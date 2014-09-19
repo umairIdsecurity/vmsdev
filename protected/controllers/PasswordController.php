@@ -118,7 +118,7 @@ class PasswordController extends Controller
                     if($model->save())
                         {
                             Yii::app()->user->setFlash('success','Password successfully updated');
-                            $this->redirect(array('view','id'=>$model->id));
+                            $this->redirect(array('user/profile','id'=>$model->id));
                         }
                 }else {
                         Yii::app()->user->setFlash('error', "Current password does not match password in your account. ");}

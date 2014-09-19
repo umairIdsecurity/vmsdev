@@ -8,8 +8,6 @@
 
 require_once 'BaseFunctionalTest.php';
 
-include 'Issue3FunctionalTestSuperAdmin.php';
-$Issue3FunctionalTestSuperAdmin = new Issue3FunctionalTestSuperAdmin();
 /**
  * Description of Issue3FunctionalTest
  *
@@ -25,8 +23,6 @@ class Issue3FunctionalTestAdmin extends BaseFunctionalTest {
     }
     
     function testAll() {
-//        global $Issue3FunctionalTestSuperAdmin;
-//        $Issue3FunctionalTestSuperAdmin->Scenario1();
         $this->createUserAdmin();
         $this->Scenario1();
         $this->Scenario2();

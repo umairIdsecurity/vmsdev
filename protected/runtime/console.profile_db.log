@@ -30418,3 +30418,499 @@
                         WHERE user_workstation.`user`='20' ORDER BY workstation.name)
 2014/09/19 09:34:24 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(select company FROM `user` where company = '2' and id='17')
 2014/09/19 09:34:24 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(select company FROM `user` where company = '2' and id='17')
+2014/09/19 09:38:30 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `user`)
+2014/09/19 09:38:30 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `user`)
+2014/09/19 09:38:30 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `user`)
+2014/09/19 09:38:30 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `user`)
+2014/09/19 09:38:30 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT COUNT(*) FROM `user` `t` WHERE role in (1,6,7,8,9,10) and (tenant = "17"))
+2014/09/19 09:38:30 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT COUNT(*) FROM `user` `t` WHERE role in (1,6,7,8,9,10) and (tenant = "17"))
+2014/09/19 09:38:30 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `user` `t` WHERE (is_deleted = 0) AND (role in (1,6,7,8,9,10) and (tenant = "17")) LIMIT 10)
+2014/09/19 09:38:30 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `user` `t` WHERE (is_deleted = 0) AND (role in (1,6,7,8,9,10) and (tenant = "17")) LIMIT 10)
+2014/09/19 09:38:30 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='17' ORDER BY workstation.name)
+2014/09/19 09:38:30 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='17' ORDER BY workstation.name)
+2014/09/19 09:38:30 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='18' ORDER BY workstation.name)
+2014/09/19 09:38:30 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='18' ORDER BY workstation.name)
+2014/09/19 09:38:30 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='19' ORDER BY workstation.name)
+2014/09/19 09:38:30 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='19' ORDER BY workstation.name)
+2014/09/19 09:38:30 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='20' ORDER BY workstation.name)
+2014/09/19 09:38:30 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='20' ORDER BY workstation.name)
+2014/09/19 09:38:38 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `user`)
+2014/09/19 09:38:38 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `user`)
+2014/09/19 09:38:38 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `user`)
+2014/09/19 09:38:38 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `user`)
+2014/09/19 09:38:38 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `user` `t` WHERE (is_deleted = 0) AND (LOWER(email)=?) LIMIT 1. Bound with 0='superadmin@test.com')
+2014/09/19 09:38:38 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `user` `t` WHERE (is_deleted = 0) AND (LOWER(email)=?) LIMIT 1. Bound with 0='superadmin@test.com')
+2014/09/19 09:38:39 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `user`)
+2014/09/19 09:38:39 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `user`)
+2014/09/19 09:38:39 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `user`)
+2014/09/19 09:38:39 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `user`)
+2014/09/19 09:38:39 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT COUNT(*) FROM `user` `t` WHERE role in (1,5,6,7,8,9,10) and (is_deleted=0))
+2014/09/19 09:38:39 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT COUNT(*) FROM `user` `t` WHERE role in (1,5,6,7,8,9,10) and (is_deleted=0))
+2014/09/19 09:38:39 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `user` `t` WHERE (is_deleted = 0) AND (role in (1,5,6,7,8,9,10) and (is_deleted=0)) LIMIT 10)
+2014/09/19 09:38:39 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `user` `t` WHERE (is_deleted = 0) AND (role in (1,5,6,7,8,9,10) and (is_deleted=0)) LIMIT 10)
+2014/09/19 09:38:39 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='16' ORDER BY workstation.name)
+2014/09/19 09:38:39 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='16' ORDER BY workstation.name)
+2014/09/19 09:38:39 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='17' ORDER BY workstation.name)
+2014/09/19 09:38:39 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='17' ORDER BY workstation.name)
+2014/09/19 09:38:39 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='18' ORDER BY workstation.name)
+2014/09/19 09:38:39 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='18' ORDER BY workstation.name)
+2014/09/19 09:38:39 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='19' ORDER BY workstation.name)
+2014/09/19 09:38:39 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='19' ORDER BY workstation.name)
+2014/09/19 09:38:39 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='20' ORDER BY workstation.name)
+2014/09/19 09:38:39 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='20' ORDER BY workstation.name)
+2014/09/19 09:38:39 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='21' ORDER BY workstation.name)
+2014/09/19 09:38:39 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='21' ORDER BY workstation.name)
+2014/09/19 09:38:39 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='22' ORDER BY workstation.name)
+2014/09/19 09:38:39 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='22' ORDER BY workstation.name)
+2014/09/19 09:38:43 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `company`)
+2014/09/19 09:38:43 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `company`)
+2014/09/19 09:38:43 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `company`)
+2014/09/19 09:38:43 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `company`)
+2014/09/19 09:38:43 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT COUNT(*) FROM `company` `t`)
+2014/09/19 09:38:43 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT COUNT(*) FROM `company` `t`)
+2014/09/19 09:38:43 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `company` `t` WHERE is_deleted = 0 LIMIT 10)
+2014/09/19 09:38:43 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `company` `t` WHERE is_deleted = 0 LIMIT 10)
+2014/09/19 09:38:44 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(select company FROM `user` where company = '1' and id='16')
+2014/09/19 09:38:44 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(select company FROM `user` where company = '1' and id='16')
+2014/09/19 09:38:44 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `company`)
+2014/09/19 09:38:44 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `company`)
+2014/09/19 09:38:44 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `company`)
+2014/09/19 09:38:44 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `company`)
+2014/09/19 09:38:44 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `company` `t` WHERE (is_deleted = 0) AND (`t`.`id`=1) LIMIT 1)
+2014/09/19 09:38:44 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `company` `t` WHERE (is_deleted = 0) AND (`t`.`id`=1) LIMIT 1)
+2014/09/19 09:38:45 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT photo.`relative_path` FROM company
+                            LEFT JOIN photo ON photo.id = company.`logo`
+                            where company.id="1")
+2014/09/19 09:38:45 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT photo.`relative_path` FROM company
+                            LEFT JOIN photo ON photo.id = company.`logo`
+                            where company.id="1")
+2014/09/19 09:38:45 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(select description from license_details limit 1)
+2014/09/19 09:38:45 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(select description from license_details limit 1)
+2014/09/19 09:38:47 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `license_details`)
+2014/09/19 09:38:47 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `license_details`)
+2014/09/19 09:38:47 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `license_details`)
+2014/09/19 09:38:47 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `license_details`)
+2014/09/19 09:38:47 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `license_details` `t` WHERE `t`.`id`='1' LIMIT 1)
+2014/09/19 09:38:47 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `license_details` `t` WHERE `t`.`id`='1' LIMIT 1)
+2014/09/19 09:39:17 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `license_details`)
+2014/09/19 09:39:17 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `license_details`)
+2014/09/19 09:39:17 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `license_details`)
+2014/09/19 09:39:17 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `license_details`)
+2014/09/19 09:39:17 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `license_details` `t` WHERE `t`.`id`='1' LIMIT 1)
+2014/09/19 09:39:17 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `license_details` `t` WHERE `t`.`id`='1' LIMIT 1)
+2014/09/19 09:39:17 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `company`)
+2014/09/19 09:39:17 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `company`)
+2014/09/19 09:39:17 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `company`)
+2014/09/19 09:39:17 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `company`)
+2014/09/19 09:39:17 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT COUNT(*) FROM `company` `t`)
+2014/09/19 09:39:17 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT COUNT(*) FROM `company` `t`)
+2014/09/19 09:39:17 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `company` `t` WHERE is_deleted = 0 LIMIT 10)
+2014/09/19 09:39:17 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `company` `t` WHERE is_deleted = 0 LIMIT 10)
+2014/09/19 09:43:59 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(select company FROM `user` where company = '1' and id='16')
+2014/09/19 09:43:59 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(select company FROM `user` where company = '1' and id='16')
+2014/09/19 09:43:59 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `company`)
+2014/09/19 09:43:59 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `company`)
+2014/09/19 09:43:59 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `company`)
+2014/09/19 09:43:59 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `company`)
+2014/09/19 09:43:59 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `company` `t` WHERE (is_deleted = 0) AND (`t`.`id`=1) LIMIT 1)
+2014/09/19 09:43:59 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `company` `t` WHERE (is_deleted = 0) AND (`t`.`id`=1) LIMIT 1)
+2014/09/19 09:43:59 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT photo.`relative_path` FROM company
+                            LEFT JOIN photo ON photo.id = company.`logo`
+                            where company.id="1")
+2014/09/19 09:43:59 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT photo.`relative_path` FROM company
+                            LEFT JOIN photo ON photo.id = company.`logo`
+                            where company.id="1")
+2014/09/19 09:43:59 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(select description from license_details limit 1)
+2014/09/19 09:43:59 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(select description from license_details limit 1)
+2014/09/19 09:45:23 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `license_details`)
+2014/09/19 09:45:23 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `license_details`)
+2014/09/19 09:45:23 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `license_details`)
+2014/09/19 09:45:23 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `license_details`)
+2014/09/19 09:45:23 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `license_details` `t` WHERE `t`.`id`='1' LIMIT 1)
+2014/09/19 09:45:23 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `license_details` `t` WHERE `t`.`id`='1' LIMIT 1)
+2014/09/19 09:46:53 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `user`)
+2014/09/19 09:46:53 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `user`)
+2014/09/19 09:46:53 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `user`)
+2014/09/19 09:46:53 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `user`)
+2014/09/19 09:46:53 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `user` `t` WHERE (is_deleted = 0) AND (LOWER(email)=?) LIMIT 1. Bound with 0='superadmin@test.com')
+2014/09/19 09:46:53 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `user` `t` WHERE (is_deleted = 0) AND (LOWER(email)=?) LIMIT 1. Bound with 0='superadmin@test.com')
+2014/09/19 09:46:54 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `user`)
+2014/09/19 09:46:54 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `user`)
+2014/09/19 09:46:54 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `user`)
+2014/09/19 09:46:54 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `user`)
+2014/09/19 09:46:54 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT COUNT(*) FROM `user` `t` WHERE role in (1,5,6,7,8,9,10) and (is_deleted=0))
+2014/09/19 09:46:54 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT COUNT(*) FROM `user` `t` WHERE role in (1,5,6,7,8,9,10) and (is_deleted=0))
+2014/09/19 09:46:54 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `user` `t` WHERE (is_deleted = 0) AND (role in (1,5,6,7,8,9,10) and (is_deleted=0)) LIMIT 10)
+2014/09/19 09:46:54 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `user` `t` WHERE (is_deleted = 0) AND (role in (1,5,6,7,8,9,10) and (is_deleted=0)) LIMIT 10)
+2014/09/19 09:46:54 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='16' ORDER BY workstation.name)
+2014/09/19 09:46:54 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='16' ORDER BY workstation.name)
+2014/09/19 09:46:54 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='17' ORDER BY workstation.name)
+2014/09/19 09:46:54 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='17' ORDER BY workstation.name)
+2014/09/19 09:46:54 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='18' ORDER BY workstation.name)
+2014/09/19 09:46:54 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='18' ORDER BY workstation.name)
+2014/09/19 09:46:54 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='19' ORDER BY workstation.name)
+2014/09/19 09:46:54 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='19' ORDER BY workstation.name)
+2014/09/19 09:46:54 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='20' ORDER BY workstation.name)
+2014/09/19 09:46:54 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='20' ORDER BY workstation.name)
+2014/09/19 09:46:54 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='21' ORDER BY workstation.name)
+2014/09/19 09:46:54 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='21' ORDER BY workstation.name)
+2014/09/19 09:46:54 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='22' ORDER BY workstation.name)
+2014/09/19 09:46:54 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='22' ORDER BY workstation.name)
+2014/09/19 09:46:57 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `company`)
+2014/09/19 09:46:57 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `company`)
+2014/09/19 09:46:57 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `company`)
+2014/09/19 09:46:57 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `company`)
+2014/09/19 09:46:57 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT COUNT(*) FROM `company` `t`)
+2014/09/19 09:46:57 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT COUNT(*) FROM `company` `t`)
+2014/09/19 09:46:57 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `company` `t` WHERE is_deleted = 0 LIMIT 10)
+2014/09/19 09:46:57 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `company` `t` WHERE is_deleted = 0 LIMIT 10)
+2014/09/19 09:47:03 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `company`)
+2014/09/19 09:47:03 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `company`)
+2014/09/19 09:47:03 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `company`)
+2014/09/19 09:47:03 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `company`)
+2014/09/19 09:47:03 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT COUNT(*) FROM `company` `t` WHERE name LIKE :ycp0. Bound with :ycp0='%Test Company 1%')
+2014/09/19 09:47:03 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT COUNT(*) FROM `company` `t` WHERE name LIKE :ycp0. Bound with :ycp0='%Test Company 1%')
+2014/09/19 09:47:03 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `company` `t` WHERE (is_deleted = 0) AND (name LIKE :ycp0) LIMIT 10. Bound with :ycp0='%Test Company 1%')
+2014/09/19 09:47:03 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `company` `t` WHERE (is_deleted = 0) AND (name LIKE :ycp0) LIMIT 10. Bound with :ycp0='%Test Company 1%')
+2014/09/19 09:47:07 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(select company FROM `user` where company = '1' and id='16')
+2014/09/19 09:47:07 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(select company FROM `user` where company = '1' and id='16')
+2014/09/19 09:47:07 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `company`)
+2014/09/19 09:47:07 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `company`)
+2014/09/19 09:47:07 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `company`)
+2014/09/19 09:47:07 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `company`)
+2014/09/19 09:47:07 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `company` `t` WHERE (is_deleted = 0) AND (`t`.`id`=1) LIMIT 1)
+2014/09/19 09:47:07 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `company` `t` WHERE (is_deleted = 0) AND (`t`.`id`=1) LIMIT 1)
+2014/09/19 09:47:07 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT photo.`relative_path` FROM company
+                            LEFT JOIN photo ON photo.id = company.`logo`
+                            where company.id="1")
+2014/09/19 09:47:07 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT photo.`relative_path` FROM company
+                            LEFT JOIN photo ON photo.id = company.`logo`
+                            where company.id="1")
+2014/09/19 09:47:07 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(select description from license_details limit 1)
+2014/09/19 09:47:07 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(select description from license_details limit 1)
+2014/09/19 09:47:10 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `license_details`)
+2014/09/19 09:47:10 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `license_details`)
+2014/09/19 09:47:10 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `license_details`)
+2014/09/19 09:47:10 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `license_details`)
+2014/09/19 09:47:10 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `license_details` `t` WHERE `t`.`id`='1' LIMIT 1)
+2014/09/19 09:47:10 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `license_details` `t` WHERE `t`.`id`='1' LIMIT 1)
+2014/09/19 09:48:04 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `license_details`)
+2014/09/19 09:48:04 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `license_details`)
+2014/09/19 09:48:04 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `license_details`)
+2014/09/19 09:48:04 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `license_details`)
+2014/09/19 09:48:04 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `license_details` `t` WHERE `t`.`id`='1' LIMIT 1)
+2014/09/19 09:48:04 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `license_details` `t` WHERE `t`.`id`='1' LIMIT 1)
+2014/09/19 09:48:04 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `company`)
+2014/09/19 09:48:04 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `company`)
+2014/09/19 09:48:04 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `company`)
+2014/09/19 09:48:04 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `company`)
+2014/09/19 09:48:04 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT COUNT(*) FROM `company` `t`)
+2014/09/19 09:48:04 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT COUNT(*) FROM `company` `t`)
+2014/09/19 09:48:04 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `company` `t` WHERE is_deleted = 0 LIMIT 10)
+2014/09/19 09:48:04 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `company` `t` WHERE is_deleted = 0 LIMIT 10)
+2014/09/19 09:48:15 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `company`)
+2014/09/19 09:48:15 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `company`)
+2014/09/19 09:48:15 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `company`)
+2014/09/19 09:48:15 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `company`)
+2014/09/19 09:48:15 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT COUNT(*) FROM `company` `t` WHERE name LIKE :ycp0. Bound with :ycp0='%Test Company 1%')
+2014/09/19 09:48:15 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT COUNT(*) FROM `company` `t` WHERE name LIKE :ycp0. Bound with :ycp0='%Test Company 1%')
+2014/09/19 09:48:15 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `company` `t` WHERE (is_deleted = 0) AND (name LIKE :ycp0) LIMIT 10. Bound with :ycp0='%Test Company 1%')
+2014/09/19 09:48:15 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `company` `t` WHERE (is_deleted = 0) AND (name LIKE :ycp0) LIMIT 10. Bound with :ycp0='%Test Company 1%')
+2014/09/19 09:48:16 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(select company FROM `user` where company = '1' and id='16')
+2014/09/19 09:48:16 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(select company FROM `user` where company = '1' and id='16')
+2014/09/19 09:48:16 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `company`)
+2014/09/19 09:48:16 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `company`)
+2014/09/19 09:48:16 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `company`)
+2014/09/19 09:48:16 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `company`)
+2014/09/19 09:48:16 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `company` `t` WHERE (is_deleted = 0) AND (`t`.`id`=1) LIMIT 1)
+2014/09/19 09:48:16 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `company` `t` WHERE (is_deleted = 0) AND (`t`.`id`=1) LIMIT 1)
+2014/09/19 09:48:16 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT photo.`relative_path` FROM company
+                            LEFT JOIN photo ON photo.id = company.`logo`
+                            where company.id="1")
+2014/09/19 09:48:16 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT photo.`relative_path` FROM company
+                            LEFT JOIN photo ON photo.id = company.`logo`
+                            where company.id="1")
+2014/09/19 09:48:16 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(select description from license_details limit 1)
+2014/09/19 09:48:16 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(select description from license_details limit 1)
+2014/09/19 09:48:19 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `license_details`)
+2014/09/19 09:48:19 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `license_details`)
+2014/09/19 09:48:19 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `license_details`)
+2014/09/19 09:48:19 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `license_details`)
+2014/09/19 09:48:19 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `license_details` `t` WHERE `t`.`id`='1' LIMIT 1)
+2014/09/19 09:48:19 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `license_details` `t` WHERE `t`.`id`='1' LIMIT 1)
+2014/09/19 09:56:13 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `license_details`)
+2014/09/19 09:56:13 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `license_details`)
+2014/09/19 09:56:13 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `license_details`)
+2014/09/19 09:56:13 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `license_details`)
+2014/09/19 09:56:13 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `license_details` `t` WHERE `t`.`id`='1' LIMIT 1)
+2014/09/19 09:56:13 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `license_details` `t` WHERE `t`.`id`='1' LIMIT 1)
+2014/09/19 09:57:21 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `license_details`)
+2014/09/19 09:57:21 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `license_details`)
+2014/09/19 09:57:21 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `license_details`)
+2014/09/19 09:57:21 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `license_details`)
+2014/09/19 09:57:21 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `license_details` `t` WHERE `t`.`id`='1' LIMIT 1)
+2014/09/19 09:57:21 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `license_details` `t` WHERE `t`.`id`='1' LIMIT 1)
+2014/09/19 09:57:21 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `company`)
+2014/09/19 09:57:21 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `company`)
+2014/09/19 09:57:21 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `company`)
+2014/09/19 09:57:21 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `company`)
+2014/09/19 09:57:21 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT COUNT(*) FROM `company` `t`)
+2014/09/19 09:57:21 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT COUNT(*) FROM `company` `t`)
+2014/09/19 09:57:21 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `company` `t` WHERE is_deleted = 0 LIMIT 10)
+2014/09/19 09:57:21 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `company` `t` WHERE is_deleted = 0 LIMIT 10)
+2014/09/19 09:57:24 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(select company FROM `user` where company = '1' and id='16')
+2014/09/19 09:57:24 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(select company FROM `user` where company = '1' and id='16')
+2014/09/19 09:57:24 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `company`)
+2014/09/19 09:57:24 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `company`)
+2014/09/19 09:57:24 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `company`)
+2014/09/19 09:57:24 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `company`)
+2014/09/19 09:57:24 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `company` `t` WHERE (is_deleted = 0) AND (`t`.`id`=1) LIMIT 1)
+2014/09/19 09:57:24 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `company` `t` WHERE (is_deleted = 0) AND (`t`.`id`=1) LIMIT 1)
+2014/09/19 09:57:24 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT photo.`relative_path` FROM company
+                            LEFT JOIN photo ON photo.id = company.`logo`
+                            where company.id="1")
+2014/09/19 09:57:24 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT photo.`relative_path` FROM company
+                            LEFT JOIN photo ON photo.id = company.`logo`
+                            where company.id="1")
+2014/09/19 09:57:24 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(select description from license_details limit 1)
+2014/09/19 09:57:24 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(select description from license_details limit 1)
+2014/09/19 09:57:25 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `license_details`)
+2014/09/19 09:57:25 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `license_details`)
+2014/09/19 09:57:25 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `license_details`)
+2014/09/19 09:57:25 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `license_details`)
+2014/09/19 09:57:25 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `license_details` `t` WHERE `t`.`id`='1' LIMIT 1)
+2014/09/19 09:57:25 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `license_details` `t` WHERE `t`.`id`='1' LIMIT 1)
+2014/09/19 10:39:56 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `license_details`)
+2014/09/19 10:39:56 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `license_details`)
+2014/09/19 10:39:56 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `license_details`)
+2014/09/19 10:39:56 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `license_details`)
+2014/09/19 10:39:56 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `license_details` `t` WHERE `t`.`id`='1' LIMIT 1)
+2014/09/19 10:39:56 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `license_details` `t` WHERE `t`.`id`='1' LIMIT 1)
+2014/09/19 15:21:27 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `license_details`)
+2014/09/19 15:21:27 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `license_details`)
+2014/09/19 15:21:27 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `license_details`)
+2014/09/19 15:21:27 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `license_details`)
+2014/09/19 15:21:27 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `license_details` `t` WHERE `t`.`id`='1' LIMIT 1)
+2014/09/19 15:21:27 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `license_details` `t` WHERE `t`.`id`='1' LIMIT 1)
+2014/09/19 15:23:48 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `company`)
+2014/09/19 15:23:48 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `company`)
+2014/09/19 15:23:48 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `company`)
+2014/09/19 15:23:48 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `company`)
+2014/09/19 15:23:48 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(select description from license_details limit 1)
+2014/09/19 15:23:48 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(select description from license_details limit 1)
+2014/09/19 15:23:56 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `workstation`)
+2014/09/19 15:23:56 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `workstation`)
+2014/09/19 15:23:56 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `workstation`)
+2014/09/19 15:23:56 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `workstation`)
+2014/09/19 15:30:13 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `company`)
+2014/09/19 15:30:13 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `company`)
+2014/09/19 15:30:13 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `company`)
+2014/09/19 15:30:13 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `company`)
+2014/09/19 15:30:13 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT COUNT(*) FROM `company` `t`)
+2014/09/19 15:30:13 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT COUNT(*) FROM `company` `t`)
+2014/09/19 15:30:13 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `company` `t` WHERE is_deleted = 0 LIMIT 10)
+2014/09/19 15:30:13 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `company` `t` WHERE is_deleted = 0 LIMIT 10)
+2014/09/19 15:30:14 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(select company FROM `user` where company = '1' and id='16')
+2014/09/19 15:30:14 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(select company FROM `user` where company = '1' and id='16')
+2014/09/19 15:30:14 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `company`)
+2014/09/19 15:30:14 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `company`)
+2014/09/19 15:30:14 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `company`)
+2014/09/19 15:30:14 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `company`)
+2014/09/19 15:30:14 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `company` `t` WHERE (is_deleted = 0) AND (`t`.`id`=1) LIMIT 1)
+2014/09/19 15:30:14 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `company` `t` WHERE (is_deleted = 0) AND (`t`.`id`=1) LIMIT 1)
+2014/09/19 15:30:14 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT photo.`relative_path` FROM company
+                            LEFT JOIN photo ON photo.id = company.`logo`
+                            where company.id="1")
+2014/09/19 15:30:14 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT photo.`relative_path` FROM company
+                            LEFT JOIN photo ON photo.id = company.`logo`
+                            where company.id="1")
+2014/09/19 15:30:14 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(select description from license_details limit 1)
+2014/09/19 15:30:14 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(select description from license_details limit 1)
+2014/09/19 15:30:17 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(select company FROM `user` where company = '1' and id='16')
+2014/09/19 15:30:17 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(select company FROM `user` where company = '1' and id='16')
+2014/09/19 15:30:17 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `company`)
+2014/09/19 15:30:17 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `company`)
+2014/09/19 15:30:17 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `company`)
+2014/09/19 15:30:17 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `company`)
+2014/09/19 15:30:17 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `company` `t` WHERE (is_deleted = 0) AND (`t`.`id`=1) LIMIT 1)
+2014/09/19 15:30:17 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `company` `t` WHERE (is_deleted = 0) AND (`t`.`id`=1) LIMIT 1)
+2014/09/19 15:30:17 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT photo.`relative_path` FROM company
+                            LEFT JOIN photo ON photo.id = company.`logo`
+                            where company.id="1")
+2014/09/19 15:30:17 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT photo.`relative_path` FROM company
+                            LEFT JOIN photo ON photo.id = company.`logo`
+                            where company.id="1")
+2014/09/19 15:30:17 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(select description from license_details limit 1)
+2014/09/19 15:30:17 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(select description from license_details limit 1)
+2014/09/19 15:58:32 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `user`)
+2014/09/19 15:58:32 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `user`)
+2014/09/19 15:58:32 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `user`)
+2014/09/19 15:58:32 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `user`)
+2014/09/19 15:58:32 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `user` `t` WHERE (is_deleted = 0) AND (LOWER(email)=?) LIMIT 1. Bound with 0='staffmember@test.com')
+2014/09/19 15:58:32 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `user` `t` WHERE (is_deleted = 0) AND (LOWER(email)=?) LIMIT 1. Bound with 0='staffmember@test.com')
+2014/09/19 15:59:09 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `user`)
+2014/09/19 15:59:09 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `user`)
+2014/09/19 15:59:09 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `user`)
+2014/09/19 15:59:09 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `user`)
+2014/09/19 15:59:09 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `user` `t` WHERE (is_deleted = 0) AND (`t`.`id`=21) LIMIT 1)
+2014/09/19 15:59:09 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `user` `t` WHERE (is_deleted = 0) AND (`t`.`id`=21) LIMIT 1)
+2014/09/19 15:59:09 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `company`)
+2014/09/19 15:59:09 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `company`)
+2014/09/19 15:59:09 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `company`)
+2014/09/19 15:59:09 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `company`)
+2014/09/19 15:59:09 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `company` `t` WHERE is_deleted = 0)
+2014/09/19 15:59:09 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `company` `t` WHERE is_deleted = 0)
+2014/09/19 15:59:09 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(select company from user where id='21')
+2014/09/19 15:59:09 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(select company from user where id='21')
+2014/09/19 15:59:09 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(select company from user where id='21')
+2014/09/19 15:59:09 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(select company from user where id='21')
+2014/09/19 15:59:09 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(select company from user where id='21')
+2014/09/19 15:59:09 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(select company from user where id='21')
+2014/09/19 16:02:48 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `user`)
+2014/09/19 16:02:48 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `user`)
+2014/09/19 16:02:48 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `user`)
+2014/09/19 16:02:48 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `user`)
+2014/09/19 16:02:48 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `user` `t` WHERE (is_deleted = 0) AND (`t`.`id`=21) LIMIT 1)
+2014/09/19 16:02:48 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `user` `t` WHERE (is_deleted = 0) AND (`t`.`id`=21) LIMIT 1)
+2014/09/19 16:02:48 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `company`)
+2014/09/19 16:02:48 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `company`)
+2014/09/19 16:02:48 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `company`)
+2014/09/19 16:02:48 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `company`)
+2014/09/19 16:02:48 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `company` `t` WHERE is_deleted = 0)
+2014/09/19 16:02:48 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `company` `t` WHERE is_deleted = 0)
+2014/09/19 16:02:48 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(select company from user where id='21')
+2014/09/19 16:02:48 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(select company from user where id='21')
+2014/09/19 16:02:48 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(select company from user where id='21')
+2014/09/19 16:02:48 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(select company from user where id='21')
+2014/09/19 16:02:48 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(select company from user where id='21')
+2014/09/19 16:02:48 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(select company from user where id='21')
+2014/09/19 16:03:00 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `user`)
+2014/09/19 16:03:00 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `user`)
+2014/09/19 16:03:00 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `user`)
+2014/09/19 16:03:00 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `user`)
+2014/09/19 16:03:00 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `user` `t` WHERE `t`.`id`=21 LIMIT 1)
+2014/09/19 16:03:00 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `user` `t` WHERE `t`.`id`=21 LIMIT 1)
+2014/09/19 16:03:00 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `user` `t` WHERE `t`.`id`=21 LIMIT 1)
+2014/09/19 16:03:00 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `user` `t` WHERE `t`.`id`=21 LIMIT 1)
+2014/09/19 16:03:16 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `user`)
+2014/09/19 16:03:16 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `user`)
+2014/09/19 16:03:16 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `user`)
+2014/09/19 16:03:16 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `user`)
+2014/09/19 16:03:16 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `user` `t` WHERE `t`.`id`=21 LIMIT 1)
+2014/09/19 16:03:16 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `user` `t` WHERE `t`.`id`=21 LIMIT 1)
+2014/09/19 16:03:16 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `user` `t` WHERE `t`.`id`=21 LIMIT 1)
+2014/09/19 16:03:16 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `user` `t` WHERE `t`.`id`=21 LIMIT 1)
+2014/09/19 16:03:18 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `user`)
+2014/09/19 16:03:18 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `user`)
+2014/09/19 16:03:18 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `user`)
+2014/09/19 16:03:18 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `user`)
+2014/09/19 16:03:18 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `user` `t` WHERE `t`.`id`=21 LIMIT 1)
+2014/09/19 16:03:18 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `user` `t` WHERE `t`.`id`=21 LIMIT 1)

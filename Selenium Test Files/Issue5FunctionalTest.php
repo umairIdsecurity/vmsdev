@@ -68,9 +68,10 @@ class Issue5FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Test Company 3", $this->getText("//div[@id='company-grid']/table/tbody/tr/td[2]"));
     }
 
-    /* Scenario 2 – Login as super admin and update a company
+    /*
+      Scenario 2 – Login as super admin and update a company
       Expected Behavior
-      -	Assert text  ’Test Company 3 - update’ in display name  in search display name field
+      -	Assert text ’Test Company 3 - update’ in display name in search display name field
 
       Steps:
       1.	Go to localhost/vms
@@ -79,11 +80,20 @@ class Issue5FunctionalTest extends BaseFunctionalTest {
       4.	Click Login
       5.	Click ‘Administration’
       6.	Click ‘Manage companies’
-      7.        Click 'view companies'
+      7.     Click 'view companies'
       8.	Wait for page to redirect in manage companies
-      9.	Type Test company 3 in company name adn display namefilter
+      9.	Type Test company 3 in company name and display name filter
       10.	Assert text Test company 3 in company name row
       11.	Assert text Test company 3 in company display name row
+      12.	Click link edit
+      13.     Type ‘Test Company 3 - update’ in trading/display name field
+      14.	click update
+      15.	Assert text ‘Organization Settings Updated’
+      16.	Click Manage companies
+      17.	Click View Companies
+      18.	Type Test Company 3 in company name
+      19.	Assert text ‘Test Company 3 - update’ in display name
+
      */
 
     function Scenario2() {

@@ -56,7 +56,7 @@ class Issue9FunctionalTest extends BaseFunctionalTest {
         $this->click("id=createBtn");
         $this->waitForPageToLoad("30000");
         $this->assertEquals("Organization Settings Updated", $this->getText("css=div.flash-success"));
-        $this->assertEquals("Test Company 1 - Update", $this->getValue("id=Company_trading_name")); 
+        $this->assertEquals("Test Company 1 - Update", $this->getValue("id=Company_trading_name"));
         $this->click("id=modalBtn");
         $this->assertEquals("This is a sample license detail.", $this->getText("id=modalBody"));
     }
@@ -127,7 +127,50 @@ class Issue9FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("You are not authorized to perform this action.", $this->getText("css=div.error"));
     }
 
-    
+    /*
+      Scenario 4 – Login as super admin and update license details
+      Expected Behavior
+      -	Assert text you are not authorized to perform this action.
+
+      Steps:
+      1.	Go to localhost/vms
+      2.	Type admin@test.com in username field
+      3.	Type 12345 in password field
+      4.	Click Login
+      5.	click manage companies
+      6.         click view companies
+      7.         type test company 1 in company name and click edit
+      8.         wait for page to load and click license details
+      9.         wait for page to load and  type 'this is a sample license details update'
+      10.        click save
+      11.        wait for page to load and type test company 1 in company name field
+      12.        click edit
+      13.        click license details and assert text 'this is a sample license details update'
+     */
+
+    function Scenario4() {
+        $username = 'superadmin@test.com';
+        $this->login($username, '12345');
+        $this->click("css=a > span");
+        $this->click("css=li.even > a > span");
+        $this->waitForPageToLoad("30000");
+        $this->type("css=td > input[name=\"Company[name]\"]", "Test Company 1");
+        $this->click("link=Edit");
+        $this->waitForPageToLoad("30000");
+        $this->click("css=button.yiiBtn");
+        $this->waitForPageToLoad("30000");
+        $this->click("css=a.redactor_btn_fontcolor > span");
+        $this->click("css=a.redactor_btn_horizontalrule > span");
+        $this->click("name=yt0");
+        $this->waitForPageToLoad("30000");
+        $this->type("css=td > input[name=\"Company[name]\"]", "Test Company 1");
+        $this->click("link=Edit");
+        $this->waitForPageToLoad("30000");
+        $this->click("css=button.yiiBtn");
+        $this->waitForPageToLoad("30000");
+        $this->assertTrue($this->isElementPresent("css=html"));
+    }
+
 }
 
 ?>

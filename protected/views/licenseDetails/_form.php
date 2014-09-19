@@ -21,7 +21,7 @@
 
     <?php echo $form->errorSummary($model); ?>
     <?php echo $form->labelEx($model,'description'); ?>
-    <?php $this->widget('ext.widgets.redactorjs.Redactor', array('name' => 'LicenseDetails[trading_name]','model' => $model, 'attribute' => 'description')); ?>
+    <?php $this->widget('ext.widgets.redactorjs.Redactor', array('name' => 'LicenseDetails[description]','model' => $model, 'attribute' => 'description')); ?>
 
 
     <div class="row buttons">

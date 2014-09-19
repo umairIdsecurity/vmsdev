@@ -63,7 +63,7 @@ class Issue3FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->click("link=Administration");
         $this->waitForPageToLoad("30000");
-        $this->assertEquals("Displaying 1-10 of 14 results.", $this->getText("css=div.summary"));
+        $this->assertEquals("Displaying 1-7 of 7 results.", $this->getText("css=div.summary"));
         $this->select("css=select[name=\"User[role]\"]", "label=Super Administrator");
         sleep(1);
         $this->assertEquals("Super Administrator", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[3]"));
@@ -72,27 +72,27 @@ class Issue3FunctionalTest extends BaseFunctionalTest {
         $this->select("css=select[name=\"User[role]\"]", "label=Administrator");
         sleep(1);
         $this->assertEquals("Administrator", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[3]"));
-        $this->assertEquals("Displaying 1-3 of 3 results.", $this->getText("css=div.summary"));
+        $this->assertEquals("Displaying 1-2 of 2 results.", $this->getText("css=div.summary"));
         
         $this->select("css=select[name=\"User[role]\"]", "label=Agent Administrator");
         sleep(1);
         $this->assertEquals("Agent Administrator", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[3]"));
-        $this->assertEquals("Displaying 1-3 of 3 results.", $this->getText("css=div.summary"));
+        $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
 
         $this->select("css=select[name=\"User[role]\"]", "label=Agent Operator");
         sleep(1);
         $this->assertEquals("Agent Operator", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[3]"));
-        $this->assertEquals("Displaying 1-2 of 2 results.", $this->getText("css=div.summary"));
+        $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
 
         $this->select("css=select[name=\"User[role]\"]", "label=Operator");
         sleep(1);
         $this->assertEquals("Operator", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[3]"));
-        $this->assertEquals("Displaying 1-2 of 2 results.", $this->getText("css=div.summary"));
+        $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
 
         $this->select("css=select[name=\"User[role]\"]", "label=Staff Member");
         sleep(1);
         $this->assertEquals("Staff Member", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[3]"));
-        $this->assertEquals("Displaying 1-3 of 3 results.", $this->getText("css=div.summary"));
+        $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
         
         $this->click("link=Manage Users");
         $this->assertTrue($this->isElementPresent("link=Add Administrator"));
@@ -176,23 +176,19 @@ class Issue3FunctionalTest extends BaseFunctionalTest {
         $this->select("css=select[name=\"User[role]\"]", "label=Agent Administrator");
         sleep(1);
         $this->assertEquals("Agent Administrator", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[3]"));
-        $this->assertEquals("Displaying 1-3 of 3 results.", $this->getText("css=div.summary"));
+        $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
         
         $this->select("css=select[name=\"User[role]\"]", "label=Agent Operator");
         sleep(1);
         $this->assertEquals("Agent Operator", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[3]"));
-        $this->assertEquals("Displaying 1-2 of 2 results.", $this->getText("css=div.summary"));
+        $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
         
         $this->select("css=select[name=\"User[role]\"]", "label=Operator");
         sleep(1);
         $this->assertEquals("Operator", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[3]"));
-        $this->assertEquals("Displaying 1-2 of 2 results.", $this->getText("css=div.summary"));
-        
-        $this->select("css=select[name=\"User[role]\"]", "label=Staff Member");
-        sleep(1);
-        $this->assertEquals("Staff Member", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[3]"));
         $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
         
+       
         $this->click("link=Manage Users");
         $this->assertTrue($this->isElementPresent("link=Add Administrator"));
         $this->click("link=Manage Users");
@@ -237,8 +233,7 @@ class Issue3FunctionalTest extends BaseFunctionalTest {
         $this->open("http://localhost/vms/index.php?r=user/update&id=19");
         $this->assertEquals("Update User", $this->getText("css=h1"));
         
-        $this->open("http://localhost/vms/index.php?r=user/update&id=26");
-        $this->assertEquals("Update User", $this->getText("css=h1"));
+        
     }
 
     /* Scenario 5 – Login as agent admin and check data control
@@ -272,12 +267,12 @@ class Issue3FunctionalTest extends BaseFunctionalTest {
         $this->select("css=select[name=\"User[role]\"]", "label=Agent Operator");
         sleep(1);
         $this->assertEquals("Agent Operator", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[3]"));
-        $this->assertEquals("Displaying 1-2 of 2 results.", $this->getText("css=div.summary"));
-
+        $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
+        
         $this->select("css=select[name=\"User[role]\"]", "label=Staff Member");
         sleep(1);
         $this->assertEquals("Staff Member", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[3]"));
-        $this->assertEquals("Displaying 1-2 of 2 results.", $this->getText("css=div.summary"));
+        $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
         
         $this->click("link=Manage Users");
         $this->assertTrue($this->isElementPresent("link=Add Agent Operator"));
@@ -469,7 +464,7 @@ class Issue3FunctionalTest extends BaseFunctionalTest {
         $this->click("link=Manage Users");
         $this->click("link=Set Access Rules");
         $this->waitForPageToLoad("30000");
-        $this->assertEquals("Displaying 1-2 of 2 results.", $this->getText("css=div.summary"));
+        $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
         $this->type("xpath=(//input[@name='User[email]'])[2]", "agentoperator@test.com");
         $this->click("css=select[name=\"User[user_type]\"]");
         $this->select("css=select[name=\"User[user_type]\"]", "label=Internal");
@@ -477,12 +472,7 @@ class Issue3FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("agentoperator@test.com", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[3]"));
         $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
         
-        $this->type("xpath=(//input[@name='User[email]'])[2]", "agentoperator2@test.com");
-        $this->click("css=select[name=\"User[user_type]\"]");
-        $this->select("css=select[name=\"User[user_type]\"]", "label=Internal");
-        sleep(1);
-        $this->assertEquals("agentoperator2@test.com", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[3]"));
-        $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
+        
     }
 
     /* Scenario 10 – Login as admin, go to set access rule and check data control
@@ -512,7 +502,7 @@ class Issue3FunctionalTest extends BaseFunctionalTest {
         $this->click("link=Manage Users");
         $this->click("link=Set Access Rules");
         $this->waitForPageToLoad("30000");
-        $this->assertEquals("Displaying 1-4 of 4 results.", $this->getText("css=div.summary"));
+        $this->assertEquals("Displaying 1-2 of 2 results.", $this->getText("css=div.summary"));
         $this->type("xpath=(//input[@name='User[email]'])[2]", "operator@test.com");
         $this->type("css=td > input[name=\"User[first_name]\"]", "Test Operator");
         

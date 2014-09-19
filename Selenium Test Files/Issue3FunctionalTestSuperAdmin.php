@@ -163,8 +163,8 @@ class Issue3FunctionalTestSuperAdmin extends BaseFunctionalTest {
         $this->select("id=User_tenant", "label=Test admin");
         sleep(1);
         $this->getDisabledCompanyValue("Test Company 1");
-        $this->assertEquals("Workstation", $this->getText("id=User_workstation"));
-
+        $this->assertEquals("Workstation", $this->getEval("window.document.getElementById(\"User_workstation\").options[window.document.getElementById(\"User_workstation\").selectedIndex].text"));
+    
 
         $this->click("id=submitBtn");
         $this->click("id=submitForm");

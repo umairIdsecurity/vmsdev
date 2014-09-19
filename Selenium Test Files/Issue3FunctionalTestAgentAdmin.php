@@ -21,6 +21,7 @@ class Issue3FunctionalTestAgentAdmin extends BaseFunctionalTest {
     }
 
     function testAll() {
+        $this->createUserAgentAdmin();
         $this->Scenario1();
         $this->Scenario2();
     }
@@ -59,7 +60,7 @@ class Issue3FunctionalTestAgentAdmin extends BaseFunctionalTest {
         $this->getDisabledRoleValue("7");
 
         $this->getDisabledCompanyValue("Test Company 1");
-        $this->assertEquals("Workstation", $this->getText("id=User_workstation"));
+        $this->assertEquals("Workstation1", $this->getText("id=User_workstation"));
         
         $this->click("id=submitBtn");
         $this->click("id=submitForm");
@@ -122,7 +123,30 @@ class Issue3FunctionalTestAgentAdmin extends BaseFunctionalTest {
         
         $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
     }
-
+    function createUserAgentAdmin() {
+        $username = 'superadmin@test.com';
+        $this->login($username, '12345');
+        $this->click("link=Administration");
+        $this->waitForPageToLoad("30000");
+        $this->click("link=Manage Users");
+        $this->click("link=Add Agent Administrator");
+        $this->waitForPageToLoad("30000");
+        $this->addUser("agentadmin@test.com", "agentadmin");
+        $this->select("id=User_tenant", "label=Test admin");
+        $this->waitForElementPresent("id=User_company");
+        sleep(1);
+        $this->click("id=submitBtn");
+        $this->click("id=submitForm");
+        $this->waitForPageToLoad("30000");
+        $this->type("css=td > input[name=\"User[first_name]\"]", "Test");
+        $this->click("//td[2]/input");
+        $this->type("//td[2]/input", "agentadmin");
+        $this->select("css=select[name=\"User[role]\"]", "label=Agent Administrator");
+        sleep(1);
+        $this->assertEquals("Test", $this->getText("css=tr.odd > td"));
+        $this->assertEquals("Agent Administrator", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[3]"));
+        $this->assertEquals("Displaying 1-3 of 3 results.", $this->getText("css=div.summary"));
+    }
 }
 
 ?>

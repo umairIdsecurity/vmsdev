@@ -54,6 +54,7 @@ DROP TABLE IF EXISTS `user_status`;
 DROP TABLE IF EXISTS `user_type`;
 DROP TABLE IF EXISTS `user_workstation`;
 DROP TABLE IF EXISTS `workstation`;
+DROP TABLE IF EXISTS `license_details`;
 --
 -- Table structure for table `company`
 --
@@ -263,11 +264,16 @@ CREATE TABLE IF NOT EXISTS `workstation` (
 --
 
 INSERT INTO `workstation` (`id`, `name`, `location`, `contact_name`, `contact_number`, `contact_email_address`, `number_of_operators`, `assign_kiosk`, `password`, `created_by`, `tenant`, `tenant_agent`) VALUES
-(8, 'Workstation', 'PAL', 'Test Person', 123456, 'workstation1@test.com', NULL, 0, NULL, 16, 17, 18);
+(8, 'Workstation', 'PAL', 'Test Person', 123456, 'workstation1@test.com', NULL, 0, NULL, 16, 17, 18),
+(9, 'Workstation1', 'PAL', 'Test Person', 123456, 'workstation1@test.com', NULL, 0, NULL, 16, 17, 23);
 
-CREATE TABLE `vms`.`license_details`( `id` BIGINT, `description` TEXT ); 
+CREATE TABLE IF NOT EXISTS `license_details`( 
+    `id` BIGINT NOT NULL AUTO_INCREMENT, 
+    `description` TEXT,
+PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1; 
 
-INSERT INTO `workstation` (`id`, `description`) VALUES
+INSERT INTO `license_details` (`id`, `description`) VALUES
 (1, 'This is a sample license detail.');
 
 --

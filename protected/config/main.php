@@ -66,10 +66,12 @@ return array(
 		
 		'db'=>array(
 			'connectionString' => 'mysql:host=localhost;dbname=vms',
-			'emulatePrepare' => true,
+			
 			'username' => 'root',
 			'password' => '',
 			'charset' => 'utf8',
+                        'enableParamLogging'=> true,
+                        'enableProfiling'=> true,
 		),
 		
 		'errorHandler'=>array(
@@ -81,7 +83,9 @@ return array(
 			'routes'=>array(
 				array(
 					'class'=>'CFileLogRoute',
-					'levels'=>'error, warning',
+					'levels'=>'profile,console',
+                                        'logFile'=>'console.profile_db.log',
+                                        'categories'=>'system.db.CDbCommand.query'
 				),
 				// uncomment the following to show log messages on web pages
 				/*

@@ -7,15 +7,15 @@
  */
 
 
-require_once 'PHPUnit/Extensions/SeleniumTestCase.php';
-//require_once 'BaseFunctionalTest.php';
+//require_once 'PHPUnit/Extensions/SeleniumTestCase.php';
+require_once 'BaseFunctionalTest.php';
 
 /**
  * Description of Issue 1
  *
  * @author Jeremiah
  */
-class Issue1 extends PHPUnit_Extensions_SeleniumTestCase {
+class Issue1 extends BaseFunctionalTest {
 
     
     protected function setUp() {
@@ -81,16 +81,7 @@ class Issue1 extends PHPUnit_Extensions_SeleniumTestCase {
         $this->waitForPageToLoad("30000");
     }
     
-    function login($username = NULL,$password = NULL){
-        $this->open("http://localhost/vms");
-        $this->click("link=Login");
-        $this->waitForPageToLoad("30000");
-        $this->type("id=LoginForm_username", $username);
-        $this->type("id=LoginForm_password", $password);
-        $this->click("name=yt0");
-        $this->click("name=yt0");
-        $this->waitForPageToLoad("30000");    
-    }
+    
 
 }
 

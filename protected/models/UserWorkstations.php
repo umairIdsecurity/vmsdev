@@ -21,7 +21,7 @@ class UserWorkstations extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'user_workstations';
+		return 'user_workstation';
 	}
 
 	/**
@@ -95,6 +95,8 @@ class UserWorkstations extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+        
+        
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -106,4 +108,37 @@ class UserWorkstations extends CActiveRecord
 	{
 		return parent::model($className);
 	}
+        
+        public function getAllworkstations($userid){
+            $connection = Yii::app()->db;
+                $sql ="SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='$userid' ORDER BY workstation.name";
+                $command = $connection->createCommand($sql);
+                $row = $command->queryAll();
+                
+                if (count($row)>0)
+                {
+                    $res = array();
+                    foreach ($row as $key=>$val) {
+                       $res[] = $val;
+                    }
+                    $resp= array();
+                    foreach ($res as $workstations){
+                        $resp [] = $workstations;
+                    }
+                    foreach ($resp as $val){
+                        $copy = $resp;
+                        foreach ($val as $v){
+                            echo $v;
+                            if(!next($copy))
+                            {echo "<br>";}
+                        }
+                     }
+                }
+                else {
+                    return $result = '-'; 
+                }
+        }
 }

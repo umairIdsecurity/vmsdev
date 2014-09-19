@@ -2,11 +2,7 @@
 /* @var $this PasswordController */
 /* @var $model Password */
 
-$this->breadcrumbs=array(
-	'Passwords'=>array('index'),
-	'Update',
-);
-
+$session = new CHttpSession;
 
 ?>
 
@@ -22,7 +18,7 @@ $this->breadcrumbs=array(
         echo '<div class="flash-' . $key . '">' . $message . "</div>\n";
     }
 ?>
-<div class="form" data-ng-app="myApp">
+<div class="form" data-ng-app="PwordForm">
  
 <?php $form=$this->beginWidget('CActiveForm', array(
     'id'=>'password-form',
@@ -42,7 +38,7 @@ $this->breadcrumbs=array(
         <tr>
             <td>
                 <div class="row">
-                    <b>Current Password:</b> 
+                    <label>Current Password:</label>
                 </div>
             </td>
             <td>
@@ -53,7 +49,7 @@ $this->breadcrumbs=array(
     <tr>
         <td>
             <div class="row">
-        <b>New Password:</b> 
+        <label>New Password:</label>
             </div>
         </td>
         <td><input ng-model="user.passwords" type="password" name="Password[password]" data-ng-class="{'ng-invalid':passwordform.confirmPassword.$error.match}" />
@@ -62,7 +58,7 @@ $this->breadcrumbs=array(
     <tr>
            <td style='width:150px;'>
     <div class="row">
-        <b>Repeat New Password:</b> </div>
+        <label>Repeat New Password:</label> </div>
             </td>
             <td><input ng-model="user.passwordConfirm" type="password" data-match="user.passwords" name="confirmPassword" />
             <span class="required">*</span></td>
@@ -71,20 +67,19 @@ $this->breadcrumbs=array(
     </table>
        <div >
         <button id='updateBtn'>Update</button>
-        <button id='cancelBtn'>Cancel</button>
+        <button id='cancelBtn' class="btn btn-primary">Cancel</button>
     </div>
     <div class="row buttons" style='display:none;'>
-        <?php echo CHtml::submitButton($model->isNewRecord ? 'Add' : 'Save', array('class'=>'tobutton','id'=>'save')); ?>
+        <?php echo CHtml::submitButton($model->isNewRecord ? 'Add' : 'Save', array('class'=>'tobutton btn','id'=>'save')); ?>
     </div>
     
 <?php $this->endWidget();?>
 </div><!-- form -->
 
-<script>
+<script> 
     $(document).ready(function() {
         
         $("#Password_currentpassword").val('');
-        $("#updateBtn").click(function(e) {
         
         $("#updateBtn").click(function(e) {
             
@@ -96,10 +91,10 @@ $this->breadcrumbs=array(
                      $("#save").click();
             } 
         });
-    });
+  
         $("#cancelBtn").click(function (e){
            e.preventDefault();
-           window.location='index.php?r=user/admin' ;
+           window.location='index.php?r=user/profile&id=<?php echo $session['id'];?>' ;
         });
     });
 </script>

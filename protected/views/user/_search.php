@@ -66,10 +66,7 @@
 		<?php echo $form->textArea($model,'notes',array('rows'=>6, 'cols'=>50)); ?>
 	</div>
 
-	<div class="row">
-		<?php echo $form->label($model,'photo'); ?>
-		<?php echo $form->textField($model,'photo',array('size'=>60,'maxlength'=>150)); ?>
-	</div>
+	
 
 	<div class="row">
 		<?php echo $form->label($model,'role'); ?>

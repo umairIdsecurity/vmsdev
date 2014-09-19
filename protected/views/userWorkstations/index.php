@@ -1,20 +1,56 @@
+
+<?php echo CHtml::beginForm(); ?>
 <?php
-/* @var $this UserWorkstationsController */
-/* @var $dataProvider CActiveDataProvider */
-
-$this->breadcrumbs=array(
-	'User Workstations',
-);
-
-$this->menu=array(
-	array('label'=>'Create UserWorkstations', 'url'=>array('create')),
-	array('label'=>'Manage UserWorkstations', 'url'=>array('admin')),
-);
+//$uw = UserWorkstations::model()->search(); 
+// echo $model->user;
+?>
+<input type='hidden' value='<?php echo $_GET['id']; ?>' name='userId'>
+<?php
+foreach (Yii::app()->user->getFlashes() as $key => $message) {
+    echo '<div class="flash-' . $key . '">' . $message . "</div>\n";
+}
+?>
+<?php
+$this->widget('zii.widgets.grid.CGridView', array(
+    'id' => 'user_workstationsGrid',
+    'dataProvider' => Workstations::model()->search(),
+    'template' => "{items}",
+    'columns' => array(
+        array('name' => 'name', 'header' => 'Name'),
+        array('name' => 'location', 'header' => 'Location'),
+        array('class' => 'CCheckBoxColumn',
+            'id' => 'cbColumn',
+            'selectableRows' => 2,
+            'checked' => '(Workstations::model()->getWorkstations(' . $_GET['id'] . ',$data->id)==true)?(1):(0)',
+            'htmlOptions' => array("onclick" => 'getId()'),
+        ),
+        
+    // ), 
+    ),
+));
 ?>
 
-<h1>User Workstations</h1>
+<div>
+    <?php echo CHtml::submitButton('Save Changes', array('name' => 'ApproveButton', 'id' => 'btnSubmit')); ?>
 
-<?php $this->widget('zii.widgets.CListView', array(
-	'dataProvider'=>$dataProvider,
-	'itemView'=>'_view',
-)); ?>
+</div>
+<?php
+$connection = Yii::app()->db;
+$sql = "select id from workstation";
+$command = $connection->createCommand($sql);
+$row = $command->query();
+foreach ($row as $user) {
+    foreach ($user as $v) {
+        $sql = "select id from user_workstation where user=105 and workstation=$v";
+        $command = $connection->createCommand($sql);
+        $row = $command->query();
+        foreach ($row as $user) {
+            foreach ($user as $v) {
+                //   echo $v;
+            }
+        }
+    }
+}
+?>
+<?php echo CHtml::endForm(); ?>
+            

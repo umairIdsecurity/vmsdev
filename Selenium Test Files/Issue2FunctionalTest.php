@@ -7,15 +7,15 @@
  */
 
 
-require_once 'PHPUnit/Extensions/SeleniumTestCase.php';
-//require_once 'BaseFunctionalTest.php';
+//require_once 'PHPUnit/Extensions/SeleniumTestCase.php';
+require_once 'BaseFunctionalTest.php';
 
 /**
  * Description of Issue 2
  *
  * @author Jeremiah
  */
-class Issue2 extends PHPUnit_Extensions_SeleniumTestCase {
+class Issue2 extends BaseFunctionalTest {
 
     
     protected function setUp() {
@@ -194,17 +194,7 @@ Steps:
         $this->waitForPageToLoad("30000");    
     }
     
-    function updatePassword($id = NULL)
-    {
-        $this->open("http://localhost/vms/index.php?r=password/update&id=".$id);
-        $this->type("id=Password_currentpassword", "12345");
-        $this->type("name=Password[password]", "admin");
-        $this->type("name=confirmPassword", "admin");
-        $this->click("id=updateBtn");
-        $this->click("id=save");
-        $this->waitForPageToLoad("30000");
-        $this->assertEquals("Password successfully updated", $this->getText("css=div.flash-success"));
-    }
+    
 }
 
 ?>

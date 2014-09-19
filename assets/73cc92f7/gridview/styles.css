@@ -26,7 +26,7 @@
 .grid-view table.items th
 {
 	color: white;
-	background: url("bg.gif") repeat-x scroll left top white;
+	//background: url("bg.gif") repeat-x scroll left top white;
 	text-align: center;
 }
 
@@ -56,12 +56,13 @@
 
 .grid-view table.items tr.even
 {
-	background: #F8F8F8;
+	//background: #E5F1F4;
 }
 
 .grid-view table.items tr.odd
 {
-	background: #E5F1F4;
+	background: #F8F8F8;
+        
 }
 
 .grid-view table.items tr.selected
@@ -103,7 +104,10 @@
 .grid-view .summary
 {
 	margin: 0 0 5px 0;
-	text-align: right;
+	text-align: left !important;
+        color: #323232;
+        font-size: 12px;
+        font-weight: bold;
 }
 
 .grid-view .pager
@@ -123,3 +127,9 @@
 	width: 100%;
 	border: 1px solid #ccc;
 }
+.grid-view .filters{
+    background-color:#E7E7E7;
+}
+
+
+

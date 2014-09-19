@@ -1,29 +1,11 @@
-<?php
-/* @var $this UserWorkstationsController */
-/* @var $model UserWorkstations */
-
-$this->breadcrumbs=array(
-	'User Workstations'=>array('index'),
-	$model->id,
-);
-
-$this->menu=array(
-	array('label'=>'List UserWorkstations', 'url'=>array('index')),
-	array('label'=>'Create UserWorkstations', 'url'=>array('create')),
-	array('label'=>'Update UserWorkstations', 'url'=>array('update', 'id'=>$model->id)),
-	array('label'=>'Delete UserWorkstations', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->id),'confirm'=>'Are you sure you want to delete this item?')),
-	array('label'=>'Manage UserWorkstations', 'url'=>array('admin')),
-);
-?>
-
-<h1>View UserWorkstations #<?php echo $model->id; ?></h1>
-
-<?php $this->widget('zii.widgets.CDetailView', array(
-	'data'=>$model,
-	'attributes'=>array(
-		'id',
-		'user',
-		'workstation',
-		'created_by',
-	),
-)); ?>
+<div class="modal-header">
+<a class="close" data-dismiss="modal">&times;</a>
+<h3>Modal header 2</h3>
+</div>
+<div class="modal-body">
+<p>One body...</p>
+</div>
+<div class="modal-footer">
+<a class="btn btn-primary" onclick="$('.modal-body > form').submit();">Save Changes</a>
+<a class="btn" data-dismiss="modal">Close</a>
+</div>

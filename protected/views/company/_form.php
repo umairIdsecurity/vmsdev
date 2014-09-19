@@ -44,7 +44,7 @@ if ($this->action->id == 'update') {
         <tr>
             <td><?php echo $form->labelEx($model, 'Upload Company Logo'); ?></td>
             <td id="uploadRow">
-                <input type="hidden" id="Company_logo" name="Company[logo]" >
+                <input type="hidden" id="Company_logo" name="Company[logo]" value="<?php echo $model['logo'];?>">
                 <div class="companyLogoDiv" <?php
                 if ($model['logo'] == NULL) {
                     echo "style='display:none !important;'";

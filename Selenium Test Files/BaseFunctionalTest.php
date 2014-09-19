@@ -105,4 +105,20 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
         $this->assertEquals($value, $this->getEval("window.document.getElementById(\"User_company\").options[window.document.getElementById(\"User_company\").selectedIndex].text"));
     }
 
+    function addinAdministrationCompany($companyname = NULL, $companyemail = NULL) {
+        $this->waitForElementPresent("id=Company_name");
+        $this->type("id=Company_name", $companyname);
+        $this->type("id=Company_trading_name", $companyname);
+        $this->type("id=Company_contact", "Test Person");
+        $this->type("id=Company_billing_address", "123 street");
+        $this->type("id=Company_email_address", $companyemail . "@test.com");
+        $this->type("id=Company_office_number", "12345");
+        $this->type("id=Company_mobile_number", "12345");
+        $this->type("id=Company_logo", "1");
+        $this->type("id=Company_website", "http://" . $companyemail . ".com");
+        $this->waitForElementPresent("id=createBtn");
+        //sleep(100);
+        $this->click("id=createBtn");
+        $this->waitForPageToLoad("30000");
+    }
 }

@@ -176,5 +176,14 @@ class Company extends CActiveRecord {
             ),
         );
     }
+    
+    protected function afterValidate() {
+        parent::afterValidate();
+        if (!$this->hasErrors()) {
+            if ($this->logo =='') {
+                $this->logo = NULL;
+            }
+        }
+    }
 
 }

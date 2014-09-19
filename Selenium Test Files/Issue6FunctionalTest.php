@@ -13,7 +13,7 @@ require_once 'BaseFunctionalTest.php';
  *
  * @author Jeremiah
  */
-class Issue5FunctionalTest extends BaseFunctionalTest {
+class Issue6FunctionalTest extends BaseFunctionalTest {
 
     function setUp() {
         $this->setBrowser("*firefox");
@@ -27,7 +27,7 @@ class Issue5FunctionalTest extends BaseFunctionalTest {
         $this->Scenario4();
     }
 
-    /* Scenario 1 – Login as super admin and add new company
+    /* Scenario 1 – Login as super admin and add new workstation
       Expected Behavior
       -	Assert text  ’Test Company3’ in company name and display name  in search company and display name field
 

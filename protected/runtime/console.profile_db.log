@@ -28090,3 +28090,125 @@
                         FROM user_workstation 
                         LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
                         WHERE user_workstation.`user`='20' ORDER BY workstation.name)
+2014/09/19 07:40:45 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `user`)
+2014/09/19 07:40:45 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `user`)
+2014/09/19 07:40:45 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `user`)
+2014/09/19 07:40:45 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `user`)
+2014/09/19 07:40:45 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT COUNT(*) FROM `user` `t` WHERE role in (1,6,7,8,9,10) and (tenant = "17"))
+2014/09/19 07:40:45 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT COUNT(*) FROM `user` `t` WHERE role in (1,6,7,8,9,10) and (tenant = "17"))
+2014/09/19 07:40:45 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `user` `t` WHERE (is_deleted = 0) AND (role in (1,6,7,8,9,10) and (tenant = "17")) LIMIT 10)
+2014/09/19 07:40:45 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `user` `t` WHERE (is_deleted = 0) AND (role in (1,6,7,8,9,10) and (tenant = "17")) LIMIT 10)
+2014/09/19 07:40:45 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='17' ORDER BY workstation.name)
+2014/09/19 07:40:45 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='17' ORDER BY workstation.name)
+2014/09/19 07:40:45 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='18' ORDER BY workstation.name)
+2014/09/19 07:40:45 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='18' ORDER BY workstation.name)
+2014/09/19 07:40:45 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='19' ORDER BY workstation.name)
+2014/09/19 07:40:45 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='19' ORDER BY workstation.name)
+2014/09/19 07:40:45 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='20' ORDER BY workstation.name)
+2014/09/19 07:40:45 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='20' ORDER BY workstation.name)
+2014/09/19 07:40:50 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `user`)
+2014/09/19 07:40:50 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `user`)
+2014/09/19 07:40:50 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `user`)
+2014/09/19 07:40:50 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `user`)
+2014/09/19 07:40:50 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `user` `t` WHERE (is_deleted = 0) AND (LOWER(email)=?) LIMIT 1. Bound with 0='superadmin@test.com')
+2014/09/19 07:40:50 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `user` `t` WHERE (is_deleted = 0) AND (LOWER(email)=?) LIMIT 1. Bound with 0='superadmin@test.com')
+2014/09/19 07:40:51 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `user`)
+2014/09/19 07:40:51 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `user`)
+2014/09/19 07:40:51 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `user`)
+2014/09/19 07:40:51 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `user`)
+2014/09/19 07:40:51 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT COUNT(*) FROM `user` `t` WHERE role in (1,5,6,7,8,9,10) and (is_deleted=0))
+2014/09/19 07:40:51 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT COUNT(*) FROM `user` `t` WHERE role in (1,5,6,7,8,9,10) and (is_deleted=0))
+2014/09/19 07:40:51 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `user` `t` WHERE (is_deleted = 0) AND (role in (1,5,6,7,8,9,10) and (is_deleted=0)) LIMIT 10)
+2014/09/19 07:40:51 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `user` `t` WHERE (is_deleted = 0) AND (role in (1,5,6,7,8,9,10) and (is_deleted=0)) LIMIT 10)
+2014/09/19 07:40:51 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='16' ORDER BY workstation.name)
+2014/09/19 07:40:51 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='16' ORDER BY workstation.name)
+2014/09/19 07:40:51 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='17' ORDER BY workstation.name)
+2014/09/19 07:40:51 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='17' ORDER BY workstation.name)
+2014/09/19 07:40:51 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='18' ORDER BY workstation.name)
+2014/09/19 07:40:51 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='18' ORDER BY workstation.name)
+2014/09/19 07:40:51 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='19' ORDER BY workstation.name)
+2014/09/19 07:40:51 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='19' ORDER BY workstation.name)
+2014/09/19 07:40:51 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='20' ORDER BY workstation.name)
+2014/09/19 07:40:51 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='20' ORDER BY workstation.name)
+2014/09/19 07:40:51 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='21' ORDER BY workstation.name)
+2014/09/19 07:40:51 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='21' ORDER BY workstation.name)
+2014/09/19 07:40:51 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='22' ORDER BY workstation.name)
+2014/09/19 07:40:51 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT workstation.name as name
+                        FROM user_workstation 
+                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
+                        WHERE user_workstation.`user`='22' ORDER BY workstation.name)
+2014/09/19 07:40:56 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `workstation`)
+2014/09/19 07:40:56 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `workstation`)
+2014/09/19 07:40:56 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `workstation`)
+2014/09/19 07:40:56 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `workstation`)
+2014/09/19 07:40:56 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT COUNT(*) FROM `workstation` `t`)
+2014/09/19 07:40:56 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT COUNT(*) FROM `workstation` `t`)
+2014/09/19 07:40:56 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SELECT * FROM `workstation` `t` WHERE is_deleted = 0 LIMIT 10)
+2014/09/19 07:40:56 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SELECT * FROM `workstation` `t` WHERE is_deleted = 0 LIMIT 10)
+2014/09/19 07:41:28 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `workstation`)
+2014/09/19 07:41:28 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW FULL COLUMNS FROM `workstation`)
+2014/09/19 07:41:28 [profile] [system.db.CDbCommand.query] begin:system.db.CDbCommand.query(SHOW CREATE TABLE `workstation`)
+2014/09/19 07:41:28 [profile] [system.db.CDbCommand.query] end:system.db.CDbCommand.query(SHOW CREATE TABLE `workstation`)

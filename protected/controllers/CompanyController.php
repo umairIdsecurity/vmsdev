@@ -27,11 +27,15 @@ class CompanyController extends Controller {
         return array(
             array('allow', // allow all users to perform 'index' and 'view' actions
                 'actions' => array('index', 'view', 'GetCompanyList'),
-                'users' => array('*'),
+                'users' => array('@'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update'),
+                'actions' => array('create'),
                 'users' => array('@'),
+            ),
+            array('allow', // allow authenticated user to perform 'create' and 'update' actions
+                'actions' => array('update'),
+                'expression' => 'Yii::app()->controller->accessRoles("update")',
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
                 'actions' => array('admin', 'delete'),
@@ -42,7 +46,7 @@ class CompanyController extends Controller {
             ),
         );
     }
-    
+
     public function accessRoles($action) {
         $session = new CHttpSession;
         $CurrentRole = $session['role'];
@@ -54,9 +58,20 @@ class CompanyController extends Controller {
                     return true;
                 }
                 break;
+            case "update":
+                $connection = Yii::app()->db;
+                
+                $ownerQuery = "select company FROM `user` where company = '".$_GET['id']."' and id='".$session['id']."'";
+                $command = $connection->createCommand($ownerQuery);
+                $row = $command->query();
+                if ($row->rowCount !== 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+                break;
             default:
                 return false;
-              
         }
     }
 

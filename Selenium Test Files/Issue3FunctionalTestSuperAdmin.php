@@ -315,8 +315,8 @@ class Issue3FunctionalTestSuperAdmin extends BaseFunctionalTest {
       13.	Assert company field text is test company 2
       14.	Click save
       15.	Wait for page to redirect in manage users
-      16.	Type admin4@test.com in email filter
-      17.	Assert text admin4@test.com
+      16.	Type admin2@test.com in email filter
+      17.	Assert text admin2@test.com
       18.	Assert text administrator
      */
 

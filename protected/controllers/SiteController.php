@@ -150,5 +150,21 @@ class SiteController extends Controller {
         // display the login form
         $this->render('selectworkstation', array('workstations' => $aArray));
     }
+    
+    public function actionresetDb() {
+        echo 'Resetting Database';
+        $return_var = NULL;
+        $output = NULL;
+        $sql = 'mysql -u user_vms -pHFz7c9dHrmPqwNGr vms < "'.Yii::getPathOfAlias('webroot').'/Selenium Test Files/vms.sql"';
+        exec($sql, $output, $return_var);
+    }
+    
+    public function actionresetDb2() {
+        echo 'Resetting Database';
+        $return_var = NULL;
+        $output = NULL;
+        $sql = 'mysql -u user_vms -pHFz7c9dHrmPqwNGr vms < "'.Yii::getPathOfAlias('webroot').'/Selenium Test Files/vms-withData.sql"';
+        exec($sql, $output, $return_var);
+    }
 
 }

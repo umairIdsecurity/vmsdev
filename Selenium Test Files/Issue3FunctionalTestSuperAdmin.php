@@ -18,10 +18,11 @@ class Issue3FunctionalTestSuperAdmin extends BaseFunctionalTest {
     function setUp() {
         $this->setBrowser("*firefox");
         $this->setBrowserUrl("http://localhost/");
-        $this->resetDb();
+        
     }
 
     function testAll() {
+        $this->resetDb();
         $this->Scenario1();
         $this->Scenario2();
         $this->Scenario3();

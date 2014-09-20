@@ -69,7 +69,7 @@ $session = new CHttpSession;
                 <td><?php echo $form->error($model, 'tenant'); ?></td>
             </tr>
             <tr>
-                <td><?php echo $form->labelEx($model, 'tenant'); ?></td>
+                <td><?php echo $form->labelEx($model, 'tenant_agent'); ?></td>
                 <td><select id="Workstation_tenant_agent" name="Workstation[tenant_agent]">
                         <?php
                         if ($this->action->Id != 'create') {

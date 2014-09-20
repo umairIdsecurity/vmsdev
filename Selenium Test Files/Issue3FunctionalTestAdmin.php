@@ -21,11 +21,10 @@ class Issue3FunctionalTestAdmin extends BaseFunctionalTest {
     function setUp() {
         $this->setBrowser("*firefox");
         $this->setBrowserUrl("http://localhost/");
-        $this->resetDb();
+        $this->resetDbWithData();
     }
     
     function testAll() {
-        $this->createUserAdmin();
         $this->Scenario1();
         $this->Scenario2();
         $this->Scenario3();
@@ -283,33 +282,7 @@ class Issue3FunctionalTestAdmin extends BaseFunctionalTest {
         $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
     }
     
-    function createUserAdmin() {
-        $username = 'superadmin@test.com';
-        $this->login($username, '12345');
-        $this->click("link=Administration");
-        $this->waitForPageToLoad("30000");
-        $this->click("link=Manage Users");
-        $this->click("link=Add Administrator");
-        $this->waitForPageToLoad("30000");
-        $this->addUser("admin@test.com", "admin");
-        $this->addCompany("Test Company 1", "testcompany");
-        sleep(1);
-        $this->waitForElementPresent("id=submitBtn");
-        $this->click("id=submitBtn");
-        $this->click("id=submitForm");
-        $this->waitForPageToLoad("30000");
-        $this->type("css=td > input[name=\"User[first_name]\"]", "Test");
-        $this->click("//td[2]/input");
-        $this->type("//td[2]/input", "Admin");
-        $this->select("css=select[name=\"User[role]\"]", "label=Administrator");
-
-        $this->select("css=select[name=\"User[user_type]\"]", "label=Internal");
-        sleep(1);
-        $this->assertEquals("Test", $this->getText("css=tr.odd > td"));
-        $this->assertEquals("admin", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[2]"));
-        $this->assertEquals("Administrator", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[3]"));
-        $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
-    }
+    
 
 }
 

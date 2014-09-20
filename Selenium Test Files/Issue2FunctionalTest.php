@@ -21,6 +21,7 @@ class Issue2 extends BaseFunctionalTest {
         parent::setUp();
         $this->setBrowser("*firefox");
         $this->setBrowserUrl("http://localhost/vms");
+        
     }
 
     
@@ -44,6 +45,7 @@ class Issue2 extends BaseFunctionalTest {
      * *
      */
     function Scenario1() {
+        $this->resetDbWithData();
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->updatePassword('16');

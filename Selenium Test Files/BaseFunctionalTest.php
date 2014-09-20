@@ -23,15 +23,23 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
     }
 
     public function resetDb() {
-        echo 'Resetting Database\n';
+        echo 'Resetting Database';
         $return_var = NULL;
         $output = NULL;
         //make sure mysql is in your path
         $sql = 'mysql -u user_vms -pHFz7c9dHrmPqwNGr vms < "vms.sql"';
         exec($sql, $output, $return_var);
-       
     }
-//C:/xampp/htdocs/vms/Selenium Test Files/vms.sql
+    
+    public function resetDbWithData() {
+        echo 'Resetting Database';
+        $return_var = NULL;
+        $output = NULL;
+        //make sure mysql is in your path
+        $sql = 'mysql -u user_vms -pHFz7c9dHrmPqwNGr vms < "vms-withData.sql"';
+        exec($sql, $output, $return_var);
+    }
+    
     public function __destruct() {
         parent::__destruct();
     }
@@ -118,5 +126,9 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
         //sleep(100);
         $this->click("id=createBtn");
         $this->waitForPageToLoad("30000");
+    }
+    
+    function testBlank(){
+        assert(true);
     }
 }

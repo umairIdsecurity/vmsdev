@@ -38,7 +38,7 @@ class Workstation extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('name', 'required'),
+            array('name,tenant', 'required'),
             array('contact_number', 'safe'),
             array('contact_email_address', 'email'),
             array('number_of_operators, assign_kiosk', 'numerical', 'integerOnly' => true),

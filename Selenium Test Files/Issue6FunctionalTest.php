@@ -9,7 +9,7 @@
 require_once 'BaseFunctionalTest.php';
 
 /**
- * Description of Issue3FunctionalTest
+ * Description of Issue6FunctionalTest
  *
  * @author Jeremiah
  */
@@ -21,6 +21,7 @@ class Issue6FunctionalTest extends BaseFunctionalTest {
     }
 
     function testAll() {
+        $this->resetDbWithData();
         $this->Scenario1();
         $this->Scenario2();
         $this->Scenario3();
@@ -30,7 +31,7 @@ class Issue6FunctionalTest extends BaseFunctionalTest {
     /* Scenario 1 – Login as super admin and add new workstation
 
       Expected Behavior
-      -	Assert text ‘Workstaion 2’ in name field in Search Company filters.
+      -	Assert text ‘Workstation 2’ in name field in Search Company filters.
       Steps:
       1.	Go to localhost/vms
       2.	Type superadmin@test.com in username field
@@ -85,7 +86,7 @@ class Issue6FunctionalTest extends BaseFunctionalTest {
       4.	Click Login
       5.	Click ‘Administration’
       6.	Click ‘Manage workstations’
-      7.     Click ‘View companies’
+      7.        Click ‘View companies’
       8.	Type Workstation 2 in name field and workstation2@test.com
       9.	Click edit
       9.	Type office updated in location field
@@ -130,14 +131,12 @@ class Issue6FunctionalTest extends BaseFunctionalTest {
       4.	Click Login
       5.	Click ‘Administration’
       6.	Click ‘Manage workstations’
-      7.     Click ‘Add company’
+      7.        Click ‘Add company’
       8.	Click save
       9.	Assert text name cannot be blank
       9.	Type 123 in email field
       10.	Assert text contact email address is not a valid email address
-
-
-     */
+*/
 
     function Scenario3() {
         $username = 'superadmin@test.com';
@@ -150,10 +149,11 @@ class Issue6FunctionalTest extends BaseFunctionalTest {
         $this->click("name=yt0");
         $this->waitForPageToLoad("30000");
         $this->assertEquals("Name cannot be blank.", $this->getText("css=div.errorSummary > ul > li"));
+        $this->assertEquals("Tenant cannot be blank.", $this->getText("//form[@id='workstations-form']/div/ul/li[2]"));
         $this->type("id=Workstation_contact_email_address", "123");
         $this->click("name=yt0");
         $this->waitForPageToLoad("30000");
-        $this->assertEquals("Contact Email Address is not a valid email address.", $this->getText("//form[@id='workstations-form']/div/ul/li[2]"));
+        $this->assertEquals("Contact Email Address is not a valid email address.", $this->getText("//form[@id='workstations-form']/div/ul/li[3]"));
     }
     
     /*Scenario 4 – Login as admin and add workstation

@@ -24,12 +24,13 @@ class Issue9FunctionalTest extends BaseFunctionalTest {
         $this->Scenario1();
         $this->Scenario2();
         $this->Scenario3();
+        $this->Scenario4();
     }
 
-    /* Scenario 1 – Login as admin and view and update organization settings .
+    /* Scenario 1 – Login as admin and view and update organization settings.
       Expected Behavior
-      -	Assert text  ’Test company 1’ in company name field
-      -	Assert text  ’Organization settings updated’ in company name field
+      -	Assert text ’Test Company 1’ in company name field
+      -	Assert text ’Organization settings updated’ in company name field
 
       Steps:
       1.	Go to localhost/vms
@@ -37,14 +38,15 @@ class Issue9FunctionalTest extends BaseFunctionalTest {
       3.	Type 12345 in password field
       4.	Click Login
       5.	Click Administrator
-      6.        Click organization settings
-      6.        Assert Text 'Test company 1 in email field'
-      7.        Type Test company 1 - update in display name field
-      8.       Click save wait for page to reload
-      9.         Asser text organization settings updated
-      10.       assert text lastname 'test company 1 - update'
-      11.        Click view license details.
-      12.        Assert text 'this is a sample license detail'.
+      6.     Click organization settings
+      7. 	Assert Text 'Test Company 1 in email field'
+      8.	Type Test Company 1 - update in display name field
+      9.     Click save wait for page to reload
+      10.   Asser text organization settings updated
+      11.   Assert text last name 'test company 1 - update'
+      12.   Click view license details.
+      13.   Assert text 'this is a sample license detail'.
+
      */
 
     function Scenario1() {
@@ -63,26 +65,27 @@ class Issue9FunctionalTest extends BaseFunctionalTest {
 
     /* Scenario 2 – Login as admin and check for validation errors
       Expected Behavior
-      -	Assert text  company name cannot be blank
-      - Assert text email address is not valid
-      - Assert text website is not valid URL
+      -	Assert text company name cannot be blank
+      - 	Assert text email address is not valid
+      - 	Assert text website is not valid URL
 
       Steps:
       1.	Go to localhost/vms
       2.	Type superadmin@test.com in username field
       3.	Type 12345 in password field
       4.	Click Login
-      7.        Click 'Adminsitration'
-      8.      Click organization settings
-      9.        Empty fields
-      10.       Click Save
-      11.        Assert text company name cannot be blank
-      12.        type 123 in email field
-      13.        Click save
-      14.        Assert text email addess is not valid.
-      12.        type 123 in website url field
-      13.        Click save
-      14.        Assert text website is not valid url.
+      5.     Click 'Administration'
+      6.     Click organization settings
+      7.     Empty fields
+      8.     Click Save
+      9.      Assert text company name cannot be blank
+      10.    Type 123 in email field
+      11.        Click save
+      12.        Assert text email address is not valid.
+      13.        type 123 in website url field
+      14.        Click save
+      15.        Assert text website is not valid url.
+
      */
 
     function Scenario2() {
@@ -118,6 +121,7 @@ class Issue9FunctionalTest extends BaseFunctionalTest {
       4.	Click Login
       5.	Go to http://localhost/vms/index.php?r=company/update/&id=2
       6.        Assert Text you are not authorized this action.
+
      */
 
     function Scenario3() {
@@ -130,45 +134,50 @@ class Issue9FunctionalTest extends BaseFunctionalTest {
     /*
       Scenario 4 – Login as super admin and update license details
       Expected Behavior
-      -	Assert text you are not authorized to perform this action.
+      -	Assert text 'this is a sample license details update.
 
       Steps:
       1.	Go to localhost/vms
-      2.	Type admin@test.com in username field
+      2.	Type superadmin@test.com in username field
       3.	Type 12345 in password field
       4.	Click Login
-      5.	click manage companies
-      6.         click view companies
-      7.         type test company 1 in company name and click edit
-      8.         wait for page to load and click license details
-      9.         wait for page to load and  type 'this is a sample license details update'
-      10.        click save
-      11.        wait for page to load and type test company 1 in company name field
-      12.        click edit
-      13.        click license details and assert text 'this is a sample license details update'
+      5.	Click manage companies
+      6.     Click view companies
+      7.     Type Test Company 1 in company name and click edit
+      8.      Wait for page to load and click license details
+      9.      wait for page to load and  type 'this is a sample license details update'
+      10.    Click save
+      11.    Wait for page to load and type Test Company 1 in company name field
+      12.    Click edit
+      13.     Click license details and assert text 'this is a sample license details update'
+
      */
 
     function Scenario4() {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
-        $this->click("css=a > span");
-        $this->click("css=li.even > a > span");
+        $this->click("link=Administration");
+        $this->click("link=Manage Companies");
+        $this->click("link=View Companies");
         $this->waitForPageToLoad("30000");
         $this->type("css=td > input[name=\"Company[name]\"]", "Test Company 1");
+        sleep(1);
         $this->click("link=Edit");
         $this->waitForPageToLoad("30000");
         $this->click("css=button.yiiBtn");
         $this->waitForPageToLoad("30000");
-        $this->click("css=a.redactor_btn_fontcolor > span");
-        $this->click("css=a.redactor_btn_horizontalrule > span");
+        $this->click("css=a.redactor_btn_html > span");
+        $this->type("id=LicenseDetails_description", "This is a sample license details update");
         $this->click("name=yt0");
         $this->waitForPageToLoad("30000");
         $this->type("css=td > input[name=\"Company[name]\"]", "Test Company 1");
+        sleep(1);
         $this->click("link=Edit");
         $this->waitForPageToLoad("30000");
         $this->click("css=button.yiiBtn");
         $this->waitForPageToLoad("30000");
-        $this->assertTrue($this->isElementPresent("css=html"));
+        $this->click("css=a.redactor_btn_html > span");
+        $this->assertEquals("This is a sample license details update", $this->getText("id=LicenseDetails_description"));
     }
 
 }

@@ -98,6 +98,8 @@ class Issue8FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Company_email_address", "testcompany4@test.com");
         $this->type("id=Company_office_number", "12345");
         $this->type("id=Company_mobile_number", "12345");
+        $this->type("id=Company_logo", "2");
+        sleep(20);
         $this->type("//input[@type='file']", "C:\\xampp\\htdocs\\vms\\Selenium Test Files\\images\\Company-Icon.png");
         $this->type("id=Company_website", "http://testcompany4.com");
         $this->waitForElementPresent("id=createBtn");
@@ -116,31 +118,7 @@ class Issue8FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Test Company 4", $this->getText("//div[@id='company-grid']/table/tbody/tr/td[2]"));
     }
 
-    /*
-      Scenario 3 – Login as super admin and check for validation errors
-      Expected Behavior
-      -	Assert text  please fix the following input errors
-     * - Assert Email address is not valid
-     * - Assert website is not a valid url
-     * - assert company name cannot be blank
-
-      Steps:
-      1.	Go to localhost/vms
-      2.	Type superadmin@test.com in username field
-      3.	Type 12345 in password field
-      4.	Click Login
-      5.	Click ‘Administration’
-      6.	Click ‘Manage Companies’
-      7.        Click 'add company'
-      7.	click submit
-      8.	assert please fix the following input errors
-      9.	type 123 in email field
-      10.	assert email address is not valid
-      11.	Click save
-      12.	type 123 in website
-      13.	assert website is not a valid url
-
-     */
+    
 }
 
 ?>

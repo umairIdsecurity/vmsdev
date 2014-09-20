@@ -72,8 +72,7 @@ class UserController extends Controller {
                     $ownerCondition = "WHERE tenant = '" . $session['tenant'] . "' ";
                 } else if ($session['role'] == Roles::ROLE_AGENT_ADMIN) {
                     $ownerCondition = "WHERE `tenant_agent`='" . $session['tenant_agent'] . "'";
-                    //   $ownerCondition = "WHERE tenant = '" . $session['tenant'] . "' AND `tenant_agent`='" . $session['tenant_agent'] . "'";
-                }
+                 }
                 $ownerQuery = "select * FROM `user`
                             " . $ownerCondition . " and id ='" . $_GET['id'] . "' 
                             ";
@@ -121,7 +120,7 @@ class UserController extends Controller {
             $model->attributes = $_POST['User'];
             if ($model->save()) {
                 $connection = Yii::app()->db;
-                if ($_POST['User']['role'] == Roles::ROLE_OPERATOR) {
+                if ($_POST['User']['role'] == Roles::ROLE_OPERATOR || $_POST['User']['role'] == Roles::ROLE_AGENT_OPERATOR) {
                     $command = $connection->createCommand('INSERT INTO `user_workstation` '
                             . '(`user`, `workstation`, `created_by`) VALUES (' . $model->id . ',' . $_POST['User']['workstation'] . ',' . $session['id'] . ' )');
                     $command->query();

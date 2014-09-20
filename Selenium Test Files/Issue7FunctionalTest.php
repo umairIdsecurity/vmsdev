@@ -29,7 +29,7 @@ class Issue7FunctionalTest extends BaseFunctionalTest {
 
     /* Scenario 1 – Login as super admin and view and update profile
       Expected Behavior
-      -	Assert text  ’superadmin@test.com’ in email field
+      -	Assert text ‘test - update’ in last name field
 
       Steps:
       1.	Go to localhost/vms
@@ -37,12 +37,13 @@ class Issue7FunctionalTest extends BaseFunctionalTest {
       3.	Type 12345 in password field
       4.	Click Login
       5.	Click Profile
-      6.        Assert Text 'superadmin@test.com in email field'
-      7.        Assert company field disabled
-      8.        Assert First name, last name, email, and contact number not disabled
-      9.        Type test - update in lastname field
-      10.       Click save wait for page to reload and go to my profile
-      11.       assert text lastname 'test - update'
+      6.      Assert Text 'superadmin@test.com in email field'
+      7.      Assert company field disabled
+      8.      Assert First name, last name, email, and contact number not disabled
+      9.      Type test - update in last name field
+      10.    Click save wait for page to reload and go to my profile
+      11.    Assert text last name 'test - update'
+
      */
 
     function Scenario1() {
@@ -168,7 +169,6 @@ class Issue7FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("staffmember@test.com", $this->getEval("window.document.getElementById(\"User_email\").value"));
         $this->assertFalse($this->isElementPresent("id='User_contact_number'"));
         $this->assertEquals("123456", $this->getEval("window.document.getElementById(\"User_contact_number\").value"));
-        
     }
 
 }

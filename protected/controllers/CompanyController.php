@@ -60,7 +60,9 @@ class CompanyController extends Controller {
                 break;
             case "update":
                 $connection = Yii::app()->db;
-                
+                if ($session['role'] == Roles::ROLE_SUPERADMIN){
+                    return true;
+                }else {
                 $ownerQuery = "select company FROM `user` where company = '".$_GET['id']."' and id='".$session['id']."'";
                 $command = $connection->createCommand($ownerQuery);
                 $row = $command->query();
@@ -68,7 +70,7 @@ class CompanyController extends Controller {
                     return true;
                 } else {
                     return false;
-                }
+                }}
                 break;
             default:
                 return false;

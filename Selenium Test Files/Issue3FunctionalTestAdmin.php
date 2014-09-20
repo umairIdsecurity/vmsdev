@@ -8,6 +8,8 @@
 
 require_once 'BaseFunctionalTest.php';
 
+include 'Issue3FunctionalTestSuperAdmin.php';
+$Issue3FunctionalTestSuperAdmin = new Issue3FunctionalTestSuperAdmin();
 /**
  * Description of Issue3FunctionalTest
  *

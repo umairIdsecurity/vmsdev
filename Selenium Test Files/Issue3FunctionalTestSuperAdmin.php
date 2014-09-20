@@ -50,7 +50,7 @@ class Issue3FunctionalTestSuperAdmin extends BaseFunctionalTest {
       13.	Assert text administrator
      */
 
-    function Scenario1() {
+    public function Scenario1() {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->click("link=Administration");
@@ -100,7 +100,7 @@ class Issue3FunctionalTestSuperAdmin extends BaseFunctionalTest {
 
      */
 
-    function Scenario2() {
+    public function Scenario2() {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->click("link=Administration");
@@ -150,7 +150,7 @@ class Issue3FunctionalTestSuperAdmin extends BaseFunctionalTest {
 
      */
 
-    function Scenario3() {
+    public function Scenario3() {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->click("link=Administration");
@@ -204,7 +204,7 @@ class Issue3FunctionalTestSuperAdmin extends BaseFunctionalTest {
       17.	Assert text agent operator
      */
 
-    function Scenario4() {
+    public function Scenario4() {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->click("link=Administration");
@@ -262,7 +262,7 @@ class Issue3FunctionalTestSuperAdmin extends BaseFunctionalTest {
       16.	Assert text staff member
      */
 
-    function Scenario5() {
+    public function Scenario5() {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->click("link=Administration");
@@ -319,7 +319,7 @@ class Issue3FunctionalTestSuperAdmin extends BaseFunctionalTest {
       18.	Assert text administrator
      */
 
-    function Scenario6() {
+    public function Scenario6() {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->click("link=Administration");

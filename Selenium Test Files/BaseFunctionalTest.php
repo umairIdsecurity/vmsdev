@@ -20,7 +20,6 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
     protected function setUp() {
 
         parent::setUp();
-        $this->resetDb();
     }
 
     public function resetDb() {
@@ -35,7 +34,6 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
 //C:/xampp/htdocs/vms/Selenium Test Files/vms.sql
     public function __destruct() {
         parent::__destruct();
-        $this->resetDb();
     }
 
     function login($username = NULL, $password = NULL) {
@@ -57,7 +55,7 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
         $this->click("id=updateBtn");
         $this->click("id=save");
         $this->waitForPageToLoad("30000");
-        $this->assertEquals("Password successfully updated", $this->getText("css=div.flash-success"));
+       
     }
 
     function addUser($email = NULL, $lastname = NULL) {

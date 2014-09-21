@@ -20,6 +20,8 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
     protected function setUp() {
 
         parent::setUp();
+        $this->setBrowser("*firefox");
+        $this->setBrowserUrl("http://cvms.identitysecurity.info/");
     }
 
     public function resetDb() {
@@ -129,6 +131,7 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
     }
     
     function testBlank(){
-        assert(true);
+        $this->setBrowser("*firefox");
+        $this->setBrowserUrl("http://cvms.identitysecurity.info/");
     }
 }

@@ -25,30 +25,9 @@ SET time_zone = "+00:00";
 --
 -- Table structure for table `company`
 --
-ALTER TABLE `company` DROP FOREIGN KEY company_ibfk_1;
-ALTER TABLE `company` DROP FOREIGN KEY company_ibfk_2;
-ALTER TABLE `company` DROP FOREIGN KEY company_ibfk_3;
-ALTER TABLE `company` DROP FOREIGN KEY company_ibfk_4;
 
-ALTER TABLE `roles` DROP FOREIGN KEY roles_ibfk_1;
 
-ALTER TABLE `user` DROP FOREIGN KEY user_ibfk_1;
-ALTER TABLE `user` DROP FOREIGN KEY user_ibfk_2;
-ALTER TABLE `user` DROP FOREIGN KEY user_ibfk_3;
-ALTER TABLE `user` DROP FOREIGN KEY user_ibfk_4;
-ALTER TABLE `user` DROP FOREIGN KEY user_ibfk_5;
-ALTER TABLE `user` DROP FOREIGN KEY user_ibfk_6;
-ALTER TABLE `user` DROP FOREIGN KEY user_ibfk_7;
-
-ALTER TABLE `user_status` DROP FOREIGN KEY user_status_ibfk_1;
-ALTER TABLE `user_type` DROP FOREIGN KEY user_type_ibfk_1;
-
-ALTER TABLE `user_workstation` DROP FOREIGN KEY user_workstation_ibfk_1;
-ALTER TABLE `user_workstation` DROP FOREIGN KEY user_workstation_ibfk_2;
-ALTER TABLE `user_workstation` DROP FOREIGN KEY user_workstation_ibfk_3;
-
-ALTER TABLE `workstation` DROP FOREIGN KEY workstation_ibfk_1;
-
+SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `company`;
 DROP TABLE IF EXISTS `photo`;
 DROP TABLE IF EXISTS `roles`;
@@ -58,6 +37,7 @@ DROP TABLE IF EXISTS `user_type`;
 DROP TABLE IF EXISTS `user_workstation`;
 DROP TABLE IF EXISTS `workstation`;
 DROP TABLE IF EXISTS `license_details`;
+SET FOREIGN_KEY_CHECKS = 1;
 
 
 CREATE TABLE IF NOT EXISTS `company` (

@@ -68,7 +68,7 @@ $user_role = $session['role'];
                                     <p>My Profile</p>
                                 </a>
                             </li>
-                            <li><a href="<?php echo Yii::app()->createUrl("/site/contact"); ?>">
+                            <li><a href="#">
                                     <p>Contact Support</p>
                                 </a>
                             </li>

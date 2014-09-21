@@ -136,6 +136,7 @@ class UserWorkstationsController extends Controller {
                     $row = $command->query();
                 }
             }
+            Yii::app()->user->setFlash('success','Workstation updated.');
         }
         $this->render('index', array());
     }

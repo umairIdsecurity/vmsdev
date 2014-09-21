@@ -1,19 +1,20 @@
 
 <?php echo CHtml::beginForm(); ?>
 <?php
-//$uw = UserWorkstations::model()->search(); 
-// echo $model->user;
+    foreach(Yii::app()->user->getFlashes() as $key => $message) {
+        echo '<div class="flash-' . $key . '">' . $message . "</div>\n";
+    }
 ?>
 <input type='hidden' value='<?php echo $_GET['id']; ?>' name='userId'>
 <?php
 foreach (Yii::app()->user->getFlashes() as $key => $message) {
-    echo '<div class="flash-' . $key . '">' . $message . "</div>\n";
+    echo '<div class="flash-' . $key . '" style="width:450px !important;">' . $message . "</div>\n";
 }
 ?>
 <?php
 $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'user_workstationsGrid',
-    'dataProvider' => Workstations::model()->search(),
+    'dataProvider' => Workstation::model()->search(),
     'template' => "{items}",
     'columns' => array(
         array('name' => 'name', 'header' => 'Name'),
@@ -21,7 +22,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array('class' => 'CCheckBoxColumn',
             'id' => 'cbColumn',
             'selectableRows' => 2,
-            'checked' => '(Workstations::model()->getWorkstations(' . $_GET['id'] . ',$data->id)==true)?(1):(0)',
+            'checked' => '(Workstation::model()->getWorkstations(' . $_GET['id'] . ',$data->id)==true)?(1):(0)',
             'htmlOptions' => array("onclick" => 'getId()'),
         ),
         

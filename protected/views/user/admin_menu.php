@@ -51,7 +51,7 @@ switch ($session['role']) {
                             <li><a href='<?php echo Yii::app()->createUrl('user/create/&role=6'); ?>'><span>Add Agent Administrator</span></a></li>
                             <li><a href='<?php echo Yii::app()->createUrl('user/create/&role=8'); ?>'><span>Add Operator</span></a></li>
                             <li><a href='<?php echo Yii::app()->createUrl('user/create/&role=7'); ?>'><span>Add Agent Operator</span></a></li>
-
+                            
         <?php
         break;
     case "1":
@@ -59,6 +59,7 @@ switch ($session['role']) {
                             <li><a href='<?php echo Yii::app()->createUrl('user/create/&role=1'); ?>'><span>Add Administrator</span></a></li>
                             <li><a href='<?php echo Yii::app()->createUrl('user/create/&role=6'); ?>'><span>Add Agent Administrator</span></a></li>
                             <li><a href='<?php echo Yii::app()->createUrl('user/create/&role=8'); ?>'><span>Add Operator</span></a></li>
+                            <li><a href='<?php echo Yii::app()->createUrl('user/systemaccessrules'); ?>'><span>Set Access Rules</span></a></li>
 
         <?php
         break;
@@ -66,18 +67,19 @@ switch ($session['role']) {
     case "6":
         ?>
                             <li><a href='<?php echo Yii::app()->createUrl('user/create/&role=7'); ?>'><span>Add Agent Operator</span></a></li>
-                            <?php
+                            <li><a href='<?php echo Yii::app()->createUrl('user/systemaccessrules'); ?>'><span>Set Access Rules</span></a></li>
+                                <?php
                             break;
                         default:
                             echo "";
                             break;
                     };
                     ?>
-                    <li><a href='<?php echo Yii::app()->createUrl('user/systemaccessrules'); ?>'><span>Set Access Rules</span></a></li>
+                    
                 </ul>
             </li>
-            <li class=''><a href='<?php echo Yii::app()->createUrl(''); ?>' ><span>Manage Visitor Records</span></a></li>
-            <li class=''><a href='<?php echo Yii::app()->createUrl(''); ?>' ><span>Active Directory</span></a></li>
+            <li class=''><a href='#' ><span>Manage Visitor Records</span></a></li>
+            <li class=''><a href='#' ><span>Active Directory</span></a></li>
 
             <li class=''><a href='#'><span>Reports</span></a></li>
         </ul>

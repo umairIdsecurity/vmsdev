@@ -100,11 +100,9 @@ class Issue8FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Company_office_number", "12345");
         $this->type("id=Company_mobile_number", "12345");
         $this->type("id=Company_logo", "2");
-        sleep(20);
         $this->type("//input[@type='file']", "C:\\xampp\\htdocs\\vms\\Selenium Test Files\\images\\Company-Icon.png");
         $this->type("id=Company_website", "http://testcompany4.com");
         $this->waitForElementPresent("id=createBtn");
-        //sleep(100);
         $this->click("id=createBtn");
         $this->waitForPageToLoad("30000");
         $this->assertTrue($this->isElementPresent("css=div.flash-success"));

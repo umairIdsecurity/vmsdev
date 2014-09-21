@@ -1,9 +1,11 @@
 <?php
+
 $session = new CHttpSession;
 Yii::app()->bootstrap->register();
 ?>
 <?php
 $cs = Yii::app()->clientScript;
+
 $cs->registerCoreScript('jquery');
 $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/script-sidebar.js');
 //$cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.min.js');

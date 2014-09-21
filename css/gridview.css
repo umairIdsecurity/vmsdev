@@ -3,44 +3,6 @@
 	background:url(loading.gif) no-repeat;
 }
 
-.grid-view
-{
-	padding: 15px 0;
-}
-
-.grid-view table.items
-{
-	background: white;
-	border-collapse: collapse;
-	width: 100%;
-	border: 1px #D0E3EF solid;
-}
-
-.grid-view table.items th, .grid-view table.items td
-{
-	font-size: 0.9em;
-	border: 1px white solid;
-	padding: 0.3em;
-}
-
-.grid-view table.items th
-{
-	color: white;
-	background: url("bg.gif") repeat-x scroll left top white;
-	text-align: center;
-}
-
-.grid-view table.items th a
-{
-	color: #EEE;
-	font-weight: bold;
-	text-decoration: none;
-}
-
-.grid-view table.items th a:hover
-{
-	color: #FFF;
-}
 
 .grid-view table.items th a.asc
 {
@@ -57,11 +19,6 @@
 .grid-view table.items tr.even
 {
 	background: #F8F8F8;
-}
-
-.grid-view table.items tr.odd
-{
-	background: blue;
 }
 
 .grid-view table.items tr.selected
@@ -122,4 +79,55 @@
 {
 	width: 100%;
 	border: 1px solid #ccc;
+}
+
+
+
+.grid-view table .items th,table th,.grid-view table.items th a{
+    background-color: #FBFBFB !important;
+    background-image:none !important;
+    background-repeat: repeat-x;
+    //  box-shadow: 0 1px 0 #FFFFFF inset;
+    list-style: none outside none;
+    //margin: 0 0 18px;
+    padding: 4px;
+    position: relative; 
+    color:#323232 !important;
+    text-decoration: none;
+    font-weight:bold;
+    text-align:center;
+    padding:6px;
+    color:#323232 !important;
+    font-size:12px;
+    
+    
+}
+
+.grid-view{
+    padding:0 !important;
+}
+
+.grid-view td a{
+    padding:3px;
+    display:block;
+    font-size:10px;
+    margin-bottom:2px;
+}
+
+.grid-view table td{
+    border-collapse: collapse;
+    border:1px solid white;
+    padding:5px !important;
+}
+
+.grid-view .filters{
+    background-color: #E7E7E7 !important;
+}
+
+.filters select[name="User[role]"]{
+    width:162px !important;
+}
+
+.filters select[name="User[user_type]"]{
+    width:90px !important;
 }

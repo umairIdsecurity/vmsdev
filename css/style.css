@@ -311,3 +311,27 @@ nav.navigation ul li:last-child.active
 .update a{
     margin-bottom:5px !important;
 }
+
+
+.grid-view table.items th,table th,.grid-view table.items th a{
+    background-color: #FBFBFB;
+    background-image:none !important;
+    background-repeat: repeat-x;
+    //  box-shadow: 0 1px 0 #FFFFFF inset;
+    list-style: none outside none;
+    //margin: 0 0 18px;
+    padding: 4px;
+    position: relative; 
+    color:#323232 !important;
+}
+
+.grid-view{
+    padding:0 !important;
+}
+
+.grid-view td a{
+    padding:3px;
+    display:block;
+    font-size:10px;
+    margin-bottom:2px;
+}

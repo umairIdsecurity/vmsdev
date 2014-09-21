@@ -40,6 +40,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
            
             <li class='has-sub'><a href='<?php echo Yii::app()->createUrl('user/admin'); ?>'><span>Manage Users</span></a>
                 <ul>
+                    <li><a href='<?php echo Yii::app()->createUrl('user/admin'); ?>'><span>View Users</span></a></li>
                     <li><a href='<?php echo Yii::app()->createUrl('user/create'); ?>'><span>Add User</span></a></li>
 
 <?php

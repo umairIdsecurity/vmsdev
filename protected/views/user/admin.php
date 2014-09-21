@@ -67,7 +67,8 @@ $this->widget('zii.widgets.grid.CGridView', array(
                     'label' => 'Delete', // text label of the button
                     // 'url' => 'CHtml::normalizeUrl(array("dashboard/mail/id/"))', //Your URL According to your wish
                     'imageUrl' => false, // image URL of the button. If not set or false, a text link is used, The image must be 16X16 pixels
-                ),
+                    'visible'=>'$data->id != 16',
+                    ),
             ),
         ),
     ),

@@ -45,7 +45,7 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
     }
 
     function login($username = NULL, $password = NULL) {
-        $this->open("http://localhost/vms/index.php?r=site/login");
+        $this->open("http://cvms.identitysecurity.info/index.php?r=site/login");
 
         $this->waitForPageToLoad("30000");
         $this->type("id=LoginForm_username", $username);
@@ -56,7 +56,7 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
     }
 
     function updatePassword($id = NULL) {
-        $this->open("http://localhost/vms/index.php?r=password/update&id=" . $id);
+        $this->open("http://cvms.identitysecurity.info/index.php?r=password/update&id=" . $id);
         $this->type("id=Password_currentpassword", "12345");
         $this->type("name=Password[password]", "admin");
         $this->type("name=confirmPassword", "admin");

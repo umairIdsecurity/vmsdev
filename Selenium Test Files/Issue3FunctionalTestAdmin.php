@@ -20,7 +20,7 @@ class Issue3FunctionalTestAdmin extends BaseFunctionalTest {
     
     function setUp() {
         $this->setBrowser("*firefox");
-        $this->setBrowserUrl("http://localhost/");
+        $this->setBrowserUrl("http://cvms.identitysecurity.info");
         $this->resetDbWithData();
     }
     

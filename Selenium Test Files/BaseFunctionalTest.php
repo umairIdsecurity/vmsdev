@@ -25,21 +25,13 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
     }
 
     public function resetDb() {
-        echo 'Resetting Database';
-        $return_var = NULL;
-        $output = NULL;
-        //make sure mysql is in your path
-        $sql = 'mysql -u user_vms -pHFz7c9dHrmPqwNGr vms < "vms.sql"';
-        exec($sql, $output, $return_var);
+        $this->open("http://cvms.identitysecurity.info/index.php?r=site/resetDb");
+        $this->assertEquals("Tables imported successfully", $this->getText("css=body"));
     }
     
     public function resetDbWithData() {
-        echo 'Resetting Database';
-        $return_var = NULL;
-        $output = NULL;
-        //make sure mysql is in your path
-        $sql = 'mysql -u user_vms -pHFz7c9dHrmPqwNGr vms < "vms-withData.sql"';
-        exec($sql, $output, $return_var);
+        $this->open("http://cvms.identitysecurity.info/index.php?r=site/resetDb2");
+        $this->assertEquals("Tables imported successfully", $this->getText("css=body"));
     }
     
     public function __destruct() {

@@ -125,7 +125,7 @@ class Issue2 extends BaseFunctionalTest {
             } catch (Exception $e) {
                 
             }
-            sleep(1);
+            sleep(5);
         }
 
         $this->assertEquals("Current password does not match password in your account.", $this->getText("css=div.flash-error"));
@@ -169,7 +169,7 @@ class Issue2 extends BaseFunctionalTest {
             } catch (Exception $e) {
                 
             }
-            sleep(1);
+            sleep(5);
         }
 
         $this->assertEquals("Please fill in required fields", $this->getText("css=div.flash-error"));
@@ -185,7 +185,7 @@ class Issue2 extends BaseFunctionalTest {
             } catch (Exception $e) {
                 
             }
-            sleep(1);
+            sleep(5);
         }
 
         $this->assertEquals("New Password does not match with Repeat New Password.", $this->getText("//form[@id='password-form']/table/tbody/tr[4]/td/div"));
@@ -218,7 +218,7 @@ class Issue2 extends BaseFunctionalTest {
             } catch (Exception $e) {
                 
             }
-            sleep(1);
+            sleep(5);
         }
 
         $this->assertEquals("You are not authorized to perform this action.", $this->getText("css=div.error"));

@@ -70,7 +70,7 @@ class Issue3FunctionalTestAgentAdmin extends BaseFunctionalTest {
         $this->click("//td[2]/input");
         $this->type("//td[2]/input", "agentoperator2");
         $this->select("css=select[name=\"User[role]\"]", "label=Agent Operator");
-        sleep(1);
+        sleep(5);
         $this->assertEquals("Test", $this->getText("css=tr.odd > td"));
         $this->assertEquals("agentoperator2", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[2]"));
         
@@ -117,7 +117,7 @@ class Issue3FunctionalTestAgentAdmin extends BaseFunctionalTest {
         $this->click("//td[2]/input");
         $this->type("//td[2]/input", "staffmember3");
         $this->select("css=select[name=\"User[role]\"]", "label=Staff Member");
-        sleep(1);
+        sleep(5);
         $this->assertEquals("Test", $this->getText("css=tr.odd > td"));
         $this->assertEquals("staffmember3", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[2]"));
         $this->assertEquals("Staff Member", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[3]"));

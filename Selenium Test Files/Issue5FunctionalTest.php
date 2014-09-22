@@ -60,12 +60,13 @@ class Issue5FunctionalTest extends BaseFunctionalTest {
         $this->assertTrue($this->isElementPresent("css=div.flash-success"));
         $this->click("link=Manage Companies");
         $this->click("link=View Companies");
-        sleep(1);
+        sleep(5);
         $this->type("css=td > input[name=\"Company[name]\"]", "Test Company 3");
         $this->type("xpath=(//input[@name='Company[trading_name]'])[2]", "Test Company 3");
-        sleep(1);
+        sleep(5);
 
         $this->assertEquals("Test Company 3", $this->getText("css=tr.odd > td"));
+        $this->waitForElementPresent("//div[@id='company-grid']/table/tbody/tr/td[2]");
         $this->assertEquals("Test Company 3", $this->getText("//div[@id='company-grid']/table/tbody/tr/td[2]"));
     }
 
@@ -97,7 +98,7 @@ class Issue5FunctionalTest extends BaseFunctionalTest {
         $this->waitForPageToLoad("30000");
         $this->type("css=td > input[name=\"Company[name]\"]", "Test Company 3");
         $this->type("xpath=(//input[@name='Company[trading_name]'])[2]", "Test Company 3");
-        sleep(1);
+        sleep(5);
         $this->click("link=Edit");
         $this->waitForPageToLoad("30000");
         $this->type("id=Company_trading_name", "Test Company 3 - update");
@@ -109,7 +110,7 @@ class Issue5FunctionalTest extends BaseFunctionalTest {
         $this->waitForPageToLoad("30000");
         $this->type("css=td > input[name=\"Company[name]\"]", "Test Company 3");
         $this->type("xpath=(//input[@name='Company[trading_name]'])[2]", "Test Company 3");
-        sleep(1);
+        sleep(5);
         $this->assertEquals("Test Company 3", $this->getText("css=tr.odd > td"));
         $this->assertEquals("Test Company 3 - update", $this->getText("//div[@id='company-grid']/table/tbody/tr/td[2]"));
     }

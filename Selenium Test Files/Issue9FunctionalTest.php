@@ -162,7 +162,7 @@ class Issue9FunctionalTest extends BaseFunctionalTest {
         $this->click("link=View Companies");
         $this->waitForPageToLoad("30000");
         $this->type("css=td > input[name=\"Company[name]\"]", "Test Company 1");
-        sleep(1);
+        sleep(5);
         $this->click("link=Edit");
         $this->waitForPageToLoad("30000");
         $this->click("css=button.yiiBtn");
@@ -172,7 +172,7 @@ class Issue9FunctionalTest extends BaseFunctionalTest {
         $this->click("name=yt0");
         $this->waitForPageToLoad("30000");
         $this->type("css=td > input[name=\"Company[name]\"]", "Test Company 1");
-        sleep(1);
+        sleep(5);
         $this->click("link=Edit");
         $this->waitForPageToLoad("30000");
         $this->click("css=button.yiiBtn");

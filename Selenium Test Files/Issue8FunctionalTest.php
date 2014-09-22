@@ -108,10 +108,10 @@ class Issue8FunctionalTest extends BaseFunctionalTest {
         $this->assertTrue($this->isElementPresent("css=div.flash-success"));
         $this->click("link=Manage Companies");
         $this->click("link=View Companies");
-        sleep(1);
+        sleep(5);
         $this->type("css=td > input[name=\"Company[name]\"]", "Test Company 4");
         $this->type("xpath=(//input[@name='Company[trading_name]'])[2]", "Test Company 4");
-        sleep(1);
+        sleep(5);
 
         $this->assertEquals("Test Company 4", $this->getText("css=tr.odd > td"));
         $this->assertEquals("Test Company 4", $this->getText("//div[@id='company-grid']/table/tbody/tr/td[2]"));

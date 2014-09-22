@@ -69,8 +69,9 @@ class Issue6FunctionalTest extends BaseFunctionalTest {
         $this->waitForPageToLoad("30000");
         $this->type("css=td > input[name=\"Workstation[name]\"]", "Workstation 2");
         $this->type("xpath=(//input[@name='Workstation[contact_email_address]'])[2]", "workstation2@test.com");
-        sleep(1);
+        sleep(5);
         $this->assertEquals("Workstation 2", $this->getText("css=tr.odd > td"));
+        $this->waitForElementPresent("//div[@id='workstation-grid']/table/tbody/tr/td[5]");
         $this->assertEquals("workstation2@test.com", $this->getText("//div[@id='workstation-grid']/table/tbody/tr/td[5]"));
     }
 
@@ -106,7 +107,7 @@ class Issue6FunctionalTest extends BaseFunctionalTest {
         $this->waitForPageToLoad("30000");
         $this->type("css=td > input[name=\"Workstation[name]\"]", "Workstation 2");
         $this->type("xpath=(//input[@name='Workstation[contact_email_address]'])[2]", "workstation2@test.com");
-        sleep(1);
+        sleep(5);
         $this->click("link=Edit");
         $this->waitForPageToLoad("30000");
         $this->type("id=Workstation_location", "Office - updated");
@@ -114,7 +115,7 @@ class Issue6FunctionalTest extends BaseFunctionalTest {
         $this->waitForPageToLoad("30000");
         $this->type("css=td > input[name=\"Workstation[name]\"]", "Workstation 2");
         $this->type("xpath=(//input[@name='Workstation[contact_email_address]'])[2]", "workstation2@test.com");
-        sleep(1);
+        sleep(5);
         $this->assertEquals("Office - updated", $this->getText("//div[@id='workstation-grid']/table/tbody/tr/td[2]"));
     }
 
@@ -193,7 +194,7 @@ class Issue6FunctionalTest extends BaseFunctionalTest {
         $this->waitForPageToLoad("30000");
         $this->type("css=td > input[name=\"Workstation[name]\"]", "Workstation 3");
         $this->type("xpath=(//input[@name='Workstation[contact_email_address]'])[2]", "workstation3@test.com");
-        sleep(1);
+        sleep(5);
         $this->assertEquals("Workstation 3", $this->getText("css=tr.odd > td"));
         $this->assertEquals("workstation3@test.com", $this->getText("//div[@id='workstation-grid']/table/tbody/tr/td[5]"));
     

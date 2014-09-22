@@ -59,7 +59,7 @@ class Issue3FunctionalTestSetAccessRule extends BaseFunctionalTest {
         $this->click("xpath=(//input[@name='User[email]'])[2]");
         $this->type("xpath=(//input[@name='User[email]'])[2]", "operator@test.com");
         $this->click("id=19");
-        sleep(1);
+        sleep(5);
         $this->click("id=cbColumn_all");
         $this->click("id=btnSubmit");
         $this->waitForPageToLoad("30000");
@@ -94,10 +94,10 @@ class Issue3FunctionalTestSetAccessRule extends BaseFunctionalTest {
         $this->waitForPageToLoad("30000");
         $this->type("css=td > input[name=\"User[first_name]\"]", "Test agentOperator");
         $this->click("xpath=(//input[@name='User[email]'])[2]");
-        sleep(1);
+        sleep(5);
         $this->type("xpath=(//input[@name='User[email]'])[2]", "agentoperator@test.com");
         $this->click("id=20");
-        sleep(1);
+        sleep(5);
         $this->click("id=cbColumn_all");
         $this->click("id=btnSubmit");
         $this->waitForPageToLoad("30000");

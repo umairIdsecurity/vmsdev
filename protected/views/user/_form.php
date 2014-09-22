@@ -385,6 +385,8 @@ if ($session['role'] != 5 && $this->action->id == 'update') {
             var repeatPassword = $("#User_repeat_password").val();
             if (((Password != '' && repeatPassword != '') && (Password === repeatPassword))) {
                 $("#submitForm").click();
+            }else {
+                alert("Password cannot be blank.");
             }
         });
 

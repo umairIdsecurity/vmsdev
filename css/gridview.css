@@ -6,18 +6,18 @@
 
 .grid-view table.items th a.asc
 {
-	background:url('../images/up.gif') right center no-repeat !important;
+	background:url('../images/up.color.png') right center no-repeat !important;
 	padding-right: 10px;
 }
 .grid-view a.sort-link 
 {
-	background:url('../images/up.gif') right center no-repeat !important;
+	background:url('../images/up.color.png') right center no-repeat !important;
 	padding-right: 10px !important;
 }
 
 .grid-view table.items th a.desc
 {
-	background:url('../images/down.gif') right center no-repeat !important;
+	background:url('../images/down.color.png') right center no-repeat !important;
 	padding-right: 10px;
 }
 

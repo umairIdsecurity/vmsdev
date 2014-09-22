@@ -109,7 +109,7 @@ $this->widget('bootstrap.widgets.TbButton', array(
         span.appendChild( document.createTextNode(username) );
         
         //change modal url to pass user id
-         var url = 'index.php?r=userworkstations/index&id='+id;
+         var url = 'index.php?r=userWorkstations/index&id='+id;
         $(".modal-body").html('<iframe width="100%" height="50%" frameborder="0" scrolling="no" src="'+url+'"></iframe>');
         $("#modalBtn").click();
     }

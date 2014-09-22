@@ -55,7 +55,7 @@ if ($this->action->id == 'update') {
                        <!-- <img id="companyLogo" src="" style="display:none;"/> -->
                     <?php } ?>
                 </div>
-                <?php require_once(Yii::app()->basePath . '\draganddrop\index.php'); ?>
+                <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
             </td>
         </tr>
         <tr>
@@ -115,7 +115,7 @@ if ($this->action->id == 'update') {
             }
 
             function gotoLicensePage() {
-                window.location = 'index.php?r=licensedetails/update&id=1';
+                window.location = 'index.php?r=licenseDetails/update&id=1';
             }
         </script>
 

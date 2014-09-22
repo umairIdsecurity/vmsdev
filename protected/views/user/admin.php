@@ -43,7 +43,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' => 'workstation.workstation',
             'header' => 'Assigned Workstations',
-            'value' => 'Userworkstations::model()->getAllworkstations($data->id)',
+            'value' => 'UserWorkstations::model()->getAllworkstations($data->id)',
         //'value'=>'',
         ),
         array(

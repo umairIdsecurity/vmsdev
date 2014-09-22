@@ -54,7 +54,7 @@ $user_role = $session['role'];
                 $viewFrom = '';
             }
             ?>
-            <div id="header" <?php if ($viewFrom != '' || $this->id=='userworkstations') {
+            <div id="header" <?php if ($viewFrom != '' || $this->id=='userWorkstations') {
                 echo "style='display:none'";
             } ?>>
                
@@ -112,7 +112,7 @@ echo '<li><a href="' . Yii::app()->createUrl("/site/logout") . '"><p>Log Out</p>
             </div>
             <div class="clear"></div>
             <br><br>
-                    <div id="footer" <?php if ($viewFrom != '' || $this->id=='userworkstations') {
+                    <div id="footer" <?php if ($viewFrom != '' || $this->id=='userWorkstations') {
                 echo "style='display:none'";
             } ?>>
                         VMS 

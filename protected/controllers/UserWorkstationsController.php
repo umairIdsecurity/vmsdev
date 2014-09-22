@@ -118,25 +118,25 @@ class UserWorkstationsController extends Controller {
             $connection = Yii::app()->db;
             $deleteCondition = "where workstation.tenant=0";
             if ($session['role'] == Roles::ROLE_ADMIN) {
-                $deleteCondition = "WHERE workstation.tenant = '".$session['tenant']."' ";
+                $deleteCondition = "WHERE workstation.tenant = '" . $session['tenant'] . "' ";
             } else if ($session['role'] == Roles::ROLE_AGENT_ADMIN) {
-                $deleteCondition = "WHERE workstation.tenant = '".$session['tenant']."' AND workstation.`tenant_agent`='".$session['tenant_agent']."'";
+                $deleteCondition = "WHERE workstation.tenant = '" . $session['tenant'] . "' AND workstation.`tenant_agent`='" . $session['tenant_agent'] . "'";
             }
             $deleteQuery = "DELETE user_workstation FROM user_workstation
                             LEFT JOIN workstation ON workstation.`id` = user_workstation.`workstation`
-                            ".$deleteCondition." and user_workstation.user =$id 
+                            " . $deleteCondition . " and user_workstation.user =$id 
                             ";
             $command = $connection->createCommand($deleteQuery);
             $command->query();
             if (isset($_POST['cbColumn'])) {
-            foreach ($_POST['cbColumn'] as $id) {
-                
-                    $sql = "INSERT INTO user_workstation (`user`,workstation,created_by) VALUES (" . $_POST['userId'] . ",$id,'".$session['id']."')";
+                foreach ($_POST['cbColumn'] as $id) {
+
+                    $sql = "INSERT INTO user_workstation (`user`,workstation,created_by) VALUES (" . $_POST['userId'] . ",$id,'" . $session['id'] . "')";
                     $command = $connection->createCommand($sql);
                     $row = $command->query();
                 }
             }
-            Yii::app()->user->setFlash('success','Workstation updated.');
+            Yii::app()->user->setFlash('success', 'Workstation updated.');
         }
         $this->render('index', array());
     }

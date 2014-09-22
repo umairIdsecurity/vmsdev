@@ -41,7 +41,6 @@ return array(
             'widgets' => array(
                 'CGridView' => array(
                     'cssFile' => '/css/gridview.css'
-//                //'cssFile' => false,
                ),
             ),
         ),

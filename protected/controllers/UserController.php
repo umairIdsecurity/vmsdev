@@ -188,7 +188,7 @@ class UserController extends Controller {
         $model = new User('search');
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['User']))
-            $model->attributes = $_GET['User'];
+           $model->attributes = $_GET['User'];
 
         $this->render('admin', array(
             'model' => $model,

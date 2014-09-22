@@ -2,15 +2,8 @@
 
 class CompanyController extends Controller {
 
-    /**
-     * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
-     * using two-column layout. See 'protected/views/layouts/column2.php'.
-     */
     public $layout = '//layouts/column2';
 
-    /**
-     * @return array action filters
-     */
     public function filters() {
         return array(
             'accessControl', // perform access control for CRUD operations
@@ -60,42 +53,28 @@ class CompanyController extends Controller {
                 break;
             case "update":
                 $connection = Yii::app()->db;
-                if ($session['role'] == Roles::ROLE_SUPERADMIN){
-                    return true;
-                }else {
-                $ownerQuery = "select company FROM `user` where company = '".$_GET['id']."' and id='".$session['id']."'";
-                $command = $connection->createCommand($ownerQuery);
-                $row = $command->query();
-                if ($row->rowCount !== 0) {
+                if ($session['role'] == Roles::ROLE_SUPERADMIN) {
                     return true;
                 } else {
-                    return false;
-                }}
+                    $ownerQuery = "select company FROM `user` where company = '" . $_GET['id'] . "' and id='" . $session['id'] . "'";
+                    $command = $connection->createCommand($ownerQuery);
+                    $row = $command->query();
+                    if ($row->rowCount !== 0) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
                 break;
             default:
                 return false;
         }
     }
 
-    /**
-     * Displays a particular model.
-     * @param integer $id the ID of the model to be displayed
-     */
-    public function actionView($id) {
-        $this->render('view', array(
-            'model' => $this->loadModel($id),
-        ));
-    }
-
-    /**
-     * Creates a new model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     */
+    
     public function actionCreate() {
         $model = new Company;
         $session = new CHttpSession;
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
 
         if (isset($_POST['Company'])) {
             $model->attributes = $_POST['Company'];
@@ -142,16 +121,8 @@ class CompanyController extends Controller {
         ));
     }
 
-    /**
-     * Updates a particular model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id the ID of the model to be updated
-     */
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
-
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
 
         if (isset($_POST['Company'])) {
             $model->attributes = $_POST['Company'];
@@ -244,8 +215,6 @@ class CompanyController extends Controller {
 
         $resultMessage['data'] = $aArray;
 
-
-        // echo json_encode($resultMessage);
         echo CJavaScript::jsonEncode($resultMessage);
         Yii::app()->end();
     }

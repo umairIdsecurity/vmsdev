@@ -88,10 +88,9 @@ class SiteController extends Controller {
                 $session = new CHttpSession;
                 if ($session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_AGENT_ADMIN || $session['role'] == Roles::ROLE_SUPERADMIN) {
                     $this->redirect('index.php?r=user/admin');
-                } else if ($session['role']==Roles::ROLE_AGENT_OPERATOR || $session['role']==Roles::ROLE_OPERATOR){
+                } else if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles::ROLE_OPERATOR) {
                     $this->redirect('index.php?r=site/selectworkstation&id=' . $session['id']);
-                }
-                else {
+                } else {
                     $this->redirect('index.php?r=dashboard');
                 }
             }
@@ -133,37 +132,37 @@ class SiteController extends Controller {
             }
         } else {
             $aArray[] = array(
-                    'id' => '',
-                    'name' => '-',
-                );
+                'id' => '',
+                'name' => '-',
+            );
         }
-        
-        if(isset($_POST['submit']) && $_POST['userWorkstation']!=''){
+
+        if (isset($_POST['submit']) && $_POST['userWorkstation'] != '') {
             $session = new CHttpSession;
             $session->open();
             $session['workstation'] = $_POST['userWorkstation'];
             $this->redirect('index.php?r=dashboard');
-        }else {
+        } else {
             
         }
 
         // display the login form
         $this->render('selectworkstation', array('workstations' => $aArray));
     }
-    
+
     public function actionresetDb() {
         echo 'Resetting Database';
         $return_var = NULL;
         $output = NULL;
-        $sql = 'mysql -u user_vms -pHFz7c9dHrmPqwNGr vms < "'.Yii::getPathOfAlias('webroot').'/Selenium Test Files/vms.sql"';
+        $sql = 'mysql -u user_vms -pHFz7c9dHrmPqwNGr vms < "' . Yii::getPathOfAlias('webroot') . '/Selenium Test Files/vms.sql"';
         exec($sql, $output, $return_var);
     }
-    
+
     public function actionresetDb2() {
         echo 'Resetting Database';
         $return_var = NULL;
         $output = NULL;
-        $sql = 'mysql -u user_vms -pHFz7c9dHrmPqwNGr vms < "'.Yii::getPathOfAlias('webroot').'/Selenium Test Files/vms-withData.sql"';
+        $sql = 'mysql -u user_vms -pHFz7c9dHrmPqwNGr vms < "' . Yii::getPathOfAlias('webroot') . '/Selenium Test Files/vms-withData.sql"';
         exec($sql, $output, $return_var);
     }
 

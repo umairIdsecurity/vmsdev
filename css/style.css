@@ -45,8 +45,8 @@ div.form label{
     font-size:0.8em !important;
 }
 
-.login-area th, caption {
-    padding: 0px;
+.login-area th,.login-area td, caption {
+    padding: 0px !important;
 }
 
 .header_midbox

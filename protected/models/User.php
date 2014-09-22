@@ -145,7 +145,7 @@ class User extends VmsActiveRecord {
         // @todo Please modify the following code to remove attributes that should not be searched.
         $session = new CHttpSession;
         $criteria = new CDbCriteria;
-
+        $criteria->order = 'first_name ASC';
         $criteria->compare('id', $this->id);
       //  $criteria->compare('first_name', $this->first_name, true);
         $criteria->compare('last_name', $this->last_name, true);
@@ -205,6 +205,7 @@ class User extends VmsActiveRecord {
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
+            
         ));
     }
 

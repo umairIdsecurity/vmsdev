@@ -320,7 +320,7 @@ class User extends VmsActiveRecord {
             $connection = Yii::app()->db;
             $command = $connection->createCommand('SELECT user.tenant,user.tenant_agent,user.role as role,user.company as user_company,company.name, 
             company.tenant AS company_tenant, company.`tenant_agent` AS company_tenant_agent
-            FROM USER 
+            FROM user 
             LEFT JOIN company ON company.id=user.`company`
             WHERE user.id="' . $lastInsertId . '"');
 

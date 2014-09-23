@@ -36,7 +36,8 @@
  * @property UserType[] $userTypes
  */
 class User extends VmsActiveRecord {
-
+    
+    public $repeatpassword;
     public static $USER_ROLE_LIST = array(
         5 => 'Super Administrator',
         1 => 'Administrator',
@@ -75,6 +76,8 @@ class User extends VmsActiveRecord {
             array('date_of_birth, notes,tenant,tenant_agent', 'safe'),
             array('email', 'unique'),
             array('email', 'email'),
+            array('repeatpassword', 'required', 'on'=>'insert'),
+            array('password', 'compare', 'compareAttribute'=>'repeatpassword'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, first_name, last_name,email,is_deleted ,contact_number, date_of_birth, company, department, position, staff_id, notes, role_id, user_type_id, user_status_id, created_by', 'safe', 'on' => 'search'),

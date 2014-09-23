@@ -22,7 +22,7 @@ class Issue3FunctionalTest extends BaseFunctionalTest {
 
     function testAll() {
         $this->resetDbWithData();
-        $this->Scenario1();
+        $this->Scenario1();/
         $this->Scenario2();
         $this->Scenario3();
         $this->Scenario4();
@@ -409,6 +409,10 @@ class Issue3FunctionalTest extends BaseFunctionalTest {
         $this->assertTrue($this->isElementPresent("//form[@id='user-form']/table/tbody/tr[5]/td[2]/div"));
         $this->type("id=User_repeat_password", "12345");
         $this->assertFalse($this->isTextPresent("//form[@id='user-form']/table/tbody/tr[5]/td[2]/div"));
+        
+        $this->type("id=User_password", "");
+        $this->type("id=User_repeat_password", "");
+        
         $this->click("id=submitBtn");
         $this->click("id=submitForm");
         $this->waitForPageToLoad("30000");
@@ -416,16 +420,19 @@ class Issue3FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("First Name cannot be blank.", $this->getText("css=div.errorMessage"));
         $this->assertEquals("Last Name cannot be blank.", $this->getText("//form[@id='user-form']/table/tbody/tr[2]/td[3]/div"));
         $this->assertEquals("Email cannot be blank.", $this->getText("//form[@id='user-form']/table/tbody/tr[3]/td[3]/div"));
+        $this->assertEquals("Repeatpassword cannot be blank.", $this->getText("//form[@id='user-form']/table/tbody/tr[5]/td[3]/div"));
         $this->assertEquals("Contact Number cannot be blank.", $this->getText("//form[@id='user-form']/table/tbody/tr[6]/td[3]/div"));
         $this->assertEquals("Role cannot be blank.", $this->getText("//form[@id='user-form']/table/tbody/tr[8]/td[3]/div"));
         $this->assertEquals("Company Name cannot be blank.", $this->getText("//form[@id='user-form']/table/tbody/tr[11]/td[3]/div"));
         $this->type("id=User_password", "12345");
-        $this->type("id=User_repeat_password", "12345");
+        $this->type("id=User_repeat_password", "123456");
         $this->type("id=User_email", "testemail");
         $this->click("id=submitBtn");
         $this->click("id=submitForm");
         $this->waitForPageToLoad("30000");
         $this->assertEquals("Email is not a valid email address.", $this->getText("//form[@id='user-form']/table/tbody/tr[3]/td[3]/div"));
+        $this->assertEquals("Password must be repeated exactly.", $this->getText("//form[@id='user-form']/table/tbody/tr[4]/td[3]/div"));
+        
         $this->type("id=User_email", "superadmin@test.com");
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeat_password", "12345");

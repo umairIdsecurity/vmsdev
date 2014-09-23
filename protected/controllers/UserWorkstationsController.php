@@ -116,15 +116,9 @@ class UserWorkstationsController extends Controller {
         $session = new CHttpSession;
         if (isset($_POST['ApproveButton'])) {
             $connection = Yii::app()->db;
-            $deleteCondition = "where workstation.tenant=0";
-            if ($session['role'] == Roles::ROLE_ADMIN) {
-                $deleteCondition = "WHERE workstation.tenant = '" . $session['tenant'] . "' ";
-            } else if ($session['role'] == Roles::ROLE_AGENT_ADMIN) {
-                $deleteCondition = "WHERE workstation.tenant = '" . $session['tenant'] . "' AND workstation.`tenant_agent`='" . $session['tenant_agent'] . "'";
-            }
+            
             $deleteQuery = "DELETE user_workstation FROM user_workstation
-                            LEFT JOIN workstation ON workstation.`id` = user_workstation.`workstation`
-                            " . $deleteCondition . " and user_workstation.user =$id 
+                            where user_workstation.user =$id 
                             ";
             $command = $connection->createCommand($deleteQuery);
             $command->query();

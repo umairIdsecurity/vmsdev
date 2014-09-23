@@ -51,17 +51,17 @@ if (isset($_GET['id'])) {
             <tr>
                 <td><label for="User_password">Password <span class="required">*</span></label></td>
                 <td>
-                    <input ng-model="user.passwords" data-ng-class="{'ng-invalid':userform.repeatpassword.$error.match}" type="password" id="User_password" value = '<?php echo $model->password; ?>' name="User[password]">			
+                    <input ng-model="user.passwords" data-ng-class="{'ng-invalid':userform['User[repeatpassword]'].$error.match}" type="password" id="User_password" value = '<?php echo $model->password; ?>' name="User[password]">			
                 </td>
+                <td><?php echo $form->error($model, 'password'); ?></td>
             </tr>
             <tr>
                 <td><label for="User_repeat_password">Repeat Password <span class="required">*</span></label></td>
-                <td colspan="3">
-                    <input ng-model="user.passwordConfirm" type="password" id="User_repeat_password" data-match="user.passwords" name="repeatpassword"/>			
-                    <div style='font-size:10px;color:red;' data-ng-show="userform.repeatpassword.$error.match">New Password does not match with Repeat New Password. </div>
-
+                <td >
+                    <input ng-model="user.passwordConfirm" type="password" id="User_repeat_password" data-match="user.passwords" name="User[repeatpassword]"/>			
+                    <div style='font-size:10px;color:red;' data-ng-show="userform['User[repeatpassword]'].$error.match">New Password does not match with Repeat New Password. </div>
                 </td>
-
+                <td><?php echo $form->error($model, 'repeatpassword'); ?> </td>
 
             </tr>
 
@@ -383,11 +383,12 @@ if ($session['role'] != 5 && $this->action->id == 'update') {
             e.preventDefault();
             var Password = $("#User_password").val();
             var repeatPassword = $("#User_repeat_password").val();
-            if (((Password != '' && repeatPassword != '') && (Password === repeatPassword))) {
-                $("#submitForm").click();
-            }else {
-                alert("Password cannot be blank.");
-            }
+            $("#submitForm").click();
+//            if (((Password != '' && repeatPassword != '') && (Password === repeatPassword))) {
+//                $("#submitForm").click();
+//            }else {
+//                alert("Password cannot be blank.");
+//            }
         });
 
         $('#User_tenant').on('change', function(e) {

@@ -34,7 +34,7 @@ class UserController extends Controller {
                     'GetTenantAjax',
                     'GetTenantAgentCompany',
                     'GetTenantWorkstation', 'GetTenantAgentWorkstation'),
-                'users' => array('*'),
+                'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
                 'actions' => array('update'),

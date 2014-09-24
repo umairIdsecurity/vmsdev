@@ -178,5 +178,13 @@ class Workstation extends CActiveRecord {
             //disable if action is update 
         }
     }
+    
+    public function getWorkstationName($id) {
+        $connection = Yii::app()->db;
+        $command = $connection->createCommand("SELECT name from workstation where id=$id");
+
+        $row = $command->queryRow();
+        return $row['name'];
+    }
 
 }

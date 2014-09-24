@@ -489,4 +489,11 @@ class User extends VmsActiveRecord {
         );
     }
 
+    public function getFullName($id) {
+        $connection = Yii::app()->db;
+        $command = $connection->createCommand("SELECT concat(first_name,' ',last_name) as name from user where id=$id");
+
+        $row = $command->queryRow();
+        return $row['name'];
+    }
 }

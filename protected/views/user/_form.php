@@ -30,7 +30,7 @@ if (isset($_GET['id'])) {
 
     <p class="note">Fields with <span class="required">*</span> are required.</p>
 
-<?php echo $form->errorSummary($model); ?>
+    <?php echo $form->errorSummary($model); ?>
     <table>
         <tr>
             <td style="width:200px !important;"><?php echo $form->labelEx($model, 'first_name'); ?></td>
@@ -47,7 +47,7 @@ if (isset($_GET['id'])) {
             <td><?php echo $form->textField($model, 'email', array('size' => 50, 'maxlength' => 50)); ?></td>
             <td><?php echo $form->error($model, 'email'); ?></td>
         </tr>
-<?php if ($this->action->id == 'create') { ?>
+        <?php if ($this->action->id == 'create') { ?>
             <tr>
                 <td><label for="User_password">Password <span class="required">*</span></label></td>
                 <td>
@@ -65,7 +65,7 @@ if (isset($_GET['id'])) {
 
             </tr>
 
-                <?php } ?>
+        <?php } ?>
         <tr>
             <td><?php echo $form->labelEx($model, 'contact_number'); ?></td>
             <td><?php echo $form->textField($model, 'contact_number'); ?></td>
@@ -88,10 +88,10 @@ if (isset($_GET['id'])) {
         <tr>
             <td><?php echo $form->labelEx($model, 'role'); ?></td>
             <td><select  onchange="getTenant()" <?php
-                    if ($this->action->Id != 'update' && isset($_GET['role'])) {
-                        echo "disabled";
-                    }
-                    ?> id="User_role" name="User[role]">
+                if ($this->action->Id != 'update' && isset($_GET['role'])) {
+                    echo "disabled";
+                }
+                ?> id="User_role" name="User[role]">
                     <option disabled value='' selected>Select Role</option>
                     <?php
                     $userRoles = getAccess($session['role']); // roles with access rules from getaccess function
@@ -101,21 +101,21 @@ if (isset($_GET['id'])) {
                             ?>
 
                             <option id= "<?php echo $key; ?>" value="<?php echo $key; ?>" <?php
-                                if (isset($_GET['role'])) {
-                                    if ($userRole == $key) {
-                                        echo "selected ";
-                                    }
-                                } elseif ($this->action->Id == 'update') {
-                                    if ($key == $model->role) {
-                                        echo " selected ";
-                                    }
+                            if (isset($_GET['role'])) {
+                                if ($userRole == $key) {
+                                    echo "selected ";
                                 }
-                                ?>>
-        <?php echo $value; ?></option>
-        <?php
-    }
-}
-?>
+                            } elseif ($this->action->Id == 'update') {
+                                if ($key == $model->role) {
+                                    echo " selected ";
+                                }
+                            }
+                            ?>>
+                                <?php echo $value; ?></option>
+                            <?php
+                        }
+                    }
+                    ?>
 
                 </select></td>
             <td><?php echo $form->error($model, 'role'); ?></td>
@@ -138,9 +138,9 @@ if (isset($_GET['id'])) {
                             echo " selected ";
                         }
                         ?> value="<?php echo $value->tenant; ?>"><?php echo $value->first_name . " " . $value->last_name; ?></option>
-    <?php
-}
-?>
+                            <?php
+                        }
+                        ?>
                 </select>
             </td>
             <td><?php echo $form->error($model, 'tenant'); ?></td>
@@ -160,16 +160,16 @@ if (isset($_GET['id'])) {
                         foreach ($opts as $key => $value) {
                             ?>
                             <option <?php
-                        if ($session['role'] == '6' && $session['tenant_agent'] == $value->id) {
-                            echo " selected ";
+                            if ($session['role'] == '6' && $session['tenant_agent'] == $value->id) {
+                                echo " selected ";
+                            }
+                            ?> value="<?php echo $value->id; ?>"><?php echo $value->first_name . " " . $value->last_name; ?></option>
+                                <?php
+                            }
+                        } else {
+                            echo "<option value='' selected>Select Tenant Agent</option>";
                         }
-                        ?> value="<?php echo $value->id; ?>"><?php echo $value->first_name . " " . $value->last_name; ?></option>
-        <?php
-    }
-} else {
-    echo "<option value='' selected>Select Tenant Agent</option>";
-}
-?>
+                        ?>
                 </select>
             </td>
             <td><?php echo $form->error($model, 'tenant'); ?></td>
@@ -178,10 +178,10 @@ if (isset($_GET['id'])) {
             <td><?php echo $form->labelEx($model, 'company'); ?></td>
             <td>
                 <select id="User_company" name="User[company]" <?php
-                    if ($session['role'] == '6' || $userRole == '8' || $session['id'] == $userId) {
-                        echo " disabled ";
-                    }
-                    ?>>
+                if ($session['role'] == '6' || $userRole == '8' || $session['id'] == $userId) {
+                    echo " disabled ";
+                }
+                ?>>
                     <option value='' selected>Select Company</option>
                     <?php
                     $opts = CHtml::listData(Company::model()->findAll(), 'id', 'name');
@@ -189,34 +189,34 @@ if (isset($_GET['id'])) {
                         foreach ($opts as $key => $value) {
                             ?>
                             <option <?php
-                        if ($this->action->id == 'update' || $session['role'] != 5) {
-                            $company = User::model()->getCompany($userId);
-                            if ($company == $key) {
-                                echo " selected ";
-                            }
-                        }
-                            ?> value="<?php echo $key; ?>"><?php echo $value; ?></option>
-                                    <?php
+                            if ($this->action->id == 'update' || $session['role'] != 5) {
+                                $company = User::model()->getCompany($userId);
+                                if ($company == $key) {
+                                    echo " selected ";
                                 }
                             }
-                            ?>
+                            ?> value="<?php echo $key; ?>"><?php echo $value; ?></option>
+                                <?php
+                            }
+                        }
+                        ?>
                 </select>
                 <select id="User_company_base" <?php
-                    if ($session['role'] == '6' || $userRole == '8') {
-                        echo " disabled";
-                    }
-                    ?>>
-<?php
-$opts = CHtml::listData(Company::model()->findAll(), 'id', 'name');
-foreach ($opts as $key => $value) {
-    ?>
+                if ($session['role'] == '6' || $userRole == '8') {
+                    echo " disabled";
+                }
+                ?>>
+                            <?php
+                            $opts = CHtml::listData(Company::model()->findAll(), 'id', 'name');
+                            foreach ($opts as $key => $value) {
+                                ?>
                         <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
-    <?php
-}
-?>
+                        <?php
+                    }
+                    ?>
                 </select>
                 <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;">
-<?php //echo CHtml::image(Yii::app()->request->baseUrl . '/images/plus_icon.png');   ?>
+                    <?php //echo CHtml::image(Yii::app()->request->baseUrl . '/images/plus_icon.png');     ?>
                     Add New Company
 
                 </a>
@@ -224,8 +224,7 @@ foreach ($opts as $key => $value) {
             <td><?php echo $form->error($model, 'company'); ?></td>
         </tr>
         <tr id="workstationRow">
-            <td>Primary Wor
-                kstation</td>
+            <td>Primary Workstation</td>
             <td>
                 <select id="User_workstation" name="User[workstation]" disabled>
 
@@ -269,10 +268,10 @@ foreach ($opts as $key => $value) {
 
     <button class="btn btn-success" id="submitBtn"><?php echo ($this->action->Id == 'create' ? 'Create' : 'Save') ?></button>
     <div class="row buttons" style='display:none;'>
-<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save', array('id' => 'submitForm',)); ?>
+        <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save', array('id' => 'submitForm',)); ?>
     </div>
 
-<?php $this->endWidget(); ?>
+    <?php $this->endWidget(); ?>
 
 </div><!-- form -->
 <input type="hidden" id="currentAction" value="<?php echo $this->action->Id; ?>"/>
@@ -833,3 +832,88 @@ $this->widget('bootstrap.widgets.TbButton', array(
         });
     }
 </script>
+
+<?php
+if (isset($_POST['User'])) {
+    if (isset($_POST['User']['role'])) {
+        ?>
+        <input type='hidden' id='formSubmit_Role' value='<?php echo $_POST['User']['role']; ?>'>
+        <script>
+            $(document).ready(function() {
+                var formSubmit_Role = $("#formSubmit_Role").val();
+                if (formSubmit_Role == '1') {
+                    $("#addCompanyLink").show();
+                } else if (formSubmit_Role == '6') {
+                    $("#tenantRow").show();
+                    document.getElementById('User_tenant').disabled = false;
+                } else if (formSubmit_Role == '7') {
+                    $("#tenantRow").show();
+                    document.getElementById('User_tenant').disabled = false;
+                    $("#tenantAgentRow").show();
+                    document.getElementById('User_tenant_agent').disabled = false;
+                    $("#workstationRow").show();
+                    document.getElementById('User_workstation').disabled = false;
+                } else if (formSubmit_Role == '8') {
+                    $("#tenantRow").show();
+                    document.getElementById('User_tenant').disabled = false;
+                    $("#tenantAgentRow").hide();
+                    document.getElementById('User_tenant_agent').disabled = true;
+                    $("#workstationRow").show();
+                    document.getElementById('User_workstation').disabled = false;
+                } else if (formSubmit_Role == '9') {
+                    $("#tenantRow").show();
+                    document.getElementById('User_tenant').disabled = false;
+                    $("#tenantAgentRow").show();
+                    document.getElementById('User_tenant_agent').disabled = false;
+                    $("#workstationRow").hide();
+                    document.getElementById('User_workstation').disabled = true;
+                }
+                document.getElementById('User_role').value = '<?php echo $_POST['User']['role']; ?>';
+            });
+        </script>
+        <?php
+    }
+
+    if (isset($_POST['User']['tenant'])) {
+        ?>
+        <script>
+            $(document).ready(function() {
+                document.getElementById('User_tenant').value = '<?php echo $_POST['User']['tenant']; ?>';
+            });
+        </script>
+        <?php
+    }
+
+    if (isset($_POST['User']['tenant_agent'])) {
+        ?>
+        <script>
+            $(document).ready(function() {
+                $('#User_tenant_agent').append('<option value="<?php echo $_POST['User']['tenant_agent']; ?>"><?php echo User::model()->getFullName($_POST['User']['tenant_agent']); ?></option>');
+                document.getElementById('User_tenant_agent').value = '<?php echo $_POST['User']['tenant_agent']; ?>';
+
+            });
+        </script>
+        <?php
+    }
+
+    if (isset($_POST['User']['company'])) {
+        ?>
+        <script>
+            $('#User_company').append('<option value="<?php echo $_POST['User']['company']; ?>"><?php echo Company::model()->getCompanyName($_POST['User']['company']) ?></option>');
+            document.getElementById('User_company').value = '<?php echo $_POST['User']['company']; ?>';
+
+        </script>
+        <?php
+    }
+
+    if (isset($_POST['User']['workstation'])) {
+        ?>
+        <script>
+            $('#User_workstation').append('<option value="<?php echo $_POST['User']['workstation']; ?>"><?php echo Workstation::model()->getWorkstationName($_POST['User']['workstation']); ?></option>');
+            document.getElementById('User_workstation').value = '<?php echo $_POST['User']['workstation']; ?>';
+
+        </script>
+        <?php
+    }
+}
+?>

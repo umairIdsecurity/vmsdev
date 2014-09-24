@@ -169,6 +169,14 @@ class Company extends CActiveRecord {
         return $row['relative_path'];
     }
     
+    public function getCompanyName($id) {
+        $connection = Yii::app()->db;
+        $command = $connection->createCommand("SELECT name from company where id=$id");
+
+        $row = $command->queryRow();
+        return $row['name'];
+    }
+    
     public function behaviors() {
         return array(
             'softDelete' => array(

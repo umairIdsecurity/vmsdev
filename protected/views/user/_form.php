@@ -182,6 +182,7 @@ if (isset($_GET['id'])) {
                         echo " disabled ";
                     }
                     ?>>
+                    <option value='' selected>Select Company</option>
                     <?php
                     $opts = CHtml::listData(Company::model()->findAll(), 'id', 'name');
                     if ($this->action->id != 'create' || $session['role'] == 1 || $userRole == 1 || $userRole == 7 || $session['role'] == 6) {
@@ -223,7 +224,8 @@ foreach ($opts as $key => $value) {
             <td><?php echo $form->error($model, 'company'); ?></td>
         </tr>
         <tr id="workstationRow">
-            <td>Primary Workstation</td>
+            <td>Primary Wor
+                kstation</td>
             <td>
                 <select id="User_workstation" name="User[workstation]" disabled>
 

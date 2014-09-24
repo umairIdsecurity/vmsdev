@@ -28,6 +28,7 @@ class Issue3FunctionalTestSetAccessRule extends BaseFunctionalTest {
         $this->resetDbWithData();
         $this->Scenario1();
         $this->Scenario2();
+        $this->addWorkstationForAdmin();
         $this->Scenario3();
     }
 
@@ -68,7 +69,7 @@ class Issue3FunctionalTestSetAccessRule extends BaseFunctionalTest {
         $this->click("link=×");
     }
     
-    /* Scenario 2 – Login as agent admin and remove access rule for operator@tes.com
+    /* Scenario 2 – Login as agent admin and remove access rule for agentoperator@test.com
       Expected Behavior
       -	Asser text  'workstation updated'
 
@@ -81,7 +82,7 @@ class Issue3FunctionalTestSetAccessRule extends BaseFunctionalTest {
       6.	Click 'manage users' then click set access rule
       7.	type test agentoperator in name field and agentoperator@test.com in email field
       8.	click edit
-      9.	check 1st checkbox to check all
+      9.	check 1st checkbox to uncheck all
       10.	Click save
       11.	assert text workstation updated
      */
@@ -143,7 +144,7 @@ class Issue3FunctionalTestSetAccessRule extends BaseFunctionalTest {
         $this->type("xpath=(//input[@name='User[email]'])[2]", "operator@test.com");
         $this->click("id=19");
         sleep(5);
-        $this->click("id=cbColumn_all");
+        $this->click("id=cbColumnAll");
         $this->click("id=btnSubmit");
         $this->waitForPageToLoad("30000");
         $this->click("link=×");
@@ -151,15 +152,33 @@ class Issue3FunctionalTestSetAccessRule extends BaseFunctionalTest {
         $this->type("css=td > input[name=\"User[first_name]\"]", "Test AgentOperator");
         $this->click("xpath=(//input[@name='User[email]'])[2]");
         $this->type("xpath=(//input[@name='User[email]'])[2]", "agentoperator@test.com");
-        $this->click("id=19");
         sleep(5);
-        $this->click("id=cbColumn_all");
+        $this->click("id=20");
+        sleep(5);
+        $this->click("id=cbColumnAll");
         $this->click("id=btnSubmit");
         $this->waitForPageToLoad("30000");
         $this->click("link=×");
     }
 
-
+    function addWorkstationForAdmin() {
+        $username = 'superadmin@test.com';
+        $this->login($username, '12345');
+        $this->click("link=Administration");
+        $this->waitForPageToLoad("30000");
+        $this->click("link=Manage Workstations");
+        $this->click("link=Add Workstation");
+        $this->waitForPageToLoad("30000");
+        $this->type("id=Workstation_name", "Workstation 2");
+        $this->type("id=Workstation_location", "Office");
+        $this->type("id=Workstation_contact_name", "Test Person");
+        $this->type("id=Workstation_contact_number", "1234-567");
+        $this->type("id=Workstation_contact_email_address", "workstation2@test.com");
+        $this->select("id=Workstation_tenant", "label=Test admin2");
+        $this->type("id=Workstation_password", "12345");
+        $this->click("name=yt0");
+        $this->waitForPageToLoad("30000");
+         }
 }
 
 ?>

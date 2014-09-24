@@ -120,7 +120,7 @@ class Workstation extends CActiveRecord {
 
             $criteria->compare('tenant', $session['tenant']);
             $criteria->compare('tenant_agent', $session['tenant_agent']);
-        }
+        } 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
         ));

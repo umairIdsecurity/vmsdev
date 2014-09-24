@@ -36,7 +36,7 @@
  * @property UserType[] $userTypes
  */
 class User extends VmsActiveRecord {
-    
+
     public $repeatpassword;
     public static $USER_ROLE_LIST = array(
         5 => 'Super Administrator',
@@ -69,19 +69,34 @@ class User extends VmsActiveRecord {
     public function rules() {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
-        return array(
+        if (Yii::app()->controller->action->id == 'update' || Yii::app()->controller->action->id == 'profile' ) {
+            return array(
             array('first_name, last_name, email, contact_number, role, user_type,is_deleted,password,company', 'required'),
             array('company, role, user_type, user_status, created_by', 'numerical', 'integerOnly' => true),
             array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
             array('date_of_birth, notes,tenant,tenant_agent', 'safe'),
             array('email', 'unique'),
             array('email', 'email'),
-            array('repeatpassword', 'required', 'on'=>'insert'),
-            array('password', 'compare', 'compareAttribute'=>'repeatpassword'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, first_name, last_name,email,is_deleted ,contact_number, date_of_birth, company, department, position, staff_id, notes, role_id, user_type_id, user_status_id, created_by', 'safe', 'on' => 'search'),
         );
+        } else {
+            return array(
+            array('first_name, last_name, email, contact_number, role, user_type,is_deleted,password,company', 'required'),
+            array('company, role, user_type, user_status, created_by', 'numerical', 'integerOnly' => true),
+            array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
+            array('date_of_birth, notes,tenant,tenant_agent', 'safe'),
+            array('email', 'unique'),
+            array('email', 'email'),
+            array('repeatpassword', 'required', 'on' => 'insert'),
+            array('password', 'compare', 'compareAttribute' => 'repeatpassword'),
+            // The following rule is used by search().
+            // @todo Please remove those attributes that should not be searched.
+            array('id, first_name, last_name,email,is_deleted ,contact_number, date_of_birth, company, department, position, staff_id, notes, role_id, user_type_id, user_status_id, created_by', 'safe', 'on' => 'search'),
+        );
+        }
+
     }
 
     /**
@@ -129,6 +144,7 @@ class User extends VmsActiveRecord {
             'is_deleted' => 'Deleted',
             'tenant' => 'Tenant',
             'tenant_agent' => 'Tenant Agent',
+            'repeatpassword' => 'Repeat Password',
         );
     }
 
@@ -150,7 +166,7 @@ class User extends VmsActiveRecord {
         $criteria = new CDbCriteria;
         $criteria->order = 'first_name ASC';
         $criteria->compare('id', $this->id);
-      //  $criteria->compare('first_name', $this->first_name, true);
+        //  $criteria->compare('first_name', $this->first_name, true);
         $criteria->compare('last_name', $this->last_name, true);
         $criteria->compare('email', $this->email, true);
         $criteria->compare('contact_number', $this->contact_number);
@@ -188,19 +204,19 @@ class User extends VmsActiveRecord {
             case Roles::ROLE_AGENT_ADMIN:
                 if (Yii::app()->controller->action->id == 'systemaccessrules') {
                     $rolein = '(7)';
-                }else {
+                } else {
                     $rolein = '(6,7,8,9,10)';
                 }
-                
+
                 $queryCondition = 'tenant_agent="' . $session['tenant_agent'] . '"';
                 break;
             default:
                 if (Yii::app()->controller->action->id == 'systemaccessrules') {
                     $rolein = '(8,7)';
-                }else {
+                } else {
                     $rolein = '(1,5,6,7,8,9,10)';
                 }
-                
+
                 $queryCondition = 'is_deleted=0';
                 break;
         }
@@ -208,7 +224,6 @@ class User extends VmsActiveRecord {
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
-            
         ));
     }
 
@@ -225,7 +240,7 @@ class User extends VmsActiveRecord {
     protected function afterValidate() {
         parent::afterValidate();
         if (!$this->hasErrors()) {
-            if (Yii::app()->controller->action->id == 'create'  ) {
+            if (Yii::app()->controller->action->id == 'create') {
                 $this->password = $this->hashPassword($this->password);
             }
             //disable if action is update 
@@ -302,7 +317,7 @@ class User extends VmsActiveRecord {
                     if ($userid == $company_tenant) {
                         $command = $connection->createCommand('update company set tenant =NULL where id ="' . $user_company . '" ');
                         $command->query();
-                }
+                    }
                 }
             }
         }
@@ -455,7 +470,7 @@ class User extends VmsActiveRecord {
                 if ($company_tenant == '') {
                     $command = $connection->createCommand('update company set tenant =' . $userid . ' where id ="' . $user_company . '" ');
                     $command->query();
-                    
+
                     $command2 = $connection->createCommand('update user set tenant =' . $userid . ' where id ="' . $userid . '" ');
                     $command2->query();
                 } else {

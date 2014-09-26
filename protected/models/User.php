@@ -492,7 +492,7 @@ class User extends VmsActiveRecord {
 
     public function getFullName($id) {
         $connection = Yii::app()->db;
-        $command = $connection->createCommand("SELECT concat(first_name,' ',last_name) as name from user where id=$id");
+        $command = $connection->createCommand("SELECT concat(first_name,' ',last_name) as name from user where id='".$id."'");
 
         $row = $command->queryRow();
         return $row['name'];
@@ -536,15 +536,14 @@ class User extends VmsActiveRecord {
         }
     }
 
-    public function saveWorkstation($model_Id, $workstation_Id) {
-        $session = new CHttpSession;
+    public function saveWorkstation($model_Id, $workstation_Id,$created_by) {
         $connection = Yii::app()->db;
         $command = $connection->createCommand('INSERT INTO `user_workstation` '
-                . '(`user`, `workstation`, `created_by`) VALUES (' . $model_Id . ',' . $workstation_Id . ',' . $session['id'] . ' )');
+                . '(`user`, `workstation`, `created_by`) VALUES (' . $model_Id . ',' . $workstation_Id . ',' . $created_by . ' )');
         $command->query();
     }
     
-    public function findTenantAgent($id){
+    public function findAllTenantAgent($id){
         $tenant = trim($id);
 
         $aArray = array();
@@ -562,7 +561,7 @@ class User extends VmsActiveRecord {
         }
         return $aArray;
     }
-    public function findTenantorTenantAgentCompany($id){
+    public function findCompanyDetailsOfUser($id){
         $aArray = array();
 
         $connection = Yii::app()->db;
@@ -581,7 +580,7 @@ class User extends VmsActiveRecord {
         return $aArray;
     }
     
-    public function findTenantWorkstation($id){
+    public function findWorkstationsWithSameTenant($id){
         $aArray = array();
 
         $connection = Yii::app()->db;
@@ -599,7 +598,7 @@ class User extends VmsActiveRecord {
         return $aArray;
     }
     
-    public function findTenantAgentWorkstation($id, $tenant){
+    public function findWorkstationsWithSameTenantAndTenantAgent($id, $tenant){
         $aArray = array();
 
         $connection = Yii::app()->db;

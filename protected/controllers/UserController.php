@@ -92,7 +92,7 @@ class UserController extends Controller {
             $model->attributes = $_POST['User'];
             if ($model->save()) {
                 if ($_POST['User']['role'] == Roles::ROLE_OPERATOR || $_POST['User']['role'] == Roles::ROLE_AGENT_OPERATOR) {
-                    User::model()->saveWorkstation($model->id, $_POST['User']['workstation']);
+                    User::model()->saveWorkstation($model->id, $_POST['User']['workstation'],$session['id']);
                 }
                 $this->redirect(array('admin'));
             }
@@ -192,7 +192,7 @@ class UserController extends Controller {
     }
 
     public function actionGetTenantAgentAjax($id) {
-        $resultMessage['data'] = User::model()->findTenantAgent($id);
+        $resultMessage['data'] = User::model()->findAllTenantAgent($id);
 
         echo CJavaScript::jsonEncode($resultMessage);
         Yii::app()->end();
@@ -200,23 +200,21 @@ class UserController extends Controller {
 
     public function actionGetTenantOrTenantAgentCompany($id) {
         
-        $resultMessage['data'] = User::model()->findTenantorTenantAgentCompany($id);
+        $resultMessage['data'] = User::model()->findCompanyDetailsOfUser($id);
 
         echo CJavaScript::jsonEncode($resultMessage);
         Yii::app()->end();
     }
 
     public function actionGetTenantWorkstation($id) {
-        $resultMessage['data'] = User::model()->findTenantWorkstation($id);
+        $resultMessage['data'] = User::model()->findWorkstationsWithSameTenant($id);
 
         echo CJavaScript::jsonEncode($resultMessage);
         Yii::app()->end();
     }
 
     public function actionGetTenantAgentWorkstation($id, $tenant ) {
-        
-
-        $resultMessage['data'] = User::model()->findTenantAgentWorkstation($id, $tenant);
+        $resultMessage['data'] = User::model()->findWorkstationsWithSameTenantAndTenantAgent($id, $tenant);
 
         // echo json_encode($resultMessage);
         echo CJavaScript::jsonEncode($resultMessage);

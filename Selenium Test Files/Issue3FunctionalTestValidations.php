@@ -420,7 +420,7 @@ class Issue3FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("First Name cannot be blank.", $this->getText("css=div.errorMessage"));
         $this->assertEquals("Last Name cannot be blank.", $this->getText("//form[@id='user-form']/table/tbody/tr[2]/td[3]/div"));
         $this->assertEquals("Email cannot be blank.", $this->getText("//form[@id='user-form']/table/tbody/tr[3]/td[3]/div"));
-        $this->assertEquals("Repeatpassword cannot be blank.", $this->getText("//form[@id='user-form']/table/tbody/tr[5]/td[3]/div"));
+        $this->assertEquals("Repeat Password cannot be blank.", $this->getText("//form[@id='user-form']/table/tbody/tr[5]/td[3]/div"));
         $this->assertEquals("Contact Number cannot be blank.", $this->getText("//form[@id='user-form']/table/tbody/tr[6]/td[3]/div"));
         $this->assertEquals("Role cannot be blank.", $this->getText("//form[@id='user-form']/table/tbody/tr[8]/td[3]/div"));
         $this->assertEquals("Company Name cannot be blank.", $this->getText("//form[@id='user-form']/table/tbody/tr[11]/td[3]/div"));

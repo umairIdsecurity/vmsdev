@@ -42,11 +42,11 @@ class Workstation extends CActiveRecord {
             array('contact_number', 'safe'),
             array('contact_email_address', 'email'),
             array('number_of_operators, assign_kiosk', 'numerical', 'integerOnly' => true),
-            array('name, contact_name, password,tenant,tenant_agent,created_by', 'length', 'max' => 50),
+            array('name, contact_name,tenant,tenant_agent,created_by', 'length', 'max' => 50),
             array('location', 'length', 'max' => 100),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, name, location, contact_name, contact_number, contact_email_address, number_of_operators, assign_kiosk, password, created_by, tenant, tenant_agent, is_deleted', 'safe', 'on' => 'search'),
+            array('id, name, location, contact_name, contact_number, contact_email_address, number_of_operators, assign_kiosk, created_by, tenant, tenant_agent, is_deleted', 'safe', 'on' => 'search'),
         );
     }
 
@@ -75,7 +75,6 @@ class Workstation extends CActiveRecord {
             'contact_email_address' => 'Contact Email Address',
             'number_of_operators' => 'Number Of Operators',
             'assign_kiosk' => 'Assign Kiosk',
-            'password' => 'Password',
             'created_by' => 'Created By',
             'tenant' => 'Tenant',
             'tenant_agent' => 'Tenant Agent',
@@ -120,7 +119,7 @@ class Workstation extends CActiveRecord {
 
             $criteria->compare('tenant', $session['tenant']);
             $criteria->compare('tenant_agent', $session['tenant_agent']);
-        } 
+        }
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
         ));
@@ -168,17 +167,17 @@ class Workstation extends CActiveRecord {
             ),
         );
     }
-    
+
     protected function afterValidate() {
         parent::afterValidate();
         if (!$this->hasErrors()) {
-            if (Yii::app()->controller->action->id == 'create'  ) {
+            if (Yii::app()->controller->action->id == 'create') {
                 $this->password = User::model()->hashPassword($this->password);
             }
             //disable if action is update 
         }
     }
-    
+
     public function getWorkstationName($id) {
         $connection = Yii::app()->db;
         $command = $connection->createCommand("SELECT name from workstation where id=$id");

@@ -30,24 +30,23 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                 'checked' => '(Workstation::model()->getWorkstations(' . $_GET['id'] . ',$data->id)==true)?(1):(0)',
                 'htmlOptions' => array("onclick" => 'getId()'),
             ),
-        // ), 
         ),
     ));
 } else {
     ?>
-    <form method="post" action="/index.php?r=userWorkstations/index&amp;id=<?php echo $_GET['id']?>"><input type="hidden" name="userId" value="<?php echo $_GET['id']?>">
+    <form method="post" action="/index.php?r=userWorkstations/index&amp;id=<?php echo $_GET['id'] ?>"><input type="hidden" name="userId" value="<?php echo $_GET['id'] ?>">
 
         <div class="grid-view" id="user_workstationsGrid">
-            <table class="items">
+            <table class="items table-striped" >
                 <thead>
                     <tr>
-                        <th id="user_workstationsGrid_c0">
+                        <th id="user_workstationsGrid_c0" style="text-align:center;">
                             <a href="/index.php?r=userWorkstations/index&amp;id=<?php echo $_GET['id']; ?>&amp;Workstation_sort=name" class="sort-link">Name</a>
                         </th>
-                        <th id="user_workstationsGrid_c1">
+                        <th id="user_workstationsGrid_c1" style="text-align:center;">
                             <a href="/index.php?r=userWorkstations/index&amp;id=<?php echo $_GET['id']; ?>&amp;Workstation_sort=location" class="sort-link">Location</a>
                         </th>
-                        <th id="cbColumn" class="checkbox-column"><input type="checkbox" id="cbColumnAll" name="cbColumn_all">
+                        <th id="cbColumn" class="checkbox-column" style="text-align:center;"><input type="checkbox" id="cbColumnAll" name="cbColumn_all">
                         </th>
                     </tr>
                 </thead>
@@ -71,12 +70,13 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                     foreach ($row as $user) {
                         ?> 
                         <tr class="odd">
-                            <td><?php echo $user['name'] ?></td>
-                            <td><?php echo $user['location'] ?></td>
-                            <td onclick="getId()">
-                                <input type="checkbox" name="cbColumn[]"  <?php (Workstation::model()->getWorkstations($_GET['id'], $user['id']) == true) ? ( $cbVal = 'checked') : ( $cbVal = '');
-                echo $cbVal;
-                ?> id="cbColumn_0" value="<?php echo $user['id'] ?>">
+                            <td style="text-align:center;"><?php echo $user['name'] ?></td>
+                            <td style="text-align:center;"><?php echo $user['location'] ?></td>
+                            <td style="text-align:center;" onclick="getId()">
+                                <input type="checkbox" name="cbColumn[]"  <?php
+                                (Workstation::model()->getWorkstations($_GET['id'], $user['id']) == true) ? ( $cbVal = 'checked') : ( $cbVal = '');
+                                echo $cbVal;
+                                ?> id="cbColumn_0" value="<?php echo $user['id'] ?>">
                             </td>
                         </tr>
 
@@ -85,24 +85,24 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                     ?>
                 </tbody>
             </table>
-           
+
         </div>
 
-<?php } ?>
-<div>
-    <?php echo CHtml::submitButton('Save Changes', array('name' => 'ApproveButton', 'id' => 'btnSubmit')); ?>
+        <?php } ?>
+    <div>
+<?php echo CHtml::submitButton('Save Changes', array('name' => 'ApproveButton', 'id' => 'btnSubmit')); ?>
 
-</div>
+    </div>
 
 <?php echo CHtml::endForm(); ?>
-<script>
-    $(document).ready(function() {
-        
-        $("#cbColumnAll").on("click", function() {
-            var all = $(this);
-            $('input:checkbox').each(function() {
-                $(this).prop("checked", all.prop("checked"));
+    <script>
+        $(document).ready(function() {
+
+            $("#cbColumnAll").on("click", function() {
+                var all = $(this);
+                $('input:checkbox').each(function() {
+                    $(this).prop("checked", all.prop("checked"));
+                });
             });
         });
-    });
-</script>
+    </script>

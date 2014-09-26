@@ -175,7 +175,6 @@ class Issue3FunctionalTestSetAccessRule extends BaseFunctionalTest {
         $this->type("id=Workstation_contact_number", "1234-567");
         $this->type("id=Workstation_contact_email_address", "workstation2@test.com");
         $this->select("id=Workstation_tenant", "label=Test admin2");
-        $this->type("id=Workstation_password", "12345");
         $this->click("name=yt0");
         $this->waitForPageToLoad("30000");
          }

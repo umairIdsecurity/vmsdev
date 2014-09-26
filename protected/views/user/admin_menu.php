@@ -45,7 +45,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
 
 <?php
 switch ($session['role']) {
-    case "5":
+    case Roles::ROLE_SUPERADMIN:
         ?>
                             <li><a href='<?php echo Yii::app()->createUrl('user/create/&role=1'); ?>'><span>Add Administrator</span></a></li>
                             <li><a href='<?php echo Yii::app()->createUrl('user/create/&role=6'); ?>'><span>Add Agent Administrator</span></a></li>
@@ -55,7 +55,7 @@ switch ($session['role']) {
 
         <?php
         break;
-    case "1":
+    case Roles::ROLE_ADMIN:
         ?>
                             <li><a href='<?php echo Yii::app()->createUrl('user/create/&role=1'); ?>'><span>Add Administrator</span></a></li>
                             <li><a href='<?php echo Yii::app()->createUrl('user/create/&role=6'); ?>'><span>Add Agent Administrator</span></a></li>
@@ -65,7 +65,7 @@ switch ($session['role']) {
         <?php
         break;
 
-    case "6":
+    case Roles::ROLE_AGENT_ADMIN:
         ?>
                             <li><a href='<?php echo Yii::app()->createUrl('user/create/&role=7'); ?>'><span>Add Agent Operator</span></a></li>
                             <li><a href='<?php echo Yii::app()->createUrl('user/systemaccessrules'); ?>'><span>Set Access Rules</span></a></li>

@@ -2,16 +2,6 @@
 /* @var $this CompanyController */
 /* @var $model Company */
 
-$this->breadcrumbs=array(
-	'Companies'=>array('index'),
-	'Manage',
-);
-
-$this->menu=array(
-	array('label'=>'List Company', 'url'=>array('index')),
-	array('label'=>'Create Company', 'url'=>array('create')),
-);
-
 Yii::app()->clientScript->registerScript('search', "
 $('.search-button').click(function(){
 	$('.search-form').toggle();

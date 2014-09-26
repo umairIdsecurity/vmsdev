@@ -3,20 +3,19 @@
 /* @var $model User */
 /* @var $form CActiveForm */
 $session = new CHttpSession;
+
 if (isset($_GET['role'])) {
-    $userRole = $_GET['role'];
+    $userGetRole = $_GET['role'];
 } else {
-    $userRole = '';
+    $userGetRole = '';
 }
+
+$currentlyEditedUserId = '';
 if (isset($_GET['id'])) {
-    $userId = $_GET['id'];
-} else { //if no id means its create
-    if ($session['role'] != 5) {
-        $userId = $session['id'];
-    } else {
-        $userId = '';
-    }
+    $currentlyEditedUserId = $_GET['id'];
 }
+
+$currentLoggedUserId = $session['id'];
 ?>
 
 <div class="form" data-ng-app="PwordForm">
@@ -74,45 +73,47 @@ if (isset($_GET['id'])) {
         <tr>
             <td><?php echo $form->labelEx($model, 'date_of_birth'); ?></td>
             <td><?php
-                $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                    'model' => $model,
-                    'attribute' => 'date_of_birth',
-                    'htmlOptions' => array(
-                        'size' => '10', // textField size
-                        'maxlength' => '10', // textField maxlength
-                    ),
-                ));
-                ?></td>
+        $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+            'model' => $model,
+            'attribute' => 'date_of_birth',
+            'options' => array(
+                'dateFormat' => 'dd-mm-yy',
+            ),
+            'htmlOptions' => array(
+                'size' => '10', // textField size
+                'maxlength' => '10', // textField maxlength
+            ),
+        ));
+        ?></td>
             <td><?php echo $form->error($model, 'date_of_birth'); ?></td>
         </tr>
         <tr>
             <td><?php echo $form->labelEx($model, 'role'); ?></td>
-            <td><select  onchange="getTenant()" <?php
-                if ($this->action->Id != 'update' && isset($_GET['role'])) {
+            <td><select  onchange="populateDynamicFields()" <?php
+                if ($this->action->Id == 'create' && isset($_GET['role'])) { //if action create with user roles selected in url
                     echo "disabled";
                 }
-                ?> id="User_role" name="User[role]">
+        ?> id="User_role" name="User[role]">
                     <option disabled value='' selected>Select Role</option>
                     <?php
-                    $userRoles = getAccess($session['role']); // roles with access rules from getaccess function
-                    foreach ($userRoles as $values) {
-                        foreach ($values as $key => $value) {
-                            //put here option html 
+                    $assignableRowsArray = getAssignableRoles($session['role']); // roles with access rules from getaccess function
+                    foreach ($assignableRowsArray as $assignableRoles) {
+                        foreach ($assignableRoles as $key => $value) {
                             ?>
 
                             <option id= "<?php echo $key; ?>" value="<?php echo $key; ?>" <?php
-                            if (isset($_GET['role'])) {
-                                if ($userRole == $key) {
-                                    echo "selected ";
-                                }
-                            } elseif ($this->action->Id == 'update') {
-                                if ($key == $model->role) {
-                                    echo " selected ";
-                                }
-                            }
+                    if (isset($_GET['role'])) { //if url with selected role 
+                        if ($userGetRole == $key) {
+                            echo "selected ";
+                        }
+                    } elseif ($this->action->Id == 'update') { //if update and $key == to role of user being updated
+                        if ($key == $model->role) {
+                            echo " selected ";
+                        }
+                    }
                             ?>>
-                                <?php echo $value; ?></option>
-                            <?php
+                                    <?php echo $value; ?></option>
+                                <?php
                         }
                     }
                     ?>
@@ -126,17 +127,13 @@ if (isset($_GET['id'])) {
                 <select id="User_tenant" name="User[tenant]"  >
                     <option value='' selected>Select Admin</option>
                     <?php
-                    $criteria = new CDbCriteria;
-                    $criteria->select = 'id,tenant,first_name,last_name';
-                    $criteria->addCondition('role = 1');
-
-                    $opts = User::model()->findAll($criteria);
-                    foreach ($opts as $key => $value) {
+                    $allAdminNames = User::model()->findAllAdmin();
+                    foreach ($allAdminNames as $key => $value) {
                         ?>
                         <option <?php
-                        if ($session['role'] == '6' && $session['tenant'] == $value->id) {
-                            echo " selected ";
-                        }
+                    if ($session['role'] == Roles::ROLE_AGENT_ADMIN && $session['tenant'] == $value->id) {
+                        echo " selected "; //if logged in is agent admin and tenant of agent admin = admin id in adminList
+                    }
                         ?> value="<?php echo $value->tenant; ?>"><?php echo $value->first_name . " " . $value->last_name; ?></option>
                             <?php
                         }
@@ -152,17 +149,14 @@ if (isset($_GET['id'])) {
 
                     <?php
                     if ($this->action->Id != 'create') {
-                        $criteria = new CDbCriteria;
-                        $criteria->select = 'id,first_name,last_name';
-                        $criteria->addCondition('role = 6');
 
-                        $opts = User::model()->findAll($criteria);
-                        foreach ($opts as $key => $value) {
+                        $allAgentAdminNames = User::model()->findAllAgentAdmin();
+                        foreach ($allAgentAdminNames as $key => $value) {
                             ?>
                             <option <?php
-                            if ($session['role'] == '6' && $session['tenant_agent'] == $value->id) {
-                                echo " selected ";
-                            }
+                    if ($session['role'] == Roles::ROLE_AGENT_ADMIN && $session['tenant_agent'] == $value->id) {
+                        echo " selected "; //if logged in is agent admin and tenant agent of logged in user is = agentadminname
+                    }
                             ?> value="<?php echo $value->id; ?>"><?php echo $value->first_name . " " . $value->last_name; ?></option>
                                 <?php
                             }
@@ -178,58 +172,54 @@ if (isset($_GET['id'])) {
             <td><?php echo $form->labelEx($model, 'company'); ?></td>
             <td>
                 <select id="User_company" name="User[company]" <?php
-                if ($session['role'] == '6' || $userRole == '8' || $session['id'] == $userId) {
-                    echo " disabled ";
-                }
-                ?>>
+                        if ($session['role'] == Roles::ROLE_AGENT_ADMIN || $userGetRole == Roles::ROLE_OPERATOR || $currentLoggedUserId == $currentlyEditedUserId) {
+                            echo " disabled ";
+                        } //if currently logged in user is agent admin or if selected role=operator or owner is editing his account
+                        ?>>
                     <option value='' selected>Select Company</option>
                     <?php
-                    $opts = CHtml::listData(Company::model()->findAll(), 'id', 'name');
-                    if ($this->action->id != 'create' || $session['role'] == 1 || $userRole == 1 || $userRole == 7 || $session['role'] == 6) {
-                        foreach ($opts as $key => $value) {
+                    $companyList = CHtml::listData(Company::model()->findAll(), 'id', 'name');
+                    if (isset($_GET['role'])) {
+                        $urlRole = $_GET['role'];
+                    } else {
+                        $urlRole = '';
+                    }
+                    if ($this->action->id != 'create' || $session['role'] == Roles::ROLE_ADMIN || $urlRole == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_AGENT_ADMIN || $urlRole == Roles::ROLE_AGENT_ADMIN) {
+                        foreach ($companyList as $key => $value) {
                             ?>
                             <option <?php
-                            if ($this->action->id == 'update' || $session['role'] != 5) {
-                                $company = User::model()->getCompany($userId);
-                                if ($company == $key) {
-                                    echo " selected ";
-                                }
-                            }
+                    if ($this->action->id == 'update') {
+                        $company = User::model()->getCompany($currentlyEditedUserId);
+                    } elseif ($session['role'] != Roles::ROLE_SUPERADMIN) {
+                        $company = User::model()->getCompany($currentLoggedUserId);
+                    }
+                    if (isset($company) && $company == $key) {
+                        echo " selected ";
+                    }
                             ?> value="<?php echo $key; ?>"><?php echo $value; ?></option>
                                 <?php
                             }
                         }
                         ?>
                 </select>
-                <select id="User_company_base" <?php
-                if ($session['role'] == '6' || $userRole == '8') {
-                    echo " disabled";
-                }
-                ?>>
-                            <?php
-                            $opts = CHtml::listData(Company::model()->findAll(), 'id', 'name');
-                            foreach ($opts as $key => $value) {
-                                ?>
+                <select id="User_company_base" style="display:none;">
+                    <?php
+                    $companyList = CHtml::listData(Company::model()->findAll(), 'id', 'name');
+                    foreach ($companyList as $key => $value) {
+                        ?>
                         <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
                         <?php
                     }
                     ?>
                 </select>
-                <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;">
-                    <?php //echo CHtml::image(Yii::app()->request->baseUrl . '/images/plus_icon.png');     ?>
-                    Add New Company
-
-                </a>
+                <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;">Add New Company</a>
             </td>
             <td><?php echo $form->error($model, 'company'); ?></td>
         </tr>
         <tr id="workstationRow">
             <td>Primary Workstation</td>
             <td>
-                <select id="User_workstation" name="User[workstation]" disabled>
-
-                </select>
-
+                <select id="User_workstation" name="User[workstation]" disabled></select>
             </td>
         </tr>
         <tr>
@@ -264,8 +254,6 @@ if (isset($_GET['id'])) {
             <td><?php echo $form->error($model, 'user_status'); ?></td>
         </tr>
     </table>
-
-
     <button class="btn btn-success" id="submitBtn"><?php echo ($this->action->Id == 'create' ? 'Create' : 'Save') ?></button>
     <div class="row buttons" style='display:none;'>
         <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save', array('id' => 'submitForm',)); ?>
@@ -274,21 +262,36 @@ if (isset($_GET['id'])) {
     <?php $this->endWidget(); ?>
 
 </div><!-- form -->
+
 <input type="hidden" id="currentAction" value="<?php echo $this->action->Id; ?>"/>
 <input type="hidden" id="currentRole" value="<?php echo $session['role']; ?>"/>
-<input type="hidden" id="userId" value="<?php echo $userId; ?>"/>
+<input type="hidden" id="userId" value="<?php echo $currentlyEditedUserId; ?>"/>
 <input type="hidden" id="selectedUserId" value="<?php echo $session['id']; ?>"/>
-<input type="hidden" id="getRole" value="<?php echo $userRole; ?>"/>
+<input type="hidden" id="getRole" value="<?php echo $userGetRole; ?>"/>
 <input type="hidden" id="sessionCompany" value="<?php
-if ($session['role'] != 5 && $this->action->id == 'update') {
-    echo User::model()->getCompany($userId);
-}
-?>"/>
+    if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+        echo User::model()->getCompany($currentLoggedUserId);
+    }else if ($this->action->id == 'update'){
+        echo User::model()->getCompany($currentlyEditedUserId);
+    }
+    ?>"/>
 <script>
 
     $(document).ready(function() {
+        var sessionRole = $("#currentRole").val(); //session role of currently logged in user
+        var userId = $("#userId").val(); //id in url for update action
+        var selectedUserId = $("#selectedUserId").val(); //session id of currenlty logged in user
+        var actionId = $("#currentAction").val(); // current action
+        var getRole = $("#getRole").val(); // role in url
+
+        var superadmin = 5;
+        var admin = 1;
+        var agentadmin = 6;
+        var agentoperator = 7;
+        var operator = 8;
+        var staffmember = 9;
+
         $("#addCompanyLink").hide(); //button for adding company
-        $("#User_company_base").hide();
         $("#tenantAgentRow").hide();
         $("#tenantRow").hide();
         $("#workstationRow").hide();
@@ -296,29 +299,22 @@ if ($session['role'] != 5 && $this->action->id == 'update') {
         document.getElementById('User_tenant').disabled = true;
         document.getElementById('User_tenant_agent').disabled = true;
 
-        var sessionRole = $("#currentRole").val(); //session role of currently logged in user
-        var userId = $("#userId").val(); //id in url for update action
-        var selectedUserId = $("#selectedUserId").val(); //session id of currenlty logged in user
-        var actionId = $("#currentAction").val(); // current action
-        var getRole = $("#getRole").val(); // role in url
-
-        if ((getRole != 1 && getRole != '') && sessionRole == 5) { //5 is superadmin and add user with role url
-            if (getRole == 6) {
+        if ((getRole != admin && getRole != '') && sessionRole == superadmin) {
+            if (getRole == agentadmin) {
 
                 document.getElementById('User_tenant_agent').disabled = true;
                 document.getElementById('User_tenant').disabled = false;
                 $("#tenantRow").show();
                 $("#addCompanyLink").show();
             }
-            else if (getRole == 8) {
+            else if (getRole == operator) {
                 document.getElementById('User_tenant_agent').disabled = true;
                 document.getElementById('User_tenant').disabled = false;
                 document.getElementById('User_workstation').disabled = false;
                 $("#workstationRow").show();
                 $("#tenantRow").show();
-
             }
-            else if (getRole == 7) {
+            else if (getRole == agentoperator) {
                 $("#User_company").empty();
                 document.getElementById('User_tenant').disabled = false;
                 document.getElementById('User_tenant_agent').disabled = false;
@@ -333,34 +329,31 @@ if ($session['role'] != 5 && $this->action->id == 'update') {
                 $("#tenantRow").show();
                 $("#tenantAgentRow").show();
             }
-        } else if (getRole == 1 && sessionRole == 5) {
+        } else if (getRole == admin && sessionRole == superadmin) {
             $("#addCompanyLink").show();
         }
-        else if (sessionRole == 1) {
-            if (getRole == 1)
+        else if (sessionRole == admin) {
+            if (getRole == admin)
             {
                 $("#User_company").val($("#sessionCompany").val());
                 document.getElementById('User_company').disabled = true;
-
             }
-            else if (getRole == 8) {
+            else if (getRole == operator) {
                 document.getElementById('User_workstation').disabled = false;
                 $("#workstationRow").show();
                 getWorkstation();
             }
-            else if (getRole == 6) {
+            else if (getRole == agentadmin) {
                 $("#addCompanyLink").show();
             }
         }
-        else if (sessionRole == 6) {
-            if (getRole == 7) {
+        else if (sessionRole == agentadmin) {
+            if (getRole == agentoperator) {
                 document.getElementById('User_workstation').disabled = false;
                 $("#workstationRow").show();
                 getWorkstationAgentOperator();
             }
         }
-
-
 
         $('form').bind('submit', function() {
             $(this).find('#User_role').removeAttr('disabled');
@@ -375,32 +368,26 @@ if ($session['role'] != 5 && $this->action->id == 'update') {
             document.getElementById("User_user_type").disabled = true;
         }
 
-        if ((selectedUserId == userId) && actionId == 'update') {
+        if ((selectedUserId == userId) && actionId == 'update') { //disable user role for owner
             document.getElementById("User_role").disabled = true;
         }
 
         $("#submitBtn").click(function(e) {
-
             e.preventDefault();
-            var Password = $("#User_password").val();
-            var repeatPassword = $("#User_repeat_password").val();
             $("#submitForm").click();
-//            if (((Password != '' && repeatPassword != '') && (Password === repeatPassword))) {
-//                $("#submitForm").click();
-//            }else {
-//                alert("Password cannot be blank.");
-//            }
         });
 
         $('#User_tenant').on('change', function(e) {
             e.preventDefault();
+
             var tenant = $(this).val();
             $("#User_company").empty();
             $("#User_workstation").empty();
-            if ($("#User_role").val() == 8 || $("#User_role").val() == 9 || $("#User_role").val() == 6) {
+
+            if ($("#User_role").val() == operator || $("#User_role").val() == staffmember || $("#User_role").val() == agentadmin) {
                 $.ajax({
                     type: 'POST',
-                    url: '<?php echo Yii::app()->createUrl('user/GetTenantAgentCompany&id='); ?>' + tenant,
+                    url: '<?php echo Yii::app()->createUrl('user/GetTenantOrTenantAgentCompany&id='); ?>' + tenant,
                     dataType: 'json',
                     data: tenant,
                     success: function(r) {
@@ -416,8 +403,8 @@ if ($session['role'] != 5 && $this->action->id == 'update') {
                     }
                 });
             }
-            if ($("#User_role").val() == 8) {
-                if (sessionRole == 5)
+            if ($("#User_role").val() == operator) {
+                if (sessionRole == superadmin)
                 {
                     var tenant = $("#User_tenant").val();
                 }
@@ -440,15 +427,73 @@ if ($session['role'] != 5 && $this->action->id == 'update') {
                 });
             }
 
-            if ($("#User_role").val() != 8)
+            if ($("#User_role").val() != operator)
             {
                 $("#User_tenant_agent").empty();
                 $("#User_company").empty();
                 $.ajax({
                     type: 'POST',
-                    url: '<?php echo Yii::app()->createUrl('user/GetTenantAjax&id='); ?>' + tenant,
+                    url: '<?php echo Yii::app()->createUrl('user/GetTenantAgentAjax&id='); ?>' + tenant,
                     dataType: 'json',
                     data: tenant,
+                    success: function(r) {
+                        $('#User_tenant_agent option[value!=""]').remove();
+                        $('#User_tenant_agent').append('<option value="">Select Tenant Agent</option>');
+                        $.each(r.data, function(index, value) {
+                            $('#User_tenant_agent').append('<option value="' + value.id + '">' + value.name + '</option>');
+                        });
+                        $("#User_tenant_agent").val('');
+                    }
+                });
+            }
+
+        });
+    });
+
+    function populateDynamicFields() {
+        /*if superadmin user company set to empty*/
+        if (<?php echo $session['role'] ?> == 5)
+        {
+            $("#User_company").empty();
+        }
+
+        var selectedRole = $("#User_role").val();
+        var sessionRole = $("#currentRole").val(); //session role of currently logged in user
+        var actionId = $("#currentAction").val(); // current action
+        var admin = 1;
+        var operator = 8;
+        var staffmember = 9;
+        var superadmin = 5;
+        var agentadmin = 6;
+
+        if (sessionRole == admin)
+        {
+            if (selectedRole == admin)
+            {
+                document.getElementById('User_company').disabled = true;
+                document.getElementById('User_workstation').disabled = true;
+                $("#workstationRow").hide();
+            }
+            else if (selectedRole == operator)
+            {
+                $("#User_company").val($("#sessionCompany").val());
+                document.getElementById('User_company').disabled = true;
+                document.getElementById('User_workstation').disabled = false;
+                $("#workstationRow").show();
+                getWorkstation();
+            }
+            else if (selectedRole == staffmember) {
+                document.getElementById('User_workstation').disabled = true;
+                $("#workstationRow").hide();
+                $("#User_company").val($("#sessionCompany").val());
+                document.getElementById('User_tenant').disabled = true;
+                document.getElementById('User_company').disabled = true;
+                var selectedUserId = $("#selectedUserId").val();
+                $.ajax({
+                    type: 'POST',
+                    url: '<?php echo Yii::app()->createUrl('user/GetTenantAgentAjax&id='); ?>' + selectedUserId,
+                    dataType: 'json',
+                    data: selectedUserId,
                     success: function(r) {
                         $('#User_tenant_agent option[value!=""]').remove();
                         $('#User_tenant_agent').append('<option value="">Select Tenant Agent</option>');
@@ -460,154 +505,93 @@ if ($session['role'] != 5 && $this->action->id == 'update') {
                     }
                 });
             }
-
-        });
-    });
-
-    function getTenant() {
-        if (<?php echo $session['role'] ?> == 5)
-        {
-            $("#User_company").empty();
+            else {
+                document.getElementById('User_workstation').disabled = true;
+                $("#workstationRow").hide();
+                document.getElementById('User_company').disabled = false;
+            }
         }
-        var selectedRole = $("#User_role").val();
-        var sessionRole = $("#currentRole").val(); //session role of currently logged in user
-        var actionId = $("#currentAction").val(); // current action
-
-        if (actionId == 'update' || actionId == 'create') {
-            if (sessionRole == 1)
-            {
-                if (selectedRole == 1)
-                {
-                    // $("#User_company").val($("#sessionCompany").val());
-                    document.getElementById('User_company').disabled = true;
-                    document.getElementById('User_workstation').disabled = true;
-                    $("#workstationRow").hide();
-
-
-                }
-                else if (selectedRole == 8)
-                {
-                    $("#User_company").val($("#sessionCompany").val());
-                    document.getElementById('User_company').disabled = true;
+        else if (sessionRole == superadmin)
+        {
+            if (selectedRole != admin) { // if selected is not equal to admin enable tenant
+                if (selectedRole == operator) {
+                    document.getElementById('User_tenant_agent').disabled = true;
                     document.getElementById('User_workstation').disabled = false;
+                    $("#tenantAgentRow").hide();
+                    $("#tenantRow").show();
                     $("#workstationRow").show();
-                    getWorkstation();
+                    document.getElementById('User_tenant').disabled = false;
+                    document.getElementById('User_company').disabled = true;
+                    $("#User_tenant").val('');
+
                 }
                 else if (selectedRole == 9) {
-                    document.getElementById('User_workstation').disabled = true;
-                    $("#workstationRow").hide();
-                    $("#User_company").val($("#sessionCompany").val());
-                    document.getElementById('User_tenant').disabled = true;
+                    document.getElementById('User_tenant_agent').disabled = false;
+                    $("#tenantAgentRow").show();
+                    $("#tenantRow").show();
+                    document.getElementById('User_tenant').disabled = false;
                     document.getElementById('User_company').disabled = true;
-                    var selectedUserId = $("#selectedUserId").val();
-                    $.ajax({
-                        type: 'POST',
-                        url: '<?php echo Yii::app()->createUrl('user/GetTenantAjax&id='); ?>' + selectedUserId,
-                        dataType: 'json',
-                        data: selectedUserId,
-                        success: function(r) {
-                            $('#User_tenant_agent option[value!=""]').remove();
-                            $('#User_tenant_agent').append('<option value="">Select Tenant Agent</option>');
-                            $.each(r.data, function(index, value) {
-                                $('#User_tenant_agent').append('<option value="' + value.id + '">' + value.name + '</option>');
-
-                            });
-                            $("#User_tenant_agent").val('');
-                        }
-                    });
-                }
-                else {
                     document.getElementById('User_workstation').disabled = true;
                     $("#workstationRow").hide();
-                    document.getElementById('User_company').disabled = false;
+                    $("#User_tenant").val('');
+                    $("#User_tenant_agent").empty();
                 }
-            }
-            else if (sessionRole == 5)
-            {
-
-                if (selectedRole != 1) { // if selected is not equal to admin enable tenant
-                    if (selectedRole == 8) {
-                        document.getElementById('User_tenant_agent').disabled = true;
-                        document.getElementById('User_workstation').disabled = false;
-                        $("#tenantAgentRow").hide();
-                        $("#tenantRow").show();
-                        $("#workstationRow").show();
-                        document.getElementById('User_tenant').disabled = false;
-                        document.getElementById('User_company').disabled = true;
-                        $("#User_tenant").val('');
-
-                    } else if (selectedRole == 9) {
-                        document.getElementById('User_tenant_agent').disabled = false;
-                        $("#tenantAgentRow").show();
-                        $("#tenantRow").show();
-                        document.getElementById('User_tenant').disabled = false;
-                        document.getElementById('User_company').disabled = true;
-                        document.getElementById('User_workstation').disabled = true;
-                        $("#workstationRow").hide();
-                        $("#User_tenant").val('');
-                        $("#User_tenant_agent").empty();
-                    }
-                    else if (selectedRole == 6) {
-                        $("#User_tenant").val('');
-                        document.getElementById('User_tenant_agent').disabled = true;
-                        $("#tenantAgentRow").hide();
-                        document.getElementById('User_company').disabled = true;
-                        document.getElementById('User_workstation').disabled = true;
-                        $("#workstationRow").hide();
-                        $("#tenantRow").show();
-
-
-
-                        document.getElementById('User_tenant').disabled = false;
-                    } else if (selectedRole == 7) {
-                        document.getElementById('User_tenant_agent').disabled = false;
-                        $("#tenantAgentRow").show();
-                        document.getElementById('User_company').disabled = true;
-                        $("#tenantRow").show();
-                        document.getElementById('User_tenant').disabled = false;
-                        document.getElementById('User_workstation').disabled = false;
-                        $("#workstationRow").show();
-                        $("#User_tenant").val('');
-                        $("#User_tenant_agent").empty();
-
-                    }
-                    else {
-                        document.getElementById('User_company').disabled = false;
-
-                    }
-                }
-                else {
-                    document.getElementById('User_tenant').disabled = true;
+                else if (selectedRole == 6) {
+                    $("#User_tenant").val('');
                     document.getElementById('User_tenant_agent').disabled = true;
-                    document.getElementById('User_company').disabled = false;
-
-                    //reset company list
-                    /*Taking an array of all options-2 and kind of embedding it on the select1*/
-                    $("#User_company").data('options', $('#User_company_base option').clone());
-                    var id = $("#User_company").val();
-                    var options = $("#User_company").data('options');
-                    $('#User_company').html(options);
+                    $("#tenantAgentRow").hide();
+                    document.getElementById('User_company').disabled = true;
                     document.getElementById('User_workstation').disabled = true;
                     $("#workstationRow").hide();
-                    $("#tenantRow").hide();
-                    $("#tenantAgentRow").hide();
+                    $("#tenantRow").show();
+                    document.getElementById('User_tenant').disabled = false;
                 }
-            }
-            else if (sessionRole == 6) {
-                if (selectedRole == 7) {
+                else if (selectedRole == 7) {
+                    document.getElementById('User_tenant_agent').disabled = false;
+                    $("#tenantAgentRow").show();
+                    document.getElementById('User_company').disabled = true;
+                    $("#tenantRow").show();
+                    document.getElementById('User_tenant').disabled = false;
                     document.getElementById('User_workstation').disabled = false;
                     $("#workstationRow").show();
-                    getWorkstationAgentOperator();
-                } else {
-                    document.getElementById('User_workstation').disabled = true;
-                    $("#workstationRow").hide();
+                    $("#User_tenant").val('');
+                    $("#User_tenant_agent").empty();
                 }
+                else {
+                    document.getElementById('User_company').disabled = false;
+
+                }
+            }
+            else {
+                document.getElementById('User_tenant').disabled = true;
+                document.getElementById('User_tenant_agent').disabled = true;
+                document.getElementById('User_company').disabled = false;
+
+                //reset company list
+                /*Taking an array of all companybase and kind of embedding it on the company*/
+                $("#User_company").data('options', $('#User_company_base option').clone());
+                var id = $("#User_company").val();
+                var options = $("#User_company").data('options');
+                $('#User_company').html(options);
+                document.getElementById('User_workstation').disabled = true;
+                $("#workstationRow").hide();
+                $("#tenantRow").hide();
+                $("#tenantAgentRow").hide();
+            }
+        }
+        else if (sessionRole == agentadmin) {
+            if (selectedRole == agentoperator) {
+                document.getElementById('User_workstation').disabled = false;
+                $("#workstationRow").show();
+                getWorkstationAgentOperator();
+            } else {
+                document.getElementById('User_workstation').disabled = true;
+                $("#workstationRow").hide();
             }
         }
 
-        if (sessionRole == 5 && (selectedRole == '1' || selectedRole == '6')) {
-            $("#addCompanyLink").show();
-        } else if (sessionRole == 1 && selectedRole == '6') {
+        /*show or hide add company button*/
+        if ((sessionRole == superadmin && (selectedRole == admin || selectedRole == agentadmin)) || (sessionRole == admin && selectedRole == agentadmin)) {
             $("#addCompanyLink").show();
         }
         else {
@@ -615,12 +599,17 @@ if ($session['role'] != 5 && $this->action->id == 'update') {
         }
     }
 
-    function getCompanyTenantAgent() {
+    function getCompanyTenantAgent() { /*get tenant agent company*/
         var tenantAgent = $("#User_tenant_agent").val();
-        if ($("#User_role").val() != 9 && $("#User_role").val() != 6) {
+        var staffmember = 9;
+        var agentadmin = 6;
+        var agentoperator = 7;
+        var superadmin = 5;
+
+        if ($("#User_role").val() != staffmember || $("#User_role").val() != agentadmin) {
             $.ajax({
                 type: 'POST',
-                url: '<?php echo Yii::app()->createUrl('user/GetTenantAgentCompany&id='); ?>' + tenantAgent,
+                url: '<?php echo Yii::app()->createUrl('user/GetTenantOrTenantAgentCompany&id='); ?>' + tenantAgent,
                 dataType: 'json',
                 data: tenantAgent,
                 success: function(r) {
@@ -634,8 +623,8 @@ if ($session['role'] != 5 && $this->action->id == 'update') {
                 }
             });
         }
-        if ($("#User_role").val() == 7) {
-            if ($("#currentRole").val() == 5)
+        if ($("#User_role").val() == agentoperator) {
+            if ($("#currentRole").val() == superadmin)
             {
                 var tenantAgent = $("#User_tenant_agent").val();
                 var tenant = $("#User_tenant").val();
@@ -664,115 +653,114 @@ if ($session['role'] != 5 && $this->action->id == 'update') {
         }
     }
 
-    function getWorkstation() {
+    function getWorkstation() { /*get workstations for operator*/
         var sessionRole = '<?php echo $session['role']; ?>';
-        if ($("#User_role").val() == 8) {
-            if (sessionRole == 5)
-            {
-                var tenant = $("#User_tenant").val();
-            }
-            else {
-                var tenant = '<?php echo $session['tenant'] ?>';
-            }
-            $.ajax({
-                type: 'POST',
-                url: '<?php echo Yii::app()->createUrl('user/getTenantWorkstation&id='); ?>' + tenant,
-                dataType: 'json',
-                data: tenant,
-                success: function(r) {
-                    $('#User_workstation option[value!=""]').remove();
+        var superadmin = 5;
 
-                    $.each(r.data, function(index, value) {
-                        $('#User_workstation').append('<option value="' + value.id + '">' + value.name + '</option>');
-                    });
-
-                }
-            });
+        if (sessionRole == superadmin)
+        {
+            var tenant = $("#User_tenant").val();
         }
+        else {
+            var tenant = '<?php echo $session['tenant'] ?>';
+        }
+        $.ajax({
+            type: 'POST',
+            url: '<?php echo Yii::app()->createUrl('user/getTenantWorkstation&id='); ?>' + tenant,
+            dataType: 'json',
+            data: tenant,
+            success: function(r) {
+                $('#User_workstation option[value!=""]').remove();
+
+                $.each(r.data, function(index, value) {
+                    $('#User_workstation').append('<option value="' + value.id + '">' + value.name + '</option>');
+                });
+
+            }
+        });
+
     }
 
-    function getWorkstationAgentOperator() {
-        if ($("#User_role").val() == 7) {
+    function getWorkstationAgentOperator() { /*get workstation for agent operator*/
 
-            var tenant = '<?php echo $session['tenant'] ?>';
-            var tenantAgent = '<?php echo $session['tenant_agent'] ?>';
+        var tenant = '<?php echo $session['tenant'] ?>';
+        var tenantAgent = '<?php echo $session['tenant_agent'] ?>';
 
-            $.ajax({
-                type: 'POST',
-                url: '<?php echo Yii::app()->createUrl('user/getTenantAgentWorkstation&id='); ?>' + tenantAgent + '&tenant=' + tenant,
-                dataType: 'json',
-                data: tenantAgent,
-                success: function(r) {
-                    $('#User_workstation option[value!=""]').remove();
+        $.ajax({
+            type: 'POST',
+            url: '<?php echo Yii::app()->createUrl('user/getTenantAgentWorkstation&id='); ?>' + tenantAgent + '&tenant=' + tenant,
+            dataType: 'json',
+            data: tenantAgent,
+            success: function(r) {
+                $('#User_workstation option[value!=""]').remove();
 
-                    $.each(r.data, function(index, value) {
-                        $('#User_workstation').append('<option value="' + value.id + '">' + value.name + '</option>');
-                    });
+                $.each(r.data, function(index, value) {
+                    $('#User_workstation').append('<option value="' + value.id + '">' + value.name + '</option>');
+                });
 
-                }
-            });
-        }
+            }
+        });
+
     }
 </script>
 
 <?php
 
-function getAccess($user_role) {
+function getAssignableRoles($user_role) {
     $session = new CHttpSession;
-    if (isset($_GET['id'])) {
-        $userId = $_GET['id'];
+    if (isset($_GET['id'])) { //if update
+        $userIdOnUpdate = $_GET['id'];
     } else {
-        $userId = '';
+        $userIdOnUpdate = '';
     }
 
-    $accessRoles = array();
+    $assignableRolesArray = array();
     switch ($user_role) {
-        case 6: //agentadmin
-            if ($session['id'] == $userId) {
-                $canAccess = array("6", "7", "9"); //keys
+        case Roles::ROLE_AGENT_ADMIN: //agentadmin
+            //if session id = id editing ->add role of logged in
+            if ($session['id'] == $userIdOnUpdate) {
+                $assignableRoles = array(Roles::ROLE_AGENT_ADMIN, Roles::ROLE_AGENT_OPERATOR, Roles::ROLE_STAFFMEMBER); //keys
             } else {
-                $canAccess = array("7", "9"); //keys
+                $assignableRoles = array(Roles::ROLE_AGENT_OPERATOR, Roles::ROLE_STAFFMEMBER); //keys
             }
-            $search_array = User::$USER_ROLE_LIST;
-            foreach ($canAccess as $roles) {
+            foreach ($assignableRoles as $roles) {
                 if (isset(User::$USER_ROLE_LIST[$roles])) {
-                    $accessRoles[] = array(
+                    $assignableRolesArray[] = array(
                         $roles => User::$USER_ROLE_LIST[$roles],
                     );
                 }
             }
             break;
 
-        case 5: //superadmin
+        case Roles::ROLE_SUPERADMIN: //superadmin
 
-            if ($session['id'] == $userId) {
-                $canAccess = array("1", "5", "6", "7", "8", "9"); //keys
+            if ($session['id'] == $userIdOnUpdate) {
+                $assignableRoles = array(Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN, Roles::ROLE_AGENT_ADMIN, Roles::ROLE_AGENT_OPERATOR, Roles::ROLE_OPERATOR, Roles::ROLE_STAFFMEMBER); //keys
             } else {
-                $canAccess = array("1", "6", "7", "8", "9");
+                $assignableRoles = array(Roles::ROLE_ADMIN, Roles::ROLE_AGENT_ADMIN, Roles::ROLE_AGENT_OPERATOR, Roles::ROLE_OPERATOR, Roles::ROLE_STAFFMEMBER);
             } //keys
-            $search_array = User::$USER_ROLE_LIST;
-            foreach ($canAccess as $roles) {
+            foreach ($assignableRoles as $roles) {
                 if (isset(User::$USER_ROLE_LIST[$roles])) {
-                    $accessRoles[] = array(
+                    $assignableRolesArray[] = array(
                         $roles => User::$USER_ROLE_LIST[$roles],
                     );
                 }
             }
             break;
 
-        case 1: //admin
-            $canAccess = array("1", "6", "8", "9"); //keys
-            $search_array = User::$USER_ROLE_LIST;
-            foreach ($canAccess as $roles) {
+        case Roles::ROLE_ADMIN: //admin
+            $assignableRoles = array(Roles::ROLE_ADMIN, Roles::ROLE_AGENT_ADMIN, Roles::ROLE_OPERATOR, Roles::ROLE_STAFFMEMBER); //keys
+
+            foreach ($assignableRoles as $roles) {
                 if (isset(User::$USER_ROLE_LIST[$roles])) {
-                    $accessRoles[] = array(
+                    $assignableRolesArray[] = array(
                         $roles => User::$USER_ROLE_LIST[$roles],
                     );
                 }
             }
             break;
     }
-    return $accessRoles;
+    return $assignableRolesArray;
 }
 ?>
 <div class="modal hide fade" id="addCompanyModal" style="width:600px;">
@@ -801,9 +789,10 @@ $this->widget('bootstrap.widgets.TbButton', array(
         var sessionRole = $("#currentRole").val();
         var selectedRole = $("#User_role").val();
         var tenant = $("#User_tenant").val();
-
-        if (sessionRole == 5) {
-            if (selectedRole == 6) {
+        var superadmin = 5;
+        var agentadmin = 6;
+        if (sessionRole == superadmin) {
+            if (selectedRole == agentadmin) {
                 url = '<?php echo $this->createUrl('company/create&viewFrom=1&tenant=') ?>' + tenant;
             }
         }
@@ -840,27 +829,34 @@ if (isset($_POST['User'])) {
         <input type='hidden' id='formSubmit_Role' value='<?php echo $_POST['User']['role']; ?>'>
         <script>
             $(document).ready(function() {
+                var superadmin = 5;
+                var admin = 1;
+                var agentadmin = 6;
+                var agentoperator = 7;
+                var operator = 8;
+                var staffmember = 9;
+
                 var formSubmit_Role = $("#formSubmit_Role").val();
-                if (formSubmit_Role == '1') {
+                if (formSubmit_Role == admin) {
                     $("#addCompanyLink").show();
-                } else if (formSubmit_Role == '6') {
+                } else if (formSubmit_Role == agentadmin) {
                     $("#tenantRow").show();
                     document.getElementById('User_tenant').disabled = false;
-                } else if (formSubmit_Role == '7') {
+                } else if (formSubmit_Role == agentoperator) {
                     $("#tenantRow").show();
                     document.getElementById('User_tenant').disabled = false;
                     $("#tenantAgentRow").show();
                     document.getElementById('User_tenant_agent').disabled = false;
                     $("#workstationRow").show();
                     document.getElementById('User_workstation').disabled = false;
-                } else if (formSubmit_Role == '8') {
+                } else if (formSubmit_Role == operator) {
                     $("#tenantRow").show();
                     document.getElementById('User_tenant').disabled = false;
                     $("#tenantAgentRow").hide();
                     document.getElementById('User_tenant_agent').disabled = true;
                     $("#workstationRow").show();
                     document.getElementById('User_workstation').disabled = false;
-                } else if (formSubmit_Role == '9') {
+                } else if (formSubmit_Role == staffmember) {
                     $("#tenantRow").show();
                     document.getElementById('User_tenant').disabled = false;
                     $("#tenantAgentRow").show();

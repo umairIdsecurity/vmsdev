@@ -24,7 +24,7 @@ class LicenseDetailsController extends Controller {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('create', 'update'),
-                'users' => array('*'),
+                'users' => array('@'),
             ),
             array('deny', // deny all users
                 'users' => array('*'),
@@ -40,8 +40,6 @@ class LicenseDetailsController extends Controller {
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
         $session = new CHttpSession;
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
 
         if (isset($_POST['LicenseDetails'])) {
             $model->attributes = $_POST['LicenseDetails'];

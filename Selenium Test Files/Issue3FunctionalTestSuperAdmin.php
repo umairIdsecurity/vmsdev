@@ -61,7 +61,7 @@ class Issue3FunctionalTestSuperAdmin extends BaseFunctionalTest {
         $this->waitForPageToLoad("30000");
         $this->addUser("admin@test.com", "admin");
         $this->addCompany("Test Company 1", "testcompany");
-        sleep(5);
+        sleep(1);
         $this->waitForElementPresent("id=submitBtn");
         $this->click("id=submitBtn");
         $this->click("id=submitForm");
@@ -72,7 +72,7 @@ class Issue3FunctionalTestSuperAdmin extends BaseFunctionalTest {
         $this->select("css=select[name=\"User[role]\"]", "label=Administrator");
 
         $this->select("css=select[name=\"User[user_type]\"]", "label=Internal");
-        sleep(5);
+        sleep(1);
         $this->assertEquals("Test", $this->getText("css=tr.odd > td"));
         $this->assertEquals("admin", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[2]"));
         $this->assertEquals("Administrator", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[3]"));
@@ -112,7 +112,7 @@ class Issue3FunctionalTestSuperAdmin extends BaseFunctionalTest {
         $this->addUser("agentadmin@test.com", "agentadmin");
         $this->select("id=User_tenant", "label=Test admin");
         $this->waitForElementPresent("id=User_company");
-        sleep(5);
+        sleep(1);
         $this->click("id=submitBtn");
         $this->click("id=submitForm");
         $this->waitForPageToLoad("30000");
@@ -120,7 +120,7 @@ class Issue3FunctionalTestSuperAdmin extends BaseFunctionalTest {
         $this->click("//td[2]/input");
         $this->type("//td[2]/input", "agentadmin");
         $this->select("css=select[name=\"User[role]\"]", "label=Agent Administrator");
-        sleep(5);
+        sleep(1);
         $this->assertEquals("Test", $this->getText("css=tr.odd > td"));
         $this->assertEquals("agentadmin", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[2]"));
         $this->assertEquals("Agent Administrator", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[3]"));
@@ -162,7 +162,7 @@ class Issue3FunctionalTestSuperAdmin extends BaseFunctionalTest {
         $this->addUser("operator@test.com", "operator");
         $this->getDisabledRoleValue("8");
         $this->select("id=User_tenant", "label=Test admin");
-        sleep(5);
+        sleep(1);
         $this->getDisabledCompanyValue("Test Company 1");
         $this->assertEquals("Workstation", $this->getEval("window.document.getElementById(\"User_workstation\").options[window.document.getElementById(\"User_workstation\").selectedIndex].text"));
     
@@ -171,10 +171,11 @@ class Issue3FunctionalTestSuperAdmin extends BaseFunctionalTest {
         $this->click("id=submitForm");
         $this->waitForPageToLoad("30000");
         $this->type("css=td > input[name=\"User[first_name]\"]", "Test");
-        $this->type("xpath=(//input[@name='User[last_name]'])[2]", "Operator");
+        sleep(1);
+        $this->type("name=User[last_name]", "Operator");
         $this->select("css=select[name=\"User[role]\"]", "label=Operator");
         $this->waitForElementPresent("css=td > input[name=\"User[first_name]\"]");
-        sleep(5);
+        sleep(1);
         $this->assertEquals("Test", $this->getText("css=tr.odd > td"));
         $this->assertEquals("operator", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[2]"));
         $this->assertEquals("Operator", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[3]"));
@@ -217,10 +218,10 @@ class Issue3FunctionalTestSuperAdmin extends BaseFunctionalTest {
         $this->getDisabledRoleValue("7");
         $this->select("id=User_tenant", "label=Test admin");
         $this->waitForElementPresent("id=User_tenant_agent");
-        sleep(5);
+        sleep(1);
         $this->select("id=User_tenant_agent", "label=Test agentadmin");
         $this->waitForElementPresent("id=User_company");
-        sleep(5);
+        sleep(1);
         $this->getDisabledCompanyValue("Test Company 1");
         $this->waitForElementPresent("id=User_workstation");
         $this->assertEquals("Workstation", $this->getText("id=User_workstation"));
@@ -234,7 +235,7 @@ class Issue3FunctionalTestSuperAdmin extends BaseFunctionalTest {
         $this->type("//td[2]/input", "agentoperator");
         $this->select("css=select[name=\"User[role]\"]", "label=Agent Operator");
         $this->waitForElementPresent("css=td > input[name=\"User[first_name]\"]");
-        sleep(5);
+        sleep(1);
         $this->assertEquals("Test", $this->getText("css=tr.odd > td"));
         $this->assertEquals("agentoperator", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[2]"));
         $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
@@ -275,7 +276,7 @@ class Issue3FunctionalTestSuperAdmin extends BaseFunctionalTest {
         $this->select("id=User_role", "label=Staff Member");
         $this->select("id=User_tenant", "label=Test admin");
         $this->waitForElementPresent("id=User_tenant_agent");
-        sleep(5);
+        sleep(1);
         $this->select("id=User_tenant_agent", "label=Test agentadmin");
         $this->waitForElementPresent("id=User_tenant_agent");
         $this->getDisabledCompanyValue("Test Company 1");
@@ -288,7 +289,7 @@ class Issue3FunctionalTestSuperAdmin extends BaseFunctionalTest {
         $this->type("//td[2]/input", "staffmember");
         $this->select("css=select[name=\"User[role]\"]", "label=Staff Member");
         $this->waitForElementPresent("css=td > input[name=\"User[first_name]\"]");
-        sleep(5);
+        sleep(1);
         $this->assertEquals("Test", $this->getText("css=tr.odd > td"));
         $this->assertEquals("staffmember", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[2]"));
         $this->assertEquals("Staff Member", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[3]"));
@@ -341,7 +342,7 @@ class Issue3FunctionalTestSuperAdmin extends BaseFunctionalTest {
         $this->select("css=select[name=\"User[role]\"]", "label=Administrator");
         $this->select("css=select[name=\"User[user_type]\"]", "label=Internal");
         $this->waitForElementPresent("css=td > input[name=\"User[first_name]\"]");
-        sleep(5);
+        sleep(1);
         $this->assertEquals("Test", $this->getText("css=tr.odd > td"));
         $this->assertEquals("admin2", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[2]"));
         $this->assertEquals("Administrator", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[3]"));

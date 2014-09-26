@@ -41,7 +41,7 @@ return array(
             'widgets' => array(
                 'CGridView' => array(
                     'cssFile' => '/css/gridview.css'
-               ),
+                ),
             ),
         ),
         'user' => array(
@@ -61,10 +61,7 @@ return array(
           ),
           ),
          */
-//		'db'=>array(
-//			'connectionString' => 'sqlite:'.dirname(__FILE__).'/../data/testdrive.db',
-//		),
-        // uncomment the following to use a MySQL database
+        
         'db' => array(
             'connectionString' => 'mysql:host=localhost;dbname=vms',
             'username' => 'user_vms',
@@ -73,6 +70,15 @@ return array(
             'enableParamLogging' => true,
             'enableProfiling' => true,
         ),
+        //uncomment for live
+//        'db' => array(
+//            'connectionString' => 'mysql:host=localhost;dbname=identity_cvms',
+//            'username' => 'identity_vms',
+//            'password' => 'HFz7c9dHrmPqwNGr',
+//            'charset' => 'utf8',
+//            'enableParamLogging' => true,
+//            'enableProfiling' => true,
+//        ),
         'errorHandler' => array(
             // use 'site/error' action to display errors
             'errorAction' => 'site/error',

@@ -171,7 +171,7 @@ class Company extends CActiveRecord {
     
     public function getCompanyName($id) {
         $connection = Yii::app()->db;
-        $command = $connection->createCommand("SELECT name from company where id=$id");
+        $command = $connection->createCommand("SELECT name from company where id='".$id."'");
 
         $row = $command->queryRow();
         return $row['name'];

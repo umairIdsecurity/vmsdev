@@ -38,10 +38,11 @@ class SiteController extends Controller {
     public function actionError() {
         $this->layout = '//layouts/column2';
         if ($error = Yii::app()->errorHandler->error) {
-            if (Yii::app()->request->isAjaxRequest)
+            if (Yii::app()->request->isAjaxRequest) {
                 echo $error['message'];
-            else
+            } else {
                 $this->render('error', $error);
+            }
         }
     }
 
@@ -89,7 +90,11 @@ class SiteController extends Controller {
                 if ($session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_AGENT_ADMIN || $session['role'] == Roles::ROLE_SUPERADMIN) {
                     $this->redirect('index.php?r=user/admin');
                 } else if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles::ROLE_OPERATOR) {
-                    $this->redirect('index.php?r=site/selectworkstation&id=' . $session['id']);
+                    $model->findWorkstations($session['id']);
+                    if(!($model->findWorkstations($session['id']))){
+                        Yii::app()->user->setFlash('error', "No workstations currenlty assigned to you. Please ask your administrator. ");
+                    }else
+                    {$this->redirect('index.php?r=site/selectworkstation&id=' . $session['id']);}
                 } else {
                     $this->redirect('index.php?r=dashboard');
                 }
@@ -158,41 +163,31 @@ class SiteController extends Controller {
         $this->resetDB('vms-withData.sql');
     }
 
-    public function resetDB($sqlfilename = NULL){
+    public function resetDB($sqlfilename = NULL) {
         $mysql_host = 'localhost';
-// MySQL username
-        $mysql_username = 'root';
-// MySQL password
-        $mysql_password = '';
-// Database name
+        $mysql_username = 'user_vms';
+        $mysql_password = 'HFz7c9dHrmPqwNGr';
         $mysql_database = 'vms';
 
-// Connect to MySQL server
         mysql_connect($mysql_host, $mysql_username, $mysql_password) or die('Error connecting to MySQL server: ' . mysql_error());
-// Select database
         mysql_select_db($mysql_database) or die('Error selecting MySQL database: ' . mysql_error());
 
 
-        $filename = Yii::getPathOfAlias('webroot') . '/Selenium Test Files/'.$sqlfilename;
+        $filename = Yii::getPathOfAlias('webroot') . '/Selenium Test Files/' . $sqlfilename;
         $templine = '';
-// Read in entire file
         $lines = file($filename);
-// Loop through each line
+        
         foreach ($lines as $line) {
-// Skip it if it's a comment
             if (substr($line, 0, 2) == '--' || $line == '')
                 continue;
 
-// Add this line to the current segment
             $templine .= $line;
-// If it has a semicolon at the end, it's the end of the query
             if (substr(trim($line), -1, 1) == ';') {
-                // Perform the query
                 mysql_query($templine) or print('Error performing query \'<strong>' . $templine . '\': ' . mysql_error() . '<br /><br />');
-                // Reset temp variable to empty
                 $templine = '';
             }
         }
         echo "Tables imported successfully";
     }
+
 }

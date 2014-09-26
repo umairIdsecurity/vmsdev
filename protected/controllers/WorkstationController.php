@@ -49,7 +49,7 @@ class WorkstationController extends Controller {
 
         switch ($action) {
             case "admin":
-                $user_role = array("5", "1","6");
+                $user_role = array("5", "1", "6");
                 if (in_array($CurrentRole, $user_role)) {
                     return true;
                 }
@@ -141,8 +141,9 @@ class WorkstationController extends Controller {
     public function actionAdmin() {
         $model = new Workstation('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['Workstation']))
+        if (isset($_GET['Workstation'])) {
             $model->attributes = $_GET['Workstation'];
+        }
 
         $this->render('admin', array(
             'model' => $model,

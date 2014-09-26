@@ -25,13 +25,10 @@ class PasswordController extends Controller {
      */
     public function accessRules() {
         return array(
-            array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('index', 'view'),
-                'users' => array('*'),
-            ),
+            
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('create'),
-                'users' => array('*'),
+                'users' => array('@'),
             ),
             array('allow',
                 'actions' => array('update'),
@@ -39,7 +36,7 @@ class PasswordController extends Controller {
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
                 'actions' => array('admin', 'delete'),
-                'users' => array('*'),
+                'users' => array('@'),
             ),
             array('deny', // deny all users
                 'users' => array('*'),
@@ -130,15 +127,7 @@ class PasswordController extends Controller {
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
     }
 
-    /**
-     * Lists all models.
-     */
-    public function actionIndex() {
-        $dataProvider = new CActiveDataProvider('Password');
-        $this->render('index', array(
-            'dataProvider' => $dataProvider,
-        ));
-    }
+    
 
     /**
      * Manages all models.

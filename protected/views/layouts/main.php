@@ -1,5 +1,4 @@
 <?php
-
 $session = new CHttpSession;
 Yii::app()->bootstrap->register();
 ?>
@@ -7,10 +6,9 @@ Yii::app()->bootstrap->register();
 $cs = Yii::app()->clientScript;
 
 $cs->registerCoreScript('jquery');
-$cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/script-sidebar.js');
-//$cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.min.js');
-$cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.uploadfile.min.js');
-$cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
+$cs->registerScriptFile(Yii::app()->request->baseUrl . '/js/script-sidebar.js');
+$cs->registerScriptFile(Yii::app()->request->baseUrl . '/js/jquery.uploadfile.min.js');
+$cs->registerScriptFile(Yii::app()->request->baseUrl . '/js/jquery.form.js');
 $session = new CHttpSession;
 $user_role = $session['role'];
 ?>
@@ -34,13 +32,13 @@ $user_role = $session['role'];
         <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/uploadfile.css" />
         <script  src="<?php echo Yii::app()->request->baseUrl; ?>/js/angular.min.js" ></script>
         <script  src="<?php echo Yii::app()->request->baseUrl; ?>/js/match.js" ></script>
-        
+
         <script  src="<?php echo Yii::app()->request->baseUrl; ?>/js/script-sidebar.js" ></script>
         <script  src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.min.js" ></script>
         <script  src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.uploadfile.min.js" ></script>
         <script  src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.form.js" ></script>
-        
-        
+
+
         <title><?php echo CHtml::encode($this->pageTitle); ?></title>
     </head>
 
@@ -54,10 +52,12 @@ $user_role = $session['role'];
                 $viewFrom = '';
             }
             ?>
-            <div id="header" <?php if ($viewFrom != '' || $this->id=='userWorkstations') {
+            <div id="header" <?php
+            if ($viewFrom != '' || $this->id == 'userWorkstations') {
                 echo "style='display:none'";
-            } ?>>
-               
+            }
+            ?>>
+
                 <div id="logo"><?php echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl . '/images/admin_lifehouse.png')); ?></div>
                 <article class="header_midbox">
 
@@ -72,9 +72,9 @@ $user_role = $session['role'];
                                     <p>Contact Support</p>
                                 </a>
                             </li>
-<?php
-echo '<li><a href="' . Yii::app()->createUrl("/site/logout") . '"><p>Log Out</p></a></li>';
-?>
+                            <?php
+                            echo '<li><a href="' . Yii::app()->createUrl("/site/logout") . '"><p>Log Out</p></a></li>';
+                            ?>
                         </ul>
                         <div class="clear"></div>
                         <a href="<?php echo Yii::app()->createUrl("/site/logout"); ?>">
@@ -87,7 +87,7 @@ echo '<li><a href="' . Yii::app()->createUrl("/site/logout") . '"><p>Log Out</p>
                             <li class="<?php echo ($this->id == "dashboard") ? "active" : "" ?>">
                                 <a href="<?php echo Yii::app()->createUrl("/dashboard"); ?>">Dashboard</a>
                             </li>
-                            <?php if ($session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_AGENT_ADMIN || $session['role'] == Roles::ROLE_SUPERADMIN) { ?>
+<?php if ($session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_AGENT_ADMIN || $session['role'] == Roles::ROLE_SUPERADMIN) { ?>
                                 <li class="<?php echo ($this->id == "user" && $this->action->id == "admin") ? "active" : "" ?>">
                                     <a href="<?php echo Yii::app()->createUrl("/user/admin"); ?>">Administration</a>
                                 </li>
@@ -104,18 +104,22 @@ echo '<li><a href="' . Yii::app()->createUrl("/site/logout") . '"><p>Log Out</p>
 
                 </article>
             </div><!-- header -->
-            
-            <div class="wrapper" <?php if ($viewFrom != '' ) {
-                echo "style='margin-left:180px'";
-            } ?>>
+
+            <div class="wrapper" <?php
+                 if ($viewFrom != '') {
+                     echo "style='margin-left:180px'";
+                 }
+                 ?>>
 <?php echo $content; ?>
             </div>
             <div class="clear"></div>
             <br><br>
-                    <div id="footer" <?php if ($viewFrom != '' || $this->id=='userWorkstations') {
-                echo "style='display:none'";
-            } ?>>
-                        VMS 
+                    <div id="footer" <?php
+if ($viewFrom != '' || $this->id == 'userWorkstations') {
+    echo "style='display:none'";
+}
+?>>
+                        Copyright &copy; <?php echo date('Y'); ?> by <a href="http://idsecurity.com.au">Identity Security Pty Ltd </a>©.<br/>
                         All Rights Reserved.<br/>
 
                     </div><!-- footer -->

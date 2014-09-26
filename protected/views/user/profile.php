@@ -13,9 +13,9 @@ $session = new CHttpSession;
 /* @var $form CActiveForm */
 
 if (isset($_GET['id'])) {
-    $userId = $_GET['id'];
+    $currentlyEditedUserId = $_GET['id'];
 } else {
-    $userId = '';
+    $currentlyEditedUserId = '';
 }
 ?>
 
@@ -54,8 +54,8 @@ if (isset($_GET['id'])) {
                 
                 ?>>
                             <?php
-                            $opts = CHtml::listData(Company::model()->findAll(), 'id', 'name');
-                            foreach ($opts as $key => $value) {
+                            $companyList = CHtml::listData(Company::model()->findAll(), 'id', 'name');
+                            foreach ($companyList as $key => $value) {
                                 ?>
                         <option <?php
                         if (  User::model()->getCompany($session['id']) == $key ) {
@@ -97,7 +97,7 @@ if (isset($_GET['id'])) {
 </div><!-- form -->
 <input type="hidden" id="currentAction" value="<?php echo $this->action->Id; ?>"/>
 <input type="hidden" id="currentRole" value="<?php echo $session['role']; ?>"/>
-<input type="hidden" id="userId" value="<?php echo $userId; ?>"/>
+<input type="hidden" id="userId" value="<?php echo $currentlyEditedUserId; ?>"/>
 <input type="hidden" id="selectedUserId" value="<?php echo $session['id']; ?>"/>
 <input type="hidden" id="sessionCompany" value="<?php echo $session['company']; ?>"/>
 <script>
@@ -107,8 +107,8 @@ if (isset($_GET['id'])) {
         var userId = $("#userId").val(); //id in url for update action
         var selectedUserId = $("#selectedUserId").val(); //session id of currenlty logged in user
         var actionId = $("#currentAction").val(); // current action
-
-        if (sessionRole == '9'){
+        var staffmember = 9;
+        if (sessionRole == staffmember){
             document.getElementById('User_first_name').disabled = true;
             document.getElementById('User_last_name').disabled = true;
             document.getElementById('User_company').disabled = true;

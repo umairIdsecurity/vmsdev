@@ -71,7 +71,6 @@ class CompanyController extends Controller {
         }
     }
 
-    
     public function actionCreate() {
         $model = new Company;
         $session = new CHttpSession;
@@ -126,9 +125,9 @@ class CompanyController extends Controller {
 
         if (isset($_POST['Company'])) {
             $model->attributes = $_POST['Company'];
-            if ($model->save())
-            //$this->redirect(array('view','id'=>$model->id));
+            if ($model->save()) {
                 Yii::app()->user->setFlash('success', 'Organization Settings Updated');
+            }
         }
 
         $this->render('update', array(
@@ -145,18 +144,9 @@ class CompanyController extends Controller {
         $this->loadModel($id)->delete();
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax']))
+        if (!isset($_GET['ajax'])) {
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
-    }
-
-    /**
-     * Lists all models.
-     */
-    public function actionIndex() {
-        $dataProvider = new CActiveDataProvider('Company');
-        $this->render('index', array(
-            'dataProvider' => $dataProvider,
-        ));
+        }
     }
 
     /**

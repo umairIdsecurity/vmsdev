@@ -53,8 +53,8 @@ $session = new CHttpSession;
                         $criteria->select = 'id,tenant,first_name,last_name';
                         $criteria->addCondition('role = 1');
 
-                        $opts = User::model()->findAll($criteria);
-                        foreach ($opts as $key => $value) {
+                        $companyList = User::model()->findAll($criteria);
+                        foreach ($companyList as $key => $value) {
                             ?>
                             <option <?php
                             if ($model['tenant'] == $value->id) {
@@ -75,10 +75,10 @@ $session = new CHttpSession;
                         if ($this->action->Id != 'create') {
                             $criteria = new CDbCriteria;
                             $criteria->select = 'id,first_name,last_name';
-                            $criteria->addCondition('id = "'.$model['tenant_agent'].'"');
+                            $criteria->addCondition('id = "' . $model['tenant_agent'] . '"');
 
-                            $opts = User::model()->findAll($criteria);
-                            foreach ($opts as $key => $value) {
+                            $companyList = User::model()->findAll($criteria);
+                            foreach ($companyList as $key => $value) {
                                 ?>
                                 <option <?php
                                 if ($model['tenant_agent'] == $value->id) {
@@ -90,31 +90,25 @@ $session = new CHttpSession;
                             } else {
                                 ?>
                             <option disabled value='' selected>Select Tenant Agent</option>
-    <?php } ?>
+                        <?php } ?>
                     </select></td>
                 <td><?php echo $form->error($model, 'tenant_agent'); ?></td>
             </tr>
-<?php } else { ?>
+        <?php } else { ?>
             <input type="hidden" id="Workstation_tenant" name="Workstation[tenant]" value="<?php echo $session['tenant']; ?>">
             <input type="hidden" id="Workstation_tenant_agent" name="Workstation[tenant_agent]" value="<?php echo $session['tenant_agent'] ?>">
 
         <?php } ?>
-<?php if ($this->action->id != 'update') { ?>
-            <tr>
-                <td><?php echo $form->labelEx($model, 'password'); ?></td>
-                <td><input type="password" id="Workstation_password" name="Workstation[password]" ></td>
-                <td><?php echo $form->error($model, 'password'); ?></td>
-            </tr>
-<?php } ?>
+       
         <input type="hidden" id="Workstation_created_by" name="Workstation[created_by]" value="<?php echo $session['id']; ?>">
     </table>
 
 
     <div class="row buttons">
-<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
+        <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
     </div>
 
-<?php $this->endWidget(); ?>
+    <?php $this->endWidget(); ?>
 
 </div><!-- form -->
 

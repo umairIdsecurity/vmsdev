@@ -69,34 +69,33 @@ class User extends VmsActiveRecord {
     public function rules() {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
-        if (Yii::app()->controller->action->id == 'update' || Yii::app()->controller->action->id == 'profile' ) {
+        if (Yii::app()->controller->action->id == 'update' || Yii::app()->controller->action->id == 'profile') {
             return array(
-            array('first_name, last_name, email, contact_number, role, user_type,is_deleted,password,company', 'required'),
-            array('company, role, user_type, user_status, created_by', 'numerical', 'integerOnly' => true),
-            array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
-            array('date_of_birth, notes,tenant,tenant_agent', 'safe'),
-            array('email', 'unique'),
-            array('email', 'email'),
-            // The following rule is used by search().
-            // @todo Please remove those attributes that should not be searched.
-            array('id, first_name, last_name,email,is_deleted ,contact_number, date_of_birth, company, department, position, staff_id, notes, role_id, user_type_id, user_status_id, created_by', 'safe', 'on' => 'search'),
-        );
+                array('first_name, last_name, email, contact_number, role, user_type,is_deleted,password,company', 'required'),
+                array('company, role, user_type, user_status, created_by', 'numerical', 'integerOnly' => true),
+                array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
+                array('date_of_birth, notes,tenant,tenant_agent', 'safe'),
+                array('email', 'unique'),
+                array('email', 'email'),
+                // The following rule is used by search().
+                // @todo Please remove those attributes that should not be searched.
+                array('id, first_name, last_name,email,is_deleted ,contact_number, date_of_birth, company, department, position, staff_id, notes, role_id, user_type_id, user_status_id, created_by', 'safe', 'on' => 'search'),
+            );
         } else {
             return array(
-            array('first_name, last_name, email, contact_number, role, user_type,is_deleted,password,company', 'required'),
-            array('company, role, user_type, user_status, created_by', 'numerical', 'integerOnly' => true),
-            array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
-            array('date_of_birth, notes,tenant,tenant_agent', 'safe'),
-            array('email', 'unique'),
-            array('email', 'email'),
-            array('repeatpassword', 'required', 'on' => 'insert'),
-            array('password', 'compare', 'compareAttribute' => 'repeatpassword'),
-            // The following rule is used by search().
-            // @todo Please remove those attributes that should not be searched.
-            array('id, first_name, last_name,email,is_deleted ,contact_number, date_of_birth, company, department, position, staff_id, notes, role_id, user_type_id, user_status_id, created_by', 'safe', 'on' => 'search'),
-        );
+                array('first_name, last_name, email, contact_number, role, user_type,is_deleted,password,company', 'required'),
+                array('company, role, user_type, user_status, created_by', 'numerical', 'integerOnly' => true),
+                array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
+                array('date_of_birth, notes,tenant,tenant_agent', 'safe'),
+                array('email', 'unique'),
+                array('email', 'email'),
+                array('repeatpassword', 'required', 'on' => 'insert'),
+                array('password', 'compare', 'compareAttribute' => 'repeatpassword'),
+                // The following rule is used by search().
+                // @todo Please remove those attributes that should not be searched.
+                array('id, first_name, last_name,email,is_deleted ,contact_number, date_of_birth, company, department, position, staff_id, notes, role_id, user_type_id, user_status_id, created_by', 'safe', 'on' => 'search'),
+            );
         }
-
     }
 
     /**
@@ -193,28 +192,30 @@ class User extends VmsActiveRecord {
         $queryCondition = 'company = "' . $session['company'] . '" or created_by="' . $session['id'] . '"';
         switch ($session['role']) {
             case Roles::ROLE_ADMIN:
-                //$rolein = '(7,8)'; uncomment for if action id is systemaccessrule
                 if (Yii::app()->controller->action->id == 'systemaccessrules') {
-                    $rolein = '(7,8)';
+                    $rolein = '('.Roles::ROLE_AGENT_OPERATOR.','.Roles::ROLE_OPERATOR.')';
                 } else {
-                    $rolein = '(1,6,7,8,9,10)';
+                    $rolein = '('.Roles::ROLE_ADMIN.','.Roles::ROLE_AGENT_ADMIN.','.Roles::ROLE_AGENT_OPERATOR.','.Roles::ROLE_OPERATOR.','.Roles::ROLE_VISITOR.','.Roles::ROLE_STAFFMEMBER.')';
                 }
                 $queryCondition = 'tenant = "' . $session['tenant'] . '"';
                 break;
             case Roles::ROLE_AGENT_ADMIN:
                 if (Yii::app()->controller->action->id == 'systemaccessrules') {
-                    $rolein = '(7)';
+                    $rolein = '('.Roles::ROLE_AGENT_OPERATOR.')';
                 } else {
                     $rolein = '(6,7,8,9,10)';
+                    $rolein = '('.Roles::ROLE_AGENT_ADMIN.','.Roles::ROLE_AGENT_OPERATOR.','.Roles::ROLE_STAFFMEMBER.','.Roles::ROLE_VISITOR.')';
+                
                 }
 
                 $queryCondition = 'tenant_agent="' . $session['tenant_agent'] . '"';
                 break;
             default:
                 if (Yii::app()->controller->action->id == 'systemaccessrules') {
-                    $rolein = '(8,7)';
+                    $rolein = '('.Roles::ROLE_AGENT_OPERATOR.','.Roles::ROLE_OPERATOR.')';
                 } else {
-                    $rolein = '(1,5,6,7,8,9,10)';
+                    $rolein = '('.Roles::ROLE_SUPERADMIN.','.Roles::ROLE_ADMIN.','.Roles::ROLE_AGENT_ADMIN.','.Roles::ROLE_AGENT_OPERATOR.','.Roles::ROLE_OPERATOR.','.Roles::ROLE_VISITOR.','.Roles::ROLE_STAFFMEMBER.')';
+                
                 }
 
                 $queryCondition = 'is_deleted=0';
@@ -277,9 +278,9 @@ class User extends VmsActiveRecord {
         $command = $connection->createCommand($sql);
         $row = $command->queryRow();
         foreach ($row as $key => $val) {
-            $session['company'] = $val;
+            $company = $val;
         }
-        return $session['company'];
+        return $company;
     }
 
     public function beforeSave() {
@@ -296,7 +297,7 @@ class User extends VmsActiveRecord {
             $this->created_by = $id;
         } else {
 
-            if ($session['role'] == 5) {
+            if ($session['role'] == Roles::ROLE_SUPERADMIN) {
                 $lastInsertId = Yii::app()->db->getLastInsertID();
                 $connection = Yii::app()->db;
                 $command = $connection->createCommand('SELECT user.id as id,user.role as role,user.company as user_company,company.name, 
@@ -495,5 +496,123 @@ class User extends VmsActiveRecord {
 
         $row = $command->queryRow();
         return $row['name'];
+    }
+
+    public function findAllAdmin() {
+        $criteria = new CDbCriteria;
+        $criteria->select = 'id,tenant,first_name,last_name';
+        $criteria->addCondition('role = 1');
+
+        return User::model()->findAll($criteria);
+    }
+
+    public function findAllAgentAdmin() {
+        $criteria = new CDbCriteria;
+        $criteria->select = 'id,tenant,first_name,last_name';
+        $criteria->addCondition('role = 6');
+
+        return User::model()->findAll($criteria);
+    }
+
+    public function validateIfUserHasSameTenantOrTenantAgent($currentlyEditedUserId,$currentLoggedUserRole,$currentLoggedUserTenant,$currentLoggedUserTenantAgent) {
+        
+        $connection = Yii::app()->db;
+        $ownerCondition = "where id ='" . $currentlyEditedUserId . "'";
+        
+        if ($currentLoggedUserRole == Roles::ROLE_ADMIN) {
+            $ownerCondition = "WHERE tenant = '" . $currentLoggedUserTenant . "' ";
+        } else if ($currentLoggedUserRole == Roles::ROLE_AGENT_ADMIN) {
+            $ownerCondition = "WHERE `tenant_agent`='" . $currentLoggedUserTenantAgent . "'";
+        }
+        $ownerQuery = "select * FROM `user`
+                            " . $ownerCondition . " and id ='" . $currentlyEditedUserId . "' 
+                            ";
+        $command = $connection->createCommand($ownerQuery);
+        $row = $command->query();
+        if ($row->rowCount !== 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function saveWorkstation($model_Id, $workstation_Id) {
+        $session = new CHttpSession;
+        $connection = Yii::app()->db;
+        $command = $connection->createCommand('INSERT INTO `user_workstation` '
+                . '(`user`, `workstation`, `created_by`) VALUES (' . $model_Id . ',' . $workstation_Id . ',' . $session['id'] . ' )');
+        $command->query();
+    }
+    
+    public function findTenantAgent($id){
+        $tenant = trim($id);
+
+        $aArray = array();
+
+        $connection = Yii::app()->db;
+        $sql = "select id,concat(first_name,' ',last_name) as name from `user` where tenant=$id and role=6";
+        $command = $connection->createCommand($sql);
+        $row = $command->queryAll();
+        foreach ($row as $key => $value) {
+
+            $aArray[] = array(
+                'id' => $value['id'],
+                'name' => $value['name'],
+            );
+        }
+        return $aArray;
+    }
+    public function findTenantorTenantAgentCompany($id){
+        $aArray = array();
+
+        $connection = Yii::app()->db;
+        $sql = "SELECT company.id as id,company.name as company FROM `user`
+                        LEFT JOIN company ON company.id = user.`company`
+                        WHERE `user`.id=$id ";
+        $command = $connection->createCommand($sql);
+        $row = $command->queryAll();
+        foreach ($row as $key => $value) {
+
+            $aArray[] = array(
+                'id' => $value['id'],
+                'name' => $value['company'],
+            );
+        }
+        return $aArray;
+    }
+    
+    public function findTenantWorkstation($id){
+        $aArray = array();
+
+        $connection = Yii::app()->db;
+        $sql = "SELECT id,name from workstation where tenant=$id";
+        $command = $connection->createCommand($sql);
+        $row = $command->queryAll();
+        foreach ($row as $key => $value) {
+
+            $aArray[] = array(
+                'id' => $value['id'],
+                'name' => $value['name'],
+            );
+        }
+        
+        return $aArray;
+    }
+    
+    public function findTenantAgentWorkstation($id, $tenant){
+        $aArray = array();
+
+        $connection = Yii::app()->db;
+        $sql = "SELECT id,name from workstation where tenant_agent=$id and tenant = '".$tenant."'";
+        $command = $connection->createCommand($sql);
+        $row = $command->queryAll();
+        foreach ($row as $key => $value) {
+
+            $aArray[] = array(
+                'id' => $value['id'],
+                'name' => $value['name'],
+            );
+        }
+        return $aArray;
     }
 }

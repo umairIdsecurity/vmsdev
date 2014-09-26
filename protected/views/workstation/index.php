@@ -2,14 +2,7 @@
 /* @var $this WorkstationController */
 /* @var $dataProvider CActiveDataProvider */
 
-$this->breadcrumbs=array(
-	'Workstations',
-);
 
-$this->menu=array(
-	array('label'=>'Create Workstation', 'url'=>array('create')),
-	array('label'=>'Manage Workstation', 'url'=>array('admin')),
-);
 ?>
 
 <h1>Workstations</h1>

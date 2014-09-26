@@ -43,7 +43,7 @@ $session=new CHttpSession;
 
 	<div id="footer">
             Copyright &copy; <?php echo date('Y'); ?> by <a href="http://idsecurity.com.au">Identity Security Pty Ltd </a>©.<br/>
-		All Rights Reserved.<br/>
+            All Rights Reserved.<br/>
 		
 	</div><!-- footer -->
 

@@ -25,14 +25,11 @@ class UserController extends Controller {
      */
     public function accessRules() {
         return array(
-            array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('index', 'view'),
-                'users' => array('*'),
-            ),
+            
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('create',
-                    'GetTenantAjax',
-                    'GetTenantAgentCompany',
+                    'GetTenantAgentAjax',
+                    'GetTenantOrTenantAgentCompany',
                     'GetTenantWorkstation', 'GetTenantAgentWorkstation'),
                 'users' => array('@'),
             ),
@@ -60,29 +57,14 @@ class UserController extends Controller {
 
         switch ($action) {
             case "admin":
-                $user_role = array("1", "5", "6");
+                $user_role = array(Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN, Roles::ROLE_AGENT_ADMIN);
                 if (in_array($CurrentRole, $user_role)) {
                     return true;
                 }
                 break;
             case "userTenant":
-                $connection = Yii::app()->db;
-                $ownerCondition = "where id ='" . $_GET['id'] . "'";
-                if ($session['role'] == Roles::ROLE_ADMIN) {
-                    $ownerCondition = "WHERE tenant = '" . $session['tenant'] . "' ";
-                } else if ($session['role'] == Roles::ROLE_AGENT_ADMIN) {
-                    $ownerCondition = "WHERE `tenant_agent`='" . $session['tenant_agent'] . "'";
-                 }
-                $ownerQuery = "select * FROM `user`
-                            " . $ownerCondition . " and id ='" . $_GET['id'] . "' 
-                            ";
-                $command = $connection->createCommand($ownerQuery);
-                $row = $command->query();
-                if ($row->rowCount !== 0) {
-                    return true;
-                } else {
-                    return false;
-                }
+                
+                return User::model()->validateIfUserHasSameTenantOrTenantAgent($_GET['id'],$session['role'],$session['tenant'],$session['tenant_agent']);
                 break;
 
             case "profile":
@@ -99,16 +81,6 @@ class UserController extends Controller {
     }
 
     /**
-     * Displays a particular model.
-     * @param integer $id the ID of the model to be displayed
-     */
-    public function actionView($id) {
-        $this->render('view', array(
-            'model' => $this->loadModel($id),
-        ));
-    }
-
-    /**
      * Creates a new model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
@@ -119,13 +91,9 @@ class UserController extends Controller {
         if (isset($_POST['User'])) {
             $model->attributes = $_POST['User'];
             if ($model->save()) {
-                $connection = Yii::app()->db;
                 if ($_POST['User']['role'] == Roles::ROLE_OPERATOR || $_POST['User']['role'] == Roles::ROLE_AGENT_OPERATOR) {
-                    $command = $connection->createCommand('INSERT INTO `user_workstation` '
-                            . '(`user`, `workstation`, `created_by`) VALUES (' . $model->id . ',' . $_POST['User']['workstation'] . ',' . $session['id'] . ' )');
-                    $command->query();
+                    User::model()->saveWorkstation($model->id, $_POST['User']['workstation']);
                 }
-                $session['lastInsertId'] = $model->id;
                 $this->redirect(array('admin'));
             }
         }
@@ -143,13 +111,11 @@ class UserController extends Controller {
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
 
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-
         if (isset($_POST['User'])) {
             $model->attributes = $_POST['User'];
-            if ($model->save())
+            if ($model->save()) {
                 $this->redirect(array('admin'));
+            }
         }
 
         $this->render('update', array(
@@ -166,8 +132,9 @@ class UserController extends Controller {
         $this->loadModel($id)->delete();
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax']))
+        if (!isset($_GET['ajax'])) {
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+        }
     }
 
     /**
@@ -187,8 +154,9 @@ class UserController extends Controller {
     public function actionAdmin() {
         $model = new User('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['User']))
-           $model->attributes = $_GET['User'];
+        if (isset($_GET['User'])) {
+            $model->attributes = $_GET['User'];
+        }
 
         $this->render('admin', array(
             'model' => $model,
@@ -198,8 +166,9 @@ class UserController extends Controller {
     public function actionSystemAccessRules() {
         $model = new User('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['User']))
+        if (isset($_GET['User'])) {
             $model->attributes = $_GET['User'];
+        }
 
         $this->render('systemAccessRule', array(
             'model' => $model,
@@ -210,8 +179,6 @@ class UserController extends Controller {
         $this->layout = "//layouts/column1";
         $model = $this->loadModel($id);
 
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
 
         if (isset($_POST['User'])) {
             $model->attributes = $_POST['User'];
@@ -224,96 +191,32 @@ class UserController extends Controller {
         ));
     }
 
-    public function actionGetTenantAjax($id) {
-        $tenant = trim($id);
+    public function actionGetTenantAgentAjax($id) {
+        $resultMessage['data'] = User::model()->findTenantAgent($id);
 
-        $aArray = array();
-
-        $connection = Yii::app()->db;
-        $sql = "select id,concat(first_name,' ',last_name) as name from `user` where tenant=$id and role=6";
-        $command = $connection->createCommand($sql);
-        $row = $command->queryAll();
-        foreach ($row as $key => $value) {
-
-            $aArray[] = array(
-                'id' => $value['id'],
-                'name' => $value['name'],
-            );
-        }
-
-        $resultMessage['data'] = $aArray;
-
-
-        // echo json_encode($resultMessage);
         echo CJavaScript::jsonEncode($resultMessage);
         Yii::app()->end();
     }
 
-    public function actionGetTenantAgentCompany($id) {
-        $aArray = array();
+    public function actionGetTenantOrTenantAgentCompany($id) {
+        
+        $resultMessage['data'] = User::model()->findTenantorTenantAgentCompany($id);
 
-        $connection = Yii::app()->db;
-        $sql = "SELECT company.id as id,company.name as company FROM `user`
-                        LEFT JOIN company ON company.id = user.`company`
-                        WHERE `user`.id=$id ";
-        $command = $connection->createCommand($sql);
-        $row = $command->queryAll();
-        foreach ($row as $key => $value) {
-
-            $aArray[] = array(
-                'id' => $value['id'],
-                'name' => $value['company'],
-            );
-        }
-
-        $resultMessage['data'] = $aArray;
-
-
-        // echo json_encode($resultMessage);
         echo CJavaScript::jsonEncode($resultMessage);
         Yii::app()->end();
     }
 
     public function actionGetTenantWorkstation($id) {
-        $aArray = array();
+        $resultMessage['data'] = User::model()->findTenantWorkstation($id);
 
-        $connection = Yii::app()->db;
-        $sql = "SELECT id,name from workstation where tenant=$id";
-        $command = $connection->createCommand($sql);
-        $row = $command->queryAll();
-        foreach ($row as $key => $value) {
-
-            $aArray[] = array(
-                'id' => $value['id'],
-                'name' => $value['name'],
-            );
-        }
-
-        $resultMessage['data'] = $aArray;
-
-
-        // echo json_encode($resultMessage);
         echo CJavaScript::jsonEncode($resultMessage);
         Yii::app()->end();
     }
 
-    public function actionGetTenantAgentWorkstation($id, $tenant = NULL) {
-        $aArray = array();
+    public function actionGetTenantAgentWorkstation($id, $tenant ) {
+        
 
-        $connection = Yii::app()->db;
-        $sql = "SELECT id,name from workstation where tenant_agent=$id and tenant = $tenant";
-        $command = $connection->createCommand($sql);
-        $row = $command->queryAll();
-        foreach ($row as $key => $value) {
-
-            $aArray[] = array(
-                'id' => $value['id'],
-                'name' => $value['name'],
-            );
-        }
-
-        $resultMessage['data'] = $aArray;
-
+        $resultMessage['data'] = User::model()->findTenantAgentWorkstation($id, $tenant);
 
         // echo json_encode($resultMessage);
         echo CJavaScript::jsonEncode($resultMessage);

@@ -335,3 +335,22 @@ nav.navigation ul li:last-child.active
     font-size:10px;
     margin-bottom:2px;
 }
+
+#company-form td  {
+    padding: 4px 10px 4px 5px !important;
+}
+
+.superadminSetAccessTable table.items th,.superadminSetAccessTable table th, .superadminSetAccessTable table.items th a{
+    background-color: white;
+    font-size:12px;
+    text-decoration: none;
+    padding:3px;
+}
+
+.superadminSetAccessTable td{
+    padding:5px;
+}
+.superadminSetAccessTable table tr td{
+    border-collapse: separate;
+    border:1px solid white;
+}

@@ -43,7 +43,7 @@ if ($this->action->id == 'update') {
         </tr>
         <tr>
             <td><?php echo $form->labelEx($model, 'Upload Company Logo'); ?></td>
-            <td id="uploadRow">
+            <td id="uploadRow" >
                 <input type="hidden" id="Company_logo" name="Company[logo]" <?php if($this->action->id =='update'){ echo "disabled";}?> value="<?php echo $model['logo'];?>">
                 <div class="companyLogoDiv" <?php
                 if ($model['logo'] == NULL) {
@@ -100,9 +100,9 @@ if ($this->action->id == 'update') {
         } else {
             if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                 ?>
-                <button class="yiiBtn" id="modalBtn" style="padding:1.5px 6px;margin-top:-4.1px;" data-target="#viewLicense" data-toggle="modal">View License Details</button> 
+                <button class="yiiBtn" id="modalBtn" style="padding:1.5px 6px;margin-top:-4.1px;height:30.1px;" data-target="#viewLicense" data-toggle="modal">View License Details</button> 
                 <?php } else { ?>
-                <button class="yiiBtn" style="padding:2px 6px;margin-top:-4.1px;" type='button' onclick="gotoLicensePage()">License Details</bitton>
+                <button class="yiiBtn" style="padding:2px 6px;margin-top:-4.1px;height:30.1px;" type='button' onclick="gotoLicensePage()">License Details</bitton>
         <?php } } ?>
             </div>
 

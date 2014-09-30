@@ -36,8 +36,8 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
     ?>
     <form method="post" action="/index.php?r=userWorkstations/index&amp;id=<?php echo $_GET['id'] ?>"><input type="hidden" name="userId" value="<?php echo $_GET['id'] ?>">
 
-        <div class="grid-view" id="user_workstationsGrid">
-            <table class="items table-striped" >
+        <div class="grid-view superadminSetAccessTable" id="user_workstationsGrid">
+            <table class="items table-striped ">
                 <thead>
                     <tr>
                         <th id="user_workstationsGrid_c0" style="text-align:center;">
@@ -69,9 +69,9 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                     $row = $command->query();
                     foreach ($row as $user) {
                         ?> 
-                        <tr class="odd">
-                            <td style="text-align:center;"><?php echo $user['name'] ?></td>
-                            <td style="text-align:center;"><?php echo $user['location'] ?></td>
+                        <tr>
+                            <td ><?php echo $user['name'] ?></td>
+                            <td ><?php echo $user['location'] ?></td>
                             <td style="text-align:center;" onclick="getId()">
                                 <input type="checkbox" name="cbColumn[]"  <?php
                                 (Workstation::model()->getWorkstations($_GET['id'], $user['id']) == true) ? ( $cbVal = 'checked') : ( $cbVal = '');

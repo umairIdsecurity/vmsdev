@@ -165,9 +165,10 @@ class SiteController extends Controller {
 
     public function resetDB($sqlfilename = NULL) {
         $mysql_host = 'localhost';
-        $mysql_username = 'user_vms';
+        //$mysql_username = 'user_vms';
+        $mysql_username = 'identity_vms';
         $mysql_password = 'HFz7c9dHrmPqwNGr';
-        $mysql_database = 'vms';
+        $mysql_database = 'identity_cvms';
 
         mysql_connect($mysql_host, $mysql_username, $mysql_password) or die('Error connecting to MySQL server: ' . mysql_error());
         mysql_select_db($mysql_database) or die('Error selecting MySQL database: ' . mysql_error());

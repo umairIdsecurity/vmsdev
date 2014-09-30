@@ -54,6 +54,7 @@ class Password extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('password', 'length', 'max'=>150),
+			array('password', 'required'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			);

@@ -119,7 +119,7 @@ $session = new CHttpSession;
 
         $.ajax({
             type: 'POST',
-            url: '<?php echo Yii::app()->createUrl('user/GetTenantAjax&id='); ?>' + tenant,
+            url: '<?php echo Yii::app()->createUrl('user/GetTenantAgentAjax&id='); ?>' + tenant,
             dataType: 'json',
             data: tenant,
             success: function(r) {

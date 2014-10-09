@@ -26,7 +26,8 @@ class UserIdentity extends CUserIdentity
             else
             {
                 $this->_id=$user->id;
-                $this->username=$user->email;
+                $this->setState('email', $user->email);
+                $this->setState('role', $user->role);
                 
                 $session=new CHttpSession;
                 $session->open();

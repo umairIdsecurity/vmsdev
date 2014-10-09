@@ -66,9 +66,10 @@ class Issue3FunctionalTestSuperAdmin extends BaseFunctionalTest {
         $this->click("id=submitBtn");
         $this->click("id=submitForm");
         $this->waitForPageToLoad("30000");
-        $this->type("css=td > input[name=\"User[first_name]\"]", "Test");
+        sleep(10);
+        $this->type("name=User[first_name]", "Test");
         $this->click("//td[2]/input");
-        $this->type("//td[2]/input", "Admin");
+        $this->type("name=User[last_name]", "Admin");
         $this->select("css=select[name=\"User[role]\"]", "label=Administrator");
 
         $this->select("css=select[name=\"User[user_type]\"]", "label=Internal");
@@ -333,6 +334,7 @@ class Issue3FunctionalTestSuperAdmin extends BaseFunctionalTest {
         $this->waitForElementPresent("id=submitBtn");
         $this->addCompany("Test Company 2", "testcompany2");
         $this->waitForElementPresent("id=submitBtn");
+        sleep(10);
         $this->click("id=submitBtn");
         $this->click("id=submitForm");
         $this->waitForPageToLoad("30000");

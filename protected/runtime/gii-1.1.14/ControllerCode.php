@@ -2,5 +2,5 @@
 return array (
   'template' => 'default',
   'baseClass' => 'Controller',
-  'actions' => 'index,update,create,delete,admin',
+  'actions' => 'getPathOfCompanyLogo',
 );

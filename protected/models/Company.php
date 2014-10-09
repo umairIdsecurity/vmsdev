@@ -121,6 +121,9 @@ class Company extends CActiveRecord {
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 'ID DESC',
+            ),
         ));
     }
 
@@ -134,49 +137,30 @@ class Company extends CActiveRecord {
         return parent::model($className);
     }
 
-    protected function afterSave() {
-        /* if logged in is admin
-         * set company tenant to tenant of admin
-         */
-        $session = new CHttpSession;
-        if ($this->isNewRecord) {
-            $lastInsertId = Yii::app()->db->getLastInsertID();
-            //query if lastinsert record tenant=''
-            $connection = Yii::app()->db;
-            $command = $connection->createCommand('select id,tenant from company where id="' . $lastInsertId . '"');
+    public function getCompanyLogo($id) {
+        
+            $company = Company::model()->findByPK($id);
+            if ($company->logo != '') {
+            $photo = Photo::model()->findByPK($company->logo);
 
-            $row = $command->queryRow(); //executes the SQL statement and returns the first row of the result.
-            foreach ($row as $key => $value) {
-                $tenant = $row['tenant'];
-                $companyId = $row['id'];
+            return $photo->relative_path;
             }
-            if ($tenant == '') {
-                if ($session['role'] == Roles::ROLE_ADMIN) {
-                    $command = $connection->createCommand('update company set tenant =' . $session['tenant'] . ' where id=' . $companyId . '');
-                    $command->query();
-                }
-            }
+    }
+
+    public function getPhotoRelativePath($id) {
+        if ($id != '') {
+            $photo = Photo::model()->findByPK($id);
+            return $photo->relative_path;
         }
     }
 
-    public function getCompanyLogo($id) {
-        $connection = Yii::app()->db;
-        $command = $connection->createCommand('SELECT photo.`relative_path` FROM company
-                            LEFT JOIN photo ON photo.id = company.`logo`
-                            where company.id="'.$id.'"');
-
-        $row = $command->queryRow();
-        return $row['relative_path'];
-    }
-    
     public function getCompanyName($id) {
-        $connection = Yii::app()->db;
-        $command = $connection->createCommand("SELECT name from company where id='".$id."'");
-
-        $row = $command->queryRow();
-        return $row['name'];
+        if ($id != '') {
+            $company = Company::model()->findByPK($id);
+            return $company->name;
+        }
     }
-    
+
     public function behaviors() {
         return array(
             'softDelete' => array(
@@ -184,14 +168,50 @@ class Company extends CActiveRecord {
             ),
         );
     }
-    
+
     protected function afterValidate() {
         parent::afterValidate();
         if (!$this->hasErrors()) {
-            if ($this->logo =='') {
+            if ($this->logo == '') {
                 $this->logo = NULL;
             }
         }
+    }
+
+    public function validateIfCurrentLoggedUserCanViewTheCompany($companyId, $currentLoggedUser) {
+
+        $Criteria = new CDbCriteria();
+        $Criteria->condition = "company = '" . $companyId . "' and id='" . $currentLoggedUser . "'";
+        $user = User::model()->findAll($Criteria);
+
+        $user = array_filter($user);
+        if (empty($user)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public function validateIfCompanyIsUniqueWithinTheTenant($company_name, $tenant) {
+        $Criteria = new CDbCriteria();
+        $Criteria->condition = "name = '" . $company_name . "' and tenant='" . $tenant . "'";
+        $company = Company::model()->findAll($Criteria);
+
+        $company = array_filter($company);
+        return count($company);
+    }
+
+    public function findAllCompany() {
+        $aArray = array();
+        $company = Company::model()->findAll();
+        foreach ($company as $index => $value) {
+            $aArray[] = array(
+                'id' => $value['id'],
+                'name' => $value['name'],
+            );
+        }
+
+        return $aArray;
     }
 
 }

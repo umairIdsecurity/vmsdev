@@ -2,19 +2,21 @@
 /* @var $this CompanyController */
 /* @var $model Company */
 /* @var $form CActiveForm */
+
+
 $session = new CHttpSession;
+
+$tenant = '';
 if (isset($_GET['tenant'])) {
     $tenant = $_GET['tenant'];
-} else {
-    $tenant = '';
 }
 
+$companyid = '';
 if ($this->action->id == 'update') {
     $companyid = $_GET['id'];
-} else {
-    $companyid = '';
 }
 ?>
+
 <div class="form">
 
     <?php
@@ -29,12 +31,14 @@ if ($this->action->id == 'update') {
     }
     ?>
     <?php echo $form->errorSummary($model); ?>
+
     <input type="hidden" id="Company_tenant" name="Company[tenant]" value="<?php echo $tenant; ?>">
     <table>
         <tr>
             <td style="width:160px;"><?php echo $form->labelEx($model, 'name'); ?></td>
             <td style="width:240px;"><?php echo $form->textField($model, 'name', array('size' => 60, 'maxlength' => 150)); ?></td>
             <td><?php echo $form->error($model, 'name'); ?></td>
+
         </tr>
         <tr>
             <td><?php echo $form->labelEx($model, 'trading_name'); ?></td>
@@ -44,7 +48,12 @@ if ($this->action->id == 'update') {
         <tr>
             <td><?php echo $form->labelEx($model, 'Upload Company Logo'); ?></td>
             <td id="uploadRow" >
-                <input type="hidden" id="Company_logo" name="Company[logo]" <?php if($this->action->id =='update'){ echo "disabled";}?> value="<?php echo $model['logo'];?>">
+                <input type="hidden" id="Company_logo" name="Company[logo]" 
+                <?php
+                if ($this->action->id == 'update') {
+                    echo "disabled";
+                }
+                ?> value="<?php echo $model['logo']; ?>">
                 <div class="companyLogoDiv" <?php
                 if ($model['logo'] == NULL) {
                     echo "style='display:none !important;'";
@@ -52,8 +61,14 @@ if ($this->action->id == 'update') {
                 ?>>
                     <?php if ($companyid != '') { ?><img id='companyLogo' src="<?php echo Yii::app()->request->baseUrl . "/" . $model->getCompanyLogo($companyid); ?>"/>
                     <?php } else { ?> 
-                       <!-- <img id="companyLogo" src="" style="display:none;"/> -->
-                    <?php } ?>
+                        <img id='companyLogo' src="<?php
+                        if (isset($_POST['Company']['logo'])) {
+                            echo Yii::app()->request->baseUrl . "/" . $model->getPhotoRelativePath($_POST['Company']['logo']);
+                        }
+                        ?>
+
+                             " />
+                         <?php } ?>
                 </div>
                 <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
             </td>
@@ -93,44 +108,64 @@ if ($this->action->id == 'update') {
 
 
     <div class="row buttons">
-        <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Update', array('id' => 'createBtn')); ?>
+        <?php echo CHtml::submitButton($model->isNewRecord ? 'Add' : 'Save', array('id' => 'createBtn', 'style' => 'height:30px;')); ?>
         <?php if (isset($_GET['viewFrom'])) { ?>
-            <input class="yiiBtn" type='button' value='Cancel' onclick='closeParent()'></input>
-        <?php
+            <input class="yiiBtn" type='button' value='Cancel' onclick='closeParent()' style="height:30px;"></input>
+            <?php
         } else {
             if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                 ?>
                 <button class="yiiBtn" id="modalBtn" style="padding:1.5px 6px;margin-top:-4.1px;height:30.1px;" data-target="#viewLicense" data-toggle="modal">View License Details</button> 
-                <?php } else { ?>
+            <?php } else { ?>
                 <button class="yiiBtn" style="padding:2px 6px;margin-top:-4.1px;height:30.1px;" type='button' onclick="gotoLicensePage()">License Details</bitton>
-        <?php } } ?>
-            </div>
-
-        <?php $this->endWidget(); ?>
-
-        </div><!-- form -->
-        <script>
-            function closeParent() {
-                window.parent.dismissModal();
-            }
-
-            function gotoLicensePage() {
-                window.location = 'index.php?r=licenseDetails/update&id=1';
-            }
-        </script>
-
-        <div class="modal hide fade" id="viewLicense" style="width:600px;">
-            <div class="modal-header">
-                <a data-dismiss="modal" class="close" id="dismissModal" >×</a>
-                <br>
-            </div>
-            <div id="modalBody" style="padding:20px;">
-                <?php
-                foreach (LicenseDetails::model()->getLicenseDetails() as $value) {
-                    echo $value;
+                    <?php
                 }
-                ?> 
-            </div>
+            }
+            ?>
+    </div>
 
-        </div>
-        
+    <?php $this->endWidget(); ?>
+
+</div><!-- form -->
+<script>
+    function closeParent() {
+        window.parent.dismissModal();
+    }
+
+    function gotoLicensePage() {
+        window.location = 'index.php?r=licenseDetails/update&id=1';
+    }
+
+    $("#company-form").submit(function(event) {
+        event.preventDefault();
+        var websiteUrl = $("#Company_website").val();
+        if (websiteUrl != '')
+        {
+            var httpString = websiteUrl.substr(0, 6);
+            if (httpString != 'http:/') {
+                $("#Company_website").val("http://" + websiteUrl);
+                $(this).unbind('submit').submit();
+            } else {
+                $(this).unbind('submit').submit();
+            }
+        } else {
+            $(this).unbind('submit').submit()
+        }
+
+
+    });
+
+</script>
+
+<div class="modal hide fade" id="viewLicense" style="width:600px;">
+    <div class="modal-header">
+        <a data-dismiss="modal" class="close" id="dismissModal" >×</a>
+        <br>
+    </div>
+    <div id="modalBody" style="padding:20px;">
+        <?php
+        echo LicenseDetails::model()->getLicenseDetails();
+        ?> 
+    </div>
+
+</div>

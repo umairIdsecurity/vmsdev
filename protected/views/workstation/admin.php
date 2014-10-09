@@ -7,12 +7,6 @@
 
 <h1>Manage Workstations</h1>
 
-<div class="search-form" style="display:none">
-<?php $this->renderPartial('_search',array(
-	'model'=>$model,
-)); ?>
-</div><!-- search-form -->
-
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'workstation-grid',
 	'dataProvider'=>$model->search(),

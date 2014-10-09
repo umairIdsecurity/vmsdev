@@ -40,17 +40,6 @@ if (isset($_FILES["myfile"])) {
         }
         
     }
-//	else  //Multiple files, file[]
-//	{
-//	  $fileCount = count($_FILES["myfile"]["name"]);
-//	  for($i=0; $i < $fileCount; $i++)
-//	  {
-//	  	$fileName = $_FILES["myfile"]["name"][$i];
-//		move_uploaded_file($_FILES["myfile"]["tmp_name"][$i],$output_dir.$fileName);
-//	  	$ret[]= $fileName;
-//	  }
-//	
-//	}
     echo $ret;
     //echo json_encode($ret);
 }

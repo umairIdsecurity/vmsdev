@@ -23,7 +23,9 @@
     border:1px solid #ddd;
     padding:1px;
     border-radius:3px;
-    display:inline-block}
+    display:inline-block;
+    margin-top:29px !important;
+}
 
 .ajax-file-upload-bar{
     background-color:#9ED92F;
@@ -126,7 +128,7 @@
     float:left;
     position:relative;
     width:500px;
-
+    margin-top:30px !important;
 }
 
 

@@ -113,7 +113,7 @@ class Issue2 extends BaseFunctionalTest {
         $this->waitForPageToLoad("30000");
         $this->type("id=Password_currentpassword", "test");
         $this->type("name=Password[password]", "12345");
-        $this->type("name=confirmPassword", "12345");
+        $this->type("name=Password[repeatpassword]", "12345");
         $this->click("id=updateBtn");
         $this->waitForPageToLoad("30000");
         for ($second = 0;; $second++) {
@@ -125,7 +125,7 @@ class Issue2 extends BaseFunctionalTest {
             } catch (Exception $e) {
                 
             }
-            sleep(5);
+            sleep(1);
         }
 
         $this->assertEquals("Current password does not match password in your account.", $this->getText("css=div.flash-error"));
@@ -169,13 +169,13 @@ class Issue2 extends BaseFunctionalTest {
             } catch (Exception $e) {
                 
             }
-            sleep(5);
+            sleep(1);
         }
 
-        $this->assertEquals("Please fill in required fields", $this->getText("css=div.flash-error"));
+        $this->assertEquals("Current password does not match password in your account.", $this->getText("css=div.flash-error"));
         $this->type("id=Password_currentpassword", "12345");
         $this->type("name=Password[password]", "123");
-        $this->type("name=confirmPassword", "12");
+        $this->type("name=Password[repeatpassword]", "12");
         for ($second = 0;; $second++) {
             if ($second >= 60)
                 $this->fail("timeout");
@@ -185,7 +185,7 @@ class Issue2 extends BaseFunctionalTest {
             } catch (Exception $e) {
                 
             }
-            sleep(5);
+            sleep(1);
         }
 
         $this->assertEquals("New Password does not match with Repeat New Password.", $this->getText("//form[@id='password-form']/table/tbody/tr[4]/td/div"));
@@ -218,7 +218,7 @@ class Issue2 extends BaseFunctionalTest {
             } catch (Exception $e) {
                 
             }
-            sleep(5);
+            sleep(1);
         }
 
         $this->assertEquals("You are not authorized to perform this action.", $this->getText("css=div.error"));

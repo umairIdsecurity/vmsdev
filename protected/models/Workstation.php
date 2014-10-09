@@ -71,7 +71,7 @@ class Workstation extends CActiveRecord {
             'name' => 'Name',
             'location' => 'Location',
             'contact_name' => 'Contact Person Name',
-            'contact_number' => 'Contact Number',
+            'contact_number' => 'Contact No.',
             'contact_email_address' => 'Contact Email Address',
             'number_of_operators' => 'Number Of Operators',
             'assign_kiosk' => 'Assign Kiosk',
@@ -96,7 +96,6 @@ class Workstation extends CActiveRecord {
      */
     public function search() {
         // @todo Please modify the following code to remove attributes that should not be searched.
-        $session = new CHttpSession;
         $criteria = new CDbCriteria;
 
         $criteria->compare('id', $this->id);
@@ -112,16 +111,20 @@ class Workstation extends CActiveRecord {
         $criteria->compare('tenant', $this->tenant, true);
         $criteria->compare('tenant_agent', $this->tenant_agent, true);
         $criteria->compare('is_deleted', $this->is_deleted);
-        if ($session['role'] == Roles::ROLE_ADMIN) {
+        $user = User::model()->findByPK(Yii::app()->user->id);
+        if ($user->role == Roles::ROLE_ADMIN) {
 
-            $criteria->compare('tenant', $session['tenant']);
-        } else if ($session['role'] == Roles::ROLE_AGENT_ADMIN) {
+            $criteria->compare('tenant', $user->tenant);
+        } else if ($user->role == Roles::ROLE_AGENT_ADMIN) {
 
-            $criteria->compare('tenant', $session['tenant']);
-            $criteria->compare('tenant_agent', $session['tenant_agent']);
+            $criteria->compare('tenant', $user->tenant);
+            $criteria->compare('tenant_agent', $user->tenant_agent);
         }
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 'ID DESC',
+            ),
         ));
     }
 
@@ -137,24 +140,15 @@ class Workstation extends CActiveRecord {
 
     public function getWorkstations($userid, $workstationid) {
 
-        $connection = Yii::app()->db;
-        $sql = "select * from user_workstation where user='" . $userid . "' and workstation='" . $workstationid . "'";
-        $command = $connection->createCommand($sql);
-        $row = $command->queryRow();
+        $Criteria = new CDbCriteria();
+        $Criteria->condition = "user = '" . $userid . "' and workstation='" . $workstationid . "'";
+        $userworkstations = UserWorkstations::model()->findAll($Criteria);
 
-        if (is_array($row)) {
-            $res = array();
-            foreach ($row as $key => $val) {
-                $res[] = array('label' => $key, 'value' => $val);
-            }
-            $res = array_filter($res);
+        $userworkstations = array_filter($userworkstations);
+        $workstationCount = count($userworkstations);
 
-            if (!empty($res)) {
-
-                return true;
-            } else {
-                return false;
-            }
+        if ($workstationCount != 0) {
+            return true;
         } else {
             return false;
         }
@@ -179,11 +173,30 @@ class Workstation extends CActiveRecord {
     }
 
     public function getWorkstationName($id) {
-        $connection = Yii::app()->db;
-        $command = $connection->createCommand("SELECT name from workstation where id=$id");
+        $workstations = Workstation::model()->findByPk($id);
+        return $workstations->name;
+    }
 
-        $row = $command->queryRow();
-        return $row['name'];
+    public function findWorkstationAvailableForUser($user_id) {
+
+        $Criteria = new CDbCriteria();
+        $Criteria->condition = "user = '$user_id'";
+        $userworkstations = UserWorkstations::model()->findAll($Criteria);
+
+        $aArray = array();
+        if (count($userworkstations) != 0) {
+            foreach ($userworkstations as $index => $value) {
+
+                $workstations = Workstation::model()->findByPk($value['workstation']);
+                $aArray[] = array(
+                    'id' => $workstations['id'],
+                    'name' => $workstations['name'],
+                );
+            }
+            return $aArray;
+        } else {
+            return false;
+        }
     }
 
 }

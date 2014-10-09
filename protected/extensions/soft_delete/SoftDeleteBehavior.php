@@ -15,7 +15,7 @@ class SoftDeleteBehavior extends CActiveRecordBehavior
     public function beforeFind($event)
     {
         $criteria = new CDbCriteria;
-        $criteria->condition = "is_deleted = 0";
+        $criteria->condition = "t.is_deleted = 0";
         $this->owner->dbCriteria->mergeWith($criteria);
     }
 

@@ -2,7 +2,7 @@
 <?php $this->beginContent('//layouts/main'); ?>
 <div id="content" style="margin-left:-10px;<?php
      if ($this->action->id == 'profile' || $this->id == 'password' || $this->id == 'dashboard') {
-         echo 'margin-left:30px;width:94.5%';
+         echo 'margin-left:25px;width:94.9%';
      }elseif($this->id =='userWorkstations'){
          echo 'border:1px solid white;';
      }

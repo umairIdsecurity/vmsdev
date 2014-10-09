@@ -18,7 +18,11 @@ if (isset($_GET['id'])) {
     $currentlyEditedUserId = '';
 }
 ?>
-
+<?php
+    foreach(Yii::app()->user->getFlashes() as $key => $message) {
+        echo '<div class="flash-' . $key . '">' . $message . "</div>\n";
+    }
+?>
 <div class="form" data-ng-app="PwordForm">
     <?php
     $form = $this->beginWidget('CActiveForm', array(
@@ -86,10 +90,10 @@ if (isset($_GET['id'])) {
     </table>
 
 
-    <button class="btn btn-success" id="submitBtn" <?php if ($session['role'] == Roles::ROLE_STAFFMEMBER){ echo "style='display:none;'"; } ?>><?php echo ($this->action->Id == 'create' ? 'Create' : 'Update Details') ?></button>
+    <button class="btn btn-success" id="submitBtn" <?php if ($session['role'] == Roles::ROLE_STAFFMEMBER){ echo "style='display:none;'"; } ?>><?php echo ($this->action->Id == 'create' ? 'Add' : 'Save') ?></button>
     <a class="btn btn-primary" id="resetPasswordBtn" onclick = "goToUpdatePassword(<?php echo $session['id'];?>)">Reset Password</a>
     <div class="row buttons" style='display:none;'>
-        <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Update Details', array('id' => 'submitForm',)); ?>
+        <?php echo CHtml::submitButton($model->isNewRecord ? 'Add' : 'Save', array('id' => 'submitForm',)); ?>
     </div>
 
     <?php $this->endWidget(); ?>
@@ -104,10 +108,8 @@ if (isset($_GET['id'])) {
 
     $(document).ready(function() {
         var sessionRole = $("#currentRole").val(); //session role of currently logged in user
-        var userId = $("#userId").val(); //id in url for update action
-        var selectedUserId = $("#selectedUserId").val(); //session id of currenlty logged in user
-        var actionId = $("#currentAction").val(); // current action
         var staffmember = 9;
+        
         if (sessionRole == staffmember){
             document.getElementById('User_first_name').disabled = true;
             document.getElementById('User_last_name').disabled = true;

@@ -4,6 +4,6 @@
 
 ?>
 
-<h1>Create Workstation</h1>
+<h1>Add Workstation</h1>
 
 <?php $this->renderPartial('_form', array('model'=>$model)); ?>

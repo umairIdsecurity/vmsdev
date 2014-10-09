@@ -24,6 +24,8 @@ return array(
         'application.components.*',
         'application.components.*',
         'application.extensions.bootstrap.widgets.*',
+        'application.service.impl.*',
+        'application.service.*',
     ),
     'modules' => array(
         // uncomment the following to enable the Gii tool
@@ -93,11 +95,11 @@ return array(
                     'categories' => 'system.db.CDbCommand.query'
                 ),
             // uncomment the following to show log messages on web pages
-            /*
+/*            
               array(
               'class'=>'CWebLogRoute',
-              ),
-             */
+              ),*/
+             
             ),
         ),
     ),

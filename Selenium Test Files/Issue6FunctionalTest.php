@@ -56,6 +56,7 @@ class Issue6FunctionalTest extends BaseFunctionalTest {
         $this->click("link=Administration");
         $this->waitForPageToLoad("30000");
         $this->click("link=Manage Workstations");
+        $this->waitForElementPresent("link=Add Workstation");
         $this->click("link=Add Workstation");
         $this->waitForPageToLoad("30000");
         $this->type("id=Workstation_name", "Workstation 2");
@@ -67,7 +68,7 @@ class Issue6FunctionalTest extends BaseFunctionalTest {
         $this->click("name=yt0");
         $this->waitForPageToLoad("30000");
         $this->type("css=td > input[name=\"Workstation[name]\"]", "Workstation 2");
-        $this->type("xpath=(//input[@name='Workstation[contact_email_address]'])[2]", "workstation2@test.com");
+        $this->type("name=Workstation[contact_email_address]", "workstation2@test.com");
         sleep(5);
         $this->assertEquals("Workstation 2", $this->getText("css=tr.odd > td"));
         $this->waitForElementPresent("//div[@id='workstation-grid']/table/tbody/tr/td[5]");
@@ -102,18 +103,18 @@ class Issue6FunctionalTest extends BaseFunctionalTest {
         $this->click("link=Administration");
         $this->waitForPageToLoad("30000");
         $this->click("link=Manage Workstations");
-        $this->click("link=View Workstations");
         $this->waitForPageToLoad("30000");
+        $this->waitForElementPresent("css=td > input[name=\"Workstation[name]\"]");
         $this->type("css=td > input[name=\"Workstation[name]\"]", "Workstation 2");
-        $this->type("xpath=(//input[@name='Workstation[contact_email_address]'])[2]", "workstation2@test.com");
-        sleep(5);
+        $this->type("name=Workstation[contact_email_address]", "workstation2@test.com");
+        $this->waitForElementPresent("link=Edit");
         $this->click("link=Edit");
         $this->waitForPageToLoad("30000");
         $this->type("id=Workstation_location", "Office - updated");
         $this->click("name=yt0");
-        $this->waitForPageToLoad("30000");
+        $this->waitForElementPresent("css=td > input[name=\"Workstation[name]\"]");
         $this->type("css=td > input[name=\"Workstation[name]\"]", "Workstation 2");
-        $this->type("xpath=(//input[@name='Workstation[contact_email_address]'])[2]", "workstation2@test.com");
+        $this->type("name=Workstation[contact_email_address]", "workstation2@test.com");
         sleep(5);
         $this->assertEquals("Office - updated", $this->getText("//div[@id='workstation-grid']/table/tbody/tr/td[2]"));
     }
@@ -191,7 +192,7 @@ class Issue6FunctionalTest extends BaseFunctionalTest {
         $this->click("name=yt0");
         $this->waitForPageToLoad("30000");
         $this->type("css=td > input[name=\"Workstation[name]\"]", "Workstation 3");
-        $this->type("xpath=(//input[@name='Workstation[contact_email_address]'])[2]", "workstation3@test.com");
+        $this->type("name=Workstation[contact_email_address]", "workstation3@test.com");
         sleep(5);
         $this->assertEquals("Workstation 3", $this->getText("css=tr.odd > td"));
         $this->assertEquals("workstation3@test.com", $this->getText("//div[@id='workstation-grid']/table/tbody/tr/td[5]"));

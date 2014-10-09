@@ -209,6 +209,7 @@ CREATE TABLE IF NOT EXISTS `user_workstation` (
   `user` int(10) NOT NULL,
   `workstation` int(10) NOT NULL,
   `created_by` int(10) DEFAULT NULL,
+  `is_primary` tinyint(1) DEFAULT 0 NOT NULL,
   PRIMARY KEY (`id`),
   KEY `workstation` (`workstation`),
   KEY `created_by` (`created_by`),

@@ -58,7 +58,7 @@ $user_role = $session['role'];
             }
             ?>>
 
-                <div id="logo"><?php echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl . '/images/admin_lifehouse.png')); ?></div>
+                <div id="logo"><?php echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl . '/images/ids-logo.png')); ?></div>
                 <article class="header_midbox">
 
                     <aside class="top_nav">
@@ -92,8 +92,8 @@ $user_role = $session['role'];
                                     <a href="<?php echo Yii::app()->createUrl("/user/admin"); ?>">Administration</a>
                                 </li>
 <?php } ?>
-                            <li style='text-align:right; float:right;'>
-                                <a>Logged in as <?php echo Yii::app()->user->name . ' - ' . User::model()->getUserRole($user_role); ?></a>
+                            <li style=' float:right;'>
+                                <a style="width:334px !important;text-align:right;">Logged in as <?php echo Yii::app()->user->name . ' - ' . User::model()->getUserRole($user_role); ?></a>
                             </li> 
 
                         </ul>

@@ -29,7 +29,7 @@ class Issue8FunctionalTest extends BaseFunctionalTest {
     /* Scenario 1 – Login as admin and update company logo
       Expected Behavior
       -	Assert image is Company-icon.png
-      -        Assert text organization settings saved
+      -        Assert text organisation settings saved
 
       Steps:
       1.	Go to localhost/vms
@@ -37,11 +37,11 @@ class Issue8FunctionalTest extends BaseFunctionalTest {
       3.	Type 12345 in password field
       4.	Click Login
       5.	Click Administration
-      6.        Click organization settings
+      6.        Click organisation settings
       7.      Click browse computer
       8.      Select image in vms/test files/images/company-icon.png
       9.      Click save
-      10.    Assert text ‘organizations settings successfully updated’
+      10.    Assert text ‘organisations settings successfully updated’
       11.    Assert image src /vms/uploads/company_logo/4e5607a6-1411146634.jpg
 
      */
@@ -51,12 +51,12 @@ class Issue8FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->click("link=Administration");
         $this->waitForPageToLoad("30000");
-        $this->click("link=Organization Settings");
+        $this->click("link=Organisation Settings");
         $this->waitForPageToLoad("30000");
         $this->type("//input[@type='file']", "C:\\xampp\\htdocs\\vms\\Selenium Test Files\\images\\Company-Icon.png");
         $this->click("id=createBtn");
         $this->waitForPageToLoad("30000");
-        $this->assertEquals("Organization Settings Updated", $this->getText("css=div.flash-success"));
+        $this->assertEquals("Organisation Settings Updated", $this->getText("css=div.flash-success"));
     }
 
     /* Scenario 2 – Login as super admin and add company with logo
@@ -105,13 +105,10 @@ class Issue8FunctionalTest extends BaseFunctionalTest {
         $this->waitForElementPresent("id=createBtn");
         $this->click("id=createBtn");
         $this->waitForPageToLoad("30000");
-        $this->assertTrue($this->isElementPresent("css=div.flash-success"));
-        $this->click("link=Manage Companies");
-        $this->click("link=View Companies");
-        sleep(5);
+        $this->waitForElementPresent("css=td > input[name=\"Company[name]\"]");
         $this->type("css=td > input[name=\"Company[name]\"]", "Test Company 4");
-        $this->type("xpath=(//input[@name='Company[trading_name]'])[2]", "Test Company 4");
-        sleep(5);
+        $this->type("name=Company[trading_name]", "Test Company 4");
+        sleep(1);
 
         $this->assertEquals("Test Company 4", $this->getText("css=tr.odd > td"));
         $this->assertEquals("Test Company 4", $this->getText("//div[@id='company-grid']/table/tbody/tr/td[2]"));

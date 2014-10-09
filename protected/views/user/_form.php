@@ -4,10 +4,9 @@
 /* @var $form CActiveForm */
 $session = new CHttpSession;
 
+$currentRoleinUrl = '';
 if (isset($_GET['role'])) {
-    $userGetRole = $_GET['role'];
-} else {
-    $userGetRole = '';
+    $currentRoleinUrl = $_GET['role'];
 }
 
 $currentlyEditedUserId = '';
@@ -27,234 +26,246 @@ $currentLoggedUserId = $session['id'];
     ));
     ?>
 
-    <p class="note">Fields with <span class="required">*</span> are required.</p>
 
     <?php echo $form->errorSummary($model); ?>
     <table>
         <tr>
-            <td style="width:200px !important;"><?php echo $form->labelEx($model, 'first_name'); ?></td>
-            <td><?php echo $form->textField($model, 'first_name', array('size' => 50, 'maxlength' => 50)); ?></td>
-            <td><?php echo $form->error($model, 'first_name'); ?></td>
-        </tr>
-        <tr>
-            <td><?php echo $form->labelEx($model, 'last_name'); ?></td>
-            <td><?php echo $form->textField($model, 'last_name', array('size' => 50, 'maxlength' => 50)); ?></td>
-            <td><?php echo $form->error($model, 'last_name'); ?></td>
-        </tr>
-        <tr>
-            <td><?php echo $form->labelEx($model, 'email'); ?></td>
-            <td><?php echo $form->textField($model, 'email', array('size' => 50, 'maxlength' => 50)); ?></td>
-            <td><?php echo $form->error($model, 'email'); ?></td>
-        </tr>
-        <?php if ($this->action->id == 'create') { ?>
-            <tr>
-                <td><label for="User_password">Password <span class="required">*</span></label></td>
-                <td>
-                    <input ng-model="user.passwords" data-ng-class="{'ng-invalid':userform['User[repeatpassword]'].$error.match}" type="password" id="User_password" value = '<?php echo $model->password; ?>' name="User[password]">			
-                </td>
-                <td><?php echo $form->error($model, 'password'); ?></td>
-            </tr>
-            <tr>
-                <td><label for="User_repeat_password">Repeat Password <span class="required">*</span></label></td>
-                <td >
-                    <input ng-model="user.passwordConfirm" type="password" id="User_repeat_password" data-match="user.passwords" name="User[repeatpassword]"/>			
-                    <div style='font-size:10px;color:red;' data-ng-show="userform['User[repeatpassword]'].$error.match">New Password does not match with Repeat New Password. </div>
-                </td>
-                <td><?php echo $form->error($model, 'repeatpassword'); ?> </td>
+            <td style="vertical-align: top;">
+                <table>
+                    <tr>
+                        <td><?php echo $form->labelEx($model, 'role'); ?></td>
+                        <td><select  onchange="populateDynamicFields()" <?php
+                            if ($this->action->Id == 'create' && isset($_GET['role'])) { //if action create with user roles selected in url
+                                echo "disabled";
+                            }
+                            ?> id="User_role" name="User[role]">
+                                <option disabled value='' selected>Select Role</option>
+                                <?php
+                                $assignableRowsArray = getAssignableRoles($session['role']); // roles with access rules from getaccess function
+                                foreach ($assignableRowsArray as $assignableRoles) {
+                                    foreach ($assignableRoles as $key => $value) {
+                                        ?>
 
-            </tr>
+                                        <option id= "<?php echo $key; ?>" value="<?php echo $key; ?>" <?php
+                                        if (isset($_GET['role'])) { //if url with selected role 
+                                            if ($currentRoleinUrl == $key) {
+                                                echo "selected ";
+                                            }
+                                        } elseif ($this->action->Id == 'update') { //if update and $key == to role of user being updated
+                                            if ($key == $model->role) {
+                                                echo " selected ";
+                                            }
+                                        }
+                                        ?>>
+                                            <?php echo $value; ?></option>
+                                        <?php
+                                    }
+                                }
+                                ?>
 
-        <?php } ?>
-        <tr>
-            <td><?php echo $form->labelEx($model, 'contact_number'); ?></td>
-            <td><?php echo $form->textField($model, 'contact_number'); ?></td>
-            <td><?php echo $form->error($model, 'contact_number'); ?></td>
-        </tr>
-        <tr>
-            <td><?php echo $form->labelEx($model, 'date_of_birth'); ?></td>
-            <td><?php
-        $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-            'model' => $model,
-            'attribute' => 'date_of_birth',
-            'options' => array(
-                'dateFormat' => 'dd-mm-yy',
-            ),
-            'htmlOptions' => array(
-                'size' => '10', // textField size
-                'maxlength' => '10', // textField maxlength
-            ),
-        ));
-        ?></td>
-            <td><?php echo $form->error($model, 'date_of_birth'); ?></td>
-        </tr>
-        <tr>
-            <td><?php echo $form->labelEx($model, 'role'); ?></td>
-            <td><select  onchange="populateDynamicFields()" <?php
-                if ($this->action->Id == 'create' && isset($_GET['role'])) { //if action create with user roles selected in url
-                    echo "disabled";
-                }
-        ?> id="User_role" name="User[role]">
-                    <option disabled value='' selected>Select Role</option>
-                    <?php
-                    $assignableRowsArray = getAssignableRoles($session['role']); // roles with access rules from getaccess function
-                    foreach ($assignableRowsArray as $assignableRoles) {
-                        foreach ($assignableRoles as $key => $value) {
-                            ?>
+                            </select><?php echo "<br>".$form->error($model, 'role'); ?></td>
+                        
+                    </tr>
+                    <tr id="tenantRow">
+                        <td><?php echo $form->labelEx($model, 'tenant'); ?></td>
+                        <td>
+                            <select id="User_tenant" name="User[tenant]"  >
+                                <option value='' selected>Select Admin</option>
+                                <?php
+                                $allAdminNames = User::model()->findAllAdmin();
+                                foreach ($allAdminNames as $key => $value) {
+                                    ?>
+                                    <option <?php
+                                    if ($session['role'] == Roles::ROLE_AGENT_ADMIN && $session['tenant'] == $value->id) {
+                                        echo " selected "; //if logged in is agent admin and tenant of agent admin = admin id in adminList
+                                    }
+                                    ?> value="<?php echo $value->tenant; ?>"><?php echo $value->first_name . " " . $value->last_name; ?></option>
+                                        <?php
+                                    }
+                                    ?>
+                            </select><?php echo "<br>".$form->error($model, 'tenant'); ?>
+                        </td>
+                    </tr>
+                    <tr id="tenantAgentRow">
+                        <td><?php echo $form->labelEx($model, 'tenant_agent'); ?></td>
+                        <td>
+                            <select id="User_tenant_agent" onchange='getCompanyTenantAgent()' name="User[tenant_agent]" >
 
-                            <option id= "<?php echo $key; ?>" value="<?php echo $key; ?>" <?php
-                    if (isset($_GET['role'])) { //if url with selected role 
-                        if ($userGetRole == $key) {
-                            echo "selected ";
-                        }
-                    } elseif ($this->action->Id == 'update') { //if update and $key == to role of user being updated
-                        if ($key == $model->role) {
-                            echo " selected ";
-                        }
-                    }
+                                <?php
+                                if ($this->action->Id != 'create' || isset($_POST['User'])) {
+
+                                    $allAgentAdminNames = User::model()->findAllTenantAgent($model['tenant_agent']);
+                                    foreach ($allAgentAdminNames as $key => $value) {
+                                        ?>
+                                        <option <?php
+                                        if ($session['role'] == Roles::ROLE_AGENT_ADMIN && $session['tenant_agent'] == $value['id']) {
+                                            echo " selected "; //if logged in is agent admin and tenant agent of logged in user is = agentadminname
+                                        }
+                                        ?> value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
+                                            <?php
+                                        }
+                                    } else {
+                                        echo "<option value='' selected>Select Tenant Agent</option>";
+                                    }
+                                    ?>
+                            </select><?php echo "<br>".$form->error($model, 'tenant_agent'); ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><?php echo $form->labelEx($model, 'company'); ?></td>
+                        <td>
+                            <select id="User_company" name="User[company]" <?php
+                            if ($session['role'] == Roles::ROLE_AGENT_ADMIN || $currentRoleinUrl == Roles::ROLE_OPERATOR || $currentLoggedUserId == $currentlyEditedUserId) {
+                                echo " disabled ";
+                            } //if currently logged in user is agent admin or if selected role=operator or owner is editing his account
                             ?>>
-                                    <?php echo $value; ?></option>
+                                <option value='' selected>Select Company</option>
                                 <?php
-                        }
-                    }
-                    ?>
-
-                </select></td>
-            <td><?php echo $form->error($model, 'role'); ?></td>
-        </tr>
-        <tr id="tenantRow">
-            <td><?php echo $form->labelEx($model, 'tenant'); ?></td>
-            <td>
-                <select id="User_tenant" name="User[tenant]"  >
-                    <option value='' selected>Select Admin</option>
-                    <?php
-                    $allAdminNames = User::model()->findAllAdmin();
-                    foreach ($allAdminNames as $key => $value) {
-                        ?>
-                        <option <?php
-                    if ($session['role'] == Roles::ROLE_AGENT_ADMIN && $session['tenant'] == $value->id) {
-                        echo " selected "; //if logged in is agent admin and tenant of agent admin = admin id in adminList
-                    }
-                        ?> value="<?php echo $value->tenant; ?>"><?php echo $value->first_name . " " . $value->last_name; ?></option>
-                            <?php
-                        }
-                        ?>
-                </select>
-            </td>
-            <td><?php echo $form->error($model, 'tenant'); ?></td>
-        </tr>
-        <tr id="tenantAgentRow">
-            <td><?php echo $form->labelEx($model, 'tenant_agent'); ?></td>
-            <td>
-                <select id="User_tenant_agent" onchange='getCompanyTenantAgent()' name="User[tenant_agent]" >
-
-                    <?php
-                    if ($this->action->Id != 'create') {
-
-                        $allAgentAdminNames = User::model()->findAllAgentAdmin();
-                        foreach ($allAgentAdminNames as $key => $value) {
-                            ?>
-                            <option <?php
-                    if ($session['role'] == Roles::ROLE_AGENT_ADMIN && $session['tenant_agent'] == $value->id) {
-                        echo " selected "; //if logged in is agent admin and tenant agent of logged in user is = agentadminname
-                    }
-                            ?> value="<?php echo $value->id; ?>"><?php echo $value->first_name . " " . $value->last_name; ?></option>
+                                $companyList = CHtml::listData(Company::model()->findAll(), 'id', 'name');
+                                if (isset($_GET['role'])) {
+                                    $urlRole = $_GET['role'];
+                                } else {
+                                    $urlRole = '';
+                                }
+                                if ($this->action->id != 'create' || $session['role'] == Roles::ROLE_ADMIN || $urlRole == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_AGENT_ADMIN || $urlRole == Roles::ROLE_AGENT_ADMIN) {
+                                    foreach ($companyList as $key => $value) {
+                                        ?>
+                                        <option <?php
+                                        if ($this->action->id == 'update') {
+                                            $company = User::model()->getCompany($currentlyEditedUserId);
+                                        } elseif ($session['role'] != Roles::ROLE_SUPERADMIN) {
+                                            $company = User::model()->getCompany($currentLoggedUserId);
+                                        }
+                                        if (isset($company) && $company == $key) {
+                                            echo " selected ";
+                                        }
+                                        ?> value="<?php echo $key; ?>"><?php echo $value; ?></option>
+                                            <?php
+                                        }
+                                    }
+                                    ?>
+                            </select>
+                            <select id="User_company_base" style="display:none;">
                                 <?php
-                            }
-                        } else {
-                            echo "<option value='' selected>Select Tenant Agent</option>";
-                        }
-                        ?>
-                </select>
-            </td>
-            <td><?php echo $form->error($model, 'tenant'); ?></td>
-        </tr>
-        <tr>
-            <td><?php echo $form->labelEx($model, 'company'); ?></td>
-            <td>
-                <select id="User_company" name="User[company]" <?php
-                        if ($session['role'] == Roles::ROLE_AGENT_ADMIN || $userGetRole == Roles::ROLE_OPERATOR || $currentLoggedUserId == $currentlyEditedUserId) {
-                            echo " disabled ";
-                        } //if currently logged in user is agent admin or if selected role=operator or owner is editing his account
-                        ?>>
-                    <option value='' selected>Select Company</option>
-                    <?php
-                    $companyList = CHtml::listData(Company::model()->findAll(), 'id', 'name');
-                    if (isset($_GET['role'])) {
-                        $urlRole = $_GET['role'];
-                    } else {
-                        $urlRole = '';
-                    }
-                    if ($this->action->id != 'create' || $session['role'] == Roles::ROLE_ADMIN || $urlRole == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_AGENT_ADMIN || $urlRole == Roles::ROLE_AGENT_ADMIN) {
-                        foreach ($companyList as $key => $value) {
-                            ?>
-                            <option <?php
-                    if ($this->action->id == 'update') {
-                        $company = User::model()->getCompany($currentlyEditedUserId);
-                    } elseif ($session['role'] != Roles::ROLE_SUPERADMIN) {
-                        $company = User::model()->getCompany($currentLoggedUserId);
-                    }
-                    if (isset($company) && $company == $key) {
-                        echo " selected ";
-                    }
-                            ?> value="<?php echo $key; ?>"><?php echo $value; ?></option>
-                                <?php
-                            }
-                        }
-                        ?>
-                </select>
-                <select id="User_company_base" style="display:none;">
-                    <?php
-                    $companyList = CHtml::listData(Company::model()->findAll(), 'id', 'name');
-                    foreach ($companyList as $key => $value) {
-                        ?>
-                        <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
-                        <?php
-                    }
-                    ?>
-                </select>
-                <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;">Add New Company</a>
-            </td>
-            <td><?php echo $form->error($model, 'company'); ?></td>
-        </tr>
-        <tr id="workstationRow">
-            <td>Primary Workstation</td>
-            <td>
-                <select id="User_workstation" name="User[workstation]" disabled></select>
-            </td>
-        </tr>
-        <tr>
-            <td><?php echo $form->labelEx($model, 'department'); ?></td>
-            <td><?php echo $form->textField($model, 'department', array('size' => 50, 'maxlength' => 50)); ?></td>
-            <td><?php echo $form->error($model, 'department'); ?></td>
-        </tr>
-        <tr>
-            <td><?php echo $form->labelEx($model, 'position'); ?></td>
-            <td><?php echo $form->textField($model, 'position', array('size' => 50, 'maxlength' => 50)); ?></td>
-            <td><?php echo $form->error($model, 'position'); ?></td>
-        </tr>
-        <tr>
-            <td><?php echo $form->labelEx($model, 'Staff ID'); ?></td>
-            <td><?php echo $form->textField($model, 'staff_id', array('size' => 50, 'maxlength' => 50)); ?></td>
-            <td><?php echo $form->error($model, 'staff_id'); ?></td>
-        </tr>
-        <tr>
-            <td><?php echo $form->labelEx($model, 'notes'); ?></td>
-            <td><?php echo $form->textArea($model, 'notes', array('rows' => 6, 'cols' => 50)); ?></td>
-            <td><?php echo $form->error($model, 'notes'); ?></td>
-        </tr>
+                                $companyList = CHtml::listData(Company::model()->findAll(), 'id', 'name');
+                                foreach ($companyList as $key => $value) {
+                                    ?>
+                                    <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
+                                    <?php
+                                }
+                                ?>
+                            </select>
+                            <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;"><br>Add New Company</a>
+                        <?php echo "<br>".$form->error($model, 'company'); ?>
+                        </td>
+                        <td></td></tr>
+                    <tr >
+                        <td class="workstationRow"> Primary Workstation</td>
+                        <td class="workstationRow">
+                            <select id="User_workstation" name="User[workstation]" disabled></select>
+                        </td>
+                        <td class="workstationRow"></td>
+                    </tr>
+                    <tr>
+                        <td><?php echo $form->labelEx($model, 'user_type'); ?></td>
+                        <td><?php echo $form->dropDownList($model, 'user_type', User::$USER_TYPE_LIST); ?>
+                        <?php echo "<br>".$form->error($model, 'user_type'); ?>
+                        </td>
+                       
+                    </tr>
+                    <tr>
+                        <td><?php echo $form->labelEx($model, 'user_status'); ?></td>
+                        <td><?php echo $form->dropDownList($model, 'user_status', User::$USER_STATUS_LIST); ?>
+                        <?php echo "<br>".$form->error($model, 'user_status'); ?>
+                        </td>
+                        
+                    </tr>
+                    <tr>
+                        <td><?php echo $form->labelEx($model, 'notes'); ?></td>
+                        <td><?php echo $form->textArea($model, 'notes', array('rows' => 6, 'cols' => 50)); ?>
+                        <?php echo "<br>".$form->error($model, 'notes'); ?>
+                        </td>
+                      
+                    </tr>
+                    <?php if ($this->action->id == 'create') { ?>
+                        <tr>
+                            <td><label for="User_password">Password <span class="required">*</span></label></td>
+                            <td>
+                                <input ng-model="user.passwords" data-ng-class="{'ng-invalid':userform['User[repeatpassword]'].$error.match}" type="password" id="User_password" value = '<?php echo $model->password; ?>' name="User[password]">			
+                            <?php echo "<br>".$form->error($model, 'password'); ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="User_repeat_password">Repeat Password <span class="required">*</span></label></td>
+                            <td >
+                                <input ng-model="user.passwordConfirm" type="password" id="User_repeat_password" data-match="user.passwords" name="User[repeatpassword]"/>			
+                                <div style='font-size:10px;color:red;' data-ng-show="userform['User[repeatpassword]'].$error.match">New Password does not match with <br>Repeat New Password. </div>
+                            <?php echo "<br>".$form->error($model, 'repeatpassword'); ?>
+                            </td>
 
-        <tr>
-            <td><?php echo $form->labelEx($model, 'user_type'); ?></td>
-            <td><?php echo $form->dropDownList($model, 'user_type', User::$USER_TYPE_LIST); ?></td>
-            <td><?php echo $form->error($model, 'user_type'); ?></td>
-        </tr>
-        <tr>
-            <td><?php echo $form->labelEx($model, 'user_status'); ?></td>
-            <td><?php echo $form->dropDownList($model, 'user_status', User::$USER_STATUS_LIST); ?></td>
-            <td><?php echo $form->error($model, 'user_status'); ?></td>
+                        </tr>
+
+                    <?php } ?>
+
+
+                </table>
+            </td>
+            <td style="vertical-align: top;">
+                <table>
+                    <tr>
+                        <td style="width:110 !important;"><?php echo $form->labelEx($model, 'first_name'); ?></td>
+                        <td><?php echo $form->textField($model, 'first_name', array('size' => 50, 'maxlength' => 50)); ?>
+                        <?php echo "<br>".$form->error($model, 'first_name'); ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><?php echo $form->labelEx($model, 'last_name'); ?></td>
+                        <td><?php echo $form->textField($model, 'last_name', array('size' => 50, 'maxlength' => 50)); ?>
+                        <?php echo "<br>".$form->error($model, 'last_name'); ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><?php echo $form->labelEx($model, 'email'); ?></td>
+                        <td><?php echo $form->textField($model, 'email', array('size' => 50, 'maxlength' => 50)); ?>
+                        <?php echo "<br>".$form->error($model, 'email'); ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><?php echo $form->labelEx($model, 'contact_number'); ?></td>
+                        <td><?php echo $form->textField($model, 'contact_number'); ?>
+                        <?php echo "<br>".$form->error($model, 'contact_number'); ?></td>
+                    </tr>
+                    <tr>
+                        <td><?php echo $form->labelEx($model, 'department'); ?></td>
+                        <td><?php echo $form->textField($model, 'department', array('size' => 50, 'maxlength' => 50)); ?>
+                        <?php echo "<br>".$form->error($model, 'department'); ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><?php echo $form->labelEx($model, 'position'); ?></td>
+                        <td><?php echo $form->textField($model, 'position', array('size' => 50, 'maxlength' => 50)); ?>
+                        <?php echo "<br>".$form->error($model, 'position'); ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><?php echo $form->labelEx($model, 'Staff ID'); ?></td>
+                        <td><?php echo $form->textField($model, 'staff_id', array('size' => 50, 'maxlength' => 50)); ?>
+                        <?php echo "<br>".$form->error($model, 'staff_id'); ?></td>
+                    </tr>
+                    <tr>
+                        <td><?php echo $form->labelEx($model, 'date_of_birth'); ?></td>
+                        <td class="birthdayDropdown">
+                            <?php echo $form->dropDownList($model, 'birthdayDay', $this->getDays()); ?>
+                            <?php echo $form->dropDownList($model, 'birthdayMonth', $this->getMonths()); ?>
+                            <?php echo $form->dropDownList($model, 'birthdayYear', $this->getYears()); ?>
+                        </td>
+                    </tr>
+                </table>
+            </td>
         </tr>
     </table>
-    <button class="btn btn-success" id="submitBtn"><?php echo ($this->action->Id == 'create' ? 'Create' : 'Save') ?></button>
+
+    <button class="btn btn-success" id="submitBtn"><?php echo ($this->action->Id == 'create' ? 'Add' : 'Save') ?></button>
     <div class="row buttons" style='display:none;'>
         <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save', array('id' => 'submitForm',)); ?>
     </div>
@@ -267,14 +278,14 @@ $currentLoggedUserId = $session['id'];
 <input type="hidden" id="currentRole" value="<?php echo $session['role']; ?>"/>
 <input type="hidden" id="userId" value="<?php echo $currentlyEditedUserId; ?>"/>
 <input type="hidden" id="selectedUserId" value="<?php echo $session['id']; ?>"/>
-<input type="hidden" id="getRole" value="<?php echo $userGetRole; ?>"/>
+<input type="hidden" id="getRole" value="<?php echo $currentRoleinUrl; ?>"/>
 <input type="hidden" id="sessionCompany" value="<?php
-    if ($session['role'] != Roles::ROLE_SUPERADMIN) {
-        echo User::model()->getCompany($currentLoggedUserId);
-    }else if ($this->action->id == 'update'){
-        echo User::model()->getCompany($currentlyEditedUserId);
-    }
-    ?>"/>
+if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+    echo User::model()->getCompany($currentLoggedUserId);
+} else if ($this->action->id == 'update') {
+    echo User::model()->getCompany($currentlyEditedUserId);
+}
+?>"/>
 <script>
 
     $(document).ready(function() {
@@ -294,7 +305,7 @@ $currentLoggedUserId = $session['id'];
         $("#addCompanyLink").hide(); //button for adding company
         $("#tenantAgentRow").hide();
         $("#tenantRow").hide();
-        $("#workstationRow").hide();
+        $(".workstationRow").hide();
 
         document.getElementById('User_tenant').disabled = true;
         document.getElementById('User_tenant_agent').disabled = true;
@@ -311,17 +322,17 @@ $currentLoggedUserId = $session['id'];
                 document.getElementById('User_tenant_agent').disabled = true;
                 document.getElementById('User_tenant').disabled = false;
                 document.getElementById('User_workstation').disabled = false;
-                $("#workstationRow").show();
+                $(".workstationRow").show();
                 $("#tenantRow").show();
             }
             else if (getRole == agentoperator) {
-                $("#User_company").empty();
+                // $("#User_company").empty();
                 document.getElementById('User_tenant').disabled = false;
                 document.getElementById('User_tenant_agent').disabled = false;
                 $("#tenantRow").show();
                 $("#tenantAgentRow").show();
                 document.getElementById('User_workstation').disabled = false;
-                $("#workstationRow").show();
+                $(".workstationRow").show();
             }
             else {
                 document.getElementById('User_tenant').disabled = false;
@@ -340,7 +351,7 @@ $currentLoggedUserId = $session['id'];
             }
             else if (getRole == operator) {
                 document.getElementById('User_workstation').disabled = false;
-                $("#workstationRow").show();
+                $(".workstationRow").show();
                 getWorkstation();
             }
             else if (getRole == agentadmin) {
@@ -350,7 +361,7 @@ $currentLoggedUserId = $session['id'];
         else if (sessionRole == agentadmin) {
             if (getRole == agentoperator) {
                 document.getElementById('User_workstation').disabled = false;
-                $("#workstationRow").show();
+                $(".workstationRow").show();
                 getWorkstationAgentOperator();
             }
         }
@@ -376,6 +387,25 @@ $currentLoggedUserId = $session['id'];
             e.preventDefault();
             $("#submitForm").click();
         });
+
+        function populateTenantAgentField(tenant) {
+            $("#User_tenant_agent").empty();
+            //$("#User_company").empty();
+            $.ajax({
+                type: 'POST',
+                url: '<?php echo Yii::app()->createUrl('user/GetTenantAgentAjax&id='); ?>' + tenant,
+                dataType: 'json',
+                data: tenant,
+                success: function(r) {
+                    $('#User_tenant_agent option[value!=""]').remove();
+                    $('#User_tenant_agent').append('<option value="">Select Tenant Agent</option>');
+                    $.each(r.data, function(index, value) {
+                        $('#User_tenant_agent').append('<option value="' + value.id + '">' + value.name + '</option>');
+                    });
+                    $("#User_tenant_agent").val('');
+                }
+            });
+        }
 
         $('#User_tenant').on('change', function(e) {
             e.preventDefault();
@@ -411,6 +441,7 @@ $currentLoggedUserId = $session['id'];
                 else {
                     var tenant = '<?php echo $session['tenant'] ?>';
                 }
+
                 $.ajax({
                     type: 'POST',
                     url: '<?php echo Yii::app()->createUrl('user/getTenantWorkstation&id='); ?>' + tenant,
@@ -429,22 +460,7 @@ $currentLoggedUserId = $session['id'];
 
             if ($("#User_role").val() != operator)
             {
-                $("#User_tenant_agent").empty();
-                $("#User_company").empty();
-                $.ajax({
-                    type: 'POST',
-                    url: '<?php echo Yii::app()->createUrl('user/GetTenantAgentAjax&id='); ?>' + tenant,
-                    dataType: 'json',
-                    data: tenant,
-                    success: function(r) {
-                        $('#User_tenant_agent option[value!=""]').remove();
-                        $('#User_tenant_agent').append('<option value="">Select Tenant Agent</option>');
-                        $.each(r.data, function(index, value) {
-                            $('#User_tenant_agent').append('<option value="' + value.id + '">' + value.name + '</option>');
-                        });
-                        $("#User_tenant_agent").val('');
-                    }
-                });
+                populateTenantAgentField(tenant);
             }
 
         });
@@ -456,6 +472,7 @@ $currentLoggedUserId = $session['id'];
         {
             $("#User_company").empty();
         }
+        $("#User_workstation").empty();
 
         var selectedRole = $("#User_role").val();
         var sessionRole = $("#currentRole").val(); //session role of currently logged in user
@@ -472,19 +489,20 @@ $currentLoggedUserId = $session['id'];
             {
                 document.getElementById('User_company').disabled = true;
                 document.getElementById('User_workstation').disabled = true;
-                $("#workstationRow").hide();
+                $(".workstationRow").hide();
             }
             else if (selectedRole == operator)
             {
                 $("#User_company").val($("#sessionCompany").val());
                 document.getElementById('User_company').disabled = true;
                 document.getElementById('User_workstation').disabled = false;
-                $("#workstationRow").show();
+                $(".workstationRow").show();
+
                 getWorkstation();
             }
             else if (selectedRole == staffmember) {
                 document.getElementById('User_workstation').disabled = true;
-                $("#workstationRow").hide();
+                $(".workstationRow").hide();
                 $("#User_company").val($("#sessionCompany").val());
                 document.getElementById('User_tenant').disabled = true;
                 document.getElementById('User_company').disabled = true;
@@ -507,7 +525,7 @@ $currentLoggedUserId = $session['id'];
             }
             else {
                 document.getElementById('User_workstation').disabled = true;
-                $("#workstationRow").hide();
+                $(".workstationRow").hide();
                 document.getElementById('User_company').disabled = false;
             }
         }
@@ -519,7 +537,7 @@ $currentLoggedUserId = $session['id'];
                     document.getElementById('User_workstation').disabled = false;
                     $("#tenantAgentRow").hide();
                     $("#tenantRow").show();
-                    $("#workstationRow").show();
+                    $(".workstationRow").show();
                     document.getElementById('User_tenant').disabled = false;
                     document.getElementById('User_company').disabled = true;
                     $("#User_tenant").val('');
@@ -532,7 +550,7 @@ $currentLoggedUserId = $session['id'];
                     document.getElementById('User_tenant').disabled = false;
                     document.getElementById('User_company').disabled = true;
                     document.getElementById('User_workstation').disabled = true;
-                    $("#workstationRow").hide();
+                    $(".workstationRow").hide();
                     $("#User_tenant").val('');
                     $("#User_tenant_agent").empty();
                 }
@@ -542,7 +560,7 @@ $currentLoggedUserId = $session['id'];
                     $("#tenantAgentRow").hide();
                     document.getElementById('User_company').disabled = true;
                     document.getElementById('User_workstation').disabled = true;
-                    $("#workstationRow").hide();
+                    $(".workstationRow").hide();
                     $("#tenantRow").show();
                     document.getElementById('User_tenant').disabled = false;
                 }
@@ -553,7 +571,7 @@ $currentLoggedUserId = $session['id'];
                     $("#tenantRow").show();
                     document.getElementById('User_tenant').disabled = false;
                     document.getElementById('User_workstation').disabled = false;
-                    $("#workstationRow").show();
+                    $(".workstationRow").show();
                     $("#User_tenant").val('');
                     $("#User_tenant_agent").empty();
                 }
@@ -574,19 +592,19 @@ $currentLoggedUserId = $session['id'];
                 var options = $("#User_company").data('options');
                 $('#User_company').html(options);
                 document.getElementById('User_workstation').disabled = true;
-                $("#workstationRow").hide();
+                $(".workstationRow").hide();
                 $("#tenantRow").hide();
                 $("#tenantAgentRow").hide();
             }
         }
         else if (sessionRole == agentadmin) {
-            if (selectedRole == agentoperator) {
+            if (selectedRole == 7) { /*if selected role field is agent operator*/
                 document.getElementById('User_workstation').disabled = false;
-                $("#workstationRow").show();
+                $(".workstationRow").show();
                 getWorkstationAgentOperator();
             } else {
                 document.getElementById('User_workstation').disabled = true;
-                $("#workstationRow").hide();
+                $(".workstationRow").hide();
             }
         }
 
@@ -598,7 +616,42 @@ $currentLoggedUserId = $session['id'];
             $("#addCompanyLink").hide();
         }
     }
+    function populateAgentOperatorWorkstations(tenant, tenantAgent, value) {
 
+        $("#User_workstation").empty();
+
+        $.ajax({
+            type: 'POST',
+            url: '<?php echo Yii::app()->createUrl('user/getTenantAgentWorkstation&id='); ?>' + tenantAgent + '&tenant=' + tenant,
+            dataType: 'json',
+            data: tenantAgent,
+            success: function(r) {
+                $('#User_workstation option[value!=""]').remove();
+
+                $.each(r.data, function(index, value) {
+                    $('#User_workstation').append('<option value="' + value.id + '">' + value.name + '</option>');
+                });
+                $("#User_workstation").val(value);
+            }
+        });
+    }
+
+    function populateOperatorWorkstations(tenant, value) {
+        $.ajax({
+            type: 'POST',
+            url: '<?php echo Yii::app()->createUrl('user/getTenantWorkstation&id='); ?>' + tenant,
+            dataType: 'json',
+            data: tenant,
+            success: function(r) {
+                $('#User_workstation option[value!=""]').remove();
+
+                $.each(r.data, function(index, value) {
+                    $('#User_workstation').append('<option value="' + value.id + '">' + value.name + '</option>');
+                });
+                $("#User_workstation").val(value);
+            }
+        });
+    }
     function getCompanyTenantAgent() { /*get tenant agent company*/
         var tenantAgent = $("#User_tenant_agent").val();
         var staffmember = 9;
@@ -633,23 +686,7 @@ $currentLoggedUserId = $session['id'];
                 var tenant = '<?php echo $session['tenant'] ?>';
                 var tenantAgent = '<?php echo $session['tenant_agent'] ?>';
             }
-            $("#User_company").empty();
-            $("#User_workstation").empty();
-
-            $.ajax({
-                type: 'POST',
-                url: '<?php echo Yii::app()->createUrl('user/getTenantAgentWorkstation&id='); ?>' + tenantAgent + '&tenant=' + tenant,
-                dataType: 'json',
-                data: tenantAgent,
-                success: function(r) {
-                    $('#User_workstation option[value!=""]').remove();
-
-                    $.each(r.data, function(index, value) {
-                        $('#User_workstation').append('<option value="' + value.id + '">' + value.name + '</option>');
-                    });
-
-                }
-            });
+            populateAgentOperatorWorkstations(tenant, tenantAgent);
         }
     }
 
@@ -664,20 +701,7 @@ $currentLoggedUserId = $session['id'];
         else {
             var tenant = '<?php echo $session['tenant'] ?>';
         }
-        $.ajax({
-            type: 'POST',
-            url: '<?php echo Yii::app()->createUrl('user/getTenantWorkstation&id='); ?>' + tenant,
-            dataType: 'json',
-            data: tenant,
-            success: function(r) {
-                $('#User_workstation option[value!=""]').remove();
-
-                $.each(r.data, function(index, value) {
-                    $('#User_workstation').append('<option value="' + value.id + '">' + value.name + '</option>');
-                });
-
-            }
-        });
+        populateOperatorWorkstations(tenant);
 
     }
 
@@ -686,20 +710,7 @@ $currentLoggedUserId = $session['id'];
         var tenant = '<?php echo $session['tenant'] ?>';
         var tenantAgent = '<?php echo $session['tenant_agent'] ?>';
 
-        $.ajax({
-            type: 'POST',
-            url: '<?php echo Yii::app()->createUrl('user/getTenantAgentWorkstation&id='); ?>' + tenantAgent + '&tenant=' + tenant,
-            dataType: 'json',
-            data: tenantAgent,
-            success: function(r) {
-                $('#User_workstation option[value!=""]').remove();
-
-                $.each(r.data, function(index, value) {
-                    $('#User_workstation').append('<option value="' + value.id + '">' + value.name + '</option>');
-                });
-
-            }
-        });
+        populateAgentOperatorWorkstations(tenant, tenantAgent);
 
     }
 </script>
@@ -824,9 +835,29 @@ $this->widget('bootstrap.widgets.TbButton', array(
 
 <?php
 if (isset($_POST['User'])) {
+    $tenantagent = '';
+    $tenant = '';
+    if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+        $tenantagent = $session['tenant_agent'];
+    } else if (isset($_POST['User']['tenant_agent'])) {
+        $tenantagent = $_POST['User']['tenant_agent'];
+    }
+
+    if (isset($_POST['User']['tenant'])) {
+        $tenant = $_POST['User']['tenant'];
+    } else if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+        $tenant = $session['tenant'];
+    }
     if (isset($_POST['User']['role'])) {
+        $user_role = $_POST['User']['role'];
+        if (isset($_GET['role'])) {
+            $user_role = $_GET['role'];
+        }
         ?>
-        <input type='hidden' id='formSubmit_Role' value='<?php echo $_POST['User']['role']; ?>'>
+
+        <input type='hidden' id='formSubmit_Role' value='<?php echo $user_role; ?>'>
+        <input type='hidden' id='formSubmit_TenantAgent' value='<?php echo $tenantagent; ?>'>
+        <input type='hidden' id='formSubmit_Tenant' value='<?php echo $tenant; ?>'>
         <script>
             $(document).ready(function() {
                 var superadmin = 5;
@@ -835,36 +866,61 @@ if (isset($_POST['User'])) {
                 var agentoperator = 7;
                 var operator = 8;
                 var staffmember = 9;
-
                 var formSubmit_Role = $("#formSubmit_Role").val();
-                if (formSubmit_Role == admin) {
-                    $("#addCompanyLink").show();
-                } else if (formSubmit_Role == agentadmin) {
-                    $("#tenantRow").show();
-                    document.getElementById('User_tenant').disabled = false;
-                } else if (formSubmit_Role == agentoperator) {
-                    $("#tenantRow").show();
-                    document.getElementById('User_tenant').disabled = false;
-                    $("#tenantAgentRow").show();
-                    document.getElementById('User_tenant_agent').disabled = false;
-                    $("#workstationRow").show();
-                    document.getElementById('User_workstation').disabled = false;
-                } else if (formSubmit_Role == operator) {
-                    $("#tenantRow").show();
-                    document.getElementById('User_tenant').disabled = false;
-                    $("#tenantAgentRow").hide();
-                    document.getElementById('User_tenant_agent').disabled = true;
-                    $("#workstationRow").show();
-                    document.getElementById('User_workstation').disabled = false;
-                } else if (formSubmit_Role == staffmember) {
-                    $("#tenantRow").show();
-                    document.getElementById('User_tenant').disabled = false;
-                    $("#tenantAgentRow").show();
-                    document.getElementById('User_tenant_agent').disabled = false;
-                    $("#workstationRow").hide();
-                    document.getElementById('User_workstation').disabled = true;
+                if ($("#currentRole").val() == superadmin) {
+
+                    if (formSubmit_Role == admin) {
+                        $("#addCompanyLink").show();
+                    }
+                    else if (formSubmit_Role == agentadmin) {
+                        $("#tenantRow").show();
+                        $("#addCompanyLink").show();
+                        document.getElementById('User_tenant').disabled = false;
+                    } else if (formSubmit_Role == agentoperator) {
+                        $("#tenantRow").show();
+                        document.getElementById('User_tenant').disabled = false;
+                        document.getElementById('User_company').disabled = true;
+                        $("#tenantAgentRow").show();
+                        document.getElementById('User_tenant_agent').disabled = false;
+                        $(".workstationRow").show();
+                        document.getElementById('User_workstation').disabled = false;
+                    } else if (formSubmit_Role == operator) {
+                        $("#tenantRow").show();
+                        document.getElementById('User_tenant').disabled = false;
+                        $("#tenantAgentRow").hide();
+                        document.getElementById('User_tenant_agent').disabled = true;
+                        $(".workstationRow").show();
+                        document.getElementById('User_workstation').disabled = false;
+                        document.getElementById('User_company').disabled = true;
+                    } else if (formSubmit_Role == staffmember) {
+                        $("#tenantRow").show();
+                        document.getElementById('User_tenant').disabled = false;
+                        $("#tenantAgentRow").show();
+                        document.getElementById('User_tenant_agent').disabled = false;
+                        $(".workstationRow").hide();
+                        document.getElementById('User_workstation').disabled = true;
+                        document.getElementById('User_company').disabled = true;
+                    }
                 }
-                document.getElementById('User_role').value = '<?php echo $_POST['User']['role']; ?>';
+                else if ($("#currentRole").val() == admin) {
+                    if (formSubmit_Role == admin || formSubmit_Role == staffmember) {
+                        document.getElementById('User_company').disabled = true;
+                    } else if (formSubmit_Role == agentadmin) {
+                        $("#addCompanyLink").show();
+                    } else if (formSubmit_Role == operator) {
+                        $(".workstationRow").show();
+                        document.getElementById('User_company').disabled = true;
+                        document.getElementById('User_workstation').disabled = false;
+                    }
+                }
+                else if ($("#currentRole").val() == agentadmin) {
+                    if (formSubmit_Role == agentoperator) {
+                        $(".workstationRow").show();
+                        document.getElementById('User_company').disabled = true;
+                        document.getElementById('User_workstation').disabled = false;
+                    }
+                }
+                document.getElementById('User_role').value = '<?php echo $user_role; ?>';
             });
         </script>
         <?php
@@ -874,7 +930,7 @@ if (isset($_POST['User'])) {
         ?>
         <script>
             $(document).ready(function() {
-                document.getElementById('User_tenant').value = '<?php echo $_POST['User']['tenant']; ?>';
+                document.getElementById('User_tenant').value = '<?php echo $tenant; ?>';
             });
         </script>
         <?php
@@ -883,10 +939,25 @@ if (isset($_POST['User'])) {
     if (isset($_POST['User']['tenant_agent'])) {
         ?>
         <script>
+            function populateTenantAgentField(tenant) {
+                $("#User_tenant_agent").empty();
+                $.ajax({
+                    type: 'POST',
+                    url: '<?php echo Yii::app()->createUrl('user/GetTenantAgentAjax&id='); ?>' + tenant,
+                    dataType: 'json',
+                    data: tenant,
+                    success: function(r) {
+                        $('#User_tenant_agent option[value!=""]').remove();
+                        $('#User_tenant_agent').append('<option value="">Select Tenant Agent</option>');
+                        $.each(r.data, function(index, value) {
+                            $('#User_tenant_agent').append('<option value="' + value.id + '">' + value.name + '</option>');
+                        });
+                        $("#User_tenant_agent").val('<?php echo $tenantagent; ?>');
+                    }
+                });
+            }
             $(document).ready(function() {
-                $('#User_tenant_agent').append('<option value="<?php echo $_POST['User']['tenant_agent']; ?>"><?php echo User::model()->getFullName($_POST['User']['tenant_agent']); ?></option>');
-                document.getElementById('User_tenant_agent').value = '<?php echo $_POST['User']['tenant_agent']; ?>';
-
+                populateTenantAgentField('<?php echo $tenant; ?>');
             });
         </script>
         <?php
@@ -895,7 +966,17 @@ if (isset($_POST['User'])) {
     if (isset($_POST['User']['company'])) {
         ?>
         <script>
-            $('#User_company').append('<option value="<?php echo $_POST['User']['company']; ?>"><?php echo Company::model()->getCompanyName($_POST['User']['company']) ?></option>');
+            $("#User_company").empty();
+            var formSubmit_Role = $("#formSubmit_Role").val();
+            if (formSubmit_Role == '<?php echo Roles::ROLE_ADMIN; ?>') {
+                $("#User_company").data('options', $('#User_company_base option').clone());
+                var id = $("#User_company").val();
+                var options = $("#User_company").data('options');
+                $('#User_company').html(options);
+            } else
+            {
+                $('#User_company').append('<option value="<?php echo $_POST['User']['company']; ?>"><?php echo Company::model()->getCompanyName($_POST['User']['company']) ?></option>');
+            }
             document.getElementById('User_company').value = '<?php echo $_POST['User']['company']; ?>';
 
         </script>
@@ -905,9 +986,15 @@ if (isset($_POST['User'])) {
     if (isset($_POST['User']['workstation'])) {
         ?>
         <script>
-            $('#User_workstation').append('<option value="<?php echo $_POST['User']['workstation']; ?>"><?php echo Workstation::model()->getWorkstationName($_POST['User']['workstation']); ?></option>');
-            document.getElementById('User_workstation').value = '<?php echo $_POST['User']['workstation']; ?>';
-
+            $(document).ready(function() {
+                var role = $("#formSubmit_Role").val();
+                if (role == 7) /*if role is agent operator*/
+                {
+                    populateAgentOperatorWorkstations('<?php echo $tenant; ?>', '<?php echo $tenantagent ?>', '<?php echo $_POST['User']['workstation']; ?>');
+                } else {
+                    populateOperatorWorkstations('<?php echo $tenant ?>', '<?php echo $_POST['User']['workstation']; ?>');
+                }
+            });
         </script>
         <?php
     }

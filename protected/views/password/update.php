@@ -7,11 +7,6 @@ $session = new CHttpSession;
 ?>
 
 <h1>Reset Password </h1>
-<?php if(Yii::app()->user->hasFlash('update')): ?>
-<div class="flash-success">
-<?php echo Yii::app()->user->getFlash('update'); ?>
-</div>
-<?php endif; ?>
 
 <?php
     foreach(Yii::app()->user->getFlashes() as $key => $message) {
@@ -23,10 +18,6 @@ $session = new CHttpSession;
 <?php $form=$this->beginWidget('CActiveForm', array(
     'id'=>'password-form',
     'htmlOptions' => array("name"=>"passwordform"),
-    // Please note: When you enable ajax validation, make sure the corresponding
-    // controller action is handling ajax validation correctly.
-    // There is a call to performAjaxValidation() commented in generated controller code.
-    // See class documentation of CActiveForm for details on this.
     'enableAjaxValidation'=>false,
 )); ?>
     <p class="note">Fields with <span class="required">*</span> are required.</p>
@@ -43,7 +34,7 @@ $session = new CHttpSession;
             </td>
             <td>
                 <input type='password' name="Password[currentpassword]" id="Password_currentpassword" type="text" maxlength="150" >
-                <span class="required">*</span><?php echo $form->error($model, 'password'); ?>
+                
             </td>
         </tr>
     <tr>
@@ -52,21 +43,22 @@ $session = new CHttpSession;
         <label>New Password:</label>
             </div>
         </td>
-        <td><input ng-model="user.passwords" type="password" name="Password[password]" data-ng-class="{'ng-invalid':passwordform.confirmPassword.$error.match}" />
-            <span class="required">*</span><br></td>
+        <td><input ng-model="user.passwords" type="password" name="Password[password]" data-ng-class="{'ng-invalid':passwordform['Password[repeatpassword]'].confirmPassword.$error.match}" />
+        <span class="required">*</span><?php echo $form->error($model, 'password'); ?></td>
     </tr>
     <tr>
-           <td style='width:150px;'>
-    <div class="row">
-        <label>Repeat New Password:</label> </div>
-            </td>
-            <td><input ng-model="user.passwordConfirm" type="password" data-match="user.passwords" name="confirmPassword" />
-            <span class="required">*</span></td>
+        <td style='width:150px;'>
+            <div class="row">
+                <label>Repeat New Password:</label> 
+            </div>
+        </td>
+        <td><input ng-model="user.passwordConfirm" type="password" data-match="user.passwords" name="Password[repeatpassword]" />
+            <span class="required">*</span><?php echo $form->error($model, 'repeatpassword'); ?></td>
     </tr>
-    <tr><td colspan='3'><div style='font-size:10px;color:red;' data-ng-show="passwordform.confirmPassword.$error.match">New Password does not match with Repeat New Password. </div></td></tr>
+    <tr><td colspan='3'><div style='font-size:10px;color:red;' data-ng-show="passwordform['Password[repeatpassword]'].$error.match">New Password does not match with Repeat New Password. </div></td></tr>
     </table>
        <div >
-        <button id='updateBtn'>Update</button>
+        <button id='updateBtn'>Save</button>
         <button id='cancelBtn' class="btn btn-primary">Cancel</button>
     </div>
     <div class="row buttons" style='display:none;'>
@@ -82,14 +74,7 @@ $session = new CHttpSession;
         $("#Password_currentpassword").val('');
         
         $("#updateBtn").click(function(e) {
-            
-            e.preventDefault();
-            var currentPassword = $("#Password_currentpassword").val();
-            var newPassword = $("#Password_password").val();
-            var repeatPassword = $("#Password_repeatpassword").val();
-            if (newPassword !='' && repeatPassword !='' && currentPassword !='' ){
-                     $("#save").click();
-            } 
+            $("#save").click(); 
         });
   
         $("#cancelBtn").click(function (e){

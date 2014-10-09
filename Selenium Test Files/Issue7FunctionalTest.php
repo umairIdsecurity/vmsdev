@@ -97,7 +97,7 @@ class Issue7FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("First Name cannot be blank.", $this->getText("css=div.errorSummary > ul > li"));
         $this->assertEquals("Last Name cannot be blank.", $this->getText("//form[@id='user-form']/div/ul/li[2]"));
         $this->assertEquals("Email cannot be blank.", $this->getText("//form[@id='user-form']/div/ul/li[3]"));
-        $this->assertEquals("Contact Number cannot be blank.", $this->getText("//form[@id='user-form']/div/ul/li[4]"));
+        $this->assertEquals("Contact No. cannot be blank.", $this->getText("//form[@id='user-form']/div/ul/li[4]"));
         $this->type("id=User_email", "123");
         $this->click("id=submitBtn");
         $this->waitForPageToLoad("30000");

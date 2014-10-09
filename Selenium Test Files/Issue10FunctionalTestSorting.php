@@ -49,14 +49,14 @@ class Issue10FunctionalTestSorting extends BaseFunctionalTest {
         $this->assertTrue($this->isElementPresent("link=Last Name"));
         $this->assertTrue($this->isElementPresent("link=Role"));
         $this->assertTrue($this->isElementPresent("link=User Type"));
-        $this->assertTrue($this->isElementPresent("link=Contact Number"));
+        $this->assertTrue($this->isElementPresent("link=Contact No."));
         $this->click("link=First Name");
         $this->click("link=Last Name");
-        sleep(5);
+        sleep(1);
         $this->assertTrue($this->isElementPresent("css=a.sort-link.asc"));
-        $this->assertEquals("admin", $this->getText("//div[@id='user-grid']/table/tbody/tr[2]/td[2]"));
+        $this->assertEquals("admin2", $this->getText("//div[@id='user-grid']/table/tbody/tr[2]/td[2]"));
         $this->click("link=Last Name");
-        sleep(5);
+        sleep(1);
         $this->assertTrue($this->isElementPresent("css=a.sort-link.desc"));
         $this->assertEquals("staffmember", $this->getText("//div[@id='user-grid']/table/tbody/tr[2]/td[2]"));
     }

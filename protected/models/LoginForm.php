@@ -67,28 +67,27 @@ class LoginForm extends CFormModel {
     }
 
     public function findWorkstations($id) {
+        
+        $Criteria = new CDbCriteria();
+        $Criteria->condition = "user = '$id'";
+        $userworkstations = UserWorkstations::model()->findAll($Criteria);
+
         $aArray = array();
+        if (count($userworkstations) != 0) {
+            foreach ($userworkstations as $index => $value) {
 
-        $connection = Yii::app()->db;
-        $sql = "SELECT workstation.id,workstation.name as name
-                        FROM user_workstation 
-                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
-                        WHERE user_workstation.`user`='$id' ORDER BY workstation.name";
-        $command = $connection->createCommand($sql);
-        $row = $command->queryAll();
-
-        if (count($row) > 0) {
-            foreach ($row as $key => $value) {
-
+                $workstations = Workstation::model()->findByPk($value['workstation']);
                 $aArray[] = array(
-                    'id' => $value['id'],
-                    'name' => $value['name'],
+                    'id' => $workstations['id'],
+                    'name' => $workstations['name'],
                 );
             }
-            return $aArray;
+            return true;
         } else {
             return false;
         }
+        
+        
     }
 
 }

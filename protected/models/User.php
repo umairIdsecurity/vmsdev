@@ -36,8 +36,12 @@
  * @property UserType[] $userTypes
  */
 class User extends VmsActiveRecord {
-
+    
+    public $assignedWorkstations;
     public $repeatpassword;
+    public $birthdayMonth;
+    public $birthdayYear;
+    public $birthdayDay;
     public static $USER_ROLE_LIST = array(
         5 => 'Super Administrator',
         1 => 'Administrator',
@@ -74,7 +78,7 @@ class User extends VmsActiveRecord {
                 array('first_name, last_name, email, contact_number, role, user_type,is_deleted,password,company', 'required'),
                 array('company, role, user_type, user_status, created_by', 'numerical', 'integerOnly' => true),
                 array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
-                array('date_of_birth, notes,tenant,tenant_agent', 'safe'),
+                array('date_of_birth, notes,tenant,tenant_agent,birthdayYear,birthdayMonth,birthdayDay', 'safe'),
                 array('email', 'unique'),
                 array('email', 'email'),
                 // The following rule is used by search().
@@ -86,14 +90,14 @@ class User extends VmsActiveRecord {
                 array('first_name, last_name, email, contact_number, role, user_type,is_deleted,password,company', 'required'),
                 array('company, role, user_type, user_status, created_by', 'numerical', 'integerOnly' => true),
                 array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
-                array('date_of_birth, notes,tenant,tenant_agent', 'safe'),
+                array('date_of_birth, notes,tenant,tenant_agent,birthdayYear,birthdayMonth,birthdayDay', 'safe'),
                 array('email', 'unique'),
                 array('email', 'email'),
                 array('repeatpassword', 'required', 'on' => 'insert'),
                 array('password', 'compare', 'compareAttribute' => 'repeatpassword'),
                 // The following rule is used by search().
                 // @todo Please remove those attributes that should not be searched.
-                array('id, first_name, last_name,email,is_deleted ,contact_number, date_of_birth, company, department, position, staff_id, notes, role_id, user_type_id, user_status_id, created_by', 'safe', 'on' => 'search'),
+                array('id, first_name, last_name,email,is_deleted,assignedWorkstations,contact_number, date_of_birth, company, department, position, staff_id, notes, role_id, user_type_id, user_status_id, created_by', 'safe', 'on' => 'search'),
             );
         }
     }
@@ -116,6 +120,8 @@ class User extends VmsActiveRecord {
             'userStatuses' => array(self::HAS_MANY, 'UserStatus', 'created_by'),
             'userTypes' => array(self::HAS_MANY, 'UserType', 'created_by'),
             'workstation' => array(self::HAS_MANY, 'user_workstation', 'id'),
+            'userWorkstation1'=>array(self::MANY_MANY, 'Workstation', 'user_workstation(user, workstation)'),
+                
         );
     }
 
@@ -128,7 +134,7 @@ class User extends VmsActiveRecord {
             'first_name' => 'First Name',
             'last_name' => 'Last Name',
             'email' => 'Email',
-            'contact_number' => 'Contact Number',
+            'contact_number' => 'Contact No.',
             'date_of_birth' => 'Date Of Birth',
             'company' => 'Company Name',
             'department' => 'Department',
@@ -161,10 +167,9 @@ class User extends VmsActiveRecord {
      */
     public function search() {
         // @todo Please modify the following code to remove attributes that should not be searched.
-        $session = new CHttpSession;
+
         $criteria = new CDbCriteria;
-        $criteria->order = 'first_name ASC';
-        $criteria->compare('id', $this->id);
+        $criteria->compare('t.id', $this->id);
         //  $criteria->compare('first_name', $this->first_name, true);
         $criteria->compare('last_name', $this->last_name, true);
         $criteria->compare('email', $this->email, true);
@@ -179,9 +184,15 @@ class User extends VmsActiveRecord {
         $criteria->compare('user_type', $this->user_type);
         $criteria->compare('user_status', $this->user_status);
         $criteria->compare('created_by', $this->created_by);
-        $criteria->compare('is_deleted', $this->is_deleted);
-        $criteria->compare('tenant', $this->tenant);
-        $criteria->compare('tenant_agent', $this->tenant_agent);
+        $criteria->compare('t.is_deleted', $this->is_deleted);
+        $criteria->compare('t.tenant', $this->tenant);
+        $criteria->compare('t.tenant_agent', $this->tenant_agent);
+        
+        $criteria->compare('workstation',$this->assignedWorkstations);
+                $criteria->with=array('userWorkstation1');
+                $criteria->together=true;
+                
+        $user = User::model()->findByPK(Yii::app()->user->id);
 
         if (Yii::app()->controller->action->id == 'systemaccessrules') {
             $criteria->compare('CONCAT(first_name, \' \', last_name)', $this->first_name, true);
@@ -189,42 +200,42 @@ class User extends VmsActiveRecord {
             $criteria->compare('first_name', $this->first_name, true);
         }
 
-        $queryCondition = 'company = "' . $session['company'] . '" or created_by="' . $session['id'] . '"';
-        switch ($session['role']) {
+        $queryCondition = 'company = "' . $user->company . '" or created_by="' . $user->id . '"';
+        switch ($user->role) {
             case Roles::ROLE_ADMIN:
                 if (Yii::app()->controller->action->id == 'systemaccessrules') {
-                    $rolein = '('.Roles::ROLE_AGENT_OPERATOR.','.Roles::ROLE_OPERATOR.')';
+                    $rolein = '(' . Roles::ROLE_AGENT_OPERATOR . ',' . Roles::ROLE_OPERATOR . ')';
                 } else {
-                    $rolein = '('.Roles::ROLE_ADMIN.','.Roles::ROLE_AGENT_ADMIN.','.Roles::ROLE_AGENT_OPERATOR.','.Roles::ROLE_OPERATOR.','.Roles::ROLE_VISITOR.','.Roles::ROLE_STAFFMEMBER.')';
+                    $rolein = '(' . Roles::ROLE_ADMIN . ',' . Roles::ROLE_AGENT_ADMIN . ',' . Roles::ROLE_AGENT_OPERATOR . ',' . Roles::ROLE_OPERATOR . ',' . Roles::ROLE_VISITOR . ',' . Roles::ROLE_STAFFMEMBER . ')';
                 }
-                $queryCondition = 'tenant = "' . $session['tenant'] . '"';
+                $queryCondition = 't.tenant = "' . $user->tenant . '"';
                 break;
             case Roles::ROLE_AGENT_ADMIN:
                 if (Yii::app()->controller->action->id == 'systemaccessrules') {
-                    $rolein = '('.Roles::ROLE_AGENT_OPERATOR.')';
+                    $rolein = '(' . Roles::ROLE_AGENT_OPERATOR . ')';
                 } else {
-                    $rolein = '(6,7,8,9,10)';
-                    $rolein = '('.Roles::ROLE_AGENT_ADMIN.','.Roles::ROLE_AGENT_OPERATOR.','.Roles::ROLE_STAFFMEMBER.','.Roles::ROLE_VISITOR.')';
-                
+                    $rolein = '(' . Roles::ROLE_AGENT_ADMIN . ',' . Roles::ROLE_AGENT_OPERATOR . ',' . Roles::ROLE_STAFFMEMBER . ',' . Roles::ROLE_VISITOR . ')';
                 }
 
-                $queryCondition = 'tenant_agent="' . $session['tenant_agent'] . '"';
+                $queryCondition = 't.tenant_agent="' . $user->tenant_agent . '"';
                 break;
             default:
                 if (Yii::app()->controller->action->id == 'systemaccessrules') {
-                    $rolein = '('.Roles::ROLE_AGENT_OPERATOR.','.Roles::ROLE_OPERATOR.')';
+                    $rolein = '(' . Roles::ROLE_AGENT_OPERATOR . ',' . Roles::ROLE_OPERATOR . ')';
                 } else {
-                    $rolein = '('.Roles::ROLE_SUPERADMIN.','.Roles::ROLE_ADMIN.','.Roles::ROLE_AGENT_ADMIN.','.Roles::ROLE_AGENT_OPERATOR.','.Roles::ROLE_OPERATOR.','.Roles::ROLE_VISITOR.','.Roles::ROLE_STAFFMEMBER.')';
-                
+                    $rolein = '(' . Roles::ROLE_SUPERADMIN . ',' . Roles::ROLE_ADMIN . ',' . Roles::ROLE_AGENT_ADMIN . ',' . Roles::ROLE_AGENT_OPERATOR . ',' . Roles::ROLE_OPERATOR . ',' . Roles::ROLE_VISITOR . ',' . Roles::ROLE_STAFFMEMBER . ')';
                 }
 
-                $queryCondition = 'is_deleted=0';
+                $queryCondition = 't.is_deleted=0';
                 break;
         }
         $criteria->addCondition('role in ' . $rolein . ' and (' . $queryCondition . ')');
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 't.ID DESC',
+            ),
         ));
     }
 
@@ -271,8 +282,6 @@ class User extends VmsActiveRecord {
     }
 
     public function getCompany($id) {
-        $session = new CHttpSession;
-
         $connection = Yii::app()->db;
         $sql = "select company from user where id='" . $id . "'";
         $command = $connection->createCommand($sql);
@@ -281,205 +290,6 @@ class User extends VmsActiveRecord {
             $company = $val;
         }
         return $company;
-    }
-
-    public function beforeSave() {
-        $session = new CHttpSession;
-        // $this->password = $this->hashPassword($this->password);
-        $this->date_of_birth = date('Y-m-d', strtotime($this->date_of_birth));
-        if (null !== Yii::app()->user) {
-            $id = Yii::app()->user->id;
-        } else {
-            $id = 16;
-        }
-
-        if ($this->isNewRecord) {
-            $this->created_by = $id;
-        } else {
-
-            if ($session['role'] == Roles::ROLE_SUPERADMIN) {
-                $lastInsertId = Yii::app()->db->getLastInsertID();
-                $connection = Yii::app()->db;
-                $command = $connection->createCommand('SELECT user.id as id,user.role as role,user.company as user_company,company.name, 
-                company.tenant AS company_tenant, company.`tenant_agent` AS company_tenant_agent
-                FROM `user` 
-                LEFT JOIN company ON company.id=user.`company`
-                WHERE user.id="' . $this->id . '"');
-                $row = $command->queryRow();
-                foreach ($row as $key => $value) {
-                    $userid = $row['id'];
-                    $role = $row['role'];
-                    $user_company = $row['user_company'];
-                    $company_tenant = $row['company_tenant'];
-                    $company_tenant_agent = $row['company_tenant_agent'];
-                }
-
-                if ($role == Roles::ROLE_ADMIN) {
-                    if ($userid == $company_tenant) {
-                        $command = $connection->createCommand('update company set tenant =NULL where id ="' . $user_company . '" ');
-                        $command->query();
-                    }
-                }
-            }
-        }
-        return true;
-    }
-
-    protected function afterSave() {
-        /** set tenant id if superadmin and user created is admin.. tenant id = admin_id 
-         * set tenant_agent if superadmin and user created is agentadmin.. tenant id = admin_id ,tenant_agent
-         * if not superadmin inherit tenant id from currently logged in user
-         * if superadmin and user created != admin .. tenant id = choose admin_id
-         * if agent admin logged in , all created 
-         * * */
-        $session = new CHttpSession;
-        if ($this->isNewRecord) {
-            $lastInsertId = Yii::app()->db->getLastInsertID();
-            //query if lastinsert record tenant=''
-            $connection = Yii::app()->db;
-            $command = $connection->createCommand('SELECT user.tenant,user.tenant_agent,user.role as role,user.company as user_company,company.name, 
-            company.tenant AS company_tenant, company.`tenant_agent` AS company_tenant_agent
-            FROM user 
-            LEFT JOIN company ON company.id=user.`company`
-            WHERE user.id="' . $lastInsertId . '"');
-
-            $row = $command->queryRow(); //executes the SQL statement and returns the first row of the result.
-            foreach ($row as $key => $value) {
-                $tenant = $row['tenant'];
-                $tenant_agent = $row['tenant_agent'];
-                $role = $row['role'];
-                $user_company = $row['user_company'];
-                $company_tenant = $row['company_tenant'];
-                $company_tenant_agent = $row['company_tenant_agent'];
-            }
-
-            if ($session['role'] == Roles::ROLE_SUPERADMIN) {
-                if ($this->isNewRecord) {
-                    $tenant_id = $lastInsertId;
-                    if ($role == Roles::ROLE_ADMIN) {
-                        if ($tenant == '') {
-                            if ($company_tenant == '') {
-                                $this->tenant = $tenant_id;
-                                $command = $connection->createCommand('update company set tenant= "' . $tenant_id . '" where id="' . $user_company . '"');
-                                $row = $command->query();
-                                $this->isNewRecord = false;
-                                $this->saveAttributes(array('tenant'));
-                            } else {
-                                $this->tenant = $company_tenant;
-                                $this->isNewRecord = false;
-                                $this->saveAttributes(array('tenant'));
-                            }
-                        }
-                    } else if ($role == Roles::ROLE_AGENT_ADMIN) {
-                        if ($tenant_agent == '') {
-                            if ($company_tenant_agent == '') {
-                                $this->tenant_agent = $lastInsertId;
-                                $command = $connection->createCommand('update company set tenant_agent="' . $tenant_id . '" where id="' . $user_company . '"');
-                                $row = $command->query();
-                            } else {
-                                $this->tenant_agent = $company_tenant_agent;
-                            }
-                            if ($company_tenant == '') {
-                                $command = $connection->createCommand('update company set tenant="' . $tenant . '" where id="' . $user_company . '"');
-                                $row = $command->query();
-                            }
-                            $this->isNewRecord = false;
-                            $this->saveAttributes(array('tenant_agent'));
-                        }
-                    } elseif ($role == Roles::ROLE_STAFFMEMBER) {
-                        if ($this->isNewRecord) {
-                            if ($tenant_agent != '') {
-                                $this->tenant = '';
-
-                                $this->isNewRecord = false;
-                                $this->saveAttributes(array('tenant'));
-                            }
-                        }
-                    }
-                }
-            } else {
-                if ($this->isNewRecord) {
-                    $tenant_id = $lastInsertId;
-                    if ($tenant == '') { //meaning if no administrator saved
-                        if ($role == Roles::ROLE_ADMIN) {
-                            if ($company_tenant == '') {
-                                $this->tenant = $tenant_id;
-                                $command = $connection->createCommand('update company set tenant= "' . $tenant_id . '" where id="' . $user_company . '"');
-                                $row = $command->query();
-                                $this->isNewRecord = false;
-                                $this->saveAttributes(array('tenant'));
-                            } else {
-                                $this->tenant = $company_tenant;
-                                $this->isNewRecord = false;
-                                $this->saveAttributes(array('tenant'));
-                            }
-                        } else if ($role == Roles::ROLE_AGENT_ADMIN) {
-                            if ($company_tenant_agent == '') {
-                                $this->tenant_agent = $tenant_id;
-                                $command = $connection->createCommand('update company set tenant_agent= "' . $tenant_id . '" where id="' . $user_company . '"');
-                                $row = $command->query();
-                            } else {
-                                $this->tenant_agent = $company_tenant_agent;
-                            }
-                            //check if company tenant blank ->company tenant = admin id
-
-                            if ($company_tenant == '') {
-                                $command = $connection->createCommand('update company set tenant= "' . $session['id'] . '" where id="' . $user_company . '"');
-                                $row = $command->query();
-                                $this->tenant = $session['id'];
-                            } else {
-                                $this->tenant = $company_tenant;
-                            }
-
-                            $this->isNewRecord = false;
-                            $this->saveAttributes(array('tenant_agent', 'tenant'));
-                        } else if ($role == Roles::ROLE_AGENT_OPERATOR) {
-                            $this->tenant_agent = $session['tenant_agent'];
-                            $this->tenant = $session['tenant'];
-                            $this->isNewRecord = false;
-                            $this->saveAttributes(array('tenant_agent', 'tenant'));
-                        } else if ($session['role'] == Roles::ROLE_AGENT_ADMIN) {
-                            if ($role == Roles::ROLE_STAFFMEMBER) {
-                                $this->tenant_agent = $session['tenant_agent'];
-                                $this->isNewRecord = false;
-                                $this->saveAttributes(array('tenant_agent'));
-                            }
-                        } else {
-                            $this->tenant = $session['tenant'];
-                            $this->isNewRecord = false;
-                            $this->saveAttributes(array('tenant'));
-                        }
-                    }
-                }
-            }
-        } else {
-            $connection = Yii::app()->db;
-            $command = $connection->createCommand('SELECT user.id as id,user.role as role,user.company as user_company,company.name, 
-                company.tenant AS company_tenant, company.`tenant_agent` AS company_tenant_agent
-                FROM `user` 
-                LEFT JOIN company ON company.id=user.`company`
-                WHERE user.id="' . $this->id . '"');
-            $row = $command->queryRow();
-            foreach ($row as $key => $value) {
-                $userid = $row['id'];
-                $role = $row['role'];
-                $user_company = $row['user_company'];
-                $company_tenant = $row['company_tenant'];
-                $company_tenant_agent = $row['company_tenant_agent'];
-            }
-            if ($role == Roles::ROLE_ADMIN) {
-                if ($company_tenant == '') {
-                    $command = $connection->createCommand('update company set tenant =' . $userid . ' where id ="' . $user_company . '" ');
-                    $command->query();
-
-                    $command2 = $connection->createCommand('update user set tenant =' . $userid . ' where id ="' . $userid . '" ');
-                    $command2->query();
-                } else {
-                    $command = $connection->createCommand('update user set tenant =' . $company_tenant . ' where id ="' . $userid . '" ');
-                    $command->query();
-                }
-            }
-        }
     }
 
     public function behaviors() {
@@ -491,14 +301,13 @@ class User extends VmsActiveRecord {
     }
 
     public function getFullName($id) {
-        $connection = Yii::app()->db;
-        $command = $connection->createCommand("SELECT concat(first_name,' ',last_name) as name from user where id='".$id."'");
-
-        $row = $command->queryRow();
-        return $row['name'];
+        $user = User::model()->findByPK($id);
+        $name = $user->first_name . ' ' . $user->last_name;
+        return $name;
     }
 
     public function findAllAdmin() {
+
         $criteria = new CDbCriteria;
         $criteria->select = 'id,tenant,first_name,last_name';
         $criteria->addCondition('role = 1');
@@ -509,16 +318,16 @@ class User extends VmsActiveRecord {
     public function findAllAgentAdmin() {
         $criteria = new CDbCriteria;
         $criteria->select = 'id,tenant,first_name,last_name';
-        $criteria->addCondition('role = 6');
+        $criteria->addCondition('role ="' . Roles::ROLE_AGENT_ADMIN . '"');
 
         return User::model()->findAll($criteria);
     }
 
-    public function validateIfUserHasSameTenantOrTenantAgent($currentlyEditedUserId,$currentLoggedUserRole,$currentLoggedUserTenant,$currentLoggedUserTenantAgent) {
-        
+    public function validateIfUserHasSameTenantOrTenantAgent($currentlyEditedUserId, $currentLoggedUserRole, $currentLoggedUserTenant, $currentLoggedUserTenantAgent) {
+
         $connection = Yii::app()->db;
         $ownerCondition = "where id ='" . $currentlyEditedUserId . "'";
-        
+
         if ($currentLoggedUserRole == Roles::ROLE_ADMIN) {
             $ownerCondition = "WHERE tenant = '" . $currentLoggedUserTenant . "' ";
         } else if ($currentLoggedUserRole == Roles::ROLE_AGENT_ADMIN) {
@@ -536,82 +345,85 @@ class User extends VmsActiveRecord {
         }
     }
 
-    public function saveWorkstation($model_Id, $workstation_Id,$created_by) {
-        $connection = Yii::app()->db;
-        $command = $connection->createCommand('INSERT INTO `user_workstation` '
-                . '(`user`, `workstation`, `created_by`) VALUES (' . $model_Id . ',' . $workstation_Id . ',' . $created_by . ' )');
-        $command->query();
+    public function saveWorkstation($model_Id, $workstation_Id, $created_by) {
+
+        $post = new UserWorkstations;
+        $post->user = $model_Id;
+        $post->workstation = $workstation_Id;
+        $post->created_by = $created_by;
+        $post->is_primary = '1';
+        $post->save();
     }
-    
-    public function findAllTenantAgent($id){
+
+    public function findAllTenantAgent($id) {
         $tenant = trim($id);
+        $aArray = array();
+        $Criteria = new CDbCriteria();
+        $Criteria->condition = "tenant = '" . $tenant . "' and role=" . Roles::ROLE_AGENT_ADMIN;
+        $User = User::model()->findAll($Criteria);
+        foreach ($User as $index => $value) {
+            $aArray[] = array(
+                'id' => $value['id'],
+                'name' => $value['first_name'] . ' ' . $value['last_name'],
+            );
+        }
 
+        return $aArray;
+    }
+
+    public function findCompanyDetailsOfUser($id) {
         $aArray = array();
 
-        $connection = Yii::app()->db;
-        $sql = "select id,concat(first_name,' ',last_name) as name from `user` where tenant=$id and role=6";
-        $command = $connection->createCommand($sql);
-        $row = $command->queryAll();
-        foreach ($row as $key => $value) {
+        $usercompany = User::model()->findByPK($id);
+        $company = Company::model()->findByPK($usercompany->company);
 
+        $aArray[] = array(
+            'id' => $company->id,
+            'name' => $company->name,
+        );
+
+        return $aArray;
+    }
+
+    public function findWorkstationsWithSameTenant($id) {
+        $aArray = array();
+
+        $Criteria = new CDbCriteria();
+        $Criteria->condition = "tenant = '$id'";
+        $workstation = Workstation::model()->findAll($Criteria);
+
+        foreach ($workstation as $index => $value) {
             $aArray[] = array(
                 'id' => $value['id'],
                 'name' => $value['name'],
             );
         }
+
         return $aArray;
     }
-    public function findCompanyDetailsOfUser($id){
+
+    public function findWorkstationsWithSameTenantAndTenantAgent($id, $tenant) {
         $aArray = array();
 
-        $connection = Yii::app()->db;
-        $sql = "SELECT company.id as id,company.name as company FROM `user`
-                        LEFT JOIN company ON company.id = user.`company`
-                        WHERE `user`.id=$id ";
-        $command = $connection->createCommand($sql);
-        $row = $command->queryAll();
-        foreach ($row as $key => $value) {
-
-            $aArray[] = array(
-                'id' => $value['id'],
-                'name' => $value['company'],
-            );
-        }
-        return $aArray;
-    }
-    
-    public function findWorkstationsWithSameTenant($id){
-        $aArray = array();
-
-        $connection = Yii::app()->db;
-        $sql = "SELECT id,name from workstation where tenant=$id";
-        $command = $connection->createCommand($sql);
-        $row = $command->queryAll();
-        foreach ($row as $key => $value) {
-
+        $Criteria = new CDbCriteria();
+        $Criteria->condition = "tenant = '" . $tenant . "' and tenant_agent='" . $id . "'";
+        $workstation = Workstation::model()->findAll($Criteria);
+        foreach ($workstation as $index => $value) {
             $aArray[] = array(
                 'id' => $value['id'],
                 'name' => $value['name'],
             );
         }
-        
+
         return $aArray;
     }
-    
-    public function findWorkstationsWithSameTenantAndTenantAgent($id, $tenant){
-        $aArray = array();
 
-        $connection = Yii::app()->db;
-        $sql = "SELECT id,name from workstation where tenant_agent=$id and tenant = '".$tenant."'";
-        $command = $connection->createCommand($sql);
-        $row = $command->queryAll();
-        foreach ($row as $key => $value) {
-
-            $aArray[] = array(
-                'id' => $value['id'],
-                'name' => $value['name'],
-            );
-        }
-        return $aArray;
+    protected function afterFind() {
+        $date_of_birth = $this->date_of_birth;
+        $this->birthdayDay = date('d', strtotime($date_of_birth));
+        $this->birthdayMonth = date('n', strtotime($date_of_birth));
+        $this->birthdayYear = date('o', strtotime($date_of_birth));
+        return parent::afterFind();
     }
+
 }

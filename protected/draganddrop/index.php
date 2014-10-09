@@ -18,6 +18,7 @@ if (isset($_GET['id'])) {
             allowedTypes: "png,gif,jpg,jpeg",
             fileName: "myfile",
             // maxFileCount: 1,
+            maxFileSize:2100000,
             showDone: false,
             showStatusAfterSuccess: false,
             onSuccess: function(files, data, xhr)
@@ -29,7 +30,22 @@ if (isset($_GET['id'])) {
                     logo.src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + data;
                     $(".companyLogoDiv").show();
                 } else {
+                    //id of photo
                     $("#Company_logo").val(data);
+                    $.ajax({
+                        type: 'POST',
+                        url: '<?php echo Yii::app()->createUrl('photo/GetPathOfCompanyLogo&id='); ?>' + data,
+                        dataType: 'json',
+                        data: data,
+                        success: function(r) {
+
+                            $.each(r.data, function(index, value) {
+                                logo.src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+                                $(".companyLogoDiv").show();
+                            });
+
+                        }
+                    });
                 }
             }
         });

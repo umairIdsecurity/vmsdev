@@ -19,12 +19,12 @@ class CompanyController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('index', 'view', 'GetCompanyList'),
+                'actions' => array('GetCompanyList'),
                 'users' => array('@'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('create'),
-                'users' => array('@'),
+                'expression' => 'Yii::app()->controller->accessRoles("canCreateCompany")',
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('update'),
@@ -46,24 +46,23 @@ class CompanyController extends Controller {
 
         switch ($action) {
             case "admin":
-                $user_role = array("5");
+                $user_role = array(Roles::ROLE_SUPERADMIN);
+                if (in_array($CurrentRole, $user_role)) {
+                    return true;
+                }
+                break;
+            case "canCreateCompany":
+                $user_role = array(Roles::ROLE_SUPERADMIN, Roles::ROLE_ADMIN);
                 if (in_array($CurrentRole, $user_role)) {
                     return true;
                 }
                 break;
             case "update":
-                $connection = Yii::app()->db;
+
                 if ($session['role'] == Roles::ROLE_SUPERADMIN) {
                     return true;
                 } else {
-                    $ownerQuery = "select company FROM `user` where company = '" . $_GET['id'] . "' and id='" . $session['id'] . "'";
-                    $command = $connection->createCommand($ownerQuery);
-                    $row = $command->query();
-                    if ($row->rowCount !== 0) {
-                        return true;
-                    } else {
-                        return false;
-                    }
+                    return Company::model()->validateIfCurrentLoggedUserCanViewTheCompany($_GET['id'], $session['id']);
                 }
                 break;
             default:
@@ -74,59 +73,64 @@ class CompanyController extends Controller {
     public function actionCreate() {
         $model = new Company;
         $session = new CHttpSession;
-
+        $companyService = new CompanyServiceImpl();
+        $viewFromModal = '';
+        if (isset($_GET['viewFrom'])) {
+            $viewFromModal = 1;
+        }
         if (isset($_POST['Company'])) {
             $model->attributes = $_POST['Company'];
-            // if admin check if company is unique with the tenant
-            if ($session['role'] == Roles::ROLE_ADMIN) {
-                $connection = Yii::app()->db;
-                $command = $connection->createCommand('SELECT `name` FROM company WHERE `name`="' . $_POST['Company']['name'] . '" AND tenant="' . $session['tenant'] . '"');
 
-                $row = $command->query();
-                //if no match
-                if ($row->rowCount == 0) {
-                    if ($model->save()) {
-                        $lastId = Yii::app()->db->getLastInsertID();
-                        $cs = Yii::app()->clientScript;
-                        $cs->registerScript('closeParentModal', 'window.parent.dismissModal(' . $lastId . ');', CClientScript::POS_READY);
-                        $model->unsetAttributes();
-                        Yii::app()->user->setFlash('success', 'Company Successfully added!');
+            if ($this->checkIfCompanyIsUnique($session['tenant'], $session['role'], $_POST['Company']['name'], $_POST['Company']['tenant']) == 0) {
+                if ($companyService->save($model, $session['tenant'], $session['role'], 'create')) {
+                    $lastId = $model->id;
+                    $cs = Yii::app()->clientScript;
+                    $cs->registerScript('closeParentModal', 'window.parent.dismissModal(' . $lastId . ');', CClientScript::POS_READY);
+                    $model->unsetAttributes();
+
+                    switch ($viewFromModal) {
+                        case 1:
+                            Yii::app()->user->setFlash('success', 'Company Successfully added!');
+                            break;
+                        default:
+                            $this->redirect(array('company/admin'));
                     }
-                } else {
-                    Yii::app()->user->setFlash('error', 'Company name has already been taken.');
                 }
             } else {
-                $connection = Yii::app()->db;
-                $command = $connection->createCommand('SELECT `name` FROM company WHERE `name`="' . $_POST['Company']['name'] . '" AND tenant="' . $_POST['Company']['tenant'] . '"');
-
-                $row = $command->query();
-                //if no match
-                if ($row->rowCount == 0) {
-                    if ($model->save()) {
-                        $lastId = Yii::app()->db->getLastInsertID();
-                        $cs = Yii::app()->clientScript;
-                        $cs->registerScript('closeParentModal', 'window.parent.dismissModal(' . $lastId . ');', CClientScript::POS_READY);
-                        $model->unsetAttributes();
-                        Yii::app()->user->setFlash('success', 'Company Successfully added!');
-                    }
-                } else {
-                    Yii::app()->user->setFlash('error', 'Company name has already been taken.');
-                }
+                Yii::app()->user->setFlash('error', 'Company name has already been taken.');
             }
         }
+
 
         $this->render('create', array(
             'model' => $model,
         ));
     }
 
+    private function checkIfCompanyIsUnique($sessionTenant, $sessionRole, $companyName, $selectedTenant) {
+        if ($sessionRole == Roles::ROLE_ADMIN) {
+            $countCompany = Company::model()->validateIfCompanyIsUniqueWithinTheTenant($companyName, $sessionTenant);
+        } else {
+            $countCompany = Company::model()->validateIfCompanyIsUniqueWithinTheTenant($companyName, $selectedTenant);
+        }
+
+        return $countCompany;
+    }
+
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
-
+        $session = new CHttpSession;
         if (isset($_POST['Company'])) {
             $model->attributes = $_POST['Company'];
             if ($model->save()) {
-                Yii::app()->user->setFlash('success', 'Organization Settings Updated');
+                switch ($session['role']) {
+                    case Roles::ROLE_SUPERADMIN:
+                        $this->redirect(array('company/admin'));
+                        break;
+
+                    default:
+                        Yii::app()->user->setFlash('success', 'Organisation Settings Updated');
+                }
             }
         }
 
@@ -189,21 +193,7 @@ class CompanyController extends Controller {
     }
 
     public function actionGetCompanyList() {
-        $aArray = array();
-
-        $connection = Yii::app()->db;
-        $sql = "SELECT id,name from company";
-        $command = $connection->createCommand($sql);
-        $row = $command->queryAll();
-        foreach ($row as $key => $value) {
-
-            $aArray[] = array(
-                'id' => $value['id'],
-                'name' => $value['name'],
-            );
-        }
-
-        $resultMessage['data'] = $aArray;
+        $resultMessage['data'] = Company::model()->findAllCompany();
 
         echo CJavaScript::jsonEncode($resultMessage);
         Yii::app()->end();

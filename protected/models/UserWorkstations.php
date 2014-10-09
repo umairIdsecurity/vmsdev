@@ -14,131 +14,161 @@
  * @property User $createdBy
  * @property User $user0
  */
-class UserWorkstations extends CActiveRecord
-{
-	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'user_workstation';
-	}
+class UserWorkstations extends CActiveRecord {
 
-	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array(
-			array('user, workstation', 'required'),
-			array('user, workstation, created_by', 'numerical', 'integerOnly'=>true),
-			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
-			array('id, user, workstation, created_by', 'safe', 'on'=>'search'),
-		);
-	}
+    /**
+     * @return string the associated database table name
+     */
+    public function tableName() {
+        return 'user_workstation';
+    }
 
-	/**
-	 * @return array relational rules.
-	 */
-	public function relations()
-	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-			'workstation0' => array(self::BELONGS_TO, 'Workstations', 'workstation'),
-			'createdBy' => array(self::BELONGS_TO, 'User', 'created_by'),
-			'user0' => array(self::BELONGS_TO, 'User', 'user'),
-		);
-	}
+    /**
+     * @return array validation rules for model attributes.
+     */
+    public function rules() {
+        // NOTE: you should only define rules for those attributes that
+        // will receive user inputs.
+        return array(
+            array('user, workstation', 'required'),
+            array('user, workstation, created_by,is_primary', 'numerical', 'integerOnly' => true),
+            // The following rule is used by search().
+            // @todo Please remove those attributes that should not be searched.
+            array('id, user, workstation, created_by', 'safe', 'on' => 'search'),
+        );
+    }
 
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return array(
-			'id' => 'ID',
-			'user' => 'User',
-			'workstation' => 'Workstation',
-			'created_by' => 'Created By',
-		);
-	}
+    /**
+     * @return array relational rules.
+     */
+    public function relations() {
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'workstation0' => array(self::BELONGS_TO, 'Workstations', 'workstation'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'created_by'),
+            'user0' => array(self::BELONGS_TO, 'User', 'user'),
+        );
+    }
 
-	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 *
-	 * Typical usecase:
-	 * - Initialize the model fields with values from filter form.
-	 * - Execute this method to get CActiveDataProvider instance which will filter
-	 * models according to data in model fields.
-	 * - Pass data provider to CGridView, CListView or any similar widget.
-	 *
-	 * @return CActiveDataProvider the data provider that can return the models
-	 * based on the search/filter conditions.
-	 */
-	public function search()
-	{
-		// @todo Please modify the following code to remove attributes that should not be searched.
+    /**
+     * @return array customized attribute labels (name=>label)
+     */
+    public function attributeLabels() {
+        return array(
+            'id' => 'ID',
+            'user' => 'User',
+            'workstation' => 'Workstation',
+            'created_by' => 'Created By',
+            'is_primary' => 'Is_Primary',
+        );
+    }
 
-		$criteria=new CDbCriteria;
+    /**
+     * Retrieves a list of models based on the current search/filter conditions.
+     *
+     * Typical usecase:
+     * - Initialize the model fields with values from filter form.
+     * - Execute this method to get CActiveDataProvider instance which will filter
+     * models according to data in model fields.
+     * - Pass data provider to CGridView, CListView or any similar widget.
+     *
+     * @return CActiveDataProvider the data provider that can return the models
+     * based on the search/filter conditions.
+     */
+    public function search() {
+        // @todo Please modify the following code to remove attributes that should not be searched.
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('user',$this->user);
-		$criteria->compare('workstation',$this->workstation);
-		$criteria->compare('created_by',$this->created_by);
-		//$criteria->compare('created_by',$this->created_by);
+        $criteria = new CDbCriteria;
 
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
-	}
-        
-        
+        $criteria->compare('id', $this->id);
+        $criteria->compare('user', $this->user);
+        $criteria->compare('workstation', $this->workstation);
+        $criteria->compare('created_by', $this->created_by);
+        $criteria->compare('is_primary', $this->is_primary);
+        //$criteria->compare('created_by',$this->created_by);
 
-	/**
-	 * Returns the static model of the specified AR class.
-	 * Please note that you should have this exact method in all your CActiveRecord descendants!
-	 * @param string $className active record class name.
-	 * @return UserWorkstations the static model class
-	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
-        
-        public function getAllworkstations($userid){
-            $connection = Yii::app()->db;
-                $sql ="SELECT workstation.name as name
-                        FROM user_workstation 
-                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
-                        WHERE user_workstation.`user`='$userid' ORDER BY workstation.name";
-                $command = $connection->createCommand($sql);
-                $row = $command->queryAll();
-                
-                if (count($row)>0)
-                {
-                    $res = array();
-                    foreach ($row as $key=>$val) {
-                       $res[] = $val;
-                    }
-                    $resp= array();
-                    foreach ($res as $workstations){
-                        $resp [] = $workstations;
-                    }
-                    foreach ($resp as $val){
-                        $copy = $resp;
-                        foreach ($val as $v){
-                            echo $v;
-                            if(!next($copy))
-                            {echo "<br>";}
-                        }
-                     }
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+        ));
+    }
+
+    /**
+     * Returns the static model of the specified AR class.
+     * Please note that you should have this exact method in all your CActiveRecord descendants!
+     * @param string $className active record class name.
+     * @return UserWorkstations the static model class
+     */
+    public static function model($className = __CLASS__) {
+        return parent::model($className);
+    }
+
+    public function getAllworkstations($userid) {
+        $Criteria = new CDbCriteria();
+        $Criteria->condition = "user = '$userid'";
+        $userworkstations = UserWorkstations::model()->findAll($Criteria);
+
+        if (count($userworkstations) != 0) {
+            foreach ($userworkstations as $index => $value) {
+                $workstations = Workstation::model()->findByPk($value['workstation']);
+                echo $workstations->name . "<br>";
+            }
+        } else {
+            return $result = '-';
+        }
+    }
+
+    public function getAllUserWorkstationsCanBeEditedBySuperAdmin($currentlyEditedUser, $currentSessionRole) {
+
+        $user = User::model()->findByPk($currentlyEditedUser);
+        $currentlyLoggedInUser = User::model()->findByPK(Yii::app()->user->id);
+        switch ($currentSessionRole) {
+            case Roles::ROLE_ADMIN:
+                $queryCondition = "tenant='" . $currentlyLoggedInUser->tenant . "'";
+                if ($user->role == Roles::ROLE_OPERATOR) {
+                    $queryCondition = "tenant='" . $user->tenant . "' and tenant_agent IS NULL";
+                } else {
+                    $queryCondition = "tenant='" . $currentlyLoggedInUser->tenant . "'";
                 }
-                else {
-                    return $result = '-'; 
+                break;
+            case Roles::ROLE_AGENT_ADMIN:
+                $queryCondition = "tenant='" . $currentlyLoggedInUser->tenant . "' and tenant_agent ='" . $currentlyLoggedInUser->tenant_agent . "'";
+                
+                break;
+            default:
+                if ($user->role == Roles::ROLE_OPERATOR) {
+                    $queryCondition = "tenant='" . $user->tenant . "' and tenant_agent IS NULL";
+                } else {
+                    $queryCondition = "tenant='" . $user->tenant . "' and tenant_agent ='" . $user->tenant_agent . "'";
                 }
         }
+
+        $Criteria = new CDbCriteria();
+        $Criteria->condition = $queryCondition;
+        $workstations = Workstation::model()->findAll($Criteria);
+
+        return $workstations;
+    }
+
+    public function deleteAllUserWorkstationsWithSameUserId($id) {
+
+        UserWorkstations::model()->deleteAll(array(
+            'condition' => "`user` = '$id'",
+        ));
+    }
+
+    public function checkIfWorkstationIsPrimaryOfUser($currentlyEditedUser, $workstationId) {
+        $Criteria = new CDbCriteria();
+        $Criteria->condition = "user = '$currentlyEditedUser' and workstation ='" . $workstationId . "'";
+        $userworkstations = UserWorkstations::model()->findAll($Criteria);
+
+        foreach ($userworkstations as $index => $value) {
+            if ($value['is_primary'] == 1) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
 }

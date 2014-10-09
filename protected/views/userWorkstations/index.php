@@ -3,11 +3,7 @@
 $session = new CHttpSession;
 echo CHtml::beginForm();
 ?>
-<?php
-foreach (Yii::app()->user->getFlashes() as $key => $message) {
-    echo '<div class="flash-' . $key . '">' . $message . "</div>\n";
-}
-?>
+
 <input type='hidden' value='<?php echo $_GET['id']; ?>' name='userId'>
 <?php
 foreach (Yii::app()->user->getFlashes() as $key => $message) {
@@ -15,30 +11,11 @@ foreach (Yii::app()->user->getFlashes() as $key => $message) {
 }
 ?>
 
-<?php
-if ($session['role'] != Roles::ROLE_SUPERADMIN) {
-    $this->widget('zii.widgets.grid.CGridView', array(
-        'id' => 'user_workstationsGrid',
-        'dataProvider' => Workstation::model()->search(),
-        'template' => "{items}",
-        'columns' => array(
-            array('name' => 'name', 'header' => 'Name'),
-            array('name' => 'location', 'header' => 'Location'),
-            array('class' => 'CCheckBoxColumn',
-                'id' => 'cbColumn',
-                'selectableRows' => 2,
-                'checked' => '(Workstation::model()->getWorkstations(' . $_GET['id'] . ',$data->id)==true)?(1):(0)',
-                'htmlOptions' => array("onclick" => 'getId()'),
-            ),
-        ),
-    ));
-} else {
-    ?>
     <form method="post" action="/index.php?r=userWorkstations/index&amp;id=<?php echo $_GET['id'] ?>"><input type="hidden" name="userId" value="<?php echo $_GET['id'] ?>">
 
         <div class="grid-view superadminSetAccessTable" id="user_workstationsGrid">
             <table class="items table-striped ">
-                <thead>
+                <thead >
                     <tr>
                         <th id="user_workstationsGrid_c0" style="text-align:center;">
                             <a href="/index.php?r=userWorkstations/index&amp;id=<?php echo $_GET['id']; ?>&amp;Workstation_sort=name" class="sort-link">Name</a>
@@ -46,37 +23,44 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                         <th id="user_workstationsGrid_c1" style="text-align:center;">
                             <a href="/index.php?r=userWorkstations/index&amp;id=<?php echo $_GET['id']; ?>&amp;Workstation_sort=location" class="sort-link">Location</a>
                         </th>
-                        <th id="cbColumn" class="checkbox-column" style="text-align:center;"><input type="checkbox" id="cbColumnAll" name="cbColumn_all">
-                        </th>
+                        <th id="cbColumn" class="checkbox-column" style="text-align:center;"><input type="checkbox" id="cbColumnAll" name="cbColumn_all"></th>
+                        <th style="text-align:center;">Set Primary</th>
                     </tr>
                 </thead>
                 <tbody> <?php
-                    $connection = Yii::app()->db;
-
-                    $sqlA = "select role from `user` where id='" . $_GET['id'] . "'";
-                    $command = $connection->createCommand($sqlA);
-                    $rowA = $command->queryRow();
-                    if ($rowA['role'] == Roles::ROLE_OPERATOR) {
-                        $queryCondition = "WHERE workstation.tenant=user.tenant and workstation"
-                                . ".tenant_agent IS NULL";
-                    } else {
-                        $queryCondition = "WHERE workstation.tenant=user.tenant and workstation"
-                                . ".tenant_agent = user.tenant_agent";
-                    }
-                    $sql = "SELECT workstation.id as id,workstation.location as location,workstation.name as name FROM workstation
-                            LEFT JOIN `user` ON user.`id` = " . $_GET['id'] . " " . $queryCondition;
-                    $command = $connection->createCommand($sql);
-                    $row = $command->query();
+                    $row = UserWorkstations::model()->getAllUserWorkstationsCanBeEditedBySuperAdmin($_GET['id'],$session['role']);
                     foreach ($row as $user) {
                         ?> 
                         <tr>
                             <td ><?php echo $user['name'] ?></td>
                             <td ><?php echo $user['location'] ?></td>
-                            <td style="text-align:center;" onclick="getId()">
+                            <td style="text-align:center;" onclick="getId()" class="checkboxColumnTd">
                                 <input type="checkbox" name="cbColumn[]"  <?php
                                 (Workstation::model()->getWorkstations($_GET['id'], $user['id']) == true) ? ( $cbVal = 'checked') : ( $cbVal = '');
-                                echo $cbVal;
+                                echo $cbVal." ";
+
+                                if (UserWorkstations::model()->checkIfWorkstationIsPrimaryOfUser($_GET['id'], $user['id']) == true) {
+                                    $checked = "checked";
+                                    $disabled = "disabled";
+                                    $is_primary = "1";
+                                    $label = "Primary";
+                                } else {
+                                    $checked = "";
+                                    $disabled = "";
+                                    $is_primary = "0";
+                                    $label="Set Primary";
+                                }
+                                echo $disabled;
                                 ?> id="cbColumn_0" value="<?php echo $user['id'] ?>">
+                            </td>
+                            <td style="text-align: center;" class="radioButtonTd">
+
+                                <input type="radio" id="setPrimary<?php echo $user['id']; ?>" name="rButtons" class="rButtons"
+                                       <?php echo $checked; ?>
+                                       />
+                                <label for="setPrimary<?php echo $user['id']; ?>" id="setPrimary<?php echo $user['id']; ?>"><?php echo $label; ?></label>
+                                <input type="text" style="display:none;" name="radioSetPrimaryInput[<?php echo $user['id']; ?>]" value="<?php echo $is_primary; ?>"/>
+
                             </td>
                         </tr>
 
@@ -88,21 +72,35 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
 
         </div>
 
-        <?php } ?>
     <div>
-<?php echo CHtml::submitButton('Save Changes', array('name' => 'ApproveButton', 'id' => 'btnSubmit')); ?>
+        <?php echo CHtml::submitButton('Save Changes', array('name' => 'ApproveButton', 'id' => 'btnSubmit')); ?>
 
     </div>
 
-<?php echo CHtml::endForm(); ?>
+    <?php echo CHtml::endForm(); ?>
     <script>
-        $(document).ready(function() {
+        $(".rButtons").click(function() {
+            $("input[type='text']").val("0");
+            $("label").html("Set Primary");
+            $("input[type='checkbox']").prop("disabled", false);
 
+            $(this).closest('td.radioButtonTd').find('input[type=text]').val("1");
+            $(this).closest('td.radioButtonTd').find('label').html("Primary");
+            $(this).parents('td:eq(0)').prev().find('input[type="checkbox"]').prop("checked", true);
+            $(this).parents('td:eq(0)').prev().find('input[type="checkbox"]').prop("disabled", true);
+        });
+
+        $("#btnSubmit").click(function() {
+            $("input[type='checkbox']").prop("disabled", false);
+        });
+        
+        $(document).ready(function() {
             $("#cbColumnAll").on("click", function() {
                 var all = $(this);
-                $('input:checkbox').each(function() {
+                $('input:checkbox').not("[disabled]").each(function() {
                     $(this).prop("checked", all.prop("checked"));
                 });
             });
-        });
+        }
+        );
     </script>

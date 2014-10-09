@@ -1,5 +1,6 @@
 <?php
 
+
 class UserController extends Controller {
 
     /**
@@ -25,7 +26,6 @@ class UserController extends Controller {
      */
     public function accessRules() {
         return array(
-            
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('create',
                     'GetTenantAgentAjax',
@@ -63,12 +63,11 @@ class UserController extends Controller {
                 }
                 break;
             case "userTenant":
-                
-                return User::model()->validateIfUserHasSameTenantOrTenantAgent($_GET['id'],$session['role'],$session['tenant'],$session['tenant_agent']);
+
+                return User::model()->validateIfUserHasSameTenantOrTenantAgent($_GET['id'], $session['role'], $session['tenant'], $session['tenant_agent']);
                 break;
 
             case "profile":
-                $connection = Yii::app()->db;
                 if ($session['id'] == $_GET['id']) {
                     return true;
                 } else {
@@ -86,14 +85,16 @@ class UserController extends Controller {
      */
     public function actionCreate() {
         $model = new User;
+        $userService = new UserServiceImpl();
         $session = new CHttpSession;
 
         if (isset($_POST['User'])) {
             $model->attributes = $_POST['User'];
-            if ($model->save()) {
-                if ($_POST['User']['role'] == Roles::ROLE_OPERATOR || $_POST['User']['role'] == Roles::ROLE_AGENT_OPERATOR) {
-                    User::model()->saveWorkstation($model->id, $_POST['User']['workstation'],$session['id']);
-                }
+            $workstation = NULL;
+            if (isset($_POST['User']['workstation'])){
+                $workstation = $_POST['User']['workstation'];
+            }
+            if ($userService->save($model, $session['tenant'], $session['tenant_agent'], $session['role'],$session['id'],$workstation)) {
                 $this->redirect(array('admin'));
             }
         }
@@ -110,10 +111,13 @@ class UserController extends Controller {
      */
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
-
+        $userService = new UserServiceImpl();
+        $session = new CHttpSession;
+        
         if (isset($_POST['User'])) {
             $model->attributes = $_POST['User'];
-            if ($model->save()) {
+
+            if ($userService->save($model, $session['tenant'], $session['tenant_agent'], $session['role'],$session['id'],NULL)) {
                 $this->redirect(array('admin'));
             }
         }
@@ -179,11 +183,10 @@ class UserController extends Controller {
         $this->layout = "//layouts/column1";
         $model = $this->loadModel($id);
 
-
         if (isset($_POST['User'])) {
             $model->attributes = $_POST['User'];
             if ($model->save())
-                $this->redirect(array('admin'));
+                Yii::app()->user->setFlash('success', "Profile Updated Successfully.");
         }
 
         $this->render('profile', array(
@@ -199,7 +202,7 @@ class UserController extends Controller {
     }
 
     public function actionGetTenantOrTenantAgentCompany($id) {
-        
+
         $resultMessage['data'] = User::model()->findCompanyDetailsOfUser($id);
 
         echo CJavaScript::jsonEncode($resultMessage);
@@ -213,10 +216,9 @@ class UserController extends Controller {
         Yii::app()->end();
     }
 
-    public function actionGetTenantAgentWorkstation($id, $tenant ) {
+    public function actionGetTenantAgentWorkstation($id, $tenant) {
         $resultMessage['data'] = User::model()->findWorkstationsWithSameTenantAndTenantAgent($id, $tenant);
 
-        // echo json_encode($resultMessage);
         echo CJavaScript::jsonEncode($resultMessage);
         Yii::app()->end();
     }
@@ -244,6 +246,28 @@ class UserController extends Controller {
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }
+    }
+
+    public function getDays() {
+        for ($i = 1; $i <= 31; $i++) {
+            $days["{$i}"] = "{$i}";
+        }
+        return $days;
+    }
+
+    public function getMonths() {
+        $monthNames = array('', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec');
+        for ($i = 1; $i <= 12; $i++) {
+            $months["{$i}"] = Yii::t('default', $monthNames[$i]);
+        }
+        return $months;
+    }
+
+    public function getYears() {
+        for ($i = date('Y'); $i >= 1900; $i--) {
+            $years["{$i}"] = "{$i}";
+        }
+        return $years;
     }
 
 }

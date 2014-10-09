@@ -28,10 +28,10 @@ class Issue9FunctionalTest extends BaseFunctionalTest {
         $this->Scenario4();
     }
 
-    /* Scenario 1 – Login as admin and view and update organization settings.
+    /* Scenario 1 – Login as admin then view and update organisation settings.
       Expected Behavior
       -	Assert text ’Test Company 1’ in company name field
-      -	Assert text ’Organization settings updated’ in company name field
+      -	Assert text ’Organisation settings updated’ in company name field
 
       Steps:
       1.	Go to localhost/vms
@@ -39,11 +39,11 @@ class Issue9FunctionalTest extends BaseFunctionalTest {
       3.	Type 12345 in password field
       4.	Click Login
       5.	Click Administrator
-      6.     Click organization settings
+      6.     Click organisation settings
       7. 	Assert Text 'Test Company 1 in email field'
       8.	Type Test Company 1 - update in display name field
       9.     Click save wait for page to reload
-      10.   Asser text organization settings updated
+      10.   Asser text organisation settings updated
       11.   Assert text last name 'test company 1 - update'
       12.   Click view license details.
       13.   Assert text 'this is a sample license detail'.
@@ -52,13 +52,12 @@ class Issue9FunctionalTest extends BaseFunctionalTest {
 
     function Scenario1() {
         $this->login("admin@test.com", "12345");
-        $this->click("link=Organization Settings");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("link=Administration");
+        $this->clickAndWait("link=Organisation Settings");
         $this->assertEquals("Test Company 1", $this->getValue("id=Company_name"));
         $this->type("id=Company_trading_name", "Test Company 1 - Update");
-        $this->click("id=createBtn");
-        $this->waitForPageToLoad("30000");
-        $this->assertEquals("Organization Settings Updated", $this->getText("css=div.flash-success"));
+        $this->clickAndWait("id=createBtn");
+        $this->assertEquals("Organisation Settings Updated", $this->getText("css=div.flash-success"));
         $this->assertEquals("Test Company 1 - Update", $this->getValue("id=Company_trading_name"));
         $this->click("id=modalBtn");
         $this->assertEquals("This is a sample license detail.", $this->getText("id=modalBody"));
@@ -76,7 +75,7 @@ class Issue9FunctionalTest extends BaseFunctionalTest {
       3.	Type 12345 in password field
       4.	Click Login
       5.     Click 'Administration'
-      6.     Click organization settings
+      6.     Click organisation settings
       7.     Empty fields
       8.     Click Save
       9.      Assert text company name cannot be blank
@@ -94,7 +93,7 @@ class Issue9FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->click("link=Administration");
         $this->waitForPageToLoad("30000");
-        $this->click("link=Organization Settings");
+        $this->click("link=Organisation Settings");
         $this->waitForPageToLoad("30000");
         $this->type("id=Company_name", "");
         $this->click("id=createBtn");
@@ -157,26 +156,19 @@ class Issue9FunctionalTest extends BaseFunctionalTest {
     function Scenario4() {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
-        $this->click("link=Administration");
-        $this->click("link=Manage Companies");
-        $this->click("link=View Companies");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("link=Administration");
+        $this->clickAndWait("link=Manage Companies");
         $this->type("css=td > input[name=\"Company[name]\"]", "Test Company 1");
-        sleep(5);
-        $this->click("link=Edit");
-        $this->waitForPageToLoad("30000");
-        $this->click("css=button.yiiBtn");
-        $this->waitForPageToLoad("30000");
+        $this->waitForElementPresent("link=Edit");
+        $this->clickAndWait("link=Edit");
+        $this->clickAndWait("css=button.yiiBtn");
         $this->click("css=a.redactor_btn_html > span");
         $this->type("id=LicenseDetails_description", "This is a sample license details update");
-        $this->click("name=yt0");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("name=yt0");
         $this->type("css=td > input[name=\"Company[name]\"]", "Test Company 1");
         sleep(5);
-        $this->click("link=Edit");
-        $this->waitForPageToLoad("30000");
-        $this->click("css=button.yiiBtn");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("link=Edit");
+        $this->clickAndWait("css=button.yiiBtn");
         $this->click("css=a.redactor_btn_html > span");
         $this->assertEquals("This is a sample license details update", $this->getText("id=LicenseDetails_description"));
     }

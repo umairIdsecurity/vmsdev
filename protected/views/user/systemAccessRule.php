@@ -2,6 +2,7 @@
 /* @var $this UserController */
 /* @var $model User */
 $session = new CHttpSession;
+
 ?>
 
 <h1>Set Access Rules</h1>

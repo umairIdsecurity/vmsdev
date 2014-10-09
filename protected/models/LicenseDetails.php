@@ -86,14 +86,11 @@ class LicenseDetails extends CActiveRecord {
     }
 
     public function getLicenseDetails() {
-        $connection = Yii::app()->db;
-        $sql = "select description from license_details limit 1";
-        $command = $connection->createCommand($sql);
-        $row = $command->queryAll();
-        
-        foreach ($row as $key => $val) {
-            $description = $val;
+        $license = LicenseDetails::model()->findAll();
+        foreach ($license as $index => $value) {
+            $description = $value['description'];
         }
+
         return $description;
     }
 

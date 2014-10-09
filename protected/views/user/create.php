@@ -4,7 +4,10 @@
 
 $session = new CHttpSession;
 ?>
-<h1>Create User</h1>
+<h1 style="display:inline;">Add User </h1>
+
+<span class="note indentLeft addLineHeight">Fields with <span class="required">*</span> are required.</span>
+
 
 <?php $this->renderPartial('_form', array('model'=>$model)); ?>
 

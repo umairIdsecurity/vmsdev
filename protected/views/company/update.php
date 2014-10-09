@@ -5,7 +5,7 @@
 
 ?>
 
-<h1>Update Organization Fields</h1>
+<h1>Edit Organisation Fields</h1>
 <?php
     foreach(Yii::app()->user->getFlashes() as $key => $message) {
         echo '<div class="flash-' . $key . '">' . $message . "</div>\n";

@@ -28,12 +28,12 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
         $this->open("http://cvms.identitysecurity.info/index.php?r=site/resetDb");
         $this->assertEquals("Tables imported successfully", $this->getText("css=body"));
     }
-    
+
     public function resetDbWithData() {
         $this->open("http://cvms.identitysecurity.info/index.php?r=site/resetDb2");
         $this->assertEquals("Tables imported successfully", $this->getText("css=body"));
     }
-    
+
     public function __destruct() {
         parent::__destruct();
     }
@@ -53,11 +53,10 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
         $this->open("http://cvms.identitysecurity.info/index.php?r=password/update&id=" . $id);
         $this->type("id=Password_currentpassword", "12345");
         $this->type("name=Password[password]", "admin");
-        $this->type("name=confirmPassword", "admin");
+        $this->type("name=Password[repeatpassword]", "admin");
         $this->click("id=updateBtn");
         $this->click("id=save");
         $this->waitForPageToLoad("30000");
-       
     }
 
     function addUser($email = NULL, $lastname = NULL) {
@@ -67,9 +66,9 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeat_password", "12345");
         $this->type("id=User_contact_number", "123456");
-        $this->click("id=User_date_of_birth");
-        $this->waitForElementPresent("link=14");
-        $this->click("link=14");
+        $this->select("id=User_birthdayDay", "label=10");
+        $this->select("id=User_birthdayMonth", "label=Jul");
+        $this->select("id=User_birthdayYear", "label=1989");
         $this->waitForElementPresent("id=User_department");
         $this->type("id=User_department", "Test Department");
         $this->type("id=User_position", "Test Position");
@@ -121,9 +120,10 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
         $this->click("id=createBtn");
         $this->waitForPageToLoad("30000");
     }
-    
-    function testBlank(){
+
+    function testBlank() {
         $this->setBrowser("*firefox");
         $this->setBrowserUrl("http://cvms.identitysecurity.info/");
     }
+
 }

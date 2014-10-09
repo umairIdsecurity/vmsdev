@@ -49,11 +49,8 @@ $session = new CHttpSession;
                 <td><select  onchange="getTenantAgent()"  id="Workstation_tenant" name="Workstation[tenant]">
                         <option disabled value='' selected>Select Tenant</option>
                         <?php
-                        $criteria = new CDbCriteria;
-                        $criteria->select = 'id,tenant,first_name,last_name';
-                        $criteria->addCondition('role = 1');
 
-                        $companyList = User::model()->findAll($criteria);
+                        $companyList = User::model()->findAllAdmin();
                         foreach ($companyList as $key => $value) {
                             ?>
                             <option <?php
@@ -73,18 +70,15 @@ $session = new CHttpSession;
                 <td><select id="Workstation_tenant_agent" name="Workstation[tenant_agent]">
                         <?php
                         if ($this->action->Id != 'create') {
-                            $criteria = new CDbCriteria;
-                            $criteria->select = 'id,first_name,last_name';
-                            $criteria->addCondition('id = "' . $model['tenant_agent'] . '"');
-
-                            $companyList = User::model()->findAll($criteria);
+                            
+                            $companyList = User::model()->findAllTenantAgent($model['tenant']);
                             foreach ($companyList as $key => $value) {
                                 ?>
                                 <option <?php
-                                if ($model['tenant_agent'] == $value->id) {
+                                if ($model['tenant_agent'] == $value['id']) {
                                     echo " selected ";
                                 }
-                                ?> value="<?php echo $value->id; ?>"><?php echo $value->first_name . " " . $value->last_name; ?></option>
+                                ?> value="<?php echo $value['id']; ?>"><?php echo $value['name'] ; ?></option>
                                     <?php
                                 }
                             } else {
@@ -105,7 +99,7 @@ $session = new CHttpSession;
 
 
     <div class="row buttons">
-        <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
+        <?php echo CHtml::submitButton($model->isNewRecord ? 'Add' : 'Save'); ?>
     </div>
 
     <?php $this->endWidget(); ?>

@@ -26,18 +26,11 @@ class PasswordController extends Controller {
     public function accessRules() {
         return array(
             
-            array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create'),
-                'users' => array('@'),
-            ),
             array('allow',
                 'actions' => array('update'),
                 'expression' => 'Yii::app()->controller->allowOnlyOwner()',
             ),
-            array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin', 'delete'),
-                'users' => array('@'),
-            ),
+            
             array('deny', // deny all users
                 'users' => array('*'),
             ),
@@ -50,36 +43,7 @@ class PasswordController extends Controller {
         return $example->id === Yii::app()->user->id;
     }
 
-    /**
-     * Displays a particular model.
-     * @param integer $id the ID of the model to be displayed
-     */
-    public function actionView($id) {
-        $this->render('view', array(
-            'model' => $this->loadModel($id),
-        ));
-    }
-
-    /**
-     * Creates a new model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     */
-    public function actionCreate() {
-        $model = new Password;
-
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-
-        if (isset($_POST['Password'])) {
-            $model->attributes = $_POST['Password'];
-            if ($model->save())
-                $this->redirect(array('view', 'id' => $model->id));
-        }
-
-        $this->render('create', array(
-            'model' => $model,
-        ));
-    }
+   
 
     /**
      * Updates a particular model.
@@ -94,12 +58,9 @@ class PasswordController extends Controller {
 
         if (isset($_POST['Password'])) {
             $model->attributes = $_POST['Password'];
-
-            if ($_POST['Password']['currentpassword'] == '' || $_POST['Password']['password'] == '' || $_POST['confirmPassword'] == '') {
-                Yii::app()->user->setFlash('error', 'Please fill in required fields');
-            } elseif ($_POST['Password']['password'] != $_POST['confirmPassword'] || $_POST['Password']['password'] == '' || $_POST['confirmPassword'] == '') {
-                Yii::app()->user->setFlash('error', "New password does not match with repeat new password. ");
-            } elseif (User::model()->validatePassword($_POST['Password']['currentpassword'], $_POST['Password']['passwordindb'])) {
+            $user = User::model()->findByPK($id);
+            
+            if (User::model()->validatePassword($_POST['Password']['currentpassword'], $user->password)) {
                 if ($model->save()) {
                     Yii::app()->user->setFlash('success', 'Password successfully updated');
                     $this->redirect(array('user/profile', 'id' => $model->id));
@@ -114,34 +75,6 @@ class PasswordController extends Controller {
         ));
     }
 
-    /**
-     * Deletes a particular model.
-     * If deletion is successful, the browser will be redirected to the 'admin' page.
-     * @param integer $id the ID of the model to be deleted
-     */
-    public function actionDelete($id) {
-        $this->loadModel($id)->delete();
-
-        // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax']))
-            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
-    }
-
-    
-
-    /**
-     * Manages all models.
-     */
-    public function actionAdmin() {
-        $model = new Password('search');
-        $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['Password']))
-            $model->attributes = $_GET['Password'];
-
-        $this->render('admin', array(
-            'model' => $model,
-        ));
-    }
 
     /**
      * Returns the data model based on the primary key given in the GET variable.

@@ -86,18 +86,22 @@ class SiteController extends Controller {
             $model->attributes = $_POST['LoginForm'];
             // validate user input and redirect to the previous page if valid
             if ($model->validate() && $model->login()) {
+
                 $session = new CHttpSession;
-                if ($session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_AGENT_ADMIN || $session['role'] == Roles::ROLE_SUPERADMIN) {
-                    $this->redirect('index.php?r=user/admin');
-                } else if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles::ROLE_OPERATOR) {
-                    $model->findWorkstations($session['id']);
-                    if(!($model->findWorkstations($session['id']))){
-                        Yii::app()->user->setFlash('error', "No workstations currenlty assigned to you. Please ask your administrator. ");
-                    }else
-                    {$this->redirect('index.php?r=site/selectworkstation&id=' . $session['id']);}
-                } else {
-                    $this->redirect('index.php?r=dashboard');
+                switch ($session['role']) {
+                    case Roles::ROLE_AGENT_OPERATOR:
+                    case Roles::ROLE_OPERATOR:
+                        if (!($model->findWorkstations($session['id']))) {
+                            Yii::app()->user->setFlash('error', "No workstations currenlty assigned to you. Please ask your administrator. ");
+                        } else {
+                            $this->redirect('index.php?r=site/selectworkstation&id=' . $session['id']);
+                        }
+                        break;
+                        
+                    default:
+                        $this->redirect('index.php?r=dashboard');
                 }
+               
             }
         }
         // display the login form
@@ -117,15 +121,7 @@ class SiteController extends Controller {
     }
 
     public function actionSelectWorkstation($id) {
-        $aArray = array();
-
-        $connection = Yii::app()->db;
-        $sql = "SELECT workstation.id,workstation.name as name
-                        FROM user_workstation 
-                        LEFT JOIN workstation ON workstation.id=user_workstation.`workstation`
-                        WHERE user_workstation.`user`='$id' ORDER BY workstation.name";
-        $command = $connection->createCommand($sql);
-        $row = $command->queryAll();
+        $row = Workstation::model()->findWorkstationAvailableForUser($id);
 
         if (count($row) > 0) {
             foreach ($row as $key => $value) {
@@ -147,8 +143,6 @@ class SiteController extends Controller {
             $session->open();
             $session['workstation'] = $_POST['userWorkstation'];
             $this->redirect('index.php?r=dashboard');
-        } else {
-            
         }
 
         // display the login form
@@ -165,10 +159,10 @@ class SiteController extends Controller {
 
     public function resetDB($sqlfilename = NULL) {
         $mysql_host = 'localhost';
-        //$mysql_username = 'user_vms';
-        $mysql_username = 'identity_vms';
+        $mysql_username = 'user_vms';
+        //$mysql_username = 'identity_vms';
         $mysql_password = 'HFz7c9dHrmPqwNGr';
-        $mysql_database = 'identity_cvms';
+        $mysql_database = 'vms';
 
         mysql_connect($mysql_host, $mysql_username, $mysql_password) or die('Error connecting to MySQL server: ' . mysql_error());
         mysql_select_db($mysql_database) or die('Error selecting MySQL database: ' . mysql_error());
@@ -177,7 +171,7 @@ class SiteController extends Controller {
         $filename = Yii::getPathOfAlias('webroot') . '/Selenium Test Files/' . $sqlfilename;
         $templine = '';
         $lines = file($filename);
-        
+
         foreach ($lines as $line) {
             if (substr($line, 0, 2) == '--' || $line == '')
                 continue;

@@ -25,16 +25,8 @@ class WorkstationController extends Controller {
      */
     public function accessRules() {
         return array(
-            array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('index', 'view'),
-                'users' => array('*'),
-            ),
-            array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update'),
-                'users' => array('@'),
-            ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin', 'delete'),
+                'actions' => array('admin', 'delete','create','update'),
                 'expression' => 'Yii::app()->controller->accessRoles("admin")',
             ),
             array('deny', // deny all users
@@ -49,7 +41,7 @@ class WorkstationController extends Controller {
 
         switch ($action) {
             case "admin":
-                $user_role = array("5", "1", "6");
+                $user_role = array(Roles::ROLE_SUPERADMIN, Roles::ROLE_ADMIN, Roles::ROLE_AGENT_ADMIN);
                 if (in_array($CurrentRole, $user_role)) {
                     return true;
                 }
@@ -59,15 +51,7 @@ class WorkstationController extends Controller {
         }
     }
 
-    /**
-     * Displays a particular model.
-     * @param integer $id the ID of the model to be displayed
-     */
-    public function actionView($id) {
-        $this->render('view', array(
-            'model' => $this->loadModel($id),
-        ));
-    }
+    
 
     /**
      * Creates a new model.
@@ -125,15 +109,6 @@ class WorkstationController extends Controller {
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
     }
 
-    /**
-     * Lists all models.
-     */
-    public function actionIndex() {
-        $dataProvider = new CActiveDataProvider('Workstation');
-        $this->render('index', array(
-            'dataProvider' => $dataProvider,
-        ));
-    }
 
     /**
      * Manages all models.

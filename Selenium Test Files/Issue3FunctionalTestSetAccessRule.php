@@ -21,14 +21,12 @@ class Issue3FunctionalTestSetAccessRule extends BaseFunctionalTest {
     function setUp() {
         $this->setBrowser("*firefox");
         $this->setBrowserUrl("http://cvms.identitysecurity.info");
-        
     }
 
     function testAll() {
         $this->resetDbWithData();
         $this->Scenario1();
         $this->Scenario2();
-        $this->addWorkstationForAdmin();
         $this->Scenario3();
     }
 
@@ -43,9 +41,9 @@ class Issue3FunctionalTestSetAccessRule extends BaseFunctionalTest {
       4.	Click Login
       5.	Click ‘Administration’
       6.	Click 'manage users' then click set access rule
-      7.	type test operator in name field and operator@test.com in email field
+      7.	type test Test operator in name field and operator@test.com in email field
       8.	click edit
-      9.	check 1st checkbox to check all
+      9.	check set primary button in first workstation
       10.	Click save
       11.	assert text workstation updated
      */
@@ -56,19 +54,19 @@ class Issue3FunctionalTestSetAccessRule extends BaseFunctionalTest {
         $this->click("link=Administration");
         $this->waitForPageToLoad("30000");
         $this->click("link=Manage Users");
+        $this->waitForElementPresent("link=Set Access Rules");
         $this->click("link=Set Access Rules");
-        $this->waitForPageToLoad("30000");
-        $this->type("css=td > input[name=\"User[first_name]\"]", "Test Operator");
-        $this->click("xpath=(//input[@name='User[email]'])[2]");
-        $this->type("xpath=(//input[@name='User[email]'])[2]", "operator@test.com");
+        $this->waitForElementPresent("id=19");
         $this->click("id=19");
-        sleep(5);
-        $this->click("id=cbColumn_all");
+        $this->waitForElementPresent("id=setPrimary10");
+        $this->click("id=setPrimary10");
+        $this->click("//label[@id='setPrimary10']");
         $this->click("id=btnSubmit");
         $this->waitForPageToLoad("30000");
+        $this->assertEquals("Workstation updated.", $this->getText("css=div.flash-success"));
         $this->click("link=×");
     }
-    
+
     /* Scenario 2 – Login as agent admin and remove access rule for agentoperator@test.com
       Expected Behavior
       -	Asser text  'workstation updated'
@@ -88,25 +86,23 @@ class Issue3FunctionalTestSetAccessRule extends BaseFunctionalTest {
      */
 
     function Scenario2() {
-        $username = 'admin@test.com';
+        $username = 'agentadmin@test.com';
         $this->login($username, '12345');
         $this->click("link=Administration");
         $this->waitForPageToLoad("30000");
         $this->click("link=Manage Users");
+        $this->waitForElementPresent("link=Set Access Rules");
         $this->click("link=Set Access Rules");
-        $this->waitForPageToLoad("30000");
-        $this->type("css=td > input[name=\"User[first_name]\"]", "Test agentOperator");
-        $this->click("xpath=(//input[@name='User[email]'])[2]");
-        sleep(5);
-        $this->type("xpath=(//input[@name='User[email]'])[2]", "agentoperator@test.com");
+        $this->waitForElementPresent("id=20");
         $this->click("id=20");
-        sleep(5);
-        $this->click("id=cbColumn_all");
+        $this->waitForElementPresent("id=cbColumnAll");
+        $this->click("id=cbColumnAll");
         $this->click("id=btnSubmit");
         $this->waitForPageToLoad("30000");
+        $this->assertEquals("Workstation updated.", $this->getText("css=div.flash-success"));
         $this->click("link=×");
     }
-    
+
     /* Scenario 3 – Login as superadmin and add access rule for operator@test.com and agentoperator@test.com
       Expected Behavior
       -	Asser text  'workstation updated'
@@ -136,48 +132,63 @@ class Issue3FunctionalTestSetAccessRule extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->click("link=Administration");
         $this->waitForPageToLoad("30000");
-        $this->click("link=Manage Users");
-        $this->click("link=Set Access Rules");
+        $this->click("//div[@id='cssmenu']/ul/li[2]/a/span");
         $this->waitForPageToLoad("30000");
-        $this->type("css=td > input[name=\"User[first_name]\"]", "Test Operator");
-        $this->click("xpath=(//input[@name='User[email]'])[2]");
-        $this->type("xpath=(//input[@name='User[email]'])[2]", "operator@test.com");
-        $this->click("id=19");
-        sleep(5);
-        $this->click("id=cbColumnAll");
-        $this->click("id=btnSubmit");
+        $this->click("css=li.odd > a.has-sub-sub > span");
         $this->waitForPageToLoad("30000");
-        $this->click("link=×");
-        sleep(5);
-        $this->type("css=td > input[name=\"User[first_name]\"]", "Test AgentOperator");
-        $this->click("xpath=(//input[@name='User[email]'])[2]");
-        $this->type("xpath=(//input[@name='User[email]'])[2]", "agentoperator@test.com");
-        sleep(5);
-        $this->click("id=20");
-        sleep(5);
-        $this->click("id=cbColumnAll");
-        $this->click("id=btnSubmit");
-        $this->waitForPageToLoad("30000");
-        $this->click("link=×");
-    }
-
-    function addWorkstationForAdmin() {
-        $username = 'superadmin@test.com';
-        $this->login($username, '12345');
-        $this->click("link=Administration");
-        $this->waitForPageToLoad("30000");
-        $this->click("link=Manage Workstations");
-        $this->click("link=Add Workstation");
-        $this->waitForPageToLoad("30000");
-        $this->type("id=Workstation_name", "Workstation 2");
-        $this->type("id=Workstation_location", "Office");
-        $this->type("id=Workstation_contact_name", "Test Person");
-        $this->type("id=Workstation_contact_number", "1234-567");
-        $this->type("id=Workstation_contact_email_address", "workstation2@test.com");
-        $this->select("id=Workstation_tenant", "label=Test admin2");
+        $this->type("id=Workstation_name", "Operator Workstation");
+        $this->type("id=Workstation_location", "PAL");
+        $this->type("id=Workstation_contact_name", "Person Name");
+        $this->type("id=Workstation_contact_number", "09367941012");
+        $this->type("id=Workstation_contact_email_address", "test@test.com");
+        $this->select("id=Workstation_tenant", "label=Test admin");
         $this->click("name=yt0");
         $this->waitForPageToLoad("30000");
-         }
+        $this->click("//div[@id='cssmenu']/ul/li[3]/a/span");
+        $this->waitForPageToLoad("30000");
+        $this->click("//div[@id='cssmenu']/ul/li[3]/ul/li[6]/a/span");
+        $this->waitForPageToLoad("30000");
+        $this->waitForElementPresent("id=19");
+        $this->click("id=19");
+        $this->waitForElementPresent("id=setPrimary11");
+        $this->click("id=setPrimary11");
+        $this->click("//label[@id='setPrimary11']");
+        $this->click("id=cbColumn_0");
+        $this->click("id=btnSubmit");
+        $this->waitForPageToLoad("30000");
+        $this->assertEquals("Workstation updated.", $this->getText("css=div.flash-success"));
+        $this->click("link=×");
+        
+        $this->click("//div[@id='cssmenu']/ul/li[2]/a/span");
+        $this->waitForPageToLoad("30000");
+        $this->click("css=li.odd > a.has-sub-sub > span");
+        $this->waitForPageToLoad("30000");
+        $this->type("id=Workstation_name", "Workstation Agent Operator");
+        $this->type("id=Workstation_location", "MNL");
+        $this->type("id=Workstation_contact_name", "Test Person");
+        $this->type("id=Workstation_contact_number", "3585795");
+        $this->type("id=Workstation_contact_email_address", "test@test.com");
+        $this->select("id=Workstation_tenant", "label=Test admin");
+        $this->waitForElementPresent("id=Workstation_tenant_agent");
+        sleep(1);
+        $this->select("id=Workstation_tenant_agent", "label=Test agentadmin");
+        $this->click("name=yt0");
+        $this->waitForPageToLoad("30000");
+        $this->click("link=Manage Users");
+        $this->waitForPageToLoad("30000");
+        $this->click("//div[@id='cssmenu']/ul/li[3]/ul/li[6]/a/span");
+        $this->waitForPageToLoad("30000");
+        $this->waitForElementPresent("id=20");
+        $this->click("id=20");
+        $this->waitForElementPresent("id=setPrimary12");
+        $this->click("id=setPrimary12");
+        $this->click("//label[@id='setPrimary12']");
+        $this->click("id=cbColumn_0");
+        $this->click("id=btnSubmit");
+        $this->waitForPageToLoad("30000");
+        $this->assertEquals("Workstation updated.", $this->getText("css=div.flash-success"));
+    }
+
 }
 
 ?>

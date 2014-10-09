@@ -243,6 +243,7 @@ CREATE TABLE IF NOT EXISTS `user_workstation` (
   `user` int(10) NOT NULL,
   `workstation` int(10) NOT NULL,
   `created_by` int(10) DEFAULT NULL,
+  `is_primary` tinyint(1) DEFAULT 0 NOT NULL,
   PRIMARY KEY (`id`),
   KEY `workstation` (`workstation`),
   KEY `created_by` (`created_by`),
@@ -253,9 +254,10 @@ CREATE TABLE IF NOT EXISTS `user_workstation` (
 -- Dumping data for table `user_workstation`
 --
 
-INSERT INTO `user_workstation` (`id`, `user`, `workstation`, `created_by`) VALUES
-(1, 19, 8, 16),
-(2, 20, 8, 16);
+INSERT INTO `user_workstation` (`id`, `user`, `workstation`, `created_by`,`is_primary`) VALUES
+(1, 19, 8, 16,1),
+(2, 20, 8, 16,1),
+(3, 19, 10, 16,1);
 
 -- --------------------------------------------------------
 
@@ -287,7 +289,8 @@ CREATE TABLE IF NOT EXISTS `workstation` (
 
 INSERT INTO `workstation` (`id`, `name`, `location`, `contact_name`, `contact_number`, `contact_email_address`, `number_of_operators`, `assign_kiosk`, `password`, `created_by`, `tenant`, `tenant_agent`, `is_deleted`) VALUES
 (8, 'Workstation', 'PAL', 'Test Person', 123456, 'workstation1@test.com', NULL, 0, NULL, 16, 17, 18, 0),
-(9, 'Workstation1', 'PAL', 'Test Person', 123456, 'workstation1@test.com', NULL, 0, NULL, 16, 17, 20, 0);
+(9, 'Workstation1', 'PAL', 'Test Person', 123456, 'workstation1@test.com', NULL, 0, NULL, 16, 17, 20, 0),
+(10, 'Workstation2', 'PAL', 'Test Person', 123456, 'workstation1@test.com', NULL, 0, NULL, 16, 17,NULL, 0);
 
 --
 -- Constraints for dumped tables

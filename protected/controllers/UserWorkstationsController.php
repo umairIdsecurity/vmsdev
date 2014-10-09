@@ -34,13 +34,29 @@ class UserWorkstationsController extends Controller {
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin', 'delete'),
-                'users' => array('@'),
+                'actions' => array('admin', 'delete', 'create', 'update', 'index', 'view'),
+                'expression' => 'Yii::app()->controller->accessRoles("admin")',
             ),
             array('deny', // deny all users
                 'users' => array('*'),
             ),
         );
+    }
+
+    public function accessRoles($action) {
+        $session = new CHttpSession;
+        $CurrentRole = $session['role'];
+
+        switch ($action) {
+            case "admin":
+                $user_role = array(Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN, Roles::ROLE_AGENT_ADMIN);
+                if (in_array($CurrentRole, $user_role)) {
+                    return true;
+                }
+                break;
+            default:
+                return false;
+        }
     }
 
     /**
@@ -116,20 +132,21 @@ class UserWorkstationsController extends Controller {
         $session = new CHttpSession;
         if (isset($_POST['ApproveButton'])) {
             $connection = Yii::app()->db;
-            
-            $deleteQuery = "DELETE user_workstation FROM user_workstation
-                            where user_workstation.user =$id 
-                            ";
-            $command = $connection->createCommand($deleteQuery);
-            $command->query();
+
+            UserWorkstations::model()->deleteAllUserWorkstationsWithSameUserId($id);
+
             if (isset($_POST['cbColumn'])) {
                 foreach ($_POST['cbColumn'] as $id) {
-
-                    $sql = "INSERT INTO user_workstation (`user`,workstation,created_by) VALUES (" . $_POST['userId'] . ",$id,'" . $session['id'] . "')";
-                    $command = $connection->createCommand($sql);
-                    $row = $command->query();
+                    $userworkstation = new UserWorkstations;
+                    $userworkstation->user = $_POST['userId'];
+                    $userworkstation->workstation = $id;
+                    $userworkstation->created_by = $session['id'];
+                    $userworkstation->is_primary = $_POST['radioSetPrimaryInput'][$id];
+                    $userworkstation->save();
                 }
             }
+
+
             Yii::app()->user->setFlash('success', 'Workstation updated.');
         }
         $this->render('index', array());

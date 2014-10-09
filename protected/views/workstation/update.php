@@ -5,6 +5,6 @@
 
 ?>
 
-<h1>Update Workstation</h1>
+<h1>Edit Workstation</h1>
 
 <?php $this->renderPartial('_form', array('model'=>$model)); ?>

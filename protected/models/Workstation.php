@@ -148,9 +148,9 @@ class Workstation extends CActiveRecord {
         $workstationCount = count($userworkstations);
 
         if ($workstationCount != 0) {
-            return true;
+            return "1";
         } else {
-            return false;
+            return "0";
         }
     }
 

@@ -26,6 +26,8 @@ class SoftDeleteBehavior extends CActiveRecordBehavior
 
         //prevent real deletion
         $event->isValid = false;
+        
+        
     }
 
 }

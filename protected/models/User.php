@@ -36,7 +36,7 @@
  * @property UserType[] $userTypes
  */
 class User extends VmsActiveRecord {
-    
+
     public $assignedWorkstations;
     public $repeatpassword;
     public $birthdayMonth;
@@ -120,8 +120,7 @@ class User extends VmsActiveRecord {
             'userStatuses' => array(self::HAS_MANY, 'UserStatus', 'created_by'),
             'userTypes' => array(self::HAS_MANY, 'UserType', 'created_by'),
             'workstation' => array(self::HAS_MANY, 'user_workstation', 'id'),
-            'userWorkstation1'=>array(self::MANY_MANY, 'Workstation', 'user_workstation(user, workstation)'),
-                
+            'userWorkstation1' => array(self::MANY_MANY, 'Workstation', 'user_workstation(user, workstation)'),
         );
     }
 
@@ -187,11 +186,11 @@ class User extends VmsActiveRecord {
         $criteria->compare('t.is_deleted', $this->is_deleted);
         $criteria->compare('t.tenant', $this->tenant);
         $criteria->compare('t.tenant_agent', $this->tenant_agent);
-        
-        $criteria->compare('workstation',$this->assignedWorkstations);
-                $criteria->with=array('userWorkstation1');
-                $criteria->together=true;
-                
+
+        $criteria->compare('workstation', $this->assignedWorkstations);
+        $criteria->with = array('userWorkstation1');
+        $criteria->together = true;
+
         $user = User::model()->findByPK(Yii::app()->user->id);
 
         if (Yii::app()->controller->action->id == 'systemaccessrules') {
@@ -290,14 +289,6 @@ class User extends VmsActiveRecord {
             $company = $val;
         }
         return $company;
-    }
-
-    public function behaviors() {
-        return array(
-            'softDelete' => array(
-                'class' => 'ext.soft_delete.SoftDeleteBehavior'
-            ),
-        );
     }
 
     public function getFullName($id) {
@@ -425,5 +416,11 @@ class User extends VmsActiveRecord {
         $this->birthdayYear = date('o', strtotime($date_of_birth));
         return parent::afterFind();
     }
+
+    public function beforeDelete () {
+      $this->is_deleted=1;
+      $this->update();
+      return false;
+   }
 
 }

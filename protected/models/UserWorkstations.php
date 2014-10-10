@@ -110,8 +110,12 @@ class UserWorkstations extends CActiveRecord {
 
         if (count($userworkstations) != 0) {
             foreach ($userworkstations as $index => $value) {
-                $workstations = Workstation::model()->findByPk($value['workstation']);
-                echo $workstations->name . "<br>";
+                $Criteria = new CDbCriteria();
+                $Criteria->condition = "id = '" . $value['workstation'] . "' and is_deleted=0";
+                $workstation = Workstation::model()->findAll($Criteria);
+                foreach ($workstation as $index => $value) {
+                    echo $value['name'] . "<br>";
+                }
             }
         } else {
             return $result = '-';
@@ -133,7 +137,7 @@ class UserWorkstations extends CActiveRecord {
                 break;
             case Roles::ROLE_AGENT_ADMIN:
                 $queryCondition = "tenant='" . $currentlyLoggedInUser->tenant . "' and tenant_agent ='" . $currentlyLoggedInUser->tenant_agent . "'";
-                
+
                 break;
             default:
                 if ($user->role == Roles::ROLE_OPERATOR) {
@@ -168,6 +172,18 @@ class UserWorkstations extends CActiveRecord {
             } else {
                 return false;
             }
+        }
+    }
+
+    public function checkIfWorkstationIsAssignedAsPrimary($workstationId) {
+        $Criteria = new CDbCriteria();
+        $Criteria->condition = "workstation ='" . $workstationId . "' and is_primary='1'";
+        $userworkstations = UserWorkstations::model()->findAll($Criteria);
+
+        if (count($userworkstations) != 0) {
+            return true;
+        } else {
+            return false;
         }
     }
 

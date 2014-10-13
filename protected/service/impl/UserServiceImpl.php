@@ -129,7 +129,7 @@ class UserServiceImpl implements UserService {
 
     private function removeTenantAgentofUserIfTenantIsSetForRoleStaffMember($user) {
         if ($user->tenant_agent != '') {
-            User::model()->updateByPk($user->id, array('tenant' => ''));
+            User::model()->updateByPk($user->id, array('tenant' => NULL));
         }
     }
 

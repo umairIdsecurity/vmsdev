@@ -52,11 +52,9 @@ class Issue3FunctionalTestAgentAdmin extends BaseFunctionalTest {
     function Scenario1() {
         $username = 'agentadmin@test.com';
         $this->login($username, '12345');
-        $this->click("link=Administration");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("link=Administration");
         $this->click("link=Manage Users");
-        $this->click("link=Add Agent Operator");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("link=Add Agent Operator");
         $this->addUser("agentoperator2@test.com", "agentoperator2");
         $this->getDisabledRoleValue("7");
 
@@ -64,16 +62,16 @@ class Issue3FunctionalTestAgentAdmin extends BaseFunctionalTest {
         $this->assertEquals("Workstation", $this->getText("id=User_workstation"));
         
         $this->click("id=submitBtn");
-        $this->click("id=submitForm");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("id=submitForm");
+        
         $this->type("css=td > input[name=\"User[first_name]\"]", "test");
         $this->click("//td[2]/input");
         $this->type("//td[2]/input", "agentoperator2");
         $this->select("css=select[name=\"User[role]\"]", "label=Agent Operator");
-        sleep(5);
+        $this->waitForElementPresent("css=tr.odd > td");
         $this->assertEquals("Test", $this->getText("css=tr.odd > td"));
         $this->assertEquals("agentoperator2", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[2]"));
-        
+        sleep(1);
         $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
     }
 
@@ -102,22 +100,19 @@ class Issue3FunctionalTestAgentAdmin extends BaseFunctionalTest {
     function Scenario2() {
         $username = 'agentadmin@test.com';
         $this->login($username, '12345');
-        $this->click("link=Administration");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("link=Administration");
         $this->click("link=Manage Users");
-        $this->click("link=Add User");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("link=Add User");
         $this->addUser("staffmember3@test.com", "staffmember3");
         $this->select("id=User_role", "label=Staff Member");
         $this->getDisabledCompanyValue("Test Company 1");
         $this->click("id=submitBtn");
-        $this->click("id=submitForm");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("id=submitForm");
         $this->type("css=td > input[name=\"User[first_name]\"]", "Test");
         $this->click("//td[2]/input");
         $this->type("//td[2]/input", "staffmember3");
         $this->select("css=select[name=\"User[role]\"]", "label=Staff Member");
-        sleep(5);
+        sleep(1);
         $this->assertEquals("Test", $this->getText("css=tr.odd > td"));
         $this->assertEquals("staffmember3", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[2]"));
         $this->assertEquals("Staff Member", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[3]"));

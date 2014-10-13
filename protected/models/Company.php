@@ -46,6 +46,7 @@ class Company extends CActiveRecord {
             array('contact', 'length', 'max' => 100),
             array('tenant', 'length', 'max' => 100),
             array('logo,is_deleted', 'safe'),
+            array('tenant, tenant_agent', 'default', 'setOnEmpty' => true, 'value' => null),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, name, trading_name, logo,tenant, contact, billing_address, email_address, office_number, mobile_number, website, created_by_user, created_by_visitor', 'safe', 'on' => 'search'),

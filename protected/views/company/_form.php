@@ -9,6 +9,8 @@ $session = new CHttpSession;
 $tenant = '';
 if (isset($_GET['tenant'])) {
     $tenant = $_GET['tenant'];
+} elseif($session['role'] != Roles::ROLE_SUPERADMIN){
+    $tenant = $session['tenant'];
 }
 
 $companyid = '';

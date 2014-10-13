@@ -45,8 +45,7 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
         $this->type("id=LoginForm_username", $username);
         $this->type("id=LoginForm_password", $password);
         $this->click("name=yt0");
-        $this->click("name=yt0");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("name=yt0");
     }
 
     function updatePassword($id = NULL) {

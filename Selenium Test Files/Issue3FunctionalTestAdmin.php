@@ -279,14 +279,10 @@ class Issue3FunctionalTestAdmin extends BaseFunctionalTest {
         $this->assertEquals("Test", $this->getText("css=tr.odd > td"));
         $this->assertEquals("agentadmin3", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[2]"));
         $this->assertEquals("Agent Administrator", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[3]"));
-        
+        sleep(1);
         $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
     }
     
-    
-    
-    
-
 }
 
 ?>

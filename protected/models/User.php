@@ -95,11 +95,19 @@ class User extends VmsActiveRecord {
                 array('email', 'email'),
                 array('repeatpassword', 'required', 'on' => 'insert'),
                 array('password', 'compare', 'compareAttribute' => 'repeatpassword'),
+                //array('tenant_agent,tenant', 'filter', 'filter' => 'empty2null'),
+                array('tenant, tenant_agent', 'default', 'setOnEmpty' => true, 'value' => null),
                 // The following rule is used by search().
                 // @todo Please remove those attributes that should not be searched.
                 array('id, first_name, last_name,email,is_deleted,assignedWorkstations,contact_number, date_of_birth, company, department, position, staff_id, notes, role_id, user_type_id, user_status_id, created_by', 'safe', 'on' => 'search'),
             );
         }
+    }
+
+    /* set empty fields to null */
+
+    function empty2null($value) {
+        return $value === '' ? null : $value;
     }
 
     /**
@@ -417,10 +425,10 @@ class User extends VmsActiveRecord {
         return parent::afterFind();
     }
 
-    public function beforeDelete () {
-      $this->is_deleted=1;
-      $this->update();
-      return false;
-   }
+    public function beforeDelete() {
+        $this->is_deleted = 1;
+        $this->update();
+        return false;
+    }
 
 }

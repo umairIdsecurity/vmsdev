@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Sep 17, 2014 at 07:44 AM
+-- Generation Time: Oct 13, 2014 at 02:19 AM
 -- Server version: 5.5.16
 -- PHP Version: 5.3.8
 
@@ -21,7 +21,6 @@ SET time_zone = "+00:00";
 --
 
 -- --------------------------------------------------------
-
 SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `company`;
 DROP TABLE IF EXISTS `photo`;
@@ -32,15 +31,70 @@ DROP TABLE IF EXISTS `user_type`;
 DROP TABLE IF EXISTS `user_workstation`;
 DROP TABLE IF EXISTS `workstation`;
 DROP TABLE IF EXISTS `license_details`;
-SET FOREIGN_KEY_CHECKS = 1;
 
+DROP TABLE IF EXISTS `card_generated`;
+DROP TABLE IF EXISTS `card_type`;
+DROP TABLE IF EXISTS `visit_reason`;
+DROP TABLE IF EXISTS `visit_status`;
+DROP TABLE IF EXISTS `visitor`;
+DROP TABLE IF EXISTS `visitor_status`;
+DROP TABLE IF EXISTS `visitor_type`;
+SET FOREIGN_KEY_CHECKS = 1;
+--
+-- Table structure for table `card_generated`
+--
+
+CREATE TABLE IF NOT EXISTS `card_generated` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `date_printed` date DEFAULT NULL,
+  `date_expiration` date DEFAULT NULL,
+  `card_image_generated_filename` bigint(20) DEFAULT NULL,
+  `visitor_id` bigint(20) DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `tenant` bigint(20) DEFAULT NULL,
+  `tenant_agent` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `card_image_generated_filename` (`card_image_generated_filename`),
+  KEY `created_by` (`created_by`),
+  KEY `tenant` (`tenant`),
+  KEY `tenant_agent` (`tenant_agent`),
+  KEY `visitor_id` (`visitor_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `card_type`
+--
+
+CREATE TABLE IF NOT EXISTS `card_type` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) DEFAULT NULL,
+  `max_time_validity` varchar(50) DEFAULT NULL,
+  `max_entry_count_validity` int(10) DEFAULT NULL,
+  `card_background_image_path` bigint(20) DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `created_by` (`created_by`),
+  KEY `card_background_image_path` (`card_background_image_path`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+
+--
+-- Dumping data for table `card_type`
+--
+
+INSERT INTO `card_type` (`id`, `name`, `max_time_validity`, `max_entry_count_validity`, `card_background_image_path`, `created_by`) VALUES
+(1, 'Same Day Visitor', 'same day', NULL, NULL, NULL),
+(2, 'Multiday Visitor', NULL, NULL, NULL, NULL);
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `company`
 --
 
 CREATE TABLE IF NOT EXISTS `company` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(150) NOT NULL,
   `trading_name` varchar(150) DEFAULT NULL,
   `logo` bigint(20) DEFAULT NULL,
@@ -50,18 +104,41 @@ CREATE TABLE IF NOT EXISTS `company` (
   `office_number` int(30) DEFAULT NULL,
   `mobile_number` int(50) DEFAULT NULL,
   `website` varchar(50) DEFAULT NULL,
-  `created_by_user` int(10) DEFAULT NULL,
-  `created_by_visitor` int(10) DEFAULT NULL,
-  `tenant` int(10) DEFAULT NULL,
-  `tenant_agent` int(10) DEFAULT NULL,
-  `is_deleted` int(120) DEFAULT 0,
+  `created_by_user` bigint(20) DEFAULT NULL,
+  `created_by_visitor` bigint(20) DEFAULT NULL,
+  `tenant` bigint(20) DEFAULT NULL,
+  `tenant_agent` bigint(20) DEFAULT NULL,
+  `is_deleted` int(12) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `created_by_visitor` (`created_by_visitor`),
   KEY `created_by_user` (`created_by_user`),
   KEY `tenant_agent` (`tenant_agent`),
   KEY `tenant` (`tenant`),
   KEY `logo` (`logo`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+
+--
+-- Dumping data for table `company`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `license_details`
+--
+
+CREATE TABLE IF NOT EXISTS `license_details` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `description` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `license_details`
+--
+
+INSERT INTO `license_details` (`id`, `description`) VALUES
+(1, 'This is a sample license detail.');
 
 -- --------------------------------------------------------
 
@@ -91,9 +168,9 @@ INSERT INTO `photo` (`id`, `filename`, `unique_filename`, `relative_path`) VALUE
 --
 
 CREATE TABLE IF NOT EXISTS `roles` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
-  `created_by` int(10) DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `created_by` (`created_by`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
@@ -118,25 +195,25 @@ INSERT INTO `roles` (`id`, `name`, `created_by`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `user` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `first_name` varchar(50) NOT NULL,
   `last_name` varchar(50) NOT NULL,
   `email` varchar(50) NOT NULL,
   `contact_number` varchar(20) NOT NULL,
   `date_of_birth` date DEFAULT NULL,
-  `company` int(10) DEFAULT NULL,
+  `company` bigint(20) DEFAULT NULL,
   `department` varchar(50) DEFAULT NULL,
   `position` varchar(50) DEFAULT NULL,
   `staff_id` varchar(50) DEFAULT NULL,
   `notes` text,
   `password` varchar(150) DEFAULT NULL,
-  `role` int(2) NOT NULL,
-  `user_type` int(2) NOT NULL,
-  `user_status` int(2) DEFAULT NULL,
-  `created_by` int(10) DEFAULT NULL,
+  `role` bigint(20) NOT NULL,
+  `user_type` bigint(20) NOT NULL,
+  `user_status` bigint(20) DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
   `is_deleted` tinyint(1) NOT NULL DEFAULT '0',
-  `tenant` int(10) DEFAULT NULL,
-  `tenant_agent` int(10) DEFAULT NULL,
+  `tenant` bigint(20) DEFAULT NULL,
+  `tenant_agent` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `role` (`role`),
   KEY `user_type` (`user_type`),
@@ -145,7 +222,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   KEY `created_by` (`created_by`),
   KEY `tenant` (`tenant`),
   KEY `tenant_agent` (`tenant_agent`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=17 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=16 ;
 
 --
 -- Dumping data for table `user`
@@ -161,9 +238,9 @@ INSERT INTO `user` (`id`, `first_name`, `last_name`, `email`, `contact_number`, 
 --
 
 CREATE TABLE IF NOT EXISTS `user_status` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
-  `created_by` int(10) DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `created_by` (`created_by`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
@@ -183,9 +260,9 @@ INSERT INTO `user_status` (`id`, `name`, `created_by`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `user_type` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
-  `created_by` int(10) DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `created_by` (`created_by`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
@@ -205,16 +282,141 @@ INSERT INTO `user_type` (`id`, `name`, `created_by`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `user_workstation` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
-  `user` int(10) NOT NULL,
-  `workstation` int(10) NOT NULL,
-  `created_by` int(10) DEFAULT NULL,
-  `is_primary` tinyint(1) DEFAULT 0 NOT NULL,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `user` bigint(20) NOT NULL,
+  `workstation` bigint(20) NOT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `is_primary` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `workstation` (`workstation`),
   KEY `created_by` (`created_by`),
   KEY `user` (`user`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+
+--
+-- Dumping data for table `user_workstation`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `visitor`
+--
+
+CREATE TABLE IF NOT EXISTS `visitor` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `first_name` varchar(50) NOT NULL,
+  `last_name` varchar(50) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `contact_number` varchar(20) NOT NULL,
+  `date_of_birth` date DEFAULT NULL,
+  `company` bigint(20) DEFAULT NULL,
+  `department` varchar(50) DEFAULT NULL,
+  `position` varchar(50) DEFAULT NULL,
+  `staff_id` varchar(50) DEFAULT NULL,
+  `notes` text,
+  `password` varchar(150) DEFAULT NULL,
+  `role` bigint(20) NOT NULL DEFAULT '10',
+  `visitor_type` bigint(20) DEFAULT NULL,
+  `visitor_status` bigint(20) DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT '0',
+  `tenant` bigint(20) DEFAULT NULL,
+  `tenant_agent` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `role` (`role`),
+  KEY `company` (`company`),
+  KEY `created_by` (`created_by`),
+  KEY `tenant` (`tenant`),
+  KEY `tenant_agent` (`tenant_agent`),
+  KEY `visitor_type` (`visitor_type`),
+  KEY `visitor_status` (`visitor_status`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `visitor_status`
+--
+
+CREATE TABLE IF NOT EXISTS `visitor_status` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+
+--
+-- Dumping data for table `visitor_status`
+--
+
+INSERT INTO `visitor_status` (`id`, `name`) VALUES
+(1, 'Open'),
+(2, 'Access Denied');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `visitor_type`
+--
+
+CREATE TABLE IF NOT EXISTS `visitor_type` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(25) DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `created_by` (`created_by`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+
+--
+-- Dumping data for table `visitor_type`
+--
+
+INSERT INTO `visitor_type` (`id`, `name`, `created_by`) VALUES
+(1, 'Patient Visitor', NULL),
+(2, 'Corporate Visitor', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `visit_reason`
+--
+
+CREATE TABLE IF NOT EXISTS `visit_reason` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `reason` text,
+  `created_by` bigint(20) DEFAULT NULL,
+  `tenant` bigint(20) DEFAULT NULL,
+  `tenant_agent` bigint(20) DEFAULT NULL,
+    `is_deleted` tinyint(2) DEFAULT  '0' NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `created_by` (`created_by`),
+  KEY `tenant` (`tenant`),
+  KEY `tenant_agent` (`tenant_agent`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `visit_status`
+--
+
+CREATE TABLE IF NOT EXISTS `visit_status` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(25) DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `created_by` (`created_by`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+
+--
+-- Dumping data for table `visit_status`
+--
+
+INSERT INTO `visit_status` (`id`, `name`, `created_by`) VALUES
+(1, 'Active', NULL),
+(2, 'Pre-registered', NULL),
+(3, 'Closed', NULL),
+(4, 'Expired', NULL);
 
 -- --------------------------------------------------------
 
@@ -223,7 +425,7 @@ CREATE TABLE IF NOT EXISTS `user_workstation` (
 --
 
 CREATE TABLE IF NOT EXISTS `workstation` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
   `location` varchar(100) DEFAULT NULL,
   `contact_name` varchar(50) DEFAULT NULL,
@@ -232,34 +434,40 @@ CREATE TABLE IF NOT EXISTS `workstation` (
   `number_of_operators` int(2) DEFAULT NULL,
   `assign_kiosk` tinyint(1) DEFAULT '0',
   `password` varchar(50) DEFAULT NULL,
-  `created_by` int(10) DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
   `tenant` bigint(20) DEFAULT NULL,
   `tenant_agent` bigint(20) DEFAULT NULL,
   `is_deleted` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `created_by` (`created_by`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
 
 --
 -- Dumping data for table `workstation`
 --
-
 INSERT INTO `workstation` (`id`, `name`, `location`, `contact_name`, `contact_number`, `contact_email_address`, `number_of_operators`, `assign_kiosk`, `password`, `created_by`, `tenant`, `tenant_agent`) VALUES
-(8, 'Workstation', 'PAL', 'Test Person', 123456, 'workstation1@test.com', NULL, 0, NULL, 16, 17, 18),
-(9, 'Workstation1', 'PAL', 'Test Person', 123456, 'workstation1@test.com', NULL, 0, NULL, 16, 17, 23);
-
-CREATE TABLE IF NOT EXISTS `license_details`( 
-    `id` BIGINT NOT NULL AUTO_INCREMENT, 
-    `description` TEXT,
-PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1; 
-
-INSERT INTO `license_details` (`id`, `description`) VALUES
-(1, 'This is a sample license detail.');
+(8, 'Workstation', 'PAL', 'Test Person', 123456, 'workstation1@test.com', NULL, 0, NULL, 16, 17, 18);
 
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `card_generated`
+--
+ALTER TABLE `card_generated`
+  ADD CONSTRAINT `card_generated_ibfk_5` FOREIGN KEY (`visitor_id`) REFERENCES `visitor` (`id`),
+  ADD CONSTRAINT `card_generated_ibfk_1` FOREIGN KEY (`card_image_generated_filename`) REFERENCES `photo` (`id`),
+  ADD CONSTRAINT `card_generated_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`),
+  ADD CONSTRAINT `card_generated_ibfk_3` FOREIGN KEY (`tenant`) REFERENCES `user` (`id`),
+  ADD CONSTRAINT `card_generated_ibfk_4` FOREIGN KEY (`tenant_agent`) REFERENCES `user` (`id`);
+
+--
+-- Constraints for table `card_type`
+--
+ALTER TABLE `card_type`
+  ADD CONSTRAINT `card_type_ibfk_2` FOREIGN KEY (`card_background_image_path`) REFERENCES `photo` (`id`),
+  ADD CONSTRAINT `card_type_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`);
 
 --
 -- Constraints for table `company`
@@ -309,11 +517,42 @@ ALTER TABLE `user_workstation`
   ADD CONSTRAINT `user_workstation_ibfk_3` FOREIGN KEY (`user`) REFERENCES `user` (`id`);
 
 --
+-- Constraints for table `visitor`
+--
+ALTER TABLE `visitor`
+  ADD CONSTRAINT `visitor_ibfk_7` FOREIGN KEY (`company`) REFERENCES `company` (`id`),
+  ADD CONSTRAINT `visitor_ibfk_1` FOREIGN KEY (`visitor_type`) REFERENCES `visitor_type` (`id`),
+  ADD CONSTRAINT `visitor_ibfk_2` FOREIGN KEY (`visitor_status`) REFERENCES `visitor_status` (`id`),
+  ADD CONSTRAINT `visitor_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`),
+  ADD CONSTRAINT `visitor_ibfk_4` FOREIGN KEY (`tenant`) REFERENCES `user` (`id`),
+  ADD CONSTRAINT `visitor_ibfk_5` FOREIGN KEY (`tenant_agent`) REFERENCES `user` (`id`),
+  ADD CONSTRAINT `visitor_ibfk_6` FOREIGN KEY (`role`) REFERENCES `roles` (`id`);
+
+--
+-- Constraints for table `visitor_type`
+--
+ALTER TABLE `visitor_type`
+  ADD CONSTRAINT `visitor_type_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`);
+
+--
+-- Constraints for table `visit_reason`
+--
+ALTER TABLE `visit_reason`
+  ADD CONSTRAINT `visit_reason_ibfk_3` FOREIGN KEY (`tenant_agent`) REFERENCES `user` (`id`),
+  ADD CONSTRAINT `visit_reason_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`),
+  ADD CONSTRAINT `visit_reason_ibfk_2` FOREIGN KEY (`tenant`) REFERENCES `user` (`id`);
+
+--
+-- Constraints for table `visit_status`
+--
+ALTER TABLE `visit_status`
+  ADD CONSTRAINT `visit_status_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`);
+
+--
 -- Constraints for table `workstation`
 --
 ALTER TABLE `workstation`
   ADD CONSTRAINT `workstation_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`);
-
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

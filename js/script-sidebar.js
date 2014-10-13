@@ -55,6 +55,13 @@
                     li[4].click();
                 }
                 break;
+                
+            case "index.php?r=visitReason/admin":
+                if (currentRole == superadmin) {
+                    li[12].click();
+                }
+                
+                break;
         }
 
         $('.has-sub a').click(function() {

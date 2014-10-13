@@ -66,7 +66,7 @@ class Issue3FunctionalTestSuperAdmin extends BaseFunctionalTest {
         $this->click("id=submitBtn");
         $this->click("id=submitForm");
         $this->waitForPageToLoad("30000");
-        sleep(10);
+        sleep(1);
         $this->type("name=User[first_name]", "Test");
         $this->click("//td[2]/input");
         $this->type("name=User[last_name]", "Admin");
@@ -157,9 +157,8 @@ class Issue3FunctionalTestSuperAdmin extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->click("link=Administration");
         $this->waitForPageToLoad("30000");
-        $this->click("link=Manage Users");
-        $this->click("link=Add Operator");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("link=Manage Users");
+        $this->clickAndWait("link=Add Operator");
         $this->addUser("operator@test.com", "operator");
         $this->getDisabledRoleValue("8");
         $this->select("id=User_tenant", "label=Test admin");
@@ -283,8 +282,8 @@ class Issue3FunctionalTestSuperAdmin extends BaseFunctionalTest {
         $this->getDisabledCompanyValue("Test Company 1");
         $this->waitForElementPresent("id=submitBtn");
         $this->click("id=submitBtn");
-        $this->click("id=submitForm");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("id=submitForm");
+        $this->waitForElementPresent("css=td > input[name=\"User[first_name]\"]");
         $this->type("css=td > input[name=\"User[first_name]\"]", "Test");
         $this->click("//td[2]/input");
         $this->type("//td[2]/input", "staffmember");
@@ -334,7 +333,7 @@ class Issue3FunctionalTestSuperAdmin extends BaseFunctionalTest {
         $this->waitForElementPresent("id=submitBtn");
         $this->addCompany("Test Company 2", "testcompany2");
         $this->waitForElementPresent("id=submitBtn");
-        sleep(10);
+        sleep(1);
         $this->click("id=submitBtn");
         $this->click("id=submitForm");
         $this->waitForPageToLoad("30000");

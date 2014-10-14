@@ -14,6 +14,11 @@
  */
 class VisitorType extends CActiveRecord
 {
+    public static $VISITOR_TYPE_LIST = array(
+        1 => 'Patient Visitor',
+        2 => 'Corporate Visitor',
+    );
+    
 	/**
 	 * @return string the associated database table name
 	 */
@@ -100,4 +105,12 @@ class VisitorType extends CActiveRecord
 	{
 		return parent::model($className);
 	}
+        
+        public function getVisitorType($visitor_type){
+            
+            
+            if(isset(VisitorType::$VISITOR_TYPE_LIST[$visitor_type])){
+                return VisitorType::$VISITOR_TYPE_LIST[$visitor_type];
+            }
+       }
 }

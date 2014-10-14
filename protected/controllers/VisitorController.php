@@ -1,6 +1,6 @@
 <?php
 
-class VisitReasonController extends Controller {
+class VisitorController extends Controller {
 
     /**
      * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -29,6 +29,11 @@ class VisitReasonController extends Controller {
                 'actions' => array('create', 'update', 'admin', 'delete'),
                 'expression' => 'Yii::app()->controller->checkIfUserCanAccess("superadmin")',
             ),
+            array('allow', // allow authenticated user to perform 'create' and 'update' actions
+                'actions' => array('GetTenantAgentWithSameTenant','GetCompanyWithSameTenant','GetCompanyWithSameTenantAndTenantAgent'),
+                'users' => array('@'),
+            ),
+            
             array('deny', // deny all users
                 'users' => array('*'),
             ),
@@ -57,14 +62,14 @@ class VisitReasonController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate() {
-        $model = new VisitReason;
-
+        $model = new Visitor;
+        $visitorService = new VisitorServiceImpl();
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
-        if (isset($_POST['VisitReason'])) {
-            $model->attributes = $_POST['VisitReason'];
-            if ($model->save())
+        if (isset($_POST['Visitor'])) {
+            $model->attributes = $_POST['Visitor'];
+            if ($visitorService->save($model))
                 $this->redirect(array('admin'));
         }
 
@@ -80,13 +85,13 @@ class VisitReasonController extends Controller {
      */
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
-
+        $visitorService = new VisitorServiceImpl();
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
-        if (isset($_POST['VisitReason'])) {
-            $model->attributes = $_POST['VisitReason'];
-            if ($model->save())
+        if (isset($_POST['Visitor'])) {
+            $model->attributes = $_POST['Visitor'];
+            if ($visitorService->save($model))
                 $this->redirect(array('admin'));
         }
 
@@ -112,10 +117,10 @@ class VisitReasonController extends Controller {
      * Manages all models.
      */
     public function actionAdmin() {
-        $model = new VisitReason('search');
+        $model = new Visitor('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['VisitReason']))
-            $model->attributes = $_GET['VisitReason'];
+        if (isset($_GET['Visitor']))
+            $model->attributes = $_GET['Visitor'];
 
         $this->render('admin', array(
             'model' => $model,
@@ -126,11 +131,11 @@ class VisitReasonController extends Controller {
      * Returns the data model based on the primary key given in the GET variable.
      * If the data model is not found, an HTTP exception will be raised.
      * @param integer $id the ID of the model to be loaded
-     * @return VisitReason the loaded model
+     * @return Visitor the loaded model
      * @throws CHttpException
      */
     public function loadModel($id) {
-        $model = VisitReason::model()->findByPk($id);
+        $model = Visitor::model()->findByPk($id);
         if ($model === null)
             throw new CHttpException(404, 'The requested page does not exist.');
         return $model;
@@ -138,13 +143,55 @@ class VisitReasonController extends Controller {
 
     /**
      * Performs the AJAX validation.
-     * @param VisitReason $model the model to be validated
+     * @param Visitor $model the model to be validated
      */
     protected function performAjaxValidation($model) {
-        if (isset($_POST['ajax']) && $_POST['ajax'] === 'visit-reason-form') {
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'visitor-form') {
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }
+    }
+
+    public function getDays() {
+        for ($i = 1; $i <= 31; $i++) {
+            $days["{$i}"] = "{$i}";
+        }
+        return $days;
+    }
+
+    public function getMonths() {
+        $monthNames = array('', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec');
+        for ($i = 1; $i <= 12; $i++) {
+            $months["{$i}"] = Yii::t('default', $monthNames[$i]);
+        }
+        return $months;
+    }
+
+    public function getYears() {
+        for ($i = date('Y'); $i >= 1900; $i--) {
+            $years["{$i}"] = "{$i}";
+        }
+        return $years;
+    }
+
+    public function actionGetTenantAgentWithSameTenant($id) {
+        $resultMessage['data'] = User::model()->findAllTenantAgent($id);
+        echo CJavaScript::jsonEncode($resultMessage);
+        Yii::app()->end();
+    }
+    
+    public function actionGetCompanyWithSameTenant($id) {
+
+        $resultMessage['data'] = Visitor::model()->findAllCompanyWithSameTenant($id);
+        echo CJavaScript::jsonEncode($resultMessage);
+        Yii::app()->end();
+    }
+    
+    public function actionGetCompanyWithSameTenantAndTenantAgent($id,$tenantagent) {
+
+        $resultMessage['data'] = Visitor::model()->findAllCompanyWithSameTenantAndTenantAgent($id, $tenantagent);
+        echo CJavaScript::jsonEncode($resultMessage);
+        Yii::app()->end();
     }
 
 }

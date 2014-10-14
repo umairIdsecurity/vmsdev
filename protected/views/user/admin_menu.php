@@ -76,14 +76,20 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
 
                 </ul>
             </li>
-            <li class=''><a href='#' ><span>Manage Visitor Records</span></a></li>
+
             <?php if ($session['role'] == Roles::ROLE_SUPERADMIN) {
                 ?>
+                <li class='has-sub'><a href='<?php echo Yii::app()->createUrl('visitor/admin'); ?>'><span>Manage Visitor Records</span></a>
+                    <ul>
+                        <li><a href='<?php echo Yii::app()->createUrl('visitor/create'); ?>' class="has-sub-sub"><span>Add Visitor</span></a></li>
+                    </ul>
+                </li>    
                 <li class='has-sub'><a href='<?php echo Yii::app()->createUrl('visitReason/admin'); ?>'><span>Manage Visit Reasons</span></a>
                     <ul>
                         <li><a href='<?php echo Yii::app()->createUrl('visitReason/create'); ?>' class="has-sub-sub"><span>Add Reason</span></a></li>
                     </ul>
                 </li>
+
 
                 <?php
             }

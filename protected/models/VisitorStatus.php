@@ -12,6 +12,11 @@
  */
 class VisitorStatus extends CActiveRecord
 {
+    public static $VISITOR_STATUS_LIST = array(
+        1 => 'Open',
+        2 => 'Access Denied',
+    );
+    
 	/**
 	 * @return string the associated database table name
 	 */

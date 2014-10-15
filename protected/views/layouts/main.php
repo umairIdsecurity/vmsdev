@@ -1,15 +1,14 @@
 <?php
 $session = new CHttpSession;
 Yii::app()->bootstrap->register();
-?>
-<?php
+
 $cs = Yii::app()->clientScript;
 
 $cs->registerCoreScript('jquery');
-$cs->registerScriptFile(Yii::app()->request->baseUrl . '/js/script-sidebar.js');
 $cs->registerScriptFile(Yii::app()->request->baseUrl . '/js/jquery.uploadfile.min.js');
 $cs->registerScriptFile(Yii::app()->request->baseUrl . '/js/jquery.form.js');
-$session = new CHttpSession;
+
+
 $user_role = $session['role'];
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -58,7 +57,9 @@ $user_role = $session['role'];
             }
             ?>>
 
-                <div id="logo"><?php echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl . '/images/ids-logo.png')); ?></div>
+                <div id="logo" <?php if ($this->id == "dashboard") {
+                     echo "style='padding: 10px 106px !important;'";
+                 } ?>><?php echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl . '/images/ids-logo.png')); ?></div>
                 <article class="header_midbox">
 
                     <aside class="top_nav">
@@ -88,7 +89,7 @@ $user_role = $session['role'];
                                 <a href="<?php echo Yii::app()->createUrl("/dashboard"); ?>">Dashboard</a>
                             </li>
 <?php if ($session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_AGENT_ADMIN || $session['role'] == Roles::ROLE_SUPERADMIN) { ?>
-                                <li class="<?php echo ($this->id == "user" && $this->action->id == "admin") ? "active" : "" ?>">
+                                <li class="<?php echo ($this->id == "user" || $this->id == "visitor" || $this->id == "company" || $this->id == "workstation") ? "active" : "" ?>">
                                     <a href="<?php echo Yii::app()->createUrl("/user/admin"); ?>">Administration</a>
                                 </li>
 <?php } ?>
@@ -106,19 +107,19 @@ $user_role = $session['role'];
             </div><!-- header -->
 
             <div class="wrapper" <?php
-                 if ($viewFrom != '') {
-                     echo "style='margin-left:180px'";
-                 }
-                 ?>>
+            if ($viewFrom != '') {
+                echo "style='margin-left:180px'";
+            }
+            ?>>
 <?php echo $content; ?>
             </div>
             <div class="clear"></div>
             <br><br>
                     <div id="footer" <?php
-if ($viewFrom != '' || $this->id == 'userWorkstations') {
-    echo "style='display:none'";
-}
-?>>
+                         if ($viewFrom != '' || $this->id == 'userWorkstations') {
+                             echo "style='display:none'";
+                         }
+                         ?>>
                         Copyright &copy; <?php echo date('Y'); ?> by <a href="http://idsecurity.com.au">Identity Security Pty Ltd </a>©.<br/>
                         All Rights Reserved.<br/>
 

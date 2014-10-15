@@ -32,6 +32,14 @@ DROP TABLE IF EXISTS `user_type`;
 DROP TABLE IF EXISTS `user_workstation`;
 DROP TABLE IF EXISTS `workstation`;
 DROP TABLE IF EXISTS `license_details`;
+
+DROP TABLE IF EXISTS `card_generated`;
+DROP TABLE IF EXISTS `card_type`;
+DROP TABLE IF EXISTS `visit_reason`;
+DROP TABLE IF EXISTS `visit_status`;
+DROP TABLE IF EXISTS `visitor`;
+DROP TABLE IF EXISTS `visitor_status`;
+DROP TABLE IF EXISTS `visitor_type`;
 SET FOREIGN_KEY_CHECKS = 1;
 
 

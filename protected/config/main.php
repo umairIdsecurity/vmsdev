@@ -9,7 +9,7 @@ return array(
     'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . '..',
     'name' => 'Visitor Management System',
     // preloading 'log' component
-    'preload' => array('log'),
+    'preload' => array('log','foundation'),
     'theme' => 'bootstrap',
     'modules' => array(
         'gii' => array(
@@ -39,6 +39,7 @@ return array(
     ),
     // application components
     'components' => array(
+        'foundation' => array("class" => "ext.foundation.components.Foundation"),
         'widgetFactory' => array(
             'widgets' => array(
                 'CGridView' => array(

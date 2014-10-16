@@ -30,7 +30,7 @@ div.form label{
 
 
 .login-area input[type="submit"], .grid-view td a, #btnSubmit, input[type="submit"],#updateBtn,#submitBtn,#addCompanyLink
-,.yiiBtn{
+,.yiiBtn, #clicktabA, #clicktabB,#submitFormVisitor,#clicktabC,.visitor-findBtn,.visitor-backBtn{
     background: -webkit-gradient(linear, center top, center bottom, from(#A1DC33), to(#82BD12));
     background: -moz-linear-gradient(center top , #A1DC33, #82BD12) repeat scroll 0 0 rgba(0, 0, 0, 0);
     background: -webkit-gradient(linear, center top, center bottom, from(#A1DC33), to(#82BD12));
@@ -381,14 +381,14 @@ nav.navigation ul li:last-child.active
 
 #sidebar2{
     border:1px solid #E7E7E7;width:215px;height:115%;padding-bottom:10px;
-    
+
 }
 
 #sidebar{
     margin-left: -4px;
 }
 
-.delete{
+.delete, .visitor-findBtn,.visitor-backBtn{
     background: -webkit-gradient(linear, center top, center bottom, from(#CCCCCC), to(#999999)) !important;
     background: -moz-linear-gradient(center top , #CCCCCC, #999999) repeat scroll 0 0 rgba(0, 0, 0, 0) !important;
     background: -webkit-gradient(linear, center top, center bottom, from(#CCCCCC), to(#999999)) !important;
@@ -415,9 +415,9 @@ nav.navigation ul li:last-child.active
 }
 
 .grid-view .summary {
-text-align: left !important;
-font-weight:bold;
-font-size:12px;
+    text-align: left !important;
+    font-weight:bold;
+    font-size:12px;
 }
 
 #page{
@@ -453,7 +453,7 @@ font-size:12px;
     background: -moz-linear-gradient(center top , #bbb, #bbb) repeat scroll 0 0 rgba(0, 0, 0, 0);
     background: -webkit-gradient(linear, center top, center bottom, from(#bbb), to(#bbb));
     border: 1px solid #7C8994;
-   
+
 }
 
 .indentLeft{
@@ -470,7 +470,7 @@ ul.yiiPager .hidden a {
 h1,
 h2,
 h3 {
-  line-height: 20px !important;
+    line-height: 20px !important;
 }
 
 div.form{
@@ -484,4 +484,71 @@ div.form{
 #logo a img{
     height:70px;width:180px !important;
 }
-/*radio buttons*/
+
+/*visitor page*/
+dl, dt, tabs-content li{
+    box-sizing:border-box !important;
+}
+
+dt.tabs dt{
+    /* IE10 Consumer Preview */ 
+    background-image: -ms-linear-gradient(top, #FFFFFF 0%, #4A4A4A 100%);
+
+    /* Mozilla Firefox */ 
+    background-image: -moz-linear-gradient(top, #FFFFFF 0%, #4A4A4A 100%);
+
+    /* Opera */ 
+    background-image: -o-linear-gradient(top, #FFFFFF 0%, #4A4A4A 100%);
+
+    /* Webkit (Safari/Chrome 10) */ 
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #FFFFFF), color-stop(1, #4A4A4A));
+
+    /* Webkit (Chrome 11+) */ 
+    background-image: -webkit-linear-gradient(top, #FFFFFF 0%, #4A4A4A 100%);
+
+    /* W3C Markup, IE10 Release Preview */ 
+    background-image: linear-gradient(to bottom, #FFFFFF 0%, #4A4A4A 100%);
+}
+
+.visitor-title{
+    font-size:18px;
+    font-weight:bold;
+    margin: 20px 0px;
+    color:#5C5C5E;
+}
+
+#register-form label{
+    color:#637280; 
+}
+
+#register-form table tr td{
+    padding:3px;
+}
+
+.visitor-findBtn{
+    vertical-align: top;
+    margin-top:2.5px;
+}
+
+.search-text{
+    width:350px;
+}
+
+#findVisitorRecordModal{
+    left: 300px;
+    margin: 0 auto !important;
+    width: 800px;
+    height:500px;
+}
+
+#findvisitor-grid{
+   width:750px !important;
+}
+
+#findAddVisitorRecordDiv{
+    padding:0px !important;
+}
+
+#addvisitor-table tr td{
+    vertical-align: top !important;
+}

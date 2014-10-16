@@ -39,6 +39,7 @@ DROP TABLE IF EXISTS `visit_status`;
 DROP TABLE IF EXISTS `visitor`;
 DROP TABLE IF EXISTS `visitor_status`;
 DROP TABLE IF EXISTS `visitor_type`;
+DROP TABLE IF EXISTS `visitor_visit_reason`;
 SET FOREIGN_KEY_CHECKS = 1;
 --
 -- Table structure for table `card_generated`
@@ -465,6 +466,8 @@ INSERT INTO `workstation` (`id`, `name`, `location`, `contact_name`, `contact_nu
 (8, 'Workstation', 'PAL', 'Test Person', 123456, 'workstation1@test.com', NULL, 0, NULL, 16, 17, 18, 0),
 (9, 'Workstation1', 'PAL', 'Test Person', 123456, 'workstation1@test.com', NULL, 0, NULL, 16, 17, 20, 0),
 (10, 'Workstation2', 'PAL', 'Test Person', 123456, 'workstation1@test.com', NULL, 0, NULL, 16, 17, NULL, 0);
+
+
 
 --
 -- Constraints for dumped tables

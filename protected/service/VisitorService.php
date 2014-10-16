@@ -12,5 +12,5 @@
  */
 interface VisitorService {
     //put your code here
-    public function save($visitor);
+    public function save($visitor,$visit_reason,$sessionId);
 }

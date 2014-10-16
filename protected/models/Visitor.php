@@ -59,14 +59,16 @@ class Visitor extends CActiveRecord {
             array('is_deleted', 'numerical', 'integerOnly' => true),
             array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
             array('contact_number, company, role, visitor_type, visitor_status, created_by, tenant, tenant_agent', 'length', 'max' => 20),
-            array('password', 'length', 'max' => 150),
+            // array('password', 'length', 'max' => 150),
             array('date_of_birth, notes,birthdayYear,birthdayMonth,birthdayDay', 'safe'),
             array('tenant, tenant_agent,company', 'default', 'setOnEmpty' => true, 'value' => null),
-            array('repeatpassword,password', 'required', 'on' => 'insert'),
-            array('password', 'compare', 'compareAttribute' => 'repeatpassword', 'on' => 'insert'),
+//            array('repeatpassword,password', 'required', 'on' => 'insert'),
+//            array('password', 'compare', 'compareAttribute' => 'repeatpassword', 'on' => 'insert'),
+            
+            array('email', 'email'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, first_name, last_name, email, contact_number, date_of_birth, company, department, position, staff_id, notes, password, role, visitor_type, visitor_status, created_by, is_deleted, tenant, tenant_agent', 'safe', 'on' => 'search'),
+            array('id, first_name, last_name, email, contact_number, date_of_birth, company, department, position, staff_id, notes, role, visitor_type, visitor_status, created_by, is_deleted, tenant, tenant_agent', 'safe', 'on' => 'search'),
         );
     }
 
@@ -96,12 +98,12 @@ class Visitor extends CActiveRecord {
             'id' => 'ID',
             'first_name' => 'First Name',
             'last_name' => 'Last Name',
-            'email' => 'Email',
-            'contact_number' => 'Contact No.',
+            'email' => 'Email Address',
+            'contact_number' => 'Mobile Number',
             'date_of_birth' => 'Date Of Birth',
             'company' => 'Company',
             'department' => 'Department',
-            'position' => 'Position',
+            'position' => 'Position:',
             'staff_id' => 'Staff',
             'notes' => 'Notes',
             'password' => 'Password',
@@ -144,7 +146,7 @@ class Visitor extends CActiveRecord {
         $criteria->compare('position', $this->position, true);
         $criteria->compare('staff_id', $this->staff_id, true);
         $criteria->compare('notes', $this->notes, true);
-        $criteria->compare('password', $this->password, true);
+        //$criteria->compare('password', $this->password, true);
         $criteria->compare('role', $this->role, true);
         $criteria->compare('visitor_type', $this->visitor_type, true);
         $criteria->compare('visitor_status', $this->visitor_status, true);
@@ -183,7 +185,7 @@ class Visitor extends CActiveRecord {
         parent::afterValidate();
         if (!$this->hasErrors()) {
             if (Yii::app()->controller->action->id == 'create') {
-                $this->password = User::model()->hashPassword($this->password);
+                // $this->password = User::model()->hashPassword($this->password);
             }
             //disable if action is update 
         }
@@ -220,6 +222,14 @@ class Visitor extends CActiveRecord {
             );
         }
         return $aArray;
+    }
+    
+    public function saveReason($visitor_id, $visit_reason_id) {
+
+        $post = new VisitorVisitReason;
+        $post->visitor = $visitor_id;
+        $post->visit_reason = $visit_reason_id;
+        $post->save();
     }
 
 }

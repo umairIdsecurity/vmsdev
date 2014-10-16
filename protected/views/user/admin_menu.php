@@ -12,7 +12,7 @@ $session = new ChttpSession;
 <input type="hidden" value="<?php echo $session['role'] ?>" id="sessionRoleForSideBar">
 
 <div id="sidebar2" style="<?php
-if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_STAFFMEMBER || $session['role'] == Roles::ROLE_VISITOR) {
+if ( $session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_STAFFMEMBER || $session['role'] == Roles::ROLE_VISITOR) {
     echo 'display:none;';
 }
 ?>" >
@@ -81,7 +81,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                 ?>
                 <li class='has-sub'><a href='<?php echo Yii::app()->createUrl('visitor/admin'); ?>'><span>Manage Visitor Records</span></a>
                     <ul>
-                        <li><a href='<?php echo Yii::app()->createUrl('visitor/create'); ?>' class="has-sub-sub"><span>Add Visitor</span></a></li>
+                        <li><a href='<?php echo Yii::app()->createUrl('visitor/create'); ?>' class="has-sub-sub"><span>Register a Visitor</span></a></li>
                     </ul>
                 </li>    
                 <li class='has-sub'><a href='<?php echo Yii::app()->createUrl('visitReason/admin'); ?>'><span>Manage Visit Reasons</span></a>

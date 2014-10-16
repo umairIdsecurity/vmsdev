@@ -53,7 +53,7 @@ $user_role = $session['role'];
             }
             ?>
             <div id="header" <?php
-            if ($viewFrom != '' || $this->id == 'userWorkstations') {
+            if ($viewFrom != '' || $this->id == 'userWorkstations' || $this->action->id == 'findvisitor') {
                 echo "style='display:none'";
             }
             ?>>
@@ -106,7 +106,7 @@ $user_role = $session['role'];
             </div><!-- header -->
 
             <div class="wrapper" <?php
-                 if ($viewFrom != '') {
+                 if ($viewFrom != '' ) {
                      echo "style='margin-left:180px'";
                  }
                  ?>>
@@ -115,7 +115,7 @@ $user_role = $session['role'];
             <div class="clear"></div>
             <br><br>
                     <div id="footer" <?php
-if ($viewFrom != '' || $this->id == 'userWorkstations') {
+if ($viewFrom != '' || $this->id == 'userWorkstations' || $this->action->id == 'findvisitor') {
     echo "style='display:none'";
 }
 ?>>

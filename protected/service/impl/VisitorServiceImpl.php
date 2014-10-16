@@ -13,14 +13,16 @@
  */
 class VisitorServiceImpl implements VisitorService {
 
-    public function save($visitor) {
-        $visitor->date_of_birth = date('Y-m-d', strtotime($visitor->birthdayYear . '-' .    $visitor->birthdayMonth . '-' . $visitor->birthdayDay));
-        
+    public function save($visitor, $visit_reason,$sessionId) {
+        $visitor->created_by = $sessionId;
+        $visitor->date_of_birth = date('Y-m-d', strtotime($visitor->birthdayYear . '-' . $visitor->birthdayMonth . '-' . $visitor->birthdayDay));
+
         if (!($visitor->save())) {
             return false;
         }
+
+        Visitor::model()->saveReason($visitor->id, $visit_reason);
         return true;
     }
 
-    
 }

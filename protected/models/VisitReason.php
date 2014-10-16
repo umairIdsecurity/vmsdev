@@ -111,5 +111,13 @@ class VisitReason extends CActiveRecord {
             ),
         );
     }
+    
+    public function findAllReason() {
+
+        $criteria = new CDbCriteria;
+        $criteria->select = 'id,reason';
+
+        return VisitReason::model()->findAll($criteria);
+    }
 
 }

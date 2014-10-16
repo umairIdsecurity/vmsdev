@@ -4,7 +4,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
+$cs = Yii::app()->clientScript;
+$cs->registerScriptFile(Yii::app()->request->baseUrl . '/js/script-sidebar.js');
 /* @var $this UserController */
 /* @var $model User */
 $session = new ChttpSession;

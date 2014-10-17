@@ -65,9 +65,9 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeat_password", "12345");
         $this->type("id=User_contact_number", "123456");
-        $this->select("id=User_birthdayDay", "label=10");
-        $this->select("id=User_birthdayMonth", "label=Jul");
-        $this->select("id=User_birthdayYear", "label=1989");
+        $this->select("id=fromDay", "label=10");
+        $this->select("id=fromMonth", "label=Jul");
+        $this->select("id=fromYear", "label=1993");
         $this->waitForElementPresent("id=User_department");
         $this->type("id=User_department", "Test Department");
         $this->type("id=User_position", "Test Position");

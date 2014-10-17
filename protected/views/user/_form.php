@@ -1,7 +1,11 @@
+
 <?php
+$cs = Yii::app()->clientScript;
+$cs->registerScriptFile(Yii::app()->request->baseUrl . '/js/script-birthday.js');
 /* @var $this UserController */
 /* @var $model User */
 /* @var $form CActiveForm */
+
 $session = new CHttpSession;
 
 $currentRoleinUrl = '';
@@ -63,8 +67,8 @@ $currentLoggedUserId = $session['id'];
                                 }
                                 ?>
 
-                            </select><?php echo "<br>".$form->error($model, 'role'); ?></td>
-                        
+                            </select><?php echo "<br>" . $form->error($model, 'role'); ?></td>
+
                     </tr>
                     <tr id="tenantRow">
                         <td><?php echo $form->labelEx($model, 'tenant'); ?></td>
@@ -83,7 +87,7 @@ $currentLoggedUserId = $session['id'];
                                         <?php
                                     }
                                     ?>
-                            </select><?php echo "<br>".$form->error($model, 'tenant'); ?>
+                            </select><?php echo "<br>" . $form->error($model, 'tenant'); ?>
                         </td>
                     </tr>
                     <tr id="tenantAgentRow">
@@ -108,12 +112,12 @@ $currentLoggedUserId = $session['id'];
                                         echo "<option value='' selected>Select Tenant Agent</option>";
                                     }
                                     ?>
-                            </select><?php echo "<br>".$form->error($model, 'tenant_agent'); ?>
+                            </select><?php echo "<br>" . $form->error($model, 'tenant_agent'); ?>
                         </td>
                     </tr>
                     <tr>
                         <td><?php echo $form->labelEx($model, 'company'); ?></td>
-                        <td>
+                        <td id='companyRow'>
                             <select id="User_company" name="User[company]" <?php
                             if ($session['role'] == Roles::ROLE_AGENT_ADMIN || $currentRoleinUrl == Roles::ROLE_OPERATOR || $currentLoggedUserId == $currentlyEditedUserId) {
                                 echo " disabled ";
@@ -156,7 +160,7 @@ $currentLoggedUserId = $session['id'];
                                 ?>
                             </select>
                             <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;"><br>Add New Company</a>
-                        <?php echo "<br>".$form->error($model, 'company'); ?>
+                            <?php echo "<br>" . $form->error($model, 'company'); ?>
                         </td>
                         <td></td></tr>
                     <tr >
@@ -169,30 +173,30 @@ $currentLoggedUserId = $session['id'];
                     <tr>
                         <td><?php echo $form->labelEx($model, 'user_type'); ?></td>
                         <td><?php echo $form->dropDownList($model, 'user_type', User::$USER_TYPE_LIST); ?>
-                        <?php echo "<br>".$form->error($model, 'user_type'); ?>
+                            <?php echo "<br>" . $form->error($model, 'user_type'); ?>
                         </td>
-                       
+
                     </tr>
                     <tr>
                         <td><?php echo $form->labelEx($model, 'user_status'); ?></td>
                         <td><?php echo $form->dropDownList($model, 'user_status', User::$USER_STATUS_LIST); ?>
-                        <?php echo "<br>".$form->error($model, 'user_status'); ?>
+                            <?php echo "<br>" . $form->error($model, 'user_status'); ?>
                         </td>
-                        
+
                     </tr>
                     <tr>
                         <td><?php echo $form->labelEx($model, 'notes'); ?></td>
                         <td><?php echo $form->textArea($model, 'notes', array('rows' => 6, 'cols' => 50)); ?>
-                        <?php echo "<br>".$form->error($model, 'notes'); ?>
+                            <?php echo "<br>" . $form->error($model, 'notes'); ?>
                         </td>
-                      
+
                     </tr>
                     <?php if ($this->action->id == 'create') { ?>
                         <tr>
                             <td><label for="User_password">Password <span class="required">*</span></label></td>
                             <td>
                                 <input ng-model="user.passwords" data-ng-class="{'ng-invalid':userform['User[repeatpassword]'].$error.match}" type="password" id="User_password" value = '<?php echo $model->password; ?>' name="User[password]">			
-                            <?php echo "<br>".$form->error($model, 'password'); ?>
+                                <?php echo "<br>" . $form->error($model, 'password'); ?>
                             </td>
                         </tr>
                         <tr>
@@ -200,7 +204,7 @@ $currentLoggedUserId = $session['id'];
                             <td >
                                 <input ng-model="user.passwordConfirm" type="password" id="User_repeat_password" data-match="user.passwords" name="User[repeatpassword]"/>			
                                 <div style='font-size:10px;color:red;' data-ng-show="userform['User[repeatpassword]'].$error.match">New Password does not match with <br>Repeat New Password. </div>
-                            <?php echo "<br>".$form->error($model, 'repeatpassword'); ?>
+                                <?php echo "<br>" . $form->error($model, 'repeatpassword'); ?>
                             </td>
 
                         </tr>
@@ -215,49 +219,53 @@ $currentLoggedUserId = $session['id'];
                     <tr>
                         <td style="width:110 !important;"><?php echo $form->labelEx($model, 'first_name'); ?></td>
                         <td><?php echo $form->textField($model, 'first_name', array('size' => 50, 'maxlength' => 50)); ?>
-                        <?php echo "<br>".$form->error($model, 'first_name'); ?>
+                            <?php echo "<br>" . $form->error($model, 'first_name'); ?>
                         </td>
                     </tr>
                     <tr>
                         <td><?php echo $form->labelEx($model, 'last_name'); ?></td>
                         <td><?php echo $form->textField($model, 'last_name', array('size' => 50, 'maxlength' => 50)); ?>
-                        <?php echo "<br>".$form->error($model, 'last_name'); ?>
+                            <?php echo "<br>" . $form->error($model, 'last_name'); ?>
                         </td>
                     </tr>
                     <tr>
                         <td><?php echo $form->labelEx($model, 'email'); ?></td>
                         <td><?php echo $form->textField($model, 'email', array('size' => 50, 'maxlength' => 50)); ?>
-                        <?php echo "<br>".$form->error($model, 'email'); ?>
+                            <?php echo "<br>" . $form->error($model, 'email'); ?>
                         </td>
                     </tr>
                     <tr>
                         <td><?php echo $form->labelEx($model, 'contact_number'); ?></td>
                         <td><?php echo $form->textField($model, 'contact_number'); ?>
-                        <?php echo "<br>".$form->error($model, 'contact_number'); ?></td>
+                            <?php echo "<br>" . $form->error($model, 'contact_number'); ?></td>
                     </tr>
                     <tr>
                         <td><?php echo $form->labelEx($model, 'department'); ?></td>
                         <td><?php echo $form->textField($model, 'department', array('size' => 50, 'maxlength' => 50)); ?>
-                        <?php echo "<br>".$form->error($model, 'department'); ?>
+                            <?php echo "<br>" . $form->error($model, 'department'); ?>
                         </td>
                     </tr>
                     <tr>
                         <td><?php echo $form->labelEx($model, 'position'); ?></td>
                         <td><?php echo $form->textField($model, 'position', array('size' => 50, 'maxlength' => 50)); ?>
-                        <?php echo "<br>".$form->error($model, 'position'); ?>
+                            <?php echo "<br>" . $form->error($model, 'position'); ?>
                         </td>
                     </tr>
                     <tr>
                         <td><?php echo $form->labelEx($model, 'Staff ID'); ?></td>
                         <td><?php echo $form->textField($model, 'staff_id', array('size' => 50, 'maxlength' => 50)); ?>
-                        <?php echo "<br>".$form->error($model, 'staff_id'); ?></td>
+                            <?php echo "<br>" . $form->error($model, 'staff_id'); ?></td>
                     </tr>
                     <tr>
                         <td><?php echo $form->labelEx($model, 'date_of_birth'); ?></td>
                         <td class="birthdayDropdown">
-                            <?php echo $form->dropDownList($model, 'birthdayDay', $this->getDays()); ?>
-                            <?php echo $form->dropDownList($model, 'birthdayMonth', $this->getMonths()); ?>
-                            <?php echo $form->dropDownList($model, 'birthdayYear', $this->getYears()); ?>
+                            <input type="hidden" id="dateofBirthBreakdownValueYear" value="<?php echo date("Y", strtotime($model->date_of_birth)); ?>">
+                            <input type="hidden" id="dateofBirthBreakdownValueMonth" value="<?php echo date("n", strtotime($model->date_of_birth)); ?>">
+                            <input type="hidden" id="dateofBirthBreakdownValueDay" value="<?php echo date("j", strtotime($model->date_of_birth)); ?>">
+                            
+                            <select id="fromMonth" name="User[birthdayMonth]" class='monthSelect'></select>
+                            <select id="fromDay" name="User[birthdayDay]" class='daySelect'></select>
+                            <select id="fromYear" name="User[birthdayYear]" class='yearSelect'></select>
                         </td>
                     </tr>
                 </table>
@@ -309,7 +317,14 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
 
         document.getElementById('User_tenant').disabled = true;
         document.getElementById('User_tenant_agent').disabled = true;
-
+        
+        if(actionId =='update'){
+            $("#fromYear").val($("#dateofBirthBreakdownValueYear").val());
+            $("#fromMonth").val($("#dateofBirthBreakdownValueMonth").val());
+            $("#fromDay").val($("#dateofBirthBreakdownValueDay").val());
+            
+        }
+        
         if ((getRole != admin && getRole != '') && sessionRole == superadmin) {
             if (getRole == agentadmin) {
 
@@ -317,6 +332,7 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                 document.getElementById('User_tenant').disabled = false;
                 $("#tenantRow").show();
                 $("#addCompanyLink").show();
+                document.getElementById("companyRow").style.paddingBottom = "10px";
             }
             else if (getRole == operator) {
                 document.getElementById('User_tenant_agent').disabled = true;
@@ -342,6 +358,7 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
             }
         } else if (getRole == admin && sessionRole == superadmin) {
             $("#addCompanyLink").show();
+            document.getElementById("companyRow").style.paddingBottom = "10px";
         }
         else if (sessionRole == admin) {
             if (getRole == admin)
@@ -356,6 +373,7 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
             }
             else if (getRole == agentadmin) {
                 $("#addCompanyLink").show();
+                document.getElementById("companyRow").style.paddingBottom = "10px";
             }
         }
         else if (sessionRole == agentadmin) {
@@ -611,9 +629,11 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
         /*show or hide add company button*/
         if ((sessionRole == superadmin && (selectedRole == admin || selectedRole == agentadmin)) || (sessionRole == admin && selectedRole == agentadmin)) {
             $("#addCompanyLink").show();
+            document.getElementById("companyRow").style.paddingBottom = "10px";
         }
         else {
             $("#addCompanyLink").hide();
+            document.getElementById("companyRow").style.paddingBottom = "0px";
         }
     }
     function populateAgentOperatorWorkstations(tenant, tenantAgent, value) {
@@ -713,6 +733,8 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
         populateAgentOperatorWorkstations(tenant, tenantAgent);
 
     }
+    
+    
 </script>
 
 <?php
@@ -871,10 +893,13 @@ if (isset($_POST['User'])) {
 
                     if (formSubmit_Role == admin) {
                         $("#addCompanyLink").show();
+                        document.getElementById("companyRow").style.paddingBottom = "10px";
                     }
                     else if (formSubmit_Role == agentadmin) {
                         $("#tenantRow").show();
                         $("#addCompanyLink").show();
+                        document.getElementById("companyRow").style.paddingBottom = "10px";
+
                         document.getElementById('User_tenant').disabled = false;
                     } else if (formSubmit_Role == agentoperator) {
                         $("#tenantRow").show();
@@ -907,6 +932,7 @@ if (isset($_POST['User'])) {
                         document.getElementById('User_company').disabled = true;
                     } else if (formSubmit_Role == agentadmin) {
                         $("#addCompanyLink").show();
+                        document.getElementById("companyRow").style.paddingBottom = "10px";
                     } else if (formSubmit_Role == operator) {
                         $(".workstationRow").show();
                         document.getElementById('User_company').disabled = true;

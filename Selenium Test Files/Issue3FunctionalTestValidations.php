@@ -416,7 +416,7 @@ class Issue3FunctionalTestValidations extends BaseFunctionalTest {
         $this->clickAndWait("id=submitForm");
         $this->assertEquals("Please fix the following input errors:", $this->getText("css=div.errorSummary > p"));
         $this->assertEquals("Role cannot be blank.", $this->getText("css=div.errorMessage"));
-        $this->assertEquals("Company Name cannot be blank.", $this->getText("//form[@id='user-form']/table/tbody/tr/td/table/tbody/tr[4]/td[2]/div"));
+        $this->assertEquals("Company Name cannot be blank.", $this->getText("css=#companyRow > div.errorMessage"));
         $this->assertEquals("First Name cannot be blank.", $this->getText("//form[@id='user-form']/table/tbody/tr/td[2]/table/tbody/tr/td[2]/div"));
         $this->assertEquals("Last Name cannot be blank.", $this->getText("//form[@id='user-form']/table/tbody/tr/td[2]/table/tbody/tr[2]/td[2]/div"));
         $this->assertEquals("Email cannot be blank.", $this->getText("//form[@id='user-form']/table/tbody/tr/td[2]/table/tbody/tr[3]/td[2]/div"));

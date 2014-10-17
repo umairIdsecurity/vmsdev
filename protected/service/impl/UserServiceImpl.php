@@ -14,8 +14,9 @@
 class UserServiceImpl implements UserService {
 
     public function save($user, $sessionTenant, $sessionTenantAgent, $sessionRole, $sessionId, $workstation) {
-        $user->date_of_birth = date('Y-m-d', strtotime($user->birthdayYear . '-' . $user->birthdayMonth . '-' . $user->birthdayDay));
-        
+        $user->date_of_birth = date('Y-m-d', strtotime($user->birthdayYear.'-'.$user->birthdayMonth.'-'.$user->birthdayDay));
+
+
         if ($user->isNewRecord) {
             $user->created_by = $sessionId;
         } else {

@@ -24,21 +24,20 @@
 
         /*click sidebar menu if same with current page*/
         var pathArray = window.location.href.split('/');
-        var secondLevelLocation = pathArray[3] + "/" + pathArray[4];
+        var secondLevelLocation = pathArray[3]; // + "/" + pathArray[4];
         var currentRole = $("#sessionRoleForSideBar").val();
         var admin = 1;
         var agentadmin = 6;
         var superadmin = 5;
-
         var li = $('#cssmenu > ul li a');
         switch (secondLevelLocation) {
-            case "index.php?r=company/admin":
+            case "index.php?r=company":
                 if (currentRole == superadmin)
                 {
                     li[0].click();
                 }
                 break;
-            case "index.php?r=workstation/admin":
+            case "index.php?r=workstation":
                 if (currentRole == admin || currentRole == agentadmin) {
                     li[1].click();
                 } else
@@ -46,7 +45,7 @@
                     li[2].click();
                 }
                 break;
-            case "index.php?r=user/admin":
+            case "index.php?r=user":
                 if (currentRole == admin || currentRole == agentadmin) {
                     li[3].click();
                 }

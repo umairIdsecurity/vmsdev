@@ -55,12 +55,12 @@
                 }
                 break;
 
-            case "index.php?r=visitReason/admin":
+            case "index.php?r=visitReason":
                 if (currentRole == superadmin) {
                     li[13].click();
                 }
                 break;
-            case "index.php?r=visitor/admin":
+            case "index.php?r=visitor":
                 if (currentRole == superadmin) {
                     li[11].click();
                 }

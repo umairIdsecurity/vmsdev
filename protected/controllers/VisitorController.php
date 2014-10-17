@@ -30,7 +30,7 @@ class VisitorController extends Controller {
                 'expression' => 'Yii::app()->controller->checkIfUserCanAccess("superadmin")',
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('GetVisitorDetails','FindVisitor', 'GetTenantAgentWithSameTenant', 'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent'),
+                'actions' => array('CheckEmailIfUnique','GetVisitorDetails', 'FindVisitor', 'GetTenantAgentWithSameTenant', 'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -61,22 +61,23 @@ class VisitorController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate() {
-        $session= new CHttpSession;
+        $session = new CHttpSession;
         $model = new Visitor;
+        $userModel = new User();
+        
         $visitorService = new VisitorServiceImpl();
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
 
         if (isset($_POST['Visitor'])) {
             $model->attributes = $_POST['Visitor'];
-            if ($visitorService->save($model,$_POST['Visitor']['reason'],$session['id'])) {
-               // $this->redirect(array('admin'));
+            if ($visitorService->save($model, $_POST['Visitor']['reason'], $session['id'])) {
+                // $this->redirect(array('admin'));
             }
         }
 
         $this->render('create', array(
             'model' => $model,
-        ),false,true);
+            'userModel' => $userModel,
+                ), false, true);
     }
 
     /**
@@ -206,11 +207,19 @@ class VisitorController extends Controller {
             'model' => $model,
                 ), false, true);
     }
-    
-    public function actionGetVisitorDetails($id){
+
+    public function actionGetVisitorDetails($id) {
         $resultMessage['data'] = Visitor::model()->findAllByPk($id);
         echo CJavaScript::jsonEncode($resultMessage);
         Yii::app()->end();
+    }
+
+    public function actionCheckEmailIfUnique($id) {
+        if (Visitor::model()->checkIfEmailAddressIsTaken($id)) {
+            echo "1";
+        }else{
+            echo "0";
+        };
     }
 
 }

@@ -17,17 +17,33 @@
 <ul class="tabs-content">
     <li class="active" id="stepTab">
         <?php $this->renderPartial('selectCardType', array('model' => $model)); ?>
+
         <input type="hidden" id="cardtype"/>
     </li>
     <li id="step2Tab">
         <?php $this->renderPartial('findAddVisitorRecord', array('model' => $model)); ?>
     </li>
-    <li id="step3Tab">This is simple tab 3's content. It's, you know...okay. <button id="clicktabC">click me </button></li>
+    <li id="step3Tab">
+        <?php $this->renderPartial('findAddHostRecord', array('userModel' => $userModel)); ?>
+    </li>
 </ul>
 
 
 <script>
     $(document).ready(function() {
+        document.getElementById('Visitor_company').disabled = true;
+        $('#Visitor_visitor_type').on('change', function(e) {
+            $('#Visitor_company option[value!=""]').remove();
+            $('#Visitor_tenant_agent option[value!=""]').remove();
+            $('#Visitor_tenant').val("");
+
+            if ($(this).val() == "2") {
+                document.getElementById('Visitor_company').disabled = false;
+            } else {
+                document.getElementById('Visitor_company').disabled = true;
+            }
+        });
+
         $("#clicktabA").click(function(e) {
             e.preventDefault();
             showHideTabs('findVisitorB', 'findVisitorA', 'findVisitor', 'selectCardA', 'selectCard', 'findHostA', 'findHost');
@@ -40,14 +56,21 @@
 
         $("#clicktabC").click(function(e) {
             e.preventDefault();
-
-            showHideTabs('selectCardB', 'selectCardA', 'selectCard', 'findVisitorA', 'findVisitor', 'findHostA', 'findHost');
+            $("#clicktabB").hide();
+            $("#submitFormVisitor").click();
+            $("#submitFormVisitor").show();
         });
 
         $("#btnBackTab2").click(function(e) {
             e.preventDefault();
             showHideTabs('selectCardB', 'selectCardA', 'selectCard', 'findVisitorA', 'findVisitor', 'findHostA', 'findHost');
             hidePreviousPage('step2Tab', 'stepTab');
+        });
+
+        $("#btnBackTab3").click(function(e) {
+            e.preventDefault();
+            showHideTabs('findVisitorB', 'findVisitorA', 'findVisitor', 'selectCardA', 'selectCard', 'findHostA', 'findHost');
+            hidePreviousPage('step3Tab', 'stepTab2');
         });
 
 
@@ -83,9 +106,94 @@
                 $.each(r.data, function(index, value) {
                     $("#Visitor_first_name").val(value.first_name);
                     $("#Visitor_last_name").val(value.first_name);
-                  
+
                 });
 
+            }
+        });
+    }
+
+    function checkEmailIfUnique() {
+        var email = $("#Visitor_email").val();
+        $.ajax({
+            type: 'POST',
+            url: '<?php echo Yii::app()->createUrl('visitor/checkEmailIfUnique&id='); ?>' + email,
+            dataType: 'json',
+            data: email,
+            success: function(r) {
+
+                if (r == 1) {
+                    $(".errorMessageEmail").show();
+                     $("#emailIsUnique").val("0");
+                    return false;
+                } else {
+                    $(".errorMessageEmail").hide();
+                    $("#emailIsUnique").val("1");
+                }
+            }
+        });
+    }
+
+    function populateTenantAgentAndCompanyField()
+    {
+        $('#Visitor_company option[value!=""]').remove();
+        $('#Visitor_tenant_agent option[value!=""]').remove();
+
+        var visitor_type = $("#Visitor_visitor_type").val();
+        var tenant = $("#Visitor_tenant").val();
+
+        if (visitor_type == "1") {
+            getTenantAgentWithSameTenant(tenant, '');
+            document.getElementById('Visitor_company').disabled = true;
+        } else {
+            getTenantAgentWithSameTenant(tenant);
+            getCompanyWithSameTenant(tenant);
+        }
+    }
+
+    function getTenantAgentWithSameTenant(tenant, selected) {
+        $('#Visitor_tenant_agent').empty();
+        $('#Visitor_tenant_agent').append('<option value="">Select Tenant Agent</option>');
+        $.ajax({
+            type: 'POST',
+            url: '<?php echo Yii::app()->createUrl('visitor/GetTenantAgentWithSameTenant&id='); ?>' + tenant,
+            dataType: 'json',
+            data: tenant,
+            success: function(r) {
+                $.each(r.data, function(index, value) {
+                    $('#Visitor_tenant_agent').append('<option value="' + value.id + '">' + value.name + '</option>');
+                });
+                $("#Visitor_tenant_agent").val(selected);
+            }
+        });
+    }
+
+    function getCompanyWithSameTenant(tenant) {
+        $.ajax({
+            type: 'POST',
+            url: '<?php echo Yii::app()->createUrl('visitor/GetCompanyWithSameTenant&id='); ?>' + tenant,
+            dataType: 'json',
+            data: tenant,
+            success: function(r) {
+                $('#Visitor_company option[value=""]').remove();
+                $.each(r.data, function(index, value) {
+                    $('#Visitor_company').append('<option value="' + value.id + '">' + value.name + '</option>');
+                });
+            }
+        });
+    }
+
+    function getCompanyWithSameTenantAndTenantAgent(tenant, tenant_agent) {
+        $.ajax({
+            type: 'POST',
+            url: '<?php echo Yii::app()->createUrl('visitor/GetCompanyWithSameTenantAndTenantAgent&id='); ?>' + tenant + '&tenantagent=' + tenant_agent,
+            dataType: 'json',
+            data: tenant,
+            success: function(r) {
+                $('#Visitor_company option[value=""]').remove();
+                $.each(r.data, function(index, value) {
+                    $('#Visitor_company').append('<option value="' + value.id + '">' + value.name + '</option>');
+                });
             }
         });
     }

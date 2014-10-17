@@ -17,14 +17,19 @@
             'validateOnSubmit' => true,
             'afterValidate' => 'js:function(form,data,hasError){
                         if(!hasError){
-                                $.ajax({
+                             checkEmailIfUnique();
+                             if($("#emailIsUnique").val() == 1){
+                             $.ajax({
                                         "type":"POST",
                                         "url":"' . CHtml::normalizeUrl(array("visitor/create")) . '",
                                         "data":form.serialize(),
                                         "success":function(data){$("#clicktabB").click();},
                                         
                                         });
-                                }
+}
+                               } else{
+                            $("#clicktabA").click();    
+                            }
                         }'
         ),
     ));
@@ -32,6 +37,7 @@
 
 
     <?php echo $form->errorSummary($model); ?>
+    <input type="text" id="emailIsUnique"/>
     <div class="visitor-title">Add New Visitor Record</div>
     <div>
         <table  id="addvisitor-table">
@@ -53,9 +59,13 @@
                     <?php echo $form->textField($model, 'last_name', array('size' => 50, 'maxlength' => 50)); ?>
                     <?php echo "<br>" . $form->error($model, 'last_name'); ?>
                 </td>
-                <td>
+                <td id="visitorCompanyRow">
+
                     <?php echo $form->labelEx($model, 'company'); ?><br>
-                    <?php echo $form->textField($model, 'company', array('size' => 50, 'maxlength' => 50)); ?>
+                    <select id="Visitor_company" name="Visitor[company]" >
+                        <option value=''>Select Company</option>
+                    </select>
+
                     <?php echo "<br>" . $form->error($model, 'company'); ?>
                 </td>
             </tr>
@@ -75,6 +85,7 @@
                     <?php echo $form->labelEx($model, 'email'); ?><br>
                     <?php echo $form->textField($model, 'email', array('size' => 50, 'maxlength' => 50)); ?>
                     <?php echo "<br>" . $form->error($model, 'email'); ?>
+                    <div style="" id="Visitor_email_em_" class="errorMessage errorMessageEmail" >Email Address has already been taken.</div>
                 </td>
             </tr>
             <tr>
@@ -93,16 +104,37 @@
                         <option value="Other">Other</option>
                     </select>
                 </td>
+                <td id="visitorTenantRow"><?php echo $form->labelEx($model, 'tenant'); ?><br>
+
+                    <select id="Visitor_tenant" onchange="populateTenantAgentAndCompanyField()" name="Visitor[tenant]"  >
+                        <option value='' selected>Select Admin</option>
+                        <?php
+                        $allAdminNames = User::model()->findAllAdmin();
+                        foreach ($allAdminNames as $key => $value) {
+                            ?>
+                            <option value="<?php echo $value->tenant; ?>"><?php echo $value->first_name . " " . $value->last_name; ?></option>
+                            <?php
+                        }
+                        ?>
+                    </select><?php echo "<br>" . $form->error($model, 'tenant'); ?>
+                </td>
+                <td id="visitorTenantAgentRow"><?php echo $form->labelEx($model, 'tenant_agent'); ?><br>
+
+                    <select id="Visitor_tenant_agent" name="Visitor[tenant_agent]" onchange="populateCompanyWithSameTenantAndTenantAgent()" >
+                        <?php
+                        echo "<option value='' selected>Select Tenant Agent</option>";
+                        ?>
+                    </select><?php echo "<br>" . $form->error($model, 'tenant_agent'); ?>
+                </td>
             </tr>
+
         </table>
 
     </div>
     <input type="button" class="visitor-backBtn" id="btnBackTab2" value="Back"/>
-    <button id="clicktabB" style="display:none;">Save and Continue</button>
+    <input type="button" id="clicktabB" value="Save and Continue"/>
 
-    <input type="submit" value="Save and Continue" name="yt0" id="submitFormVisitor" />
-
-
+    <input type="submit" value="Save and Continue" name="yt0" id="submitFormVisitor" style="display:none;"/>
     <?php $this->endWidget(); ?>
 
 </div>
@@ -134,12 +166,6 @@
         var url = 'index.php?r=visitor/findvisitor&id=' + searchText;
         $(".modal-body").html('<iframe width="100%" height="400px" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
     }
-    
-    
-    
-  
-
-
 </script>
 
 <?php $this->beginWidget('bootstrap.widgets.TbModal', array('id' => 'findVisitorRecordModal')); ?>

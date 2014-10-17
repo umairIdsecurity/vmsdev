@@ -55,7 +55,7 @@ class Visitor extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('first_name, last_name, email, contact_number', 'required'),
+            array('first_name, last_name, email, contact_number,tenant', 'required'),
             array('is_deleted', 'numerical', 'integerOnly' => true),
             array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
             array('contact_number, company, role, visitor_type, visitor_status, created_by, tenant, tenant_agent', 'length', 'max' => 20),
@@ -65,6 +65,7 @@ class Visitor extends CActiveRecord {
 //            array('repeatpassword,password', 'required', 'on' => 'insert'),
 //            array('password', 'compare', 'compareAttribute' => 'repeatpassword', 'on' => 'insert'),
             
+            array('email', 'unique'),
             array('email', 'email'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
@@ -230,6 +231,21 @@ class Visitor extends CActiveRecord {
         $post->visitor = $visitor_id;
         $post->visit_reason = $visit_reason_id;
         $post->save();
+    }
+    
+    public function checkIfEmailAddressIsTaken($email){
+        $Criteria = new CDbCriteria();
+        $Criteria->condition = "email = '" . $email . "' ";
+        $visitorEmail = Visitor::model()->findAll($Criteria);
+
+        $visitorEmail = array_filter($visitorEmail);
+        $visitorEmailCount = count($visitorEmail);
+
+        if ($visitorEmailCount == 0) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
 }

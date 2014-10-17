@@ -33,6 +33,9 @@ class VisitReason extends CActiveRecord {
         return array(
             array('created_by, tenant, tenant_agent', 'length', 'max' => 20),
             array('reason', 'required'),
+            
+            array('reason', 'filter', 'filter'=>'trim'),
+            array('reason', 'unique'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id,reason, created_by, tenant, tenant_agent,is_deleted', 'safe', 'on' => 'search'),

@@ -27,6 +27,7 @@ class Issue24FunctionalTest extends BaseFunctionalTest {
         $this->Scenario3();
         $this->resetDbWithData();
         $this->Scenario4();
+        $this->Scenario5();
     }
 
     /* Scenario 1 – Login as super admin and add new visit reason.
@@ -168,6 +169,55 @@ class Issue24FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("You are not authorized to perform this action.", $this->getText("css=div.error"));
         $this->open("http://cvms.identitysecurity.info/index.php?r=visitReason/update");
         $this->assertEquals("You are not authorized to perform this action.", $this->getText("css=div.error"));
+    }
+
+    /* Scenario 5 – Log in as super admin and check for validations
+      Expected Behavior
+      -	Assert text reason has already been taken
+      -	Assert text “This is a valid reason ?!.,’”()@#$%^&*-+” in manage reason field
+
+      Steps:
+      1.	Go to cvms.identitysecurity.info/index.php?r=site/login
+      2.	Login as superadmin@test.com and use 12345 as password
+      3.	Click administration
+      4.	Click manage visit reasons
+      5.	Click Add reason
+      6.	Type “ this is a reason ”. Then click add.
+      7.	Wait for page to load, then type this is a reason in reason filter.
+      8.	Assert text “This is a reason”.
+      9.	Click add reason.
+      10.	Wait for page to load then type “THIS IS A REASON” in reason field.
+      11.	Click Add button
+      12.	Assert text reason has already been taken.
+      13.	Click add reason, then type “This is a valid reason ?!.,’”()@#$%^&*-+”
+      14.	Click add button
+      15.	Wait for page to load
+      16.	Type This is a valid reason ?!.,’”()@#$%^&*-+ in reason filter
+      17.	Assert text This is a valid reason ?!.,’”()@#$%^&*-+
+     */
+
+    function Scenario5() {
+        $username = 'superadmin@test.com';
+        $this->login($username, '12345');
+        $this->clickAndWait("link=Administration");
+        $this->clickAndWait("//div[@id='cssmenu']/ul/li[5]/a/span");
+        $this->clickAndWait("css=li.has-sub.active > ul > li.even > a.has-sub-sub > span");
+        $this->type("id=VisitReason_reason", "This is a reason");
+        $this->clickAndWait("name=yt0");
+        $this->assertEquals("This is a reason", $this->getText("css=tr.odd > td"));
+        $this->clickAndWait("css=li.has-sub.active > ul > li.even > a.has-sub-sub > span");
+        $this->type("id=VisitReason_reason", " THIS IS A REASON ");
+        $this->clickAndWait("name=yt0");
+        $this->assertEquals("Reason \"THIS IS A REASON\" has already been taken.", $this->getText("css=div.errorSummary > ul > li"));
+        $this->clickAndWait("css=li.has-sub.active > ul > li.even > a.has-sub-sub > span");
+        
+        $this->type("id=VisitReason_reason", "This is a valid reason ?!.,’”()@#$%^&*-+");
+        $this->clickAndWait("name=yt0");
+        
+        $this->type("name=VisitReason[reason]", "This is a valid reason ?!.,’”()@#$%^&*-+");
+        sleep(1);
+        $this->assertEquals("This is a valid reason ?!.,’”()@#$%^&*-+", $this->getText("css=tr.odd > td"));
+       
     }
 
 }

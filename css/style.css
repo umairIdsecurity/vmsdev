@@ -552,3 +552,16 @@ dt.tabs dt{
 #addvisitor-table tr td{
     vertical-align: top !important;
 }
+#visit-reason-grid_c1{
+    width:150px !important;
+}
+
+#visit-reason-grid table tr td a{
+    width:50px !important;
+    margin: 0 auto;
+}
+
+#visit-reason-grid .filters input{
+    width:98% !important;
+}
+/*radio buttons*/

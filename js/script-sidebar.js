@@ -55,7 +55,7 @@
                 }
                 break;
                 
-            case "index.php?r=visitReason/admin":
+            case "index.php?r=visitReason":
                 if (currentRole == superadmin) {
                     li[12].click();
                 }

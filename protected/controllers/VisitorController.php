@@ -30,7 +30,7 @@ class VisitorController extends Controller {
                 'expression' => 'Yii::app()->controller->checkIfUserCanAccess("superadmin")',
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('GetIdOfUser','GetHostDetails','GetPatientDetails', 'CheckEmailIfUnique', 'GetVisitorDetails', 'FindVisitor', 'FindHost', 'GetTenantAgentWithSameTenant', 'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent'),
+                'actions' => array('VisitorDetail', 'GetIdOfUser', 'GetHostDetails', 'GetPatientDetails', 'CheckEmailIfUnique', 'GetVisitorDetails', 'FindVisitor', 'FindHost', 'GetTenantAgentWithSameTenant', 'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -72,8 +72,9 @@ class VisitorController extends Controller {
 
         if (isset($_POST['Visitor'])) {
             $model->attributes = $_POST['Visitor'];
-           
-            if ($visitorService->save($model, $_POST['Visitor']['reason'], $session['id'])) { 
+
+            if ($visitorService->save($model, $_POST['Visitor']['reason'], $session['id'])) {
+                
             }
         }
 
@@ -99,12 +100,40 @@ class VisitorController extends Controller {
 
         if (isset($_POST['Visitor'])) {
             $model->attributes = $_POST['Visitor'];
-            if ($visitorService->save($model))
+            if ($visitorService->save($model)) {
                 $this->redirect(array('admin'));
+            }
         }
-
         $this->render('update', array(
             'model' => $model,
+        ));
+    }
+
+    /* Visitor detail page */
+
+    public function actionVisitorDetail($id) {
+        $model = $this->loadModel($id);
+        $visitModel = Visit::model()->findByPk($model->id);
+        $reasonModel = VisitReason::model()->findByPk($id);
+        $userModel = User::model()->findByPk($id);
+        $patientModel = Patient::model()->findByPk($id);
+        
+        $visitorService = new VisitorServiceImpl();
+        // Uncomment the following line if AJAX validation is needed
+        // $this->performAjaxValidation($model);
+
+        if (isset($_POST['Visitor'])) {
+            $model->attributes = $_POST['Visitor'];
+            if ($visitorService->save($model)) {
+                $this->redirect(array('admin'));
+            }
+        }
+
+        $this->render('visitordetail', array(
+            'model' => $model,
+//            'reasonModel' => $reasonModel,
+//            'userModel' => $userModel,
+//            'patientModel' => $patientModel,
         ));
     }
 
@@ -237,13 +266,13 @@ class VisitorController extends Controller {
         echo CJavaScript::jsonEncode($resultMessage);
         Yii::app()->end();
     }
-    
+
     public function actionGetPatientDetails($id) {
         $resultMessage['data'] = Patient::model()->findAllByPk($id);
         echo CJavaScript::jsonEncode($resultMessage);
         Yii::app()->end();
     }
-    
+
     public function actionGetIdOfUser($id) {
         $resultMessage['data'] = Visitor::model()->getIdOfUser($id);
         echo CJavaScript::jsonEncode($resultMessage);
@@ -257,6 +286,5 @@ class VisitorController extends Controller {
             echo "0";
         }
     }
-    
 
 }

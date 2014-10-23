@@ -26,6 +26,7 @@ and open the template in the editor.
     font-size: 14px;
     position: relative;
     border-radius: 5px;
+    
    
 }
 #cssmenu a {
@@ -36,7 +37,7 @@ and open the template in the editor.
     width: 200px;
     margin-top:-10px;
 }
-#cssmenu > ul > li {
+#cssmenu > ul > li{
     cursor: pointer;
 }
 #cssmenu > ul > li:last-child {

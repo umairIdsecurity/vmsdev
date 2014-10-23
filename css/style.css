@@ -597,3 +597,70 @@ dt.tabs dt{
 #addReasonBtn{
     cursor:pointer;
 }
+
+/*for visitor detail page*/
+#visitorDetailDiv{
+    width:100%;
+}
+#visitorDetailDiv tr th{
+    font-size:12px;
+    text-align:center;
+    width:150px;
+}
+
+#visitorDetailDiv, #visitorDetailDiv tr, #visitorDetailDiv td{
+    border: 1px solid #E7E7E7;
+    border-collapse:separate !important;
+}
+
+.detailsTable, .detailsTable tr, .detailsTable td{
+    border-collapse:collapse !important;
+    border: 1px solid white !important;
+}
+
+.detailsTable{
+    width:200px;
+}
+
+#visitorInformationCssMenu ul,
+#visitorInformationCssMenu li,
+#visitorInformationCssMenu a{
+    margin: 2px;
+    padding: 0;
+    border: 0;
+    list-style: none;
+    font-weight: normal;
+    text-decoration: none;
+    line-height: 1;
+    font-size: 14px;
+    position: relative;
+    border-radius: 5px;
+}
+
+#visitorInformationCssMenu > ul > li > a {
+    font-size: 13.4px;
+    display: block;
+    background: #64676e;
+    background: -moz-linear-gradient(#FBFBFB 0%, #FBFBFB 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #FBFBFB), color-stop(100%, #FBFBFB));
+    background: -webkit-linear-gradient(#FBFBFB 0%, #FBFBFB 100%);
+    background: linear-gradient(#FBFBFB 0%, #FBFBFB 100%);
+    color:#58585A;
+    font-weight:bold;
+    padding:10px;
+}
+
+#visitorInformationCssMenu .has-sub li {
+    cursor:auto;
+    padding:10px !important;
+    color:#B2B2B2;
+}
+
+#visitorInformationCssMenu{
+    padding-bottom:15px;
+    padding-top:15px;
+}
+
+#visitorInformationCssMenu table tr td{
+    vertical-align:middle !important;
+}

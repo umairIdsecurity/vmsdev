@@ -120,6 +120,52 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
         $this->waitForPageToLoad("30000");
     }
 
+    function addVisitor($visitor_name) {
+        
+        $this->type("id=Visitor_first_name", "Test");
+        $this->type("id=Visitor_last_name", $visitor_name);
+        $this->type("id=Visitor_contact_number", "1234567");
+        $this->type("id=Visitor_position", "Position");
+        $this->type("id=Visitor_email", "test" . $visitor_name . "@test.com");
+        $this->select("id=Visitor_tenant", "label=Test admin");
+        sleep(1);
+        $this->select("id=Visitor_tenant_agent", "label=Test agentadmin");
+    }
+
+    function addReason($reason) {
+        $this->select("id=Visit_reason", "label=Other");
+        $this->type("id=VisitReason_reason", $reason);
+        $this->click("id=addReasonBtn");
+        sleep(1);
+    }
+
+    function addHost($host_name) {
+        $this->type("id=User_first_name", "Test");
+        $this->type("id=User_last_name", $host_name);
+        $this->type("id=User_department", "Department");
+        $this->type("id=User_staff_id", "123456");
+        $this->type("id=User_email", "test".$host_name."@test.com");
+        $this->type("id=User_contact_number", "123456");
+        $this->select("id=User_tenant", "label=Test admin");
+        sleep(1);
+        $this->select("id=User_tenant_agent", "label=Test agentadmin");
+        $this->click("id=clicktabC");
+    }
+
+    function addPatient($patient_name) {
+        $this->type("id=Patient_name", $patient_name);
+    }
+
+    function verifyVisitorInTable($visitor_name, $visitor_type) {
+        $this->open("/index.php?r=visitor/admin");
+        $this->type("name=Visitor[first_name]", "Test");
+        $this->type("name=Visitor[last_name]", $visitor_name);
+        $this->type("name=Visitor[email]", "test" . $visitor_name . "@test.com");
+        sleep(1);
+        $this->assertEquals("test" . $visitor_name . "@test.com", $this->getText("//div[@id='visitor-grid']/table/tbody/tr/td[3]"));
+        $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
+    }
+
     function testBlank() {
         $this->setBrowser("*firefox");
         $this->setBrowserUrl("http://cvms.identitysecurity.info/");

@@ -1,6 +1,6 @@
 <?php
 
-class VisitReasonController extends Controller {
+class VisitController extends Controller {
 
     /**
      * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -25,13 +25,17 @@ class VisitReasonController extends Controller {
      */
     public function accessRules() {
         return array(
-            array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin', 'delete'),
-                'expression' => 'Yii::app()->controller->checkIfUserCanAccess("superadmin")',
+            array('allow', // allow all users to perform 'index' and 'view' actions
+                'actions' => array('index', 'view'),
+                'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('GetAllReason','CheckReasonIfUnique'),
-                'users' => array('*'),
+                'actions' => array('create', 'update'),
+                'users' => array('@'),
+            ),
+            array('allow', // allow admin user to perform 'admin' and 'delete' actions
+                'actions' => array('admin', 'delete'),
+                'users' => array('admin'),
             ),
             array('deny', // deny all users
                 'users' => array('*'),
@@ -39,21 +43,14 @@ class VisitReasonController extends Controller {
         );
     }
 
-    public function checkIfUserCanAccess($action) {
-        $session = new CHttpSession;
-        $CurrentRole = $session['role'];
-
-        switch ($action) {
-            case "superadmin":
-                $user_role = array(Roles::ROLE_SUPERADMIN);
-                if (in_array($CurrentRole, $user_role)) {
-                    return true;
-                }
-                break;
-
-            default:
-                return false;
-        }
+    /**
+     * Displays a particular model.
+     * @param integer $id the ID of the model to be displayed
+     */
+    public function actionView($id) {
+        $this->render('view', array(
+            'model' => $this->loadModel($id),
+        ));
     }
 
     /**
@@ -61,26 +58,17 @@ class VisitReasonController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate() {
+        $model = new Visit;
+        $visit = new VisitServiceImpl();
         $session = new CHttpSession;
-        $model = new VisitReason;
-        $visitReasonService = new VisitReasonServiceImpl();
-        $viewFrom = 0;
-        if (isset($_GET['register'])) {
-            $viewFrom = 1;
-        }
+
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
-        if (isset($_POST['VisitReason'])) {
-            $model->attributes = $_POST['VisitReason'];
-            if ($visitReasonService->save($model, $session['id'])) {
-
-                switch ($viewFrom) {
-                    case 1:
-                        break;
-                    default:
-                        $this->redirect(array('admin'));
-                }
+        if (isset($_POST['Visit'])) {
+            $model->attributes = $_POST['Visit'];
+            if ($visit->save($model, $session['id'])) {
+                
             }
         }
 
@@ -100,10 +88,10 @@ class VisitReasonController extends Controller {
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
-        if (isset($_POST['VisitReason'])) {
-            $model->attributes = $_POST['VisitReason'];
+        if (isset($_POST['Visit'])) {
+            $model->attributes = $_POST['Visit'];
             if ($model->save())
-                $this->redirect(array('admin'));
+                $this->redirect(array('view', 'id' => $model->id));
         }
 
         $this->render('update', array(
@@ -125,13 +113,23 @@ class VisitReasonController extends Controller {
     }
 
     /**
+     * Lists all models.
+     */
+    public function actionIndex() {
+        $dataProvider = new CActiveDataProvider('Visit');
+        $this->render('index', array(
+            'dataProvider' => $dataProvider,
+        ));
+    }
+
+    /**
      * Manages all models.
      */
     public function actionAdmin() {
-        $model = new VisitReason('search');
+        $model = new Visit('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['VisitReason']))
-            $model->attributes = $_GET['VisitReason'];
+        if (isset($_GET['Visit']))
+            $model->attributes = $_GET['Visit'];
 
         $this->render('admin', array(
             'model' => $model,
@@ -142,11 +140,11 @@ class VisitReasonController extends Controller {
      * Returns the data model based on the primary key given in the GET variable.
      * If the data model is not found, an HTTP exception will be raised.
      * @param integer $id the ID of the model to be loaded
-     * @return VisitReason the loaded model
+     * @return Visit the loaded model
      * @throws CHttpException
      */
     public function loadModel($id) {
-        $model = VisitReason::model()->findByPk($id);
+        $model = Visit::model()->findByPk($id);
         if ($model === null)
             throw new CHttpException(404, 'The requested page does not exist.');
         return $model;
@@ -154,27 +152,13 @@ class VisitReasonController extends Controller {
 
     /**
      * Performs the AJAX validation.
-     * @param VisitReason $model the model to be validated
+     * @param Visit $model the model to be validated
      */
     protected function performAjaxValidation($model) {
-        if (isset($_POST['ajax']) && $_POST['ajax'] === 'visit-reason-form') {
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'visit-form') {
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }
     }
 
-    public function actionGetAllReason() {
-        $resultMessage['data'] = VisitReason::model()->GetAllReason();
-
-        echo CJavaScript::jsonEncode($resultMessage);
-        Yii::app()->end();
-    }
-    
-    public function actionCheckReasonIfUnique($id) {
-        if (VisitReason::model()->checkIfReasonIsTaken($id)) {
-            echo "1";
-        } else {
-            echo "0";
-        }
-    }
 }

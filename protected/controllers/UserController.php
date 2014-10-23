@@ -1,6 +1,5 @@
 <?php
 
-
 class UserController extends Controller {
 
     /**
@@ -28,6 +27,9 @@ class UserController extends Controller {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('create',
+                    'GetTenantAgentWithSameTenant',
+                    'GetIdOfUser',
+                    'CheckEmailIfUnique',
                     'GetTenantAgentAjax',
                     'GetTenantOrTenantAgentCompany',
                     'GetTenantWorkstation', 'GetTenantAgentWorkstation'),
@@ -91,10 +93,10 @@ class UserController extends Controller {
         if (isset($_POST['User'])) {
             $model->attributes = $_POST['User'];
             $workstation = NULL;
-            if (isset($_POST['User']['workstation'])){
+            if (isset($_POST['User']['workstation'])) {
                 $workstation = $_POST['User']['workstation'];
             }
-            if ($userService->save($model, $session['tenant'], $session['tenant_agent'], $session['role'],$session['id'],$workstation)) {
+            if ($userService->save($model, $session['tenant'], $session['tenant_agent'], $session['role'], $session['id'], $workstation)) {
                 $this->redirect(array('admin'));
             }
         }
@@ -113,11 +115,11 @@ class UserController extends Controller {
         $model = $this->loadModel($id);
         $userService = new UserServiceImpl();
         $session = new CHttpSession;
-        
+
         if (isset($_POST['User'])) {
             $model->attributes = $_POST['User'];
 
-            if ($userService->save($model, $session['tenant'], $session['tenant_agent'], $session['role'],$session['id'],NULL)) {
+            if ($userService->save($model, $session['tenant'], $session['tenant_agent'], $session['role'], $session['id'], NULL)) {
                 $this->redirect(array('admin'));
             }
         }
@@ -248,26 +250,18 @@ class UserController extends Controller {
         }
     }
 
-    public function getDays() {
-        for ($i = 1; $i <= 31; $i++) {
-            $days["{$i}"] = "{$i}";
-        }
-        return $days;
+    public function actionCheckEmailIfUnique($id) {
+        if (User::model()->checkIfEmailAddressIsTaken($id)) {
+            echo "1";
+        } else {
+            echo "0";
+        };
     }
 
-    public function getMonths() {
-        $monthNames = array('', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec');
-        for ($i = 1; $i <= 12; $i++) {
-            $months["{$i}"] = Yii::t('default', $monthNames[$i]);
-        }
-        return $months;
-    }
-
-    public function getYears() {
-        for ($i = date('Y'); $i >= 1900; $i--) {
-            $years["{$i}"] = "{$i}";
-        }
-        return $years;
+    public function actionGetIdOfUser($id) {
+        $resultMessage['data'] = User::model()->getIdOfUser($id);
+        echo CJavaScript::jsonEncode($resultMessage);
+        Yii::app()->end();
     }
 
 }

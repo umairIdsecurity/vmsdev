@@ -19,6 +19,9 @@ class UserType extends CActiveRecord
             2 => 'External',
         );
         
+        const USERTYPE_INTERNAL = 1;
+        const USERTYPE_EXTERNAL = 2;
+        
 	/**
 	 * @return string the associated database table name
 	 */

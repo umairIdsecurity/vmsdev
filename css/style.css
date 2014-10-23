@@ -30,7 +30,9 @@ div.form label{
 
 
 .login-area input[type="submit"], .grid-view td a, #btnSubmit, input[type="submit"],#updateBtn,#submitBtn,#addCompanyLink
-,.yiiBtn, #clicktabA, #clicktabB,#submitFormVisitor,#clicktabC,.visitor-findBtn,.visitor-backBtn{
+,.yiiBtn, #clicktabA, #clicktabB,#clicktabB1,#clicktabB2,#submitFormVisitor,#clicktabC,
+.visitor-findBtn,.host-findBtn,.visitor-backBtn,
+#dummy-submitFormPatientName{
     background: -webkit-gradient(linear, center top, center bottom, from(#A1DC33), to(#82BD12));
     background: -moz-linear-gradient(center top , #A1DC33, #82BD12) repeat scroll 0 0 rgba(0, 0, 0, 0);
     background: -webkit-gradient(linear, center top, center bottom, from(#A1DC33), to(#82BD12));
@@ -321,11 +323,11 @@ nav.navigation ul li:last-child.active
     padding-left: 30px;
     padding-right: 30px;
     width: 120.6%;
-
 }
 
 #companyLogo{
     height:120px;
+    width: 100%;
 }
 
 .update a{
@@ -388,7 +390,7 @@ nav.navigation ul li:last-child.active
     margin-left: -4px;
 }
 
-.delete, .visitor-findBtn,.visitor-backBtn{
+.delete, .visitor-findBtn,.visitor-backBtn, .host-findBtn{
     background: -webkit-gradient(linear, center top, center bottom, from(#CCCCCC), to(#999999)) !important;
     background: -moz-linear-gradient(center top , #CCCCCC, #999999) repeat scroll 0 0 rgba(0, 0, 0, 0) !important;
     background: -webkit-gradient(linear, center top, center bottom, from(#CCCCCC), to(#999999)) !important;
@@ -525,7 +527,7 @@ dt.tabs dt{
     padding:3px;
 }
 
-.visitor-findBtn{
+.visitor-findBtn, ,.host-findBtn{
     vertical-align: top;
     margin-top:2.5px;
 }
@@ -541,15 +543,15 @@ dt.tabs dt{
     height:500px;
 }
 
-#findvisitor-grid{
-   width:750px !important;
+#findvisitor-grid, #findpatient-grid, #findHost-grid{
+    width:59% !important;
 }
 
 #findAddVisitorRecordDiv{
     padding:0px !important;
 }
 
-#addvisitor-table tr td{
+#addvisitor-table tr td, #addhost-table tr td{
     vertical-align: top !important;
 }
 #visit-reason-grid_c1{
@@ -566,7 +568,32 @@ dt.tabs dt{
 }
 /*radio buttons*/
 
-.errorMessageEmail{
+.errorMessageEmail, .errorMessageEmail1{
     display: none;
-    
+}
+#searchVisitorTableDiv, #visitor_fields_for_Search, 
+#search-visitor-reason-error, #searchHostTableDiv, 
+#register-host-form, #register-reason-form, .visitorReason, #submitFormPatientName
+,#Patient_name_error,
+#selectedVisitorInSearchTable,#visitorId,#selectedHostInSearchTable,#patientIsUnique, 
+#hostId, #hostEmailIsUnique,#register-visit-form,
+#register-host-form #User_role, #register-host-form #User_user_type,
+#register-host-form #User_password,
+#register-host-form #User_repeat_password
+,#currentRoleOfLoggedInUser,
+#currentCompanyOfLoggedInUser
+{
+    display: none;
+}
+
+#register-reason-form{
+   // margin-top: -117px;
+}
+
+#register-reason-form input[type="text"]{
+    width:210px;
+}
+
+#addReasonBtn{
+    cursor:pointer;
 }

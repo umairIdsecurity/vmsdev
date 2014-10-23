@@ -214,5 +214,22 @@ class Company extends CActiveRecord {
 
         return $aArray;
     }
+    
+    public function findAllCompanyWithSameTenant($id) {
+        $aArray = array();
+
+        $Criteria = new CDbCriteria();
+        $Criteria->condition = "tenant = '$id'";
+        $company = Company::model()->findAll($Criteria);
+
+        foreach ($company as $index => $value) {
+            $aArray[] = array(
+                'id' => $value['id'],
+                'name' => $value['name'],
+            );
+        }
+
+        return $aArray;
+    }
 
 }

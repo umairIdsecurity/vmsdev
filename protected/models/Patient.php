@@ -1,32 +1,19 @@
 <?php
 
 /**
- * This is the model class for table "visitor_type".
+ * This is the model class for table "patient".
  *
- * The followings are the available columns in table 'visitor_type':
+ * The followings are the available columns in table 'patient':
  * @property string $id
  * @property string $name
- * @property string $created_by
- *
- * The followings are the available model relations:
- * @property Visitor[] $visitors
- * @property User $createdBy
  */
-class VisitorType extends CActiveRecord {
-
-    public static $VISITOR_TYPE_LIST = array(
-        1 => 'Patient Visitor',
-        2 => 'Corporate Visitor',
-    );
-
-    const PATIENT_VISITOR = 1;
-    const CORPORATE_VISITOR = 2;
+class Patient extends CActiveRecord {
 
     /**
      * @return string the associated database table name
      */
     public function tableName() {
-        return 'visitor_type';
+        return 'patient';
     }
 
     /**
@@ -36,11 +23,11 @@ class VisitorType extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('name', 'length', 'max' => 25),
-            array('created_by', 'length', 'max' => 20),
+            array('name', 'length', 'max' => 100),
+            array('name', 'required'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, name, created_by', 'safe', 'on' => 'search'),
+            array('id, name', 'safe', 'on' => 'search'),
         );
     }
 
@@ -51,8 +38,6 @@ class VisitorType extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'visitors' => array(self::HAS_MANY, 'Visitor', 'visitor_type'),
-            'createdBy' => array(self::BELONGS_TO, 'User', 'created_by'),
         );
     }
 
@@ -62,8 +47,7 @@ class VisitorType extends CActiveRecord {
     public function attributeLabels() {
         return array(
             'id' => 'ID',
-            'name' => 'Name',
-            'created_by' => 'Created By',
+            'name' => 'Patient name',
         );
     }
 
@@ -86,7 +70,6 @@ class VisitorType extends CActiveRecord {
 
         $criteria->compare('id', $this->id, true);
         $criteria->compare('name', $this->name, true);
-        $criteria->compare('created_by', $this->created_by, true);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -97,18 +80,40 @@ class VisitorType extends CActiveRecord {
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
      * @param string $className active record class name.
-     * @return VisitorType the static model class
+     * @return Patient the static model class
      */
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }
 
-    public function getVisitorType($visitor_type) {
+    public function checkIfPatientNameIsTaken($name) {
+        $Criteria = new CDbCriteria();
+        $Criteria->condition = "name = '" . $name . "' ";
+        $patientName = Patient::model()->findAll($Criteria);
 
+        $patientName = array_filter($patientName);
+        $patientNameCount = count($patientName);
 
-        if (isset(VisitorType::$VISITOR_TYPE_LIST[$visitor_type])) {
-            return VisitorType::$VISITOR_TYPE_LIST[$visitor_type];
+        if ($patientNameCount == 0) {
+            return false;
+        } else {
+            return true;
         }
+    }
+
+    public function getIdOfUser($patientname) {
+        $aArray = array();
+
+        $Criteria = new CDbCriteria();
+        $Criteria->condition = "name = '$patientname'";
+        $patientId = Patient::model()->findAll($Criteria);
+
+        foreach ($patientId as $index => $value) {
+            $aArray[] = array(
+                'id' => $value['id'],
+            );
+        }
+        return $aArray;
     }
 
 }

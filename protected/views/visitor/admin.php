@@ -14,15 +14,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
     'columns' => array(
         'first_name',
         'last_name',
-        array(
-            'name' => 'role',
-            'value' => 'User::model()->getUserRole($data->role)',
-        ),
-        array(
-            'name' => 'visitor_type',
-            'value' => 'VisitorType::model()->getVisitorType($data->visitor_type)',
-            'filter' => VisitorType::$VISITOR_TYPE_LIST,
-        ),
+        'email',
         'contact_number',
         array(
             'header' => 'Actions',

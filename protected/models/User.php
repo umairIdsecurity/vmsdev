@@ -96,7 +96,6 @@ class User extends VmsActiveRecord {
                 array('email', 'email'),
                 array('repeatpassword', 'required', 'on' => 'insert'),
                 array('password', 'compare', 'compareAttribute' => 'repeatpassword'),
-                //array('tenant_agent,tenant', 'filter', 'filter' => 'empty2null'),
                 array('tenant, tenant_agent', 'default', 'setOnEmpty' => true, 'value' => null),
                 // The following rule is used by search().
                 // @todo Please remove those attributes that should not be searched.
@@ -431,5 +430,37 @@ class User extends VmsActiveRecord {
         $this->update();
         return false;
     }
+    
+    public function checkIfEmailAddressIsTaken($email){
+        $Criteria = new CDbCriteria();
+        $Criteria->condition = "email = '" . $email . "' ";
+        $userEmail = User::model()->findAll($Criteria);
 
+        $userEmails = array_filter($userEmail);
+        $userEmailCount = count($userEmails);
+
+        if ($userEmailCount == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
+    public function getIdOfUser($email){
+        $aArray = array();
+
+        $Criteria = new CDbCriteria();
+        $Criteria->condition = "email = '$email'";
+        $userId = User::model()->findAll($Criteria);
+
+        foreach ($userId as $index => $value) {
+            $aArray[] = array(
+                'id' => $value['id'],
+            );
+        }
+        return $aArray;
+    }
+    
+    
 }
+

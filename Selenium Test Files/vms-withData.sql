@@ -40,6 +40,8 @@ DROP TABLE IF EXISTS `visitor`;
 DROP TABLE IF EXISTS `visitor_status`;
 DROP TABLE IF EXISTS `visitor_type`;
 DROP TABLE IF EXISTS `visitor_visit_reason`;
+DROP TABLE IF EXISTS `visit`;
+DROP TABLE IF EXISTS `patient`;
 SET FOREIGN_KEY_CHECKS = 1;
 --
 -- Table structure for table `card_generated`
@@ -145,6 +147,17 @@ CREATE TABLE IF NOT EXISTS `license_details` (
 INSERT INTO `license_details` (`id`, `description`) VALUES
 (1, 'This is a sample license detail.');
 
+
+--
+-- Table structure for table `patient`
+--
+
+CREATE TABLE IF NOT EXISTS `patient` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=38 ;
+
 -- --------------------------------------------------------
 
 --
@@ -214,7 +227,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `password` varchar(150) DEFAULT NULL,
   `role` bigint(20) NOT NULL,
   `user_type` bigint(20) NOT NULL,
-  `user_status` bigint(20) DEFAULT NULL,
+  `user_status` bigint(20) DEFAULT '1',
   `created_by` bigint(20) DEFAULT NULL,
   `is_deleted` tinyint(1) NOT NULL DEFAULT '0',
   `tenant` bigint(20) DEFAULT NULL,
@@ -316,6 +329,45 @@ INSERT INTO `user_workstation` (`id`, `user`, `workstation`, `created_by`, `is_p
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `visit`
+--
+
+CREATE TABLE IF NOT EXISTS `visit` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `visitor` bigint(20) DEFAULT NULL,
+  `card` bigint(20) DEFAULT NULL,
+  `visitor_type` bigint(20) DEFAULT NULL,
+  `reason` bigint(20) DEFAULT NULL,
+  `visitor_status` bigint(20) DEFAULT '1',
+  `host` bigint(20) DEFAULT NULL,
+  `patient` bigint(20) DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `date_in` date DEFAULT NULL,
+  `time_in` time DEFAULT NULL,
+  `date_out` date DEFAULT NULL,
+  `time_out` time DEFAULT NULL,
+  `date_check_in` date DEFAULT NULL,
+  `time_check_in` time DEFAULT NULL,
+  `date_check_out` date DEFAULT NULL,
+  `time_check_out` time DEFAULT NULL,
+  `tenant` bigint(20) DEFAULT NULL,
+  `tenant_agent` bigint(20) DEFAULT NULL,
+  `is_deleted` tinyint(4) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `card` (`card`),
+  KEY `reason` (`reason`),
+  KEY `visitor_type` (`visitor_type`),
+  KEY `visitor_status` (`visitor_status`),
+  KEY `host` (`host`),
+  KEY `patient` (`patient`),
+  KEY `created_by` (`created_by`),
+  KEY `tenant` (`tenant`),
+  KEY `tenant_agent` (`tenant_agent`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `visitor`
 --
 
@@ -334,7 +386,7 @@ CREATE TABLE IF NOT EXISTS `visitor` (
   `password` varchar(150) DEFAULT NULL,
   `role` bigint(20) NOT NULL DEFAULT '10',
   `visitor_type` bigint(20) DEFAULT NULL,
-  `visitor_status` bigint(20) DEFAULT NULL,
+  `visitor_status` bigint(20) DEFAULT '1',
   `created_by` bigint(20) DEFAULT NULL,
   `is_deleted` tinyint(1) NOT NULL DEFAULT '0',
   `tenant` bigint(20) DEFAULT NULL,
@@ -537,17 +589,33 @@ ALTER TABLE `user_workstation`
   ADD CONSTRAINT `user_workstation_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`),
   ADD CONSTRAINT `user_workstation_ibfk_3` FOREIGN KEY (`user`) REFERENCES `user` (`id`);
 
+
+--
+-- Constraints for table `visit`
+--
+ALTER TABLE `visit`
+  ADD CONSTRAINT `visit_ibfk_1` FOREIGN KEY (`card`) REFERENCES `card_generated` (`id`),
+  ADD CONSTRAINT `visit_ibfk_10` FOREIGN KEY (`tenant_agent`) REFERENCES `user` (`id`),
+  ADD CONSTRAINT `visit_ibfk_3` FOREIGN KEY (`reason`) REFERENCES `visit_reason` (`id`),
+  ADD CONSTRAINT `visit_ibfk_4` FOREIGN KEY (`visitor_type`) REFERENCES `visitor_type` (`id`),
+  ADD CONSTRAINT `visit_ibfk_5` FOREIGN KEY (`visitor_status`) REFERENCES `visitor_status` (`id`),
+  ADD CONSTRAINT `visit_ibfk_6` FOREIGN KEY (`host`) REFERENCES `user` (`id`),
+  ADD CONSTRAINT `visit_ibfk_7` FOREIGN KEY (`patient`) REFERENCES `patient` (`id`),
+  ADD CONSTRAINT `visit_ibfk_8` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`),
+  ADD CONSTRAINT `visit_ibfk_9` FOREIGN KEY (`tenant`) REFERENCES `user` (`id`);
+
+
 --
 -- Constraints for table `visitor`
 --
 ALTER TABLE `visitor`
-  ADD CONSTRAINT `visitor_ibfk_7` FOREIGN KEY (`company`) REFERENCES `company` (`id`),
   ADD CONSTRAINT `visitor_ibfk_1` FOREIGN KEY (`visitor_type`) REFERENCES `visitor_type` (`id`),
   ADD CONSTRAINT `visitor_ibfk_2` FOREIGN KEY (`visitor_status`) REFERENCES `visitor_status` (`id`),
   ADD CONSTRAINT `visitor_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`),
   ADD CONSTRAINT `visitor_ibfk_4` FOREIGN KEY (`tenant`) REFERENCES `user` (`id`),
   ADD CONSTRAINT `visitor_ibfk_5` FOREIGN KEY (`tenant_agent`) REFERENCES `user` (`id`),
-  ADD CONSTRAINT `visitor_ibfk_6` FOREIGN KEY (`role`) REFERENCES `roles` (`id`);
+  ADD CONSTRAINT `visitor_ibfk_6` FOREIGN KEY (`role`) REFERENCES `roles` (`id`),
+  ADD CONSTRAINT `visitor_ibfk_7` FOREIGN KEY (`company`) REFERENCES `company` (`id`);
 
 --
 -- Constraints for table `visitor_type`

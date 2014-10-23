@@ -33,8 +33,7 @@ class VisitReason extends CActiveRecord {
         return array(
             array('created_by, tenant, tenant_agent', 'length', 'max' => 20),
             array('reason', 'required'),
-            
-            array('reason', 'filter', 'filter'=>'trim'),
+            array('reason', 'filter', 'filter' => 'trim'),
             array('reason', 'unique'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
@@ -114,13 +113,41 @@ class VisitReason extends CActiveRecord {
             ),
         );
     }
-    
+
     public function findAllReason() {
 
         $criteria = new CDbCriteria;
         $criteria->select = 'id,reason';
 
         return VisitReason::model()->findAll($criteria);
+    }
+
+    public function GetAllReason() {
+        $aArray = array();
+        $visitReason = VisitReason::model()->findAll();
+        foreach ($visitReason as $index => $value) {
+            $aArray[] = array(
+                'id' => $value['id'],
+                'name' => $value['reason'],
+            );
+        }
+
+        return $aArray;
+    }
+    
+    public function checkIfReasonIsTaken($reason){
+        $Criteria = new CDbCriteria();
+        $Criteria->condition = "reason = '" . $reason . "' ";
+        $visitorReason = VisitReason::model()->findAll($Criteria);
+
+        $visitorReason = array_filter($visitorReason);
+        $visitorReasonCount = count($visitorReason);
+
+        if ($visitorReasonCount == 0) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
 }

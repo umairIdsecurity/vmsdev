@@ -4,9 +4,42 @@
         <input type="text" id="search-visitor" name="search-visitor" class="search-text"/> 
         <button class="visitor-findBtn" onclick="findVisitorRecord()" id="visitor-findBtn" style="display:none;" data-target="#findVisitorRecordModal" data-toggle="modal">Find Record</button>
         <button class="visitor-findBtn" id="dummy-visitor-findBtn">Find Record</button>
-
-        <div class="errorMessage" id="searchTextErrorMessage" style="display:none;">Search Name cannot be blank.</div>
+        <div class="errorMessage" id="searchTextErrorMessage" style="display:none;"></div>
     </div>
+
+    <div id="searchVisitorTableDiv">
+        <h4>Search Results for : <span id='search'></span></h4>
+        <div id="visitor_fields_for_Search">
+            <label for="Visitor_visitor_type_search">Visitor Type</label><br>
+            <?php
+            echo CHtml::dropDownList('Visitor_visitor_type_search', 'visitor_type', VisitorType::$VISITOR_TYPE_LIST, array(
+                'onchange' => 'showHideHostPatientName(this)',
+            ));
+            ?>
+            <?php echo "<br>" . CHtml::error($model, 'visitor_type'); ?>
+
+            <label for="Visit_reason_search">Reason</label><br>
+
+            <select id="Visit_reason_search" name="Visitor[reason]" onchange="ifSelectedIsOtherShowAddReasonDiv(this)">
+                <option value='' selected>Select Reason</option>
+                <?php
+                $reason = VisitReason::model()->findAllReason();
+                foreach ($reason as $key => $value) {
+                    ?>
+                    <option value="<?php echo $value->id; ?>"><?php echo $value->reason; ?></option>
+                    <?php
+                }
+                ?>
+                <option value="Other">Other</option>
+            </select>
+            <div class="errorMessage visitorReason" id="search-visitor-reason-error">Reason cannot be blank.</div>
+        </div>
+        <div id="searchVisitorTable"></div>
+
+        <input type="button" class="visitor-backBtn btnBackTab2" id="btnBackTab2" value="Back"/>
+        <input type="button" id="clicktabB1"  value="Save and Continue"/>
+    </div>
+    <input type="text" id="selectedVisitorInSearchTable" value="0"></input>
     <?php
     $form = $this->beginWidget('CActiveForm', array(
         'id' => 'register-form',
@@ -15,36 +48,31 @@
         'enableClientValidation' => true,
         'clientOptions' => array(
             'validateOnSubmit' => true,
-            'afterValidate' => 'js:function(form,data,hasError){
-                        if(!hasError){
-                             checkEmailIfUnique();
-                             if($("#emailIsUnique").val() == 1){
-                             $.ajax({
-                                        "type":"POST",
-                                        "url":"' . CHtml::normalizeUrl(array("visitor/create")) . '",
-                                        "data":form.serialize(),
-                                        "success":function(data){$("#clicktabB").click();},
-                                        
-                                        });
-}
-                               } else{
-                            $("#clicktabA").click();    
-                            }
-                        }'
+            'afterValidate' => 'js:function(form, data, hasError){
+                                if (!hasError){
+                                    checkEmailIfUnique();
+                                    sendVisitorForm();
+                                }
+                                else {
+                                    $("#clicktabA").click();
+                                }
+                                }'
         ),
     ));
     ?>
-
-
     <?php echo $form->errorSummary($model); ?>
-    <input type="text" id="emailIsUnique"/>
+    <input type="hidden" id="emailIsUnique" value="0"/>
     <div class="visitor-title">Add New Visitor Record</div>
     <div>
         <table  id="addvisitor-table">
             <tr>
                 <td>
                     <?php echo $form->labelEx($model, 'visitor_type'); ?><br>
-                    <?php echo $form->dropDownList($model, 'visitor_type', VisitorType::$VISITOR_TYPE_LIST); ?>
+                    <?php
+                    echo $form->dropDownList($model, 'visitor_type', VisitorType::$VISITOR_TYPE_LIST, array(
+                        'onchange' => 'showHideHostPatientName(this)',
+                    ));
+                    ?>
                     <?php echo "<br>" . $form->error($model, 'visitor_type'); ?>
                 </td>
             </tr>
@@ -91,8 +119,10 @@
             <tr>
                 <td>
                     <label for="Visit_reason">Reason</label><br>
-                    <select id="Visit_reason" name="Visitor[reason]">
+
+                    <select id="Visit_reason" name="Visitor[reason]" onchange="ifSelectedIsOtherShowAddReasonDiv(this)">
                         <option value='' selected>Select Reason</option>
+                        <option value="Other">Other</option>
                         <?php
                         $reason = VisitReason::model()->findAllReason();
                         foreach ($reason as $key => $value) {
@@ -101,8 +131,9 @@
                             <?php
                         }
                         ?>
-                        <option value="Other">Other</option>
+
                     </select>
+                    <div class="errorMessage visitorReason" >Reason cannot be blank.</div>
                 </td>
                 <td id="visitorTenantRow"><?php echo $form->labelEx($model, 'tenant'); ?><br>
 
@@ -131,12 +162,34 @@
         </table>
 
     </div>
-    <input type="button" class="visitor-backBtn" id="btnBackTab2" value="Back"/>
+    <input type="button" class="visitor-backBtn btnBackTab2" id="btnBackTab2" value="Back"/>
     <input type="button" id="clicktabB" value="Save and Continue"/>
 
     <input type="submit" value="Save and Continue" name="yt0" id="submitFormVisitor" style="display:none;"/>
     <?php $this->endWidget(); ?>
-
+    
+    <?php
+    $form = $this->beginWidget('CActiveForm', array(
+        'id' => 'register-reason-form',
+        'action' => Yii::app()->createUrl('/visitReason/create&register=1'),
+        'htmlOptions' => array("name" => "register-reason-form"),
+        'enableAjaxValidation' => false,
+        'enableClientValidation' => true,
+        'clientOptions' => array(
+            'validateOnSubmit' => true,
+            'afterValidate' => 'js:function(form, data, hasError){
+                                if (!hasError){                               
+                           }
+                        }'
+        ),
+    ));
+    ?>
+    <input type="text" id="VisitReason_reason" name="VisitReason[reason]" placeholder="Add Reason"/> 
+    <img src="<?php echo Yii::app()->request->baseUrl . '/images/submit-green.png'?>" id="addReasonBtn" onclick="checkReasonIfUnique()"/>
+    <div class="errorMessage" id="visitReasonErrorMessage" style="display:none;">Reason cannot be blank.</div>
+    
+  
+    <?php $this->endWidget(); ?>
 </div>
 
 <script>
@@ -149,34 +202,141 @@
                 $("#visitor-findBtn").click();
             } else {
                 $("#searchTextErrorMessage").show();
+                $("#searchTextErrorMessage").html("Search Name cannot be blank.");
             }
         });
     });
 
     function findVisitorRecord() {
+        $("#visitor_fields_for_Search").hide();
+        $("#selectedVisitorInSearchTable").val("");
+        $("#searchVisitorTableDiv h4").html("Search Results for : " + $("#search-visitor").val());
+        $("#searchVisitorTableDiv").show();
+        $("#register-form").hide();
         //append searched text in modal
         var searchText = $("#search-visitor").val();
-        var span = document.getElementById('search');
-        while (span.firstChild) {
-            span.removeChild(span.firstChild);
-        }
-        span.appendChild(document.createTextNode(searchText));
 
         //change modal url to pass user searched text
         var url = 'index.php?r=visitor/findvisitor&id=' + searchText;
-        $(".modal-body").html('<iframe width="100%" height="400px" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
+        $("#searchVisitorTable").html('<iframe id="findVisitorTableIframe" onLoad="autoResize();" width="100%" height="100%" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
+    }
+
+    function autoResize() {
+        var newheight;
+
+        if (document.getElementById) {
+            newheight = document.getElementById('findVisitorTableIframe').contentWindow.document.body.scrollHeight;
+        }
+        document.getElementById('findVisitorTableIframe').height = (newheight - 60) + "px";
+    }
+
+    function addReasonInDropdown() {
+        $.ajax({
+            type: 'POST',
+            url: '<?php echo Yii::app()->createUrl('visitReason/GetAllReason'); ?>',
+            dataType: 'json',
+            success: function(r) {
+                $('#Visit_reason option[value!="Other"]').remove();
+                $('#Visit_reason_search option[value!="Other"]').remove();
+
+                $.each(r.data, function(index, value) {
+                    $('#Visit_reason').append('<option value="' + value.id + '">' + value.name + '</option>');
+                    $('#Visit_reason_search').append('<option value="' + value.id + '">' + value.name + '</option>');
+
+                    var textToFind = $("#VisitReason_reason").val();
+
+                    var dd = document.getElementById('Visit_reason');
+                    for (var i = 0; i < dd.options.length; i++) {
+                        if (dd.options[i].text === textToFind) {
+                            dd.selectedIndex = i;
+                            break;
+                        }
+                    }
+                    $("#Visit_reason_search").val($("#Visit_reason").val());
+                    $("#register-reason-form").hide();
+                    $("#Visit_reason").show();
+                });
+
+            }
+        });
+    }
+
+    function ifSelectedIsOtherShowAddReasonDiv(reason) {
+        if (reason.value == 'Other') {
+            $("#register-reason-form").show();
+          //  $("#Visit_reason").hide();
+            
+        } else {
+            $("#register-reason-form").hide();
+           // $("#Visit_reason").show();
+        }
+
+        $("#Visit_reason").val(reason.value);
+        $("#Visit_reason_search").val(reason.value);
+    }
+
+    function sendVisitorForm() {
+        if ($("#Visit_reason").val() == '' || $("#Visit_reason").val() == 'Other') {
+            $(".visitorReason").show();
+        } else {
+            $(".visitorReason").hide();
+            if ($("#emailIsUnique").val() == 1) {
+
+                var form = $("#register-form").serialize();
+                $.ajax({
+                    type: "POST",
+                    url: "<?php echo CHtml::normalizeUrl(array("visitor/create")); ?>",
+                    data: form,
+                    success: function(data) {
+                        $("#clicktabB").click();
+                        $("#clicktabB").show();
+                        $("#submitFormVisitor").hide();
+                        $("#clicktabC").hide();
+                        if ($("#selectedHostInSearchTable").val() != 0) { //if host is from search
+                            $("#visitReasonFormField").val($("#Visit_reason").val());
+                            $("#Visit_patient").val($("#hostId").val());
+                            $("#Visit_host").val($("#hostId").val());
+
+
+                            // populateVisitFormFields();
+                            if ($("#selectedVisitorInSearchTable").val() == 0) {
+                                $.when(getLastVisitorId()).then(populateVisitFormFields());
+                            }
+                        } else {
+
+                            if ($("#Visitor_visitor_type").val() == 1) { //if patient
+                                $("#submitFormPatientName").click();
+                                $("#submitFormPatientName").show();
+                                $("#dummy-submitFormPatientName").hide();
+
+                            } else {
+                                $("#submitFormUser").click();
+                                $("#submitFormUser").show();
+                            }
+
+                            getLastVisitorId();
+                        }
+
+
+                    },
+                });
+            }
+        }
+    }
+    
+    function sendReasonForm() {
+        
+        var reasonForm = $("#register-reason-form").serialize();
+        $.ajax({
+            type: "POST",
+            url: "<?php echo CHtml::normalizeUrl(array("visitReason/create&register=1")); ?>",
+            data: reasonForm,
+            success: function(data) {
+                addReasonInDropdown();
+            },
+        });
+
     }
 </script>
 
-<?php $this->beginWidget('bootstrap.widgets.TbModal', array('id' => 'findVisitorRecordModal')); ?>
-
-<div class="modal-header">
-    <a class="close" data-dismiss="modal" id="dismissModal">&times;</a>
-    <h4>Search Results for : <span id='search'></span></h4>
-</div>
-
-<div class="modal-body">
-
-</div>
-
-<?php $this->endWidget(); ?>
+<input type="text" id="visitorId" placeholder="visitor id"/>

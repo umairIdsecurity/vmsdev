@@ -30,7 +30,7 @@ class VisitorController extends Controller {
                 'expression' => 'Yii::app()->controller->checkIfUserCanAccess("superadmin")',
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('CheckEmailIfUnique','GetVisitorDetails', 'FindVisitor', 'GetTenantAgentWithSameTenant', 'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent'),
+                'actions' => array('GetIdOfUser','GetHostDetails','GetPatientDetails', 'CheckEmailIfUnique', 'GetVisitorDetails', 'FindVisitor', 'FindHost', 'GetTenantAgentWithSameTenant', 'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -64,19 +64,25 @@ class VisitorController extends Controller {
         $session = new CHttpSession;
         $model = new Visitor;
         $userModel = new User();
-        
+        $patientModel = new Patient();
+        $reasonModel = new VisitReason();
+        $visitModel = new Visit();
+
         $visitorService = new VisitorServiceImpl();
 
         if (isset($_POST['Visitor'])) {
             $model->attributes = $_POST['Visitor'];
-            if ($visitorService->save($model, $_POST['Visitor']['reason'], $session['id'])) {
-                // $this->redirect(array('admin'));
+           
+            if ($visitorService->save($model, $_POST['Visitor']['reason'], $session['id'])) { 
             }
         }
 
         $this->render('create', array(
             'model' => $model,
             'userModel' => $userModel,
+            'patientModel' => $patientModel,
+            'reasonModel' => $reasonModel,
+            'visitModel' => $visitModel,
                 ), false, true);
     }
 
@@ -208,8 +214,38 @@ class VisitorController extends Controller {
                 ), false, true);
     }
 
+    public function actionFindHost($id) {
+        $this->layout = '//layouts/column1';
+        $model = new User('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['User']))
+            $model->attributes = $_GET['User'];
+
+        $this->render('findHost', array(
+            'model' => $model,
+                ), false, true);
+    }
+
     public function actionGetVisitorDetails($id) {
         $resultMessage['data'] = Visitor::model()->findAllByPk($id);
+        echo CJavaScript::jsonEncode($resultMessage);
+        Yii::app()->end();
+    }
+
+    public function actionGetHostDetails($id) {
+        $resultMessage['data'] = User::model()->findAllByPk($id);
+        echo CJavaScript::jsonEncode($resultMessage);
+        Yii::app()->end();
+    }
+    
+    public function actionGetPatientDetails($id) {
+        $resultMessage['data'] = Patient::model()->findAllByPk($id);
+        echo CJavaScript::jsonEncode($resultMessage);
+        Yii::app()->end();
+    }
+    
+    public function actionGetIdOfUser($id) {
+        $resultMessage['data'] = Visitor::model()->getIdOfUser($id);
         echo CJavaScript::jsonEncode($resultMessage);
         Yii::app()->end();
     }
@@ -217,9 +253,10 @@ class VisitorController extends Controller {
     public function actionCheckEmailIfUnique($id) {
         if (Visitor::model()->checkIfEmailAddressIsTaken($id)) {
             echo "1";
-        }else{
+        } else {
             echo "0";
-        };
+        }
     }
+    
 
 }

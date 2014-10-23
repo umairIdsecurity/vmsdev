@@ -247,5 +247,20 @@ class Visitor extends CActiveRecord {
             return true;
         }
     }
+    
+    public function getIdOfUser($email){
+        $aArray = array();
+
+        $Criteria = new CDbCriteria();
+        $Criteria->condition = "email = '$email'";
+        $visitorId = Visitor::model()->findAll($Criteria);
+
+        foreach ($visitorId as $index => $value) {
+            $aArray[] = array(
+                'id' => $value['id'],
+            );
+        }
+        return $aArray;
+    }
 
 }

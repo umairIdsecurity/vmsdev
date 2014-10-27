@@ -135,8 +135,6 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
     function addReason($reason) {
         $this->select("id=Visit_reason", "label=Other");
         $this->type("id=VisitReason_reason", $reason);
-        $this->click("id=addReasonBtn");
-        sleep(1);
     }
 
     function addHost($host_name) {
@@ -149,15 +147,13 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
         $this->select("id=User_tenant", "label=Test admin");
         sleep(1);
         $this->select("id=User_tenant_agent", "label=Test agentadmin");
-        $this->click("id=clicktabC");
     }
 
     function addPatient($patient_name) {
         $this->type("id=Patient_name", $patient_name);
     }
 
-    function verifyVisitorInTable($visitor_name, $visitor_type) {
-        $this->open("/index.php?r=visitor/admin");
+    function verifyVisitorInTable($visitor_name) {
         $this->type("name=Visitor[first_name]", "Test");
         $this->type("name=Visitor[last_name]", $visitor_name);
         $this->type("name=Visitor[email]", "test" . $visitor_name . "@test.com");

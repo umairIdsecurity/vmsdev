@@ -20,7 +20,7 @@
 
             <label for="Visit_reason_search">Reason</label><br>
 
-            <select id="Visit_reason_search" name="Visitor[reason]" onchange="ifSelectedIsOtherShowAddReasonDiv(this)">
+            <select id="Visit_reason_search" name="Visitor[reason]" onchange="ifSelectedIsOtherShowAddReasonDivSearch(this)">
                 <option value='' selected>Select Reason</option>
                 <?php
                 $reason = VisitReason::model()->findAllReason();
@@ -34,10 +34,33 @@
             </select>
             <div class="errorMessage visitorReason" id="search-visitor-reason-error">Reason cannot be blank.</div>
         </div>
-        <div id="searchVisitorTable"></div>
+        <?php
+        $form = $this->beginWidget('CActiveForm', array(
+            'id' => 'register-reason-form-search',
+            'action' => Yii::app()->createUrl('/visitReason/create&register=1'),
+            'htmlOptions' => array("name" => "register-reason-form"),
+            'enableAjaxValidation' => false,
+            'enableClientValidation' => true,
+            'clientOptions' => array(
+                'validateOnSubmit' => true,
+                'afterValidate' => 'js:function(form, data, hasError){
+                                if (!hasError){                               
+                           }
+                        }'
+            ),
+        ));
+        ?>
+        <input type="text" id="VisitReason_reason_search" name="VisitReason[reason]" placeholder="Add Reason"/> 
+        <div class="errorMessage" id="visitReasonErrorMessageSearch" style="display:none;">Reason cannot be blank.</div>
 
-        <input type="button" class="visitor-backBtn btnBackTab2" id="btnBackTab2" value="Back"/>
-        <input type="button" id="clicktabB1"  value="Save and Continue"/>
+
+        <?php $this->endWidget(); ?>
+
+        <div id="searchVisitorTable"></div>
+        <div class="register-a-visitor-buttons-div">
+            <input type="button" class="visitor-backBtn btnBackTab2" id="btnBackTab2" value="Back"/>
+            <input type="button" id="clicktabB1"  value="Save and Continue"/>
+        </div>
     </div>
     <input type="text" id="selectedVisitorInSearchTable" value="0"></input>
     <?php
@@ -50,11 +73,15 @@
             'validateOnSubmit' => true,
             'afterValidate' => 'js:function(form, data, hasError){
                                 if (!hasError){
+                                if ($("#Visit_reason").val() == "" || ($("#Visit_reason").val() == "Other" &&  $("#VisitReason_reason").val() == "")) {                                  
+                                    $(".visitorReason").show();
+                                } else if ($("#Visit_reason").val() == "Other" &&  $("#VisitReason_reason").val() != "")
+                                { 
+                                    checkReasonIfUnique();
+                                } else {
+                                    $(".visitorReason").hide();
                                     checkEmailIfUnique();
-                                    sendVisitorForm();
-                                }
-                                else {
-                                    $("#clicktabA").click();
+                                    }
                                 }
                                 }'
         ),
@@ -162,12 +189,14 @@
         </table>
 
     </div>
-    <input type="button" class="visitor-backBtn btnBackTab2" id="btnBackTab2" value="Back"/>
-    <input type="button" id="clicktabB" value="Save and Continue"/>
+    <div class="register-a-visitor-buttons-div">
+        <input type="button" class="visitor-backBtn btnBackTab2" id="btnBackTab2" value="Back"/>
+        <input type="button" id="clicktabB" value="Save and Continue" style="display:none;"/>
 
-    <input type="submit" value="Save and Continue" name="yt0" id="submitFormVisitor" style="display:none;"/>
+        <input type="submit" value="Save and Continue" name="yt0" id="submitFormVisitor" />
+    </div>
     <?php $this->endWidget(); ?>
-    
+
     <?php
     $form = $this->beginWidget('CActiveForm', array(
         'id' => 'register-reason-form',
@@ -185,10 +214,9 @@
     ));
     ?>
     <input type="text" id="VisitReason_reason" name="VisitReason[reason]" placeholder="Add Reason"/> 
-    <img src="<?php echo Yii::app()->request->baseUrl . '/images/submit-green.png'?>" id="addReasonBtn" onclick="checkReasonIfUnique()"/>
     <div class="errorMessage" id="visitReasonErrorMessage" style="display:none;">Reason cannot be blank.</div>
-    
-  
+
+
     <?php $this->endWidget(); ?>
 </div>
 
@@ -196,6 +224,10 @@
     $(document).ready(function() {
         $("#dummy-visitor-findBtn").click(function(e) {
             e.preventDefault();
+            $("#Visit_reason_search").val("");
+            $("#register-reason-form-search").hide();
+            $("#register-reason-form").hide();
+            
             var searchText = $("#search-visitor").val();
             if (searchText != '') {
                 $("#searchTextErrorMessage").hide();
@@ -243,7 +275,12 @@
                     $('#Visit_reason').append('<option value="' + value.id + '">' + value.name + '</option>');
                     $('#Visit_reason_search').append('<option value="' + value.id + '">' + value.name + '</option>');
 
-                    var textToFind = $("#VisitReason_reason").val();
+                    if ($("#Visit_reason_search").val() == 'Other' && $("#selectedVisitorInSearchTable").val() != 0) {
+                        var textToFind = $("#VisitReason_reason_search").val();
+                    } else
+                    {
+                        var textToFind = $("#VisitReason_reason").val();
+                    }
 
                     var dd = document.getElementById('Visit_reason');
                     for (var i = 0; i < dd.options.length; i++) {
@@ -256,7 +293,33 @@
                     $("#register-reason-form").hide();
                     $("#Visit_reason").show();
                 });
-
+                /*if visitor is not from search pass formvisitor
+                 * else if visitor is from search donot pass visitor 
+                 * ---if not from search determine right away if host is from search or not 
+                 * if from search set patient adn host visit field to hostid
+                 * else if not from search pass patient form if patient, host form if corporate
+                 * */
+                $("#visitReasonFormField").val($("#Visit_reason_search").val());
+                if ($("#selectedVisitorInSearchTable").val() == '0') { //if visitor is not from search
+                    sendVisitorForm();
+                  //  alert("visitor is not from search");
+                } else if ($("#selectedVisitorInSearchTable").val() != '0') { //if visitor is from search
+                            //  alert("visitor from search");
+                    if ($("#selectedHostInSearchTable").val() != 0) { //if host is from search
+                        $("#visitReasonFormField").val($("#Visit_reason_search").val());
+                        $("#Visit_patient").val($("#hostId").val());
+                        $("#Visit_host").val($("#hostId").val());
+                      //  alert("host from search");
+                        populateVisitFormFields();
+                    } else {
+                      //  alert("add host");
+                        if ($("#Visitor_visitor_type").val() == 1) { //if patient
+                            sendPatientForm();
+                        } else {
+                            sendHostForm();
+                        }
+                    }
+                }
             }
         });
     }
@@ -264,11 +327,26 @@
     function ifSelectedIsOtherShowAddReasonDiv(reason) {
         if (reason.value == 'Other') {
             $("#register-reason-form").show();
-          //  $("#Visit_reason").hide();
-            
+            //  $("#Visit_reason").hide();
+
         } else {
             $("#register-reason-form").hide();
-           // $("#Visit_reason").show();
+            // $("#Visit_reason").show();
+        }
+
+        $("#Visit_reason").val(reason.value);
+        $("#Visit_reason_search").val(reason.value);
+    }
+
+    function ifSelectedIsOtherShowAddReasonDivSearch(reason) {
+        $("#VisitReason_reason_search").val("");
+        if (reason.value == 'Other') {
+            $("#register-reason-form-search").show();
+            //  $("#Visit_reason").hide();
+
+        } else {
+            $("#register-reason-form-search").hide();
+            // $("#Visit_reason").show();
         }
 
         $("#Visit_reason").val(reason.value);
@@ -276,66 +354,62 @@
     }
 
     function sendVisitorForm() {
-        if ($("#Visit_reason").val() == '' || $("#Visit_reason").val() == 'Other') {
-            $(".visitorReason").show();
-        } else {
-            $(".visitorReason").hide();
-            if ($("#emailIsUnique").val() == 1) {
 
-                var form = $("#register-form").serialize();
-                $.ajax({
-                    type: "POST",
-                    url: "<?php echo CHtml::normalizeUrl(array("visitor/create")); ?>",
-                    data: form,
-                    success: function(data) {
-                        $("#clicktabB").click();
-                        $("#clicktabB").show();
-                        $("#submitFormVisitor").hide();
-                        $("#clicktabC").hide();
-                        if ($("#selectedHostInSearchTable").val() != 0) { //if host is from search
-                            $("#visitReasonFormField").val($("#Visit_reason").val());
-                            $("#Visit_patient").val($("#hostId").val());
-                            $("#Visit_host").val($("#hostId").val());
-
-
-                            // populateVisitFormFields();
-                            if ($("#selectedVisitorInSearchTable").val() == 0) {
-                                $.when(getLastVisitorId()).then(populateVisitFormFields());
-                            }
-                        } else {
-
-                            if ($("#Visitor_visitor_type").val() == 1) { //if patient
-                                $("#submitFormPatientName").click();
-                                $("#submitFormPatientName").show();
-                                $("#dummy-submitFormPatientName").hide();
-
-                            } else {
-                                $("#submitFormUser").click();
-                                $("#submitFormUser").show();
-                            }
-
-                            getLastVisitorId();
-                        }
-
-
-                    },
-                });
-            }
-        }
-    }
-    
-    function sendReasonForm() {
-        
-        var reasonForm = $("#register-reason-form").serialize();
+        var form = $("#register-form").serialize();
         $.ajax({
             type: "POST",
-            url: "<?php echo CHtml::normalizeUrl(array("visitReason/create&register=1")); ?>",
-            data: reasonForm,
+            url: "<?php echo CHtml::normalizeUrl(array("visitor/create")); ?>",
+            data: form,
             success: function(data) {
-                addReasonInDropdown();
+
+                if ($("#selectedHostInSearchTable").val() != 0) { //if host is from search
+                    $("#visitReasonFormField").val($("#Visit_reason").val());
+                    $("#Visit_patient").val($("#hostId").val());
+                    $("#Visit_host").val($("#hostId").val());
+
+
+                    // if visitor is not from search;
+                    if ($("#selectedVisitorInSearchTable").val() == 0) {
+                        $.when(getLastVisitorId()).then(populateVisitFormFields());
+                    }
+                } else {
+                    getLastVisitorId();
+
+                    if ($("#Visitor_visitor_type").val() == 1) { //if patient
+                        sendPatientForm();
+                    } else {
+                        sendHostForm();
+                    }
+                }
             },
         });
+    }
 
+
+
+    function sendReasonForm() {
+        if ($("#Visit_reason").val() == 'Other' || $("#Visit_reason_search").val() == 'Other')
+        {
+            if ($("#selectedVisitorInSearchTable").val() != '0') {
+                var reasonForm = $("#register-reason-form-search").serialize();
+               // alert("searchreason");
+            } else {
+                var reasonForm = $("#register-reason-form").serialize();
+            //    alert("add visitor reason");
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "<?php echo CHtml::normalizeUrl(array("visitReason/create&register=1")); ?>",
+                data: reasonForm,
+                success: function(data) {
+                    addReasonInDropdown();
+                },
+            });
+        }
+        else {
+            sendVisitorForm();
+        }
     }
 </script>
 

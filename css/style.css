@@ -398,8 +398,8 @@ nav.navigation ul li:last-child.active
 }
 
 #logo {
-    width:200;
-    height:70;
+    width:200px;
+    height:70px;
 }
 
 .sidebarTitle{
@@ -407,7 +407,7 @@ nav.navigation ul li:last-child.active
     font-size:13px;
     font-family:inherit;
     text-align:center !important;
-    width:100%; !important;
+    width:100% !important;
     background-color:#B2B2B2;
     border-top-left-radius:8px;
     border-top-right-radius:8px;
@@ -573,27 +573,66 @@ dt.tabs dt{
 }
 #searchVisitorTableDiv, #visitor_fields_for_Search, 
 #search-visitor-reason-error, #searchHostTableDiv, 
-#register-host-form, #register-reason-form, .visitorReason, #submitFormPatientName
+#register-host-form, #register-reason-form, .visitorReason
 ,#Patient_name_error,
 #selectedVisitorInSearchTable,#visitorId,#selectedHostInSearchTable,#patientIsUnique, 
-#hostId, #hostEmailIsUnique,#register-visit-form,
+#hostId, #hostEmailIsUnique, #register-visit-form,
 #register-host-form #User_role, #register-host-form #User_user_type,
 #register-host-form #User_password,
 #register-host-form #User_repeat_password
 ,#currentRoleOfLoggedInUser,
-#currentCompanyOfLoggedInUser
+#currentCompanyOfLoggedInUser,
+#register-reason-form-search,
+#searchHostDiv
 {
     display: none;
 }
 
 #register-reason-form{
-   // margin-top: -117px;
+     margin-top: -80px;
 }
 
 #register-reason-form input[type="text"]{
-    width:210px;
+    margin-left: 3px;
+    width: 207px;
 }
 
 #addReasonBtn{
     cursor:pointer;
+    display:none;
 }
+
+#selectCardDiv input[type="radio"] {
+    //display:none !important; 
+}
+
+
+#selectCardDiv label ,#labelforsameday{
+    display:inline-block;
+    height: 117px;
+    color:white;
+    width: 100px;
+}
+
+#labelformultiday{
+    display:inline-block;
+    height: 117px;
+    color:white;
+    width: 100px;
+}
+
+.selectCardTypeTable tr td{
+
+    text-align:center;
+}
+.selectCardTypeTable{
+    width:50px;
+}
+.selectCardTypeTable img{
+   height:137px;
+}
+
+.register-a-visitor-buttons-div{
+    text-align:right;
+}
+

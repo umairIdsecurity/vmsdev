@@ -31,7 +31,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'header' => 'Action',
             'type' => 'raw',
-            'htmlOptions' => array('style' => 'text-align:center'),
+            'htmlOptions' => array('style' => 'text-align:center', 'class'=>'findVisitorButtonColumn'),
             'value' => function($data) {
         return CHtml::link('Select Visitor', '#', array(
                     'id' => $data['id'],

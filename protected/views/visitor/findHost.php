@@ -61,7 +61,7 @@ if ($visitor_type != VisitorType::PATIENT_VISITOR) {
             array(
                 'header' => 'Action',
                 'type' => 'raw',
-                'htmlOptions' => array('style' => 'text-align:center'),
+                'htmlOptions' => array('style' => 'text-align:center', 'class'=> 'findHostButtonColumn'),
                 'value' => function($data) {
             return CHtml::link('Select Patient', '#', array(
                         'id' => $data['id'],

@@ -94,12 +94,13 @@ class VisitorController extends Controller {
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
         $visitorService = new VisitorServiceImpl();
+        $session = new CHttpSession;
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['Visitor'])) {
             $model->attributes = $_POST['Visitor'];
-            if ($visitorService->save($model))
+            if ($visitorService->save($model,NULL,$session['id']))
                 $this->redirect(array('admin'));
         }
 
@@ -158,28 +159,6 @@ class VisitorController extends Controller {
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }
-    }
-
-    public function getDays() {
-        for ($i = 1; $i <= 31; $i++) {
-            $days["{$i}"] = "{$i}";
-        }
-        return $days;
-    }
-
-    public function getMonths() {
-        $monthNames = array('', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec');
-        for ($i = 1; $i <= 12; $i++) {
-            $months["{$i}"] = Yii::t('default', $monthNames[$i]);
-        }
-        return $months;
-    }
-
-    public function getYears() {
-        for ($i = date('Y'); $i >= 1900; $i--) {
-            $years["{$i}"] = "{$i}";
-        }
-        return $years;
     }
 
     public function actionGetTenantAgentWithSameTenant($id) {

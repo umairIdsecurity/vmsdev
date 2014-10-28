@@ -56,7 +56,7 @@ class Visit extends CActiveRecord
 			array('is_deleted', 'numerical', 'integerOnly'=>true),
 			array('reason,visitor_type,visitor,visitor_status', 'required'),
 			array('visitor,card, visitor_type, reason, visitor_status, host, patient, created_by, tenant, tenant_agent', 'length', 'max'=>20),
-			array('date_in, time_in, date_out, time_out, date_check_in, time_check_in, date_check_out, time_check_out,card_type', 'safe'),
+			array('visit_status,date_in, time_in, date_out, time_out, date_check_in, time_check_in, date_check_out, time_check_out,card_type', 'safe'),
                         array('patient, host,card,tenant,tenant_agent', 'default', 'setOnEmpty' => true, 'value' => null),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
@@ -111,6 +111,7 @@ class Visit extends CActiveRecord
 			'tenant' => 'Tenant',
 			'tenant_agent' => 'Tenant Agent',
 			'is_deleted' => 'Is Deleted',
+			'visit_status' => 'visit_status',
 		);
 	}
 
@@ -153,6 +154,7 @@ class Visit extends CActiveRecord
 		$criteria->compare('tenant',$this->tenant,true);
 		$criteria->compare('tenant_agent',$this->tenant_agent,true);
 		$criteria->compare('is_deleted',$this->is_deleted);
+		$criteria->compare('visit_status',$this->visit_status);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -169,4 +171,12 @@ class Visit extends CActiveRecord
 	{
 		return parent::model($className);
 	}
+        
+        public function behaviors() {
+        return array(
+            'softDelete' => array(
+                'class' => 'ext.soft_delete.SoftDeleteBehavior'
+            ),
+        );
+    }
 }

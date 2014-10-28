@@ -583,7 +583,8 @@ dt.tabs dt{
 ,#currentRoleOfLoggedInUser,
 #currentCompanyOfLoggedInUser,
 #register-reason-form-search,
-#searchHostDiv
+#searchHostDiv,
+#addreasonTable
 {
     display: none;
 }
@@ -636,21 +637,24 @@ dt.tabs dt{
     text-align:right;
 }
 
-}
+
 
 /*for visitor detail page*/
 #visitorDetailDiv{
-    width:100%;
+    padding:0px;margin-left:-30px;height:100%;width:106.59% !important;max-width:107%;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
 }
-#visitorDetailDiv tr th{
+#visitorDetailDiv .theadVisitorDetail td{
     font-size:12px;
     text-align:center;
     width:150px;
+    background-color: #F1F1F1;
 }
 
 #visitorDetailDiv, #visitorDetailDiv tr, #visitorDetailDiv td{
     border: 1px solid #E7E7E7;
-    border-collapse:separate !important;
+    border-collapse:collapse !important;
 }
 
 .detailsTable, .detailsTable tr, .detailsTable td{
@@ -659,7 +663,7 @@ dt.tabs dt{
 }
 
 .detailsTable{
-    width:200px;
+    width: 295px;
 }
 
 #visitorInformationCssMenu ul,
@@ -678,21 +682,21 @@ dt.tabs dt{
 }
 
 #visitorInformationCssMenu > ul > li > a {
-    font-size: 13.4px;
+    font-size: 12px;
     display: block;
     background: #64676e;
-    background: -moz-linear-gradient(#FBFBFB 0%, #FBFBFB 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #FBFBFB), color-stop(100%, #FBFBFB));
-    background: -webkit-linear-gradient(#FBFBFB 0%, #FBFBFB 100%);
-    background: linear-gradient(#FBFBFB 0%, #FBFBFB 100%);
+    background: -moz-linear-gradient(#F1F1F1 0%, #F1F1F1 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #F1F1F1), color-stop(100%, #F1F1F1));
+    background: -webkit-linear-gradient(#F1F1F1 0%, #F1F1F1 100%);
+    background: linear-gradient(#F1F1F1 0%, #F1F1F1 100%);
     color:#58585A;
     font-weight:bold;
-    padding:10px;
+    padding:8px;
 }
 
 #visitorInformationCssMenu .has-sub li {
     cursor:auto;
-    padding:10px !important;
+    padding:10px 10px 0 10px !important;
     color:#B2B2B2;
 }
 
@@ -701,6 +705,80 @@ dt.tabs dt{
     padding-top:15px;
 }
 
-#visitorInformationCssMenu table tr td{
+#visitorInformationCssMenu table tr td, #visitorInformationCssMenu table tr td label{
     vertical-align:middle !important;
+    font-size:12px;
 }
+
+#visitorInformationCssMenu table tr td input[type="text"]{
+    height:17px;font-size:12px;
+}
+#visitorInformationCssMenu table tr td select{
+    height:27px;
+    font-size:12px;
+}
+
+#visitorInformationCssMenu .errorMessage {
+    color:red;
+}
+
+#visitorInformationCssMenu > ul > li.has-sub > a:before {
+    content: "";
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    border: 5px solid transparent;
+    border-left: 5px solid #ffffff;
+    border-color: #4E5800 rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
+}
+
+/*visitor detail actions*/
+#actionsVisitDetails tr td, #visitorDetailDiv tr td{
+    vertical-align: top;
+}
+#actionsVisitDetails tr td .actionsLabel,
+#visitHistoryVisitDetailDiv span,
+.visitTitle,
+.visitHistory th,
+.theadVisitorDetail td{
+    font-size:12px;
+    color:#58585A;
+    font-weight: bold;
+}
+
+.theadVisitorDetail td{
+    font-size:13px;
+    padding:5px;
+}
+
+#actionsVisitDetails tr td,#actionsVisitDetails, #actionsVisitDetails tr{
+    border:1px solid white;
+}
+
+#visitHistoryVisitDetailDiv{ 
+    margin-left:-267px;
+    width:133%;   
+}
+
+#visitHistoryTableDiv{
+    border:1px solid #E7E7E7;
+    border-radius: 5px;
+    padding:15px;
+}
+
+.visitHistory th{
+    
+}
+
+.printCardBtn{
+    width:70% !important;font-size:11px;font-weight:bold;
+    background: -moz-linear-gradient(#7FB6DA 0%, #17629C 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #7FB6DA), color-stop(100%, #17629C));
+    background: -webkit-linear-gradient(#7FB6DA 0%, #17629C 100%);
+    background: linear-gradient(#7FB6DA 0%, #17629C 100%);
+    color: #FFFFFF;
+    padding:3px;
+    border:none;
+    border-radius:2px;
+}
+

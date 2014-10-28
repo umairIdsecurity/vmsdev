@@ -9,7 +9,7 @@ if (isset($_GET['viewFrom'])) {
 ?>
 <?php $this->beginContent('//layouts/main'); ?>
 <div class="span-19">
-    <div id="content" style="<?php if ($viewFrom !=''){ echo "border:1px solid white !important;"; } ?>">
+    <div id="content" style="<?php if ($viewFrom !='' || $this->action->id == 'detail'){ echo "border:1px solid white !important;"; } ?>">
         <?php echo $content; ?>
     </div><!-- content -->
 </div>

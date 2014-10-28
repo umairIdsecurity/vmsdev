@@ -30,7 +30,7 @@ class VisitorController extends Controller {
                 'expression' => 'Yii::app()->controller->checkIfUserCanAccess("superadmin")',
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('VisitorDetail', 'GetIdOfUser', 'GetHostDetails', 'GetPatientDetails', 'CheckEmailIfUnique', 'GetVisitorDetails', 'FindVisitor', 'FindHost', 'GetTenantAgentWithSameTenant', 'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent'),
+                'actions' => array('GetIdOfUser', 'GetHostDetails', 'GetPatientDetails', 'CheckEmailIfUnique', 'GetVisitorDetails', 'FindVisitor', 'FindHost', 'GetTenantAgentWithSameTenant', 'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -96,47 +96,32 @@ class VisitorController extends Controller {
         $model = $this->loadModel($id);
         $visitorService = new VisitorServiceImpl();
         $session = new CHttpSession;
+        $view = 0;
+        if (isset($_GET['view'])) {
+            $view = 1;
+        }
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['Visitor'])) {
             $model->attributes = $_POST['Visitor'];
-            if ($visitorService->save($model,NULL,$session['id']))
-                $this->redirect(array('admin'));
+            if ($visitorService->save($model, NULL, $session['id'])) {
+                switch ($view){
+                    case "1":
+                        break;
+
+                    default:
+                       $this->redirect(array('admin'));
+                }
             }
         }
+
         $this->render('update', array(
             'model' => $model,
         ));
     }
 
     /* Visitor detail page */
-
-    public function actionVisitorDetail($id) {
-        $model = $this->loadModel($id);
-        $visitModel = Visit::model()->findByPk($model->id);
-        $reasonModel = VisitReason::model()->findByPk($id);
-        $userModel = User::model()->findByPk($id);
-        $patientModel = Patient::model()->findByPk($id);
-        
-        $visitorService = new VisitorServiceImpl();
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-
-        if (isset($_POST['Visitor'])) {
-            $model->attributes = $_POST['Visitor'];
-            if ($visitorService->save($model)) {
-                $this->redirect(array('admin'));
-            }
-        }
-
-        $this->render('visitordetail', array(
-            'model' => $model,
-//            'reasonModel' => $reasonModel,
-//            'userModel' => $userModel,
-//            'patientModel' => $patientModel,
-        ));
-    }
 
     /**
      * Deletes a particular model.

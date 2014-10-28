@@ -66,6 +66,12 @@
         <?php echo $form->textField($visitModel, 'patient', array('size' => 20, 'maxlength' => 20)); ?>
         <?php echo $form->error($visitModel, 'patient'); ?>
     </div>
+    
+    <div class="row">
+        <?php echo $form->labelEx($visitModel, 'card_type'); ?>
+        <?php echo $form->textField($visitModel, 'card_type'); ?>
+        <?php echo $form->error($visitModel, 'card_type'); ?>
+    </div>
 
     <div class="row buttons">
         <input type="submit" id="submitVisitForm" value="Add">
@@ -85,7 +91,7 @@
         $("#Visit_visitor_type").val($("#Visitor_visitor_type").val());
         $("#visitReasonFormField").val($("#Visit_reason").val());
         $("#Visit_visitor_status").val("1");
-        
+
         if ($("#Visitor_visitor_type").val() == 1) { //if type is patient
             $("#Visit_host").val("");
             $("#Visit_patient").val($("#hostId").val());
@@ -95,7 +101,7 @@
             $("#Visit_host").val($("#hostId").val());
             $("#submitVisitForm").click();
         }
-        
+
     }
 
     function sendVisitForm() {
@@ -105,7 +111,7 @@
             url: "<?php echo CHtml::normalizeUrl(array("visit/create")); ?>",
             data: visitForm,
             success: function(data) {
-                window.location = "index.php?r=visitor/detail";
+                window.location = "index.php?r=visitor/admin";
             },
         });
     }

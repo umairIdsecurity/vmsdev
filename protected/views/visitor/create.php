@@ -6,12 +6,17 @@ $session = new CHttpSession;
 
 <h1>Register a Visitor</h1>
 <dl class="tabs three-up">
-    <dt id="selectCardA" style="display:none;">Select Card Type</dt>
-    <dd class="active" id="selectCard"><a href="#step1" id="selectCardB">Select Card Type</a></dd>
+    <dt id="selectCardA" style="display:none;border-top-left-radius: 5px ! important;">Select Card Type</dt>
+    <dd class="active" id="selectCard" style="border-top-left-radius: 5px ! important;">
+        <a href="#step1" id="selectCardB" style="border-top-left-radius: 5px ! important;">Select Card Type</a>
+    </dd>
     <dt id="findVisitorA">Find or Add New Visitor Record</dt>
     <dd style="display:none;" id="findVisitor"><a href="#step2" id="findVisitorB">Find or Add New Visitor Record</a></dd>
-    <dt id="findHostA">Find or Add Host</dt>
-    <dd style="display:none;" id="findHost"><a href="#step3" id="findHostB">Find or Add Host</a></dd>
+    
+    <dt id="findHostA" style="border-top-right-radius: 5px ! important;">Find or Add Host</dt>
+    <dd style="display:none;border-top-right-radius: 5px ! important;" id="findHost">
+        <a href="#step3" id="findHostB" style="border-top-right-radius: 5px ! important;">Find or Add Host</a>
+    </dd>
 </dl>
 
 
@@ -65,31 +70,36 @@ $session = new CHttpSession;
 
         $("#clicktabB").click(function(e) {
             e.preventDefault();
-            if ($("#Visit_reason").val() == '' || $("#Visit_reason").val() == 'Other') {
-                $(".visitorReason").show();
-            } else
-            {
-                $(".visitorReason").hide();
-                showHideTabs('findHostB', 'findHostA', 'findHost', 'findVisitorA', 'findVisitor', 'selectCardA', 'selectCard');
+            $(".visitorReason").hide();
+            if ($("#Visitor_visitor_type").val() == 1 || $("#Visitor_visitor_type_search").val() == 1) {
+                $("#findHostA").html("Add Patient Details");
+                $("#findHostB").html("Add Patient Details");
+            } else {
+                $("#findHostA").html("Find or Add Host");
+                $("#findHostB").html("Find or Add Host");
             }
+            showHideTabs('findHostB', 'findHostA', 'findHost', 'findVisitorA', 'findVisitor', 'selectCardA', 'selectCard');
+
         });
 
         $("#clicktabB1").click(function(e) {
             e.preventDefault();
+            $("#register-reason-form").hide();
             var visit_reason = $("#Visit_reason_search").val();
 
             if (($("#selectedVisitorInSearchTable").val() == '' && $("#search-visitor").val() != '') || $("#selectedVisitorInSearchTable").val() == '') {
                 $("#searchTextErrorMessage").html("Please select a visitor.");
                 $("#searchTextErrorMessage").show();
             }
-            else if (visit_reason == '' || visit_reason == 'undefined' || visit_reason == 'Other')
+            else if (visit_reason == '' || visit_reason == 'undefined' || (visit_reason == 'Other' && $("#VisitReason_reason_search").val() == ''))
             {
                 $("#search-visitor-reason-error").show();
             }
             else {
                 $("#searchTextErrorMessage").hide();
                 $("#search-visitor-reason-error").hide();
-                showHideTabs('findHostB', 'findHostA', 'findHost', 'findVisitorA', 'findVisitor', 'selectCardA', 'selectCard');
+                checkReasonIfUnique();
+                //showHideTabs('findHostB', 'findHostA', 'findHost', 'findVisitorA', 'findVisitor', 'selectCardA', 'selectCard');
             }
         });
 
@@ -101,14 +111,17 @@ $session = new CHttpSession;
                 $("#searchTextHostErrorMessage").html("Please select a host.");
                 $("#searchTextHostErrorMessage").show();
             } else if ($("#selectedVisitorInSearchTable").val() != '0') { // if visitor is from search
-                populateVisitFormFields();
+
+                if ($("#VisitReason_reason_search").val() != 0 && $("#Visit_reason_search").val() == 'Other') {
+                    sendReasonForm();
+                } else {
+                    populateVisitFormFields();
+                }
                 $("#searchTextHostErrorMessage").hide();
             }
             else {
                 $("#searchTextHostErrorMessage").hide();
-                $("#clicktabB").hide();
-                $("#submitFormVisitor").click();
-                $("#submitFormVisitor").show();
+                sendReasonForm();
             }
         });
 
@@ -181,6 +194,10 @@ $session = new CHttpSession;
                 $.each(r.data, function(index, value) {
                     $("#searchVisitorTableDiv h4").html("Selected Visitor Record : " + value.first_name + ' ' + value.last_name);
                 });
+                $('#findVisitorTableIframe').contents().find('.findVisitorButtonColumn a').removeClass('delete');
+                $('#findVisitorTableIframe').contents().find('.findVisitorButtonColumn a').html('Select Visitor');
+                $('#findVisitorTableIframe').contents().find('#' + id).addClass('delete');
+                $('#findVisitorTableIframe').contents().find('#' + id).html('Selected Visitor');
             }
         });
 
@@ -202,6 +219,11 @@ $session = new CHttpSession;
                         $("#searchHostTableDiv h4").html("Selected Host Record : " + value.first_name + " " + value.last_name);
 
                     });
+
+                    $('#findHostTableIframe').contents().find('.findHostButtonColumn a').removeClass('delete');
+                    $('#findHostTableIframe').contents().find('.findHostButtonColumn a').html('Select Host');
+                    $('#findHostTableIframe').contents().find('#' + id).addClass('delete');
+                    $('#findHostTableIframe').contents().find('#' + id).html('Selected Host');
                 }
             });
         } else {
@@ -237,8 +259,7 @@ $session = new CHttpSession;
                 } else {
                     $(".errorMessageEmail").hide();
                     $("#emailIsUnique").val("1");
-                    sendVisitorForm();
-                    getLastVisitorId();
+                    $("#clicktabB").click();
                 }
             }
         });
@@ -259,28 +280,15 @@ $session = new CHttpSession;
                 } else {
                     $(".errorMessageEmail1").hide();
                     $("#hostEmailIsUnique").val("1");
-                    sendHostForm();
-                }
-            }
-        });
-    }
-
-    function checkPatientIfUnique() {
-        var patientname = $("#Patient_name").val();
-        $.ajax({
-            type: 'POST',
-            url: '<?php echo Yii::app()->createUrl('patient/checkPatientIfUnique&id='); ?>' + patientname.trim(),
-            dataType: 'json',
-            data: patientname,
-            success: function(r) {
-
-                if (r == 1) {
-                    $("#patientIsUnique").val("0");
-                    $("#Patient_name_error").show();
-                } else {
-                    $("#Patient_name_error").hide();
-                    $("#patientIsUnique").val("1");
-                    sendPatientForm();
+                    //if visitor is not from search sendvisitorform
+                    if ($("#Visit_reason").val() == 'Other') {
+                        sendReasonForm();
+                    }
+                    else if ($("#selectedVisitorInSearchTable").val() == 0) {
+                        sendVisitorForm();
+                    } else {
+                        sendHostForm();
+                    }
                 }
             }
         });
@@ -416,12 +424,14 @@ $session = new CHttpSession;
     }
 
     function showHideHostPatientName(visitor_type) {
-        if (visitor_type.value == 1) {
+        if (visitor_type.value == 1) { //if patient 
             $("#register-host-patient-form").show();
             $("#register-host-form").hide();
+            $("#searchHostDiv").hide();
         } else {
             $("#register-host-patient-form").hide();
             $("#register-host-form").show();
+            $("#searchHostDiv").show();
         }
 
         $("#Visitor_visitor_type").val(visitor_type.value);
@@ -474,38 +484,71 @@ $session = new CHttpSession;
                 $.each(r.data, function(index, value) {
                     $("#hostId").val(value.id);
                     $("#Visit_patient").val(value.id);
+
                 });
+
 
             }
         });
     }
 
     function checkReasonIfUnique() {
+        if ($("#VisitReason_reason_search").val() != '') {
+            var visitReason = $("#VisitReason_reason_search").val();
+        } else
+        {
+            var visitReason = $("#VisitReason_reason").val();
+        }
 
-        var visitReason = $("#VisitReason_reason").val();
-        if (visitReason == '') {
-            $("#visitReasonErrorMessage").show();
-            $("#visitReasonErrorMessage").html("Reason cannot be blank.");
-        } else {
-            $.ajax({
-                type: 'POST',
-                url: '<?php echo Yii::app()->createUrl('visitReason/checkReasonIfUnique&id='); ?>' + visitReason.trim(),
-                dataType: 'json',
-                data: visitReason,
-                success: function(r) {
+        $.ajax({
+            type: 'POST',
+            url: '<?php echo Yii::app()->createUrl('visitReason/checkReasonIfUnique&id='); ?>' + visitReason.trim(),
+            dataType: 'json',
+            data: visitReason,
+            success: function(r) {
 
-                    if (r == 1) {
-                        $("#patientIsUnique").val("0");
+                if (r == 1) {
+                    if ($("#VisitReason_reason_search").val() != '') {
+                        $("#visitReasonErrorMessageSearch").show();
+                        $("#visitReasonErrorMessageSearch").html("Reason is already registered.");
+                    } else {
                         $("#visitReasonErrorMessage").show();
                         $("#visitReasonErrorMessage").html("Reason is already registered.");
+                    }
+
+                } else {
+                    $("#visitReasonErrorMessageSearch").hide();
+                    $("#visitReasonErrorMessage").hide();
+                    $(".visitorReason").hide();
+                    if ($("#selectedVisitorInSearchTable").val() == '0')
+                    {
+                        checkEmailIfUnique();
                     } else {
-                        $("#visitReasonErrorMessage").hide();
-                        $("#patientIsUnique").val("1");
-                        sendReasonForm();
+                        if ($("#Visitor_visitor_type").val() == 1 || $("#Visitor_visitor_type_search").val() == 1) {
+                            $("#findHostA").html("Add Patient Details");
+                            $("#findHostB").html("Add Patient Details");
+                        } else {
+                            $("#findHostA").html("Find or Add Host");
+                            $("#findHostB").html("Find or Add Host");
+                        }
+                        showHideTabs('findHostB', 'findHostA', 'findHost', 'findVisitorA', 'findVisitor', 'selectCardA', 'selectCard');
                     }
                 }
-            });
-        }
+            }
+        });
+    }
+
+    function showHideTabs(showThisId, hideThisId, showThisRow, hideOtherA, showOtherRowA, hideOtherB, showOtherRowB) {
+        $("#" + showThisId).click(); // findvisitorB dt
+        $("#" + showThisId).show(); //findvisitorB dt
+        $("#" + showThisRow).show(); //findVisitor dd
+        $("#" + hideThisId).hide(); //findvisitor a dt
+
+        $("#" + hideOtherA).show(); //selectcardtype dd
+        $("#" + showOtherRowA).hide(); //selectcardtype dd
+
+        $("#" + hideOtherB).show(); //selectcardtype dd
+        $("#" + showOtherRowB).hide(); //selectcardtype dd
     }
 
 </script>

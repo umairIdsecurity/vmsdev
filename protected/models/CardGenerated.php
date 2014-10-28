@@ -39,7 +39,7 @@ class CardGenerated extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('card_image_generated_filename, visitor_id, created_by, tenant, tenant_agent', 'length', 'max'=>20),
-			array('date_printed, date_expiration', 'safe'),
+			array('date_printed,date_expiration', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('id, date_printed, date_expiration, card_image_generated_filename, visitor_id, created_by, tenant, tenant_agent', 'safe', 'on'=>'search'),

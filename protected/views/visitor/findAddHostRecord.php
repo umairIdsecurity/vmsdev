@@ -1,23 +1,25 @@
 <div id="findAddHostRecordDiv" class="findAddHostRecordDiv form">
-    <div>
-        <label><b>Search Name:</b></label> 
-        <input type="text" id="search-host" name="search-host" class="search-text"/> 
-        <button class="host-findBtn" onclick="findHostRecord()" id="host-findBtn" style="display:none;" data-target="#findHostRecordModal" data-toggle="modal">Find Record</button>
-        <button class="host-findBtn" id="dummy-host-findBtn">Find Host</button>
+    <div id="searchHostDiv">
+        <div>
+            <label><b>Search Name:</b></label> 
+            <input type="text" id="search-host" name="search-host" class="search-text"/> 
+            <button class="host-findBtn" onclick="findHostRecord()" id="host-findBtn" style="display:none;" data-target="#findHostRecordModal" data-toggle="modal">Find Record</button>
+            <button class="host-findBtn" id="dummy-host-findBtn">Find Host</button>
 
-        <div class="errorMessage" id="searchTextHostErrorMessage" style="display:none;"></div>
+            <div class="errorMessage" id="searchTextHostErrorMessage" style="display:none;"></div>
+        </div>
+
+        <div id="searchHostTableDiv">
+            <h4>Search Results for : <span id='searchhostname'></span></h4>
+
+            <div id="searchHostTable"></div>
+            <div class="register-a-visitor-buttons-div">
+                <input type="button" class="visitor-backBtn btnBackTab3" id="btnBackTab3" value="Back"/>
+                <input type="button" id="clicktabB2"  value="Save and Continue"/>
+            </div>
+        </div>
+        <input type="text" id="selectedHostInSearchTable" value="0"/>
     </div>
-
-    <div id="searchHostTableDiv">
-        <h4>Search Results for : <span id='searchhostname'></span></h4>
-
-        <div id="searchHostTable"></div>
-
-        <input type="button" class="visitor-backBtn btnBackTab3" id="btnBackTab3" value="Back"/>
-        <input type="button" id="clicktabB2"  value="Save and Continue"/>
-    </div>
-    <input type="text" id="selectedHostInSearchTable" value="0"/>
-
     <?php
     $form = $this->beginWidget('CActiveForm', array(
         'id' => 'register-host-patient-form',
@@ -29,7 +31,8 @@
             'validateOnSubmit' => true,
             'afterValidate' => 'js:function(form,data,hasError){
                         if(!hasError){
-                            checkPatientIfUnique(); }
+                                sendReasonForm();
+                            }
                         }'
         ),
     ));
@@ -41,11 +44,11 @@
     <?php echo "<br>" . $form->error($patientModel, 'name'); ?>
     <div style="" id="Patient_name_error" class="errorMessage Patient_name_error" >Patient Name has already been taken.</div>
 
-    <input type="text" id="patientIsUnique" value="0"/>
-
-    <input type="button" class="visitor-backBtn btnBackTab3" id="btnBackTab3" value="Back"/>
-    <input type="button" id="dummy-submitFormPatientName" value="Save and Continue"/>
-    <input type="submit" value="Save and Continue" name="yt0" id="submitFormPatientName"/>
+    <input type="text" id="patientIsUnique" value="0"/><br>
+    <div class="register-a-visitor-buttons-div">
+        <input type="button" class="visitor-backBtn btnBackTab3" id="btnBackTab3" value="Back"/>
+        <input type="submit" value="Save and Continue" name="yt0" id="submitFormPatientName" style="display:inline-block;"/>
+    </div>
     <?php $this->endWidget(); ?>
 
     <?php
@@ -154,10 +157,12 @@
         </table>
 
     </div>
-    <input type="button" class="visitor-backBtn btnBackTab3" id="btnBackTab3" value="Back"/>
-    <input type="button" id="clicktabC" value="Save and Continue"/>
+    <div class="register-a-visitor-buttons-div">
+        <input type="button" class="visitor-backBtn btnBackTab3" id="btnBackTab3" value="Back"/>
+        <input type="button" id="clicktabC" value="Save and Continue" style="display:none;"/>
 
-    <input type="submit" value="Save and Continue" name="yt0" id="submitFormUser" style="display:none;"/>
+        <input type="submit" value="Save and Continue" name="yt0" id="submitFormUser" />
+    </div>
     <?php $this->endWidget(); ?>
 
 </div>
@@ -192,7 +197,7 @@
         //change modal url to pass user searched text
         var url = 'index.php?r=visitor/findhost&id=' + searchText + '&visitortype=' + $("#Visitor_visitor_type").val();
         $("#searchHostTable").html('<iframe id="findHostTableIframe" onLoad="autoResize2();" width="100%" height="100%" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
-    }   
+    }
 
     function autoResize2() {
         var newheight;

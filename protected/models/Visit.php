@@ -56,7 +56,7 @@ class Visit extends CActiveRecord
 			array('is_deleted', 'numerical', 'integerOnly'=>true),
 			array('reason,visitor_type,visitor,visitor_status', 'required'),
 			array('visitor,card, visitor_type, reason, visitor_status, host, patient, created_by, tenant, tenant_agent', 'length', 'max'=>20),
-			array('date_in, time_in, date_out, time_out, date_check_in, time_check_in, date_check_out, time_check_out', 'safe'),
+			array('date_in, time_in, date_out, time_out, date_check_in, time_check_in, date_check_out, time_check_out,card_type', 'safe'),
                         array('patient, host,card,tenant,tenant_agent', 'default', 'setOnEmpty' => true, 'value' => null),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
@@ -92,7 +92,8 @@ class Visit extends CActiveRecord
 		return array(
 			'id' => 'ID',
 			'visitor' => 'Visitor',
-			'card' => 'Card',
+			'card' => 'Card Generated',
+			'card_type' => 'Card Type',
 			'visitor_type' => 'Visitor Type',
 			'reason' => 'Reason',
 			'visitor_status' => 'Visitor Status',
@@ -134,6 +135,7 @@ class Visit extends CActiveRecord
 		$criteria->compare('id',$this->id,true);
 		$criteria->compare('visitor',$this->visitor,true);
 		$criteria->compare('card',$this->card,true);
+		$criteria->compare('card_type',$this->card_type,true);
 		$criteria->compare('visitor_type',$this->visitor_type,true);
 		$criteria->compare('reason',$this->reason,true);
 		$criteria->compare('visitor_status',$this->visitor_status,true);

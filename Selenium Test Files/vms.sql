@@ -75,6 +75,7 @@ CREATE TABLE IF NOT EXISTS `card_type` (
   `name` varchar(50) DEFAULT NULL,
   `max_time_validity` varchar(50) DEFAULT NULL,
   `max_entry_count_validity` int(10) DEFAULT NULL,
+  `card_icon_type` text,
   `card_background_image_path` bigint(20) DEFAULT NULL,
   `created_by` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -86,9 +87,9 @@ CREATE TABLE IF NOT EXISTS `card_type` (
 -- Dumping data for table `card_type`
 --
 
-INSERT INTO `card_type` (`id`, `name`, `max_time_validity`, `max_entry_count_validity`, `card_background_image_path`, `created_by`) VALUES
-(1, 'Same Day Visitor', 'same day', NULL, NULL, NULL),
-(2, 'Multiday Visitor', NULL, NULL, NULL, NULL);
+INSERT INTO `card_type` (`id`, `name`, `max_time_validity`, `max_entry_count_validity`, `card_icon_type`, `card_background_image_path`, `created_by`) VALUES
+(1, 'Same Day Visitor', 'same day', NULL, 'images/same_day_vic.png', NULL, NULL),
+(2, 'Multiday Visitor', NULL, NULL, 'images/multi_day_vic.png', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -320,6 +321,7 @@ CREATE TABLE IF NOT EXISTS `user_workstation` (
 CREATE TABLE IF NOT EXISTS `visit` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `visitor` bigint(20) DEFAULT NULL,
+  `card_type` bigint(20) DEFAULT NULL,
   `card` bigint(20) DEFAULT NULL,
   `visitor_type` bigint(20) DEFAULT NULL,
   `reason` bigint(20) DEFAULT NULL,
@@ -347,7 +349,8 @@ CREATE TABLE IF NOT EXISTS `visit` (
   KEY `patient` (`patient`),
   KEY `created_by` (`created_by`),
   KEY `tenant` (`tenant`),
-  KEY `tenant_agent` (`tenant_agent`)
+  KEY `tenant_agent` (`tenant_agent`),
+  KEY `card_type` (`card_type`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -574,6 +577,7 @@ ALTER TABLE `user_workstation`
 -- Constraints for table `visit`
 --
 ALTER TABLE `visit`
+  ADD CONSTRAINT `visit_ibfk_11` FOREIGN KEY (`card_type`) REFERENCES `card_type` (`id`),
   ADD CONSTRAINT `visit_ibfk_1` FOREIGN KEY (`card`) REFERENCES `card_generated` (`id`),
   ADD CONSTRAINT `visit_ibfk_10` FOREIGN KEY (`tenant_agent`) REFERENCES `user` (`id`),
   ADD CONSTRAINT `visit_ibfk_3` FOREIGN KEY (`reason`) REFERENCES `visit_reason` (`id`),

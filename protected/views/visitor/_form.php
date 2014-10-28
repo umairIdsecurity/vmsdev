@@ -31,12 +31,6 @@ $session = new CHttpSession;
                         </td>
                     </tr>
 
-                    <tr>
-                        <td><?php echo $form->labelEx($model, 'visitor_type'); ?></td>
-                        <td><?php echo $form->dropDownList($model, 'visitor_type', VisitorType::$VISITOR_TYPE_LIST); ?>
-                            <?php echo "<br>" . $form->error($model, 'visitor_type'); ?>
-                        </td>
-                    </tr>
 
                     <tr id="visitorTenantRow">
                         <td><?php echo $form->labelEx($model, 'tenant'); ?></td>
@@ -47,20 +41,42 @@ $session = new CHttpSession;
                                 $allAdminNames = User::model()->findAllAdmin();
                                 foreach ($allAdminNames as $key => $value) {
                                     ?>
-                                    <option value="<?php echo $value->tenant; ?>"><?php echo $value->first_name . " " . $value->last_name; ?></option>
-                                    <?php
-                                }
-                                ?>
+                                    <option value="<?php echo $value->tenant; ?>" <?php
+                                    if ($this->action->id == 'update') {
+                                        if ($model->tenant == $value->tenant) {
+                                            echo " selected ";
+                                        }
+                                    }
+                                    ?>
+
+                                            ><?php echo $value->first_name . " " . $value->last_name; ?></option>
+                                            <?php
+                                        }
+                                        ?>
                             </select><?php echo "<br>" . $form->error($model, 'tenant'); ?>
                         </td>
                     </tr>
                     <tr id="visitorTenantAgentRow">
                         <td><?php echo $form->labelEx($model, 'tenant_agent'); ?></td>
                         <td>
-                            <select id="Visitor_tenant_agent" name="Visitor[tenant_agent]" onchange="populateCompanyWithSameTenantAndTenantAgent()" >
-                                <?php
-                                echo "<option value='' selected>Select Tenant Agent</option>";
-                                ?>
+                            <select id="Visitor_tenant_agent" name="Visitor[tenant_agent]" >
+                            <?php
+                            if ($this->action->Id != 'create') {
+
+                                $allAgentAdminNames = User::model()->findAllTenantAgent($model->tenant);
+                                foreach ($allAgentAdminNames as $key => $value) {
+                                    ?>
+                                            <option <?php
+                                                if ($model->tenant_agent == $value['id']) {
+                                                    echo " selected "; //if logged in is agent admin and tenant agent of logged in user is = agentadminname
+                                                }
+                                                ?> value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
+                                            <?php
+                                        }
+                                    } else {
+                                        echo "<option value='' selected>Select Tenant Agent</option>";
+                                    }
+                                    ?>
                             </select><?php echo "<br>" . $form->error($model, 'tenant_agent'); ?>
                         </td>
                     </tr>
@@ -147,19 +163,8 @@ $session = new CHttpSession;
                             <?php echo "<br>" . $form->error($model, 'position'); ?>
                         </td>
                     </tr>
-                    <tr>
-                        <td><?php echo $form->labelEx($model, 'Staff ID'); ?></td>
-                        <td><?php echo $form->textField($model, 'staff_id', array('size' => 50, 'maxlength' => 50)); ?>
-                            <?php echo "<br>" . $form->error($model, 'staff_id'); ?></td>
-                    </tr>
-                    <tr>
-                        <td><?php echo $form->labelEx($model, 'date_of_birth'); ?></td>
-                        <td class="birthdayDropdown">
-                            <?php echo $form->dropDownList($model, 'birthdayDay', $this->getDays()); ?>
-                            <?php echo $form->dropDownList($model, 'birthdayMonth', $this->getMonths()); ?>
-                            <?php echo $form->dropDownList($model, 'birthdayYear', $this->getYears()); ?>
-                        </td>
-                    </tr>
+
+
                 </table>
             </td>
         </tr>

@@ -26,7 +26,7 @@ class PatientController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update','CheckPatientIfUnique','GetIdOfUser'),
+                'actions' => array('create', 'update', 'CheckPatientIfUnique', 'GetIdOfUser'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -74,8 +74,9 @@ class PatientController extends Controller {
 
         if (isset($_POST['Patient'])) {
             $model->attributes = $_POST['Patient'];
-            if ($model->save())
-                $this->redirect(array('view', 'id' => $model->id));
+            if ($model->save()) {
+                //$this->redirect(array('view', 'id' => $model->id));
+            }
         }
 
         $this->render('update', array(
@@ -128,8 +129,8 @@ class PatientController extends Controller {
             echo "0";
         }
     }
-    
-    public function actionGetIdOfUser($id){
+
+    public function actionGetIdOfUser($id) {
         $resultMessage['data'] = Patient::model()->getIdOfUser($id);
         echo CJavaScript::jsonEncode($resultMessage);
         Yii::app()->end();

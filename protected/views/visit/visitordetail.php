@@ -10,9 +10,16 @@ $session = new CHttpSession;
         <td>Actions</td>
     </tr>
     <tr>
-        <td style="padding:5px;">
-            <img src="<?php echo Yii::app()->request->baseUrl . '/images/cardprint.png'; ?>"/><br>
-            &nbsp <input type="button" class="printCardBtn" value="Print Card" />
+        <td style="padding:5px;text-align: center;">
+            <?php
+            $this->renderPartial('visitor-detail-card', array('model' => $model,
+                'visitorModel' => $visitorModel,
+                'hostModel' => $hostModel,
+                'patientModel' => $patientModel,
+                'cardTypeModel' => $cardTypeModel,
+            ));
+            ?>
+            
         </td>
         <td>
             <?php
@@ -20,6 +27,9 @@ $session = new CHttpSession;
                 'visitorModel' => $visitorModel,
                 'hostModel' => $hostModel,
                 'reasonModel' => $reasonModel,
+                'patientModel' => $patientModel,
+                'newPatient' => $newPatient,
+                'newHost' => $newHost,
             ));
             ?>
 
@@ -29,13 +39,13 @@ $session = new CHttpSession;
                 <tr>
                     <td></td>
                     <td style="padding:25px 10px 10px 20px;">
-                        <span class="actionsLabel">Log Visit</span>
+                        <span class="icons log-current actionsLabel">Log Visit</span>
                     </td>
                 </tr>
                 <tr>
                     <td></td>
                     <td style="padding:5px 10px 10px 20px;">
-                        <span class="actionsLabel">Preregister a Visit</span>
+                        <span class="icons pre-visits actionsLabel">Preregister a Visit</span>
                     </td>
                 </tr>
             </table>
@@ -93,7 +103,7 @@ $this->renderPartial('visithistory', array('model' => $model,
     }
 
     function checkHostEmailIfUnique() {
-        var email = $("#User_email").val();
+        var email = $(".update_user_email").val();
         if (email == '<?php echo $hostModel->email ?>') {
             sendHostForm();
         } else {
@@ -221,4 +231,108 @@ $this->renderPartial('visithistory', array('model' => $model,
             },
         });
     }
+
+    function sendVisitForm(formId) {
+        var visitForm = $("#" + formId).serialize();
+        $.ajax({
+            type: "POST",
+            url: "<?php echo CHtml::normalizeUrl(array("visit/update&id=" . $model->id)); ?>",
+            data: visitForm,
+            success: function(data) {
+
+            },
+        });
+    }
+
+    function sendPatientForm() {
+        var patientForm = $("#update-patient-form").serialize();
+        $.ajax({
+            type: "POST",
+            url: "<?php echo CHtml::normalizeUrl(array("patient/update&id=" . $model->patient)); ?>",
+            data: patientForm,
+            success: function(data) {
+            },
+        });
+    }
+
+    function sendNewPatientForm() {
+        var patientForm = $("#register-host-patient-form").serialize();
+        $.ajax({
+            type: "POST",
+            url: "<?php echo CHtml::normalizeUrl(array("patient/create")); ?>",
+            data: patientForm,
+            success: function(data) {
+                getLastPatientId();
+            },
+        });
+    }
+
+    function getLastPatientId() {
+        var id = $("#Patient_name").val();
+        $.ajax({
+            type: 'POST',
+            url: '<?php echo Yii::app()->createUrl('patient/GetIdOfUser&id='); ?>' + id.trim(),
+            dataType: 'json',
+            data: id,
+            success: function(r) {
+                $.each(r.data, function(index, value) {
+                    $("#Visit_patient").val(value.id);
+                });
+                sendVisitForm("update-visit-form");
+            }
+        });
+    }
+
+    function checkNewHostEmailIfUnique() {
+        var email = $(".New_user_email").val();
+
+        $.ajax({
+            type: 'POST',
+            url: '<?php echo Yii::app()->createUrl('user/checkEmailIfUnique&id='); ?>' + email.trim(),
+            dataType: 'json',
+            data: email,
+            success: function(r) {
+
+                if (r == 1) {
+                    $("#newHostEmailIsUnique").val("0");
+                    $(".errorMessageEmail2").show();
+                } else {
+                    $(".errorMessageEmail2").hide();
+                    $("#newHostEmailIsUnique").val("1");
+                    sendNewHostForm();
+                }
+            }
+        });
+
+    }
+    
+    function sendNewHostForm(){
+    var hostform = $("#register-newhost-form").serialize();
+        $.ajax({
+            type: "POST",
+            url: "<?php echo CHtml::normalizeUrl(array("user/create")); ?>",
+            data: hostform,
+            success: function(data) {
+                getLastHostId();
+            },
+        });
+    }
+    
+    function getLastHostId() {
+        var id = $(".New_user_email").val();
+        $.ajax({
+            type: 'POST',
+            url: '<?php echo Yii::app()->createUrl('user/GetIdOfUser&id='); ?>' + id.trim(),
+            dataType: 'json',
+            data: id,
+            success: function(r) {
+                $.each(r.data, function(index, value) {
+                    $("#Visit_host").val(value.id);
+                });
+                
+                sendVisitForm("update-visit-form");
+            }
+        });
+    }
+
 </script>

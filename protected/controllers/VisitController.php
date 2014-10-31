@@ -26,7 +26,7 @@ class VisitController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update','detail','admin','delete'),
+                'actions' => array('create', 'update', 'detail', 'admin', 'delete'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -82,8 +82,10 @@ class VisitController extends Controller {
 
         if (isset($_POST['Visit'])) {
             $model->attributes = $_POST['Visit'];
-            if ($model->save()){}
-               // $this->redirect(array('view', 'id' => $model->id));
+            if ($model->save()) {
+                
+            }
+            // $this->redirect(array('view', 'id' => $model->id));
         }
 
         $this->render('update', array(
@@ -152,16 +154,25 @@ class VisitController extends Controller {
             Yii::app()->end();
         }
     }
-    
+
     public function actionDetail($id) {
         $model = $this->loadModel($id);
         $visitorModel = Visitor::model()->findByPk($model->visitor);
         $reasonModel = VisitReason::model()->findByPk($model->reason);
-        if($model->visitor_type == VisitorType::PATIENT_VISITOR){
-            $hostModel = Patient::model()->findByPk($model->patient);
+        $patientModel = Patient::model()->findByPk($model->patient);
+        $cardTypeModel = CardType::model()->findByPk($model->card_type);
+        
+        $newPatient = new Patient;
+        $newHost = new User;
+                
+        if ($model->visitor_type == VisitorType::PATIENT_VISITOR) {
+            $host = 16;
         } else {
-            $hostModel = User::model()->findByPk($model->host);
+            $host = $model->host;
         }
+        $hostModel = User::model()->findByPk($host);
+
+        
 
         $visitorService = new VisitorServiceImpl();
         // Uncomment the following line if AJAX validation is needed
@@ -169,7 +180,9 @@ class VisitController extends Controller {
 
         if (isset($_POST['Visit'])) {
             $model->attributes = $_POST['Visit'];
-            if ($model->save()){}
+            if ($model->save()) {
+                
+            }
         }
 
         $this->render('visitordetail', array(
@@ -177,6 +190,10 @@ class VisitController extends Controller {
             'visitorModel' => $visitorModel,
             'reasonModel' => $reasonModel,
             'hostModel' => $hostModel,
+            'patientModel' => $patientModel,
+            'newPatient' => $newPatient,
+            'newHost' => $newHost,
+            'cardTypeModel' => $cardTypeModel,
         ));
     }
 

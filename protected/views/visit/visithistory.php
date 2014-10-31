@@ -25,7 +25,7 @@
                     'header' => 'Open by',
                     'name' => 'created_by',
                     'type' => 'html',
-                    'value' => 'User::model()->findByPk($data->created_by)->first_name',
+                    'value' => 'User::model()->findByPk($data->created_by)->first_name." ".User::model()->findByPk($data->created_by)->last_name',
                 ),
                 array(
                     'name' => 'date_in',
@@ -43,11 +43,7 @@
                     'header' => 'Closed by',
                     'name' => 'created_by',
                     'type' => 'html',
-                    'value' => 'User::model()->findByPk($data->created_by)->first_name',
-                ),
-                array(
-                    'header' => 'Negate Visit',
-                    'name' => 'created_by'
+                    'value' => 'User::model()->findByPk($data->created_by)->first_name." ".User::model()->findByPk($data->created_by)->last_name',
                 ),
                 array(
                     'header' => 'Actions',

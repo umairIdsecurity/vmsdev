@@ -32,7 +32,9 @@ div.form label{
 .login-area input[type="submit"], .grid-view td a, #btnSubmit, input[type="submit"],#updateBtn,#submitBtn,#addCompanyLink
 ,.yiiBtn, #clicktabA, #clicktabB,#clicktabB1,#clicktabB2,#submitFormVisitor,#clicktabC,
 .visitor-findBtn,.host-findBtn,.visitor-backBtn,
-#dummy-submitFormPatientName{
+#dummy-submitFormPatientName,
+#updateVisitHostFromSearch,
+.submitBtn{
     background: -webkit-gradient(linear, center top, center bottom, from(#A1DC33), to(#82BD12));
     background: -moz-linear-gradient(center top , #A1DC33, #82BD12) repeat scroll 0 0 rgba(0, 0, 0, 0);
     background: -webkit-gradient(linear, center top, center bottom, from(#A1DC33), to(#82BD12));
@@ -508,8 +510,6 @@ dt.tabs dt{
     /* Webkit (Chrome 11+) */ 
     background-image: -webkit-linear-gradient(top, #FFFFFF 0%, #4A4A4A 100%);
 
-    /* W3C Markup, IE10 Release Preview */ 
-    background-image: linear-gradient(to bottom, #FFFFFF 0%, #4A4A4A 100%);
 }
 
 .visitor-title{
@@ -527,7 +527,7 @@ dt.tabs dt{
     padding:3px;
 }
 
-.visitor-findBtn, ,.host-findBtn{
+.visitor-findBtn ,.host-findBtn{
     vertical-align: top;
     margin-top:2.5px;
 }
@@ -584,13 +584,14 @@ dt.tabs dt{
 #currentCompanyOfLoggedInUser,
 #register-reason-form-search,
 #searchHostDiv,
-#addreasonTable
+#addreasonTable,
+.errorMessageEmail2
 {
     display: none;
 }
 
 #register-reason-form{
-     margin-top: -80px;
+    margin-top: -80px;
 }
 
 #register-reason-form input[type="text"]{
@@ -630,7 +631,7 @@ dt.tabs dt{
     width:50px;
 }
 .selectCardTypeTable img{
-   height:137px;
+    height:137px;
 }
 
 .register-a-visitor-buttons-div{
@@ -650,11 +651,15 @@ dt.tabs dt{
     text-align:center;
     width:150px;
     background-color: #F1F1F1;
+    border: 1px solid #E7E7E7;
 }
 
-#visitorDetailDiv, #visitorDetailDiv tr, #visitorDetailDiv td{
-    border: 1px solid #E7E7E7;
+#visitorDetailDiv, #visitorDetailDiv td{
+
     border-collapse:collapse !important;
+}
+#visitorDetailDiv tr{
+    border: 1px solid #E7E7E7;
 }
 
 .detailsTable, .detailsTable tr, .detailsTable td{
@@ -696,7 +701,10 @@ dt.tabs dt{
 
 #visitorInformationCssMenu .has-sub li {
     cursor:auto;
-    padding:10px 10px 0 10px !important;
+    padding-bottom: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0;
+    padding-top: 10px !important;
     color:#B2B2B2;
 }
 
@@ -711,11 +719,14 @@ dt.tabs dt{
 }
 
 #visitorInformationCssMenu table tr td input[type="text"]{
-    height:17px;font-size:12px;
+    height:17px;
+    font-size:12px;
+    width:107%;
 }
 #visitorInformationCssMenu table tr td select{
     height:27px;
     font-size:12px;
+    width:115%;
 }
 
 #visitorInformationCssMenu .errorMessage {
@@ -767,7 +778,7 @@ dt.tabs dt{
 }
 
 .visitHistory th{
-    
+
 }
 
 .printCardBtn{
@@ -782,3 +793,41 @@ dt.tabs dt{
     border-radius:2px;
 }
 
+#cardDiv{
+    background: url('../images/cardprint-new.png') no-repeat center top;
+    height: 290px;
+}
+
+#cardDetailsTable tr td{
+    font-size:12px;
+    font-weight:800;
+    color:#58585A;
+    border:none !important;
+}
+
+#cardDetailsTable tr{
+    border:none !important;
+}
+
+/*icons*/
+.icons{
+    background: url('../images/icons.png') 0 0 no-repeat;
+}
+
+.log-current {
+    background-position: 0px -23px;
+    padding: 5px 0px 5px 30px;
+    display: block;
+    height: 15px;
+    text-decoration: none;
+    color: #000;
+}
+
+.pre-visits {
+background-position: 0px -375px;
+padding: 5px 0px 5px 30px;
+display: block;
+height: 16px;
+text-decoration: none;
+color: #000;
+}

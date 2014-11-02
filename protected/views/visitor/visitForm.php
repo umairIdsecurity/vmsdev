@@ -72,6 +72,11 @@
         <?php echo $form->textField($visitModel, 'card_type'); ?>
         <?php echo $form->error($visitModel, 'card_type'); ?>
     </div>
+    <div class="row">
+        <?php echo $form->labelEx($visitModel, 'visit_status'); ?>
+        <input name="Visit[visit_status]" id="Visit_visit_status" type="text" value="2">
+        <?php echo $form->error($visitModel, 'visit_status'); ?>
+    </div>
 
     <div class="row buttons">
         <input type="submit" id="submitVisitForm" value="Add">

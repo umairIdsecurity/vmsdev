@@ -67,7 +67,7 @@ class Issue25FunctionalTest extends BaseFunctionalTest {
         $this->click("id=submitFormVisitor");
         $this->addPatient("Patient Name 1");
         $this->click("id=submitFormPatientName");
-        sleep(2);
+        sleep(1);
         $this->clickAndWait("id=submitVisitForm");
         $this->verifyVisitorInTable('Visitor1');
     }
@@ -270,7 +270,7 @@ class Issue25FunctionalTest extends BaseFunctionalTest {
         $this->click("id=submitFormPatientName");
         sleep(1);
         $this->waitForElementPresent("id=Patient_name_em_");
-        $this->assertEquals("Patient name cannot be blank.", $this->getText("id=Patient_name_em_"));
+        $this->assertEquals("Patient Name cannot be blank.", $this->getText("id=Patient_name_em_"));
         $this->click("css=#register-host-patient-form > div.register-a-visitor-buttons-div > #btnBackTab3");
         $this->waitForElementPresent("id=Patient_name_em_");
         $this->type("id=search-visitor", "test");

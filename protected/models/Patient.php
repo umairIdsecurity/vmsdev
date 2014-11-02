@@ -47,7 +47,7 @@ class Patient extends CActiveRecord {
     public function attributeLabels() {
         return array(
             'id' => 'ID',
-            'name' => 'Patient name',
+            'name' => 'Patient Name',
         );
     }
 

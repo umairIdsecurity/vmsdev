@@ -117,8 +117,10 @@ $this->renderPartial('visithistory', array('model' => $model,
                     if (r == 1) {
                         $("#hostEmailIsUnique").val("0");
                         $(".errorMessageEmail1").show();
+                        $("#User_email_em_1a").show();
                     } else {
                         $(".errorMessageEmail1").hide();
+                        $("#User_email_em_1a").hide();
                         $("#hostEmailIsUnique").val("1");
                         sendHostForm();
                     }

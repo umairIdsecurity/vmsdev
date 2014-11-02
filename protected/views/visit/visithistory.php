@@ -5,9 +5,17 @@
         <span>Closed Visit</span>
 
         <?php
+        if($model->host !=''){
+            $host = $model->host;
+            $userHost = 'host';
+        } else {
+            $host= $model->patient;
+            $userHost = 'patient';
+        }
+        
         $model = new Visit;
         $criteria = new CDbCriteria;
-        $criteria->addCondition('visit_status=3');
+        $criteria->addCondition('visit_status=3 ');
 
         $model->unsetAttributes();
         $visitData = new CActiveDataProvider($model, array(

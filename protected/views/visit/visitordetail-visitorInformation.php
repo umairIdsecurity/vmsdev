@@ -416,7 +416,7 @@ $session = new CHttpSession;
                             <td>
                                 <?php echo $hostForm->textField($hostModel, 'email',array('class'=>'update_user_email')); ?>
                                 <?php echo "<br>" . $hostForm->error($hostModel, 'email'); ?>
-                                <div style="" id="User_email_em_" class="errorMessage errorMessageEmail1" >Email Address has already been taken.</div>
+                                <div style="display:none;" id="User_email_em_1a" class="errorMessage errorMessageEmail1" >Email Address has already been taken.</div>
                             </td>
                         </tr>
                         <tr>

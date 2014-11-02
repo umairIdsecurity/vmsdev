@@ -8,7 +8,13 @@
                 <td><?php echo $visitorModel->first_name.', '.$visitorModel->last_name ?></td>
             </tr>
             <tr>
-                <td><?php echo Company::model()->findByPk($visitorModel->company)->name;?></td>
+                <td><?php 
+                    if($visitorModel->company != ''){
+                        echo Company::model()->findByPk($visitorModel->company)->name;
+                    }   else {
+                        echo "Not Available";
+                    }
+                    ?></td>
             </tr>
             <tr>
                 <td><?php echo date('d/m/Y'); ?></td>

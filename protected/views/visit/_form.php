@@ -71,11 +71,7 @@
 		<?php echo $form->error($model,'date_in'); ?>
 	</div>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'time_in'); ?>
-		<?php echo $form->textField($model,'time_in'); ?>
-		<?php echo $form->error($model,'time_in'); ?>
-	</div>
+	
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'date_out'); ?>

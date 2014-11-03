@@ -58,7 +58,7 @@ class Visitor extends CActiveRecord {
             array('first_name, last_name, email, contact_number,tenant', 'required'),
             array('is_deleted', 'numerical', 'integerOnly' => true),
             array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
-            array('contact_number, company, role, visitor_type, visitor_status, created_by, tenant, tenant_agent', 'length', 'max' => 20),
+            array('contact_number, company, role, visitor_status, created_by, tenant, tenant_agent', 'length', 'max' => 20),
             // array('password', 'length', 'max' => 150),
             array('date_of_birth, notes,birthdayYear,birthdayMonth,birthdayDay', 'safe'),
             array('tenant, tenant_agent,company', 'default', 'setOnEmpty' => true, 'value' => null),
@@ -69,7 +69,7 @@ class Visitor extends CActiveRecord {
             array('email', 'email'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, first_name, last_name, email, contact_number, date_of_birth, company, department, position, staff_id, notes, role, visitor_type, visitor_status, created_by, is_deleted, tenant, tenant_agent', 'safe', 'on' => 'search'),
+            array('id, first_name, last_name, email, contact_number, date_of_birth, company, department, position, staff_id, notes, role, visitor_status, created_by, is_deleted, tenant, tenant_agent', 'safe', 'on' => 'search'),
         );
     }
 
@@ -82,7 +82,6 @@ class Visitor extends CActiveRecord {
         return array(
             'cardGenerateds' => array(self::HAS_MANY, 'CardGenerated', 'visitor_id'),
             'company0' => array(self::BELONGS_TO, 'Company', 'company'),
-            'visitorType' => array(self::BELONGS_TO, 'VisitorType', 'visitor_type'),
             'visitorStatus' => array(self::BELONGS_TO, 'VisitorStatus', 'visitor_status'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'created_by'),
             'tenant0' => array(self::BELONGS_TO, 'User', 'tenant'),
@@ -109,7 +108,6 @@ class Visitor extends CActiveRecord {
             'notes' => 'Notes',
             'password' => 'Password',
             'role' => 'Role',
-            'visitor_type' => 'Visitor Type',
             'visitor_status' => 'Visitor Status',
             'created_by' => 'Created By',
             'is_deleted' => 'Is Deleted',
@@ -137,7 +135,7 @@ class Visitor extends CActiveRecord {
         $criteria = new CDbCriteria;
 
         $criteria->compare('id', $this->id, true);
-        $criteria->compare('first_name', $this->first_name, true);
+       // $criteria->compare('first_name', $this->first_name, true);
         $criteria->compare('last_name', $this->last_name, true);
         $criteria->compare('email', $this->email, true);
         $criteria->compare('contact_number', $this->contact_number, true);
@@ -149,13 +147,17 @@ class Visitor extends CActiveRecord {
         $criteria->compare('notes', $this->notes, true);
         //$criteria->compare('password', $this->password, true);
         $criteria->compare('role', $this->role, true);
-        $criteria->compare('visitor_type', $this->visitor_type, true);
         $criteria->compare('visitor_status', $this->visitor_status, true);
         $criteria->compare('created_by', $this->created_by, true);
         $criteria->compare('is_deleted', $this->is_deleted);
         $criteria->compare('tenant', $this->tenant, true);
         $criteria->compare('tenant_agent', $this->tenant_agent, true);
 
+        if (Yii::app()->controller->id == 'visit') {
+            $criteria->compare('CONCAT(first_name, \' \', last_name)', $this->first_name, true);
+        } else {
+            $criteria->compare('first_name', $this->first_name, true);
+        }
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'sort' => array(

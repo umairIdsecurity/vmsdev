@@ -66,9 +66,8 @@ class Issue25FunctionalTest extends BaseFunctionalTest {
         $this->addReason('Reason 1');
         $this->click("id=submitFormVisitor");
         $this->addPatient("Patient Name 1");
-        $this->click("id=submitFormPatientName");
-        sleep(1);
-        $this->clickAndWait("id=submitVisitForm");
+        $this->clickAndWait("id=submitFormPatientName");
+      // sleep(1);
         $this->verifyVisitorInTable('Visitor1');
     }
 
@@ -111,9 +110,7 @@ class Issue25FunctionalTest extends BaseFunctionalTest {
         $this->type("id=VisitReason_reason_search", "Reason 2");
         $this->click("id=clicktabB1");
         $this->type("id=Patient_name", "Patient Name 2");
-        $this->click("id=submitFormPatientName");
-        sleep(1);
-        $this->click("id=submitVisitForm");
+        $this->clickAndWait("id=submitFormPatientName");
     }
 
     /* Scenario 3 – Login as super admin then perform register a visitor functionality for patient visitor type. Add new patient and add new reason
@@ -149,9 +146,7 @@ class Issue25FunctionalTest extends BaseFunctionalTest {
         $this->select("id=Visit_reason", "label=Reason 1");
         $this->click("id=submitFormVisitor");
         $this->addPatient("Patient Name 3");
-        $this->click("id=submitFormPatientName");
-        sleep(1);
-        $this->clickAndWait("id=submitVisitForm");
+        $this->clickAndWait("id=submitFormPatientName");
         $this->verifyVisitorInTable('Visitor3');
     }
 
@@ -191,9 +186,7 @@ class Issue25FunctionalTest extends BaseFunctionalTest {
         $this->addHost("Host1");
         $this->click("id=submitFormVisitor");
         sleep(2);
-        $this->click("id=submitFormUser");
-        sleep(2);
-        $this->clickAndWait("id=submitVisitForm");
+        $this->clickAndWait("id=submitFormUser");
         $this->verifyVisitorInTable('Visitor4');
     }
 

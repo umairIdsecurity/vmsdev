@@ -19,7 +19,7 @@ $session = new CHttpSession;
                 'cardTypeModel' => $cardTypeModel,
             ));
             ?>
-            
+
         </td>
         <td>
             <?php
@@ -39,7 +39,16 @@ $session = new CHttpSession;
                 <tr>
                     <td></td>
                     <td style="padding:25px 10px 10px 20px;">
-                        <span class="icons log-current actionsLabel">Log Visit</span>
+                        <span class="icons log-current actionsLabel"><a>Log Visit</a></span>
+                        <div id="logVisitDiv">
+                            <?php
+                            $this->renderPartial('logvisit', array('model' => $model,
+                                'visitorModel' => $visitorModel,
+                                'hostModel' => $hostModel,
+                                'reasonModel' => $reasonModel,
+                            ));
+                            ?>
+                        </div>
                     </td>
                 </tr>
                 <tr>
@@ -307,9 +316,9 @@ $this->renderPartial('visithistory', array('model' => $model,
         });
 
     }
-    
-    function sendNewHostForm(){
-    var hostform = $("#register-newhost-form").serialize();
+
+    function sendNewHostForm() {
+        var hostform = $("#register-newhost-form").serialize();
         $.ajax({
             type: "POST",
             url: "<?php echo CHtml::normalizeUrl(array("user/create")); ?>",
@@ -319,7 +328,7 @@ $this->renderPartial('visithistory', array('model' => $model,
             },
         });
     }
-    
+
     function getLastHostId() {
         var id = $(".New_user_email").val();
         $.ajax({
@@ -331,7 +340,7 @@ $this->renderPartial('visithistory', array('model' => $model,
                 $.each(r.data, function(index, value) {
                     $("#Visit_host").val(value.id);
                 });
-                
+
                 sendVisitForm("update-visit-form");
             }
         });

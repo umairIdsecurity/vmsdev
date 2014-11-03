@@ -76,13 +76,15 @@ class VisitController extends Controller {
      */
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
-
+        $visit = new VisitServiceImpl();
+        $session = new CHttpSession;
+        
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['Visit'])) {
             $model->attributes = $_POST['Visit'];
-            if ($model->save()) {
+            if ($visit->save($model, $session['id'])) {
                 
             }
             // $this->redirect(array('view', 'id' => $model->id));

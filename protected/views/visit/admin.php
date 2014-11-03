@@ -1,73 +1,71 @@
 <?php
 /* @var $this VisitController */
 /* @var $model Visit */
-
-$this->breadcrumbs=array(
-	'Visits'=>array('index'),
-	'Manage',
-);
-
-$this->menu=array(
-	array('label'=>'List Visit', 'url'=>array('index')),
-	array('label'=>'Create Visit', 'url'=>array('create')),
-);
-
-Yii::app()->clientScript->registerScript('search', "
-$('.search-button').click(function(){
-	$('.search-form').toggle();
-	return false;
-});
-$('.search-form form').submit(function(){
-	$('#visit-grid').yiiGridView('update', {
-		data: $(this).serialize()
-	});
-	return false;
-});
-");
 ?>
 
 <h1>Manage Visits</h1>
 
-<p>
-You may optionally enter a comparison operator (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>
-or <b>=</b>) at the beginning of each of your search values to specify how the comparison should be done.
-</p>
+<?php
+$this->widget('zii.widgets.grid.CGridView', array(
+    'id' => 'visit-grid',
+    'dataProvider' => $model->search(),
+    'filter' => $model,
+    'columns' =>
+    array(
+        array(
+            'name'=>'visitor',
+            'value'=>'getVisitorFullName($data->visitor)',
+            
+        ),
+        array(
+            'name' => 'card_type',
+            'value' => 'CardType::$CARD_TYPE_LIST[$data->card_type]',
+            'filter' => CardType::$CARD_TYPE_LIST,
+        ),
+        array(
+            'name' => 'visitor_type',
+            'value' => 'VisitorType::$VISITOR_TYPE_LIST[$data->visitor_type]',
+            'filter' => VisitorType::$VISITOR_TYPE_LIST,
+        ),
+        array(
+            'name' => 'reason',
+            'value' => 'VisitReason::model()->findByPk($data->reason)->reason',
+            'filter' => CHtml::listData(VisitReason::model()->findAll(array('order' => 'reason ASC')), 'id', 'reason'),
+            
+        ),
+        array(
+            'name' => 'visitor_status',
+            'value' => 'VisitorStatus::$VISITOR_STATUS_LIST[$data->visitor_status]',
+            'filter' => VisitorStatus::$VISITOR_STATUS_LIST,
+        ),
+        array(
+            'name' => 'visit_status',
+            'value' => 'VisitStatus::$VISIT_STATUS_LIST[$data->visit_status]',
+            'filter' => VisitStatus::$VISIT_STATUS_LIST,
+        ),
+        array(
+            'header' => 'Actions',
+            'class' => 'CButtonColumn',
+            'template' => '{update}{delete}',
+            'buttons' => array(
+                'update' => array(//the name {reply} must be same
+                    'label' => 'Edit', // text label of the button
+                    'imageUrl' => false, // image URL of the button. If not set or false, a text link is used, The image must be 16X16 pixels
+                    'url' => 'Yii::app()->createUrl("visit/detail", array("id"=>$data->id))',
+                    ),
+                'delete' => array(//the name {reply} must be same
+                    'label' => 'Delete', // text label of the button
+                    'imageUrl' => false, // image URL of the button. If not set or false, a text link is used, The image must be 16X16 pixels
+                
+                ),
+            ),
+        ),
+        
+    ),
+));
 
-<?php echo CHtml::link('Advanced Search','#',array('class'=>'search-button')); ?>
-<div class="search-form" style="display:none">
-<?php $this->renderPartial('_search',array(
-	'model'=>$model,
-)); ?>
-</div><!-- search-form -->
-
-<?php $this->widget('zii.widgets.grid.CGridView', array(
-	'id'=>'visit-grid',
-	'dataProvider'=>$model->search(),
-	'filter'=>$model,
-	'columns'=>array(
-		'id',
-		'card',
-		'visitor_type',
-		'reason',
-		'visitor_status',
-		'host',
-		/*
-		'patient',
-		'created_by',
-		'date_in',
-		'time_in',
-		'date_out',
-		'time_out',
-		'date_check_in',
-		'time_check_in',
-		'date_check_out',
-		'time_check_out',
-		'tenant',
-		'tenant_agent',
-		'is_deleted',
-		*/
-		array(
-			'class'=>'CButtonColumn',
-		),
-	),
-)); ?>
+function getVisitorFullName($id){
+    $visitor =Visitor::model()->findByPk($id);
+    return $visitor->first_name.' '.$visitor->last_name;
+}
+?>

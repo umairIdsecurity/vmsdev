@@ -90,7 +90,9 @@ if ( $session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles
                         <li><a href='<?php echo Yii::app()->createUrl('visitReason/create'); ?>' class="has-sub-sub"><span>Add Reason</span></a></li>
                     </ul>
                 </li>
-
+                <li class=''><a href='<?php echo Yii::app()->createUrl('visit/admin'); ?>'><span>Manage Visits</span></a>
+                   
+                </li>
 
                 <?php
             }

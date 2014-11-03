@@ -723,6 +723,15 @@ dt.tabs dt{
     font-size:12px;
     width:107%;
 }
+#logvisitTable tr td input[type="text"]{
+    height:17px;
+    font-size:12px;
+    width:110%;
+}
+
+#logvisitTable{
+    width:150px !important;
+}
 #visitorInformationCssMenu table tr td select{
     height:27px;
     font-size:12px;
@@ -753,8 +762,13 @@ dt.tabs dt{
 .visitHistory th,
 .theadVisitorDetail td{
     font-size:12px;
-    color:#58585A;
+    color:#58585A !important;
     font-weight: bold;
+}
+
+.actionsLabel a{
+    color:#58585A !important;
+    cursor:pointer;
 }
 
 .theadVisitorDetail td{
@@ -830,4 +844,8 @@ display: block;
 height: 16px;
 text-decoration: none;
 color: #000;
+}
+
+.time{
+    width:60px;
 }

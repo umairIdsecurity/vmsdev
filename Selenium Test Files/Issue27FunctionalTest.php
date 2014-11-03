@@ -15,7 +15,7 @@ require_once 'BaseFunctionalTest.php';
  *
  * @author Jeremiah
  */
-class Issue26FunctionalTest extends BaseFunctionalTest {
+class Issue27FunctionalTest extends BaseFunctionalTest {
 
     function setUp() {
         $this->setBrowser("*firefox");
@@ -23,19 +23,21 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
     }
 
     function testAll() {
-        $this->resetDbWithData();
+
         $this->Scenario0();
         $this->Scenario1();
         $this->Scenario2();
         $this->Scenario3();
         $this->Scenario4();
+        $this->Scenario5();
+        $this->Scenario6();
     }
-    
-    function Scenario0(){
+
+    function Scenario0() {
         $issue25 = new Issue25FunctionalTest();
         $issue25->testAll();
     }
-    
+
     /* Scenario 1 – Login as super admin then perform update a visitor functionality for patient visitor type
       Expected Behavior
       -	Assert text testvisitor1@test.com in email field.
@@ -62,7 +64,15 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->open("/index.php?r=visit/detail&id=1");
+        $this->clickAndWait("//div[@id='cssmenu']/ul/li[6]/a/span");
+
+        $this->type("name=Visit[visitor]", "test visitor1");
+        sleep(1);
+        $this->select("name=Visit[card_type]", "label=Same Day Visitor");
+        $this->select("name=Visit[visitor_type]", "label=Patient Visitor");
+        sleep(1);
+        $this->select("name=Visit[reason]", "label=Reason 1");
+        $this->clickAndWait("css=tr.even > td.button-column > a.update");
         $this->assertEquals("Test", $this->getText("//table[@id='personalDetailsTable']/tbody/tr/td[2]"));
         $this->assertEquals("Visitor1", $this->getText("//table[@id='personalDetailsTable']/tbody/tr[2]/td[2]"));
         $this->assertEquals("testVisitor1@test.com", $this->getValue("id=Visitor_email"));
@@ -82,7 +92,15 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
         $this->type("document.forms['update-patient-form'].elements['Patient[name]']", "Patient Name 3");
         $this->click("id=submit");
         sleep(1);
-        $this->open("/index.php?r=visit/detail&id=1");
+        $this->clickAndWait("//div[@id='cssmenu']/ul/li[6]/a/span");
+        $this->type("name=Visit[visitor]", "test visitor1");
+        $this->select("name=Visit[card_type]", "label=Same Day Visitor");
+        $this->select("name=Visit[visitor_type]", "label=Patient Visitor");
+        sleep(1);
+        $this->select("name=Visit[reason]", "label=Reason 3");
+        sleep(1);
+        $this->clickAndWait("link=Edit");
+
         $this->assertEquals("testVisitorB@test.com", $this->getValue("id=Visitor_email"));
         $this->assertEquals("1234567890", $this->getValue("id=Visitor_contact_number"));
         $this->assertEquals("1", $this->getValue("id=Visit_visitor_type"));
@@ -115,7 +133,13 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->open("/index.php?r=visit/detail&id=4");
+        $this->clickAndWait("//div[@id='cssmenu']/ul/li[6]/a/span");
+        $this->type("name=Visit[visitor]", "test visitor4");
+        $this->select("name=Visit[card_type]", "label=Same Day Visitor");
+        $this->select("name=Visit[visitor_type]", "label=Corporate Visitor");
+        sleep(1);
+        $this->clickAndWait("link=Edit");
+
         $this->assertEquals("testVisitor4@test.com", $this->getValue("id=Visitor_email"));
         $this->assertEquals("2", $this->getValue("id=Visit_visitor_type"));
         $this->type("id=Visitor_email", "testVisitorC@test.com");
@@ -129,7 +153,12 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
         $this->type("document.forms['register-host-form'].elements['User[email]']", "testHost1A@test.com");
         $this->click("document.forms['register-host-form'].yt0");
         sleep(1);
-        $this->open("/index.php?r=visit/detail&id=4");
+        $this->clickAndWait("//div[@id='cssmenu']/ul/li[6]/a/span");
+        $this->type("name=Visit[visitor]", "test visitor4");
+        $this->select("name=Visit[card_type]", "label=Same Day Visitor");
+        $this->select("name=Visit[visitor_type]", "label=Corporate Visitor");
+        sleep(1);
+        $this->clickAndWait("link=Edit");
         $this->assertEquals("testVisitorC@test.com", $this->getValue("id=Visitor_email"));
         $this->assertEquals("1234567890", $this->getValue("id=Visitor_contact_number"));
         $this->assertEquals("2", $this->getValue("id=Visit_reason"));
@@ -167,7 +196,14 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->open("/index.php?r=visit/detail&id=1");
+        $this->clickAndWait("//div[@id='cssmenu']/ul/li[6]/a/span");
+        $this->type("name=Visit[visitor]", "test visitor1");
+        $this->select("name=Visit[card_type]", "label=Same Day Visitor");
+        $this->select("name=Visit[visitor_type]", "label=Patient Visitor");
+        $this->select("name=Visit[reason]", "label=Reason 3");
+        sleep(1);
+        $this->clickAndWait("link=Edit");
+
         $this->type("id=Visitor_email", "");
         $this->type("id=Visitor_contact_number", "");
         $this->click("id=submitContactDetailForm");
@@ -226,7 +262,13 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->open("/index.php?r=visit/detail&id=4");
+        $this->clickAndWait("//div[@id='cssmenu']/ul/li[6]/a/span");
+        $this->type("name=Visit[visitor]", "test visitor4");
+        $this->select("name=Visit[card_type]", "label=Same Day Visitor");
+        $this->select("name=Visit[visitor_type]", "label=Corporate Visitor");
+        $this->select("name=Visit[reason]", "label=Reason 2");
+        sleep(1);
+        $this->clickAndWait("link=Edit");
         $this->type("document.forms['register-host-form'].elements['User[first_name]']", "");
         $this->type("document.forms['register-host-form'].elements['User[last_name]']", "");
         $this->type("document.forms['register-host-form'].elements['User[department]']", "");
@@ -252,6 +294,139 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
         $this->waitForElementPresent("xpath=(//div[@id='User_email_em_'])[2]");
         sleep(1);
         $this->assertEquals("Email is not a valid email address.", $this->getText("xpath=(//div[@id='User_email_em_'])[2]"));
+    }
+
+    /* Scenario 5 – Login as super admin update a patient visitor to corporate visitor. Add new host and check validations
+      Expected Behavior
+      -	Assert corporate visitor in visitor type
+      -	Assert testHostB@test.com in host email field
+      -	Assert text first name cannot be blank, last name cannot be blank, contact number cannot be blank, email cannot be blank, and Company name cannot be blank.
+      -	Assert text email is not a valid email address
+      -	Assert text email has already been taken
+
+      Steps:
+      1.	Log in as superadmin@test.com with 12345  as password
+      2.	Click administration
+      3.	Click manage visits
+      4.	Type test visitor1 in name search field, select patient type in visitor type and select reason 3 in reason. Click edit
+      5.	Assert email testVisitorB@test.com
+      6.	Select corporate visitor in visitor type
+      7.	Wait for host details to show below
+      8.	Click add button
+      9.	Assert text first name cannot be blank, last name cannot be blank, contact number cannot be blank, email cannot be blank, and Company name cannot be blank.
+      10.	Type 123 in email
+      11.	Assert text email is not a valid email address.
+      12.	Type test in first name, newhostA in last name, admin@test.com in email field, 12345 in contact no., select test admin in tenant, select tenant agentadmin in tenant agent, and test company1 in company name.
+      13.	Click add button
+      14.	Assert text email address has already been taken.
+      15.	Type testnewHostA@test.com in email field
+      16.	Click manage visits
+      17.	Type test visitor1 in name search field, select corporate type in visitor type and select reason 3 in reason. Click edit
+      18.	Assert email testVisitorB@test.com
+      19.	Assert corporate type in visitor type
+      20.	Assert email testnewHostA@test.com in email field
+      21.	Assert test in first name
+      22.	Assert newhostA in last name
+      23.	Assert 12345 in contact no.
+     */
+
+    function Scenario5() {
+        $username = 'superadmin@test.com';
+        $this->login($username, '12345');
+        $this->clickAndWait("link=Administration");
+        $this->clickAndWait("//div[@id='cssmenu']/ul/li[6]/a/span");
+        $this->type("name=Visit[visitor]", "test visitor1");
+        $this->select("name=Visit[visitor_type]", "label=Patient Visitor");
+        $this->select("name=Visit[reason]", "label=Reason 3");
+        sleep(1);
+        $this->click("link=Edit");
+        $this->waitForPageToLoad("30000");
+        $this->assertEquals("testVisitorB@test.com", $this->getValue("id=Visitor_email"));
+        $this->select("id=Visit_visitor_type", "label=Corporate Visitor");
+        sleep(1);
+        $this->click("document.forms['register-newhost-form'].yt0");
+        sleep(1);
+        $this->assertEquals("First Name cannot be blank.", $this->getText("id=User_first_name_em_"));
+        $this->assertEquals("Last Name cannot be blank.", $this->getText("id=User_last_name_em_"));
+        $this->assertEquals("Email cannot be blank.", $this->getText("id=User_email_em_"));
+        $this->assertEquals("Contact No. cannot be blank.", $this->getText("id=User_contact_number_em_"));
+        $this->assertEquals("Company Name cannot be blank.", $this->getText("id=User_company_em_"));
+        $this->type("id=User_first_name", "test");
+        $this->type("id=User_last_name", "newhostA");
+        $this->type("id=User_email", "admin@test.com");
+        $this->type("id=User_contact_number", "123456");
+        $this->select("id=User_tenant", "label=Test admin");
+        sleep(1);
+        $this->select("id=User_tenant_agent", "label=Test agentadmin");
+        sleep(1);
+        $this->click("document.forms['register-newhost-form'].yt0");
+        sleep(1);
+        $this->assertEquals("Email Address has already been taken.", $this->getText("id=New_user_email_em_"));
+        $this->type("id=User_email", "testnewHostA@test.com");
+        $this->click("document.forms['register-newhost-form'].yt0");
+        sleep(3);
+        $this->clickAndWait("//div[@id='cssmenu']/ul/li[6]/a/span");
+        $this->type("name=Visit[visitor]", "test visitor1");
+        $this->select("name=Visit[visitor_type]", "label=Corporate Visitor");
+        $this->select("name=Visit[reason]", "label=Reason 3");
+        sleep(1);
+        $this->clickAndWait("link=Edit");
+        $this->assertEquals("testVisitorB@test.com", $this->getValue("id=Visitor_email"));
+        $this->assertEquals("2", $this->getValue("id=Visit_visitor_type"));
+        $this->assertEquals("testnewHostA@test.com", $this->getValue("document.forms['register-host-form'].elements['User[email]']"));
+        $this->assertEquals("test", $this->getValue("document.forms['register-host-form'].elements['User[first_name]']"));
+        $this->assertEquals("newhostA", $this->getValue("document.forms['register-host-form'].elements['User[last_name]']"));
+    }
+
+    /*
+      Scenario 6- Login as super admin and add log visit
+      Expected Behavior
+      -	Assert date in 2014-11-25
+      -	Assert date out 2014-11-25
+      -	Assert time in 11:24
+      Steps:
+      1.	Login as superadmin@test.com use 12345 as password
+      2.	Click administration
+      3.	Click manage visits
+      4.	Type test visitor1 in name search field, select reason 3 and click edit
+      5.	Select November 25, 2014 in datepicker for date in
+      6.	Select November 25, 2014 in datepicker for date out
+      7.	Select 11 in hours dropdown and 24 in minutes dropdown
+      8.	Click update button
+      9.	Click manage visits
+      10.	Type test visitor1 in name search field, select reason 3 and click edit
+      11.	Assert value date in is 2014-11-25
+      12.	Assert value date out is 2014-11-25
+      13.	Assert hour selected 11
+      14.	Assert minute selected 24
+     */
+
+    function Scenario6() {
+        $username = 'superadmin@test.com';
+        $this->login($username, '12345');
+        $this->clickAndWait("link=Administration");
+        $this->clickAndWait("//div[@id='cssmenu']/ul/li[6]/a/span");
+        $this->type("name=Visit[visitor]", "test visitor1");
+        $this->select("name=Visit[reason]", "label=Reason 3");
+        sleep(1);
+        $this->clickAndWait("link=Edit");
+        $this->click("id=Visit_date_in");
+        $this->type("id=Visit_date_in", "11/25/2014");
+        $this->click("id=Visit_date_out");
+        $this->type("id=Visit_date_out", "11/25/2014");
+        $this->select("id=Visit_time_in_hours", "label=11");
+        $this->select("id=Visit_time_in_minutes", "label=24");
+        $this->click("css=#update-log-visit-form > input[type=\"submit\"]");
+        sleep(1);
+        $this->clickAndWait("link=Manage Visits");
+        $this->type("name=Visit[visitor]", "test visitor1");
+        $this->select("name=Visit[reason]", "label=Reason 3");
+        sleep(1);
+        $this->clickAndWait("link=Edit");
+        $this->assertEquals("2014-11-25", $this->getValue("id=Visit_date_in"));
+        $this->assertEquals("2014-11-25", $this->getValue("id=Visit_date_out"));
+        $this->assertEquals("11", $this->getValue("id=Visit_time_in_hours"));
+        $this->assertEquals("24", $this->getValue("id=Visit_time_in_minutes"));
     }
 
 }

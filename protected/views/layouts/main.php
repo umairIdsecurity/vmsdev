@@ -88,13 +88,23 @@ $user_role = $session['role'];
                     <nav class="navigation">
                         <ul id="tabs">
                             <li class="<?php echo ($this->id == "dashboard") ? "active" : "" ?>">
-                                <a href="<?php echo Yii::app()->createUrl("/dashboard"); ?>">Dashboard</a>
+                                <?php
+                                if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
+                                    ?>
+                                    <a href="<?php echo Yii::app()->createUrl("/dashboard/viewmyvisitors"); ?>">Dashboard</a>
+                                    <?php
+                                } else {
+                                    ?>
+                                    <a href="<?php echo Yii::app()->createUrl("/dashboard"); ?>">Dashboard</a>
+                                    <?php
+                                }
+                                ?>
                             </li>
-<?php if ($session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_AGENT_ADMIN || $session['role'] == Roles::ROLE_SUPERADMIN) { ?>
-                                <li class="<?php echo ($this->id == "user" || $this->id == "visitor" || $this->id == "company" || $this->id == "workstation" || $this->id == "visitReason") ? "active" : "" ?>">
+                            <?php if ($session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_AGENT_ADMIN || $session['role'] == Roles::ROLE_SUPERADMIN) { ?>
+                                <li class="<?php echo ($this->action->id == "admin" || $this->id=='visit' || $this->id == "user" || $this->id == "visitor" || $this->id == "company" || $this->id == "workstation" || $this->id == "visitReason") ? "active" : "" ?>">
                                     <a href="<?php echo Yii::app()->createUrl("/user/admin"); ?>">Administration</a>
                                 </li>
-<?php } ?>
+                            <?php } ?>
                             <li style=' float:right;'>
                                 <a style="width:334px !important;text-align:right;">Logged in as <?php echo Yii::app()->user->name . ' - ' . User::model()->getUserRole($user_role); ?></a>
                             </li> 
@@ -113,15 +123,15 @@ $user_role = $session['role'];
                 echo "style='margin-left:180px'";
             }
             ?>>
-<?php echo $content; ?>
+                     <?php echo $content; ?>
             </div>
             <div class="clear"></div>
             <br><br>
                     <div id="footer" <?php
-if ($viewFrom != '' || $this->id == 'userWorkstations' || $this->action->id == 'findvisitor' || $this->action->id == 'findhost') {
-    echo "style='display:none'";
-}
-?>>
+                         if ($viewFrom != '' || $this->id == 'userWorkstations' || $this->action->id == 'findvisitor' || $this->action->id == 'findhost') {
+                             echo "style='display:none'";
+                         }
+                         ?>>
                         Copyright &copy; <?php echo date('Y'); ?> by <a href="http://idsecurity.com.au">Identity Security Pty Ltd </a>©.<br/>
                         All Rights Reserved.<br/>
 

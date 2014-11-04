@@ -21,22 +21,35 @@ class DashboardController extends Controller {
      */
     public function accessRules() {
         return array(
-            array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('index'),
-                'users' => array('@'),
-            ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update'),
+                'actions' => array('create', 'update','index'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin', 'delete'),
-                'users' => array('@'),
+                'actions' => array('ViewMyVisitors'),
+                'expression' => 'Yii::app()->controller->checkIfUserCanAccess("viewmyvisitor")',
             ),
             array('deny', // deny all users
                 'users' => array('*'),
             ),
         );
+    }
+    
+    public function checkIfUserCanAccess($action) {
+        $session = new CHttpSession;
+        $CurrentRole = $session['role'];
+
+        switch ($action) {
+            case "viewmyvisitor":
+                $user_role = array(Roles::ROLE_STAFFMEMBER);
+                if (in_array($CurrentRole, $user_role)) {
+                    return true;
+                }
+                break;
+            
+            default:
+                return false;
+        }
     }
 
     /**
@@ -112,6 +125,7 @@ class DashboardController extends Controller {
         $this->render('index', array(
             'dataProvider' => $dataProvider,
         ));
+       
     }
 
     /**
@@ -151,6 +165,18 @@ class DashboardController extends Controller {
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }
+    }
+    
+    public function actionViewMyVisitors() {
+        $this->layout = '//layouts/column2';
+        $model = new Visit('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['Visit']))
+            $model->attributes = $_GET['Visit'];
+
+        $this->render('viewmyvisitors', array(
+            'model' => $model,
+        ));
     }
 
 }

@@ -45,7 +45,7 @@ class VisitorController extends Controller {
 
         switch ($action) {
             case "superadmin":
-                $user_role = array(Roles::ROLE_SUPERADMIN);
+                $user_role = array(Roles::ROLE_SUPERADMIN,  Roles::ROLE_STAFFMEMBER);
                 if (in_array($CurrentRole, $user_role)) {
                     return true;
                 }

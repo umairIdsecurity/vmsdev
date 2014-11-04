@@ -40,6 +40,11 @@ class Visit extends CActiveRecord {
     public $time_in_minutes;
     public $time_in_hours;
     private $_visitor;
+    private $_firstname;
+    private $_lastname;
+    private $_company;
+    private $_contactnumber;
+    private $_contactemail;
 
     /**
      * @return string the associated database table name
@@ -62,7 +67,7 @@ class Visit extends CActiveRecord {
             array('patient, host,card,tenant,tenant_agent', 'default', 'setOnEmpty' => true, 'value' => null),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id,visit_status,visitor ,card, visitor_type, reason, visitor_status, host, patient, created_by, date_in, time_in, date_out, time_out, date_check_in, time_check_in, date_check_out, time_check_out, tenant, tenant_agent, is_deleted', 'safe', 'on' => 'search'),
+            array('id,contactnumber,contactemail,company,lastname,firstname,visit_status,visitor ,card, visitor_type, reason, visitor_status, host, patient, created_by, date_in, time_in, date_out, time_out, date_check_in, time_check_in, date_check_out, time_check_out, tenant, tenant_agent, is_deleted', 'safe', 'on' => 'search'),
         );
     }
 
@@ -76,6 +81,66 @@ class Visit extends CActiveRecord {
     public function setVisitor($value) {
         // set private attribute for search
         $this->_visitor = $value;
+    }
+    
+    public function getFirstname() {
+        // return private attribute on search
+        if ($this->scenario == 'search') {
+            return $this->_firstname;
+        }
+    }
+
+    public function setFirstname($value) {
+        // set private attribute for search
+        $this->_firstname = $value;
+    }
+    
+    public function getLastname() {
+        // return private attribute on search
+        if ($this->scenario == 'search') {
+            return $this->_lastname;
+        }
+    }
+
+    public function setLastname($value) {
+        // set private attribute for search
+        $this->_lastname = $value;
+    }
+    
+    public function getCompany() {
+        // return private attribute on search
+        if ($this->scenario == 'search') {
+            return $this->_company;
+        }
+    }
+
+    public function setCompany($value) {
+        // set private attribute for search
+        $this->_company = $value;
+    }
+    
+    public function getContactNumber() {
+        // return private attribute on search
+        if ($this->scenario == 'search') {
+            return $this->_contactnumber;
+        }
+    }
+
+    public function setContactNumber($value) {
+        // set private attribute for search
+        $this->_contactnumber = $value;
+    }
+    
+    public function getContactEmail() {
+        // return private attribute on search
+        if ($this->scenario == 'search') {
+            return $this->_contactemail;
+        }
+    }
+
+    public function setContactEmail($value) {
+        // set private attribute for search
+        $this->_contactemail = $value;
     }
 
     /**
@@ -146,7 +211,11 @@ class Visit extends CActiveRecord {
         $criteria = new CDbCriteria;
         $criteria->with = 'visitor0';
         $criteria->compare('CONCAT(visitor0.first_name, \' \', visitor0.last_name)', $this->visitor, true);
-
+        $criteria->compare('visitor0.first_name', $this->firstname, true);
+        $criteria->compare('visitor0.last_name', $this->lastname, true);
+        $criteria->compare('visitor0.contact_number', $this->contactnumber, true);
+        $criteria->compare('visitor0.email', $this->contactemail, true);
+        
         $criteria->compare('id', $this->id, true);
         //  $criteria->compare('visitor', $this->visitor, true);
         $criteria->compare('card', $this->card, true);
@@ -169,7 +238,12 @@ class Visit extends CActiveRecord {
         $criteria->compare('tenant_agent', $this->tenant_agent, true);
         $criteria->compare('is_deleted', $this->is_deleted);
         $criteria->compare('visit_status', $this->visit_status);
-
+        
+        if(Yii::app()->user->role == Roles::ROLE_STAFFMEMBER){
+            $criteria->addCondition('host = '.Yii::app()->user->id.' and visit_status = '.VisitStatus::PREREGISTERED);
+        }
+        
+        
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'sort' => array(
@@ -195,5 +269,6 @@ class Visit extends CActiveRecord {
             ),
         );
     }
+  
 
 }

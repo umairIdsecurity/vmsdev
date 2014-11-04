@@ -25,7 +25,7 @@ class UserController extends Controller {
      */
     public function accessRules() {
         return array(
-            array('allow', // allow authenticated user to perform 'create' and 'update' actions
+            array('allow', 
                 'actions' => array('create',
                     'GetTenantAgentWithSameTenant',
                     'GetIdOfUser',
@@ -35,15 +35,15 @@ class UserController extends Controller {
                     'GetTenantWorkstation', 'GetTenantAgentWorkstation'),
                 'users' => array('@'),
             ),
-            array('allow', // allow admin user to perform 'admin' and 'delete' actions
+            array('allow',
                 'actions' => array('update'),
                 'expression' => 'Yii::app()->controller->accessRoles("userTenant")',
             ),
-            array('allow', // allow admin user to perform 'admin' and 'delete' actions
+            array('allow', 
                 'actions' => array('profile'),
                 'expression' => 'Yii::app()->controller->accessRoles("profile")',
             ),
-            array('allow', // allow admin user to perform 'admin' and 'delete' actions
+            array('allow', 
                 'actions' => array('admin', 'delete', 'systemaccessrules'),
                 'expression' => 'Yii::app()->controller->accessRoles("admin")',
             ),

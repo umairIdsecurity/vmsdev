@@ -13,6 +13,11 @@
  */
 class VisitStatus extends CActiveRecord
 {
+    const ACTIVE = 1;
+    const PREREGISTERED = 2;
+    const CLOSED = 3;
+    const EXPIRED = 4;
+    
     public static $VISIT_STATUS_LIST = array(
         1 => 'Active',
         2 => 'Pre-registered',

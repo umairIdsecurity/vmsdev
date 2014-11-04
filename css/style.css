@@ -325,6 +325,8 @@ nav.navigation ul li:last-child.active
     padding-left: 30px;
     padding-right: 30px;
     width: 120.6%;
+    overflow-x: auto;
+    min-height: 400px;
 }
 
 #companyLogo{
@@ -827,25 +829,66 @@ dt.tabs dt{
 .icons{
     background: url('../images/icons.png') 0 0 no-repeat;
 }
-
-.log-current {
-    background-position: 0px -23px;
-    padding: 5px 0px 5px 30px;
+.addhost{
+    background: url('../images/add_user.png') 0 0 no-repeat;
+   
+    padding: 1px 0 1px 30px;
     display: block;
     height: 15px;
     text-decoration: none;
-    color: #000;
+}
+.addvisitor{
+    background: url('../images/addvisitor.png') 0 0 no-repeat;
+    padding: 1px 0 1px 30px;
+    display: block;
+    height: 15px;
+    text-decoration: none;
+    background-position: 0px 1px;
+}
+
+.log-current {
+    background-position: 0px -23px;
+    padding: 1px 0 1px 30px;
+    display: block;
+    height: 15px;
+    text-decoration: none;
 }
 
 .pre-visits {
 background-position: 0px -375px;
-padding: 5px 0px 5px 30px;
+padding: 1px 0 1px 30px;
 display: block;
 height: 16px;
 text-decoration: none;
-color: #000;
+}
+
+.findrecord {
+background-position: 0 -537px;
+padding: 1px 0 1px 30px;
+display: block;
+height: 16px;
+text-decoration: none;
 }
 
 .time{
     width:60px;
+}
+
+#visit-gridDashboard{
+    width:1500px;
+    padding-right: 40px !important;
+}
+
+.statusLink{
+    background:none !important;
+    border:none !important;
+    color:#9BD62C !important;
+    text-decoration: underline;
+    font-size:13px !important;
+    font-weight:normal !important;
+    padding:0 !important;
+}
+
+.overflowxvisible{
+    overflow-x: visible !important;
 }

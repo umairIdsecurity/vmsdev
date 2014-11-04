@@ -48,6 +48,7 @@ $session = new CHttpSession;
             $("#Visitor_tenant_agent").val('<?php echo $session['tenant_agent']; ?>');
             $("#User_tenant_agent").val('<?php echo $session['tenant_agent']; ?>');
         }
+        
         $('#Visitor_visitor_type').on('change', function(e) {
             $('#Visitor_company option[value!=""]').remove();
             $('#Visitor_tenant_agent option[value!=""]').remove();

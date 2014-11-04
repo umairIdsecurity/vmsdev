@@ -97,7 +97,9 @@ class SiteController extends Controller {
                             $this->redirect('index.php?r=site/selectworkstation&id=' . $session['id']);
                         }
                         break;
-                        
+                    case Roles::ROLE_STAFFMEMBER:
+                        $this->redirect('index.php?r=dashboard/viewmyvisitors');
+                        break;
                     default:
                         $this->redirect('index.php?r=dashboard');
                 }

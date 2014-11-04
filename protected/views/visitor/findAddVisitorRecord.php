@@ -1,3 +1,6 @@
+<?php
+$session = new CHttpSession;
+?>
 <div id="findAddVisitorRecordDiv" class="findAddVisitorRecordDiv form">
     <div>
         <label><b>Search Name:</b></label> 
@@ -116,12 +119,28 @@
                 </td>
                 <td id="visitorCompanyRow">
 
-                    <?php echo $form->labelEx($model, 'company'); ?><br>
-                    <select id="Visitor_company" name="Visitor[company]" >
-                        <option value=''>Select Company</option>
-                    </select>
 
-                    <?php echo "<br>" . $form->error($model, 'company'); ?>
+                    <?php
+                    if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
+                        ?>
+                        <?php echo $form->labelEx($model, 'company'); ?><br>
+                        <select id="Visitor_company" name="Visitor[company]" >
+                            <option value='<?php echo $session['company']; ?>'><?php echo Company::model()->findByPk($session['company'])->name; ?></option>
+                        </select>    
+                        <?php echo "<br>" . $form->error($model, 'company'); ?>
+                        <?php
+                    } else {
+                        ?>
+                        <?php echo $form->labelEx($model, 'company'); ?><br>
+                        <select id="Visitor_company" name="Visitor[company]" >
+                            <option value=''>Select Company</option>
+                        </select>    
+                        <?php echo "<br>" . $form->error($model, 'company'); ?>
+                        <?php
+                    }
+                    ?>
+
+
                 </td>
             </tr>
 
@@ -164,25 +183,45 @@
                 </td>
                 <td id="visitorTenantRow"><?php echo $form->labelEx($model, 'tenant'); ?><br>
 
-                    <select id="Visitor_tenant" onchange="populateTenantAgentAndCompanyField()" name="Visitor[tenant]"  >
-                        <option value='' selected>Select Admin</option>
-                        <?php
-                        $allAdminNames = User::model()->findAllAdmin();
-                        foreach ($allAdminNames as $key => $value) {
-                            ?>
-                            <option value="<?php echo $value->tenant; ?>"><?php echo $value->first_name . " " . $value->last_name; ?></option>
-                            <?php
-                        }
+                    <?php
+                    if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
                         ?>
-                    </select><?php echo "<br>" . $form->error($model, 'tenant'); ?>
+                        <input type='text' name='Visitor["tenant"]' value='<?php echo $session['tenant']; ?>'/>
+                        <?php
+                    } else {
+                        ?>
+                        <select id="Visitor_tenant" onchange="populateTenantAgentAndCompanyField()" name="Visitor[tenant]"  >
+                            <option value='' selected>Select Admin</option>
+                            <?php
+                            $allAdminNames = User::model()->findAllAdmin();
+                            foreach ($allAdminNames as $key => $value) {
+                                ?>
+                                <option value="<?php echo $value->tenant; ?>"><?php echo $value->first_name . " " . $value->last_name; ?></option>
+                                <?php
+                            }
+                            ?>
+                        </select><?php echo "<br>" . $form->error($model, 'tenant'); ?>
+
+                        <?php
+                    }
+                    ?>
                 </td>
                 <td id="visitorTenantAgentRow"><?php echo $form->labelEx($model, 'tenant_agent'); ?><br>
-
-                    <select id="Visitor_tenant_agent" name="Visitor[tenant_agent]" onchange="populateCompanyWithSameTenantAndTenantAgent()" >
-                        <?php
-                        echo "<option value='' selected>Select Tenant Agent</option>";
+                    <?php
+                    if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
                         ?>
-                    </select><?php echo "<br>" . $form->error($model, 'tenant_agent'); ?>
+                        <input type='text' name='Visitor["tenant_agent"]' value='<?php echo $session['tenant_agent']; ?>'/>
+                        <?php
+                    } else {
+                        ?>
+                        <select id="Visitor_tenant_agent" name="Visitor[tenant_agent]" onchange="populateCompanyWithSameTenantAndTenantAgent()" >
+                            <?php
+                            echo "<option value='' selected>Select Tenant Agent</option>";
+                            ?>
+                        </select><?php echo "<br>" . $form->error($model, 'tenant_agent'); ?>
+                        <?php }
+                    ?>
+
                 </td>
             </tr>
 
@@ -227,7 +266,7 @@
             $("#Visit_reason_search").val("");
             $("#register-reason-form-search").hide();
             $("#register-reason-form").hide();
-            
+
             var searchText = $("#search-visitor").val();
             if (searchText != '') {
                 $("#searchTextErrorMessage").hide();
@@ -302,17 +341,17 @@
                 $("#visitReasonFormField").val($("#Visit_reason_search").val());
                 if ($("#selectedVisitorInSearchTable").val() == '0') { //if visitor is not from search
                     sendVisitorForm();
-                  //  alert("visitor is not from search");
+                    //  alert("visitor is not from search");
                 } else if ($("#selectedVisitorInSearchTable").val() != '0') { //if visitor is from search
-                            //  alert("visitor from search");
+                    //  alert("visitor from search");
                     if ($("#selectedHostInSearchTable").val() != 0) { //if host is from search
                         $("#visitReasonFormField").val($("#Visit_reason_search").val());
                         $("#Visit_patient").val($("#hostId").val());
                         $("#Visit_host").val($("#hostId").val());
-                      //  alert("host from search");
+                        //  alert("host from search");
                         populateVisitFormFields();
                     } else {
-                      //  alert("add host");
+                        //  alert("add host");
                         if ($("#Visitor_visitor_type").val() == 1) { //if patient
                             sendPatientForm();
                         } else {
@@ -392,10 +431,10 @@
         {
             if ($("#selectedVisitorInSearchTable").val() != '0') {
                 var reasonForm = $("#register-reason-form-search").serialize();
-               // alert("searchreason");
+                // alert("searchreason");
             } else {
                 var reasonForm = $("#register-reason-form").serialize();
-            //    alert("add visitor reason");
+                //    alert("add visitor reason");
             }
 
             $.ajax({

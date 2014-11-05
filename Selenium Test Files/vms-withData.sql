@@ -73,6 +73,7 @@ CREATE TABLE IF NOT EXISTS `card_generated` (
 CREATE TABLE IF NOT EXISTS `card_type` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) DEFAULT NULL,
+  `max_day_validity` int(10) DEFAULT NULL,
   `max_time_validity` varchar(50) DEFAULT NULL,
   `max_entry_count_validity` int(10) DEFAULT NULL,
   `card_icon_type` text,
@@ -87,9 +88,9 @@ CREATE TABLE IF NOT EXISTS `card_type` (
 -- Dumping data for table `card_type`
 --
 
-INSERT INTO `card_type` (`id`, `name`, `max_time_validity`, `max_entry_count_validity`, `card_icon_type`, `card_background_image_path`, `created_by`) VALUES
-(1, 'Same Day Visitor', 'same day', NULL, 'images/same_day_vic.png', NULL, NULL),
-(2, 'Multiday Visitor', NULL, NULL, 'images/multi_day_vic.png', NULL, NULL);
+INSERT INTO `card_type` (`id`, `name`,`max_day_validity` ,`max_time_validity`, `max_entry_count_validity`, `card_icon_type`, `card_background_image_path`, `created_by`) VALUES
+(1, 'Same Day Visitor', '1', NULL,NULL ,'images/same_day_vic.png', NULL, NULL),
+(2, 'Multiday Visitor', NULL,NULL, NULL, 'images/multi_day_vic.png', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -159,6 +160,11 @@ CREATE TABLE IF NOT EXISTS `patient` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
+
+INSERT INTO `patient` (`id`, `name`) VALUES
+(1, 'Patient Name 1'),
+(2, 'Patient Name 2'),
+(3, 'Patient Name 3');
 -- --------------------------------------------------------
 
 --
@@ -241,7 +247,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   KEY `created_by` (`created_by`),
   KEY `tenant` (`tenant`),
   KEY `tenant_agent` (`tenant_agent`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=23 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
 -- Dumping data for table `user`
@@ -253,8 +259,9 @@ INSERT INTO `user` (`id`, `first_name`, `last_name`, `email`, `contact_number`, 
 (18, 'Test', 'agentadmin', 'agentadmin@test.com', '123456', '2014-09-14', 1, 'Test Department', 'Test Position', '123456', 'Test Notes', '$2a$13$Jnj1TVTdBZD3GOitBD7HGea4OOr6YZi63vSWQPFiJchipiDJorTqm', 6, 1, 1, 16, 0, 17, 18),
 (19, 'Test', 'operator', 'operator@test.com', '123456', '2014-09-14', 1, 'Test Department', 'Test Position', '123456', 'Test Notes', '$2a$13$b1b.63axWWCFUjhIFjGLSutoYkNU6DBgRzxUJvv6QJxfdKoOz89We', 8, 1, 1, 16, 0, 17, NULL),
 (20, 'Test', 'agentoperator', 'agentoperator@test.com', '123456', '2014-09-14', 1, 'Test Department', 'Test Position', '123456', 'Test Notes', '$2a$13$VCQIjGBIohdn8xa30FGFj.OJkeFdZH7gVybPn9muggcD9B8CqfOgy', 7, 1, 1, 16, 0, 17, 18),
-(21, 'Test', 'staffmember', 'staffmember@test.com', '123456', '2014-09-14', 1, 'Test Department', 'Test Position', '123456', 'Test Notes', '$2a$13$w1Kro.V4SJPkFBu5HChiEeHwRDBSccKKqWW1qPZbEqDZEZc/V9sna', 9, 1, 1, 16, 0, NULL, 18),
-(22, 'Test', 'admin2', 'admin2@test.com', '123456', '2014-09-14', 1, 'Test Department', 'Test Position', '123456', 'Test Notes', '$2a$13$5X3fP8TUNc/0sVUi9fwlkOqboosSxQxbpiR0GAi83GUedz9hLyTfC', 1, 1, 1, 16, 0, 17, NULL);
+(21, 'Test', 'staffmember', 'staffmember@test.com', '123456', '2014-09-14', 1, 'Test Department', 'Test Position', '123456', 'Test Notes', '$2a$13$w1Kro.V4SJPkFBu5HChiEeHwRDBSccKKqWW1qPZbEqDZEZc/V9sna', 9, 1, 1, 16, 0, 17, 18),
+(22, 'Test', 'admin2', 'admin2@test.com', '123456', '2014-09-14', 1, 'Test Department', 'Test Position', '123456', 'Test Notes', '$2a$13$5X3fP8TUNc/0sVUi9fwlkOqboosSxQxbpiR0GAi83GUedz9hLyTfC', 1, 1, 1, 16, 0, 17, NULL),
+(23, 'Test', 'host1', 'testHost1@test.com', '123456', '2014-09-14', 1, 'Test Department', 'Test Position', '123456', 'Test Notes', '$2a$13$5X3fP8TUNc/0sVUi9fwlkOqboosSxQxbpiR0GAi83GUedz9hLyTfC', 9, 1, 1, 16, 0, 17, 18);
 
 -- --------------------------------------------------------
 
@@ -367,8 +374,18 @@ CREATE TABLE IF NOT EXISTS `visit` (
   KEY `tenant` (`tenant`),
   KEY `tenant_agent` (`tenant_agent`),
   KEY `card_type` (`card_type`),
-KEY `visit_status` (`visit_status`)
+  KEY `visit_status` (`visit_status`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+
+INSERT INTO `visit` (`id`, `visitor`, `card_type`, `card`, `visitor_type`, `reason`, `visitor_status`, `host`, `patient`, `created_by`, `date_in`, `time_in`, `date_out`, `time_out`, `date_check_in`, `time_check_in`, `date_check_out`, `time_check_out`, `visit_status`, `tenant`, `tenant_agent`, `is_deleted`) VALUES
+(1, 2, 1, NULL, 1, 1, 1, NULL, 1, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 17, 18, 0),
+(2, 2, 1, NULL, 1, 2, 1, NULL, 2, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 17, 18, 0),
+(3, 2, 1, NULL, 1, 2, 1, NULL, 2, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 17, 18, 0),
+(4, 3, 1, NULL, 1, 1, 1, NULL, 3, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 17, 18, 0),
+(5, 3, 1, NULL, 1, 1, 1, NULL, 3, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 17, 18, 0),
+(6, 4, 1, NULL, 2, 1, 1, 23, NULL, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 17, 18, 0),
+(7, 2, 1, NULL, 2, 1, 1, 21, NULL, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 17, 18, 0);
 
 -- --------------------------------------------------------
 
@@ -405,6 +422,12 @@ CREATE TABLE IF NOT EXISTS `visitor` (
   KEY `visitor_type` (`visitor_type`),
   KEY `visitor_status` (`visitor_status`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+
+INSERT INTO `visitor` (`id`, `first_name`, `last_name`, `email`, `contact_number`, `date_of_birth`, `company`, `department`, `position`, `staff_id`, `notes`, `password`, `role`, `visitor_type`, `visitor_status`, `created_by`, `is_deleted`, `tenant`, `tenant_agent`) VALUES
+(2, 'Test', 'Visitor1', 'testVisitor1@test.com', '1234567', '1970-01-01', NULL, NULL, 'Position', NULL, NULL, NULL, 10, 1, 1, 16, 0, 17, 18),
+(3, 'Test', 'Visitor3', 'testVisitor3@test.com', '1234567', '1970-01-01', NULL, NULL, 'Position', NULL, NULL, NULL, 10, 1, 1, 16, 0, 17, 18),
+(4, 'Test', 'Visitor4', 'testVisitor4@test.com', '1234567', '1970-01-01', 1, NULL, 'Position', NULL, NULL, NULL, 10, 2, 1, 16, 0, 17, 18);
 
 -- --------------------------------------------------------
 
@@ -467,6 +490,9 @@ CREATE TABLE IF NOT EXISTS `visit_reason` (
   KEY `tenant_agent` (`tenant_agent`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
+INSERT INTO `visit_reason` (`id`, `reason`, `created_by`, `tenant`, `tenant_agent`, `is_deleted`) VALUES
+(1, 'Reason 1', 16, NULL, NULL, 0),
+(2, 'Reason 2', 16, NULL, NULL, 0);
 -- --------------------------------------------------------
 
 --
@@ -601,6 +627,7 @@ ALTER TABLE `user_workstation`
 ALTER TABLE `visit`
   ADD CONSTRAINT `visit_ibfk_11` FOREIGN KEY (`card_type`) REFERENCES `card_type` (`id`),
 ADD CONSTRAINT `visit_ibfk_12` FOREIGN KEY (`visit_status`) REFERENCES `visit_status` (`id`),
+  
   ADD CONSTRAINT `visit_ibfk_1` FOREIGN KEY (`card`) REFERENCES `card_generated` (`id`),
   ADD CONSTRAINT `visit_ibfk_10` FOREIGN KEY (`tenant_agent`) REFERENCES `user` (`id`),
   ADD CONSTRAINT `visit_ibfk_3` FOREIGN KEY (`reason`) REFERENCES `visit_reason` (`id`),

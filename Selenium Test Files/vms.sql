@@ -73,6 +73,7 @@ CREATE TABLE IF NOT EXISTS `card_generated` (
 CREATE TABLE IF NOT EXISTS `card_type` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) DEFAULT NULL,
+  `max_day_validity` int(10) DEFAULT NULL,
   `max_time_validity` varchar(50) DEFAULT NULL,
   `max_entry_count_validity` int(10) DEFAULT NULL,
   `card_icon_type` text,
@@ -87,9 +88,9 @@ CREATE TABLE IF NOT EXISTS `card_type` (
 -- Dumping data for table `card_type`
 --
 
-INSERT INTO `card_type` (`id`, `name`, `max_time_validity`, `max_entry_count_validity`, `card_icon_type`, `card_background_image_path`, `created_by`) VALUES
-(1, 'Same Day Visitor', 'same day', NULL, 'images/same_day_vic.png', NULL, NULL),
-(2, 'Multiday Visitor', NULL, NULL, 'images/multi_day_vic.png', NULL, NULL);
+INSERT INTO `card_type` (`id`, `name`,`max_day_validity` ,`max_time_validity`, `max_entry_count_validity`, `card_icon_type`, `card_background_image_path`, `created_by`) VALUES
+(1, 'Same Day Visitor', '1', NULL,NULL ,'images/same_day_vic.png', NULL, NULL),
+(2, 'Multiday Visitor', NULL,NULL, NULL, 'images/multi_day_vic.png', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -237,7 +238,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   KEY `created_by` (`created_by`),
   KEY `tenant` (`tenant`),
   KEY `tenant_agent` (`tenant_agent`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=16 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
 -- Dumping data for table `user`
@@ -351,7 +352,8 @@ CREATE TABLE IF NOT EXISTS `visit` (
   KEY `created_by` (`created_by`),
   KEY `tenant` (`tenant`),
   KEY `tenant_agent` (`tenant_agent`),
-  KEY `card_type` (`card_type`)
+  KEY `card_type` (`card_type`),
+  KEY `visit_status` (`visit_status`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------

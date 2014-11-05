@@ -66,7 +66,7 @@ class Issue3FunctionalTestValidations extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->click("link=Administration");
         $this->waitForPageToLoad("30000");
-        $this->assertEquals("Displaying 1-7 of 7 results.", $this->getText("css=div.summary"));
+        $this->assertEquals("Displaying 1-8 of 8 results.", $this->getText("css=div.summary"));
         $this->select("css=select[name=\"User[role]\"]", "label=Super Administrator");
         sleep(1);
         $this->assertEquals("Super Administrator", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[3]"));
@@ -95,7 +95,7 @@ class Issue3FunctionalTestValidations extends BaseFunctionalTest {
         $this->select("css=select[name=\"User[role]\"]", "label=Staff Member");
         sleep(1);
         $this->assertEquals("Staff Member", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[3]"));
-        $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
+        $this->assertEquals("Displaying 1-2 of 2 results.", $this->getText("css=div.summary"));
 
         $this->click("link=Manage Users");
         $this->assertTrue($this->isElementPresent("link=Add Administrator"));
@@ -273,7 +273,7 @@ class Issue3FunctionalTestValidations extends BaseFunctionalTest {
         $this->select("css=select[name=\"User[role]\"]", "label=Staff Member");
         sleep(1);
         $this->assertEquals("Staff Member", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[3]"));
-        $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
+        $this->assertEquals("Displaying 1-2 of 2 results.", $this->getText("css=div.summary"));
 
         $this->click("link=Manage Users");
         $this->assertTrue($this->isElementPresent("link=Add Agent Operator"));

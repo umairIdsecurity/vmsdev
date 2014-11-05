@@ -66,9 +66,10 @@ class UserServiceImpl implements UserService {
                         /* if user role is agent operator, set tenant agent = tenant agent of current logged user */
                         User::model()->updateByPk($user->id, array('tenant_agent' => $sessionTenantAgent, 'tenant' => $sessionTenant));
                     } else if ($sessionRole == Roles::ROLE_AGENT_ADMIN) {
-                        $this->assignSessionTenantAgentForRoleStaffMember($user, $sessionTenantAgent);
+                        $this->assignSessionTenantAgentForRoleStaffMember($user,$sessionTenant ,$sessionTenantAgent);
                     } else {
                         User::model()->updateByPk($user->id, array('tenant' => $sessionTenant));
+                        User::model()->updateByPk($user->id, array('tenant_agent' => $sessionTenantAgent));
                     }
             }
         } else { //else if update
@@ -130,8 +131,8 @@ class UserServiceImpl implements UserService {
 
     private function removeTenantAgentofUserIfTenantIsSetForRoleStaffMember($user) {
         if ($user->tenant_agent != '') {
-            User::model()->updateByPk($user->id, array('tenant' => NULL));
-        }
+            User::model()->updateByPk($user->id, array('tenant' => $user->tenant));
+        } 
     }
 
     private function updateTenantForRoleAdmin($user, $company_tenant) {
@@ -144,10 +145,11 @@ class UserServiceImpl implements UserService {
         }
     }
 
-    public function assignSessionTenantAgentForRoleStaffMember($user, $sessionTenantAgent) {
+    public function assignSessionTenantAgentForRoleStaffMember($user, $sessionTenant,$sessionTenantAgent) {
         if ($user->role == Roles::ROLE_STAFFMEMBER) {
             User::model()->updateByPk($user->id, array(
-                'tenant_agent' => $sessionTenantAgent
+                'tenant_agent' => $sessionTenantAgent,
+                'tenant' => $sessionTenant
             ));
         }
     }

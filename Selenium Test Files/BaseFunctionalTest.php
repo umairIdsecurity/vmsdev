@@ -30,6 +30,7 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
     }
 
     public function resetDbWithData() {
+        $this->start();
         $this->open("http://cvms.identitysecurity.info/index.php?r=site/resetDb2");
         $this->assertEquals("Tables imported successfully", $this->getText("css=body"));
     }

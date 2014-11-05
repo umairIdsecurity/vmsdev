@@ -105,6 +105,7 @@ class Issue3FunctionalTestAgentAdmin extends BaseFunctionalTest {
         $this->clickAndWait("link=Add User");
         $this->addUser("staffmember3@test.com", "staffmember3");
         $this->select("id=User_role", "label=Staff Member");
+        
         $this->getDisabledCompanyValue("Test Company 1");
         $this->click("id=submitBtn");
         $this->clickAndWait("id=submitForm");

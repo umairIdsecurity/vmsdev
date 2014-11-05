@@ -7,7 +7,6 @@
  */
 
 
-require_once 'Issue25FunctionalTest.php';
 require_once 'BaseFunctionalTest.php';
 
 /**
@@ -23,15 +22,13 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
     }
 
     function testAll() {
-        
-//        $issue25 = new Issue25FunctionalTest();
-//        $issue25->testAll();
+        $this->resetDbWithData();
         $this->Scenario1();
         $this->Scenario2();
         $this->Scenario3();
         $this->Scenario4();
     }
-    
+
     /* Scenario 1 – Login as super admin then perform update a visitor functionality for patient visitor type
       Expected Behavior
       -	Assert text testvisitor1@test.com in email field.
@@ -58,7 +55,7 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->open("/index.php?r=visit/detail&id=2");
+        $this->open("/index.php?r=visit/detail&id=1");
         $this->assertEquals("Test", $this->getText("//table[@id='personalDetailsTable']/tbody/tr/td[2]"));
         $this->assertEquals("Visitor1", $this->getText("//table[@id='personalDetailsTable']/tbody/tr[2]/td[2]"));
         $this->assertEquals("testVisitor1@test.com", $this->getValue("id=Visitor_email"));
@@ -78,7 +75,7 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
         $this->type("document.forms['update-patient-form'].elements['Patient[name]']", "Patient Name 3");
         $this->click("id=submit");
         sleep(1);
-        $this->open("/index.php?r=visit/detail&id=2");
+        $this->open("/index.php?r=visit/detail&id=1");
         $this->assertEquals("testVisitorB@test.com", $this->getValue("id=Visitor_email"));
         $this->assertEquals("1234567890", $this->getValue("id=Visitor_contact_number"));
         $this->assertEquals("1", $this->getValue("id=Visit_visitor_type"));
@@ -111,7 +108,7 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->open("/index.php?r=visit/detail&id=5");
+        $this->open("/index.php?r=visit/detail&id=6");
         $this->assertEquals("testVisitor4@test.com", $this->getValue("id=Visitor_email"));
         $this->assertEquals("2", $this->getValue("id=Visit_visitor_type"));
         $this->type("id=Visitor_email", "testVisitorC@test.com");
@@ -125,7 +122,7 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
         $this->type("document.forms['register-host-form'].elements['User[email]']", "testHost1A@test.com");
         $this->click("document.forms['register-host-form'].yt0");
         sleep(1);
-        $this->open("/index.php?r=visit/detail&id=5");
+        $this->open("/index.php?r=visit/detail&id=6");
         $this->assertEquals("testVisitorC@test.com", $this->getValue("id=Visitor_email"));
         $this->assertEquals("1234567890", $this->getValue("id=Visitor_contact_number"));
         $this->assertEquals("2", $this->getValue("id=Visit_reason"));
@@ -163,7 +160,7 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->open("/index.php?r=visit/detail&id=2");
+        $this->open("/index.php?r=visit/detail&id=1");
         $this->type("id=Visitor_email", "");
         $this->type("id=Visitor_contact_number", "");
         $this->click("id=submitContactDetailForm");
@@ -222,7 +219,7 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->open("/index.php?r=visit/detail&id=5");
+        $this->open("/index.php?r=visit/detail&id=6");
         $this->type("document.forms['register-host-form'].elements['User[first_name]']", "");
         $this->type("document.forms['register-host-form'].elements['User[last_name]']", "");
         $this->type("document.forms['register-host-form'].elements['User[department]']", "");

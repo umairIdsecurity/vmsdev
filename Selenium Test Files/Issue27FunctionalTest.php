@@ -7,7 +7,6 @@
  */
 
 
-require_once 'Issue25FunctionalTest.php';
 require_once 'BaseFunctionalTest.php';
 
 /**
@@ -23,19 +22,14 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
     }
 
     function testAll() {
-
-        $this->Scenario0();
+        $this->resetDbWithData();
         $this->Scenario1();
         $this->Scenario2();
         $this->Scenario3();
         $this->Scenario4();
         $this->Scenario5();
         $this->Scenario6();
-    }
-
-    function Scenario0() {
-        $issue25 = new Issue25FunctionalTest();
-        $issue25->testAll();
+        $this->Scenario7();
     }
 
     /* Scenario 1 – Login as super admin then perform update a visitor functionality for patient visitor type
@@ -72,7 +66,8 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->select("name=Visit[visitor_type]", "label=Patient Visitor");
         sleep(1);
         $this->select("name=Visit[reason]", "label=Reason 1");
-        $this->clickAndWait("css=tr.even > td.button-column > a.update");
+        sleep(1);
+        $this->clickAndWait("link=Edit");
         $this->assertEquals("Test", $this->getText("//table[@id='personalDetailsTable']/tbody/tr/td[2]"));
         $this->assertEquals("Visitor1", $this->getText("//table[@id='personalDetailsTable']/tbody/tr[2]/td[2]"));
         $this->assertEquals("testVisitor1@test.com", $this->getValue("id=Visitor_email"));
@@ -379,7 +374,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
     }
 
     /*
-      Scenario 6- Login as super admin and add log visit
+      Scenario 6- Login as super admin and add log visit for same day card type
       Expected Behavior
       -	Assert date in 2014-11-25
       -	Assert date out 2014-11-25
@@ -412,8 +407,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Edit");
         $this->click("id=Visit_date_in");
         $this->type("id=Visit_date_in", "11/25/2014");
-        $this->click("id=Visit_date_out");
-        $this->type("id=Visit_date_out", "11/25/2014");
+        sleep(1);
         $this->select("id=Visit_time_in_hours", "label=11");
         $this->select("id=Visit_time_in_minutes", "label=24");
         $this->click("css=#update-log-visit-form > input[type=\"submit\"]");
@@ -425,6 +419,65 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Edit");
         $this->assertEquals("2014-11-25", $this->getValue("id=Visit_date_in"));
         $this->assertEquals("2014-11-25", $this->getValue("id=Visit_date_out"));
+        $this->assertEquals("11", $this->getValue("id=Visit_time_in_hours"));
+        $this->assertEquals("24", $this->getValue("id=Visit_time_in_minutes"));
+    }
+    
+    /*
+      Scenario 7- Login as super admin and add log visit for multiday card type
+      Expected Behavior
+      -	Assert date in 2014-11-25
+      -	Assert date out 2014-11-27
+      -	Assert time in 11:24
+      Steps:
+      1.	Login as superadmin@test.com use 12345 as password
+      2.	Click administration
+      3.	Click manage visits
+      4.	Type test visitor1 in name search field, select reason 1 in reason, multi day in card type
+      5.	Click edit then click log visit
+      6.	Click date in input text and select november 25 in datepicker in date out select november 27 
+      7.	Select 11 in hours dropdown and 24 in minutes dropdown
+      8.	Click update button
+      9.	Click manage visits
+      10.	Type test visitor1 in name search field, select multi day visitor then click edit.
+      11.	Click log visit. Assert value date in is 2014-11-25
+      12.	Assert value date out is 2014-11-27
+      13.	Assert hour selected 11
+      14.	Assert minute selected 24
+     */
+
+    function Scenario7() {
+        $username = 'superadmin@test.com';
+        $this->login($username, '12345');
+        $this->clickAndWait("link=Administration");
+        $this->clickAndWait("//div[@id='cssmenu']/ul/li[6]/a/span");
+        $this->type("name=Visit[visitor]", "test visitor1");
+        $this->select("name=Visit[card_type]", "label=Multi Day Visitor");
+        sleep(1);
+        $this->select("name=Visit[reason]", "label=Reason 1");
+        sleep(1);
+        $this->clickAndWait("link=Edit");
+        $this->click("//li[@id='logvisitLi']/a/span");
+        sleep(1);
+        $this->click("id=Visit_date_in");
+        $this->type("id=Visit_date_in", "11/25/2014");
+        $this->click("id=Visit_date_out");
+        $this->type("id=Visit_date_out", "11/27/2014");
+        $this->select("id=Visit_time_in_hours", "label=11");
+        $this->select("id=Visit_time_in_minutes", "label=24");
+        $this->click("css=#update-log-visit-form > input[type=\"submit\"]");
+        sleep(1);
+        $this->clickAndWait("link=Manage Visits");
+        $this->type("name=Visit[visitor]", "test visitor1");
+        $this->select("name=Visit[card_type]", "label=Multi Day Visitor");
+        sleep(1);
+        $this->select("name=Visit[reason]", "label=Reason 1");
+        sleep(1);
+        $this->clickAndWait("link=Edit");
+        $this->click("//li[@id='logvisitLi']/a/span");
+        sleep(1);
+        $this->assertEquals("2014-11-25", $this->getValue("id=Visit_date_in"));
+        $this->assertEquals("2014-11-27", $this->getValue("id=Visit_date_out"));
         $this->assertEquals("11", $this->getValue("id=Visit_time_in_hours"));
         $this->assertEquals("24", $this->getValue("id=Visit_time_in_minutes"));
     }

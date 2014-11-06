@@ -25,7 +25,7 @@
                 </td>
                 
                 <td >
-                    <textarea id="VisitReason_reason" name="VisitReason[reason]" style="width:400px !important;text-transform: capitalize;" cols="80" rows="3"><?php 
+                    <textarea id="VisitReason_reason" maxlength="128" name="VisitReason[reason]" style="width:400px !important;text-transform: capitalize;" cols="80" rows="3"><?php 
                         echo $model->reason;
                     ?></textarea> <?php echo $form->error($model,'reason'); ?>
                 </td>

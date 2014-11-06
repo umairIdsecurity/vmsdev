@@ -50,7 +50,7 @@
             ),
         ));
         ?>
-        <textarea id="VisitReason_reason_search" name="VisitReason[reason]"></textarea> 
+        <textarea id="VisitReason_reason_search" maxlength="128" name="VisitReason[reason]"></textarea> 
         <div class="errorMessage" id="visitReasonErrorMessageSearch" style="display:none;">Reason cannot be blank.</div>
 
 
@@ -213,7 +213,7 @@
         ),
     ));
     ?>
-    <textarea id="VisitReason_reason" name="VisitReason[reason]" ></textarea> 
+    <textarea id="VisitReason_reason" name="VisitReason[reason]" maxlength="128"></textarea> 
     <div class="errorMessage" id="visitReasonErrorMessage" style="display:none;">Reason cannot be blank.</div>
 
 

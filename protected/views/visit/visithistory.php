@@ -12,10 +12,10 @@
             $host= $model->patient;
             $userHost = 'patient';
         }
-        
+        $visitor = $model->visitor;
         $model = new Visit;
         $criteria = new CDbCriteria;
-        $criteria->addCondition('visit_status=3 ');
+        $criteria->addCondition('visit_status=3 and visitor="'.$visitor.'"');
 
         $model->unsetAttributes();
         $visitData = new CActiveDataProvider($model, array(

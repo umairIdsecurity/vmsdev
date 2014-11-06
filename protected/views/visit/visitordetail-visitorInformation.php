@@ -179,7 +179,7 @@ $session = new CHttpSession;
                     <table id="addreasonTable" class="detailsTable">
                         <tr>
                             <td width="100px;"><label for="VisitReason_reason">Reason</label></td>
-                            <td><textarea id="VisitReason_reason" name="VisitReason[reason]" style="width:200px !important;text-transform: capitalize;" cols="80" rows="3"><?php
+                            <td><textarea id="VisitReason_reason" maxlength="128" name="VisitReason[reason]" style="width:200px !important;text-transform: capitalize;" cols="80" rows="3"><?php
                                     echo $reasonModel->reason;
                                     ?></textarea> <?php echo $addReasonForm->error($reasonModel, 'reason'); ?>
                                 <div class="errorMessage visitorReason" id="visitReasonErrorMessage">Reason cannot be blank.</div>
@@ -512,8 +512,6 @@ $session = new CHttpSession;
 </div>
 <script>
     $(document).ready(function() {
-        
-        
         if($("#currentSessionRole").val() == 9){
             $("#personalDetailsLi").html("<a href='#'><span>Personal Details</span></a>");
             $("#contactDetailsLi").html("<a href='#'><span>Contact Details</span></a>");

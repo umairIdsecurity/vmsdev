@@ -77,11 +77,10 @@ CREATE TABLE IF NOT EXISTS `card_type` (
   `max_time_validity` varchar(50) DEFAULT NULL,
   `max_entry_count_validity` int(10) DEFAULT NULL,
   `card_icon_type` text,
-  `card_background_image_path` bigint(20) DEFAULT NULL,
+  `card_background_image_path` text,
   `created_by` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `created_by` (`created_by`),
-  KEY `card_background_image_path` (`card_background_image_path`)
+  KEY `created_by` (`created_by`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
@@ -89,8 +88,8 @@ CREATE TABLE IF NOT EXISTS `card_type` (
 --
 
 INSERT INTO `card_type` (`id`, `name`,`max_day_validity` ,`max_time_validity`, `max_entry_count_validity`, `card_icon_type`, `card_background_image_path`, `created_by`) VALUES
-(1, 'Same Day Visitor', '1', NULL,NULL ,'images/same_day_vic.png', NULL, NULL),
-(2, 'Multiday Visitor', NULL,NULL, NULL, 'images/multi_day_vic.png', NULL, NULL);
+(1, 'Same Day Visitor', '1', NULL,NULL ,'images/same_day_vic.png', 'images/cardprint-new.png', NULL),
+(2, 'Multiday Visitor', NULL,NULL, NULL, 'images/multi_day_vic.png', 'images/cardprint-new.png', NULL);
 
 -- --------------------------------------------------------
 
@@ -385,7 +384,7 @@ INSERT INTO `visit` (`id`, `visitor`, `card_type`, `card`, `visitor_type`, `reas
 (4, 3, 1, NULL, 1, 1, 1, NULL, 3, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 17, 18, 0),
 (5, 3, 1, NULL, 1, 1, 1, NULL, 3, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 17, 18, 0),
 (6, 4, 1, NULL, 2, 1, 1, 23, NULL, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 17, 18, 0),
-(7, 2, 1, NULL, 2, 1, 1, 21, NULL, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 17, 18, 0);
+(7, 2, 2, NULL, 2, 1, 1, 21, NULL, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 17, 18, 0);
 
 -- --------------------------------------------------------
 
@@ -570,7 +569,6 @@ ALTER TABLE `card_generated`
 -- Constraints for table `card_type`
 --
 ALTER TABLE `card_type`
-  ADD CONSTRAINT `card_type_ibfk_2` FOREIGN KEY (`card_background_image_path`) REFERENCES `photo` (`id`),
   ADD CONSTRAINT `card_type_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`);
 
 --

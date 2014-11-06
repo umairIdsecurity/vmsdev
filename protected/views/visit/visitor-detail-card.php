@@ -1,8 +1,10 @@
-<div id="cardDiv">
+
+<div id="cardDiv" 
+ style="background: url('../<?php echo CardType::model()->findByPk($model->card_type)->card_background_image_path; ?>') no-repeat center top;">
     <div style="position: relative; padding-top:180px;padding-left:30px;">
         <table class="" style="width:100%;margin-left:100px;" id="cardDetailsTable">
             <tr>
-                <td><?php echo CardType::$CARD_TYPE_LIST[$model->visitor_type]; ?></td>
+                <td><?php echo CardType::$CARD_TYPE_LIST[$model->card_type]; ?></td>
             </tr>
             <tr>
                 <td><?php echo $visitorModel->first_name.', '.$visitorModel->last_name ?></td>

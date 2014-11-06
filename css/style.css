@@ -874,6 +874,17 @@ text-decoration: none;
     width:60px;
 }
 
+#actionsCssMenu li{
+    list-style:none outside none;
+}
+#actionsCssMenu li a, #actionsCssMenu li a span{
+    color:#58585A !important;
+    font-weight:bold;
+    font-size:12px;
+}
+
+.ui-datepicker-calendar tr th{
+    background:none !important;
 #visit-gridDashboard{
     width:1500px;
     padding-right: 40px !important;

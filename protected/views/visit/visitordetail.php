@@ -35,29 +35,15 @@ $session = new CHttpSession;
 
         </td>
         <td>
-            <table id="actionsVisitDetails">
-                <tr>
-                    <td></td>
-                    <td style="padding:25px 10px 10px 20px;">
-                        <span class="icons log-current actionsLabel"><a>Log Visit</a></span>
-                        <div id="logVisitDiv">
-                            <?php
-                            $this->renderPartial('logvisit', array('model' => $model,
-                                'visitorModel' => $visitorModel,
-                                'hostModel' => $hostModel,
-                                'reasonModel' => $reasonModel,
-                            ));
-                            ?>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td style="padding:5px 10px 10px 20px;">
-                        <span class="icons pre-visits actionsLabel">Preregister a Visit</span>
-                    </td>
-                </tr>
-            </table>
+            <?php
+            $this->renderPartial('visitordetail-actions', array('model' => $model,
+                'visitorModel' => $visitorModel,
+                'hostModel' => $hostModel,
+                'reasonModel' => $reasonModel,
+                'patientModel' => $patientModel,
+            ));
+            ?>
+            
         </td>
 
     </tr>

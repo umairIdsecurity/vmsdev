@@ -204,7 +204,7 @@ class Issue24FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("css=li.has-sub.active > ul > li.odd > a.has-sub-sub > span");
         $this->type("id=VisitReason_reason", "This is a reason");
         $this->clickAndWait("name=yt0");
-        $this->assertEquals("This is a reason", $this->getText("css=tr.odd > td"));
+        $this->assertEquals("This is a reason", $this->getText("//div[@id='visit-reason-grid']/table/tbody/tr[3]/td"));
         $this->clickAndWait("css=li.has-sub.active > ul > li.odd > a.has-sub-sub > span");
         $this->type("id=VisitReason_reason", " THIS IS A REASON ");
         $this->clickAndWait("name=yt0");

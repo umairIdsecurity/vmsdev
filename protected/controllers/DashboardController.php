@@ -22,11 +22,11 @@ class DashboardController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update','index'),
+                'actions' => array('create', 'update', 'index'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('ViewMyVisitors'),
+                'actions' => array('ViewMyVisitors','addHost'),
                 'expression' => 'Yii::app()->controller->checkIfUserCanAccess("viewmyvisitor")',
             ),
             array('deny', // deny all users
@@ -34,7 +34,7 @@ class DashboardController extends Controller {
             ),
         );
     }
-    
+
     public function checkIfUserCanAccess($action) {
         $session = new CHttpSession;
         $CurrentRole = $session['role'];
@@ -46,7 +46,7 @@ class DashboardController extends Controller {
                     return true;
                 }
                 break;
-            
+
             default:
                 return false;
         }
@@ -125,7 +125,6 @@ class DashboardController extends Controller {
         $this->render('index', array(
             'dataProvider' => $dataProvider,
         ));
-       
     }
 
     /**
@@ -166,7 +165,7 @@ class DashboardController extends Controller {
             Yii::app()->end();
         }
     }
-    
+
     public function actionViewMyVisitors() {
         $this->layout = '//layouts/column2';
         $model = new Visit('search');
@@ -177,6 +176,17 @@ class DashboardController extends Controller {
         $this->render('viewmyvisitors', array(
             'model' => $model,
         ));
+    }
+
+    public function actionAddHost() {
+        $this->layout = '//layouts/column2';
+        $userModel = new User();
+        $patientModel = new Patient();
+
+        $this->render('addhost', array(
+            'userModel' => $userModel,
+            'patientModel' => $patientModel
+                ), false, true);
     }
 
 }

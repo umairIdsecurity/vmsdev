@@ -181,46 +181,45 @@ $session = new CHttpSession;
                     </select>
                     <div class="errorMessage visitorReason" >Reason cannot be blank.</div>
                 </td>
-                <td id="visitorTenantRow"><?php echo $form->labelEx($model, 'tenant'); ?><br>
+                <td id="visitorTenantRow" <?php
+                if ($session['role'] != 5) {
+                    echo " class='hidden' ";
+                }
+                ?>><?php echo $form->labelEx($model, 'tenant'); ?><br>
 
-                    <?php
-                    if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
-                        ?>
-                        <input type='text' name='Visitor["tenant"]' value='<?php echo $session['tenant']; ?>'/>
+                    <select id="Visitor_tenant" onchange="populateTenantAgentAndCompanyField()" name="Visitor[tenant]"  >
+                        <option value='' selected>Select Admin</option>
                         <?php
-                    } else {
-                        ?>
-                        <select id="Visitor_tenant" onchange="populateTenantAgentAndCompanyField()" name="Visitor[tenant]"  >
-                            <option value='' selected>Select Admin</option>
+                        $allAdminNames = User::model()->findAllAdmin();
+                        foreach ($allAdminNames as $key => $value) {
+                            ?>
+                            <option value="<?php echo $value->tenant; ?>"
                             <?php
-                            $allAdminNames = User::model()->findAllAdmin();
-                            foreach ($allAdminNames as $key => $value) {
-                                ?>
-                                <option value="<?php echo $value->tenant; ?>"><?php echo $value->first_name . " " . $value->last_name; ?></option>
-                                <?php
+                            if ($session['role'] == Roles::ROLE_STAFFMEMBER && $session['tenant'] == $value->tenant) {
+                                echo " selected ";
                             }
                             ?>
-                        </select><?php echo "<br>" . $form->error($model, 'tenant'); ?>
+                                    ><?php echo $value->first_name . " " . $value->last_name; ?></option>
+                                    <?php
+                                }
+                                ?>
+                    </select><?php echo "<br>" . $form->error($model, 'tenant'); ?>
 
-                        <?php
-                    }
-                    ?>
                 </td>
-                <td id="visitorTenantAgentRow"><?php echo $form->labelEx($model, 'tenant_agent'); ?><br>
-                    <?php
-                    if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
-                        ?>
-                        <input type='text' name='Visitor["tenant_agent"]' value='<?php echo $session['tenant_agent']; ?>'/>
+                <td id="visitorTenantAgentRow" <?php
+                                if ($session['role'] != 5) {
+                                    echo " class='hidden' ";
+                                }
+                                ?>><?php echo $form->labelEx($model, 'tenant_agent'); ?><br>
+
+                    <select id="Visitor_tenant_agent" name="Visitor[tenant_agent]" onchange="populateCompanyWithSameTenantAndTenantAgent()" >
                         <?php
-                    } else {
+                        echo "<option value='' selected>Select Tenant Agent</option>";
+                        if ($session['role'] == Roles::ROLE_STAFFMEMBER ) {
+                            echo "<option value='".$session['tenant_agent']."' selected>TenantAgent</option>";
+                        }
                         ?>
-                        <select id="Visitor_tenant_agent" name="Visitor[tenant_agent]" onchange="populateCompanyWithSameTenantAndTenantAgent()" >
-                            <?php
-                            echo "<option value='' selected>Select Tenant Agent</option>";
-                            ?>
-                        </select><?php echo "<br>" . $form->error($model, 'tenant_agent'); ?>
-                        <?php }
-                    ?>
+                    </select><?php echo "<br>" . $form->error($model, 'tenant_agent'); ?>
 
                 </td>
             </tr>
@@ -256,7 +255,7 @@ $session = new CHttpSession;
     <div class="errorMessage" id="visitReasonErrorMessage" style="display:none;">Reason cannot be blank.</div>
 
 
-    <?php $this->endWidget(); ?>
+<?php $this->endWidget(); ?>
 </div>
 
 <script>

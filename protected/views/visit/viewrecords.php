@@ -3,16 +3,24 @@
 /* @var $model Visit */
 
 ?>
-<h1>Preregistered Visitors</h1>
+<h1>Visitor Records</h1>
 <br>
 <?php
+$session = new CHttpSession;
+
 $this->widget('zii.widgets.grid.CGridView', array(
-    'id' => 'visit-gridDashboard',
+    'id' => 'view-visitor-records',
     'dataProvider' => $model->search(),
-    'filter' => $model,
     
+    'filter' => $model,
     'columns' =>
     array(
+        array(
+            'filter'=>false,
+            'value' => 'CHtml::link("View",Yii::app()->createUrl("visit/detail",array("id"=>$data->id)),array("class" =>"statusLink black"))',
+            'type'=>'raw',
+            'header'=>'',
+            ),
         array(
             'name' => 'visit_status',
             'filter'=>false,
@@ -20,8 +28,12 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'type'=>'raw',
             'header'=>'Status',
             ),
+        array(
+            'name' => 'visitor_type',
+            'value' => 'VisitorType::$VISITOR_TYPE_LIST[$data->visitor_type]',
+            'filter' => VisitorType::$VISITOR_TYPE_LIST,
+        ),
         
-        'date_in',
         array(
             'name' => 'card',
             'header' =>'Card No.'
@@ -39,10 +51,13 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' => 'company',
             'value' => 'getCompany($data->visitor)',
-            'header' => 'Company',
+            'header' => 'Company Name',
             'cssClassExpression' => '( getCompany($data->visitor)== "Not Available" ? "errorNotAvailable" : "" ) ',
             'type'=>'raw'
         ),
+        'date_in',
+        'time_in',
+        
         array(
             'name' => 'contactnumber',
             'value' => 'Visitor::model()->findByPk($data->visitor)->contact_number',
@@ -55,16 +70,11 @@ $this->widget('zii.widgets.grid.CGridView', array(
         ),
         'time_in',
         'date_out',
-       
+        'card0.date_expiration',
         
     ),
 ));
 
-function getVisitorFullName($id){
-    $visitor =Visitor::model()->findByPk($id);
-   
-    return $visitor->first_name.' '.$visitor->last_name;
-}
 
 function getCompany($id){
     if(Visitor::model()->findByPk($id)->company == NULL){

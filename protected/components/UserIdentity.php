@@ -28,6 +28,8 @@ class UserIdentity extends CUserIdentity
                 $this->_id=$user->id;
                 $this->setState('email', $user->email);
                 $this->setState('role', $user->role);
+                $this->setState('tenant', $user->tenant);
+                $this->setState('tenant_agent', $user->tenant_agent);
                 
                 $session=new CHttpSession;
                 $session->open();

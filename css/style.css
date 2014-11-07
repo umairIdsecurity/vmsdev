@@ -34,7 +34,8 @@ div.form label{
 .visitor-findBtn,.host-findBtn,.visitor-backBtn,
 #dummy-submitFormPatientName,
 #updateVisitHostFromSearch,
-.submitBtn{
+.submitBtn,.host-AddBtn
+,#saveCurrentUserAsHost{
     background: -webkit-gradient(linear, center top, center bottom, from(#A1DC33), to(#82BD12));
     background: -moz-linear-gradient(center top , #A1DC33, #82BD12) repeat scroll 0 0 rgba(0, 0, 0, 0);
     background: -webkit-gradient(linear, center top, center bottom, from(#A1DC33), to(#82BD12));
@@ -45,6 +46,10 @@ div.form label{
     font-weight: bold;
     padding: 3px 15px 5px;
     cursor:pointer;
+}
+
+.host-AddBtn{
+    margin-top:-4px;
 }
 
 .login-area .errorMessage{
@@ -885,6 +890,7 @@ text-decoration: none;
 
 .ui-datepicker-calendar tr th{
     background:none !important;
+}
 #visit-gridDashboard{
     width:1500px;
     padding-right: 40px !important;
@@ -898,8 +904,32 @@ text-decoration: none;
     font-size:13px !important;
     font-weight:normal !important;
     padding:0 !important;
+    text-align:center;
 }
 
 .overflowxvisible{
     overflow-x: visible !important;
+}
+
+#visit-gridDashboard_c0{
+    width:120px;
+}
+
+.errorNotAvailable{
+    color:red;
+    font-size:13px;
+}
+
+.black {
+    color:black !important;
+    font-weight:bold !important;
+}
+
+#view-visitor-grid_c1{
+    width:130px !important;
+}
+
+#view-visitor-records {
+    width:1680px;
+    padding-right:30px !important;
 }

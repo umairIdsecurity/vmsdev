@@ -12,7 +12,7 @@ $session = new CHttpSession;
     </dd>
     <dt id="findVisitorA">Find or Add New Visitor Record</dt>
     <dd style="display:none;" id="findVisitor"><a href="#step2" id="findVisitorB">Find or Add New Visitor Record</a></dd>
-    
+
     <dt id="findHostA" style="border-top-right-radius: 5px ! important;">Find or Add Host</dt>
     <dd style="display:none;border-top-right-radius: 5px ! important;" id="findHost">
         <a href="#step3" id="findHostB" style="border-top-right-radius: 5px ! important;">Find or Add Host</a>
@@ -47,17 +47,42 @@ $session = new CHttpSession;
             $("#User_tenant").val('<?php echo $session['tenant']; ?>');
             $("#Visitor_tenant_agent").val('<?php echo $session['tenant_agent']; ?>');
             $("#User_tenant_agent").val('<?php echo $session['tenant_agent']; ?>');
+
+            $("#Visitor_visitor_type").val(2);
+            $("#Visitor_visitor_type_search").val(2);
+            $('#Visitor_visitor_type option[value!="2"]').remove();
+            $('#Visitor_visitor_type_search option[value!="2"]').remove();
+            document.getElementById('Visitor_company').disabled = false;
+            /*check if current logged in role is staff member
+             * if staff member check if tenant agent admin is null
+             * if null populate company by tenant
+             * else if not null populate company by tenant and tenant agent
+             */
+            $("#register-host-patient-form").hide();
+            $("#register-host-form").hide();
+            $("#searchHostDiv").show();
+            $("#currentHostDetailsDiv").show();
+            
+            $('#Visitor_company option[value!=""]').remove();
+            if ($("#currentRoleOfLoggedInUser").val() != 5) { //not superadmin
+                if ($("#Visitor_tenant_agent").val() == '') {
+                    getCompanyWithSameTenant($("#Visitor_tenant").val());
+                } else {
+                    getCompanyWithSameTenantAndTenantAgent($("#Visitor_tenant").val(), $("#Visitor_tenant_agent").val());
+                }
+            }
         }
-        
+
         $('#Visitor_visitor_type').on('change', function(e) {
             $('#Visitor_company option[value!=""]').remove();
             $('#Visitor_tenant_agent option[value!=""]').remove();
             $('#Visitor_tenant').val("");
-            if ($(this).val() == "2") {
+            if ($(this).val() == "2") { //if corporate type
                 $("#register-host-patient-form").hide();
                 $("#register-host-form").show();
                 document.getElementById('Visitor_company').disabled = false;
-            } else {
+
+            } else { //if patient type
                 $("#register-host-patient-form").show();
                 $("#register-host-form").hide();
                 document.getElementById('Visitor_company').disabled = true;

@@ -26,11 +26,11 @@ class VisitorController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin', 'delete'),
+                'actions' => array('update', 'admin', 'delete'),
                 'expression' => 'Yii::app()->controller->checkIfUserCanAccess("superadmin")',
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('GetIdOfUser', 'GetHostDetails', 'GetPatientDetails', 'CheckEmailIfUnique', 'GetVisitorDetails', 'FindVisitor', 'FindHost', 'GetTenantAgentWithSameTenant', 'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent'),
+                'actions' => array('create','GetIdOfUser', 'GetHostDetails', 'GetPatientDetails', 'CheckEmailIfUnique', 'GetVisitorDetails', 'FindVisitor', 'FindHost', 'GetTenantAgentWithSameTenant', 'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -250,5 +250,7 @@ class VisitorController extends Controller {
             echo "0";
         }
     }
+    
+    
 
 }

@@ -25,7 +25,7 @@ class UserController extends Controller {
      */
     public function accessRules() {
         return array(
-            array('allow', 
+            array('allow',
                 'actions' => array('create',
                     'GetTenantAgentWithSameTenant',
                     'GetIdOfUser',
@@ -39,11 +39,11 @@ class UserController extends Controller {
                 'actions' => array('update'),
                 'expression' => 'Yii::app()->controller->accessRoles("userTenant")',
             ),
-            array('allow', 
+            array('allow',
                 'actions' => array('profile'),
                 'expression' => 'Yii::app()->controller->accessRoles("profile")',
             ),
-            array('allow', 
+            array('allow',
                 'actions' => array('admin', 'delete', 'systemaccessrules'),
                 'expression' => 'Yii::app()->controller->accessRoles("admin")',
             ),
@@ -97,7 +97,9 @@ class UserController extends Controller {
                 $workstation = $_POST['User']['workstation'];
             }
             if ($userService->save($model, $session['tenant'], $session['tenant_agent'], $session['role'], $session['id'], $workstation)) {
-                $this->redirect(array('admin'));
+                if (!isset($_GET['view'])) {
+                    $this->redirect(array('admin'));
+                }
             }
         }
 

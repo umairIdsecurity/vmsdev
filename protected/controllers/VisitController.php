@@ -26,7 +26,7 @@ class VisitController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'detail', 'admin', 'delete'),
+                'actions' => array('create', 'update', 'detail', 'admin', 'view'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -35,15 +35,6 @@ class VisitController extends Controller {
         );
     }
 
-    /**
-     * Displays a particular model.
-     * @param integer $id the ID of the model to be displayed
-     */
-    public function actionView($id) {
-        $this->render('view', array(
-            'model' => $this->loadModel($id),
-        ));
-    }
 
     /**
      * Creates a new model.
@@ -78,7 +69,7 @@ class VisitController extends Controller {
         $model = $this->loadModel($id);
         $visit = new VisitServiceImpl();
         $session = new CHttpSession;
-        
+
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
@@ -163,10 +154,10 @@ class VisitController extends Controller {
         $reasonModel = VisitReason::model()->findByPk($model->reason);
         $patientModel = Patient::model()->findByPk($model->patient);
         $cardTypeModel = CardType::model()->findByPk($model->card_type);
-        
+
         $newPatient = new Patient;
         $newHost = new User;
-                
+
         if ($model->visitor_type == VisitorType::PATIENT_VISITOR) {
             $host = 16;
         } else {
@@ -174,7 +165,7 @@ class VisitController extends Controller {
         }
         $hostModel = User::model()->findByPk($host);
 
-        
+
 
         $visitorService = new VisitorServiceImpl();
         // Uncomment the following line if AJAX validation is needed
@@ -196,6 +187,21 @@ class VisitController extends Controller {
             'newPatient' => $newPatient,
             'newHost' => $newHost,
             'cardTypeModel' => $cardTypeModel,
+        ));
+    }
+
+    /* Visitor Records */
+
+    public function actionView() {
+        $this->layout = "//layouts/column1";
+        $model = new Visit('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['Visit'])) {
+            $model->attributes = $_GET['Visit'];
+        }
+
+        $this->render('viewrecords', array(
+            'model' => $model,
         ));
     }
 

@@ -424,7 +424,7 @@ CREATE TABLE IF NOT EXISTS `visitor` (
 
 
 INSERT INTO `visitor` (`id`, `first_name`, `last_name`, `email`, `contact_number`, `date_of_birth`, `company`, `department`, `position`, `staff_id`, `notes`, `password`, `role`, `visitor_type`, `visitor_status`, `created_by`, `is_deleted`, `tenant`, `tenant_agent`) VALUES
-(2, 'Test', 'Visitor1', 'testVisitor1@test.com', '1234567', '1970-01-01', NULL, NULL, 'Position', NULL, NULL, NULL, 10, 1, 1, 16, 0, 17, 18),
+(2, 'Test', 'Visitor1', 'testVisitor1@test.com', '1234567', '1970-01-01', 1, NULL, 'Position', NULL, NULL, NULL, 10, 1, 1, 16, 0, 17, 18),
 (3, 'Test', 'Visitor3', 'testVisitor3@test.com', '1234567', '1970-01-01', NULL, NULL, 'Position', NULL, NULL, NULL, 10, 1, 1, 16, 0, 17, 18),
 (4, 'Test', 'Visitor4', 'testVisitor4@test.com', '1234567', '1970-01-01', 1, NULL, 'Position', NULL, NULL, NULL, 10, 2, 1, 16, 0, 17, 18);
 

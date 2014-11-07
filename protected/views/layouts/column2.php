@@ -10,16 +10,18 @@ if (isset($_GET['viewFrom'])) {
 <?php $this->beginContent('//layouts/main');
 ?>
 <div class="span-19">
-    <div id="content" style="<?php if ($viewFrom != '' || $this->action->id == 'detail') {
-    echo "border:1px solid white !important;";
-} ?>"
-         <?php 
-         if($this->action->id == 'detail'){
-             echo "class='overflowxvisible'";
-         }
-         ?>
+    <div id="content" style="<?php
+    if ($viewFrom != '' || $this->action->id == 'detail') {
+        echo "border:1px solid white !important;";
+    }
+    ?>"
+    <?php
+    if ($this->action->id == 'detail') {
+        echo "class='overflowxvisible'";
+    }
+    ?>
          >
-<?php echo $content; ?>
+             <?php echo $content; ?>
     </div><!-- content -->
 </div>
 <div class="span-5 last">

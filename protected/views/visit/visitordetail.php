@@ -307,7 +307,7 @@ $this->renderPartial('visithistory', array('model' => $model,
         var hostform = $("#register-newhost-form").serialize();
         $.ajax({
             type: "POST",
-            url: "<?php echo CHtml::normalizeUrl(array("user/create")); ?>",
+            url: "<?php echo CHtml::normalizeUrl(array("user/create&view=1")); ?>",
             data: hostform,
             success: function(data) {
                 getLastHostId();

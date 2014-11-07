@@ -14,7 +14,7 @@
 class VisitServiceImpl implements VisitService {
 
     public function save($visit, $sessionId) {
-        echo $visit->time_in_hours."hours";
+        
         $visit->created_by = $sessionId;
         
         if ($visit->date_in !=''){

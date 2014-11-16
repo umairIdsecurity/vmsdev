@@ -46,8 +46,8 @@ $multiday = CardType::model()->findByPk(CardType::MULTI_DAY_VISITOR);
             }
             $("#cardtype").val(card_type_value);
             $("#Visit_card_type").val(card_type_value);
+            
         });
-
 
     });
 </script>

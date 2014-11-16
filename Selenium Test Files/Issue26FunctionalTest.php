@@ -26,7 +26,7 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
         $this->Scenario1();
         $this->Scenario2();
         $this->Scenario3();
-        $this->Scenario4();
+        $this->Scenario5();
     }
 
     /* Scenario 1 – Login as super admin then perform update a visitor functionality for patient visitor type
@@ -66,21 +66,23 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_contact_number", "1234567890");
         $this->type("id=Visitor_email", "testVisitorB@test.com");
         $this->click("id=submitContactDetailForm");
+        $this->waitForElementPresent("css=div.flash-success.success-update-contact-details");
+        $this->assertEquals("Contact Details Updated Successfully.", $this->getText("css=div.flash-success.success-update-contact-details"));
         $this->select("id=Visit_reason", "label=Other");
         $this->type("id=VisitReason_reason", "Reason 3");
 
         $this->click("id=submitAddReasonForm");
-        sleep(1);
+        $this->waitForElementPresent("css=div.flash-success.success-add-reason");
+        $this->assertEquals("Reason Added Successfully.", $this->getText("css=div.flash-success.success-add-reason"));
+
         $this->click("id=submitReasonForm");
+        $this->waitForElementPresent("css=div.flash-success.success-update-reason");
+        $this->assertEquals("Reason Updated Successfully.", $this->getText("css=div.flash-success.success-update-reason"));
+
         $this->type("document.forms['update-patient-form'].elements['Patient[name]']", "Patient Name 3");
         $this->click("id=submit");
-        sleep(1);
-        $this->open("/index.php?r=visit/detail&id=1");
-        $this->assertEquals("testVisitorB@test.com", $this->getValue("id=Visitor_email"));
-        $this->assertEquals("1234567890", $this->getValue("id=Visitor_contact_number"));
-        $this->assertEquals("1", $this->getValue("id=Visit_visitor_type"));
-        $this->assertEquals("3", $this->getValue("id=Visit_reason"));
-        $this->assertEquals("Patient Name 3", $this->getValue("document.forms['update-patient-form'].elements['Patient[name]']"));
+        $this->waitForElementPresent("css=div.flash-success.success-update-patient");
+        $this->assertEquals("Patient Updated Successfully.", $this->getText("css=div.flash-success.success-update-patient"));
     }
 
     /* Scenario 2 – Login as super admin then perform update visitor functionality for corporate visitor type
@@ -114,21 +116,13 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_email", "testVisitorC@test.com");
         $this->type("id=Visitor_contact_number", "1234567890");
         $this->click("id=submitContactDetailForm");
-        sleep(1);
+        $this->waitForElementPresent("css=div.flash-success.success-update-contact-details");
+        $this->assertEquals("Contact Details Updated Successfully.", $this->getText("css=div.flash-success.success-update-contact-details"));
+
         $this->select("id=Visit_reason", "label=Reason 2");
         $this->click("id=submitReasonForm");
-        $this->type("document.forms['register-host-form'].elements['User[first_name]']", "TestA");
-        $this->type("document.forms['register-host-form'].elements['User[last_name]']", "HostA");
-        $this->type("document.forms['register-host-form'].elements['User[email]']", "testHost1A@test.com");
-        $this->click("document.forms['register-host-form'].yt0");
-        sleep(1);
-        $this->open("/index.php?r=visit/detail&id=6");
-        $this->assertEquals("testVisitorC@test.com", $this->getValue("id=Visitor_email"));
-        $this->assertEquals("1234567890", $this->getValue("id=Visitor_contact_number"));
-        $this->assertEquals("2", $this->getValue("id=Visit_reason"));
-        $this->assertEquals("TestA", $this->getValue("document.forms['register-host-form'].elements['User[first_name]']"));
-        $this->assertEquals("HostA", $this->getValue("document.forms['register-host-form'].elements['User[last_name]']"));
-        $this->assertEquals("testHost1A@test.com", $this->getValue("document.forms['register-host-form'].elements['User[email]']"));
+        $this->waitForElementPresent("css=div.flash-success.success-update-reason");
+        $this->assertEquals("Reason Updated Successfully.", $this->getText("css=div.flash-success.success-update-reason"));
     }
 
     /* Scenario 3 –Login as super admin and Check for validations in updating a patient visitor
@@ -197,54 +191,78 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Email Address is not a valid email address.", $this->getText("id=Visitor_email_em_"));
     }
 
-    /* Scenario 4 –Login as super admin and Check for validations in updating a corporate visitor
-      Expected behavior
-      -	Assert text mobile number cannot be blank
-      -	Assert text email address cannot be blank
-      -	Assert text email address has already been taken.
-      -	Assert text reason cannot be blank
+    /* Scenario 5 – Login as super admin update a patient visitor to corporate visitor. Add new host and check validations
+      Expected Behavior
+      -	Assert corporate visitor in visitor type
+      -	Assert testHostB@test.com in host email field
+      -	Assert text first name cannot be blank, last name cannot be blank, contact number cannot be blank, email cannot be blank, and Company name cannot be blank.
+      -	Assert text email is not a valid email address
+      -	Assert text email has already been taken
+
       Steps:
-      1.	Go to cvms.identitysecurity.info/index.php?r=site/login
-      2.	Type superadmin@test.com in email field and 12345 in password field
-      3.	Click login
-      4.	Click administration
-      5.	Go to http://cvms.identitysecurity.info/index.php?r=visit/detail&id=5
-      6.	Empty all fields under host details then click update button
-      7.	Assert text first name cannot be blank, last name cannot be blank, email cannot be blank and contact no. cannot be blank
-      8.	Type test in first name, test in last name, staffmember@test.com in email field and 123456 in mobile field.
-      9.	Click save button and assert text email has already been taken.
+      1.	Log in as superadmin@test.com with 12345  as password
+      2.	Click administration
+      3.	Click manage visits
+      4.	Type test visitor1 in name search field, select patient type in visitor type and select reason 3 in reason. Click edit
+      5.	Assert email testVisitorB@test.com
+      6.	Select corporate visitor in visitor type
+      7.	Wait for host details to show below
+      8.	Click add button
+      9.	Assert text first name cannot be blank, last name cannot be blank, contact number cannot be blank, email cannot be blank, and Company name cannot be blank.
+      10.	Type 123 in email
+      11.	Assert text email is not a valid email address.
+      12.	Type test in first name, newhostA in last name, admin@test.com in email field, 12345 in contact no., select test admin in tenant, select tenant agentadmin in tenant agent, and test company1 in company name.
+      13.	Click add button
+      14.	Assert text email address has already been taken.
+      15.	Type testnewHostA@test.com in email field
+      16.	Click manage visits
+      17.	Type test visitor1 in name search field, select corporate type in visitor type and select reason 3 in reason. Click edit
+      18.	Assert email testVisitorB@test.com
+      19.	Assert corporate type in visitor type
+      20.	Assert email testnewHostA@test.com in email field
+      21.	Assert test in first name
+      22.	Assert newhostA in last name
+      23.	Assert 12345 in contact no.
      */
 
-    function Scenario4() {
+    function Scenario5() {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->open("/index.php?r=visit/detail&id=6");
-        $this->type("document.forms['register-host-form'].elements['User[first_name]']", "");
-        $this->type("document.forms['register-host-form'].elements['User[last_name]']", "");
-        $this->type("document.forms['register-host-form'].elements['User[department]']", "");
-        $this->type("document.forms['register-host-form'].elements['User[staff_id]']", "");
-        $this->type("document.forms['register-host-form'].elements['User[email]']", "");
-        $this->type("document.forms['register-host-form'].elements['User[contact_number]']", "");
-        $this->click("document.forms['register-host-form'].yt0");
-        $this->waitForElementPresent("xpath=(//div[@id='User_first_name_em_'])[2]");
+        $this->open("/index.php?r=visit/detail&id=1");
+        $this->assertEquals("testVisitorB@test.com", $this->getValue("id=Visitor_email"));
+        $this->select("id=Visit_visitor_type", "label=Corporate Visitor");
         sleep(1);
-        $this->assertEquals("First Name cannot be blank.", $this->getText("xpath=(//div[@id='User_first_name_em_'])[2]"));
-        $this->assertEquals("Last Name cannot be blank.", $this->getText("xpath=(//div[@id='User_last_name_em_'])[2]"));
-        $this->assertEquals("Email cannot be blank.", $this->getText("xpath=(//div[@id='User_email_em_'])[2]"));
-        $this->assertEquals("Contact No. cannot be blank.", $this->getText("xpath=(//div[@id='User_contact_number_em_'])[2]"));
-        $this->type("document.forms['register-host-form'].elements['User[first_name]']", "Test");
-        $this->type("document.forms['register-host-form'].elements['User[last_name]']", "Host");
-        $this->type("document.forms['register-host-form'].elements['User[email]']", "admin@test.com");
-        $this->type("document.forms['register-host-form'].elements['User[contact_number]']", "123456");
-        $this->click("document.forms['register-host-form'].yt0");
+        $this->click("document.forms['register-newhost-form'].yt0");
         sleep(1);
-        $this->waitForElementPresent("id=User_email_em_1a");
-        $this->assertEquals("Email Address has already been taken.", $this->getText("id=User_email_em_1a"));
-        $this->type("document.forms['register-host-form'].elements['User[email]']", "123");
-        $this->waitForElementPresent("xpath=(//div[@id='User_email_em_'])[2]");
+        $this->assertEquals("First Name cannot be blank.", $this->getText("id=User_first_name_em_"));
+        $this->assertEquals("Last Name cannot be blank.", $this->getText("id=User_last_name_em_"));
+        $this->assertEquals("Email cannot be blank.", $this->getText("id=User_email_em_"));
+        $this->assertEquals("Contact No. cannot be blank.", $this->getText("id=User_contact_number_em_"));
+        $this->assertEquals("Password cannot be blank.", $this->getText("id=User_password_em_"));
+        $this->assertEquals("Repeat Password cannot be blank.", $this->getText("id=User_repeatpassword_em_"));
+        $this->type("id=User_first_name", "test");
+        $this->type("id=User_last_name", "newhostA");
+        $this->type("id=User_email", "admin@test.com");
+        $this->type("id=User_contact_number", "123456");
+        $this->type("id=User_password", "12345");
+        $this->type("id=User_repeatpassword", "12345");
+        $this->select("id=User_tenant", "label=Test admin");
         sleep(1);
-        $this->assertEquals("Email is not a valid email address.", $this->getText("xpath=(//div[@id='User_email_em_'])[2]"));
+        $this->select("id=User_tenant_agent", "label=Test agentadmin");
+        sleep(1);
+        $this->click("document.forms['register-newhost-form'].yt0");
+        sleep(1);
+        $this->assertEquals("Email Address has already been taken.", $this->getText("id=New_user_email_em_"));
+        $this->type("id=User_email", "testnewHostA@test.com");
+        $this->click("document.forms['register-newhost-form'].yt0");
+        
+        $this->waitForElementPresent("css=div.flash-success.success-add-host");
+        $this->assertEquals("Host Added Successfully.", $this->getText("css=div.flash-success.success-add-host"));
+        
+        $this->waitForElementPresent("css=div.flash-success.success-update-visitor-type");
+        $this->assertEquals("Visitor Type Updated Successfully.", $this->getText("css=div.flash-success.success-update-visitor-type"));
+
     }
 
 }

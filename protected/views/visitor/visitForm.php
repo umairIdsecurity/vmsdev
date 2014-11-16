@@ -13,19 +13,20 @@
         'htmlOptions' => array("name" => "register-visit-form"),
         'enableAjaxValidation' => false,
         'enableClientValidation' => true,
-        'clientOptions' => array(
-            'validateOnSubmit' => true,
-            'afterValidate' => 'js:function(form,data,hasError){
-                        if(!hasError){
-                            sendVisitForm();
-                                } else {
-                                sendVisitForm();
-                                }
-                                
-                        }'
-        ),
+//        'clientOptions' => array(
+//            'validateOnSubmit' => true,
+//            'afterValidate' => 'js:function(form,data,hasError){
+//                        if(!hasError){
+//                            sendVisitForm();
+//                                } else {
+//                                sendVisitForm();
+//                                }
+//                                
+//                        }'
+//        ),
     ));
     ?>
+ 
 
     <p class="note">Fields with <span class="required">*</span> are required.</p>
 
@@ -39,7 +40,7 @@
 
     <div class="row">
         <?php echo $form->labelEx($visitModel, 'visitor_type'); ?>
-        <?php echo $form->textField($visitModel, 'visitor_type', array('size' => 20, 'maxlength' => 20)); ?>
+        <input name="Visit[visitor_type]" id="Visit_visitor_type" type="text" value="1">
         <?php echo $form->error($visitModel, 'visitor_type'); ?>
     </div>
 
@@ -66,17 +67,45 @@
         <?php echo $form->textField($visitModel, 'patient', array('size' => 20, 'maxlength' => 20)); ?>
         <?php echo $form->error($visitModel, 'patient'); ?>
     </div>
-    
+
     <div class="row">
         <?php echo $form->labelEx($visitModel, 'card_type'); ?>
         <?php echo $form->textField($visitModel, 'card_type'); ?>
         <?php echo $form->error($visitModel, 'card_type'); ?>
     </div>
     <div class="row">
-        <?php echo $form->labelEx($visitModel, 'visit_status'); ?>
-        <input name="Visit[visit_status]" id="Visit_visit_status" type="text" value="2">
-        <?php echo $form->error($visitModel, 'visit_status'); ?>
+        <?php echo $form->labelEx($visitModel, 'workstation'); ?>
+        <?php echo $form->textField($visitModel, 'workstation'); ?>
+        <?php echo $form->error($visitModel, 'workstation'); ?>
     </div>
+    <div class="row">
+        <?php echo $form->labelEx($visitModel, 'visit_status'); ?>
+        <input name="Visit[visit_status]" id="Visit_visit_status" type="text" value="<?php
+        if (isset($_GET['action'])) {
+            echo "2";
+        } else {
+            echo "1";
+        };
+        ?>">
+               <?php echo $form->error($visitModel, 'visit_status'); ?>
+    </div>
+    <?php if (!isset($_GET['action'])) { ?>
+        <div class="row">
+            <?php echo $form->labelEx($visitModel, 'date_in'); ?>
+            <input name="Visit[date_in]" id="Visit_date_in" type="text" value="<?php echo date("Y-m-d"); ?>">
+            <?php echo $form->error($visitModel, 'date_in'); ?>
+        </div>
+        <?php
+        date_default_timezone_set('Asia/Manila');
+        $time = date('H:i:s');
+        ?>
+        <div class="row">
+            <?php echo $form->labelEx($visitModel, 'time_in'); ?>
+            <input name="Visit[time_in]" id="Visit_time_in" type="text" value="<?php echo $time; ?>">
+            <?php echo $form->error($visitModel, 'time_in'); ?>
+        </div>
+
+    <?php } ?>
 
     <div class="row buttons">
         <input type="submit" id="submitVisitForm" value="Add">
@@ -89,24 +118,24 @@
 
 <script>
     $(document).ready(function() {
-        
+
     });
     function populateVisitFormFields() {
         $("#Visit_visitor").val($("#visitorId").val());
         $("#Visit_visitor_type").val($("#Visitor_visitor_type").val());
         $("#visitReasonFormField").val($("#Visit_reason").val());
         $("#Visit_visitor_status").val("1");
-
+        $("#Visit_workstation").val($("#workstation").val());
+        
         if ($("#Visitor_visitor_type").val() == 1) { //if type is patient
             $("#Visit_host").val("");
             $("#Visit_patient").val($("#hostId").val());
-            $("#submitVisitForm").click();
+            $("#submitVisitForm").delay(1000).click();
         } else {
             $("#Visit_patient").val("");
             $("#Visit_host").val($("#hostId").val());
-            $("#submitVisitForm").click();
+            $("#submitVisitForm").delay(1000).click();
         }
-
     }
 
     function sendVisitForm() {
@@ -116,7 +145,8 @@
             url: "<?php echo CHtml::normalizeUrl(array("visit/create")); ?>",
             data: visitForm,
             success: function(data) {
-                window.location = "index.php?r=visitor/admin";
+                //window.location = "index.php?r=visitor/admin";
+              //  window.location = "index.php?r=visit/detail&id="+data.id;
             },
         });
     }

@@ -35,15 +35,17 @@ $session = new CHttpSession;
 
         </td>
         <td>
+
             <?php
-            $this->renderPartial('visitordetail-actions', array('model' => $model,
-                'visitorModel' => $visitorModel,
-                'hostModel' => $hostModel,
-                'reasonModel' => $reasonModel,
-                'patientModel' => $patientModel,
-            ));
-            ?>
+                $this->renderPartial('visitordetail-actions', array('model' => $model,
+                    'visitorModel' => $visitorModel,
+                    'hostModel' => $hostModel,
+                    'reasonModel' => $reasonModel,
+                    'patientModel' => $patientModel,
+                ));
             
+            ?>
+
         </td>
 
     </tr>
@@ -158,9 +160,10 @@ $this->renderPartial('visithistory', array('model' => $model,
             url: "<?php echo CHtml::normalizeUrl(array("/visitor/update&id=" . $visitorModel->id . "&view=1")); ?>",
             data: form,
             success: function(data) {
-
+                $(".success-update-contact-details").show();
             },
         });
+
     }
 
     function sendReasonForm() {
@@ -172,6 +175,7 @@ $this->renderPartial('visithistory', array('model' => $model,
             data: reasonForm,
             success: function(data) {
                 addReasonInDropdown();
+
             },
         });
 
@@ -198,6 +202,7 @@ $this->renderPartial('visithistory', array('model' => $model,
                         }
                     }
                     $("#addreasonTable").hide();
+                    $(".success-add-reason").show();
                 });
 
 
@@ -225,6 +230,8 @@ $this->renderPartial('visithistory', array('model' => $model,
             url: "<?php echo CHtml::normalizeUrl(array("visit/update&id=" . $model->id)); ?>",
             data: reasonForm,
             success: function(data) {
+                $(".success-update-reason").show();
+                $(".success-add-reason").hide();
             },
         });
     }
@@ -236,7 +243,15 @@ $this->renderPartial('visithistory', array('model' => $model,
             url: "<?php echo CHtml::normalizeUrl(array("visit/update&id=" . $model->id)); ?>",
             data: visitForm,
             success: function(data) {
-
+                if (formId == 'update-host-visit-form') {
+                    $(".success-update-host-details").show();
+                } else if (formId == 'update-log-visit-form'){
+                    $(".success-update-preregister").show();
+                }
+                else
+                {
+                    $(".success-update-visitor-type").show();
+                }
             },
         });
     }
@@ -248,6 +263,7 @@ $this->renderPartial('visithistory', array('model' => $model,
             url: "<?php echo CHtml::normalizeUrl(array("patient/update&id=" . $model->patient)); ?>",
             data: patientForm,
             success: function(data) {
+                $(".success-update-patient").show();
             },
         });
     }
@@ -275,6 +291,7 @@ $this->renderPartial('visithistory', array('model' => $model,
                 $.each(r.data, function(index, value) {
                     $("#Visit_patient").val(value.id);
                 });
+                $(".success-add-patient").show();
                 sendVisitForm("update-visit-form");
             }
         });
@@ -326,9 +343,33 @@ $this->renderPartial('visithistory', array('model' => $model,
                 $.each(r.data, function(index, value) {
                     $("#Visit_host").val(value.id);
                 });
-
+                $(".success-add-host").show();
                 sendVisitForm("update-visit-form");
             }
+        });
+    }
+    
+    function sendActivateVisitForm(formId) {
+        var visitForm = $("#" + formId).serialize();
+        $.ajax({
+            type: "POST",
+            url: "<?php echo CHtml::normalizeUrl(array("visit/update&id=" . $model->id)); ?>",
+            data: visitForm,
+            success: function(data) {
+                window.location = "index.php?r=visit/detail&id=<?php echo $_GET['id']; ?>";
+            },
+        });
+    }
+    
+    function sendCloseVisit(formId) {
+        var visitForm = $("#" + formId).serialize();
+        $.ajax({
+            type: "POST",
+            url: "<?php echo CHtml::normalizeUrl(array("visit/update&id=" . $model->id)); ?>",
+            data: visitForm,
+            success: function(data) {
+                window.location = "index.php?r=visit/detail&id=<?php echo $_GET['id']; ?>";
+            },
         });
     }
 

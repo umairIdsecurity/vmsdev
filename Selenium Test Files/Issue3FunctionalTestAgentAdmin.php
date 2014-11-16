@@ -71,7 +71,17 @@ class Issue3FunctionalTestAgentAdmin extends BaseFunctionalTest {
         $this->waitForElementPresent("css=tr.odd > td");
         $this->assertEquals("Test", $this->getText("css=tr.odd > td"));
         $this->assertEquals("agentoperator2", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[2]"));
-        sleep(1);
+        for ($second = 0;; $second++) {
+            if ($second >= 10)
+                $this->fail("timeout");
+            try {
+                if ("Displaying 1-1 of 1 result." == $this->getText("css=div.summary"))
+                    break;
+            } catch (Exception $e) {
+                
+            }
+            sleep(1);
+        }
         $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
     }
 
@@ -113,11 +123,31 @@ class Issue3FunctionalTestAgentAdmin extends BaseFunctionalTest {
         $this->click("//td[2]/input");
         $this->type("//td[2]/input", "staffmember3");
         $this->select("css=select[name=\"User[role]\"]", "label=Staff Member");
-        sleep(1);
+        for ($second = 0;; $second++) {
+            if ($second >= 10)
+                $this->fail("timeout");
+            try {
+                if ("Test" == $this->getText("css=tr.odd > td"))
+                    break;
+            } catch (Exception $e) {
+                
+            }
+            sleep(1);
+        }
         $this->assertEquals("Test", $this->getText("css=tr.odd > td"));
         $this->assertEquals("staffmember3", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[2]"));
         $this->assertEquals("Staff Member", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[3]"));
-        
+        for ($second = 0;; $second++) {
+            if ($second >= 10)
+                $this->fail("timeout");
+            try {
+                if ("Displaying 1-1 of 1 result." == $this->getText("css=div.summary"))
+                    break;
+            } catch (Exception $e) {
+                
+            }
+            sleep(1);
+        }
         $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
     }
     

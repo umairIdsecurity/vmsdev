@@ -8,8 +8,6 @@
 
 require_once 'BaseFunctionalTest.php';
 
-include 'Issue3FunctionalTestSuperAdmin.php';
-$Issue3FunctionalTestSuperAdmin = new Issue3FunctionalTestSuperAdmin();
 /**
  * Description of Issue3FunctionalTest
  *
@@ -17,13 +15,11 @@ $Issue3FunctionalTestSuperAdmin = new Issue3FunctionalTestSuperAdmin();
  */
 class Issue3FunctionalTestAdmin extends BaseFunctionalTest {
 
-    
     function setUp() {
         $this->setBrowser("*firefox");
         $this->setBrowserUrl("http://cvms.identitysecurity.info");
-        
     }
-    
+
     function testAll() {
         $this->resetDbWithData();
         $this->Scenario1();
@@ -53,7 +49,7 @@ class Issue3FunctionalTestAdmin extends BaseFunctionalTest {
       13.	Assert text admin2@test.com
       14.	Assert text administrator
      */
-    
+
     function Scenario1() {
         $username = 'admin@test.com';
         $this->login($username, '12345');
@@ -75,7 +71,17 @@ class Issue3FunctionalTestAdmin extends BaseFunctionalTest {
         $this->assertEquals("Test", $this->getText("css=tr.odd > td"));
         $this->assertEquals("admin3", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[2]"));
         $this->assertEquals("Administrator", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[3]"));
-        
+        for ($second = 0;; $second++) {
+            if ($second >= 10)
+                $this->fail("timeout");
+            try {
+                if ("Displaying 1-1 of 1 result." == $this->getText("css=div.summary"))
+                    break;
+            } catch (Exception $e) {
+                
+            }
+            sleep(1);
+        }
         $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
     }
 
@@ -124,7 +130,7 @@ class Issue3FunctionalTestAdmin extends BaseFunctionalTest {
         $this->assertEquals("Test", $this->getText("css=tr.odd > td"));
         $this->assertEquals("agentadmin2", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[2]"));
         $this->assertEquals("Agent Administrator", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[3]"));
-        
+
         $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
     }
 
@@ -162,7 +168,7 @@ class Issue3FunctionalTestAdmin extends BaseFunctionalTest {
         $this->getDisabledRoleValue("8");
         $this->getDisabledCompanyValue("Test Company 1");
         $this->assertEquals("Workstation", $this->getEval("window.document.getElementById(\"User_workstation\").options[window.document.getElementById(\"User_workstation\").selectedIndex].text"));
-    
+
         $this->waitForElementPresent("id=submitBtn");
         $this->click("id=submitBtn");
         $this->click("id=submitForm");
@@ -176,7 +182,17 @@ class Issue3FunctionalTestAdmin extends BaseFunctionalTest {
         $this->assertEquals("Test", $this->getText("css=tr.odd > td"));
         $this->assertEquals("operator2", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[2]"));
         $this->assertEquals("Operator", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[3]"));
-        
+        for ($second = 0;; $second++) {
+            if ($second >= 10)
+                $this->fail("timeout");
+            try {
+                if ("Displaying 1-1 of 1 result." == $this->getText("css=div.summary"))
+                    break;
+            } catch (Exception $e) {
+                
+            }
+            sleep(1);
+        }
         $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
     }
 
@@ -225,10 +241,20 @@ class Issue3FunctionalTestAdmin extends BaseFunctionalTest {
         $this->assertEquals("Test", $this->getText("css=tr.odd > td"));
         $this->assertEquals("staffmember2", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[2]"));
         $this->assertEquals("Staff Member", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[3]"));
-        
+        for ($second = 0;; $second++) {
+            if ($second >= 10)
+                $this->fail("timeout");
+            try {
+                if ("Displaying 1-1 of 1 result." == $this->getText("css=div.summary"))
+                    break;
+            } catch (Exception $e) {
+                
+            }
+            sleep(1);
+        }
         $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
     }
-    
+
     /* Scenario 5 – Login as admin and add agent administrator with new company
       Expected Behavior
       -	Asser text  ’agent administrator’ and agentadmin3@test.com  in search role field
@@ -275,14 +301,34 @@ class Issue3FunctionalTestAdmin extends BaseFunctionalTest {
         $this->select("css=select[name=\"User[role]\"]", "label=Agent Administrator");
         $this->select("css=select[name=\"User[user_type]\"]", "label=Internal");
         $this->waitForElementPresent("css=td > input[name=\"User[first_name]\"]");
-        sleep(1);
+        for ($second = 0;; $second++) {
+            if ($second >= 10)
+                $this->fail("timeout");
+            try {
+                if ("Test" == $this->getText("css=tr.odd > td"))
+                    break;
+            } catch (Exception $e) {
+                
+            }
+            sleep(1);
+        }
         $this->assertEquals("Test", $this->getText("css=tr.odd > td"));
         $this->assertEquals("agentadmin3", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[2]"));
         $this->assertEquals("Agent Administrator", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[3]"));
-        sleep(1);
+        for ($second = 0;; $second++) {
+            if ($second >= 10)
+                $this->fail("timeout");
+            try {
+                if ("Displaying 1-1 of 1 result." == $this->getText("css=div.summary"))
+                    break;
+            } catch (Exception $e) {
+                
+            }
+            sleep(1);
+        }
         $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
     }
-    
+
 }
 
 ?>

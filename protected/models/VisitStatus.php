@@ -24,6 +24,11 @@ class VisitStatus extends CActiveRecord
         3 => 'Closed',
         4 => 'Expired',
     );
+    CONST ACTIVE = 1;
+    CONST PREREGISTERED = 2;
+    CONST CLOSED =3;
+    CONST EXPIRED = 4;
+    
 	/**
 	 * @return string the associated database table name
 	 */

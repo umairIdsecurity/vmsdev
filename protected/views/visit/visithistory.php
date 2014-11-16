@@ -5,17 +5,19 @@
         <span>Closed Visit</span>
 
         <?php
-        if($model->host !=''){
+        if ($model->host != '') {
             $host = $model->host;
-            $userHost = 'host';
+            $GLOBALS['userHost'] = 'host';
         } else {
-            $host= $model->patient;
-            $userHost = 'patient';
+            $host = $model->patient;
+            $GLOBALS['userHost'] = 'patient';
         }
+
+
         $visitor = $model->visitor;
         $model = new Visit;
         $criteria = new CDbCriteria;
-        $criteria->addCondition('visit_status=3 and visitor="'.$visitor.'"');
+        $criteria->addCondition('visit_status=3 and visitor="' . $visitor . '"');
 
         $model->unsetAttributes();
         $visitData = new CActiveDataProvider($model, array(
@@ -40,7 +42,11 @@
                     'type' => 'html',
                     'value' => 'Yii::app()->dateFormatter->format("d/MM/y",strtotime($data->date_in))',
                 ),
-                'host',
+                array(
+                    'name' => 'Host',
+                    'type' => 'html',
+                    'value' => 'returnPatientOrHostName($data->id,$GLOBALS["userHost"])',
+                ),
                 array(
                     'name' => 'date_out',
                     'type' => 'html',
@@ -70,3 +76,19 @@
 
     </div>
 </div>
+
+<?php
+
+function returnPatientOrHostName($visit_id, $userHost) {
+    $visitDetails = Visit::model()->findByPk($visit_id);
+    if($visitDetails['visitor_type'] == VisitorType::PATIENT_VISITOR){
+        $hostFullName = Patient::model()->findByPk($visitDetails['patient'])->name;
+    } else {
+        $fname = User::model()->findByPk($visitDetails['host'])->first_name;
+        $lname = User::model()->findByPk($visitDetails['host'])->last_name;
+        $hostFullName = $fname." ".$lname;
+    }
+    
+    return $hostFullName;
+}
+?>

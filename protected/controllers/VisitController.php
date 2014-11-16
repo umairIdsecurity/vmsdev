@@ -51,7 +51,7 @@ class VisitController extends Controller {
         if (isset($_POST['Visit'])) {
             $model->attributes = $_POST['Visit'];
             if ($visit->save($model, $session['id'])) {
-                
+                $this->redirect(array('visit/detail', 'id' => $model->id));
             }
         }
 

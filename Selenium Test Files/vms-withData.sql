@@ -359,6 +359,7 @@ CREATE TABLE IF NOT EXISTS `visit` (
   `date_check_out` date DEFAULT NULL,
   `time_check_out` time DEFAULT NULL,
 `visit_status` bigint(20) DEFAULT NULL,
+  `workstation` bigint(20) DEFAULT NULL,
   `tenant` bigint(20) DEFAULT NULL,
   `tenant_agent` bigint(20) DEFAULT NULL,
   `is_deleted` tinyint(4) DEFAULT '0',
@@ -373,18 +374,19 @@ CREATE TABLE IF NOT EXISTS `visit` (
   KEY `tenant` (`tenant`),
   KEY `tenant_agent` (`tenant_agent`),
   KEY `card_type` (`card_type`),
-  KEY `visit_status` (`visit_status`)
+  KEY `visit_status` (`visit_status`),
+  KEY `workstation` (`workstation`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 
-INSERT INTO `visit` (`id`, `visitor`, `card_type`, `card`, `visitor_type`, `reason`, `visitor_status`, `host`, `patient`, `created_by`, `date_in`, `time_in`, `date_out`, `time_out`, `date_check_in`, `time_check_in`, `date_check_out`, `time_check_out`, `visit_status`, `tenant`, `tenant_agent`, `is_deleted`) VALUES
-(1, 2, 1, NULL, 1, 1, 1, NULL, 1, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 17, 18, 0),
-(2, 2, 1, NULL, 1, 2, 1, NULL, 2, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 17, 18, 0),
-(3, 2, 1, NULL, 1, 2, 1, NULL, 2, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 17, 18, 0),
-(4, 3, 1, NULL, 1, 1, 1, NULL, 3, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 17, 18, 0),
-(5, 3, 1, NULL, 1, 1, 1, NULL, 3, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 17, 18, 0),
-(6, 4, 1, NULL, 2, 1, 1, 23, NULL, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 17, 18, 0),
-(7, 2, 2, NULL, 2, 1, 1, 21, NULL, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 17, 18, 0);
+INSERT INTO `visit` (`id`, `visitor`, `card_type`, `card`, `visitor_type`, `reason`, `visitor_status`, `host`, `patient`, `created_by`, `date_in`, `time_in`, `date_out`, `time_out`, `date_check_in`, `time_check_in`, `date_check_out`, `time_check_out`, `visit_status`, `tenant`, `tenant_agent`, `is_deleted`,`workstation`) VALUES
+(1, 2, 1, NULL, 1, 1, 1, NULL, 1, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 17, 18, 0,8),
+(2, 2, 1, NULL, 1, 2, 1, NULL, 2, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 17, 18, 0,8),
+(3, 2, 1, NULL, 1, 2, 1, NULL, 2, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 17, 18, 0,8),
+(4, 3, 1, NULL, 1, 1, 1, NULL, 3, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 17, 18, 0,8),
+(5, 3, 1, NULL, 1, 1, 1, NULL, 3, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 17, 18, 0,8),
+(6, 4, 1, NULL, 2, 1, 1, 23, NULL, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 17, 18, 0,8),
+(7, 2, 2, NULL, 2, 1, 1, 21, NULL, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 17, 18, 0,8);
 
 -- --------------------------------------------------------
 
@@ -623,9 +625,9 @@ ALTER TABLE `user_workstation`
 -- Constraints for table `visit`
 --
 ALTER TABLE `visit`
+  ADD CONSTRAINT `visit_ibfk_13` FOREIGN KEY (`workstation`) REFERENCES `workstation` (`id`),
   ADD CONSTRAINT `visit_ibfk_11` FOREIGN KEY (`card_type`) REFERENCES `card_type` (`id`),
 ADD CONSTRAINT `visit_ibfk_12` FOREIGN KEY (`visit_status`) REFERENCES `visit_status` (`id`),
-  
   ADD CONSTRAINT `visit_ibfk_1` FOREIGN KEY (`card`) REFERENCES `card_generated` (`id`),
   ADD CONSTRAINT `visit_ibfk_10` FOREIGN KEY (`tenant_agent`) REFERENCES `user` (`id`),
   ADD CONSTRAINT `visit_ibfk_3` FOREIGN KEY (`reason`) REFERENCES `visit_reason` (`id`),

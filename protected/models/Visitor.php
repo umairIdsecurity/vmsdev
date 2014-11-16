@@ -62,8 +62,8 @@ class Visitor extends CActiveRecord {
             // array('password', 'length', 'max' => 150),
             array('date_of_birth, notes,birthdayYear,birthdayMonth,birthdayDay', 'safe'),
             array('tenant, tenant_agent,company', 'default', 'setOnEmpty' => true, 'value' => null),
-//            array('repeatpassword,password', 'required', 'on' => 'insert'),
-//            array('password', 'compare', 'compareAttribute' => 'repeatpassword', 'on' => 'insert'),
+            array('repeatpassword,password', 'required', 'on' => 'insert'),
+            array('password', 'compare', 'compareAttribute' => 'repeatpassword', 'on' => 'insert'),
             
             array('email', 'unique'),
             array('email', 'email'),
@@ -264,5 +264,7 @@ class Visitor extends CActiveRecord {
         }
         return $aArray;
     }
+    
+    
 
 }

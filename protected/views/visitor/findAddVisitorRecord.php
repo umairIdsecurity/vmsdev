@@ -66,15 +66,16 @@ $session = new CHttpSession;
         </div>
     </div>
     <input type="text" id="selectedVisitorInSearchTable" value="0"></input>
-    <?php
-    $form = $this->beginWidget('CActiveForm', array(
-        'id' => 'register-form',
-        'htmlOptions' => array("name" => "register-form"),
-        'enableAjaxValidation' => false,
-        'enableClientValidation' => true,
-        'clientOptions' => array(
-            'validateOnSubmit' => true,
-            'afterValidate' => 'js:function(form, data, hasError){
+    <div data-ng-app="PwordForm">
+        <?php
+        $form = $this->beginWidget('CActiveForm', array(
+            'id' => 'register-form',
+            'htmlOptions' => array("name" => "registerform"),
+            'enableAjaxValidation' => false,
+            'enableClientValidation' => true,
+            'clientOptions' => array(
+                'validateOnSubmit' => true,
+                'afterValidate' => 'js:function(form, data, hasError){
                                 if (!hasError){
                                 if ($("#Visit_reason").val() == "" || ($("#Visit_reason").val() == "Other" &&  $("#VisitReason_reason").val() == "")) {                                  
                                     $(".visitorReason").show();
@@ -87,154 +88,146 @@ $session = new CHttpSession;
                                     }
                                 }
                                 }'
-        ),
-    ));
-    ?>
-    <?php echo $form->errorSummary($model); ?>
-    <input type="hidden" id="emailIsUnique" value="0"/>
-    <div class="visitor-title">Add New Visitor Record</div>
-    <div>
-        <table  id="addvisitor-table">
-            <tr>
-                <td>
-                    <?php echo $form->labelEx($model, 'visitor_type'); ?><br>
-                    <?php
-                    echo $form->dropDownList($model, 'visitor_type', VisitorType::$VISITOR_TYPE_LIST, array(
-                        'onchange' => 'showHideHostPatientName(this)',
-                    ));
-                    ?>
-                    <?php echo "<br>" . $form->error($model, 'visitor_type'); ?>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <?php echo $form->labelEx($model, 'first_name'); ?><br>
-                    <?php echo $form->textField($model, 'first_name', array('size' => 50, 'maxlength' => 50)); ?>
-                    <?php echo "<br>" . $form->error($model, 'first_name'); ?>
-                </td>
-                <td>
-                    <?php echo $form->labelEx($model, 'last_name'); ?><br>
-                    <?php echo $form->textField($model, 'last_name', array('size' => 50, 'maxlength' => 50)); ?>
-                    <?php echo "<br>" . $form->error($model, 'last_name'); ?>
-                </td>
-                <td id="visitorCompanyRow">
-
-
-                    <?php
-                    if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
-                        ?>
-                        <?php echo $form->labelEx($model, 'company'); ?><br>
-                        <select id="Visitor_company" name="Visitor[company]" >
-                            <option value='<?php echo $session['company']; ?>'><?php echo Company::model()->findByPk($session['company'])->name; ?></option>
-                        </select>    
-                        <?php echo "<br>" . $form->error($model, 'company'); ?>
+            ),
+        ));
+        ?>
+        <?php echo $form->errorSummary($model); ?>
+        <input type="hidden" id="emailIsUnique" value="0"/>
+        <div class="visitor-title">Add New Visitor Record</div>
+        <div >
+            <table  id="addvisitor-table" data-ng-app="PwordForm">
+                <tr>
+                    <td>
+                        <?php echo $form->labelEx($model, 'visitor_type'); ?><br>
                         <?php
-                    } else {
+                        echo $form->dropDownList($model, 'visitor_type', VisitorType::$VISITOR_TYPE_LIST, array(
+                            'onchange' => 'showHideHostPatientName(this)',
+                        ));
                         ?>
+                        <?php echo "<br>" . $form->error($model, 'visitor_type'); ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <?php echo $form->labelEx($model, 'first_name'); ?><br>
+                        <?php echo $form->textField($model, 'first_name', array('size' => 50, 'maxlength' => 50)); ?>
+                        <?php echo "<br>" . $form->error($model, 'first_name'); ?>
+                    </td>
+                    <td>
+                        <?php echo $form->labelEx($model, 'last_name'); ?><br>
+                        <?php echo $form->textField($model, 'last_name', array('size' => 50, 'maxlength' => 50)); ?>
+                        <?php echo "<br>" . $form->error($model, 'last_name'); ?>
+                    </td>
+                    <td id="visitorCompanyRow">
+
                         <?php echo $form->labelEx($model, 'company'); ?><br>
                         <select id="Visitor_company" name="Visitor[company]" >
                             <option value=''>Select Company</option>
-                        </select>    
+                        </select>
+
                         <?php echo "<br>" . $form->error($model, 'company'); ?>
-                        <?php
-                    }
-                    ?>
+                    </td>
+                </tr>
 
+                <tr>
+                    <td>
+                        <?php echo $form->labelEx($model, 'position'); ?><br>
+                        <?php echo $form->textField($model, 'position', array('size' => 50, 'maxlength' => 50)); ?>
+                        <?php echo "<br>" . $form->error($model, 'position'); ?>
+                    </td>
+                    <td>
+                        <?php echo $form->labelEx($model, 'contact_number'); ?><br>
+                        <?php echo $form->textField($model, 'contact_number', array('size' => 50, 'maxlength' => 50)); ?>
+                        <?php echo "<br>" . $form->error($model, 'contact_number'); ?>
+                    </td>
+                    <td>
+                        <?php echo $form->labelEx($model, 'email'); ?><br>
+                        <?php echo $form->textField($model, 'email', array('size' => 50, 'maxlength' => 50)); ?>
+                        <?php echo "<br>" . $form->error($model, 'email'); ?>
+                        <div style="" id="Visitor_email_em_" class="errorMessage errorMessageEmail" >Email Address has already been taken.</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="Visit_reason">Reason</label><br>
 
-                </td>
-            </tr>
-
-            <tr>
-                <td>
-                    <?php echo $form->labelEx($model, 'position'); ?><br>
-                    <?php echo $form->textField($model, 'position', array('size' => 50, 'maxlength' => 50)); ?>
-                    <?php echo "<br>" . $form->error($model, 'position'); ?>
-                </td>
-                <td>
-                    <?php echo $form->labelEx($model, 'contact_number'); ?><br>
-                    <?php echo $form->textField($model, 'contact_number', array('size' => 50, 'maxlength' => 50)); ?>
-                    <?php echo "<br>" . $form->error($model, 'contact_number'); ?>
-                </td>
-                <td>
-                    <?php echo $form->labelEx($model, 'email'); ?><br>
-                    <?php echo $form->textField($model, 'email', array('size' => 50, 'maxlength' => 50)); ?>
-                    <?php echo "<br>" . $form->error($model, 'email'); ?>
-                    <div style="" id="Visitor_email_em_" class="errorMessage errorMessageEmail" >Email Address has already been taken.</div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="Visit_reason">Reason</label><br>
-
-                    <select id="Visit_reason" name="Visitor[reason]" onchange="ifSelectedIsOtherShowAddReasonDiv(this)">
-                        <option value='' selected>Select Reason</option>
-                        <option value="Other">Other</option>
-                        <?php
-                        $reason = VisitReason::model()->findAllReason();
-                        foreach ($reason as $key => $value) {
-                            ?>
-                            <option value="<?php echo $value->id; ?>"><?php echo $value->reason; ?></option>
+                        <select id="Visit_reason" name="Visitor[reason]" onchange="ifSelectedIsOtherShowAddReasonDiv(this)">
+                            <option value='' selected>Select Reason</option>
+                            <option value="Other">Other</option>
                             <?php
-                        }
-                        ?>
-
-                    </select>
-                    <div class="errorMessage visitorReason" >Reason cannot be blank.</div>
-                </td>
-                <td id="visitorTenantRow" <?php
-                if ($session['role'] != 5) {
-                    echo " class='hidden' ";
-                }
-                ?>><?php echo $form->labelEx($model, 'tenant'); ?><br>
-
-                    <select id="Visitor_tenant" onchange="populateTenantAgentAndCompanyField()" name="Visitor[tenant]"  >
-                        <option value='' selected>Select Admin</option>
-                        <?php
-                        $allAdminNames = User::model()->findAllAdmin();
-                        foreach ($allAdminNames as $key => $value) {
-                            ?>
-                            <option value="<?php echo $value->tenant; ?>"
-                            <?php
-                            if ($session['role'] == Roles::ROLE_STAFFMEMBER && $session['tenant'] == $value->tenant) {
-                                echo " selected ";
+                            $reason = VisitReason::model()->findAllReason();
+                            foreach ($reason as $key => $value) {
+                                ?>
+                                <option value="<?php echo $value->id; ?>"><?php echo $value->reason; ?></option>
+                                <?php
                             }
                             ?>
-                                    ><?php echo $value->first_name . " " . $value->last_name; ?></option>
-                                    <?php
-                                }
+
+                        </select>
+                        <div class="errorMessage visitorReason" >Reason cannot be blank.</div>
+                    </td>
+                    <td>
+                        <label for="Visitor_password">Password <span class="required">*</span></label><br>
+                        <input ng-model="user.passwords" data-ng-class="{'ng-invalid':registerform['Visitor[repeatpassword]'].$error.match}" type="password" id="Visitor_password" name="Visitor[password]">			
+                        <?php echo "<br>" . $form->error($model, 'password'); ?>
+                    </td>
+                    <td>
+                        <label for="Visitor_repeatpassword">Repeat Password <span class="required">*</span></label><br>
+                        <input ng-model="user.passwordConfirm" type="password" id="Visitor_repeatpassword" data-match="user.passwords" name="Visitor[repeatpassword]"/>			
+                        <div style='font-size:0.9em;color:red;position: absolute;' data-ng-show="registerform['Visitor[repeatpassword]'].$error.match">New Password does not match with Repeat <br> New Password. </div>
+                        <?php echo "<br>" . $form->error($model, 'repeatpassword'); ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td id="workstationRow"><label>Workstation</label><span class="required">*</span><br>
+
+                        <select id="workstation">
+                            <?php
+                            $workstationList = populateWorkstation();
+                            foreach ($workstationList as $key => $value) {
                                 ?>
-                    </select><?php echo "<br>" . $form->error($model, 'tenant'); ?>
+                                <option value="<?php echo $value->id; ?>"><?php echo $value->name;  ?></option>
+                                <?php
+                            }
+                            ?>
+                        </select>
+                    </td>
+                    <td id="visitorTenantRow"><?php echo $form->labelEx($model, 'tenant'); ?><br>
 
-                </td>
-                <td id="visitorTenantAgentRow" <?php
-                                if ($session['role'] != 5) {
-                                    echo " class='hidden' ";
-                                }
-                                ?>><?php echo $form->labelEx($model, 'tenant_agent'); ?><br>
+                        <select id="Visitor_tenant" onchange="populateTenantAgentAndCompanyField()" name="Visitor[tenant]"  >
+                            <option value='' selected>Select Admin</option>
+                            <?php
+                            $allAdminNames = User::model()->findAllAdmin();
+                            foreach ($allAdminNames as $key => $value) {
+                                ?>
+                                <option value="<?php echo $value->tenant; ?>"><?php echo $value->first_name . " " . $value->last_name; ?></option>
+                                <?php
+                            }
+                            ?>
+                        </select><?php echo "<br>" . $form->error($model, 'tenant'); ?>
+                    </td>
+                    <td id="visitorTenantAgentRow"><?php echo $form->labelEx($model, 'tenant_agent'); ?><br>
 
-                    <select id="Visitor_tenant_agent" name="Visitor[tenant_agent]" onchange="populateCompanyWithSameTenantAndTenantAgent()" >
-                        <?php
-                        echo "<option value='' selected>Select Tenant Agent</option>";
-                        if ($session['role'] == Roles::ROLE_STAFFMEMBER ) {
-                            echo "<option value='".$session['tenant_agent']."' selected>TenantAgent</option>";
-                        }
-                        ?>
-                    </select><?php echo "<br>" . $form->error($model, 'tenant_agent'); ?>
+                        <select id="Visitor_tenant_agent" name="Visitor[tenant_agent]" onchange="populateCompanyWithSameTenantAndTenantAgent()" >
+                            <?php
+                            echo "<option value='' selected>Select Tenant Agent</option>";
+                            ?>
+                        </select><?php echo "<br>" . $form->error($model, 'tenant_agent'); ?>
+                    </td>
+                </tr>
 
-                </td>
-            </tr>
+            </table>
 
-        </table>
+        </div>
+        <div class="register-a-visitor-buttons-div">
+            <input type="button" class="visitor-backBtn btnBackTab2" id="btnBackTab2" value="Back"/>
+            <input type="button" id="clicktabB" value="Save and Continue" style="display:none;"/>
 
+            <input type="submit" value="Save and Continue" name="yt0" id="submitFormVisitor" />
+        </div>
+
+        <?php $this->endWidget(); ?>
     </div>
-    <div class="register-a-visitor-buttons-div">
-        <input type="button" class="visitor-backBtn btnBackTab2" id="btnBackTab2" value="Back"/>
-        <input type="button" id="clicktabB" value="Save and Continue" style="display:none;"/>
-
-        <input type="submit" value="Save and Continue" name="yt0" id="submitFormVisitor" />
-    </div>
-    <?php $this->endWidget(); ?>
-
     <?php
     $form = $this->beginWidget('CActiveForm', array(
         'id' => 'register-reason-form',
@@ -340,17 +333,17 @@ $session = new CHttpSession;
                 $("#visitReasonFormField").val($("#Visit_reason_search").val());
                 if ($("#selectedVisitorInSearchTable").val() == '0') { //if visitor is not from search
                     sendVisitorForm();
-                    //  alert("visitor is not from search");
+                    // alert("visitor is not from search");
                 } else if ($("#selectedVisitorInSearchTable").val() != '0') { //if visitor is from search
-                    //  alert("visitor from search");
+                    // alert("visitor from search");
                     if ($("#selectedHostInSearchTable").val() != 0) { //if host is from search
                         $("#visitReasonFormField").val($("#Visit_reason_search").val());
                         $("#Visit_patient").val($("#hostId").val());
                         $("#Visit_host").val($("#hostId").val());
-                        //  alert("host from search");
+                        // alert("host from search");
                         populateVisitFormFields();
                     } else {
-                        //  alert("add host");
+                        // alert("add host");
                         if ($("#Visitor_visitor_type").val() == 1) { //if patient
                             sendPatientForm();
                         } else {
@@ -408,16 +401,23 @@ $session = new CHttpSession;
 
                     // if visitor is not from search;
                     if ($("#selectedVisitorInSearchTable").val() == 0) {
-                        $.when(getLastVisitorId()).then(populateVisitFormFields());
+                        //alert("visitor is not from search host from search");
+
+                        // $.when(getLastVisitorId()).done(populateVisitFormFields());
+                        getLastVisitorId(function(data) {
+                            populateVisitFormFields(); // Do what you want with the data returned
+                        });
                     }
                 } else {
-                    getLastVisitorId();
 
-                    if ($("#Visitor_visitor_type").val() == 1) { //if patient
-                        sendPatientForm();
-                    } else {
-                        sendHostForm();
-                    }
+                    getLastVisitorId(function(data) {
+                        if ($("#Visitor_visitor_type").val() == 1) { //if patient
+                            sendPatientForm();
+                        } else {
+                            sendHostForm();
+                        }
+                    });
+
                 }
             },
         });
@@ -430,10 +430,10 @@ $session = new CHttpSession;
         {
             if ($("#selectedVisitorInSearchTable").val() != '0') {
                 var reasonForm = $("#register-reason-form-search").serialize();
-                // alert("searchreason");
+                //alert("searchreason");
             } else {
                 var reasonForm = $("#register-reason-form").serialize();
-                //    alert("add visitor reason");
+                //alert("add visitor reason");
             }
 
             $.ajax({
@@ -447,8 +447,23 @@ $session = new CHttpSession;
         }
         else {
             sendVisitorForm();
+            // alert("with exstng reason");
         }
     }
 </script>
 
 <input type="text" id="visitorId" placeholder="visitor id"/>
+<?php 
+
+function populateWorkstation(){
+    $session = new CHttpSession;
+    switch ($session['role']){
+        case Roles::ROLE_SUPERADMIN:
+            $workstationList = Workstation::model()->findAll();
+            break;
+    }
+    
+    return $workstationList;
+}
+
+?>

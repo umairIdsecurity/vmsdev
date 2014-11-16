@@ -70,11 +70,33 @@ class Issue3FunctionalTestValidations extends BaseFunctionalTest {
         $this->select("css=select[name=\"User[role]\"]", "label=Super Administrator");
         sleep(1);
         $this->assertEquals("Super Administrator", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[3]"));
+        for ($second = 0;; $second++) {
+            if ($second >= 10)
+                $this->fail("timeout");
+            try {
+                if ("Displaying 1-1 of 1 result." == $this->getText("css=div.summary"))
+                    break;
+            } catch (Exception $e) {
+                
+            }
+            sleep(1);
+        }
         $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
         sleep(1);
         $this->select("css=select[name=\"User[role]\"]", "label=Administrator");
         sleep(1);
         $this->assertEquals("Administrator", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[3]"));
+        for ($second = 0;; $second++) {
+            if ($second >= 10)
+                $this->fail("timeout");
+            try {
+                if ("Displaying 1-2 of 2 results." == $this->getText("css=div.summary"))
+                    break;
+            } catch (Exception $e) {
+                
+            }
+            sleep(1);
+        }
         $this->assertEquals("Displaying 1-2 of 2 results.", $this->getText("css=div.summary"));
 
         $this->select("css=select[name=\"User[role]\"]", "label=Agent Administrator");
@@ -664,8 +686,7 @@ class Issue3FunctionalTestValidations extends BaseFunctionalTest {
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeat_password", "12345");
         $this->click("id=submitBtn");
-        $this->click("id=submitForm");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("id=submitForm");
         $this->assertEquals("Email \"superadmin@test.com\" has already been taken.", $this->getText("//form[@id='user-form']/table/tbody/tr/td[2]/table/tbody/tr[3]/td[2]/div"));
         $this->type("id=User_password", "test");
         $this->type("id=User_repeat_password", "Test");

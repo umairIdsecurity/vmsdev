@@ -7,13 +7,13 @@
                 <td><?php echo CardType::$CARD_TYPE_LIST[$model->card_type]; ?></td>
             </tr>
             <tr>
-                <td><?php echo $visitorModel->first_name.', '.$visitorModel->last_name ?></td>
+                <td><?php echo $visitorModel->first_name . ', ' . $visitorModel->last_name ?></td>
             </tr>
             <tr>
-                <td><?php 
-                    if($visitorModel->company != ''){
+                <td><?php
+                    if ($visitorModel->company != '') {
                         echo Company::model()->findByPk($visitorModel->company)->name;
-                    }   else {
+                    } else {
                         echo "Not Available";
                     }
                     ?></td>
@@ -22,8 +22,19 @@
                 <td><?php echo date('d/m/Y'); ?></td>
             </tr>
         </table>
-        
-        
+
+
     </div>
 </div>
-<input type="button" class="printCardBtn" value="Print Card" />
+<input type="button" class="printCardBtn" value="Print Card" id="printCardBtn"/>
+<script>
+    $(document).ready(function() {
+        if(<?php echo $model->visit_status;?> == '1'){ //1 is active
+            document.getElementById('printCardBtn').disabled = false;
+            
+        } else {
+            document.getElementById('printCardBtn').disabled = true;
+            $("#printCardBtn").addClass("disabledButton");
+        }
+    });
+</script>

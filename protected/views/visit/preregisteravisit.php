@@ -20,6 +20,7 @@ $logform = $this->beginWidget('CActiveForm', array(
     ),
         ));
 ?>
+<div class="flash-success success-update-preregister">Visit Successfully Updated.</div>
 <table class="detailsTable" style="font-size:12px;" id="logvisitTable">
     <tr>
         <td>Proposed Date In</td>
@@ -70,6 +71,7 @@ $logform = $this->beginWidget('CActiveForm', array(
     </tr>
     <tr>
         <td>
+
             <select class="time" name='Visit[time_in_hours]' id='Visit_time_in_hours' >
                 <?php for ($i = 1; $i <= 24; $i++): ?>
                     <option 
@@ -106,8 +108,26 @@ $logform = $this->beginWidget('CActiveForm', array(
 <?php $this->endWidget(); ?>
 
 <input type='text' id='currentCardTypeValueOfEditedUser' value='<?php echo $model->card_type; ?>' style='display:none;'>
+<input type='text' id='savedTimeIn' value='<?php echo $model->time_in; ?>' style='display:none;'>
 <script>
     $(document).ready(function() {
+        var currentTime = new Date();
+        var dd = currentTime.getDate();
+        var mm = currentTime.getMonth() + 1; //January is 0!
+        var yyyy = currentTime.getFullYear();
+
+        var currentDate = yyyy + "-" + mm + "-" + dd;
+        
+        if ($("#savedTimeIn").val() == '') {
+            $("#Visit_time_in_hours").val(currentTime.getHours());
+            $("#Visit_time_in_minutes").val(currentTime.getMinutes());
+        }
+        
+        if ($("#currentCardTypeValueOfEditedUser").val() == 1) { //if card type is same visitor
+            $("#Visit_date_in").val(currentDate);
+            $("#Visit_date_out").val(currentDate);
+            $("#Visit_date_in").attr("disabled", true);
+        }
 
         $('#Visit_date_in').on('change', function(e) {
             assignValuesForProposedDateOutDependingOnCardType();
@@ -139,9 +159,10 @@ $logform = $this->beginWidget('CActiveForm', array(
                 $("#Visit_date_in").datepicker("option", "maxDate", selectedDate);
             }
         });
-        
+
         $('#update-log-visit-form').bind('submit', function() {
             $(this).find('#Visit_date_out').removeAttr('disabled');
+            $(this).find('#Visit_date_in').removeAttr('disabled');
         });
 
     });

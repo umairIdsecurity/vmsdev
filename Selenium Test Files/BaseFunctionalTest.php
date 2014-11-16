@@ -131,6 +131,8 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
         $this->select("id=Visitor_tenant", "label=Test admin");
         sleep(1);
         $this->select("id=Visitor_tenant_agent", "label=Test agentadmin");
+        $this->type("id=Visitor_password", "12345");
+        $this->type("id=Visitor_repeatpassword", "12345");
     }
 
     function addReason($reason) {
@@ -148,6 +150,10 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
         $this->select("id=User_tenant", "label=Test admin");
         sleep(1);
         $this->select("id=User_tenant_agent", "label=Test agentadmin");
+        $this->type("id=User_password", "12345");
+        $this->type("id=User_repeatpassword", "12345");
+        $this->click("id=User_company");
+        sleep(1);
     }
 
     function addPatient($patient_name) {
@@ -155,11 +161,14 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
     }
 
     function verifyVisitorInTable($visitor_name) {
+        $this->waitForElementPresent("//div[@id='cssmenu']/ul/li[4]/a/span");
+        $this->clickAndWait("//div[@id='cssmenu']/ul/li[4]/a/span");
         $this->type("name=Visitor[first_name]", "Test");
         $this->type("name=Visitor[last_name]", $visitor_name);
         $this->type("name=Visitor[email]", "test" . $visitor_name . "@test.com");
         sleep(1);
         $this->assertEquals("test" . $visitor_name . "@test.com", $this->getText("//div[@id='visitor-grid']/table/tbody/tr/td[3]"));
+        sleep(1);
         $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
     }
 

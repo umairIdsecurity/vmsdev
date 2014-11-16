@@ -3,9 +3,18 @@
 /* @var $model Visitor */
 $session = new CHttpSession;
 ?>
-
-<h1>Register a Visitor</h1>
-<dl class="tabs three-up">
+<h1><?php
+    if (isset($_GET['action'])) {
+        echo "Preregister";
+    } else {
+        echo "Register";
+    };
+    ?> a Visitor</h1>
+<dl class="tabs <?php if (!isset($_GET['action'])) { ?> four-up <?php
+} else {
+    echo 'three-up';
+}
+?>">
     <dt id="selectCardA" style="display:none;border-top-left-radius: 5px ! important;">Select Card Type</dt>
     <dd class="active" id="selectCard" style="border-top-left-radius: 5px ! important;">
         <a href="#step1" id="selectCardB" style="border-top-left-radius: 5px ! important;">Select Card Type</a>
@@ -13,10 +22,21 @@ $session = new CHttpSession;
     <dt id="findVisitorA">Find or Add New Visitor Record</dt>
     <dd style="display:none;" id="findVisitor"><a href="#step2" id="findVisitorB">Find or Add New Visitor Record</a></dd>
 
-    <dt id="findHostA" style="border-top-right-radius: 5px ! important;">Find or Add Host</dt>
-    <dd style="display:none;border-top-right-radius: 5px ! important;" id="findHost">
-        <a href="#step3" id="findHostB" style="border-top-right-radius: 5px ! important;">Find or Add Host</a>
+    <dt id="findHostA" <?php if (isset($_GET['action'])) { ?> style="border-top-right-radius: 5px ! important;" <?php } ?>>Find or Add Host</dt>
+    <dd style="display:none;<?php
+    if (isset($_GET['action'])) {
+        echo "border-top-right-radius: 5px ! important;";
+    }
+    ?>" id="findHost">
+        <a href="#step3" id="findHostB" <?php if (isset($_GET['action'])) { ?> style="border-top-right-radius: 5px ! important;" <?php } ?>>Find or Add Host</a>
     </dd>
+    <?php if (!isset($_GET['action'])) { ?>
+        <dt id = "logVisitA" style = "border-top-right-radius: 5px ! important;">Log Visit</dt>
+        <dd style = "display:none;border-top-right-radius: 5px ! important;" id = "logVisit">
+            <a href = "#step4" id = "logVisitB" style = "border-top-right-radius: 5px ! important;">Log Visit</a>
+        </dd>
+    <?php }
+    ?>
 </dl>
 
 
@@ -33,12 +53,18 @@ $session = new CHttpSession;
         <?php $this->renderPartial('findAddHostRecord', array('userModel' => $userModel, 'patientModel' => $patientModel)); ?>
         <?php $this->renderPartial('visitForm', array('visitModel' => $visitModel)); ?>
     </li>
+    <li id="step4Tab">
+        <?php $this->renderPartial('logvisit', array('visitModel' => $visitModel)); ?>
+    </li>
 </ul>
 
 <input type="text" id="currentRoleOfLoggedInUser" value="<?php echo $session['role']; ?>">
 <input type="text" id="currentCompanyOfLoggedInUser" value="<?php echo User::model()->getCompany($session['id']); ?>">
 <script>
+
     $(document).ready(function() {
+        display_ct();
+
         document.getElementById('Visitor_company').disabled = true;
 
         if ($("#currentRoleOfLoggedInUser").val() != 5) { //not superadmin
@@ -77,12 +103,11 @@ $session = new CHttpSession;
             $('#Visitor_company option[value!=""]').remove();
             $('#Visitor_tenant_agent option[value!=""]').remove();
             $('#Visitor_tenant').val("");
-            if ($(this).val() == "2") { //if corporate type
+            if ($(this).val() == "2") {
                 $("#register-host-patient-form").hide();
                 $("#register-host-form").show();
                 document.getElementById('Visitor_company').disabled = false;
-
-            } else { //if patient type
+            } else {
                 $("#register-host-patient-form").show();
                 $("#register-host-form").hide();
                 document.getElementById('Visitor_company').disabled = true;
@@ -131,11 +156,16 @@ $session = new CHttpSession;
 
         $("#clicktabB2").click(function(e) {
             e.preventDefault();
+            var currentURL = location.href.split("=");
 
             //checks if host is from search and verifys that a user has been selected
             if (($("#selectedHostInSearchTable").val() == '' && $("#search-host").val() != '') || $("#selectedHostInSearchTable").val() == '') {
                 $("#searchTextHostErrorMessage").html("Please select a host.");
                 $("#searchTextHostErrorMessage").show();
+                //alert("host from search");
+            } else if (currentURL[1] == "visitor/create") {
+                showHideTabs("logVisitB", "logVisitA", "logVisit", "findHostA", "findHost", "findVisitorA", "findVisitor");
+                // alert("preregister");
             } else if ($("#selectedVisitorInSearchTable").val() != '0') { // if visitor is from search
 
                 if ($("#VisitReason_reason_search").val() != 0 && $("#Visit_reason_search").val() == 'Other') {
@@ -190,6 +220,11 @@ $session = new CHttpSession;
             showHideTabs('findVisitorB', 'findVisitorA', 'findVisitor', 'selectCardA', 'selectCard', 'findHostA', 'findHost');
             hidePreviousPage('step3Tab', 'stepTab2');
         });
+        $(".btnBackTab4").click(function(e) {
+            e.preventDefault();
+            showHideTabs('findHostB', 'findHostA', 'findHost', 'selectCardA', 'selectCard', 'logVisitA', 'logVisit');
+            hidePreviousPage('step4Tab', 'stepTab3');
+        });
         function showHideTabs(showThisId, hideThisId, showThisRow, hideOtherA, showOtherRowA, hideOtherB, showOtherRowB) {
             $("#" + showThisId).click(); // findvisitorB dt
             $("#" + showThisId).show(); //findvisitorB dt
@@ -224,6 +259,7 @@ $session = new CHttpSession;
                 $('#findVisitorTableIframe').contents().find('.findVisitorButtonColumn a').html('Select Visitor');
                 $('#findVisitorTableIframe').contents().find('#' + id).addClass('delete');
                 $('#findVisitorTableIframe').contents().find('#' + id).html('Selected Visitor');
+                $('#findVisitorTableIframe').contents().find('.findVisitorButtonColumn .linkToVisitorDetailPage').html('Visitor has an active visit');
             }
         });
 
@@ -268,6 +304,7 @@ $session = new CHttpSession;
         }
         $("#selectedHostInSearchTable").val(id);
         $("#hostId").val(id);
+        $("#Visit_host").val(id);
     }
 
     function checkEmailIfUnique() {
@@ -306,15 +343,21 @@ $session = new CHttpSession;
                 } else {
                     $(".errorMessageEmail1").hide();
                     $("#hostEmailIsUnique").val("1");
-                    //if visitor is not from search sendvisitorform
-                    if ($("#Visit_reason").val() == 'Other') {
-                        sendReasonForm();
-                    }
-                    else if ($("#selectedVisitorInSearchTable").val() == 0) {
-                        sendVisitorForm();
+                    var currentURL = location.href.split("=");
+                    if (currentURL[1] != "visitor/create") {
+//                    //if visitor is not from search sendvisitorform
+                        if ($("#Visit_reason").val() == 'Other') {
+                            sendReasonForm();
+                        }
+                        else if ($("#selectedVisitorInSearchTable").val() == 0) {
+                            sendVisitorForm();
+                        } else {
+                            sendHostForm();
+                        }
                     } else {
-                        sendHostForm();
+                        showHideTabs("logVisitB", "logVisitA", "logVisit", "findHostA", "findHost", "findVisitorA", "findVisitor");
                     }
+
                 }
             }
         });
@@ -465,9 +508,10 @@ $session = new CHttpSession;
         $("#Visit_visitor_type").val(visitor_type.value);
     }
 
-    function getLastVisitorId() {
+    function getLastVisitorId(callback) {
         var id = $("#Visitor_email").val();
-        $.ajax({
+
+        var ajaxcall = $.ajax({
             type: 'POST',
             url: '<?php echo Yii::app()->createUrl('visitor/GetIdOfUser&id='); ?>' + id,
             dataType: 'json',
@@ -477,15 +521,18 @@ $session = new CHttpSession;
                     $("#visitorId").val(value.id);
                     $("#Visit_visitor").val(value.id);
                 });
-                return true;
             }
+        }).done(callback).complete(function() { 
+            //alert("complete");
         });
-        return true;
+        
+        //ajaxcall.complete(function(){ alert("second complete"); });
+
     }
 
-    function getLastHostId() {
+    function getLastHostId(callback) {
         var id = $("#User_email").val();
-        $.ajax({
+        return $.ajax({
             type: 'POST',
             url: '<?php echo Yii::app()->createUrl('user/GetIdOfUser&id='); ?>' + id.trim(),
             dataType: 'json',
@@ -496,12 +543,12 @@ $session = new CHttpSession;
                     $("#Visit_host").val(value.id);
                 });
             }
-        });
+        }).done(callback);
     }
 
-    function getLastPatientId() {
+    function getLastPatientId(callback) {
         var id = $("#Patient_name").val();
-        $.ajax({
+        return $.ajax({
             type: 'POST',
             url: '<?php echo Yii::app()->createUrl('patient/GetIdOfUser&id='); ?>' + id.trim(),
             dataType: 'json',
@@ -515,7 +562,7 @@ $session = new CHttpSession;
 
 
             }
-        });
+        }).done(callback);
     }
 
     function checkReasonIfUnique() {
@@ -575,6 +622,24 @@ $session = new CHttpSession;
 
         $("#" + hideOtherB).show(); //selectcardtype dd
         $("#" + showOtherRowB).hide(); //selectcardtype dd
+    }
+
+    function display_c() {
+        var refresh = 1000; // Refresh rate in milli seconds
+        mytime = setTimeout('display_ct()', refresh)
+    }
+
+    function display_ct() {
+
+        var x = new Date();
+        var currenttime = x.getHours() + ":" + x.getMinutes() + ":" + x.getSeconds();
+
+        //document.getElementById('Visit_time_in').innerHTML = x;
+        $("#Visit_time_inLog").val(currenttime);
+        $("#Visit_time_in").val(currenttime);
+        $("#Visit_time_in_hours").val(x.getHours());
+        $("#Visit_time_in_minutes").val(x.getMinutes());
+        tt = display_c();
     }
 
 </script>

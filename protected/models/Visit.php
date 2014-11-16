@@ -61,13 +61,13 @@ class Visit extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('is_deleted', 'numerical', 'integerOnly' => true),
-            array('reason,visitor_type,visitor,visitor_status', 'required'),
+            array('reason,visitor_type,visitor,visitor_status,workstation', 'required'),
             array('visitor,card, visitor_type, reason, visitor_status, host, patient, created_by, tenant, tenant_agent', 'length', 'max' => 20),
             array('time_in_hours,time_in_minutes,visit_status,date_in, time_in, date_out, time_out, date_check_in, time_check_in, date_check_out, time_check_out,card_type', 'safe'),
             array('patient, host,card,tenant,tenant_agent', 'default', 'setOnEmpty' => true, 'value' => null),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id,contactnumber,contactemail,company,lastname,firstname,visit_status,visitor ,card, visitor_type, reason, visitor_status, host, patient, created_by, date_in, time_in, date_out, time_out, date_check_in, time_check_in, date_check_out, time_check_out, tenant, tenant_agent, is_deleted', 'safe', 'on' => 'search'),
+            array('id,visit_status,visitor ,card,workstation, visitor_type, reason, visitor_status, host, patient, created_by, date_in, time_in, date_out, time_out, date_check_in, time_check_in, date_check_out, time_check_out, tenant, tenant_agent, is_deleted', 'safe', 'on' => 'search'),
         );
     }
 
@@ -161,6 +161,7 @@ class Visit extends CActiveRecord {
             'patient0' => array(self::BELONGS_TO, 'Patient', 'patient'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'created_by'),
             'tenant0' => array(self::BELONGS_TO, 'User', 'tenant'),
+            'workstation0' => array(self::BELONGS_TO, 'Workstation', 'workstation'),
         );
     }
 
@@ -191,6 +192,7 @@ class Visit extends CActiveRecord {
             'tenant_agent' => 'Tenant Agent',
             'is_deleted' => 'Is Deleted',
             'visit_status' => 'Visit Status',
+            'workstation' => 'Workstation',
         );
     }
 
@@ -239,6 +241,7 @@ class Visit extends CActiveRecord {
         $criteria->compare('tenant_agent', $this->tenant_agent, true);
         $criteria->compare('t.is_deleted', $this->is_deleted);
         $criteria->compare('visit_status', $this->visit_status);
+        $criteria->compare('workstation', $this->workstation);
 
         if (Yii::app()->user->role == Roles::ROLE_STAFFMEMBER) {
             $criteria->addCondition('host = ' . Yii::app()->user->id . ' and visit_status = ' . VisitStatus::PREREGISTERED);

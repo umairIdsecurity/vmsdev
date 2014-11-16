@@ -43,6 +43,7 @@ $session = new CHttpSession;
                     ));
                     ?>
                     <input type="hidden" id="emailIsUnique" value="0"/>
+                    <div class="flash-success success-update-contact-details"> Contact Details Updated Successfully. </div>
                     <table id="contactDetailsTable" class="detailsTable">
                         <tr>
                             <td width="100px;">Email:</td>
@@ -61,7 +62,7 @@ $session = new CHttpSession;
                 </li>
             </ul>
         </li>
-        <li class='has-sub'><a href="#"><span>Visitor Type</span></a>
+        <li class='has-sub' id="visitorTypeDetailsLi"><a href="#"><span>Visitor Type</span></a>
             <ul>
                 <li>
                     <?php
@@ -80,6 +81,8 @@ $session = new CHttpSession;
                         ),
                     ));
                     ?>
+                    <div class="flash-success success-update-visitor-type"> Visitor Type Updated Successfully. </div>
+                    
                     <table id="visitorTypeTable" class="detailsTable">
                         <tr>
                             <td width="100px;"><?php echo $visitForm->labelEx($model, 'visitor_type'); ?></td>
@@ -102,7 +105,7 @@ $session = new CHttpSession;
                 </li>
             </ul>
         </li>
-        <li class='has-sub'><a href="#"><span>Reason</span></a>
+        <li class='has-sub' id="reasonLi"><a href="#"><span>Reason</span></a>
             <ul>
                 <li>
                     <?php
@@ -129,6 +132,9 @@ $session = new CHttpSession;
                         ),
                     ));
                     ?>
+                    <div class="flash-success success-update-reason">Reason Updated Successfully. </div>
+                    <div class="flash-success success-add-reason">Reason Added Successfully. </div>
+                    
                     <table id="reasonTable" class="detailsTable">
                         <tr>
                             <td width="100px;"><label for="Visit_reason">Reason</label></td>
@@ -177,7 +183,7 @@ $session = new CHttpSession;
                     <table id="addreasonTable" class="detailsTable">
                         <tr>
                             <td width="100px;"><label for="VisitReason_reason">Reason</label></td>
-                            <td><textarea id="VisitReason_reason" maxlength="128" name="VisitReason[reason]" style="width:200px !important;text-transform: capitalize;" cols="80" rows="3"><?php
+                            <td><textarea id="VisitReason_reason" name="VisitReason[reason]" style="width:200px !important;text-transform: capitalize;" cols="80" rows="3"><?php
                                     echo $reasonModel->reason;
                                     ?></textarea> <?php echo $addReasonForm->error($reasonModel, 'reason'); ?>
                                 <div class="errorMessage visitorReason" id="visitReasonErrorMessage">Reason cannot be blank.</div>
@@ -209,19 +215,19 @@ $session = new CHttpSession;
                         ),
                     ));
                     ?>
+                    <div class="flash-success success-update-host-details"> Host Details Updated Successfully. </div>
+                    
                     <div id="searchHostDiv" style="display:block;">
                         <div>
                             <label style="font-size:12px;">Search Name:</label> 
                             <input type="text" id="search-host" name="search-host" class="search-text" style="width:96%;"/> 
                             <button class="host-findBtn" onclick="findHostRecord()" id="host-findBtn" style="display:none;" data-target="#findHostRecordModal" data-toggle="modal">Find Record</button>
-
                             <div class="errorMessage" id="searchTextHostErrorMessage" style="display:none;font-size:12px;"></div>
 
                             <button class="host-findBtn" id="dummy-host-findBtn">Find Host</button>
-                            <button class="host-AddBtn" style="margin-bottom: -23px;">Add Host</button>
                         </div>
                         <input type="text" name="Visit[host]" id="selectedHostInSearchTable" style="display:none;"/>
-                        <input type="text" name="Visit[visitor_type]" id="visitorTypeUnderSearchForm" style="display:none;" value="<?php echo $model->visitor_type; ?>"/>
+                        <input type="text" name="Visit[visitor_type]" id="visitorTypeUnderSearchForm" style="display:none;"/>
                         <?php echo "<br>" . $updateHostVisitForm->error($model, 'host'); ?>
                         <div id="searchHostTableDiv">
                             <br><div style="font-weight:bold;" class="findDivTitle"></div><br>
@@ -236,7 +242,7 @@ $session = new CHttpSession;
                     <?php
                     $form = $this->beginWidget('CActiveForm', array(
                         'id' => 'register-newhost-form',
-                        'action' => Yii::app()->createUrl('/user/create&view=1'),
+                        'action' => Yii::app()->createUrl('/user/create'),
                         'htmlOptions' => array("name" => "register-newhost-form"),
                         'enableAjaxValidation' => false,
                         'enableClientValidation' => true,
@@ -251,10 +257,12 @@ $session = new CHttpSession;
                         ),
                     ));
                     ?>
+                    <div class="flash-success success-add-host">Host Added Successfully. </div>
+                    
                     <table  id="addnewhost-table" class="detailsTable" style="display:none;">
 
                         <tr>
-                            <td width="100px;">
+                            <td style="width:107px !important;">
                                 <?php echo $form->labelEx($newHost, 'first_name'); ?>
                             </td>
                             <td>
@@ -309,12 +317,26 @@ $session = new CHttpSession;
                                 <?php echo "<br>" . $form->error($newHost, 'contact_number'); ?>
                             </td>
                         </tr>
-
-                        <tr id="hostTenantRow" <?php
-                        if ($session['role'] != Roles::ROLE_SUPERADMIN) {
-                            echo "style='display:none;'";
-                        }
-                        ?> >
+                        <tr>
+                            <td>
+                                <label for="User_password">Password <span class="required">*</span></label>
+                            </td>
+                            <td>
+                                <input type="password" id="User_password" name="User[password]">			
+                                <?php echo "<br>" . $form->error($newHost, 'password'); ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="User_repeatpassword">Repeat Password <span class="required">*</span></label>
+                            </td>
+                            <td>
+                                <input type="password" id="User_repeatpassword" name="User[repeatpassword]" onChange="checkPasswordMatch();"/>			
+                                <div style='font-size:10px;color:red;font-size:11.5px;display:none;' id="passwordErrorMessage">New Password does not match with Repeat New Password. </div>
+                                <?php echo "<br>" . $form->error($newHost, 'repeatpassword'); ?>
+                            </td>
+                        </tr>
+                        <tr id="hostTenantRow">
 
                             <td ><?php echo $form->labelEx($newHost, 'tenant'); ?></td>
                             <td>
@@ -324,51 +346,28 @@ $session = new CHttpSession;
                                     $allAdminNames = User::model()->findAllAdmin();
                                     foreach ($allAdminNames as $key => $value) {
                                         ?>
-                                        <option value="<?php echo $value->tenant; ?>"
+                                        <option value="<?php echo $value->tenant; ?>"><?php echo $value->first_name . " " . $value->last_name; ?></option>
                                         <?php
-                                        if ($session['role'] == Roles::ROLE_STAFFMEMBER && $session['tenant'] == $value->tenant) {
-                                            echo " selected ";
-                                        }
-                                        ?>
-                                                ><?php echo $value->first_name . " " . $value->last_name; ?></option>
-                                                <?php
-                                            }
-                                            ?>
+                                    }
+                                    ?>
                                 </select><?php echo "<br>" . $form->error($newHost, 'tenant'); ?>
                             </td>
                         </tr>
-                        <tr id="hostTenantAgentRow" <?php
-                        if ($session['role'] != Roles::ROLE_SUPERADMIN) {
-                            echo "style='display:none;'";
-                        }
-                        ?>>
+                        <tr id="hostTenantAgentRow">
                             <td ><?php echo $form->labelEx($newHost, 'tenant_agent'); ?></td>
                             <td>
                                 <select id="User_tenant_agent" class="New_user_tenant_agent" name="User[tenant_agent]" onchange="populateHostCompanyWithSameTenantAndTenantAgent()" >
                                     <?php
                                     echo "<option value='' selected>Select Tenant Agent</option>";
-                                    if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
-                                        echo "<option value='" . $session['tenant_agent'] . "' selected>Tenant Agent</option>";
-                                    }
                                     ?>
-
                                 </select><?php echo "<br>" . $form->error($newHost, 'tenant_agent'); ?>
                             </td>
                         </tr>
-                        <tr id="hostCompanyRow" <?php
-                        if ($session['role'] != Roles::ROLE_SUPERADMIN) {
-                            echo "style='display:none;'";
-                        }
-                        ?>>
+                        <tr id="hostCompanyRow">
                             <td><?php echo $form->labelEx($newHost, 'company'); ?></td>
                             <td>
                                 <select id="User_company" name="User[company]" class="New_user_company">
                                     <option value=''>Select Company</option>
-                                    <?php
-                                    if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
-                                        echo "<option value='" . $session['company'] . "' selected>Company</option>";
-                                    }
-                                    ?>
                                 </select>
 
                                 <?php echo "<br>" . $form->error($newHost, 'company'); ?>
@@ -400,10 +399,10 @@ $session = new CHttpSession;
                         'clientOptions' => array(
                             'validateOnSubmit' => true,
                             'afterValidate' => 'js:function(form,data,hasError){
-                            if(!hasError){
-                                    checkHostEmailIfUnique();
-                                    }
-                            }'
+                        if(!hasError){
+                                checkHostEmailIfUnique();
+                                }
+                        }'
                         ),
                     ));
                     ?>
@@ -411,37 +410,37 @@ $session = new CHttpSession;
 
                     <table id="hostTable" class="detailsTable">
                         <tr>
-                            <td width="100px;"><?php echo $hostForm->labelEx($hostModel, 'first_name'); ?></td>
+                            <td style="width:100px !important;"><?php echo $hostForm->labelEx($hostModel, 'first_name'); ?></td>
                             <td>
-                                <?php echo $hostForm->textField($hostModel, 'first_name', array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled')); ?>
+                                <?php echo $hostForm->textField($hostModel, 'first_name', array('size' => 50, 'maxlength' => 50)); ?>
                                 <?php echo "<br>" . $hostForm->error($hostModel, 'first_name'); ?>
                             </td>
                         </tr>
                         <tr>
                             <td width="100px;"><?php echo $hostForm->labelEx($hostModel, 'last_name'); ?></td>
                             <td>
-                                <?php echo $hostForm->textField($hostModel, 'last_name', array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled')); ?>
+                                <?php echo $hostForm->textField($hostModel, 'last_name', array('size' => 50, 'maxlength' => 50)); ?>
                                 <?php echo "<br>" . $hostForm->error($hostModel, 'last_name'); ?>
                             </td>
                         </tr>
                         <tr>
                             <td width="100px;"><?php echo $hostForm->labelEx($hostModel, 'department'); ?></td>
                             <td>
-                                <?php echo $hostForm->textField($hostModel, 'department', array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled')); ?>
+                                <?php echo $hostForm->textField($hostModel, 'department', array('size' => 50, 'maxlength' => 50)); ?>
                                 <?php echo "<br>" . $hostForm->error($hostModel, 'department'); ?>
                             </td>
                         </tr>
                         <tr>
                             <td width="100px;"><?php echo $hostForm->labelEx($hostModel, 'staff_id'); ?></td>
                             <td>
-                                <?php echo $hostForm->textField($hostModel, 'staff_id', array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled')); ?>
+                                <?php echo $hostForm->textField($hostModel, 'staff_id', array('size' => 50, 'maxlength' => 50)); ?>
                                 <?php echo "<br>" . $hostForm->error($hostModel, 'staff_id'); ?>
                             </td>
                         </tr>
                         <tr>
                             <td width="100px;"><?php echo $hostForm->labelEx($hostModel, 'email'); ?></td>
                             <td>
-                                <?php echo $hostForm->textField($hostModel, 'email', array('class' => 'update_user_email', 'disabled' => 'disabled')); ?>
+                                <?php echo $hostForm->textField($hostModel, 'email', array('class' => 'update_user_email')); ?>
                                 <?php echo "<br>" . $hostForm->error($hostModel, 'email'); ?>
                                 <div style="display:none;" id="User_email_em_1a" class="errorMessage errorMessageEmail1" >Email Address has already been taken.</div>
                             </td>
@@ -449,7 +448,7 @@ $session = new CHttpSession;
                         <tr>
                             <td width="100px;">Mobile:</td>
                             <td>
-                                <?php echo $hostForm->textField($hostModel, 'contact_number', array('disabled' => 'disabled')); ?>
+                                <?php echo $hostForm->textField($hostModel, 'contact_number'); ?>
                                 <?php echo "<br>" . $hostForm->error($hostModel, 'contact_number'); ?>
                             </td>
                         </tr>
@@ -479,6 +478,8 @@ $session = new CHttpSession;
                             ),
                         ));
                         ?>
+                        <div class="flash-success success-add-patient">Patient Added Successfully. </div>
+                    
                         <table id='newPatientTable' class='detailsTable'>
                             <tr>
                                 <td width="100px"><?php echo $newPatientForm->labelEx($newPatient, 'name'); ?></td>
@@ -514,7 +515,8 @@ $session = new CHttpSession;
                     ));
                     if ($patientModel !== null) {
                         ?>
-
+<div class="flash-success success-update-patient">Patient Updated Successfully. </div>
+                    
                         <table id="patientTable" class="detailsTable">
                             <tr>
                                 <td width="100px;"><?php echo $patientForm->labelEx($patientModel, 'first_name');
@@ -538,10 +540,20 @@ $session = new CHttpSession;
 </div>
 <script>
     $(document).ready(function() {
+
+        $("#User_repeatpassword").keyup(checkPasswordMatch);
         if ($("#currentSessionRole").val() == 9) {
             $("#personalDetailsLi").html("<a href='#'><span>Personal Details</span></a>");
             $("#contactDetailsLi").html("<a href='#'><span>Contact Details</span></a>");
-            $('#Visit_visitor_type option[value!="2"]').remove();
+        }
+        
+        if (<?php echo $model->visit_status; ?> == '3') {
+            $("#personalDetailsLi").html("<a href='#'><span>Personal Details</span></a>");
+            $("#contactDetailsLi").html("<a href='#'><span>Contact Details</span></a>");
+            $("#visitorTypeDetailsLi").html("<a href='#'><span>Visitor Type</span></a>");
+            $("#reasonLi").html("<a href='#'><span>Reason</span></a>");
+            $("#hostDetailsLi").html("<a href='#'><span>Host Details</span></a>");
+            $("#patientDetailsLi").html("<a href='#'><span>Patient Details</span></a>");
         }
 
         $("#dummy-host-findBtn").click(function(e) {
@@ -721,9 +733,17 @@ $session = new CHttpSession;
         });
     }
 
+    function checkPasswordMatch() {
+        var password = $("#User_password").val();
+        var confirmPassword = $("#User_repeatpassword").val();
+
+        if (password != confirmPassword)
+            $("#passwordErrorMessage").show();
+        else
+            $("#passwordErrorMessage").hide();
+    }
 
 </script>
-<!-- START MODAL -->
 <input type="button" id="findHostModalBtn" value="findhost" data-target="#findHostModal" data-toggle="modal" style="display:none;"/>
 <div class="modal hide fade" id="findHostModal" style="width:69%; margin-left:-435px;">
     <div class="modal-header">
@@ -736,4 +756,3 @@ $session = new CHttpSession;
         <div id="modalIframe" style="overflow-x: hidden !important; overflow-y: auto !important;"></div>
     </div>
 </div>
-<!-- END MODAL -->

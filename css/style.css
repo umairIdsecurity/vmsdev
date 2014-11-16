@@ -526,11 +526,11 @@ dt.tabs dt{
     color:#5C5C5E;
 }
 
-#register-form label{
+#registerform label{
     color:#637280; 
 }
 
-#register-form table tr td{
+#registerform table tr td{
     padding:3px;
 }
 
@@ -584,9 +584,7 @@ dt.tabs dt{
 ,#Patient_name_error,
 #selectedVisitorInSearchTable,#visitorId,#selectedHostInSearchTable,#patientIsUnique, 
 #hostId, #hostEmailIsUnique, #register-visit-form,
-#register-host-form #User_role, #register-host-form #User_user_type,
-#register-host-form #User_password,
-#register-host-form #User_repeat_password
+#register-host-form #User_role, #register-host-form #User_user_type
 ,#currentRoleOfLoggedInUser,
 #currentCompanyOfLoggedInUser,
 #register-reason-form-search,
@@ -645,10 +643,16 @@ dt.tabs dt{
     text-align:right;
 }
 
+.linkToVisitorDetailPage {
+    background: none repeat scroll 0 0 rgba(0, 0, 0, 0) !important;
+    border: medium none !important;
+    color: #000000 !important;
+    font-size: 12px !important;
+}
 
 
 /*for visitor detail page*/
-#visitorDetailDiv{
+#visitorDetailDiv, #visitHistoryVisitDetailDiv{
     padding:0px;margin-left:-30px;height:100%;width:106.59% !important;max-width:107%;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
@@ -721,11 +725,11 @@ dt.tabs dt{
 }
 
 #visitorInformationCssMenu table tr td, #visitorInformationCssMenu table tr td label{
-    vertical-align:middle !important;
+    vertical-align:top !important;
     font-size:12px;
 }
 
-#visitorInformationCssMenu table tr td input[type="text"]{
+#visitorInformationCssMenu table tr td input[type="text"], #visitorInformationCssMenu table tr td input[type="password"]{
     height:17px;
     font-size:12px;
     width:107%;
@@ -787,10 +791,6 @@ dt.tabs dt{
     border:1px solid white;
 }
 
-#visitHistoryVisitDetailDiv{ 
-    margin-left:-267px;
-    width:133%;   
-}
 
 #visitHistoryTableDiv{
     border:1px solid #E7E7E7;
@@ -798,9 +798,6 @@ dt.tabs dt{
     padding:15px;
 }
 
-.visitHistory th{
-
-}
 
 .printCardBtn{
     width:70% !important;font-size:11px;font-weight:bold;
@@ -875,8 +872,12 @@ height: 16px;
 text-decoration: none;
 }
 
+#visitorDetailDiv .flash-success{
+    display:none;
+    font-size:12px;
+}
 .time{
-    width:60px;
+    width:60px !important;
 }
 
 #actionsCssMenu li{
@@ -932,4 +933,8 @@ text-decoration: none;
 #view-visitor-records {
     width:1680px;
     padding-right:30px !important;
+}
+
+.disabledButton {
+    background:linear-gradient(#C6C6C6 0%, #C6C6C6 100%) repeat scroll 0 0 rgba(0, 0, 0, 0) !important;
 }

@@ -339,6 +339,7 @@ CREATE TABLE IF NOT EXISTS `visit` (
   `date_check_out` date DEFAULT NULL,
   `time_check_out` time DEFAULT NULL,
 `visit_status` bigint(20) DEFAULT NULL,
+  `workstation` bigint(20) DEFAULT NULL,
   `tenant` bigint(20) DEFAULT NULL,
   `tenant_agent` bigint(20) DEFAULT NULL,
   `is_deleted` tinyint(4) DEFAULT '0',
@@ -353,7 +354,8 @@ CREATE TABLE IF NOT EXISTS `visit` (
   KEY `tenant` (`tenant`),
   KEY `tenant_agent` (`tenant_agent`),
   KEY `card_type` (`card_type`),
-  KEY `visit_status` (`visit_status`)
+  KEY `visit_status` (`visit_status`),
+  KEY `workstation` (`workstation`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -580,9 +582,9 @@ ALTER TABLE `user_workstation`
 -- Constraints for table `visit`
 --
 ALTER TABLE `visit`
+  ADD CONSTRAINT `visit_ibfk_13` FOREIGN KEY (`workstation`) REFERENCES `workstation` (`id`),
   ADD CONSTRAINT `visit_ibfk_11` FOREIGN KEY (`card_type`) REFERENCES `card_type` (`id`),
 ADD CONSTRAINT `visit_ibfk_12` FOREIGN KEY (`visit_status`) REFERENCES `visit_status` (`id`),
-  
   ADD CONSTRAINT `visit_ibfk_1` FOREIGN KEY (`card`) REFERENCES `card_generated` (`id`),
   ADD CONSTRAINT `visit_ibfk_10` FOREIGN KEY (`tenant_agent`) REFERENCES `user` (`id`),
   ADD CONSTRAINT `visit_ibfk_3` FOREIGN KEY (`reason`) REFERENCES `visit_reason` (`id`),

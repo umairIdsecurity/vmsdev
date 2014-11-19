@@ -66,7 +66,10 @@ $session = new CHttpSession;
         display_ct();
 
         document.getElementById('Visitor_company').disabled = true;
-
+        if($("#currentRoleOfLoggedInUser").val() == 9){
+            $("#Visit_visitor_type").val(2);
+        }
+        
         if ($("#currentRoleOfLoggedInUser").val() != 5) { //not superadmin
             $("#Visitor_company").val($("#currentCompanyOfLoggedInUser").val());
             $("#Visitor_tenant").val('<?php echo $session['tenant']; ?>');
@@ -266,6 +269,7 @@ $session = new CHttpSession;
         $("#visitor_fields_for_Search").show();
         $("#selectedVisitorInSearchTable").val(id);
         $("#visitorId").val(id);
+        $("#Visit_visitor").val(id);
     }
 
     function populateFieldHost(id) {

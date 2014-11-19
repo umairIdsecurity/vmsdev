@@ -16,7 +16,7 @@ $session = new ChttpSession;
     <div class="sidebarTitle" style="">Main Menu</div><br><div id='cssmenu' class="dashboardMenu">
         <ul>
             <li class=''>
-                <a href='<?php echo Yii::app()->createUrl('dashboard/viewmyvisitors'); ?>'>
+                <a href='<?php echo Yii::app()->createUrl('visitor/create&action=preregister'); ?>'>
                     <span class="icons pre-visits">Preregistered Visitors</span>
                 </a>
             </li>

@@ -243,7 +243,7 @@ class Visit extends CActiveRecord {
         $criteria->compare('visit_status', $this->visit_status);
         $criteria->compare('workstation', $this->workstation);
 
-        if (Yii::app()->user->role == Roles::ROLE_STAFFMEMBER) {
+        if (Yii::app()->user->role == Roles::ROLE_STAFFMEMBER && Yii::app()->controller->action->id != 'view') {
             $criteria->addCondition('host = ' . Yii::app()->user->id . ' and visit_status = ' . VisitStatus::PREREGISTERED);
         }
         
@@ -253,7 +253,7 @@ class Visit extends CActiveRecord {
                 break;
 
             case Roles::ROLE_SUPERADMIN:
-                $criteria->addCondition('id != ""');
+                $criteria->addCondition('t.id != ""');
                 break;
             
             case Roles::ROLE_ADMIN:

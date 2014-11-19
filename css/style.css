@@ -35,7 +35,8 @@ div.form label{
 #dummy-submitFormPatientName,
 #updateVisitHostFromSearch,
 .submitBtn,.host-AddBtn
-,#saveCurrentUserAsHost{
+,#saveCurrentUserAsHost,
+.greenBtn{
     background: -webkit-gradient(linear, center top, center bottom, from(#A1DC33), to(#82BD12));
     background: -moz-linear-gradient(center top , #A1DC33, #82BD12) repeat scroll 0 0 rgba(0, 0, 0, 0);
     background: -webkit-gradient(linear, center top, center bottom, from(#A1DC33), to(#82BD12));
@@ -591,6 +592,7 @@ dt.tabs dt{
 #searchHostDiv,
 #addreasonTable,
 .errorMessageEmail2
+
 {
     display: none;
 }

@@ -186,13 +186,17 @@ $session = new CHttpSession;
                             $workstationList = populateWorkstation();
                             foreach ($workstationList as $key => $value) {
                                 ?>
-                                <option value="<?php echo $value->id; ?>"><?php echo $value->name;  ?></option>
+                                <option value="<?php echo $value->id; ?>"><?php echo $value->name; ?></option>
                                 <?php
                             }
                             ?>
                         </select>
                     </td>
-                    <td id="visitorTenantRow"><?php echo $form->labelEx($model, 'tenant'); ?><br>
+                    <td id="visitorTenantRow" <?php
+                                if ($session['role'] != 5) {
+                                    echo " class='hidden' ";
+                                }
+                                ?>><?php echo $form->labelEx($model, 'tenant'); ?><br>
 
                         <select id="Visitor_tenant" onchange="populateTenantAgentAndCompanyField()" name="Visitor[tenant]"  >
                             <option value='' selected>Select Admin</option>
@@ -200,18 +204,32 @@ $session = new CHttpSession;
                             $allAdminNames = User::model()->findAllAdmin();
                             foreach ($allAdminNames as $key => $value) {
                                 ?>
-                                <option value="<?php echo $value->tenant; ?>"><?php echo $value->first_name . " " . $value->last_name; ?></option>
+                                <option value="<?php echo $value->tenant; ?>"
+                                        <?php
+                            if ($session['role'] == Roles::ROLE_STAFFMEMBER && $session['tenant'] == $value->tenant) {
+                                echo " selected ";
+                            }
+                            ?>
+                                        
+                                        ><?php echo $value->first_name . " " . $value->last_name; ?></option>
                                 <?php
                             }
                             ?>
                         </select><?php echo "<br>" . $form->error($model, 'tenant'); ?>
                     </td>
-                    <td id="visitorTenantAgentRow"><?php echo $form->labelEx($model, 'tenant_agent'); ?><br>
+                    <td id="visitorTenantAgentRow" <?php
+                                if ($session['role'] != 5) {
+                                    echo " class='hidden' ";
+                                }
+                                ?>><?php echo $form->labelEx($model, 'tenant_agent'); ?><br>
 
                         <select id="Visitor_tenant_agent" name="Visitor[tenant_agent]" onchange="populateCompanyWithSameTenantAndTenantAgent()" >
                             <?php
-                            echo "<option value='' selected>Select Tenant Agent</option>";
-                            ?>
+                        echo "<option value='' selected>Select Tenant Agent</option>";
+                        if ($session['role'] == Roles::ROLE_STAFFMEMBER ) {
+                            echo "<option value='".$session['tenant_agent']."' selected>TenantAgent</option>";
+                        }
+                        ?>
                         </select><?php echo "<br>" . $form->error($model, 'tenant_agent'); ?>
                     </td>
                 </tr>
@@ -248,7 +266,7 @@ $session = new CHttpSession;
     <div class="errorMessage" id="visitReasonErrorMessage" style="display:none;">Reason cannot be blank.</div>
 
 
-<?php $this->endWidget(); ?>
+    <?php $this->endWidget(); ?>
 </div>
 
 <script>
@@ -389,7 +407,7 @@ $session = new CHttpSession;
         var form = $("#register-form").serialize();
         $.ajax({
             type: "POST",
-            url: "<?php echo CHtml::normalizeUrl(array("visitor/create")); ?>",
+            url: "<?php echo CHtml::normalizeUrl(array("visitor/create&view=1")); ?>",
             data: form,
             success: function(data) {
 
@@ -453,17 +471,33 @@ $session = new CHttpSession;
 </script>
 
 <input type="text" id="visitorId" placeholder="visitor id"/>
-<?php 
+<?php
 
-function populateWorkstation(){
+function populateWorkstation() {
     $session = new CHttpSession;
-    switch ($session['role']){
+    
+    switch ($session['role']) {
         case Roles::ROLE_SUPERADMIN:
             $workstationList = Workstation::model()->findAll();
             break;
+        case Roles::ROLE_STAFFMEMBER:
+            if($session['tenant'] == NULL ){
+                $tenantsearchby = "IS NULL";
+            } else {
+                $tenantsearchby = "='".$session['tenant']."'";
+            }
+            
+            if($session['tenant_agent']== NULL){
+                $tenantagentsearchby = "IS NULL";
+            } else {
+                $tenantagentsearchby = "='".$session['tenant_agent']."'";
+            }
+            $Criteria = new CDbCriteria();
+            $Criteria->condition = "tenant $tenantsearchby and tenant_agent $tenantagentsearchby";
+            $workstationList = Workstation::model()->findAll($Criteria);
+            break;
     }
-    
+
     return $workstationList;
 }
-
 ?>

@@ -6,7 +6,9 @@
             <input type="text" id="search-host" name="search-host" class="search-text"/> 
             <button class="host-findBtn" onclick="findHostRecord()" id="host-findBtn" style="display:none;" data-target="#findHostRecordModal" data-toggle="modal">Find Record</button>
             <button class="host-findBtn" id="dummy-host-findBtn">Find Host</button>
-            <button class="host-AddBtn" >Add Host</button>
+            <button class="host-AddBtn" <?php if($session['role'] != Roles::ROLE_STAFFMEMBER){
+                 echo " style='display:none;' ";
+            }?>>Add Host</button>
 
             <div class="errorMessage" id="searchTextHostErrorMessage" style="display:none;"></div>
         </div>
@@ -65,7 +67,7 @@
         <?php
         $form = $this->beginWidget('CActiveForm', array(
             'id' => 'register-host-form',
-            'action' => Yii::app()->createUrl('/user/create'),
+            'action' => Yii::app()->createUrl('/user/create&view=1'),
             'htmlOptions' => array("name" => "registerhostform"),
             'enableAjaxValidation' => false,
             'enableClientValidation' => true,
@@ -123,7 +125,7 @@
                         <?php echo "<br>" . $form->error($userModel, 'contact_number'); ?>
                     </td>
                 </tr>
-                <tr>
+                <tr <?php if($session['role'] != Roles::ROLE_SUPERADMIN) { echo "style='display:none;'"; }?>>
 
                     <td id="hostTenantRow"><?php echo $form->labelEx($userModel, 'tenant'); ?><br>
 
@@ -133,10 +135,16 @@
                             $allAdminNames = User::model()->findAllAdmin();
                             foreach ($allAdminNames as $key => $value) {
                                 ?>
-                                <option value="<?php echo $value->tenant; ?>"><?php echo $value->first_name . " " . $value->last_name; ?></option>
+                            <option value="<?php echo $value->tenant; ?>"
                                 <?php
+                            if ($session['role'] == Roles::ROLE_STAFFMEMBER && $session['tenant'] == $value->tenant) {
+                                echo " selected ";
                             }
                             ?>
+                                    ><?php echo $value->first_name . " " . $value->last_name; ?></option>
+                                    <?php
+                                }
+                                ?>
                         </select><?php echo "<br>" . $form->error($userModel, 'tenant'); ?>
                     </td>
                     <td id="hostTenantAgentRow"><?php echo $form->labelEx($userModel, 'tenant_agent'); ?><br>
@@ -144,6 +152,9 @@
                         <select id="User_tenant_agent" name="User[tenant_agent]" onchange="populateHostCompanyWithSameTenantAndTenantAgent()" >
                             <?php
                             echo "<option value='' selected>Select Tenant Agent</option>";
+                        if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
+                            echo "<option value='" . $session['tenant_agent'] . "' selected>Tenant Agent</option>";
+                        }
                             ?>
                         </select><?php echo "<br>" . $form->error($userModel, 'tenant_agent'); ?>
                     </td>
@@ -152,6 +163,11 @@
                         <?php echo $form->labelEx($userModel, 'company'); ?><br>
                         <select id="User_company" name="User[company]" >
                             <option value=''>Select Company</option>
+                        <?php
+                        if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
+                            echo "<option value='" . $session['company'] . "' selected>Company</option>";
+                        }
+                        ?>
                         </select>
 
                         <?php echo "<br>" . $form->error($userModel, 'company'); ?>
@@ -174,39 +190,123 @@
                         <div style='font-size:10px;color:red;font-size:0.9em;display:none;margin-bottom:-20px;' id="passwordErrorMessage">New Password does not match with <br>Repeat New Password. </div>
                         <?php echo "<br>" . $form->error($userModel, 'repeatpassword'); ?>
                     </td>
-
                 </tr>
 
 
-            </table>
+        </table>
 
-        </div>
+    </div>
+    <div class="register-a-visitor-buttons-div">
+        <input type="button" class="visitor-backBtn btnBackTab3" id="btnBackTab3" value="Back"/>
+        <input type="button" id="clicktabC" value="Save and Continue" style="display:none;"/>
+
+        <input type="submit" value="Save and Continue" name="yt0" id="submitFormUser" />
+    </div>
+    <?php $this->endWidget(); ?>
+    <br>
+    <div id="currentHostDetailsDiv" <?php if ($session['role'] != Roles::ROLE_STAFFMEMBER){ echo "style='display:none;'"; }?>>
+        <?php
+        $userStaffMemberModel = User::model()->findByPk($session['id']);
+
+        $staffmemberform = $this->beginWidget('CActiveForm', array(
+            'id' => 'staffmember-host-form',
+            'action' => Yii::app()->createUrl('/user/create'),
+            'htmlOptions' => array("name" => "staffmember-host-form"),
+        ));
+        ?>
+        <table  id="currentHostDetails">
+
+                <tr>
+                    <td>
+
+                    <?php echo $staffmemberform->labelEx($userStaffMemberModel, 'first_name'); ?><br>
+                    <?php echo $staffmemberform->textField($userStaffMemberModel, 'first_name', array(
+                        'size' => 50, 'maxlength' => 50,'disabled'=>'disabled'
+                        )); ?>
+                    <?php echo "<br>" . $staffmemberform->error($userStaffMemberModel, 'first_name'); ?>
+                    </td>
+                    <td>
+                    <?php echo $staffmemberform->labelEx($userStaffMemberModel, 'last_name'); ?><br>
+                    <?php echo $staffmemberform->textField($userStaffMemberModel, 'last_name', array('size' => 50, 'maxlength' => 50,'disabled'=>'disabled')); ?>
+                    <?php echo "<br>" . $staffmemberform->error($userStaffMemberModel, 'last_name'); ?>
+                    </td>
+                <td>
+
+                    <?php echo $staffmemberform->labelEx($userStaffMemberModel, 'department'); ?><br>
+                    <?php echo $staffmemberform->textField($userStaffMemberModel, 'department', array('size' => 50, 'maxlength' => 50,'disabled'=>'disabled')); ?>
+                    <?php echo "<br>" . $staffmemberform->error($userStaffMemberModel, 'department'); ?>
+                </td>
+                </tr>
+
+            <tr>
+                <td>
+                    <?php echo $staffmemberform->labelEx($userStaffMemberModel, 'staff_id'); ?><br>
+                    <?php echo $staffmemberform->textField($userStaffMemberModel, 'staff_id', array('size' => 50, 'maxlength' => 50,'disabled'=>'disabled')); ?>
+                    <?php echo "<br>" . $staffmemberform->error($userStaffMemberModel, 'staff_id'); ?>
+                </td>
+
+                <td>
+                    <?php echo $staffmemberform->labelEx($userStaffMemberModel, 'email'); ?><br>
+                    <?php echo $staffmemberform->textField($userStaffMemberModel, 'email', array('size' => 50, 'maxlength' => 50,'disabled'=>'disabled')); ?>
+                    <?php echo "<br>" . $staffmemberform->error($userStaffMemberModel, 'email'); ?>
+                    <div style="" id="User_email_em_" class="errorMessage errorMessageEmail1" >Email Address has already been taken.</div>
+                </td>
+                <td>
+                    <?php echo $staffmemberform->labelEx($userStaffMemberModel, 'contact_number'); ?><br>
+                    <?php echo $staffmemberform->textField($userStaffMemberModel, 'contact_number', array('size' => 50, 'maxlength' => 50,'disabled'=>'disabled')); ?>
+                    <?php echo "<br>" . $staffmemberform->error($userStaffMemberModel, 'contact_number'); ?>
+                </td>
+            </tr>
+            </table>
+        <?php $this->endWidget(); ?>
         <div class="register-a-visitor-buttons-div">
             <input type="button" class="visitor-backBtn btnBackTab3" id="btnBackTab3" value="Back"/>
-            <input type="button" id="clicktabC" value="Save and Continue" style="display:none;"/>
-            <input type="submit" value="Save and Continue" name="yt0" id="submitFormUser" />
-
+            
+            <input type="button" id="saveCurrentUserAsHost" value="Save and Continue" />
+        
         </div>
-        <?php $this->endWidget(); ?>
+        
     </div>
 
 </div>
 
 <script>
     $(document).ready(function() {
-
+        
+        
+        
         $("#dummy-host-findBtn").click(function(e) {
             e.preventDefault();
             var searchText = $("#search-host").val();
             if (searchText != '') {
                 $("#searchTextHostErrorMessage").hide();
                 $("#host-findBtn").click();
+                $("#currentHostDetailsDiv").hide();
+                $(".host-AddBtn").hide();
             } else {
                 $("#searchTextHostErrorMessage").show();
                 $("#searchTextHostErrorMessage").html("Search Name cannot be blank.");
             }
+            
         });
+        
         $("#User_repeatpassword").keyup(checkPasswordMatch);
+    
+        $("#saveCurrentUserAsHost").click(function(e) {
+            e.preventDefault();
+            $("#selectedHostInSearchTable").val('<?php echo $session['id']; ?>');
+            $("#search-host").val('staff');
+            $("#hostId").val('<?php echo $session['id']; ?>');
+            $("#clicktabB2").click();
+    });
+
+        $(".host-AddBtn").click(function(e) {
+            e.preventDefault();
+            $("#register-host-form").show();
+            $("#searchHostDiv").show();
+            $("#currentHostDetailsDiv").hide();
+            $(".host-AddBtn").hide();
+        });
     });
 
     function findHostRecord() {
@@ -239,7 +339,7 @@
         var hostform = $("#register-host-form").serialize();
         $.ajax({
             type: "POST",
-            url: "<?php echo CHtml::normalizeUrl(array("user/create")); ?>",
+            url: "<?php echo CHtml::normalizeUrl(array("user/create&view=1")); ?>",
             data: hostform,
             success: function(data) {
                 getLastHostId(function(data) {

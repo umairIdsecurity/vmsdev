@@ -35,7 +35,7 @@ $session = new CHttpSession;
 
         </td>
         <td>
-
+            <?php if ($session['role'] != Roles::ROLE_STAFFMEMBER){ ?>
             <?php
                 $this->renderPartial('visitordetail-actions', array('model' => $model,
                     'visitorModel' => $visitorModel,
@@ -45,7 +45,7 @@ $session = new CHttpSession;
                 ));
             
             ?>
-
+            <?php } ?>
         </td>
 
     </tr>

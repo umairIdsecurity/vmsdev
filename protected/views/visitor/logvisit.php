@@ -60,14 +60,16 @@ if ($visitModel->time_in != '') {
             // alert($("#Visit_visitor_type").val());
             if ($("#Visit_visitor_type").val() == 1) { //if patient type
                 sendReasonForm();
+               // alert("patient");
             } else {
+               /// alert('corporate');
                 if (($("#selectedHostInSearchTable").val() != '' && $("#search-host").val() != '')) { //if host is from search
-//alert("host from search ");
+                  //  alert("host from search ");
                     if ($("#selectedVisitorInSearchTable").val() != '0') { // if visitor is from search
 
                         if ($("#VisitReason_reason_search").val() != 0 && $("#Visit_reason_search").val() == 'Other') {
                             sendReasonForm();
-                           // alert("visitor from search with new reason");
+                            //alert("visitor from search with new reason");
                         } else {
                             populateVisitFormFields();
                           //  alert("visitor from search with exstng reason");
@@ -77,7 +79,7 @@ if ($visitModel->time_in != '') {
                     else {
                         $("#searchTextHostErrorMessage").hide();
                         sendReasonForm();
-                       // alert("visitor not search ");
+                      //  alert("visitor not search ");
                     }
 
                 }

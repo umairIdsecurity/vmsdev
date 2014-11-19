@@ -1,4 +1,7 @@
+<?php 
+date_default_timezone_set("Asia/Manila");
 
+?>
 <div id="visitHistoryVisitDetailDiv">
     <span class="visitTitle">Visit History</span>
     <div id="visitHistoryTableDiv">
@@ -52,6 +55,12 @@
                     'type' => 'html',
                     'value' => 'Yii::app()->dateFormatter->format("d/MM/y",strtotime($data->date_out))',
                 ),
+                array(
+                    'name' => 'time_out',
+                    'type' => 'html',
+                    'value' => 'formatTime($data->time_out)',
+                ),
+                
                 'time_out',
                 array(
                     'header' => 'Closed by',
@@ -90,5 +99,9 @@ function returnPatientOrHostName($visit_id, $userHost) {
     }
     
     return $hostFullName;
+}
+
+function formatTime($time){
+    return date('H:i A', strtotime($time));
 }
 ?>

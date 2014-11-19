@@ -165,8 +165,6 @@ class Issue24FunctionalTest extends BaseFunctionalTest {
         $this->assertFalse($this->isTextPresent("//div[@id='cssmenu']/ul/li[5]/a/span"));
         $this->open("http://cvms.identitysecurity.info/index.php?r=visitReason/admin");
         $this->assertEquals("You are not authorized to perform this action.", $this->getText("css=div.error"));
-        $this->open("http://cvms.identitysecurity.info/index.php?r=visitReason/create");
-        $this->assertEquals("You are not authorized to perform this action.", $this->getText("css=div.error"));
         $this->open("http://cvms.identitysecurity.info/index.php?r=visitReason/update");
         $this->assertEquals("You are not authorized to perform this action.", $this->getText("css=div.error"));
     }

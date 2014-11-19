@@ -27,11 +27,18 @@ class VisitServiceImpl implements VisitService {
             $visit->time_in = $visit->time_in_hours . ':' . $visit->time_in_minutes;
         }
 
-
+        if($visit->visitor_type == VisitorType::PATIENT_VISITOR){
+            $visit->host =NULL;
+        } else {
+            $visit->patient = NULL;
+        }
+        
         if (!($visit->save())) {
             return false;
         }
-
+        
+        
+        
         $visitor = Visitor::model()->findByPK($visit->visitor);
         Visit::model()->updateByPk($visit->id, array(
             'tenant' => $visitor->tenant,

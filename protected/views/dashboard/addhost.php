@@ -6,16 +6,16 @@ $session = new CHttpSession;
 
     <?php
     $form = $this->beginWidget('CActiveForm', array(
-        'id' => 'register-host-form',
+        'id' => 'registerhostform',
         'action' => Yii::app()->createUrl('/user/create'),
-        'htmlOptions' => array("name" => "register-host-form", "style" => "display:block;"),
+        'htmlOptions' => array("name" => "registerhostform", "style" => "display:block;"),
         'enableAjaxValidation' => false,
         'enableClientValidation' => true,
         'clientOptions' => array(
             'validateOnSubmit' => true,
             'afterValidate' => 'js:function(form,data,hasError){
                         if(!hasError){
-                                sendHostForm();
+                                checkHostEmailIfUnique();
                                 }
                         }'
         ),
@@ -24,8 +24,8 @@ $session = new CHttpSession;
     <?php echo $form->errorSummary($userModel); ?>
     <input type="text" id="hostEmailIsUnique" value="0"/>
     <div class="visitor-title">Add Host</div>
-    <div>
-        <table  id="addhost-table">
+    <div >
+        <table  id="addhost-table" data-ng-app="PwordForm">
 
             <tr>
                 <td>
@@ -65,6 +65,20 @@ $session = new CHttpSession;
                     <?php echo "<br>" . $form->error($userModel, 'contact_number'); ?>
                 </td>
             </tr>
+            <tr>
+                <td>
+                        <label for="User_password">Password <span class="required">*</span></label><br>
+                        <input type="password" id="User_password" name="User[password]" onChange="checkPasswordMatch();">			
+                        <?php echo "<br>" . $form->error($userModel, 'password'); ?>
+                    </td>
+
+                    <td>
+                        <label for="User_repeatpassword">Repeat Password <span class="required">*</span></label><br>
+                        <input type="password" id="User_repeatpassword" name="User[repeatpassword]" onChange="checkPasswordMatch();"/>			
+                        <div style='font-size:10px;color:red;font-size:0.9em;display:none;margin-bottom:-20px;' id="passwordErrorMessage">New Password does not match with <br>Repeat New Password. </div>
+                        <?php echo "<br>" . $form->error($userModel, 'repeatpassword'); ?>
+                    </td>
+            </tr>
             <tr style="display:none;">
 
                 <td id="hostTenantRow"><?php echo $form->labelEx($userModel, 'tenant'); ?><br>
@@ -80,11 +94,10 @@ $session = new CHttpSession;
                     <input type="text" id="User_company" name="User[company]" value="<?php echo $session['company']; ?>"/>
                     <?php echo "<br>" . $form->error($userModel, 'company'); ?>
                 </td>
+
                 <td >
                     <input name="User[role]" id="User_role" value="<?php echo Roles::ROLE_STAFFMEMBER ?>"/>
-                    <input name="User[user_type]" id="User_user_type" value="<?php echo UserType::USERTYPE_INTERNAL; ?>"/>
-                    <input name="User[password]" id="User_password" value="0"/>
-                    <input name="User[repeatpassword]" id="User_repeat_password" value="0"/>
+                    <input name="User[user_type]" id="User_user_type" value="<?php echo UserType::USERTYPE_INTERNAL; ?>"/>             
                 </td>
             </tr>
 
@@ -103,11 +116,13 @@ $session = new CHttpSession;
 
 <script>
     $(document).ready(function() {
-
+        $("#User_repeatpassword").keyup(checkPasswordMatch);
+        $("#User_password").keyup(checkPasswordMatch);
+    
     });
     function sendHostForm() {
 
-        var hostform = $("#register-host-form").serialize();
+        var hostform = $("#registerhostform").serialize();
         $.ajax({
             type: "POST",
             url: "<?php echo CHtml::normalizeUrl(array("user/create")); ?>",
@@ -120,4 +135,35 @@ $session = new CHttpSession;
             },
         });
     }
+    
+    function checkPasswordMatch() {
+        var password = $("#User_password").val();
+        var confirmPassword = $("#User_repeatpassword").val();
+
+        if (password != confirmPassword)
+            $("#passwordErrorMessage").show();
+        else
+            $("#passwordErrorMessage").hide();
+    }
+    
+     function checkHostEmailIfUnique() {
+        var email = $("#User_email").val();
+        $.ajax({
+            type: 'POST',
+            url: '<?php echo Yii::app()->createUrl('user/checkEmailIfUnique&id='); ?>' + email.trim(),
+            dataType: 'json',
+            data: email,
+            success: function(r) {
+
+                if (r == 1) {
+                    $(".errorMessageEmail1").show();
+                } else {
+                    $(".errorMessageEmail1").hide();
+                    sendHostForm();
+
+                }
+            }
+        });
+    }
+
 </script>

@@ -179,7 +179,11 @@ $session = new CHttpSession;
                     </td>
                 </tr>
                 <tr>
-                    <td id="workstationRow"><label>Workstation</label><span class="required">*</span><br>
+                    <td id="workstationRow" <?php
+                                if ($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
+                                   echo " class='hidden' ";
+                                }
+                                ?>><label>Workstation</label><span class="required">*</span><br>
 
                         <select id="workstation">
                             <?php
@@ -193,8 +197,8 @@ $session = new CHttpSession;
                         </select>
                     </td>
                     <td id="visitorTenantRow" <?php
-                                if ($session['role'] != 5) {
-                                    echo " class='hidden' ";
+                                if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+                                   echo " class='hidden' ";
                                 }
                                 ?>><?php echo $form->labelEx($model, 'tenant'); ?><br>
 
@@ -206,7 +210,7 @@ $session = new CHttpSession;
                                 ?>
                                 <option value="<?php echo $value->tenant; ?>"
                                         <?php
-                            if ($session['role'] == Roles::ROLE_STAFFMEMBER && $session['tenant'] == $value->tenant) {
+                            if ($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value->tenant) {
                                 echo " selected ";
                             }
                             ?>
@@ -226,7 +230,7 @@ $session = new CHttpSession;
                         <select id="Visitor_tenant_agent" name="Visitor[tenant_agent]" onchange="populateCompanyWithSameTenantAndTenantAgent()" >
                             <?php
                         echo "<option value='' selected>Select Tenant Agent</option>";
-                        if ($session['role'] == Roles::ROLE_STAFFMEMBER ) {
+                        if ($session['role'] != Roles::ROLE_SUPERADMIN ) {
                             echo "<option value='".$session['tenant_agent']."' selected>TenantAgent</option>";
                         }
                         ?>
@@ -480,6 +484,14 @@ function populateWorkstation() {
         case Roles::ROLE_SUPERADMIN:
             $workstationList = Workstation::model()->findAll();
             break;
+        
+        case Roles::ROLE_OPERATOR:
+        case Roles::ROLE_AGENT_OPERATOR:
+            $Criteria = new CDbCriteria();
+            $Criteria->condition = "id ='".$session['workstation']."'";
+            $workstationList = Workstation::model()->findAll($Criteria);
+            break;
+        
         case Roles::ROLE_STAFFMEMBER:
             if($session['tenant'] == NULL ){
                 $tenantsearchby = "IS NULL";
@@ -496,6 +508,19 @@ function populateWorkstation() {
             $Criteria->condition = "tenant $tenantsearchby and tenant_agent $tenantagentsearchby";
             $workstationList = Workstation::model()->findAll($Criteria);
             break;
+            
+        case Roles::ROLE_ADMIN:
+            $Criteria = new CDbCriteria();
+            $Criteria->condition = "tenant ='".$session['tenant']."'";
+            $workstationList = Workstation::model()->findAll($Criteria);
+            break;
+        
+        case Roles::ROLE_AGENT_ADMIN:
+            $Criteria = new CDbCriteria();
+            $Criteria->condition = "tenant ='".$session['tenant']."' and tenant_agent ='".$session['tenant_agent']."'";
+            $workstationList = Workstation::model()->findAll($Criteria);
+            break;
+       
     }
 
     return $workstationList;

@@ -66,31 +66,32 @@ $session = new CHttpSession;
         display_ct();
 
         document.getElementById('Visitor_company').disabled = true;
-        if($("#currentRoleOfLoggedInUser").val() == 9){
+        if ($("#currentRoleOfLoggedInUser").val() == 9) { //if staffmember logged in user
             $("#Visit_visitor_type").val(2);
-        }
-        
-        if ($("#currentRoleOfLoggedInUser").val() != 5) { //not superadmin
             $("#Visitor_company").val($("#currentCompanyOfLoggedInUser").val());
-            $("#Visitor_tenant").val('<?php echo $session['tenant']; ?>');
-            $("#User_tenant").val('<?php echo $session['tenant']; ?>');
-            $("#Visitor_tenant_agent").val('<?php echo $session['tenant_agent']; ?>');
-            $("#User_tenant_agent").val('<?php echo $session['tenant_agent']; ?>');
-
             $("#Visitor_visitor_type").val(2);
             $("#Visitor_visitor_type_search").val(2);
             $('#Visitor_visitor_type option[value!="2"]').remove();
             $('#Visitor_visitor_type_search option[value!="2"]').remove();
             document.getElementById('Visitor_company').disabled = false;
+            $("#register-host-patient-form").hide();
+            $("#register-host-form").hide();
+            $("#searchHostDiv").show();
+            $("#currentHostDetailsDiv").show();
+        }
+
+        if ($("#currentRoleOfLoggedInUser").val() != 5) { //not superadmin
+
+            $("#Visitor_tenant").val('<?php echo $session['tenant']; ?>');
+            $("#User_tenant").val('<?php echo $session['tenant']; ?>');
+            $("#Visitor_tenant_agent").val('<?php echo $session['tenant_agent']; ?>');
+            $("#User_tenant_agent").val('<?php echo $session['tenant_agent']; ?>');
+
             /*check if current logged in role is staff member
              * if staff member check if tenant agent admin is null
              * if null populate company by tenant
              * else if not null populate company by tenant and tenant agent
              */
-            $("#register-host-patient-form").hide();
-            $("#register-host-form").hide();
-            $("#searchHostDiv").show();
-            $("#currentHostDetailsDiv").show();
             
             $('#Visitor_company option[value!=""]').remove();
             if ($("#currentRoleOfLoggedInUser").val() != 5) { //not superadmin
@@ -99,13 +100,24 @@ $session = new CHttpSession;
                 } else {
                     getCompanyWithSameTenantAndTenantAgent($("#Visitor_tenant").val(), $("#Visitor_tenant_agent").val());
                 }
+                
+                if ($("#User_tenant_agent").val() == '') {
+                    getHostCompanyWithSameTenant($("#User_tenant").val());
+                } else {
+                    getHostCompanyWithSameTenantAndTenantAgent($("#User_tenant").val(), $("#User_tenant_agent").val());
+                }
+                
+                
             }
         }
 
         $('#Visitor_visitor_type').on('change', function(e) {
-            $('#Visitor_company option[value!=""]').remove();
-            $('#Visitor_tenant_agent option[value!=""]').remove();
-            $('#Visitor_tenant').val("");
+            if ($("#currentRoleOfLoggedInUser").val() == 5) {
+                $('#Visitor_company option[value!=""]').remove();
+                $('#Visitor_tenant_agent option[value!=""]').remove();
+                $('#Visitor_tenant').val("");
+            }
+
             if ($(this).val() == "2") {
                 $("#register-host-patient-form").hide();
                 $("#register-host-form").show();
@@ -526,10 +538,10 @@ $session = new CHttpSession;
                     $("#Visit_visitor").val(value.id);
                 });
             }
-        }).done(callback).complete(function() { 
+        }).done(callback).complete(function() {
             //alert("complete");
         });
-        
+
         //ajaxcall.complete(function(){ alert("second complete"); });
 
     }

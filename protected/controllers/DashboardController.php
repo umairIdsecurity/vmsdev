@@ -22,11 +22,11 @@ class DashboardController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'index'),
+                'actions' => array('create', 'update', 'index','addHost'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('ViewMyVisitors','addHost'),
+                'actions' => array('ViewMyVisitors'),
                 'expression' => 'Yii::app()->controller->checkIfUserCanAccess("viewmyvisitor")',
             ),
             array('deny', // deny all users
@@ -121,9 +121,14 @@ class DashboardController extends Controller {
      * Lists all models.
      */
     public function actionIndex() {
-        $dataProvider = new CActiveDataProvider('User');
-        $this->render('index', array(
-            'dataProvider' => $dataProvider,
+        $this->layout = '//layouts/column2';
+        $model = new Visit('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['Visit']))
+            $model->attributes = $_GET['Visit'];
+
+        $this->render('viewdashboard', array(
+            'model' => $model,
         ));
     }
 

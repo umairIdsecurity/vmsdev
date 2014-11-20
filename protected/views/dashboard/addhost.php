@@ -65,37 +65,82 @@ $session = new CHttpSession;
                     <?php echo "<br>" . $form->error($userModel, 'contact_number'); ?>
                 </td>
             </tr>
+            <tr <?php
+            if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+                echo "style='display:none;'";
+            }
+            ?>
+                >
+                    <?php
+                    if ($session['role'] == Roles::ROLE_SUPERADMIN) {
+                        ?>
+                    <td id="hostTenantRow"><?php echo $form->labelEx($userModel, 'tenant'); ?><br>
+                        <select id="User_tenant" onchange="populateHostTenantAgentAndCompanyField()" name="User[tenant]"  >
+                            <option value='' selected>Select Admin</option>
+                            <?php
+                            $allAdminNames = User::model()->findAllAdmin();
+                            foreach ($allAdminNames as $key => $value) {
+                                ?>
+                                <option value="<?php echo $value->tenant; ?>" ><?php echo $value->first_name . " " . $value->last_name; ?></option>
+                                <?php
+                            }
+                            ?>
+                        </select>
+                        <?php echo "<br>" . $form->error($userModel, 'tenant'); ?>
+                    </td>
+                    <td id="hostTenantAgentRow"><?php echo $form->labelEx($userModel, 'tenant_agent'); ?><br>
+                        <select id="User_tenant_agent" name="User[tenant_agent]" onchange="populateHostCompanyWithSameTenantAndTenantAgent()" >
+                            <?php
+                            echo "<option value='' selected>Select Tenant Agent</option>";
+                            ?>
+                        </select>
+                        <?php echo "<br>" . $form->error($userModel, 'tenant_agent'); ?>
+                    </td>
+
+                    <td id="hostCompanyRow">
+                        <?php echo $form->labelEx($userModel, 'company'); ?><br>
+                        <select id="User_company" name="User[company]" >
+                            <option value=''>Select Company</option>
+                        </select>
+                        <?php echo "<br>" . $form->error($userModel, 'company'); ?>
+                    </td>
+                    <?php
+                } else {
+                    ?>
+                    <td id="hostTenantRow"><?php echo $form->labelEx($userModel, 'tenant'); ?><br>
+                        <input type="text" id="User_tenant" name="User[tenant]" value="<?php echo $session['tenant']; ?>"/>
+                        <?php echo "<br>" . $form->error($userModel, 'tenant'); ?>
+                    </td>
+                    <td id="hostTenantAgentRow"><?php echo $form->labelEx($userModel, 'tenant_agent'); ?><br>
+                        <input type="text" id="User_tenant_agent" name="User[tenant_agent]" value="<?php echo $session['tenant_agent']; ?>"/>
+                        <?php echo "<br>" . $form->error($userModel, 'tenant_agent'); ?>
+                    </td>
+
+                    <td id="hostCompanyRow">
+                        <?php echo $form->labelEx($userModel, 'company'); ?><br>
+                        <input type="text" id="User_company" name="User[company]" value="<?php echo $session['company']; ?>"/>
+                        <?php echo "<br>" . $form->error($userModel, 'company'); ?>
+                    </td>
+                <?php } ?>
+            </tr>
+
             <tr>
                 <td>
-                        <label for="User_password">Password <span class="required">*</span></label><br>
-                        <input type="password" id="User_password" name="User[password]" onChange="checkPasswordMatch();">			
-                        <?php echo "<br>" . $form->error($userModel, 'password'); ?>
-                    </td>
+                    <label for="User_password">Password <span class="required">*</span></label><br>
+                    <input type="password" id="User_password" name="User[password]" onChange="checkPasswordMatch();">			
+                    <?php echo "<br>" . $form->error($userModel, 'password'); ?>
+                </td>
 
-                    <td>
-                        <label for="User_repeatpassword">Repeat Password <span class="required">*</span></label><br>
-                        <input type="password" id="User_repeatpassword" name="User[repeatpassword]" onChange="checkPasswordMatch();"/>			
-                        <div style='font-size:10px;color:red;font-size:0.9em;display:none;margin-bottom:-20px;' id="passwordErrorMessage">New Password does not match with <br>Repeat New Password. </div>
-                        <?php echo "<br>" . $form->error($userModel, 'repeatpassword'); ?>
-                    </td>
+                <td>
+                    <label for="User_repeatpassword">Repeat Password <span class="required">*</span></label><br>
+                    <input type="password" id="User_repeatpassword" name="User[repeatpassword]" onChange="checkPasswordMatch();"/>			
+                    <div style='font-size:10px;color:red;font-size:0.9em;display:none;margin-bottom:-20px;' id="passwordErrorMessage">New Password does not match with <br>Repeat New Password. </div>
+                    <?php echo "<br>" . $form->error($userModel, 'repeatpassword'); ?>
+                </td>
             </tr>
-            <tr style="display:none;">
 
-                <td id="hostTenantRow"><?php echo $form->labelEx($userModel, 'tenant'); ?><br>
-                    <input type="text" id="User_tenant" name="User[tenant]" value="<?php echo $session['tenant']; ?>"/>
-                    <?php echo "<br>" . $form->error($userModel, 'tenant'); ?>
-                </td>
-                <td id="hostTenantAgentRow"><?php echo $form->labelEx($userModel, 'tenant_agent'); ?><br>
-                    <input type="text" id="User_tenant_agent" name="User[tenant_agent]" value="<?php echo $session['tenant_agent']; ?>"/>
-                    <?php echo "<br>" . $form->error($userModel, 'tenant_agent'); ?>
-                </td>
-                <td id="hostCompanyRow">
-                    <?php echo $form->labelEx($userModel, 'company'); ?><br>
-                    <input type="text" id="User_company" name="User[company]" value="<?php echo $session['company']; ?>"/>
-                    <?php echo "<br>" . $form->error($userModel, 'company'); ?>
-                </td>
-
-                <td >
+            <tr>
+                <td style="display:none;">
                     <input name="User[role]" id="User_role" value="<?php echo Roles::ROLE_STAFFMEMBER ?>"/>
                     <input name="User[user_type]" id="User_user_type" value="<?php echo UserType::USERTYPE_INTERNAL; ?>"/>             
                 </td>
@@ -118,7 +163,7 @@ $session = new CHttpSession;
     $(document).ready(function() {
         $("#User_repeatpassword").keyup(checkPasswordMatch);
         $("#User_password").keyup(checkPasswordMatch);
-    
+
     });
     function sendHostForm() {
 
@@ -128,14 +173,23 @@ $session = new CHttpSession;
             url: "<?php echo CHtml::normalizeUrl(array("user/create")); ?>",
             data: hostform,
             success: function(data) {
-                window.location = "index.php?r=dashboard/viewmyvisitors";
+
+                if ('<?php echo $session['role']; ?>' != 9) { //if not equal to staff member
+                    window.location = "index.php?r=dashboard";
+                } else {
+                    window.location = "index.php?r=dashboard/viewmyvisitors";
+                }
             },
             error: function() {
-                window.location = "index.php?r=dashboard/viewmyvisitors";
+                if ('<?php echo $session['role']; ?>' != 9) { //if not equal to staff member
+                    window.location = "index.php?r=dashboard";
+                } else {
+                    window.location = "index.php?r=dashboard/viewmyvisitors";
+                }
             },
         });
     }
-    
+
     function checkPasswordMatch() {
         var password = $("#User_password").val();
         var confirmPassword = $("#User_repeatpassword").val();
@@ -145,8 +199,8 @@ $session = new CHttpSession;
         else
             $("#passwordErrorMessage").hide();
     }
-    
-     function checkHostEmailIfUnique() {
+
+    function checkHostEmailIfUnique() {
         var email = $("#User_email").val();
         $.ajax({
             type: 'POST',
@@ -162,6 +216,68 @@ $session = new CHttpSession;
                     sendHostForm();
 
                 }
+            }
+        });
+    }
+
+    function populateHostCompanyWithSameTenantAndTenantAgent() {
+        $('#User_company option[value!=""]').remove();
+        getHostCompanyWithSameTenantAndTenantAgent($("#User_tenant").val(), $("#User_tenant_agent").val());
+    }
+
+    function getHostCompanyWithSameTenantAndTenantAgent(tenant, tenant_agent) {
+        $.ajax({
+            type: 'POST',
+            url: '<?php echo Yii::app()->createUrl('visitor/GetCompanyWithSameTenantAndTenantAgent&id='); ?>' + tenant + '&tenantagent=' + tenant_agent,
+            dataType: 'json',
+            data: tenant,
+            success: function(r) {
+                $('#User_company option[value=""]').remove();
+                $.each(r.data, function(index, value) {
+                    $('#User_company').append('<option value="' + value.id + '">' + value.name + '</option>');
+                });
+            }
+        });
+    }
+
+    function populateHostTenantAgentAndCompanyField()
+    {
+        $('#User_company option[value!=""]').remove();
+        $('#User_tenant_agent option[value!=""]').remove();
+        var tenant = $("#User_tenant").val();
+
+        getHostTenantAgentWithSameTenant(tenant);
+        getHostCompanyWithSameTenant(tenant);
+
+    }
+
+    function getHostTenantAgentWithSameTenant(tenant) {
+        $('#User_tenant_agent').empty();
+        $('#User_tenant_agent').append('<option value="">Select Tenant Agent</option>');
+        $.ajax({
+            type: 'POST',
+            url: '<?php echo Yii::app()->createUrl('visitor/GetTenantAgentWithSameTenant&id='); ?>' + tenant,
+            dataType: 'json',
+            data: tenant,
+            success: function(r) {
+                $.each(r.data, function(index, value) {
+                    $('#User_tenant_agent').append('<option value="' + value.id + '">' + value.name + '</option>');
+                });
+            }
+        });
+    }
+
+    function getHostCompanyWithSameTenant(tenant) {
+        $.ajax({
+            type: 'POST',
+            url: '<?php echo Yii::app()->createUrl('company/GetCompanyWithSameTenant&id='); ?>' + tenant,
+            dataType: 'json',
+            data: tenant,
+            success: function(r) {
+                $('#User_company option[value=""]').remove();
+                $.each(r.data, function(index, value) {
+                    $('#User_company').append('<option value="' + value.id + '">' + value.name + '</option>');
+                });
             }
         });
     }

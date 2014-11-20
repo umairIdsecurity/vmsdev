@@ -67,7 +67,7 @@ class Visit extends CActiveRecord {
             array('patient, host,card,tenant,tenant_agent', 'default', 'setOnEmpty' => true, 'value' => null),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id,visit_status,visitor ,card,workstation, visitor_type, reason, visitor_status, host, patient, created_by, date_in, time_in, date_out, time_out, date_check_in, time_check_in, date_check_out, time_check_out, tenant, tenant_agent, is_deleted', 'safe', 'on' => 'search'),
+            array('id,firstname,lastname,contactnumber,contactemail,visit_status,visitor ,card,workstation, visitor_type, reason, visitor_status, host, patient, created_by, date_in, time_in, date_out, time_out, date_check_in, time_check_in, date_check_out, time_check_out, tenant, tenant_agent, is_deleted', 'safe', 'on' => 'search'),
         );
     }
 
@@ -246,7 +246,7 @@ class Visit extends CActiveRecord {
         if (Yii::app()->user->role == Roles::ROLE_STAFFMEMBER && Yii::app()->controller->action->id != 'view') {
             $criteria->addCondition('host = ' . Yii::app()->user->id . ' and visit_status = ' . VisitStatus::PREREGISTERED);
         }
-        
+        $session= new CHttpSession;
         switch (Yii::app()->user->role) {
             case Roles::ROLE_STAFFMEMBER:
                 $criteria->addCondition('host = ' . Yii::app()->user->id);
@@ -262,6 +262,11 @@ class Visit extends CActiveRecord {
             
             case Roles::ROLE_AGENT_ADMIN:
                 $criteria->addCondition('t.tenant = ' . Yii::app()->user->tenant .' and t.tenant_agent = '.Yii::app()->user->tenant_agent );
+                break;
+            
+            case Roles::ROLE_OPERATOR:
+            case Roles::ROLE_AGENT_OPERATOR:
+                $criteria->addCondition('t.workstation ="' . $session['workstation'].'"' );
                 break;
                 
         }

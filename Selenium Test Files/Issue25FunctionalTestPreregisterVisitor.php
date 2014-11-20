@@ -64,7 +64,7 @@ class Issue25FunctionalTestPreregisterVisitor extends BaseFunctionalTest {
         $this->click("id=clicktabA");
         $this->addVisitor('Visitor5');
         $this->addReason('Reason 1');
-        sleep(1);
+        $this->waitForElementPresent("id=submitFormVisitor");
         $this->click("id=submitFormVisitor");
         $this->addPatient("Patient Name 1");
         $this->clickAndWait("id=submitFormPatientName");
@@ -104,7 +104,17 @@ class Issue25FunctionalTestPreregisterVisitor extends BaseFunctionalTest {
         $this->click("id=dummy-visitor-findBtn");
         $this->waitForElementPresent("id=2");
         $this->click("id=2");
-        sleep(1);
+        for ($second = 0;; $second++) {
+            if ($second >= 10)
+                $this->fail("timeout");
+            try {
+                if ("Selected Visitor Record : Test Visitor1" == $this->getText("css=h4"))
+                    break;
+            } catch (Exception $e) {
+                
+            }
+            sleep(1);
+        }
         $this->assertEquals("Selected Visitor Record : Test Visitor1", $this->getText("css=h4"));
         $this->select("id=Visit_reason_search", "label=Other");
         $this->type("id=VisitReason_reason_search", "Reason 2");
@@ -180,12 +190,22 @@ class Issue25FunctionalTestPreregisterVisitor extends BaseFunctionalTest {
         $this->select("id=Visitor_visitor_type", "label=Corporate Visitor");
         $this->addVisitor('Visitor5');
         $this->select("id=Visit_reason", "label=Reason 1");
-        sleep(1);
+        for ($second = 0;; $second++) {
+            if ($second >= 10)
+                $this->fail("timeout");
+            try {
+                if ("Test Company 1" == $this->getText("id=Visitor_company"))
+                    break;
+            } catch (Exception $e) {
+                
+            }
+            sleep(1);
+        }
         $this->assertEquals("Test Company 1", $this->getText("id=Visitor_company"));
         $this->click("id=submitFormVisitor");
-        sleep(1);
+        $this->waitForElementPresent("id=User_first_name");
         $this->addHost("Host2");
-        sleep(1);
+        $this->waitForElementPresent("id=submitFormUser");
         $this->clickAndWait("id=submitFormUser");
         $this->verifyVisitorInTable('Visitor5');
     }
@@ -244,7 +264,7 @@ class Issue25FunctionalTestPreregisterVisitor extends BaseFunctionalTest {
         $this->type("id=Visitor_email", "testvisitor1@test.com");
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
-        sleep(1);
+        $this->waitForElementPresent("id=Visitor_tenant_agent");
         $this->select("id=Visitor_tenant_agent", "label=Test agentadmin");
         $this->click("id=submitFormVisitor");
         $this->waitForElementPresent("css=td > div.errorMessage.visitorReason");
@@ -253,7 +273,17 @@ class Issue25FunctionalTestPreregisterVisitor extends BaseFunctionalTest {
         $this->type("id=VisitReason_reason", "reason 1");
         $this->click("id=submitFormVisitor");
         $this->waitForElementPresent("id=visitReasonErrorMessage");
-        sleep(1);
+        for ($second = 0;; $second++) {
+            if ($second >= 10)
+                $this->fail("timeout");
+            try {
+                if ("Reason is already registered." == $this->getText("id=visitReasonErrorMessage"))
+                    break;
+            } catch (Exception $e) {
+                
+            }
+            sleep(1);
+        }
         $this->assertEquals("Reason is already registered.", $this->getText("id=visitReasonErrorMessage"));
         $this->type("id=VisitReason_reason", "reason test");
         $this->click("id=submitFormVisitor");
@@ -263,8 +293,17 @@ class Issue25FunctionalTestPreregisterVisitor extends BaseFunctionalTest {
         $this->click("id=submitFormVisitor");
 
         $this->click("id=submitFormPatientName");
-        sleep(1);
-        $this->waitForElementPresent("id=Patient_name_em_");
+        for ($second = 0;; $second++) {
+            if ($second >= 10)
+                $this->fail("timeout");
+            try {
+                if ("Patient Name cannot be blank." == $this->getText("id=Patient_name_em_"))
+                    break;
+            } catch (Exception $e) {
+                
+            }
+            sleep(1);
+        }
         $this->assertEquals("Patient Name cannot be blank.", $this->getText("id=Patient_name_em_"));
         $this->click("css=#register-host-patient-form > div.register-a-visitor-buttons-div > #btnBackTab3");
         $this->waitForElementPresent("id=Patient_name_em_");
@@ -276,7 +315,7 @@ class Issue25FunctionalTestPreregisterVisitor extends BaseFunctionalTest {
         $this->select("id=Visit_reason_search", "label=Other");
         $this->type("id=VisitReason_reason_search", "reason 2");
         $this->click("id=clicktabB1");
-        sleep(1);
+       
         $this->waitForTextPresent("Reason is already registered.");
         $this->assertEquals("Reason is already registered.", $this->getText("id=visitReasonErrorMessageSearch"));
         $this->type("id=VisitReason_reason_search", "");
@@ -336,6 +375,7 @@ class Issue25FunctionalTestPreregisterVisitor extends BaseFunctionalTest {
         $this->type("id=Visitor_contact_number", "123456");
         $this->type("id=Visitor_email", "test");
         $this->select("id=Visitor_tenant", "label=Test admin");
+        $this->waitForElementPresent("id=Visitor_email");
         $this->type("id=Visitor_email", "testvisitor1@test.com");
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
@@ -348,7 +388,17 @@ class Issue25FunctionalTestPreregisterVisitor extends BaseFunctionalTest {
         $this->type("id=VisitReason_reason", "reason 1");
         $this->click("id=submitFormVisitor");
         $this->waitForElementPresent("id=visitReasonErrorMessage");
-        sleep(1);
+        for ($second = 0;; $second++) {
+            if ($second >= 10)
+                $this->fail("timeout");
+            try {
+                if ("Reason is already registered." == $this->getText("id=visitReasonErrorMessage"))
+                    break;
+            } catch (Exception $e) {
+                
+            }
+            sleep(1);
+        }
         $this->assertEquals("Reason is already registered.", $this->getText("id=visitReasonErrorMessage"));
         $this->type("id=VisitReason_reason", "reason test");
         $this->click("id=submitFormVisitor");
@@ -356,12 +406,20 @@ class Issue25FunctionalTestPreregisterVisitor extends BaseFunctionalTest {
         $this->assertEquals("Email Address has already been taken.", $this->getText("xpath=(//div[@id='Visitor_email_em_'])[2]"));
         $this->type("id=Visitor_email", "testvisitor6@test.com");
         $this->click("id=submitFormVisitor");
-
-        sleep(1);
-
+        $this->waitForElementPresent("id=submitFormUser");
         $this->click("id=submitFormUser");
-        sleep(1);
         $this->waitForElementPresent("id=User_first_name_em_");
+        for ($second = 0;; $second++) {
+            if ($second >= 10)
+                $this->fail("timeout");
+            try {
+                if ("First Name cannot be blank." == $this->getText("id=User_first_name_em_"))
+                    break;
+            } catch (Exception $e) {
+                
+            }
+            sleep(1);
+        }
         $this->assertEquals("First Name cannot be blank.", $this->getText("id=User_first_name_em_"));
         $this->assertEquals("Last Name cannot be blank.", $this->getText("id=User_last_name_em_"));
         $this->assertEquals("Email cannot be blank.", $this->getText("id=User_email_em_"));
@@ -418,21 +476,18 @@ class Issue25FunctionalTestPreregisterVisitor extends BaseFunctionalTest {
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test visitor1");
         $this->click("id=dummy-visitor-findBtn");
-        sleep(1);
+        $this->waitForElementPresent("id=2");
         $this->click("id=2");
         $this->waitForElementPresent("css=h4");
-        sleep(1);
-        $this->assertEquals("Selected Visitor Record : Test Visitor1", $this->getText("css=h4"));
         $this->select("id=Visit_reason_search", "label=Reason 1");
         $this->assertEquals("testVisitor1@test.com", $this->getText("//div[@id='findvisitor-grid']/table/tbody/tr/td[3]"));
         $this->select("id=Visitor_visitor_type_search", "label=Corporate Visitor");
         $this->click("id=clicktabB1");
         $this->type("id=search-host", "staffmember");
         $this->click("id=dummy-host-findBtn");
-        sleep(1);
+        $this->waitForElementPresent("id=21");
         $this->waitForElementPresent("id=21");
         $this->click("id=21");
-        sleep(1);
         $this->clickAndWait("id=clicktabB2");
     }
 

@@ -61,7 +61,6 @@ date_default_timezone_set("Asia/Manila");
                     'value' => 'formatTime($data->time_out)',
                 ),
                 
-                'time_out',
                 array(
                     'header' => 'Closed by',
                     'name' => 'created_by',
@@ -101,7 +100,11 @@ function returnPatientOrHostName($visit_id, $userHost) {
     return $hostFullName;
 }
 
-function formatTime($time){
-    return date('H:i A', strtotime($time));
+function formatTime($time) {
+    if ($time == '') {
+        return "-";
+    } else {
+        return date('h:i A', strtotime($time));
+    }
 }
 ?>

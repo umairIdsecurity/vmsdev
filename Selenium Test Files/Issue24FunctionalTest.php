@@ -213,7 +213,17 @@ class Issue24FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("name=yt0");
         
         $this->type("name=VisitReason[reason]", "This is a valid reason ?!.,’”()@#$%^&*-+");
-        sleep(1);
+        for ($second = 0;; $second++) {
+            if ($second >= 10)
+                $this->fail("timeout");
+            try {
+                if ("This is a valid reason ?!.,’”()@#$%^&*-+" == $this->getText("css=tr.odd > td"))
+                    break;
+            } catch (Exception $e) {
+                
+            }
+            sleep(1);
+        }
         $this->assertEquals("This is a valid reason ?!.,’”()@#$%^&*-+", $this->getText("css=tr.odd > td"));
        
     }

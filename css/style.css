@@ -940,3 +940,6 @@ text-decoration: none;
 .disabledButton {
     background:linear-gradient(#C6C6C6 0%, #C6C6C6 100%) repeat scroll 0 0 rgba(0, 0, 0, 0) !important;
 }
+#view-visitor-records_c1{
+    min-width:100px;
+}

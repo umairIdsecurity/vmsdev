@@ -29,7 +29,10 @@ if (isset($_GET['viewFrom'])) {
         <?php
         if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
             require_once(Yii::app()->basePath . '/views/visit/dashboardSidebar.php');
-        } elseif (!isset($_GET['viewFrom'])) {
+        } elseif(($this->action->id != 'viewmyvisitors' && $this->id == 'dashboard') || $session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR){
+            require_once(Yii::app()->basePath . '/views/dashboard/viewdashboardsidebar.php');
+        } 
+        elseif (!isset($_GET['viewFrom'])) {
             require_once(Yii::app()->basePath . '/views/user/admin_menu.php');
         }
         ?>

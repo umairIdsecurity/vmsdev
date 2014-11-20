@@ -125,40 +125,23 @@
                         <?php echo "<br>" . $form->error($userModel, 'contact_number'); ?>
                     </td>
                 </tr>
-                <tr <?php if($session['role'] != Roles::ROLE_SUPERADMIN) { echo "style='display:none;'"; }?>>
-
-                    <td id="hostTenantRow"><?php echo $form->labelEx($userModel, 'tenant'); ?><br>
-
-                        <select id="User_tenant" onchange="populateHostTenantAgentAndCompanyField()" name="User[tenant]"  >
-                            <option value='' selected>Select Admin</option>
-                            <?php
-                            $allAdminNames = User::model()->findAllAdmin();
-                            foreach ($allAdminNames as $key => $value) {
-                                ?>
-                            <option value="<?php echo $value->tenant; ?>"
-                                <?php
-                            if ($session['role'] == Roles::ROLE_STAFFMEMBER && $session['tenant'] == $value->tenant) {
-                                echo " selected ";
-                            }
-                            ?>
-                                    ><?php echo $value->first_name . " " . $value->last_name; ?></option>
-                                    <?php
-                                }
-                                ?>
-                        </select><?php echo "<br>" . $form->error($userModel, 'tenant'); ?>
+                <tr >
+                    <td>
+                        <label for="User_password">Password <span class="required">*</span></label><br>
+                        <input type="password" id="User_password" name="User[password]">			
+                        <?php echo "<br>" . $form->error($userModel, 'password'); ?>
                     </td>
-                    <td id="hostTenantAgentRow"><?php echo $form->labelEx($userModel, 'tenant_agent'); ?><br>
 
-                        <select id="User_tenant_agent" name="User[tenant_agent]" onchange="populateHostCompanyWithSameTenantAndTenantAgent()" >
-                            <?php
-                            echo "<option value='' selected>Select Tenant Agent</option>";
-                        if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
-                            echo "<option value='" . $session['tenant_agent'] . "' selected>Tenant Agent</option>";
-                        }
-                            ?>
-                        </select><?php echo "<br>" . $form->error($userModel, 'tenant_agent'); ?>
+                    <td>
+                        <label for="User_repeatpassword">Repeat Password <span class="required">*</span></label><br>
+                        <input type="password" id="User_repeatpassword" name="User[repeatpassword]" onChange="checkPasswordMatch();"/>			
+                        <div style='font-size:10px;color:red;font-size:0.9em;display:none;margin-bottom:-20px;' id="passwordErrorMessage">New Password does not match with <br>Repeat New Password. </div>
+                        <?php echo "<br>" . $form->error($userModel, 'repeatpassword'); ?>
                     </td>
-                    <td id="hostCompanyRow">
+                    
+                    <td id="hostCompanyRow" <?php if($session['role'] == Roles::ROLE_AGENT_ADMIN || $session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles::ROLE_STAFFMEMBER ) { 
+                                echo "style='display:none;'"; 
+                            }?>>
 
                         <?php echo $form->labelEx($userModel, 'company'); ?><br>
                         <select id="User_company" name="User[company]" >
@@ -177,18 +160,39 @@
                         <input name="User[user_type]" id="User_user_type" value="<?php echo UserType::USERTYPE_INTERNAL; ?>"/>
                     </td>
                 </tr>
-                <tr>
-                    <td>
-                        <label for="User_password">Password <span class="required">*</span></label><br>
-                        <input type="password" id="User_password" name="User[password]">			
-                        <?php echo "<br>" . $form->error($userModel, 'password'); ?>
-                    </td>
+                <tr <?php if($session['role'] != Roles::ROLE_SUPERADMIN) { 
+                        echo "style='display:none;'"; 
+                }?>>
+                    <td id="hostTenantRow"><?php echo $form->labelEx($userModel, 'tenant'); ?><br>
 
-                    <td>
-                        <label for="User_repeatpassword">Repeat Password <span class="required">*</span></label><br>
-                        <input type="password" id="User_repeatpassword" name="User[repeatpassword]" onChange="checkPasswordMatch();"/>			
-                        <div style='font-size:10px;color:red;font-size:0.9em;display:none;margin-bottom:-20px;' id="passwordErrorMessage">New Password does not match with <br>Repeat New Password. </div>
-                        <?php echo "<br>" . $form->error($userModel, 'repeatpassword'); ?>
+                        <select id="User_tenant" onchange="populateHostTenantAgentAndCompanyField()" name="User[tenant]"  >
+                            <option value='' selected>Select Admin</option>
+                            <?php
+                            $allAdminNames = User::model()->findAllAdmin();
+                            foreach ($allAdminNames as $key => $value) {
+                                ?>
+                            <option value="<?php echo $value->tenant; ?>"
+                                <?php
+                            if ($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value->tenant) {
+                                echo " selected ";
+                            }
+                            ?>
+                                    ><?php echo $value->first_name . " " . $value->last_name; ?></option>
+                                    <?php
+                                }
+                                ?>
+                        </select><?php echo "<br>" . $form->error($userModel, 'tenant'); ?>
+                    </td>
+                    <td id="hostTenantAgentRow"><?php echo $form->labelEx($userModel, 'tenant_agent'); ?><br>
+
+                        <select id="User_tenant_agent" name="User[tenant_agent]" onchange="populateHostCompanyWithSameTenantAndTenantAgent()" >
+                            <?php
+                            echo "<option value='' selected>Select Tenant Agent</option>";
+                        if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+                            echo "<option value='" . $session['tenant_agent'] . "' selected>Tenant Agent</option>";
+                        }
+                            ?>
+                        </select><?php echo "<br>" . $form->error($userModel, 'tenant_agent'); ?>
                     </td>
                 </tr>
 

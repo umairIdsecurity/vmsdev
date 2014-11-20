@@ -246,7 +246,7 @@ class Visit extends CActiveRecord {
         if (Yii::app()->user->role == Roles::ROLE_STAFFMEMBER && Yii::app()->controller->action->id != 'view') {
             $criteria->addCondition('host = ' . Yii::app()->user->id . ' and visit_status = ' . VisitStatus::PREREGISTERED);
         }
-        $session= new CHttpSession;
+        $session = new CHttpSession;
         switch (Yii::app()->user->role) {
             case Roles::ROLE_STAFFMEMBER:
                 $criteria->addCondition('host = ' . Yii::app()->user->id);
@@ -255,20 +255,19 @@ class Visit extends CActiveRecord {
             case Roles::ROLE_SUPERADMIN:
                 $criteria->addCondition('t.id != ""');
                 break;
-            
+
             case Roles::ROLE_ADMIN:
                 $criteria->addCondition('t.tenant = ' . Yii::app()->user->tenant);
                 break;
-            
+
             case Roles::ROLE_AGENT_ADMIN:
-                $criteria->addCondition('t.tenant = ' . Yii::app()->user->tenant .' and t.tenant_agent = '.Yii::app()->user->tenant_agent );
+                $criteria->addCondition('t.tenant = ' . Yii::app()->user->tenant . ' and t.tenant_agent = ' . Yii::app()->user->tenant_agent);
                 break;
-            
+
             case Roles::ROLE_OPERATOR:
             case Roles::ROLE_AGENT_OPERATOR:
-                $criteria->addCondition('t.workstation ="' . $session['workstation'].'"' );
+                $criteria->addCondition('t.workstation ="' . $session['workstation'] . '"');
                 break;
-                
         }
 
         return new CActiveDataProvider($this, array(
@@ -295,6 +294,21 @@ class Visit extends CActiveRecord {
                 'class' => 'ext.soft_delete.SoftDeleteBehavior'
             ),
         );
+    }
+
+    public function exportVisitorRecords() {
+        $rawData = Yii::app()->db->createCommand("SELECT "
+                . "visit.card,visitor.first_name, visitor.last_name,visit_status.name as visitStatus,visitor_status.name as visitorStatus,"
+                . "visitor.email,visitor.contact_number,visitor_type.name as visitorType,company.name as CompanyName,visit.date_in, "
+                . "visit.time_in "
+                . "FROM visit "
+                . "LEFT JOIN visitor ON visitor.id = visit.visitor "
+                . "LEFT JOIN company ON visitor.company = company.id "
+                . "LEFT JOIN visit_status ON visit.visit_status = visit_status.id "
+                . "LEFT JOIN visitor_type ON visit.visitor_type = visitor_type.id "
+                . "LEFT JOIN visitor_status ON visitor.visitor_status = visitor_status.id "
+                . "WHERE visit.is_deleted= 0 ")->queryAll();
+        return $rawData;
     }
 
 }

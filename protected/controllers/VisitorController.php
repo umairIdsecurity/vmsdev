@@ -26,7 +26,7 @@ class VisitorController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('update', 'admin', 'delete'),
+                'actions' => array('update', 'admin', 'delete','exportVisitorRecords'),
                 'expression' => 'Yii::app()->controller->checkIfUserCanAccess("superadmin")',
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -217,6 +217,13 @@ class VisitorController extends Controller {
         $this->render('findHost', array(
             'model' => $model,
                 ), false, true);
+    }
+    public function actionExportVisitorRecords() {
+        $model = new Visit('exportVisitorRecords');
+        $model->unsetAttributes();  
+        $this->render('exportvisitorrecords', array(
+            'model' => $model,
+        ));
     }
 
     public function actionGetVisitorDetails($id) {

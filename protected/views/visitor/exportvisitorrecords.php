@@ -19,7 +19,7 @@ $headers = array(
     'date_in' =>'Date of Visit',
     'time_in' =>'Time in',
     'CompanyName' =>'Company Name',
-    );
+);
 
 $csv->setHeaders($headers);
 

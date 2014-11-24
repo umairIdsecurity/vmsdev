@@ -32,7 +32,7 @@ class VisitServiceImpl implements VisitService {
         } else {
             $visit->patient = NULL;
         }
-        
+       
         if (!($visit->save())) {
             return false;
         }

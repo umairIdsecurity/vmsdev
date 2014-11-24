@@ -823,6 +823,7 @@ dt.tabs dt{
     font-weight:800;
     color:#58585A;
     border:none !important;
+     word-wrap:break-word;
 }
 
 #cardDetailsTable tr{
@@ -835,7 +836,7 @@ dt.tabs dt{
 }
 .addhost{
     background: url('../images/add_user.png') 0 0 no-repeat;
-   
+
     padding: 1px 0 1px 30px;
     display: block;
     height: 15px;
@@ -859,19 +860,19 @@ dt.tabs dt{
 }
 
 .pre-visits {
-background-position: 0px -375px;
-padding: 1px 0 1px 30px;
-display: block;
-height: 16px;
-text-decoration: none;
+    background-position: 0px -375px;
+    padding: 1px 0 1px 30px;
+    display: block;
+    height: 16px;
+    text-decoration: none;
 }
 
 .findrecord {
-background-position: 0 -537px;
-padding: 1px 0 1px 30px;
-display: block;
-height: 16px;
-text-decoration: none;
+    background-position: 0 -537px;
+    padding: 1px 0 1px 30px;
+    display: block;
+    height: 16px;
+    text-decoration: none;
 }
 
 #visitorDetailDiv .flash-success{
@@ -942,4 +943,21 @@ text-decoration: none;
 }
 #view-visitor-records_c1{
     min-width:100px;
+}
+
+#visit-gridDashboard .filters select{
+    width:100% !important;
+}
+
+.grid-view .filters select{
+    width:100% !important;
+}
+
+.close-visit {
+    background-position: 0 -48px;
+    padding: 1px 0 5px 30px;
+    display: block;
+    height: 16px;
+    text-decoration: none;
+    margin-bottom:10px;
 }

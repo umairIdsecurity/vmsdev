@@ -52,7 +52,7 @@ $user_role = $session['role'];
             }
             ?>
             <div id="header" <?php
-            if ($viewFrom != '' || $this->id == 'userWorkstations' || $this->action->id == 'findvisitor' || $this->action->id == 'findhost') {
+            if ($viewFrom != '' || $this->id == 'userWorkstations' || $this->action->id == 'findvisitor' || $this->action->id == 'findhost' || $this->action->id == 'print') {
                 echo "style='display:none'";
             }
             ?>>
@@ -131,7 +131,7 @@ $user_role = $session['role'];
             <div class="clear"></div>
             <br><br>
                     <div id="footer" <?php
-                         if ($viewFrom != '' || $this->id == 'userWorkstations' || $this->action->id == 'findvisitor' || $this->action->id == 'findhost') {
+                         if ($viewFrom != '' || $this->id == 'userWorkstations' || $this->action->id == 'findvisitor' || $this->action->id == 'findhost' || $this->action->id == 'print') {
                              echo "style='display:none'";
                          }
                          ?>>

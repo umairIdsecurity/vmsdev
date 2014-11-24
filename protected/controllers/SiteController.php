@@ -100,6 +100,10 @@ class SiteController extends Controller {
                     case Roles::ROLE_STAFFMEMBER:
                         $this->redirect('index.php?r=dashboard/viewmyvisitors');
                         break;
+                    case Roles::ROLE_ADMIN:
+                    case Roles::ROLE_AGENT_ADMIN:
+                        $this->redirect('index.php?r=dashboard/admindashboard');
+                        break;
                     default:
                         $this->redirect('index.php?r=dashboard');
                 }

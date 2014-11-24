@@ -100,11 +100,11 @@ $user_role = $session['role'];
                                 }
                                 ?>
                             </li>
-                            <li class="<?php echo ($this->action->id == "view" || $this->id == 'visit') ? "active" : "" ?>">
+                            <li class="<?php echo ($this->action->id == "view" && $this->id == 'visit') ? "active" : "" ?>">
                                 <a href="<?php echo Yii::app()->createUrl("/visit/view"); ?>">Visitor Records</a>
                             </li>
                             <?php if ($session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_AGENT_ADMIN || $session['role'] == Roles::ROLE_SUPERADMIN) { ?>
-                                <li class="<?php echo ($this->action->id == "admin" || $this->id == 'visit' || $this->id == "user" || $this->id == "visitor" || $this->id == "company" || $this->id == "workstation" || $this->id == "visitReason") ? "active" : "" ?>">
+                                <li class="<?php echo ($this->action->id == "admin" || ($this->id == 'visit' && $this->action->id != 'view') || $this->id == "user" || $this->id == "visitor" || $this->id == "company" || $this->id == "workstation" || $this->id == "visitReason") ? "active" : "" ?>">
                                     <a href="<?php echo Yii::app()->createUrl("/user/admin"); ?>">Administration</a>
                                 </li>
                             <?php } ?>

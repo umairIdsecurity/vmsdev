@@ -101,7 +101,12 @@ if ( $session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles
             ?>
             <li class=''><a href='#' ><span>Active Directory</span></a></li>
 
-            <li class=''><a href='#'><span>Reports</span></a></li>
+            <li class='has-sub'><a href='#'><span>Reports</span></a>
+                    <ul>
+                        <li><a href='<?php echo Yii::app()->createUrl('visit/evacuationReport'); ?>' class="has-sub-sub"><span>Evacuation Report</span></a></li>
+                        <li><a href='<?php echo Yii::app()->createUrl('visitor/visitorRegistrationHistory'); ?>' class="has-sub-sub"><span>Visitor Registration History</span></a></li>
+                    </ul>
+                </li>
         </ul>
     </div>
 </div>

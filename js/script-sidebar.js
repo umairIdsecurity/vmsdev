@@ -65,8 +65,21 @@
                     li[11].click();
                 }
                 break;
-        }
 
+        }
+        
+        if (pathArray[4] == 'evacuationReport' || pathArray[4] == 'visitorRegistrationHistory') {
+
+            if (currentRole == admin) {
+                li[10].click();
+            }
+            else if (currentRole == agentadmin) {
+                li[8].click();
+            }
+            else {
+                li[19].click();
+            }
+        }
         $('.has-sub a').click(function() {
             window.location = this.href;
         });

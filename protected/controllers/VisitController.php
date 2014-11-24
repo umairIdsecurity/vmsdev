@@ -26,8 +26,12 @@ class VisitController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'detail', 'admin', 'view'),
+                'actions' => array('create', 'update', 'detail', 'admin', 'view', 'printEvacuationReport'),
                 'users' => array('@'),
+            ),
+            array('allow',
+                'actions' => array('evacuationReport', 'PrintEvacuationReport'),
+                'expression' => 'Yii::app()->controller->accessRoles("administration")',
             ),
             array('deny', // deny all users
                 'users' => array('*'),
@@ -35,6 +39,22 @@ class VisitController extends Controller {
         );
     }
 
+    public function accessRoles($action) {
+        $session = new CHttpSession;
+        $CurrentRole = $session['role'];
+
+        switch ($action) {
+            case "administration":
+                $user_role = array(Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN, Roles::ROLE_AGENT_ADMIN);
+                if (in_array($CurrentRole, $user_role)) {
+                    return true;
+                }
+                break;
+
+            default:
+                return false;
+        }
+    }
 
     /**
      * Creates a new model.
@@ -203,6 +223,38 @@ class VisitController extends Controller {
         $this->render('viewrecords', array(
             'model' => $model,
         ));
+    }
+
+    public function actionEvacuationReport() {
+        $model = new Visit('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['Visit'])) {
+            $model->attributes = $_GET['Visit'];
+        }
+
+        $this->render('evacuationreport', array(
+            'model' => $model,
+        ));
+    }
+
+    public function actionPrintEvacuationReport() {
+        header('Content-type: text/csv');
+        header('Content-Disposition: attachment; filename="centrico-RIP-Railcars-' . date('YmdHi') . '.csv"');
+
+        $model = new Visit('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['Visit'])) {
+            $model->attributes = $_GET['Visit'];
+        }
+        $dataProvider = $model->search(false);
+
+        //csv header
+        echo "Evacuation Report";
+
+        foreach ($dataProvider->getData() as $data) {
+            echo "$data->id,$data->visitor, $data->host \r\n";
+        }
+        exit;
     }
 
 }

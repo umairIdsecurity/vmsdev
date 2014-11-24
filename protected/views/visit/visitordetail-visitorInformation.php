@@ -107,7 +107,7 @@ $session = new CHttpSession;
                                     <?php
                                 } else {
                                     echo $visitForm->dropDownList($model, 'visitor_type', VisitorType::$VISITOR_TYPE_LIST, array(
-                                        'onchange' => 'visitorTypeOnChange()','class' => 'visitortypedetails',
+                                        'onchange' => 'visitorTypeOnChange()', 'class' => 'visitortypedetails',
                                     ));
                                 }
                                 ?>
@@ -119,9 +119,9 @@ $session = new CHttpSession;
 
                         </tr>
                         <?php if ($session['role'] != Roles::ROLE_STAFFMEMBER) { ?>
-                        <tr>
-                            <td><input type='submit' value='Update' class='submitBtn'></td>
-                        </tr>
+                            <tr>
+                                <td><input type='submit' value='Update' class='submitBtn'></td>
+                            </tr>
                         <?php } ?>
                     </table>
                     <?php $this->endWidget(); ?>
@@ -577,12 +577,14 @@ $session = new CHttpSession;
         }
 
         if (<?php echo $model->visit_status; ?> == '3') {
-            $("#personalDetailsLi").html("<a href='#'><span>Personal Details</span></a>");
-            $("#contactDetailsLi").html("<a href='#'><span>Contact Details</span></a>");
-            $("#visitorTypeDetailsLi").html("<a href='#'><span>Visitor Type</span></a>");
-            $("#reasonLi").html("<a href='#'><span>Reason</span></a>");
-            $("#hostDetailsLi").html("<a href='#'><span>Host Details</span></a>");
-            $("#patientDetailsLi").html("<a href='#'><span>Patient Details</span></a>");
+//            $("#personalDetailsLi").html("<a href='#'><span>Personal Details</span></a>");
+//            $("#contactDetailsLi").html("<a href='#'><span>Contact Details</span></a>");
+//            $("#visitorTypeDetailsLi").html("<a href='#'><span>Visitor Type</span></a>");
+//            $("#reasonLi").html("<a href='#'><span>Reason</span></a>");
+//            $("#hostDetailsLi").html("<a href='#'><span>Host Details</span></a>");
+//            $("#patientDetailsLi").html("<a href='#'><span>Patient Details</span></a>");
+            $("#visitorInformationCssMenu :input").attr('disabled', true);
+            $("#visitorInformationCssMenu input[type='submit']").hide();
         }
 
         $("#dummy-host-findBtn").click(function(e) {

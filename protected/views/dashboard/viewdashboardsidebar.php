@@ -15,11 +15,6 @@ $session = new ChttpSession;
 <div id="sidebar2">
     <div class="sidebarTitle" style="">Main Menu</div><br><div id='cssmenu' class="dashboardMenu">
         <ul>
-            <li class=''>
-                <a href='#'>
-                    <span class="icons pre-visits">Log Visit</span>
-                </a>
-            </li>
             <li class=''><a href='<?php echo Yii::app()->createUrl('dashboard/addHost'); ?>' ><span class="addhost">Add Host</span></a></li>
 
             <li class=''><a href='<?php echo Yii::app()->createUrl('visitor/create'); ?>'><span class="addvisitor">Add Visitor Record</span></a></li>

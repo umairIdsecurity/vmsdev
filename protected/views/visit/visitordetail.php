@@ -35,17 +35,15 @@ $session = new CHttpSession;
 
         </td>
         <td>
-            <?php if ($session['role'] != Roles::ROLE_STAFFMEMBER){ ?>
-            <?php
+            
+                <?php
                 $this->renderPartial('visitordetail-actions', array('model' => $model,
                     'visitorModel' => $visitorModel,
                     'hostModel' => $hostModel,
                     'reasonModel' => $reasonModel,
                     'patientModel' => $patientModel,
                 ));
-            
-            ?>
-            <?php } ?>
+                ?>
         </td>
 
     </tr>
@@ -245,7 +243,7 @@ $this->renderPartial('visithistory', array('model' => $model,
             success: function(data) {
                 if (formId == 'update-host-visit-form') {
                     $(".success-update-host-details").show();
-                } else if (formId == 'update-log-visit-form'){
+                } else if (formId == 'update-log-visit-form') {
                     $(".success-update-preregister").show();
                 }
                 else
@@ -348,7 +346,7 @@ $this->renderPartial('visithistory', array('model' => $model,
             }
         });
     }
-    
+
     function sendActivateVisitForm(formId) {
         var visitForm = $("#" + formId).serialize();
         $.ajax({
@@ -360,7 +358,7 @@ $this->renderPartial('visithistory', array('model' => $model,
             },
         });
     }
-    
+
     function sendCloseVisit(formId) {
         var visitForm = $("#" + formId).serialize();
         $.ajax({

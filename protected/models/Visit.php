@@ -208,7 +208,7 @@ class Visit extends CActiveRecord {
      * @return CActiveDataProvider the data provider that can return the models
      * based on the search/filter conditions.
      */
-    public function search() {
+    public function search($merge = null) {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
@@ -229,7 +229,10 @@ class Visit extends CActiveRecord {
         $criteria->compare('host', $this->host, true);
         $criteria->compare('patient', $this->patient, true);
         $criteria->compare('created_by', $this->created_by, true);
+
         $criteria->compare('date_in', $this->date_in, true);
+        //$criteria->compare("DATE_FORMAT(date_in,'%Y-%m-%d')",$this->date_in);
+
         $criteria->compare('time_in', $this->time_in, true);
         $criteria->compare('date_out', $this->date_out, true);
         $criteria->compare('time_out', $this->time_out, true);
@@ -242,11 +245,14 @@ class Visit extends CActiveRecord {
         $criteria->compare('t.is_deleted', $this->is_deleted);
         $criteria->compare('visit_status', $this->visit_status);
         $criteria->compare('workstation', $this->workstation);
+        if ($merge !== null) {
+            $criteria->mergeWith($merge);
+        }
 
         if (Yii::app()->user->role == Roles::ROLE_STAFFMEMBER && Yii::app()->controller->action->id != 'view') {
             $criteria->addCondition('host = ' . Yii::app()->user->id . ' and visit_status = ' . VisitStatus::PREREGISTERED);
         }
-        $session= new CHttpSession;
+        $session = new CHttpSession;
         switch (Yii::app()->user->role) {
             case Roles::ROLE_STAFFMEMBER:
                 $criteria->addCondition('host = ' . Yii::app()->user->id);
@@ -255,20 +261,19 @@ class Visit extends CActiveRecord {
             case Roles::ROLE_SUPERADMIN:
                 $criteria->addCondition('t.id != ""');
                 break;
-            
+
             case Roles::ROLE_ADMIN:
                 $criteria->addCondition('t.tenant = ' . Yii::app()->user->tenant);
                 break;
-            
+
             case Roles::ROLE_AGENT_ADMIN:
-                $criteria->addCondition('t.tenant = ' . Yii::app()->user->tenant .' and t.tenant_agent = '.Yii::app()->user->tenant_agent );
+                $criteria->addCondition('t.tenant = ' . Yii::app()->user->tenant . ' and t.tenant_agent = ' . Yii::app()->user->tenant_agent);
                 break;
-            
+
             case Roles::ROLE_OPERATOR:
             case Roles::ROLE_AGENT_OPERATOR:
-                $criteria->addCondition('t.workstation ="' . $session['workstation'].'"' );
+                $criteria->addCondition('t.workstation ="' . $session['workstation'] . '"');
                 break;
-                
         }
 
         return new CActiveDataProvider($this, array(
@@ -276,6 +281,7 @@ class Visit extends CActiveRecord {
             'sort' => array(
                 'defaultOrder' => 't.ID DESC',
             ),
+            'pagination'=>false,
         ));
     }
 

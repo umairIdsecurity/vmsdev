@@ -14,17 +14,12 @@ $this->widget('zii.widgets.grid.CGridView', array(
     'columns' =>
     array(
         array(
-            'filter' => false,
-            'value' => 'CHtml::link("View",Yii::app()->createUrl("visit/detail",array("id"=>$data->id)),array("class" =>"statusLink black"))',
-            'type' => 'raw',
-            'header' => '',
-        ),
-        array(
             'name' => 'visit_status',
             'filter' => false,
             'value' => 'CHtml::link(VisitStatus::$VISIT_STATUS_LIST[$data->visit_status],Yii::app()->createUrl("visit/detail",array("id"=>$data->id)),array("class" =>"statusLink"))',
             'type' => 'raw',
             'header' => 'Status',
+            'filter' => VisitStatus::$VISIT_STATUS_LIST,
         ),
         array(
             'name' => 'visitor_type',
@@ -62,13 +57,21 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'value' => 'Visitor::model()->findByPk($data->visitor)->email',
             'header' => 'Contact Email'
         ),
-        'date_in',
+        array(
+            'name' => 'date_in',
+            'type' => 'html',
+            'value' => 'formatDate($data->date_in)',
+        ),
         array(
             'name' => 'time_in',
             'type' => 'html',
             'value' => 'formatTime($data->time_in)',
         ),
-        'date_out',
+        array(
+            'name' => 'date_out',
+            'type' => 'html',
+            'value' => 'formatDate($data->date_out)',
+        ),
         array(
             'name' => 'time_out',
             'type' => 'html',
@@ -91,6 +94,14 @@ function formatTime($time) {
         return "-";
     } else {
         return date('h:i A', strtotime($time));
+    }
+}
+
+function formatDate($date) {
+    if ($date == '') {
+        return "-";
+    } else {
+        return Yii::app()->dateFormatter->format("d/MM/y", strtotime($date));
     }
 }
 ?>

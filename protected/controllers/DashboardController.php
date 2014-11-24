@@ -22,12 +22,16 @@ class DashboardController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'index','addHost'),
+                'actions' => array('create', 'update', 'index', 'addHost'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
                 'actions' => array('ViewMyVisitors'),
                 'expression' => 'Yii::app()->controller->checkIfUserCanAccess("viewmyvisitor")',
+            ),
+            array('allow', // allow admin user to perform 'admin' and 'delete' actions
+                'actions' => array('AdminDashboard'),
+                'expression' => 'Yii::app()->controller->checkIfUserCanAccess("admindashboard")',
             ),
             array('deny', // deny all users
                 'users' => array('*'),
@@ -42,6 +46,13 @@ class DashboardController extends Controller {
         switch ($action) {
             case "viewmyvisitor":
                 $user_role = array(Roles::ROLE_STAFFMEMBER);
+                if (in_array($CurrentRole, $user_role)) {
+                    return true;
+                }
+                break;
+
+            case "admindashboard":
+                $user_role = array(Roles::ROLE_ADMIN, Roles::ROLE_AGENT_ADMIN);
                 if (in_array($CurrentRole, $user_role)) {
                     return true;
                 }
@@ -179,6 +190,20 @@ class DashboardController extends Controller {
             $model->attributes = $_GET['Visit'];
 
         $this->render('viewmyvisitors', array(
+            'model' => $model,
+        ));
+    }
+
+    public function actionAdminDashboard() {
+        $this->layout = '//layouts/column2';
+        $model = new Visit('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['Visit'])) {
+            $model->attributes = $_GET['Visit'];
+        }
+
+       
+        $this->render('admindashboard', array(
             'model' => $model,
         ));
     }

@@ -1,6 +1,6 @@
 <?php 
 date_default_timezone_set("Asia/Manila");
-
+$session = new CHttpSession;
 ?>
 <div id="visitHistoryVisitDetailDiv">
     <span class="visitTitle">Visit History</span>
@@ -75,7 +75,8 @@ date_default_timezone_set("Asia/Manila");
                         'delete' => array(//the name {reply} must be same
                             'label' => 'Delete', // text label of the button
                             'imageUrl' => false, // image URL of the button. If not set or false, a text link is used, The image must be 16X16 pixels
-                        ),
+                            'visible' => 'checkSessionIfAllowedToDelete()',
+                            ),
                     ),
                 ),
             ),
@@ -105,6 +106,15 @@ function formatTime($time) {
         return "-";
     } else {
         return date('h:i A', strtotime($time));
+    }
+}
+
+function checkSessionIfAllowedToDelete(){
+    $session = new CHttpSession;
+    if($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles::ROLE_OPERATOR){
+        return true;
+    } else {
+        return false;
     }
 }
 ?>

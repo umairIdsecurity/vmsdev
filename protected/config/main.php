@@ -9,7 +9,7 @@ return array(
     'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . '..',
     'name' => 'Visitor Management System',
     // preloading 'log' component
-    'preload' => array('log','foundation'),
+    'preload' => array('log', 'foundation'),
     'theme' => 'bootstrap',
     'modules' => array(
         'gii' => array(
@@ -39,6 +39,15 @@ return array(
     ),
     // application components
     'components' => array(
+        'ePdf' => array(
+            'class' => 'ext.yii-pdf.EYiiPdf',
+            'params' => array(
+                'HTML2PDF' => array(
+                    'librarySourcePath' => 'application.vendor.html2pdf.*',
+                    'classFile' => 'html2pdf.class.php',
+                ),
+            ),
+        ),
         'foundation' => array("class" => "ext.foundation.components.Foundation"),
         'widgetFactory' => array(
             'widgets' => array(
@@ -64,7 +73,6 @@ return array(
           ),
           ),
          */
-        
         'db' => array(
             'connectionString' => 'mysql:host=localhost;dbname=vms',
             'username' => 'user_vms',
@@ -96,11 +104,10 @@ return array(
                     'categories' => 'system.db.CDbCommand.query'
                 ),
             // uncomment the following to show log messages on web pages
-/*            
+            /*
               array(
               'class'=>'CWebLogRoute',
-              ),*/
-             
+              ), */
             ),
         ),
     ),

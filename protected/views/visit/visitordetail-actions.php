@@ -4,10 +4,16 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl . '/js/script-visitordetail
 $session = new CHttpSession;
 ?><br>
 <div id='actionsCssMenu'>
-
+    <?php if ($model->visit_status == VisitStatus::CLOSED) {?>
     <ul>
-        <?php if ($model->visit_status == VisitStatus::ACTIVE) { ?>
-            <li class='has-sub' id="closevisitLi"><a href="#"><span class="icons log-current actionsLabel">Close Visit</span></a>
+        <li>
+    <a style="text-decoration: none; color:red !important;">Visit Status: Closed</a>
+        </li>
+    </ul>
+    <?php } ?>
+    <ul>
+        <?php if ($model->visit_status == VisitStatus::ACTIVE && $session['role'] != Roles::ROLE_STAFFMEMBER) { ?>
+            <li class='has-sub' id="closevisitLi"><a href="#"><span class="icons close-visit actionsLabel">Close Visit</span></a>
                 <ul>
                     <li>
                         <table id="actionsVisitDetails">
@@ -78,32 +84,7 @@ $session = new CHttpSession;
                 </ul>
 
             </li>
-        <?php } else if ($model->visit_status == VisitStatus::ACTIVE) { ?>
-            <li class='has-sub' id="logvisitLi"><a href="#"><span class="icons log-current actionsLabel">Log Visit</span></a>
-                <ul>
-                    <li>
-                        <table id="actionsVisitDetails">
-                            <tr>
-                                <td></td>
-                                <td >
-
-                                    <div id="logVisitDiv">
-                                        <?php
-                                        $this->renderPartial('logvisit', array('model' => $model,
-                                            'visitorModel' => $visitorModel,
-                                            'hostModel' => $hostModel,
-                                            'reasonModel' => $reasonModel,
-                                        ));
-                                        ?>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </li>
-                </ul>
-
-            </li>
-        <?php } else if ($model->visit_status == VisitStatus::PREREGISTERED){ ?>
+        <?php }  else if ($model->visit_status == VisitStatus::PREREGISTERED && $session['role'] != Roles::ROLE_STAFFMEMBER){ ?>
             <li class='has-sub' id="preregisterLi"><a href="#"><span class="icons pre-visits actionsLabel">Preregister a Visit</span></a>
                 <ul>
                     <li>
@@ -128,7 +109,7 @@ $session = new CHttpSession;
                     </li>
                 </ul>
             </li>
-            <li class='has-sub' id="activateLi"><a href="#"><span class="icons pre-visits actionsLabel">Activate a Visit</span></a>
+            <li class='has-sub' id="activateLi"><a href="#"><span class="icons pre-visits actionsLabel">Log a Visit</span></a>
                 <ul>
                     <li>
                         <?php

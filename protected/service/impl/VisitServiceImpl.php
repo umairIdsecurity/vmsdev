@@ -27,18 +27,25 @@ class VisitServiceImpl implements VisitService {
             $visit->time_in = $visit->time_in_hours . ':' . $visit->time_in_minutes;
         }
 
-        if($visit->visitor_type == VisitorType::PATIENT_VISITOR){
-            $visit->host =NULL;
+        if ($visit->visitor_type == VisitorType::PATIENT_VISITOR) {
+            $visit->host = NULL;
         } else {
             $visit->patient = NULL;
         }
-        
+
+
+
+
         if (!($visit->save())) {
             return false;
         }
-        
-        
-        
+        //if visit is closed set card generated status -> returned;
+        $cardGenerated = CardGenerated::model()->findByAttributes(array('visitor_id' => $visit->visitor));
+        $cardGenerated->card_status = CardStatus::RETURNED;
+        $cardGenerated->SaveAttributes(array('card_status'));
+
+
+        echo $visit->visit_status . "hello";
         $visitor = Visitor::model()->findByPK($visit->visitor);
         Visit::model()->updateByPk($visit->id, array(
             'tenant' => $visitor->tenant,

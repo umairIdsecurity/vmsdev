@@ -39,10 +39,10 @@ class CardGenerated extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('card_image_generated_filename, visitor_id, created_by, tenant, tenant_agent', 'length', 'max'=>20),
-			array('date_printed,date_expiration', 'safe'),
+			array('card_status,date_printed,date_expiration', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, date_printed, date_expiration, card_image_generated_filename, visitor_id, created_by, tenant, tenant_agent', 'safe', 'on'=>'search'),
+			array('id, card_status,date_printed, date_expiration, card_image_generated_filename, visitor_id, created_by, tenant, tenant_agent', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -76,6 +76,7 @@ class CardGenerated extends CActiveRecord
 			'created_by' => 'Created By',
 			'tenant' => 'Tenant',
 			'tenant_agent' => 'Tenant Agent',
+			'card_status' => 'Card Status',
 		);
 	}
 
@@ -105,6 +106,7 @@ class CardGenerated extends CActiveRecord
 		$criteria->compare('created_by',$this->created_by,true);
 		$criteria->compare('tenant',$this->tenant,true);
 		$criteria->compare('tenant_agent',$this->tenant_agent,true);
+		$criteria->compare('card_status',$this->card_status,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

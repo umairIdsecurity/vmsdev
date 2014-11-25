@@ -35,7 +35,6 @@ class VisitController extends Controller {
         );
     }
 
-
     /**
      * Creates a new model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -78,7 +77,6 @@ class VisitController extends Controller {
             if ($visit->save($model, $session['id'])) {
                 
             }
-            // $this->redirect(array('view', 'id' => $model->id));
         }
 
         $this->render('update', array(

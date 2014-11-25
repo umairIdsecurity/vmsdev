@@ -236,7 +236,10 @@ class Visit extends CActiveRecord {
         $criteria->compare('time_in', $this->time_in, true);
         $criteria->compare('date_out', $this->date_out, true);
         $criteria->compare('time_out', $this->time_out, true);
-        $criteria->compare('date_check_in', $this->date_check_in, true);
+        
+        //$criteria->compare('date_check_in', $this->date_check_in, true);
+        $criteria->mergeWith($this->dateRangeSearchCriteria('date_check_in', $this->date_check_in));
+        
         $criteria->compare('time_check_in', $this->time_check_in, true);
         $criteria->compare('date_check_out', $this->date_check_out, true);
         $criteria->compare('time_check_out', $this->time_check_out, true);
@@ -281,7 +284,7 @@ class Visit extends CActiveRecord {
             'sort' => array(
                 'defaultOrder' => 't.ID DESC',
             ),
-            'pagination'=>false,
+            'pagination' => false,
         ));
     }
 
@@ -300,22 +303,27 @@ class Visit extends CActiveRecord {
             'softDelete' => array(
                 'class' => 'ext.soft_delete.SoftDeleteBehavior'
             ),
+            'dateRangeSearch' => array(
+                'class' => 'application.components.behaviors.EDateRangeSearchBehavior',
+            ),
         );
     }
 
     public function exportVisitorRecords() {
         $rawData = Yii::app()->db->createCommand("SELECT "
-                . "visit.card,visitor.first_name, visitor.last_name,visit_status.name as visitStatus,visitor_status.name as visitorStatus,"
-                . "visitor.email,visitor.contact_number,visitor_type.name as visitorType,company.name as CompanyName,visit.date_in, "
-                . "visit.time_in "
-                . "FROM visit "
-                . "LEFT JOIN visitor ON visitor.id = visit.visitor "
-                . "LEFT JOIN company ON visitor.company = company.id "
-                . "LEFT JOIN visit_status ON visit.visit_status = visit_status.id "
-                . "LEFT JOIN visitor_type ON visit.visitor_type = visitor_type.id "
-                . "LEFT JOIN visitor_status ON visitor.visitor_status = visitor_status.id "
-                . "WHERE visit.is_deleted= 0 ")->queryAll();
+                        . "visit.card,visitor.first_name, visitor.last_name,visit_status.name as visitStatus,visitor_status.name as visitorStatus,"
+                        . "visitor.email,visitor.contact_number,visitor_type.name as visitorType,company.name as CompanyName,visit.date_in, "
+                        . "visit.time_in "
+                        . "FROM visit "
+                        . "LEFT JOIN visitor ON visitor.id = visit.visitor "
+                        . "LEFT JOIN company ON visitor.company = company.id "
+                        . "LEFT JOIN visit_status ON visit.visit_status = visit_status.id "
+                        . "LEFT JOIN visitor_type ON visit.visitor_type = visitor_type.id "
+                        . "LEFT JOIN visitor_status ON visitor.visitor_status = visitor_status.id "
+                        . "WHERE visit.is_deleted= 0 ")->queryAll();
         return $rawData;
     }
+
+  
 
 }

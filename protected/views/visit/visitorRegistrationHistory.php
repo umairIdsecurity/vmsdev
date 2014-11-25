@@ -1,21 +1,47 @@
+
+
+<h1>Visitor Registration History</h1>
+<div style="text-align:left;"><input type="button" class="greenBtn" value="Export to CSV" id="export"/></div>
+<br>
+<div class="searchDateRange">
 <?php
 /* @var $this VisitController */
 /* @var $model Visit */
+$form = $this->beginWidget('CActiveForm', array(
+    'action' => Yii::app()->createUrl($this->route),
+    'method' => 'get',
+        ));
+
+$attribute = 'date_check_in';
+for ($i = 0; $i <= 1; $i++) {
+    echo ($i == 0 ? Yii::t('main', '<span class="searchRangeTitle">From:</span>') : Yii::t('main', '<span class="searchRangeTitle">To:</span>'));
+    $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+        'id' => CHtml::activeId($model, $attribute . '_' . $i),
+        'model' => $model,
+        'attribute' => $attribute . "[$i]",
+        'options' => array(
+            'dateFormat' => 'yy-mm-dd',
+        ),
+    ));
+    
+}
 ?>
 
-<h1>Evacuation Report</h1>
-<div style="text-align:left;"><input type="button" class="greenBtn" value="Export to CSV" id="export"/></div>
-<br>
+<div class="row buttons">
+<?php echo CHtml::submitButton('Search'); ?>
+</div>
+
+<?php $this->endWidget(); ?>
+</div>
 <?php
 $session = new CHttpSession;
 $merge = new CDbCriteria;
-$merge->addCondition('visit_status ="' . VisitStatus::ACTIVE . '"');
+$merge->addCondition('visit_status ="' . VisitStatus::CLOSED . '"');
 
 $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'view-visitor-records',
     'dataProvider' => $model->search($merge),
     'filter' => $model,
-    
     'columns' =>
     array(
         array(
@@ -111,17 +137,6 @@ function formatDate($date) {
 ?>
 <script>
     $(document).ready(function() {
-        $('#export-button').on('click', function() {
-            $.fn.yiiGridView.export();
-        });
-        $.fn.yiiGridView.export = function() {
-            $.fn.yiiGridView.update('view-visitor-records', {
-                success: function() {
-                    $('#view-visitor-records').removeClass('grid-view-loading');
-                    window.location = '". $this->createUrl('exportFile')  . "';
-                },
-                data: $('.search-form form').serialize() + '&export=true'
-            });
-        }
+
     });
 </script>

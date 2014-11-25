@@ -29,10 +29,7 @@ class VisitorController extends Controller {
                 'actions' => array('update', 'admin', 'delete','exportVisitorRecords'),
                 'expression' => 'Yii::app()->controller->checkIfUserCanAccess("superadmin")',
             ),
-            array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('visitorRegistrationHistory'),
-                'expression' => 'Yii::app()->controller->checkIfUserCanAccess("administration")',
-            ),
+            
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('create','GetIdOfUser', 'GetHostDetails', 'GetPatientDetails', 'CheckEmailIfUnique', 'GetVisitorDetails', 'FindVisitor', 'FindHost', 'GetTenantAgentWithSameTenant', 'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent'),
                 'users' => array('@'),
@@ -269,15 +266,6 @@ class VisitorController extends Controller {
         }
     }
     
-    public function actionVisitorRegistrationHistory() {
-        $model = new Visitor('search');
-        $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['Visitor']))
-            $model->attributes = $_GET['Visitor'];
-
-        $this->render('visitorRegistrationHistory', array(
-            'model' => $model,
-        ));
-    }
+    
 
 }

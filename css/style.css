@@ -961,3 +961,14 @@ dt.tabs dt{
     text-decoration: none;
     margin-bottom:10px;
 }
+
+.searchDateRange{
+    text-align:center
+}
+
+.searchRangeTitle{
+    color: #58585A !important;
+    font-size: 13px;
+    font-weight: bold;
+    padding: 10px;
+}

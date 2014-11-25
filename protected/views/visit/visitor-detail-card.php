@@ -19,17 +19,35 @@
                     ?></td>
             </tr>
             <tr>
-                <td><?php echo date('d/m/Y'); ?></td>
+                <td><?php
+                    if ($model->card_type == CardType::SAME_DAY_VISITOR) {
+                        echo date('d/m/Y');
+                    } else {
+                        echo Yii::app()->dateFormatter->format("d/MM/y", strtotime($model->date_out));
+                    }
+                    ?></td>
             </tr>
         </table>
 
 
     </div>
 </div>
+<?php
+$cardDetail = CardGenerated::model()->findAllByAttributes(array(
+    'visitor_id' => $model->visitor
+        ));
+if (count($cardDetail) > 0 && $model->visit_status == VisitStatus::ACTIVE) {
+    ?><input type="button" class="printCardBtn" value="Re-print Card" id="reprintCardBtn" onclick="regenerateCard()"/><?php
+} else {
+    ?>
     <input type="button" class="printCardBtn" value="Print Card" id="printCardBtn" onclick="generateCard()"/>
+
+    <?php
+}
+?>
 <script>
     $(document).ready(function() {
-        if(<?php echo $model->visit_status;?> == '1'){ //1 is active
+        if (<?php echo $model->visit_status; ?> == '1') { //1 is active
             document.getElementById('printCardBtn').disabled = false;
 
         } else {
@@ -42,7 +60,7 @@
     function generateCard() {
         //$("#generateCardModalBtn").click();
         //change modal url to pass visit id
-        var url = 'index.php?r=cardgenerated/print&id=<?php echo $model->id; ?>' ;
+        var url = 'index.php?r=cardgenerated/print&id=<?php echo $model->id; ?>';
         $("#generateCardModalBody #generateCardModalIframe").html('<iframe id="generateCardTableIframe" scrolling="no" onLoad="resizeThis();" width="100%" height="100%" style="max-height:400px !important;" frameborder="0" src="' + url + '"></iframe>');
     }
 

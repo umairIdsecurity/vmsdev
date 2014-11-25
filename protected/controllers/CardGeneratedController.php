@@ -78,6 +78,7 @@ class CardGeneratedController extends Controller {
         $cardGeneratedRecord->visitor_id = $model->visitor;
         $cardGeneratedRecord->tenant = $session['tenant'];
         $cardGeneratedRecord->tenant_agent = $session['tenant_agent'];
+        $cardGeneratedRecord->card_status = CardStatus::ACTIVE;
         $cardGeneratedRecord->created_by = $session['id'];
         
         $cardGeneratedRecord->save();

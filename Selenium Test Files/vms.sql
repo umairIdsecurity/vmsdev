@@ -40,6 +40,7 @@ DROP TABLE IF EXISTS `visitor`;
 DROP TABLE IF EXISTS `visitor_status`;
 DROP TABLE IF EXISTS `visitor_type`;
 DROP TABLE IF EXISTS `visitor_visit_reason`;
+DROP TABLE IF EXISTS `card_status`;
 DROP TABLE IF EXISTS `visit`;
 DROP TABLE IF EXISTS `patient`;
 SET FOREIGN_KEY_CHECKS = 1;
@@ -51,8 +52,11 @@ CREATE TABLE IF NOT EXISTS `card_generated` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `date_printed` date DEFAULT NULL,
   `date_expiration` date DEFAULT NULL,
+  `date_cancelled` date DEFAULT NULL,
+  `date_returned` date DEFAULT NULL,
   `card_image_generated_filename` bigint(20) DEFAULT NULL,
   `visitor_id` bigint(20) DEFAULT NULL,
+  `card_status` bigint(20) DEFAULT NULL,
   `created_by` bigint(20) DEFAULT NULL,
   `tenant` bigint(20) DEFAULT NULL,
   `tenant_agent` bigint(20) DEFAULT NULL,
@@ -61,10 +65,28 @@ CREATE TABLE IF NOT EXISTS `card_generated` (
   KEY `created_by` (`created_by`),
   KEY `tenant` (`tenant`),
   KEY `tenant_agent` (`tenant_agent`),
+  KEY `card_status` (`card_status`),
   KEY `visitor_id` (`visitor_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `card_status` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `created_by` (`created_by`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=0 ;
+
+--
+-- Dumping data for table `user_status`
+--
+
+INSERT INTO `card_status` (`id`, `name`, `created_by`) VALUES
+(1, 'Cancelled', NULL),
+(2, 'Returned', NULL),
+(2, 'Active', NULL);
+
 
 --
 -- Table structure for table `card_type`
@@ -80,8 +102,7 @@ CREATE TABLE IF NOT EXISTS `card_type` (
   `card_background_image_path` bigint(20) DEFAULT NULL,
   `created_by` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `created_by` (`created_by`),
-  KEY `card_background_image_path` (`card_background_image_path`)
+  KEY `created_by` (`created_by`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
@@ -89,8 +110,8 @@ CREATE TABLE IF NOT EXISTS `card_type` (
 --
 
 INSERT INTO `card_type` (`id`, `name`,`max_day_validity` ,`max_time_validity`, `max_entry_count_validity`, `card_icon_type`, `card_background_image_path`, `created_by`) VALUES
-(1, 'Same Day Visitor', '1', NULL,NULL ,'images/same_day_vic.png', NULL, NULL),
-(2, 'Multiday Visitor', NULL,NULL, NULL, 'images/multi_day_vic.png', NULL, NULL);
+(1, 'Same Day Visitor', '1', NULL,NULL ,'images/same_day_vic.png', 'images/cardprint-new.png', NULL),
+(2, 'Multiday Visitor', NULL,NULL, NULL, 'images/multi_day_vic.png', 'images/cardprint-new.png', NULL);
 
 -- --------------------------------------------------------
 
@@ -518,6 +539,7 @@ INSERT INTO `workstation` (`id`, `name`, `location`, `contact_name`, `contact_nu
 --
 ALTER TABLE `card_generated`
   ADD CONSTRAINT `card_generated_ibfk_5` FOREIGN KEY (`visitor_id`) REFERENCES `visitor` (`id`),
+  ADD CONSTRAINT `card_generated_ibfk_6` FOREIGN KEY (`card_status`) REFERENCES `card_status` (`id`),
   ADD CONSTRAINT `card_generated_ibfk_1` FOREIGN KEY (`card_image_generated_filename`) REFERENCES `photo` (`id`),
   ADD CONSTRAINT `card_generated_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`),
   ADD CONSTRAINT `card_generated_ibfk_3` FOREIGN KEY (`tenant`) REFERENCES `user` (`id`),
@@ -627,6 +649,9 @@ ALTER TABLE `visit_reason`
 --
 ALTER TABLE `visit_status`
   ADD CONSTRAINT `visit_status_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`);
+
+ALTER TABLE `card_status`
+  ADD CONSTRAINT `card_status_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`);
 
 --
 -- Constraints for table `workstation`

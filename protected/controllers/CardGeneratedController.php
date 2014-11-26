@@ -26,7 +26,7 @@ class CardGeneratedController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin', 'delete', 'print'),
+                'actions' => array('create', 'update', 'admin', 'delete', 'print','reprint'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -70,26 +70,65 @@ class CardGeneratedController extends Controller {
 
     public function actionPrint($id) {
         $this->layout = '//layouts/column1';
+
+        $cardGenerated = new CardGenerated;
+        $cardGeneratedService = new CardGeneratedServiceImpl();
         $session = new CHttpSession;
         $model = Visit::model()->findByPk($id);
-        $cardGeneratedRecord = new CardGenerated;
-        $cardGeneratedRecord->date_printed = date("Y-m-d");
-        $cardGeneratedRecord->date_expiration = date("Y-m-d");
-        $cardGeneratedRecord->visitor_id = $model->visitor;
-        $cardGeneratedRecord->tenant = $session['tenant'];
-        $cardGeneratedRecord->tenant_agent = $session['tenant_agent'];
-        $cardGeneratedRecord->card_status = CardStatus::ACTIVE;
-        $cardGeneratedRecord->created_by = $session['id'];
+        $visitorModel = Visitor::model()->findByPk($model->visitor);
+
         
-        $cardGeneratedRecord->save();
-//		$this->render('print',array(
-//		));
-//                # HTML2PDF has very similar syntax
-        $html2pdf = Yii::app()->ePdf->HTML2PDF();
-        $html2pdf->WriteHTML($this->renderPartial('print', array(), true));
-        //$html2pdf->Output();
-        $usernameHash = hash('adler32', Yii::app()->user->name);
-        $html2pdf->Output('doc' . $usernameHash . '.pdf', EYiiPdf::OUTPUT_TO_DOWNLOAD);
+            $cardGeneratedArray = array(
+                'date_printed' => date("Y-m-d"),
+                'date_expiration' => date("Y-m-d"),
+                'visitor_id' => $model->visitor,
+                'tenant' => $session['tenant'],
+                'tenant_agent' => $session['tenant_agent'],
+                'card_status' => CardStatus::ACTIVE,
+                'created_by' => $session['id'],
+            );
+            $cardGenerated->attributes = $cardGeneratedArray;
+            if($cardGeneratedService->save($cardGenerated, $model, $session['tenant'], $session['tenant_agent'], $session['id'])){
+                $cardGeneratedService->saveCardImage($model);
+            }
+            
+
+        $this->render('print', array(
+            'model' => $model,
+            'visitorModel' => $visitorModel,
+        ));
+    }
+    
+    public function actionReprint($id) {
+        $this->layout = '//layouts/column1';
+
+        $cardGenerated = new CardGenerated;
+        $cardGeneratedService = new CardGeneratedServiceImpl();
+        $session = new CHttpSession;
+        $model = Visit::model()->findByPk($id);
+        $visitorModel = Visitor::model()->findByPk($model->visitor);
+
+        
+            $cardGeneratedArray = array(
+                'date_printed' => date("Y-m-d"),
+                'date_expiration' => date("Y-m-d"),
+                'visitor_id' => $model->visitor,
+                'tenant' => $session['tenant'],
+                'tenant_agent' => $session['tenant_agent'],
+                'card_status' => CardStatus::ACTIVE,
+                'created_by' => $session['id'],
+            );
+            $cardGenerated->attributes = $cardGeneratedArray;
+
+            if($cardGeneratedService->updateCard($cardGenerated, $model, $session['tenant'], $session['tenant_agent'], $session['id'])){
+                $cardGeneratedService->saveCardImage($model);
+            }
+        
+
+        $this->render('print', array(
+            'model' => $model,
+            'visitorModel' => $visitorModel,
+        ));
     }
 
     /**

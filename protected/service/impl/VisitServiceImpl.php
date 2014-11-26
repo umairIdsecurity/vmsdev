@@ -32,20 +32,15 @@ class VisitServiceImpl implements VisitService {
         } else {
             $visit->patient = NULL;
         }
-
-
-
-
+        
+        
         if (!($visit->save())) {
             return false;
         }
-        //if visit is closed set card generated status -> returned;
-        $cardGenerated = CardGenerated::model()->findByAttributes(array('visitor_id' => $visit->visitor));
-        $cardGenerated->card_status = CardStatus::RETURNED;
-        $cardGenerated->SaveAttributes(array('card_status'));
+        
+        updateCard($visit);
+        
 
-
-        echo $visit->visit_status . "hello";
         $visitor = Visitor::model()->findByPK($visit->visitor);
         Visit::model()->updateByPk($visit->id, array(
             'tenant' => $visitor->tenant,
@@ -53,6 +48,16 @@ class VisitServiceImpl implements VisitService {
         ));
 
         return true;
+    }
+    
+    function updateCard(){
+        //if visit is closed update card status to returned and date returned to current date
+        if($visit->card != '' && $visit->visit_status == VisitStatus::CLOSED){
+            CardGenerated::model()->updateByPk($visit->card, array(
+            'card_status' => CardStatus::RETURNED,
+            'date_returned' => date('Y-m-d'),
+        ));
+        }
     }
 
 }

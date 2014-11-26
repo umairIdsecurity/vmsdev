@@ -265,6 +265,7 @@ class Issue25FunctionalTestPreregisterVisitor extends BaseFunctionalTest {
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
         $this->waitForElementPresent("id=Visitor_tenant_agent");
+        sleep(1);
         $this->select("id=Visitor_tenant_agent", "label=Test agentadmin");
         $this->click("id=submitFormVisitor");
         $this->waitForElementPresent("css=td > div.errorMessage.visitorReason");

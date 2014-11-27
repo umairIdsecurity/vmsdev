@@ -4,8 +4,16 @@
 ?>
 
 <h1>Evacuation Report</h1>
-<div style="text-align:left;"><input type="button" class="greenBtn" value="Export to CSV" id="export"/></div>
+<?php echo CHtml::button('Export to CSV', array('id' => 'export-button', 'class' => 'greenBtn')); ?>
 <br>
+
+<div class="search-form" style="display:none;">
+    <?php
+    $this->renderPartial('_search', array(
+        'model' => $model,
+    ));
+    ?>
+</div><!-- search-form -->
 <?php
 $session = new CHttpSession;
 $merge = new CDbCriteria;
@@ -15,7 +23,6 @@ $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'view-visitor-records',
     'dataProvider' => $model->search($merge),
     'filter' => $model,
-    
     'columns' =>
     array(
         array(
@@ -32,17 +39,20 @@ $this->widget('zii.widgets.grid.CGridView', array(
         ),
         array(
             'name' => 'card',
-            'header' => 'Card No.'
+            'header' => 'Card No.',
+            'filter' => CHtml::textField('Visit[card]', '', array('class' => 'filterCard')),
         ),
         array(
             'name' => 'firstname',
             'value' => 'Visitor::model()->findByPk($data->visitor)->first_name',
-            'header' => 'First Name'
+            'header' => 'First Name',
+            'filter' => CHtml::textField('Visit[firstname]', '', array('class' => 'filterFirstName')),
         ),
         array(
             'name' => 'lastname',
             'value' => 'Visitor::model()->findByPk($data->visitor)->last_name',
-            'header' => 'Last Name'
+            'header' => 'Last Name',
+            'filter' => CHtml::textField('Visit[lastname]', '', array('class' => 'filterLastName')),
         ),
         array(
             'name' => 'company',
@@ -118,10 +128,11 @@ function formatDate($date) {
             $.fn.yiiGridView.update('view-visitor-records', {
                 success: function() {
                     $('#view-visitor-records').removeClass('grid-view-loading');
-                    window.location = '". $this->createUrl('exportFile')  . "';
+                    window.location = '<?php echo $this->createUrl('exportFile'); ?>';
                 },
-                data: $('.search-form form').serialize() + '&export=true'
+                data: $('#view-visitor-records').serialize() + '&export=true'
             });
         }
+
     });
 </script>

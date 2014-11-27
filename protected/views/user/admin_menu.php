@@ -84,7 +84,7 @@ if ( $session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles
                     <ul>
                         <li><a href='<?php echo Yii::app()->createUrl('visitor/create'); ?>' class="has-sub-sub"><span>Register a Visitor</span></a></li>
                         <li><a href='<?php echo Yii::app()->createUrl('visitor/create&action=preregister'); ?>' class="has-sub-sub"><span>Pre-register a Visitor</span></a></li>
-                        <li><a href='<?php echo Yii::app()->createUrl('visitor/exportvisitorrecords'); ?>' class="has-sub-sub"><span>Export Visitor Records</span></a></li>
+                        <li><a href='<?php echo Yii::app()->createUrl('visit/exportvisitorrecords'); ?>' class="has-sub-sub"><span>Export Visitor Records</span></a></li>
                     </ul>
                 </li>    
                 <li class='has-sub'><a href='<?php echo Yii::app()->createUrl('visitReason/admin'); ?>'><span>Manage Visit Reasons</span></a>

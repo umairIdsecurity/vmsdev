@@ -80,6 +80,13 @@
                 li[19].click();
             }
         }
+        
+        
+        if(pathArray[4] == 'exportvisitorrecords'){
+            if (currentRole == superadmin) {
+                    li[11].click();
+                }
+        }
         $('.has-sub a').click(function() {
             window.location = this.href;
         });

@@ -162,6 +162,7 @@ class Visit extends CActiveRecord {
             'createdBy' => array(self::BELONGS_TO, 'User', 'created_by'),
             'tenant0' => array(self::BELONGS_TO, 'User', 'tenant'),
             'workstation0' => array(self::BELONGS_TO, 'Workstation', 'workstation'),
+            'visitStatus' => array(self::BELONGS_TO, 'VisitStatus', 'visit_status'),
         );
     }
 
@@ -193,6 +194,7 @@ class Visit extends CActiveRecord {
             'is_deleted' => 'Is Deleted',
             'visit_status' => 'Visit Status',
             'workstation' => 'Workstation',
+            'firstname' => 'First Name',
         );
     }
 

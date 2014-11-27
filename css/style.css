@@ -933,15 +933,22 @@ dt.tabs dt{
     width:130px !important;
 }
 
-#view-visitor-records {
+#view-visitor-records, #view-visitor-records-history {
     width:1680px;
     padding-right:30px !important;
 }
 
+#view-export-visitor-records{
+    width:1380px;
+    padding-right:30px !important;
+}
+#view-export-visitor-records_c0{
+    width:100px;
+}
 .disabledButton {
     background:linear-gradient(#C6C6C6 0%, #C6C6C6 100%) repeat scroll 0 0 rgba(0, 0, 0, 0) !important;
 }
-#view-visitor-records_c1{
+#view-visitor-records_c1,#view-visitor-records-history_c1,#view-visitor-records-history_c0{
     min-width:100px;
 }
 

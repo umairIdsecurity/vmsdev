@@ -1,37 +1,36 @@
 
 
 <h1>Visitor Registration History</h1>
-<div style="text-align:left;"><input type="button" class="greenBtn" value="Export to CSV" id="export"/></div>
+<?php echo CHtml::button('Export to CSV', array('id' => 'export-button', 'class' => 'greenBtn')); ?>
 <br>
 <div class="searchDateRange">
-<?php
-/* @var $this VisitController */
-/* @var $model Visit */
-$form = $this->beginWidget('CActiveForm', array(
-    'action' => Yii::app()->createUrl($this->route),
-    'method' => 'get',
-        ));
-
-$attribute = 'date_check_in';
-for ($i = 0; $i <= 1; $i++) {
-    echo ($i == 0 ? Yii::t('main', '<span class="searchRangeTitle">From:</span>') : Yii::t('main', '<span class="searchRangeTitle">To:</span>'));
-    $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-        'id' => CHtml::activeId($model, $attribute . '_' . $i),
-        'model' => $model,
-        'attribute' => $attribute . "[$i]",
-        'options' => array(
-            'dateFormat' => 'yy-mm-dd',
-        ),
+    <?php
+    /* @var $this VisitController */
+    /* @var $model Visit */
+    $form = $this->beginWidget('CActiveForm', array(
+        'action' => Yii::app()->createUrl($this->route),
+        'method' => 'get',
     ));
-    
-}
-?>
 
-<div class="row buttons">
-<?php echo CHtml::submitButton('Search'); ?>
-</div>
+    $attribute = 'date_check_in';
+    for ($i = 0; $i <= 1; $i++) {
+        echo ($i == 0 ? Yii::t('main', '<span class="searchRangeTitle">From:</span>') : Yii::t('main', '<span class="searchRangeTitle">To:</span>'));
+        $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+            'id' => CHtml::activeId($model, $attribute . '_' . $i),
+            'model' => $model,
+            'attribute' => $attribute . "[$i]",
+            'options' => array(
+                'dateFormat' => 'yy-mm-dd',
+            ),
+        ));
+    }
+    ?>
 
-<?php $this->endWidget(); ?>
+    <div class="row buttons">
+        <?php echo CHtml::submitButton('Search'); ?>
+    </div>
+
+    <?php $this->endWidget(); ?>
 </div>
 <?php
 $session = new CHttpSession;
@@ -39,7 +38,7 @@ $merge = new CDbCriteria;
 $merge->addCondition('visit_status ="' . VisitStatus::CLOSED . '"');
 
 $this->widget('zii.widgets.grid.CGridView', array(
-    'id' => 'view-visitor-records',
+    'id' => 'view-visitor-records-history',
     'dataProvider' => $model->search($merge),
     'filter' => $model,
     'columns' =>
@@ -137,6 +136,17 @@ function formatDate($date) {
 ?>
 <script>
     $(document).ready(function() {
-
+        $('#export-button').on('click', function() {
+            $.fn.yiiGridView.export();
+        });
+        $.fn.yiiGridView.export = function() {
+            $.fn.yiiGridView.update('view-visitor-records-history', {
+                success: function() {
+                    $('#view-visitor-records-history').removeClass('grid-view-loading');
+                    window.location = '<?php echo $this->createUrl('exportFileHistory'); ?>';
+                },
+                data: $('#view-visitor-records-history').serialize() + '&export=true'
+            });
+        }
     });
 </script>

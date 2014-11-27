@@ -26,11 +26,17 @@ class VisitController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'detail', 'admin', 'view', 'printEvacuationReport'),
+                'actions' => array('create', 'update', 'detail', 'admin', 'view'),
                 'users' => array('@'),
             ),
             array('allow',
-                'actions' => array('evacuationReport', 'PrintEvacuationReport','visitorRegistrationHistory'),
+                'actions' => array('evacuationReport', 'PrintEvacuationReport',
+                    'visitorRegistrationHistory',
+                    'exportFile',
+                    'exportFileHistory',
+                    'exportFileVisitorRecords',
+                    'exportVisitorRecords',
+                ),
                 'expression' => 'Yii::app()->controller->accessRoles("administration")',
             ),
             array('deny', // deny all users
@@ -184,8 +190,6 @@ class VisitController extends Controller {
         }
         $hostModel = User::model()->findByPk($host);
 
-
-
         $visitorService = new VisitorServiceImpl();
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
@@ -229,43 +233,260 @@ class VisitController extends Controller {
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['Visit'])) {
             $model->attributes = $_GET['Visit'];
-}
+        }
+
+        if (Yii::app()->request->getParam('export')) {
+            $this->actionExport();
+            Yii::app()->end();
+        }
 
         $this->render('evacuationreport', array(
             'model' => $model,
         ));
     }
 
-    public function actionPrintEvacuationReport() {
-        header('Content-type: text/csv');
-        header('Content-Disposition: attachment; filename="centrico-RIP-Railcars-' . date('YmdHi') . '.csv"');
-
-        $model = new Visit('search');
-        $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['Visit'])) {
-            $model->attributes = $_GET['Visit'];
-        }
-        $dataProvider = $model->search(false);
-
-        //csv header
-        echo "Evacuation Report";
-
-        foreach ($dataProvider->getData() as $data) {
-            echo "$data->id,$data->visitor, $data->host \r\n";
-        }
-        exit;
-    }
-    
     public function actionVisitorRegistrationHistory() {
         $model = new Visit('search');
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['Visit'])) {
             $model->attributes = $_GET['Visit'];
-}
-
+        }
+        
+        if (Yii::app()->request->getParam('export')) {
+            $this->actionExportHistory();
+            Yii::app()->end();
+        }
+        
         $this->render('visitorRegistrationHistory', array(
             'model' => $model,
         ));
     }
+
+    public function actionExport() {
+        $fp = fopen('php://temp', 'w');
+
+        /*
+         * Write a header of csv file
+         */
+        $headers = array(
+            'visitorType.name',
+            'card',
+            'visitor0.first_name',
+            'visitor0.last_name',
+            'visitor0.contact_number',
+            'visitor0.email',
+            'date_in',
+            'time_in',
+            'date_out',
+            'time_out'
+        );
+        $row = array();
+        foreach ($headers as $header) {
+            $row[] = Visit::model()->getAttributeLabel($header);
+        }
+        fputcsv($fp, $row);
+
+        /*
+         * Init dataProvider for first page
+         */
+        $model = new Visit('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['Visit'])) {
+            $model->attributes = $_GET['Visit'];
+        }
+       
+            $merge = new CDbCriteria;
+            $merge->addCondition('visit_status ="' . VisitStatus::ACTIVE . '"');
+
+            $dp = $model->search($merge);
+        
+
+        /*
+         * Get models, write to a file, then change page and re-init DataProvider
+         * with next page and repeat writing again
+         */
+        $dp->setPagination(false);
+
+        /*
+         * Get models, write to a file
+         */
+
+        $models = $dp->getData();
+        foreach ($models as $model) {
+            $row = array();
+            foreach ($headers as $head) {
+                $row[] = CHtml::value($model, $head);
+            }
+            fputcsv($fp, $row);
+        }
+
+        /*
+         * save csv content to a Session
+         */
+        rewind($fp);
+        Yii::app()->user->setState('export', stream_get_contents($fp));
+        fclose($fp);
+    }
+
+    public function actionExportFile() {
+        Yii::app()->request->sendFile('evacuationreport.csv', Yii::app()->user->getState('export'));
+        Yii::app()->user->clearState('export');
+    }
+
+    public function actionExportHistory() {
+        $fp = fopen('php://temp', 'w');
+
+        /*
+         * Write a header of csv file
+         */
+        $headers = array(
+            'visitorType.name',
+            'card',
+            'visitor0.first_name',
+            'visitor0.last_name',
+            'visitor0.contact_number',
+            'visitor0.email',
+            'date_in',
+            'time_in',
+            'date_out',
+            'time_out'
+        );
+        $row = array();
+        foreach ($headers as $header) {
+            $row[] = Visit::model()->getAttributeLabel($header);
+        }
+        fputcsv($fp, $row);
+
+        /*
+         * Init dataProvider for first page
+         */
+        $model = new Visit('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['Visit'])) {
+            $model->attributes = $_GET['Visit'];
+        }
+
+        $merge = new CDbCriteria;
+        $merge->addCondition('visit_status ="' . VisitStatus::CLOSED . '"');
+
+        $dp = $model->search($merge);
+
+        /*
+         * Get models, write to a file, then change page and re-init DataProvider
+         * with next page and repeat writing again
+         */
+        $dp->setPagination(false);
+
+        /*
+         * Get models, write to a file
+         */
+
+        $models = $dp->getData();
+        foreach ($models as $model) {
+            $row = array();
+            foreach ($headers as $head) {
+                $row[] = CHtml::value($model, $head);
+            }
+            fputcsv($fp, $row);
+        }
+
+        /*
+         * save csv content to a Session
+         */
+        rewind($fp);
+        Yii::app()->user->setState('export', stream_get_contents($fp));
+        fclose($fp);
+    }
+
+    public function actionExportFileHistory() {
+        Yii::app()->request->sendFile('viewregistrationHistory.csv', Yii::app()->user->getState('export'));
+        Yii::app()->user->clearState('export');
+    }
+    
+    public function actionExportVisitorRecords() {
+        $model = new Visit('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['Visit'])) {
+            $model->attributes = $_GET['Visit'];
+        }
+
+        if (Yii::app()->request->getParam('export')) {
+            $this->actionExportVisitorRecordsCSV();
+            Yii::app()->end();
+        }
+
+        $this->render('exportvisitorrecords', array(
+            'model' => $model,
+        ));
+    }
+    
+    public function actionExportVisitorRecordsCSV() {
+        $fp = fopen('php://temp', 'w');
+
+        /*
+         * Write a header of csv file
+         */
+        $headers = array(
+            
+            'card',
+            'visitor0.first_name',
+            'visitor0.last_name',
+            'visitor0.visitor_status',
+            'visitor0.email',
+            'visitor0.contact_number',
+            'visitorType.name',
+            'date_in',
+            'time_in',
+        );
+        $row = array();
+        foreach ($headers as $header) {
+            $row[] = Visit::model()->getAttributeLabel($header);
+        }
+        fputcsv($fp, $row);
+
+        /*
+         * Init dataProvider for first page
+         */
+        $model = new Visit('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['Visit'])) {
+            $model->attributes = $_GET['Visit'];
+        }
+
+       
+        $dp = $model->search();
+
+        /*
+         * Get models, write to a file, then change page and re-init DataProvider
+         * with next page and repeat writing again
+         */
+        $dp->setPagination(false);
+
+        /*
+         * Get models, write to a file
+         */
+
+        $models = $dp->getData();
+        foreach ($models as $model) {
+            $row = array();
+            foreach ($headers as $head) {
+                $row[] = CHtml::value($model, $head);
+            }
+            fputcsv($fp, $row);
+        }
+
+        /*
+         * save csv content to a Session
+         */
+        rewind($fp);
+        Yii::app()->user->setState('export', stream_get_contents($fp));
+        fclose($fp);
+    }
+
+    public function actionExportFileVisitorRecords() {
+        Yii::app()->request->sendFile('visitorrecords.csv', Yii::app()->user->getState('export'));
+        Yii::app()->user->clearState('export');
+    }
+    
 
 }

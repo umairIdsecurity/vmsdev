@@ -26,7 +26,7 @@ class VisitorController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('update', 'admin', 'delete','exportVisitorRecords'),
+                'actions' => array('update', 'admin', 'delete'),
                 'expression' => 'Yii::app()->controller->checkIfUserCanAccess("superadmin")',
             ),
             
@@ -226,13 +226,7 @@ class VisitorController extends Controller {
             'model' => $model,
                 ), false, true);
     }
-    public function actionExportVisitorRecords() {
-        $model = new Visit('exportVisitorRecords');
-        $model->unsetAttributes();  
-        $this->render('exportvisitorrecords', array(
-            'model' => $model,
-        ));
-    }
+    
 
     public function actionGetVisitorDetails($id) {
         $resultMessage['data'] = Visitor::model()->findAllByPk($id);

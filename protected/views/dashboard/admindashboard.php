@@ -1,3 +1,4 @@
+<div id="admindashboardDiv">
 <?php
 
 /* @var $this VisitController */
@@ -17,15 +18,16 @@ switch ($session['role']) {
         $workstationList = Workstation::model()->findAll($Criteria);
         break;
 }
+ $x = 0;
 foreach ($workstationList as $workstation) {
-    $x = 0;
+   
     $x++;
     echo "<h1>" . $workstation->name . "</h1>";
         $merge = new CDbCriteria;
         $merge->addCondition('workstation ="' . $workstation->id . '"');
    
     $this->widget('zii.widgets.grid.CGridView', array(
-        'id' => 'visit-gridDashboard',
+        'id' => 'visit-gridDashboard'.$x,
         'dataProvider' => $model->search($merge),
         'filter' => $model,
         'columns' =>
@@ -36,6 +38,7 @@ foreach ($workstationList as $workstation) {
                 'value' => 'CHtml::link(VisitStatus::$VISIT_STATUS_LIST[$data->visit_status],Yii::app()->createUrl("visit/detail",array("id"=>$data->id)),array("class" =>"statusLink"))',
                 'type' => 'raw',
                 'header' => 'Status',
+                 'cssClassExpression' => '"statusRow"',
             ),
             array(
                 'name' => 'date_in',
@@ -117,3 +120,4 @@ function formatDate($date) {
     }
 }
 ?>
+</div>

@@ -111,7 +111,7 @@ function formatTime($time) {
 
 function checkSessionIfAllowedToDelete(){
     $session = new CHttpSession;
-    if($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles::ROLE_OPERATOR){
+    if($session['role'] != Roles::ROLE_STAFFMEMBER ){
         return true;
     } else {
         return false;

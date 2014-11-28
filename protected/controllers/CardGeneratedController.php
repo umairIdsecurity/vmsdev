@@ -26,7 +26,7 @@ class CardGeneratedController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin', 'delete', 'print','reprint'),
+                'actions' => array('create', 'update', 'admin', 'delete', 'print', 'reprint'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -77,28 +77,26 @@ class CardGeneratedController extends Controller {
         $model = Visit::model()->findByPk($id);
         $visitorModel = Visitor::model()->findByPk($model->visitor);
 
-        
-            $cardGeneratedArray = array(
-                'date_printed' => date("Y-m-d"),
-                'date_expiration' => date("Y-m-d"),
-                'visitor_id' => $model->visitor,
-                'tenant' => $session['tenant'],
-                'tenant_agent' => $session['tenant_agent'],
-                'card_status' => CardStatus::ACTIVE,
-                'created_by' => $session['id'],
-            );
-            $cardGenerated->attributes = $cardGeneratedArray;
-            if($cardGeneratedService->save($cardGenerated, $model, $session['tenant'], $session['tenant_agent'], $session['id'])){
-                $cardGeneratedService->saveCardImage($model);
-            }
-            
 
-        $this->render('print', array(
-            'model' => $model,
-            'visitorModel' => $visitorModel,
-        ));
+        $cardGeneratedArray = array(
+            'date_printed' => date("Y-m-d"),
+            'date_expiration' => date("Y-m-d"),
+            'visitor_id' => $model->visitor,
+            'tenant' => $model->tenant,
+            'tenant_agent' => $model->tenant_agent,
+            'card_status' => CardStatus::ACTIVE,
+            'created_by' => $session['id'],
+        );
+        $cardGenerated->attributes = $cardGeneratedArray;
+        if ($cardGeneratedService->save($cardGenerated, $model, $session['tenant'], $session['tenant_agent'], $session['id'])) {
+
+            $this->render('print', array(
+                'model' => $model,
+                'visitorModel' => $visitorModel,
+            ));
+        }
     }
-    
+
     public function actionReprint($id) {
         $this->layout = '//layouts/column1';
 
@@ -108,27 +106,24 @@ class CardGeneratedController extends Controller {
         $model = Visit::model()->findByPk($id);
         $visitorModel = Visitor::model()->findByPk($model->visitor);
 
-        
-            $cardGeneratedArray = array(
-                'date_printed' => date("Y-m-d"),
-                'date_expiration' => date("Y-m-d"),
-                'visitor_id' => $model->visitor,
-                'tenant' => $session['tenant'],
-                'tenant_agent' => $session['tenant_agent'],
-                'card_status' => CardStatus::ACTIVE,
-                'created_by' => $session['id'],
-            );
-            $cardGenerated->attributes = $cardGeneratedArray;
 
-            if($cardGeneratedService->updateCard($cardGenerated, $model, $session['tenant'], $session['tenant_agent'], $session['id'])){
-                $cardGeneratedService->saveCardImage($model);
-            }
-        
+        $cardGeneratedArray = array(
+            'date_printed' => date("Y-m-d"),
+            'date_expiration' => date("Y-m-d"),
+            'visitor_id' => $model->visitor,
+            'tenant' => $model->tenant,
+            'tenant_agent' => $model->tenant_agent,
+            'card_status' => CardStatus::ACTIVE,
+            'created_by' => $session['id'],
+        );
+        $cardGenerated->attributes = $cardGeneratedArray;
 
-        $this->render('print', array(
-            'model' => $model,
-            'visitorModel' => $visitorModel,
-        ));
+        if ($cardGeneratedService->updateCard($cardGenerated, $model, $session['tenant'], $session['tenant_agent'], $session['id'])) {
+            $this->render('print', array(
+                'model' => $model,
+                'visitorModel' => $visitorModel,
+            ));
+        }
     }
 
     /**

@@ -969,6 +969,12 @@ dt.tabs dt{
     margin-bottom:10px;
 }
 
+#admindashboardDiv > .grid-view{
+    width:1680px;
+    padding-right:30px !important;
+}
+.statusRow{
+    width:100px;
 .searchDateRange{
     text-align:center
 }

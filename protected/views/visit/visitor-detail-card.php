@@ -1,5 +1,6 @@
 <?php
-echo Yii::app()->params['photo_unique_filename'];
+$session = new CHttpSession;
+
 ?>
 <div id="cardDiv" 
      style="background: url('../images/cardprint-new.png') no-repeat center top;">
@@ -34,24 +35,35 @@ echo Yii::app()->params['photo_unique_filename'];
 
     </div>
 </div>
-<?php
-$cardDetail = CardGenerated::model()->findAllByAttributes(array(
-    'visitor_id' => $model->visitor
-        ));
-if ($model->card != NULL && $model->visit_status == VisitStatus::ACTIVE) {
-    ?><input type="button" class="printCardBtn" value="Re-print Card" id="reprintCardBtn" onclick="regenerateCard()"/><?php
-} else {
+<div
+    <?php 
+    if($session['role'] == Roles::ROLE_STAFFMEMBER){
+        echo "style='display:none'";
+    }
     ?>
-    <input type="button" class="printCardBtn" value="Print Card" id="printCardBtn" onclick="generateCard()"/>
-    <?php
-}
+    >
+<?php
+
+    $cardDetail = CardGenerated::model()->findAllByAttributes(array(
+        'visitor_id' => $model->visitor
+    ));
+    if ($model->card != NULL && $model->visit_status == VisitStatus::ACTIVE) {
+        ?><input type="button" class="printCardBtn" value="Re-print Card" id="reprintCardBtn" onclick="regenerateCard()"/><?php
+    } else {
+        ?>
+        <input type="button" class="printCardBtn" value="Print Card" id="printCardBtn" onclick="generateCard()"/>
+        <?php
+    }
+
 ?>
+</div>
+<input type="hidden" id="dummycardvalue" value="<?php echo $model->card; ?>"/>
 <script>
     $(document).ready(function() {
-        if (<?php echo $model->visit_status; ?> == '1') { //1 is active
+        if (<?php echo $model->visit_status; ?> == '1' && $("#dummycardvalue").val() == '' ) { //1 is active
             document.getElementById('printCardBtn').disabled = false;
 
-        } else {
+        } else if(<?php echo $model->visit_status; ?> != '1' )  {
             document.getElementById('printCardBtn').disabled = true;
             $("#printCardBtn").addClass("disabledButton");
         }
@@ -65,7 +77,7 @@ if ($model->card != NULL && $model->visit_status == VisitStatus::ACTIVE) {
         window.open(url, '_blank');
         window.location = "index.php?r=visit/detail&id=<?php echo $_GET['id']; ?>";
     }
-    
+
     function regenerateCard() {
         //$("#generateCardModalBtn").click();
         //change modal url to pass visit id

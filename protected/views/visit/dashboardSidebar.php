@@ -24,7 +24,7 @@ $session = new ChttpSession;
 
             <li class=''><a href='<?php echo Yii::app()->createUrl('visitor/create'); ?>'><span class="addvisitor">Add Visitor Record</span></a></li>
             <li class=''><a href='<?php echo Yii::app()->createUrl('visit/view'); ?>'><span class="icons findrecord">Find Record</span></a></li>
-            <li class=''><a href='#'><span>Evacutation Report</span></a></li>
+            <li class=''><a href='#'><span>Evacuation Report</span></a></li>
         </ul>
     </div>
 </div>

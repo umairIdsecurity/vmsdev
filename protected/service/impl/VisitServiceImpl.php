@@ -38,7 +38,7 @@ class VisitServiceImpl implements VisitService {
             return false;
         }
         
-        updateCard($visit);
+        $this->updateCard($visit);
         
 
         $visitor = Visitor::model()->findByPK($visit->visitor);
@@ -50,7 +50,7 @@ class VisitServiceImpl implements VisitService {
         return true;
     }
     
-    function updateCard(){
+    function updateCard($visit){
         //if visit is closed update card status to returned and date returned to current date
         if($visit->card != '' && $visit->visit_status == VisitStatus::CLOSED){
             CardGenerated::model()->updateByPk($visit->card, array(

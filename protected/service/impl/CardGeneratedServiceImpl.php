@@ -22,6 +22,9 @@ class CardGeneratedServiceImpl implements CardGeneratedService {
         if (!($cardGenerated->save(false))) {
             return false;
         }
+        //after visit save card id to visit
+        //save image to photo table
+        //add photo id to card generated table
 
         Visit::model()->updateByPk($visit->id, array(
             'card' => $cardGenerated->id,
@@ -33,13 +36,18 @@ class CardGeneratedServiceImpl implements CardGeneratedService {
         $path = "uploads/card_generated/" . $unique_fileName;
         Yii::app()->params['photo_unique_filename'] = $unique_fileName;
 
-        $photo = new Photo;
-        $photo->filename = $unique_fileName;
-        $photo->unique_filename = $unique_fileName;
-        $photo->relative_path = $path;
-        $photo->save();
+        $connection = Yii::app()->db;
+        $command = $connection->createCommand('INSERT INTO `photo` '
+                . '(`filename`, `unique_filename`, `relative_path`) VALUES ("' . $unique_fileName . '","' . $unique_fileName . '","' . $path . '" )');
+        $command->query();
 
 
+        $photoUpload = Photo::model()->findByAttributes(array('unique_filename' => $unique_fileName));
+        if (count($photoUpload) > 0) {
+            CardGenerated::model()->updateByPk($cardGenerated->id, array(
+                'card_image_generated_filename' => $photoUpload->id,
+            ));
+        }
         return true;
     }
 
@@ -69,11 +77,21 @@ class CardGeneratedServiceImpl implements CardGeneratedService {
         $unique_fileName = 'card' . $usernameHash . '-' . time() . ".png";
         $path = "uploads/card_generated/" . $unique_fileName;
         Yii::app()->params['photo_unique_filename'] = $unique_fileName;
-        $photo = new Photo;
-        $photo->filename = $unique_fileName;
-        $photo->unique_filename = $unique_fileName;
-        $photo->relative_path = $path;
-        $photo->save();
+
+        $connection = Yii::app()->db;
+        $command = $connection->createCommand('INSERT INTO `photo` '
+                . '(`filename`, `unique_filename`, `relative_path`) VALUES ("' . $unique_fileName . '","' . $unique_fileName . '","' . $path . '" )');
+        $command->query();
+
+
+        $photoUpload = Photo::model()->findByAttributes(array('unique_filename' => $unique_fileName));
+
+        CardGenerated::model()->updateByPk($cardGenerated->id, array(
+            'card_image_generated_filename' => $photoUpload->id,
+        ));
+
+
+
 
         return true;
     }
@@ -83,7 +101,7 @@ class CardGeneratedServiceImpl implements CardGeneratedService {
         $photo = Photo::model()->findByAttributes(array('unique_filename' => Yii::app()->params['photo_unique_filename']));
 
         CardGenerated::model()->updateByPk($visit->card, array(
-            'card_image_generated_filename' => $photo->id,
+            'card_image_generated_filename' => Yii::app()->db->lastInsertID,
         ));
     }
 

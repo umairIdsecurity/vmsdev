@@ -1,12 +1,13 @@
 <?php
-
+error_reporting(E_ALL);
 $session = new CHttpSession;
 // clean up the input
+$model = Visit::model()->findByPk($_GET['id']);
 $card_type = CardType::$CARD_TYPE_LIST[$model->card_type];
 $company_name = "Not Available";
 $full_name = $visitorModel->first_name . ' ' . $visitorModel->last_name;
 if ($visitorModel->company != '') {
-    echo Company::model()->findByPk($visitorModel->company)->name;
+    $company_name = Company::model()->findByPk($visitorModel->company)->name;
 }
 
 $dateExpiry = date('d/m/Y');
@@ -75,7 +76,7 @@ imagettftext($image, $font_size, 0, $x, 250, $font_color, $font_file, $text);
 
 header('Content-Disposition: Attachment;filename=image.png');
 header('Content-type: ' . $mime_type);
-ImagePNG($image);
+imagepng($image);
 
 $usernameHash = hash('adler32', $visitorModel->email);
 $unique_fileName = 'card'.$usernameHash . '-' . time() . ".png";

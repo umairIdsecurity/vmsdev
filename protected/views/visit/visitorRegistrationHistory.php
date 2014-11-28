@@ -14,7 +14,7 @@
 
     $attribute = 'date_check_in';
     for ($i = 0; $i <= 1; $i++) {
-        echo ($i == 0 ? Yii::t('main', '<span class="searchRangeTitle">From:</span>') : Yii::t('main', '<span class="searchRangeTitle">To:</span>'));
+        echo ($i == 0 ? Yii::t('main', '<span class="searchRangeTitle">Date From:</span>') : Yii::t('main', '<span class="searchRangeTitle">Date To:</span>'));
         $this->widget('zii.widgets.jui.CJuiDatePicker', array(
             'id' => CHtml::activeId($model, $attribute . '_' . $i),
             'model' => $model,

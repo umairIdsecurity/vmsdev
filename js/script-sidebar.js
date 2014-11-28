@@ -68,16 +68,16 @@
 
         }
         
-        if (pathArray[4] == 'evacuationReport' || pathArray[4] == 'visitorRegistrationHistory') {
+        if ((pathArray[4] == 'evacuationReport' || pathArray[4] == 'visitorRegistrationHistory') && (currentRole == admin || currentRole == agentadmin || currentRole == superadmin)) {
 
             if (currentRole == admin) {
-                li[10].click();
+                li[9].click();
             }
             else if (currentRole == agentadmin) {
-                li[8].click();
+                li[7].click();
             }
             else {
-                li[19].click();
+                li[18].click();
             }
         }
         

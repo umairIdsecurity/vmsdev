@@ -1,6 +1,6 @@
 <?php
 $session = new CHttpSession;
-
+///print_r($model->company->name);
 ?>
 <div id="cardDiv" 
      style="background: url('../images/cardprint-new.png') no-repeat center top;">

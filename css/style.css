@@ -973,8 +973,9 @@ dt.tabs dt{
     width:1680px;
     padding-right:30px !important;
 }
-.statusRow{
+.statusRow,#view-visitor-records_c0{
     width:100px;
+}
 .searchDateRange{
     text-align:center
 }
@@ -985,4 +986,7 @@ dt.tabs dt{
     font-weight: bold;
     padding: 10px;
 }
+
+#export-button{
+    margin-top:-10px;
 }

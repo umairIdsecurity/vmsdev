@@ -163,6 +163,7 @@ class Visit extends CActiveRecord {
             'tenant0' => array(self::BELONGS_TO, 'User', 'tenant'),
             'workstation0' => array(self::BELONGS_TO, 'Workstation', 'workstation'),
             'visitStatus' => array(self::BELONGS_TO, 'VisitStatus', 'visit_status'),
+           
         );
     }
 
@@ -254,7 +255,7 @@ class Visit extends CActiveRecord {
             $criteria->mergeWith($merge);
         }
 
-        if (Yii::app()->user->role == Roles::ROLE_STAFFMEMBER && Yii::app()->controller->action->id != 'view') {
+        if (Yii::app()->user->role == Roles::ROLE_STAFFMEMBER && Yii::app()->controller->action->id != 'view' && Yii::app()->controller->action->id !='evacuationReport') {
             $criteria->addCondition('host = ' . Yii::app()->user->id . ' and visit_status = ' . VisitStatus::PREREGISTERED);
         }
         $session = new CHttpSession;
@@ -286,7 +287,7 @@ class Visit extends CActiveRecord {
             'sort' => array(
                 'defaultOrder' => 't.ID DESC',
             ),
-            'pagination' => false,
+           // 'pagination' => false,
         ));
     }
 

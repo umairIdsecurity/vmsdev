@@ -26,13 +26,13 @@ class VisitController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'detail', 'admin', 'view'),
+                'actions' => array('create', 'update', 'detail', 'admin', 'view','exportFile','evacuationReport'),
                 'users' => array('@'),
             ),
             array('allow',
-                'actions' => array('evacuationReport', 'PrintEvacuationReport',
+                'actions' => array( 'PrintEvacuationReport',
                     'visitorRegistrationHistory',
-                    'exportFile',
+                    
                     'exportFileHistory',
                     'exportFileVisitorRecords',
                     'exportVisitorRecords',
@@ -283,7 +283,9 @@ class VisitController extends Controller {
         $row = array();
         foreach ($headers as $header) {
             $row[] = Visit::model()->getAttributeLabel($header);
+            
         }
+        $row[] = 'Accounted for';
         fputcsv($fp, $row);
 
         /*
@@ -329,7 +331,7 @@ class VisitController extends Controller {
     }
 
     public function actionExportFile() {
-        Yii::app()->request->sendFile('evacuationreport.csv', Yii::app()->user->getState('export'));
+        Yii::app()->request->sendFile('Evacuationreport'.time().'.csv', Yii::app()->user->getState('export'));
         Yii::app()->user->clearState('export');
     }
 
@@ -399,7 +401,7 @@ class VisitController extends Controller {
     }
 
     public function actionExportFileHistory() {
-        Yii::app()->request->sendFile('viewregistrationHistory.csv', Yii::app()->user->getState('export'));
+        Yii::app()->request->sendFile('ViewRegistrationHistory'.time().'.csv', Yii::app()->user->getState('export'));
         Yii::app()->user->clearState('export');
     }
     
@@ -484,7 +486,7 @@ class VisitController extends Controller {
     }
 
     public function actionExportFileVisitorRecords() {
-        Yii::app()->request->sendFile('visitorrecords.csv', Yii::app()->user->getState('export'));
+        Yii::app()->request->sendFile('VisitorRecords'.time().'.csv', Yii::app()->user->getState('export'));
         Yii::app()->user->clearState('export');
     }
     

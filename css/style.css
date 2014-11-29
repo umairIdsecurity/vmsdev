@@ -969,7 +969,7 @@ dt.tabs dt{
     margin-bottom:10px;
 }
 
-#admindashboardDiv > .grid-view{
+.admindashboardDiv > .grid-view{
     width:1680px;
     padding-right:30px !important;
 }
@@ -989,4 +989,11 @@ dt.tabs dt{
 
 #export-button{
     margin-top:-10px;
+}
+
+.admindashboardDiv{
+    border: 1px solid #E7E7E7;
+    border-radius: 5px;
+    overflow-x: scroll;
+    padding: 10px;
 }

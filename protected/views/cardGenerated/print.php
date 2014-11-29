@@ -74,7 +74,7 @@ $x = imagesx($image) - $textWidth - 10;
 imagettftext($image, $font_size, 0, $x, 250, $font_color, $font_file, $text);
 
 
-header('Content-Disposition: Attachment;filename=image.png');
+//header('Content-Disposition: Attachment;filename=image.png');
 header('Content-type: ' . $mime_type);
 imagepng($image);
 

@@ -201,7 +201,6 @@ class DashboardController extends Controller {
         if (isset($_GET['Visit'])) {
             $model->attributes = $_GET['Visit'];
         }
-
        
         $this->render('admindashboard', array(
             'model' => $model,

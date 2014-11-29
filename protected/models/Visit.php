@@ -67,7 +67,7 @@ class Visit extends CActiveRecord {
             array('patient, host,card,tenant,tenant_agent', 'default', 'setOnEmpty' => true, 'value' => null),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id,firstname,lastname,contactnumber,contactemail,visit_status,visitor ,card,workstation, visitor_type, reason, visitor_status, host, patient, created_by, date_in, time_in, date_out, time_out, date_check_in, time_check_in, date_check_out, time_check_out, tenant, tenant_agent, is_deleted', 'safe', 'on' => 'search'),
+            array('id,company,firstname,lastname,contactnumber,contactemail,visit_status,visitor ,card,workstation, visitor_type, reason, visitor_status, host, patient, created_by, date_in, time_in, date_out, time_out, date_check_in, time_check_in, date_check_out, time_check_out, tenant, tenant_agent, is_deleted', 'safe', 'on' => 'search'),
         );
     }
 
@@ -162,6 +162,12 @@ class Visit extends CActiveRecord {
             'createdBy' => array(self::BELONGS_TO, 'User', 'created_by'),
             'tenant0' => array(self::BELONGS_TO, 'User', 'tenant'),
             'workstation0' => array(self::BELONGS_TO, 'Workstation', 'workstation'),
+            
+            'company0' => array(self::HAS_MANY,
+                'Company',
+                array('company' => 'id'),
+                'through' => 'visitor0'
+            ),
         );
     }
 
@@ -218,6 +224,8 @@ class Visit extends CActiveRecord {
         $criteria->compare('visitor0.last_name', $this->lastname, true);
         $criteria->compare('visitor0.contact_number', $this->contactnumber, true);
         $criteria->compare('visitor0.email', $this->contactemail, true);
+//        $criteria->with = 'company0';
+//        $criteria->compare('company0.name', $this->company, true);
 
         $criteria->compare('id', $this->id, true);
         //  $criteria->compare('visitor', $this->visitor, true);
@@ -276,12 +284,21 @@ class Visit extends CActiveRecord {
                 break;
         }
 
+        if (Yii::app()->controller->action->id == 'admindashboard') {
+            Yii::app()->user->setState('pageSize', (int) '5');
+        } else {
+            Yii::app()->user->setState('pageSize', (int) '');
+        }
+
         return new CActiveDataProvider($this, array(
+            'pagination' => array(
+                'pageSize' => Yii::app()->user->getState('pageSize', Yii::app()->params['defaultPageSize']),
+            ),
             'criteria' => $criteria,
             'sort' => array(
                 'defaultOrder' => 't.ID DESC',
             ),
-            'pagination'=>false,
+                //'pagination'=>false,
         ));
     }
 

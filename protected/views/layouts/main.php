@@ -93,6 +93,10 @@ $user_role = $session['role'];
                                     ?>
                                     <a href="<?php echo Yii::app()->createUrl("/dashboard/viewmyvisitors"); ?>">Dashboard</a>
                                     <?php
+                                } elseif($session['role'] == Roles::ROLE_ADMIN || $session['role']==Roles::ROLE_AGENT_ADMIN) {
+                                    ?>
+                                    <a href="<?php echo Yii::app()->createUrl("/dashboard/admindashboard"); ?>">Dashboard</a>
+                                    <?php
                                 } else {
                                     ?>
                                     <a href="<?php echo Yii::app()->createUrl("/dashboard"); ?>">Dashboard</a>

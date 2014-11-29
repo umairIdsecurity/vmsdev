@@ -1,6 +1,8 @@
 <?php
 $session = new CHttpSession;
-
+foreach($model->company0 as $comp){
+   // echo $comp->name;
+}
 ?>
 <div id="cardDiv" 
      style="background: url('../images/cardprint-new.png') no-repeat center top;">

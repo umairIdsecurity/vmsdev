@@ -162,14 +162,12 @@ class Visit extends CActiveRecord {
             'createdBy' => array(self::BELONGS_TO, 'User', 'created_by'),
             'tenant0' => array(self::BELONGS_TO, 'User', 'tenant'),
             'workstation0' => array(self::BELONGS_TO, 'Workstation', 'workstation'),
-            
             'company0' => array(self::HAS_MANY,
                 'Company',
                 array('company' => 'id'),
                 'through' => 'visitor0'
             ),
             'visitStatus' => array(self::BELONGS_TO, 'VisitStatus', 'visit_status'),
-           
         );
     }
 
@@ -247,10 +245,10 @@ class Visit extends CActiveRecord {
         $criteria->compare('time_in', $this->time_in, true);
         $criteria->compare('date_out', $this->date_out, true);
         $criteria->compare('time_out', $this->time_out, true);
-        
+
         //$criteria->compare('date_check_in', $this->date_check_in, true);
         $criteria->mergeWith($this->dateRangeSearchCriteria('date_check_in', $this->date_check_in));
-        
+
         $criteria->compare('time_check_in', $this->time_check_in, true);
         $criteria->compare('date_check_out', $this->date_check_out, true);
         $criteria->compare('time_check_out', $this->time_check_out, true);
@@ -263,7 +261,7 @@ class Visit extends CActiveRecord {
             $criteria->mergeWith($merge);
         }
 
-        if (Yii::app()->user->role == Roles::ROLE_STAFFMEMBER && Yii::app()->controller->action->id != 'view' && Yii::app()->controller->action->id !='evacuationReport') {
+        if (Yii::app()->user->role == Roles::ROLE_STAFFMEMBER && Yii::app()->controller->action->id != 'view' && Yii::app()->controller->action->id != 'evacuationReport') {
             $criteria->addCondition('host = ' . Yii::app()->user->id . ' and visit_status = ' . VisitStatus::PREREGISTERED);
         }
         $session = new CHttpSession;
@@ -344,6 +342,34 @@ class Visit extends CActiveRecord {
         return $rawData;
     }
 
-  
+    public function updateVisitsToClose() {
+        $command = Yii::app()->db->createCommand("UPDATE visit
+                    LEFT JOIN card_generated ON card_generated.id = visit.`card` 
+                    SET visit_status = '" . VisitStatus::CLOSED . "'
+                    WHERE '" . date('Y-m-d') . "' > date_out AND date_out != '" . date('Y-m-d') . "' AND visit_status = '" . VisitStatus::ACTIVE . "'
+                    AND card_status ='" . CardStatus::ACTIVE . "' and card_type= '".CardType::SAME_DAY_VISITOR."'");
+
+        try {
+            $command->query();
+            echo "Update to close visit successful";
+        } catch (Exception $ex) {
+            echo 'Query failed', $ex->getMessage();
+        }
+    }
+
+    public function updateVisitsToExpired() {
+        $command = Yii::app()->db->createCommand("UPDATE visit
+                    LEFT JOIN card_generated ON card_generated.id = visit.`card` 
+                    SET visit_status = '" . VisitStatus::EXPIRED . "'
+                    WHERE '" . date('Y-m-d') . "' > date_expiration AND visit_status = '" . VisitStatus::ACTIVE . "'
+                    AND card_status ='" . CardStatus::ACTIVE . "' and card_type='".CardType::MULTI_DAY_VISITOR."'");
+
+        try {
+            $command->query();
+            echo "Update To Expired Visit Successful";
+        } catch (Exception $ex) {
+            echo 'Query failed', $ex->getMessage();
+        }
+    }
 
 }

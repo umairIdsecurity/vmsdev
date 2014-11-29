@@ -3,7 +3,6 @@
     /* @var $this VisitController */
     /* @var $model Visit */
     $session = new CHttpSession();
-
     switch ($session['role']) {
         case Roles::ROLE_ADMIN:
             $Criteria = new CDbCriteria();

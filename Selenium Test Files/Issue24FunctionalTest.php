@@ -10,7 +10,7 @@ require_once 'BaseFunctionalTest.php';
 
 /**
  * Description of Issue24FunctionalTest
- *
+ *manage reasons
  * @author Jeremiah
  */
 class Issue24FunctionalTest extends BaseFunctionalTest {
@@ -41,7 +41,7 @@ class Issue24FunctionalTest extends BaseFunctionalTest {
       3.	Type 12345 in password field
       4.	Click Login
       5.	Click Administration
-      6.      Click manage visit reasons then click add reason
+      6.        Click manage visit reasons then click add. 
       7.	Type test reason in reason field.
       8.	Click add button and wait for page to load.
       9.	Type test reason  in reason filter
@@ -138,8 +138,6 @@ class Issue24FunctionalTest extends BaseFunctionalTest {
       9.	assert manage visit reasons not present
       10.	go to http://cvms.identitysecurity.info/index.php?r=visitReason/admin
       11.	assert text You are not authorized to perform this action.
-      12.	go to http://cvms.identitysecurity.info/index.php?r=visitReason/create
-      13.	assert text You are not authorized to perform this action.
       14.	go to http://cvms.identitysecurity.info/index.php?r=visitReason/update
       15.	assert text You are not authorized to perform this action.
       16.	Click logout
@@ -148,8 +146,6 @@ class Issue24FunctionalTest extends BaseFunctionalTest {
       19.	assert manage visit reasons not present
       20.	go to http://cvms.identitysecurity.info/index.php?r=visitReason/admin
       21.	assert text You are not authorized to perform this action.
-      22.	go to http://cvms.identitysecurity.info/index.php?r=visitReason/create
-      23.	assert text You are not authorized to perform this action.
       24.	go to http://cvms.identitysecurity.info/index.php?r=visitReason/update
       25.	assert text You are not authorized to perform this action.
      */
@@ -183,7 +179,7 @@ class Issue24FunctionalTest extends BaseFunctionalTest {
       6.	Type “ this is a reason ”. Then click add.
       7.	Wait for page to load, then type this is a reason in reason filter.
       8.	Assert text “This is a reason”.
-      9.	Click add reason.
+      9.	Click add button.
       10.	Wait for page to load then type “THIS IS A REASON” in reason field.
       11.	Click Add button
       12.	Assert text reason has already been taken.

@@ -10,8 +10,8 @@
 require_once 'BaseFunctionalTest.php';
 date_default_timezone_set('Asia/Manila');
 /**
- * Description of Issue26FunctionalTest
- *
+ * Description of Issue27FunctionalTest
+ *Administration Visits
  * @author Jeremiah
  */
 class Issue27FunctionalTest extends BaseFunctionalTest {
@@ -26,7 +26,6 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->Scenario1();
         $this->Scenario2();
         $this->Scenario3();
-        //$this->Scenario4();
         $this->Scenario5();
         $this->Scenario6();
         $this->Scenario7();
@@ -34,7 +33,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
 
     /* Scenario 1 – Login as super admin then perform update a visitor functionality for patient visitor type
       Expected Behavior
-      -	Assert text testvisitor1@test.com in email field.
+      -	Assert text testvisitorB@test.com in email field.
       -	Assert text of all fields to verify correct record.
 
 
@@ -44,13 +43,12 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
       3.	Type 12345 in password field
       4.	Click Login
       5.	Click Administration
-      6.	Go to http://cvms.identitysecurity.info/index.php?r=visit/detail&id=2
-      7.	Assert first name: test , last name: visitor1, email: testvisitor1@test.com, mobile: 123456, visitor type:patient visitor, reason: reason 1, Patient name: patient name 1.
-      8.	Type 09123456789 in mobile number and testvisitorB@test.com in email field for contact details. Click save button under contact details.
-      9.	select other in reason then Type reason 3 in reason field then click add button under reason
-      10.	Type patient name 3 in patient name field. Click update button under patient details.
-      11.	Go to http://cvms.identitysecurity.info/index.php?r=visit/detail&id=2. Assert t09123456789 in mobile number, testvisitorB@test.com in email field for contact details.
-      Assert reason 3 in reason. Patient name 3 in patient name field.
+      6.	Click manage visits type test visitor 1 in visitor search filter. select same day visitor in card type, patient visitor in visitor type and reason 1 in reason
+      7.	Click edit and wait for page to load. Assert first name: test , last name: visitor1, email: testvisitor1@test.com, mobile: 123456, visitor type:patient visitor, reason: reason 1, Patient name: patient name 1.
+      8.	Type 09123456789 in mobile number and testvisitorB@test.com in email field for contact details. Click update button under contact details.
+      9.	Assert contact details updated successfully. select other in reason then Type reason 3 in reason field then click add button under reason. assert reason added successfully.
+      10.	Click update button under reason and assert reason updated successfully. Type patient name 3 in patient name field. Click update button under patient details.
+      11.	Assert patient updated successfully.
 
      */
 

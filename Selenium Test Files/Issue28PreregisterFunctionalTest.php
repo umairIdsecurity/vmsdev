@@ -51,7 +51,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Add Host", $this->getText("css=span.addhost"));
         $this->assertEquals("Add Visitor Record", $this->getText("css=span.addvisitor"));
         $this->assertEquals("Find Record", $this->getText("link=Find Record"));
-        $this->assertEquals("Evacutation Report", $this->getText("link=Evacutation Report"));
+        $this->assertEquals("Evacuation Report", $this->getText("link=Evacuation Report"));
         $this->clickAndWait("css=span.icons.pre-visits");
         $this->click("id=clicktabA");
         $this->assertEquals("Corporate Visitor", $this->getText("id=Visitor_visitor_type"));
@@ -73,7 +73,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_repeatpassword", "12345");
         $this->clickAndWait("id=submitFormUser");
         $this->assertEquals("Same Day Visitor", $this->getText("css=#cardDetailsTable > tbody > tr > td"));
-        $this->assertEquals("Test, staffmembervisitor", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[2]/td"));
+        $this->assertEquals("Test staffmembervisitor", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[2]/td"));
         $this->assertEquals("Test Company 1", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[3]/td"));
         $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("//ul[@id='tabs']/li[3]/a/p");
@@ -299,7 +299,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->click("id=submitFormVisitor");
         $this->waitForElementPresent("id=saveCurrentUserAsHost");
         $this->clickAndWait("id=saveCurrentUserAsHost");
-        $this->assertEquals("test, staffmembervisitor5", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[2]/td"));
+        $this->assertEquals("test staffmembervisitor5", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[2]/td"));
         $this->clickAndWait("link=Dashboard");
         $this->assertEquals("staffmembervisitor5", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
         $this->clickAndWait("link=Preregistered");
@@ -331,7 +331,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->waitForElementPresent("id=24");
         $this->click("id=24");
         $this->clickAndWait("id=clicktabB2");
-        $this->assertEquals("test, staffmembervisitor6", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[2]/td"));
+        $this->assertEquals("test staffmembervisitor6", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[2]/td"));
         $this->clickAndWait("//ul[@id='tabs']/li[3]/a/p");
         $this->type("id=LoginForm_username", "staffmemberhost@test.com");
         $this->type("id=LoginForm_password", "12345");
@@ -371,7 +371,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeatpassword", "12345");
         $this->clickAndWait("id=submitFormUser");
-        $this->assertEquals("Test, staffmembervisitor", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[2]/td"));
+        $this->assertEquals("Test staffmembervisitor", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[2]/td"));
         $this->clickAndWait("//ul[@id='tabs']/li[3]/a/p");
         $this->type("id=LoginForm_username", "staffmemberhost4@test.com");
         $this->type("id=LoginForm_password", "12345");
@@ -402,7 +402,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->click("id=clicktabB1");
         $this->waitForElementPresent("id=saveCurrentUserAsHost");
         $this->clickAndWait("id=saveCurrentUserAsHost");
-        $this->assertEquals("Test, Visitor1", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[2]/td"));
+        $this->assertEquals("Test Visitor1", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[2]/td"));
         $this->clickAndWait("link=Dashboard");
         $this->assertEquals("Visitor1", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
         $this->assertEquals("testVisitor1@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[8]"));
@@ -432,7 +432,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->waitForElementPresent("id=24");
         $this->click("id=24");
         $this->clickAndWait("id=clicktabB2");
-        $this->assertEquals("Test, staffmembervisitor", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[2]/td"));
+        $this->assertEquals("Test staffmembervisitor", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[2]/td"));
         $this->clickAndWait("//ul[@id='tabs']/li[3]/a/p");
         $this->type("id=LoginForm_username", "staffmemberhost@test.com");
         $this->type("id=LoginForm_password", "12345");

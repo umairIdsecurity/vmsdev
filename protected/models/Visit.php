@@ -163,6 +163,11 @@ class Visit extends CActiveRecord {
             'tenant0' => array(self::BELONGS_TO, 'User', 'tenant'),
             'workstation0' => array(self::BELONGS_TO, 'Workstation', 'workstation'),
             
+//            'company0' => array(self::HAS_MANY,
+//                'Company',
+//                array('company' => 'id'),
+//                'through' => 'visitor0'
+//            ),
             'company0' => array(self::HAS_MANY,
                 'Company',
                 array('company' => 'id'),

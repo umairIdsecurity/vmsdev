@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS `card_status` (
 INSERT INTO `card_status` (`id`, `name`, `created_by`) VALUES
 (1, 'Cancelled', NULL),
 (2, 'Returned', NULL),
-(2, 'Active', NULL);
+(3, 'Active', NULL);
 
 
 --
@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS `card_type` (
   `max_time_validity` varchar(50) DEFAULT NULL,
   `max_entry_count_validity` int(10) DEFAULT NULL,
   `card_icon_type` text,
-  `card_background_image_path` bigint(20) DEFAULT NULL,
+  `card_background_image_path` text,
   `created_by` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `created_by` (`created_by`)
@@ -549,7 +549,6 @@ ALTER TABLE `card_generated`
 -- Constraints for table `card_type`
 --
 ALTER TABLE `card_type`
-  ADD CONSTRAINT `card_type_ibfk_2` FOREIGN KEY (`card_background_image_path`) REFERENCES `photo` (`id`),
   ADD CONSTRAINT `card_type_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`);
 
 --

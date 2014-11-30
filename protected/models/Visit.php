@@ -168,11 +168,7 @@ class Visit extends CActiveRecord {
 //                array('company' => 'id'),
 //                'through' => 'visitor0'
 //            ),
-            'company0' => array(self::HAS_MANY,
-                'Company',
-                array('company' => 'id'),
-                'through' => 'visitor0'
-            ),
+           
             'visitStatus' => array(self::BELONGS_TO, 'VisitStatus', 'visit_status'),
            
         );

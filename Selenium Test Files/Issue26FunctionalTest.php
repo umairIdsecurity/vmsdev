@@ -24,9 +24,9 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
     function testAll() {
         $this->resetDbWithData();
         $this->Scenario1();
-//        $this->Scenario2();
-//        $this->Scenario3();
-//        $this->Scenario5();
+        $this->Scenario2();
+        $this->Scenario3();
+        $this->Scenario5();
     }
 
     /* Scenario 1 – Login as super admin then perform update a visitor functionality for patient visitor type

@@ -57,13 +57,10 @@ $user_role = $session['role'];
             }
             ?>>
 
-                <div id="logo" <?php
-                if ($this->id == "dashboard") {
-                    echo "style='padding: 10px 106px !important;'";
-                }
-                ?>><?php echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl . '/images/ids-logo.png')); ?></div>
-                <article class="header_midbox">
 
+                <article class="header_midbox">
+                    <div id="logo" ><?php echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl . '/images/ids-logo.png')); ?>
+                    </div>
                     <aside class="top_nav">
                         <ul id="tabs">
                             <li>
@@ -93,7 +90,7 @@ $user_role = $session['role'];
                                     ?>
                                     <a href="<?php echo Yii::app()->createUrl("/dashboard/viewmyvisitors"); ?>">Dashboard</a>
                                     <?php
-                                } elseif($session['role'] == Roles::ROLE_ADMIN || $session['role']==Roles::ROLE_AGENT_ADMIN) {
+                                } elseif ($session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_AGENT_ADMIN) {
                                     ?>
                                     <a href="<?php echo Yii::app()->createUrl("/dashboard/admindashboard"); ?>">Dashboard</a>
                                     <?php

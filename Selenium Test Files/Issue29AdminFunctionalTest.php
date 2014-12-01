@@ -22,14 +22,16 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
     }
 
     function testAll() {
-       // $this->resetDbWithData();
-       // $this->ScenarioAdmin();
+        $this->resetDbWithData();
+        $this->ScenarioAdmin();
         $this->resetDbWithData();
         $this->ScenarioAgentAdmin();
         $this->resetDbWithData();
         $this->ScenarioAgentOperator();
         $this->resetDbWithData();
         $this->ScenarioOperator();
+        $this->resetDbWithData();
+        $this->ScenarioStaffMember();
     }
 
     function ScenarioAdmin() {
@@ -48,6 +50,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->Scenario12("admin");
         $this->Scenario13("admin");
         $this->Scenario14("admin");
+        $this->ScenarioEvacuationReport("admin");
     }
 
     function ScenarioAgentAdmin() {
@@ -66,6 +69,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->Scenario12("agentadmin");
         $this->Scenario13("agentadmin");
         $this->Scenario14("agentadmin");
+        $this->ScenarioEvacuationReport("agentadmin");
     }
 
     function ScenarioAgentOperator() {
@@ -85,6 +89,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->Scenario12($username);
         $this->Scenario13($username);
         $this->Scenario14($username);
+        $this->ScenarioEvacuationReport($username);
     }
 
     function ScenarioOperator() {
@@ -104,6 +109,13 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->Scenario12($username);
         $this->Scenario13($username);
         $this->Scenario14($username);
+        $this->ScenarioEvacuationReport($username);
+    }
+
+    function ScenarioStaffMember() {
+        $username = "staffmember";
+        $this->Scenario14($username);
+        $this->ScenarioEvacuationReport($username);
     }
 
     /* Scenario 1 – Login as admin add patient visitor add patient with exisitng reason
@@ -221,10 +233,10 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Dashboard");
         if ($username == 'admin' || $username == 'agentadmin') {
             $this->assertEquals($username . "visitor2", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[5]"));
-            $this->assertEquals($username."visitor2@test.com", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[8]"));
+            $this->assertEquals($username . "visitor2@test.com", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[8]"));
         } else {
             $this->assertEquals($username . "visitor2", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
-            $this->assertEquals($username."visitor2@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[8]"));
+            $this->assertEquals($username . "visitor2@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[8]"));
         }
     }
 
@@ -261,10 +273,10 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Dashboard");
         if ($username == 'admin' || $username == 'agentadmin') {
             $this->assertEquals($username . "visitor3", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[5]"));
-            $this->assertEquals($username. "visitor3@test.com", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[8]"));
+            $this->assertEquals($username . "visitor3@test.com", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[8]"));
         } else {
             $this->assertEquals($username . "visitor3", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
-            $this->assertEquals($username. "visitor3@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[8]"));
+            $this->assertEquals($username . "visitor3@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[8]"));
         }
     }
 
@@ -757,7 +769,11 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->waitForElementPresent("id=search-host");
         $this->type("id=search-host", "new" . $username . "host");
         $this->click("id=dummy-host-findBtn");
-        $this->waitForElementPresent("id=26");
+        if ($username == 'staffmember') {
+            $this->waitForElementPresent("id=24");
+        } else {
+            $this->waitForElementPresent("id=26");
+        }
         $this->assertEquals("new" . $username . "host", $this->getText("//div[@id='findHost-grid']/table/tbody/tr/td[2]"));
         $this->assertEquals("new" . $username . "host@test.com", $this->getText("//div[@id='findHost-grid']/table/tbody/tr/td[3]"));
         $this->clickAndWait("link=Dashboard");
@@ -795,11 +811,47 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Email Address has already been taken.", $this->getText("xpath=(//div[@id='User_email_em_'])[2]"));
     }
 
-    /* Scenario15 */
+    function ScenarioEvacuationReport($username) {
+        $this->login($username . "@test.com", '12345');
+        if ($username == 'agentoperator' || $username == 'operator') {
+            $this->click("id=submitBtn");
+            $this->clickAndWait("id=submit");
+        }
+        $this->clickAndWait("link=Visitor Records");
+        if ($username == 'staffmember') {
+            $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
+        } else {
+            $this->assertEquals("Displaying 1-10 of 13 results.", $this->getText("css=div.summary"));
+        }
 
-    function Scenario16() {
-        $username = 'staffmember@test.com';
-        $this->login($username, '12345');
+        if ($username != 'staffmember') {
+            $this->select("name=Visit[visit_status]", "label=Active");
+            for ($second = 0;; $second++) {
+                if ($second >= 10)
+                    $this->fail("timeout");
+                try {
+                    if ("Displaying 1-6 of 6 results." == $this->getText("css=div.summary"))
+                        break;
+                } catch (Exception $e) {
+                    
+                }
+                sleep(1);
+            }
+            $this->assertEquals("Displaying 1-6 of 6 results.", $this->getText("css=div.summary"));
+            $this->select("name=Visit[visit_status]", "label=Preregistered");
+            for ($second = 0;; $second++) {
+                if ($second >= 10)
+                    $this->fail("timeout");
+                try {
+                    if ("Displaying 1-7 of 7 results." == $this->getText("css=div.summary"))
+                        break;
+                } catch (Exception $e) {
+                    
+                }
+                sleep(1);
+            }
+            $this->assertEquals("Displaying 1-7 of 7 results.", $this->getText("css=div.summary"));
+        }
     }
 
 }

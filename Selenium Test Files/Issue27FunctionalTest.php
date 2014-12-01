@@ -103,7 +103,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
 
     /* Scenario 2 – Login as super admin then perform update visitor functionality for corporate visitor type
       Expected Behavior
-      -	Assert text testvisitor2@test.com in email field.
+      -	Assert text testvisitor4@test.com in email field.
       -	Assert text of all fields to verify correct record.
 
 
@@ -400,7 +400,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         sleep(1);
         $this->clickAndWait("link=Edit");
         $this->click("//li[@id='preregisterLi']/a/span");
-        $currentDate = date('Y-m-d');
+        $currentDate = date('Y-m-j');
         $this->assertEquals($currentDate, $this->getEval("window.document.getElementById(\"Visit_date_in\").value"));
         $this->assertEquals($currentDate, $this->getEval("window.document.getElementById(\"Visit_date_out\").value"));
         $currentHour = date('H');

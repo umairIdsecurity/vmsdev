@@ -79,8 +79,8 @@ header('Content-type: ' . $mime_type);
 imagepng($image);
 
 $usernameHash = hash('adler32', $visitorModel->email);
-$unique_fileName = 'card'.$usernameHash . '-' . time() . ".png";
-$path = "uploads/card_generated/" .$unique_fileName;
+$unique_fileName = 'card' . $usernameHash . '-' . time() . ".png";
+$path = "uploads/card_generated/" . $unique_fileName;
 imagepng($image, $path);
 ImageDestroy($image);
 

@@ -40,7 +40,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' => 'firstname',
             'value' => 'Visitor::model()->findByPk($data->visitor)->first_name',
-            'header' => 'First Name'
+            'header' => 'First Name',
         ),
         array(
             'name' => 'lastname',

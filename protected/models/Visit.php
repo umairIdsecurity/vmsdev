@@ -88,6 +88,8 @@ class Visit extends CActiveRecord {
         if ($this->scenario == 'search') {
             return $this->_firstname;
         }
+
+     
     }
 
     public function setFirstname($value) {
@@ -101,6 +103,7 @@ class Visit extends CActiveRecord {
             return $this->_lastname;
         }
         // return $this->_lastname;
+       
     }
 
     public function setLastname($value) {
@@ -125,6 +128,10 @@ class Visit extends CActiveRecord {
         if ($this->scenario == 'search') {
             return $this->_contactnumber;
         }
+        
+//        if (isset($this->_contactnumber) && is_object($this->contactnumber)) {
+//            return $this->user->lastname;
+//        }
     }
 
     public function setContactNumber($value) {
@@ -162,13 +169,8 @@ class Visit extends CActiveRecord {
             'createdBy' => array(self::BELONGS_TO, 'User', 'created_by'),
             'tenant0' => array(self::BELONGS_TO, 'User', 'tenant'),
             'workstation0' => array(self::BELONGS_TO, 'Workstation', 'workstation'),
+            //'company0' => array(self::BELONGS_TO, 'Company', 'visitor0.id'),
             
-//            'company0' => array(self::HAS_MANY,
-//                'Company',
-//                array('company' => 'id'),
-//                'through' => 'visitor0'
-//            ),
-           
             'visitStatus' => array(self::BELONGS_TO, 'VisitStatus', 'visit_status'),
         );
     }
@@ -303,6 +305,25 @@ class Visit extends CActiveRecord {
             'criteria' => $criteria,
             'sort' => array(
                 'defaultOrder' => 't.ID DESC',
+                'attributes' => array(
+                    'firstname' => array(
+                        'asc' => 'visitor0.first_name',
+                        'desc' => 'visitor0.first_name DESC',
+                    ),
+                    'lastname' => array(
+                        'asc' => 'visitor0.last_name',
+                        'desc' => 'visitor0.last_name DESC',
+                    ),
+                    'contactnumber' => array(
+                        'asc' => 'visitor0.contact_number',
+                        'desc' => 'visitor0.contact_number DESC',
+                    ),
+                    'contactemail' => array(
+                        'asc' => 'visitor0.email',
+                        'desc' => 'visitor0.email DESC',
+                    ),
+                    '*',
+                ),
             ),
                 //'pagination'=>false,
         ));
@@ -349,7 +370,7 @@ class Visit extends CActiveRecord {
                     LEFT JOIN card_generated ON card_generated.id = visit.`card` 
                     SET visit_status = '" . VisitStatus::CLOSED . "'
                     WHERE '" . date('Y-m-d') . "' > date_out AND date_out != '" . date('Y-m-d') . "' AND visit_status = '" . VisitStatus::ACTIVE . "'
-                    AND card_status ='" . CardStatus::ACTIVE . "' and card_type= '".CardType::SAME_DAY_VISITOR."'");
+                    AND card_status ='" . CardStatus::ACTIVE . "' and card_type= '" . CardType::SAME_DAY_VISITOR . "'");
 
         try {
             $command->query();
@@ -364,7 +385,7 @@ class Visit extends CActiveRecord {
                     LEFT JOIN card_generated ON card_generated.id = visit.`card` 
                     SET visit_status = '" . VisitStatus::EXPIRED . "'
                     WHERE '" . date('Y-m-d') . "' > date_expiration AND visit_status = '" . VisitStatus::ACTIVE . "'
-                    AND card_status ='" . CardStatus::ACTIVE . "' and card_type='".CardType::MULTI_DAY_VISITOR."'");
+                    AND card_status ='" . CardStatus::ACTIVE . "' and card_type='" . CardType::MULTI_DAY_VISITOR . "'");
 
         try {
             $command->query();

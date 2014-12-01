@@ -75,7 +75,8 @@ div.form label{
 #logo
 {
     float:left;
-    padding:10px 100px;
+   // padding:10px 100px;
+    margin-left: 5px;
 }
 .top_nav
 {

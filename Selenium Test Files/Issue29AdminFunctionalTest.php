@@ -30,6 +30,8 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->ScenarioAgentOperator();
         $this->resetDbWithData();
         $this->ScenarioOperator();
+        $this->resetDbWithData();
+        $this->ScenarioStaffMember();
     }
 
     function ScenarioAdmin() {
@@ -48,6 +50,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->Scenario12("admin");
         $this->Scenario13("admin");
         $this->Scenario14("admin");
+        $this->ScenarioEvacuationReport("admin");
     }
 
     function ScenarioAgentAdmin() {
@@ -66,6 +69,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->Scenario12("agentadmin");
         $this->Scenario13("agentadmin");
         $this->Scenario14("agentadmin");
+        $this->ScenarioEvacuationReport("agentadmin");
     }
 
     function ScenarioAgentOperator() {
@@ -85,8 +89,9 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->Scenario12($username);
         $this->Scenario13($username);
         $this->Scenario14($username);
+        $this->ScenarioEvacuationReport($username);
     }
-    
+
     function ScenarioOperator() {
         $username = "operator";
         $this->Scenario1($username);
@@ -104,6 +109,13 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->Scenario12($username);
         $this->Scenario13($username);
         $this->Scenario14($username);
+        $this->ScenarioEvacuationReport($username);
+    }
+
+    function ScenarioStaffMember() {
+        $username = "staffmember";
+        $this->Scenario14($username);
+        $this->ScenarioEvacuationReport($username);
     }
 
     /* Scenario 1 – Login as admin add patient visitor add patient with exisitng reason
@@ -138,8 +150,13 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("1", $this->getValue("id=Visit_reason"));
         $this->assertEquals($username . "patient1", $this->getValue("document.forms['update-patient-form'].elements['Patient[name]']"));
         $this->clickAndWait("link=Dashboard");
-        $this->assertEquals($username . "visitor1", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
-        $this->assertEquals($username . "visitor1@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[8]"));
+        if ($username == 'admin' || $username == 'agentadmin') {
+            $this->assertEquals($username . "visitor1", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[5]"));
+            $this->assertEquals($username . "visitor1@test.com", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[8]"));
+        } else {
+            $this->assertEquals($username . "visitor1", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
+            $this->assertEquals($username . "visitor1@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[8]"));
+        }
     }
 
     /* Scenario 2 – Login as admin, find patient visitor, add patient with exisitng reason
@@ -169,8 +186,13 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("1", $this->getValue("id=Visit_reason"));
         $this->assertEquals($username . "patient2", $this->getValue("document.forms['update-patient-form'].elements['Patient[name]']"));
         $this->clickAndWait("link=Dashboard");
-        $this->assertEquals("Visitor1", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
-        $this->assertEquals("testVisitor1@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[8]"));
+        if ($username == 'admin' || $username == 'agentadmin') {
+            $this->assertEquals("Visitor1", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[5]"));
+            $this->assertEquals("testVisitor1@test.com", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[8]"));
+        } else {
+            $this->assertEquals("Visitor1", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
+            $this->assertEquals("testVisitor1@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[8]"));
+        }
     }
 
     /* Scenario 3 –Login as admin add corporate visitor add host with exisitng reason
@@ -209,8 +231,13 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("2", $this->getValue("id=Visit_visitor_type"));
         $this->assertEquals("1", $this->getValue("id=Visit_reason"));
         $this->clickAndWait("link=Dashboard");
-        $this->assertEquals($username . "visitor2", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
-        $this->assertEquals($username . "visitor2@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[8]"));
+        if ($username == 'admin' || $username == 'agentadmin') {
+            $this->assertEquals($username . "visitor2", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[5]"));
+            $this->assertEquals($username . "visitor2@test.com", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[8]"));
+        } else {
+            $this->assertEquals($username . "visitor2", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
+            $this->assertEquals($username . "visitor2@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[8]"));
+        }
     }
 
     /* Scenario 4 –Login as admin add corporate visitor find host with exisitng reason
@@ -244,8 +271,13 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals($username . "visitor3@test.com", $this->getValue("id=Visitor_email"));
         $this->assertEquals("2", $this->getValue("id=Visit_visitor_type"));
         $this->clickAndWait("link=Dashboard");
-        $this->assertEquals($username . "visitor3", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
-        $this->assertEquals($username . "visitor3@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[8]"));
+        if ($username == 'admin' || $username == 'agentadmin') {
+            $this->assertEquals($username . "visitor3", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[5]"));
+            $this->assertEquals($username . "visitor3@test.com", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[8]"));
+        } else {
+            $this->assertEquals($username . "visitor3", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
+            $this->assertEquals($username . "visitor3@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[8]"));
+        }
     }
 
     /* Scenario 5 – Login as admin find visitor add host with exisitng reason
@@ -282,8 +314,13 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("2", $this->getValue("id=Visit_visitor_type"));
         $this->assertEquals("1", $this->getValue("id=Visit_reason"));
         $this->clickAndWait("link=Dashboard");
-        $this->assertEquals("Visitor3", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
-        $this->assertEquals("testVisitor3@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[8]"));
+        if ($username == 'admin' || $username == 'agentadmin') {
+            $this->assertEquals("Visitor3", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[5]"));
+            $this->assertEquals("testVisitor3@test.com", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[8]"));
+        } else {
+            $this->assertEquals("Visitor3", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
+            $this->assertEquals("testVisitor3@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[8]"));
+        }
     }
 
     /*
@@ -315,8 +352,13 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("testVisitor4@test.com", $this->getValue("id=Visitor_email"));
         $this->assertEquals("1", $this->getValue("id=Visit_reason"));
         $this->clickAndWait("link=Dashboard");
-        $this->assertEquals("Visitor4", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
-        $this->assertEquals("testVisitor4@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[8]"));
+        if ($username == 'admin' || $username == 'agentadmin') {
+            $this->assertEquals("Visitor4", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[5]"));
+            $this->assertEquals("testVisitor4@test.com", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[8]"));
+        } else {
+            $this->assertEquals("Visitor4", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
+            $this->assertEquals("testVisitor4@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[8]"));
+        }
     }
 
     /*
@@ -352,8 +394,13 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("3", $this->getValue("id=Visit_reason"));
         $this->assertEquals($username . "patient1", $this->getValue("document.forms['update-patient-form'].elements['Patient[name]']"));
         $this->clickAndWait("link=Dashboard");
-        $this->assertEquals($username . "visitor1", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
-        $this->assertEquals($username . "visitor1@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[8]"));
+        if ($username == 'admin' || $username == 'agentadmin') {
+            $this->assertEquals($username . "visitor1", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[5]"));
+            $this->assertEquals($username . "visitor1@test.com", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[8]"));
+        } else {
+            $this->assertEquals($username . "visitor1", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
+            $this->assertEquals($username . "visitor1@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[8]"));
+        }
     }
 
     /*
@@ -384,8 +431,13 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("4", $this->getValue("id=Visit_reason"));
         $this->assertEquals($username . "patient2", $this->getValue("document.forms['update-patient-form'].elements['Patient[name]']"));
         $this->clickAndWait("link=Dashboard");
-        $this->assertEquals("Visitor1", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
-        $this->assertEquals("testVisitor1@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[8]"));
+        if ($username == 'admin' || $username == 'agentadmin') {
+            $this->assertEquals("Visitor1", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[5]"));
+            $this->assertEquals("testVisitor1@test.com", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[8]"));
+        } else {
+            $this->assertEquals("Visitor1", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
+            $this->assertEquals("testVisitor1@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[8]"));
+        }
     }
 
     /*
@@ -426,8 +478,13 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("2", $this->getValue("id=Visit_visitor_type"));
         $this->assertEquals("5", $this->getValue("id=Visit_reason"));
         $this->clickAndWait("link=Dashboard");
-        $this->assertEquals($username . "visitor2", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
-        $this->assertEquals($username . "visitor2@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[8]"));
+        if ($username == 'admin' || $username == 'agentadmin') {
+            $this->assertEquals($username . "visitor2", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[5]"));
+            $this->assertEquals($username . "visitor2@test.com", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[8]"));
+        } else {
+            $this->assertEquals($username . "visitor2", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
+            $this->assertEquals($username . "visitor2@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[8]"));
+        }
     }
 
     /*
@@ -464,8 +521,13 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("2", $this->getValue("id=Visit_visitor_type"));
         $this->assertEquals("6", $this->getValue("id=Visit_reason"));
         $this->clickAndWait("link=Dashboard");
-        $this->assertEquals($username . "visitor3", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
-        $this->assertEquals($username . "visitor3@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[8]"));
+        if ($username == 'admin' || $username == 'agentadmin') {
+            $this->assertEquals($username . "visitor3", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[5]"));
+            $this->assertEquals($username . "visitor3@test.com", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[8]"));
+        } else {
+            $this->assertEquals($username . "visitor3", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
+            $this->assertEquals($username . "visitor3@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[8]"));
+        }
     }
 
     /*
@@ -503,8 +565,13 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("2", $this->getValue("id=Visit_visitor_type"));
         $this->assertEquals("7", $this->getValue("id=Visit_reason"));
         $this->clickAndWait("link=Dashboard");
-        $this->assertEquals("Visitor3", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
-        $this->assertEquals("testVisitor3@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[8]"));
+        if ($username == 'admin' || $username == 'agentadmin') {
+            $this->assertEquals("Visitor3", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[5]"));
+            $this->assertEquals("testVisitor3@test.com", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[8]"));
+        } else {
+            $this->assertEquals("Visitor3", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
+            $this->assertEquals("testVisitor3@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[8]"));
+        }
     }
 
     /*
@@ -537,8 +604,13 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("testVisitor4@test.com", $this->getValue("id=Visitor_email"));
         $this->assertEquals("8", $this->getValue("id=Visit_reason"));
         $this->clickAndWait("link=Dashboard");
-        $this->assertEquals("Visitor4", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
-        $this->assertEquals("testVisitor4@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[8]"));
+        if ($username == 'admin' || $username == 'agentadmin') {
+            $this->assertEquals("Visitor4", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[5]"));
+            $this->assertEquals("testVisitor4@test.com", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[8]"));
+        } else {
+            $this->assertEquals("Visitor4", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
+            $this->assertEquals("testVisitor4@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[8]"));
+        }
     }
 
     /*
@@ -697,7 +769,11 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->waitForElementPresent("id=search-host");
         $this->type("id=search-host", "new" . $username . "host");
         $this->click("id=dummy-host-findBtn");
-        $this->waitForElementPresent("id=26");
+        if ($username == 'staffmember') {
+            $this->waitForElementPresent("id=24");
+        } else {
+            $this->waitForElementPresent("id=26");
+        }
         $this->assertEquals("new" . $username . "host", $this->getText("//div[@id='findHost-grid']/table/tbody/tr/td[2]"));
         $this->assertEquals("new" . $username . "host@test.com", $this->getText("//div[@id='findHost-grid']/table/tbody/tr/td[3]"));
         $this->clickAndWait("link=Dashboard");
@@ -735,11 +811,47 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Email Address has already been taken.", $this->getText("xpath=(//div[@id='User_email_em_'])[2]"));
     }
 
-    /* Scenario15 */
+    function ScenarioEvacuationReport($username) {
+        $this->login($username . "@test.com", '12345');
+        if ($username == 'agentoperator' || $username == 'operator') {
+            $this->click("id=submitBtn");
+            $this->clickAndWait("id=submit");
+        }
+        $this->clickAndWait("link=Visitor Records");
+        if ($username == 'staffmember') {
+            $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
+        } else {
+            $this->assertEquals("Displaying 1-10 of 13 results.", $this->getText("css=div.summary"));
+        }
 
-    function Scenario16() {
-        $username = 'staffmember@test.com';
-        $this->login($username, '12345');
+        if ($username != 'staffmember') {
+            $this->select("name=Visit[visit_status]", "label=Active");
+            for ($second = 0;; $second++) {
+                if ($second >= 10)
+                    $this->fail("timeout");
+                try {
+                    if ("Displaying 1-6 of 6 results." == $this->getText("css=div.summary"))
+                        break;
+                } catch (Exception $e) {
+                    
+                }
+                sleep(1);
+            }
+            $this->assertEquals("Displaying 1-6 of 6 results.", $this->getText("css=div.summary"));
+            $this->select("name=Visit[visit_status]", "label=Preregistered");
+            for ($second = 0;; $second++) {
+                if ($second >= 10)
+                    $this->fail("timeout");
+                try {
+                    if ("Displaying 1-7 of 7 results." == $this->getText("css=div.summary"))
+                        break;
+                } catch (Exception $e) {
+                    
+                }
+                sleep(1);
+            }
+            $this->assertEquals("Displaying 1-7 of 7 results.", $this->getText("css=div.summary"));
+        }
     }
 
 }

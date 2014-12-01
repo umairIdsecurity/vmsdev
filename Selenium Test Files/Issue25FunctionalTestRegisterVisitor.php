@@ -36,6 +36,20 @@ class Issue25FunctionalTestRegisterVisitor extends BaseFunctionalTest {
     /*Scenarion 0 - Log in as super admin and preregister a visitor
      * Expected Behavior 
      * -Assert text testvisitor0@test.com in email field
+     * 
+     Steps:
+        1. Go cvms.idsecurity.com.au/index.php?r=site/login
+     2. Log in as superadmin@test.com and 12345 in password
+     3. Click login 
+     4. Click administration
+     5. Click manage visitor records 
+     6, Click pre register a visitor
+     7. Click same day visitor then click continue button
+     8. Type test in firstname, visitor0 in lastname, testvisitor0@test.com in email, 1234567 in contact number, select
+      reason 1 in reason, type 12345 in password and repeat password, select tenant in tenant field and tenant agent in tenant field.
+     9. Click save and continue button 
+     10. Type patient name 0 in patient name field. Click save and continue button
+     11. Wait for page to load and assert testvisitor0@test.com in email field.
      */
     function scenario0(){
         $username = 'superadmin@test.com';
@@ -73,7 +87,7 @@ class Issue25FunctionalTestRegisterVisitor extends BaseFunctionalTest {
     /* Scenario 1 – Login as super admin then perform register a visitor functionality for patient visitor type. Add new patient and add new reason
 
       Expected Behavior
-      -	Assert text visitor1@test.com in email field.
+      -	Assert text testvisitor2@test.com in email field.
       -	Assert text of all fields to verify correct record.
 
 
@@ -84,12 +98,12 @@ class Issue25FunctionalTestRegisterVisitor extends BaseFunctionalTest {
       4.	Click Login
       5.	Click Administration
       6.        Click manage visitor records then click register a visitor
-      7.	Click same day visitor. Click continue button. Type ‘test’ in first name, visitor1 in last name, testvisitor1@test.com in email, 123456 in mobile Number. Select patient type in visitor type. Select test admin in tenant and select tenant agentadmin for tenant agent.
-      8.	Assert company field is disabled. Select other in reason. Type reason 1 in reason field then click add.
+      7.	Click same day visitor. Click continue button. Type ‘test’ in first name, visitor2 in last name, testvisitor2@test.com in email, 123456 in mobile Number. Select patient type in visitor type. Select test admin in tenant and select tenant agentadmin for tenant agent.
+      8.	Assert company field is disabled. Select other in reason. Type reason 3 in reason field. Type 12345 in password and repeat password.
       9.	Click save and continue button.
       10.	Type patient name 1 in patient name field.
-      11.	Click continue button.
-      12.	Wait for page to load. Assert text visitor detail. Assert test in first name, visitor1 in last name, visitor1@test.com in email field, and 123456 in mobile field
+      11.	Click save and continue button. Wait for log visit page and assert value is current date and current time. Click save and continue.
+      12.	Wait for page to load. Assert text visitor detail. Assert test in first name, visitor2 in last name, testvisitor2@test.com in email field, and 123456 in mobile field
      */
 
     function Scenario1() {
@@ -99,19 +113,19 @@ class Issue25FunctionalTestRegisterVisitor extends BaseFunctionalTest {
         $this->clickAndWait("//div[@id='cssmenu']/ul/li[4]/a/span");
         $this->clickAndWait("link=Register a Visitor");
         $this->click("id=clicktabA");
-        $this->addVisitor('Visitor1');
-        $this->addReason('Reason 1');
+        $this->addVisitor('Visitor2');
+        $this->addReason('Reason 3');
         $this->click("id=submitFormVisitor");
         $this->addPatient("Patient Name 1");
         $this->click("id=submitFormPatientName");
         $this->clickAndWait("id=submitAllForms");
-        $this->verifyVisitorInTable('Visitor1');
+        $this->verifyVisitorInTable('Visitor2');
     }
 
     /* Scenario 2 – Login as super admin then perform register a visitor functionality for exisiting patient visitor type. Add new patient and add new reason
 
       Expected Behavior
-      -	Assert text visitor2@test.com in email field.
+      -	Assert text testvisitor0@test.com in email field.
       -	Assert text of all fields to verify correct record.
 
 
@@ -122,12 +136,12 @@ class Issue25FunctionalTestRegisterVisitor extends BaseFunctionalTest {
       4.	Click Login
       5.	Click Administration
       6.        Click manage visitor records then click register a visitor
-      7.	Click same day visitor. Click continue button. Type ‘test visitor1’ in search name,Select patient type in visitor type.
-      8.	Select other in reason. Type reason 2 in reason field
+      7.	Click same day visitor. Click continue button. Type ‘test visitor0’ in search name,click select visitor.Select patient type in visitor type.
+      8.	Select other in reason. Type reason 4 in reason field
       9.	Click save and continue button.
-      10.	Type patient2 in patient name field.
-      11.	Click continue button.
-      12.	Wait for page to load. Assert text visitor detail. Assert test in first name, visitor1 in last name, visitor1@test.com in email field, and 123456 in mobile field
+      10.	Type patient name 2 in patient name field.
+      11.	Click save and continue button. Assert date in is current date and time is current time. Click save and continue button
+      12.	Wait for page to load. Assert text visitor detail. Assert test in first name, visitor0 in last name, testvisitor0@test.com in email field, and 123456 in mobile field
      */
 
     function Scenario2() {
@@ -139,7 +153,7 @@ class Issue25FunctionalTestRegisterVisitor extends BaseFunctionalTest {
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test visitor0");
         $this->click("id=dummy-visitor-findBtn");
-        $this->waitForElementPresent("id=5");
+        $this->waitForElementPresent("id=6");
         $this->select("id=Visit_reason_search", "label=Other");
         $this->type("id=VisitReason_reason_search", "Reason 2");
         $this->click("id=clicktabB1");
@@ -148,10 +162,10 @@ class Issue25FunctionalTestRegisterVisitor extends BaseFunctionalTest {
         $this->clickAndWait("id=submitAllForms");
     }
 
-    /* Scenario 3 – Login as super admin then perform register a visitor functionality for patient visitor type. Add new patient and add new reason
+    /* Scenario 3 – Login as super admin then perform register a visitor functionality for patient visitor type. Add new patient 
 
       Expected Behavior
-      -	Assert text visitor1@test.com in email field.
+      -	Assert text testvisitor5@test.com in email field.
       -	Assert text of all fields to verify correct record.
 
 
@@ -162,12 +176,12 @@ class Issue25FunctionalTestRegisterVisitor extends BaseFunctionalTest {
       4.	Click Login
       5.	Click Administration
       6.        Click manage visitor records then click register a visitor
-      7.	Click same day visitor. Click continue button. Type ‘test’ in first name, visitor2 in last name, testvisitor1@test.com in email, 123456 in mobile Number. Select patient type in visitor type. Select test admin in tenant and select tenant agentadmin for tenant agent.
-      8.	Assert company field is disabled. Select reason 1 in reason field
+      7.	Click same day visitor. Click continue button. Type ‘test’ in first name, visitor5 in last name, testvisitor5@test.com in email, 123456 in mobile Number. Select patient type in visitor type. Select test admin in tenant and select tenant agentadmin for tenant agent.
+      8.	Type 12345 in password and repeat password. Assert company field is disabled. Select reason 1 in reason field
       9.	Click save and continue button.
       10.	Type patient name 3 in patient name field.
-      11.	Click continue button.
-      12.	Wait for page to load. Assert text visitor detail. Assert test in first name, visitor3 in last name, visitor1@test.com in email field, and 123456 in mobile field
+      11.	Click save and continue button. Assert date in is current time and current time in time in. Click save and continue button.
+      12.	Wait for page to load. Assert text visitor detail. Assert test in first name, visitor5 in last name, testvisitor5@test.com in email field, and 123456 in mobile field
      */
 
     function Scenario3() {
@@ -177,18 +191,18 @@ class Issue25FunctionalTestRegisterVisitor extends BaseFunctionalTest {
         $this->clickAndWait("//div[@id='cssmenu']/ul/li[4]/a/span");
         $this->clickAndWait("link=Register a Visitor");
         $this->click("id=clicktabA");
-        $this->addVisitor('Visitor3');
+        $this->addVisitor('Visitor5');
         $this->select("id=Visit_reason", "label=Reason 1");
         $this->click("id=submitFormVisitor");
         $this->addPatient("Patient Name 3");
         $this->click("id=submitFormPatientName");
         $this->clickAndWait("id=submitAllForms");
-        $this->verifyVisitorInTable('Visitor3');
+        $this->verifyVisitorInTable('Visitor5');
     }
 
     /* Scenario 4 – Login as super admin then perform add visitor functionality for corporate visitor type
       Expected Behavior
-      -	Assert text testvisitor2@test.com in email field.
+      -	Assert text testvisitor6@test.com in email field.
       -	Assert text of all fields to verify correct record.
 
 
@@ -199,11 +213,11 @@ class Issue25FunctionalTestRegisterVisitor extends BaseFunctionalTest {
       4.	Click Login
       5.	Click Administration
       6.      Click manage visitor records then click register a visitor
-      7.	Click same day visitor. Click continue button. Type ‘test’ in first name, visitor2 in last name, visitor2@test.com in email, 123456 in mobile Number. Select patient type in visitor type. Select test admin in tenant and select tenant agentadmin for tenant admin. Select this is a reason in reason field.
-      8.	Assert company field is present. Select test company 1 in company then Click Add button.
+      7.	Click same day visitor. Click continue button. Type ‘test’ in first name, visitor6 in last name, testvisitor6@test.com in email, 123456 in mobile Number. Select corporate type in visitor type. Select test admin in tenant and select tenant agentadmin for tenant admin. Select reason 1 in reason field.
+      8.	Assert company field is present. Select test company 1 in company then Click save and continue button.
       9.	Wait for page to load. Type test in first name, staffmemberHostA in last name, Test department in department, 12345 in staff id, staffmemberHostA@test.com in email field, and 123456 in mobile number field.
-      10.	Click Continue button.
-      11.	Wait for page to load. Assert text visitor detail. Assert test in first name, visitor2 in last name, visitor2@test.com in email field, and 123456 in mobile field. Assert visitor type is corporate visitor. Assert text this is a reason in reason dropdown.
+      10.	type 12345 in password and repeat password.select tenant admin in tenant and tenant agent admin in tenant agent. Click save and Continue button.
+      11.	Click save and continue button in log visit. Wait for page to load. Assert text visitor detail. Assert test in first name, visitor6 in last name, testvisitor6@test.com in email field, and 123456 in mobile field. Assert visitor type is corporate visitor. Assert text reason 1 in reason dropdown.
      */
 
     function Scenario4() {
@@ -214,7 +228,7 @@ class Issue25FunctionalTestRegisterVisitor extends BaseFunctionalTest {
         $this->clickAndWait("link=Register a Visitor");
         $this->click("id=clicktabA");
         $this->select("id=Visitor_visitor_type", "label=Corporate Visitor");
-        $this->addVisitor('Visitor4');
+        $this->addVisitor('Visitor6');
         $this->select("id=Visit_reason", "label=Reason 1");
         sleep(1);
         $this->assertEquals("Test Company 1", $this->getText("id=Visitor_company"));
@@ -222,7 +236,7 @@ class Issue25FunctionalTestRegisterVisitor extends BaseFunctionalTest {
         $this->addHost("Host1");
         $this->click("id=submitFormUser");
         $this->clickAndWait("id=submitAllForms");
-        $this->verifyVisitorInTable('Visitor4');
+        $this->verifyVisitorInTable('Visitor6');
     }
 
     /* Scenario 5 –Login as super admin and Check for validations in registering a patient visitor
@@ -398,7 +412,7 @@ class Issue25FunctionalTestRegisterVisitor extends BaseFunctionalTest {
         $this->click("id=submitFormVisitor");
         $this->waitForElementPresent("xpath=(//div[@id='Visitor_email_em_'])[2]");
         $this->assertEquals("Email Address has already been taken.", $this->getText("xpath=(//div[@id='Visitor_email_em_'])[2]"));
-        $this->type("id=Visitor_email", "testvisitor6@test.com");
+        $this->type("id=Visitor_email", "testvisitortest@test.com");
         $this->click("id=submitFormVisitor");
         $this->click("id=submitFormUser");
         for ($second = 0;; $second++) {
@@ -424,8 +438,6 @@ class Issue25FunctionalTestRegisterVisitor extends BaseFunctionalTest {
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeatpassword", "12345");
         $this->click("id=submitFormUser");
-        $this->waitForTextPresent("Email is not a valid email address.");
-        $this->assertEquals("Email is not a valid email address.", $this->getText("id=User_email_em_"));
         $this->type("id=User_email", "staffmember@test.com");
         $this->type("id=User_contact_number", "123456");
         $this->select("id=User_tenant", "label=Test admin");
@@ -435,7 +447,7 @@ class Issue25FunctionalTestRegisterVisitor extends BaseFunctionalTest {
 
     /* Scenario 7 – Log in as super admin and register a corporate visitor with existing host and visitor record
       Expected behavior
-      -	Assert text testvisitor3@test.com in visitor email field.
+      -	Assert text testvisitor1@test.com in visitor email field.
       Steps:
       1.	Go to cvms.identitysecurity.info/index.php?r=site/login
       2.	Type superadmin@test.com in email field and 12345 in password field
@@ -454,9 +466,10 @@ class Issue25FunctionalTestRegisterVisitor extends BaseFunctionalTest {
       15.	Type staffmember in search name field.
       16.	Click find host
       17.	Assert text staffmember@test.com in email row
-      18.	Click select patient
-      19.	Assert selected patient: patient name 1
-      20.	Click save and continue
+      18.	Click select host
+      19.	Assert selected host record: test staffmember
+      20.	Click save and continue. Wait for log visit page and click save and continue button
+      21.       Assert testvisitor1@test.com in email field. Assert staffmember@test.com in host email field. Assert print card is activated
      */
 
     function Scenario7() {
@@ -468,9 +481,9 @@ class Issue25FunctionalTestRegisterVisitor extends BaseFunctionalTest {
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test visitor0a");
         $this->click("id=dummy-visitor-findBtn");
-        $this->waitForElementPresent("id=6");
-        $this->waitForElementPresent("id=6");
-        $this->click("id=6");
+        $this->waitForElementPresent("id=9");
+        $this->waitForElementPresent("id=9");
+        $this->click("id=9");
         $this->waitForElementPresent("css=h4");
         $this->select("id=Visit_reason_search", "label=Reason 1");
         $this->assertEquals("testVisitor0a@test.com", $this->getText("//div[@id='findvisitor-grid']/table/tbody/tr/td[3]"));

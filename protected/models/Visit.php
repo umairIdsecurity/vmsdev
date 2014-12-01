@@ -162,11 +162,13 @@ class Visit extends CActiveRecord {
             'createdBy' => array(self::BELONGS_TO, 'User', 'created_by'),
             'tenant0' => array(self::BELONGS_TO, 'User', 'tenant'),
             'workstation0' => array(self::BELONGS_TO, 'Workstation', 'workstation'),
-            'company0' => array(self::HAS_MANY,
-                'Company',
-                array('company' => 'id'),
-                'through' => 'visitor0'
-            ),
+            
+//            'company0' => array(self::HAS_MANY,
+//                'Company',
+//                array('company' => 'id'),
+//                'through' => 'visitor0'
+//            ),
+           
             'visitStatus' => array(self::BELONGS_TO, 'VisitStatus', 'visit_status'),
         );
     }

@@ -11,7 +11,7 @@ require_once 'BaseFunctionalTest.php';
 
 /**
  * Description of Issue26FunctionalTest
- *
+ * visitor detail page
  * @author Jeremiah
  */
 class Issue26FunctionalTest extends BaseFunctionalTest {
@@ -31,7 +31,7 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
 
     /* Scenario 1 – Login as super admin then perform update a visitor functionality for patient visitor type
       Expected Behavior
-      -	Assert text testvisitor1@test.com in email field.
+      -	Assert text testvisitorB@test.com in email field.
       -	Assert text of all fields to verify correct record.
 
 
@@ -41,12 +41,12 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
       3.	Type 12345 in password field
       4.	Click Login
       5.	Click Administration
-      6.	Go to http://cvms.identitysecurity.info/index.php?r=visit/detail&id=2
+      6.	Go to http://cvms.identitysecurity.info/index.php?r=visit/detail&id=1
       7.	Assert first name: test , last name: visitor1, email: testvisitor1@test.com, mobile: 123456, visitor type:patient visitor, reason: reason 1, Patient name: patient name 1.
-      8.	Type 09123456789 in mobile number and testvisitorB@test.com in email field for contact details. Click save button under contact details.
-      9.	select other in reason then Type reason 3 in reason field then click add button under reason
-      10.	Type patient name 3 in patient name field. Click update button under patient details.
-      11.	Go to http://cvms.identitysecurity.info/index.php?r=visit/detail&id=2. Assert t09123456789 in mobile number, testvisitorB@test.com in email field for contact details.
+      8.	Type 09123456789 in mobile number and testvisitorB@test.com in email field for contact details. Click update button under contact details.
+      9.	Assert contact details updated successfully. select other in reason then Type reason 3 in reason field then click add button under reason. Assert reason added successfully. Click update under reason .
+      10.	Assert reason updated successfully. Type patient name 3 in patient name field. Click update button under patient details.
+      11.	Assert patient updated successfully. Go to http://cvms.identitysecurity.info/index.php?r=visit/detail&id=1. Assert 09123456789 in mobile number, testvisitorB@test.com in email field for contact details.
       Assert reason 3 in reason. Patient name 3 in patient name field.
 
      */
@@ -87,7 +87,7 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
 
     /* Scenario 2 – Login as super admin then perform update visitor functionality for corporate visitor type
       Expected Behavior
-      -	Assert text testvisitor2@test.com in email field.
+      -	Assert text testvisitorC@test.com in email field.
       -	Assert text of all fields to verify correct record.
 
 
@@ -97,14 +97,11 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
       3.	Type 12345 in password field
       4.	Click Login
       5.	Click Administration
-      6.	Go to http://cvms.identitysecurity.info/index.php?r=visit/detail&id=5
+      6.	Go to http://cvms.identitysecurity.info/index.php?r=visit/detail&id=6
       7.	Assert email field testvisitor4@Test.com in email, and corporate visitor in visitor type.
       8.	Type 09123456789 in mobile number and testvisitorC@test.com in email field for contact details. Click update button under contact details.
-      9.	Select reason 2 in reason then click update button
-      10.	Type testA in host first name, hostA in last name, testHost1A@test.com in email field
-      11.	Go to http://cvms.identitysecurity.info/index.php?r=visit/detail&id=5. Assert 1234567890 in mobile number, testvisitorC@test.com in email field for contact details.
-      12.	Assert reason 2 in reason. TestA in host first name, HostA in last name, testHost1A@test.com in email
-     */
+      9.	Assert contact details updated successfully. Select reason 2 in reason then click update button. Assert reason updated successfully.
+       */
 
     function Scenario2() {
         $username = 'superadmin@test.com';
@@ -138,11 +135,11 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
       2.	Type superadmin@test.com in email field and 12345 in password field
       3.	Click login
       4.	Click administration
-      5.	Go to http://cvms.identitysecurity.info/index.php?r=visit/detail&id=2
+      5.	Go to http://cvms.identitysecurity.info/index.php?r=visit/detail&id=1
       6.	Empty field mobile number and email field. Click update button under contact details.
       7.	Assert email address cannot be blank.
       8.	Type testvisitor3@test.com in email field. Click update and assert text email has already been taken.
-      9.	Empty reason field then click update button.
+      9.	Select select reason in reason field
       10.	Assert text reason cannot be blank.
       11.	Select other in reason and Type reason 2 in reason field. Click add button
       12.	Assert text reason has already been registered.
@@ -194,7 +191,7 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
     /* Scenario 5 – Login as super admin update a patient visitor to corporate visitor. Add new host and check validations
       Expected Behavior
       -	Assert corporate visitor in visitor type
-      -	Assert testHostB@test.com in host email field
+      -	Assert testnewhosta@test.com in host email field
       -	Assert text first name cannot be blank, last name cannot be blank, contact number cannot be blank, email cannot be blank, and Company name cannot be blank.
       -	Assert text email is not a valid email address
       -	Assert text email has already been taken
@@ -202,24 +199,23 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
       Steps:
       1.	Log in as superadmin@test.com with 12345  as password
       2.	Click administration
-      3.	Click manage visits
-      4.	Type test visitor1 in name search field, select patient type in visitor type and select reason 3 in reason. Click edit
+      3.	go to cvms.idsecurity.info/index.php?r=visit/detail&id=1
       5.	Assert email testVisitorB@test.com
       6.	Select corporate visitor in visitor type
       7.	Wait for host details to show below
-      8.	Click add button
-      9.	Assert text first name cannot be blank, last name cannot be blank, contact number cannot be blank, email cannot be blank, and Company name cannot be blank.
+      8.	Click add button under host details
+      9.	Assert text first name cannot be blank, last name cannot be blank, contact number cannot be blank, email cannot be blank,password cannot be blank, repeat password cannot be blank and Company name cannot be blank.
       10.	Type 123 in email
       11.	Assert text email is not a valid email address.
       12.	Type test in first name, newhostA in last name, admin@test.com in email field, 12345 in contact no., select test admin in tenant, select tenant agentadmin in tenant agent, and test company1 in company name.
-      13.	Click add button
+      13.	Type 12345 in password and repeat password. Click add button
       14.	Assert text email address has already been taken.
-      15.	Type testnewHostA@test.com in email field
-      16.	Click manage visits
-      17.	Type test visitor1 in name search field, select corporate type in visitor type and select reason 3 in reason. Click edit
+      15.	Type testnewHostA@test.com in email field. click add button
+      16.	Assert host added successfully in host details and visitor type updated successfully in visitor type.
+      17.	go to cvms.idsecurity.info/index.php?r=visit/detail&id=1
       18.	Assert email testVisitorB@test.com
       19.	Assert corporate type in visitor type
-      20.	Assert email testnewHostA@test.com in email field
+      20.	Assert email testnewHostA@test.com in host email field
       21.	Assert test in first name
       22.	Assert newhostA in last name
       23.	Assert 12345 in contact no.

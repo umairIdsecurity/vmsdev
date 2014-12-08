@@ -2,7 +2,7 @@
 $session = new CHttpSession;
 ?>
 <div id="findAddHostRecordDiv" class="findAddHostRecordDiv form">
-
+<input type="text" id="sessionRole" value="<?php echo $session['role'];?>" style="display:none;" >
 
     <?php
     $form = $this->beginWidget('CActiveForm', array(
@@ -158,7 +158,7 @@ $session = new CHttpSession;
     <?php $this->endWidget(); ?>
 
 </div>
-
+<input type="text" id="createUrlForEmailUnique" style="display:none;" value="<?php echo Yii::app()->createUrl('user/checkEmailIfUnique&id='); ?>"/>
 <script>
     $(document).ready(function() {
         $("#User_repeatpassword").keyup(checkPasswordMatch);
@@ -180,13 +180,7 @@ $session = new CHttpSession;
                     window.location = "index.php?r=dashboard/viewmyvisitors";
                 }
             },
-            error: function() {
-                if ('<?php echo $session['role']; ?>' != 9) { //if not equal to staff member
-                    window.location = "index.php?r=dashboard";
-                } else {
-                    window.location = "index.php?r=dashboard/viewmyvisitors";
-                }
-            },
+          
         });
     }
 
@@ -202,9 +196,16 @@ $session = new CHttpSession;
 
     function checkHostEmailIfUnique() {
         var email = $("#User_email").val();
+        var tenant;
+        if($("#sessionRole").val() == 5){ //check if superadmin
+            tenant = $("#User_tenant").val();
+        } else {
+            tenant = '<?php echo $session['tenant']; ?>';
+        }
+        var url = $("#createUrlForEmailUnique").val() + email.trim() + '&tenant=' + tenant;
         $.ajax({
             type: 'POST',
-            url: '<?php echo Yii::app()->createUrl('user/checkEmailIfUnique&id='); ?>' + email.trim(),
+            url: url ,
             dataType: 'json',
             data: email,
             success: function(r) {

@@ -79,7 +79,7 @@ class User extends VmsActiveRecord {
                 array('company, role, user_type, user_status, created_by', 'numerical', 'integerOnly' => true),
                 array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
                 array('date_of_birth, notes,tenant,tenant_agent,birthdayYear,birthdayMonth,birthdayDay', 'safe'),
-                array('email', 'unique'),
+                // array('email', 'unique'),
                 array('email', 'email'),
                 array('tenant, tenant_agent', 'default', 'setOnEmpty' => true, 'value' => null),
                 // The following rule is used by search().
@@ -92,7 +92,7 @@ class User extends VmsActiveRecord {
                 array('company, role, user_type, user_status, created_by', 'numerical', 'integerOnly' => true),
                 array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
                 array('date_of_birth, notes,tenant,tenant_agent,birthdayYear,birthdayMonth,birthdayDay', 'safe'),
-                array('email', 'unique'),
+                // array('email', 'unique'),
                 array('email', 'email'),
                 array('repeatpassword', 'required', 'on' => 'insert'),
                 array('password', 'compare', 'compareAttribute' => 'repeatpassword'),
@@ -430,10 +430,22 @@ class User extends VmsActiveRecord {
         $this->update();
         return false;
     }
-    
-    public function checkIfEmailAddressIsTaken($email){
+
+    public function checkIfEmailAddressIsTaken($email, $tenant ) {
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "email = '" . $email . "' ";
+        $session = new CHttpSession;
+        if ($tenant != '') {
+            if ($session['role'] == Roles::ROLE_SUPERADMIN) {
+                $Criteria->condition = "email = '" . $email . "' and tenant = '" . $tenant . "'";
+            } else {
+                $Criteria->condition = "email = '" . $email . "' and tenant = '" . $session['tenant'] . "'";
+            }
+        } else { //if position is admin compare to email only
+                $Criteria->condition = "email = '" . $email . "'";
+           
+        }
+
+
         $userEmail = User::model()->findAll($Criteria);
 
         $userEmails = array_filter($userEmail);
@@ -445,8 +457,8 @@ class User extends VmsActiveRecord {
             return true;
         }
     }
-    
-    public function getIdOfUser($email){
+
+    public function getIdOfUser($email) {
         $aArray = array();
 
         $Criteria = new CDbCriteria();
@@ -460,7 +472,5 @@ class User extends VmsActiveRecord {
         }
         return $aArray;
     }
-    
-    
-}
 
+}

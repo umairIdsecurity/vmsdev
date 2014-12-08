@@ -232,6 +232,7 @@ $currentLoggedUserId = $session['id'];
                         <td><?php echo $form->labelEx($model, 'email'); ?></td>
                         <td><?php echo $form->textField($model, 'email', array('size' => 50, 'maxlength' => 50)); ?>
                             <?php echo "<br>" . $form->error($model, 'email'); ?>
+                            <span class="errorMessageEmail1" style="display:none;color:red;font-size:10px;">Email has already been taken.</span>
                         </td>
                     </tr>
                     <tr>
@@ -294,6 +295,11 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
     echo User::model()->getCompany($currentlyEditedUserId);
 }
 ?>"/>
+
+
+<input type="text" id="createUrlForEmailUnique" style="display:none;" value="<?php echo Yii::app()->createUrl('user/checkEmailIfUnique&id='); ?>"/>
+<input type="text" id="emailunique" style="display:none;" />
+
 <script>
 
     $(document).ready(function() {
@@ -390,6 +396,8 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
             if (sessionRole == 6) {
                 $(this).find('#User_tenant_agent').removeAttr('disabled');
             }
+            
+            
         });
 
         if (actionId == 'update') {
@@ -403,7 +411,9 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
 
         $("#submitBtn").click(function(e) {
             e.preventDefault();
-            $("#submitForm").click();
+            checkHostEmailIfUnique();
+            
+            
         });
 
         function populateTenantAgentField(tenant) {
@@ -483,7 +493,40 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
 
         });
     });
+    function checkHostEmailIfUnique() {
+        var email = $("#User_email").val();
+        var tenant;
+        if($("#currentRole").val() == 5){ //check if superadmin
+            tenant = $("#User_tenant").val();
+        } else {
+            tenant = '<?php echo $session['tenant']; ?>';
+        }
+        if($("#User_role").val() == 1){
+            var url = $("#createUrlForEmailUnique").val() + email.trim() ;
+        } else {
+            var url = $("#createUrlForEmailUnique").val() + email.trim() + '&tenant=' + tenant;
+        }
+        
+        $.ajax({
+            type: 'POST',
+            url: url ,
+            dataType: 'json',
+            data: email,
+            success: function(r) {
 
+                if (r == 1) {
+                    $(".errorMessageEmail1").show();
+                    $("#emailunique").val("1");
+                    
+                } else {
+                    $(".errorMessageEmail1").hide();
+                    $("#emailunique").val("0");
+                    $("#submitForm").click();
+                }
+            }
+        });
+    }
+    
     function populateDynamicFields() {
         /*if superadmin user company set to empty*/
         if (<?php echo $session['role'] ?> == 5)

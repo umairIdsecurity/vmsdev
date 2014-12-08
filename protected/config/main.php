@@ -105,10 +105,10 @@ return array(
                     'categories' => 'system.db.CDbCommand.query'
                 ),
             // uncomment the following to show log messages on web pages
-            /*
-              array(
-              'class'=>'CWebLogRoute',
-              ), */
+            
+//              array(
+//              'class'=>'CWebLogRoute',
+//              ), 
             ),
         ),
     ),

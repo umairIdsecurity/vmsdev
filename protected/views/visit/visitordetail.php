@@ -35,15 +35,15 @@ $session = new CHttpSession;
 
         </td>
         <td>
-            
-                <?php
-                $this->renderPartial('visitordetail-actions', array('model' => $model,
-                    'visitorModel' => $visitorModel,
-                    'hostModel' => $hostModel,
-                    'reasonModel' => $reasonModel,
-                    'patientModel' => $patientModel,
-                ));
-                ?>
+
+            <?php
+            $this->renderPartial('visitordetail-actions', array('model' => $model,
+                'visitorModel' => $visitorModel,
+                'hostModel' => $hostModel,
+                'reasonModel' => $reasonModel,
+                'patientModel' => $patientModel,
+            ));
+            ?>
         </td>
 
     </tr>
@@ -55,6 +55,8 @@ $this->renderPartial('visithistory', array('model' => $model,
     'reasonModel' => $reasonModel,
 ));
 ?>
+<input type="text" id="createUrlForEmailUnique" value="<?php echo Yii::app()->createUrl('user/checkEmailIfUnique&id='); ?>"/>
+<input type="text" id="Visitor_tenant" value="<?php echo $visitorModel->tenant; ?>"/>
 
 <input type="text" id="currentRoleOfLoggedInUser" value="<?php echo $session['role']; ?>">
 <input type="text" id="currentCompanyOfLoggedInUser" value="<?php echo User::model()->getCompany($session['id']); ?>">
@@ -77,9 +79,10 @@ $this->renderPartial('visithistory', array('model' => $model,
         if (email == '<?php echo $visitorModel->email ?>') {
             sendVisitorForm();
         } else {
+     
             $.ajax({
                 type: 'POST',
-                url: '<?php echo Yii::app()->createUrl('visitor/checkEmailIfUnique&id='); ?>' + email,
+                url: '<?php echo Yii::app()->createUrl('visitor/checkEmailIfUnique&id='); ?>' + email.trim(),
                 dataType: 'json',
                 data: email,
                 success: function(r) {
@@ -102,9 +105,16 @@ $this->renderPartial('visithistory', array('model' => $model,
         if (email == '<?php echo $hostModel->email ?>') {
             sendHostForm();
         } else {
+            var tenant;
+            if ($("#currentRoleOfLoggedInUser").val() == 5) { //check if superadmin
+                tenant = $("#User_tenant").val();
+            } else {
+                tenant = '<?php echo $session['tenant']; ?>';
+            }
+            var url = $("#createUrlForEmailUnique").val() + email.trim() + '&tenant=' + tenant;
             $.ajax({
                 type: 'POST',
-                url: '<?php echo Yii::app()->createUrl('user/checkEmailIfUnique&id='); ?>' + email.trim(),
+                url: url,
                 dataType: 'json',
                 data: email,
                 success: function(r) {
@@ -297,10 +307,16 @@ $this->renderPartial('visithistory', array('model' => $model,
 
     function checkNewHostEmailIfUnique() {
         var email = $(".New_user_email").val();
-
+        var tenant;
+        if($("#currentRoleOfLoggedInUser").val() == 5){ //check if superadmin
+            tenant = $("#User_tenant").val();
+        } else {
+            tenant = '<?php echo $session['tenant']; ?>';
+        }
+        var url = $("#createUrlForEmailUnique").val() + email.trim() + '&tenant=' + tenant;
         $.ajax({
             type: 'POST',
-            url: '<?php echo Yii::app()->createUrl('user/checkEmailIfUnique&id='); ?>' + email.trim(),
+            url: url,
             dataType: 'json',
             data: email,
             success: function(r) {

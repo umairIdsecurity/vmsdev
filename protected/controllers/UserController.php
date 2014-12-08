@@ -252,8 +252,8 @@ class UserController extends Controller {
         }
     }
 
-    public function actionCheckEmailIfUnique($id) {
-        if (User::model()->checkIfEmailAddressIsTaken($id)) {
+    public function actionCheckEmailIfUnique($id, $tenant = NULL) {
+        if (User::model()->checkIfEmailAddressIsTaken($id,$tenant)) {
             echo "1";
         } else {
             echo "0";

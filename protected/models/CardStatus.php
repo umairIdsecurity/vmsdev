@@ -19,11 +19,13 @@ class CardStatus extends CActiveRecord
         1 => 'Cancelled',
         2 => 'Returned',
         3 => 'Active',
+        4 => 'Not Returned',
     );
     
     CONST CANCELLED = 1;
     CONST RETURNED = 2;
     CONST ACTIVE = 3;
+    CONST NOT_RETURNED = 4;
     
 	/**
 	 * @return string the associated database table name

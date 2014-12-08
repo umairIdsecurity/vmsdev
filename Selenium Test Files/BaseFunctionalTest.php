@@ -34,6 +34,14 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
         $this->open("http://cvms.identitysecurity.info/index.php?r=site/resetDb2");
         $this->assertEquals("Tables imported successfully", $this->getText("css=body"));
     }
+    
+    public function issue35Sql() {
+        $this->start();
+        $this->open("http://cvms.identitysecurity.info/index.php?r=site/issue35UpdateDatabaseRecord");
+        $this->assertEquals("Tables updated successfully", $this->getText("css=body"));
+    }
+    
+    
 
     public function __destruct() {
         parent::__destruct();

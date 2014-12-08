@@ -85,7 +85,8 @@ CREATE TABLE IF NOT EXISTS `card_status` (
 INSERT INTO `card_status` (`id`, `name`, `created_by`) VALUES
 (1, 'Cancelled', NULL),
 (2, 'Returned', NULL),
-(3, 'Active', NULL);
+(3, 'Active', NULL),
+(4, 'Not Returned', NULL);
 
 
 --

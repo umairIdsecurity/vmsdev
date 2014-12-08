@@ -16,7 +16,6 @@ class VisitServiceImpl implements VisitService {
     public function save($visit, $sessionId) {
         $visit->created_by = $sessionId;
 
-      
         if ($visit->time_in_hours != '') {
             $visit->time_in = $visit->time_in_hours . ':' . $visit->time_in_minutes;
         }
@@ -26,13 +25,13 @@ class VisitServiceImpl implements VisitService {
         } else {
             $visit->patient = NULL;
         }
-       
+
         if (!($visit->save())) {
             return false;
         }
-        
-        $this->updateCard($visit);
-        
+
+        $this->returnCardIfVisitIsClosedManually($visit);
+
 
         $visitor = Visitor::model()->findByPK($visit->visitor);
         Visit::model()->updateByPk($visit->id, array(
@@ -42,15 +41,24 @@ class VisitServiceImpl implements VisitService {
 
         return true;
     }
-    
-    function updateCard($visit){
+
+    function returnCardIfVisitIsClosedManually($visit) {
         //if visit is closed update card status to returned and date returned to current date
-        if($visit->card != '' && $visit->visit_status == VisitStatus::CLOSED){
+        if ($visit->card != '' && $visit->visit_status == VisitStatus::CLOSED) {
             CardGenerated::model()->updateByPk($visit->card, array(
-            'card_status' => CardStatus::RETURNED,
-            'date_returned' => date('d-m-Y'),
-        ));
+                'card_status' => CardStatus::RETURNED,
+                'date_returned' => date('d-m-Y'),
+            ));
         }
+    }
+
+   
+    public function notreturnCardIfVisitIsExpiredAutomatically() {
+       Visit::model()->updateVisitsToExpired();
+    }
+
+    public function notreturnCardIfVisitIsClosedAutomatically() {
+        Visit::model()->updateVisitsToClose();
     }
 
 }

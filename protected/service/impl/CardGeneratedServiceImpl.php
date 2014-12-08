@@ -90,11 +90,10 @@ class CardGeneratedServiceImpl implements CardGeneratedService {
             'card_image_generated_filename' => $photoUpload->id,
         ));
 
-
-
-
         return true;
     }
+    
+    
 
    
 

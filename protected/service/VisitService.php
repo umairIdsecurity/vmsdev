@@ -13,4 +13,6 @@
 interface VisitService {
     //put your code here
     public function save($visit,$sessionId);
+    public function notreturnCardIfVisitIsClosedAutomatically();
+    public function notreturnCardIfVisitIsExpiredAutomatically();
 }

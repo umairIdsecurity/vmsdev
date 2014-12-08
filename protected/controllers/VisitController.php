@@ -507,36 +507,16 @@ class VisitController extends Controller {
         
         /*Run expiredVisits after closevisit to avoid query confusion*/
         echo "Scheduled Jobs - Close <br>";
-        $this->closeVisit();
+        $visit = new VisitServiceImpl();
+        $visit->notreturnCardIfVisitIsClosedAutomatically();
     }
     
     public function actionRunScheduledJobsExpired() {
         
         /*Run expiredVisits after closevisit to avoid query confusion*/
         echo "Scheduled Jobs - Expired <br>";
-        $this->ExpiredVisit();
+        $visit = new VisitServiceImpl();
+        $visit->notreturnCardIfVisitIsExpiredAutomatically();
     }
-    
-    public function closeVisit() {
-        /* update status to close if
-          visit date out is not equal to current date and if current date is greater than date out
-          and if card status is active -- 3 and visit status is not equals  3 closed
-         */
-
-        $visit = new Visit();
-        if($visit->updateVisitsToClose()){
-           // $this->redirect('index.php?r=site/RunScheduledJobsExpired');
-        }
-    }
-
-    public function ExpiredVisit() {
-        /* update status to expired if
-          current day is greater than expiration day and card type is multiday visitor and 
-         * visit status is active and card status is active
-         */
-        $visit = new Visit();
-        $visit->updateVisitsToExpired();
-    }
-    
 
 }

@@ -170,7 +170,9 @@ $session = new CHttpSession;
             $(this).find('#Visit_date_check_in').removeAttr('disabled');
         });
          display_ct();
-       
+        if('<?php echo $model->card_type;?>' == 1){
+            $(".ui-datepicker-trigger").hide();
+        }
     });
     
     function display_c() {

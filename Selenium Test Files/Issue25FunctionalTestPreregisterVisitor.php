@@ -10,7 +10,7 @@ require_once 'BaseFunctionalTest.php';
 
 /**
  * Description of Issue25FunctionalTest
- *Preregister a visitor
+ * Preregister a visitor
  * @author Jeremiah
  */
 class Issue25FunctionalTestPreregisterVisitor extends BaseFunctionalTest {
@@ -25,7 +25,7 @@ class Issue25FunctionalTestPreregisterVisitor extends BaseFunctionalTest {
         $this->Scenario1();
         $this->Scenario2();
         $this->Scenario3();
-        $this->Scenario4();
+       // $this->Scenario4();
         $this->Scenario5();
         $this->Scenario6();
         $this->Scenario7();

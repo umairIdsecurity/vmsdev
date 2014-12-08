@@ -740,11 +740,12 @@ dt.tabs dt{
 #logvisitTable tr td input[type="text"]{
     height:17px;
     font-size:12px;
-    width:110%;
+    width:80%;
 }
 
 #logvisitTable{
-    width:150px !important;
+    width:250px !important
+    
 }
 #visitorInformationCssMenu table tr td select{
     height:27px;
@@ -978,7 +979,8 @@ dt.tabs dt{
     width:100px;
 }
 .searchDateRange{
-    text-align:center
+    text-align:center;
+    margin-top:2px;
 }
 
 .searchRangeTitle{

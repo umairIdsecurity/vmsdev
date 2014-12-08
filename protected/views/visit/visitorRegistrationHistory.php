@@ -1,9 +1,8 @@
 
-
 <h1>Visitor Registration History</h1>
 <?php echo CHtml::button('Export to CSV', array('id' => 'export-button', 'class' => 'greenBtn')); ?>
 <br>
-<div class="searchDateRange">
+<div class="searchDateRange" >
     <?php
     /* @var $this VisitController */
     /* @var $model Visit */
@@ -20,15 +19,16 @@
             'model' => $model,
             'attribute' => $attribute . "[$i]",
             'options' => array(
-                'dateFormat' => 'yy-mm-dd',
+                'dateFormat' => 'dd-mm-yy',
             ),
+            'htmlOptions' => array(
+                    'placeholder' => 'dd-mm-yyyy',
+                    'readonly' => 'readonly',
+                ),
         ));
     }
     ?>
-
-    <div class="row buttons">
-        <?php echo CHtml::submitButton('Search'); ?>
-    </div>
+        <input type="submit" name="yt1" value="Filter" style="margin-top:-10px;height:30px;">  
 
     <?php $this->endWidget(); ?>
 </div>
@@ -89,7 +89,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' => 'date_in',
             'type' => 'html',
-            'value' => 'formatDate($data->date_in)',
+          //  'value' => 'formatDate($data->date_in)',
         ),
         array(
             'name' => 'time_in',
@@ -99,7 +99,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' => 'date_out',
             'type' => 'html',
-            'value' => 'formatDate($data->date_out)',
+         //   'value' => 'formatDate($data->date_out)',
         ),
         array(
             'name' => 'time_out',
@@ -126,13 +126,7 @@ function formatTime($time) {
     }
 }
 
-function formatDate($date) {
-    if ($date == '') {
-        return "-";
-    } else {
-        return Yii::app()->dateFormatter->format("d/MM/y", strtotime($date));
-    }
-}
+
 ?>
 <script>
     $(document).ready(function() {
@@ -148,5 +142,27 @@ function formatDate($date) {
                 data: $('#view-visitor-records-history').serialize() + '&export=true'
             });
         }
+        
+        $("#Visit_date_check_in_0").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            showOn: "button",
+            buttonImage: "<?php echo Yii::app()->request->baseUrl;?>/images/calendar.png",
+            buttonImageOnly: true,
+            buttonText: "Select Date From",
+            dateFormat: "dd-mm-yy",
+           
+        });
+        
+        $("#Visit_date_check_in_1").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            showOn: "button",
+            buttonImage: "<?php echo Yii::app()->request->baseUrl;?>/images/calendar.png",
+            buttonImageOnly: true,
+            buttonText: "Select Date To",
+            dateFormat: "dd-mm-yy",
+            
+        });
     });
 </script>

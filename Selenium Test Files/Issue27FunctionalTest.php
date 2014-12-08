@@ -59,12 +59,34 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("//div[@id='cssmenu']/ul/li[6]/a/span");
 
         $this->type("name=Visit[visitor]", "test visitor1");
-        sleep(1);
+sleep(1);        
         $this->select("name=Visit[card_type]", "label=Same Day Visitor");
         $this->select("name=Visit[visitor_type]", "label=Patient Visitor");
         sleep(1);
         $this->select("name=Visit[reason]", "label=Reason 1");
-        sleep(1);
+        for ($second = 0;; $second++) {
+            if ($second >= 10)
+                $this->fail("timeout");
+            try {
+                if ("Test Visitor1" == $this->getText("css=tr.odd > td"))
+                    break;
+            } catch (Exception $e) {
+                
+            }
+            sleep(1);
+        }
+        
+        for ($second = 0;; $second++) {
+            if ($second >= 10)
+                $this->fail("timeout");
+            try {
+                if ("Reason 1" == $this->getText("//div[@id='visit-grid']/table/tbody/tr/td[4]"))
+                    break;
+            } catch (Exception $e) {
+                
+            }
+            sleep(1);
+        }
         $this->clickAndWait("link=Edit");
         $this->assertEquals("Test", $this->getText("//table[@id='personalDetailsTable']/tbody/tr/td[2]"));
         $this->assertEquals("Visitor1", $this->getText("//table[@id='personalDetailsTable']/tbody/tr[2]/td[2]"));
@@ -76,22 +98,54 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_contact_number", "1234567890");
         $this->type("id=Visitor_email", "testVisitorB@test.com");
         $this->click("id=submitContactDetailForm");
+        $this->waitForElementPresent("css=div.flash-success.success-update-contact-details");
+        $this->assertEquals("Contact Details Updated Successfully.", $this->getText("css=div.flash-success.success-update-contact-details"));
+        
+        
         $this->select("id=Visit_reason", "label=Other");
         $this->type("id=VisitReason_reason", "Reason 3");
 
         $this->click("id=submitAddReasonForm");
         sleep(1);
+        $this->waitForElementPresent("css=div.flash-success.success-add-reason");
+        $this->assertEquals("Reason Added Successfully.", $this->getText("css=div.flash-success.success-add-reason"));
+        
         $this->click("id=submitReasonForm");
+       
+        $this->waitForElementPresent("css=div.flash-success.success-update-reason");
+        $this->assertEquals("Reason Updated Successfully.", $this->getText("css=div.flash-success.success-update-reason"));
+        
         $this->type("document.forms['update-patient-form'].elements['Patient[name]']", "Patient Name 3");
         $this->click("id=submit");
         sleep(1);
         $this->clickAndWait("//div[@id='cssmenu']/ul/li[6]/a/span");
         $this->type("name=Visit[visitor]", "test visitor1");
+        sleep(1);
         $this->select("name=Visit[card_type]", "label=Same Day Visitor");
         $this->select("name=Visit[visitor_type]", "label=Patient Visitor");
-        sleep(1);
+        for ($second = 0;; $second++) {
+            if ($second >= 10)
+                $this->fail("timeout");
+            try {
+                if ("Test Visitor1" == $this->getText("css=tr.odd > td"))
+                    break;
+            } catch (Exception $e) {
+                
+            }
+            sleep(1);
+        }
         $this->select("name=Visit[reason]", "label=Reason 3");
-        sleep(1);
+        for ($second = 0;; $second++) {
+            if ($second >= 10)
+                $this->fail("timeout");
+            try {
+                if ("Reason 3" == $this->getText("//div[@id='visit-grid']/table/tbody/tr/td[4]"))
+                    break;
+            } catch (Exception $e) {
+                
+            }
+            sleep(1);
+        }
         $this->clickAndWait("link=Edit");
 
         $this->assertEquals("testVisitorB@test.com", $this->getValue("id=Visitor_email"));
@@ -128,9 +182,17 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Administration");
         $this->clickAndWait("//div[@id='cssmenu']/ul/li[6]/a/span");
         $this->type("name=Visit[visitor]", "test visitor4");
-        $this->select("name=Visit[card_type]", "label=Same Day Visitor");
-        $this->select("name=Visit[visitor_type]", "label=Corporate Visitor");
-        sleep(1);
+        for ($second = 0;; $second++) {
+            if ($second >= 10)
+                $this->fail("timeout");
+            try {
+                if ("Test Visitor4" == $this->getText("css=tr.odd > td"))
+                    break;
+            } catch (Exception $e) {
+                
+            }
+            sleep(1);
+        }
         $this->clickAndWait("link=Edit");
 
         $this->assertEquals("testVisitor4@test.com", $this->getValue("id=Visitor_email"));
@@ -144,10 +206,19 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         sleep(1);
         $this->clickAndWait("//div[@id='cssmenu']/ul/li[6]/a/span");
         $this->type("name=Visit[visitor]", "test visitor4");
-        $this->select("name=Visit[card_type]", "label=Same Day Visitor");
-        $this->select("name=Visit[visitor_type]", "label=Corporate Visitor");
-        sleep(1);
+        for ($second = 0;; $second++) {
+            if ($second >= 10)
+                $this->fail("timeout");
+            try {
+                if ("Test Visitor4" == $this->getText("css=tr.odd > td"))
+                    break;
+            } catch (Exception $e) {
+                
+            }
+            sleep(1);
+        }
         $this->clickAndWait("link=Edit");
+        
         $this->assertEquals("testVisitorC@test.com", $this->getValue("id=Visitor_email"));
         $this->assertEquals("1234567890", $this->getValue("id=Visitor_contact_number"));
         $this->assertEquals("2", $this->getValue("id=Visit_reason"));
@@ -188,7 +259,29 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->select("name=Visit[visitor_type]", "label=Patient Visitor");
         $this->select("name=Visit[reason]", "label=Reason 3");
         
-        sleep(1);
+        for ($second = 0;; $second++) {
+            if ($second >= 10)
+                $this->fail("timeout");
+            try {
+                if ("Test Visitor1" == $this->getText("css=tr.odd > td"))
+                    break;
+            } catch (Exception $e) {
+                
+            }
+            sleep(1);
+        }
+        
+        for ($second = 0;; $second++) {
+            if ($second >= 10)
+                $this->fail("timeout");
+            try {
+                if ("Reason 3" == $this->getText("//div[@id='visit-grid']/table/tbody/tr/td[4]"))
+                    break;
+            } catch (Exception $e) {
+                
+            }
+            sleep(1);
+        }
         $this->clickAndWait("link=Edit");
 
         $this->type("id=Visitor_email", "");
@@ -216,6 +309,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->click("id=submitAddReasonForm");
         sleep(1);
         $this->assertEquals("Reason is already registered.", $this->getText("id=visitReasonErrorMessage"));
+        $this->waitForElementPresent("document.forms['update-patient-form'].elements['Patient[name]']");
         $this->type("document.forms['update-patient-form'].elements['Patient[name]']", "");
         $this->click("id=submit");
         $this->waitForElementPresent("xpath=(//div[@id='Patient_name_em_'])[2]");
@@ -346,23 +440,51 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->select("id=User_tenant", "label=Test admin");
         sleep(1);
         $this->select("id=User_tenant_agent", "label=Test agentadmin");
-        sleep(1);
+        $this->waitForElementPresent("document.forms['register-newhost-form'].yt0");
         $this->click("document.forms['register-newhost-form'].yt0");
-        sleep(1);
+        $this->waitForElementPresent("id=New_user_email_em_");
         $this->assertEquals("Email Address has already been taken.", $this->getText("id=New_user_email_em_"));
-        $this->type("id=User_email", "testnewHostA@test.com");
+        $this->type("id=User_email", "testnewHosts@test.com");
         $this->click("document.forms['register-newhost-form'].yt0");
+        sleep(20);
+        $this->waitForElementPresent("css=div.flash-success.success-add-host");
+        $this->assertEquals("Host Added Successfully.", $this->getText("css=div.flash-success.success-add-host"));
+        sleep(5);
         $this->waitForElementPresent("css=div.flash-success.success-update-visitor-type");
-        sleep(10);
+        $this->assertEquals("Visitor Type Updated Successfully.", $this->getText("css=div.flash-success.success-update-visitor-type"));
+        sleep(1);        
         $this->clickAndWait("//div[@id='cssmenu']/ul/li[6]/a/span");
         $this->type("name=Visit[visitor]", "test visitor1");
         $this->select("name=Visit[visitor_type]", "label=Corporate Visitor");
-        $this->select("name=Visit[reason]", "label=Reason 3");
         sleep(1);
+        $this->select("name=Visit[reason]", "label=Reason 3");
+        for ($second = 0;; $second++) {
+            if ($second >= 10)
+                $this->fail("timeout");
+            try {
+                if ("Test Visitor1" == $this->getText("css=tr.odd > td"))
+                    break;
+            } catch (Exception $e) {
+                
+            }
+            sleep(1);
+        }
+        
+        for ($second = 0;; $second++) {
+            if ($second >= 10)
+                $this->fail("timeout");
+            try {
+                if ("Reason 3" == $this->getText("//div[@id='visit-grid']/table/tbody/tr/td[4]"))
+                    break;
+            } catch (Exception $e) {
+                
+            }
+            sleep(1);
+        }
         $this->clickAndWait("link=Edit");
         $this->assertEquals("testVisitorB@test.com", $this->getValue("id=Visitor_email"));
         $this->assertEquals("2", $this->getValue("id=Visit_visitor_type"));
-        $this->assertEquals("testnewHostA@test.com", $this->getValue("document.forms['register-host-form'].elements['User[email]']"));
+        $this->assertEquals("testnewHosts@test.com", $this->getValue("document.forms['register-host-form'].elements['User[email]']"));
         $this->assertEquals("test", $this->getValue("document.forms['register-host-form'].elements['User[first_name]']"));
         $this->assertEquals("newhostA", $this->getValue("document.forms['register-host-form'].elements['User[last_name]']"));
     }
@@ -400,7 +522,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         sleep(1);
         $this->clickAndWait("link=Edit");
         $this->click("//li[@id='preregisterLi']/a/span");
-        $currentDate = date('Y-m-j');
+        $currentDate = date('d-m-Y');
         $this->assertEquals($currentDate, $this->getEval("window.document.getElementById(\"Visit_date_in\").value"));
         $this->assertEquals($currentDate, $this->getEval("window.document.getElementById(\"Visit_date_out\").value"));
         $currentHour = date('H');
@@ -456,9 +578,9 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->click("//li[@id='preregisterLi']/a/span");
         sleep(1);
         $this->click("id=Visit_date_in");
-        $this->type("id=Visit_date_in", "11/25/2014");
+        $this->type("id=Visit_date_in", date("d-m-Y"));
         $this->click("id=Visit_date_out");
-        $this->type("id=Visit_date_out", "11/27/2014");
+        $this->type("id=Visit_date_out", date('d-m-Y', strtotime("+30 days")));
         $this->select("id=Visit_time_in_hours", "label=11");
         $this->select("id=Visit_time_in_minutes", "label=24");
         $this->click("css=#update-log-visit-form > input[type=\"submit\"]");
@@ -473,8 +595,8 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Edit");
         $this->click("//li[@id='preregisterLi']/a/span");
         sleep(1);
-        $this->assertEquals("2014-11-25", $this->getValue("id=Visit_date_in"));
-        $this->assertEquals("2014-11-27", $this->getValue("id=Visit_date_out"));
+        $this->assertEquals(date('d-m-Y'), $this->getValue("id=Visit_date_in"));
+        $this->assertEquals(date('d-m-Y', strtotime("+30 days")), $this->getValue("id=Visit_date_out"));
         $this->assertEquals("11", $this->getValue("id=Visit_time_in_hours"));
         $this->assertEquals("24", $this->getValue("id=Visit_time_in_minutes"));
     }

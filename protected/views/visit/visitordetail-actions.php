@@ -47,8 +47,8 @@ $session = new CHttpSession;
                                             <tr>
                                                 <td>
                                                     <input name="Visit[visit_status]" id="Visit_visit_status" type="text" value="<?php echo VisitStatus::CLOSED; ?>" style="display:none;">
-                                                    <input name="Visit[time_out]" id="Visit_time_out" class="timeout" type="text" style="display:none;">
-                                                    <input type="text" value="<?php echo date("Y-m-d"); ?>" id='Visit_date_out' name="Visit[date_out]" readonly>
+                                                    <input name="Visit[time_check_out]" id="Visit_time_check_out" class="timeout" type="text" style="display:none;">
+                                                    <input type="text" value="<?php echo date("d-m-Y"); ?>" id='Visit_date_check_out' name="Visit[date_check_out]" readonly>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -56,12 +56,12 @@ $session = new CHttpSession;
                                             </tr>
                                             <tr>
                                                 <td>
-                                                    <select class="time visit_time_in_hours" id='Visit_time_in_hours' disabled style="width:70px;">
+                                                    <select class="time visit_time_in_hours" id='Visit_time_check_out_hours' disabled style="width:70px;">
                                                         <?php for ($i = 1; $i <= 24; $i++): ?>
                                                             <option value="<?= $i; ?>"><?= date("H", strtotime("$i:00")); ?></option>
                                                         <?php endfor; ?>
                                                     </select> :
-                                                    <select class='time visit_time_in_minutes'  id='Visit_time_in_minutes' disabled style="width:70px;">
+                                                    <select class='time visit_time_in_minutes'  id='Visit_time_check_out_minutes' disabled style="width:70px;">
                                                         <?php for ($i = 1; $i <= 60; $i++): ?>
                                                             <option value="<?= $i; ?>"><?php
                                                                 if ($i > 0 && $i < 10) {
@@ -167,7 +167,7 @@ $session = new CHttpSession;
         $("#activateLi a").click();
 
         $('#activate-a-visit-form').bind('submit', function() {
-            $(this).find('#Visit_date_in').removeAttr('disabled');
+            $(this).find('#Visit_date_check_in').removeAttr('disabled');
         });
          display_ct();
        
@@ -186,6 +186,7 @@ $session = new CHttpSession;
         $(".visit_time_in_hours").val(x.getHours());
         $(".visit_time_in_minutes").val(x.getMinutes());
         $("#Visit_time_out").val(currenttime);
+        $("#Visit_time_check_out").val(currenttime);
         tt = display_c();
     }
 

@@ -8,8 +8,14 @@
     <tr>
         <td>
             <input name="Visit[visit_status]" id="Visit_visit_status" type="text" value="1" style="display:none;">
-            <input name="Visit[time_in]" id="Visit_time_in" class="activatevisittimein" type="text" style="display:none;">
-            <input type="text" value="<?php echo date("Y-m-d"); ?>" id='Visit_date_in' name="Visit[date_in]" disabled>
+            <input name="Visit[time_check_in]" id="Visit_time_check_in" class="activatevisittimein" type="text" style="display:none;">
+            <input type="text" value="<?php echo date("d-m-Y"); ?>" id='Visit_date_check_in' name="Visit[date_check_in]" disabled>
+            <input type="text" style="display:none;" value="<?php
+            if ($model->card_type == CardType::SAME_DAY_VISITOR) {
+                echo date("d-m-Y");
+            }
+            ?>" id='Visit_date_check_out' 
+                   name="Visit[date_check_out]" >
         </td>
     </tr>
 
@@ -21,10 +27,10 @@
             <select class="time visit_time_in_hours" id='Visit_time_in_hours' disabled style="width:70px;">
                 <?php for ($i = 1; $i <= 24; $i++): ?>
                     <option value="<?= $i; ?>"><?= date("H", strtotime("$i:00")); ?></option>
-                <?php endfor; ?>
+<?php endfor; ?>
             </select> :
             <select class='time visit_time_in_minutes'  id='Visit_time_in_minutes' disabled style="width:70px;">
-                <?php for ($i = 1; $i <= 60; $i++): ?>
+                    <?php for ($i = 1; $i <= 60; $i++): ?>
                     <option value="<?= $i; ?>"><?php
                         if ($i > 0 && $i < 10) {
                             echo '0' . $i;
@@ -32,7 +38,7 @@
                             echo $i;
                         };
                         ?></option>
-                <?php endfor; ?>
+<?php endfor; ?>
             </select>
         </td>
     </tr>
@@ -40,7 +46,7 @@
 <script>
     $(document).ready(function() {
         refreshTimeIn();
-       
+
     });
 
     function refreshToCurrentTime() {

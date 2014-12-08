@@ -21,7 +21,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' => 'date_in',
             'type' => 'html',
-            'value' => 'formatDate($data->date_in)',
+          //  'value' => 'formatDate($data->date_in)',
         ),
         array(
             'name' => 'card',
@@ -62,7 +62,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' => 'date_out',
             'type' => 'html',
-            'value' => 'formatDate($data->date_out)',
+        //    'value' => 'formatDate($data->date_out)',
         ),
     ),
 ));
@@ -89,11 +89,5 @@ function formatTime($time) {
     }
 }
 
-function formatDate($date) {
-    if ($date == '') {
-        return "-";
-    } else {
-        return Yii::app()->dateFormatter->format("d/MM/y", strtotime($date));
-    }
-}
+
 ?>

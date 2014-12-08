@@ -17,6 +17,7 @@ return array(
                 'bootstrap.gii',
             ),
         ),
+        
     ),
     // autoloading model and component classes
     'import' => array(
@@ -114,7 +115,7 @@ return array(
     // application-level parameters that can be accessed
     // using Yii::app()->params['paramName']
     'params' => array(
-    // this is used in contact page
-        'photo_unique_filename'=>'test',
+        // this is used in contact page
+        'photo_unique_filename' => 'test',
     ),
 );

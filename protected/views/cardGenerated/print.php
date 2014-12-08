@@ -1,5 +1,5 @@
 <?php
-error_reporting(E_ALL);
+//error_reporting(E_ALL);
 $session = new CHttpSession;
 // clean up the input
 $model = Visit::model()->findByPk($_GET['id']);

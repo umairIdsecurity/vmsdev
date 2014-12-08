@@ -107,7 +107,6 @@ class SiteController extends Controller {
                     default:
                         $this->redirect('index.php?r=dashboard');
                 }
-               
             }
         }
         // display the login form
@@ -190,5 +189,7 @@ class SiteController extends Controller {
         }
         echo "Tables imported successfully";
     }
+
+    
 
 }

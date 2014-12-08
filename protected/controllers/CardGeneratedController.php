@@ -79,8 +79,8 @@ class CardGeneratedController extends Controller {
 
 
         $cardGeneratedArray = array(
-            'date_printed' => date("Y-m-d"),
-            'date_expiration' => date("Y-m-d"),
+            'date_printed' => date("d-m-Y"),
+            'date_expiration' => date("d-m-Y"),
             'visitor_id' => $model->visitor,
             'tenant' => $model->tenant,
             'tenant_agent' => $model->tenant_agent,
@@ -108,8 +108,8 @@ class CardGeneratedController extends Controller {
 
 
         $cardGeneratedArray = array(
-            'date_printed' => date("Y-m-d"),
-            'date_expiration' => date("Y-m-d"),
+            'date_printed' => date("d-m-Y"),
+            'date_expiration' => date("d-m-Y"),
             'visitor_id' => $model->visitor,
             'tenant' => $model->tenant,
             'tenant_agent' => $model->tenant_agent,

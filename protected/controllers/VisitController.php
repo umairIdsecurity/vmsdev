@@ -36,8 +36,14 @@ class VisitController extends Controller {
                     'exportFileHistory',
                     'exportFileVisitorRecords',
                     'exportVisitorRecords',
+                    
                 ),
                 'expression' => 'Yii::app()->controller->accessRoles("administration")',
+            ),
+            array('allow',
+                'actions' => array( 'RunScheduledJobsClose','RunScheduledJobsExpired'
+                ),
+                'expression' => 'Yii::app()->controller->accessRoles("superadmin")',
             ),
             array('deny', // deny all users
                 'users' => array('*'),
@@ -52,6 +58,13 @@ class VisitController extends Controller {
         switch ($action) {
             case "administration":
                 $user_role = array(Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN, Roles::ROLE_AGENT_ADMIN);
+                if (in_array($CurrentRole, $user_role)) {
+                    return true;
+                }
+                break;
+                
+            case "superadmin":
+                $user_role = array(Roles::ROLE_SUPERADMIN);
                 if (in_array($CurrentRole, $user_role)) {
                     return true;
                 }
@@ -488,6 +501,41 @@ class VisitController extends Controller {
     public function actionExportFileVisitorRecords() {
         Yii::app()->request->sendFile('VisitorRecords'.time().'.csv', Yii::app()->user->getState('export'));
         Yii::app()->user->clearState('export');
+    }
+    
+    public function actionRunScheduledJobsClose() {
+        
+        /*Run expiredVisits after closevisit to avoid query confusion*/
+        echo "Scheduled Jobs - Close <br>";
+        $this->closeVisit();
+    }
+    
+    public function actionRunScheduledJobsExpired() {
+        
+        /*Run expiredVisits after closevisit to avoid query confusion*/
+        echo "Scheduled Jobs - Expired <br>";
+        $this->ExpiredVisit();
+    }
+    
+    public function closeVisit() {
+        /* update status to close if
+          visit date out is not equal to current date and if current date is greater than date out
+          and if card status is active -- 3 and visit status is not equals  3 closed
+         */
+
+        $visit = new Visit();
+        if($visit->updateVisitsToClose()){
+           // $this->redirect('index.php?r=site/RunScheduledJobsExpired');
+        }
+    }
+
+    public function ExpiredVisit() {
+        /* update status to expired if
+          current day is greater than expiration day and card type is multiday visitor and 
+         * visit status is active and card status is active
+         */
+        $visit = new Visit();
+        $visit->updateVisitsToExpired();
     }
     
 

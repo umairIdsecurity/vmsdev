@@ -60,7 +60,7 @@ class CardGeneratedServiceImpl implements CardGeneratedService {
         if ($visit->card != NULL) {
             CardGenerated::model()->updateByPk($visit->card, array(
                 'card_status' => CardStatus::CANCELLED,
-                'date_cancelled' => date('Y-m-d'),
+                'date_cancelled' => date('d-m-Y'),
             ));
         }
 
@@ -96,13 +96,6 @@ class CardGeneratedServiceImpl implements CardGeneratedService {
         return true;
     }
 
-    public function saveCardImage($visit) {
-
-        $photo = Photo::model()->findByAttributes(array('unique_filename' => Yii::app()->params['photo_unique_filename']));
-
-        CardGenerated::model()->updateByPk($visit->card, array(
-            'card_image_generated_filename' => Yii::app()->db->lastInsertID,
-        ));
-    }
+   
 
 }

@@ -11,10 +11,31 @@ $logform = $this->beginWidget('CActiveForm', array(
     'enableClientValidation' => true,
     'clientOptions' => array(
         'validateOnSubmit' => true,
+        'validateOnChange' => true,
         'afterValidate' => 'js:function(form, data, hasError){
                                 if (!hasError){
-                                    sendVisitForm("update-log-visit-form");
-                                    $("#Visit_date_out").attr("disabled", true);
+                                        $("#Visit_date_out").attr("disabled", true);
+                                        $("#Visit_date_in").attr("disabled", true);
+                                    if($("#Visit_date_in").val() == "" && $("#Visit_date_out").val() == ""){
+                                        $("#preregisterdateinError").show();
+                                        $("#preregisterdateoutError").show();
+                                    }
+                                    else if( $("#Visit_date_in").val() == "" ){
+                                        $("#preregisterdateinError").show();
+                                         $("#preregisterdateoutError").hide();
+                                    } else if($("#Visit_date_out").val() == "" ) {
+                                       $("#preregisterdateoutError").show();
+                                       $("#preregisterdateinError").hide();
+                                    } else {
+                                        $("#preregisterdateinError").hide();
+                                        $("#preregisterdateoutError").hide();
+                                        $("#Visit_date_out").attr("disabled", false);
+                                        $("#Visit_date_in").attr("disabled", false);
+                                        sendVisitForm("update-log-visit-form");
+                                        $("#Visit_date_out").attr("disabled", true);
+                                        $("#Visit_date_in").attr("disabled", true);
+                                    }
+
                                 }
                                 }'
     ),
@@ -22,26 +43,33 @@ $logform = $this->beginWidget('CActiveForm', array(
 ?>
 <div class="flash-success success-update-preregister">Visit Successfully Updated.</div>
 <table class="detailsTable" style="font-size:12px;" id="logvisitTable">
+
     <tr>
         <td>Proposed Date In</td>
     </tr>
     <tr>
+
         <td><?php
+            $mindate = date("d-m-Y");
             $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                 'model' => $model,
                 'attribute' => 'date_in',
                 'htmlOptions' => array(
                     'size' => '10', // textField size
                     'maxlength' => '10', // textField maxlength
-                    'readonly' => 'readonly',
+                    'placeholder' => 'dd-mm-yyyy',
+                    'disabled' => 'disabled',
                 ),
-                'value' => date('mm/dd/Y'),
                 'options' => array(
-                    'dateFormat' => 'mm/dd/yy',
+                    'showButtonPanel' => false,
+                    'showOn' => 'both',
+                    'dateFormat' => 'dd-mm-yy',
+                    'minDate' => $mindate,
                     'onClose' => 'js:function(selectedDate) { $("#Visit_date_in").datepicker("option", "minDate", selectedDate); }',
                 )
             ));
             ?>
+            <span style="color:red;display:none;" id="preregisterdateinError">Date In cannot be blank.</span>
         </td>
     </tr>
     <tr>
@@ -56,14 +84,18 @@ $logform = $this->beginWidget('CActiveForm', array(
                     'size' => '10', // textField size
                     'maxlength' => '10', // textField maxlength
                     'disabled' => 'disabled',
-                    'readonly' => 'readonly',
+                    // 'readonly' => 'readonly',
+                    'placeholder' => 'dd-mm-yyyy',
                 ),
                 'options' => array(
-                    'dateFormat' => 'mm/dd/yy',
+                    'buttonImage' => Yii::app()->request->baseUrl . '/images/Calendar.png',
+                    'buttonImageOnly' => true,
+                    'dateFormat' => 'dd-mm-yy',
                     'onClose' => 'js:function(selectedDate) { $("#Visit_date_out").datepicker("option", "maxDate", selectedDate); }',
                 )
             ));
             ?>
+            <span style="color:red;display:none;" id="preregisterdateoutError">Date Out cannot be blank.</span>
         </td>
     </tr>
     <tr>
@@ -106,7 +138,7 @@ $logform = $this->beginWidget('CActiveForm', array(
 <?php echo $logform->error($model, 'date_in'); ?>
 <input type='submit' value='Update'/>
 <?php $this->endWidget(); ?>
-
+<input type="text" value="<?php echo date('d-m-Y'); ?>" id="curDate" style="display:none;">
 <input type='text' id='currentCardTypeValueOfEditedUser' value='<?php echo $model->card_type; ?>' style='display:none;'>
 <input type='text' id='savedTimeIn' value='<?php echo $model->time_in; ?>' style='display:none;'>
 <script>
@@ -116,13 +148,13 @@ $logform = $this->beginWidget('CActiveForm', array(
         var mm = currentTime.getMonth() + 1; //January is 0!
         var yyyy = currentTime.getFullYear();
 
-        var currentDate = yyyy + "-" + mm + "-" + dd;
-        
+        var currentDate = $("#curDate").val();
+
         if ($("#savedTimeIn").val() == '') {
             $("#Visit_time_in_hours").val(currentTime.getHours());
             $("#Visit_time_in_minutes").val(currentTime.getMinutes());
         }
-        
+
         if ($("#currentCardTypeValueOfEditedUser").val() == 1) { //if card type is same visitor
             $("#Visit_date_in").val(currentDate);
             $("#Visit_date_out").val(currentDate);
@@ -130,7 +162,7 @@ $logform = $this->beginWidget('CActiveForm', array(
         }
 
         $('#Visit_date_in').on('change', function(e) {
-            assignValuesForProposedDateOutDependingOnCardType();
+            // assignValuesForProposedDateOutDependingOnCardType();
         });
 
         function assignValuesForProposedDateOutDependingOnCardType() {
@@ -144,8 +176,11 @@ $logform = $this->beginWidget('CActiveForm', array(
         $("#Visit_date_in").datepicker({
             changeMonth: true,
             changeYear: true,
-            buttonImageOnly: false,
-            dateFormat: "yy-mm-dd",
+            showOn: "button",
+            buttonImage: "<?php echo Yii::app()->request->baseUrl; ?>/images/calendar.png",
+            buttonImageOnly: true,
+            buttonText: "Select Proposed Date In",
+            dateFormat: "dd-mm-yy",
             onClose: function(selectedDate) {
                 $("#Visit_date_out").datepicker("option", "minDate", selectedDate);
             }
@@ -153,8 +188,11 @@ $logform = $this->beginWidget('CActiveForm', array(
         $("#Visit_date_out").datepicker({
             changeMonth: true,
             changeYear: true,
-            buttonImageOnly: false,
-            dateFormat: "yy-mm-dd",
+            showOn: "button",
+            buttonImage: "<?php echo Yii::app()->request->baseUrl; ?>/images/calendar.png",
+            buttonImageOnly: true,
+            buttonText: "Select Proposed Date Out",
+            dateFormat: "dd-mm-yy",
             onClose: function(selectedDate) {
                 $("#Visit_date_in").datepicker("option", "maxDate", selectedDate);
             }
@@ -163,6 +201,8 @@ $logform = $this->beginWidget('CActiveForm', array(
         $('#update-log-visit-form').bind('submit', function() {
             $(this).find('#Visit_date_out').removeAttr('disabled');
             $(this).find('#Visit_date_in').removeAttr('disabled');
+            $(this).find('#Visit_date_check_in').removeAttr('disabled');
+            $(this).find('#Visit_date_check_out').removeAttr('disabled');
         });
 
     });

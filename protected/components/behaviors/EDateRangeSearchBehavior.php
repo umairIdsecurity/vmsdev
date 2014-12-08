@@ -8,12 +8,12 @@ class EDateRangeSearchBehavior extends CActiveRecordBehavior {
     /**
      * @param the default 'from' date when nothing is entered.
      */
-    public $dateFromDefault = '1900-01-01';
+    public $dateFromDefault = '01-01-1900';
 
     /**
      * @param the default 'to' date when nothing is entered.
      */
-    public $dateToDefault = '2099-12-31';
+    public $dateToDefault = '31-12-2099';
 
     /*
      * Date range search criteria

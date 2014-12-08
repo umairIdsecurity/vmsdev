@@ -124,7 +124,10 @@ $logform = $this->beginWidget('CActiveForm', array(
         $("#Visit_date_in").datepicker({
             changeMonth: true,
             changeYear: true,
-            buttonImageOnly: false,
+            showOn: "button",
+            buttonImage: "<?php echo Yii::app()->request->baseUrl;?>/images/calendar.png",
+            buttonImageOnly: true,
+            buttonText: "Select Date From",
             dateFormat: "yy-mm-dd",
             onClose: function(selectedDate) {
                 $("#Visit_date_out").datepicker("option", "minDate", selectedDate);
@@ -133,7 +136,10 @@ $logform = $this->beginWidget('CActiveForm', array(
         $("#Visit_date_out").datepicker({
             changeMonth: true,
             changeYear: true,
-            buttonImageOnly: false,
+            showOn: "button",
+            buttonImage: "<?php echo Yii::app()->request->baseUrl;?>/images/calendar.png",
+            buttonImageOnly: true,
+            buttonText: "Select Date From",
             dateFormat: "yy-mm-dd",
             onClose: function(selectedDate) {
                 $("#Visit_date_in").datepicker("option", "maxDate", selectedDate);

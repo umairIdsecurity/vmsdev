@@ -3,7 +3,7 @@
 /* @var $model Visit */
 ?>
 <h1>Visitor Records</h1>
-<br>
+
 <?php
 $session = new CHttpSession;
 
@@ -60,7 +60,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' => 'date_in',
             'type' => 'html',
-            'value' => 'formatDate($data->date_in)',
+         //   'value' => 'formatDate($data->date_in)',
         ),
         array(
             'name' => 'time_in',
@@ -70,7 +70,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' => 'date_out',
             'type' => 'html',
-            'value' => 'formatDate($data->date_out)',
+          //  'value' => 'formatDate($data->date_out)',
         ),
         array(
             'name' => 'time_out',

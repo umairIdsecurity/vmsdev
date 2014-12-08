@@ -16,13 +16,7 @@ class VisitServiceImpl implements VisitService {
     public function save($visit, $sessionId) {
         $visit->created_by = $sessionId;
 
-        if ($visit->date_in != '') {
-            $visit->date_in = date('Y-m-d', strtotime($visit->date_in));
-        }
-
-        if ($visit->date_out != '') {
-            $visit->date_out = date('Y-m-d', strtotime($visit->date_out));
-        }
+      
         if ($visit->time_in_hours != '') {
             $visit->time_in = $visit->time_in_hours . ':' . $visit->time_in_minutes;
         }
@@ -54,7 +48,7 @@ class VisitServiceImpl implements VisitService {
         if($visit->card != '' && $visit->visit_status == VisitStatus::CLOSED){
             CardGenerated::model()->updateByPk($visit->card, array(
             'card_status' => CardStatus::RETURNED,
-            'date_returned' => date('Y-m-d'),
+            'date_returned' => date('d-m-Y'),
         ));
         }
     }

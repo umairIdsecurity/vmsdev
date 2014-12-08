@@ -43,7 +43,7 @@ $session = new CHttpSession;
                 array(
                     'name' => 'date_in',
                     'type' => 'html',
-                    'value' => 'Yii::app()->dateFormatter->format("d/MM/y",strtotime($data->date_in))',
+                 //   'value' => 'Yii::app()->dateFormatter->format("d/MM/y",strtotime($data->date_in))',
                 ),
                 array(
                     'name' => 'Host',
@@ -53,7 +53,7 @@ $session = new CHttpSession;
                 array(
                     'name' => 'date_out',
                     'type' => 'html',
-                    'value' => 'Yii::app()->dateFormatter->format("d/MM/y",strtotime($data->date_out))',
+                  //  'value' => 'Yii::app()->dateFormatter->format("d/MM/y",strtotime($data->date_out))',
                 ),
                 array(
                     'name' => 'time_out',

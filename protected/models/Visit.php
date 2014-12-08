@@ -62,8 +62,8 @@ class Visit extends CActiveRecord {
         return array(
             array('is_deleted', 'numerical', 'integerOnly' => true),
             array('reason,visitor_type,visitor,visitor_status,workstation', 'required'),
-            array('visitor,card, visitor_type, reason, visitor_status, host, patient, created_by, tenant, tenant_agent', 'length', 'max' => 20),
-            array('time_in_hours,time_in_minutes,visit_status,date_in, time_in, date_out, time_out, date_check_in, time_check_in, date_check_out, time_check_out,card_type', 'safe'),
+            array('visitor,card, visitor_type, reason, visitor_status,host, patient, created_by, tenant, tenant_agent', 'length', 'max' => 20),
+            array('date_in,date_out,time_in_hours,time_in_minutes,visit_status, time_in, time_out, date_check_in, time_check_in, date_check_out, time_check_out,card_type', 'safe'),
             array('patient, host,card,tenant,tenant_agent', 'default', 'setOnEmpty' => true, 'value' => null),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
@@ -88,8 +88,6 @@ class Visit extends CActiveRecord {
         if ($this->scenario == 'search') {
             return $this->_firstname;
         }
-
-     
     }
 
     public function setFirstname($value) {
@@ -103,7 +101,6 @@ class Visit extends CActiveRecord {
             return $this->_lastname;
         }
         // return $this->_lastname;
-       
     }
 
     public function setLastname($value) {
@@ -128,7 +125,7 @@ class Visit extends CActiveRecord {
         if ($this->scenario == 'search') {
             return $this->_contactnumber;
         }
-        
+
 //        if (isset($this->_contactnumber) && is_object($this->contactnumber)) {
 //            return $this->user->lastname;
 //        }
@@ -170,7 +167,6 @@ class Visit extends CActiveRecord {
             'tenant0' => array(self::BELONGS_TO, 'User', 'tenant'),
             'workstation0' => array(self::BELONGS_TO, 'Workstation', 'workstation'),
             //'company0' => array(self::BELONGS_TO, 'Company', 'visitor0.id'),
-            
             'visitStatus' => array(self::BELONGS_TO, 'VisitStatus', 'visit_status'),
         );
     }
@@ -366,32 +362,46 @@ class Visit extends CActiveRecord {
     }
 
     public function updateVisitsToClose() {
-        $command = Yii::app()->db->createCommand("UPDATE visit
+        
+        try {
+            $command = Yii::app()->db->createCommand("UPDATE visit
                     LEFT JOIN card_generated ON card_generated.id = visit.`card` 
                     SET visit_status = '" . VisitStatus::CLOSED . "'
-                    WHERE '" . date('Y-m-d') . "' > date_out AND date_out != '" . date('Y-m-d') . "' AND visit_status = '" . VisitStatus::ACTIVE . "'
-                    AND card_status ='" . CardStatus::ACTIVE . "' and card_type= '" . CardType::SAME_DAY_VISITOR . "'");
-
-        try {
-            $command->query();
-            echo "Update to close visit successful";
+                    WHERE '" . date('d-m-Y') . "' > date_out AND date_out != '" . date('d-m-Y') . "' AND visit_status = '" . VisitStatus::ACTIVE . "'
+                    AND card_status ='" . CardStatus::ACTIVE . "' and card_type= '" . CardType::SAME_DAY_VISITOR . "'")->execute();
+            echo "Affected Rows : ".$command."<br>";
+            if($command > 0){
+                echo "Update visit to close status successful.";
+            } else {
+                echo "Nothing to update.";
+            }
+            
+            return true;
         } catch (Exception $ex) {
             echo 'Query failed', $ex->getMessage();
+            return false;
         }
     }
 
     public function updateVisitsToExpired() {
-        $command = Yii::app()->db->createCommand("UPDATE visit
+        
+        try {
+            $command = Yii::app()->db->createCommand("UPDATE visit
                     LEFT JOIN card_generated ON card_generated.id = visit.`card` 
                     SET visit_status = '" . VisitStatus::EXPIRED . "'
-                    WHERE '" . date('Y-m-d') . "' > date_expiration AND visit_status = '" . VisitStatus::ACTIVE . "'
-                    AND card_status ='" . CardStatus::ACTIVE . "' and card_type='" . CardType::MULTI_DAY_VISITOR . "'");
-
-        try {
-            $command->query();
-            echo "Update To Expired Visit Successful";
+                    WHERE '" . date('d-m-Y') . "' > date_expiration AND visit_status = '" . VisitStatus::ACTIVE . "'
+                    AND card_status ='" . CardStatus::ACTIVE . "' and card_type='" . CardType::MULTI_DAY_VISITOR . "'")->execute();
+            echo "Affected Rows : ".$command."<br>";
+            if($command > 0){
+                echo "Update visit to expired status successful.";
+            } else {
+                echo "Nothing to update.";
+            }
+            
+            return true;
         } catch (Exception $ex) {
             echo 'Query failed', $ex->getMessage();
+            return false;
         }
     }
 

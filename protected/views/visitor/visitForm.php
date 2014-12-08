@@ -92,7 +92,7 @@
     <?php if (!isset($_GET['action'])) { ?>
         <div class="row">
             <?php echo $form->labelEx($visitModel, 'date_in'); ?>
-            <input name="Visit[date_in]" id="Visit_date_in" type="text" value="<?php echo date("Y-m-d"); ?>">
+            <input name="Visit[date_in]" id="Visit_date_in" type="text" value="<?php echo date("d-m-Y"); ?>">
             <?php echo $form->error($visitModel, 'date_in'); ?>
         </div>
         <?php

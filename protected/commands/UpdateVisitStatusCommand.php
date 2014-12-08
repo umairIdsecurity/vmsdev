@@ -5,6 +5,7 @@ class UpdateVisitStatusCommand extends CConsoleCommand {
     public function run($args) {
         $this->closeVisit();
         $this->ExpiredVisit();
+     
     }
 
     public function closeVisit() {

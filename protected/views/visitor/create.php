@@ -57,7 +57,7 @@ $session = new CHttpSession;
         <?php $this->renderPartial('logvisit', array('visitModel' => $visitModel)); ?>
     </li>
 </ul>
-<input type="text" id="createUrlForEmailUnique" value="<?php echo Yii::app()->createUrl('user/checkEmailIfUnique&id='); ?>"/>
+<input type="text" style="display:none;" id="createUrlForEmailUnique" value="<?php echo Yii::app()->createUrl('user/checkEmailIfUnique&id='); ?>"/>
 
 <input type="text" id="currentRoleOfLoggedInUser" value="<?php echo $session['role']; ?>">
 <input type="text" id="currentCompanyOfLoggedInUser" value="<?php echo User::model()->getCompany($session['id']); ?>">

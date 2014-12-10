@@ -13,6 +13,8 @@
             <input type="text" style="display:none;" value="<?php
             if ($model->card_type == CardType::SAME_DAY_VISITOR) {
                 echo date("d-m-Y");
+            } else {
+                echo $model->date_out;
             }
             ?>" id='Visit_date_check_out' 
                    name="Visit[date_check_out]" >

@@ -22,12 +22,12 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
     }
 
     function testAll() {
-//        $this->resetDbWithData();
-//        $this->ScenarioAdmin();
-//        $this->resetDbWithData();
-//        $this->ScenarioAgentAdmin();
-//        $this->resetDbWithData();
-//        $this->ScenarioAgentOperator();
+        $this->resetDbWithData();
+        $this->ScenarioAdmin();
+        $this->resetDbWithData();
+        $this->ScenarioAgentAdmin();
+        $this->resetDbWithData();
+        $this->ScenarioAgentOperator();
         $this->resetDbWithData();
         $this->ScenarioOperator();
         $this->resetDbWithData();

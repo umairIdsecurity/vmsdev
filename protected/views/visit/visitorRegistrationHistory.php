@@ -22,13 +22,13 @@
                 'dateFormat' => 'dd-mm-yy',
             ),
             'htmlOptions' => array(
-                    'placeholder' => 'dd-mm-yyyy',
-                    'readonly' => 'readonly',
-                ),
+                'placeholder' => 'dd-mm-yyyy',
+                'readonly' => 'readonly',
+            ),
         ));
     }
     ?>
-        <input type="submit" name="yt1" value="Filter" style="margin-top:-10px;height:30px;">  
+    <input type="submit" name="yt1" value="Filter" style="margin-top:-10px;height:30px;">  
 
     <?php $this->endWidget(); ?>
 </div>
@@ -36,7 +36,9 @@
 $session = new CHttpSession;
 $merge = new CDbCriteria;
 $merge->addCondition('visit_status ="' . VisitStatus::CLOSED . '"');
-
+?>
+<input type="text" id="totalRecordsCount" value="<?php echo $model->search($merge)->getTotalItemCount(); ?>"/>
+<?php
 $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'view-visitor-records-history',
     'dataProvider' => $model->search($merge),
@@ -89,7 +91,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' => 'date_in',
             'type' => 'html',
-          //  'value' => 'formatDate($data->date_in)',
+        //  'value' => 'formatDate($data->date_in)',
         ),
         array(
             'name' => 'time_in',
@@ -99,7 +101,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' => 'date_out',
             'type' => 'html',
-         //   'value' => 'formatDate($data->date_out)',
+        //   'value' => 'formatDate($data->date_out)',
         ),
         array(
             'name' => 'time_out',
@@ -125,11 +127,15 @@ function formatTime($time) {
         return date('h:i A', strtotime($time));
     }
 }
-
-
 ?>
 <script>
     $(document).ready(function() {
+        if ($("#totalRecordsCount").val() == 0) {
+            $('#export-button').removeClass('greenBtn');
+            $('#export-button').addClass('btn DeleteBtn');
+            $("#export-button").attr('disabled', true);
+        }
+
         $('#export-button').on('click', function() {
             $.fn.yiiGridView.export();
         });
@@ -142,27 +148,25 @@ function formatTime($time) {
                 data: $('#view-visitor-records-history').serialize() + '&export=true'
             });
         }
-        
+
         $("#Visit_date_check_in_0").datepicker({
             changeMonth: true,
             changeYear: true,
             showOn: "button",
-            buttonImage: "<?php echo Yii::app()->request->baseUrl;?>/images/calendar.png",
+            buttonImage: "<?php echo Yii::app()->request->baseUrl; ?>/images/calendar.png",
             buttonImageOnly: true,
             buttonText: "Select Date From",
             dateFormat: "dd-mm-yy",
-           
         });
-        
+
         $("#Visit_date_check_in_1").datepicker({
             changeMonth: true,
             changeYear: true,
             showOn: "button",
-            buttonImage: "<?php echo Yii::app()->request->baseUrl;?>/images/calendar.png",
+            buttonImage: "<?php echo Yii::app()->request->baseUrl; ?>/images/calendar.png",
             buttonImageOnly: true,
             buttonText: "Select Date To",
             dateFormat: "dd-mm-yy",
-            
         });
     });
 </script>

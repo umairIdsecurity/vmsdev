@@ -12,6 +12,7 @@ if ($visitModel->time_in != '') {
     <tr>
         <td><input type="text" value="<?php echo date("d-m-Y"); ?>" id='Visit_date_inLog' readonly=""></td>
     </tr>
+    
 
     <tr>
         <td>Time In</td>

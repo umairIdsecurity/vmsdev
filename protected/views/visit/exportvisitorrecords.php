@@ -16,6 +16,9 @@
 </div><!-- search-form -->
 <?php
 $session = new CHttpSession;
+?>
+<input type="text" id="totalRecordsCount" value="<?php echo $model->search()->getTotalItemCount(); ?>"/>
+<?php
 $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'view-export-visitor-records',
     'dataProvider' => $model->search(),

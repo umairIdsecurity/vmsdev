@@ -6,7 +6,7 @@
 <h1>Evacuation Report</h1>
 <?php echo CHtml::button('Export to CSV', array('id' => 'export-button', 'class' => 'greenBtn')); ?>
 <br>
-
+<br>
 <div class="search-form" style="display:none;">
     <?php
     $this->renderPartial('_search', array(
@@ -18,13 +18,16 @@
 $session = new CHttpSession;
 $merge = new CDbCriteria;
 $merge->addCondition('visit_status ="' . VisitStatus::ACTIVE . '"');
-
+?>
+<input type="text" id="totalRecordsCount" value="<?php echo $model->search($merge)->getTotalItemCount(); ?>"/>
+<?php
 $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'view-visitor-records',
     'dataProvider' => $model->search($merge),
     'filter' => $model,
     'columns' =>
     array(
+        
         array(
             'name' => 'visit_status',
             'filter' => false,
@@ -84,7 +87,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' => 'date_out',
             'type' => 'html',
-         //   'value' => 'formatDate($data->date_out)',
+        //   'value' => 'formatDate($data->date_out)',
         ),
         array(
             'name' => 'time_out',
@@ -110,11 +113,15 @@ function formatTime($time) {
         return date('h:i A', strtotime($time));
     }
 }
-
-
 ?>
 <script>
     $(document).ready(function() {
+        if ($("#totalRecordsCount").val() == 0) {
+            $('#export-button').removeClass('greenBtn');
+            $('#export-button').addClass('btn DeleteBtn');
+            $("#export-button").attr('disabled', true);
+        }
+        
         $('#export-button').on('click', function() {
             $.fn.yiiGridView.export();
         });

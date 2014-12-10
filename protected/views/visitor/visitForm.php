@@ -96,6 +96,11 @@ $session = new CHttpSession;
             <input name="Visit[date_in]" id="Visit_date_in" type="text" value="<?php echo date("d-m-Y"); ?>">
             <?php echo $form->error($visitModel, 'date_in'); ?>
         </div>
+        <div class="row">
+            <?php echo $form->labelEx($visitModel, 'date_check_in'); ?>
+            <input name="Visit[date_check_in]" id="Visit_date_check_in" type="text" value="<?php echo date("d-m-Y"); ?>">
+            <?php echo $form->error($visitModel, 'date_check_in'); ?>
+        </div>
         <?php
         date_default_timezone_set('Asia/Manila');
         $time = date('H:i:s');
@@ -104,6 +109,11 @@ $session = new CHttpSession;
             <?php echo $form->labelEx($visitModel, 'time_in'); ?>
             <input name="Visit[time_in]" id="Visit_time_in" type="text" value="<?php echo $time; ?>">
             <?php echo $form->error($visitModel, 'time_in'); ?>
+        </div>
+        <div class="row">
+            <?php echo $form->labelEx($visitModel, 'time_check_in'); ?>
+            <input name="Visit[time_check_in]" id="Visit_time_check_in" type="text" value="<?php echo $time; ?>">
+            <?php echo $form->error($visitModel, 'time_check_in'); ?>
         </div>
 
     <?php } ?>

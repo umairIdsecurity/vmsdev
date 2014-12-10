@@ -41,7 +41,7 @@ $session = new CHttpSession;
                     'value' => 'User::model()->findByPk($data->created_by)->first_name." ".User::model()->findByPk($data->created_by)->last_name',
                 ),
                 array(
-                    'name' => 'date_in',
+                    'name' => 'date_check_in',
                     'type' => 'html',
                  //   'value' => 'Yii::app()->dateFormatter->format("d/MM/y",strtotime($data->date_in))',
                 ),
@@ -51,14 +51,14 @@ $session = new CHttpSession;
                     'value' => 'returnPatientOrHostName($data->id,$GLOBALS["userHost"])',
                 ),
                 array(
-                    'name' => 'date_out',
+                    'name' => 'date_check_out',
                     'type' => 'html',
                   //  'value' => 'Yii::app()->dateFormatter->format("d/MM/y",strtotime($data->date_out))',
                 ),
                 array(
-                    'name' => 'time_out',
+                    'name' => 'time_check_out',
                     'type' => 'html',
-                    'value' => 'formatTime($data->time_out)',
+                    'value' => 'formatTime($data->time_check_out)',
                 ),
                 
                 array(

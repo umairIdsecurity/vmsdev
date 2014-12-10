@@ -54,7 +54,7 @@ class Issue24FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->clickAndWait("//div[@id='cssmenu']/ul/li[5]/a/span");
-        $this->clickAndWait("css=li.has-sub.active > ul > li.odd > a.has-sub-sub > span");
+        $this->clickAndWait("css=li.has-sub.active > ul > li.odd > a.addSubMenu > span");
         $this->type("id=VisitReason_reason", "Test Reason");
         $this->clickAndWait("name=yt0");
         $this->assertEquals("Test Reason", $this->getText("css=tr.odd > td"));
@@ -195,15 +195,15 @@ class Issue24FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->clickAndWait("//div[@id='cssmenu']/ul/li[5]/a/span");
-        $this->clickAndWait("css=li.has-sub.active > ul > li.odd > a.has-sub-sub > span");
+        $this->clickAndWait("css=li.has-sub.active > ul > li.odd > a.addSubMenu > span");
         $this->type("id=VisitReason_reason", "This is a reason");
         $this->clickAndWait("name=yt0");
-        $this->assertEquals("This is a reason", $this->getText("css=tr.odd > td"));
-        $this->clickAndWait("css=li.has-sub.active > ul > li.odd > a.has-sub-sub > span");
+        $this->assertEquals("This Is A Reason", $this->getText("css=tr.odd > td"));
+        $this->clickAndWait("css=li.has-sub.active > ul > li.odd > a.addSubMenu > span");
         $this->type("id=VisitReason_reason", " THIS IS A REASON ");
         $this->clickAndWait("name=yt0");
         $this->assertEquals("Reason \"THIS IS A REASON\" has already been taken.", $this->getText("css=div.errorSummary > ul > li"));
-        $this->clickAndWait("css=li.has-sub.active > ul > li.odd > a.has-sub-sub > span");
+        $this->clickAndWait("css=li.has-sub.active > ul > li.odd > a.addSubMenu > span");
         
         $this->type("id=VisitReason_reason", "This is a valid reason ?!.,’”()@#$%^&*-+");
         $this->clickAndWait("name=yt0");
@@ -213,14 +213,14 @@ class Issue24FunctionalTest extends BaseFunctionalTest {
             if ($second >= 10)
                 $this->fail("timeout");
             try {
-                if ("This is a valid reason ?!.,’”()@#$%^&*-+" == $this->getText("css=tr.odd > td"))
+                if ("This Is A Valid Reason ?!.,’”()@#$%^&*-+" == $this->getText("css=tr.odd > td"))
                     break;
             } catch (Exception $e) {
                 
             }
             sleep(1);
         }
-        $this->assertEquals("This is a valid reason ?!.,’”()@#$%^&*-+", $this->getText("css=tr.odd > td"));
+        $this->assertEquals("This Is A Valid Reason ?!.,’”()@#$%^&*-+", $this->getText("css=tr.odd > td"));
        
     }
 

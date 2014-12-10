@@ -15,7 +15,7 @@ class VisitReasonServiceImpl implements VisitReasonService {
 
     public function save($visitReason, $sessionId) {
         $visitReason->created_by = $sessionId;
-        
+        $visitReason->reason = ucwords($visitReason->reason);  
         if (!($visitReason->save())) {
             return false;
         }

@@ -569,7 +569,8 @@ dt.tabs dt{
 
 #visit-reason-grid table tr td a{
     width:50px !important;
-    margin: 0 auto;
+     margin-left: auto;
+    margin-right: auto;
 }
 
 #visit-reason-grid .filters input{

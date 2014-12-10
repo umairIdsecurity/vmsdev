@@ -529,7 +529,7 @@ CREATE TABLE IF NOT EXISTS `workstation` (
 -- Dumping data for table `workstation`
 --
 INSERT INTO `workstation` (`id`, `name`, `location`, `contact_name`, `contact_number`, `contact_email_address`, `number_of_operators`, `assign_kiosk`, `password`, `created_by`, `tenant`, `tenant_agent`) VALUES
-(8, 'Workstation', 'PAL', 'Test Person', 123456, 'workstation1@test.com', NULL, 0, NULL, 16, 17, 18);
+(8, 'Workstation1', 'PAL', 'Test Person', 123456, 'workstation1@test.com', NULL, 0, NULL, 16, 17, 18);
 
 --
 -- Constraints for dumped tables

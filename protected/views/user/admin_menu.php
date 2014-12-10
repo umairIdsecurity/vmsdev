@@ -23,7 +23,7 @@ if ( $session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles
                 ?>
                 <li class='has-sub'><a href='<?php echo Yii::app()->createUrl('company/admin'); ?>'><span>Manage Companies</span></a>
                     <ul>
-                        <li><a href='<?php echo Yii::app()->createUrl('company/create'); ?>' class="has-sub-sub"><span>Add Company</span></a></li>
+                        <li><a href='<?php echo Yii::app()->createUrl('company/create'); ?>' class="addSubMenu"><span>Add Company</span></a></li>
                     </ul>
                 </li>
 
@@ -35,7 +35,7 @@ if ( $session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles
             ?>
             <li class='has-sub'><a href='<?php echo Yii::app()->createUrl('workstation/admin') ?>'><span>Manage Workstations</span></a>
                 <ul>
-                    <li><a href='<?php echo Yii::app()->createUrl('workstation/create'); ?>' class="has-sub-sub"><span>Add Workstation</span></a></li>
+                    <li><a href='<?php echo Yii::app()->createUrl('workstation/create'); ?>' class="addSubMenu"><span>Add Workstation</span></a></li>
                 </ul>
             </li>
 
@@ -82,14 +82,14 @@ if ( $session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles
                 ?>
                 <li class='has-sub'><a href='<?php echo Yii::app()->createUrl('visitor/admin'); ?>'><span>Manage Visitor Records</span></a>
                     <ul>
-                        <li><a href='<?php echo Yii::app()->createUrl('visitor/create'); ?>' class="has-sub-sub"><span>Register a Visitor</span></a></li>
-                        <li><a href='<?php echo Yii::app()->createUrl('visitor/create&action=preregister'); ?>' class="has-sub-sub"><span>Pre-register a Visitor</span></a></li>
-                        <li><a href='<?php echo Yii::app()->createUrl('visit/exportvisitorrecords'); ?>' class="has-sub-sub"><span>Export Visitor Records</span></a></li>
+                        <li><a href='<?php echo Yii::app()->createUrl('visitor/create'); ?>' class="addSubMenu"><span>Register a Visitor</span></a></li>
+                        <li><a href='<?php echo Yii::app()->createUrl('visitor/create&action=preregister'); ?>' class="addSubMenu"><span>Pre-register a Visitor</span></a></li>
+                        <li><a href='<?php echo Yii::app()->createUrl('visit/exportvisitorrecords'); ?>' ><span>Export Visitor Records</span></a></li>
                     </ul>
                 </li>    
                 <li class='has-sub'><a href='<?php echo Yii::app()->createUrl('visitReason/admin'); ?>'><span>Manage Visit Reasons</span></a>
                     <ul>
-                        <li><a href='<?php echo Yii::app()->createUrl('visitReason/create'); ?>' class="has-sub-sub"><span>Add Reason</span></a></li>
+                        <li><a href='<?php echo Yii::app()->createUrl('visitReason/create'); ?>' class="addSubMenu"><span>Add Visit Reason</span></a></li>
                     </ul>
                 </li>
                 <li class=''><a href='<?php echo Yii::app()->createUrl('visit/admin'); ?>'><span>Manage Visits</span></a>
@@ -101,8 +101,8 @@ if ( $session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles
             ?>
             <li class='has-sub'><a href='#'><span>Reports</span></a>
                     <ul>
-                        <li><a href='<?php echo Yii::app()->createUrl('visit/evacuationReport'); ?>' class="has-sub-sub"><span>Evacuation Report</span></a></li>
-                        <li><a href='<?php echo Yii::app()->createUrl('visit/visitorRegistrationHistory'); ?>' class="has-sub-sub"><span>Visitor Registration History</span></a></li>
+                        <li><a href='<?php echo Yii::app()->createUrl('visit/evacuationReport'); ?>' ><span>Evacuation Report</span></a></li>
+                        <li><a href='<?php echo Yii::app()->createUrl('visit/visitorRegistrationHistory'); ?>'><span>Visitor Registration History</span></a></li>
                     </ul>
                 </li>
         </ul>

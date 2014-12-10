@@ -167,7 +167,7 @@ class Issue3FunctionalTestAdmin extends BaseFunctionalTest {
         $this->addUser("operator2@test.com", "operator2");
         $this->getDisabledRoleValue("8");
         $this->getDisabledCompanyValue("Test Company 1");
-        $this->assertEquals("Workstation", $this->getEval("window.document.getElementById(\"User_workstation\").options[window.document.getElementById(\"User_workstation\").selectedIndex].text"));
+        $this->assertEquals("Workstation1", $this->getEval("window.document.getElementById(\"User_workstation\").options[window.document.getElementById(\"User_workstation\").selectedIndex].text"));
 
         $this->waitForElementPresent("id=submitBtn");
         $this->click("id=submitBtn");

@@ -22,12 +22,12 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
     }
 
     function testAll() {
-        $this->resetDbWithData();
-        $this->ScenarioAdmin();
-        $this->resetDbWithData();
-        $this->ScenarioAgentAdmin();
-        $this->resetDbWithData();
-        $this->ScenarioAgentOperator();
+//        $this->resetDbWithData();
+//        $this->ScenarioAdmin();
+//        $this->resetDbWithData();
+//        $this->ScenarioAgentAdmin();
+//        $this->resetDbWithData();
+//        $this->ScenarioAgentOperator();
         $this->resetDbWithData();
         $this->ScenarioOperator();
         $this->resetDbWithData();
@@ -138,9 +138,13 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->select("id=Visit_reason", "label=Reason 1");
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
+        if ($username == 'superadmin' || $username == 'admin' || $username == 'agentadmin') {
+            $this->select("id=workstation", "label=Workstation1");
+        }
         $this->click("id=submitFormVisitor");
         $this->type("id=Patient_name", $username . "patient1");
         $this->click("id=submitFormPatientName");
+        $this->waitForElementPresent("id=submitAllForms");
         $this->clickAndWait("id=submitAllForms");
         $this->assertEquals("test", $this->getText("//table[@id='personalDetailsTable']/tbody/tr/td[2]"));
         $this->assertEquals($username . "visitor1", $this->getText("//table[@id='personalDetailsTable']/tbody/tr[2]/td[2]"));
@@ -176,6 +180,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->waitForElementPresent("id=2");
         $this->click("id=2");
         $this->select("id=Visit_reason_search", "label=Reason 1");
+        $this->select("id=workstation_search", "label=Workstation1");
         $this->click("id=clicktabB1");
         $this->type("id=Patient_name", $username . "patient2");
         $this->click("id=submitFormPatientName");
@@ -215,6 +220,9 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->select("id=Visit_reason", "label=Reason 1");
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
+        if ($username == 'superadmin' || $username == 'admin' || $username == 'agentadmin') {
+            $this->select("id=workstation", "label=Workstation1");
+        }
         $this->click("id=submitFormVisitor");
         $this->type("id=User_first_name", "test");
         $this->type("id=User_last_name", $username . "host1");
@@ -260,6 +268,9 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->select("id=Visit_reason", "label=Reason 1");
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
+        if ($username == 'superadmin' || $username == 'admin' || $username == 'agentadmin') {
+            $this->select("id=workstation", "label=Workstation1");
+        }
         $this->click("id=submitFormVisitor");
         $this->type("id=search-host", "test");
         $this->click("id=dummy-host-findBtn");
@@ -298,6 +309,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->click("id=3");
         $this->select("id=Visitor_visitor_type_search", "label=Corporate Visitor");
         $this->select("id=Visit_reason_search", "label=Reason 1");
+        $this->select("id=workstation_search", "label=Workstation1");
         $this->click("id=clicktabB1");
         $this->type("id=User_first_name", "test");
         $this->type("id=User_last_name", $username . "host2");
@@ -341,6 +353,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->click("id=4");
         $this->select("id=Visit_reason_search", "label=Reason 1");
         $this->select("id=Visitor_visitor_type_search", "label=Corporate Visitor");
+        $this->select("id=workstation_search", "label=Workstation1");
         $this->click("id=clicktabB1");
         $this->type("id=search-host", "test");
         $this->click("id=dummy-host-findBtn");
@@ -382,6 +395,9 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->type("id=VisitReason_reason", "reason 3");
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
+        if ($username == 'superadmin' || $username == 'admin' || $username == 'agentadmin') {
+            $this->select("id=workstation", "label=Workstation1");
+        }
         $this->click("id=submitFormVisitor");
         $this->type("id=Patient_name", $username . "patient1");
         $this->click("id=submitFormPatientName");
@@ -421,6 +437,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->click("id=2");
         $this->select("id=Visit_reason_search", "label=Other");
         $this->type("id=VisitReason_reason_search", "Reason 4");
+        $this->select("id=workstation_search", "label=Workstation1");
         $this->click("id=clicktabB1");
         $this->type("id=Patient_name", $username . "patient2");
         $this->click("id=submitFormPatientName");
@@ -462,6 +479,9 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->type("id=VisitReason_reason", "reason 5");
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
+        if ($username == 'superadmin' || $username == 'admin' || $username == 'agentadmin') {
+            $this->select("id=workstation", "label=Workstation1");
+        }
         $this->click("id=submitFormVisitor");
         $this->type("id=User_first_name", "test");
         $this->type("id=User_last_name", $username . "host1");
@@ -509,6 +529,9 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->type("id=VisitReason_reason", "reason 6");
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
+        if ($username == 'superadmin' || $username == 'admin' || $username == 'agentadmin') {
+            $this->select("id=workstation", "label=Workstation1");
+        }
         $this->click("id=submitFormVisitor");
         $this->type("id=search-host", "test");
         $this->click("id=dummy-host-findBtn");
@@ -549,6 +572,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->select("id=Visitor_visitor_type_search", "label=Corporate Visitor");
         $this->select("id=Visit_reason_search", "label=Other");
         $this->type("id=VisitReason_reason_search", "Reason 7");
+        $this->select("id=workstation_search", "label=Workstation1");
         $this->click("id=clicktabB1");
         $this->type("id=User_first_name", "test");
         $this->type("id=User_last_name", $username . "host2");
@@ -592,6 +616,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->click("id=4");
         $this->select("id=Visit_reason_search", "label=Other");
         $this->type("id=VisitReason_reason_search", "Reason 8");
+        $this->select("id=workstation_search", "label=Workstation1");
         $this->select("id=Visitor_visitor_type_search", "label=Corporate Visitor");
         $this->click("id=clicktabB1");
         $this->type("id=search-host", "test");
@@ -664,6 +689,9 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->select("id=Visit_reason", "label=Other");
         $this->type("id=Visitor_repeatpassword", "12345");
         $this->type("id=Visitor_password", "12345");
+        if ($username == 'superadmin' || $username == 'admin' || $username == 'agentadmin') {
+            $this->select("id=workstation", "label=Workstation1");
+        }
         $this->click("id=submitFormVisitor");
         $this->assertEquals("Reason cannot be blank.", $this->getText("css=td > div.errorMessage.visitorReason"));
         $this->type("id=VisitReason_reason", "reason 1");
@@ -682,9 +710,15 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Reason is already registered.", $this->getText("id=visitReasonErrorMessage"));
         $this->select("id=Visit_reason", "label=Reason 1");
         $this->type("id=Visitor_email", "testvisitor1@test.com");
+        if ($username == 'superadmin' || $username == 'admin' || $username == 'agentadmin') {
+            $this->select("id=workstation", "label=Workstation1");
+        }
         $this->click("id=submitFormVisitor");
         $this->assertEquals("Email Address has already been taken.", $this->getText("xpath=(//div[@id='Visitor_email_em_'])[2]"));
         $this->type("id=Visitor_email", "test@test.com");
+        if ($username == 'superadmin' || $username == 'admin' || $username == 'agentadmin') {
+            $this->select("id=workstation", "label=Workstation1");
+        }
         $this->click("id=submitFormVisitor");
         $this->click("id=submitFormPatientName");
         for ($second = 0;; $second++) {
@@ -701,6 +735,9 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Patient Name cannot be blank.", $this->getText("id=Patient_name_em_"));
         $this->click("css=#register-host-patient-form > div.register-a-visitor-buttons-div > #btnBackTab3");
         $this->select("id=Visitor_visitor_type", "label=Corporate Visitor");
+        if ($username == 'superadmin' || $username == 'admin' || $username == 'agentadmin') {
+            $this->select("id=workstation", "label=Workstation1");
+        }
         $this->click("id=submitFormVisitor");
         $this->click("id=submitFormUser");
         for ($second = 0;; $second++) {
@@ -766,6 +803,9 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->select("id=Visit_reason", "label=Reason 1");
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
+        if ($username == 'superadmin' || $username == 'admin' || $username == 'agentadmin') {
+            $this->select("id=workstation", "label=Workstation1");
+        }
         $this->click("id=submitFormVisitor");
         $this->waitForElementPresent("id=search-host");
         $this->type("id=search-host", "new" . $username . "host");
@@ -841,8 +881,8 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
                     }
                     sleep(1);
                 }
-            
-            $this->assertEquals("Displaying 1-6 of 6 results.", $this->getText("css=div.summary"));
+
+                $this->assertEquals("Displaying 1-6 of 6 results.", $this->getText("css=div.summary"));
             }
             $this->select("name=Visit[visit_status]", "label=Preregistered");
             for ($second = 0;; $second++) {

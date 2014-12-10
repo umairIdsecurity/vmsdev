@@ -55,8 +55,8 @@ $this->renderPartial('visithistory', array('model' => $model,
     'reasonModel' => $reasonModel,
 ));
 ?>
-<input type="text" id="createUrlForEmailUnique" value="<?php echo Yii::app()->createUrl('user/checkEmailIfUnique&id='); ?>"/>
-<input type="text" id="Visitor_tenant" value="<?php echo $visitorModel->tenant; ?>"/>
+<input type="text" style="display:none;" id="createUrlForEmailUnique" value="<?php echo Yii::app()->createUrl('user/checkEmailIfUnique&id='); ?>"/>
+<input type="text" style="display:none;" id="Visitor_tenant" value="<?php echo $visitorModel->tenant; ?>"/>
 
 <input type="text" id="currentRoleOfLoggedInUser" value="<?php echo $session['role']; ?>">
 <input type="text" id="currentCompanyOfLoggedInUser" value="<?php echo User::model()->getCompany($session['id']); ?>">
@@ -79,7 +79,7 @@ $this->renderPartial('visithistory', array('model' => $model,
         if (email == '<?php echo $visitorModel->email ?>') {
             sendVisitorForm();
         } else {
-     
+
             $.ajax({
                 type: 'POST',
                 url: '<?php echo Yii::app()->createUrl('visitor/checkEmailIfUnique&id='); ?>' + email.trim(),
@@ -201,7 +201,9 @@ $this->renderPartial('visithistory', array('model' => $model,
                     $('#Visit_reason').append('<option value="' + value.id + '">' + value.name + '</option>');
                     var textToFind = $("#VisitReason_reason").val();
 
-
+                    textToFind = textToFind.toLowerCase().replace(/^[\u00C0-\u1FFF\u2C00-\uD7FF\w]|\s[\u00C0-\u1FFF\u2C00-\uD7FF\w]/g, function(letter) {
+                        return letter.toUpperCase();
+                    });
                     var dd = document.getElementById('Visit_reason');
                     for (var i = 0; i < dd.options.length; i++) {
                         if (dd.options[i].text === textToFind) {
@@ -308,7 +310,7 @@ $this->renderPartial('visithistory', array('model' => $model,
     function checkNewHostEmailIfUnique() {
         var email = $(".New_user_email").val();
         var tenant;
-        if($("#currentRoleOfLoggedInUser").val() == 5){ //check if superadmin
+        if ($("#currentRoleOfLoggedInUser").val() == 5) { //check if superadmin
             tenant = $("#User_tenant").val();
         } else {
             tenant = '<?php echo $session['tenant']; ?>';

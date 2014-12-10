@@ -36,6 +36,33 @@ $session = new CHttpSession;
                 <option value="Other">Other</option>
             </select>
             <div class="errorMessage visitorReason" id="search-visitor-reason-error">Reason cannot be blank.</div>
+             <div id="workstationRowSearch" <?php
+                    if ($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
+                        echo " class='hidden' ";
+                    }
+                    ?>><label>Workstation</label><span class="required">*</span><br>
+
+                        <select id="workstation_search" onchange="populateVisitWorkstation(this)">
+                            <?php
+                            if ($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
+                                echo '';
+                            } else {
+                                echo '<option value="">Select Workstation</option>';
+                            }
+                            ?>
+
+                            <?php
+                            $workstationList = populateWorkstation();
+                            foreach ($workstationList as $key => $value) {
+                                ?>
+                                <option value="<?php echo $value->id; ?>"><?php echo $value->name; ?></option>
+                                <?php
+                            }
+                            ?>
+                        </select>
+                        <div style="display:none;" class="errorMessage errorMessageWorkstationSearch" >Workstation cannot be blank.</div>
+             </div>
+            
         </div>
         <?php
         $form = $this->beginWidget('CActiveForm', array(
@@ -77,12 +104,20 @@ $session = new CHttpSession;
                 'validateOnSubmit' => true,
                 'afterValidate' => 'js:function(form, data, hasError){
                                 if (!hasError){
-                                if ($("#Visit_reason").val() == "" || ($("#Visit_reason").val() == "Other" &&  $("#VisitReason_reason").val() == "")) {                                  
+                                if ($("#workstation").val() == ""){
+                                    $(".errorMessageWorkstation").show();
+                                    $(".visitorReason").hide();
+                                }
+                                else if ($("#Visit_reason").val() == "" || ($("#Visit_reason").val() == "Other" &&  $("#VisitReason_reason").val() == "")) {                                  
                                     $(".visitorReason").show();
+                                    $(".errorMessageWorkstation").hide();
                                 } else if ($("#Visit_reason").val() == "Other" &&  $("#VisitReason_reason").val() != "")
                                 { 
                                     checkReasonIfUnique();
-                                } else {
+                                    $(".errorMessageWorkstation").hide();
+                                } 
+                                else {
+                                    $(".errorMessageWorkstation").hide();
                                     $(".visitorReason").hide();
                                     checkEmailIfUnique();
                                     }
@@ -180,12 +215,20 @@ $session = new CHttpSession;
                 </tr>
                 <tr>
                     <td id="workstationRow" <?php
-                                if ($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
-                                   echo " class='hidden' ";
-                                }
-                                ?>><label>Workstation</label><span class="required">*</span><br>
+                    if ($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
+                        echo " class='hidden' ";
+                    }
+                    ?>><label>Workstation</label><span class="required">*</span><br>
 
-                        <select id="workstation">
+                        <select id="workstation" onchange="populateVisitWorkstation(this)">
+                            <?php
+                            if ($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
+                                echo '';
+                            } else {
+                                echo '<option value="">Select Workstation</option>';
+                            }
+                            ?>
+
                             <?php
                             $workstationList = populateWorkstation();
                             foreach ($workstationList as $key => $value) {
@@ -195,12 +238,14 @@ $session = new CHttpSession;
                             }
                             ?>
                         </select>
+                        <div style="display:none;" class="errorMessage errorMessageWorkstation" >Workstation cannot be blank.</div>
+
                     </td>
                     <td id="visitorTenantRow" <?php
-                                if ($session['role'] != Roles::ROLE_SUPERADMIN) {
-                                   echo " class='hidden' ";
-                                }
-                                ?>><?php echo $form->labelEx($model, 'tenant'); ?><br>
+                    if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+                        echo " class='hidden' ";
+                    }
+                    ?>><?php echo $form->labelEx($model, 'tenant'); ?><br>
 
                         <select id="Visitor_tenant" onchange="populateTenantAgentAndCompanyField()" name="Visitor[tenant]"  >
                             <option value='' selected>Select Admin</option>
@@ -209,31 +254,31 @@ $session = new CHttpSession;
                             foreach ($allAdminNames as $key => $value) {
                                 ?>
                                 <option value="<?php echo $value->tenant; ?>"
-                                        <?php
-                            if ($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value->tenant) {
-                                echo " selected ";
-                            }
-                            ?>
-                                        
-                                        ><?php echo $value->first_name . " " . $value->last_name; ?></option>
                                 <?php
-                            }
-                            ?>
+                                if ($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value->tenant) {
+                                    echo " selected ";
+                                }
+                                ?>
+
+                                        ><?php echo $value->first_name . " " . $value->last_name; ?></option>
+                                        <?php
+                                    }
+                                    ?>
                         </select><?php echo "<br>" . $form->error($model, 'tenant'); ?>
                     </td>
                     <td id="visitorTenantAgentRow" <?php
-                                if ($session['role'] != 5) {
-                                    echo " class='hidden' ";
-                                }
-                                ?>><?php echo $form->labelEx($model, 'tenant_agent'); ?><br>
+                    if ($session['role'] != 5) {
+                        echo " class='hidden' ";
+                    }
+                    ?>><?php echo $form->labelEx($model, 'tenant_agent'); ?><br>
 
                         <select id="Visitor_tenant_agent" name="Visitor[tenant_agent]" onchange="populateCompanyWithSameTenantAndTenantAgent()" >
                             <?php
-                        echo "<option value='' selected>Select Tenant Agent</option>";
-                        if ($session['role'] != Roles::ROLE_SUPERADMIN ) {
-                            echo "<option value='".$session['tenant_agent']."' selected>TenantAgent</option>";
-                        }
-                        ?>
+                            echo "<option value='' selected>Select Tenant Agent</option>";
+                            if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+                                echo "<option value='" . $session['tenant_agent'] . "' selected>TenantAgent</option>";
+                            }
+                            ?>
                         </select><?php echo "<br>" . $form->error($model, 'tenant_agent'); ?>
                     </td>
                 </tr>
@@ -266,7 +311,7 @@ $session = new CHttpSession;
         ),
     ));
     ?>
-    <textarea id="VisitReason_reason" name="VisitReason[reason]" maxlength="128"></textarea> 
+    <textarea id="VisitReason_reason" name="VisitReason[reason]" maxlength="128" style="text-transform: capitalize;"></textarea> 
     <div class="errorMessage" id="visitReasonErrorMessage" style="display:none;">Reason cannot be blank.</div>
 
 
@@ -305,7 +350,12 @@ $session = new CHttpSession;
         var url = 'index.php?r=visitor/findvisitor&id=' + searchText;
         $("#searchVisitorTable").html('<iframe id="findVisitorTableIframe" onLoad="autoResize();" width="100%" height="100%" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
     }
-
+    function populateVisitWorkstation(value) {
+        
+        $("#Visit_workstation").val(value.value);
+        //  alert($("#workstation").val());
+        // alert(value.value);
+    }
     function autoResize() {
         var newheight;
 
@@ -323,29 +373,43 @@ $session = new CHttpSession;
             success: function(r) {
                 $('#Visit_reason option[value!="Other"]').remove();
                 $('#Visit_reason_search option[value!="Other"]').remove();
+                var textToFind;
+                if ($("#Visit_reason_search").val() == 'Other' && $("#selectedVisitorInSearchTable").val() != 0) {
+                    textToFind = $("#VisitReason_reason_search").val();
+                } else
+                {
+                    textToFind = $("#VisitReason_reason").val();
+                }
+                textToFind = textToFind.toLowerCase().replace(/^[\u00C0-\u1FFF\u2C00-\uD7FF\w]|\s[\u00C0-\u1FFF\u2C00-\uD7FF\w]/g, function(letter) {
+                    return letter.toUpperCase();
+                });
 
-                $.each(r.data, function(index, value) {
+                $.each(r.data, function(index, value, f) {
                     $('#Visit_reason').append('<option value="' + value.id + '">' + value.name + '</option>');
                     $('#Visit_reason_search').append('<option value="' + value.id + '">' + value.name + '</option>');
 
-                    if ($("#Visit_reason_search").val() == 'Other' && $("#selectedVisitorInSearchTable").val() != 0) {
-                        var textToFind = $("#VisitReason_reason_search").val();
-                    } else
-                    {
-                        var textToFind = $("#VisitReason_reason").val();
-                    }
 
-                    var dd = document.getElementById('Visit_reason');
-                    for (var i = 0; i < dd.options.length; i++) {
-                        if (dd.options[i].text === textToFind) {
-                            dd.selectedIndex = i;
-                            break;
+                    var a = r.data;
+                    if (index == a.length - 1)
+                    {
+                        var dd = document.getElementById('Visit_reason');
+                        // alert(textToFind);
+                        for (var i = 0; i < dd.options.length; i++) {
+                            if (dd.options[i].text === textToFind) {
+                                dd.selectedIndex = i;
+                                break;
+                            }
                         }
                     }
-                    $("#Visit_reason_search").val($("#Visit_reason").val());
-                    $("#register-reason-form").hide();
-                    $("#Visit_reason").show();
+
                 });
+
+
+                // $("#Visit_reason").val(textToFind);
+                $("#Visit_reason_search").val($("#Visit_reason").val());
+                $("#register-reason-form").hide();
+                $("#Visit_reason").show();
+
                 /*if visitor is not from search pass formvisitor
                  * else if visitor is from search donot pass visitor 
                  * ---if not from search determine right away if host is from search or not 
@@ -376,6 +440,7 @@ $session = new CHttpSession;
             }
         });
     }
+
 
     function ifSelectedIsOtherShowAddReasonDiv(reason) {
         if (reason.value == 'Other') {
@@ -479,48 +544,47 @@ $session = new CHttpSession;
 
 function populateWorkstation() {
     $session = new CHttpSession;
-    
+
     switch ($session['role']) {
         case Roles::ROLE_SUPERADMIN:
             $workstationList = Workstation::model()->findAll();
             break;
-        
+
         case Roles::ROLE_OPERATOR:
         case Roles::ROLE_AGENT_OPERATOR:
             $Criteria = new CDbCriteria();
-            $Criteria->condition = "id ='".$session['workstation']."'";
+            $Criteria->condition = "id ='" . $session['workstation'] . "'";
             $workstationList = Workstation::model()->findAll($Criteria);
             break;
-        
+
         case Roles::ROLE_STAFFMEMBER:
-            if($session['tenant'] == NULL ){
+            if ($session['tenant'] == NULL) {
                 $tenantsearchby = "IS NULL";
             } else {
-                $tenantsearchby = "='".$session['tenant']."'";
+                $tenantsearchby = "='" . $session['tenant'] . "'";
             }
-            
-            if($session['tenant_agent']== NULL){
+
+            if ($session['tenant_agent'] == NULL) {
                 $tenantagentsearchby = "IS NULL";
             } else {
-                $tenantagentsearchby = "='".$session['tenant_agent']."'";
+                $tenantagentsearchby = "='" . $session['tenant_agent'] . "'";
             }
             $Criteria = new CDbCriteria();
             $Criteria->condition = "tenant $tenantsearchby and tenant_agent $tenantagentsearchby";
             $workstationList = Workstation::model()->findAll($Criteria);
             break;
-            
+
         case Roles::ROLE_ADMIN:
             $Criteria = new CDbCriteria();
-            $Criteria->condition = "tenant ='".$session['tenant']."'";
+            $Criteria->condition = "tenant ='" . $session['tenant'] . "'";
             $workstationList = Workstation::model()->findAll($Criteria);
             break;
-        
+
         case Roles::ROLE_AGENT_ADMIN:
             $Criteria = new CDbCriteria();
-            $Criteria->condition = "tenant ='".$session['tenant']."' and tenant_agent ='".$session['tenant_agent']."'";
+            $Criteria->condition = "tenant ='" . $session['tenant'] . "' and tenant_agent ='" . $session['tenant_agent'] . "'";
             $workstationList = Workstation::model()->findAll($Criteria);
             break;
-       
     }
 
     return $workstationList;

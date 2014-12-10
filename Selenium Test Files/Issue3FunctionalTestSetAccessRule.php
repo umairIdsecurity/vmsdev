@@ -134,7 +134,7 @@ class Issue3FunctionalTestSetAccessRule extends BaseFunctionalTest {
         $this->waitForPageToLoad("30000");
         $this->click("//div[@id='cssmenu']/ul/li[2]/a/span");
         $this->waitForPageToLoad("30000");
-        $this->click("css=li.odd > a.has-sub-sub > span");
+        $this->click("css=li.odd > a.addSubMenu > span");
         $this->waitForPageToLoad("30000");
         $this->type("id=Workstation_name", "Operator Workstation");
         $this->type("id=Workstation_location", "PAL");
@@ -161,7 +161,7 @@ class Issue3FunctionalTestSetAccessRule extends BaseFunctionalTest {
         
         $this->click("//div[@id='cssmenu']/ul/li[2]/a/span");
         $this->waitForPageToLoad("30000");
-        $this->click("css=li.odd > a.has-sub-sub > span");
+        $this->click("css=li.odd > a.addSubMenu > span");
         $this->waitForPageToLoad("30000");
         $this->type("id=Workstation_name", "Workstation Agent Operator");
         $this->type("id=Workstation_location", "MNL");

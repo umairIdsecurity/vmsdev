@@ -446,7 +446,7 @@ sleep(1);
         $this->assertEquals("Email Address has already been taken.", $this->getText("id=New_user_email_em_"));
         $this->type("id=User_email", "testnewHosts@test.com");
         $this->click("document.forms['register-newhost-form'].yt0");
-        sleep(20);
+        sleep(5);
         $this->waitForElementPresent("css=div.flash-success.success-add-host");
         $this->assertEquals("Host Added Successfully.", $this->getText("css=div.flash-success.success-add-host"));
         sleep(5);

@@ -161,8 +161,12 @@ $session = new CHttpSession;
             else if (visit_reason == '' || visit_reason == 'undefined' || (visit_reason == 'Other' && $("#VisitReason_reason_search").val() == ''))
             {
                 $("#search-visitor-reason-error").show();
+            } else if ($("#workstation_search").val() == ''){
+               
+                $(".errorMessageWorkstationSearch").show();
             }
             else {
+                $(".errorMessageWorkstationSearch").hide();
                 $("#searchTextErrorMessage").hide();
                 $("#search-visitor-reason-error").hide();
                 checkReasonIfUnique();

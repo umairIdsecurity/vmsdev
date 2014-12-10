@@ -43,11 +43,11 @@ class Issue33FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Displaying 1-7 of 7 results.", $this->getText("css=div.summary"));
         $this->selectWindow("null");
         $this->click("link=Reports");
-        $this->assertEquals("Evacuation Report", $this->getText("css=li.has-sub.active > ul > li.even > a.has-sub-sub > span"));
-        $this->assertEquals("Visitor Registration History", $this->getText("css=li.has-sub.active > ul > li.odd > a.has-sub-sub > span"));
-        $this->click("css=li.has-sub.active > ul > li.even > a.has-sub-sub > span");
+        $this->assertEquals("Evacuation Report", $this->getText("css=li.has-sub.active > ul > li.even > a > span"));
+        $this->assertEquals("Visitor Registration History", $this->getText("css=li.has-sub.active > ul > li.odd > a > span"));
+        $this->click("link=Evacuation Report");
         $this->waitForPageToLoad("30000");
-        $this->click("css=li.has-sub.active > ul > li.odd > a.has-sub-sub > span");
+        $this->click("link=Visitor Registration History");
         $this->waitForPageToLoad("30000");
         $this->click("link=Dashboard");
         $this->waitForPageToLoad("30000");
@@ -62,14 +62,14 @@ class Issue33FunctionalTest extends BaseFunctionalTest {
         $this->click("link=Administration");
         $this->waitForPageToLoad("30000");
         $this->click("//div[@id='cssmenu']/ul/li[7]/a/span");
-        $this->click("css=li.has-sub.active > ul > li.even > a.has-sub-sub > span");
+        $this->click("link=Evacuation Report");
         $this->waitForPageToLoad("30000");
         $this->assertEquals("testVisitor1@test.com", $this->getText("//div[@id='view-visitor-records']/table/tbody/tr/td[8]"));
         $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
-        $this->click("css=li.has-sub.active > ul > li.odd > a.has-sub-sub > span");
+        $this->click("link=Visitor Registration History");
         $this->waitForPageToLoad("30000");
         $this->assertEquals("No results found.", $this->getText("css=span.empty"));
-        $this->click("css=li.has-sub.active > ul > li.even > a.has-sub-sub > span");
+        $this->click("link=Evacuation Report");
         $this->waitForPageToLoad("30000");
         $this->clickAndWait("link=Active");
         
@@ -77,10 +77,10 @@ class Issue33FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Visit Status: Closed", $this->getText("link=Visit Status: Closed"));
        
         $this->click("link=Reports");
-        $this->click("css=li.has-sub.active > ul > li.even > a.has-sub-sub > span");
+        $this->click("link=Evacuation Report");
         $this->waitForPageToLoad("30000");
         $this->assertEquals("No results found.", $this->getText("css=span.empty"));
-        $this->click("css=li.has-sub.active > ul > li.odd > a.has-sub-sub > span");
+        $this->click("link=Visitor Registration History");
         $this->waitForPageToLoad("30000");
         $this->assertEquals("testVisitor1@test.com", $this->getText("//div[@id='view-visitor-records-history']/table/tbody/tr/td[8]"));
     }

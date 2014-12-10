@@ -152,5 +152,6 @@ class VisitReason extends CActiveRecord {
             return true;
         }
     }
+    
 
 }

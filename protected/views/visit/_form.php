@@ -126,6 +126,12 @@
 		<?php echo $form->textField($model,'is_deleted'); ?>
 		<?php echo $form->error($model,'is_deleted'); ?>
 	</div>
+	
+        <div class="row">
+		<?php echo $form->labelEx($model,'workstation'); ?>
+		<?php echo $form->textField($model,'workstation'); ?>
+		<?php echo $form->error($model,'workstation'); ?>
+	</div>
 
 	<div class="row buttons">
 		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>

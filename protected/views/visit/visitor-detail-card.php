@@ -73,7 +73,7 @@ $session = new CHttpSession;
     function generateCard() {
         //$("#generateCardModalBtn").click();
         //change modal url to pass visit id
-        var url = 'index.php?r=cardgenerated/print&id=<?php echo $model->id; ?>';
+        var url = 'index.php?r=cardGenerated/print&id=<?php echo $model->id; ?>';
         window.open(url, '_blank');
         window.location = "index.php?r=visit/detail&id=<?php echo $_GET['id']; ?>";
     }
@@ -81,7 +81,7 @@ $session = new CHttpSession;
     function regenerateCard() {
         //$("#generateCardModalBtn").click();
         //change modal url to pass visit id
-        var url = 'index.php?r=cardgenerated/reprint&id=<?php echo $model->id; ?>';
+        var url = 'index.php?r=cardGenerated/reprint&id=<?php echo $model->id; ?>';
         window.open(url, '_blank');
     }
 

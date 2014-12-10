@@ -2,6 +2,7 @@
 /* @var $this VisitController */
 /* @var $visitModel Visit */
 /* @var $form CActiveForm */
+$session = new CHttpSession;
 ?>
 
 <div class="form">
@@ -115,7 +116,7 @@
     <?php $this->endWidget(); ?>
 
 </div><!-- form -->
-
+<input type="text" style="display:none;" id="visitSessionRole" value="<?php echo $session['role'];?>">
 <script>
     $(document).ready(function() {
 
@@ -125,8 +126,11 @@
         $("#Visit_visitor_type").val($("#Visitor_visitor_type").val());
         $("#visitReasonFormField").val($("#Visit_reason").val());
         $("#Visit_visitor_status").val("1");
-        $("#Visit_workstation").val($("#workstation").val());
-        
+        if($("#visitSessionRole").val() == 7 || $("#visitSessionRole").val() == 8){
+            $("#Visit_workstation").val($("#workstation").val());
+        }
+       
+
         if ($("#Visitor_visitor_type").val() == 1) { //if type is patient
             $("#Visit_host").val("");
             $("#Visit_patient").val($("#hostId").val());

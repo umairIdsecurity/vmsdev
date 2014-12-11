@@ -97,6 +97,11 @@ $session = new CHttpSession;
             <?php echo $form->error($visitModel, 'date_in'); ?>
         </div>
         <div class="row">
+            <?php echo $form->labelEx($visitModel, 'date_out'); ?>
+            <input name="Visit[date_out]" id="Visit_date_out" type="text" value="<?php echo date("d-m-Y"); ?>">
+            <?php echo $form->error($visitModel, 'date_out'); ?>
+        </div>
+        <div class="row">
             <?php echo $form->labelEx($visitModel, 'date_check_in'); ?>
             <input name="Visit[date_check_in]" id="Visit_date_check_in" type="text" value="<?php echo date("d-m-Y"); ?>">
             <?php echo $form->error($visitModel, 'date_check_in'); ?>

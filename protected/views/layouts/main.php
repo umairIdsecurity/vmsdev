@@ -59,7 +59,7 @@ $user_role = $session['role'];
 
 
                 <article class="header_midbox">
-                    <div id="logo" ><?php echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl . '/images/ids-logo.png')); ?>
+                    <div id="logo" ><?php echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl . '/images/ids-logo2.jpg')); ?>
                     </div>
                     <aside class="top_nav">
                         <ul id="tabs">

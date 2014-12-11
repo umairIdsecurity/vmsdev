@@ -31,7 +31,8 @@ if ( $session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles
             } else {
                 ?>
                 <li class=''><a href='<?php echo Yii::app()->createUrl('company/update/&id=' . $session['company']) ?>'><span>Organisation Settings</span></a></li>
-            <?php }
+          
+ <?php }
             ?>
             <li class='has-sub'><a href='<?php echo Yii::app()->createUrl('workstation/admin') ?>'><span>Manage Workstations</span></a>
                 <ul>
@@ -108,3 +109,15 @@ if ( $session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles
         </ul>
     </div>
 </div>
+
+<script>
+
+    $(document).ready(function() {
+
+//        $(".organisationSettings").click(function(e) {
+//            e.preventDefault();
+//        });
+    });
+
+
+</script>

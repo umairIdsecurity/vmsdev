@@ -22,7 +22,7 @@ class DashboardController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'index', 'addHost'),
+                'actions' => array('create', 'update', 'index', 'addHost','content'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -143,6 +143,11 @@ class DashboardController extends Controller {
         ));
     }
 
+    public function actionContent() {
+        $this->layout = '//layouts/contentIframeLayout';
+        $this->render('index');
+    }
+
     /**
      * Manages all models.
      */
@@ -201,21 +206,22 @@ class DashboardController extends Controller {
         if (isset($_GET['Visit'])) {
             $model->attributes = $_GET['Visit'];
         }
-       
+
         $this->render('admindashboard', array(
             'model' => $model,
         ));
     }
 
     public function actionAddHost() {
-        $this->layout = '//layouts/column2';
+        $this->layout = '//layouts/contentIframeLayout';
+        //  $this->layout = '//layouts/column2';
         $userModel = new User();
         $patientModel = new Patient();
 
         $this->render('addhost', array(
             'userModel' => $userModel,
             'patientModel' => $patientModel
-                ), false, true);
+        ));
     }
 
 }

@@ -118,6 +118,7 @@ class CompanyController extends Controller {
     }
 
     public function actionUpdate($id) {
+        //$this->layout = '//layouts/contentIframeLayout';
         $model = $this->loadModel($id);
         $session = new CHttpSession;
         if (isset($_POST['Company'])) {

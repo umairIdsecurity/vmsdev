@@ -93,7 +93,7 @@ $session = new CHttpSession;
              * if null populate company by tenant
              * else if not null populate company by tenant and tenant agent
              */
-            
+
             $('#Visitor_company option[value!=""]').remove();
             if ($("#currentRoleOfLoggedInUser").val() != 5) { //not superadmin
                 if ($("#Visitor_tenant_agent").val() == '') {
@@ -101,14 +101,14 @@ $session = new CHttpSession;
                 } else {
                     getCompanyWithSameTenantAndTenantAgent($("#Visitor_tenant").val(), $("#Visitor_tenant_agent").val());
                 }
-                
+
                 if ($("#User_tenant_agent").val() == '') {
                     getHostCompanyWithSameTenant($("#User_tenant").val());
                 } else {
                     getHostCompanyWithSameTenantAndTenantAgent($("#User_tenant").val(), $("#User_tenant_agent").val());
                 }
-                
-                
+
+
             }
         }
 
@@ -161,8 +161,8 @@ $session = new CHttpSession;
             else if (visit_reason == '' || visit_reason == 'undefined' || (visit_reason == 'Other' && $("#VisitReason_reason_search").val() == ''))
             {
                 $("#search-visitor-reason-error").show();
-            } else if ($("#workstation_search").val() == ''){
-               
+            } else if ($("#workstation_search").val() == '') {
+
                 $(".errorMessageWorkstationSearch").show();
             }
             else {
@@ -330,7 +330,7 @@ $session = new CHttpSession;
 
     function checkEmailIfUnique() {
         var email = $("#Visitor_email").val();
-        
+
         $.ajax({
             type: 'POST',
             url: '<?php echo Yii::app()->createUrl('visitor/checkEmailIfUnique&id='); ?>' + email,
@@ -353,7 +353,7 @@ $session = new CHttpSession;
     function checkHostEmailIfUnique() {
         var email = $("#User_email").val();
         var tenant;
-        if($("#currentRoleOfLoggedInUser").val() == 5){ //check if superadmin
+        if ($("#currentRoleOfLoggedInUser").val() == 5) { //check if superadmin
             tenant = $("#User_tenant").val();
         } else {
             tenant = '<?php echo $session['tenant']; ?>';

@@ -47,12 +47,12 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $username = 'staffmember@test.com';
         $this->login($username, '12345');
         $this->assertEquals("Visitor Management System - Viewmyvisitors Dashboard", $this->getTitle());
-        $this->assertEquals("Preregistered Visitors", $this->getText("css=span.icons.pre-visits"));
-        $this->assertEquals("Add Host", $this->getText("css=span.addhost"));
-        $this->assertEquals("Add Visitor Record", $this->getText("css=span.addvisitor"));
-        $this->assertEquals("Find Record", $this->getText("link=Find Record"));
+        $this->assertEquals("Preregistered Visitors", $this->getText("css=a > span"));
+        $this->assertEquals("Add Host", $this->getText("id=yt0"));
+        $this->assertEquals("Add Visitor Record", $this->getText("//div[@id='cssmenu']/ul/li[3]/a/span"));
+        $this->assertEquals("Find Record", $this->getText("//div[@id='cssmenu']/ul/li[4]/a/span"));
         $this->assertEquals("Evacuation Report", $this->getText("link=Evacuation Report"));
-        $this->clickAndWait("css=span.icons.pre-visits");
+        $this->clickAndWait("css=a > span");
         $this->click("id=clicktabA");
         $this->assertEquals("Corporate Visitor", $this->getText("id=Visitor_visitor_type"));
         $this->select("id=workstation", "label=Workstation1");
@@ -95,7 +95,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
     function Scenario2() {
         $username = 'staffmember@test.com';
         $this->login($username, '12345');
-        $this->clickAndWait("css=span.icons.pre-visits");
+        $this->clickAndWait("css=a > span");
         $this->click("id=clicktabA");
         $this->type("id=Visitor_first_name", "test");
         $this->type("id=Visitor_last_name", "staffmembervisitor");
@@ -120,7 +120,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
     function Scenario3() {
         $username = 'staffmember@test.com';
         $this->login($username, '12345');
-        $this->clickAndWait("css=span.icons.pre-visits");
+        $this->clickAndWait("css=a > span");
         $this->click("id=clicktabA");
         $this->select("id=workstation", "label=Workstation1");
         $this->type("id=Visitor_first_name", "test");
@@ -159,7 +159,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
     function Scenario4() {
         $username = 'staffmember@test.com';
         $this->login($username, '12345');
-        $this->click("css=span.icons.pre-visits");
+        $this->click("css=a > span");
         $this->waitForPageToLoad("30000");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
@@ -200,7 +200,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
     function Scenario5() {
         $username = 'staffmember@test.com';
         $this->login($username, '12345');
-        $this->clickAndWait("css=span.icons.pre-visits");
+        $this->clickAndWait("css=a > span");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
@@ -223,7 +223,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
     function Scenario6() {
         $username = 'staffmember@test.com';
         $this->login($username, '12345');
-        $this->clickAndWait("css=span.icons.pre-visits");
+        $this->clickAndWait("css=a > span");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
@@ -254,7 +254,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
     function Scenario7() {
         $username = 'staffmember@test.com';
         $this->login($username, '12345');
-        $this->clickAndWait("css=span.icons.pre-visits");
+        $this->clickAndWait("css=a > span");
         $this->click("id=clicktabA");
         $this->select("id=workstation", "label=Workstation1");
         $this->type("id=Visitor_first_name", "test");
@@ -301,7 +301,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
     function Scenario8() {
         $username = 'staffmember@test.com';
         $this->login($username, '12345');
-        $this->clickAndWait("css=span.icons.pre-visits");
+        $this->clickAndWait("css=a > span");
         $this->click("id=clicktabA");
         $this->select("id=workstation", "label=Workstation1");
         $this->type("id=Visitor_first_name", "test");
@@ -332,7 +332,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
     function Scenario9() {
         $username = 'staffmember@test.com';
         $this->login($username, '12345');
-        $this->clickAndWait("css=span.icons.pre-visits");
+        $this->clickAndWait("css=a > span");
         $this->click("id=clicktabA");
         $this->select("id=workstation", "label=Workstation1");
         $this->type("id=Visitor_first_name", "test");
@@ -371,7 +371,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
     function Scenario10() {
         $username = 'staffmember@test.com';
         $this->login($username, '12345');
-        $this->clickAndWait("css=span.icons.pre-visits");
+        $this->clickAndWait("css=a > span");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
@@ -412,7 +412,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
     function Scenario11() {
         $username = 'staffmember@test.com';
         $this->login($username, '12345');
-        $this->click("css=span.icons.pre-visits");
+        $this->click("css=a > span");
         $this->waitForPageToLoad("30000");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
@@ -475,7 +475,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
     function Scenario13() {
         $username = 'staffmember@test.com';
         $this->login($username, '12345');
-        $this->clickAndWait("css=span.icons.pre-visits");
+        $this->clickAndWait("css=a > span");
         $this->click("id=clicktabA");
         $this->click("id=submitFormVisitor");
         for ($second = 0;; $second++) {

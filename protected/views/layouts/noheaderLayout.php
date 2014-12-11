@@ -31,7 +31,7 @@ $session=new CHttpSession;
 <div class="container" id="page">
 
 	<div id="header">
-		<div id="logo" style="padding:10px 100px;"><?php echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl.'/images/ids-logo.png')); ?></div>
+		<div id="logo" style="padding:10px 100px;"><?php echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl.'/images/ids-logo2.jpg')); ?></div>
 	
 	</div><!-- header -->
 

@@ -11,7 +11,7 @@ require_once 'BaseFunctionalTest.php';
 date_default_timezone_set('Asia/Manila');
 
 /**
- * Description of Issue29FunctionalTest
+ * Description of Issue33FunctionalTest ->
  * @author Jeremiah
  */
 class Issue33FunctionalTest extends BaseFunctionalTest {

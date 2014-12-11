@@ -74,19 +74,19 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
 
     function ScenarioAgentOperator() {
         $username = "agentoperator";
-//        $this->Scenario1($username);
-//        $this->Scenario2($username);
-//        $this->Scenario3($username);
-//        $this->Scenario4($username);
-//        $this->Scenario5($username);
-//        $this->Scenario6($username);
-//        $this->resetDbWithData();
-//        $this->Scenario7($username);
-//        $this->Scenario8($username);
-//        $this->Scenario9($username);
-//        $this->Scenario10($username);
-//        $this->Scenario11($username);
-//        $this->Scenario12($username);
+        $this->Scenario1($username);
+        $this->Scenario2($username);
+        $this->Scenario3($username);
+        $this->Scenario4($username);
+        $this->Scenario5($username);
+        $this->Scenario6($username);
+        $this->resetDbWithData();
+        $this->Scenario7($username);
+        $this->Scenario8($username);
+        $this->Scenario9($username);
+        $this->Scenario10($username);
+        $this->Scenario11($username);
+        $this->Scenario12($username);
         $this->Scenario13($username);
         $this->Scenario14($username);
         $this->ScenarioEvacuationReport($username);
@@ -127,7 +127,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->click("id=submitBtn");
             $this->clickAndWait("id=submit");
         }
-        $this->clickAndWait("css=span.addvisitor");
+        $this->clickAndWait("link=Add Visitor Record");
 
         $this->click("id=clicktabA");
         $this->type("id=Visitor_first_name", "test");
@@ -173,7 +173,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->click("id=submitBtn");
             $this->clickAndWait("id=submit");
         }
-        $this->clickAndWait("css=span.addvisitor");
+        $this->clickAndWait("link=Add Visitor Record");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
@@ -209,7 +209,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->click("id=submitBtn");
             $this->clickAndWait("id=submit");
         }
-        $this->clickAndWait("css=span.addvisitor");
+        $this->clickAndWait("link=Add Visitor Record");
         $this->click("id=clicktabA");
         $this->select("id=Visitor_visitor_type", "label=Corporate Visitor");
         $this->type("id=Visitor_first_name", "test");
@@ -257,7 +257,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->click("id=submitBtn");
             $this->clickAndWait("id=submit");
         }
-        $this->clickAndWait("css=span.addvisitor");
+        $this->clickAndWait("link=Add Visitor Record");
         $this->click("id=clicktabA");
         $this->type("id=Visitor_first_name", "test");
         $this->select("id=Visitor_visitor_type", "label=Corporate Visitor");
@@ -301,7 +301,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->click("id=submitBtn");
             $this->clickAndWait("id=submit");
         }
-        $this->clickAndWait("css=span.addvisitor");
+        $this->clickAndWait("link=Add Visitor Record");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
@@ -345,7 +345,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->click("id=submitBtn");
             $this->clickAndWait("id=submit");
         }
-        $this->clickAndWait("css=span.addvisitor");
+        $this->clickAndWait("link=Add Visitor Record");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
@@ -384,7 +384,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->click("id=submitBtn");
             $this->clickAndWait("id=submit");
         }
-        $this->clickAndWait("css=span.addvisitor");
+        $this->clickAndWait("link=Add Visitor Record");
         $this->click("id=clicktabA");
         $this->type("id=Visitor_first_name", "test");
         $this->type("id=Visitor_last_name", $username . "visitor1");
@@ -429,7 +429,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->click("id=submitBtn");
             $this->clickAndWait("id=submit");
         }
-        $this->clickAndWait("css=span.addvisitor");
+        $this->clickAndWait("link=Add Visitor Record");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
@@ -467,7 +467,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->click("id=submitBtn");
             $this->clickAndWait("id=submit");
         }
-        $this->clickAndWait("css=span.addvisitor");
+        $this->clickAndWait("link=Add Visitor Record");
         $this->click("id=clicktabA");
         $this->select("id=Visitor_visitor_type", "label=Corporate Visitor");
         $this->type("id=Visitor_first_name", "test");
@@ -517,7 +517,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->click("id=submitBtn");
             $this->clickAndWait("id=submit");
         }
-        $this->clickAndWait("css=span.addvisitor");
+        $this->clickAndWait("link=Add Visitor Record");
         $this->click("id=clicktabA");
         $this->type("id=Visitor_first_name", "test");
         $this->select("id=Visitor_visitor_type", "label=Corporate Visitor");
@@ -563,7 +563,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->click("id=submitBtn");
             $this->clickAndWait("id=submit");
         }
-        $this->clickAndWait("css=span.addvisitor");
+        $this->clickAndWait("link=Add Visitor Record");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
@@ -608,7 +608,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->click("id=submitBtn");
             $this->clickAndWait("id=submit");
         }
-        $this->clickAndWait("css=span.addvisitor");
+        $this->clickAndWait("link=Add Visitor Record");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
@@ -648,7 +648,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->click("id=submitBtn");
             $this->clickAndWait("id=submit");
         }
-        $this->clickAndWait("css=span.addvisitor");
+        $this->clickAndWait("link=Add Visitor Record");
         $this->click("id=clicktabA");
         $this->waitForElementPresent("id=submitFormVisitor");
         $this->click("id=submitFormVisitor");
@@ -781,7 +781,8 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->click("id=submitBtn");
             $this->clickAndWait("id=submit");
         }
-        $this->clickAndWait("css=span.addhost");
+        $this->click("id=yt0");
+        $this->waitForElementPresent("id=User_first_name");
         $this->type("id=User_first_name", "Test");
         $this->type("id=User_last_name", "new" . $username . "host");
         $this->type("id=User_department", "department");
@@ -791,7 +792,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeatpassword", "12345");
         $this->clickAndWait("id=submitFormUser");
-        $this->clickAndWait("css=span.addvisitor");
+        $this->clickAndWait("link=Add Visitor Record");
         $this->click("id=clicktabA");
 
         $this->select("id=Visitor_visitor_type", "label=Corporate Visitor");
@@ -810,7 +811,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->waitForElementPresent("id=search-host");
         $this->type("id=search-host", "new" . $username . "host");
         $this->click("id=dummy-host-findBtn");
-        if ($username == 'staffmember' || $username == 'agentoperator') {
+        if ($username == 'staffmember' ) {
             $this->waitForElementPresent("id=24");
         } else {
             $this->waitForElementPresent("id=26");
@@ -818,7 +819,9 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("new" . $username . "host", $this->getText("//div[@id='findHost-grid']/table/tbody/tr/td[2]"));
         $this->assertEquals("new" . $username . "host@test.com", $this->getText("//div[@id='findHost-grid']/table/tbody/tr/td[3]"));
         $this->clickAndWait("link=Dashboard");
-        $this->clickAndWait("css=span.addhost");
+        $this->click("id=yt0");
+        sleep(2);
+        $this->waitForElementPresent("id=submitFormUser");
         $this->click("id=submitFormUser");
         for ($second = 0;; $second++) {
             if ($second >= 10)
@@ -861,9 +864,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Visitor Records");
         if ($username == 'staffmember') {
             $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
-        } else if ($username == 'agentoperator') {
-            $this->assertEquals("Displaying 1-7 of 7 results.", $this->getText("css=div.summary"));
-        } else {
+        }  else {
             $this->assertEquals("Displaying 1-10 of 13 results.", $this->getText("css=div.summary"));
         }
 

@@ -17,14 +17,31 @@ $session = new ChttpSession;
         <ul>
             <li class=''>
                 <a href='<?php echo Yii::app()->createUrl('visitor/create&action=preregister'); ?>'>
-                    <span class="icons pre-visits">Preregistered Visitors</span>
+                    <span >Preregistered Visitors</span>
                 </a>
             </li>
-            <li class=''><a href='<?php echo Yii::app()->createUrl('dashboard/addHost'); ?>' ><span class="addhost">Add Host</span></a></li>
-
-            <li class=''><a href='<?php echo Yii::app()->createUrl('visitor/create'); ?>'><span class="addvisitor">Add Visitor Record</span></a></li>
-            <li class=''><a href='<?php echo Yii::app()->createUrl('visit/view'); ?>'><span class="icons findrecord">Find Record</span></a></li>
+            <li class=''><?php
+                echo CHtml::ajaxLink("Add Host", CController::createUrl('dashboard/addHost'), array(
+                    'update' => '#content',
+                        ), array(
+                    'class' => 'addhost',
+                ));
+                ?>
+            </li>
+            <li class=''><a href='<?php echo Yii::app()->createUrl('visitor/create'); ?>'><span >Add Visitor Record</span></a></li>
+            <li class=''><a href='<?php echo Yii::app()->createUrl('visit/view'); ?>'><span >Find Record</span></a></li>
             <li class=''><a href='<?php echo Yii::app()->createUrl('visit/evacuationReport'); ?>'><span>Evacuation Report</span></a></li>
         </ul>
     </div>
 </div>
+<script>
+
+    $(document).ready(function() {
+
+        $(".addhost").click(function(e) {
+            e.preventDefault();
+        });
+    });
+
+
+</script>

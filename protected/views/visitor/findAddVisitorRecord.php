@@ -330,6 +330,8 @@ $session = new CHttpSession;
             if (searchText != '') {
                 $("#searchTextErrorMessage").hide();
                 $("#visitor-findBtn").click();
+                
+            $("#visitor_fields_for_Search").show();
             } else {
                 $("#searchTextErrorMessage").show();
                 $("#searchTextErrorMessage").html("Search Name cannot be blank.");
@@ -509,8 +511,6 @@ $session = new CHttpSession;
             },
         });
     }
-
-
 
     function sendReasonForm() {
         if ($("#Visit_reason").val() == 'Other' || $("#Visit_reason_search").val() == 'Other')

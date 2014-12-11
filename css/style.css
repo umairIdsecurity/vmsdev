@@ -1009,10 +1009,12 @@ dt.tabs dt{
     background: -webkit-gradient(linear, center top, center bottom, from(#F5F5F5), to(#E5E5E5)) !important;
   //  border :1px solid #999999 !important;
 }
-.items thead tr>th:first-child{
+.items thead tr > th:first-child{
     border-radius:5px !important;
+    min-width:100px !important;
 }
 
 #totalRecordsCount{
     display:none;
 }
+

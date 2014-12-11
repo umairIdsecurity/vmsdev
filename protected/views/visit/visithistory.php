@@ -20,7 +20,9 @@ $session = new CHttpSession;
         $visitor = $model->visitor;
         $model = new Visit;
         $criteria = new CDbCriteria;
+        $criteria->order='date_check_out,time_check_out DESC';
         $criteria->addCondition('visit_status=3 and visitor="' . $visitor . '"');
+        
 
         $model->unsetAttributes();
         $visitData = new CActiveDataProvider($model, array(

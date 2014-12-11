@@ -23,13 +23,13 @@ class Issue28RegisterFunctionalTest extends BaseFunctionalTest {
     }
 
     function testAll() {
-//        $this->resetDbWithData();
-//        $this->Scenario1();
-//        $this->Scenario2();
-//        $this->Scenario3();
-//        $this->Scenario4();
-//        $this->Scenario5();
-//        $this->Scenario6();
+        $this->resetDbWithData();
+        $this->Scenario1();
+        $this->Scenario2();
+        $this->Scenario3();
+        $this->Scenario4();
+        $this->Scenario5();
+        $this->Scenario6();
         $this->resetDbWithData();
         $this->Scenario7();
         $this->Scenario8();

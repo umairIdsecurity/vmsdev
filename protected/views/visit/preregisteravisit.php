@@ -138,7 +138,11 @@ $logform = $this->beginWidget('CActiveForm', array(
 <?php echo $logform->error($model, 'date_in'); ?>
 <input type='submit' value='Update'/>
 <?php $this->endWidget(); ?>
-<input type="text" value="<?php echo date('d-m-Y'); ?>" id="curDate" style="display:none;">
+<input type="text" value="<?php echo date('d-m-Y', time() + 86400); ?>" id="curDate" style="display:none;">
+<input type="text" value="<?php
+echo date('d-m-Y', mktime(0, 0, 0, date('m'), date('d') + 2, date('Y')));
+;
+?>" id="curDateMultiDay" style="display:none;">
 <input type='text' id='currentCardTypeValueOfEditedUser' value='<?php echo $model->card_type; ?>' style='display:none;'>
 <input type='text' id='savedTimeIn' value='<?php echo $model->time_in; ?>' style='display:none;'>
 <script>
@@ -152,24 +156,26 @@ $logform = $this->beginWidget('CActiveForm', array(
 
         if ($("#savedTimeIn").val() == '') {
             $("#Visit_time_in_hours").val(currentTime.getHours());
-            $("#Visit_time_in_minutes").val(currentTime.getMinutes());
+            $("#Visit_time_in_minutes").val(currentTime.getMinutes() + 30);
         }
 
         if ($("#currentCardTypeValueOfEditedUser").val() == 1) { //if card type is same visitor
             $("#Visit_date_in").val(currentDate);
             $("#Visit_date_out").val(currentDate);
             $("#Visit_date_in").attr("disabled", true);
+        } else {
+            $("#Visit_date_in").val(currentDate);
+            $("#Visit_date_out").val($("#curDateMultiDay").val());
+            $("#dateoutDiv #Visit_date_out").val($("#curDateMultiDay").val());
         }
 
         $('#Visit_date_in').on('change', function(e) {
-            // assignValuesForProposedDateOutDependingOnCardType();
+            assignValuesForProposedDateOutDependingOnCardType();
         });
 
         function assignValuesForProposedDateOutDependingOnCardType() {
             if ($("#currentCardTypeValueOfEditedUser").val() == 1) { //if card type is same visitor
                 $("#Visit_date_out").val($("#Visit_date_in").val());
-            } else {
-                $("#Visit_date_out").attr("disabled", false);
             }
         }
 
@@ -180,9 +186,22 @@ $logform = $this->beginWidget('CActiveForm', array(
             buttonImage: "<?php echo Yii::app()->request->baseUrl; ?>/images/calendar.png",
             buttonImageOnly: true,
             buttonText: "Select Proposed Date In",
+            minDate: "+1",
             dateFormat: "dd-mm-yy",
-            onClose: function(selectedDate) {
-                $("#Visit_date_out").datepicker("option", "minDate", selectedDate);
+            onClose: function(selectedDate, test) {
+
+
+                if ($("#currentCardTypeValueOfEditedUser").val() == 1) { //same day
+                    $("#Visit_date_out").datepicker("option", "minDate", selectedDate);
+                    $('.ui-datepicker-trigger[title="Select Proposed Date Out"]').hide();
+                } else {
+
+                    var newDateString = ('0' + (parseInt(test.selectedDay) + 1)).slice(-2) + '-'
+                            + ('0' + (test.selectedMonth + 1)).slice(-2) + '-'
+                            + test.selectedYear;
+                    $("#Visit_date_out").datepicker("option", "minDate", newDateString);
+                }
+
             }
         });
         $("#Visit_date_out").datepicker({

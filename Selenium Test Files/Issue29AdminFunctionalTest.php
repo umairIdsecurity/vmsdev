@@ -158,8 +158,8 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->assertEquals($username . "visitor1", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[5]"));
             $this->assertEquals($username . "visitor1@test.com", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[8]"));
         } else {
-            $this->assertEquals($username . "visitor1", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
-            $this->assertEquals($username . "visitor1@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[8]"));
+            $this->assertEquals($username . "visitor1", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[4]"));
+            $this->assertEquals($username . "visitor1@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[7]"));
         }
     }
 
@@ -195,8 +195,8 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->assertEquals("Visitor1", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[5]"));
             $this->assertEquals("testVisitor1@test.com", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[8]"));
         } else {
-            $this->assertEquals("Visitor1", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
-            $this->assertEquals("testVisitor1@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[8]"));
+            $this->assertEquals("Visitor1", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[4]"));
+            $this->assertEquals("testVisitor1@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[7]"));
         }
     }
 
@@ -243,8 +243,8 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->assertEquals($username . "visitor2", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[5]"));
             $this->assertEquals($username . "visitor2@test.com", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[8]"));
         } else {
-            $this->assertEquals($username . "visitor2", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
-            $this->assertEquals($username . "visitor2@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[8]"));
+            $this->assertEquals($username . "visitor2", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[4]"));
+            $this->assertEquals($username . "visitor2@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[7]"));
         }
     }
 
@@ -286,8 +286,8 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->assertEquals($username . "visitor3", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[5]"));
             $this->assertEquals($username . "visitor3@test.com", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[8]"));
         } else {
-            $this->assertEquals($username . "visitor3", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
-            $this->assertEquals($username . "visitor3@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[8]"));
+            $this->assertEquals($username . "visitor3", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[4]"));
+            $this->assertEquals($username . "visitor3@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[7]"));
         }
     }
 
@@ -330,8 +330,8 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->assertEquals("Visitor3", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[5]"));
             $this->assertEquals("testVisitor3@test.com", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[8]"));
         } else {
-            $this->assertEquals("Visitor3", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
-            $this->assertEquals("testVisitor3@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[8]"));
+            $this->assertEquals("Visitor3", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[4]"));
+            $this->assertEquals("testVisitor3@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[7]"));
         }
     }
 
@@ -369,8 +369,8 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->assertEquals("Visitor4", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[5]"));
             $this->assertEquals("testVisitor4@test.com", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[8]"));
         } else {
-            $this->assertEquals("Visitor4", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
-            $this->assertEquals("testVisitor4@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[8]"));
+            $this->assertEquals("Visitor4", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[4]"));
+            $this->assertEquals("testVisitor4@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[7]"));
         }
     }
 
@@ -414,8 +414,8 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->assertEquals($username . "visitor1", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[5]"));
             $this->assertEquals($username . "visitor1@test.com", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[8]"));
         } else {
-            $this->assertEquals($username . "visitor1", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
-            $this->assertEquals($username . "visitor1@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[8]"));
+            $this->assertEquals($username . "visitor1", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[4]"));
+            $this->assertEquals($username . "visitor1@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[7]"));
         }
     }
 
@@ -452,8 +452,8 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->assertEquals("Visitor1", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[5]"));
             $this->assertEquals("testVisitor1@test.com", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[8]"));
         } else {
-            $this->assertEquals("Visitor1", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
-            $this->assertEquals("testVisitor1@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[8]"));
+            $this->assertEquals("Visitor1", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[4]"));
+            $this->assertEquals("testVisitor1@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[7]"));
         }
     }
 
@@ -502,8 +502,8 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->assertEquals($username . "visitor2", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[5]"));
             $this->assertEquals($username . "visitor2@test.com", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[8]"));
         } else {
-            $this->assertEquals($username . "visitor2", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
-            $this->assertEquals($username . "visitor2@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[8]"));
+            $this->assertEquals($username . "visitor2", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[4]"));
+            $this->assertEquals($username . "visitor2@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[7]"));
         }
     }
 
@@ -548,8 +548,8 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->assertEquals($username . "visitor3", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[5]"));
             $this->assertEquals($username . "visitor3@test.com", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[8]"));
         } else {
-            $this->assertEquals($username . "visitor3", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
-            $this->assertEquals($username . "visitor3@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[8]"));
+            $this->assertEquals($username . "visitor3", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[4]"));
+            $this->assertEquals($username . "visitor3@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[7]"));
         }
     }
 
@@ -593,8 +593,8 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->assertEquals("Visitor3", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[5]"));
             $this->assertEquals("testVisitor3@test.com", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[8]"));
         } else {
-            $this->assertEquals("Visitor3", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
-            $this->assertEquals("testVisitor3@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[8]"));
+            $this->assertEquals("Visitor3", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[4]"));
+            $this->assertEquals("testVisitor3@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[7]"));
         }
     }
 
@@ -633,8 +633,8 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->assertEquals("Visitor4", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[5]"));
             $this->assertEquals("testVisitor4@test.com", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[8]"));
         } else {
-            $this->assertEquals("Visitor4", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
-            $this->assertEquals("testVisitor4@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[8]"));
+            $this->assertEquals("Visitor4", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[4]"));
+            $this->assertEquals("testVisitor4@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[7]"));
         }
     }
 

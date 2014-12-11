@@ -88,7 +88,7 @@
                 }
         }
         $('.has-sub a').click(function() {
-       //     window.location = this.href;
+            window.location = this.href;
         //  e.preventDefault();
         });
 

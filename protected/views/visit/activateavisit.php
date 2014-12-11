@@ -3,7 +3,7 @@
 
 <table class="detailsTable" style="font-size:12px;" id="logvisitTable">
     <tr>
-        <td>Date In</td>
+        <td>Date Check In</td>
     </tr>
     <tr>
         <td>
@@ -22,7 +22,7 @@
     </tr>
 
     <tr>
-        <td>Time In</td>
+        <td>Time Check In</td>
     </tr>
     <tr>
         <td>

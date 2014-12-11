@@ -26,11 +26,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'filter' => VisitStatus::$VISIT_STATUS_LIST,
         ),
         //'date_in',
-        array(
-            'name' => 'date_in',
-            'type' => 'html',
-            //'value' => 'formatDate($data->date_in)',
-        ),
+        
         
         array(
             'name' => 'card',
@@ -62,6 +58,11 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'name' => 'contactemail',
             'value' => 'Visitor::model()->findByPk($data->visitor)->email',
             'header' => 'Contact Email'
+        ),
+        array(
+            'name' => 'date_in',
+            'type' => 'html',
+            //'value' => 'formatDate($data->date_in)',
         ),
         array(
             'name' => 'time_in',

@@ -151,6 +151,7 @@ class VisitController extends Controller {
      * Manages all models.
      */
     public function actionAdmin() {
+      //  $this->layout = '//layouts/contentIframeLayout';
         $model = new Visit('search');
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['Visit']))

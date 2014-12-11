@@ -6,6 +6,7 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl . '/js/script-visitordetail
 $session = new CHttpSession;
 ?><br>
 <div id='actionsCssMenu'>
+    <input type="text" style="display:none;" value="<?php echo $model->visit_status;?>" id="visitStatusActions"/>
     <?php if ($model->visit_status == VisitStatus::CLOSED) {?>
     <ul>
         <li>
@@ -42,7 +43,7 @@ $session = new CHttpSession;
                                         ?>
                                         <table class="detailsTable" style="font-size:12px;" id="logvisitTable">
                                             <tr>
-                                                <td>Date Out</td>
+                                                <td>Date Check Out</td>
                                             </tr>
                                             <tr>
                                                 <td>
@@ -52,7 +53,7 @@ $session = new CHttpSession;
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td>Time Out</td>
+                                                <td>Time Check Out</td>
                                             </tr>
                                             <tr>
                                                 <td>
@@ -163,7 +164,11 @@ $session = new CHttpSession;
     $(document).ready(function() {
 
         $("#logvisitLi a").click();
-        $("#preregisterLi a").click();
+        
+        if($("#visitStatusActions").val() != 2){
+            $("#preregisterLi a").click();
+        }
+        
         $("#activateLi a").click();
 
         $('#activate-a-visit-form').bind('submit', function() {

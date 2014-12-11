@@ -99,7 +99,7 @@ $logform = $this->beginWidget('CActiveForm', array(
         </td>
     </tr>
     <tr>
-        <td>Time In</td>
+        <td>Proposed Time In</td>
     </tr>
     <tr>
         <td>

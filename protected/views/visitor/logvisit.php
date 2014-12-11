@@ -7,14 +7,14 @@ if ($visitModel->time_in != '') {
 ?>
 <table class="detailsTable" style="font-size:12px;" id="logvisitTable">
     <tr>
-        <td>Date In</td>
+        <td>Date Check In</td>
     </tr>
     <tr>
         <td><input type="text" value="<?php echo date("d-m-Y"); ?>" id='Visit_date_inLog' readonly=""></td>
     </tr>
 
     <tr id="dateoutDiv">
-        <td>Date Out
+        <td>Proposed Date Out
             <br><?php
     $this->widget('zii.widgets.jui.CJuiDatePicker', array(
         'htmlOptions' => array(
@@ -36,7 +36,7 @@ if ($visitModel->time_in != '') {
     </tr>
 
     <tr>
-        <td>Time In</td>
+        <td>Time Check In</td>
     </tr>
     <tr>
         <td>

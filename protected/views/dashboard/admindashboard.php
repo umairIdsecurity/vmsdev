@@ -86,7 +86,7 @@
                 ),
             ),
         ));
-        ?></div><?php
+        ?></div><br><?php
     }
 
     function getVisitorFullName($id) {

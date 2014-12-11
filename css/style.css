@@ -962,6 +962,7 @@ dt.tabs dt{
 
 .grid-view .filters select{
     width:100% !important;
+    min-width: 122px !important;
 }
 
 .close-visit {

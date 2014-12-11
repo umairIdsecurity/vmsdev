@@ -45,11 +45,14 @@ $multiday = CardType::model()->findByPk(CardType::MULTI_DAY_VISITOR);
                 card_type_value = document.getElementById('sameday').value;
                 $("#proposedDateOut").val($("#curdateLogVisit").val());
                 $("#Visit_date_out").val($("#curdateLogVisit").val());
+                $("#dateoutDiv").hide();
                 $(".ui-datepicker-trigger").hide();
+                
             } else {
                 card_type_value = document.getElementById('multiday').value;
                  $("#proposedDateOut").val("");
                  $("#Visit_date_out").val("");
+                  $("#dateoutDiv").show();
                  $(".ui-datepicker-trigger").show();
             }
             $("#cardtype").val(card_type_value);

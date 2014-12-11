@@ -17,7 +17,7 @@ $session = new ChttpSession;
         <ul>
             <li class=''>
                 <a href='<?php echo Yii::app()->createUrl('visitor/create&action=preregister'); ?>'>
-                    <span >Preregistered Visitors</span>
+                    <span >Preregister a Visitor</span>
                 </a>
             </li>
             <li class=''><?php

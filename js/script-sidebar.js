@@ -108,7 +108,7 @@
 //                } else if (currentRole == agentadmin) {
 //                    li[7].click();
 //                }
-            $('.managevisitorrecords').next().slideDown('normal');
+            $('.managevisitorrecords').next().show();
 
         }
         $('.has-sub a').click(function() {

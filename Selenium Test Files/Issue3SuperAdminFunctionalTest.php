@@ -195,9 +195,9 @@ class Issue3SuperAdminFunctionalTest extends BaseFunctionalTest {
     public function Scenario3() {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
-        $this->click("link=Administration");
-        $this->waitForPageToLoad("30000");
-        $this->clickAndWait("link=Manage Users");
+        $this->clickAndWait("link=Administration");
+        $this->click("link=Manage Users");
+        $this->waitForElementPresent("link=Add Operator");
         $this->clickAndWait("link=Add Operator");
         $this->addUser("operator@test.com", "operator");
         $this->getDisabledRoleValue("8");

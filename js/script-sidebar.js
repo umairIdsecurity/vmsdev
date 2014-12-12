@@ -35,7 +35,7 @@
                 if (currentRole == superadmin)
                 {
                     //   li[0].click();
-                    $('.managecompanies').next().show();
+                 //   $('.managecompanies').next().show();
                 }
                 break;
             case "index.php?r=workstation":
@@ -45,7 +45,7 @@
 //                {
 //                    li[2].click();
 //                }
-                $('.manageworkstations').next().show();
+               // $('.manageworkstations').next().show();
                 break;
             case "index.php?r=user":
 //                if (currentRole == admin || currentRole == agentadmin) {
@@ -55,14 +55,14 @@
 //                {
 //                    li[4].click();
 //                }
-                $('.manageusers').next().show();
+               // $('.manageusers').next().show();
                 break;
 //
             case "index.php?r=visitReason":
 //                if (currentRole == superadmin) {
 //                    li[15].click();
 //                }
-                $('.managevisitreasons').next().show();
+             //   $('.managevisitreasons').next().show();
                 break;
             case "index.php?r=visitor":
 
@@ -73,13 +73,13 @@
 //                }  else if(currentRole == agentadmin) {
 //                    li[7].click();
 //                }
-                $('.managevisitorrecords').next().show();
+               // $('.managevisitorrecords').next().show();
                 break;
             case "index.php?r=licenseDetails":
                 if (currentRole == superadmin)
                 {
                     //   li[0].click();
-                    $('.managecompanies').next().show();
+          //          $('.managecompanies').next().show();
                 }
                 break;
         }
@@ -96,7 +96,7 @@
 //                li[18].click();
 //            }
           //  $('.managereports').next().slideDown('normal');
-            $('.managereports').next().show();
+            //$('.managereports').next().show();
         }
 //        
 //        
@@ -108,7 +108,7 @@
 //                } else if (currentRole == agentadmin) {
 //                    li[7].click();
 //                }
-            $('.managevisitorrecords').next().show();
+       //     $('.managevisitorrecords').next().show();
 
         }
         $('.has-sub a').click(function() {

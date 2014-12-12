@@ -75,7 +75,7 @@ div.form label{
 #logo
 {
     float:left;
-   // padding:10px 100px;
+    // padding:10px 100px;
     margin-left: 5px;
     height:50px ;
 }
@@ -570,7 +570,7 @@ dt.tabs dt{
 
 #visit-reason-grid table tr td a{
     width:50px !important;
-     margin-left: auto;
+    margin-left: auto;
     margin-right: auto;
 }
 
@@ -747,7 +747,7 @@ dt.tabs dt{
 
 #logvisitTable{
     width:250px !important
-    
+
 }
 #visitorInformationCssMenu table tr td select{
     height:27px;
@@ -827,7 +827,7 @@ dt.tabs dt{
     font-weight:800;
     color:#58585A;
     border:none !important;
-     word-wrap:break-word;
+    word-wrap:break-word;
 }
 
 #cardDetailsTable tr{
@@ -1008,7 +1008,7 @@ dt.tabs dt{
     background: -webkit-gradient(linear, center top, center bottom, from(#F5F5F5), to(#E5E5E5)) !important;
     background: -moz-linear-gradient(center top , #F5F5F5, #E5E5E5) repeat scroll 0 0 rgba(0, 0, 0, 0) !important;
     background: -webkit-gradient(linear, center top, center bottom, from(#F5F5F5), to(#E5E5E5)) !important;
-  //  border :1px solid #999999 !important;
+    //  border :1px solid #999999 !important;
 }
 .items thead tr > th:first-child{
     border-radius:5px !important;
@@ -1019,3 +1019,19 @@ dt.tabs dt{
     display:none;
 }
 
+#addCompanyLink {
+    width: 130px;
+    height: 20px;
+    padding-right: 0px;
+    margin-right: 0px;
+    padding-bottom: 0px;
+    display:block;
+}
+
+#companyTr td{
+    vertical-align: top !important;
+}
+
+#companyTr td:first-child{
+    padding-top: 11px;
+}

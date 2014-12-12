@@ -115,7 +115,7 @@ $currentLoggedUserId = $session['id'];
                             </select><?php echo "<br>" . $form->error($model, 'tenant_agent'); ?>
                         </td>
                     </tr>
-                    <tr>
+                    <tr id="companyTr">
                         <td><?php echo $form->labelEx($model, 'company'); ?></td>
                         <td id='companyRow'>
                             <select id="User_company" name="User[company]" <?php
@@ -160,7 +160,7 @@ $currentLoggedUserId = $session['id'];
                                 ?>
                             </select>
                             <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;">Add New Company</a>
-                            <?php echo "<br>" . $form->error($model, 'company'); ?>
+                            <?php echo $form->error($model, 'company'); ?>
                         </td>
                         <td></td></tr>
                     <tr >

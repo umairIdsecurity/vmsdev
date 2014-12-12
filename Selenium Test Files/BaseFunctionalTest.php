@@ -169,8 +169,9 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
     }
 
     function verifyVisitorInTable($visitor_name) {
-        $this->waitForElementPresent("//div[@id='cssmenu']/ul/li[4]/a/span");
-        $this->clickAndWait("//div[@id='cssmenu']/ul/li[4]/a/span");
+        $this->waitForElementPresent("link=Manage Visitor Records");
+        $this->click("link=Manage Visitor Records");
+        $this->waitForElementPresent("name=Visitor[first_name]");
         $this->type("name=Visitor[first_name]", "Test");
         $this->type("name=Visitor[last_name]", $visitor_name);
         $this->type("name=Visitor[email]", "test" . $visitor_name . "@test.com");

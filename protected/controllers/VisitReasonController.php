@@ -26,7 +26,7 @@ class VisitReasonController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('update', 'admin', 'delete'),
+                'actions' => array('update', 'admin','adminAjax', 'delete'),
                 'expression' => 'Yii::app()->controller->checkIfUserCanAccess("superadmin")',
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -133,9 +133,20 @@ class VisitReasonController extends Controller {
         if (isset($_GET['VisitReason']))
             $model->attributes = $_GET['VisitReason'];
 
-        $this->render('admin', array(
+        $this->render('_admin', array(
             'model' => $model,
-        ));
+        ),false,true);
+    }
+    
+    public function actionAdminAjax() {
+        $model = new VisitReason('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['VisitReason']))
+            $model->attributes = $_GET['VisitReason'];
+
+        $this->renderPartial('_admin', array(
+            'model' => $model,
+        ),false,true);
     }
 
     /**

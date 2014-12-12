@@ -91,21 +91,16 @@ class Issue9FunctionalTest extends BaseFunctionalTest {
     function Scenario2() {
         $username = 'admin@test.com';
         $this->login($username, '12345');
-        $this->click("link=Administration");
-        $this->waitForPageToLoad("30000");
-        $this->click("link=Organisation Settings");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("link=Administration");
+        $this->clickAndWait("link=Organisation Settings");
         $this->type("id=Company_name", "");
-        $this->click("id=createBtn");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("id=createBtn");
         $this->assertEquals("Company Name cannot be blank.", $this->getText("css=div.errorSummary > ul > li"));
         $this->type("id=Company_email_address", "123");
-        $this->click("id=createBtn");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("id=createBtn");
         $this->assertEquals("Email Address is not a valid email address.", $this->getText("//form[@id='company-form']/div/ul/li[2]"));
         $this->type("id=Company_website", "123");
-        $this->click("id=createBtn");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("id=createBtn");
         $this->assertEquals("Website is not a valid URL.", $this->getText("//form[@id='company-form']/div/ul/li[3]"));
     }
 
@@ -157,7 +152,8 @@ class Issue9FunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->clickAndWait("link=Manage Companies");
+        $this->click("link=Manage Companies");
+        $this->waitForElementPresent("css=td > input[name=\"Company[name]\"]");
         $this->type("css=td > input[name=\"Company[name]\"]", "Test Company 1");
         $this->waitForElementPresent("link=Edit");
         $this->clickAndWait("link=Edit");

@@ -26,7 +26,7 @@ class VisitController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'detail', 'admin', 'view','exportFile','evacuationReport'),
+                'actions' => array('create', 'update', 'detail', 'admin', 'view','exportFile','evacuationReport','evacuationReportAjax'),
                 'users' => array('@'),
             ),
             array('allow',
@@ -157,9 +157,9 @@ class VisitController extends Controller {
         if (isset($_GET['Visit']))
             $model->attributes = $_GET['Visit'];
 
-        $this->render('admin', array(
+        $this->renderPartial('_admin', array(
             'model' => $model,
-        ));
+        ),false,true);
     }
 
     /**
@@ -254,9 +254,26 @@ class VisitController extends Controller {
             Yii::app()->end();
         }
 
-        $this->render('evacuationreport', array(
+        $this->render('_evacuationreport', array(
             'model' => $model,
-        ));
+        ),false,true);
+    }
+    
+    public function actionEvacuationReportAjax() {
+        $model = new Visit('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['Visit'])) {
+            $model->attributes = $_GET['Visit'];
+        }
+
+        if (Yii::app()->request->getParam('export')) {
+            $this->actionExport();
+            Yii::app()->end();
+        }
+
+        $this->renderPartial('_evacuationreport', array(
+            'model' => $model,
+        ),false,true);
     }
 
     public function actionVisitorRegistrationHistory() {

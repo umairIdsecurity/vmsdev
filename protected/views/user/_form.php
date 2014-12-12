@@ -159,7 +159,7 @@ $currentLoggedUserId = $session['id'];
                                 }
                                 ?>
                             </select>
-                            <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;"><br>Add New Company</a>
+                            <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;">Add New Company</a>
                             <?php echo "<br>" . $form->error($model, 'company'); ?>
                         </td>
                         <td></td></tr>

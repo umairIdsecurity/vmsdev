@@ -65,8 +65,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->clickAndWait("//div[@id='cssmenu']/ul/li[6]/a/span");
-
+        $this->click("link=Manage Visits");        $this->waitForElementPresent("name=Visit[visitor]");
         $this->type("name=Visit[visitor]", "test visitor1");
         sleep(1);
         $this->select("name=Visit[card_type]", "label=Same Day Visitor");
@@ -127,7 +126,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->type("document.forms['update-patient-form'].elements['Patient[name]']", "Patient Name 3");
         $this->click("id=submit");
         sleep(1);
-        $this->clickAndWait("//div[@id='cssmenu']/ul/li[6]/a/span");
+        $this->click("link=Manage Visits");        $this->waitForElementPresent("name=Visit[visitor]");
         $this->type("name=Visit[visitor]", "test visitor1");
         sleep(1);
         $this->select("name=Visit[card_type]", "label=Same Day Visitor");
@@ -189,7 +188,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->clickAndWait("//div[@id='cssmenu']/ul/li[6]/a/span");
+        $this->click("link=Manage Visits");        $this->waitForElementPresent("name=Visit[visitor]");
         $this->type("name=Visit[visitor]", "test visitor4");
         for ($second = 0;; $second++) {
             if ($second >= 10)
@@ -213,7 +212,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->select("id=Visit_reason", "label=Reason 2");
         $this->click("id=submitReasonForm");
         sleep(1);
-        $this->clickAndWait("//div[@id='cssmenu']/ul/li[6]/a/span");
+        $this->click("link=Manage Visits");        $this->waitForElementPresent("name=Visit[visitor]");
         $this->type("name=Visit[visitor]", "test visitor4");
         for ($second = 0;; $second++) {
             if ($second >= 10)
@@ -262,7 +261,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->clickAndWait("//div[@id='cssmenu']/ul/li[6]/a/span");
+        $this->click("link=Manage Visits");        $this->waitForElementPresent("name=Visit[visitor]");
         $this->type("name=Visit[visitor]", "test visitor1");
         $this->select("name=Visit[card_type]", "label=Same Day Visitor");
         $this->select("name=Visit[visitor_type]", "label=Patient Visitor");
@@ -352,7 +351,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->clickAndWait("//div[@id='cssmenu']/ul/li[6]/a/span");
+        $this->click("link=Manage Visits");        $this->waitForElementPresent("name=Visit[visitor]");
         $this->type("name=Visit[visitor]", "test visitor4");
         $this->select("name=Visit[card_type]", "label=Same Day Visitor");
         $this->select("name=Visit[visitor_type]", "label=Corporate Visitor");
@@ -424,7 +423,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->clickAndWait("//div[@id='cssmenu']/ul/li[6]/a/span");
+        $this->click("link=Manage Visits");        $this->waitForElementPresent("name=Visit[visitor]");
         $this->type("name=Visit[visitor]", "test visitor1");
         $this->select("name=Visit[visitor_type]", "label=Patient Visitor");
         $this->select("name=Visit[reason]", "label=Reason 3");
@@ -462,7 +461,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->waitForElementPresent("css=div.flash-success.success-update-visitor-type");
         $this->assertEquals("Visitor Type Updated Successfully.", $this->getText("css=div.flash-success.success-update-visitor-type"));
         sleep(1);
-        $this->clickAndWait("//div[@id='cssmenu']/ul/li[6]/a/span");
+        $this->click("link=Manage Visits");        $this->waitForElementPresent("name=Visit[visitor]");
         $this->type("name=Visit[visitor]", "test visitor1");
         $this->select("name=Visit[visitor_type]", "label=Corporate Visitor");
         sleep(1);
@@ -525,7 +524,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->clickAndWait("//div[@id='cssmenu']/ul/li[6]/a/span");
+        $this->click("link=Manage Visits");        $this->waitForElementPresent("name=Visit[visitor]");
         $this->type("name=Visit[visitor]", "test visitor1");
         $this->select("name=Visit[reason]", "label=Reason 3");
         sleep(1);
@@ -540,7 +539,8 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->select("id=Visit_time_in_minutes", "label=" . $currentMinute);
         $this->click("css=#update-log-visit-form > input[type='submit']");
         $this->waitForElementPresent("css=div.flash-success.success-update-preregister");
-        $this->clickAndWait("link=Manage Visits");
+        $this->click("link=Manage Visits");
+        $this->waitForElementPresent("name=Visit[visitor]");
         $this->type("name=Visit[visitor]", "test visitor1");
         $this->select("name=Visit[reason]", "label=Reason 3");
         sleep(1);
@@ -579,7 +579,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->clickAndWait("//div[@id='cssmenu']/ul/li[6]/a/span");
+        $this->click("link=Manage Visits");        $this->waitForElementPresent("name=Visit[visitor]");
         $this->type("name=Visit[visitor]", "test visitor1");
         $this->select("name=Visit[card_type]", "label=Multi Day Visitor");
         sleep(1);
@@ -595,7 +595,8 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->click("css=#update-log-visit-form > input[type=\"submit\"]");
         $this->assertEquals("Visit Successfully Updated.", $this->getText("css=div.flash-success.success-update-preregister"));
 
-        $this->clickAndWait("link=Manage Visits");
+        $this->click("link=Manage Visits");
+        $this->waitForElementPresent("name=Visit[visitor]");
         $this->type("name=Visit[visitor]", "test visitor1");
         $this->select("name=Visit[card_type]", "label=Multi Day Visitor");
         sleep(1);
@@ -618,7 +619,8 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->clickAndWait("link=Manage Visitor Records");
+        $this->click("link=Manage Visitor Records");
+        $this->waitForElementPresent("link=Pre-register a Visitor");
         $this->clickAndWait("link=Pre-register a Visitor");
         $this->click("id=clicktabA");
         $this->addVisitor('Visitor0a');
@@ -655,7 +657,8 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->clickAndWait("link=Manage Visitor Records");
+        $this->click("link=Manage Visitor Records");
+        $this->waitForElementPresent("link=Pre-register a Visitor");
         $this->clickAndWait("link=Pre-register a Visitor");
         $this->click("id=multiday");
         $this->click("id=clicktabA");
@@ -698,7 +701,8 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->clickAndWait("link=Manage Visitor Records");
+        $this->click("link=Manage Visitor Records");
+        $this->waitForElementPresent("link=Register a Visitor");
         $this->clickAndWait("link=Register a Visitor");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
@@ -736,7 +740,8 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->clickAndWait("link=Manage Visitor Records");
+        $this->click("link=Manage Visitor Records");
+        $this->waitForElementPresent("link=Register a Visitor");
         $this->clickAndWait("link=Register a Visitor");
         $this->click("id=multiday");
         $this->click("id=clicktabA");
@@ -785,7 +790,8 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->clickAndWait("link=Manage Visitor Records");
+        $this->click("link=Manage Visitor Records");
+        $this->waitForElementPresent("link=Pre-register a Visitor");
         $this->clickAndWait("link=Pre-register a Visitor");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
@@ -806,7 +812,8 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Same Day Visitor", $this->getText("css=#cardDetailsTable > tbody > tr > td"));
 
         $this->clickAndWait("link=Administration");
-        $this->clickAndWait("link=Manage Visitor Records");
+        $this->click("link=Manage Visitor Records");
+        $this->waitForElementPresent("link=Pre-register a Visitor");
         $this->clickAndWait("link=Pre-register a Visitor");
         $this->click("id=multiday");
         $this->click("id=clicktabA");
@@ -847,7 +854,8 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->clickAndWait("link=Manage Visitor Records");
+        $this->click("link=Manage Visitor Records");
+        $this->waitForElementPresent("link=Register a Visitor");
         $this->clickAndWait("link=Register a Visitor");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
@@ -871,7 +879,8 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("css=#close-visit-form > input[type=\"submit\"]");
 
         $this->clickAndWait("link=Administration");
-        $this->clickAndWait("link=Manage Visitor Records");
+        $this->click("link=Manage Visitor Records");
+        $this->waitForElementPresent("link=Register a Visitor");
         $this->clickAndWait("link=Register a Visitor");
         $this->click("id=multiday");
         $this->click("id=clicktabA");

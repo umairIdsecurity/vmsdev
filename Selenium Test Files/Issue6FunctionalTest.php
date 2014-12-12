@@ -100,16 +100,13 @@ class Issue6FunctionalTest extends BaseFunctionalTest {
     function Scenario2() {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
-        $this->click("link=Administration");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("link=Administration");
         $this->click("link=Manage Workstations");
-        $this->waitForPageToLoad("30000");
         $this->waitForElementPresent("css=td > input[name=\"Workstation[name]\"]");
         $this->type("css=td > input[name=\"Workstation[name]\"]", "Workstation 2");
         $this->type("name=Workstation[contact_email_address]", "workstation2@test.com");
         $this->waitForElementPresent("link=Edit");
-        $this->click("link=Edit");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("link=Edit");
         $this->type("id=Workstation_location", "Office - updated");
         $this->click("name=yt0");
         $this->waitForElementPresent("css=td > input[name=\"Workstation[name]\"]");
@@ -142,18 +139,15 @@ class Issue6FunctionalTest extends BaseFunctionalTest {
     function Scenario3() {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
-        $this->click("link=Administration");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("link=Administration");
         $this->click("link=Manage Workstations");
-        $this->click("link=Add Workstation");
-        $this->waitForPageToLoad("30000");
-        $this->click("name=yt0");
-        $this->waitForPageToLoad("30000");
+        $this->waitForElementPresent("css=td > input[name=\"Workstation[name]\"]");
+        $this->clickAndWait("link=Add Workstation");
+        $this->clickAndWait("name=yt0");
         $this->assertEquals("Name cannot be blank.", $this->getText("css=div.errorSummary > ul > li"));
         $this->assertEquals("Tenant cannot be blank.", $this->getText("//form[@id='workstations-form']/div/ul/li[2]"));
         $this->type("id=Workstation_contact_email_address", "123");
-        $this->click("name=yt0");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("name=yt0");
         $this->assertEquals("Contact Email Address is not a valid email address.", $this->getText("//form[@id='workstations-form']/div/ul/li[3]"));
     }
     
@@ -179,18 +173,16 @@ class Issue6FunctionalTest extends BaseFunctionalTest {
     function Scenario4(){
         $username = 'admin@test.com';
         $this->login($username, '12345');
-        $this->click("link=Administration");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("link=Administration");
         $this->click("link=Manage Workstations");
-        $this->click("link=Add Workstation");
-        $this->waitForPageToLoad("30000");
+        $this->waitForElementPresent("css=td > input[name=\"Workstation[name]\"]");
+        $this->clickAndWait("link=Add Workstation");
         $this->type("id=Workstation_name", "Workstation 3");
         $this->type("id=Workstation_location", "Office");
         $this->type("id=Workstation_contact_name", "Test Person");
         $this->type("id=Workstation_contact_number", "1234-567");
         $this->type("id=Workstation_contact_email_address", "workstation3@test.com");
-        $this->click("name=yt0");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("name=yt0");
         $this->type("css=td > input[name=\"Workstation[name]\"]", "Workstation 3");
         $this->type("name=Workstation[contact_email_address]", "workstation3@test.com");
         sleep(5);
@@ -216,7 +208,7 @@ class Issue6FunctionalTest extends BaseFunctionalTest {
     function Scenario5() {
         $username = 'admin@test.com';
         $this->login($username, '12345');
-        $this->click("link=Administration");
+        $this->clickAndWait("link=Administration");
         $this->waitForPageToLoad("30000");
         $this->open("http://cvms.identitysecurity.info/index.php?r=company/admin");
         $this->assertEquals("You are not authorized to perform this action.", $this->getText("css=div.error"));

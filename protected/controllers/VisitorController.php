@@ -26,7 +26,7 @@ class VisitorController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('update', 'delete','admin'),
+                'actions' => array('update', 'delete','admin','adminAjax'),
                 'expression' => 'Yii::app()->controller->checkIfUserCanAccess("administration")',
             ),
             
@@ -154,9 +154,20 @@ class VisitorController extends Controller {
         if (isset($_GET['Visitor']))
             $model->attributes = $_GET['Visitor'];
 
-        $this->render('admin', array(
+        $this->render('_admin', array(
             'model' => $model,
-        ));
+        ),false,true);
+    }
+    
+    public function actionAdminAjax() {
+        $model = new Visitor('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['Visitor']))
+            $model->attributes = $_GET['Visitor'];
+
+        $this->renderPartial('_admin', array(
+            'model' => $model,
+        ),false,true);
     }
 
     /**

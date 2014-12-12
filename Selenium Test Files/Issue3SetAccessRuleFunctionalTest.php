@@ -8,15 +8,15 @@
 
 require_once 'BaseFunctionalTest.php';
 
-include 'Issue3FunctionalTestSuperAdmin.php';
-$Issue3FunctionalTestSuperAdmin = new Issue3FunctionalTestSuperAdmin();
+include 'Issue3SuperAdminFunctionalTest.php';
+$Issue3SuperAdminFunctionalTest = new Issue3SuperAdminFunctionalTest();
 
 /**
  * Description of Issue3FunctionalTest
  *
  * @author Jeremiah
  */
-class Issue3FunctionalTestSetAccessRule extends BaseFunctionalTest {
+class Issue3SetAccessRuleFunctionalTest extends BaseFunctionalTest {
 
     function setUp() {
         $this->setBrowser("*firefox");
@@ -132,22 +132,19 @@ class Issue3FunctionalTestSetAccessRule extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->click("link=Administration");
         $this->waitForPageToLoad("30000");
-        $this->click("//div[@id='cssmenu']/ul/li[2]/a/span");
-        $this->waitForPageToLoad("30000");
-        $this->click("css=li.odd > a.addSubMenu > span");
-        $this->waitForPageToLoad("30000");
+        $this->click("link=Manage Workstations");
+        $this->waitForElementPresent("link=Add Workstation");
+        $this->clickAndWait("link=Add Workstation");
         $this->type("id=Workstation_name", "Operator Workstation");
         $this->type("id=Workstation_location", "PAL");
         $this->type("id=Workstation_contact_name", "Person Name");
         $this->type("id=Workstation_contact_number", "09367941012");
         $this->type("id=Workstation_contact_email_address", "test@test.com");
         $this->select("id=Workstation_tenant", "label=Test admin");
-        $this->click("name=yt0");
-        $this->waitForPageToLoad("30000");
-        $this->click("//div[@id='cssmenu']/ul/li[3]/a/span");
-        $this->waitForPageToLoad("30000");
-        $this->click("//div[@id='cssmenu']/ul/li[3]/ul/li[6]/a/span");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("name=yt0");
+        $this->click("link=Manage Users");
+        $this->waitForElementPresent("link=Set Access Rules");
+        $this->clickAndWait("link=Set Access Rules");
         $this->waitForElementPresent("id=19");
         $this->click("id=19");
         $this->waitForElementPresent("id=setPrimary11");
@@ -159,10 +156,9 @@ class Issue3FunctionalTestSetAccessRule extends BaseFunctionalTest {
         $this->assertEquals("Workstation updated.", $this->getText("css=div.flash-success"));
         $this->click("link=×");
         
-        $this->click("//div[@id='cssmenu']/ul/li[2]/a/span");
-        $this->waitForPageToLoad("30000");
-        $this->click("css=li.odd > a.addSubMenu > span");
-        $this->waitForPageToLoad("30000");
+        $this->click("link=Manage Workstations");
+        $this->waitForElementPresent("link=Add Workstation");
+        $this->clickAndWait("link=Add Workstation");
         $this->type("id=Workstation_name", "Workstation Agent Operator");
         $this->type("id=Workstation_location", "MNL");
         $this->type("id=Workstation_contact_name", "Test Person");
@@ -175,9 +171,8 @@ class Issue3FunctionalTestSetAccessRule extends BaseFunctionalTest {
         $this->click("name=yt0");
         $this->waitForPageToLoad("30000");
         $this->click("link=Manage Users");
-        $this->waitForPageToLoad("30000");
-        $this->click("//div[@id='cssmenu']/ul/li[3]/ul/li[6]/a/span");
-        $this->waitForPageToLoad("30000");
+        $this->waitForElementPresent("link=Set Access Rules");
+        $this->clickAndWait("link=Set Access Rules");
         $this->waitForElementPresent("id=20");
         $this->click("id=20");
         $this->waitForElementPresent("id=setPrimary12");

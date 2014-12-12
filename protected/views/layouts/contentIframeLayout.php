@@ -45,7 +45,7 @@ $user_role = $session['role'];
 
         <div class="container" id="page">
             <div class="wrapper" >
-                <div id="content" style="margin-left: 0; width: 81%;border:1px solid white;">
+                <div id="content" style="margin-left: -30px; width: 930px;border:1px solid white;">
                     <?php echo $content; ?>
                 </div>
             </div>

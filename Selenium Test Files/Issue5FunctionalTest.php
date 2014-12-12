@@ -92,12 +92,11 @@ class Issue5FunctionalTest extends BaseFunctionalTest {
         $this->click("link=Administration");
         $this->waitForPageToLoad("30000");
         $this->click("link=Manage Companies");
-        $this->waitForPageToLoad("30000");
+        $this->waitForElementPresent("css=td > input[name=\"Company[name]\"]");
         $this->type("css=td > input[name=\"Company[name]\"]", "Test Company 3");
         $this->type("name=Company[trading_name]", "Test Company 3");
         sleep(5);
-        $this->click("link=Edit");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("link=Edit");
         $this->type("id=Company_trading_name", "Test Company 3 - update");
         $this->click("id=createBtn");
         $this->waitForElementPresent("css=td > input[name=\"Company[name]\"]");
@@ -137,21 +136,18 @@ class Issue5FunctionalTest extends BaseFunctionalTest {
     function Scenario3() {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
-        $this->click("link=Administration");
+        $this->clickAndWait("link=Administration");
         $this->waitForPageToLoad("30000");
         $this->click("link=Manage Companies");
-        $this->click("link=Add Company");
-        $this->waitForPageToLoad("30000");
-        $this->click("id=createBtn");
-        $this->waitForPageToLoad("30000");
+        $this->waitForElementPresent("link=Add Company");
+        $this->clickAndWait("link=Add Company");
+        $this->clickAndWait("id=createBtn");
         $this->assertEquals("Please fix the following input errors:", $this->getText("css=div.errorSummary > p"));
         $this->type("id=Company_email_address", "123");
-        $this->click("id=createBtn");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("id=createBtn");
         $this->assertEquals("Email Address is not a valid email address.", $this->getText("//form[@id='company-form']/table/tbody/tr[6]/td[3]/div"));
         $this->type("id=Company_website", "123");
-        $this->click("id=createBtn");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("id=createBtn");
         $this->assertEquals("Website is not a valid URL.", $this->getText("//form[@id='company-form']/table/tbody/tr[9]/td[3]/div"));
     }
 

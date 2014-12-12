@@ -44,7 +44,7 @@ class UserController extends Controller {
                 'expression' => 'Yii::app()->controller->accessRoles("profile")',
             ),
             array('allow',
-                'actions' => array('admin', 'delete', 'systemaccessrules'),
+                'actions' => array('admin','adminAjax', 'delete', 'systemaccessrules'),
                 'expression' => 'Yii::app()->controller->accessRoles("admin")',
             ),
             array('deny', // deny all users
@@ -166,9 +166,21 @@ class UserController extends Controller {
             $model->attributes = $_GET['User'];
         }
 
-        $this->render('admin', array(
+        $this->render('_admin', array(
             'model' => $model,
-        ));
+        ),false,true);
+    }
+    
+    public function actionAdminAjax() {
+        $model = new User('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['User'])) {
+            $model->attributes = $_GET['User'];
+        }
+
+        $this->renderPartial('_admin', array(
+            'model' => $model,
+        ),false,true);
     }
 
     public function actionSystemAccessRules() {

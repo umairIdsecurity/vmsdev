@@ -13,7 +13,7 @@ $session = new ChttpSession;
 <input type="hidden" value="<?php echo $session['role'] ?>" id="sessionRoleForSideBar">
 
 <div id="sidebar2" style="<?php
-if ( $session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_STAFFMEMBER || $session['role'] == Roles::ROLE_VISITOR) {
+if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_STAFFMEMBER || $session['role'] == Roles::ROLE_VISITOR) {
     echo 'display:none;';
 }
 ?>" >
@@ -21,26 +21,68 @@ if ( $session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles
         <ul>
             <?php if ($session['role'] == Roles::ROLE_SUPERADMIN) {
                 ?>
-                <li class='has-sub'><a href='<?php echo Yii::app()->createUrl('company/admin'); ?>'><span>Manage Companies</span></a>
+                <li class='has-sub'><?php
+                    echo CHtml::ajaxLink("Manage Companies", CController::createUrl('company/adminAjax'), array(
+                        'update' => '#content',
+                        'complete' => "js:function(html){
+            $('.manageworkstations').next().slideUp('normal');
+            $('.managecompanies').next().slideDown('normal');
+            $('.manageusers').next().slideUp('normal');
+            $('.managevisitorrecords').next().slideUp('normal');
+            $('.managevisitreasons').next().slideUp('normal');
+            $('.managereports').next().slideUp('normal');
+        }",
+                            ), array(
+                        'class' => 'managecompanies',
+                    ));
+                    ?>
                     <ul>
-                        <li><a href='<?php echo Yii::app()->createUrl('company/create'); ?>' class="addSubMenu"><span>Add Company</span></a></li>
+                        
+                        <li><a href='<?php echo Yii::app()->createUrl('company/create'); ?>' id="addcompany" class="addSubMenu ajaxLinkLi"><span>Add Company</span></a></li>
                     </ul>
                 </li>
-
                 <?php
             } else {
                 ?>
                 <li class=''><a href='<?php echo Yii::app()->createUrl('company/update/&id=' . $session['company']) ?>'><span>Organisation Settings</span></a></li>
-          
- <?php }
+
+            <?php }
             ?>
-            <li class='has-sub'><a href='<?php echo Yii::app()->createUrl('workstation/admin') ?>'><span>Manage Workstations</span></a>
+            <li class='has-sub'><?php
+                echo CHtml::ajaxLink("Manage Workstations", CController::createUrl('workstation/adminAjax'), array(
+                    'update' => '#content',
+                    'complete' => "js:function(html){
+            $('.managecompanies').next().slideUp('normal');
+            $('.manageworkstations').next().slideDown('normal');
+            $('.manageusers').next().slideUp('normal');
+            $('.managevisitorrecords').next().slideUp('normal');
+            $('.managevisitreasons').next().slideUp('normal');
+            $('.managereports').next().slideUp('normal');
+        }",
+                        ), array(
+                    'class' => 'manageworkstations',
+                ));
+                ?>
                 <ul>
                     <li><a href='<?php echo Yii::app()->createUrl('workstation/create'); ?>' class="addSubMenu"><span>Add Workstation</span></a></li>
                 </ul>
             </li>
 
-            <li class='has-sub'><a href='<?php echo Yii::app()->createUrl('user/admin'); ?>'><span>Manage Users</span></a>
+            <li class='has-sub'><?php
+                echo CHtml::ajaxLink("Manage Users", CController::createUrl('user/adminAjax'), array(
+                    'update' => '#content',
+                    'complete' => "js:function(html){
+            $('.managecompanies').next().slideUp('normal');
+            $('.manageworkstations').next().slideUp('normal');
+            $('.manageusers').next().slideDown('normal');
+            $('.managevisitorrecords').next().slideUp('normal');
+            $('.managevisitreasons').next().slideUp('normal');
+            $('.managereports').next().slideUp('normal');
+        }",
+                        ), array(
+                    'class' => 'manageusers',
+                ));
+                ?>
                 <ul>
                     <li><a href='<?php echo Yii::app()->createUrl('user/create'); ?>' class="has-sub-sub"><span>Add User</span></a></li>
 
@@ -81,51 +123,127 @@ if ( $session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles
 
             <?php if ($session['role'] == Roles::ROLE_SUPERADMIN) {
                 ?>
-                <li class='has-sub'><a href='<?php echo Yii::app()->createUrl('visitor/admin'); ?>'><span>Manage Visitor Records</span></a>
+                <li class='has-sub'><?php
+                    echo CHtml::ajaxLink("Manage Visitor Records", CController::createUrl('visitor/adminAjax'), array(
+                        'update' => '#content',
+                        'complete' => "js:function(html){
+            $('.managecompanies').next().slideUp('normal');
+            $('.manageworkstations').next().slideUp('normal');
+            $('.manageusers').next().slideUp('normal');
+            $('.managevisitorrecords').next().slideDown('normal');
+            $('.managevisitreasons').next().slideUp('normal');
+            $('.managereports').next().slideUp('normal');
+        }",
+                            ), array(
+                        'class' => 'managevisitorrecords',
+                    ));
+                    ?>
                     <ul>
                         <li><a href='<?php echo Yii::app()->createUrl('visitor/create'); ?>' class="addSubMenu"><span>Register a Visitor</span></a></li>
                         <li><a href='<?php echo Yii::app()->createUrl('visitor/create&action=preregister'); ?>' class="addSubMenu"><span>Pre-register a Visitor</span></a></li>
                         <li><a href='<?php echo Yii::app()->createUrl('visit/exportvisitorrecords'); ?>' ><span>Export Visitor Records</span></a></li>
                     </ul>
                 </li>    
-                <li class='has-sub'><a href='<?php echo Yii::app()->createUrl('visitReason/admin'); ?>'><span>Manage Visit Reasons</span></a>
+                <li class='has-sub'><?php
+                    echo CHtml::ajaxLink("Manage Visit Reasons", CController::createUrl('visitReason/adminAjax'), array(
+                        'update' => '#content',
+                        'complete' => "js:function(html){
+            $('.managecompanies').next().slideUp('normal');
+            $('.manageworkstations').next().slideUp('normal');
+            $('.manageusers').next().slideUp('normal');
+            $('.managevisitorrecords').next().slideUp('normal');
+            $('.managevisitreasons').next().slideDown('normal');
+            $('.managereports').next().slideUp('normal');
+        }",
+                            ), array(
+                        'class' => 'managevisitreasons',
+                    ));
+                    ?>
                     <ul>
                         <li><a href='<?php echo Yii::app()->createUrl('visitReason/create'); ?>' class="addSubMenu"><span>Add Visit Reason</span></a></li>
                     </ul>
                 </li>
-                <li class=''><a href='<?php echo Yii::app()->createUrl('visit/admin'); ?>'><span>Manage Visits</span></a>
-                   
+                <li class=''><?php
+                    echo CHtml::ajaxLink("Manage Visits", CController::createUrl('visit/admin'), array(
+                        'update' => '#content',
+                        'complete' => "js:function(html){
+            $('.manageworkstations').next().slideUp('normal');
+            $('.managecompanies').next().slideUp('normal');
+            $('.manageusers').next().slideUp('normal');
+            $('.managevisitorrecords').next().slideUp('normal');
+            $('.managevisitreasons').next().slideUp('normal');
+            $('.managereports').next().slideUp('normal');
+        }",
+                            ), array(
+                        'class' => 'managevisits',
+                    ));
+                    ?>
+
                 </li>
 
-                <?php
-            } else { ?>
-                <li class='has-sub'><a href='<?php echo Yii::app()->createUrl('visitor/admin'); ?>'><span>Manage Visitor Records</span></a>
+            <?php } else {
+                ?>
+                <li class='has-sub'><?php
+                    echo CHtml::ajaxLink("Manage Visitor Records", CController::createUrl('visitor/adminAjax'), array(
+                        'update' => '#content',
+                        'complete' => "js:function(html){
+            $('.managecompanies').next().slideUp('normal');
+            $('.manageworkstations').next().slideUp('normal');
+            $('.manageusers').next().slideUp('normal');
+            $('.managevisitorrecords').next().slideDown('normal');
+            $('.managevisitreasons').next().slideUp('normal');
+            $('.managereports').next().slideUp('normal');
+        }",
+                            ), array(
+                        'class' => 'managevisitorrecords',
+                    ));
+                    ?>
                     <ul>
                         <li><a href='<?php echo Yii::app()->createUrl('visitor/create'); ?>' class="addSubMenu"><span>Register a Visitor</span></a></li>
                         <li><a href='<?php echo Yii::app()->createUrl('visitor/create&action=preregister'); ?>' class="addSubMenu"><span>Pre-register a Visitor</span></a></li>
                         <li><a href='<?php echo Yii::app()->createUrl('visit/exportvisitorrecords'); ?>' ><span>Export Visitor Records</span></a></li>
                     </ul>
                 </li>
-           <?php }
+            <?php }
             ?>
-            <li class='has-sub'><a href='#'><span>Reports</span></a>
-                    <ul>
-                        <li><a href='<?php echo Yii::app()->createUrl('visit/evacuationReport'); ?>' ><span>Evacuation Report</span></a></li>
-                        <li><a href='<?php echo Yii::app()->createUrl('visit/visitorRegistrationHistory'); ?>'><span>Visitor Registration History</span></a></li>
-                    </ul>
-                </li>
+            <li class='has-sub'><?php
+                echo CHtml::ajaxLink("Reports", CController::createUrl('visit/evacuationReportAjax'), array(
+                    'update' => '#content',
+                    'complete' => "js:function(html){
+            $('.manageworkstations').next().slideUp('normal');
+            $('.managecompanies').next().slideUp('normal');
+            $('.manageusers').next().slideUp('normal');
+            $('.managevisitorrecords').next().slideUp('normal');
+            $('.managevisitreasons').next().slideUp('normal');
+            $('.managereports').next().slideDown('normal');
+        }",
+                        ), array(
+                    'class' => 'managereports',
+                ));
+                ?>
+                <ul>
+                    <li><a href='<?php echo Yii::app()->createUrl('visit/evacuationReport'); ?>' ><span>Evacuation Report</span></a></li>
+                    <li><a href='<?php echo Yii::app()->createUrl('visit/visitorRegistrationHistory'); ?>'><span>Visitor Registration History</span></a></li>
+                </ul>
+            </li>
         </ul>
     </div>
 </div>
 
 <script>
-
     $(document).ready(function() {
 
-//        $(".organisationSettings").click(function(e) {
-//            e.preventDefault();
+        
+//        
+//        $("#manageworkstations").click(function() {
+//            //e.preventDefault();
+//            // $('#managecompanies').next().slideDown('normal');
+//            var id = $(this).attr('id');
+//            alert(id);
+//            $("."+id).click();
 //        });
     });
 
 
 </script>
+

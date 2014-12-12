@@ -26,7 +26,7 @@ class WorkstationController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin', 'delete','create','update'),
+                'actions' => array('admin','adminAjax' ,'delete','create','update'),
                 'expression' => 'Yii::app()->controller->accessRoles("admin")',
             ),
             array('deny', // deny all users
@@ -120,9 +120,24 @@ class WorkstationController extends Controller {
             $model->attributes = $_GET['Workstation'];
         }
 
-        $this->render('admin', array(
+        $this->render('_admin', array(
             'model' => $model,
-        ));
+        ),false,true);
+    }
+    
+    /**
+     * Manages all models ajax.
+     */
+    public function actionAdminAjax() {
+        $model = new Workstation('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['Workstation'])) {
+            $model->attributes = $_GET['Workstation'];
+        }
+
+        $this->renderPartial('_admin', array(
+            'model' => $model,
+        ),false,true);
     }
 
     /**

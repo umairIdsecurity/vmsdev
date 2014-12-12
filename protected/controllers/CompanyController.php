@@ -31,7 +31,7 @@ class CompanyController extends Controller {
                 'expression' => 'Yii::app()->controller->accessRoles("update")',
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin', 'delete'),
+                'actions' => array('admin','adminAjax', 'delete'),
                 'expression' => 'Yii::app()->controller->accessRoles("admin")',
             ),
             array('deny', // deny all users
@@ -158,14 +158,27 @@ class CompanyController extends Controller {
      * Manages all models.
      */
     public function actionAdmin() {
+      //  $this->layout = '//layouts/contentIframeLayout';
         $model = new Company('search');
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['Company']))
             $model->attributes = $_GET['Company'];
 
-        $this->render('admin', array(
+        $this->render('_admin', array(
             'model' => $model,
-        ));
+        ),false,true);
+    }
+    
+    public function actionAdminAjax() {
+      //  $this->layout = '//layouts/contentIframeLayout';
+        $model = new Company('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['Company']))
+            $model->attributes = $_GET['Company'];
+
+        $this->renderPartial('_admin', array(
+            'model' => $model,
+        ),false,true);
     }
 
     /**

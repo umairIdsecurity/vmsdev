@@ -213,15 +213,16 @@ class DashboardController extends Controller {
     }
 
     public function actionAddHost() {
-        $this->layout = '//layouts/contentIframeLayout';
+       // $this->layout = '//layouts/contentIframeLayout';
         //  $this->layout = '//layouts/column2';
+        
         $userModel = new User();
         $patientModel = new Patient();
 
-        $this->render('addhost', array(
+        $this->renderPartial('_addhost', array(
             'userModel' => $userModel,
             'patientModel' => $patientModel
-        ));
+        ),false,true);
     }
 
 }

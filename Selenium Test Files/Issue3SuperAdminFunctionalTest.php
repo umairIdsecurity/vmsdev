@@ -13,7 +13,7 @@ require_once 'BaseFunctionalTest.php';
  *
  * @author Jeremiah
  */
-class Issue3FunctionalTestSuperAdmin extends BaseFunctionalTest {
+class Issue3SuperAdminFunctionalTest extends BaseFunctionalTest {
 
     function setUp() {
         $this->setBrowser("*firefox");

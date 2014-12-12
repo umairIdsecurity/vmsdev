@@ -53,8 +53,8 @@ class Issue24FunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->clickAndWait("//div[@id='cssmenu']/ul/li[5]/a/span");
-        $this->clickAndWait("css=li.has-sub.active > ul > li.odd > a.addSubMenu > span");
+        $this->click("link=Manage Visit Reasons");
+        $this->clickAndWait("link=Add Visit Reason");
         $this->type("id=VisitReason_reason", "Test Reason");
         $this->clickAndWait("name=yt0");
         $this->assertEquals("Test Reason", $this->getText("css=tr.odd > td"));
@@ -83,7 +83,8 @@ class Issue24FunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->clickAndWait("link=Manage Visit Reasons");
+        $this->click("link=Manage Visit Reasons");
+        $this->waitForElementPresent("name=VisitReason[reason]");
         $this->type("name=VisitReason[reason]", "Test Reason");
         $this->clickAndWait("link=Edit");
         $this->type("id=VisitReason_reason", "Test Reason - updated");
@@ -114,7 +115,8 @@ class Issue24FunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->clickAndWait("//div[@id='cssmenu']/ul/li[5]/a/span");
+        $this->click("link=Manage Visit Reasons");
+        $this->waitForElementPresent("name=VisitReason[reason]");
         $this->type("name=VisitReason[reason]", "Test Reason - updated");
         $this->click("link=Delete");
         $this->assertTrue((bool) preg_match('/^Are you sure you want to delete this item[\s\S]$/', $this->getConfirmation()));
@@ -154,7 +156,7 @@ class Issue24FunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->assertEquals("Manage Visit Reasons", $this->getText("//div[@id='cssmenu']/ul/li[5]/a/span"));
+        $this->assertEquals("Manage Visit Reasons", $this->getText("link=Manage Visit Reasons"));
         $this->clickAndWait("//ul[@id='tabs']/li[3]/a/p");
         $this->login("admin@test.com", '12345');
         $this->clickAndWait("link=Administration");
@@ -194,16 +196,17 @@ class Issue24FunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->clickAndWait("//div[@id='cssmenu']/ul/li[5]/a/span");
-        $this->clickAndWait("css=li.has-sub.active > ul > li.odd > a.addSubMenu > span");
+        $this->click("link=Manage Visit Reasons");
+        $this->clickAndWait("link=Add Visit Reason");
+        
         $this->type("id=VisitReason_reason", "This is a reason");
         $this->clickAndWait("name=yt0");
         $this->assertEquals("This Is A Reason", $this->getText("css=tr.odd > td"));
-        $this->clickAndWait("css=li.has-sub.active > ul > li.odd > a.addSubMenu > span");
+        $this->clickAndWait("link=Add Visit Reason");
         $this->type("id=VisitReason_reason", " THIS IS A REASON ");
         $this->clickAndWait("name=yt0");
         $this->assertEquals("Reason \"THIS IS A REASON\" has already been taken.", $this->getText("css=div.errorSummary > ul > li"));
-        $this->clickAndWait("css=li.has-sub.active > ul > li.odd > a.addSubMenu > span");
+        $this->clickAndWait("link=Add Visit Reason");
         
         $this->type("id=VisitReason_reason", "This is a valid reason ?!.,’”()@#$%^&*-+");
         $this->clickAndWait("name=yt0");

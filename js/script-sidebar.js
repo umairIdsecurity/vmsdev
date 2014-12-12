@@ -61,10 +61,16 @@
                 }
                 break;
             case "index.php?r=visitor":
+            
                 if (currentRole == superadmin) {
                     li[11].click();
+                } else if(currentRole == admin) {
+                    li[9].click();
+                }  else if(currentRole == agentadmin) {
+                    li[7].click();
                 }
                 break;
+            
 
         }
         
@@ -85,6 +91,10 @@
         if(pathArray[4] == 'exportvisitorrecords'){
             if (currentRole == superadmin) {
                     li[11].click();
+                } else if (currentRole == admin) {
+                    li[9].click();
+                } else if (currentRole == agentadmin) {
+                    li[7].click();
                 }
         }
         $('.has-sub a').click(function() {

@@ -34,6 +34,8 @@ $logform = $this->beginWidget('CActiveForm', array(
                                         sendVisitForm("update-log-visit-form");
                                         $("#Visit_date_out").attr("disabled", true);
                                         $("#Visit_date_in").attr("disabled", true);
+                                        $("#dateoutDiv #Visit_date_out").val($("#Visit_date_out").val());
+                                        $("#dateoutDiv").hide();
                                     }
 
                                 }

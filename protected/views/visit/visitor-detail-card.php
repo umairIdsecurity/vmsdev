@@ -24,7 +24,12 @@ $session = new CHttpSession;
             <tr>
                 <td><?php
                     if ($model->card_type == CardType::SAME_DAY_VISITOR) {
-                        echo date('d/m/Y');
+                        
+                        if($model->date_out ==''){
+                            echo date('d/m/Y');
+                        } else {
+                            echo Yii::app()->dateFormatter->format("d/MM/y", strtotime($model->date_out));
+                        }
                     } else {
                         echo Yii::app()->dateFormatter->format("d/MM/y", strtotime($model->date_out));
                     }

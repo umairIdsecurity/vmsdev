@@ -9,9 +9,10 @@
 
 require_once 'BaseFunctionalTest.php';
 date_default_timezone_set('Asia/Manila');
+
 /**
  * Description of Issue27FunctionalTest
- *Administration Visits
+ * Administration Visits
  * @author Jeremiah
  */
 class Issue27FunctionalTest extends BaseFunctionalTest {
@@ -29,6 +30,14 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->Scenario5();
         $this->Scenario6();
         $this->Scenario7();
+        $this->resetDbWithData();
+        $this->Scenario8();
+        $this->Scenario9();
+        $this->Scenario10();
+        $this->Scenario11();
+        $this->resetDbWithData();
+        $this->Scenario12();
+        $this->Scenario13();
     }
 
     /* Scenario 1 – Login as super admin then perform update a visitor functionality for patient visitor type
@@ -59,7 +68,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("//div[@id='cssmenu']/ul/li[6]/a/span");
 
         $this->type("name=Visit[visitor]", "test visitor1");
-sleep(1);        
+        sleep(1);
         $this->select("name=Visit[card_type]", "label=Same Day Visitor");
         $this->select("name=Visit[visitor_type]", "label=Patient Visitor");
         sleep(1);
@@ -75,7 +84,7 @@ sleep(1);
             }
             sleep(1);
         }
-        
+
         for ($second = 0;; $second++) {
             if ($second >= 10)
                 $this->fail("timeout");
@@ -100,8 +109,8 @@ sleep(1);
         $this->click("id=submitContactDetailForm");
         $this->waitForElementPresent("css=div.flash-success.success-update-contact-details");
         $this->assertEquals("Contact Details Updated Successfully.", $this->getText("css=div.flash-success.success-update-contact-details"));
-        
-        
+
+
         $this->select("id=Visit_reason", "label=Other");
         $this->type("id=VisitReason_reason", "Reason 3");
 
@@ -109,12 +118,12 @@ sleep(1);
         sleep(1);
         $this->waitForElementPresent("css=div.flash-success.success-add-reason");
         $this->assertEquals("Reason Added Successfully.", $this->getText("css=div.flash-success.success-add-reason"));
-        
+
         $this->click("id=submitReasonForm");
-       
+
         $this->waitForElementPresent("css=div.flash-success.success-update-reason");
         $this->assertEquals("Reason Updated Successfully.", $this->getText("css=div.flash-success.success-update-reason"));
-        
+
         $this->type("document.forms['update-patient-form'].elements['Patient[name]']", "Patient Name 3");
         $this->click("id=submit");
         sleep(1);
@@ -218,7 +227,7 @@ sleep(1);
             sleep(1);
         }
         $this->clickAndWait("link=Edit");
-        
+
         $this->assertEquals("testVisitorC@test.com", $this->getValue("id=Visitor_email"));
         $this->assertEquals("1234567890", $this->getValue("id=Visitor_contact_number"));
         $this->assertEquals("2", $this->getValue("id=Visit_reason"));
@@ -258,7 +267,7 @@ sleep(1);
         $this->select("name=Visit[card_type]", "label=Same Day Visitor");
         $this->select("name=Visit[visitor_type]", "label=Patient Visitor");
         $this->select("name=Visit[reason]", "label=Reason 3");
-        
+
         for ($second = 0;; $second++) {
             if ($second >= 10)
                 $this->fail("timeout");
@@ -270,7 +279,7 @@ sleep(1);
             }
             sleep(1);
         }
-        
+
         for ($second = 0;; $second++) {
             if ($second >= 10)
                 $this->fail("timeout");
@@ -452,7 +461,7 @@ sleep(1);
         sleep(5);
         $this->waitForElementPresent("css=div.flash-success.success-update-visitor-type");
         $this->assertEquals("Visitor Type Updated Successfully.", $this->getText("css=div.flash-success.success-update-visitor-type"));
-        sleep(1);        
+        sleep(1);
         $this->clickAndWait("//div[@id='cssmenu']/ul/li[6]/a/span");
         $this->type("name=Visit[visitor]", "test visitor1");
         $this->select("name=Visit[visitor_type]", "label=Corporate Visitor");
@@ -469,7 +478,7 @@ sleep(1);
             }
             sleep(1);
         }
-        
+
         for ($second = 0;; $second++) {
             if ($second >= 10)
                 $this->fail("timeout");
@@ -523,12 +532,12 @@ sleep(1);
         $this->clickAndWait("link=Edit");
         $this->click("//li[@id='preregisterLi']/a/span");
         $currentDate = date('d-m-Y');
-        $this->assertEquals($currentDate, $this->getEval("window.document.getElementById(\"Visit_date_in\").value"));
-        $this->assertEquals($currentDate, $this->getEval("window.document.getElementById(\"Visit_date_out\").value"));
+        $this->assertEquals(date('d-m-Y', time() + 86400), $this->getEval("window.document.getElementById(\"Visit_date_in\").value"));
+        $this->assertEquals(date('d-m-Y', time() + 86400), $this->getEval("window.document.getElementById(\"Visit_date_out\").value"));
         $currentHour = date('H');
         $currentMinute = date('i');
-        $this->select("id=Visit_time_in_hours", "label=".$currentHour);
-        $this->select("id=Visit_time_in_minutes", "label=".$currentMinute);
+        $this->select("id=Visit_time_in_hours", "label=" . $currentHour);
+        $this->select("id=Visit_time_in_minutes", "label=" . $currentMinute);
         $this->click("css=#update-log-visit-form > input[type='submit']");
         $this->waitForElementPresent("css=div.flash-success.success-update-preregister");
         $this->clickAndWait("link=Manage Visits");
@@ -536,9 +545,9 @@ sleep(1);
         $this->select("name=Visit[reason]", "label=Reason 3");
         sleep(1);
         $this->clickAndWait("link=Edit");
-        $this->assertEquals($currentDate, $this->getEval("window.document.getElementById(\"Visit_date_in\").value"));
-        $this->assertEquals($currentDate, $this->getEval("window.document.getElementById(\"Visit_date_out\").value"));
-        
+        $this->assertEquals(date('d-m-Y', time() + 86400), $this->getEval("window.document.getElementById(\"Visit_date_in\").value"));
+        $this->assertEquals(date('d-m-Y', time() + 86400), $this->getEval("window.document.getElementById(\"Visit_date_out\").value"));
+
         $this->assertEquals($currentHour, $this->getValue("id=Visit_time_in_hours"));
         $this->assertEquals($currentMinute, $this->getValue("id=Visit_time_in_minutes"));
     }
@@ -585,7 +594,7 @@ sleep(1);
         $this->select("id=Visit_time_in_minutes", "label=24");
         $this->click("css=#update-log-visit-form > input[type=\"submit\"]");
         $this->assertEquals("Visit Successfully Updated.", $this->getText("css=div.flash-success.success-update-preregister"));
-        
+
         $this->clickAndWait("link=Manage Visits");
         $this->type("name=Visit[visitor]", "test visitor1");
         $this->select("name=Visit[card_type]", "label=Multi Day Visitor");
@@ -595,10 +604,299 @@ sleep(1);
         $this->clickAndWait("link=Edit");
         $this->click("//li[@id='preregisterLi']/a/span");
         sleep(1);
-        $this->assertEquals(date('d-m-Y'), $this->getValue("id=Visit_date_in"));
-        $this->assertEquals(date('d-m-Y', strtotime("+30 days")), $this->getValue("id=Visit_date_out"));
+        $this->assertEquals(date('d-m-Y', time() + 86400), $this->getValue("id=Visit_date_in"));
+        $this->assertEquals(date('d-m-Y', time() + 172800), $this->getValue("id=Visit_date_out"));
         $this->assertEquals("11", $this->getValue("id=Visit_time_in_hours"));
         $this->assertEquals("24", $this->getValue("id=Visit_time_in_minutes"));
+    }
+
+    /* Scenario 8 - Preregister a Visitor for same day card, activate visit
+      Expected Behavior - Assert close visit in card actions, Assert current date in date expiration
+     */
+
+    function Scenario8() {
+        $username = 'superadmin@test.com';
+        $this->login($username, '12345');
+        $this->clickAndWait("link=Administration");
+        $this->clickAndWait("link=Manage Visitor Records");
+        $this->clickAndWait("link=Pre-register a Visitor");
+        $this->click("id=clicktabA");
+        $this->addVisitor('Visitor0a');
+        $this->select("id=workstation", "label=Workstation1");
+        $this->select("id=Visit_reason", "label=Reason 1");
+        $this->click("id=submitFormVisitor");
+        $this->addPatient("Patient Name 0");
+        $this->clickAndWait("id=submitFormPatientName");
+        $this->assertEquals("Same Day Visitor", $this->getText("css=#cardDetailsTable > tbody > tr > td"));
+        $date = date('d/m/Y');
+        $date2 = date('d-m-Y', time() + 86400);
+        $this->assertEquals($date, $this->getText("//table[@id='cardDetailsTable']/tbody/tr[4]/td"));
+        $this->assertEquals($date2, $this->getEval("window.document.getElementById(\"Visit_date_in\").value"));
+        $this->assertEquals($date2, $this->getEval("window.document.getElementById(\"Visit_date_out\").value"));
+        $this->click("css=#update-log-visit-form > input[type=\"submit\"]");
+        $this->waitForElementPresent("css=div.flash-success.success-update-preregister");
+        $this->assertEquals("Visit Successfully Updated.", $this->getText("css=div.flash-success.success-update-preregister"));
+        $this->click("//li[@id='activateLi']/a/span");
+        $this->clickAndWait("css=#activate-a-visit-form > input[type=\"submit\"]");
+
+        $this->assertEquals("Close Visit", $this->getText("//li[@id='closevisitLi']/a/span"));
+        $this->assertEquals($date, $this->getText("//table[@id='cardDetailsTable']/tbody/tr[4]/td"));
+        $this->clickAndWait("css=#close-visit-form > input[type=\"submit\"]");
+        $this->assertEquals("Visit Status: Closed", $this->getText("link=Visit Status: Closed"));
+        $this->assertEquals(date('d-m-Y'), $this->getText("//div[@id='visit-grid']/table/tbody/tr/td[5]"));
+        $this->assertEquals(date('d-m-Y'), $this->getText("//div[@id='visit-grid']/table/tbody/tr/td[3]"));
+    }
+
+    /* Scenario 9 - Preregister a Visitor for multi day card, activate visit
+      Expected Behavior - Assert close visit in card actions, Assert date expiration is same with selected date.
+     */
+
+    function Scenario9() {
+        $username = 'superadmin@test.com';
+        $this->login($username, '12345');
+        $this->clickAndWait("link=Administration");
+        $this->clickAndWait("link=Manage Visitor Records");
+        $this->clickAndWait("link=Pre-register a Visitor");
+        $this->click("id=multiday");
+        $this->click("id=clicktabA");
+        $this->type("id=search-visitor", "test");
+        $this->click("id=dummy-visitor-findBtn");
+        $this->select("id=Visit_reason_search", "label=Reason 1");
+        $this->select("id=workstation_search", "label=Workstation1");
+        $this->waitForElementPresent("id=2");
+        $this->click("id=2");
+        $this->click("id=clicktabB1");
+        $this->type("id=Patient_name", "patient 0a");
+        $this->clickAndWait("id=submitFormPatientName");
+
+        $this->assertEquals("Multi Day Visitor", $this->getText("css=#cardDetailsTable > tbody > tr > td"));
+        $date = date('d/m/Y');
+        $date2 = date('d-m-Y', time() + 86400);
+        $date3 = date('d-m-Y', time() + 172800);
+        $this->assertEquals($date, $this->getText("//table[@id='cardDetailsTable']/tbody/tr[4]/td"));
+        $this->assertEquals($date2, $this->getEval("window.document.getElementById(\"Visit_date_in\").value"));
+        $this->assertEquals($date3, $this->getEval("window.document.getElementById(\"Visit_date_out\").value"));
+        $this->click("css=#update-log-visit-form > input[type=\"submit\"]");
+
+        $this->click("css=#update-log-visit-form > input[type=\"submit\"]");
+        $this->waitForElementPresent("css=div.flash-success.success-update-preregister");
+        $this->assertEquals("Visit Successfully Updated.", $this->getText("css=div.flash-success.success-update-preregister"));
+        $this->click("//li[@id='activateLi']/a/span");
+        $this->clickAndWait("css=#activate-a-visit-form > input[type=\"submit\"]");
+        $this->assertEquals(date('d/m/Y', time() + 172800), $this->getText("//table[@id='cardDetailsTable']/tbody/tr[4]/td"));
+        $this->clickAndWait("css=#close-visit-form > input[type=\"submit\"]");
+        $this->assertEquals("Visit Status: Closed", $this->getText("link=Visit Status: Closed"));
+        $this->assertEquals(date('d-m-Y'), $this->getText("//div[@id='visit-grid']/table/tbody/tr/td[5]"));
+        $this->assertEquals(date('d-m-Y'), $this->getText("//div[@id='visit-grid']/table/tbody/tr/td[3]"));
+    }
+
+    /* Scenario 10 - Register a Visitor for same day card, verify dates same as current day. 
+      Expected Behavior - Assert close visit in card actions, Assert date expiration is same with selected date.
+     */
+
+    function Scenario10() {
+        $username = 'superadmin@test.com';
+        $this->login($username, '12345');
+        $this->clickAndWait("link=Administration");
+        $this->clickAndWait("link=Manage Visitor Records");
+        $this->clickAndWait("link=Register a Visitor");
+        $this->click("id=clicktabA");
+        $this->type("id=search-visitor", "test");
+        $this->click("id=dummy-visitor-findBtn");
+        $this->select("id=Visit_reason_search", "label=Reason 1");
+        $this->select("id=workstation_search", "label=Workstation1");
+        $this->waitForElementPresent("id=2");
+        $this->click("id=2");
+        $this->click("id=clicktabB1");
+        $this->type("id=Patient_name", "patient 0a");
+        $this->click("id=submitFormPatientName");
+        try {
+            $this->assertEquals(date('d-m-Y'), $this->getValue("id=Visit_date_inLog"));
+        } catch (PHPUnit_Framework_AssertionFailedError $e) {
+            array_push($this->verificationErrors, $e->toString());
+        }
+        $this->clickAndWait("id=submitAllForms");
+        $this->assertEquals("Same Day Visitor", $this->getText("css=#cardDetailsTable > tbody > tr > td"));
+        $date = date('d/m/Y');
+        $this->assertEquals($date, $this->getText("//table[@id='cardDetailsTable']/tbody/tr[4]/td"));
+        $this->assertEquals(date('d-m-Y'), $this->getEval("window.document.getElementById(\"Visit_date_check_out\").value"));
+        $this->assertEquals("Close Visit", $this->getText("//li[@id='closevisitLi']/a/span"));
+
+        $this->clickAndWait("css=#close-visit-form > input[type=\"submit\"]");
+        $this->assertEquals("Visit Status: Closed", $this->getText("link=Visit Status: Closed"));
+        $this->assertEquals(date('d-m-Y'), $this->getText("//div[@id='visit-grid']/table/tbody/tr/td[5]"));
+        $this->assertEquals(date('d-m-Y'), $this->getText("//div[@id='visit-grid']/table/tbody/tr/td[3]"));
+    }
+
+    /* Scenario 11 - Register a Visitor for multi day card, verify dates 1 day from now. 
+      Expected Behavior - Assert close visit in card actions, Assert date expiration is same with selected date.
+     */
+
+    function Scenario11() {
+        $username = 'superadmin@test.com';
+        $this->login($username, '12345');
+        $this->clickAndWait("link=Administration");
+        $this->clickAndWait("link=Manage Visitor Records");
+        $this->clickAndWait("link=Register a Visitor");
+        $this->click("id=multiday");
+        $this->click("id=clicktabA");
+        $this->type("id=search-visitor", "test");
+        $this->click("id=dummy-visitor-findBtn");
+        $this->select("id=Visit_reason_search", "label=Reason 1");
+        $this->select("id=workstation_search", "label=Workstation1");
+        $this->waitForElementPresent("id=2");
+        $this->click("id=2");
+        $this->click("id=clicktabB1");
+        $this->type("id=Patient_name", "patient 0a");
+        $this->click("id=submitFormPatientName");
+        try {
+            $this->assertEquals(date('d-m-Y'), $this->getValue("id=Visit_date_inLog"));
+        } catch (PHPUnit_Framework_AssertionFailedError $e) {
+            array_push($this->verificationErrors, $e->toString());
+        }
+
+        $this->type("id=proposedDateOut", date('d-m-Y', time() + 86400));
+        $this->type("id=Visit_date_out", date('d-m-Y', time() + 86400));
+        $this->clickAndWait("id=submitAllForms");
+
+        $this->assertEquals("Multi Day Visitor", $this->getText("css=#cardDetailsTable > tbody > tr > td"));
+        try {
+            $this->assertEquals(date('d-m-Y'), $this->getValue("id=Visit_date_check_out"));
+        } catch (PHPUnit_Framework_AssertionFailedError $e) {
+            array_push($this->verificationErrors, $e->toString());
+        }
+
+        $this->assertEquals("Close Visit", $this->getText("//li[@id='closevisitLi']/a/span"));
+        $this->assertEquals(date('d/m/Y', time() + 86400), $this->getText("//table[@id='cardDetailsTable']/tbody/tr[4]/td"));
+        $this->clickAndWait("css=#close-visit-form > input[type=\"submit\"]");
+        $this->assertEquals("Visit Status: Closed", $this->getText("link=Visit Status: Closed"));
+    }
+
+    /* Scenario 12 - Check date validation for same day and muti day cards. Preregister function
+
+      Expected Behavior - For same day , proposed date in and date out should be the same.
+      For multi day, proposed date in and date out default should be 1 day from now. and 1 day apart eg. 12-12-2014 and 13-12-2014.
+      For multi day, if proposed date out is supplied already. Proposed date out under log a visit should not be present
+      if proposed date out is not yet supplied proposed date out in log a visit should be present with default day 1 day from current day.
+
+     */
+
+    function Scenario12() {
+        $username = 'superadmin@test.com';
+        $this->login($username, '12345');
+        $this->clickAndWait("link=Administration");
+        $this->clickAndWait("link=Manage Visitor Records");
+        $this->clickAndWait("link=Pre-register a Visitor");
+        $this->click("id=clicktabA");
+        $this->type("id=search-visitor", "test");
+        $this->click("id=dummy-visitor-findBtn");
+        $this->select("id=Visit_reason_search", "label=Reason 1");
+        $this->select("id=workstation_search", "label=Workstation1");
+        $this->waitForElementPresent("id=2");
+        $this->click("id=2");
+        $this->click("id=clicktabB1");
+        $this->type("id=Patient_name", "patient 0a");
+        $this->clickAndWait("id=submitFormPatientName");
+
+        $date2 = date('d-m-Y', time() + 86400);
+        $this->assertEquals($date2, $this->getEval("window.document.getElementById(\"Visit_date_in\").value"));
+        $this->assertEquals($date2, $this->getEval("window.document.getElementById(\"Visit_date_out\").value"));
+
+
+        $this->assertEquals("Same Day Visitor", $this->getText("css=#cardDetailsTable > tbody > tr > td"));
+
+        $this->clickAndWait("link=Administration");
+        $this->clickAndWait("link=Manage Visitor Records");
+        $this->clickAndWait("link=Pre-register a Visitor");
+        $this->click("id=multiday");
+        $this->click("id=clicktabA");
+        $this->type("id=search-visitor", "test");
+        $this->click("id=dummy-visitor-findBtn");
+        $this->select("id=Visit_reason_search", "label=Reason 1");
+        $this->select("id=workstation_search", "label=Workstation1");
+        $this->waitForElementPresent("id=2");
+        $this->click("id=2");
+        $this->click("id=clicktabB1");
+        $this->type("id=Patient_name", "patient 0a");
+        $this->clickAndWait("id=submitFormPatientName");
+        $this->click("//li[@id='activateLi']/a/span");
+        $this->assertEquals("Proposed Date Out", $this->getText("css=#dateoutDiv > td"));
+        $this->click("//li[@id='preregisterLi']/a/span");
+        $date2 = date('d-m-Y', time() + 86400);
+        $date3 = date('d-m-Y', time() + 172800);
+        $this->assertEquals($date2, $this->getEval("window.document.getElementById(\"Visit_date_in\").value"));
+        $this->assertEquals($date3, $this->getEval("window.document.getElementById(\"Visit_date_out\").value"));
+
+
+        $this->click("css=#update-log-visit-form > input[type=\"submit\"]");
+        $this->assertEquals("Visit Successfully Updated.", $this->getText("css=div.flash-success.success-update-preregister"));
+        $this->click("//li[@id='activateLi']/a/span");
+        $this->assertFalse($this->isTextPresent("css=#dateoutDiv > td"));
+        $this->clickAndWait("css=#activate-a-visit-form > input[type=\"submit\"]");
+        $this->assertEquals(date('d/m/Y', time() + 172800), $this->getText("//table[@id='cardDetailsTable']/tbody/tr[4]/td"));
+    }
+
+    /* Scenario 13 - Check date validation for same day and muti day cards. Register function
+
+      Expected Behavior - For same day , proposed date in and date out should be the same.
+      For multi day, proposed date in and date out default should be 1 day from now. and 1 day apart eg. 12-12-2014 and 13-12-2014.
+
+     */
+
+    function Scenario13() {
+        $username = 'superadmin@test.com';
+        $this->login($username, '12345');
+        $this->clickAndWait("link=Administration");
+        $this->clickAndWait("link=Manage Visitor Records");
+        $this->clickAndWait("link=Register a Visitor");
+        $this->click("id=clicktabA");
+        $this->type("id=search-visitor", "test");
+        $this->click("id=dummy-visitor-findBtn");
+        $this->select("id=Visit_reason_search", "label=Reason 1");
+        $this->select("id=workstation_search", "label=Workstation1");
+        $this->waitForElementPresent("id=3");
+        $this->click("id=3");
+        $this->click("id=clicktabB1");
+        $this->type("id=Patient_name", "patient 0a");
+        $this->click("id=submitFormPatientName");
+        try {
+            $this->assertEquals(date("d-m-Y"), $this->getValue("id=Visit_date_inLog"));
+        } catch (PHPUnit_Framework_AssertionFailedError $e) {
+            array_push($this->verificationErrors, $e->toString());
+        }
+        $this->clickAndWait("id=submitAllForms");
+        $this->assertEquals(date("d/m/Y"), $this->getText("//table[@id='cardDetailsTable']/tbody/tr[4]/td"));
+        $this->assertEquals("Same Day Visitor", $this->getText("css=#cardDetailsTable > tbody > tr > td"));
+
+        $this->clickAndWait("css=#close-visit-form > input[type=\"submit\"]");
+
+        $this->clickAndWait("link=Administration");
+        $this->clickAndWait("link=Manage Visitor Records");
+        $this->clickAndWait("link=Register a Visitor");
+        $this->click("id=multiday");
+        $this->click("id=clicktabA");
+        $this->type("id=search-visitor", "test");
+        $this->click("id=dummy-visitor-findBtn");
+        $this->select("id=Visit_reason_search", "label=Reason 1");
+        $this->select("id=workstation_search", "label=Workstation1");
+        $this->waitForElementPresent("id=3");
+        $this->click("id=3");
+        $this->click("id=clicktabB1");
+        $this->type("id=Patient_name", "patient 0a");
+        $this->click("id=submitFormPatientName");
+        try {
+            $this->assertEquals(date("d-m-Y"), $this->getValue("id=Visit_date_inLog"));
+        } catch (PHPUnit_Framework_AssertionFailedError $e) {
+            array_push($this->verificationErrors, $e->toString());
+        }
+        $this->click("id=submitAllForms");
+        $this->waitForElementPresent("id=preregisterdateoutError");
+        $this->assertEquals("Date Out cannot be blank.", $this->getText("id=preregisterdateoutError"));
+        $this->type("id=proposedDateOut", date('d-m-Y', time() + 86400));
+        $this->type("id=Visit_date_out", date('d-m-Y', time() + 86400));
+        $this->clickAndWait("id=submitAllForms");
+        $this->assertEquals(date('d/m/Y', time() + 86400), $this->getText("//table[@id='cardDetailsTable']/tbody/tr[4]/td"));
+        $this->clickAndWait("css=#close-visit-form > input[type=\"submit\"]");
     }
 
 }

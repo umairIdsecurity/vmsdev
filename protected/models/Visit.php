@@ -45,6 +45,7 @@ class Visit extends CActiveRecord {
     private $_company;
     private $_contactnumber;
     private $_contactemail;
+    private $_datecheckin1;
 
     /**
      * @return string the associated database table name
@@ -67,7 +68,7 @@ class Visit extends CActiveRecord {
             array('patient, host,card,tenant,tenant_agent', 'default', 'setOnEmpty' => true, 'value' => null),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id,company,firstname,lastname,contactnumber,contactemail,visit_status,visitor ,card,workstation, visitor_type, reason, visitor_status, host, patient, created_by, date_in, time_in, date_out, time_out, date_check_in, time_check_in, date_check_out, time_check_out, tenant, tenant_agent, is_deleted', 'safe', 'on' => 'search'),
+            array('id,datecheckin1,company,firstname,lastname,contactnumber,contactemail,visit_status,visitor ,card,workstation, visitor_type, reason, visitor_status, host, patient, created_by, date_in, time_in, date_out, time_out, date_check_in, time_check_in, date_check_out, time_check_out, tenant, tenant_agent, is_deleted', 'safe', 'on' => 'search'),
         );
     }
 
@@ -81,6 +82,18 @@ class Visit extends CActiveRecord {
     public function setVisitor($value) {
         // set private attribute for search
         $this->_visitor = $value;
+    }
+    
+    public function getDatecheckin1() {
+        // return private attribute on search
+        if ($this->scenario == 'search') {
+            return $this->_datecheckin1;
+        }
+    }
+
+    public function setDatecheckin1($value) {
+        // set private attribute for search
+        $this->_datecheckin1 = $value;
     }
 
     public function getFirstname() {
@@ -225,6 +238,7 @@ class Visit extends CActiveRecord {
         $criteria->compare('visitor0.last_name', $this->lastname, true);
         $criteria->compare('visitor0.contact_number', $this->contactnumber, true);
         $criteria->compare('visitor0.email', $this->contactemail, true);
+        $criteria->compare('date_check_in', $this->datecheckin1, true);
 //        $criteria->with = 'company0';
 //        $criteria->compare('company0.name', $this->company, true);
 

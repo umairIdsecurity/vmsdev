@@ -88,7 +88,12 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'value' => 'Visitor::model()->findByPk($data->visitor)->email',
             'header' => 'Contact Email'
         ),
-        'date_in',
+        array(
+            'name' => 'datecheckin1',
+            'value' => '$data->date_check_in',
+            'header' => 'Date Check In'
+        ),
+
       
         array(
             'name' => 'time_check_in',
@@ -101,7 +106,12 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'type' => 'html',
             'value' => 'formatTime($data->time_check_in)',
         ),
-        'card0.date_expiration',
+        array(
+            'name' => 'date_out',
+            'type' => 'html',
+            'header' => 'Date Expiration',
+        ),
+       // 'card0.date_expiration',
     ),
 ));
 

@@ -144,6 +144,7 @@ $session = new CHttpSession;
         if($("#visitSessionRole").val() == 7 || $("#visitSessionRole").val() == 8){
             $("#Visit_workstation").val($("#workstation").val());
         }
+        
        
 
         if ($("#Visitor_visitor_type").val() == 1) { //if type is patient

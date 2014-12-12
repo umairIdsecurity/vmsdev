@@ -26,9 +26,10 @@ class VisitorController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('update', 'admin', 'delete'),
-                'expression' => 'Yii::app()->controller->checkIfUserCanAccess("superadmin")',
+                'actions' => array('update', 'delete','admin'),
+                'expression' => 'Yii::app()->controller->checkIfUserCanAccess("administration")',
             ),
+            
             
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('create','GetIdOfUser', 'GetHostDetails', 'GetPatientDetails', 'CheckEmailIfUnique', 'GetVisitorDetails', 'FindVisitor', 'FindHost', 'GetTenantAgentWithSameTenant', 'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent'),

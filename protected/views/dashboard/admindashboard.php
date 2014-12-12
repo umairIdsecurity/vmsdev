@@ -1,29 +1,29 @@
 
-    <?php
-    /* @var $this VisitController */
-    /* @var $model Visit */
-    $session = new CHttpSession();
-    switch ($session['role']) {
-        case Roles::ROLE_ADMIN:
-            $Criteria = new CDbCriteria();
-            $Criteria->condition = "tenant ='" . $session['tenant'] . "'";
-            $workstationList = Workstation::model()->findAll($Criteria);
-            break;
+<?php
+/* @var $this VisitController */
+/* @var $model Visit */
+$session = new CHttpSession();
+switch ($session['role']) {
+    case Roles::ROLE_ADMIN:
+        $Criteria = new CDbCriteria();
+        $Criteria->condition = "tenant ='" . $session['tenant'] . "'";
+        $workstationList = Workstation::model()->findAll($Criteria);
+        break;
 
-        case Roles::ROLE_AGENT_ADMIN:
-            $Criteria = new CDbCriteria();
-            $Criteria->condition = "tenant ='" . $session['tenant'] . "' and tenant_agent ='" . $session['tenant_agent'] . "'";
-            $workstationList = Workstation::model()->findAll($Criteria);
-            break;
-    }
-    $x = 0;
-    foreach ($workstationList as $workstation) {
-        
-        $x++;
-        echo "<h1>" . $workstation->name . "</h1>";
-        $merge = new CDbCriteria;
-        $merge->addCondition('workstation ="' . $workstation->id . '"');
-?><div  class="admindashboardDiv"><?php
+    case Roles::ROLE_AGENT_ADMIN:
+        $Criteria = new CDbCriteria();
+        $Criteria->condition = "tenant ='" . $session['tenant'] . "' and tenant_agent ='" . $session['tenant_agent'] . "'";
+        $workstationList = Workstation::model()->findAll($Criteria);
+        break;
+}
+$x = 0;
+foreach ($workstationList as $workstation) {
+
+    $x++;
+    echo "<h1>" . $workstation->name . "</h1>";
+    $merge = new CDbCriteria;
+    $merge->addCondition('workstation ="' . $workstation->id . '"');
+    ?><div  class="admindashboardDiv"><?php
         $this->widget('zii.widgets.grid.CGridView', array(
             'id' => 'visit-gridDashboard' . $x,
             'dataProvider' => $model->search($merge),
@@ -32,16 +32,11 @@
             array(
                 array(
                     'name' => 'visit_status',
-                    'filter' => false,
+                    'filter' => VisitStatus::$VISIT_STATUS_LIST,
                     'value' => 'CHtml::link(VisitStatus::$VISIT_STATUS_LIST[$data->visit_status],Yii::app()->createUrl("visit/detail",array("id"=>$data->id)),array("class" =>"statusLink"))',
                     'type' => 'raw',
                     'header' => 'Status',
                     'cssClassExpression' => '"statusRow"',
-                ),
-                array(
-                    'name' => 'date_in',
-                    'type' => 'html',
-                  //  'value' => 'formatDate($data->date_in)',
                 ),
                 array(
                     'name' => 'card',
@@ -75,12 +70,17 @@
                     'header' => 'Contact Email'
                 ),
                 array(
-                    'name' => 'time_in',
+                    'name' => 'date_check_in',
                     'type' => 'html',
-                    'value' => 'formatTime($data->time_in)',
+                //  'value' => 'formatDate($data->date_in)',
                 ),
                 array(
-                    'name' => 'date_out',
+                    'name' => 'time_check_in',
+                    'type' => 'html',
+                    'value' => 'formatTime($data->time_check_in)',
+                ),
+                array(
+                    'name' => 'date_check_out',
                     'type' => 'html',
                 //    'value' => 'formatDate($data->date_out)',
                 ),
@@ -110,6 +110,4 @@
             return date('h:i A', strtotime($time));
         }
     }
-
-   
     ?>

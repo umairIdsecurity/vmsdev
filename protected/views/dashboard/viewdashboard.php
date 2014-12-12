@@ -60,17 +60,17 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'header' => 'Contact Email'
         ),
         array(
-            'name' => 'date_in',
+            'name' => 'date_check_in',
             'type' => 'html',
             //'value' => 'formatDate($data->date_in)',
         ),
         array(
-            'name' => 'time_in',
+            'name' => 'time_check_in',
             'type' => 'html',
-            'value' => 'formatTime($data->time_in)',
+            'value' => 'formatTime($data->time_check_in)',
         ),
         array(
-            'name' => 'date_out',
+            'name' => 'date_check_out',
             'type' => 'html',
             //'value' => 'formatDate($data->date_out)',
         ),

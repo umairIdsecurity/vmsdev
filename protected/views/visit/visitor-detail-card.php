@@ -1,6 +1,6 @@
 <?php
 $session = new CHttpSession;
-
+date_default_timezone_set('Asia/Manila');
 ?>
 <div id="cardDiv" 
      style="background: url('../images/cardprint-new.png') no-repeat center top;">

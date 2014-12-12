@@ -3,6 +3,7 @@
 /* @var $visitModel Visit */
 /* @var $form CActiveForm */
 $session = new CHttpSession;
+date_default_timezone_set('Asia/Manila');
 ?>
 
 <div class="form">

@@ -2,7 +2,6 @@
 /* @var $this UserController */
 /* @var $model User */
 $session = new ChttpSession;
-
 ?>
 
 <h1>Manage Users</h1>

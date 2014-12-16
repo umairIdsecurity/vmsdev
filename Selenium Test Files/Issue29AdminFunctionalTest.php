@@ -233,6 +233,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeatpassword", "12345");
         $this->click("id=submitFormUser");
+        
         $this->clickAndWait("id=submitAllForms");
         $this->assertEquals($username . "visitor2", $this->getText("//table[@id='personalDetailsTable']/tbody/tr[2]/td[2]"));
         $this->assertEquals($username . "visitor2@test.com", $this->getValue("id=Visitor_email"));

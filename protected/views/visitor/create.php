@@ -1,8 +1,19 @@
+
 <?php
 /* @var $this VisitorController */
 /* @var $model Visitor */
 $session = new CHttpSession;
 ?>
+<input type="text" id="getcurrentUrl" value="<?php if((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])){
+    if(isset($_GET['p'])){
+    echo $_GET['p'];
+    } else {
+        echo "d";
+    }
+}else {
+    echo "";
+}
+?>" style="display:none;">
 <h1><?php
     if (isset($_GET['action'])) {
         echo "Preregister";
@@ -176,14 +187,15 @@ $session = new CHttpSession;
 
         $("#clicktabB2").click(function(e) {
             e.preventDefault();
-            var currentURL = location.href.split("=");
+            //var currentURL = location.href.split("=");
+            var currentURL = $("#getcurrentUrl").val();
 
             //checks if host is from search and verifys that a user has been selected
             if (($("#selectedHostInSearchTable").val() == '' && $("#search-host").val() != '') || $("#selectedHostInSearchTable").val() == '') {
                 $("#searchTextHostErrorMessage").html("Please select a host.");
                 $("#searchTextHostErrorMessage").show();
                 //alert("host from search");
-            } else if (currentURL[1] == "visitor/create") {
+            } else if (currentURL != "") {
                 showHideTabs("logVisitB", "logVisitA", "logVisit", "findHostA", "findHost", "findVisitorA", "findVisitor");
                 // alert("preregister");
             } else if ($("#selectedVisitorInSearchTable").val() != '0') { // if visitor is from search
@@ -372,8 +384,9 @@ $session = new CHttpSession;
                 } else {
                     $(".errorMessageEmail1").hide();
                     $("#hostEmailIsUnique").val("1");
-                    var currentURL = location.href.split("=");
-                    if (currentURL[1] != "visitor/create") {
+                    //var currentURL = location.href.split("=");
+                    var currentURL = $("#getcurrentUrl").val();
+                    if (currentURL == "") {
 //                    //if visitor is not from search sendvisitorform
                         if ($("#Visit_reason").val() == 'Other') {
                             sendReasonForm();

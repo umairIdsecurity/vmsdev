@@ -1,4 +1,5 @@
 <?php $session = new CHttpSession; ?>
+
 <div id="findAddHostRecordDiv" class="findAddHostRecordDiv form">
     <div id="searchHostDiv">
         <div>
@@ -35,13 +36,14 @@
             'validateOnSubmit' => true,
             'afterValidate' => 'js:function(form,data,hasError){
                         if(!hasError){
-                                var currentURL = location.href.split("=");
-                                if(currentURL[1] == "visitor/create"){
-                                    //alert("register a visitor");
+                                var currentURL = $("#getcurrentUrl").val();
+                                //alert(currentURL);
+                                if(currentURL != "" ){
+                                 //   alert("register a visitor");
                                     showHideTabs("logVisitB", "logVisitA", "logVisit", "findHostA", "findHost", "findVisitorA", "findVisitor");   
                             
                                 } else {
-                                   // alert("preregister a visitor");
+                                  //  alert("preregister a visitor");
                                     sendReasonForm();
                                 }
                             }
@@ -295,7 +297,6 @@
         });
         
         $("#User_repeatpassword").keyup(checkPasswordMatch);
-    
         $("#saveCurrentUserAsHost").click(function(e) {
             e.preventDefault();
             $("#selectedHostInSearchTable").val('<?php echo $session['id']; ?>');

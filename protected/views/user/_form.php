@@ -70,7 +70,7 @@ $currentLoggedUserId = $session['id'];
                             </select><?php echo "<br>" . $form->error($model, 'role'); ?></td>
 
                     </tr>
-                    <tr id="tenantRow">
+                    <tr id="tenantRow" class='hiddenElement'>
                         <td><?php echo $form->labelEx($model, 'tenant'); ?></td>
                         <td>
                             <select id="User_tenant" name="User[tenant]"  >
@@ -90,7 +90,7 @@ $currentLoggedUserId = $session['id'];
                             </select><?php echo "<br>" . $form->error($model, 'tenant'); ?>
                         </td>
                     </tr>
-                    <tr id="tenantAgentRow">
+                    <tr id="tenantAgentRow" class='hiddenElement'>
                         <td><?php echo $form->labelEx($model, 'tenant_agent'); ?></td>
                         <td>
                             <select id="User_tenant_agent" onchange='getCompanyTenantAgent()' name="User[tenant_agent]" >
@@ -159,7 +159,7 @@ $currentLoggedUserId = $session['id'];
                                 }
                                 ?>
                             </select>
-                            <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;">Add New Company</a>
+                            <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;display:none;">Add New Company</a>
                             <?php echo $form->error($model, 'company'); ?>
                         </td>
                         <td></td></tr>
@@ -199,11 +199,11 @@ $currentLoggedUserId = $session['id'];
                                 <?php echo "<br>" . $form->error($model, 'password'); ?>
                             </td>
                         </tr>
-                        <tr>
-                            <td><label for="User_repeat_password">Repeat Password <span class="required">*</span></label></td>
+                        <tr >
+                            <td style="vertical-align: top !important;padding-top: 11px;"><label for="User_repeat_password">Repeat Password <span class="required">*</span></label></td>
                             <td >
                                 <input ng-model="user.passwordConfirm" type="password" id="User_repeat_password" data-match="user.passwords" name="User[repeatpassword]"/>			
-                                <div style='font-size:10px;color:red;' data-ng-show="userform['User[repeatpassword]'].$error.match">New Password does not match with <br>Repeat New Password. </div>
+                                <div style='font-size:10px;color:red;'  data-ng-show="userform['User[repeatpassword]'].$error.match">New Password does not match with <br>Repeat New Password. </div>
                                 <?php echo "<br>" . $form->error($model, 'repeatpassword'); ?>
                             </td>
 

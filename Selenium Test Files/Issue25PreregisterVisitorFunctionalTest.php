@@ -25,14 +25,15 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->Scenario1();
         $this->Scenario2();
         $this->Scenario3();
-       // $this->Scenario4();
+        // $this->Scenario4();
         $this->Scenario5();
         $this->Scenario6();
         $this->Scenario7();
+        $this->Scenario8();
     }
 
     /* Scenario 1 – Login as super admin then perform preregister a visitor functionality 
-    for patient visitor type. Add new patient and add new reason
+      for patient visitor type. Add new patient and add new reason
 
       Expected Behavior
       -	Assert text testvisitor5@test.com in email field.
@@ -317,7 +318,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->type("id=VisitReason_reason_search", "reason 2");
         $this->select("id=workstation_search", "label=Workstation1");
         $this->click("id=clicktabB1");
-       
+
         $this->waitForTextPresent("Reason is already registered.");
         $this->assertEquals("Reason is already registered.", $this->getText("id=visitReasonErrorMessageSearch"));
         $this->type("id=VisitReason_reason_search", "");
@@ -432,7 +433,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_last_name", "test");
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeatpassword", "12345");
-        
+
         $this->type("id=User_email", "123");
         $this->click("id=submitFormUser");
         //$this->assertEquals("Email is not a valid email address.", $this->getText("id=User_email_em_"));
@@ -492,6 +493,109 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->waitForElementPresent("id=21");
         $this->click("id=21");
         $this->clickAndWait("id=clicktabB2");
+    }
+
+    /* Scenario 8 - Login as superadmin. Preregister a corporate visitor with new company. Check for validations. 
+      Expected Behavior: Assert New Company in company row.
+      Steps:
+      1.	Go to cvms.identitysecurity.info/index.php?r=site/login
+      2.	Type superadmin@test.com in email field and 12345 in password field
+      3.	Click login
+      4.	Click administration
+      5.	Click manage visitor records
+      6.	Click pre-register a visitor
+      7.	Select same day visitor then click continue
+      8.	Select corporate visitor. Wait for add new company button.
+      9.	Type test in firstame, visitornewcompany in lastname, position in position,123456 in mobile number,testvisitornewcompany@test.com in email
+      select reason 1,12345 in password and repeat password,select workstation1 in workstation.
+      10.	Click add new company button. Wait for text then assert "Please select a tenant."
+      11.	Select test admin in tenant, select test agent admin in tenant agent.
+      12.	Click add new company
+      13.	Wait for company form to show. Type "New Company" in Company Name.
+      14.	Click add button. Wait for company form to close and assert new company selected and added in company dropdown field.
+      15.	Click save and continue.
+      16.	type test in search field. Click find host
+      17.	Select staffmember@test.com as host
+      18.	Wait for text "Selected Host Record: Test staffmember" below search field.
+      19.	Click save and continue then wait for page to load.
+      20.	Assert "testvisitornewcompany@test.com" in email field, corporate type in visitor type.
+      21.       Click dashboard then wait for page to load. Type visitornewcompany in lastname, assert "new company" in company column.
+     */
+
+    function Scenario8() {
+        $username = 'superadmin@test.com';
+        $this->login($username, '12345');
+        $this->clickAndWait("link=Administration");
+        $this->click("link=Manage Visitor Records");
+        $this->clickAndWait("link=Pre-register a Visitor");
+        $this->click("id=clicktabA");
+        $this->select("id=Visitor_visitor_type", "label=Corporate Visitor");
+        $this->select("id=workstation", "label=Workstation1");
+        $this->waitForElementPresent("id=addCompanyLink");
+        $this->assertEquals("Add New Company", $this->getText("id=addCompanyLink"));
+        $this->type("id=Visitor_first_name", "test");
+        $this->type("id=Visitor_last_name", "visitornewcompany");
+        $this->type("id=Visitor_position", "position");
+        $this->type("id=Visitor_contact_number", "123456");
+        $this->type("id=Visitor_email", "testvisitornewcompany@test.com");
+        $this->type("id=Visitor_password", "12345");
+        $this->type("id=Visitor_repeatpassword", "12345");
+        $this->click("id=Visit_reason");
+        $this->select("id=Visit_reason", "label=Reason 1");
+        $this->click("id=addCompanyLink");
+        $this->waitForElementPresent("id=Visitor_company_em_");
+        $this->assertEquals("Please select a tenant.", $this->getText("id=Visitor_company_em_"));
+        $this->select("id=Visitor_tenant", "label=Test admin");
+        $this->click("id=Visitor_tenant_agent");
+        sleep(1);
+        $this->select("id=Visitor_tenant_agent", "label=Test agentadmin");
+        $this->click("id=addCompanyLink");
+        $this->waitForElementPresent("css=h1");
+        
+        $this->waitForElementPresent("id=Company_name");
+        $this->type("id=Company_name", "new company");
+        $this->click("id=createBtn");
+        sleep(3);
+        $this->assertEquals("Test Company 1Test Company 2new company", $this->getText("id=Visitor_company"));
+        $this->click("id=submitFormVisitor");
+        $this->waitForElementPresent("id=search-host");
+        $this->type("id=search-host", "test");
+        $this->click("id=dummy-host-findBtn");
+        $this->waitForElementPresent("id=21");
+        $this->click("id=21");
+        for ($second = 0;; $second++) {
+            if ($second >= 60)
+                $this->fail("timeout");
+            try {
+                if ("Selected Host Record : Test staffmember" == $this->getText("css=#searchHostTableDiv > h4"))
+                    break;
+            } catch (Exception $e) {
+                
+            }
+            sleep(1);
+        }
+
+        $this->assertEquals("Selected Host Record : Test staffmember", $this->getText("css=#searchHostTableDiv > h4"));
+        $this->clickAndWait("id=clicktabB2");
+        try {
+            $this->assertEquals("testvisitornewcompany@test.com", $this->getValue("id=Visitor_email"));
+        } catch (PHPUnit_Framework_AssertionFailedError $e) {
+            array_push($this->verificationErrors, $e->toString());
+        }
+        $this->clickAndWait("link=Dashboard");
+        $this->type("name=Visit[lastname]", "visitornewcompany");
+        for ($second = 0;; $second++) {
+            if ($second >= 60)
+                $this->fail("timeout");
+            try {
+                if ("new company" == $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"))
+                    break;
+            } catch (Exception $e) {
+                
+            }
+            sleep(1);
+        }
+        $this->assertEquals("new company", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
     }
 
 }

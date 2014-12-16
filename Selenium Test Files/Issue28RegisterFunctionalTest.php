@@ -50,10 +50,10 @@ class Issue28RegisterFunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->assertEquals("Visitor Management System - Viewmyvisitors Dashboard", $this->getTitle());
         $this->assertEquals("Add Host", $this->getText("id=yt0"));
-        $this->assertEquals("Add Visitor Record", $this->getText("//div[@id='cssmenu']/ul/li[3]/a/span"));
+        $this->assertEquals("Register a Visitor", $this->getText("css=a > span"));
         $this->assertEquals("Find Record", $this->getText("link=Find Record"));
         $this->assertEquals("Evacuation Report", $this->getText("link=Evacuation Report"));
-        $this->clickAndWait("//div[@id='cssmenu']/ul/li[3]/a/span");
+        $this->clickAndWait("css=a > span");
         $this->click("id=clicktabA");
         $this->assertEquals("Corporate Visitor", $this->getText("id=Visitor_visitor_type"));
         
@@ -100,7 +100,7 @@ class Issue28RegisterFunctionalTest extends BaseFunctionalTest {
     function Scenario2() {
         $username = 'staffmember@test.com';
         $this->login($username, '12345');
-        $this->clickAndWait("//div[@id='cssmenu']/ul/li[3]/a/span");
+        $this->clickAndWait("css=a > span");
         $this->click("id=clicktabA");
         $this->type("id=Visitor_first_name", "test");
         $this->type("id=Visitor_last_name", "staffmembervisitor2");
@@ -129,7 +129,7 @@ class Issue28RegisterFunctionalTest extends BaseFunctionalTest {
     function Scenario3() {
         $username = 'staffmember@test.com';
         $this->login($username, '12345');
-        $this->clickAndWait("//div[@id='cssmenu']/ul/li[3]/a/span");
+        $this->clickAndWait("css=a > span");
         $this->click("id=clicktabA");
         $this->type("id=Visitor_first_name", "test");
         $this->type("id=Visitor_last_name", "staffmembervisitor3");
@@ -173,7 +173,7 @@ class Issue28RegisterFunctionalTest extends BaseFunctionalTest {
     function Scenario4() {
         $username = 'staffmember@test.com';
         $this->login($username, '12345');
-        $this->clickAndWait("//div[@id='cssmenu']/ul/li[3]/a/span");
+        $this->clickAndWait("css=a > span");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
@@ -218,7 +218,7 @@ class Issue28RegisterFunctionalTest extends BaseFunctionalTest {
     function Scenario5() {
         $username = 'staffmember@test.com';
         $this->login($username, '12345');
-        $this->clickAndWait("//div[@id='cssmenu']/ul/li[3]/a/span");
+        $this->clickAndWait("css=a > span");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
@@ -247,7 +247,7 @@ class Issue28RegisterFunctionalTest extends BaseFunctionalTest {
     function Scenario6() {
         $username = 'staffmember@test.com';
         $this->login($username, '12345');
-        $this->clickAndWait("//div[@id='cssmenu']/ul/li[3]/a/span");
+        $this->clickAndWait("css=a > span");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
@@ -284,7 +284,7 @@ class Issue28RegisterFunctionalTest extends BaseFunctionalTest {
     function Scenario7() {
         $username = 'staffmember@test.com';
         $this->login($username, '12345');
-        $this->clickAndWait("//div[@id='cssmenu']/ul/li[3]/a/span");
+        $this->clickAndWait("css=a > span");
         $this->click("id=clicktabA");
         $this->type("id=Visitor_first_name", "test");
         $this->type("id=Visitor_last_name", "staffmembervisitor4");
@@ -331,7 +331,7 @@ class Issue28RegisterFunctionalTest extends BaseFunctionalTest {
     function Scenario8() {
         $username = 'staffmember@test.com';
         $this->login($username, '12345');
-        $this->clickAndWait("//div[@id='cssmenu']/ul/li[3]/a/span");
+        $this->clickAndWait("css=a > span");
         $this->click("id=clicktabA");
         $this->type("id=Visitor_first_name", "test");
         $this->type("id=Visitor_last_name", "staffmembervisitor5");
@@ -365,7 +365,7 @@ class Issue28RegisterFunctionalTest extends BaseFunctionalTest {
     function Scenario9() {
         $username = 'staffmember@test.com';
         $this->login($username, '12345');
-        $this->clickAndWait("//div[@id='cssmenu']/ul/li[3]/a/span");
+        $this->clickAndWait("css=a > span");
         $this->click("id=clicktabA");
         $this->type("id=Visitor_first_name", "test");
         $this->type("id=Visitor_last_name", "staffmembervisitor6");
@@ -407,7 +407,7 @@ class Issue28RegisterFunctionalTest extends BaseFunctionalTest {
     function Scenario10() {
         $username = 'staffmember@test.com';
         $this->login($username, '12345');
-        $this->clickAndWait("//div[@id='cssmenu']/ul/li[3]/a/span");
+        $this->clickAndWait("css=a > span");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
@@ -452,7 +452,7 @@ class Issue28RegisterFunctionalTest extends BaseFunctionalTest {
     function Scenario11() {
         $username = 'staffmember@test.com';
         $this->login($username, '12345');
-        $this->clickAndWait("//div[@id='cssmenu']/ul/li[3]/a/span");
+        $this->clickAndWait("css=a > span");
         $this->waitForPageToLoad("30000");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
@@ -483,7 +483,7 @@ class Issue28RegisterFunctionalTest extends BaseFunctionalTest {
     function Scenario12() {
         $username = 'staffmember@test.com';
         $this->login($username, '12345');
-        $this->clickAndWait("//div[@id='cssmenu']/ul/li[3]/a/span");
+        $this->clickAndWait("css=a > span");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
@@ -520,7 +520,7 @@ class Issue28RegisterFunctionalTest extends BaseFunctionalTest {
     function Scenario13() {
         $username = 'staffmember@test.com';
         $this->login($username, '12345');
-        $this->clickAndWait("//div[@id='cssmenu']/ul/li[3]/a/span");
+        $this->clickAndWait("css=a > span");
         $this->click("id=clicktabA");
         $this->click("id=submitFormVisitor");
         for ($second = 0;; $second++) {
@@ -549,7 +549,7 @@ class Issue28RegisterFunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_repeatpassword", "1234");
         $this->select("id=workstation", "label=Workstation1");
         $this->waitForElementPresent("//table[@id='addvisitor-table']/tbody/tr[4]/td[3]/div");
-        $this->assertEquals("New Password does not match with Repeat \n New Password.", $this->getText("//table[@id='addvisitor-table']/tbody/tr[4]/td[3]/div"));
+        $this->assertEquals("New Password does not match with Repeat \n New Password.", $this->getText("//table[@id='addvisitor-table']/tbody/tr[4]/td[2]/div"));
         $this->click("id=submitFormVisitor");
         $this->type("id=Visitor_repeatpassword", "12345");
         $this->click("id=submitFormVisitor");

@@ -37,12 +37,17 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                         'class' => 'managecompanies',
                     ));
                     ?>
-                    <ul <?php if($this->id == 'company') {
+                    <ul <?php
+                    if ($this->id == 'company') {
                         echo "style='display:block ;'";
                     }
                     ?>>
-                        
-                        <li><a href='<?php echo Yii::app()->createUrl('company/create'); ?>' id="addcompany" class="addSubMenu ajaxLinkLi"><span>Add Company</span></a></li>
+
+                        <li>
+
+                            <a href='<?php echo Yii::app()->createUrl('company/create'); ?>' class="addSubMenu ajaxLinkLi"><span>Add Company</span></a>
+
+                        </li>
                     </ul>
                 </li>
                 <?php
@@ -67,10 +72,11 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     'class' => 'manageworkstations',
                 ));
                 ?>
-                <ul <?php if($this->id == 'workstation') {
-                        echo "style='display:block ;'";
-                    }
-                    ?>>
+                <ul <?php
+                if ($this->id == 'workstation') {
+                    echo "style='display:block ;'";
+                }
+                ?>>
                     <li><a href='<?php echo Yii::app()->createUrl('workstation/create'); ?>' class="addSubMenu"><span>Add Workstation</span></a></li>
                 </ul>
             </li>
@@ -90,10 +96,11 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     'class' => 'manageusers',
                 ));
                 ?>
-                <ul <?php if($this->id == 'user') {
-                        echo "style='display:block ;'";
-                    }
-                    ?>>
+                <ul <?php
+                if ($this->id == 'user') {
+                    echo "style='display:block ;'";
+                }
+                ?>>
                     <li><a href='<?php echo Yii::app()->createUrl('user/create'); ?>' class="has-sub-sub"><span>Add User</span></a></li>
 
                     <?php
@@ -126,7 +133,10 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                             break;
                     };
                     ?>
-                    <li ><a href='<?php echo Yii::app()->createUrl('user/systemaccessrules'); ?>'><span>Set Access Rules</span></a></li>
+                    <li >
+
+                        <a href='<?php echo Yii::app()->createUrl('user/systemaccessrules'); ?>'><span>Set Access Rules</span></a></li>
+
 
                 </ul>
             </li>
@@ -148,7 +158,8 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                         'class' => 'managevisitorrecords',
                     ));
                     ?>
-                    <ul <?php if($this->id == 'visitor' || $this->action->id == 'exportvisitorrecords') {
+                    <ul <?php
+                    if ($this->id == 'visitor' || $this->action->id == 'exportvisitorrecords') {
                         echo "style='display:block ;'";
                     }
                     ?>>
@@ -172,7 +183,8 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                         'class' => 'managevisitreasons',
                     ));
                     ?>
-                    <ul <?php if($this->id == 'visitReason') {
+                    <ul <?php
+                    if ($this->id == 'visitReason') {
                         echo "style='display:block ;'";
                     }
                     ?>>
@@ -199,8 +211,26 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
 
             <?php } else {
                 ?>
-                <li class='has-sub' ><a href='<?php echo Yii::app()->createUrl('visitor/admin'); ?>'><span>Manage Visitor Records</span></a>
-                    <ul >
+                <li class='has-sub' ><?php
+                    echo CHtml::ajaxLink("Manage Visitor Records", CController::createUrl('visitor/adminAjax'), array(
+                        'update' => '#content',
+                        'complete' => "js:function(html){
+            $('.managecompanies').next().slideUp('normal');
+            $('.manageworkstations').next().slideUp('normal');
+            $('.manageusers').next().slideUp('normal');
+            $('.managevisitorrecords').next().slideDown('normal');
+            $('.managevisitreasons').next().slideUp('normal');
+            $('.managereports').next().slideUp('normal');
+        }",
+                            ), array(
+                        'class' => 'managevisitorrecords',
+                    ));
+                    ?>
+                    <ul <?php
+                    if ($this->id == 'visitor' || $this->action->id == 'exportvisitorrecords') {
+                        echo "style='display:block ;'";
+                    }
+                    ?>>
                         <li><a href='<?php echo Yii::app()->createUrl('visitor/create'); ?>' class="addSubMenu"><span>Register a Visitor</span></a></li>
                         <li><a href='<?php echo Yii::app()->createUrl('visitor/create&action=preregister'); ?>' class="addSubMenu"><span>Pre-register a Visitor</span></a></li>
                         <li><a href='<?php echo Yii::app()->createUrl('visit/exportvisitorrecords'); ?>' ><span>Export Visitor Records</span></a></li>
@@ -223,10 +253,11 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     'class' => 'managereports',
                 ));
                 ?>
-                <ul <?php if($this->action->id == 'evacuationReport' || $this->action->id == 'visitorRegistrationHistory') {
-                        echo "style='display:block ;'";
-                    }
-                    ?>>
+                <ul <?php
+                if ($this->action->id == 'evacuationReport' || $this->action->id == 'visitorRegistrationHistory') {
+                    echo "style='display:block ;'";
+                }
+                ?>>
                     <li><a href='<?php echo Yii::app()->createUrl('visit/evacuationReport'); ?>' ><span>Evacuation Report</span></a></li>
                     <li><a href='<?php echo Yii::app()->createUrl('visit/visitorRegistrationHistory'); ?>'><span>Visitor Registration History</span></a></li>
                 </ul>
@@ -238,7 +269,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
 <script>
     $(document).ready(function() {
 
-        
+
 //        
 //        $("#manageworkstations").click(function() {
 //            //e.preventDefault();

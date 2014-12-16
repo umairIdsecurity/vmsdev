@@ -526,10 +526,12 @@ $session = new CHttpSession;
             $("#register-host-patient-form").show();
             $("#register-host-form").hide();
             $("#searchHostDiv").hide();
+            $("#addCompanyLink").hide();
         } else {
             $("#register-host-patient-form").hide();
             $("#register-host-form").show();
             $("#searchHostDiv").show();
+            $("#addCompanyLink").show();
         }
 
         $("#Visitor_visitor_type").val(visitor_type.value);

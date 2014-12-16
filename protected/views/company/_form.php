@@ -7,10 +7,17 @@
 $session = new CHttpSession;
 
 $tenant = '';
+$tenant_agent = '';
 if (isset($_GET['tenant'])) {
     $tenant = $_GET['tenant'];
 } elseif($session['role'] != Roles::ROLE_SUPERADMIN){
     $tenant = $session['tenant'];
+}
+
+if (isset($_GET['tenant_agent'])) {
+    $tenant_agent = $_GET['tenant_agent'];
+} elseif($session['role'] != Roles::ROLE_SUPERADMIN){
+    $tenant_agent = $session['tenant_agent'];
 }
 
 $companyid = '';
@@ -35,6 +42,7 @@ if ($this->action->id == 'update') {
     <?php echo $form->errorSummary($model); ?>
 
     <input type="hidden" id="Company_tenant" name="Company[tenant]" value="<?php echo $tenant; ?>">
+    <input type="hidden" id="Company_tenant_agent" name="Company[tenant_agent]" value="<?php echo $tenant_agent; ?>">
     <table>
         <tr>
             <td style="width:160px;"><?php echo $form->labelEx($model, 'name'); ?></td>

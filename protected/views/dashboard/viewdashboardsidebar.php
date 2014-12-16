@@ -15,14 +15,14 @@ $session = new ChttpSession;
 <div id="sidebar2">
     <div class="sidebarTitle" style="">Main Menu</div><br><div id='cssmenu' class="dashboardMenu">
         <ul>
-            <?php if($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] ==Roles::ROLE_OPERATOR ){?>
-           <li class=''>
+            <li class=''><a href='<?php echo Yii::app()->createUrl('visitor/create'); ?>' id="addvisitorSidebar"><span>Register a Visitor</span></a></li>
+            <li class=''>
                 <a href='<?php echo Yii::app()->createUrl('visitor/create&action=preregister'); ?>'>
                     <span >Preregister a Visitor</span>
                 </a>
             </li>
-            <?php } ?>
-           <!-- <li class=''><a href='<?php echo Yii::app()->createUrl('dashboard/addHost'); ?>' id="addhostSidebar"><span class="addhost">Add Host</span></a></li>!-->
+            
+<!-- <li class=''><a href='<?php echo Yii::app()->createUrl('dashboard/addHost'); ?>' id="addhostSidebar"><span class="addhost">Add Host</span></a></li>!-->
             <li class=''><?php
                 echo CHtml::ajaxLink("Add Host", CController::createUrl('dashboard/addHost'), array(
                     'update' => '#content',
@@ -31,7 +31,7 @@ $session = new ChttpSession;
                 ));
                 ?>
             </li>
-            <li class=''><a href='<?php echo Yii::app()->createUrl('visitor/create'); ?>' id="addvisitorSidebar"><span>Add Visitor Record</span></a></li>
+
             <li class=''><a href='<?php echo Yii::app()->createUrl('visit/view'); ?>' id="findrecordSidebar"><span>Find Record</span></a></li>
             <li class=''><a href='<?php echo Yii::app()->createUrl('visit/evacuationReport'); ?>' id="evacuationreportSidebar"><span>Evacuation Report</span></a></li>
         </ul>

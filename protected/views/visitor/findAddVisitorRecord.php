@@ -21,6 +21,33 @@ $session = new CHttpSession;
             ?>
             <?php echo "<br>" . CHtml::error($model, 'visitor_type'); ?>
 
+
+            <div id="workstationRowSearch" <?php
+            if ($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
+                echo " class='hidden' ";
+            }
+            ?>><label>Workstation</label><span class="required">*</span><br>
+
+                <select id="workstation_search" onchange="populateVisitWorkstation(this)">
+                    <?php
+                    if ($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
+                        echo '';
+                    } else {
+                        echo '<option value="">Select Workstation</option>';
+                    }
+                    ?>
+
+                    <?php
+                    $workstationList = populateWorkstation();
+                    foreach ($workstationList as $key => $value) {
+                        ?>
+                        <option value="<?php echo $value->id; ?>"><?php echo $value->name; ?></option>
+                        <?php
+                    }
+                    ?>
+                </select>
+                <div style="display:none;" class="errorMessage errorMessageWorkstationSearch" >Workstation cannot be blank.</div>
+            </div>
             <label for="Visit_reason_search">Reason</label><br>
 
             <select id="Visit_reason_search" name="Visitor[reason]" onchange="ifSelectedIsOtherShowAddReasonDivSearch(this)">
@@ -36,33 +63,6 @@ $session = new CHttpSession;
                 <option value="Other">Other</option>
             </select>
             <div class="errorMessage visitorReason" id="search-visitor-reason-error">Reason cannot be blank.</div>
-             <div id="workstationRowSearch" <?php
-                    if ($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
-                        echo " class='hidden' ";
-                    }
-                    ?>><label>Workstation</label><span class="required">*</span><br>
-
-                        <select id="workstation_search" onchange="populateVisitWorkstation(this)">
-                            <?php
-                            if ($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
-                                echo '';
-                            } else {
-                                echo '<option value="">Select Workstation</option>';
-                            }
-                            ?>
-
-                            <?php
-                            $workstationList = populateWorkstation();
-                            foreach ($workstationList as $key => $value) {
-                                ?>
-                                <option value="<?php echo $value->id; ?>"><?php echo $value->name; ?></option>
-                                <?php
-                            }
-                            ?>
-                        </select>
-                        <div style="display:none;" class="errorMessage errorMessageWorkstationSearch" >Workstation cannot be blank.</div>
-             </div>
-            
         </div>
         <?php
         $form = $this->beginWidget('CActiveForm', array(
@@ -141,79 +141,6 @@ $session = new CHttpSession;
                         ?>
                         <?php echo "<br>" . $form->error($model, 'visitor_type'); ?>
                     </td>
-                </tr>
-                <tr>
-                    <td>
-                        <?php echo $form->labelEx($model, 'first_name'); ?><br>
-                        <?php echo $form->textField($model, 'first_name', array('size' => 50, 'maxlength' => 50)); ?>
-                        <?php echo "<br>" . $form->error($model, 'first_name'); ?>
-                    </td>
-                    <td>
-                        <?php echo $form->labelEx($model, 'last_name'); ?><br>
-                        <?php echo $form->textField($model, 'last_name', array('size' => 50, 'maxlength' => 50)); ?>
-                        <?php echo "<br>" . $form->error($model, 'last_name'); ?>
-                    </td>
-                    <td id="visitorCompanyRow">
-
-                        <?php echo $form->labelEx($model, 'company'); ?><br>
-                        <select id="Visitor_company" name="Visitor[company]" >
-                            <option value=''>Select Company</option>
-                        </select>
-
-                        <?php echo "<br>" . $form->error($model, 'company'); ?>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <?php echo $form->labelEx($model, 'position'); ?><br>
-                        <?php echo $form->textField($model, 'position', array('size' => 50, 'maxlength' => 50)); ?>
-                        <?php echo "<br>" . $form->error($model, 'position'); ?>
-                    </td>
-                    <td>
-                        <?php echo $form->labelEx($model, 'contact_number'); ?><br>
-                        <?php echo $form->textField($model, 'contact_number', array('size' => 50, 'maxlength' => 50)); ?>
-                        <?php echo "<br>" . $form->error($model, 'contact_number'); ?>
-                    </td>
-                    <td>
-                        <?php echo $form->labelEx($model, 'email'); ?><br>
-                        <?php echo $form->textField($model, 'email', array('size' => 50, 'maxlength' => 50)); ?>
-                        <?php echo "<br>" . $form->error($model, 'email'); ?>
-                        <div style="" id="Visitor_email_em_" class="errorMessage errorMessageEmail" >Email Address has already been taken.</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="Visit_reason">Reason</label><br>
-
-                        <select id="Visit_reason" name="Visitor[reason]" onchange="ifSelectedIsOtherShowAddReasonDiv(this)">
-                            <option value='' selected>Select Reason</option>
-                            <option value="Other">Other</option>
-                            <?php
-                            $reason = VisitReason::model()->findAllReason();
-                            foreach ($reason as $key => $value) {
-                                ?>
-                                <option value="<?php echo $value->id; ?>"><?php echo $value->reason; ?></option>
-                                <?php
-                            }
-                            ?>
-
-                        </select>
-                        <div class="errorMessage visitorReason" >Reason cannot be blank.</div>
-                    </td>
-                    <td>
-                        <label for="Visitor_password">Password <span class="required">*</span></label><br>
-                        <input ng-model="user.passwords" data-ng-class="{'ng-invalid':registerform['Visitor[repeatpassword]'].$error.match}" type="password" id="Visitor_password" name="Visitor[password]">			
-                        <?php echo "<br>" . $form->error($model, 'password'); ?>
-                    </td>
-                    <td>
-                        <label for="Visitor_repeatpassword">Repeat Password <span class="required">*</span></label><br>
-                        <input ng-model="user.passwordConfirm" type="password" id="Visitor_repeatpassword" data-match="user.passwords" name="Visitor[repeatpassword]"/>			
-                        <div style='font-size:0.9em;color:red;position: absolute;' data-ng-show="registerform['Visitor[repeatpassword]'].$error.match">New Password does not match with Repeat <br> New Password. </div>
-                        <?php echo "<br>" . $form->error($model, 'repeatpassword'); ?>
-                    </td>
-                </tr>
-                <tr>
                     <td id="workstationRow" <?php
                     if ($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
                         echo " class='hidden' ";
@@ -241,6 +168,85 @@ $session = new CHttpSession;
                         <div style="display:none;" class="errorMessage errorMessageWorkstation" >Workstation cannot be blank.</div>
 
                     </td>
+                </tr>
+                <tr>
+                    <td>
+                        <?php echo $form->labelEx($model, 'first_name'); ?><br>
+                        <?php echo $form->textField($model, 'first_name', array('size' => 50, 'maxlength' => 50)); ?>
+                        <?php echo "<br>" . $form->error($model, 'first_name'); ?>
+                    </td>
+                    <td>
+                        <?php echo $form->labelEx($model, 'last_name'); ?><br>
+                        <?php echo $form->textField($model, 'last_name', array('size' => 50, 'maxlength' => 50)); ?>
+                        <?php echo "<br>" . $form->error($model, 'last_name'); ?>
+                    </td>
+                    <td id="visitorCompanyRow">
+
+                        <?php echo $form->labelEx($model, 'company'); ?><br>
+                        <select id="Visitor_company" name="Visitor[company]" >
+                            <option value=''>Select Company</option>
+                        </select>
+                        <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;<?php
+                        if ($session['role'] != Roles::ROLE_STAFFMEMBER) {
+                            echo "display:none";
+                        }
+                        ?>">Add New Company</a>
+                           <?php echo "<br>" . $form->error($model, 'company'); ?>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <?php echo $form->labelEx($model, 'position'); ?><br>
+                        <?php echo $form->textField($model, 'position', array('size' => 50, 'maxlength' => 50)); ?>
+                        <?php echo "<br>" . $form->error($model, 'position'); ?>
+                    </td>
+                    <td>
+                        <?php echo $form->labelEx($model, 'contact_number'); ?><br>
+                        <?php echo $form->textField($model, 'contact_number', array('size' => 50, 'maxlength' => 50)); ?>
+                        <?php echo "<br>" . $form->error($model, 'contact_number'); ?>
+                    </td>
+                    <td>
+                        <?php echo $form->labelEx($model, 'email'); ?><br>
+                        <?php echo $form->textField($model, 'email', array('size' => 50, 'maxlength' => 50)); ?>
+                        <?php echo "<br>" . $form->error($model, 'email'); ?>
+                        <div style="" id="Visitor_email_em_" class="errorMessage errorMessageEmail" >Email Address has already been taken.</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="Visitor_password">Password <span class="required">*</span></label><br>
+                        <input ng-model="user.passwords" data-ng-class="{
+                                    'ng-invalid':registerform['Visitor[repeatpassword]'].$error.match}" type="password" id="Visitor_password" name="Visitor[password]">			
+                        <?php echo "<br>" . $form->error($model, 'password'); ?>
+                    </td>
+                    <td>
+                        <label for="Visitor_repeatpassword">Repeat Password <span class="required">*</span></label><br>
+                        <input ng-model="user.passwordConfirm" type="password" id="Visitor_repeatpassword" data-match="user.passwords" name="Visitor[repeatpassword]"/>			
+                        <div style='font-size:0.9em;color:red;position: absolute;' data-ng-show="registerform['Visitor[repeatpassword]'].$error.match">New Password does not match with Repeat <br> New Password. </div>
+                        <?php echo "<br>" . $form->error($model, 'repeatpassword'); ?>
+                    </td>
+                    <td>
+                        <label for="Visit_reason">Reason</label><br>
+
+                        <select id="Visit_reason" name="Visitor[reason]" onchange="ifSelectedIsOtherShowAddReasonDiv(this)">
+                            <option value='' selected>Select Reason</option>
+                            <option value="Other">Other</option>
+                            <?php
+                            $reason = VisitReason::model()->findAllReason();
+                            foreach ($reason as $key => $value) {
+                                ?>
+                                <option value="<?php echo $value->id; ?>"><?php echo $value->reason; ?></option>
+                                <?php
+                            }
+                            ?>
+
+                        </select>
+                        <div class="errorMessage visitorReason" >Reason cannot be blank.</div>
+                    </td>
+                </tr>
+                <tr>
+
                     <td id="visitorTenantRow" <?php
                     if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                         echo " class='hidden' ";
@@ -286,7 +292,7 @@ $session = new CHttpSession;
             </table>
 
         </div>
-        <div class="register-a-visitor-buttons-div">
+        <div class="register-a-visitor-buttons-div" style="padding-top:50px;">
             <input type="button" class="visitor-backBtn btnBackTab2" id="btnBackTab2" value="Back"/>
             <input type="button" id="clicktabB" value="Save and Continue" style="display:none;"/>
 
@@ -296,10 +302,15 @@ $session = new CHttpSession;
         <?php $this->endWidget(); ?>
     </div>
     <?php
+    if($session['role'] == Roles::ROLE_SUPERADMIN){
+        $class = "moveFromAlignmentA";
+    } else {
+        $class = "moveFromAlignmentB";
+    }
     $form = $this->beginWidget('CActiveForm', array(
         'id' => 'register-reason-form',
         'action' => Yii::app()->createUrl('/visitReason/create&register=1'),
-        'htmlOptions' => array("name" => "register-reason-form"),
+        'htmlOptions' => array("name" => "register-reason-form","class" => $class),
         'enableAjaxValidation' => false,
         'enableClientValidation' => true,
         'clientOptions' => array(
@@ -311,7 +322,8 @@ $session = new CHttpSession;
         ),
     ));
     ?>
-    <textarea id="VisitReason_reason" name="VisitReason[reason]" maxlength="128" style="text-transform: capitalize;"></textarea> 
+    <label>Add Reason</label><br>
+    <textarea id="VisitReason_reason" name="VisitReason[reason]" rows="1" maxlength="128" style="text-transform: capitalize;"></textarea> 
     <div class="errorMessage" id="visitReasonErrorMessage" style="display:none;">Reason cannot be blank.</div>
 
 
@@ -330,8 +342,8 @@ $session = new CHttpSession;
             if (searchText != '') {
                 $("#searchTextErrorMessage").hide();
                 $("#visitor-findBtn").click();
-                
-            $("#visitor_fields_for_Search").show();
+
+                $("#visitor_fields_for_Search").show();
             } else {
                 $("#searchTextErrorMessage").show();
                 $("#searchTextErrorMessage").html("Search Name cannot be blank.");
@@ -353,7 +365,7 @@ $session = new CHttpSession;
         $("#searchVisitorTable").html('<iframe id="findVisitorTableIframe" onLoad="autoResize();" width="100%" height="100%" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
     }
     function populateVisitWorkstation(value) {
-        
+
         $("#Visit_workstation").val(value.value);
         //  alert($("#workstation").val());
         // alert(value.value);
@@ -536,6 +548,43 @@ $session = new CHttpSession;
             sendVisitorForm();
             // alert("with exstng reason");
         }
+
+
+    }
+
+    function addCompany() {
+        var url;
+        if ($("#Visitor_tenant").val() == '') {
+            $("#Visitor_company_em_").html("Please select a tenant.");
+            $("#Visitor_company_em_").show();
+        } else {
+            if ($("#currentRoleOfLoggedInUser").val() == '<?php echo Roles::ROLE_SUPERADMIN; ?>') {
+                /* if role is superadmin tenant is required. Pass selected tenant and tenant agent of user to company. */
+                url = '<?php echo Yii::app()->createUrl('company/create&viewFrom=1&tenant='); ?>' + $("#Visitor_tenant").val() + '&tenant_agent=' + $("#Visitor_tenant_agent").val();
+            } else {
+                url = '<?php echo Yii::app()->createUrl('company/create&viewFrom=1'); ?>';
+            }
+
+            $("#modalBody").html('<iframe width="100%" height="80%" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
+            $("#modalBtn").click();
+        }
+    }
+
+    function dismissModal(id) {
+        $("#dismissModal").click();
+        $.ajax({
+            type: 'POST',
+            url: '<?php echo Yii::app()->createUrl('company/GetCompanyList&lastId='); ?>',
+            dataType: 'json',
+            success: function(r) {
+                $('#Visitor_company option[value!=""]').remove();
+
+                $.each(r.data, function(index, value) {
+                    $('#Visitor_company').append('<option value="' + value.id + '">' + value.name + '</option>');
+                    $("#Visitor_company").val(value.id);
+                });
+            }
+        });
     }
 </script>
 
@@ -590,3 +639,23 @@ function populateWorkstation() {
     return $workstationList;
 }
 ?>
+<?php
+$this->widget('bootstrap.widgets.TbButton', array(
+    'label' => 'Click me',
+    'type' => 'primary',
+    'htmlOptions' => array(
+        'data-toggle' => 'modal',
+        'data-target' => '#addCompanyModal',
+        'id' => 'modalBtn',
+        'style' => 'display:none',
+    ),
+));
+?>
+<div class="modal hide fade" id="addCompanyModal" style="width:600px;">
+    <div class="modal-header">
+        <a data-dismiss="modal" class="close" id="dismissModal" >×</a>
+        <br>
+    </div>
+    <div id="modalBody"></div>
+
+</div>

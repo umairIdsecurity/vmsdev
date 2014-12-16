@@ -84,6 +84,7 @@ class Company extends CActiveRecord {
             'created_by_user' => 'Created By User',
             'created_by_visitor' => 'Created By Visitor',
             'tenant' => 'Tenant',
+            'tenant_agent' => 'Tenant Agent',
             'is_deleted' => 'Deleted',
         );
     }
@@ -118,6 +119,7 @@ class Company extends CActiveRecord {
         $criteria->compare('created_by_user', $this->created_by_user);
         $criteria->compare('created_by_visitor', $this->created_by_visitor);
         $criteria->compare('tenant', $this->tenant);
+        $criteria->compare('tenant_agent', $this->tenant_agent);
         $criteria->compare('is_deleted', $this->is_deleted);
 
         return new CActiveDataProvider($this, array(

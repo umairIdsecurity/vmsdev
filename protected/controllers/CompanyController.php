@@ -18,14 +18,14 @@ class CompanyController extends Controller {
      */
     public function accessRules() {
         return array(
-            array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('GetCompanyList','GetCompanyWithSameTenant'),
+            array('allow', // allow all users to perform 'GetCompanyList' and 'GetCompanyWithSameTenant' actions
+                'actions' => array('GetCompanyList','GetCompanyWithSameTenant','create'),
                 'users' => array('@'),
             ),
-            array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create'),
-                'expression' => 'Yii::app()->controller->accessRoles("canCreateCompany")',
-            ),
+//            array('allow', // allow authenticated user to perform 'create' and 'update' actions
+//                'actions' => array('create'),
+//                'expression' => 'Yii::app()->controller->accessRoles("canCreateCompany")',
+//            ),    
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('update'),
                 'expression' => 'Yii::app()->controller->accessRoles("update")',
@@ -71,6 +71,7 @@ class CompanyController extends Controller {
     }
 
     public function actionCreate() {
+   //     $this->layout = '//layouts/contentIframeLayout';
         $model = new Company;
         $session = new CHttpSession;
         $companyService = new CompanyServiceImpl();

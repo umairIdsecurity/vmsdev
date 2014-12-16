@@ -14,6 +14,9 @@
 class CompanyServiceImpl implements CompanyService {
 
     public function save($company, $sessionTenant, $sessionRole, $currentAction) {
+        if($company->tenant_agent == ''){
+            $company->tenant_agent = NULL;
+        }
         if (!($company->save())) {
             return false;
         }

@@ -127,7 +127,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->click("id=submitBtn");
             $this->clickAndWait("id=submit");
         }
-        $this->clickAndWait("link=Add Visitor Record");
+        $this->clickAndWait("link=Register a Visitor");
 
         $this->click("id=clicktabA");
         $this->type("id=Visitor_first_name", "test");
@@ -173,7 +173,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->click("id=submitBtn");
             $this->clickAndWait("id=submit");
         }
-        $this->clickAndWait("link=Add Visitor Record");
+        $this->clickAndWait("link=Register a Visitor");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
@@ -209,7 +209,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->click("id=submitBtn");
             $this->clickAndWait("id=submit");
         }
-        $this->clickAndWait("link=Add Visitor Record");
+        $this->clickAndWait("link=Register a Visitor");
         $this->click("id=clicktabA");
         $this->select("id=Visitor_visitor_type", "label=Corporate Visitor");
         $this->type("id=Visitor_first_name", "test");
@@ -257,7 +257,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->click("id=submitBtn");
             $this->clickAndWait("id=submit");
         }
-        $this->clickAndWait("link=Add Visitor Record");
+        $this->clickAndWait("link=Register a Visitor");
         $this->click("id=clicktabA");
         $this->type("id=Visitor_first_name", "test");
         $this->select("id=Visitor_visitor_type", "label=Corporate Visitor");
@@ -301,7 +301,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->click("id=submitBtn");
             $this->clickAndWait("id=submit");
         }
-        $this->clickAndWait("link=Add Visitor Record");
+        $this->clickAndWait("link=Register a Visitor");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
@@ -345,7 +345,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->click("id=submitBtn");
             $this->clickAndWait("id=submit");
         }
-        $this->clickAndWait("link=Add Visitor Record");
+        $this->clickAndWait("link=Register a Visitor");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
@@ -384,7 +384,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->click("id=submitBtn");
             $this->clickAndWait("id=submit");
         }
-        $this->clickAndWait("link=Add Visitor Record");
+        $this->clickAndWait("link=Register a Visitor");
         $this->click("id=clicktabA");
         $this->type("id=Visitor_first_name", "test");
         $this->type("id=Visitor_last_name", $username . "visitor1");
@@ -429,7 +429,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->click("id=submitBtn");
             $this->clickAndWait("id=submit");
         }
-        $this->clickAndWait("link=Add Visitor Record");
+        $this->clickAndWait("link=Register a Visitor");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
@@ -467,7 +467,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->click("id=submitBtn");
             $this->clickAndWait("id=submit");
         }
-        $this->clickAndWait("link=Add Visitor Record");
+        $this->clickAndWait("link=Register a Visitor");
         $this->click("id=clicktabA");
         $this->select("id=Visitor_visitor_type", "label=Corporate Visitor");
         $this->type("id=Visitor_first_name", "test");
@@ -517,7 +517,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->click("id=submitBtn");
             $this->clickAndWait("id=submit");
         }
-        $this->clickAndWait("link=Add Visitor Record");
+        $this->clickAndWait("link=Register a Visitor");
         $this->click("id=clicktabA");
         $this->type("id=Visitor_first_name", "test");
         $this->select("id=Visitor_visitor_type", "label=Corporate Visitor");
@@ -563,7 +563,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->click("id=submitBtn");
             $this->clickAndWait("id=submit");
         }
-        $this->clickAndWait("link=Add Visitor Record");
+        $this->clickAndWait("link=Register a Visitor");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
@@ -608,7 +608,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->click("id=submitBtn");
             $this->clickAndWait("id=submit");
         }
-        $this->clickAndWait("link=Add Visitor Record");
+        $this->clickAndWait("link=Register a Visitor");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
@@ -648,7 +648,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->click("id=submitBtn");
             $this->clickAndWait("id=submit");
         }
-        $this->clickAndWait("link=Add Visitor Record");
+        $this->clickAndWait("link=Register a Visitor");
         $this->click("id=clicktabA");
         $this->waitForElementPresent("id=submitFormVisitor");
         $this->click("id=submitFormVisitor");
@@ -792,7 +792,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeatpassword", "12345");
         $this->clickAndWait("id=submitFormUser");
-        $this->clickAndWait("link=Add Visitor Record");
+        $this->clickAndWait("link=Register a Visitor");
         $this->click("id=clicktabA");
 
         $this->select("id=Visitor_visitor_type", "label=Corporate Visitor");

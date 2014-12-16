@@ -27,9 +27,9 @@ if (isset($_GET['viewFrom'])) {
 <div class="span-5 last">
     <div id="sidebar">
         <?php
-        if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
+        if (!isset($_GET['viewFrom']) && $session['role'] == Roles::ROLE_STAFFMEMBER) {
             require_once(Yii::app()->basePath . '/views/visit/dashboardSidebar.php');
-        } elseif(($this->action->id != 'viewmyvisitors' && $this->id == 'dashboard') || $session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR){
+        } elseif(!isset($_GET['viewFrom']) && (($this->action->id != 'viewmyvisitors' && $this->id == 'dashboard') || $session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR)){
             require_once(Yii::app()->basePath . '/views/dashboard/viewdashboardsidebar.php');
         } 
         elseif (!isset($_GET['viewFrom'])) {

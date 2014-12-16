@@ -32,7 +32,10 @@ if (isset($_GET['viewFrom'])) {
         } elseif(!isset($_GET['viewFrom']) && (($this->action->id != 'viewmyvisitors' && $this->id == 'dashboard') || $session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR)){
             require_once(Yii::app()->basePath . '/views/dashboard/viewdashboardsidebar.php');
         } 
-        elseif (!isset($_GET['viewFrom'])) {
+        elseif(($session['role'] == Roles::ROLE_SUPERADMIN || $session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_AGENT_ADMIN) && isset($_GET['p'])){
+            require_once(Yii::app()->basePath . '/views/dashboard/viewdashboardsidebar.php');
+        }
+        elseif (!isset($_GET['viewFrom']) ) {
             require_once(Yii::app()->basePath . '/views/user/admin_menu.php');
         }
         ?>

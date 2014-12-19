@@ -149,6 +149,8 @@ echo date('d-m-Y', mktime(0, 0, 0, date('m'), date('d') + 2, date('Y')));
 <input type='text' id='savedTimeIn' value='<?php echo $model->time_in; ?>' style='display:none;'>
 <script>
     $(document).ready(function() {
+
+
         var currentTime = new Date();
         var dd = currentTime.getDate();
         var mm = currentTime.getMonth() + 1; //January is 0!
@@ -169,6 +171,10 @@ echo date('d-m-Y', mktime(0, 0, 0, date('m'), date('d') + 2, date('Y')));
             $("#Visit_date_in").val(currentDate);
             $("#Visit_date_out").val($("#curDateMultiDay").val());
             $("#dateoutDiv #Visit_date_out").val($("#curDateMultiDay").val());
+            if ('<?php echo $model->date_out; ?>' != '') {
+                $("#Visit_date_out").val("<?php echo $model->date_out; ?>");
+                $("#Visit_date_in").val("<?php echo $model->date_in; ?>");
+            }
         }
 
         $('#Visit_date_in').on('change', function(e) {

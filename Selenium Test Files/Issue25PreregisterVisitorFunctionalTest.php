@@ -62,7 +62,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Visitor Records");
-        $this->clickAndWait("link=Pre-register a Visitor");
+        $this->clickAndWait("link=Preregister a Visitor");
         $this->click("id=clicktabA");
         $this->addVisitor('Visitor5');
         $this->select("id=workstation", "label=Workstation1");
@@ -101,7 +101,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Visitor Records");
-        $this->clickAndWait("link=Pre-register a Visitor");
+        $this->clickAndWait("link=Preregister a Visitor");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test visitor1");
         $this->click("id=dummy-visitor-findBtn");
@@ -121,6 +121,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Selected Visitor Record : Test Visitor1", $this->getText("css=h4"));
         $this->select("id=Visit_reason_search", "label=Other");
         $this->type("id=VisitReason_reason_search", "Reason 4");
+        $this->select("id=workstation_search", "label=Workstation1");
         $this->click("id=clicktabB1");
         $this->type("id=Patient_name", "Patient Name 2");
         $this->clickAndWait("id=submitFormPatientName");
@@ -153,7 +154,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Visitor Records");
-        $this->clickAndWait("link=Pre-register a Visitor");
+        $this->clickAndWait("link=Preregister a Visitor");
         $this->click("id=clicktabA");
         $this->addVisitor('Visitor2');
         $this->select("id=workstation", "label=Workstation1");
@@ -189,7 +190,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Visitor Records");
-        $this->clickAndWait("link=Pre-register a Visitor");
+        $this->clickAndWait("link=Preregister a Visitor");
         $this->click("id=clicktabA");
         $this->select("id=Visitor_visitor_type", "label=Corporate Visitor");
         $this->addVisitor('Visitor6');
@@ -252,7 +253,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Visitor Records");
-        $this->clickAndWait("link=Pre-register a Visitor");
+        $this->clickAndWait("link=Preregister a Visitor");
         $this->click("id=clicktabA");
         $this->click("id=submitFormVisitor");
         $this->select("id=workstation", "label=Workstation1");
@@ -366,7 +367,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Visitor Records");
-        $this->clickAndWait("link=Pre-register a Visitor");
+        $this->clickAndWait("link=Preregister a Visitor");
         $this->click("id=clicktabA");
         $this->click("id=submitFormVisitor");
         $this->select("id=workstation", "label=Workstation1");
@@ -476,7 +477,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Visitor Records");
-        $this->clickAndWait("link=Pre-register a Visitor");
+        $this->clickAndWait("link=Preregister a Visitor");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test visitor1");
         $this->click("id=dummy-visitor-findBtn");
@@ -484,6 +485,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->click("id=2");
         $this->waitForElementPresent("css=h4");
         $this->select("id=Visit_reason_search", "label=Reason 1");
+        $this->select("id=workstation_search", "label=Workstation1");
         $this->assertEquals("testVisitor1@test.com", $this->getText("//div[@id='findvisitor-grid']/table/tbody/tr/td[3]"));
         $this->select("id=Visitor_visitor_type_search", "label=Corporate Visitor");
         $this->click("id=clicktabB1");
@@ -527,7 +529,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Visitor Records");
-        $this->clickAndWait("link=Pre-register a Visitor");
+        $this->clickAndWait("link=Preregister a Visitor");
         $this->click("id=clicktabA");
         $this->select("id=Visitor_visitor_type", "label=Corporate Visitor");
         $this->select("id=workstation", "label=Workstation1");

@@ -231,6 +231,8 @@ class VisitController extends Controller {
 
     public function actionView() {
         $this->layout = "//layouts/column1";
+        $session = new CHttpSession;
+        $session['lastPage']   = 'visitorrecords';
         $model = new Visit('search');
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['Visit'])) {

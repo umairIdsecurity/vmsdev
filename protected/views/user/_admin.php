@@ -2,6 +2,7 @@
 /* @var $this UserController */
 /* @var $model User */
 $session = new ChttpSession;
+$session['lastPage'] = 'admin';
 ?>
 
 <h1>Manage Users</h1>

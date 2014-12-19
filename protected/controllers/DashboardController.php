@@ -2,7 +2,7 @@
 
 class DashboardController extends Controller {
 
-    public $layout = '//layouts/column1';
+    public $layout = '//layouts/column2';
 
     /**
      * @return array action filters
@@ -132,6 +132,8 @@ class DashboardController extends Controller {
      * Lists all models.
      */
     public function actionIndex() {
+        $session = new CHttpSession;
+        $session['lastPage'] = 'dashboard';
         $this->layout = '//layouts/column2';
         $model = new Visit('search');
         $model->unsetAttributes();  // clear any default values

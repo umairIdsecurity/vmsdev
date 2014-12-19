@@ -164,7 +164,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     }
                     ?>>
                         <li><a href='<?php echo Yii::app()->createUrl('visitor/create'); ?>' class="addSubMenu"><span>Register a Visitor</span></a></li>
-                        <li><a href='<?php echo Yii::app()->createUrl('visitor/create&action=preregister'); ?>' class="addSubMenu"><span>Pre-register a Visitor</span></a></li>
+                        <li><a href='<?php echo Yii::app()->createUrl('visitor/create&action=preregister'); ?>' class="addSubMenu"><span>Preregister a Visitor</span></a></li>
                         <li><a href='<?php echo Yii::app()->createUrl('visit/exportvisitorrecords'); ?>' ><span>Export Visitor Records</span></a></li>
                     </ul>
                 </li>    
@@ -232,7 +232,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     }
                     ?>>
                         <li><a href='<?php echo Yii::app()->createUrl('visitor/create'); ?>' class="addSubMenu"><span>Register a Visitor</span></a></li>
-                        <li><a href='<?php echo Yii::app()->createUrl('visitor/create&action=preregister'); ?>' class="addSubMenu"><span>Pre-register a Visitor</span></a></li>
+                        <li><a href='<?php echo Yii::app()->createUrl('visitor/create&action=preregister'); ?>' class="addSubMenu"><span>Preregister a Visitor</span></a></li>
                         <li><a href='<?php echo Yii::app()->createUrl('visit/exportvisitorrecords'); ?>' ><span>Export Visitor Records</span></a></li>
                     </ul>
                 </li>

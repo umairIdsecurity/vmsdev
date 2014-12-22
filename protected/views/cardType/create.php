@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 <?php
 /* @var $this CardTypeController */
 /* @var $model CardType */
@@ -16,23 +16,4 @@ $this->menu=array(
 
 <h1>Create CardType</h1>
 
-=======
-<?php
-/* @var $this CardTypeController */
-/* @var $model CardType */
-
-$this->breadcrumbs=array(
-	'Card Types'=>array('index'),
-	'Create',
-);
-
-$this->menu=array(
-	array('label'=>'List CardType', 'url'=>array('index')),
-	array('label'=>'Manage CardType', 'url'=>array('admin')),
-);
-?>
-
-<h1>Create CardType</h1>
-
->>>>>>> origin/Issue35
 <?php $this->renderPartial('_form', array('model'=>$model)); ?>

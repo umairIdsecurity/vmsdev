@@ -57,7 +57,7 @@ div.form label
 {
 	font-weight: bold;
 	font-size: 0.9em;
-	display: block;
+	display: inline;
 }
 
 div.form .row
@@ -87,6 +87,7 @@ div.form label.error,
 div.form span.error
 {
 	color: #C00;
+        display:inline;
 }
 
 div.form div.error input,
@@ -98,6 +99,7 @@ div.form select.error
 {
 	background: #FEE;
 	border-color: #C00;
+        
 }
 
 div.form div.success input,

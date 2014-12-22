@@ -26,12 +26,18 @@ class UserIdentity extends CUserIdentity
             else
             {
                 $this->_id=$user->id;
-                $this->username=$user->email;
+                $this->setState('email', $user->email);
+                $this->setState('role', $user->role);
+                $this->setState('tenant', $user->tenant);
+                $this->setState('tenant_agent', $user->tenant_agent);
                 
                 $session=new CHttpSession;
                 $session->open();
                 $session['id']=$user->id;
                 $session['role']=$user->role;
+                $session['company']=$user->company;
+                $session['tenant']=$user->tenant;
+                $session['tenant_agent']=$user->tenant_agent;
                             
                 $this->errorCode=self::ERROR_NONE;
             }

@@ -7,89 +7,75 @@
  */
 
 
-require_once 'PHPUnit/Extensions/SeleniumTestCase.php';
-//require_once 'BaseFunctionalTest.php';
+require_once 'BaseFunctionalTest.php';
 
 /**
  * Description of Issue 1
  *
  * @author Jeremiah
  */
-class Issue1 extends PHPUnit_Extensions_SeleniumTestCase {
+class Issue1 extends BaseFunctionalTest {
 
-    
     protected function setUp() {
         parent::setUp();
         $this->setBrowser("*firefox");
-        $this->setBrowserUrl("http://localhost/vms");
+        $this->setBrowserUrl("http://cvms.identitysecurity.info");
+        
+    }
+
+    function testAll() {
+        $this->resetDbWithData();
+        $this->Scenario1();
+        $this->Scenario2();
+        $this->Scenario3();
+        $this->Scenario4();
+        $this->Scenario5();
+        $this->Scenario6();
     }
     
     
-    function testScenario1() {
+    
+    function Scenario1() {
         $username = 'superadmin@test.com';
-        $this->login($username,'12345');
-        $this->assertTrue($this->isElementPresent("link=Logged in as ".$username." - Super Administrator"));
-        $this->click("link=Logout");
-        $this->waitForPageToLoad("30000");
+        $this->login($username, '12345');
+        $this->assertTrue($this->isElementPresent("link=Logged in as " . $username . " - Super Administrator"));
     }
-    
-    function testScenario2() {
+
+    function Scenario2() {
         $username = 'admin@test.com';
-        $this->login($username,'12345');
-        $this->assertTrue($this->isElementPresent("link=Logged in as ".$username." - Administrator"));
-        $this->click("link=Logout");
-        $this->waitForPageToLoad("30000");
+        $this->login($username, '12345');
+        $this->assertTrue($this->isElementPresent("link=Logged in as " . $username . " - Administrator"));
     }
-    
-    function testScenario3() {
+
+    function Scenario3() {
         $username = 'agentadmin@test.com';
-        $this->login($username,'12345');
-        $this->assertTrue($this->isElementPresent("link=Logged in as ".$username." - Agent Administrator"));
-        $this->click("link=Logout");
-        $this->waitForPageToLoad("30000");
+        $this->login($username, '12345');
+        $this->assertTrue($this->isElementPresent("link=Logged in as " . $username . " - Agent Administrator"));
     }
-    
-    function testScenario4() {
-        $username = 'agentworkstation@test.com';
-        $this->login($username,'12345');
-        $this->assertTrue($this->isElementPresent("link=Logged in as ".$username." - Agent Workstation"));
-        $this->click("link=Logout");
+
+    function Scenario4() {
+        $username = 'agentoperator@test.com';
+        $this->login($username, '12345');
+        $this->click("id=submitBtn");
+        $this->click("id=submit");
         $this->waitForPageToLoad("30000");
+        $this->assertTrue($this->isElementPresent("link=Logged in as " . $username . " - Agent Operator"));
     }
-    
-    function testScenario5() {
-        $username = 'workstation@test.com';
-        $this->login($username,'12345');
-        $this->assertTrue($this->isElementPresent("link=Logged in as ".$username." - Workstation"));
-        $this->click("link=Logout");
+
+    function Scenario5() {
+        $username = 'operator@test.com';
+        $this->login($username, '12345');
+        $this->click("id=submitBtn");
+        $this->click("id=submit");
         $this->waitForPageToLoad("30000");
+        $this->assertTrue($this->isElementPresent("link=Logged in as " . $username . " - Operator"));
     }
-    
-    function testScenario6() {
+
+    function Scenario6() {
         $username = 'staffmember@test.com';
-        $this->login($username,'12345');
-        $this->assertTrue($this->isElementPresent("link=Logged in as ".$username." - Staff Member"));
-        $this->click("link=Logout");
-        $this->waitForPageToLoad("30000");
-    }
-    
-    function testScenario7() {
-        $username = 'visitor@test.com';
-        $this->login($username,'12345');
-        $this->assertTrue($this->isElementPresent("link=Logged in as ".$username." - Visitor"));
-        $this->click("link=Logout");
-        $this->waitForPageToLoad("30000");
-    }
-    
-    function login($username = NULL,$password = NULL){
-        $this->open("http://localhost/vms");
-        $this->click("link=Login");
-        $this->waitForPageToLoad("30000");
-        $this->type("id=LoginForm_username", $username);
-        $this->type("id=LoginForm_password", $password);
-        $this->click("name=yt0");
-        $this->click("name=yt0");
-        $this->waitForPageToLoad("30000");    
+        $this->login($username, '12345');
+
+        $this->assertTrue($this->isElementPresent("link=Logged in as " . $username . " - Staff Member"));
     }
 
 }

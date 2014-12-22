@@ -1,71 +1,147 @@
-<?php echo Yii::app()->bootstrap->init();
-$cs=Yii::app()->clientScript;
+<?php
+$session = new CHttpSession;
+Yii::app()->bootstrap->register();
+
+$cs = Yii::app()->clientScript;
+
 $cs->registerCoreScript('jquery');
-//$cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/angular.min.js');
-//$cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/match.js');
-$session=new CHttpSession;
-            $user_role = $session['role'];
+$cs->registerScriptFile(Yii::app()->request->baseUrl . '/js/jquery.uploadfile.min.js');
+$cs->registerScriptFile(Yii::app()->request->baseUrl . '/js/jquery.form.js');
+
+
+$user_role = $session['role'];
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" >
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta name="language" content="en" />
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="language" content="en" />
 
-	<!-- blueprint CSS framework -->
-	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/screen.css" media="screen, projection" />
-	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/print.css" media="print" />
-	<!--[if lt IE 8]>
-	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/ie.css" media="screen, projection" />
-	<![endif]-->
+        <!-- blueprint CSS framework -->
+        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/screen.css" media="screen, projection" />
+        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/print.css" media="print" />
+        <!--[if lt IE 8]>
+        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/ie.css" media="screen, projection" />
+        <![endif]-->
 
-	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/main.css" />
-	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/form.css" />
+        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/main.css" />
+        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/form.css" />
+        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/style.css" />
+        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/sidebar.css" />
+        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/uploadfile.css" />
         <script  src="<?php echo Yii::app()->request->baseUrl; ?>/js/angular.min.js" ></script>
         <script  src="<?php echo Yii::app()->request->baseUrl; ?>/js/match.js" ></script>
-	<title><?php echo CHtml::encode($this->pageTitle); ?></title>
-</head>
 
-<body>
+        <script  src="<?php echo Yii::app()->request->baseUrl; ?>/js/script-sidebar.js" ></script>
+        <script  src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.min.js" ></script>
+        <script  src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.uploadfile.min.js" ></script>
+        <script  src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.form.js" ></script>
 
-<div class="container" id="page">
 
-	<div id="header">
-		<div id="logo"><?php echo CHtml::encode(Yii::app()->name); ?></div>
-	</div><!-- header -->
+        <title><?php echo CHtml::encode($this->pageTitle); ?></title>
+    </head>
 
-	<div id="mainmenu">
-		<?php $this->widget('zii.widgets.CMenu',array(
-			'items'=>array(
-                            array('label'=>'Administration', 'url'=>array('/user/admin'),'visible'=>!Yii::app()->user->isGuest,),
-                            array('label'=>'Change Password', 'url'=>array('/password/update&id='.Yii::app()->user->getId()),'visible'=>!Yii::app()->user->isGuest,),
-                            array('label'=>'Login', 'url'=>array('/site/login'), 'visible'=>Yii::app()->user->isGuest),
-                            array('label'=>'Logout ', 'url'=>array('/site/logout'), 'visible'=>!Yii::app()->user->isGuest,'itemOptions'=>array('class'=>'logout')),
-                            array('label'=>'Logged in as '.Yii::app()->user->name.' - '.User::model()->getUserRole($user_role).'','url'=>array('') ,'visible'=>!Yii::app()->user->isGuest)
-                    ),
-                  //  echo User::model()->getUserRole();
-		)); ?>
-            
-	</div>
-        <!-- mainmenu -->
-      
-	<?php if(isset($this->breadcrumbs)):?>
-		<?php $this->widget('zii.widgets.CBreadcrumbs', array(
-			'links'=>$this->breadcrumbs,
-		)); ?><!-- breadcrumbs -->
-	<?php endif?>
+    <body>
 
-	<?php echo $content; ?>
+        <div class="container" id="page">
+            <?php
+            if (isset($_GET['viewFrom'])) {
+                $viewFrom = $_GET['viewFrom'];
+            } else {
+                $viewFrom = '';
+            }
+            ?>
+            <div id="header" <?php
+            if ($viewFrom != '' || $this->id == 'userWorkstations' || $this->action->id == 'findvisitor' || $this->action->id == 'findhost' || $this->action->id == 'print') {
+                echo "style='display:none'";
+            }
+            ?>>
 
-	<div class="clear"></div>
 
-	<div id="footer">
-		Copyright &copy; <?php echo date('Y'); ?> by My Company.<br/>
-		All Rights Reserved.<br/>
-		
-	</div><!-- footer -->
+                <article class="header_midbox">
+                    <div id="logo" ><?php echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl . '/images/ids-logo2.jpg')); ?>
+                    </div>
+                    <aside class="top_nav">
+                        <ul id="tabs">
+                            <li>
+                                <a href="<?php echo Yii::app()->createUrl("/user/profile&id=" . $session['id']); ?>">
+                                    <p>My Profile</p>
+                                </a>
+                            </li>
+                            <li><a href="#">
+                                    <p>Contact Support</p>
+                                </a>
+                            </li>
+                            <?php
+                            echo '<li><a href="' . Yii::app()->createUrl("/site/logout") . '"><p>Log Out</p></a></li>';
+                            ?>
+                        </ul>
+                        <div class="clear"></div>
+                        <a href="<?php echo Yii::app()->createUrl("/site/logout"); ?>">
+                        </a>
+                        <div class="clear"></div>
+                    </aside>
+                    <div class="clear"></div>
+                    <nav class="navigation">
+                        <ul id="tabs">
+                            <li class="<?php echo ($session['lastPage']=='dashboard' || $this->id == "dashboard" || (($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles::ROLE_STAFFMEMBER)&& ($this->id=="visitor" || $this->action->id=='evacuationReport'))) ? "active" : "" ?>">
+                                <?php
+                                if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
+                                    ?>
+                                    <a href="<?php echo Yii::app()->createUrl("/dashboard/viewmyvisitors"); ?>">Dashboard</a>
+                                    <?php
+                                } elseif ($session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_AGENT_ADMIN) {
+                                    ?>
+                                    <a href="<?php echo Yii::app()->createUrl("/dashboard/admindashboard"); ?>">Dashboard</a>
+                                    <?php
+                                } else {
+                                    ?>
+                                    <a href="<?php echo Yii::app()->createUrl("/dashboard"); ?>">Dashboard</a>
+                                    <?php
+                                }
+                                ?>
+                            </li>
+                            <li class="<?php echo ($this->action->id == "view" && $this->id == 'visit') ? "active" : "" ?>">
+                                <a href="<?php echo Yii::app()->createUrl("/visit/view"); ?>">Visitor Records</a>
+                            </li>
+                            <?php if ($session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_AGENT_ADMIN || $session['role'] == Roles::ROLE_SUPERADMIN) { ?>
+                                <li class="<?php echo ($session['lastPage']!='dashboard' && ($this->action->id == "admin" || ($this->id == 'visit' && $this->action->id != 'view') || $this->id == "user" || $this->id == "visitor" || $this->id == "company" || $this->id == "workstation" || $this->id == "visitReason")) ? "active" : "" ?>">
+                                    <a href="<?php echo Yii::app()->createUrl("/user/admin"); ?>">Administration</a>
+                                </li>
+                            <?php } ?>
+                            <li style=' float:right;'>
+                                <a style="width:334px !important;text-align:right;">Logged in as <?php echo Yii::app()->user->name . ' - ' . User::model()->getUserRole($user_role); ?></a>
+                            </li> 
 
-</div><!-- page -->
+                        </ul>
 
-</body>
-</html>
+                    </nav>
+
+                    <div class="clear"></div>
+
+                </article>
+            </div><!-- header -->
+
+            <div class="wrapper" <?php
+            if ($viewFrom != '') {
+                echo "style='margin-left:180px'";
+            }
+            ?>>
+                     <?php echo $content; ?>
+            </div>
+            <div class="clear"></div>
+            <br><br>
+                    <div id="footer" <?php
+                         if ($viewFrom != '' || $this->id == 'userWorkstations' || $this->action->id == 'findvisitor' || $this->action->id == 'findhost' || $this->action->id == 'print') {
+                             echo "style='display:none'";
+                         }
+                         ?>>
+                        Copyright &copy; <?php echo date('Y'); ?> by <a href="http://idsecurity.com.au">Identity Security Pty Ltd </a>©.<br/>
+                        All Rights Reserved.<br/>
+
+                    </div><!-- footer -->
+
+                    </div><!-- page -->
+
+                    </body>
+                    </html>

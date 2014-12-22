@@ -10,11 +10,12 @@
         <div id="sidebar">
         <?php
             $this->beginWidget('zii.widgets.CPortlet', array(
-                'title'=>'Operations',
+                'title'=>'Administration Menu',
             ));
             $this->widget('bootstrap.widgets.TbMenu', array(
                 'items'=>$this->menu,
                 'htmlOptions'=>array('class'=>'operations'),
+                'title'=>'Admin',
             ));
             $this->endWidget();
         ?>

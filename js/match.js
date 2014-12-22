@@ -1,4 +1,4 @@
-    var app = angular.module('myApp', []);
+    var app = angular.module('PwordForm', []);
     app.directive('match', function () {
         return {
             require: 'ngModel',

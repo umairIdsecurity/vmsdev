@@ -35,10 +35,13 @@
  * @property UserStatus[] $userStatuses
  * @property UserType[] $userTypes
  */
-class User extends VmsActiveRecord
-{       
-    
-    
+class User extends VmsActiveRecord {
+
+    public $assignedWorkstations;
+    public $repeatpassword;
+    public $birthdayMonth;
+    public $birthdayYear;
+    public $birthdayDay;
     public static $USER_ROLE_LIST = array(
         5 => 'Super Administrator',
         1 => 'Administrator',
@@ -48,181 +51,426 @@ class User extends VmsActiveRecord
         9 => 'Staff Member',
         10 => 'Visitor',
     );
-    
     public static $USER_TYPE_LIST = array(
         1 => 'Internal',
         2 => 'External',
     );
-    
     public static $USER_STATUS_LIST = array(
         1 => 'Open',
         2 => 'Access Denied',
     );
-	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'user';
-	}
 
-	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array(
-			array('first_name, last_name, email, contact_number, role, user_type', 'required'),
-			array('contact_number, company, role, user_type, user_status, created_by', 'numerical', 'integerOnly'=>true),
-			array('first_name, last_name, email, department, position, staff_id', 'length', 'max'=>50),
-			array('photo', 'length', 'max'=>150),
-			array('date_of_birth, notes', 'safe'),
-			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
-			array('id, first_name, last_name, email, contact_number, date_of_birth, company, department, position, staff_id, notes, photo, role_id, user_type_id, user_status_id, created_by', 'safe', 'on'=>'search'),
-		);
-	}
+    /**
+     * @return string the associated database table name
+     */
+    public function tableName() {
+        return 'user';
+    }
 
-	/**
-	 * @return array relational rules.
-	 */
-	public function relations()
-	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-			'companies1' => array(self::HAS_MANY, 'Company', 'created_by_user'),
-			'roles' => array(self::HAS_MANY, 'Roles', 'created_by'),
-			'createdBy' => array(self::BELONGS_TO, 'User', 'created_by'),
-			'users' => array(self::HAS_MANY, 'User', 'created_by'),
-			'role' => array(self::BELONGS_TO, 'Roles', 'role'),
-			'userType' => array(self::BELONGS_TO, 'UserType', 'user_type'),
-			'userStatus' => array(self::BELONGS_TO, 'UserStatus', 'user_status'),
-			'company' => array(self::BELONGS_TO, 'Company', 'company'),
-			'userStatuses' => array(self::HAS_MANY, 'UserStatus', 'created_by'),
-			'userTypes' => array(self::HAS_MANY, 'UserType', 'created_by'),
-			'workstation' => array(self::HAS_MANY, 'user_workstations', 'id'),
-		);
-	}
-
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return array(
-			'id' => 'ID',
-			'first_name' => 'First Name',
-			'last_name' => 'Last Name',
-			'email' => 'Email',
-			'contact_number' => 'Contact Number',
-			'date_of_birth' => 'Date Of Birth',
-			'company' => 'Company',
-			'department' => 'Department',
-			'position' => 'Position',
-			'staff_id' => 'Staff',
-			'notes' => 'Notes',
-			'photo' => 'Photo',
-			'password' => 'Password',
-			'role' => 'Role',
-			'user_type' => 'User Type',
-			'user_status' => 'User Status',
-			'created_by' => 'Created By',
-		);
-	}
-
-	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 *
-	 * Typical usecase:
-	 * - Initialize the model fields with values from filter form.
-	 * - Execute this method to get CActiveDataProvider instance which will filter
-	 * models according to data in model fields.
-	 * - Pass data provider to CGridView, CListView or any similar widget.
-	 *
-	 * @return CActiveDataProvider the data provider that can return the models
-	 * based on the search/filter conditions.
-	 */
-	public function search()
-	{
-		// @todo Please modify the following code to remove attributes that should not be searched.
-
-		$criteria=new CDbCriteria;
-
-		$criteria->compare('id',$this->id);
-		$criteria->compare('first_name',$this->first_name,true);
-		$criteria->compare('last_name',$this->last_name,true);
-		$criteria->compare('email',$this->email,true);
-		$criteria->compare('contact_number',$this->contact_number);
-		$criteria->compare('date_of_birth',$this->date_of_birth,true);
-		$criteria->compare('company',$this->company);
-		$criteria->compare('department',$this->department,true);
-		$criteria->compare('position',$this->position,true);
-		$criteria->compare('staff_id',$this->staff_id,true);
-		$criteria->compare('notes',$this->notes,true);
-		$criteria->compare('photo',$this->photo,true);
-		$criteria->compare('role',$this->role);
-		$criteria->compare('user_type',$this->user_type);
-		$criteria->compare('user_status',$this->user_status);
-		$criteria->compare('created_by',$this->created_by);
-
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
-	}
-
-	/**
-	 * Returns the static model of the specified AR class.
-	 * Please note that you should have this exact method in all your CActiveRecord descendants!
-	 * @param string $className active record class name.
-	 * @return User the static model class
-	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
-        
-        protected function afterValidate()
-	{
-            parent::afterValidate();
-            if(!$this->hasErrors())
-            { 
-               //$this->password = $this->hashPassword($this->password); 
-            }
-	}
-
-	public function hashPassword($password)
-	{
-            return CPasswordHelper::hashPassword($password);
-	}
-	
-	public function validatePassword($password,$hash)
-	{
-            //return $this->hashPassword($password)===$this->password;
-            //hash saved in database
-            if (CPasswordHelper::verifyPassword($password, $hash)){
-                return true;
-            }
-            else{
-                return false;
-            }
-	}
-        
-        
-        public function getUserRole($user_role){
-            
-            $search_array = User::$USER_ROLE_LIST;
-            if(isset(User::$USER_ROLE_LIST[$user_role])){
-                return User::$USER_ROLE_LIST[$user_role];
-            }   
+    /**
+     * @return array validation rules for model attributes.
+     */
+    public function rules() {
+        // NOTE: you should only define rules for those attributes that
+        // will receive user inputs.
+        if (Yii::app()->controller->action->id == 'update' || Yii::app()->controller->action->id == 'profile') {
+            return array(
+                array('first_name, last_name, email, contact_number, role, user_type,is_deleted,password,company', 'required'),
+                array('company, role, user_type, user_status, created_by', 'numerical', 'integerOnly' => true),
+                array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
+                array('date_of_birth, notes,tenant,tenant_agent,birthdayYear,birthdayMonth,birthdayDay', 'safe'),
+                // array('email', 'unique'),
+                array('email', 'email'),
+                array('tenant, tenant_agent', 'default', 'setOnEmpty' => true, 'value' => null),
+                // The following rule is used by search().
+                // @todo Please remove those attributes that should not be searched.
+                array('id, first_name, last_name,email,is_deleted ,contact_number, date_of_birth, company, department, position, staff_id, notes, role_id, user_type_id, user_status_id, created_by', 'safe', 'on' => 'search'),
+            );
+        } else {
+            return array(
+                array('first_name, last_name, email, contact_number, role, user_type,is_deleted,password,company', 'required'),
+                array('company, role, user_type, user_status, created_by', 'numerical', 'integerOnly' => true),
+                array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
+                array('date_of_birth, notes,tenant,tenant_agent,birthdayYear,birthdayMonth,birthdayDay', 'safe'),
+                // array('email', 'unique'),
+                array('email', 'email'),
+                array('repeatpassword', 'required', 'on' => 'insert'),
+                array('password', 'compare', 'compareAttribute' => 'repeatpassword'),
+                array('tenant, tenant_agent', 'default', 'setOnEmpty' => true, 'value' => null),
+                // The following rule is used by search().
+                // @todo Please remove those attributes that should not be searched.
+                array('id, first_name, last_name,email,is_deleted,assignedWorkstations,contact_number, date_of_birth, company, department, position, staff_id, notes, role_id, user_type_id, user_status_id, created_by', 'safe', 'on' => 'search'),
+            );
         }
-        
-        public function beforeSave() {
-            //$this->password = $this->hashPassword($this->password);
-            $this->date_of_birth=date('Y-m-d', strtotime($this->date_of_birth));
+    }
+
+    /* set empty fields to null */
+
+    function empty2null($value) {
+        return $value === '' ? null : $value;
+    }
+
+    /**
+     * @return array relational rules.
+     */
+    public function relations() {
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'companies1' => array(self::HAS_MANY, 'Company', 'created_by_user'),
+            'roles' => array(self::HAS_MANY, 'Roles', 'created_by'),
+            'createdBy' => array(self::BELONGS_TO, 'User', 'created_by'),
+            'users' => array(self::HAS_MANY, 'User', 'created_by'),
+            'role' => array(self::BELONGS_TO, 'Roles', 'role'),
+            'userType' => array(self::BELONGS_TO, 'UserType', 'user_type'),
+            'userStatus' => array(self::BELONGS_TO, 'UserStatus', 'user_status'),
+            'company' => array(self::BELONGS_TO, 'Company', 'company'),
+            'userStatuses' => array(self::HAS_MANY, 'UserStatus', 'created_by'),
+            'userTypes' => array(self::HAS_MANY, 'UserType', 'created_by'),
+            'workstation' => array(self::HAS_MANY, 'user_workstation', 'id'),
+            'userWorkstation1' => array(self::MANY_MANY, 'Workstation', 'user_workstation(user, workstation)'),
+        );
+    }
+
+    /**
+     * @return array customized attribute labels (name=>label)
+     */
+    public function attributeLabels() {
+        return array(
+            'id' => 'ID',
+            'first_name' => 'First Name',
+            'last_name' => 'Last Name',
+            'email' => 'Email',
+            'contact_number' => 'Contact No.',
+            'date_of_birth' => 'Date Of Birth',
+            'company' => 'Company Name',
+            'department' => 'Department',
+            'position' => 'Position',
+            'staff_id' => 'Staff Id',
+            'notes' => 'Notes',
+            'password' => 'Password',
+            'role' => 'Role',
+            'user_type' => 'User Type',
+            'user_status' => 'User Status',
+            'created_by' => 'Created By',
+            'is_deleted' => 'Deleted',
+            'tenant' => 'Tenant',
+            'tenant_agent' => 'Tenant Agent',
+            'repeatpassword' => 'Repeat Password',
+        );
+    }
+
+    /**
+     * Retrieves a list of models based on the current search/filter conditions.
+     *
+     * Typical usecase:
+     * - Initialize the model fields with values from filter form.
+     * - Execute this method to get CActiveDataProvider instance which will filter
+     * models according to data in model fields.
+     * - Pass data provider to CGridView, CListView or any similar widget.
+     *
+     * @return CActiveDataProvider the data provider that can return the models
+     * based on the search/filter conditions.
+     */
+    public function search() {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria = new CDbCriteria;
+        $criteria->compare('t.id', $this->id);
+        //  $criteria->compare('first_name', $this->first_name, true);
+        $criteria->compare('last_name', $this->last_name, true);
+        $criteria->compare('email', $this->email, true);
+        $criteria->compare('contact_number', $this->contact_number);
+        $criteria->compare('date_of_birth', $this->date_of_birth, true);
+        $criteria->compare('company', $this->company);
+        $criteria->compare('department', $this->department, true);
+        $criteria->compare('position', $this->position, true);
+        $criteria->compare('staff_id', $this->staff_id, true);
+        $criteria->compare('notes', $this->notes, true);
+        $criteria->compare('role', $this->role);
+        $criteria->compare('user_type', $this->user_type);
+        $criteria->compare('user_status', $this->user_status);
+        $criteria->compare('created_by', $this->created_by);
+        $criteria->compare('t.is_deleted', $this->is_deleted);
+        $criteria->compare('t.tenant', $this->tenant);
+        $criteria->compare('t.tenant_agent', $this->tenant_agent);
+
+        $criteria->compare('workstation', $this->assignedWorkstations);
+        $criteria->with = array('userWorkstation1');
+        $criteria->together = true;
+
+        $user = User::model()->findByPK(Yii::app()->user->id);
+
+        if (Yii::app()->controller->action->id == 'systemaccessrules') {
+            $criteria->compare('CONCAT(first_name, \' \', last_name)', $this->first_name, true);
+        } else {
+            $criteria->compare('first_name', $this->first_name, true);
+        }
+
+        $queryCondition = 'company = "' . $user->company . '" or created_by="' . $user->id . '"';
+        switch ($user->role) {
+            case Roles::ROLE_ADMIN:
+                if (Yii::app()->controller->action->id == 'systemaccessrules') {
+                    $rolein = '(' . Roles::ROLE_AGENT_OPERATOR . ',' . Roles::ROLE_OPERATOR . ')';
+                } else {
+                    $rolein = '(' . Roles::ROLE_ADMIN . ',' . Roles::ROLE_AGENT_ADMIN . ',' . Roles::ROLE_AGENT_OPERATOR . ',' . Roles::ROLE_OPERATOR . ',' . Roles::ROLE_VISITOR . ',' . Roles::ROLE_STAFFMEMBER . ')';
+                }
+                $queryCondition = 't.tenant = "' . $user->tenant . '"';
+                break;
+            case Roles::ROLE_AGENT_ADMIN:
+                if (Yii::app()->controller->action->id == 'systemaccessrules') {
+                    $rolein = '(' . Roles::ROLE_AGENT_OPERATOR . ')';
+                } else {
+                    $rolein = '(' . Roles::ROLE_AGENT_ADMIN . ',' . Roles::ROLE_AGENT_OPERATOR . ',' . Roles::ROLE_STAFFMEMBER . ',' . Roles::ROLE_VISITOR . ')';
+                }
+
+                $queryCondition = 't.tenant_agent="' . $user->tenant_agent . '"';
+                break;
+            default:
+                if (Yii::app()->controller->action->id == 'systemaccessrules') {
+                    $rolein = '(' . Roles::ROLE_AGENT_OPERATOR . ',' . Roles::ROLE_OPERATOR . ')';
+                } else {
+                    $rolein = '(' . Roles::ROLE_SUPERADMIN . ',' . Roles::ROLE_ADMIN . ',' . Roles::ROLE_AGENT_ADMIN . ',' . Roles::ROLE_AGENT_OPERATOR . ',' . Roles::ROLE_OPERATOR . ',' . Roles::ROLE_VISITOR . ',' . Roles::ROLE_STAFFMEMBER . ')';
+                }
+
+                $queryCondition = 't.is_deleted=0';
+                break;
+        }
+        $criteria->addCondition('role in ' . $rolein . ' and (' . $queryCondition . ')');
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 't.ID DESC',
+            ),
+        ));
+    }
+
+    /**
+     * Returns the static model of the specified AR class.
+     * Please note that you should have this exact method in all your CActiveRecord descendants!
+     * @param string $className active record class name.
+     * @return User the static model class
+     */
+    public static function model($className = __CLASS__) {
+        return parent::model($className);
+    }
+
+    protected function afterValidate() {
+        parent::afterValidate();
+        if (!$this->hasErrors()) {
+            if (Yii::app()->controller->action->id == 'create') {
+                $this->password = $this->hashPassword($this->password);
+            }
+            //disable if action is update 
+        }
+    }
+
+    public function hashPassword($password) {
+        return CPasswordHelper::hashPassword($password);
+    }
+
+    public function validatePassword($password, $hash) {
+        //return $this->hashPassword($password)===$this->password;
+        //hash saved in database
+        if (CPasswordHelper::verifyPassword($password, $hash)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function getUserRole($user_role) {
+
+        $search_array = User::$USER_ROLE_LIST;
+        if (isset(User::$USER_ROLE_LIST[$user_role])) {
+            return User::$USER_ROLE_LIST[$user_role];
+        }
+    }
+
+    public function getCompany($id) {
+        $connection = Yii::app()->db;
+        $sql = "select company from user where id='" . $id . "'";
+        $command = $connection->createCommand($sql);
+        $row = $command->queryRow();
+        foreach ($row as $key => $val) {
+            $company = $val;
+        }
+        return $company;
+    }
+
+    public function getFullName($id) {
+        $user = User::model()->findByPK($id);
+        $name = $user->first_name . ' ' . $user->last_name;
+        return $name;
+    }
+
+    public function findAllAdmin() {
+
+        $criteria = new CDbCriteria;
+        $criteria->select = 'id,tenant,first_name,last_name';
+        $criteria->addCondition('role = 1');
+
+        return User::model()->findAll($criteria);
+    }
+
+    public function findAllAgentAdmin() {
+        $criteria = new CDbCriteria;
+        $criteria->select = 'id,tenant,first_name,last_name';
+        $criteria->addCondition('role ="' . Roles::ROLE_AGENT_ADMIN . '"');
+
+        return User::model()->findAll($criteria);
+    }
+
+    public function validateIfUserHasSameTenantOrTenantAgent($currentlyEditedUserId, $currentLoggedUserRole, $currentLoggedUserTenant, $currentLoggedUserTenantAgent) {
+
+        $connection = Yii::app()->db;
+        $ownerCondition = "where id ='" . $currentlyEditedUserId . "'";
+
+        if ($currentLoggedUserRole == Roles::ROLE_ADMIN) {
+            $ownerCondition = "WHERE tenant = '" . $currentLoggedUserTenant . "' ";
+        } else if ($currentLoggedUserRole == Roles::ROLE_AGENT_ADMIN) {
+            $ownerCondition = "WHERE `tenant_agent`='" . $currentLoggedUserTenantAgent . "'";
+        }
+        $ownerQuery = "select * FROM `user`
+                            " . $ownerCondition . " and id ='" . $currentlyEditedUserId . "' 
+                            ";
+        $command = $connection->createCommand($ownerQuery);
+        $row = $command->query();
+        if ($row->rowCount !== 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function saveWorkstation($model_Id, $workstation_Id, $created_by) {
+
+        $post = new UserWorkstations;
+        $post->user = $model_Id;
+        $post->workstation = $workstation_Id;
+        $post->created_by = $created_by;
+        $post->is_primary = '1';
+        $post->save();
+    }
+
+    public function findAllTenantAgent($id) {
+        $tenant = trim($id);
+        $aArray = array();
+        $Criteria = new CDbCriteria();
+        $Criteria->condition = "tenant = '" . $tenant . "' and role=" . Roles::ROLE_AGENT_ADMIN;
+        $User = User::model()->findAll($Criteria);
+        foreach ($User as $index => $value) {
+            $aArray[] = array(
+                'id' => $value['id'],
+                'name' => $value['first_name'] . ' ' . $value['last_name'],
+            );
+        }
+
+        return $aArray;
+    }
+
+    public function findCompanyDetailsOfUser($id) {
+        $aArray = array();
+
+        $usercompany = User::model()->findByPK($id);
+        $company = Company::model()->findByPK($usercompany->company);
+
+        $aArray[] = array(
+            'id' => $company->id,
+            'name' => $company->name,
+        );
+
+        return $aArray;
+    }
+
+    public function findWorkstationsWithSameTenant($id) {
+        $aArray = array();
+
+        $Criteria = new CDbCriteria();
+        $Criteria->condition = "tenant = '$id'";
+        $workstation = Workstation::model()->findAll($Criteria);
+
+        foreach ($workstation as $index => $value) {
+            $aArray[] = array(
+                'id' => $value['id'],
+                'name' => $value['name'],
+            );
+        }
+
+        return $aArray;
+    }
+
+    public function findWorkstationsWithSameTenantAndTenantAgent($id, $tenant) {
+        $aArray = array();
+
+        $Criteria = new CDbCriteria();
+        $Criteria->condition = "tenant = '" . $tenant . "' and tenant_agent='" . $id . "'";
+        $workstation = Workstation::model()->findAll($Criteria);
+        foreach ($workstation as $index => $value) {
+            $aArray[] = array(
+                'id' => $value['id'],
+                'name' => $value['name'],
+            );
+        }
+
+        return $aArray;
+    }
+
+    protected function afterFind() {
+        $date_of_birth = $this->date_of_birth;
+        $this->birthdayDay = date('d', strtotime($date_of_birth));
+        $this->birthdayMonth = date('n', strtotime($date_of_birth));
+        $this->birthdayYear = date('o', strtotime($date_of_birth));
+        return parent::afterFind();
+    }
+
+    public function beforeDelete() {
+        $this->is_deleted = 1;
+        $this->update();
+        return false;
+    }
+
+    public function checkIfEmailAddressIsTaken($email, $tenant ) {
+        $Criteria = new CDbCriteria();
+        $session = new CHttpSession;
+        if ($tenant != '') {
+            if ($session['role'] == Roles::ROLE_SUPERADMIN) {
+                $Criteria->condition = "email = '" . $email . "' and tenant = '" . $tenant . "'";
+            } else {
+                $Criteria->condition = "email = '" . $email . "' and tenant = '" . $session['tenant'] . "'";
+            }
+        } else { //if position is admin compare to email only
+                $Criteria->condition = "email = '" . $email . "'";
+           
+        }
+
+
+        $userEmail = User::model()->findAll($Criteria);
+
+        $userEmails = array_filter($userEmail);
+        $userEmailCount = count($userEmails);
+
+        if ($userEmailCount == 0) {
+            return false;
+        } else {
             return true;
         }
-        
+    }
+
+    public function getIdOfUser($email) {
+        $aArray = array();
+
+        $Criteria = new CDbCriteria();
+        $Criteria->condition = "email = '$email'";
+        $userId = User::model()->findAll($Criteria);
+
+        foreach ($userId as $index => $value) {
+            $aArray[] = array(
+                'id' => $value['id'],
+            );
+        }
+        return $aArray;
+    }
+
 }

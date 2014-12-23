@@ -559,7 +559,9 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Edit");
         $this->assertEquals(date('d-m-Y', time() + 86400), $this->getEval("window.document.getElementById(\"Visit_date_in\").value"));
         $this->assertEquals(date('d-m-Y', time() + 86400), $this->getEval("window.document.getElementById(\"Visit_date_out\").value"));
-
+            if($currentHour == '24'){
+                $currentHour = '00';
+            }
         $this->assertEquals($currentHour, $this->getValue("id=Visit_time_in_hours"));
         $this->assertEquals($currentMinute, $this->getValue("id=Visit_time_in_minutes"));
     }

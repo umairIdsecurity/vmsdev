@@ -1,5 +1,5 @@
 <?php
-//error_reporting(E_ALL);
+error_reporting(E_ALL);
 $session = new CHttpSession;
 // clean up the input
 $model = Visit::model()->findByPk($_GET['id']);
@@ -15,7 +15,7 @@ if ($model->card_type != CardType::SAME_DAY_VISITOR) {
     $dateExpiry = Yii::app()->dateFormatter->format("d/MM/y", strtotime($model->date_out));
 }
 $text = $card_type . "\n" . $full_name . "\n" . $company_name . "\n" . $dateExpiry;
-
+//$text = "hello";
 if (empty($text)) {
     fatal_error('Error: Text not properly formatted.');
 }

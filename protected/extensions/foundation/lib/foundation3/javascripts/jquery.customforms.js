@@ -1,4 +1,3 @@
-
 /*
  * jQuery Custom Forms Plugin 1.0
  * www.ZURB.com

@@ -1,4 +1,3 @@
-
 (function($) {
     $(document).ready(function() {
         $('#visitorInformationCssMenu ul ul li:odd').addClass('odd');

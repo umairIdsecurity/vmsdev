@@ -1,4 +1,3 @@
-
 .redactor_box {
 	position: relative;
 	border: 1px solid #ddd;	
@@ -92,7 +91,7 @@ li.redactor_toolbar_right {
 }	
 .redactor_toolbar li a {
 	border: 1px solid transparent;
-	border: 1px solid #eee; 
+	* border: 1px solid #eee; 
 	display: block;
 	line-height: 0;
 	font-size: 0;

@@ -1,4 +1,3 @@
-
 /*
 	Redactor v7.6.1
 	Updated 22.05.2012

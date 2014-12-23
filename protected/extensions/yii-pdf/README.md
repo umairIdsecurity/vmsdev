@@ -1,4 +1,3 @@
-
 Yii-PDF Extension
 =================
 
@@ -136,4 +135,3 @@ If you do so - **you must keep the order of array items!**
 * **mPDF** has GNU General Public License version 2
 * **HTML2PDF** has GNU Library or Lesser General Public License (LGPL)
 * [This extension](https://github.com/Borales/yii-pdf) was released under the [New BSD License](http://www.opensource.org/licenses/bsd-license.php)
-

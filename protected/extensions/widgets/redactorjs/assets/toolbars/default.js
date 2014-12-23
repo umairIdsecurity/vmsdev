@@ -1,4 +1,3 @@
-
 if (typeof RTOOLBAR == 'undefined') var RTOOLBAR = {};
 
 RTOOLBAR['default'] = 

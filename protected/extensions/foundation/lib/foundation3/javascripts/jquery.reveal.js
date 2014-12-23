@@ -1,4 +1,3 @@
-
 /*
  * jQuery Reveal Plugin 1.1
  * www.ZURB.com

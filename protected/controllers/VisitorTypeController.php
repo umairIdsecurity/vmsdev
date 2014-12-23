@@ -1,4 +1,3 @@
-
 <?php
 
 class VisitorTypeController extends Controller {

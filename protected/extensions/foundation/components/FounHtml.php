@@ -1,4 +1,3 @@
-
 <?php
 class FounHtml extends CHtml{
 	/**

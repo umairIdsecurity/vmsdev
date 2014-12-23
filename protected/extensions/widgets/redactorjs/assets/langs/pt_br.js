@@ -1,4 +1,3 @@
-
 var RLANG = {
 	html: 'Ver HTML',
 	video: 'V&iacute;deo',

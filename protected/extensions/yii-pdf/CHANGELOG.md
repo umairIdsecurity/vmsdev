@@ -1,4 +1,3 @@
-
 Yii-PDF Change Log
 ==================
 

@@ -1,4 +1,3 @@
-
 var RLANG = {
 	html: 'Le code',
 	video: 'Vidéo',
@@ -71,5 +70,5 @@ var RLANG = {
 	horizontalrule: 'Horizontal rule',
 	fullscreen: 'Fullscreen',
 	deleted: 'Deleted',
-	none: 'None'	
+	none: 'None'					
 };

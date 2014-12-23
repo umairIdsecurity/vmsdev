@@ -1,4 +1,3 @@
-
 <?php
 
 class LicenseDetailsController extends Controller {

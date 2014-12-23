@@ -1,4 +1,3 @@
-
 Yii-PDF Extension
 =================
 
@@ -136,5 +135,4 @@ Yii-PDF Extension
 
 * **mPDF** - GNU General Public License version 2
 * **HTML2PDF** - GNU Library or Lesser General Public License (LGPL)
-
 * [Это расширение](https://github.com/Borales/yii-pdf) было выпущено под [New BSD License](http://www.opensource.org/licenses/bsd-license.php)

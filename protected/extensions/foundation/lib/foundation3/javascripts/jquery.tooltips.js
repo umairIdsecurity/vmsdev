@@ -1,4 +1,3 @@
-
 /*
  * jQuery Foundation Tooltip Plugin 1.0.1
  * http://foundation.zurb.com

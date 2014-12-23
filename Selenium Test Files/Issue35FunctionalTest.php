@@ -45,7 +45,7 @@ class Issue35FunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->open("http://cvms.identitysecurity.info/index.php?r=visit/RunScheduledJobsClose");
-        $this->assertEquals("Scheduled Jobs - Close \n Affected Rows : 2\nUpdate visit to close status successful.", $this->getText("css=body"));
+        $this->assertEquals("Scheduled Jobs - Close \nAffected Rows : 2\nUpdate visit to close status successful.", $this->getText("css=body"));
         $this->open("http://cvms.identitysecurity.info/index.php?r=dashboard");
         $this->assertEquals("Closed", $this->getText("link=Closed"));
         $this->clickAndWait("link=Closed");
@@ -69,7 +69,7 @@ class Issue35FunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->open("http://cvms.identitysecurity.info/index.php?r=visit/RunScheduledJobsExpired");
-        $this->assertEquals("Scheduled Jobs - Expired \n Affected Rows : 2\nUpdate visit to expired status successful.", $this->getText("css=body"));
+        $this->assertEquals("Scheduled Jobs - Expired \nAffected Rows : 2\nUpdate visit to expired status successful.", $this->getText("css=body"));
         $this->open("http://cvms.identitysecurity.info/index.php?r=dashboard");
         $this->assertEquals("Expired", $this->getText("link=Expired"));
     }

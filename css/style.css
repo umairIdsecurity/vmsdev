@@ -40,6 +40,7 @@ div.form label{
     background: -webkit-gradient(linear, center top, center bottom, from(#A1DC33), to(#82BD12));
     background: -moz-linear-gradient(center top , #A1DC33, #82BD12) repeat scroll 0 0 rgba(0, 0, 0, 0);
     background: -webkit-gradient(linear, center top, center bottom, from(#A1DC33), to(#82BD12));
+    background: -ms-linear-gradient(top, #a1dc33, #82bd12) ;
     border: 1px solid #63B421;
     border-radius: 5px;
     color: #FFFFFF;
@@ -406,6 +407,7 @@ nav.navigation ul li:last-child.active
     background: -webkit-gradient(linear, center top, center bottom, from(#CCCCCC), to(#999999)) !important;
     background: -moz-linear-gradient(center top , #CCCCCC, #999999) repeat scroll 0 0 rgba(0, 0, 0, 0) !important;
     background: -webkit-gradient(linear, center top, center bottom, from(#CCCCCC), to(#999999)) !important;
+    background: -ms-linear-gradient(top, #CCCCCC, #999999) !important ;
     border :1px solid #999999 !important;
 }
 

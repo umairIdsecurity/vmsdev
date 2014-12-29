@@ -7,6 +7,7 @@ dl.tabs.contained{margin-bottom:0}
 dl.tabs dt{
     background-image: -moz-linear-gradient(center top , #EBEBEB 0%, #C4C4C4 100%);
     background-image: -webkit-linear-gradient(top, #EBEBEB 0%, #C4C4C4 100%);
+     background: -ms-linear-gradient(top, #EBEBEB, #C4C4C4) !important ;
     border: 1px solid #E3E3E3;
     color: #878787;cursor:default;display:block;float:left;font-size:12px;
     height:40px;line-height:40px;padding:0 9px 0 20px;width:auto;

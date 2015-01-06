@@ -62,7 +62,11 @@ $this->renderPartial('visithistory', array('model' => $model,
 <input type="text" id="currentCompanyOfLoggedInUser" value="<?php echo User::model()->getCompany($session['id']); ?>">
 <script>
     $(document).ready(function() {
+        $.ajaxSetup({
+            cache: false,
+            isLocal: false
 
+        });
     });
     function ifSelectedIsOtherShowAddReasonDiv(reason) {
         if (reason.value == 'Other') {
@@ -86,25 +90,29 @@ $this->renderPartial('visithistory', array('model' => $model,
                 dataType: 'json',
                 data: email,
                 success: function(r) {
+                    $.each(r.data, function(index, value) {
+                        if (value.isTaken == 1) {
+                            $(".errorMessageEmail").show();
+                            $("#emailIsUnique").val("0");
+                        } else {
+                            $(".errorMessageEmail").hide();
+                            $("#emailIsUnique").val("1");
+                            sendVisitorForm();
+                        }
+                    });
 
-                    if (r == 1) {
-                        $(".errorMessageEmail").show();
-                        $("#emailIsUnique").val("0");
-                    } else {
-                        $(".errorMessageEmail").hide();
-                        $("#emailIsUnique").val("1");
-                        sendVisitorForm();
-                    }
                 }
             });
         }
     }
 
     function checkHostEmailIfUnique() {
+
         var email = $(".update_user_email").val();
         if (email == '<?php echo $hostModel->email ?>') {
             sendHostForm();
         } else {
+
             var tenant;
             if ($("#currentRoleOfLoggedInUser").val() == 5) { //check if superadmin
                 tenant = $("#User_tenant").val();
@@ -118,17 +126,19 @@ $this->renderPartial('visithistory', array('model' => $model,
                 dataType: 'json',
                 data: email,
                 success: function(r) {
+                    $.each(r.data, function(index, value) {
+                        if (value.isTaken == 1) {
+                            $("#hostEmailIsUnique").val("0");
+                            $(".errorMessageEmail1").show();
+                            $("#User_email_em_1a").show();
+                        } else {
+                            $(".errorMessageEmail1").hide();
+                            $("#User_email_em_1a").hide();
+                            $("#hostEmailIsUnique").val("1");
+                            sendHostForm();
+                        }
+                    });
 
-                    if (r == 1) {
-                        $("#hostEmailIsUnique").val("0");
-                        $(".errorMessageEmail1").show();
-                        $("#User_email_em_1a").show();
-                    } else {
-                        $(".errorMessageEmail1").hide();
-                        $("#User_email_em_1a").hide();
-                        $("#hostEmailIsUnique").val("1");
-                        sendHostForm();
-                    }
                 }
             });
         }
@@ -141,22 +151,28 @@ $this->renderPartial('visithistory', array('model' => $model,
             $("#visitReasonErrorMessage").show();
             $("#visitReasonErrorMessage").html("Reason cannot be blank.");
         } else {
+
             $.ajax({
                 type: 'POST',
                 url: '<?php echo Yii::app()->createUrl('visitReason/checkReasonIfUnique&id='); ?>' + visitReason.trim(),
                 dataType: 'json',
                 data: visitReason,
+                crossDomain: false,
+                cache: false,
                 success: function(r) {
+                    $.each(r.data, function(index, value) {
+                        if (value.isTaken == 1) {
+                            $("#visitReasonErrorMessage").show();
+                            $("#visitReasonErrorMessage").html("Reason is already registered.");
+                        } else {
+                            $("#visitReasonErrorMessage").hide();
+                            sendReasonForm();
+                        }
+                    });
 
-                    if (r == 1) {
-                        $("#visitReasonErrorMessage").show();
-                        $("#visitReasonErrorMessage").html("Reason is already registered.");
-                    } else {
-                        $("#visitReasonErrorMessage").hide();
-                        sendReasonForm();
-                    }
                 }
             });
+
         }
     }
 
@@ -322,15 +338,17 @@ $this->renderPartial('visithistory', array('model' => $model,
             dataType: 'json',
             data: email,
             success: function(r) {
+                $.each(r.data, function(index, value) {
+                    if (value.isTaken == 1) {
+                        $("#newHostEmailIsUnique").val("0");
+                        $(".errorMessageEmail2").show();
+                    } else {
+                        $(".errorMessageEmail2").hide();
+                        $("#newHostEmailIsUnique").val("1");
+                        sendNewHostForm();
+                    }
+                });
 
-                if (r == 1) {
-                    $("#newHostEmailIsUnique").val("0");
-                    $(".errorMessageEmail2").show();
-                } else {
-                    $(".errorMessageEmail2").hide();
-                    $("#newHostEmailIsUnique").val("1");
-                    sendNewHostForm();
-                }
             }
         });
 

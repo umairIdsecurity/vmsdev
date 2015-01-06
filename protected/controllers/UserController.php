@@ -266,10 +266,18 @@ class UserController extends Controller {
 
     public function actionCheckEmailIfUnique($id, $tenant = NULL) {
         if (User::model()->checkIfEmailAddressIsTaken($id,$tenant)) {
-            echo "1";
+            $aArray[] = array(
+                'isTaken' => 1,
+            );
         } else {
-            echo "0";
+            $aArray[] = array(
+                'isTaken' => 0,
+            );
         };
+        
+        $resultMessage['data'] = $aArray;
+        echo CJavaScript::jsonEncode($resultMessage);
+        Yii::app()->end();
     }
 
     public function actionGetIdOfUser($id) {

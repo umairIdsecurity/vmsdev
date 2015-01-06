@@ -263,7 +263,7 @@ $currentLoggedUserId = $session['id'];
                             <input type="hidden" id="dateofBirthBreakdownValueYear" value="<?php echo date("Y", strtotime($model->date_of_birth)); ?>">
                             <input type="hidden" id="dateofBirthBreakdownValueMonth" value="<?php echo date("n", strtotime($model->date_of_birth)); ?>">
                             <input type="hidden" id="dateofBirthBreakdownValueDay" value="<?php echo date("j", strtotime($model->date_of_birth)); ?>">
-                            
+
                             <select id="fromMonth" name="User[birthdayMonth]" class='monthSelect'></select>
                             <select id="fromDay" name="User[birthdayDay]" class='daySelect'></select>
                             <select id="fromYear" name="User[birthdayYear]" class='yearSelect'></select>
@@ -323,14 +323,14 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
 
         document.getElementById('User_tenant').disabled = true;
         document.getElementById('User_tenant_agent').disabled = true;
-        
-        if(actionId =='update'){
+
+        if (actionId == 'update') {
             $("#fromYear").val($("#dateofBirthBreakdownValueYear").val());
             $("#fromMonth").val($("#dateofBirthBreakdownValueMonth").val());
             $("#fromDay").val($("#dateofBirthBreakdownValueDay").val());
-            
+
         }
-        
+
         if ((getRole != admin && getRole != '') && sessionRole == superadmin) {
             if (getRole == agentadmin) {
 
@@ -396,8 +396,8 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
             if (sessionRole == 6) {
                 $(this).find('#User_tenant_agent').removeAttr('disabled');
             }
-            
-            
+
+
         });
 
         if (actionId == 'update') {
@@ -412,8 +412,8 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
         $("#submitBtn").click(function(e) {
             e.preventDefault();
             checkHostEmailIfUnique();
-            
-            
+
+
         });
 
         function populateTenantAgentField(tenant) {
@@ -496,37 +496,39 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
     function checkHostEmailIfUnique() {
         var email = $("#User_email").val();
         var tenant;
-        if($("#currentRole").val() == 5){ //check if superadmin
+        if ($("#currentRole").val() == 5) { //check if superadmin
             tenant = $("#User_tenant").val();
         } else {
             tenant = '<?php echo $session['tenant']; ?>';
         }
-        if($("#User_role").val() == 1){
-            var url = $("#createUrlForEmailUnique").val() + email.trim() ;
+        if ($("#User_role").val() == 1) {
+            var url = $("#createUrlForEmailUnique").val() + email.trim();
         } else {
             var url = $("#createUrlForEmailUnique").val() + email.trim() + '&tenant=' + tenant;
         }
-        
+
         $.ajax({
             type: 'POST',
-            url: url ,
+            url: url,
             dataType: 'json',
             data: email,
             success: function(r) {
+                $.each(r.data, function(index, value) {
+                    if (value.isTaken == 1) {
+                        $(".errorMessageEmail1").show();
+                        $("#emailunique").val("1");
 
-                if (r == 1) {
-                    $(".errorMessageEmail1").show();
-                    $("#emailunique").val("1");
-                    
-                } else {
-                    $(".errorMessageEmail1").hide();
-                    $("#emailunique").val("0");
-                    $("#submitForm").click();
-                }
+                    } else {
+                        $(".errorMessageEmail1").hide();
+                        $("#emailunique").val("0");
+                        $("#submitForm").click();
+                    }
+                });
+
             }
         });
     }
-    
+
     function populateDynamicFields() {
         /*if superadmin user company set to empty*/
         if (<?php echo $session['role'] ?> == 5)
@@ -776,8 +778,8 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
         populateAgentOperatorWorkstations(tenant, tenantAgent);
 
     }
-    
-    
+
+
 </script>
 
 <?php

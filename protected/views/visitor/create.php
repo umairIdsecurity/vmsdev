@@ -4,13 +4,14 @@
 /* @var $model Visitor */
 $session = new CHttpSession;
 ?>
-<input type="text" id="getcurrentUrl" value="<?php if((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])){
-    if(isset($_GET['p'])){
-    echo $_GET['p'];
+<input type="text" id="getcurrentUrl" value="<?php
+if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
+    if (isset($_GET['p'])) {
+        echo $_GET['p'];
     } else {
         echo "d";
     }
-}else {
+} else {
     echo "";
 }
 ?>" style="display:none;">
@@ -349,15 +350,17 @@ $session = new CHttpSession;
             dataType: 'json',
             data: email,
             success: function(r) {
+                $.each(r.data, function(index, value) {
+                    if (value.isTaken == 1) {
+                        $(".errorMessageEmail").show();
+                        $("#emailIsUnique").val("0");
+                    } else {
+                        $(".errorMessageEmail").hide();
+                        $("#emailIsUnique").val("1");
+                        $("#clicktabB").click();
+                    }
+                });
 
-                if (r == 1) {
-                    $(".errorMessageEmail").show();
-                    $("#emailIsUnique").val("0");
-                } else {
-                    $(".errorMessageEmail").hide();
-                    $("#emailIsUnique").val("1");
-                    $("#clicktabB").click();
-                }
             }
         });
     }
@@ -377,30 +380,31 @@ $session = new CHttpSession;
             dataType: 'json',
             data: email,
             success: function(r) {
-
-                if (r == 1) {
-                    $("#hostEmailIsUnique").val("0");
-                    $(".errorMessageEmail1").show();
-                } else {
-                    $(".errorMessageEmail1").hide();
-                    $("#hostEmailIsUnique").val("1");
-                    //var currentURL = location.href.split("=");
-                    var currentURL = $("#getcurrentUrl").val();
-                    if (currentURL == "") {
-//                    //if visitor is not from search sendvisitorform
-                        if ($("#Visit_reason").val() == 'Other') {
-                            sendReasonForm();
-                        }
-                        else if ($("#selectedVisitorInSearchTable").val() == 0) {
-                            sendVisitorForm();
-                        } else {
-                            sendHostForm();
-                        }
+                $.each(r.data, function(index, value) {
+                    if (value.isTaken == 1) {
+                        $("#hostEmailIsUnique").val("0");
+                        $(".errorMessageEmail1").show();
                     } else {
-                        showHideTabs("logVisitB", "logVisitA", "logVisit", "findHostA", "findHost", "findVisitorA", "findVisitor");
+                        $(".errorMessageEmail1").hide();
+                        $("#hostEmailIsUnique").val("1");
+                        //var currentURL = location.href.split("=");
+                        var currentURL = $("#getcurrentUrl").val();
+                        if (currentURL == "") {
+//                    //if visitor is not from search sendvisitorform
+                            if ($("#Visit_reason").val() == 'Other') {
+                                sendReasonForm();
+                            }
+                            else if ($("#selectedVisitorInSearchTable").val() == 0) {
+                                sendVisitorForm();
+                            } else {
+                                sendHostForm();
+                            }
+                        } else {
+                            showHideTabs("logVisitB", "logVisitA", "logVisit", "findHostA", "findHost", "findVisitorA", "findVisitor");
+                        }
                     }
+                });
 
-                }
             }
         });
     }
@@ -623,34 +627,35 @@ $session = new CHttpSession;
             dataType: 'json',
             data: visitReason,
             success: function(r) {
-
-                if (r == 1) {
-                    if ($("#VisitReason_reason_search").val() != '') {
-                        $("#visitReasonErrorMessageSearch").show();
-                        $("#visitReasonErrorMessageSearch").html("Reason is already registered.");
-                    } else {
-                        $("#visitReasonErrorMessage").show();
-                        $("#visitReasonErrorMessage").html("Reason is already registered.");
-                    }
-
-                } else {
-                    $("#visitReasonErrorMessageSearch").hide();
-                    $("#visitReasonErrorMessage").hide();
-                    $(".visitorReason").hide();
-                    if ($("#selectedVisitorInSearchTable").val() == '0')
-                    {
-                        checkEmailIfUnique();
-                    } else {
-                        if ($("#Visitor_visitor_type").val() == 1 || $("#Visitor_visitor_type_search").val() == 1) {
-                            $("#findHostA").html("Add Patient Details");
-                            $("#findHostB").html("Add Patient Details");
+                $.each(r.data, function(index, value) {
+                    if (value.isTaken == 1) {
+                        if ($("#VisitReason_reason_search").val() != '') {
+                            $("#visitReasonErrorMessageSearch").show();
+                            $("#visitReasonErrorMessageSearch").html("Reason is already registered.");
                         } else {
-                            $("#findHostA").html("Find or Add Host");
-                            $("#findHostB").html("Find or Add Host");
+                            $("#visitReasonErrorMessage").show();
+                            $("#visitReasonErrorMessage").html("Reason is already registered.");
                         }
-                        showHideTabs('findHostB', 'findHostA', 'findHost', 'findVisitorA', 'findVisitor', 'selectCardA', 'selectCard');
+                    } else {
+                        $("#visitReasonErrorMessageSearch").hide();
+                        $("#visitReasonErrorMessage").hide();
+                        $(".visitorReason").hide();
+                        if ($("#selectedVisitorInSearchTable").val() == '0')
+                        {
+                            checkEmailIfUnique();
+                        } else {
+                            if ($("#Visitor_visitor_type").val() == 1 || $("#Visitor_visitor_type_search").val() == 1) {
+                                $("#findHostA").html("Add Patient Details");
+                                $("#findHostB").html("Add Patient Details");
+                            } else {
+                                $("#findHostA").html("Find or Add Host");
+                                $("#findHostB").html("Find or Add Host");
+                            }
+                            showHideTabs('findHostB', 'findHostA', 'findHost', 'findVisitorA', 'findVisitor', 'selectCardA', 'selectCard');
+                        }
                     }
-                }
+                });
+
             }
         });
     }

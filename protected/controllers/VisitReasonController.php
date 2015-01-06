@@ -183,9 +183,19 @@ class VisitReasonController extends Controller {
     
     public function actionCheckReasonIfUnique($id) {
         if (VisitReason::model()->checkIfReasonIsTaken($id)) {
-            echo "1";
+            $aArray[] = array(
+                'isTaken' => 1,
+            );
+           // echo "1";
         } else {
-            echo "0";
+           // echo "0";
+            $aArray[] = array(
+                'isTaken' => 0,
+            );
         }
+        
+        $resultMessage['data'] = $aArray;
+        echo CJavaScript::jsonEncode($resultMessage);
+        Yii::app()->end();
     }
 }

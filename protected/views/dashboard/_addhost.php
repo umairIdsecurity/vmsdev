@@ -67,10 +67,10 @@ $session = new CHttpSession;
                 </td>
             </tr>
             <tr <?php
-            if ($session['role'] != Roles::ROLE_SUPERADMIN) {
-                echo "style='display:none;'";
-            }
-            ?>
+                    if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+                        echo "style='display:none;'";
+                    }
+                    ?>
                 >
                     <?php
                     if ($session['role'] == Roles::ROLE_SUPERADMIN) {
@@ -216,14 +216,16 @@ $session = new CHttpSession;
             dataType: 'json',
             data: email,
             success: function(r) {
+                $.each(r.data, function(index, value) {
+                    if (value.isTaken == 1) {
+                        $(".errorMessageEmail1").show();
+                    } else {
+                        $(".errorMessageEmail1").hide();
+                        sendHostForm();
 
-                if (r == 1) {
-                    $(".errorMessageEmail1").show();
-                } else {
-                    $(".errorMessageEmail1").hide();
-                    sendHostForm();
-
-                }
+                    }
+                });
+                
             }
         });
     }

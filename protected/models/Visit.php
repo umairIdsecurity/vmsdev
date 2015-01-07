@@ -383,7 +383,7 @@ class Visit extends CActiveRecord {
             $command = Yii::app()->db->createCommand("UPDATE visit
                     LEFT JOIN card_generated ON card_generated.id = visit.`card` 
                     SET visit_status = '" . VisitStatus::CLOSED . "',card_status ='".CardStatus::NOT_RETURNED."'
-                    WHERE '" . date('d-m-Y') . "' > date_out AND date_out != '" . date('d-m-Y') . "' AND visit_status = '" . VisitStatus::ACTIVE . "'
+                    WHERE 'd-m-Y' > date_out AND date_out != 'd-m-Y' AND visit_status = '" . VisitStatus::ACTIVE . "'
                     AND card_status ='" . CardStatus::ACTIVE . "' and card_type= '" . CardType::SAME_DAY_VISITOR . "'")->execute();
             echo "Affected Rows : ".$command."<br>";
             if($command > 0){
@@ -405,7 +405,7 @@ class Visit extends CActiveRecord {
             $command = Yii::app()->db->createCommand("UPDATE visit
                     LEFT JOIN card_generated ON card_generated.id = visit.`card` 
                     SET visit_status = '" . VisitStatus::EXPIRED . "',card_status ='".CardStatus::NOT_RETURNED."'
-                    WHERE '" . date('d-m-Y') . "' > date_expiration AND visit_status = '" . VisitStatus::ACTIVE . "'
+                    WHERE 'd-m-Y' > date_expiration AND visit_status = '" . VisitStatus::ACTIVE . "'
                     AND card_status ='" . CardStatus::ACTIVE . "' and card_type='" . CardType::MULTI_DAY_VISITOR . "'")->execute();
             echo "Affected Rows : ".$command."<br>";
             if($command > 0){

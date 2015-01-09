@@ -3,15 +3,6 @@
 /* @var $this CardGeneratedController */
 /* @var $model CardGenerated */
 
-$this->breadcrumbs=array(
-	'Card Generateds'=>array('index'),
-	'Manage',
-);
-
-$this->menu=array(
-	array('label'=>'List CardGenerated', 'url'=>array('index')),
-	array('label'=>'Create CardGenerated', 'url'=>array('create')),
-);
 
 Yii::app()->clientScript->registerScript('search', "
 $('.search-button').click(function(){

@@ -27,9 +27,9 @@ class VisitorController extends Controller {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('update', 'delete','admin','adminAjax'),
-                'expression' => 'Yii::app()->controller->checkIfUserCanAccess("administration")',
+                'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
+           
             ),
-            
             
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('create','GetIdOfUser', 'GetHostDetails', 'GetPatientDetails', 'CheckEmailIfUnique', 'GetVisitorDetails', 'FindVisitor', 'FindHost', 'GetTenantAgentWithSameTenant', 'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent'),
@@ -41,33 +41,10 @@ class VisitorController extends Controller {
         );
     }
 
-    public function checkIfUserCanAccess($action) {
-        $session = new CHttpSession;
-        $CurrentRole = $session['role'];
-
-        switch ($action) {
-            case "superadmin":
-                $user_role = array(Roles::ROLE_SUPERADMIN,  Roles::ROLE_STAFFMEMBER);
-                if (in_array($CurrentRole, $user_role)) {
-                    return true;
-                }
-                break;
-            
-            case "administration":
-                $user_role = array(Roles::ROLE_SUPERADMIN,  Roles::ROLE_AGENT_ADMIN, Roles::ROLE_ADMIN);
-                if (in_array($CurrentRole, $user_role)) {
-                    return true;
-                }
-                break;
-
-            default:
-                return false;
-        }
-    }
+    
 
     /**
-     * Creates a new model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
+     * Creates a new model. Register and Preregister a visitor page
      */
     public function actionCreate() {
         $session = new CHttpSession;
@@ -98,16 +75,17 @@ class VisitorController extends Controller {
 
     /**
      * Updates a particular model.
-     * If update is successful, the browser will be redirected to the 'view' page.
+     * If update is successful, the browser will be redirected to the 'admin' page.
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
         $visitorService = new VisitorServiceImpl();
         $session = new CHttpSession;
-        $view = 0;
+        // if view value is 1 do not redirect page else redirect to admin
+        $isViewedFromModal = 0;
         if (isset($_GET['view'])) {
-            $view = 1;
+            $isViewedFromModal = 1;
         }
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
@@ -115,7 +93,7 @@ class VisitorController extends Controller {
         if (isset($_POST['Visitor'])) {
             $model->attributes = $_POST['Visitor'];
             if ($visitorService->save($model, NULL, $session['id'])) {
-                switch ($view){
+                switch ($isViewedFromModal){
                     case "1":
                         break;
 
@@ -265,7 +243,7 @@ class VisitorController extends Controller {
     }
 
     public function actionCheckEmailIfUnique($id) {
-        if (Visitor::model()->checkIfEmailAddressIsTaken($id)) {
+        if (Visitor::model()->isEmailAddressTaken($id)) {
             $aArray[] = array(
                 'isTaken' => 1,
             );

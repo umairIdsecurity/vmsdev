@@ -8,7 +8,7 @@
 $session = new CHttpSession;
 
 $tenant = '';
-$tenant_agent = '';
+$tenantAgent = '';
 if (isset($_GET['tenant'])) {
     $tenant = $_GET['tenant'];
 } elseif($session['role'] != Roles::ROLE_SUPERADMIN){
@@ -16,14 +16,14 @@ if (isset($_GET['tenant'])) {
 }
 
 if (isset($_GET['tenant_agent'])) {
-    $tenant_agent = $_GET['tenant_agent'];
+    $tenantAgent = $_GET['tenant_agent'];
 } elseif($session['role'] != Roles::ROLE_SUPERADMIN){
-    $tenant_agent = $session['tenant_agent'];
+    $tenantAgent = $session['tenant_agent'];
 }
 
-$companyid = '';
+$companyId = '';
 if ($this->action->id == 'update') {
-    $companyid = $_GET['id'];
+    $companyId = $_GET['id'];
 }
 ?>
 
@@ -43,7 +43,7 @@ if ($this->action->id == 'update') {
     <?php echo $form->errorSummary($model); ?>
 
     <input type="hidden" id="Company_tenant" name="Company[tenant]" value="<?php echo $tenant; ?>">
-    <input type="hidden" id="Company_tenant_agent" name="Company[tenant_agent]" value="<?php echo $tenant_agent; ?>">
+    <input type="hidden" id="Company_tenant_agent" name="Company[tenant_agent]" value="<?php echo $tenantAgent; ?>">
     <table>
         <tr>
             <td style="width:160px;"><?php echo $form->labelEx($model, 'name'); ?></td>
@@ -70,7 +70,7 @@ if ($this->action->id == 'update') {
                     echo "style='display:none !important;'";
                 }
                 ?>>
-                    <?php if ($companyid != '') { ?><img id='companyLogo' src="<?php echo Yii::app()->request->baseUrl . "/" . $model->getCompanyLogo($companyid); ?>"/>
+                    <?php if ($companyId != '') { ?><img id='companyLogo' src="<?php echo Yii::app()->request->baseUrl . "/" . $model->getCompanyLogo($companyId); ?>"/>
                     <?php } else { ?> 
                         <img id='companyLogo' src="<?php
                         if (isset($_POST['Company']['logo'])) {

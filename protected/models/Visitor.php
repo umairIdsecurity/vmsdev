@@ -194,11 +194,11 @@ class Visitor extends CActiveRecord {
         }
     }
 
-    public function findAllCompanyWithSameTenant($id) {
+    public function findAllCompanyWithSameTenant($tenantId) {
         $aArray = array();
 
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = '$id'";
+        $Criteria->condition = "tenant = '$tenantId'";
         $company = Company::model()->findAll($Criteria);
 
         foreach ($company as $index => $value) {
@@ -211,11 +211,11 @@ class Visitor extends CActiveRecord {
         return $aArray;
     }
 
-    public function findAllCompanyWithSameTenantAndTenantAgent($id, $tenantagent) {
+    public function findAllCompanyWithSameTenantAndTenantAgent($id, $tenantAgentId) {
         $aArray = array();
 
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = '$id' and tenant_agent= '$tenantagent'";
+        $Criteria->condition = "tenant = '$id' and tenant_agent= '$tenantAgentId'";
         $company = Company::model()->findAll($Criteria);
 
         foreach ($company as $index => $value) {
@@ -227,15 +227,15 @@ class Visitor extends CActiveRecord {
         return $aArray;
     }
     
-    public function saveReason($visitor_id, $visit_reason_id) {
+    public function saveReason($visitorId, $visitReasonId) {
 
         $post = new VisitorVisitReason;
-        $post->visitor = $visitor_id;
-        $post->visit_reason = $visit_reason_id;
+        $post->visitor = $visitorId;
+        $post->visit_reason = $visitReasonId;
         $post->save();
     }
     
-    public function checkIfEmailAddressIsTaken($email){
+    public function isEmailAddressTaken($email){
         $Criteria = new CDbCriteria();
         $Criteria->condition = "email = '" . $email . "' ";
         $visitorEmail = Visitor::model()->findAll($Criteria);

@@ -1,6 +1,4 @@
 <br>
-
-
 <table class="detailsTable" style="font-size:12px;" id="logvisitTable">
     <tr>
         <td>Date Check In</td>

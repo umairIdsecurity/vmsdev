@@ -24,6 +24,7 @@ class UserController extends Controller {
      * @return array access control rules
      */
     public function accessRules() {
+        $session = new CHttpSession;
         return array(
             array('allow',
                 'actions' => array('create',
@@ -37,50 +38,26 @@ class UserController extends Controller {
             ),
             array('allow',
                 'actions' => array('update'),
-                'expression' => 'Yii::app()->controller->accessRoles("userTenant")',
+                'expression' => 'Yii::app()->controller->isTenantOfUserViewed(Yii::app()->user)',
+               
             ),
             array('allow',
                 'actions' => array('profile'),
-                'expression' => 'Yii::app()->controller->accessRoles("profile")',
+                'expression' => '(Yii::app()->user->id == ($_GET[\'id\']))',
             ),
             array('allow',
-                'actions' => array('admin','adminAjax', 'delete', 'systemaccessrules'),
-                'expression' => 'Yii::app()->controller->accessRoles("admin")',
+                'actions' => array('admin', 'adminAjax', 'delete', 'systemaccessrules'),
+                'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user, UserGroup::USERGROUP_ADMINISTRATION)',
             ),
             array('deny', // deny all users
                 'users' => array('*'),
             ),
         );
     }
-
-    public function accessRoles($action) {
-        $session = new CHttpSession;
-        $CurrentRole = $session['role'];
-
-        switch ($action) {
-            case "admin":
-                $user_role = array(Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN, Roles::ROLE_AGENT_ADMIN);
-                if (in_array($CurrentRole, $user_role)) {
-                    return true;
-                }
-                break;
-            case "userTenant":
-
-                return User::model()->validateIfUserHasSameTenantOrTenantAgent($_GET['id'], $session['role'], $session['tenant'], $session['tenant_agent']);
-                break;
-
-            case "profile":
-                if ($session['id'] == $_GET['id']) {
-                    return true;
-                } else {
-                    return false;
-                }
-                break;
-            default:
-                return false;
-        }
+    
+    public function isTenantOfUserViewed($user){
+        return User::model()->isTenantOrTenantAgentOfUserViewed($_GET['id'], $user);
     }
-
     /**
      * Creates a new model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -96,7 +73,7 @@ class UserController extends Controller {
             if (isset($_POST['User']['workstation'])) {
                 $workstation = $_POST['User']['workstation'];
             }
-            if ($userService->save($model, $session['tenant'], $session['tenant_agent'], $session['role'], $session['id'], $workstation)) {
+            if ($userService->save($model, Yii::app()->user, $workstation)) {
                 if (!isset($_GET['view'])) {
                     $this->redirect(array('admin'));
                 }
@@ -121,7 +98,7 @@ class UserController extends Controller {
         if (isset($_POST['User'])) {
             $model->attributes = $_POST['User'];
 
-            if ($userService->save($model, $session['tenant'], $session['tenant_agent'], $session['role'], $session['id'], NULL)) {
+            if ($userService->save($model,Yii::app()->user, NULL)) {
                 $this->redirect(array('admin'));
             }
         }
@@ -168,9 +145,9 @@ class UserController extends Controller {
 
         $this->render('_admin', array(
             'model' => $model,
-        ),false,true);
+                ), false, true);
     }
-    
+
     public function actionAdminAjax() {
         $model = new User('search');
         $model->unsetAttributes();  // clear any default values
@@ -180,7 +157,7 @@ class UserController extends Controller {
 
         $this->renderPartial('_admin', array(
             'model' => $model,
-        ),false,true);
+                ), false, true);
     }
 
     public function actionSystemAccessRules() {
@@ -265,7 +242,7 @@ class UserController extends Controller {
     }
 
     public function actionCheckEmailIfUnique($id, $tenant = NULL) {
-        if (User::model()->checkIfEmailAddressIsTaken($id,$tenant)) {
+        if (User::model()->isEmailAddressUnique($id, $tenant)) {
             $aArray[] = array(
                 'isTaken' => 1,
             );
@@ -274,7 +251,7 @@ class UserController extends Controller {
                 'isTaken' => 0,
             );
         };
-        
+
         $resultMessage['data'] = $aArray;
         echo CJavaScript::jsonEncode($resultMessage);
         Yii::app()->end();

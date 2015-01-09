@@ -15,17 +15,6 @@ date_default_timezone_set('Asia/Manila');
         'htmlOptions' => array("name" => "register-visit-form"),
         'enableAjaxValidation' => false,
         'enableClientValidation' => true,
-//        'clientOptions' => array(
-//            'validateOnSubmit' => true,
-//            'afterValidate' => 'js:function(form,data,hasError){
-//                        if(!hasError){
-//                            sendVisitForm();
-//                                } else {
-//                                sendVisitForm();
-//                                }
-//                                
-//                        }'
-//        ),
     ));
     ?>
  
@@ -83,10 +72,11 @@ date_default_timezone_set('Asia/Manila');
     <div class="row">
         <?php echo $form->labelEx($visitModel, 'visit_status'); ?>
         <input name="Visit[visit_status]" id="Visit_visit_status" type="text" value="<?php
+        
         if (isset($_GET['action'])) {
-            echo "2";
+            echo VisitStatus::PREREGISTERED;           
         } else {
-            echo "1";
+            echo VisitStatus::ACTIVE;
         };
         ?>">
                <?php echo $form->error($visitModel, 'visit_status'); ?>
@@ -146,8 +136,6 @@ date_default_timezone_set('Asia/Manila');
             $("#Visit_workstation").val($("#workstation").val());
         }
         
-       
-
         if ($("#Visitor_visitor_type").val() == 1) { //if type is patient
             $("#Visit_host").val("");
             $("#Visit_patient").val($("#hostId").val());
@@ -166,8 +154,6 @@ date_default_timezone_set('Asia/Manila');
             url: "<?php echo CHtml::normalizeUrl(array("visit/create")); ?>",
             data: visitForm,
             success: function(data) {
-                //window.location = "index.php?r=visitor/admin";
-              //  window.location = "index.php?r=visit/detail&id="+data.id;
             },
         });
     }

@@ -76,7 +76,6 @@ date_default_timezone_set('Asia/Manila');
     });
 
     function generateCard() {
-        //$("#generateCardModalBtn").click();
         //change modal url to pass visit id
         var url = 'index.php?r=cardGenerated/print&id=<?php echo $model->id; ?>';
         window.open(url, '_blank');
@@ -84,7 +83,6 @@ date_default_timezone_set('Asia/Manila');
     }
 
     function regenerateCard() {
-        //$("#generateCardModalBtn").click();
         //change modal url to pass visit id
         var url = 'index.php?r=cardGenerated/reprint&id=<?php echo $model->id; ?>';
         window.open(url, '_blank');

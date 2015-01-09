@@ -169,10 +169,8 @@ $this->renderPartial('visithistory', array('model' => $model,
                             sendReasonForm();
                         }
                     });
-
                 }
             });
-
         }
     }
 

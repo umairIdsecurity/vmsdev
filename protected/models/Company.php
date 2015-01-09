@@ -140,9 +140,9 @@ class Company extends CActiveRecord {
         return parent::model($className);
     }
 
-    public function getCompanyLogo($id) {
+    public function getCompanyLogo($companyId) {
         
-            $company = Company::model()->findByPK($id);
+            $company = Company::model()->findByPK($companyId);
             if ($company->logo != '') {
             $photo = Photo::model()->findByPK($company->logo);
 
@@ -150,16 +150,16 @@ class Company extends CActiveRecord {
             }
     }
 
-    public function getPhotoRelativePath($id) {
-        if ($id != '') {
-            $photo = Photo::model()->findByPK($id);
+    public function getPhotoRelativePath($photoId) {
+        if ($photoId != '') {
+            $photo = Photo::model()->findByPK($photoId);
             return $photo->relative_path;
         }
     }
 
-    public function getCompanyName($id) {
-        if ($id != '') {
-            $company = Company::model()->findByPK($id);
+    public function getCompanyName($companyId) {
+        if ($companyId != '') {
+            $company = Company::model()->findByPK($companyId);
             return $company->name;
         }
     }
@@ -181,23 +181,23 @@ class Company extends CActiveRecord {
         }
     }
 
-    public function validateIfCurrentLoggedUserCanViewTheCompany($companyId, $currentLoggedUser) {
+    public function isUserAllowedToViewCompany($companyId, $user) {
 
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "company = '" . $companyId . "' and id='" . $currentLoggedUser . "'";
-        $user = User::model()->findAll($Criteria);
+        $Criteria->condition = "company = '" . $companyId . "' and id='" . $user->id . "'";
+        $users = User::model()->findAll($Criteria);
 
-        $user = array_filter($user);
-        if (empty($user)) {
+        //$users = array_filter($users);
+        if (empty($users)) {
             return false;
         } else {
             return true;
         }
     }
 
-    public function validateIfCompanyIsUniqueWithinTheTenant($company_name, $tenant) {
+    public function isCompanyUniqueWithinTheTenant($companyName, $tenant) {
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "name = '" . $company_name . "' and tenant='" . $tenant . "'";
+        $Criteria->condition = "name = '" . $companyName . "' and tenant='" . $tenant . "'";
         $company = Company::model()->findAll($Criteria);
 
         $company = array_filter($company);
@@ -217,11 +217,11 @@ class Company extends CActiveRecord {
         return $aArray;
     }
     
-    public function findAllCompanyWithSameTenant($id) {
+    public function findAllCompanyWithSameTenant($tenant) {
         $aArray = array();
 
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = '$id'";
+        $Criteria->condition = "tenant = '$tenant'";
         $company = Company::model()->findAll($Criteria);
 
         foreach ($company as $index => $value) {

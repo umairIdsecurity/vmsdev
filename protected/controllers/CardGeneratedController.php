@@ -88,7 +88,7 @@ class CardGeneratedController extends Controller {
             'created_by' => $session['id'],
         );
         $cardGenerated->attributes = $cardGeneratedArray;
-        if ($cardGeneratedService->save($cardGenerated, $model, $session['tenant'], $session['tenant_agent'], $session['id'])) {
+        if ($cardGeneratedService->save($cardGenerated, $model,Yii::app()->user)) {
 
             $this->render('print', array(
                 'model' => $model,
@@ -118,7 +118,7 @@ class CardGeneratedController extends Controller {
         );
         $cardGenerated->attributes = $cardGeneratedArray;
 
-        if ($cardGeneratedService->updateCard($cardGenerated, $model, $session['tenant'], $session['tenant_agent'], $session['id'])) {
+        if ($cardGeneratedService->updateCard($cardGenerated, $model, Yii::app()->user)) {
             $this->render('print', array(
                 'model' => $model,
                 'visitorModel' => $visitorModel,

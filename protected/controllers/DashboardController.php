@@ -27,11 +27,13 @@ class DashboardController extends Controller {
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
                 'actions' => array('ViewMyVisitors'),
-                'expression' => 'Yii::app()->controller->checkIfUserCanAccess("viewmyvisitor")',
+                'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_STAFFMEMBER)',
+           
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
                 'actions' => array('AdminDashboard'),
-                'expression' => 'Yii::app()->controller->checkIfUserCanAccess("admindashboard")',
+                'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
+            
             ),
             array('deny', // deny all users
                 'users' => array('*'),
@@ -39,29 +41,6 @@ class DashboardController extends Controller {
         );
     }
 
-    public function checkIfUserCanAccess($action) {
-        $session = new CHttpSession;
-        $CurrentRole = $session['role'];
-
-        switch ($action) {
-            case "viewmyvisitor":
-                $user_role = array(Roles::ROLE_STAFFMEMBER);
-                if (in_array($CurrentRole, $user_role)) {
-                    return true;
-                }
-                break;
-
-            case "admindashboard":
-                $user_role = array(Roles::ROLE_ADMIN, Roles::ROLE_AGENT_ADMIN);
-                if (in_array($CurrentRole, $user_role)) {
-                    return true;
-                }
-                break;
-
-            default:
-                return false;
-        }
-    }
 
     /**
      * Displays a particular model.
@@ -215,9 +194,6 @@ class DashboardController extends Controller {
     }
 
     public function actionAddHost() {
-       // $this->layout = '//layouts/contentIframeLayout';
-        //  $this->layout = '//layouts/column2';
-        
         $userModel = new User();
         $patientModel = new Patient();
 

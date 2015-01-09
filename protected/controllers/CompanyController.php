@@ -1,5 +1,4 @@
 <?php
-
 class CompanyController extends Controller {
 
     public $layout = '//layouts/column2';
@@ -19,20 +18,16 @@ class CompanyController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow all users to perform 'GetCompanyList' and 'GetCompanyWithSameTenant' actions
-                'actions' => array('GetCompanyList','GetCompanyWithSameTenant','create'),
+                'actions' => array('GetCompanyList', 'GetCompanyWithSameTenant', 'create'),
                 'users' => array('@'),
             ),
-//            array('allow', // allow authenticated user to perform 'create' and 'update' actions
-//                'actions' => array('create'),
-//                'expression' => 'Yii::app()->controller->accessRoles("canCreateCompany")',
-//            ),    
-            array('allow', // allow authenticated user to perform 'create' and 'update' actions
+            array('allow', // allow user if same company
                 'actions' => array('update'),
-                'expression' => 'Yii::app()->controller->accessRoles("update")',
+                'expression' => 'Yii::app()->controller->isUserAllowedToUpdate(Yii::app()->user)',
             ),
-            array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin','adminAjax', 'delete'),
-                'expression' => 'Yii::app()->controller->accessRoles("admin")',
+            array('allow', // allow superadmin user to perform 'admin' and 'delete' actions
+                'actions' => array('admin', 'adminAjax', 'delete'),
+                'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_SUPERADMIN)',
             ),
             array('deny', // deny all users
                 'users' => array('*'),
@@ -40,56 +35,35 @@ class CompanyController extends Controller {
         );
     }
 
-    public function accessRoles($action) {
-        $session = new CHttpSession;
-        $CurrentRole = $session['role'];
-
-        switch ($action) {
-            case "admin":
-                $user_role = array(Roles::ROLE_SUPERADMIN);
-                if (in_array($CurrentRole, $user_role)) {
-                    return true;
-                }
-                break;
-            case "canCreateCompany":
-                $user_role = array(Roles::ROLE_SUPERADMIN, Roles::ROLE_ADMIN);
-                if (in_array($CurrentRole, $user_role)) {
-                    return true;
-                }
-                break;
-            case "update":
-
-                if ($session['role'] == Roles::ROLE_SUPERADMIN) {
-                    return true;
-                } else {
-                    return Company::model()->validateIfCurrentLoggedUserCanViewTheCompany($_GET['id'], $session['id']);
-                }
-                break;
-            default:
-                return false;
+    public function isUserAllowedToUpdate($user) {      
+        if ($user->role == Roles::ROLE_SUPERADMIN) {
+            return true;
+        } else {
+            $currentlyEditedCompanyId = $_GET['id'];
+            return Company::model()->isUserAllowedToViewCompany($currentlyEditedCompanyId, $user);
         }
     }
 
     public function actionCreate() {
-   //     $this->layout = '//layouts/contentIframeLayout';
+        //     $this->layout = '//layouts/contentIframeLayout';
         $model = new Company;
         $session = new CHttpSession;
         $companyService = new CompanyServiceImpl();
-        $viewFromModal = '';
+        $isUserViewingFromModal = '';
         if (isset($_GET['viewFrom'])) {
-            $viewFromModal = 1;
+            $isUserViewingFromModal = 1;
         }
         if (isset($_POST['Company'])) {
             $model->attributes = $_POST['Company'];
 
-            if ($this->checkIfCompanyIsUnique($session['tenant'], $session['role'], $_POST['Company']['name'], $_POST['Company']['tenant']) == 0) {
+            if ($this->isCompanyUnique($session['tenant'], $session['role'], $_POST['Company']['name'], $_POST['Company']['tenant']) == 0) {
                 if ($companyService->save($model, $session['tenant'], $session['role'], 'create')) {
                     $lastId = $model->id;
                     $cs = Yii::app()->clientScript;
                     $cs->registerScript('closeParentModal', 'window.parent.dismissModal(' . $lastId . ');', CClientScript::POS_READY);
                     $model->unsetAttributes();
 
-                    switch ($viewFromModal) {
+                    switch ($isUserViewingFromModal) {
                         case 1:
                             Yii::app()->user->setFlash('success', 'Company Successfully added!');
                             break;
@@ -108,11 +82,11 @@ class CompanyController extends Controller {
         ));
     }
 
-    private function checkIfCompanyIsUnique($sessionTenant, $sessionRole, $companyName, $selectedTenant) {
+    private function isCompanyUnique($sessionTenant, $sessionRole, $companyName, $selectedTenant) {
         if ($sessionRole == Roles::ROLE_ADMIN) {
-            $countCompany = Company::model()->validateIfCompanyIsUniqueWithinTheTenant($companyName, $sessionTenant);
+            $countCompany = Company::model()->isCompanyUniqueWithinTheTenant($companyName, $sessionTenant);
         } else {
-            $countCompany = Company::model()->validateIfCompanyIsUniqueWithinTheTenant($companyName, $selectedTenant);
+            $countCompany = Company::model()->isCompanyUniqueWithinTheTenant($companyName, $selectedTenant);
         }
 
         return $countCompany;
@@ -159,7 +133,7 @@ class CompanyController extends Controller {
      * Manages all models.
      */
     public function actionAdmin() {
-      //  $this->layout = '//layouts/contentIframeLayout';
+        //  $this->layout = '//layouts/contentIframeLayout';
         $model = new Company('search');
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['Company']))
@@ -167,11 +141,11 @@ class CompanyController extends Controller {
 
         $this->render('_admin', array(
             'model' => $model,
-        ),false,true);
+                ), false, true);
     }
-    
+
     public function actionAdminAjax() {
-      //  $this->layout = '//layouts/contentIframeLayout';
+        //  $this->layout = '//layouts/contentIframeLayout';
         $model = new Company('search');
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['Company']))
@@ -179,7 +153,7 @@ class CompanyController extends Controller {
 
         $this->renderPartial('_admin', array(
             'model' => $model,
-        ),false,true);
+                ), false, true);
     }
 
     /**
@@ -213,7 +187,7 @@ class CompanyController extends Controller {
         echo CJavaScript::jsonEncode($resultMessage);
         Yii::app()->end();
     }
-    
+
     public function actionGetCompanyWithSameTenant($id) {
         $resultMessage['data'] = Company::model()->findAllCompanyWithSameTenant($id);
         echo CJavaScript::jsonEncode($resultMessage);

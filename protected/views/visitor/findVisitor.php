@@ -1,23 +1,21 @@
 <?php
 /* @var $this VisitorController */
 /* @var $model Visitor */
-$search = $_GET['id'];
-?>
+$visitorName = $_GET['id'];
 
-<?php
 $model = new Visitor;
 $criteria = new CDbCriteria;
-$criteria->addCondition('CONCAT(first_name," ",last_name) like "%' . $search . '%" or first_name like "%' . $search . '%" or last_name like "%' . $search . '%"');
+$criteria->addCondition('CONCAT(first_name," ",last_name) like "%' . $visitorName . '%" or first_name like "%' . $visitorName . '%" or last_name like "%' . $visitorName . '%"');
 
 $model->unsetAttributes();
 
-$d = new CActiveDataProvider($model, array(
+$customDataProvider = new CActiveDataProvider($model, array(
     'criteria' => $criteria,
         ));
 
 $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'findvisitor-grid',
-    'dataProvider' => $d,
+    'dataProvider' => $customDataProvider,
     'columns' => array(
         array(
             'name' => 'first_name',
@@ -35,21 +33,21 @@ $this->widget('zii.widgets.grid.CGridView', array(
     ),
 ));
 
-function checkIfanActiveVisitExists($visitor_id) {
-    $results = Visit::model()->countByAttributes(array("visitor" => $visitor_id, "visit_status" => "1"));
+function checkIfanActiveVisitExists($visitorId) {
+    $results = Visit::model()->countByAttributes(array("visitor" => $visitorId, "visit_status" => "1"));
     return $results;
 }
 
-function displaySelectVisitorButton($data) {
+function displaySelectVisitorButton($visitorData) {
     return CHtml::link("Select Visitor", "#", array(
-                "id" => $data["id"],
-                "onclick" => "parent.closeAndPopulateField({$data['id']})",
+                "id" => $visitorData["id"],
+                "onclick" => "parent.closeAndPopulateField({$visitorData['id']})",
                     )
     );
 }
 
-function returnVisitorDetailLink($visitor_id) {
-    $visit_id = Visit::model()->find("visitor='" . $visitor_id . "' and visit_status=1")->id;
+function returnVisitorDetailLink($visitorId) {
+    $visit_id = Visit::model()->find("visitor='" . $visitorId . "' and visit_status=1")->id;
     $url = '/index.php?r=visit/detail&id=' . $visit_id;
     return '<a class="linkToVisitorDetailPage" href="'.$url.'" >Visitor has an active visit</a>';
 }

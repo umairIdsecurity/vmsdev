@@ -27,32 +27,15 @@ class WorkstationController extends Controller {
         return array(
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
                 'actions' => array('admin','adminAjax' ,'delete','create','update'),
-                'expression' => 'Yii::app()->controller->accessRoles("admin")',
+                'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
+           
             ),
             array('deny', // deny all users
                 'users' => array('*'),
             ),
         );
     }
-
-    public function accessRoles($action) {
-        $session = new CHttpSession;
-        $CurrentRole = $session['role'];
-
-        switch ($action) {
-            case "admin":
-                $user_role = array(Roles::ROLE_SUPERADMIN, Roles::ROLE_ADMIN, Roles::ROLE_AGENT_ADMIN);
-                if (in_array($CurrentRole, $user_role)) {
-                    return true;
-                }
-                break;
-            default:
-                return false;
-        }
-    }
-
     
-
     /**
      * Creates a new model.
      * If creation is successful, the browser will be redirected to the 'view' page.

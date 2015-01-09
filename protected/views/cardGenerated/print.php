@@ -3,19 +3,19 @@ error_reporting(E_ALL);
 $session = new CHttpSession;
 // clean up the input
 $model = Visit::model()->findByPk($_GET['id']);
-$card_type = CardType::$CARD_TYPE_LIST[$model->card_type];
-$company_name = "Not Available";
-$full_name = $visitorModel->first_name . ' ' . $visitorModel->last_name;
+$cardType = CardType::$CARD_TYPE_LIST[$model->card_type];
+$companyName = "Not Available";
+$visitorName = $visitorModel->first_name . ' ' . $visitorModel->last_name;
 if ($visitorModel->company != '') {
-    $company_name = Company::model()->findByPk($visitorModel->company)->name;
+    $companyName = Company::model()->findByPk($visitorModel->company)->name;
 }
 
 $dateExpiry = date('d/m/Y');
 if ($model->card_type != CardType::SAME_DAY_VISITOR) {
     $dateExpiry = Yii::app()->dateFormatter->format("d/MM/y", strtotime($model->date_out));
 }
-$text = $card_type . "\n" . $full_name . "\n" . $company_name . "\n" . $dateExpiry;
-//$text = "hello";
+$text = $cardType . "\n" . $visitorName . "\n" . $companyName . "\n" . $dateExpiry;
+
 if (empty($text)) {
     fatal_error('Error: Text not properly formatted.');
 }
@@ -79,8 +79,8 @@ header('Content-type: ' . $mime_type);
 imagepng($image);
 
 $usernameHash = hash('adler32', $visitorModel->email);
-$unique_fileName = 'card' . $usernameHash . '-' . time() . ".png";
-$path = "uploads/card_generated/" . $unique_fileName;
+$uniqueFileName = 'card' . $usernameHash . '-' . time() . ".png";
+$path = "uploads/card_generated/" . $uniqueFileName;
 imagepng($image, $path);
 ImageDestroy($image);
 

@@ -22,13 +22,13 @@ if (isset($_FILES["myfile"])) {
     $error = $_FILES["myfile"]["error"];
     if (!is_array($_FILES["myfile"]["name"])) { //single file
         $fileName = $_FILES["myfile"]["name"];
-        $unique_fileName = $usernameHash.'-'.time() . ".jpg";
-        $path = "uploads" . $folderKey . $unique_fileName;
-        move_uploaded_file($_FILES["myfile"]["tmp_name"], $output_dir . $unique_fileName);
+        $uniqueFileName = $usernameHash.'-'.time() . ".jpg";
+        $path = "uploads" . $folderKey . $uniqueFileName;
+        move_uploaded_file($_FILES["myfile"]["tmp_name"], $output_dir . $uniqueFileName);
         //save in database
         $connection = Yii::app()->db;
         $command = $connection->createCommand('INSERT INTO `photo` '
-                . '(`filename`, `unique_filename`, `relative_path`) VALUES ("' . $fileName . '","' . $unique_fileName . '","' . $path . '" )');
+                . '(`filename`, `unique_filename`, `relative_path`) VALUES ("' . $fileName . '","' . $uniqueFileName . '","' . $path . '" )');
         $command->query();
         //update company
         if ($action == 'update') {

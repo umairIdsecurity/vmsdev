@@ -1,6 +1,5 @@
 <?php
 $session = new CHttpSession;
-
 ?>
 <div id="findAddHostRecordDiv" class="findAddHostRecordDiv form">
     <input type="text" id="sessionRole" value="<?php echo $session['role']; ?>" style="display:none;" >

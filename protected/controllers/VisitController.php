@@ -32,18 +32,16 @@ class VisitController extends Controller {
             array('allow',
                 'actions' => array( 'PrintEvacuationReport',
                     'visitorRegistrationHistory',
-                    
                     'exportFileHistory',
                     'exportFileVisitorRecords',
                     'exportVisitorRecords',
-                    
                 ),
-                'expression' => 'Yii::app()->controller->accessRoles("administration")',
+                'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
             ),
             array('allow',
                 'actions' => array( 'RunScheduledJobsClose','RunScheduledJobsExpired'
                 ),
-                'expression' => 'Yii::app()->controller->accessRoles("superadmin")',
+                'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_SUPERADMIN)',
             ),
             array('deny', // deny all users
                 'users' => array('*'),
@@ -51,37 +49,13 @@ class VisitController extends Controller {
         );
     }
 
-    public function accessRoles($action) {
-        $session = new CHttpSession;
-        $CurrentRole = $session['role'];
-
-        switch ($action) {
-            case "administration":
-                $user_role = array(Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN, Roles::ROLE_AGENT_ADMIN);
-                if (in_array($CurrentRole, $user_role)) {
-                    return true;
-                }
-                break;
-                
-            case "superadmin":
-                $user_role = array(Roles::ROLE_SUPERADMIN);
-                if (in_array($CurrentRole, $user_role)) {
-                    return true;
-                }
-                break;
-
-            default:
-                return false;
-        }
-    }
-
     /**
      * Creates a new model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
+     * If creation is successful, the browser will be redirected to the 'detail' page.
      */
     public function actionCreate() {
         $model = new Visit;
-        $visit = new VisitServiceImpl();
+        $visitService = new VisitServiceImpl();
         $session = new CHttpSession;
 
         // Uncomment the following line if AJAX validation is needed
@@ -89,7 +63,7 @@ class VisitController extends Controller {
 
         if (isset($_POST['Visit'])) {
             $model->attributes = $_POST['Visit'];
-            if ($visit->save($model, $session['id'])) {
+            if ($visitService->save($model, $session['id'])) {
                 $this->redirect(array('visit/detail', 'id' => $model->id));
             }
         }
@@ -101,12 +75,11 @@ class VisitController extends Controller {
 
     /**
      * Updates a particular model.
-     * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
-        $visit = new VisitServiceImpl();
+        $visitService = new VisitServiceImpl();
         $session = new CHttpSession;
 
         // Uncomment the following line if AJAX validation is needed
@@ -114,7 +87,7 @@ class VisitController extends Controller {
 
         if (isset($_POST['Visit'])) {
             $model->attributes = $_POST['Visit'];
-            if ($visit->save($model, $session['id'])) {
+            if ($visitService->save($model, $session['id'])) {
                 
             }
         }
@@ -186,7 +159,10 @@ class VisitController extends Controller {
             Yii::app()->end();
         }
     }
-
+    /*Displays details of a visit
+     *@param integer $id the ID of the model to be viewed
+     *   
+     */       
     public function actionDetail($id) {
         $model = $this->loadModel($id);
         $visitorModel = Visitor::model()->findByPk($model->visitor);
@@ -204,7 +180,6 @@ class VisitController extends Controller {
         }
         $hostModel = User::model()->findByPk($host);
 
-        $visitorService = new VisitorServiceImpl();
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
@@ -243,7 +218,7 @@ class VisitController extends Controller {
             'model' => $model,
         ));
     }
-
+    /* Evacuation Report */
     public function actionEvacuationReport() {
         $model = new Visit('search');
         $model->unsetAttributes();  // clear any default values
@@ -277,7 +252,7 @@ class VisitController extends Controller {
             'model' => $model,
         ),false,true);
     }
-
+    
     public function actionVisitorRegistrationHistory() {
         $model = new Visit('search');
         $model->unsetAttributes();  // clear any default values
@@ -367,7 +342,7 @@ class VisitController extends Controller {
         Yii::app()->request->sendFile('Evacuationreport'.time().'.csv', Yii::app()->user->getState('export'));
         Yii::app()->user->clearState('export');
     }
-
+    /* Export Visitor Registration History */
     public function actionExportHistory() {
         $fp = fopen('php://temp', 'w');
 
@@ -462,7 +437,6 @@ class VisitController extends Controller {
          * Write a header of csv file
          */
         $headers = array(
-            
             'card',
             'visitor0.first_name',
             'visitor0.last_name',
@@ -525,7 +499,6 @@ class VisitController extends Controller {
     
     public function actionRunScheduledJobsClose() {
         
-        /*Run expiredVisits after closevisit to avoid query confusion*/
         echo "Scheduled Jobs - Close <br>";
         $visit = new VisitServiceImpl();
         $visit->notreturnCardIfVisitIsClosedAutomatically();
@@ -533,7 +506,6 @@ class VisitController extends Controller {
     
     public function actionRunScheduledJobsExpired() {
         
-        /*Run expiredVisits after closevisit to avoid query confusion*/
         echo "Scheduled Jobs - Expired <br>";
         $visit = new VisitServiceImpl();
         $visit->notreturnCardIfVisitIsExpiredAutomatically();

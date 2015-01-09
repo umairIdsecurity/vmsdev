@@ -273,7 +273,7 @@ $session = new CHttpSession;
                         </select><?php echo "<br>" . $form->error($model, 'tenant'); ?>
                     </td>
                     <td id="visitorTenantAgentRow" <?php
-                    if ($session['role'] != 5) {
+                    if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                         echo " class='hidden' ";
                     }
                     ?>><?php echo $form->labelEx($model, 'tenant_agent'); ?><br>
@@ -367,8 +367,6 @@ $session = new CHttpSession;
     function populateVisitWorkstation(value) {
 
         $("#Visit_workstation").val(value.value);
-        //  alert($("#workstation").val());
-        // alert(value.value);
     }
     function autoResize() {
         var newheight;
@@ -407,7 +405,6 @@ $session = new CHttpSession;
                     if (index == a.length - 1)
                     {
                         var dd = document.getElementById('Visit_reason');
-                        // alert(textToFind);
                         for (var i = 0; i < dd.options.length; i++) {
                             if (dd.options[i].text === textToFind) {
                                 dd.selectedIndex = i;
@@ -418,8 +415,6 @@ $session = new CHttpSession;
 
                 });
 
-
-                // $("#Visit_reason").val(textToFind);
                 $("#Visit_reason_search").val($("#Visit_reason").val());
                 $("#register-reason-form").hide();
                 $("#Visit_reason").show();
@@ -433,17 +428,13 @@ $session = new CHttpSession;
                 $("#visitReasonFormField").val($("#Visit_reason_search").val());
                 if ($("#selectedVisitorInSearchTable").val() == '0') { //if visitor is not from search
                     sendVisitorForm();
-                    // alert("visitor is not from search");
                 } else if ($("#selectedVisitorInSearchTable").val() != '0') { //if visitor is from search
-                    // alert("visitor from search");
                     if ($("#selectedHostInSearchTable").val() != 0) { //if host is from search
                         $("#visitReasonFormField").val($("#Visit_reason_search").val());
                         $("#Visit_patient").val($("#hostId").val());
                         $("#Visit_host").val($("#hostId").val());
-                        // alert("host from search");
                         populateVisitFormFields();
                     } else {
-                        // alert("add host");
                         if ($("#Visitor_visitor_type").val() == 1) { //if patient
                             sendPatientForm();
                         } else {
@@ -459,11 +450,9 @@ $session = new CHttpSession;
     function ifSelectedIsOtherShowAddReasonDiv(reason) {
         if (reason.value == 'Other') {
             $("#register-reason-form").show();
-            //  $("#Visit_reason").hide();
 
         } else {
             $("#register-reason-form").hide();
-            // $("#Visit_reason").show();
         }
 
         $("#Visit_reason").val(reason.value);
@@ -474,11 +463,9 @@ $session = new CHttpSession;
         $("#VisitReason_reason_search").val("");
         if (reason.value == 'Other') {
             $("#register-reason-form-search").show();
-            //  $("#Visit_reason").hide();
 
         } else {
             $("#register-reason-form-search").hide();
-            // $("#Visit_reason").show();
         }
 
         $("#Visit_reason").val(reason.value);
@@ -486,7 +473,6 @@ $session = new CHttpSession;
     }
 
     function sendVisitorForm() {
-
         var form = $("#register-form").serialize();
         $.ajax({
             type: "POST",
@@ -525,14 +511,13 @@ $session = new CHttpSession;
     }
 
     function sendReasonForm() {
+        var reasonForm;
         if ($("#Visit_reason").val() == 'Other' || $("#Visit_reason_search").val() == 'Other')
         {
             if ($("#selectedVisitorInSearchTable").val() != '0') {
-                var reasonForm = $("#register-reason-form-search").serialize();
-                //alert("searchreason");
+                reasonForm = $("#register-reason-form-search").serialize();
             } else {
-                var reasonForm = $("#register-reason-form").serialize();
-                //alert("add visitor reason");
+                reasonForm = $("#register-reason-form").serialize();
             }
 
             $.ajax({
@@ -546,10 +531,7 @@ $session = new CHttpSession;
         }
         else {
             sendVisitorForm();
-            // alert("with exstng reason");
         }
-
-
     }
 
     function addCompany() {

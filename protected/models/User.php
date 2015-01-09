@@ -322,15 +322,15 @@ class User extends VmsActiveRecord {
         return User::model()->findAll($criteria);
     }
 
-    public function validateIfUserHasSameTenantOrTenantAgent($currentlyEditedUserId, $currentLoggedUserRole, $currentLoggedUserTenant, $currentLoggedUserTenantAgent) {
+    public function isTenantOrTenantAgentOfUserViewed($currentlyEditedUserId, $user) {
 
         $connection = Yii::app()->db;
         $ownerCondition = "where id ='" . $currentlyEditedUserId . "'";
 
-        if ($currentLoggedUserRole == Roles::ROLE_ADMIN) {
-            $ownerCondition = "WHERE tenant = '" . $currentLoggedUserTenant . "' ";
-        } else if ($currentLoggedUserRole == Roles::ROLE_AGENT_ADMIN) {
-            $ownerCondition = "WHERE `tenant_agent`='" . $currentLoggedUserTenantAgent . "'";
+        if ($user->role == Roles::ROLE_ADMIN) {
+            $ownerCondition = "WHERE tenant = '" . $user->tenant . "' ";
+        } else if ($user->role == Roles::ROLE_AGENT_ADMIN) {
+            $ownerCondition = "WHERE `tenant_agent`='" . $user->tenant_agent . "'";
         }
         $ownerQuery = "select * FROM `user`
                             " . $ownerCondition . " and id ='" . $currentlyEditedUserId . "' 
@@ -344,21 +344,21 @@ class User extends VmsActiveRecord {
         }
     }
 
-    public function saveWorkstation($model_Id, $workstation_Id, $created_by) {
+    public function saveWorkstation($userId, $workstationId, $currentUserId) {
 
         $post = new UserWorkstations;
-        $post->user = $model_Id;
-        $post->workstation = $workstation_Id;
-        $post->created_by = $created_by;
+        $post->user = $userId;
+        $post->workstation = $workstationId;
+        $post->created_by = $currentUserId;
         $post->is_primary = '1';
         $post->save();
     }
 
-    public function findAllTenantAgent($id) {
-        $tenant = trim($id);
+    public function findAllTenantAgent($tenantId) {
+        $tenantId = trim($tenantId);
         $aArray = array();
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = '" . $tenant . "' and role=" . Roles::ROLE_AGENT_ADMIN;
+        $Criteria->condition = "tenant = '" . $tenantId . "' and role=" . Roles::ROLE_AGENT_ADMIN;
         $User = User::model()->findAll($Criteria);
         foreach ($User as $index => $value) {
             $aArray[] = array(
@@ -370,10 +370,10 @@ class User extends VmsActiveRecord {
         return $aArray;
     }
 
-    public function findCompanyDetailsOfUser($id) {
+    public function findCompanyDetailsOfUser($userId) {
         $aArray = array();
 
-        $usercompany = User::model()->findByPK($id);
+        $usercompany = User::model()->findByPK($userId);
         $company = Company::model()->findByPK($usercompany->company);
 
         $aArray[] = array(
@@ -384,11 +384,11 @@ class User extends VmsActiveRecord {
         return $aArray;
     }
 
-    public function findWorkstationsWithSameTenant($id) {
+    public function findWorkstationsWithSameTenant($tenantId) {
         $aArray = array();
 
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = '$id'";
+        $Criteria->condition = "tenant = '$tenantId'";
         $workstation = Workstation::model()->findAll($Criteria);
 
         foreach ($workstation as $index => $value) {
@@ -401,11 +401,11 @@ class User extends VmsActiveRecord {
         return $aArray;
     }
 
-    public function findWorkstationsWithSameTenantAndTenantAgent($id, $tenant) {
+    public function findWorkstationsWithSameTenantAndTenantAgent($tenantAgentId, $tenantId) {
         $aArray = array();
 
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = '" . $tenant . "' and tenant_agent='" . $id . "'";
+        $Criteria->condition = "tenant = '" . $tenantId . "' and tenant_agent='" . $tenantAgentId . "'";
         $workstation = Workstation::model()->findAll($Criteria);
         foreach ($workstation as $index => $value) {
             $aArray[] = array(
@@ -431,12 +431,12 @@ class User extends VmsActiveRecord {
         return false;
     }
 
-    public function checkIfEmailAddressIsTaken($email, $tenant ) {
+    public function isEmailAddressUnique($email, $tenantId ) {
         $Criteria = new CDbCriteria();
         $session = new CHttpSession;
-        if ($tenant != '') {
+        if ($tenantId != '') {
             if ($session['role'] == Roles::ROLE_SUPERADMIN) {
-                $Criteria->condition = "email = '" . $email . "' and tenant = '" . $tenant . "'";
+                $Criteria->condition = "email = '" . $email . "' and tenant = '" . $tenantId . "'";
             } else {
                 $Criteria->condition = "email = '" . $email . "' and tenant = '" . $session['tenant'] . "'";
             }

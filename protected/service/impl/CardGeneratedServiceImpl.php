@@ -13,7 +13,7 @@
  */
 class CardGeneratedServiceImpl implements CardGeneratedService {
 
-    public function save($cardGenerated, $visit, $sessionTenant, $sessionTenantAgent, $sessionId) {
+    public function save($cardGenerated, $visit, $user) {
 
         if ($visit->card_type == CardType::MULTI_DAY_VISITOR) {
             $cardGenerated->date_expiration = $visit->date_out;
@@ -51,7 +51,7 @@ class CardGeneratedServiceImpl implements CardGeneratedService {
         return true;
     }
 
-    public function updateCard($cardGenerated, $visit, $sessionTenant, $sessionTenantAgent, $sessionId) {
+    public function updateCard($cardGenerated, $visit, $user) {
 
         if ($visit->card_type == CardType::MULTI_DAY_VISITOR) {
             $cardGenerated->date_expiration = $visit->date_out;

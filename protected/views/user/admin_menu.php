@@ -269,17 +269,6 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
 <script>
     $(document).ready(function() {
 
-
-//        
-//        $("#manageworkstations").click(function() {
-//            //e.preventDefault();
-//            // $('#managecompanies').next().slideDown('normal');
-//            var id = $(this).attr('id');
-//            alert(id);
-//            $("."+id).click();
-//        });
-    });
-
-
+    })
 </script>
 

@@ -1,6 +1,7 @@
 <?php
 /* @var $this VisitController */
 /* @var $model Visit */
+
 ?>
 <h1>Preregistered Visitors</h1>
 <br>

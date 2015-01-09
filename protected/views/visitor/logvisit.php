@@ -1,8 +1,8 @@
 <br>
 <?php
-$time_in = explode(":", '00:00:00');
+$timeIn = explode(":", '00:00:00');
 if ($visitModel->time_in != '') {
-    $time_in = explode(":", $visitModel->time_in);
+    $timeIn = explode(":", $visitModel->time_in);
 }
 ?>
 <table class="detailsTable" style="font-size:12px;" id="logvisitTable">
@@ -23,7 +23,6 @@ if ($visitModel->time_in != '') {
             'size' => '10', // textField size
             'maxlength' => '10', // textField maxlength
             'disabled' => 'disabled',
-            // 'readonly' => 'readonly',
             'placeholder' => 'dd-mm-yyyy',
         ),
         'options' => array(
@@ -44,7 +43,7 @@ if ($visitModel->time_in != '') {
 <?php for ($i = 1; $i <= 24; $i++): ?>
                     <option 
                     <?php
-                    if ($time_in[0] == $i) {
+                    if ($timeIn[0] == $i) {
                         echo " selected ";
                     }
                     ?>
@@ -55,7 +54,7 @@ if ($visitModel->time_in != '') {
                     <?php for ($i = 1; $i <= 60; $i++): ?>
                     <option 
                     <?php
-                    if ($time_in[1] == $i) {
+                    if ($timeIn[1] == $i) {
                         echo " selected ";
                     }
                     ?>
@@ -96,36 +95,29 @@ if ($visitModel->time_in != '') {
 
         $("#submitAllForms").click(function(e) {
             e.preventDefault();
-            // alert($("#Visit_visitor_type").val());
             if ($("#proposedDateOut").val() == '') {
                 $("#preregisterdateoutError").show();
             }
             else if ($("#Visit_visitor_type").val() == 1) { //if patient type
                 $("#preregisterdateoutError").hide();
                 sendReasonForm();
-                // alert("patient");
             } else {
                 $("#preregisterdateoutError").hide();
-                /// alert('corporate');
                 if (($("#selectedHostInSearchTable").val() != '' && $("#search-host").val() != '')) { //if host is from search
-                    //  alert("host from search ");
+                    
                     if ($("#selectedVisitorInSearchTable").val() != '0') { // if visitor is from search
 
                         if ($("#VisitReason_reason_search").val() != 0 && $("#Visit_reason_search").val() == 'Other') {
                             sendReasonForm();
-                            //alert("visitor from search with new reason");
                         } else {
                             populateVisitFormFields();
-                            //  alert("visitor from search with exstng reason");
                         }
                         $("#searchTextHostErrorMessage").hide();
                     }
                     else {
                         $("#searchTextHostErrorMessage").hide();
                         sendReasonForm();
-                        //  alert("visitor not search ");
                     }
-
                 }
 
                 else {
@@ -136,10 +128,8 @@ if ($visitModel->time_in != '') {
                     }
                     else if ($("#selectedVisitorInSearchTable").val() == 0) {
                         sendVisitorForm();
-                        // alert("visitor not from search");
                     } else {
                         sendHostForm();
-                        // alert("visitor from search")
                     }
                 }
             }

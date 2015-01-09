@@ -376,7 +376,10 @@ class Visit extends CActiveRecord {
     }
 
     public function updateVisitsToClose() {
-        
+        /* update visit status to close and card status to not return if
+         * current date is greater than date out and if visit status is still active
+         * and card status is still active and card type is same day visitor  
+         */
         try {
             $commandUpdateCard = "";
             
@@ -400,7 +403,10 @@ class Visit extends CActiveRecord {
     }
 
     public function updateVisitsToExpired() {
-        
+        /* update visit status to expired and card status to not returned if
+         * current date is greater than date expiration and visit status is still active
+         * and card status is still active and if card type is multi day visitor
+         */
         try {
             $command = Yii::app()->db->createCommand("UPDATE visit
                     LEFT JOIN card_generated ON card_generated.id = visit.`card` 

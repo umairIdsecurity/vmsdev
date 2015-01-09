@@ -1,4 +1,3 @@
-
 <?php
 /* @var $this VisitorController */
 /* @var $model Visitor */
@@ -7,9 +6,9 @@ $session = new CHttpSession;
 <input type="text" id="getcurrentUrl" value="<?php
 if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
     if (isset($_GET['p'])) {
-        echo $_GET['p'];
+        echo $_GET['p']; //check if preregister page
     } else {
-        echo "d";
+        echo "1";
     }
 } else {
     echo "";
@@ -22,30 +21,35 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
         echo "Register";
     };
     ?> a Visitor</h1>
+
 <dl class="tabs <?php if (!isset($_GET['action'])) { ?> four-up <?php
 } else {
     echo 'three-up';
 }
 ?>">
-    <dt id="selectCardA" style="display:none;border-top-left-radius: 5px ! important;">Select Card Type</dt>
-    <dd class="active" id="selectCard" style="border-top-left-radius: 5px ! important;">
-        <a href="#step1" id="selectCardB" style="border-top-left-radius: 5px ! important;">Select Card Type</a>
+    <dt id="selectCardA" style="display:none;" class="borderTopLeftRadius">Select Card Type</dt>
+    <dd class="active borderTopLeftRadius" id="selectCard" >
+        <a href="#step1" id="selectCardB" class="borderTopLeftRadius">Select Card Type</a>
     </dd>
     <dt id="findVisitorA">Find or Add New Visitor Record</dt>
     <dd style="display:none;" id="findVisitor"><a href="#step2" id="findVisitorB">Find or Add New Visitor Record</a></dd>
 
-    <dt id="findHostA" <?php if (isset($_GET['action'])) { ?> style="border-top-right-radius: 5px ! important;" <?php } ?>>Find or Add Host</dt>
-    <dd style="display:none;<?php
+    <dt id="findHostA" <?php if (isset($_GET['action'])) { 
+        ?> 
+            class="borderTopLeftRadius" 
+        <?php } ?>>Find or Add Host</dt>
+    
+    <dd style="display:none;" <?php
     if (isset($_GET['action'])) {
-        echo "border-top-right-radius: 5px ! important;";
+        echo "class='borderTopRightRadius'";
     }
     ?>" id="findHost">
-        <a href="#step3" id="findHostB" <?php if (isset($_GET['action'])) { ?> style="border-top-right-radius: 5px ! important;" <?php } ?>>Find or Add Host</a>
+        <a href="#step3" id="findHostB" <?php if (isset($_GET['action'])) { ?> class="borderTopRightRadius" <?php } ?>>Find or Add Host</a>
     </dd>
     <?php if (!isset($_GET['action'])) { ?>
-        <dt id = "logVisitA" style = "border-top-right-radius: 5px ! important;">Log Visit</dt>
-        <dd style = "display:none;border-top-right-radius: 5px ! important;" id = "logVisit">
-            <a href = "#step4" id = "logVisitB" style = "border-top-right-radius: 5px ! important;">Log Visit</a>
+        <dt id = "logVisitA" class="borderTopRightRadius">Log Visit</dt>
+        <dd style = "display:none;" id="logVisit" class="borderTopRightRadius">
+            <a href = "#step4" id = "logVisitB" class="borderTopRightRadius">Log Visit</a>
         </dd>
     <?php }
     ?>
@@ -119,8 +123,6 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
                 } else {
                     getHostCompanyWithSameTenantAndTenantAgent($("#User_tenant").val(), $("#User_tenant_agent").val());
                 }
-
-
             }
         }
 
@@ -683,7 +685,6 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
         var x = new Date();
         var currenttime = x.getHours() + ":" + x.getMinutes() + ":" + x.getSeconds();
 
-        //document.getElementById('Visit_time_in').innerHTML = x;
         $("#Visit_time_inLog").val(currenttime);
         $("#Visit_time_in").val(currenttime);
         $("#Visit_time_in_hours").val(x.getHours());

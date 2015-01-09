@@ -26,12 +26,8 @@ class PatientController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'CheckPatientIfUnique', 'GetIdOfUser'),
+                'actions' => array('create', 'update', 'CheckPatientIfUnique', 'GetIdOfUser','admin','delete'),
                 'users' => array('@'),
-            ),
-            array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin', 'delete'),
-                'users' => array('admin'),
             ),
             array('deny', // deny all users
                 'users' => array('*'),
@@ -123,7 +119,7 @@ class PatientController extends Controller {
     }
 
     public function actionCheckPatientIfUnique($id) {
-        if (Patient::model()->checkIfPatientNameIsTaken($id)) {
+        if (Patient::model()->isPatientNameUnique($id)) {
             echo "1";
         } else {
             echo "0";

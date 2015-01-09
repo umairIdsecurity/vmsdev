@@ -22,11 +22,6 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'value' => 'User::model()->getUserRole($data->role)',
             'filter' => getAssignableRoles($session['role']),
         ),
-//        array(
-//            'name' => 'workstation.workstation',
-//            'header' => 'Assigned Workstations',
-//            'value' => 'UserWorkstations::model()->getAllworkstations($data->id)',
-//        ),
         array(
             'name' => 'assignedWorkstations',
             'filter' => CHtml::listData(Workstation::model()->findAll(array('order' => 'name ASC')), 'id', 'name'),

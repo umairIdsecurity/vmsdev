@@ -86,26 +86,11 @@ class Patient extends CActiveRecord {
         return parent::model($className);
     }
 
-    public function checkIfPatientNameIsTaken($name) {
-        $Criteria = new CDbCriteria();
-        $Criteria->condition = "name = '" . $name . "' ";
-        $patientName = Patient::model()->findAll($Criteria);
-
-        $patientName = array_filter($patientName);
-        $patientNameCount = count($patientName);
-
-        if ($patientNameCount == 0) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    public function getIdOfUser($patientname) {
+    public function getIdOfUser($patientName) {
         $aArray = array();
 
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "name = '$patientname'";
+        $Criteria->condition = "name = '$patientName'";
         $patientId = Patient::model()->findAll($Criteria);
 
         foreach ($patientId as $index => $value) {

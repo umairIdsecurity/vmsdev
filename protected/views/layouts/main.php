@@ -9,7 +9,7 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl . '/js/jquery.uploadfile.mi
 $cs->registerScriptFile(Yii::app()->request->baseUrl . '/js/jquery.form.js');
 
 
-$user_role = $session['role'];
+$userRole = $session['role'];
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" >
@@ -45,18 +45,16 @@ $user_role = $session['role'];
         <div class="container" id="page">
             <?php
             if (isset($_GET['viewFrom'])) {
-                $viewFrom = $_GET['viewFrom'];
+                $isViewedFromModal = $_GET['viewFrom'];
             } else {
-                $viewFrom = '';
+                $isViewedFromModal = '';
             }
             ?>
             <div id="header" <?php
-            if ($viewFrom != '' || $this->id == 'userWorkstations' || $this->action->id == 'findvisitor' || $this->action->id == 'findhost' || $this->action->id == 'print') {
+            if ($isViewedFromModal != '' || $this->id == 'userWorkstations' || $this->action->id == 'findvisitor' || $this->action->id == 'findhost' || $this->action->id == 'print') {
                 echo "style='display:none'";
             }
             ?>>
-
-
                 <article class="header_midbox">
                     <div id="logo" ><?php echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl . '/images/ids-logo2.jpg')); ?>
                     </div>
@@ -109,7 +107,7 @@ $user_role = $session['role'];
                                 </li>
                             <?php } ?>
                             <li style=' float:right;'>
-                                <a style="width:334px !important;text-align:right;">Logged in as <?php echo Yii::app()->user->name . ' - ' . User::model()->getUserRole($user_role); ?></a>
+                                <a style="width:334px !important;text-align:right;">Logged in as <?php echo Yii::app()->user->name . ' - ' . User::model()->getUserRole($userRole); ?></a>
                             </li> 
 
                         </ul>
@@ -122,7 +120,7 @@ $user_role = $session['role'];
             </div><!-- header -->
 
             <div class="wrapper" <?php
-            if ($viewFrom != '') {
+            if ($isViewedFromModal != '') {
                 echo "style='margin-left:180px'";
             }
             ?>>
@@ -131,7 +129,7 @@ $user_role = $session['role'];
             <div class="clear"></div>
             <br><br>
                     <div id="footer" <?php
-                         if ($viewFrom != '' || $this->id == 'userWorkstations' || $this->action->id == 'findvisitor' || $this->action->id == 'findhost' || $this->action->id == 'print') {
+                         if ($isViewedFromModal != '' || $this->id == 'userWorkstations' || $this->action->id == 'findvisitor' || $this->action->id == 'findhost' || $this->action->id == 'print') {
                              echo "style='display:none'";
                          }
                          ?>>

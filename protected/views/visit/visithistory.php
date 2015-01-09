@@ -21,7 +21,7 @@ $session = new CHttpSession;
         $model = new Visit;
         $criteria = new CDbCriteria;
         $criteria->order='date_check_out,time_check_out DESC';
-        $criteria->addCondition('visit_status=3 and visitor="' . $visitor . '"');
+        $criteria->addCondition('visit_status="'.VisitStatus::CLOSED.'" and visitor="' . $visitor . '"');
         
 
         $model->unsetAttributes();
@@ -77,7 +77,7 @@ $session = new CHttpSession;
                         'delete' => array(//the name {reply} must be same
                             'label' => 'Delete', // text label of the button
                             'imageUrl' => false, // image URL of the button. If not set or false, a text link is used, The image must be 16X16 pixels
-                            'visible' => 'checkSessionIfAllowedToDelete()',
+                            'visible' => 'isRoleAllowedToDelete()',
                             ),
                     ),
                 ),
@@ -111,7 +111,7 @@ function formatTime($time) {
     }
 }
 
-function checkSessionIfAllowedToDelete(){
+function isRoleAllowedToDelete(){
     $session = new CHttpSession;
     if($session['role'] != Roles::ROLE_STAFFMEMBER ){
         return true;

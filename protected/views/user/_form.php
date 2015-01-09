@@ -916,13 +916,13 @@ if (isset($_POST['User'])) {
         $tenant = $session['tenant'];
     }
     if (isset($_POST['User']['role'])) {
-        $user_role = $_POST['User']['role'];
+        $userRole = $_POST['User']['role'];
         if (isset($_GET['role'])) {
-            $user_role = $_GET['role'];
+            $userRole = $_GET['role'];
         }
         ?>
 
-        <input type='hidden' id='formSubmit_Role' value='<?php echo $user_role; ?>'>
+        <input type='hidden' id='formSubmit_Role' value='<?php echo $userRole; ?>'>
         <input type='hidden' id='formSubmit_TenantAgent' value='<?php echo $tenantagent; ?>'>
         <input type='hidden' id='formSubmit_Tenant' value='<?php echo $tenant; ?>'>
         <script>
@@ -991,7 +991,7 @@ if (isset($_POST['User'])) {
                         document.getElementById('User_workstation').disabled = false;
                     }
                 }
-                document.getElementById('User_role').value = '<?php echo $user_role; ?>';
+                document.getElementById('User_role').value = '<?php echo $userRole; ?>';
             });
         </script>
         <?php

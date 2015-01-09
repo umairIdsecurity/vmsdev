@@ -12,5 +12,5 @@
  */
 interface UserService {
     //put your code here
-    public function save($user, $sessionTenant, $sessionTenantAgent, $sessionRole, $sessionId, $workstation);
+    public function save($user, $userLoggedIn, $workstation);
 }

@@ -138,10 +138,10 @@ class Workstation extends CActiveRecord {
         return parent::model($className);
     }
 
-    public function getWorkstations($userid, $workstationid) {
+    public function getWorkstations($userId, $workstationId) {
 
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "user = '" . $userid . "' and workstation='" . $workstationid . "'";
+        $Criteria->condition = "user = '" . $userId . "' and workstation='" . $workstationId . "'";
         $userworkstations = UserWorkstations::model()->findAll($Criteria);
 
         $userworkstations = array_filter($userworkstations);
@@ -177,10 +177,10 @@ class Workstation extends CActiveRecord {
         return $workstations->name;
     }
 
-    public function findWorkstationAvailableForUser($user_id) {
+    public function findWorkstationAvailableForUser($userId) {
 
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "user = '$user_id'";
+        $Criteria->condition = "user = '$userId'";
         $userworkstations = UserWorkstations::model()->findAll($Criteria);
 
         $aArray = array();

@@ -1,5 +1,4 @@
 <?php
-
 $cs = Yii::app()->clientScript;
 $cs->registerScriptFile(Yii::app()->request->baseUrl . '/js/script-visitordetail-actions-cssmenu.js');
 $session = new CHttpSession;
@@ -175,7 +174,6 @@ $session = new CHttpSession;
         });
         display_ct();
         if ('<?php echo $model->card_type; ?>' == 1) {
-            //    $(".ui-datepicker-trigger").hide();
             $('.ui-datepicker-trigger[title="Select Proposed Date Out"]').hide();
 
 

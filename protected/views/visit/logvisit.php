@@ -1,9 +1,9 @@
 
 <br>
 <?php
-$time_in = explode(":", '00:00:00');
+$timeIn = explode(":", '00:00:00');
 if ($model->time_in != '') {
-    $time_in = explode(":", $model->time_in);
+    $timeIn = explode(":", $model->time_in);
 }
 $logform = $this->beginWidget('CActiveForm', array(
     'id' => 'update-log-visit-form',
@@ -75,7 +75,7 @@ $logform = $this->beginWidget('CActiveForm', array(
                 <?php for ($i = 1; $i <= 24; $i++): ?>
                     <option 
                     <?php
-                    if ($time_in[0] == $i) {
+                    if ($timeIn[0] == $i) {
                         echo " selected ";
                     }
                     ?>
@@ -86,7 +86,7 @@ $logform = $this->beginWidget('CActiveForm', array(
                 <?php for ($i = 1; $i <= 60; $i++): ?>
                     <option 
                     <?php
-                    if ($time_in[1] == $i) {
+                    if ($timeIn[1] == $i) {
                         echo " selected ";
                     }
                     ?>

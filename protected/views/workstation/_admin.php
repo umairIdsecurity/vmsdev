@@ -17,15 +17,6 @@ $this->widget('zii.widgets.grid.CGridView', array(
         'contact_name',
         'contact_number',
         'contact_email_address',
-        /*
-          'number_of_operators',
-          'assign_kiosk',
-          'password',
-          'created_by',
-          'tenant',
-          'tenant_agent',
-          'is_deleted',
-         */
         array(
             'header' => 'Actions',
             'class' => 'CButtonColumn',

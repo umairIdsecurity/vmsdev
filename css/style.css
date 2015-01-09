@@ -1062,3 +1062,11 @@ dt.tabs dt{
     margin-left: 576px;
     margin-top: -133px !important;
 }
+
+.borderTopLeftRadius {
+    border-top-left-radius: 5px ! important;
+}
+
+.borderTopRightRadius {
+    border-top-right-radius: 5px ! important;
+}

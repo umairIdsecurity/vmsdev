@@ -22,7 +22,6 @@ $session = new ChttpSession;
                 </a>
             </li>
             
-<!-- <li class=''><a href='<?php echo Yii::app()->createUrl('dashboard/addHost'); ?>' id="addhostSidebar"><span class="addhost">Add Host</span></a></li>!-->
             <li class=''><?php
                 echo CHtml::ajaxLink("Add Host", CController::createUrl('dashboard/addHost'), array(
                     'update' => '#content',
@@ -39,28 +38,3 @@ $session = new ChttpSession;
 </div>
 
 
-<script>
-
-    $(document).ready(function() {
-
-        $(".addhost").click(function(e) {
-            e.preventDefault();
-            //  var contentPanelId = jQuery(this).attr("id");
-            //  var url ;
-
-            // var url = jQuery(this).attr("href");
-            //  $("#content").html('<iframe id="contentIframe" onLoad="autoResize();" width="100%" height="100%" frameborder="0" scrolling="no" src="index.php?r=dashboard/content&page='+contentPanelId+'"></iframe>');
-            // window.location ='index.php?r=dashboard/content&page='+contentPanelId;
-        });
-    });
-
-    function autoResize() {
-        var newheight;
-
-        if (document.getElementById) {
-            newheight = document.getElementById('contentIframe').contentWindow.document.body.scrollHeight;
-        }
-        document.getElementById('contentIframe').height = (newheight - 60) + "px";
-    }
-
-</script>

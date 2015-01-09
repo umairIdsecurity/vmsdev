@@ -19,7 +19,7 @@
 	<p class="note">Fields with <span class="required">*</span> are required.</p>
 
 	<?php echo $form->errorSummary($model); ?>
-<div class="row">
+        <div class="row">
         <?php echo $form->labelEx($model, 'visitor'); ?>
         <?php echo $form->textField($model, 'visitor', array('size' => 20, 'maxlength' => 20)); ?>
         <?php echo $form->error($model, 'visitor'); ?>
@@ -71,9 +71,7 @@
 		<?php echo $form->textField($model,'date_in'); ?>
 		<?php echo $form->error($model,'date_in'); ?>
 	</div>
-
-	
-
+        
 	<div class="row">
 		<?php echo $form->labelEx($model,'date_out'); ?>
 		<?php echo $form->textField($model,'date_out'); ?>

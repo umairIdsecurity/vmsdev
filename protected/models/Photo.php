@@ -95,8 +95,8 @@ class Photo extends CActiveRecord {
         return parent::model($className);
     }
 
-    public function getRelativePathOfPhoto($id) {
-        $relativePath = Photo::model()->findByPK($id);
+    public function getRelativePathOfPhoto($photoId) {
+        $relativePath = Photo::model()->findByPK($photoId);
         
         $aArray = array();
             $aArray[] = array(

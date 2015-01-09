@@ -3,9 +3,9 @@
 $session = new CHttpSession;
 //echo $session['lastPage'];
 if (isset($_GET['viewFrom'])) {
-    $viewFrom = $_GET['viewFrom'];
+    $isViewedFromModal = $_GET['viewFrom'];
 } else {
-    $viewFrom = '';
+    $isViewedFromModal = '';
 }
 ?>
 <?php $this->beginContent('//layouts/main');
@@ -19,7 +19,6 @@ if (isset($_GET['viewFrom'])) {
             require_once(Yii::app()->basePath . '/views/visit/dashboardSidebar.php');
             
         } elseif ($this->id == 'dashboard' || $session['lastPage'] == 'dashboard') {
-            //  require_once(Yii::app()->basePath . '/views/dashboard/viewdashboardsidebar.php');
             if ($this->id != 'dashboard') {
                 $this->renderPartial("../dashboard/viewdashboardsidebar");
             } else {
@@ -39,7 +38,7 @@ if (isset($_GET['viewFrom'])) {
 </div>
 <div class="span-19">
     <div id="content" style="<?php
-if ($viewFrom != '' || $this->action->id == 'detail') {
+if ($isViewedFromModal != '' || $this->action->id == 'detail') {
     echo "border:1px solid white !important;";
 }
 ?>"

@@ -2,27 +2,22 @@
 
 /* @var $this VisitorController */
 /* @var $model Visitor */
-$search = $_GET['id'];
-$visitor_type = $_GET['visitortype'];
-?>
+$visitorName = $_GET['id'];
+$visitorType = $_GET['visitortype'];
 
-<?php
-
-    $model = new User;
-    $criteria = new CDbCriteria;
-    $criteria->addCondition('role="9" and (CONCAT(first_name," ",last_name) like "%' . $search . '%" or first_name like "%' . $search . '%" or last_name like "%' . $search . '%")');
-
-
+$model = new User;
+$criteria = new CDbCriteria;
+$criteria->addCondition('role="9" and (CONCAT(first_name," ",last_name) like "%' . $visitorName . '%" or first_name like "%' . $visitorName . '%" or last_name like "%' . $visitorName . '%")');
 
 $model->unsetAttributes();
 
-$d = new CActiveDataProvider($model, array(
+$customDataProvider = new CActiveDataProvider($model, array(
     'criteria' => $criteria,
         ));
-if ($visitor_type != VisitorType::PATIENT_VISITOR) {
+if ($visitorType != VisitorType::PATIENT_VISITOR) {
     $this->widget('zii.widgets.grid.CGridView', array(
         'id' => 'findHost-grid',
-        'dataProvider' => $d,
+        'dataProvider' => $customDataProvider,
         'columns' => array(
             array(
                 'name' => 'first_name',
@@ -34,7 +29,7 @@ if ($visitor_type != VisitorType::PATIENT_VISITOR) {
             array(
                 'header' => 'Action',
                 'type' => 'raw',
-                'htmlOptions' => array('style' => 'text-align:center','class' => 'findHostButtonColumn'),
+                'htmlOptions' => array('style' => 'text-align:center', 'class' => 'findHostButtonColumn'),
                 'value' => function($data) {
             return CHtml::link('Select Host', '#', array(
                         'id' => $data['id'],
@@ -45,5 +40,5 @@ if ($visitor_type != VisitorType::PATIENT_VISITOR) {
             ),
         ),
     ));
-} 
+}
 ?>

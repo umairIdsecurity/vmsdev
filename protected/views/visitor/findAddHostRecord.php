@@ -37,13 +37,10 @@
             'afterValidate' => 'js:function(form,data,hasError){
                         if(!hasError){
                                 var currentURL = $("#getcurrentUrl").val();
-                                //alert(currentURL);
                                 if(currentURL != "" ){
-                                 //   alert("register a visitor");
                                     showHideTabs("logVisitB", "logVisitA", "logVisit", "findHostA", "findHost", "findVisitorA", "findVisitor");   
                             
                                 } else {
-                                  //  alert("preregister a visitor");
                                     sendReasonForm();
                                 }
                             }

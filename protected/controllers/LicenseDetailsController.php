@@ -24,7 +24,7 @@ class LicenseDetailsController extends Controller {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('create', 'update'),
-                'expression' => 'Yii::app()->controller->accessRoles("canManageLicenseDetails")',
+                'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_SUPERADMIN)',
             ),
             array('deny', // deny all users
                 'users' => array('*'),
@@ -32,22 +32,7 @@ class LicenseDetailsController extends Controller {
         );
     }
     
-    public function accessRoles($action) {
-        $session = new CHttpSession;
-        $CurrentRole = $session['role'];
-
-        switch ($action) {
-            case "canManageLicenseDetails":
-                $user_role = array(Roles::ROLE_SUPERADMIN);
-                if (in_array($CurrentRole, $user_role)) {
-                    return true;
-                }
-                break;
-            
-            default:
-                return false;
-        }
-    }
+   
 
     /**
      * Updates a particular model.

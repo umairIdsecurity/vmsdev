@@ -245,8 +245,6 @@ $session = new CHttpSession;
                 });
                 $("#Visitor_tenant_agent").val(selected);
             }
-
-
         });
 
     }
@@ -311,7 +309,6 @@ $session = new CHttpSession;
 </script>
 
 <?php
-//($user['permissions'] == 'admin' ? true : false);
 if (isset($_POST['Visitor'])) {
     if (isset($_POST['Visitor']['tenant'])) {
         ?>

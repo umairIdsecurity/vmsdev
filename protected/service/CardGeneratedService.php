@@ -12,7 +12,7 @@
  */
 interface CardGeneratedService {
     //put your code here
-    public function save($cardGenerated,$visit, $sessionTenant, $sessionTenantAgent, $sessionId);
-    public function updateCard($cardGenerated,$visit, $sessionTenant, $sessionTenantAgent, $sessionId);
+    public function save($cardGenerated,$visit, $user);
+    public function updateCard($cardGenerated,$visit, $user);
   
 }

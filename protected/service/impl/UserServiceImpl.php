@@ -13,12 +13,12 @@
  */
 class UserServiceImpl implements UserService {
 
-    public function save($user, $sessionTenant, $sessionTenantAgent, $sessionRole, $sessionId, $workstation) {
+    public function save($user, $userLoggedIn, $workstation) {
         $user->date_of_birth = date('Y-m-d', strtotime($user->birthdayYear.'-'.$user->birthdayMonth.'-'.$user->birthdayDay));
 
 
         if ($user->isNewRecord) {
-            $user->created_by = $sessionId;
+            $user->created_by = $userLoggedIn->id;
         } else {
             if (Yii::app()->user->role == Roles::ROLE_SUPERADMIN) {
 
@@ -44,7 +44,7 @@ class UserServiceImpl implements UserService {
          * * */
         $company = Company::model()->findByPK($user->company);
         if (Yii::app()->controller->action->id == 'create') {
-            switch ($sessionRole) {
+            switch ($userLoggedIn->role) {
                 case Roles::ROLE_SUPERADMIN:
 
                     if ($user->role == Roles::ROLE_ADMIN) {
@@ -61,15 +61,16 @@ class UserServiceImpl implements UserService {
                     if ($user->role == Roles::ROLE_ADMIN) {
                         $this->assignTenantOfUserAndCompanyForRoleAdmin($user, $company->tenant);
                     } else if ($user->role == Roles::ROLE_AGENT_ADMIN) {
-                        $this->assignSessionTenantAndTenantAgentOfUserAndCompanyForRoleAgentAdmin($user, $company->tenant, $company->tenant_agent, $sessionTenant);
+                        $this->assignSessionTenantAndTenantAgentOfUserAndCompanyForRoleAgentAdmin($user, $company->tenant, $company->tenant_agent, $userLoggedIn);
                     } else if ($user->role == Roles::ROLE_AGENT_OPERATOR) {
                         /* if user role is agent operator, set tenant agent = tenant agent of current logged user */
-                        User::model()->updateByPk($user->id, array('tenant_agent' => $sessionTenantAgent, 'tenant' => $sessionTenant));
-                    } else if ($sessionRole == Roles::ROLE_AGENT_ADMIN) {
-                        $this->assignSessionTenantAgentForRoleStaffMember($user,$sessionTenant ,$sessionTenantAgent);
+                        User::model()->updateByPk($user->id, array('tenant_agent' => $userLoggedIn->tenant_agent, 'tenant' => $userLoggedIn->tenant));
+                    } else if ($user->role == Roles::ROLE_AGENT_ADMIN) {
+                        $this->assignSessionTenantAgentForRoleStaffMember($user,$userLoggedIn);
                     } else {
-                        User::model()->updateByPk($user->id, array('tenant' => $sessionTenant));
-                        User::model()->updateByPk($user->id, array('tenant_agent' => $sessionTenantAgent));
+                        $session = new CHttpSession;
+                        User::model()->updateByPk($user->id, array('tenant' => $userLoggedIn->tenant));
+                        User::model()->updateByPk($user->id, array('tenant_agent' => $session['tenant_agent']));
                     }
             }
         } else { //else if update
@@ -79,7 +80,7 @@ class UserServiceImpl implements UserService {
         }
 
         if ($user->role == Roles::ROLE_OPERATOR || $user->role == Roles::ROLE_AGENT_OPERATOR) {
-            User::model()->saveWorkstation($user->id, $workstation, $sessionId);
+            User::model()->saveWorkstation($user->id, $workstation, $userLoggedIn->id);
         }
         return true;
     }
@@ -110,7 +111,7 @@ class UserServiceImpl implements UserService {
         }
     }
 
-    private function assignSessionTenantAndTenantAgentOfUserAndCompanyForRoleAgentAdmin($user, $company_tenant, $company_tenant_agent, $sessionTenant) {
+    private function assignSessionTenantAndTenantAgentOfUserAndCompanyForRoleAgentAdmin($user, $company_tenant, $company_tenant_agent, $userLoggedIn) {
         if ($user->tenant == '') {
             if ($company_tenant_agent == '') {
                 Company::model()->updateByPk($user->company, array('tenant_agent' => $user->id));
@@ -121,8 +122,8 @@ class UserServiceImpl implements UserService {
 
             if ($company_tenant == '') {
 
-                Company::model()->updateByPk($user->company, array('tenant' => $sessionTenant));
-                User::model()->updateByPk($user->id, array('tenant' => $sessionTenant));
+                Company::model()->updateByPk($user->company, array('tenant' => $userLoggedIn->tenant));
+                User::model()->updateByPk($user->id, array('tenant' => $userLoggedIn->tenant));
             } else {
                 User::model()->updateByPk($user->id, array('tenant' => $company_tenant));
             }
@@ -145,11 +146,11 @@ class UserServiceImpl implements UserService {
         }
     }
 
-    public function assignSessionTenantAgentForRoleStaffMember($user, $sessionTenant,$sessionTenantAgent) {
+    public function assignSessionTenantAgentForRoleStaffMember($user, $userLoggedIn) {
         if ($user->role == Roles::ROLE_STAFFMEMBER) {
             User::model()->updateByPk($user->id, array(
-                'tenant_agent' => $sessionTenantAgent,
-                'tenant' => $sessionTenant
+                'tenant_agent' => $userLoggedIn->tenant_agent,
+                'tenant' => $userLoggedIn->tenant
             ));
         }
     }

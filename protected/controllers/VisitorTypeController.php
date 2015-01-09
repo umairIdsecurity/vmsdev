@@ -27,7 +27,8 @@ class VisitorTypeController extends Controller {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('create', 'update', 'admin', 'delete'),
-                'expression' => 'Yii::app()->controller->checkIfUserCanAccess("superadmin")',
+                'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_SUPERADMIN)',
+           
             ),
             array('deny', // deny all users
                 'users' => array('*'),
@@ -35,22 +36,6 @@ class VisitorTypeController extends Controller {
         );
     }
 
-    public function checkIfUserCanAccess($action) {
-        $session = new CHttpSession;
-        $CurrentRole = $session['role'];
-
-        switch ($action) {
-            case "superadmin":
-                $user_role = array(Roles::ROLE_SUPERADMIN);
-                if (in_array($CurrentRole, $user_role)) {
-                    return true;
-                }
-                break;
-
-            default:
-                return false;
-        }
-    }
 
     /**
      * Creates a new model.

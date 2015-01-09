@@ -85,11 +85,7 @@ if (isset($_GET['id'])) {
             <td><?php echo $form->textField($model, 'contact_number'); ?></td>
             <td><?php echo $form->error($model, 'contact_number'); ?></td>
         </tr>
-       
-        
-        
     </table>
-
 
     <button class="btn btn-success" id="submitBtn" <?php if ($session['role'] == Roles::ROLE_STAFFMEMBER){ echo "style='display:none;'"; } ?>><?php echo ($this->action->Id == 'create' ? 'Add' : 'Save') ?></button>
     <a class="btn btn-primary" id="resetPasswordBtn" onclick = "goToUpdatePassword(<?php echo $session['id'];?>)">Reset Password</a>

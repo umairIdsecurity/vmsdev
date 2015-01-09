@@ -35,7 +35,8 @@ class UserWorkstationsController extends Controller {
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
                 'actions' => array('admin', 'delete', 'create', 'update', 'index', 'view'),
-                'expression' => 'Yii::app()->controller->accessRoles("admin")',
+                'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
+           
             ),
             array('deny', // deny all users
                 'users' => array('*'),
@@ -43,21 +44,7 @@ class UserWorkstationsController extends Controller {
         );
     }
 
-    public function accessRoles($action) {
-        $session = new CHttpSession;
-        $CurrentRole = $session['role'];
-
-        switch ($action) {
-            case "admin":
-                $user_role = array(Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN, Roles::ROLE_AGENT_ADMIN);
-                if (in_array($CurrentRole, $user_role)) {
-                    return true;
-                }
-                break;
-            default:
-                return false;
-        }
-    }
+    
 
     /**
      * Displays a particular model.
@@ -131,7 +118,6 @@ class UserWorkstationsController extends Controller {
     public function actionIndex($id) {
         $session = new CHttpSession;
         if (isset($_POST['ApproveButton'])) {
-            $connection = Yii::app()->db;
 
             UserWorkstations::model()->deleteAllUserWorkstationsWithSameUserId($id);
 
@@ -145,7 +131,6 @@ class UserWorkstationsController extends Controller {
                     $userworkstation->save();
                 }
             }
-
 
             Yii::app()->user->setFlash('success', 'Workstation updated.');
         }

@@ -138,7 +138,7 @@ class VisitReason extends CActiveRecord {
         return $aArray;
     }
     
-    public function checkIfReasonIsTaken($reason){
+    public function isReasonUnique($reason){
         $Criteria = new CDbCriteria();
         $Criteria->condition = "reason = '" . $reason . "' ";
         $visitorReason = VisitReason::model()->findAll($Criteria);

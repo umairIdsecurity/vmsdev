@@ -578,12 +578,6 @@ $session = new CHttpSession;
         }
 
         if (<?php echo $model->visit_status; ?> == '3') {
-//            $("#personalDetailsLi").html("<a href='#'><span>Personal Details</span></a>");
-//            $("#contactDetailsLi").html("<a href='#'><span>Contact Details</span></a>");
-//            $("#visitorTypeDetailsLi").html("<a href='#'><span>Visitor Type</span></a>");
-//            $("#reasonLi").html("<a href='#'><span>Reason</span></a>");
-//            $("#hostDetailsLi").html("<a href='#'><span>Host Details</span></a>");
-//            $("#patientDetailsLi").html("<a href='#'><span>Patient Details</span></a>");
             $("#visitorInformationCssMenu :input").attr('disabled', true);
             $("#visitorInformationCssMenu input[type='submit']").hide();
         }

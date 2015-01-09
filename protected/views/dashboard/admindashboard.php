@@ -16,7 +16,7 @@ switch ($session['role']) {
         $workstationList = Workstation::model()->findAll($Criteria);
         break;
 }
-$x = 0;
+$x = 0; //initiate variable for foreach
 foreach ($workstationList as $workstation) {
 
     $x++;

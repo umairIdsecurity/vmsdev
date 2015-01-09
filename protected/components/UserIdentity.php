@@ -29,7 +29,12 @@ class UserIdentity extends CUserIdentity
                 $this->setState('email', $user->email);
                 $this->setState('role', $user->role);
                 $this->setState('tenant', $user->tenant);
-                $this->setState('tenant_agent', $user->tenant_agent);
+                if($user->tenant_agent == ''){
+                    $this->setState('tenant_agent', '');
+                } else {
+                    $this->setState('tenant_agent', $user->tenant_agent);
+                }
+                
                 
                 $session=new CHttpSession;
                 $session->open();
@@ -37,6 +42,7 @@ class UserIdentity extends CUserIdentity
                 $session['role']=$user->role;
                 $session['company']=$user->company;
                 $session['tenant']=$user->tenant;
+                  
                 $session['tenant_agent']=$user->tenant_agent;
                             
                 $this->errorCode=self::ERROR_NONE;

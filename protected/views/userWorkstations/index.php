@@ -42,12 +42,12 @@ foreach (Yii::app()->user->getFlashes() as $key => $message) {
                                 if (UserWorkstations::model()->checkIfWorkstationIsPrimaryOfUser($_GET['id'], $user['id']) == true) {
                                     $checked = "checked";
                                     $disabled = "disabled";
-                                    $is_primary = "1";
+                                    $isPrimary = "1";
                                     $label = "Primary";
                                 } else {
                                     $checked = "";
                                     $disabled = "";
-                                    $is_primary = "0";
+                                    $isPrimary = "0";
                                     $label="Set Primary";
                                 }
                                 echo $disabled;
@@ -59,7 +59,7 @@ foreach (Yii::app()->user->getFlashes() as $key => $message) {
                                        <?php echo $checked; ?>
                                        />
                                 <label for="setPrimary<?php echo $user['id']; ?>" id="setPrimary<?php echo $user['id']; ?>"><?php echo $label; ?></label>
-                                <input type="text" style="display:none;" name="radioSetPrimaryInput[<?php echo $user['id']; ?>]" value="<?php echo $is_primary; ?>"/>
+                                <input type="text" style="display:none;" name="radioSetPrimaryInput[<?php echo $user['id']; ?>]" value="<?php echo $isPrimary; ?>"/>
 
                             </td>
                         </tr>

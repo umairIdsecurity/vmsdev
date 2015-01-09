@@ -27,7 +27,8 @@ class VisitReasonController extends Controller {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('update', 'admin','adminAjax', 'delete'),
-                'expression' => 'Yii::app()->controller->checkIfUserCanAccess("superadmin")',
+                'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_SUPERADMIN)',
+           
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('create','GetAllReason','CheckReasonIfUnique'),
@@ -39,22 +40,6 @@ class VisitReasonController extends Controller {
         );
     }
 
-    public function checkIfUserCanAccess($action) {
-        $session = new CHttpSession;
-        $CurrentRole = $session['role'];
-
-        switch ($action) {
-            case "superadmin":
-                $user_role = array(Roles::ROLE_SUPERADMIN);
-                if (in_array($CurrentRole, $user_role)) {
-                    return true;
-                }
-                break;
-
-            default:
-                return false;
-        }
-    }
 
     /**
      * Creates a new model.
@@ -64,9 +49,11 @@ class VisitReasonController extends Controller {
         $session = new CHttpSession;
         $model = new VisitReason;
         $visitReasonService = new VisitReasonServiceImpl();
-        $viewFrom = 0;
+        
+        //if viewfrom value is 1 ->do not redirect page after submit else redirect to admin
+        $isViewedFromModal = 0;
         if (isset($_GET['register'])) {
-            $viewFrom = 1;
+            $isViewedFromModal = 1;
         }
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
@@ -75,7 +62,7 @@ class VisitReasonController extends Controller {
             $model->attributes = $_POST['VisitReason'];
             if ($visitReasonService->save($model, $session['id'])) {
 
-                switch ($viewFrom) {
+                switch ($isViewedFromModal) {
                     case 1:
                         break;
                     default:
@@ -182,13 +169,11 @@ class VisitReasonController extends Controller {
     }
     
     public function actionCheckReasonIfUnique($id) {
-        if (VisitReason::model()->checkIfReasonIsTaken($id)) {
+        if (VisitReason::model()->isReasonUnique($id)) {
             $aArray[] = array(
                 'isTaken' => 1,
             );
-           // echo "1";
         } else {
-           // echo "0";
             $aArray[] = array(
                 'isTaken' => 0,
             );

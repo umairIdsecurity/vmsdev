@@ -16,13 +16,15 @@ switch ($session['role']) {
         $workstationList = Workstation::model()->findAll($Criteria);
         break;
 }
+
+
 $x = 0; //initiate variable for foreach
 foreach ($workstationList as $workstation) {
 
     $x++;
     echo "<h1>" . $workstation->name . "</h1>";
     $merge = new CDbCriteria;
-    $merge->addCondition('workstation ="' . $workstation->id . '"');
+    $merge->addCondition('workstation ="' . $workstation->id . '" and (visit_status ="' . VisitStatus::ACTIVE . '" or visit_status ="'.VisitStatus::PREREGISTERED.'")');
     ?><div  class="admindashboardDiv"><?php
         $this->widget('zii.widgets.grid.CGridView', array(
             'id' => 'visit-gridDashboard' . $x,
@@ -32,7 +34,7 @@ foreach ($workstationList as $workstation) {
             array(
                 array(
                     'name' => 'visit_status',
-                    'filter' => VisitStatus::$VISIT_STATUS_LIST,
+                    'filter' => VisitStatus::$VISIT_STATUS_DASHBOARD_FILTER,
                     'value' => 'CHtml::link(VisitStatus::$VISIT_STATUS_LIST[$data->visit_status],Yii::app()->createUrl("visit/detail",array("id"=>$data->id)),array("class" =>"statusLink"))',
                     'type' => 'raw',
                     'header' => 'Status',

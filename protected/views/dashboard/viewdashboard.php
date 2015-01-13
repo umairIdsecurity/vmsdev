@@ -11,9 +11,13 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
 
 
 <?php
+
+$merge = new CDbCriteria;
+$merge->addCondition('visit_status ="' . VisitStatus::ACTIVE . '" or visit_status ="'.VisitStatus::PREREGISTERED.'"');
+            
 $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'visit-gridDashboard',
-    'dataProvider' => $model->search(),
+    'dataProvider' => $model->search($merge),
     'filter' => $model,
     'columns' =>
     array(
@@ -23,7 +27,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'value' => 'CHtml::link(VisitStatus::$VISIT_STATUS_LIST[$data->visit_status],Yii::app()->createUrl("visit/detail",array("id"=>$data->id)),array("class" =>"statusLink"))',
             'type' => 'raw',
             'header' => 'Status',
-            'filter' => VisitStatus::$VISIT_STATUS_LIST,
+            'filter' => VisitStatus::$VISIT_STATUS_DASHBOARD_FILTER,
         ),
         //'date_in',
         

@@ -20,6 +20,14 @@ class VisitStatus extends CActiveRecord
         3 => 'Closed',
         4 => 'Expired',
     );
+    
+    
+    public static $VISIT_STATUS_DASHBOARD_FILTER = array(
+        1 => 'Active',
+        2 => 'Preregistered'
+    );
+    
+    
     CONST ACTIVE = 1;
     CONST PREREGISTERED = 2;
     CONST CLOSED =3;

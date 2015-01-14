@@ -61,17 +61,17 @@ $session = new CHttpSession;
                         <td><?php echo $form->labelEx($model, 'tenant_agent'); ?></td>
                         <td>
                             <select id="Visitor_tenant_agent" name="Visitor[tenant_agent]" >
-                            <?php
-                            if ($this->action->Id != 'create') {
+                                <?php
+                                if ($this->action->Id != 'create') {
 
-                                $allAgentAdminNames = User::model()->findAllTenantAgent($model->tenant);
-                                foreach ($allAgentAdminNames as $key => $value) {
-                                    ?>
-                                            <option <?php
-                                                if ($model->tenant_agent == $value['id']) {
-                                                    echo " selected "; //if logged in is agent admin and tenant agent of logged in user is = agentadminname
-                                                }
-                                                ?> value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
+                                    $allAgentAdminNames = User::model()->findAllTenantAgent($model->tenant);
+                                    foreach ($allAgentAdminNames as $key => $value) {
+                                        ?>
+                                        <option <?php
+                                        if ($model->tenant_agent == $value['id']) {
+                                            echo " selected "; //if logged in is agent admin and tenant agent of logged in user is = agentadminname
+                                        }
+                                        ?> value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
                                             <?php
                                         }
                                     } else {
@@ -109,8 +109,9 @@ $session = new CHttpSession;
                         <tr>
                             <td><label for="Visitor_password">Password <span class="required">*</span></label></td>
                             <td>
-                                <input ng-model="user.passwords" data-ng-class="{'ng-invalid':visitorform['Visitor[repeatpassword]'].$error.match}" type="password" id="Visitor_password" value = '<?php echo $model->password; ?>' name="Visitor[password]">			
-                                <?php echo "<br>" . $form->error($model, 'password'); ?>
+                                <input ng-model="user.passwords" data-ng-class="{
+                                                    'ng-invalid':visitorform['Visitor[repeatpassword]'].$error.match}" type="password" id="Visitor_password" value = '<?php echo $model->password; ?>' name="Visitor[password]">			
+                                       <?php echo "<br>" . $form->error($model, 'password'); ?>
                             </td>
                         </tr>
                         <tr>
@@ -164,8 +165,12 @@ $session = new CHttpSession;
                             <?php echo "<br>" . $form->error($model, 'position'); ?>
                         </td>
                     </tr>
-
-
+                    <tr>
+                        <td><label for="Visitor_vehicle">Vehicle Registration Number</label></td>
+                        <td><input type="text" value="<?php if($model->vehicle !=''){ 
+                            echo Vehicle::model()->findByPk($model->vehicle)->vehicle_registration_plate_number;
+                        } ?>" id="Visitor_vehicle" name="Visitor[vehicle]" maxlength="6" size="6">                            <br>                        </td>
+                    </tr>
                 </table>
             </td>
         </tr>
@@ -185,7 +190,18 @@ $session = new CHttpSession;
     var corporate_type = 2;
 
     $(document).ready(function() {
+        /*Remove space for vehicle number*/
+        $('#Visitor_vehicle').keydown(function(e) {
+            if (e.which === 32) {
+                e.preventDefault();
+            }
+        }).blur(function() {
+            $(this).val(function(i, oldVal) {
+                return oldVal.replace(/\s/g, '');
+            });
 
+            $("#Visitor_vehicle").val(($("#Visitor_vehicle").val()).toUpperCase());
+        });
         /*
          * if visitor type is patient visitor, company is not mandatory
          * if visitor type is company visitor, company is mandatory

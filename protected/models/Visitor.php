@@ -60,7 +60,7 @@ class Visitor extends CActiveRecord {
             array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
             array('contact_number, company, role, visitor_status, created_by, tenant, tenant_agent', 'length', 'max' => 20),
             // array('password', 'length', 'max' => 150),
-            array('date_of_birth, notes,birthdayYear,birthdayMonth,birthdayDay', 'safe'),
+            array('date_of_birth, notes,birthdayYear,birthdayMonth,birthdayDay,vehicle', 'safe'),
             array('tenant, tenant_agent,company', 'default', 'setOnEmpty' => true, 'value' => null),
             array('repeatpassword,password', 'required', 'on' => 'insert'),
             array('password', 'compare', 'compareAttribute' => 'repeatpassword', 'on' => 'insert'),
@@ -69,7 +69,7 @@ class Visitor extends CActiveRecord {
             array('email', 'email'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, first_name, last_name, email, contact_number, date_of_birth, company, department, position, staff_id, notes, role, visitor_status, created_by, is_deleted, tenant, tenant_agent', 'safe', 'on' => 'search'),
+            array('id, first_name, last_name, email, vehicle,contact_number, date_of_birth, company, department, position, staff_id, notes, role, visitor_status, created_by, is_deleted, tenant, tenant_agent', 'safe', 'on' => 'search'),
         );
     }
 
@@ -87,6 +87,7 @@ class Visitor extends CActiveRecord {
             'tenant0' => array(self::BELONGS_TO, 'User', 'tenant'),
             'tenantAgent' => array(self::BELONGS_TO, 'User', 'tenant_agent'),
             'role0' => array(self::BELONGS_TO, 'Roles', 'role'),
+            'vehicle0' => array(self::BELONGS_TO, 'Vehicle', 'vehicle'),
         );
     }
 
@@ -114,6 +115,7 @@ class Visitor extends CActiveRecord {
             'tenant' => 'Tenant',
             'tenant_agent' => 'Tenant Agent',
             'repeatpassword' => 'Repeat Password',
+            'vehicle' => 'Vehicle Registration Number',
         );
     }
 
@@ -152,6 +154,7 @@ class Visitor extends CActiveRecord {
         $criteria->compare('is_deleted', $this->is_deleted);
         $criteria->compare('tenant', $this->tenant, true);
         $criteria->compare('tenant_agent', $this->tenant_agent, true);
+        $criteria->compare('vehicle', $this->vehicle, true);
 
         if (Yii::app()->controller->id == 'visit') {
             $criteria->compare('CONCAT(first_name, \' \', last_name)', $this->first_name, true);

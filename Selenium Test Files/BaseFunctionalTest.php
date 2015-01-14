@@ -141,6 +141,8 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
         $this->select("id=Visitor_tenant_agent", "label=Test agentadmin");
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
+        $this->type("id=Visitor_vehicle", "ABC123");
+        
     }
 
     function addReason($reason) {

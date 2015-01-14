@@ -43,6 +43,7 @@ DROP TABLE IF EXISTS `visitor_visit_reason`;
 DROP TABLE IF EXISTS `card_status`;
 DROP TABLE IF EXISTS `visit`;
 DROP TABLE IF EXISTS `patient`;
+DROP TABLE IF EXISTS `vehicle`;
 SET FOREIGN_KEY_CHECKS = 1;
 --
 -- Table structure for table `card_generated`
@@ -433,6 +434,7 @@ CREATE TABLE IF NOT EXISTS `visitor` (
   `role` bigint(20) NOT NULL DEFAULT '10',
   `visitor_type` bigint(20) DEFAULT NULL,
   `visitor_status` bigint(20) DEFAULT '1',
+  `vehicle` bigint(20) DEFAULT NULL,
   `created_by` bigint(20) DEFAULT NULL,
   `is_deleted` tinyint(1) NOT NULL DEFAULT '0',
   `tenant` bigint(20) DEFAULT NULL,
@@ -444,6 +446,7 @@ CREATE TABLE IF NOT EXISTS `visitor` (
   KEY `tenant` (`tenant`),
   KEY `tenant_agent` (`tenant_agent`),
   KEY `visitor_type` (`visitor_type`),
+  KEY `vehicle` (`vehicle`),
   KEY `visitor_status` (`visitor_status`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
@@ -565,6 +568,16 @@ CREATE TABLE IF NOT EXISTS `workstation` (
   KEY `created_by` (`created_by`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
 
+
+---
+-- Table structure for table `license`
+---
+
+CREATE TABLE IF NOT EXISTS `vehicle`( 
+    `id` BIGINT NOT NULL AUTO_INCREMENT, 
+    `vehicle_registration_plate_number` VARCHAR(6) NOT NULL, 
+    PRIMARY KEY (`id`) 
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1; 
 --
 -- Dumping data for table `workstation`
 --
@@ -673,7 +686,9 @@ ALTER TABLE `visitor`
   ADD CONSTRAINT `visitor_ibfk_4` FOREIGN KEY (`tenant`) REFERENCES `user` (`id`),
   ADD CONSTRAINT `visitor_ibfk_5` FOREIGN KEY (`tenant_agent`) REFERENCES `user` (`id`),
   ADD CONSTRAINT `visitor_ibfk_6` FOREIGN KEY (`role`) REFERENCES `roles` (`id`),
+  ADD CONSTRAINT `visitor_ibfk_8` FOREIGN KEY (`vehicle`) REFERENCES `vehicle` (`id`),
   ADD CONSTRAINT `visitor_ibfk_7` FOREIGN KEY (`company`) REFERENCES `company` (`id`);
+  
 
 --
 -- Constraints for table `visitor_type`

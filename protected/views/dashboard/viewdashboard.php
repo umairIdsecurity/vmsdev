@@ -1,3 +1,4 @@
+
 <?php
 /* @var $this VisitController */
 /* @var $model Visit */
@@ -7,10 +8,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
 } else {
     echo "<h1>Dashboard</h1>";
 }
-?>
 
-
-<?php
 
 $merge = new CDbCriteria;
 $merge->addCondition('visit_status ="' . VisitStatus::ACTIVE . '" or visit_status ="'.VisitStatus::PREREGISTERED.'"');

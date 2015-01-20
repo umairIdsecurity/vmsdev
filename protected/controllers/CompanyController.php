@@ -1,4 +1,5 @@
 <?php
+
 class CompanyController extends Controller {
 
     public $layout = '//layouts/column2';
@@ -35,7 +36,7 @@ class CompanyController extends Controller {
         );
     }
 
-    public function isUserAllowedToUpdate($user) {      
+    public function isUserAllowedToUpdate($user) {
         if ($user->role == Roles::ROLE_SUPERADMIN) {
             return true;
         } else {
@@ -193,5 +194,7 @@ class CompanyController extends Controller {
         echo CJavaScript::jsonEncode($resultMessage);
         Yii::app()->end();
     }
+
+    
 
 }

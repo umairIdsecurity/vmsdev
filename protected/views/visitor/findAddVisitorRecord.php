@@ -169,7 +169,7 @@ $session = new CHttpSession;
 
                     </td>
                     <td><label for="Visitor_vehicle">Vehicle Registration Number</label><br>
-                    <input type="text"  id="Visitor_vehicle" name="Visitor[vehicle]" maxlength="6" size="6">                            
+                        <input type="text"  id="Visitor_vehicle" name="Visitor[vehicle]" maxlength="6" size="6">                            
                     </td>
                 </tr>
                 <tr>
@@ -291,8 +291,17 @@ $session = new CHttpSession;
                         </select><?php echo "<br>" . $form->error($model, 'tenant_agent'); ?>
                     </td>
                 </tr>
-                
+                <tr> 
+                    <td><?php echo $form->labelEx($model, 'Add Photo'); ?></td>
+                    <td id="uploadRow" >
+                        <input type="hidden" id="Visitor_photo" name="Visitor[photo]">
+                        <div class="photoDiv" style='display:none !important;'>
 
+                            <img id='photoPreview' src="">
+                        </div>
+                        <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
+                    </td>
+                </tr>
             </table>
 
         </div>
@@ -303,7 +312,7 @@ $session = new CHttpSession;
             <input type="submit" value="Save and Continue" name="yt0" id="submitFormVisitor" />
         </div>
 
-    <?php $this->endWidget(); ?>
+        <?php $this->endWidget(); ?>
     </div>
     <?php
     if ($session['role'] == Roles::ROLE_SUPERADMIN) {
@@ -331,12 +340,65 @@ $session = new CHttpSession;
     <div class="errorMessage" id="visitReasonErrorMessage" style="display:none;">Reason cannot be blank.</div>
 
 
-<?php $this->endWidget(); ?>
+    <?php $this->endWidget(); ?>
 </div>
-
+<input type="hidden" id="x1"/>
+<input type="hidden" id="x2"/>
+<input type="hidden" id="y1"/>
+<input type="hidden" id="y2"/>
+<input type="hidden" id="width"/>
+<input type="hidden" id="height"/>
 <script>
     $(document).ready(function() {
-        
+        /*Allow crop photo*/
+        $('#photoPreview').imgAreaSelect({
+            handles: true,
+            onSelectEnd: function(img, selection) {
+                $("#cropImageBtn").show();
+                $("#x1").val(selection.x1);
+                $("#x2").val(selection.x2);
+                $("#y1").val(selection.y1);
+                $("#y2").val(selection.y2);
+                $("#width").val(selection.width);
+                $("#height").val(selection.height);
+            }
+        });
+
+        $("#cropImageBtn").click(function(e) {
+            e.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: '<?php echo Yii::app()->createUrl('visitor/AjaxCrop'); ?>',
+                data: {
+                    x1: $("#x1").val(),
+                    x2: $("#x2").val(),
+                    y1: $("#y1").val(),
+                    y2: $("#y2").val(),
+                    width: $("#width").val(),
+                    height: $("#height").val(),
+                    imageUrl: $('#photoPreview').attr('src').substring(1, $('#photoPreview').attr('src').length),
+                    photoId: $('#Visitor_photo').val()
+                },
+                dataType: 'json',
+                success: function(r) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '<?php echo Yii::app()->createUrl('photo/GetPathOfCompanyLogo&id='); ?>' + $('#Visitor_photo').val(),
+                        dataType: 'json',
+                        success: function(r) {
+
+                            $.each(r.data, function(index, value) {
+                                document.getElementById('photoPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+                                
+                            });
+
+                        }
+                    });
+                }
+            });
+        })
+
+
         /*Remove space for vehicle number*/
         $('#Visitor_vehicle').keydown(function(e) {
             if (e.which === 32) {
@@ -349,7 +411,7 @@ $session = new CHttpSession;
 
             $("#Visitor_vehicle").val(($("#Visitor_vehicle").val()).toUpperCase());
         });
-        
+
         $("#dummy-visitor-findBtn").click(function(e) {
             e.preventDefault();
             $("#Visit_reason_search").val("");

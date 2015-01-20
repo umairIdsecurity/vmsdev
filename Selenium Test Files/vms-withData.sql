@@ -435,6 +435,7 @@ CREATE TABLE IF NOT EXISTS `visitor` (
   `visitor_type` bigint(20) DEFAULT NULL,
   `visitor_status` bigint(20) DEFAULT '1',
   `vehicle` bigint(20) DEFAULT NULL,
+  `photo` bigint(20) DEFAULT NULL,
   `created_by` bigint(20) DEFAULT NULL,
   `is_deleted` tinyint(1) NOT NULL DEFAULT '0',
   `tenant` bigint(20) DEFAULT NULL,
@@ -447,6 +448,7 @@ CREATE TABLE IF NOT EXISTS `visitor` (
   KEY `tenant_agent` (`tenant_agent`),
   KEY `visitor_type` (`visitor_type`),
   KEY `vehicle` (`vehicle`),
+  KEY `photo` (`photo`),
   KEY `visitor_status` (`visitor_status`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
@@ -687,6 +689,7 @@ ALTER TABLE `visitor`
   ADD CONSTRAINT `visitor_ibfk_5` FOREIGN KEY (`tenant_agent`) REFERENCES `user` (`id`),
   ADD CONSTRAINT `visitor_ibfk_6` FOREIGN KEY (`role`) REFERENCES `roles` (`id`),
   ADD CONSTRAINT `visitor_ibfk_8` FOREIGN KEY (`vehicle`) REFERENCES `vehicle` (`id`),
+  ADD CONSTRAINT `visitor_ibfk_9` FOREIGN KEY (`photo`) REFERENCES `photo` (`id`),
   ADD CONSTRAINT `visitor_ibfk_7` FOREIGN KEY (`company`) REFERENCES `company` (`id`);
   
 

@@ -26,13 +26,11 @@ class VisitorController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('update', 'delete','admin','adminAjax'),
+                'actions' => array('update', 'delete', 'admin', 'adminAjax'),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
-           
             ),
-            
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create','GetIdOfUser', 'GetHostDetails', 'GetPatientDetails', 'CheckEmailIfUnique', 'GetVisitorDetails', 'FindVisitor', 'FindHost', 'GetTenantAgentWithSameTenant', 'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent'),
+                'actions' => array('ajaxCrop', 'create', 'GetIdOfUser', 'GetHostDetails', 'GetPatientDetails', 'CheckEmailIfUnique', 'GetVisitorDetails', 'FindVisitor', 'FindHost', 'GetTenantAgentWithSameTenant', 'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -40,8 +38,6 @@ class VisitorController extends Controller {
             ),
         );
     }
-
-    
 
     /**
      * Creates a new model. Register and Preregister a visitor page
@@ -93,12 +89,12 @@ class VisitorController extends Controller {
         if (isset($_POST['Visitor'])) {
             $model->attributes = $_POST['Visitor'];
             if ($visitorService->save($model, NULL, $session['id'])) {
-                switch ($isViewedFromModal){
+                switch ($isViewedFromModal) {
                     case "1":
                         break;
 
                     default:
-                       $this->redirect(array('admin'));
+                        $this->redirect(array('admin'));
                 }
             }
         }
@@ -134,9 +130,9 @@ class VisitorController extends Controller {
 
         $this->render('_admin', array(
             'model' => $model,
-        ),false,true);
+                ), false, true);
     }
-    
+
     public function actionAdminAjax() {
         $model = new Visitor('search');
         $model->unsetAttributes();  // clear any default values
@@ -145,7 +141,7 @@ class VisitorController extends Controller {
 
         $this->renderPartial('_admin', array(
             'model' => $model,
-        ),false,true);
+                ), false, true);
     }
 
     /**
@@ -216,7 +212,6 @@ class VisitorController extends Controller {
             'model' => $model,
                 ), false, true);
     }
-    
 
     public function actionGetVisitorDetails($id) {
         $resultMessage['data'] = Visitor::model()->findAllByPk($id);
@@ -252,12 +247,36 @@ class VisitorController extends Controller {
                 'isTaken' => 0,
             );
         }
-        
+
         $resultMessage['data'] = $aArray;
         echo CJavaScript::jsonEncode($resultMessage);
         Yii::app()->end();
     }
-    
-    
+
+    public function actionAjaxCrop() {
+        $jpeg_quality = 90;
+
+        $src = $_REQUEST['imageUrl'];
+        $img_r = imagecreatefromjpeg($src);
+        $dst_r = imagecreatetruecolor(200, 200);
+        $usernameHash = hash('adler32', "visitor");
+        $uniqueFileName = 'visitor' . $usernameHash . '-' . time() . ".png";
+        imagecopyresampled($dst_r, $img_r, 0, 0, $_REQUEST['x1'], $_REQUEST['y1'], 200, 200, $_REQUEST['width'], $_REQUEST['height']);
+        if (file_exists($src)) {
+            unlink($src);
+        }
+        header('Content-type: image/jpeg');
+        imagejpeg($dst_r, "uploads/visitor/" . $uniqueFileName, $jpeg_quality);
+
+
+        Photo::model()->updateByPk($_REQUEST['photoId'], array(
+            'unique_filename' => $uniqueFileName,
+            'relative_path' => "uploads/visitor/" . $uniqueFileName,
+        ));
+        
+        
+        exit;
+        return true;
+    }
 
 }

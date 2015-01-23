@@ -105,5 +105,15 @@ class Photo extends CActiveRecord {
         
         return $aArray;
     }
+    
+    public function returnVisitorPhotoRelativePath($visitorId) {
+        $visitor = Visitor::model()->findByPK($visitorId);
+        if ($visitor->photo != '') {
+            $photo = Photo::model()->findByPK($visitor->photo);
+
+            return $photo->relative_path;
+        }
+    }
+   
 
 }

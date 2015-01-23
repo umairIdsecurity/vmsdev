@@ -59,13 +59,11 @@ class Visitor extends CActiveRecord {
             array('is_deleted', 'numerical', 'integerOnly' => true),
             array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
             array('contact_number, company, role, visitor_status, created_by, tenant, tenant_agent', 'length', 'max' => 20),
-            // array('password', 'length', 'max' => 150),
             array('date_of_birth, notes,birthdayYear,birthdayMonth,birthdayDay,vehicle', 'safe'),
             array('tenant, tenant_agent,company, photo', 'default', 'setOnEmpty' => true, 'value' => null),
             array('repeatpassword,password', 'required', 'on' => 'insert'),
             array('password', 'compare', 'compareAttribute' => 'repeatpassword', 'on' => 'insert'),
             
-            array('email', 'unique'),
             array('email', 'email'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
@@ -105,7 +103,7 @@ class Visitor extends CActiveRecord {
             'date_of_birth' => 'Date Of Birth',
             'company' => 'Company',
             'department' => 'Department',
-            'position' => 'Position:',
+            'position' => 'Position',
             'staff_id' => 'Staff',
             'notes' => 'Notes',
             'password' => 'Password',
@@ -246,7 +244,7 @@ class Visitor extends CActiveRecord {
         $Criteria->condition = "email = '" . $email . "' ";
         $visitorEmail = Visitor::model()->findAll($Criteria);
 
-        $visitorEmail = array_filter($visitorEmail);
+        //$visitorEmail = array_filter($visitorEmail);
         $visitorEmailCount = count($visitorEmail);
 
         if ($visitorEmailCount == 0) {

@@ -476,7 +476,8 @@ CREATE TABLE IF NOT EXISTS `visitor_status` (
 
 INSERT INTO `visitor_status` (`id`, `name`) VALUES
 (1, 'Open'),
-(2, 'Access Denied');
+(2, 'Access Denied'),
+(3, 'Save');
 
 -- --------------------------------------------------------
 

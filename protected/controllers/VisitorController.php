@@ -30,7 +30,7 @@ class VisitorController extends Controller {
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('AddVisitor', 'ajaxCrop', 'create', 'GetIdOfUser', 'GetHostDetails', 'GetPatientDetails', 'CheckEmailIfUnique', 'GetVisitorDetails', 'FindVisitor', 'FindHost', 'GetTenantAgentWithSameTenant', 'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent'),
+                'actions' => array('AddVisitor', 'ajaxCrop', 'create', 'GetIdOfUser','GetHostDetails', 'GetPatientDetails', 'CheckEmailIfUnique', 'GetVisitorDetails', 'FindVisitor', 'FindHost', 'GetTenantAgentWithSameTenant', 'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -283,7 +283,7 @@ class VisitorController extends Controller {
         $model = new Visitor;
         $visitorService = new VisitorServiceImpl();
         $session = new CHttpSession;
-        
+
 
         if (isset($_POST['Visitor'])) {
             $model->attributes = $_POST['Visitor'];
@@ -296,5 +296,7 @@ class VisitorController extends Controller {
             'model' => $model,
         ));
     }
+
+    
 
 }

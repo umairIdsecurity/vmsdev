@@ -14,7 +14,7 @@ $session = new CHttpSession;
 <?php } ?>
     <ul>
     <?php if ($model->visit_status == VisitStatus::ACTIVE && $session['role'] != Roles::ROLE_STAFFMEMBER) { ?>
-            <li class='has-sub' id="closevisitLi"><a href="#"><span class="icons close-visit actionsLabel">Close Visit</span></a>
+            <li class='has-sub' id="closevisitLi"><a href="#"><span style="color:white !important;" class="btn btn-info actionsLabel">Close Visit</span></a>
                 <ul>
                     <li>
                         <table id="actionsVisitDetails">

@@ -90,7 +90,7 @@ class CardGeneratedController extends Controller {
         $cardGenerated->attributes = $cardGeneratedArray;
         if ($cardGeneratedService->save($cardGenerated, $model,Yii::app()->user)) {
 
-            $this->render('print', array(
+            $this->renderPartial('print', array(
                 'model' => $model,
                 'visitorModel' => $visitorModel,
             ));

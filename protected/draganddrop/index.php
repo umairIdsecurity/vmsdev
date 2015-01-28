@@ -7,7 +7,7 @@ if ($this->Id == 'visitor') {
     $dataId = '';
 }
 ?>
-<div id="fileuploader" style="margin-bottom:5px;">Browse Computer </div> 
+<div id="fileuploader" style="margin-bottom:5px;"><?php if($this->action->id == 'detail') { echo "Upload Photo"; } else { echo "Browse Computer"; }?></div> 
 <br><br>
 <input type="button" style="display:none;" id="cropImageBtn" value="Crop Image">
 
@@ -17,6 +17,7 @@ if ($this->Id == 'visitor') {
 <script>
     $(document).ready(function()
     {
+
         $("a.active").parents('li').css("property", "value");
 
         $("#fileuploader").uploadFile({
@@ -29,11 +30,12 @@ if ($this->Id == 'visitor') {
             showStatusAfterSuccess: false,
             onSuccess: function(files, data, xhr)
             {
-                if ($("#controllerId").val() == 'visitor') {
+                if ($("#controllerId").val() == 'visitor' || $("#controllerId").val() == 'visit') {
                     var logo = document.getElementById('photoPreview');
-                } else {
+                }
+                else {
                     var logo = document.getElementById('companyLogo');
-                    
+
                 }
                 var currentAction = $("#actionUpload").val();
                 if (currentAction == 'update')
@@ -42,8 +44,8 @@ if ($this->Id == 'visitor') {
                     $(".companyLogoDiv").show();
                 } else {
                     //id of photo
-                    
-                    if ($("#controllerId").val() == 'visitor') {
+
+                    if ($("#controllerId").val() == 'visitor' || $("#controllerId").val() == 'visit') {
                         $("#Visitor_photo").val(data);
                     } else {
                         $("#Company_logo").val(data);
@@ -57,14 +59,23 @@ if ($this->Id == 'visitor') {
 
                             $.each(r.data, function(index, value) {
                                 logo.src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+                                document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 $(".photoDiv").show();
+                                if ($("#controllerId").val() == 'visit') {
+                                    $("#submitBtnPhoto").click();
+                                }
                             });
-
                         }
                     });
                 }
             }
         });
+
+        if ($("#actionUpload").val() == 'detail') {
+            $(".ajax-upload-dragdrop span").hide();
+            $('.ajax-upload-dragdrop').css({"border": "none"});
+            $('.ajax-upload-dragdrop').css({"padding": "0"});
+        }
     });
 </script>
 

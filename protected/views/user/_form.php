@@ -253,7 +253,7 @@ $currentLoggedUserId = $session['id'];
                         </td>
                     </tr>
                     <tr>
-                        <td><?php echo $form->labelEx($model, 'Staff ID'); ?></td>
+                        <td>Staff ID</td>
                         <td><?php echo $form->textField($model, 'staff_id', array('size' => 50, 'maxlength' => 50)); ?>
                             <?php echo "<br>" . $form->error($model, 'staff_id'); ?></td>
                     </tr>

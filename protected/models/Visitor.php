@@ -104,7 +104,7 @@ class Visitor extends CActiveRecord {
             'company' => 'Company',
             'department' => 'Department',
             'position' => 'Position',
-            'staff_id' => 'Staff',
+            'staff_id' => 'Staff ID',
             'notes' => 'Notes',
             'password' => 'Password',
             'role' => 'Role',

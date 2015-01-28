@@ -69,7 +69,7 @@ class Issue42FunctionalTest extends BaseFunctionalTest {
         }
     }
     
-    /* Scenario 2 - Preegister a visitor with vehicle registration number
+    /* Scenario 2 - Preregister a visitor with vehicle registration number
       Expected Behavior
       Assert "ABC123" in vehicle registration number
      */

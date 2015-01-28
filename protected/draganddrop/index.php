@@ -7,9 +7,66 @@ if ($this->Id == 'visitor') {
     $dataId = '';
 }
 ?>
-<div id="fileuploader" style="margin-bottom:5px;"><?php if($this->action->id == 'detail') { echo "Upload Photo"; } else { echo "Browse Computer"; }?></div> 
+<?php if ($this->action->id == 'addvisitor') { ?>
+    <style>
+        .ajax-upload-dragdrop {
+            float:left !important;
+            margin-left:0px !important;
+        }
+        .ajax-file-upload{
+            margin-top:40px !important;
+            position:absolute !important;
+            margin-left: -53px !important;
+        }
+
+        .editImageBtn{
+            margin-bottom: -61px !important;
+            margin-left: -102px !important;
+        }
+    </style>
+<?php } elseif ($this->action->id == 'create' && $this->id !='company') { ?>
+    <style>
+        .ajax-upload-dragdrop {
+            //margin-right:-75px !important;
+            float:none !important;
+        }
+        .ajax-file-upload{
+            margin-top:40px !important;
+            position:absolute !important;
+            margin-left: -53px !important;
+        }
+
+        .editImageBtn{
+            margin-top: -10px !important;
+            margin-left:7px !important;
+        }
+    </style>
+<?php } elseif ($this->action->id == 'update') { ?>
+    <style>
+        .ajax-upload-dragdrop {
+            float:none !important;
+        }
+        .ajax-file-upload{
+            margin-top:40px !important;
+            position:absolute !important;
+            margin-left: -53px !important;
+        }
+        .editImageBtn{
+            margin-left: 6px;
+            margin-top: -9px;
+        }
+    </style>
+<?php } ?>
+<div id="fileuploader" style="margin-bottom:5px;"><?php
+    if ($this->action->id == 'detail') {
+        echo "Upload Photo";
+    } else {
+        echo "Browse Computer";
+    }
+    ?> </div> 
 <br><br>
-<input type="button" style="display:none;" id="cropImageBtn" value="Crop Image">
+<input type="button"  style="display:none;" id="cropImageBtn" class="editImageBtn" value="Edit Image" onclick = "document.getElementById('light').style.display = 'block';
+        document.getElementById('fade').style.display = 'block'">
 
 <input type="hidden" id="actionUpload" value="<?php echo $this->action->id; ?>"/> 
 <input type="hidden" id="controllerId" value="<?php echo $this->id; ?>"/> 
@@ -38,9 +95,10 @@ if ($this->Id == 'visitor') {
 
                 }
                 var currentAction = $("#actionUpload").val();
-                if (currentAction == 'update')
+                if (currentAction == 'update' && $("#controllerId").val() != 'visitor')
                 {
                     logo.src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + data;
+                   
                     $(".companyLogoDiv").show();
                 } else {
                     //id of photo
@@ -59,12 +117,18 @@ if ($this->Id == 'visitor') {
 
                             $.each(r.data, function(index, value) {
                                 logo.src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
-                                document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 $(".photoDiv").show();
+
+                                document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+
                                 if ($("#controllerId").val() == 'visit') {
                                     $("#submitBtnPhoto").click();
+                                    $("#cropImageBtn").show();
+                                } else if ($("#controllerId").val() == 'visitor') {
+                                    $("#cropImageBtn").show();
                                 }
                             });
+
                         }
                     });
                 }

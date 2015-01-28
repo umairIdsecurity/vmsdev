@@ -23,13 +23,13 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
     }
 
     function testAll() {
-//        $this->resetDbWithData();
-//        $this->Scenario1();
-//        $this->Scenario2();
-//        $this->Scenario3();
-//        $this->Scenario5();
-//        $this->Scenario6();
-//        $this->Scenario7();
+        $this->resetDbWithData();
+        $this->Scenario1();
+        $this->Scenario2();
+        $this->Scenario3();
+        $this->Scenario5();
+        $this->Scenario6();
+        $this->Scenario7();
         $this->resetDbWithData();
         $this->Scenario8();
         $this->Scenario9();
@@ -639,10 +639,10 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->click("id=submitFormVisitor");
         $this->addPatient("Patient Name 0");
         $this->clickAndWait("id=submitFormPatientName");
-        $this->assertEquals("Same Day Visitor", $this->getText("css=#cardDetailsTable > tbody > tr > td"));
+        //$this->assertEquals("Same Day Visitor", $this->getText("css=#cardDetailsTable > tbody > tr > td"));
         $date = date('d/m/Y');
         $date2 = date('d-m-Y', time() + 86400);
-        $this->assertEquals($date, $this->getText("//table[@id='cardDetailsTable']/tbody/tr[4]/td"));
+        $this->assertEquals(date('d M y'), $this->getText("css=span.cardDateText"));
         $this->assertEquals($date2, $this->getEval("window.document.getElementById(\"Visit_date_in\").value"));
         $this->assertEquals($date2, $this->getEval("window.document.getElementById(\"Visit_date_out\").value"));
         $this->click("css=#update-log-visit-form > input[type=\"submit\"]");
@@ -652,7 +652,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("css=#activate-a-visit-form > input[type=\"submit\"]");
 
         $this->assertEquals("Close Visit", $this->getText("//li[@id='closevisitLi']/a/span"));
-        $this->assertEquals(date('j/m/Y'), $this->getText("//table[@id='cardDetailsTable']/tbody/tr[4]/td"));
+        $this->assertEquals(date('d M y'), $this->getText("css=span.cardDateText"));
         $this->clickAndWait("css=#close-visit-form > input[type=\"submit\"]");
         $this->assertEquals("Visit Status: Closed", $this->getText("link=Visit Status: Closed"));
         $this->assertEquals(date('d-m-Y'), $this->getText("//div[@id='visit-grid']/table/tbody/tr/td[5]"));
@@ -682,11 +682,10 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Patient_name", "patient 0a");
         $this->clickAndWait("id=submitFormPatientName");
 
-        $this->assertEquals("Multi Day Visitor", $this->getText("css=#cardDetailsTable > tbody > tr > td"));
         $date = date('j/m/Y');
         $date2 = date('d-m-Y', time() + 86400);
         $date3 = date('d-m-Y', time() + 172800);
-        $this->assertEquals($date, $this->getText("//table[@id='cardDetailsTable']/tbody/tr[4]/td"));
+        $this->assertEquals(date('d M y'), $this->getText("css=span.cardDateText"));
         $this->assertEquals($date2, $this->getEval("window.document.getElementById(\"Visit_date_in\").value"));
         $this->assertEquals($date3, $this->getEval("window.document.getElementById(\"Visit_date_out\").value"));
         $this->click("css=#update-log-visit-form > input[type=\"submit\"]");
@@ -696,7 +695,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Visit Successfully Updated.", $this->getText("css=div.flash-success.success-update-preregister"));
         $this->click("//li[@id='activateLi']/a/span");
         $this->clickAndWait("css=#activate-a-visit-form > input[type=\"submit\"]");
-        $this->assertEquals(date('j/m/Y', time() + 172800), $this->getText("//table[@id='cardDetailsTable']/tbody/tr[4]/td"));
+        $this->assertEquals(date('d M y', time() + 259200), $this->getText("css=span.cardDateText"));
         $this->clickAndWait("css=#close-visit-form > input[type=\"submit\"]");
         $this->assertEquals("Visit Status: Closed", $this->getText("link=Visit Status: Closed"));
         $this->assertEquals(date('d-m-Y'), $this->getText("//div[@id='visit-grid']/table/tbody/tr/td[5]"));
@@ -730,9 +729,9 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
             array_push($this->verificationErrors, $e->toString());
         }
         $this->clickAndWait("id=submitAllForms");
-        $this->assertEquals("Same Day Visitor", $this->getText("css=#cardDetailsTable > tbody > tr > td"));
+        //$this->assertEquals("Same Day Visitor", $this->getText("css=#cardDetailsTable > tbody > tr > td"));
         $date = date('j/m/Y');
-       // $this->assertEquals($date, $this->getText("//table[@id='cardDetailsTable']/tbody/tr[4]/td"));
+       // $this->assertEquals($date, $this->getText("css=span.cardDateText"));
         $this->assertEquals(date('d-m-Y'), $this->getEval("window.document.getElementById(\"Visit_date_check_out\").value"));
         $this->assertEquals("Close Visit", $this->getText("//li[@id='closevisitLi']/a/span"));
 
@@ -774,7 +773,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visit_date_out", date('d-m-Y', time() + 86400));
         $this->clickAndWait("id=submitAllForms");
 
-        $this->assertEquals("Multi Day Visitor", $this->getText("css=#cardDetailsTable > tbody > tr > td"));
+        //$this->assertEquals("Multi Day Visitor", $this->getText("css=#cardDetailsTable > tbody > tr > td"));
         try {
             $this->assertEquals(date('d-m-Y'), $this->getValue("id=Visit_date_check_out"));
         } catch (PHPUnit_Framework_AssertionFailedError $e) {
@@ -782,7 +781,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         }
 
         $this->assertEquals("Close Visit", $this->getText("//li[@id='closevisitLi']/a/span"));
-        $this->assertEquals(date('j/m/Y', time() + 86400), $this->getText("//table[@id='cardDetailsTable']/tbody/tr[4]/td"));
+        $this->assertEquals(date('d M y', time() + 172800), $this->getText("css=span.cardDateText"));
         $this->clickAndWait("css=#close-visit-form > input[type=\"submit\"]");
         $this->assertEquals("Visit Status: Closed", $this->getText("link=Visit Status: Closed"));
     }
@@ -819,7 +818,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals($date2, $this->getEval("window.document.getElementById(\"Visit_date_out\").value"));
 
 
-        $this->assertEquals("Same Day Visitor", $this->getText("css=#cardDetailsTable > tbody > tr > td"));
+        //$this->assertEquals("Same Day Visitor", $this->getText("css=#cardDetailsTable > tbody > tr > td"));
 
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Visitor Records");
@@ -850,7 +849,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->click("//li[@id='activateLi']/a/span");
         $this->assertFalse($this->isTextPresent("css=#dateoutDiv > td"));
         $this->clickAndWait("css=#activate-a-visit-form > input[type=\"submit\"]");
-        $this->assertEquals(date('j/m/Y', time() + 172800), $this->getText("//table[@id='cardDetailsTable']/tbody/tr[4]/td"));
+        $this->assertEquals(date('d M y', time() + 259200), $this->getText("css=span.cardDateText"));
     }
 
     /* Scenario 13 - Check date validation for same day and muti day cards. Register function
@@ -883,8 +882,8 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
             array_push($this->verificationErrors, $e->toString());
         }
         $this->clickAndWait("id=submitAllForms");
-//        $this->assertEquals(date("j/m/Y"), $this->getText("//table[@id='cardDetailsTable']/tbody/tr[4]/td"));
-        $this->assertEquals("Same Day Visitor", $this->getText("css=#cardDetailsTable > tbody > tr > td"));
+        $this->assertEquals(date("d M y"), $this->getText("css=span.cardDateText"));
+     //   $this->assertEquals("Same Day Visitor", $this->getText("css=#cardDetailsTable > tbody > tr > td"));
 
         $this->clickAndWait("css=#close-visit-form > input[type=\"submit\"]");
 
@@ -914,7 +913,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->type("id=proposedDateOut", date('d-m-Y', time() + 86400));
         $this->type("id=Visit_date_out", date('d-m-Y', time() + 86400));
         $this->clickAndWait("id=submitAllForms");
-        $this->assertEquals(date('j/m/Y', time() + 86400), $this->getText("//table[@id='cardDetailsTable']/tbody/tr[4]/td"));
+        $this->assertEquals(date('d M y', time() + 172800), $this->getText("css=span.cardDateText"));
         $this->clickAndWait("css=#close-visit-form > input[type=\"submit\"]");
     }
 

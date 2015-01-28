@@ -627,6 +627,7 @@ dt.tabs dt{
     height: 117px;
     color:white;
     width: 100px;
+    margin-top: 15px;
 }
 
 #labelformultiday{
@@ -692,7 +693,8 @@ dt.tabs dt{
 
 #visitorInformationCssMenu ul,
 #visitorInformationCssMenu li,
-#visitorInformationCssMenu a{
+#visitorInformationCssMenu a,
+#actionsCssMenu ul{
     margin: 2px;
     padding: 0;
     border: 0;
@@ -705,7 +707,7 @@ dt.tabs dt{
     border-radius: 5px;
 }
 
-#visitorInformationCssMenu > ul > li > a {
+#visitorInformationCssMenu > ul > li > a  {
     font-size: 12px;
     display: block;
     background: #64676e;
@@ -771,6 +773,16 @@ dt.tabs dt{
     border-left: 5px solid #ffffff;
     border-color: #4E5800 rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
 }
+
+/*#actionsCssMenu > ul > li.has-sub > a:before {
+    content: "";
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    border: 5px solid transparent;
+    border-left: 5px solid #ffffff;
+    border-color: #4E5800 rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
+}*/
 
 /*visitor detail actions*/
 #actionsVisitDetails tr td, #visitorDetailDiv tr td{
@@ -892,7 +904,11 @@ dt.tabs dt{
     color:#58585A !important;
     font-weight:bold;
     font-size:12px;
+    width:253px;
+    text-align:left;
+    
 }
+
 
 .ui-datepicker-calendar tr th{
     background:none !important;
@@ -1108,6 +1124,11 @@ dt.tabs dt{
     color:white;
 }
 
+#photoPreview{
+    height: 154px;
+    width: 113px;
+}
+
 .cardPhotoPreview > img {
     height: 154px;
     width: 113px;
@@ -1161,3 +1182,8 @@ dt.tabs dt{
     width: 70%;
     z-index: 1002;
 }
+/**/
+.photoDiv{
+    height:154px;width:113px;border:1px solid gray;
+}
+

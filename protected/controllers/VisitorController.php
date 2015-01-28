@@ -93,12 +93,12 @@ class VisitorController extends Controller {
         if (isset($_POST['Visitor'])) {
             $model->attributes = $_POST['Visitor'];
             if ($visitorService->save($model, NULL, $session['id'])) {
-                switch ($isViewedFromModal){
+                switch ($isViewedFromModal) {
                     case "1":
                         break;
 
                     default:
-                       $this->redirect(array('admin'));
+                        $this->redirect(array('admin'));
                 }
             }
         }
@@ -116,7 +116,13 @@ class VisitorController extends Controller {
      * @param integer $id the ID of the model to be deleted
      */
     public function actionDelete($id) {
-        $this->loadModel($id)->delete();
+        $model = $this->loadModel($id);
+        if($model->delete()){
+           //throw new CHttpException(400, "This is a required field and cannot be deleted"); 
+        } else {
+            throw new CHttpException("Delete Failed", "Cannot delete visitor record. An existing visit exists.");
+        }
+       
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
         if (!isset($_GET['ajax']))
@@ -134,9 +140,9 @@ class VisitorController extends Controller {
 
         $this->render('_admin', array(
             'model' => $model,
-        ),false,true);
+                ), false, true);
     }
-    
+
     public function actionAdminAjax() {
         $model = new Visitor('search');
         $model->unsetAttributes();  // clear any default values
@@ -145,7 +151,7 @@ class VisitorController extends Controller {
 
         $this->renderPartial('_admin', array(
             'model' => $model,
-        ),false,true);
+                ), false, true);
     }
 
     /**
@@ -216,7 +222,6 @@ class VisitorController extends Controller {
             'model' => $model,
                 ), false, true);
     }
-    
 
     public function actionGetVisitorDetails($id) {
         $resultMessage['data'] = Visitor::model()->findAllByPk($id);
@@ -252,12 +257,12 @@ class VisitorController extends Controller {
                 'isTaken' => 0,
             );
         }
-        
+
         $resultMessage['data'] = $aArray;
         echo CJavaScript::jsonEncode($resultMessage);
         Yii::app()->end();
     }
-    
+
     
 
 }

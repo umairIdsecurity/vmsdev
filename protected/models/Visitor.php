@@ -52,8 +52,8 @@ class Visitor extends CActiveRecord {
      * @return array validation rules for model attributes.
      */
     public function rules() {
-        // NOTE: you should only define rules for those attributes that
-        // will receive user inputs.
+// NOTE: you should only define rules for those attributes that
+// will receive user inputs.
         return array(
             array('first_name, last_name, email, contact_number,tenant', 'required'),
             array('is_deleted', 'numerical', 'integerOnly' => true),
@@ -68,7 +68,7 @@ class Visitor extends CActiveRecord {
             array('email', 'unique'),
             array('email', 'email'),
             // The following rule is used by search().
-            // @todo Please remove those attributes that should not be searched.
+// @todo Please remove those attributes that should not be searched.
             array('id, first_name, last_name, email, contact_number, date_of_birth, company, department, position, staff_id, notes, role, visitor_status, created_by, is_deleted, tenant, tenant_agent', 'safe', 'on' => 'search'),
         );
     }
@@ -77,8 +77,8 @@ class Visitor extends CActiveRecord {
      * @return array relational rules.
      */
     public function relations() {
-        // NOTE: you may need to adjust the relation name and the related
-        // class name for the relations automatically generated below.
+// NOTE: you may need to adjust the relation name and the related
+// class name for the relations automatically generated below.
         return array(
             'cardGenerateds' => array(self::HAS_MANY, 'CardGenerated', 'visitor_id'),
             'company0' => array(self::BELONGS_TO, 'Company', 'company'),
@@ -130,12 +130,12 @@ class Visitor extends CActiveRecord {
      * based on the search/filter conditions.
      */
     public function search() {
-        // @todo Please modify the following code to remove attributes that should not be searched.
+// @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
 
         $criteria->compare('id', $this->id, true);
-       // $criteria->compare('first_name', $this->first_name, true);
+// $criteria->compare('first_name', $this->first_name, true);
         $criteria->compare('last_name', $this->last_name, true);
         $criteria->compare('email', $this->email, true);
         $criteria->compare('contact_number', $this->contact_number, true);
@@ -145,7 +145,7 @@ class Visitor extends CActiveRecord {
         $criteria->compare('position', $this->position, true);
         $criteria->compare('staff_id', $this->staff_id, true);
         $criteria->compare('notes', $this->notes, true);
-        //$criteria->compare('password', $this->password, true);
+//$criteria->compare('password', $this->password, true);
         $criteria->compare('role', $this->role, true);
         $criteria->compare('visitor_status', $this->visitor_status, true);
         $criteria->compare('created_by', $this->created_by, true);
@@ -176,21 +176,31 @@ class Visitor extends CActiveRecord {
         return parent::model($className);
     }
 
-    public function behaviors() {
-        return array(
-            'softDelete' => array(
-                'class' => 'ext.soft_delete.SoftDeleteBehavior'
-            ),
-        );
+    public function beforeDelete() {
+        $visitorExists = Visit::model()->exists('visitor =' . $this->id);
+        if ($visitorExists) {
+            return false;
+        } else {
+            $this->is_deleted = 1;
+            $this->save();
+            return false;
+        }
+
+    }
+
+    public function beforeFind() {
+        $criteria = new CDbCriteria;
+        $criteria->condition = "t.is_deleted = 0";
+        $this->dbCriteria->mergeWith($criteria);
     }
 
     protected function afterValidate() {
         parent::afterValidate();
         if (!$this->hasErrors()) {
             if (Yii::app()->controller->action->id == 'create') {
-                // $this->password = User::model()->hashPassword($this->password);
+// $this->password = User::model()->hashPassword($this->password);
             }
-            //disable if action is update 
+//disable if action is update 
         }
     }
 
@@ -226,7 +236,7 @@ class Visitor extends CActiveRecord {
         }
         return $aArray;
     }
-    
+
     public function saveReason($visitorId, $visitReasonId) {
 
         $post = new VisitorVisitReason;
@@ -234,8 +244,8 @@ class Visitor extends CActiveRecord {
         $post->visit_reason = $visitReasonId;
         $post->save();
     }
-    
-    public function isEmailAddressTaken($email){
+
+    public function isEmailAddressTaken($email) {
         $Criteria = new CDbCriteria();
         $Criteria->condition = "email = '" . $email . "' ";
         $visitorEmail = Visitor::model()->findAll($Criteria);
@@ -249,8 +259,8 @@ class Visitor extends CActiveRecord {
             return true;
         }
     }
-    
-    public function getIdOfUser($email){
+
+    public function getIdOfUser($email) {
         $aArray = array();
 
         $Criteria = new CDbCriteria();
@@ -264,7 +274,7 @@ class Visitor extends CActiveRecord {
         }
         return $aArray;
     }
-    
+
     
 
 }

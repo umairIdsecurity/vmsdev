@@ -32,7 +32,8 @@ $this->widget('zii.widgets.grid.CGridView', array(
         
         array(
             'name' => 'card',
-            'header' => 'Card No.'
+            'header' => 'Card No.',
+            'value' => 'getCardCode($data->card)',
         ),
         array(
             'name' => 'firstname',
@@ -98,6 +99,14 @@ function formatTime($time) {
         return "-";
     } else {
         return date('h:i A', strtotime($time));
+    }
+}
+
+function getCardCode($cardId) {
+    if($cardId !=''){
+        return CardGenerated::model()->findByPk($cardId)->card_code;
+    } else {
+        return "";
     }
 }
 ?>

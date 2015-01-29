@@ -25,15 +25,15 @@ class VisitServiceImpl implements VisitService {
         } else {
             $visit->patient = NULL;
         }
-        
+
         if (!($visit->save())) {
             return false;
         }
+        $visitor = Visitor::model()->findByPK($visit->visitor);
+        
 
         $this->returnCardIfVisitIsClosedManually($visit);
 
-
-        $visitor = Visitor::model()->findByPK($visit->visitor);
         Visit::model()->updateByPk($visit->id, array(
             'tenant' => $visitor->tenant,
             'tenant_agent' => $visitor->tenant_agent,
@@ -52,9 +52,8 @@ class VisitServiceImpl implements VisitService {
         }
     }
 
-   
     public function notreturnCardIfVisitIsExpiredAutomatically() {
-       Visit::model()->updateVisitsToExpired();
+        Visit::model()->updateVisitsToExpired();
     }
 
     public function notreturnCardIfVisitIsClosedAutomatically() {

@@ -17,6 +17,7 @@ $photoForm = $this->beginWidget('CActiveForm', array(
     ),
         ));
 ?>
+
 <input type="text" value="<?php echo $visitorModel->photo; ?>" name="Visitor[photo]" id="Visitor_photo">
 <?php echo "<br>" . $photoForm->error($visitorModel, 'photo'); ?>
 <input type="submit" id="submitBtnPhoto">
@@ -33,7 +34,15 @@ $photoForm = $this->beginWidget('CActiveForm', array(
 
     <div style="position: relative; padding-top:180px;padding-left:30px;">
         <table class="" style="width:100%;margin-left:100px;" id="cardDetailsTable">
-            <tr><td><br></td></tr>
+            <tr>
+                <td>
+                    <?php
+                    if ($visitorModel->company != '') {
+                        echo Company::model()->findByPk($visitorModel->company)->code;
+                    }
+                    ?>
+                </td>
+            </tr>
             <tr>
                 <td><span class="cardDateText"><?php
                         if ($model->card_type == CardType::SAME_DAY_VISITOR) {
@@ -61,9 +70,13 @@ $photoForm = $this->beginWidget('CActiveForm', array(
             <tr>
                 <td><?php
                     if ($visitorModel->company != '') {
-                        //echo Company::model()->findByPk($visitorModel->company)->name;
-                    } else {
-                        //echo "Not Available";
+                        $inc = 6 - (strlen($model->id));
+                        $int_code = '';
+                        for ($x = 1; $x <= $inc; $x++) {
+
+                            $int_code .= "0";
+                        }
+                        echo Company::model()->findByPk($visitorModel->company)->code . $int_code . $model->id;
                     }
                     ?>
                 </td>
@@ -92,7 +105,7 @@ $photoForm = $this->beginWidget('CActiveForm', array(
 <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
 <?php if ($visitorModel->photo != '') { ?>
     <input type="button" class="editImageBtn" id="editImageBtn" value="Edit Photo" onclick = "document.getElementById('light').style.display = 'block';
-            document.getElementById('fade').style.display = 'block'"/>
+                document.getElementById('fade').style.display = 'block'"/>
        <?php } ?>
 <div
 <?php
@@ -217,7 +230,7 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
     <div style="text-align:right;">
         <input type="button" class="btn btn-success" id="cropPhotoBtn" value="Crop" style="">
         <input type="button" id="closeCropPhoto" onclick="document.getElementById('light').style.display = 'none';
-               document.getElementById('fade').style.display = 'none'" value="x" class="btn btn-danger">
+                document.getElementById('fade').style.display = 'none'" value="x" class="btn btn-danger">
     </div>
     <br>
     <img id="photoCropPreview" src="<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($model->visitor) ?>">
@@ -231,3 +244,4 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
 <input type="hidden" id="y2"/>
 <input type="hidden" id="width"/>
 <input type="hidden" id="height"/>
+

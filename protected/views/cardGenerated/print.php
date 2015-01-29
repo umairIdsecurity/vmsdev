@@ -8,10 +8,22 @@ $session = new CHttpSession;
 $model = Visit::model()->findByPk($_GET['id']);
 $cardType = CardType::$CARD_TYPE_LIST[$model->card_type];
 $companyName = "Not Available";
+$companyCode ="";
+$cardCode ="";
+$companyLogoId ="";
 $visitorName = $visitorModel->first_name . ' ' . $visitorModel->last_name;
 if ($visitorModel->company != '') {
-    $companyName = Company::model()->findByPk($visitorModel->company)->name;
-    $companyLogoId = Company::model()->findByPk($visitorModel->company)->logo;
+    $company = Company::model()->findByPk($visitorModel->company);
+    $companyName = $company->name;
+    $companyLogoId = $company->logo;
+    $companyCode = $company->code;
+    $inc = 6 - (strlen($model->id));
+                        $int_code = '';
+                        for ($x = 1; $x <= $inc; $x++) {
+
+                            $int_code .= "0";
+                        }
+    $cardCode = $companyCode . $int_code . $model->id;
 }
 
 if ($companyLogoId == "") {
@@ -26,7 +38,8 @@ $dateExpiry = date('d M y');
 if ($model->card_type != CardType::SAME_DAY_VISITOR) {
     $dateExpiry = date("d M y", strtotime($model->date_out));
 }
-$text = $dateExpiry . "\n" . $visitorName . "\n";
+
+$text = $companyCode."\n".$dateExpiry . "\n" . $visitorName . "\n" . $cardCode;
 
 if (empty($text)) {
     fatal_error('Error: Text not properly formatted.');

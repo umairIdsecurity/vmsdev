@@ -60,10 +60,10 @@ class Visitor extends CActiveRecord {
             array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
             array('contact_number, company, role, visitor_status, created_by, tenant, tenant_agent', 'length', 'max' => 20),
             array('date_of_birth, notes,birthdayYear,birthdayMonth,birthdayDay,vehicle', 'safe'),
-            array('tenant, tenant_agent,company, photo', 'default', 'setOnEmpty' => true, 'value' => null),
+            array('tenant, tenant_agent,company, photo,vehicle', 'default', 'setOnEmpty' => true, 'value' => null),
             array('repeatpassword,password', 'required', 'on' => 'insert'),
             array('password', 'compare', 'compareAttribute' => 'repeatpassword', 'on' => 'insert'),
-            
+           // array('vehicle', 'length', 'min'=>6, 'max'=>6, 'tooShort'=>'Vehicle is too short (Should be in 6 characters)'), 
             array('email', 'email'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.

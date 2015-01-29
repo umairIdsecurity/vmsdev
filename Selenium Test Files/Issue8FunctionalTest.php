@@ -93,6 +93,7 @@ class Issue8FunctionalTest extends BaseFunctionalTest {
         $this->waitForPageToLoad("30000");
         $this->waitForElementPresent("id=Company_name");
         $this->type("id=Company_name", "Test Company 4");
+        $this->type("id=Company_code", "TCD");
         $this->type("id=Company_trading_name", "Test Company 4");
         $this->type("id=Company_contact", "Test Person");
         $this->type("id=Company_billing_address", "123 street");

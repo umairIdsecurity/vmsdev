@@ -906,7 +906,7 @@ dt.tabs dt{
     font-size:12px;
     width:253px;
     text-align:left;
-    
+
 }
 
 
@@ -1109,8 +1109,9 @@ dt.tabs dt{
 
 .cardCompanyLogo{
     height: 30px;
-    margin-right: 165px;
-    margin-top: -13px;
+    margin-left: -100px;
+    margin-top: -33px;
+    position: absolute;
     width: 50px;
 }
 

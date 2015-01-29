@@ -30,11 +30,6 @@ class Company extends CActiveRecord {
         return 'company';
     }
 
-    public $cropID;
-    public $cropX;
-    public $cropY;
-    public $cropW;
-    public $cropH;
 
     /**
      * @return array validation rules for model attributes.
@@ -43,7 +38,14 @@ class Company extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('name', 'required'),
+            array('name,code', 'required'),
+            array('code', 'unique'),
+            array('code', 'length', 'min'=>3, 'max'=>3, 'tooShort'=>'Code is too short (Should be in 3 characters)'),        
+            
+            array('code', 'match',
+                'pattern' => '/^[a-zA-Z\s]+$/',
+                'message' => 'Code can only contain letters'),
+            
             array('email_address', 'email'),
             array('website', 'url'),
             array('office_number, mobile_number, created_by_user, created_by_visitor', 'numerical', 'integerOnly' => true),
@@ -55,7 +57,7 @@ class Company extends CActiveRecord {
             array('tenant, tenant_agent', 'default', 'setOnEmpty' => true, 'value' => null),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, name, trading_name, logo,tenant, contact, billing_address, email_address, office_number, mobile_number, website, created_by_user, created_by_visitor', 'safe', 'on' => 'search'),
+            array('id, name,code, trading_name, logo,tenant, contact, billing_address, email_address, office_number, mobile_number, website, created_by_user, created_by_visitor', 'safe', 'on' => 'search'),
         );
     }
 
@@ -92,6 +94,7 @@ class Company extends CActiveRecord {
             'tenant' => 'Tenant',
             'tenant_agent' => 'Tenant Agent',
             'is_deleted' => 'Deleted',
+            'code' => 'Company Code',
         );
     }
 
@@ -127,6 +130,7 @@ class Company extends CActiveRecord {
         $criteria->compare('tenant', $this->tenant);
         $criteria->compare('tenant_agent', $this->tenant_agent);
         $criteria->compare('is_deleted', $this->is_deleted);
+        $criteria->compare('code', $this->code);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

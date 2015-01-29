@@ -11,13 +11,13 @@ $tenant = '';
 $tenantAgent = '';
 if (isset($_GET['tenant'])) {
     $tenant = $_GET['tenant'];
-} elseif($session['role'] != Roles::ROLE_SUPERADMIN){
+} elseif ($session['role'] != Roles::ROLE_SUPERADMIN) {
     $tenant = $session['tenant'];
 }
 
 if (isset($_GET['tenant_agent'])) {
     $tenantAgent = $_GET['tenant_agent'];
-} elseif($session['role'] != Roles::ROLE_SUPERADMIN){
+} elseif ($session['role'] != Roles::ROLE_SUPERADMIN) {
     $tenantAgent = $session['tenant_agent'];
 }
 
@@ -39,8 +39,14 @@ if ($this->action->id == 'update') {
     foreach (Yii::app()->user->getFlashes() as $key => $message) {
         echo '<div class="flash-' . $key . '">' . $message . "</div>\n";
     }
+
+
+    if (isset($_GET['viewFrom'])) {
+        $isViewedFromModal = $_GET['viewFrom'];
+    } else {
+        echo $form->errorSummary($model);
+    }
     ?>
-    <?php echo $form->errorSummary($model); ?>
 
     <input type="hidden" id="Company_tenant" name="Company[tenant]" value="<?php echo $tenant; ?>">
     <input type="hidden" id="Company_tenant_agent" name="Company[tenant_agent]" value="<?php echo $tenantAgent; ?>">
@@ -70,12 +76,12 @@ if ($this->action->id == 'update') {
                     echo "style='display:none !important;'";
                 }
                 ?>>
-                    <?php if ($companyId != '') { ?><img id='companyLogo' src="<?php echo Yii::app()->request->baseUrl . "/" . $model->getCompanyLogo($companyId); ?>"/>
+                     <?php if ($companyId != '') { ?><img id='companyLogo' src="<?php echo Yii::app()->request->baseUrl . "/" . $model->getCompanyLogo($companyId); ?>"/>
                     <?php } else { ?> 
                         <img id='companyLogo' src="<?php
-                        if (isset($_POST['Company']['logo'])) {
-                            echo Yii::app()->request->baseUrl . "/" . $model->getPhotoRelativePath($_POST['Company']['logo']);
-                        }
+                    if (isset($_POST['Company']['logo'])) {
+                        echo Yii::app()->request->baseUrl . "/" . $model->getPhotoRelativePath($_POST['Company']['logo']);
+                    }
                         ?>
 
                              " />

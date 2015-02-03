@@ -17,6 +17,15 @@ switch ($session['role']) {
         break;
 }
 $x = 0; //initiate variable for foreach
+if (empty($workstationList)) {
+    ?>
+
+    <div class="adminErrorSummary" >
+        <p><b>Error 503</b><br> No workstations available</p>
+    </div>
+
+    <?php
+}
 foreach ($workstationList as $workstation) {
 
     $x++;
@@ -87,27 +96,27 @@ foreach ($workstationList as $workstation) {
             ),
         ));
         ?></div><br><?php
-    }
+}
 
-    function getVisitorFullName($id) {
-        $visitor = Visitor::model()->findByPk($id);
+function getVisitorFullName($id) {
+    $visitor = Visitor::model()->findByPk($id);
 
-        return $visitor->first_name . ' ' . $visitor->last_name;
-    }
+    return $visitor->first_name . ' ' . $visitor->last_name;
+}
 
-    function getCompany($id) {
-        if (Visitor::model()->findByPk($id)->company == NULL) {
-            return "Not Available";
-        } else {
-            return Company::model()->findByPk(Visitor::model()->findByPk($id)->company)->name;
-        }
+function getCompany($id) {
+    if (Visitor::model()->findByPk($id)->company == NULL) {
+        return "Not Available";
+    } else {
+        return Company::model()->findByPk(Visitor::model()->findByPk($id)->company)->name;
     }
+}
 
-    function formatTime($time) {
-        if ($time == '') {
-            return "-";
-        } else {
-            return date('h:i A', strtotime($time));
-        }
+function formatTime($time) {
+    if ($time == '') {
+        return "-";
+    } else {
+        return date('h:i A', strtotime($time));
     }
-    ?>
+}
+?>

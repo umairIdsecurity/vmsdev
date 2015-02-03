@@ -109,13 +109,13 @@ class VisitReason extends CActiveRecord {
         return parent::model($className);
     }
 
-    public function behaviors() {
-        return array(
-            'softDelete' => array(
-                'class' => 'ext.soft_delete.SoftDeleteBehavior'
-            ),
-        );
-    }
+//    public function behaviors() {
+//        return array(
+//            'softDelete' => array(
+//                'class' => 'ext.soft_delete.SoftDeleteBehavior'
+//            ),
+//        );
+//    }
 
     public function findAllReason() {
 
@@ -137,8 +137,8 @@ class VisitReason extends CActiveRecord {
 
         return $aArray;
     }
-    
-    public function isReasonUnique($reason){
+
+    public function isReasonUnique($reason) {
         $Criteria = new CDbCriteria();
         $Criteria->condition = "reason = '" . $reason . "' ";
         $visitorReason = VisitReason::model()->findAll($Criteria);
@@ -152,6 +152,22 @@ class VisitReason extends CActiveRecord {
             return true;
         }
     }
-    
+
+    public function beforeFind() {
+        $session = new CHttpSession;
+        $criteria = new CDbCriteria;
+        if (Yii::app()->controller->action->id != 'detail' || Yii::app()->controller->id != 'dashboard') {
+            //$criteria->condition = "t.is_deleted = 0";
+        }
+        $this->dbCriteria->mergeWith($criteria);
+    }
+
+    public function beforeDelete() {
+        $this->is_deleted = 1;
+        $this->save();
+
+        //prevent real deletion
+        return false;
+    }
 
 }

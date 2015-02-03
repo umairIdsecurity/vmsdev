@@ -64,7 +64,6 @@ class Visitor extends CActiveRecord {
             array('tenant, tenant_agent,company', 'default', 'setOnEmpty' => true, 'value' => null),
             array('repeatpassword,password', 'required', 'on' => 'insert'),
             array('password', 'compare', 'compareAttribute' => 'repeatpassword', 'on' => 'insert'),
-            
             array('email', 'unique'),
             array('email', 'email'),
             // The following rule is used by search().
@@ -185,12 +184,15 @@ class Visitor extends CActiveRecord {
             $this->save();
             return false;
         }
-
     }
 
     public function beforeFind() {
+        $session = new CHttpSession;
         $criteria = new CDbCriteria;
         $criteria->condition = "t.is_deleted = 0";
+        if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+            $criteria->condition = "t.tenant = " . $session['tenant'];
+        }
         $this->dbCriteria->mergeWith($criteria);
     }
 
@@ -274,7 +276,5 @@ class Visitor extends CActiveRecord {
         }
         return $aArray;
     }
-
-    
 
 }

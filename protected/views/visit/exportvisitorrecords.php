@@ -4,9 +4,9 @@
 ?>
 
 <h1>Visitor Records</h1>
-<?php echo CHtml::button('Export to CSV', array('id' => 'export-button', 'class' => 'greenBtn')); ?>
-<br>
 
+<?php echo CHtml::button('Export to CSV', array('id' => 'export-button', 'class' => 'greenBtn complete')); ?>
+<br><Br>
 <div class="search-form" style="display:none;">
     <?php
     $this->renderPartial('_search', array(
@@ -116,6 +116,12 @@ function formatDate($date) {
 ?>
 <script>
     $(document).ready(function() {
+        
+        if ($("#totalRecordsCount").val() == 0) {
+            $('#export-button').removeClass('greenBtn');
+            $('#export-button').addClass('btn DeleteBtn actionForward');
+            $("#export-button").attr('disabled', true);
+        }  
         $('#export-button').on('click', function() {
             $.fn.yiiGridView.export();
         });

@@ -42,7 +42,7 @@ $this->pageTitle=Yii::app()->name . ' - Login';
         </tr>
         <tr >
             <td></td>
-            <td colspan="2"><?php echo CHtml::submitButton('Login'); ?></td>
+            <td colspan="2"><?php echo CHtml::submitButton('Login',array('class'=>'actionForward')); ?></td>
         </tr>
         
     </table>

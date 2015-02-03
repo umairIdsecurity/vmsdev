@@ -32,7 +32,7 @@ $multiday = CardType::model()->findByPk(CardType::MULTI_DAY_VISITOR);
 <br>
 <br>
 <div class="register-a-visitor-buttons-div">
-<button id="clicktabA">Continue</button>
+<button id="clicktabA" class="actionForward">Continue</button>
 </div>
 <input type="text" style="display:none;" id="curdateLogVisit" value="<?php echo date('d-m-Y'); ?>"/>
 <script>

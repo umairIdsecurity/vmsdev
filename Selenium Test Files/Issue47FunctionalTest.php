@@ -55,7 +55,7 @@ class Issue47FunctionalTest extends BaseFunctionalTest {
             sleep(1);
         }
         $this->assertEquals("Test Company 1", $this->getText("id=Visitor_company"));
-        $this->addCompany("Visitor Company 1", "visitorcompany", "VC1");
+        $this->addCompany("Visitor Company 1", "visitorcompany", "TCA");
         $this->click("id=submitFormVisitor");
         $this->waitForElementPresent("id=User_first_name");
         $this->addHost("staffmemberHostA");
@@ -65,14 +65,14 @@ class Issue47FunctionalTest extends BaseFunctionalTest {
 
         $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("link=Preregistered");
-        $this->assertEquals("VC1", $this->getText("css=#cardDetailsTable > tbody > tr > td"));
-        $this->assertEquals("VC1000008", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[4]/td"));
+        $this->assertEquals("TCA", $this->getText("css=#cardDetailsTable > tbody > tr > td"));
+        $this->assertEquals("TCA000008", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[4]/td"));
         $this->clickAndWait("link=Administration");
         $this->click("id=yt0");
         $this->waitForElementPresent("name=Company[name]");
         $this->clickAndWait("link=Edit");
         try {
-            $this->assertEquals("VC1", $this->getValue("id=Company_code"));
+            $this->assertEquals("TCB", $this->getValue("id=Company_code"));
         } catch (PHPUnit_Framework_AssertionFailedError $e) {
             array_push($this->verificationErrors, $e->toString());
         }

@@ -153,7 +153,7 @@ $session = new CHttpSession;
     <div >
         <input type="button" id="clicktabC" value="Add" style="display:none;"/>
 
-        <input type="submit" value="Add" name="yt0" id="submitFormUser" />
+        <input type="submit" value="Add" name="yt0" id="submitFormUser" class="complete" />
     </div>
     <?php $this->endWidget(); ?>
 

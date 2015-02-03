@@ -44,6 +44,7 @@ DROP TABLE IF EXISTS `card_status`;
 DROP TABLE IF EXISTS `visit`;
 DROP TABLE IF EXISTS `patient`;
 DROP TABLE IF EXISTS `vehicle`;
+DROP TABLE IF EXISTS `company_laf_preferences`;
 SET FOREIGN_KEY_CHECKS = 1;
 --
 -- Table structure for table `card_generated`
@@ -134,6 +135,7 @@ CREATE TABLE IF NOT EXISTS `company` (
   `office_number` int(30) DEFAULT NULL,
   `mobile_number` int(50) DEFAULT NULL,
   `website` varchar(50) DEFAULT NULL,
+  `company_laf_preferences` bigint(20) DEFAULT NULL,
   `created_by_user` bigint(20) DEFAULT NULL,
   `created_by_visitor` bigint(20) DEFAULT NULL,
   `tenant` bigint(20) DEFAULT NULL,
@@ -144,6 +146,7 @@ CREATE TABLE IF NOT EXISTS `company` (
   KEY `created_by_user` (`created_by_user`),
   KEY `tenant_agent` (`tenant_agent`),
   KEY `tenant` (`tenant`),
+  KEY `company_laf_preferences` (`company_laf_preferences`),
   KEY `logo` (`logo`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
@@ -152,8 +155,9 @@ CREATE TABLE IF NOT EXISTS `company` (
 --
 
 INSERT INTO `company` (`id`,`code`, `name`, `trading_name`, `logo`, `contact`, `billing_address`, `email_address`, `office_number`, `mobile_number`, `website`, `created_by_user`, `created_by_visitor`, `tenant`, `tenant_agent`, `is_deleted`) VALUES
-(1,'TCA', 'Test Company 1', 'Test Company 1', 1, 'Test Person', '123 street', 'testcompany@test.com', 12345, 12345, 'http://testcompany.com', NULL, NULL, 17, 18, 0),
-(2, 'TCB','Test Company 2', 'Test Company 2', 1, 'Test Person', '123 street', 'testcompany2@test.com', 12345, 12345, 'http://testcompany2.com', NULL, NULL, NULL, NULL, 0);
+(1,'IDS', 'Identity Security', 'Identity Security', 2, 'Test Person', '123 street', 'idescurity@test.com', 12345, 12345, 'http://idsecurity.com.au', NULL, NULL, 16, 16, 0),
+(2,'TCA', 'Test Company 1', 'Test Company 1', 1, 'Test Person', '123 street', 'testcompany@test.com', 12345, 12345, 'http://testcompany.com', NULL, NULL, 17, 18, 0),
+(3, 'TCB','Test Company 2', 'Test Company 2', 1, 'Test Person', '123 street', 'testcompany2@test.com', 12345, 12345, 'http://testcompany2.com', NULL, NULL, NULL, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -209,7 +213,8 @@ CREATE TABLE IF NOT EXISTS `photo` (
 --
 
 INSERT INTO `photo` (`id`, `filename`, `unique_filename`, `relative_path`) VALUES
-(1, 'personal.png', '29200577-1411087522.jpg', 'uploads/company_logo/29200577-1411087522.jpg');
+(1, 'personal.png', '29200577-1411087522.jpg', 'uploads/company_logo/1411087524.jpg'),
+(2, 'ids-logo2.jpg', '1411087524.jpg', 'uploads/company_logo/1411087524.jpg');
 
 -- --------------------------------------------------------
 
@@ -279,14 +284,14 @@ CREATE TABLE IF NOT EXISTS `user` (
 --
 
 INSERT INTO `user` (`id`, `first_name`, `last_name`, `email`, `contact_number`, `date_of_birth`, `company`, `department`, `position`, `staff_id`, `notes`, `password`, `role`, `user_type`, `user_status`, `created_by`, `is_deleted`, `tenant`, `tenant_agent`) VALUES
-(16, 'IDS', 'Test', 'superadmin@test.com', '9998798', '1993-01-01', NULL, '', '', '', '', '$2a$13$wv.A6T0CCHXczYv/tlJP6./6qUvDdOy.g8KX.FqSos1Mf6MA7Xl66', 5, 1, 1, 16, 0, 16, 16),
-(17, 'Test', 'admin', 'admin@test.com', '123456', '2014-09-14', 1, 'Test Department', 'Test Position', '123456', 'Test Notes', '$2a$13$6qNEkuI21Coug38E485YweOeVqPpe4tgpb8v9Eb.z.1Skierdhpie', 1, 1, 1, 16, 0, 17, NULL),
-(18, 'Test', 'agentadmin', 'agentadmin@test.com', '123456', '2014-09-14', 1, 'Test Department', 'Test Position', '123456', 'Test Notes', '$2a$13$Jnj1TVTdBZD3GOitBD7HGea4OOr6YZi63vSWQPFiJchipiDJorTqm', 6, 1, 1, 16, 0, 17, 18),
-(19, 'Test', 'operator', 'operator@test.com', '123456', '2014-09-14', 1, 'Test Department', 'Test Position', '123456', 'Test Notes', '$2a$13$b1b.63axWWCFUjhIFjGLSutoYkNU6DBgRzxUJvv6QJxfdKoOz89We', 8, 1, 1, 16, 0, 17, NULL),
-(20, 'Test', 'agentoperator', 'agentoperator@test.com', '123456', '2014-09-14', 1, 'Test Department', 'Test Position', '123456', 'Test Notes', '$2a$13$VCQIjGBIohdn8xa30FGFj.OJkeFdZH7gVybPn9muggcD9B8CqfOgy', 7, 1, 1, 16, 0, 17, 18),
-(21, 'Test', 'staffmember', 'staffmember@test.com', '123456', '2014-09-14', 1, 'Test Department', 'Test Position', '123456', 'Test Notes', '$2a$13$w1Kro.V4SJPkFBu5HChiEeHwRDBSccKKqWW1qPZbEqDZEZc/V9sna', 9, 1, 1, 16, 0, 17, 18),
-(22, 'Test', 'admin2', 'admin2@test.com', '123456', '2014-09-14', 1, 'Test Department', 'Test Position', '123456', 'Test Notes', '$2a$13$5X3fP8TUNc/0sVUi9fwlkOqboosSxQxbpiR0GAi83GUedz9hLyTfC', 1, 1, 1, 16, 0, 17, NULL),
-(23, 'Test', 'host1', 'testHost1@test.com', '123456', '2014-09-14', 1, 'Test Department', 'Test Position', '123456', 'Test Notes', '$2a$13$5X3fP8TUNc/0sVUi9fwlkOqboosSxQxbpiR0GAi83GUedz9hLyTfC', 9, 1, 1, 16, 0, 17, 18);
+(16, 'IDS', 'Test', 'superadmin@test.com', '9998798', '1993-01-01', 1, '', '', '', '', '$2a$13$wv.A6T0CCHXczYv/tlJP6./6qUvDdOy.g8KX.FqSos1Mf6MA7Xl66', 5, 1, 1, 16, 0, 16, 16),
+(17, 'Test', 'admin', 'admin@test.com', '123456', '2014-09-14', 2, 'Test Department', 'Test Position', '123456', 'Test Notes', '$2a$13$6qNEkuI21Coug38E485YweOeVqPpe4tgpb8v9Eb.z.1Skierdhpie', 1, 1, 1, 16, 0, 17, NULL),
+(18, 'Test', 'agentadmin', 'agentadmin@test.com', '123456', '2014-09-14', 2, 'Test Department', 'Test Position', '123456', 'Test Notes', '$2a$13$Jnj1TVTdBZD3GOitBD7HGea4OOr6YZi63vSWQPFiJchipiDJorTqm', 6, 1, 1, 16, 0, 17, 18),
+(19, 'Test', 'operator', 'operator@test.com', '123456', '2014-09-14', 2, 'Test Department', 'Test Position', '123456', 'Test Notes', '$2a$13$b1b.63axWWCFUjhIFjGLSutoYkNU6DBgRzxUJvv6QJxfdKoOz89We', 8, 1, 1, 16, 0, 17, NULL),
+(20, 'Test', 'agentoperator', 'agentoperator@test.com', '123456', '2014-09-14', 2, 'Test Department', 'Test Position', '123456', 'Test Notes', '$2a$13$VCQIjGBIohdn8xa30FGFj.OJkeFdZH7gVybPn9muggcD9B8CqfOgy', 7, 1, 1, 16, 0, 17, 18),
+(21, 'Test', 'staffmember', 'staffmember@test.com', '123456', '2014-09-14', 2, 'Test Department', 'Test Position', '123456', 'Test Notes', '$2a$13$w1Kro.V4SJPkFBu5HChiEeHwRDBSccKKqWW1qPZbEqDZEZc/V9sna', 9, 1, 1, 16, 0, 17, 18),
+(22, 'Test', 'admin2', 'admin2@test.com', '123456', '2014-09-14', 2, 'Test Department', 'Test Position', '123456', 'Test Notes', '$2a$13$5X3fP8TUNc/0sVUi9fwlkOqboosSxQxbpiR0GAi83GUedz9hLyTfC', 1, 1, 1, 16, 0, 17, NULL),
+(23, 'Test', 'host1', 'testHost1@test.com', '123456', '2014-09-14', 2, 'Test Department', 'Test Position', '123456', 'Test Notes', '$2a$13$5X3fP8TUNc/0sVUi9fwlkOqboosSxQxbpiR0GAi83GUedz9hLyTfC', 9, 1, 1, 16, 0, 17, 18);
 
 -- --------------------------------------------------------
 
@@ -456,9 +461,9 @@ CREATE TABLE IF NOT EXISTS `visitor` (
 
 
 INSERT INTO `visitor` (`id`, `first_name`, `last_name`, `email`, `contact_number`, `date_of_birth`, `company`, `department`, `position`, `staff_id`, `notes`, `password`, `role`, `visitor_type`, `visitor_status`, `created_by`, `is_deleted`, `tenant`, `tenant_agent`) VALUES
-(2, 'Test', 'Visitor1', 'testVisitor1@test.com', '1234567', '1970-01-01', 1, NULL, 'Position', NULL, NULL, NULL, 10, 1, 1, 16, 0, 17, 18),
+(2, 'Test', 'Visitor1', 'testVisitor1@test.com', '1234567', '1970-01-01', 2, NULL, 'Position', NULL, NULL, NULL, 10, 1, 1, 16, 0, 17, 18),
 (3, 'Test', 'Visitor3', 'testVisitor3@test.com', '1234567', '1970-01-01', NULL, NULL, 'Position', NULL, NULL, NULL, 10, 1, 1, 16, 0, 17, 18),
-(4, 'Test', 'Visitor4', 'testVisitor4@test.com', '1234567', '1970-01-01', 1, NULL, 'Position', NULL, NULL, NULL, 10, 2, 1, 16, 0, 17, 18);
+(4, 'Test', 'Visitor4', 'testVisitor4@test.com', '1234567', '1970-01-01', 2, NULL, 'Position', NULL, NULL, NULL, 10, 2, 1, 16, 0, 17, 18);
 
 -- --------------------------------------------------------
 
@@ -594,6 +599,42 @@ INSERT INTO `workstation` (`id`, `name`, `location`, `contact_name`, `contact_nu
 
 
 
+CREATE TABLE IF NOT EXISTS `company_laf_preferences`( 
+    `id` BIGINT NOT NULL AUTO_INCREMENT, 
+    `action_forward_bg_color` VARCHAR(7),  
+    `action_forward_bg_color2` VARCHAR(7),  
+    `action_forward_font_color` VARCHAR(7), 
+    `action_forward_hover_color` VARCHAR(7), 
+    `action_forward_hover_color2` VARCHAR(7), 
+    `action_forward_hover_font_color` VARCHAR(7), 
+    
+    `complete_bg_color` VARCHAR(7),
+    `complete_bg_color2` VARCHAR(7),
+    `complete_hover_color` VARCHAR(7), 
+    `complete_hover_color2` VARCHAR(7), 
+    `complete_font_color` VARCHAR(7), 
+    `complete_hover_font_color` VARCHAR(7), 
+
+    `neutral_bg_color` VARCHAR(7), 
+    `neutral_bg_color2` VARCHAR(7), 
+    `neutral_hover_color` VARCHAR(7), 
+    `neutral_hover_color2` VARCHAR(7), 
+    `neutral_font_color` VARCHAR(7),
+    `neutral_hover_font_color` VARCHAR(7),
+    
+    `nav_bg_color` VARCHAR(7), 
+    `nav_hover_color` VARCHAR(7), 
+    `nav_font_color` VARCHAR(7),
+    `nav_hover_font_color` VARCHAR(7),
+    
+    `sidemenu_bg_color` VARCHAR(7), 
+    `sidemenu_hover_color` VARCHAR(7), 
+    `sidemenu_font_color` VARCHAR(7),
+    `sidemenu_hover_font_color` VARCHAR(7),
+
+    `css_file_path` VARCHAR(50),  
+    PRIMARY KEY (`id`) 
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1; ; 
 --
 -- Constraints for dumped tables
 --
@@ -622,7 +663,8 @@ ALTER TABLE `company`
   ADD CONSTRAINT `company_ibfk_1` FOREIGN KEY (`created_by_user`) REFERENCES `user` (`id`),
   ADD CONSTRAINT `company_ibfk_2` FOREIGN KEY (`tenant_agent`) REFERENCES `user` (`id`),
   ADD CONSTRAINT `company_ibfk_3` FOREIGN KEY (`tenant`) REFERENCES `user` (`id`),
-  ADD CONSTRAINT `company_ibfk_4` FOREIGN KEY (`logo`) REFERENCES `photo` (`id`);
+  ADD CONSTRAINT `company_ibfk_4` FOREIGN KEY (`logo`) REFERENCES `photo` (`id`),
+  ADD CONSTRAINT `company_ibfk_5` FOREIGN KEY (`company_laf_preferences`) REFERENCES `company_laf_preferences` (`id`);
 
 --
 -- Constraints for table `roles`

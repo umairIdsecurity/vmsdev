@@ -559,7 +559,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->type("id=Company_code", "NCA");
         $this->click("id=createBtn");
         sleep(3);
-        $this->assertEquals("Test Company 1Test Company 2new company", $this->getText("id=Visitor_company"));
+        $this->assertEquals("Identity SecurityTest Company 1Test Company 2new company", $this->getText("id=Visitor_company"));
         $this->click("id=submitFormVisitor");
         $this->waitForElementPresent("id=search-host");
         $this->type("id=search-host", "test");

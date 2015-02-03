@@ -6,7 +6,7 @@ $session = new CHttpSession;
         <label><b>Search Name:</b></label> 
         <input type="text" id="search-visitor" name="search-visitor" class="search-text"/> 
         <button class="visitor-findBtn" onclick="findVisitorRecord()" id="visitor-findBtn" style="display:none;" data-target="#findVisitorRecordModal" data-toggle="modal">Find Record</button>
-        <button class="visitor-findBtn" id="dummy-visitor-findBtn">Find Record</button>
+        <button class="visitor-findBtn neutral" id="dummy-visitor-findBtn">Find Record</button>
         <div class="errorMessage" id="searchTextErrorMessage" style="display:none;"></div>
     </div>
 
@@ -89,7 +89,7 @@ $session = new CHttpSession;
         <div id="searchVisitorTable"></div>
         <div class="register-a-visitor-buttons-div">
             <input type="button" class="visitor-backBtn btnBackTab2" id="btnBackTab2" value="Back"/>
-            <input type="button" id="clicktabB1"  value="Save and Continue"/>
+            <input type="button" id="clicktabB1"  value="Save and Continue" class="actionForward"/>
         </div>
     </div>
     <input type="text" id="selectedVisitorInSearchTable" value="0"></input>
@@ -308,7 +308,7 @@ $session = new CHttpSession;
             <input type="button" class="visitor-backBtn btnBackTab2" id="btnBackTab2" value="Back"/>
             <input type="button" id="clicktabB" value="Save and Continue" style="display:none;"/>
 
-            <input type="submit" value="Save and Continue" name="yt0" id="submitFormVisitor" />
+            <input type="submit" value="Save and Continue" name="yt0" id="submitFormVisitor" class="actionForward"/>
         </div>
 
         <?php $this->endWidget(); ?>

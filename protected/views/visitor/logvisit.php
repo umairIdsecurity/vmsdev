@@ -72,7 +72,7 @@ if ($visitModel->time_in != '') {
 </table>
 <div class="register-a-visitor-buttons-div">
     <input type="button" class="visitor-backBtn btnBackTab4" value="Back"/>
-    <input type='button' value='Save and Continue' class='greenBtn' id='submitAllForms'/>
+    <input type='button' value='Save and Continue' class='greenBtn complete' id='submitAllForms'/>
 </div>
 <script>
     $(document).ready(function() {

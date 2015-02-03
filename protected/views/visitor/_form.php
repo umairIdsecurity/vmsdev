@@ -217,7 +217,7 @@ if ($this->action->id == 'update') {
 
     </div>
     <div class="register-a-visitor-buttons-div" style="text-align:left !important; ">
-        <br><br><input type="submit" value="Save" name="yt0" id="submitFormVisitor" />
+        <br><br><input type="submit" value="Save" name="yt0" id="submitFormVisitor" class="complete" />
     </div>
 
     <?php $this->endWidget(); ?>

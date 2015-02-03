@@ -4,6 +4,7 @@ $usernameHash = hash('adler32', Yii::app()->user->name);
 $controllerId = $_GET['id'];
 switch ($controllerId) {
     case 'company':
+    case 'companyLafPreferences':
         $folderKey = '/company_logo/';
         break;
     case 'profile':
@@ -41,7 +42,7 @@ if (isset($_FILES["myfile"])) {
             $update = $connection->createCommand('update company set logo="' . Yii::app()->db->lastInsertID . '" where id="' . $_GET['companyId'] . '"');
             $update->query();
             $ret = $path;
-        } else if ($action == 'create' || $action == 'addvisitor' || $action == 'detail') {
+        } else if ($action == 'create' || $action == 'addvisitor' || $action == 'detail' || $action == 'customisation') {
             $ret = Yii::app()->db->lastInsertID;
         }
     }

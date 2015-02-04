@@ -34,11 +34,11 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
     <dt id="findVisitorA">Find or Add New Visitor Record</dt>
     <dd style="display:none;" id="findVisitor"><a href="#step2" id="findVisitorB">Find or Add New Visitor Record</a></dd>
 
-    <dt id="findHostA" <?php if (isset($_GET['action'])) { 
-        ?> 
+    <dt id="findHostA" <?php if (isset($_GET['action'])) {
+    ?> 
             class="borderTopLeftRadius" 
         <?php } ?>>Find or Add Host</dt>
-    
+
     <dd style="display:none;" <?php
     if (isset($_GET['action'])) {
         echo "class='borderTopRightRadius'";
@@ -81,15 +81,17 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
 
     $(document).ready(function() {
         display_ct();
-
-        document.getElementById('Visitor_company').disabled = true;
+        $("#register-host-patient-form").hide();
+        $("#register-host-form").show();
+        $("#searchHostDiv").show();
+        // document.getElementById('Visitor_company').disabled = true;
         if ($("#currentRoleOfLoggedInUser").val() == 9) { //if staffmember logged in user
             $("#Visit_visitor_type").val(2);
             $("#Visitor_company").val($("#currentCompanyOfLoggedInUser").val());
             $("#Visitor_visitor_type").val(2);
             $("#Visitor_visitor_type_search").val(2);
-            $('#Visitor_visitor_type option[value!="2"]').remove();
-            $('#Visitor_visitor_type_search option[value!="2"]').remove();
+            //  $('#Visitor_visitor_type option[value!="2"]').remove();
+            //$('#Visitor_visitor_type_search option[value!="2"]').remove();
             document.getElementById('Visitor_company').disabled = false;
             $("#register-host-patient-form").hide();
             $("#register-host-form").hide();
@@ -133,14 +135,14 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
                 $('#Visitor_tenant').val("");
             }
 
-            if ($(this).val() == "2") {
-                $("#register-host-patient-form").hide();
-                $("#register-host-form").show();
-                document.getElementById('Visitor_company').disabled = false;
-            } else {
+            if ($(this).val() == "1") {
                 $("#register-host-patient-form").show();
                 $("#register-host-form").hide();
                 document.getElementById('Visitor_company').disabled = true;
+            } else {
+                $("#register-host-patient-form").hide();
+                $("#register-host-form").show();
+                document.getElementById('Visitor_company').disabled = false;
             }
 
         });
@@ -192,7 +194,8 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
             e.preventDefault();
             //var currentURL = location.href.split("=");
             var currentURL = $("#getcurrentUrl").val();
-
+            
+            $("#Visit_visitor_type").val($("#Visitor_visitor_type").val());
             //checks if host is from search and verifys that a user has been selected
             if (($("#selectedHostInSearchTable").val() == '' && $("#search-host").val() != '') || $("#selectedHostInSearchTable").val() == '') {
                 $("#searchTextHostErrorMessage").html("Please select a host.");

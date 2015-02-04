@@ -14,10 +14,7 @@
  */
 class VisitorType extends CActiveRecord {
 
-    public static $VISITOR_TYPE_LIST = array(
-        1 => 'Patient Visitor',
-        2 => 'Corporate Visitor',
-    );
+    //public static $VISITOR_TYPE_LIST = returnVisitorTypes();
 
     const PATIENT_VISITOR = 1;
     const CORPORATE_VISITOR = 2;
@@ -37,10 +34,11 @@ class VisitorType extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('name', 'length', 'max' => 25),
+            array('name', 'required'),
             array('created_by', 'length', 'max' => 20),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, name, created_by', 'safe', 'on' => 'search'),
+            array('id, is_deleted,tenant,tenant_agent,name, created_by', 'safe', 'on' => 'search'),
         );
     }
 
@@ -64,6 +62,9 @@ class VisitorType extends CActiveRecord {
             'id' => 'ID',
             'name' => 'Name',
             'created_by' => 'Created By',
+            'is_deleted' => 'Is Deleted',
+            'tenant' => 'Tenant',
+            'tenant_agent' => 'Tenant Agent',
         );
     }
 
@@ -87,6 +88,8 @@ class VisitorType extends CActiveRecord {
         $criteria->compare('id', $this->id, true);
         $criteria->compare('name', $this->name, true);
         $criteria->compare('created_by', $this->created_by, true);
+        $criteria->compare('tenant', $this->tenant, true);
+        $criteria->compare('tenant_agent', $this->tenant_agent, true);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -103,11 +106,35 @@ class VisitorType extends CActiveRecord {
         return parent::model($className);
     }
 
-    public function getVisitorType($visitor_type) {
+    public function beforeFind() {
+        $session = new CHttpSession;
+        $criteria = new CDbCriteria;
+        if(Yii::app()->controller->action->id != 'exportvisitorrecords' && Yii::app()->controller->action->id != 'evacuationReport' && Yii::app()->controller->action->id != 'visitorRegistrationHistory'){
+            $criteria->condition = "t.is_deleted = 0 && t.id !=1";
+        }
+        $this->dbCriteria->mergeWith($criteria);
+    }
 
+    public function beforeDelete() {
+        $this->is_deleted = 1;
+        $this->save();
 
-        if (isset(VisitorType::$VISITOR_TYPE_LIST[$visitor_type])) {
-            return VisitorType::$VISITOR_TYPE_LIST[$visitor_type];
+        //prevent real deletion
+        return false;
+    }
+
+    public function returnVisitorTypes($visitorTypeId = NULL) {
+        $visitorType = VisitorType::model()->findAll();
+        $VISITOR_TYPE_LIST = array();
+        foreach ($visitorType as $key => $value) {
+            $VISITOR_TYPE_LIST[$value['id']] = $value['name'];
+        }
+        if ($visitorTypeId == NULL) {
+            return $VISITOR_TYPE_LIST;
+        } else {
+            if ($visitorTypeId != 1) {
+                return $VISITOR_TYPE_LIST[$visitorTypeId];
+            }
         }
     }
 

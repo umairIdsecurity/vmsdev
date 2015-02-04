@@ -123,7 +123,6 @@ class Issue52FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("id=submit");
         $this->assertCloseVisitSpan();
         
-    
         $username = 'staffmember@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("//div[@id='cssmenu']/ul/li[2]/a/span");

@@ -15,7 +15,7 @@ $session = new CHttpSession;
         <div id="visitor_fields_for_Search">
             <label for="Visitor_visitor_type_search">Visitor Type</label><br>
             <?php
-            echo CHtml::dropDownList('Visitor_visitor_type_search', 'visitor_type', VisitorType::$VISITOR_TYPE_LIST, array(
+            echo CHtml::dropDownList('Visitor_visitor_type_search', 'visitor_type', VisitorType::model()->returnVisitorTypes(), array(
                 'onchange' => 'showHideHostPatientName(this)',
             ));
             ?>
@@ -135,7 +135,7 @@ $session = new CHttpSession;
                     <td>
                         <?php echo $form->labelEx($model, 'visitor_type'); ?><br>
                         <?php
-                        echo $form->dropDownList($model, 'visitor_type', VisitorType::$VISITOR_TYPE_LIST, array(
+                        echo $form->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes(), array(
                             'onchange' => 'showHideHostPatientName(this)',
                         ));
                         ?>
@@ -191,7 +191,7 @@ $session = new CHttpSession;
                         </select>
                         <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;<?php
                         if ($session['role'] != Roles::ROLE_STAFFMEMBER) {
-                            echo "display:none";
+                        //    echo "display:none";
                         }
                         ?>">Add New Company</a>
                            <?php echo "<br>" . $form->error($model, 'company'); ?>

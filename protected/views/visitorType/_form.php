@@ -18,21 +18,20 @@
 	<p class="note">Fields with <span class="required">*</span> are required.</p>
 
 	<?php echo $form->errorSummary($model); ?>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'name'); ?>
-		<?php echo $form->textField($model,'name',array('size'=>25,'maxlength'=>25)); ?>
-		<?php echo $form->error($model,'name'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'created_by'); ?>
-		<?php echo $form->textField($model,'created_by',array('size'=>20,'maxlength'=>20)); ?>
-		<?php echo $form->error($model,'created_by'); ?>
-	</div>
+        <table>
+            <tr>
+                <td>
+                    <?php echo $form->labelEx($model,'name'); ?>
+                </td>
+                <td>
+                    <?php echo $form->textField($model,'name',array('size'=>25,'maxlength'=>25)); ?>
+                    <?php echo "<br>".$form->error($model,'name'); ?>
+                </td>
+            </tr>
+        </table>
 
 	<div class="row buttons">
-		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
+		<?php echo CHtml::submitButton($model->isNewRecord ? 'Add' : 'Save', array("class" => "complete")); ?>
 	</div>
 
 <?php $this->endWidget(); ?>

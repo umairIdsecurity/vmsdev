@@ -22,9 +22,9 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
 
     function testAll() {
         $this->resetDbWithData();
-        $this->Scenario1();
-        $this->Scenario2();
-        $this->Scenario3();
+      //  $this->Scenario1();
+      //  $this->Scenario2();
+     //   $this->Scenario3();
         $this->Scenario4();
         $this->Scenario5();
         $this->Scenario6();

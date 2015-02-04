@@ -54,8 +54,8 @@ $this->widget('zii.widgets.grid.CGridView', array(
         ),
         array(
             'name' => 'visitor_type',
-            'value' => 'VisitorType::$VISITOR_TYPE_LIST[$data->visitor_type]',
-            'filter' => VisitorType::$VISITOR_TYPE_LIST,
+            'value' => 'VisitorType::model()->returnVisitorTypes($data->visitor_type)',
+            'filter' => VisitorType::model()->returnVisitorTypes(),
         ),
         array(
             'name' => 'card',

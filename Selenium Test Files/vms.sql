@@ -519,7 +519,8 @@ INSERT INTO `visit_status` (`id`, `name`, `created_by`) VALUES
 (1, 'Active', NULL),
 (2, 'Pre-registered', NULL),
 (3, 'Closed', NULL),
-(4, 'Expired', NULL);
+(4, 'Expired', NULL),
+(5, 'Save', NULL);
 
 -- --------------------------------------------------------
 

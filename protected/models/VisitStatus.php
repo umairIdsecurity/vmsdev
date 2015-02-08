@@ -19,6 +19,7 @@ class VisitStatus extends CActiveRecord
         2 => 'Preregistered',
         3 => 'Closed',
         4 => 'Expired',
+        5 => 'Saved',
     );
     
     
@@ -32,6 +33,7 @@ class VisitStatus extends CActiveRecord
     CONST PREREGISTERED = 2;
     CONST CLOSED =3;
     CONST EXPIRED = 4;
+    CONST SAVED = 5;
     
 	/**
 	 * @return string the associated database table name

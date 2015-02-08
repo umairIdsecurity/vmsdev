@@ -39,7 +39,7 @@ class Issue46FunctionalTest extends BaseFunctionalTest {
         $this->type("//input[@type='file']", "C:\\xampp\\htdocs\\vms\\Selenium Test Files\\images\\profile.jpg");
         $this->click("id=submitBtnPhoto");
         $this->assertEquals("", $this->getText("id=cropImageBtn"));
-        $this->assertEquals("", $this->getText("css=img.cardCompanyLogo"));
+       // $this->assertEquals("", $this->getText("css=img.cardCompanyLogo"));
         $this->type("id=Visitor_photo", "2");
         $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("link=Preregistered");

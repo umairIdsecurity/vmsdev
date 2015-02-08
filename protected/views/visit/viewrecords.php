@@ -29,7 +29,9 @@ $this->widget('zii.widgets.grid.CGridView', array(
         ),
         array(
             'name' => 'card',
-            'header' => 'Card No.'
+            'header' => 'Card No.',
+            'value' => 'CardGenerated::model()->getCardCode($data->card)',
+          
         ),
         array(
             'name' => 'firstname',

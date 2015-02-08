@@ -115,10 +115,13 @@ $session = new CHttpSession;
                                 { 
                                     checkReasonIfUnique();
                                     $(".errorMessageWorkstation").hide();
-                                } 
+                                } else if($("#cardtype").val() != 1 && $("#Visitor_photo").val() == ""){
+                                    $("#photoErrorMessage").show();
+                                }
                                 else {
                                     $(".errorMessageWorkstation").hide();
                                     $(".visitorReason").hide();
+                                    $("#photoErrorMessage").hide();
                                     checkEmailIfUnique();
                                     }
                                 }
@@ -298,7 +301,9 @@ $session = new CHttpSession;
                         <div class="photoDiv" style='display:none !important;margin-left:3px;margin-bottom:5px;'>
                             <img id='photoPreview' src="">
                         </div>
-                        <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?></td>
+                        <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
+                    <div id="photoErrorMessage" class="errorMessage" style="display:none;">Please upload a photo.</div>
+                    </td>
                    
                 </tr>
             </table>

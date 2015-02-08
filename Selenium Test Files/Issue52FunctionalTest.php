@@ -76,7 +76,9 @@ class Issue52FunctionalTest extends BaseFunctionalTest {
     function closeVisit() {
         $this->clickAndWait("link=Preregistered");
         $this->click("//li[@id='activateLi']/a/span");
+        $this->type("id=Visitor_photo","1");
         $this->clickAndWait("css=#activate-a-visit-form > input.complete");
+        $this->clickAndWait("link=Active");
         $this->clickAndWait("css=#close-visit-form > input.complete");
         $this->assertEquals("Visit Status: Closed", $this->getText("link=Visit Status: Closed"));
         $this->clickAndWait("link=Visitor Records");
@@ -100,6 +102,7 @@ class Issue52FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Preregistered");
         $this->click("//li[@id='activateLi']/a/span");
         $this->clickAndWait("css=#activate-a-visit-form > input.complete");
+        $this->clickAndWait("link=Active");
         $this->assertEquals("Close Visit", $this->getText("//li[@id='closevisitLi']/a/span"));
         $this->clickAndWait("//ul[@id='tabs']/li[3]/a/p");
         

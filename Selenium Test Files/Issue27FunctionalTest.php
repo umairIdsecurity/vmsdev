@@ -550,7 +550,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->select("name=Visit[reason]", "label=Reason 2");
         sleep(1);
         $this->clickAndWait("link=Edit");
-        $this->click("//li[@id='preregisterLi']/a/span");
+        //$this->click("//li[@id='preregisterLi']/a/span");
         $currentDate = date('d-m-Y');
         $this->assertEquals(date('d-m-Y', time() + 86400), $this->getEval("window.document.getElementById(\"Visit_date_in\").value"));
         $this->assertEquals(date('d-m-Y', time() + 86400), $this->getEval("window.document.getElementById(\"Visit_date_out\").value"));
@@ -558,8 +558,9 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $currentMinute = date('i');
         $this->select("id=Visit_time_in_hours", "label=" . $currentHour);
         $this->select("id=Visit_time_in_minutes", "label=" . $currentMinute);
-        $this->click("css=#update-log-visit-form > input[type='submit']");
-        $this->waitForElementPresent("css=div.flash-success.success-update-preregister");
+        $this->clickAndWait("css=#update-log-visit-form > input.complete");
+        //$this->waitForElementPresent("css=div.flash-success.success-update-preregister");
+        $this->clickAndWait("link=Administration");
         $this->click("link=Manage Visits");
         $this->waitForElementPresent("name=Visit[visitor]");
         $this->type("name=Visit[visitor]", "test visitor1");
@@ -613,9 +614,10 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         sleep(1);
         $this->select("id=Visit_time_in_hours", "label=11");
         $this->select("id=Visit_time_in_minutes", "label=24");
-        $this->click("css=#update-log-visit-form > input[type=\"submit\"]");
-        $this->assertEquals("Visit Successfully Updated.", $this->getText("css=div.flash-success.success-update-preregister"));
+        $this->clickAndWait("css=#update-log-visit-form > input.complete");
+       // $this->assertEquals("Visit Successfully Updated.", $this->getText("css=div.flash-success.success-update-preregister"));
 
+        $this->clickAndWait("link=Administration");
         $this->click("link=Manage Visits");
         $this->waitForElementPresent("name=Visit[visitor]");
         $this->type("name=Visit[visitor]", "test visitor1");
@@ -665,7 +667,8 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Visit Successfully Updated.", $this->getText("css=div.flash-success.success-update-preregister"));
         $this->click("//li[@id='activateLi']/a/span");
         $this->clickAndWait("css=#activate-a-visit-form > input[type=\"submit\"]");
-
+        $this->clickAndWait("link=Active");
+        
         $this->assertEquals("Close Visit", $this->getText("//li[@id='closevisitLi']/a/span"));
         $this->assertEquals(date('d M y'), $this->getText("css=span.cardDateText"));
         $this->clickAndWait("css=#close-visit-form > input[type=\"submit\"]");
@@ -707,15 +710,20 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals(date('d M y'), $this->getText("css=span.cardDateText"));
         $this->assertEquals($date2, $this->getEval("window.document.getElementById(\"Visit_date_in\").value"));
         $this->assertEquals($date3, $this->getEval("window.document.getElementById(\"Visit_date_out\").value"));
-        $this->click("css=#update-log-visit-form > input[type=\"submit\"]");
+        $this->clickAndWait("css=#update-log-visit-form > input.complete");
 
-        $this->click("css=#update-log-visit-form > input[type=\"submit\"]");
-        $this->waitForElementPresent("css=div.flash-success.success-update-preregister");
-        $this->assertEquals("Visit Successfully Updated.", $this->getText("css=div.flash-success.success-update-preregister"));
+        //$this->click("css=#update-log-visit-form > input[type=\"submit\"]");
+        //$this->waitForElementPresent("css=div.flash-success.success-update-preregister");
+        //$this->assertEquals("Visit Successfully Updated.", $this->getText("css=div.flash-success.success-update-preregister"));
+        $this->clickAndWait("link=Preregistered");
         $this->click("//li[@id='activateLi']/a/span");
-        $this->clickAndWait("css=#activate-a-visit-form > input[type=\"submit\"]");
+        $this->type("id=Visitor_photo", "1");
+        $this->clickAndWait("css=#activate-a-visit-form > input.complete");
+        $this->clickAndWait("link=Active");
         $this->assertEquals(date('d M y', time() + 259200), $this->getText("css=span.cardDateText"));
-        $this->clickAndWait("css=#close-visit-form > input[type=\"submit\"]");
+        $this->clickAndWait("css=#close-visit-form > input.complete");
+        $this->clickAndWait("link=Visitor Records");
+        $this->clickAndWait("link=Closed");
         $this->assertEquals("Visit Status: Closed", $this->getText("link=Visit Status: Closed"));
         $this->assertEquals(date('d-m-Y'), $this->getText("//div[@id='visit-grid']/table/tbody/tr/td[5]"));
         $this->assertEquals(date('d-m-Y'), $this->getText("//div[@id='visit-grid']/table/tbody/tr/td[3]"));
@@ -877,11 +885,14 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals($date3, $this->getEval("window.document.getElementById(\"Visit_date_out\").value"));
 
 
-        $this->click("css=#update-log-visit-form > input[type=\"submit\"]");
+        $this->clickAndWait("css=#update-log-visit-form > input.complete");
+        $this->clickAndWait("link=Preregistered");
         $this->assertEquals("Visit Successfully Updated.", $this->getText("css=div.flash-success.success-update-preregister"));
         $this->click("//li[@id='activateLi']/a/span");
         $this->assertFalse($this->isTextPresent("css=#dateoutDiv > td"));
-        $this->clickAndWait("css=#activate-a-visit-form > input[type=\"submit\"]");
+        $this->type("id=Visitor_photo","1");
+        $this->clickAndWait("css=#activate-a-visit-form > input.complete");
+        $this->clickAndWait("link=Active");
         $this->assertEquals(date('d M y', time() + 259200), $this->getText("css=span.cardDateText"));
     }
 

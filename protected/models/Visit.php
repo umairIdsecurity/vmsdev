@@ -426,5 +426,33 @@ class Visit extends CActiveRecord {
             return false;
         }
     }
+    public function isVisitorHasCurrentSavedVisit($visitorId){
+        $Criteria = new CDbCriteria();
+        $Criteria->condition = "visitor = '" . $visitorId . "' && visit_status='".VisitStatus::SAVED."'";
+        $visit = Visit::model()->findAll($Criteria);
+        
+        $visitCount = count($visit);
 
+        if ($visitCount == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
+    public function isDateConflictingWithAnotherVisit($date_in, $date_out, $visitorId, $visitStatus){
+        $Criteria = new CDbCriteria();
+        $Criteria->condition = "date_in = '" . $date_in . "' && date_out='".$date_out."' && visitor='".$visitorId."' && visit_status='".$visitStatus."'";
+        $visit = Visit::model()->findAll($Criteria);
+        
+        $visitCount = count($visit);
+
+        if ($visitCount == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
+    
 }

@@ -33,12 +33,12 @@ class Issue41FunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Visitor Records");
-        $this->assertEquals("Active Preregistered Closed Expired", $this->getText("name=Visit[visit_status]"));
+        $this->assertEquals("Active Preregistered Closed Expired Saved", $this->getText("name=Visit[visit_status]"));
         $this->clickAndWait("link=Preregistered");
-        $this->waitForPageToLoad("30000");
         $this->click("//li[@id='activateLi']/a/span");
-        $this->waitForElementPresent("css=#activate-a-visit-form > input[type=\"submit\"]");
-        $this->clickAndWait("css=#activate-a-visit-form > input[type=\"submit\"]");
+        $this->type("id=Visitor_photo","1");
+        $this->waitForElementPresent("css=#activate-a-visit-form > input.complete");
+        $this->clickAndWait("css=#activate-a-visit-form > input.complete");
         $this->clickAndWait("link=Visitor Records");
         $this->select("name=Visit[visit_status]", "label=Active");
         for ($second = 0;; $second++) {
@@ -90,18 +90,18 @@ class Issue41FunctionalTest extends BaseFunctionalTest {
         $username = 'admin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Visitor Records");
-        $this->assertEquals("Active Preregistered Closed Expired", $this->getText("name=Visit[visit_status]"));
+        $this->assertEquals("Active Preregistered Closed Expired Saved", $this->getText("name=Visit[visit_status]"));
         $this->clickAndWait("//ul[@id='tabs']/li[3]/a/p");
         $username = 'operator@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("id=submitBtn");
         $this->clickAndWait("link=Visitor Records");
-        $this->assertEquals("Active Preregistered Closed Expired", $this->getText("name=Visit[visit_status]"));
+        $this->assertEquals("Active Preregistered Closed Expired Saved", $this->getText("name=Visit[visit_status]"));
         $this->clickAndWait("//ul[@id='tabs']/li[3]/a/p");
         $username = 'staffmember@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Visitor Records");
-        $this->assertEquals("Active Preregistered Closed Expired", $this->getText("name=Visit[visit_status]"));
+        $this->assertEquals("Active Preregistered Closed Expired Saved", $this->getText("name=Visit[visit_status]"));
     }
 
 }

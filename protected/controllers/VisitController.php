@@ -26,11 +26,11 @@ class VisitController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'detail', 'admin', 'view','exportFile','evacuationReport','evacuationReportAjax'),
+                'actions' => array('create', 'DuplicateVisit','isDateConflictingWithAnotherVisit', 'GetVisitDetailsOfVisitor', 'getVisitDetailsOfHost', 'IsVisitorHasCurrentSavedVisit', 'update', 'detail', 'admin', 'view', 'exportFile', 'evacuationReport', 'evacuationReportAjax'),
                 'users' => array('@'),
             ),
             array('allow',
-                'actions' => array( 'PrintEvacuationReport',
+                'actions' => array('PrintEvacuationReport',
                     'visitorRegistrationHistory',
                     'exportFileHistory',
                     'exportFileVisitorRecords',
@@ -39,7 +39,7 @@ class VisitController extends Controller {
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
             ),
             array('allow',
-                'actions' => array( 'RunScheduledJobsClose','RunScheduledJobsExpired'
+                'actions' => array('RunScheduledJobsClose', 'RunScheduledJobsExpired'
                 ),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_SUPERADMIN)',
             ),
@@ -65,6 +65,7 @@ class VisitController extends Controller {
             $model->attributes = $_POST['Visit'];
             if ($visitService->save($model, $session['id'])) {
                 $this->redirect(array('visit/detail', 'id' => $model->id));
+
             }
         }
 
@@ -88,7 +89,7 @@ class VisitController extends Controller {
         if (isset($_POST['Visit'])) {
             $model->attributes = $_POST['Visit'];
             if ($visitService->save($model, $session['id'])) {
-                
+                $this->redirect(array('visit/detail', 'id' => $id));
             }
         }
 
@@ -124,7 +125,7 @@ class VisitController extends Controller {
      * Manages all models.
      */
     public function actionAdmin() {
-      //  $this->layout = '//layouts/contentIframeLayout';
+        //  $this->layout = '//layouts/contentIframeLayout';
         $model = new Visit('search');
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['Visit']))
@@ -132,7 +133,7 @@ class VisitController extends Controller {
 
         $this->renderPartial('_admin', array(
             'model' => $model,
-        ),false,true);
+                ), false, true);
     }
 
     /**
@@ -159,10 +160,12 @@ class VisitController extends Controller {
             Yii::app()->end();
         }
     }
-    /*Displays details of a visit
-     *@param integer $id the ID of the model to be viewed
+
+    /* Displays details of a visit
+     * @param integer $id the ID of the model to be viewed
      *   
-     */       
+     */
+
     public function actionDetail($id) {
         $model = $this->loadModel($id);
         $visitorModel = Visitor::model()->findByPk($model->visitor);
@@ -207,7 +210,7 @@ class VisitController extends Controller {
     public function actionView() {
         $this->layout = "//layouts/column1";
         $session = new CHttpSession;
-        $session['lastPage']   = 'visitorrecords';
+        $session['lastPage'] = 'visitorrecords';
         $model = new Visit('search');
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['Visit'])) {
@@ -218,7 +221,9 @@ class VisitController extends Controller {
             'model' => $model,
         ));
     }
+
     /* Evacuation Report */
+
     public function actionEvacuationReport() {
         $model = new Visit('search');
         $model->unsetAttributes();  // clear any default values
@@ -233,9 +238,9 @@ class VisitController extends Controller {
 
         $this->render('_evacuationreport', array(
             'model' => $model,
-        ),false,true);
+                ), false, true);
     }
-    
+
     public function actionEvacuationReportAjax() {
         $model = new Visit('search');
         $model->unsetAttributes();  // clear any default values
@@ -250,21 +255,21 @@ class VisitController extends Controller {
 
         $this->renderPartial('_evacuationreport', array(
             'model' => $model,
-        ),false,true);
+                ), false, true);
     }
-    
+
     public function actionVisitorRegistrationHistory() {
         $model = new Visit('search');
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['Visit'])) {
             $model->attributes = $_GET['Visit'];
         }
-        
+
         if (Yii::app()->request->getParam('export')) {
             $this->actionExportHistory();
             Yii::app()->end();
         }
-        
+
         $this->render('visitorRegistrationHistory', array(
             'model' => $model,
         ));
@@ -291,7 +296,6 @@ class VisitController extends Controller {
         $row = array();
         foreach ($headers as $header) {
             $row[] = Visit::model()->getAttributeLabel($header);
-            
         }
         $row[] = 'Accounted for';
         fputcsv($fp, $row);
@@ -304,12 +308,12 @@ class VisitController extends Controller {
         if (isset($_GET['Visit'])) {
             $model->attributes = $_GET['Visit'];
         }
-       
-            $merge = new CDbCriteria;
-            $merge->addCondition('visit_status ="' . VisitStatus::ACTIVE . '"');
 
-            $dp = $model->search($merge);
-        
+        $merge = new CDbCriteria;
+        $merge->addCondition('visit_status ="' . VisitStatus::ACTIVE . '"');
+
+        $dp = $model->search($merge);
+
 
         /*
          * Get models, write to a file, then change page and re-init DataProvider
@@ -339,10 +343,12 @@ class VisitController extends Controller {
     }
 
     public function actionExportFile() {
-        Yii::app()->request->sendFile('Evacuationreport'.time().'.csv', Yii::app()->user->getState('export'));
+        Yii::app()->request->sendFile('Evacuationreport' . time() . '.csv', Yii::app()->user->getState('export'));
         Yii::app()->user->clearState('export');
     }
+
     /* Export Visitor Registration History */
+
     public function actionExportHistory() {
         $fp = fopen('php://temp', 'w');
 
@@ -409,10 +415,10 @@ class VisitController extends Controller {
     }
 
     public function actionExportFileHistory() {
-        Yii::app()->request->sendFile('ViewRegistrationHistory'.time().'.csv', Yii::app()->user->getState('export'));
+        Yii::app()->request->sendFile('ViewRegistrationHistory' . time() . '.csv', Yii::app()->user->getState('export'));
         Yii::app()->user->clearState('export');
     }
-    
+
     public function actionExportVisitorRecords() {
         $model = new Visit('search');
         $model->unsetAttributes();  // clear any default values
@@ -429,7 +435,7 @@ class VisitController extends Controller {
             'model' => $model,
         ));
     }
-    
+
     public function actionExportVisitorRecordsCSV() {
         $fp = fopen('php://temp', 'w');
 
@@ -462,7 +468,7 @@ class VisitController extends Controller {
             $model->attributes = $_GET['Visit'];
         }
 
-       
+
         $dp = $model->search();
 
         /*
@@ -493,22 +499,92 @@ class VisitController extends Controller {
     }
 
     public function actionExportFileVisitorRecords() {
-        Yii::app()->request->sendFile('VisitorRecords'.time().'.csv', Yii::app()->user->getState('export'));
+        Yii::app()->request->sendFile('VisitorRecords' . time() . '.csv', Yii::app()->user->getState('export'));
         Yii::app()->user->clearState('export');
     }
-    
+
     public function actionRunScheduledJobsClose() {
-        
+
         echo "Scheduled Jobs - Close <br>";
         $visit = new VisitServiceImpl();
         $visit->notreturnCardIfVisitIsClosedAutomatically();
     }
-    
+
     public function actionRunScheduledJobsExpired() {
-        
+
         echo "Scheduled Jobs - Expired <br>";
         $visit = new VisitServiceImpl();
         $visit->notreturnCardIfVisitIsExpiredAutomatically();
+    }
+
+    public function actionDuplicateVisit($id) {
+        $visitService = new VisitServiceImpl();
+        $session = new CHttpSession;
+        $model = $this->loadModel($id); // record that we want to duplicate
+        $model->id = null;
+        $model->visit_status = VisitStatus::SAVED;
+        $model->date_in = '';
+        $model->time_in = '';
+        $model->time_out = '';
+        $model->date_out = '';
+        $model->date_check_in = '';
+        $model->time_check_in = '';
+        $model->time_check_out = '';
+        $model->date_check_out = '';
+
+        $model->isNewRecord = true;
+        $model->attributes = $_POST['Visit'];
+
+        if ($visitService->save($model, $session['id'])) {
+            echo $model->id;
+        }
+    }
+
+    public function actionIsVisitorHasCurrentSavedVisit($id) {
+        if (Visit::model()->isVisitorHasCurrentSavedVisit($id)) {
+            $aArray[] = array(
+                'isTaken' => 1,
+            );
+        } else {
+            $aArray[] = array(
+                'isTaken' => 0,
+            );
+        }
+
+        $resultMessage['data'] = $aArray;
+        echo CJavaScript::jsonEncode($resultMessage);
+        Yii::app()->end();
+    }
+
+    public function actionGetVisitDetailsOfVisitor($id) {
+        $Criteria = new CDbCriteria();
+        $Criteria->condition = "visitor = '" . $id . "' and visit_status='" . VisitStatus::SAVED . "'";
+        $visit = Visit::model()->findAll($Criteria);
+        $resultMessage['data'] = $visit;
+        echo CJavaScript::jsonEncode($resultMessage);
+        Yii::app()->end();
+    }
+
+    public function actionGetVisitDetailsOfHost($id) {
+        $resultMessage['data'] = User::model()->findAllByPk($id);
+        echo CJavaScript::jsonEncode($resultMessage);
+        Yii::app()->end();
+    }
+    
+    public function actionIsDateConflictingWithAnotherVisit($date_in, $date_out, $visitorId, $visitStatus){
+        if (Visit::model()->isDateConflictingWithAnotherVisit($date_in, $date_out, $visitorId, $visitStatus)) {
+            $aArray[] = array(
+                'isConflicting' => 1,
+            );
+        } else {
+            $aArray[] = array(
+                'isConflicting' => 0,
+            );
+        }
+
+        $resultMessage['data'] = $aArray;
+        echo CJavaScript::jsonEncode($resultMessage);
+        Yii::app()->end();
     }
 
 }

@@ -48,9 +48,10 @@ class Issue33FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("link=Preregistered");
         $this->click("//li[@id='activateLi']/a/span");
-        $this->clickAndWait("css=#activate-a-visit-form > input[type=\"submit\"]");
+        $this->type("id=Visitor_photo","1");
+        $this->clickAndWait("css=#activate-a-visit-form > input.complete");
+        $this->clickAndWait("link=Active");
         $this->clickAndWait("id=printCardBtn");
-        $this->waitForPageToLoad("30000");
         $this->open("http://cvms.identitysecurity.info/index.php?r=visit/detail&id=7");
         $this->assertEquals("", $this->getText("id=reprintCardBtn"));
         $this->clickAndWait("link=Administration");
@@ -70,8 +71,7 @@ class Issue33FunctionalTest extends BaseFunctionalTest {
         $this->click("link=Reports");
         $this->clickAndWait("link=Evacuation Report");
         $this->assertEquals("No results found.", $this->getText("css=span.empty"));
-        $this->click("link=Visitor Registration History");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("link=Visitor Registration History");
         $this->assertEquals("testVisitor1@test.com", $this->getText("//div[@id='view-visitor-records-history']/table/tbody/tr/td[8]"));
     }
 

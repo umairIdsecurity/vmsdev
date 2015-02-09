@@ -100,7 +100,7 @@ class Issue13FunctionalTest extends BaseFunctionalTest {
         $this->select("id=User_role", "label=Administrator");
         $this->select("id=fromMonth", "label=Jul");
         sleep(1);
-        $this->select("id=fromDay", "label=30");
+        $this->select("id=fromDay", "label=22");
         $this->select("id=fromYear", "label=1993");
         $this->type("id=User_password", "123");
         $this->type("id=User_repeat_password", "123");
@@ -111,7 +111,7 @@ class Issue13FunctionalTest extends BaseFunctionalTest {
         sleep(1);
         $this->clickAndWait("link=Edit");
         $this->assertEquals("1993", $this->getEval("window.document.getElementById(\"fromYear\").value"));
-        $this->assertEquals("30", $this->getEval("window.document.getElementById(\"fromDay\").value"));
+        $this->assertEquals("22", $this->getEval("window.document.getElementById(\"fromDay\").value"));
         $this->assertEquals("7", $this->getEval("window.document.getElementById(\"fromMonth\").value"));
     }
 

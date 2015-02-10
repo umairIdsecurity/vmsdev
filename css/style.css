@@ -1083,6 +1083,23 @@ dt.tabs dt{
     border-top-right-radius: 5px ! important;
 }
 
+.modal { overflow: visible !important; }
+.modal-body { overflow-y: visible !important; }
+.modal-body {
+    position: relative !important;
+    overflow-y: auto !important;
+    max-height: 400px !important;
+    padding: 15px !important;
+}
+
+.adminErrorSummary{
+    background: none repeat scroll 0 0 #FFEEEE;
+    border: 2px solid #CC0000;
+    font-size: 0.9em;
+    margin: 20px 0 20px;
+    padding: 7px 7px 12px;
+    width:50%;
+}
 
 .errorMessage
 {

@@ -16,15 +16,22 @@ switch ($session['role']) {
         $workstationList = Workstation::model()->findAll($Criteria);
         break;
 }
-
-
 $x = 0; //initiate variable for foreach
+if (empty($workstationList)) {
+    ?>
+
+    <div class="adminErrorSummary" >
+        <p><b>Error 503</b><br> No workstations available</p>
+    </div>
+
+    <?php
+}
 foreach ($workstationList as $workstation) {
 
     $x++;
     echo "<h1>" . $workstation->name . "</h1>";
     $merge = new CDbCriteria;
-    $merge->addCondition('workstation ="' . $workstation->id . '" and (visit_status ="' . VisitStatus::ACTIVE . '" or visit_status ="'.VisitStatus::PREREGISTERED.'")');
+    $merge->addCondition('workstation ="' . $workstation->id . '"');
     ?><div  class="admindashboardDiv"><?php
         $this->widget('zii.widgets.grid.CGridView', array(
             'id' => 'visit-gridDashboard' . $x,
@@ -34,7 +41,7 @@ foreach ($workstationList as $workstation) {
             array(
                 array(
                     'name' => 'visit_status',
-                    'filter' => VisitStatus::$VISIT_STATUS_DASHBOARD_FILTER,
+                    'filter' => VisitStatus::$VISIT_STATUS_LIST,
                     'value' => 'CHtml::link(VisitStatus::$VISIT_STATUS_LIST[$data->visit_status],Yii::app()->createUrl("visit/detail",array("id"=>$data->id)),array("class" =>"statusLink"))',
                     'type' => 'raw',
                     'header' => 'Status',
@@ -42,8 +49,7 @@ foreach ($workstationList as $workstation) {
                 ),
                 array(
                     'name' => 'card',
-                    'header' => 'Card No.',
-                    'value' => 'CardGenerated::model()->getCardCode($data->card)',
+                    'header' => 'Card No.'
                 ),
                 array(
                     'name' => 'firstname',
@@ -90,27 +96,27 @@ foreach ($workstationList as $workstation) {
             ),
         ));
         ?></div><br><?php
-    }
+}
 
-    function getVisitorFullName($id) {
-        $visitor = Visitor::model()->findByPk($id);
+function getVisitorFullName($id) {
+    $visitor = Visitor::model()->findByPk($id);
 
-        return $visitor->first_name . ' ' . $visitor->last_name;
-    }
+    return $visitor->first_name . ' ' . $visitor->last_name;
+}
 
-    function getCompany($id) {
-        if (Visitor::model()->findByPk($id)->company == NULL) {
-            return "Not Available";
-        } else {
-            return Company::model()->findByPk(Visitor::model()->findByPk($id)->company)->name;
-        }
+function getCompany($id) {
+    if (Visitor::model()->findByPk($id)->company == NULL) {
+        return "Not Available";
+    } else {
+        return Company::model()->findByPk(Visitor::model()->findByPk($id)->company)->name;
     }
+}
 
-    function formatTime($time) {
-        if ($time == '') {
-            return "-";
-        } else {
-            return date('h:i A', strtotime($time));
-        }
+function formatTime($time) {
+    if ($time == '') {
+        return "-";
+    } else {
+        return date('h:i A', strtotime($time));
     }
-    ?>
+}
+?>

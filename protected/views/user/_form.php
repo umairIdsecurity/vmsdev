@@ -874,7 +874,7 @@ $this->widget('bootstrap.widgets.TbButton', array(
                 url = '<?php echo $this->createUrl('company/create&viewFrom=1&tenant=') ?>' + tenant;
             }
         }
-        $("#modalBody").html('<iframe width="100%" height="80%" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
+        $("#modalBody").html('<iframe width="100%" id="companyModalIframe" height="88%" frameborder="0" scrolling="no" src="' + url + '" ></iframe>');
         $("#modalBtn").click();
     }
 

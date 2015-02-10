@@ -11,34 +11,40 @@ if (isset($_GET['viewFrom'])) {
 <?php $this->beginContent('//layouts/main');
 ?>
 <div class="span-5 last">
-    <?php if (!isset($_GET['viewFrom'])) { ?>
-        <div id="sidebar">
-            <?php
+    <?php if ($isViewedFromModal == '') { ?>
+    <div id="sidebar">
+        <?php
             if (isset($_GET['viewFrom'])) {
-                
+
             } elseif ($session['role'] == Roles::ROLE_STAFFMEMBER) {
-                require_once(Yii::app()->basePath . '/views/visit/dashboardSidebar.php');
+            require_once(Yii::app()->basePath . '/views/visit/dashboardSidebar.php');
+
             } elseif ($this->id == 'dashboard' || $session['lastPage'] == 'dashboard') {
-                if ($this->id != 'dashboard') {
-                    $this->renderPartial("../dashboard/viewdashboardsidebar");
-                } else {
-                    $this->renderPartial("viewdashboardsidebar");
-                }
-            } elseif ($session['role'] == Roles::ROLE_SUPERADMIN || $session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_AGENT_ADMIN) {
-                require_once(Yii::app()->basePath . '/views/user/admin_menu.php');
+            if ($this->id != 'dashboard') {
+            $this->renderPartial("../dashboard/viewdashboardsidebar");
             } else {
-                require_once(Yii::app()->basePath . '/views/dashboard/viewdashboardsidebar.php');
+            $this->renderPartial("viewdashboardsidebar");
+
+            }
+
+            } elseif ($session['role'] == Roles::ROLE_SUPERADMIN || $session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_AGENT_ADMIN) {
+            require_once(Yii::app()->basePath . '/views/user/admin_menu.php');
+
+            } else {
+            require_once(Yii::app()->basePath . '/views/dashboard/viewdashboardsidebar.php');
+
             }
             ?>
+
         </div><!-- sidebar -->
-        <?php } ?>
+    <?php } ?>
 </div>
 <div class="span-19">
     <div id="content" style="<?php
-        if ($isViewedFromModal != '' || $this->action->id == 'detail') {
-            echo "border:1px solid white !important;";
-        }
-        ?>"
+         if ($isViewedFromModal != '' || $this->action->id == 'detail') {
+             echo "border:1px solid white !important;";
+         }
+         ?>"
          <?php
          if ($this->action->id == 'detail') {
              echo "class='overflowxvisible'";
@@ -49,5 +55,4 @@ if (isset($_GET['viewFrom'])) {
     </div><!-- content -->
 </div>
 
-             <?php $this->endContent(); ?>
-
+<?php $this->endContent(); ?>

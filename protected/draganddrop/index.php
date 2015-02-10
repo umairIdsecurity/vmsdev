@@ -96,6 +96,12 @@ if ($this->action->id == 'detail') {
 
 <input type="hidden" id="actionUpload" value="<?php echo $this->action->id; ?>"/> 
 <input type="hidden" id="controllerId" value="<?php echo $this->id; ?>"/> 
+<input type="hidden" id="viewFrom" value="<?php if (isset($_GET['viewFrom'])) {
+    echo "1";
+} else {
+    echo "0";
+}
+?>"/> 
 <div id="status1"></div>
 <script>
     $(document).ready(function()
@@ -157,7 +163,9 @@ if ($this->action->id == 'detail') {
                                     $("#cropImageBtn").show();
                                 }
                             });
-
+                            if ($("#viewFrom").val() == '1') {
+                                window.parent.document.getElementById('companyModalIframe').style.height= "715px"; 
+                            }
                         }
                     });
                 }

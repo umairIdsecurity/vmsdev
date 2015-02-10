@@ -1,5 +1,4 @@
 <?php
-
 $cs = Yii::app()->clientScript;
 $cs->registerScriptFile(Yii::app()->request->baseUrl . '/js/script-visitordetail.js');
 $session = new CHttpSession;
@@ -86,9 +85,14 @@ $session = new CHttpSession;
                                             $("#visitorTypePatientHost").html("Please select a host.");
                                             $("#visitorTypePatientHost").show();
                                         }
+                                        else {
+                                            $(".visitorTypePatientHost").hide();
+                                            sendVisitForm("update-visit-form"); 
+                                        }
                                     } else {
                                     $(".visitorTypePatientHost").hide();
-                                    sendVisitForm("update-visit-form"); }
+                                    sendVisitForm("update-visit-form"); 
+                                    }
                                 }
                                 }'
                         ),
@@ -98,6 +102,30 @@ $session = new CHttpSession;
 
                     <table id="visitorTypeTable" class="detailsTable">
                         <tr>
+
+                            <td width="100px;"><?php echo $visitForm->labelEx($model, 'card_type'); ?></td>
+                            <td>
+                                <select id="Visit_card_type" name="Visit[card_type]">
+                                    <?php
+                                    $cardType = CardType::model()->findAll();
+                                    foreach ($cardType as $key => $value) {
+                                        ?>
+                                        <option value="<?php echo $value->id; ?>" <?php
+                                    if ($model->card_type == $value->id) {
+                                        echo " selected ";
+                                    }
+                                        ?>><?php echo $value->name; ?></option>
+                                                <?php
+                                            }
+                                            ?>
+
+                                </select>
+                                <?php echo "<br>" . $visitForm->error($model, 'card_type'); ?>
+                            </td>
+
+                        </tr>
+                        <tr>
+
                             <td width="100px;"><?php echo $visitForm->labelEx($model, 'visitor_type'); ?></td>
                             <td><?php
                                 if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
@@ -171,9 +199,9 @@ $session = new CHttpSession;
                                     foreach ($reason as $key => $value) {
                                         ?>
                                         <option value="<?php echo $value->id; ?>" <?php
-                                        if ($model->reason == $value->id) {
-                                            echo " selected ";
-                                        }
+                                    if ($model->reason == $value->id) {
+                                        echo " selected ";
+                                    }
                                         ?>><?php echo $value->reason; ?></option>
                                                 <?php
                                             }
@@ -208,8 +236,8 @@ $session = new CHttpSession;
                         <tr>
                             <td width="100px;"><label for="VisitReason_reason">Reason</label></td>
                             <td><textarea id="VisitReason_reason" name="VisitReason[reason]" style="width:200px !important;text-transform: capitalize;" cols="80" rows="3"><?php
-                                    echo $reasonModel->reason;
-                                    ?></textarea> <?php echo $addReasonForm->error($reasonModel, 'reason'); ?>
+                    echo $reasonModel->reason;
+                    ?></textarea> <?php echo $addReasonForm->error($reasonModel, 'reason'); ?>
                                 <div class="errorMessage visitorReason" id="visitReasonErrorMessage">Reason cannot be blank.</div>
                             </td>
                         </tr>
@@ -254,10 +282,10 @@ $session = new CHttpSession;
                         </div>
                         <input type="text" name="Visit[host]" id="selectedHostInSearchTable" style="display:none;"/>
                         <input type="text" name="Visit[visitor_type]" id="visitorTypeUnderSearchForm" style="display:none;" value="<?php
-                        if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
-                            echo "2";
-                        }
-                        ?>"/>
+                    if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
+                        echo "2";
+                    }
+                    ?>"/>
                                <?php echo "<br>" . $updateHostVisitForm->error($model, 'host'); ?>
                         <div id="searchHostTableDiv">
                             <br><div style="font-weight:bold;" class="findDivTitle"></div><br>
@@ -550,7 +578,7 @@ $session = new CHttpSession;
                         <table id="patientTable" class="detailsTable">
                             <tr>
                                 <td width="100px;"><?php echo $patientForm->labelEx($patientModel, 'first_name');
-                        ?></td>
+                    ?></td>
                                 <td>
                                     <?php echo $patientForm->textField($patientModel, 'name', array('size' => 50, 'maxlength' => 50)); ?>
                                     <?php echo "<br>" . $patientForm->error($patientModel, 'name'); ?>

@@ -271,10 +271,19 @@ $this->renderPartial('visithistory', array('model' => $model,
                     $(".success-update-host-details").show();
                 } else if (formId == 'update-log-visit-form') {
                     $(".success-update-preregister").show();
+                    if ($("#currentRoleOfLoggedInUser").val() == 5 || $("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
+                        window.location = 'index.php?r=dashboard';
+                    } else if ($("#currentRoleOfLoggedInUser").val() == 1 || $("#currentRoleOfLoggedInUser").val() == 6) {
+                        window.location = 'index.php?r=dashboard/admindashboard';
+                    } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
+                        window.location = 'index.php?r=dashboard/viewmyvisitors';
+                    }
+
                 }
                 else
                 {
                     $(".success-update-visitor-type").show();
+                    window.location = 'index.php?r=visit/detail&id=<?php echo $_GET['id']; ?>';
                 }
             },
         });
@@ -388,7 +397,14 @@ $this->renderPartial('visithistory', array('model' => $model,
             url: "<?php echo CHtml::normalizeUrl(array("visit/update&id=" . $model->id)); ?>",
             data: visitForm,
             success: function(data) {
-                window.location = "index.php?r=visit/detail&id=<?php echo $_GET['id']; ?>";
+                //window.location = "index.php?r=visit/detail&id=<?php //echo $_GET['id'];  ?>";
+                if ($("#currentRoleOfLoggedInUser").val() == 5 || $("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
+                    window.location = 'index.php?r=dashboard';
+                } else if ($("#currentRoleOfLoggedInUser").val() == 1 || $("#currentRoleOfLoggedInUser").val() == 6) {
+                    window.location = 'index.php?r=dashboard/admindashboard';
+                } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
+                    window.location = 'index.php?r=dashboard/viewmyvisitors';
+                }
             },
         });
     }
@@ -401,6 +417,31 @@ $this->renderPartial('visithistory', array('model' => $model,
             data: visitForm,
             success: function(data) {
                 window.location = "index.php?r=visit/detail&id=<?php echo $_GET['id']; ?>";
+            },
+        });
+    }
+
+    function sendCancelVisit() {
+        var visitForm = $("#cancel-visit-form").serialize();
+        $.ajax({
+            type: "POST",
+            url: "<?php echo CHtml::normalizeUrl(array("visit/update&id=" . $model->id)); ?>",
+            data: visitForm,
+            success: function(data) {
+                window.location = "index.php?r=visit/detail&id=<?php echo $_GET['id']; ?>";
+            },
+        });
+    }
+
+    function duplicateVisit(formId) {
+        var visitForm = $("#" + formId).serialize();
+        $.ajax({
+            type: "POST",
+            url: "<?php echo CHtml::normalizeUrl(array("visit/duplicateVisit&id=" . $model->id)); ?>",
+            data: visitForm,
+            success: function(data) {
+                window.location = "index.php?r=visit/detail&id=" + data;
+                //  alert(data);
             },
         });
     }

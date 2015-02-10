@@ -17,7 +17,7 @@ date_default_timezone_set('Asia/Manila');
         'enableClientValidation' => true,
     ));
     ?>
- 
+
 
     <p class="note">Fields with <span class="required">*</span> are required.</p>
 
@@ -72,9 +72,8 @@ date_default_timezone_set('Asia/Manila');
     <div class="row">
         <?php echo $form->labelEx($visitModel, 'visit_status'); ?>
         <input name="Visit[visit_status]" id="Visit_visit_status" type="text" value="<?php
-        
         if (isset($_GET['action'])) {
-            echo VisitStatus::PREREGISTERED;           
+            echo VisitStatus::PREREGISTERED;
         } else {
             echo VisitStatus::ACTIVE;
         };
@@ -122,20 +121,35 @@ date_default_timezone_set('Asia/Manila');
     <?php $this->endWidget(); ?>
 
 </div><!-- form -->
-<input type="text" style="display:none;" id="visitSessionRole" value="<?php echo $session['role'];?>">
+<input type="text" style="display:none;" id="visitSessionRole" value="<?php echo $session['role']; ?>">
+<input type="text" style="display:none;" id="currentAction" value="<?php
+    if (isset($_GET['action'])) {
+        echo "preregister";
+    }
+    ?>">
+<input type='hidden' id='isPreloaded' />
+<input type='hidden' id='preloadVisitId'/>
 <script>
     $(document).ready(function() {
 
     });
     function populateVisitFormFields() {
+        if ($("#isPreloaded").val() != '') {
+            var url = "<?php echo CHtml::normalizeUrl(array("visit/update&id=")); ?>" + $("#preloadVisitId").val();
+            $("#register-visit-form").attr("action", url);
+        }
         $("#Visit_visitor").val($("#visitorId").val());
         $("#Visit_visitor_type").val($("#Visitor_visitor_type").val());
         $("#visitReasonFormField").val($("#Visit_reason").val());
         $("#Visit_visitor_status").val("1");
-        if($("#visitSessionRole").val() == 7 || $("#visitSessionRole").val() == 8){
+        if ($("#visitSessionRole").val() == 7 || $("#visitSessionRole").val() == 8) {
             $("#Visit_workstation").val($("#workstation").val());
         }
-        
+        if ($("#currentAction").val() == 'preregister') {
+            $("#Visit_visit_status").val("<?php echo VisitStatus::SAVED; ?>");
+        }
+
+
         if ($("#Visitor_visitor_type").val() == 1) { //if type is patient
             $("#Visit_host").val("");
             $("#Visit_patient").val($("#hostId").val());
@@ -148,13 +162,25 @@ date_default_timezone_set('Asia/Manila');
     }
 
     function sendVisitForm() {
-        var visitForm = $("#register-visit-form").serialize();
-        $.ajax({
-            type: "POST",
-            url: "<?php echo CHtml::normalizeUrl(array("visit/create")); ?>",
-            data: visitForm,
-            success: function(data) {
-            },
-        });
+        if ($("#isPreloaded").val() == 1) {
+            var visitForm = $("#register-visit-form").serialize();
+            $.ajax({
+                type: "POST",
+                url: "<?php echo CHtml::normalizeUrl(array("visit/update&id=")); ?>" + $("#preloadVisitId").val(),
+                data: visitForm,
+                success: function(r) {
+                },
+            });
+        } else {
+            var visitForm = $("#register-visit-form").serialize();
+            $.ajax({
+                type: "POST",
+                url: "<?php echo CHtml::normalizeUrl(array("visit/create")); ?>",
+                data: visitForm,
+                success: function(r) {
+                },
+            });
+        }
+
     }
 </script>

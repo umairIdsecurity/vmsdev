@@ -66,7 +66,7 @@ class Issue47FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("link=Preregistered");
         $this->assertEquals("TCA", $this->getText("css=#cardDetailsTable > tbody > tr > td"));
-        $this->assertEquals("TCA000008", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[4]/td"));
+        //$this->assertEquals("TCA000008", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[4]/td"));
         $this->clickAndWait("link=Administration");
         $this->click("id=yt0");
         $this->waitForElementPresent("name=Company[name]");

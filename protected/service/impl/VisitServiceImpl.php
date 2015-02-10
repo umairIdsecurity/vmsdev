@@ -33,7 +33,8 @@ class VisitServiceImpl implements VisitService {
         
 
         $this->returnCardIfVisitIsClosedManually($visit);
-
+        $this->clearAllDatesIfVisitStatusIsSave($visit);
+        
         Visit::model()->updateByPk($visit->id, array(
             'tenant' => $visitor->tenant,
             'tenant_agent' => $visitor->tenant_agent,
@@ -48,6 +49,16 @@ class VisitServiceImpl implements VisitService {
             CardGenerated::model()->updateByPk($visit->card, array(
                 'card_status' => CardStatus::RETURNED,
                 'date_returned' => date('d-m-Y'),
+            ));
+        }
+    }
+    
+    function clearAllDatesIfVisitStatusIsSave($visit) {
+        //if visit is closed update card status to returned and date returned to current date
+        if ($visit->visit_status == VisitStatus::SAVED) {
+            Visit::model()->updateByPk($visit->id, array(
+                'time_out' => '',
+                'time_check_out' => '',
             ));
         }
     }

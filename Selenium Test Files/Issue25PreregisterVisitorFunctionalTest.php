@@ -585,20 +585,20 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         } catch (PHPUnit_Framework_AssertionFailedError $e) {
             array_push($this->verificationErrors, $e->toString());
         }
-        $this->clickAndWait("link=Dashboard");
+        $this->clickAndWait("link=Visitor Records");
         $this->type("name=Visit[lastname]", "visitornewcompany");
         for ($second = 0;; $second++) {
             if ($second >= 60)
                 $this->fail("timeout");
             try {
-                if ("new company" == $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"))
+                if ("new company" == $this->getText("//div[@id='view-visitor-records']/table/tbody/tr/td[6]"))
                     break;
             } catch (Exception $e) {
                 
             }
             sleep(1);
         }
-        $this->assertEquals("new company", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
+        $this->assertEquals("new company", $this->getText("//div[@id='view-visitor-records']/table/tbody/tr/td[6]"));
     }
 
 }

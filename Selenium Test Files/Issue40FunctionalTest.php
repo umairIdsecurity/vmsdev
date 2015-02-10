@@ -36,8 +36,8 @@ class Issue40FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Active Preregistered", $this->getText("name=Visit[visit_status]"));
         $this->clickAndWait("link=Preregistered");
         $this->click("//li[@id='activateLi']/a/span");
-        $this->click("css=#activate-a-visit-form > input[type=\"submit\"]");
-        $this->clickAndWait("link=Dashboard");
+        $this->type("id=Visitor_photo","1");
+        $this->clickAndWait("css=#activate-a-visit-form > input.complete");
         $this->select("name=Visit[visit_status]", "label=Active");
         for ($second = 0;; $second++) {
             if ($second >= 60)

@@ -1066,7 +1066,8 @@ dt.tabs dt{
 
 .moveFromAlignmentA{
     margin-left: 576px;
-    margin-top: -183px !important;
+    margin-top: -353px !important;
+    position:absolute;
 }
 
 .moveFromAlignmentB{
@@ -1109,9 +1110,17 @@ dt.tabs dt{
 
 .cardCompanyLogo{
     height: 30px;
-    margin-left: -100px;
-    margin-top: -33px;
+    margin-left: -104px;
+    margin-top: -38px;
     position: absolute;
+    width: 50px;
+}
+
+.cardCompanyLogoPreregistered{
+    height: 30px;
+    margin-left: -155px;
+    margin-top: -64px;
+    position: relative;
     width: 50px;
 }
 
@@ -1140,7 +1149,7 @@ dt.tabs dt{
     display:none;
 }
 .editImageBtn{
-    background: none repeat scroll 0 0 #9BD62C;
+    background: none repeat scroll 0 0 #9BD62C !important;
     border: 0 none;
     border-radius: 5px;
     box-shadow: 0 2px 0 0 #13648D;
@@ -1257,3 +1266,12 @@ dt.tabs dt{
     width:105px;
 }
 
+#view-visitor-records_c6{
+    width:125px;
+}
+
+.newvisitBtn{
+    margin-bottom:5px;
+    width:200px;
+    height:27px;
+}

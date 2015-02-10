@@ -33,7 +33,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' => 'card',
             'header' => 'Card No.',
-            'value' => 'getCardCode($data->card)',
+            'value' => 'CardGenerated::model()->getCardCode($data->card)',
         ),
         array(
             'name' => 'firstname',

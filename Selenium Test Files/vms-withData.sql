@@ -411,11 +411,11 @@ CREATE TABLE IF NOT EXISTS `visit` (
 
 
 INSERT INTO `visit` (`id`, `visitor`, `card_type`, `card`, `visitor_type`, `reason`, `visitor_status`, `host`, `patient`, `created_by`, `date_in`, `time_in`, `date_out`, `time_out`, `date_check_in`, `time_check_in`, `date_check_out`, `time_check_out`, `visit_status`, `tenant`, `tenant_agent`, `is_deleted`,`workstation`) VALUES
-(1, 2, 1, NULL, 1, 1, 1, NULL, 1, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 17, 18, 0,8),
-(2, 2, 1, NULL, 1, 2, 1, NULL, 2, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 17, 18, 0,8),
-(3, 2, 1, NULL, 1, 2, 1, NULL, 2, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 17, 18, 0,8),
-(4, 3, 1, NULL, 1, 1, 1, NULL, 3, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 17, 18, 0,8),
-(5, 3, 1, NULL, 1, 1, 1, NULL, 3, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 17, 18, 0,8),
+(1, 2, 1, NULL, 2, 1, 1, 21, 1, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 17, 18, 0,8),
+(2, 2, 1, NULL, 2, 2, 1, 21, 2, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 17, 18, 0,8),
+(3, 2, 1, NULL, 2, 2, 1, 21, 2, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 17, 18, 0,8),
+(4, 3, 1, NULL, 2, 1, 1, 21, 3, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 17, 18, 0,8),
+(5, 3, 1, NULL, 2, 1, 1, 21, 3, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 17, 18, 0,8),
 (6, 4, 1, NULL, 2, 1, 1, 23, NULL, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 17, 18, 0,8),
 (7, 2, 2, NULL, 2, 1, 1, 21, NULL, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 17, 18, 0,8);
 
@@ -462,7 +462,7 @@ CREATE TABLE IF NOT EXISTS `visitor` (
 
 INSERT INTO `visitor` (`id`, `first_name`, `last_name`, `email`, `contact_number`, `date_of_birth`, `company`, `department`, `position`, `staff_id`, `notes`, `password`, `role`, `visitor_type`, `visitor_status`, `created_by`, `is_deleted`, `tenant`, `tenant_agent`) VALUES
 (2, 'Test', 'Visitor1', 'testVisitor1@test.com', '1234567', '1970-01-01', 2, NULL, 'Position', NULL, NULL, NULL, 10, 1, 1, 16, 0, 17, 18),
-(3, 'Test', 'Visitor3', 'testVisitor3@test.com', '1234567', '1970-01-01', NULL, NULL, 'Position', NULL, NULL, NULL, 10, 1, 1, 16, 0, 17, 18),
+(3, 'Test', 'Visitor3', 'testVisitor3@test.com', '1234567', '1970-01-01', 2, NULL, 'Position', NULL, NULL, NULL, 10, 1, 1, 16, 0, 17, 18),
 (4, 'Test', 'Visitor4', 'testVisitor4@test.com', '1234567', '1970-01-01', 2, NULL, 'Position', NULL, NULL, NULL, 10, 2, 1, 16, 0, 17, 18);
 
 -- --------------------------------------------------------
@@ -556,7 +556,8 @@ INSERT INTO `visit_status` (`id`, `name`, `created_by`) VALUES
 (1, 'Active', NULL),
 (2, 'Pre-registered', NULL),
 (3, 'Closed', NULL),
-(4, 'Expired', NULL);
+(4, 'Expired', NULL),
+(5, 'Save', NULL);
 
 -- --------------------------------------------------------
 

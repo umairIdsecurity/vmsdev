@@ -864,7 +864,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         }
         $this->clickAndWait("link=Visitor Records");
         if ($username == 'staffmember') {
-            $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
+            $this->assertEquals("Displaying 1-6 of 6 results.", $this->getText("css=div.summary"));
         }  else {
             $this->assertEquals("Displaying 1-10 of 11 results.", $this->getText("css=div.summary"));
         }

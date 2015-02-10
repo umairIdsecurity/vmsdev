@@ -1,5 +1,6 @@
 <br>
 <?php
+$session = new CHttpSession;
 $timeIn = explode(":", '00:00:00');
 if ($model->time_in != '') {
     $timeIn = explode(":", $model->time_in);
@@ -26,16 +27,15 @@ $logform = $this->beginWidget('CActiveForm', array(
                                     } else if($("#Visit_date_out").val() == "" ) {
                                        $("#preregisterdateoutError").show();
                                        $("#preregisterdateinError").hide();
-                                    } else {
+                                    } 
+                                    else {
                                         $("#preregisterdateinError").hide();
                                         $("#preregisterdateoutError").hide();
                                         $("#Visit_date_out").attr("disabled", false);
                                         $("#Visit_date_in").attr("disabled", false);
-                                        sendVisitForm("update-log-visit-form");
-                                        $("#Visit_date_out").attr("disabled", true);
-                                        $("#Visit_date_in").attr("disabled", true);
-                                        $("#dateoutDiv #Visit_date_out").val($("#Visit_date_out").val());
-                                        $("#dateoutDiv").hide();
+                                        checkIfPreregisteredVisitConflictsWithAnotherVisit();
+                                       // sendVisitForm("update-log-visit-form");
+                                        
                                     }
 
                                 }
@@ -44,6 +44,7 @@ $logform = $this->beginWidget('CActiveForm', array(
         ));
 ?>
 <div class="flash-success success-update-preregister">Visit Successfully Updated.</div>
+<input type='hidden' id='Visit_visit_status' name='Visit[visit_status]' value='<?php echo VisitStatus::PREREGISTERED; ?>'>
 <table class="detailsTable" style="font-size:12px;" id="logvisitTable">
 
     <tr>
@@ -137,8 +138,16 @@ $logform = $this->beginWidget('CActiveForm', array(
         </td>
     </tr>
 </table>
-<?php echo $logform->error($model, 'date_in'); ?>
-<input type='submit' value='Update' class="complete"/>
+<?php echo $logform->error($model, 'date_in');
+if ($model->visit_status == VisitStatus::CLOSED) {
+    ?>
+    <button id='preregisterNewVisit' class='greenBtn actionForward'>Confirm</button><br>
+<?php } else { ?>
+    <input type='submit' value='Confirm' class="complete"/>
+    <button class="actionForward greenBtn" style="height:25px;line-height:0px ;" id="cancelPreregisteredVisitButton">Cancel</button>
+
+<?php } ?>
+
 <?php $this->endWidget(); ?>
 <input type="text" value="<?php echo date('d-m-Y', time() + 86400); ?>" id="curDate" style="display:none;">
 <input type="text" value="<?php
@@ -164,9 +173,14 @@ echo date('d-m-Y', mktime(0, 0, 0, date('m'), date('d') + 2, date('Y')));
         }
 
         if ($("#currentCardTypeValueOfEditedUser").val() == 1) { //if card type is same visitor
-            $("#Visit_date_in").val(currentDate);
-            $("#Visit_date_out").val(currentDate);
-            $("#Visit_date_in").attr("disabled", true);
+            if ('<?php echo $model->date_out; ?>' != '') {
+                $("#Visit_date_out").val("<?php echo $model->date_out; ?>");
+                $("#Visit_date_in").val("<?php echo $model->date_in; ?>");
+            } else {
+                $("#Visit_date_in").val(currentDate);
+                $("#Visit_date_out").val(currentDate);
+                $("#Visit_date_in").attr("disabled", true);
+            }
         } else {
             $("#Visit_date_in").val(currentDate);
             $("#Visit_date_out").val($("#curDateMultiDay").val());
@@ -176,6 +190,11 @@ echo date('d-m-Y', mktime(0, 0, 0, date('m'), date('d') + 2, date('Y')));
                 $("#Visit_date_in").val("<?php echo $model->date_in; ?>");
             }
         }
+
+        $('#cancelPreregisteredVisitButton').on('click', function(e) {
+            e.preventDefault();
+            sendCancelVisit();
+        });
 
         $('#Visit_date_in').on('change', function(e) {
             assignValuesForProposedDateOutDependingOnCardType();

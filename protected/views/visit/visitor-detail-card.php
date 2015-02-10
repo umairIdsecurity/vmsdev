@@ -68,7 +68,9 @@ $photoForm = $this->beginWidget('CActiveForm', array(
                 <td><?php echo $visitorModel->first_name . ' ' . $visitorModel->last_name; ?></td>
             </tr>
             <tr>
-                <td><?php
+                <td>
+                    <span style="<?php if($model->visit_status != VisitStatus::ACTIVE){ echo 'display:none;'; }?>">
+                    <?php
                     if ($visitorModel->company != '') {
                         $inc = 6 - (strlen($model->id));
                         $int_code = '';
@@ -79,6 +81,7 @@ $photoForm = $this->beginWidget('CActiveForm', array(
                         echo Company::model()->findByPk($visitorModel->company)->code . $int_code . $model->id;
                     }
                     ?>
+                    </span>
                 </td>
             </tr>
         </table>
@@ -93,7 +96,7 @@ $photoForm = $this->beginWidget('CActiveForm', array(
                 $companyLogo = Photo::model()->returnCompanyPhotoRelativePath($visitorModel->company);
             }
             ?>
-            <img class='cardCompanyLogo' src="<?php
+        <img class='<?php if($model->visit_status != VisitStatus::ACTIVE){ echo "cardCompanyLogoPreregistered"; } else { echo "cardCompanyLogo"; } ?>' src="<?php
             echo Yii::app()->request->baseUrl . "/" . $companyLogo;
             ?>"/>
                  <?php

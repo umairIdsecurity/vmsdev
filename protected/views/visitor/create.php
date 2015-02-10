@@ -194,7 +194,7 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
             e.preventDefault();
             //var currentURL = location.href.split("=");
             var currentURL = $("#getcurrentUrl").val();
-            
+
             $("#Visit_visitor_type").val($("#Visitor_visitor_type").val());
             //checks if host is from search and verifys that a user has been selected
             if (($("#selectedHostInSearchTable").val() == '' && $("#search-host").val() != '') || $("#selectedHostInSearchTable").val() == '') {
@@ -292,12 +292,14 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
             success: function(r) {
                 $.each(r.data, function(index, value) {
                     $("#searchVisitorTableDiv h4").html("Selected Visitor Record : " + value.first_name + ' ' + value.last_name);
+                    checkIfVisitorHasACurrentSavedVisit(value.id);
                 });
                 $('#findVisitorTableIframe').contents().find('.findVisitorButtonColumn a').removeClass('delete');
                 $('#findVisitorTableIframe').contents().find('.findVisitorButtonColumn a').html('Select Visitor');
                 $('#findVisitorTableIframe').contents().find('#' + id).addClass('delete');
                 $('#findVisitorTableIframe').contents().find('#' + id).html('Selected Visitor');
                 $('#findVisitorTableIframe').contents().find('.findVisitorButtonColumn .linkToVisitorDetailPage').html('Visitor has an active visit');
+
             }
         });
 
@@ -305,6 +307,77 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
         $("#selectedVisitorInSearchTable").val(id);
         $("#visitorId").val(id);
         $("#Visit_visitor").val(id);
+
+    }
+
+    function checkIfVisitorHasACurrentSavedVisit(visitorId)
+    {
+        $.ajax({
+            type: 'POST',
+            url: '<?php echo Yii::app()->createUrl('visit/isVisitorHasCurrentSavedVisit&id='); ?>' + visitorId,
+            dataType: 'json',
+            data: visitorId,
+            success: function(r) {
+                $.each(r.data, function(index, value) {
+                    if (value.isTaken == 1) {
+                        preloadVisit(visitorId);
+                    }
+
+                });
+            }
+        });
+    }
+
+    function preloadVisit(visitorId) {
+    $("#isPreloaded").val("1");
+        $.ajax({
+            type: 'POST',
+            url: '<?php echo Yii::app()->createUrl('visit/getVisitDetailsOfVisitor&id='); ?>' + visitorId,
+            dataType: 'json',
+            data: visitorId,
+            success: function(r) {
+                $.each(r.data, function(index, value) {
+                    $("#preloadVisitId").val(value.id);
+                    $("#workstation_search").val(value.workstation);
+                    $("#Visit_reason_search").val(value.reason);
+                    $("#Visitor_visitor_type_search").val(value.visitor_type);
+                    $("#Visit_host").val(value.host);
+                    $("#Visit_reason").val(value.reason);
+                    $("#Visit_workstation").val(value.workstation);
+                    if (value.visitor_type != 1) {
+                        $("#register-host-patient-form").hide();
+                        $("#register-host-form").hide();
+                        $("#searchHostDiv").show();
+                        $("#currentHostDetailsDiv").show();
+                        $("#host-AddBtn").show();
+                        preloadHostDetails(value.host);
+                    }
+                });
+            }
+        });
+    }
+
+    function preloadHostDetails(hostId) {
+
+        $.ajax({
+            type: 'POST',
+            url: '<?php echo Yii::app()->createUrl('visit/getVisitDetailsOfHost&id='); ?>' + hostId,
+            dataType: 'json',
+            data: hostId,
+            success: function(r) {
+                $.each(r.data, function(index, value) {
+                    $("#staffmember-host-form #User_first_name").val(value.first_name);
+                    $("#staffmember-host-form #User_last_name").val(value.last_name);
+                    $("#staffmember-host-form #User_department").val(value.department);
+                    $("#staffmember-host-form #User_staff_id").val(value.staff_id);
+                    $("#staffmember-host-form #User_email").val(value.email);
+                    $("#staffmember-host-form #User_contact_number").val(value.contact_number);
+                    //alert(value.email);
+                });
+                
+              //  alert($("#staffmember-host-form #User_email").val());
+            }
+        });
     }
 
     function populateFieldHost(id) {

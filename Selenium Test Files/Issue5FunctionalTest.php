@@ -57,7 +57,7 @@ class Issue5FunctionalTest extends BaseFunctionalTest {
         $this->waitForElementPresent("link=Add Company");
         $this->click("link=Add Company");
         $this->waitForPageToLoad("30000");
-        $this->addinAdministrationCompany("Test Company 3", "testcompany");
+        $this->addinAdministrationCompany("Test Company 3", "testcompany","TCC");
         sleep(1);
         $this->type("css=td > input[name=\"Company[name]\"]", "Test Company 3");
         $this->type("name=Company[trading_name]", "Test Company 3");
@@ -145,10 +145,10 @@ class Issue5FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Please fix the following input errors:", $this->getText("css=div.errorSummary > p"));
         $this->type("id=Company_email_address", "123");
         $this->clickAndWait("id=createBtn");
-        $this->assertEquals("Email Address is not a valid email address.", $this->getText("//form[@id='company-form']/table/tbody/tr[6]/td[3]/div"));
+        $this->assertEquals("Email Address is not a valid email address.", $this->getText("//form[@id='company-form']/table/tbody/tr[7]/td[3]/div"));
         $this->type("id=Company_website", "123");
         $this->clickAndWait("id=createBtn");
-        $this->assertEquals("Website is not a valid URL.", $this->getText("//form[@id='company-form']/table/tbody/tr[9]/td[3]/div"));
+        $this->assertEquals("Website is not a valid URL.", $this->getText("//form[@id='company-form']/table/tbody/tr[10]/td[3]/div"));
     }
 
     /*

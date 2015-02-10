@@ -84,10 +84,11 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
         $this->type("id=User_notes", "Test Notes");
     }
 
-    function addCompany($companyname = NULL, $companyemail = NULL) {
+    function addCompany($companyname = NULL, $companyemail = NULL, $companycode = NULL) {
         $this->click("id=addCompanyLink");
         $this->waitForElementPresent("id=Company_name");
         $this->type("id=Company_name", $companyname);
+        $this->type("id=Company_code", $companycode);
         $this->type("id=Company_trading_name", $companyname);
         $this->type("id=Company_contact", "Test Person");
         $this->type("id=Company_billing_address", "123 street");
@@ -113,9 +114,10 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
         $this->assertEquals($value, $this->getEval("window.document.getElementById(\"User_company\").options[window.document.getElementById(\"User_company\").selectedIndex].text"));
     }
 
-    function addinAdministrationCompany($companyname = NULL, $companyemail = NULL) {
+    function addinAdministrationCompany($companyname = NULL, $companyemail = NULL, $companycode = NULL) {
         $this->waitForElementPresent("id=Company_name");
         $this->type("id=Company_name", $companyname);
+        $this->type("id=Company_code", $companycode);
         $this->type("id=Company_trading_name", $companyname);
         $this->type("id=Company_contact", "Test Person");
         $this->type("id=Company_billing_address", "123 street");

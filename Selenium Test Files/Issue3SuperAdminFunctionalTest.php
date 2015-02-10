@@ -60,7 +60,7 @@ class Issue3SuperAdminFunctionalTest extends BaseFunctionalTest {
         $this->click("link=Add Administrator");
         $this->waitForPageToLoad("30000");
         $this->addUser("admin@test.com", "admin");
-        $this->addCompany("Test Company 1", "testcompany");
+        $this->addCompany("Test Company 1", "testcompany","TCA");
         sleep(1);
         $this->waitForElementPresent("id=submitBtn");
         $this->click("id=submitBtn");
@@ -434,7 +434,7 @@ class Issue3SuperAdminFunctionalTest extends BaseFunctionalTest {
         $this->waitForPageToLoad("30000");
         $this->addUser("admin2@test.com", "admin2");
         $this->waitForElementPresent("id=submitBtn");
-        $this->addCompany("Test Company 2", "testcompany2");
+        $this->addCompany("Test Company 2", "testcompany2","TCB");
         $this->waitForElementPresent("id=submitBtn");
         sleep(1);
         $this->click("id=submitBtn");

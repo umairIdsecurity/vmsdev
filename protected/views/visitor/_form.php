@@ -97,7 +97,8 @@ if ($this->action->id == 'update') {
                                 if ($this->action->id == 'update' && $model->vehicle != "") {
                                     echo Vehicle::model()->findByPk($model->vehicle)->vehicle_registration_plate_number;
                                 }
-                                ?>">                            
+                                ?>">  
+                                       <?php echo "<br>" . $form->error($model, 'vehicle'); ?>
                             </td>
                         </tr>
 
@@ -105,19 +106,19 @@ if ($this->action->id == 'update') {
                             <td><?php echo $form->labelEx($model, 'Add Photo'); ?></td>
                             <td id="uploadRow" >
                                 <input type="hidden" id="Visitor_photo" name="Visitor[photo]"
-                                value="<?php echo $model['photo']; ?>">
+                                       value="<?php echo $model['photo']; ?>">
 
                                 <div class="photoDiv"  style="<?php
                                 if ($model['photo'] == NULL) {
                                     echo "display:none;";
-                                } 
+                                }
                                 ?>margin-bottom:5px;">
-                                         <?php if ($dataId != '') { ?> 
+                                     <?php if ($dataId != '') { ?> 
                                         <img id='photoPreview' src="<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($dataId) ?>"/>
                                     <?php } else { ?> 
                                         <img id='photoPreview' src="<?php
-                                        if (isset($_POST['Visitor']['photo'])) {
-                                            echo Yii::app()->request->baseUrl . "/" . $model->getPhotoRelativePath($_POST['Visitor']['photo']);
+                                        if ($this->action->id == 'update' && $model->photo != '') {
+                                            echo Yii::app()->request->baseUrl . "/" . Company::model()->getPhotoRelativePath($model->photo);
                                         }
                                         ?>
 
@@ -190,7 +191,7 @@ if ($this->action->id == 'update') {
                                 </td>
                                 <td>
                                     <input ng-model="user.passwords" data-ng-class="{
-                                                                    'ng-invalid':registerform['Visitor[repeatpassword]'].$error.match}" type="password" id="Visitor_password" name="Visitor[password]">			
+                                                    'ng-invalid':registerform['Visitor[repeatpassword]'].$error.match}" type="password" id="Visitor_password" name="Visitor[password]">			
                                            <?php echo "<br>" . $form->error($model, 'password'); ?>
                                 </td>
                             </tr>
@@ -232,7 +233,7 @@ if (isset($_GET['id'])) {
 <script>
     $(document).ready(function() {
         if ($("#currentAction").val() == 'update') {
-            if($("#Visitor_photo").val() != ''){
+            if ($("#Visitor_photo").val() != '') {
                 $("#cropImageBtn").show();
             }
             if ($("#currentRoleOfLoggedInUser").val() != 5) {

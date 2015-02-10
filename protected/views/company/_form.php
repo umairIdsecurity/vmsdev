@@ -48,10 +48,17 @@ if ($this->action->id == 'update') {
             <td><?php echo $form->error($model, 'name'); ?></td>
 
         </tr>
+        
         <tr>
             <td><?php echo $form->labelEx($model, 'trading_name'); ?></td>
             <td><?php echo $form->textField($model, 'trading_name', array('size' => 60, 'maxlength' => 150)); ?></td>
             <td><?php echo $form->error($model, 'trading_name'); ?></td>
+        </tr>
+        <tr>
+            <td style="width:160px;"><?php echo $form->labelEx($model, 'code'); ?></td>
+            <td style="width:240px;"><?php echo $form->textField($model, 'code', array('size' => 3, 'maxlength' => 3)); ?></td>
+            <td><?php echo $form->error($model, 'code'); ?></td>
+
         </tr>
         <tr>
             <td><?php echo $form->labelEx($model, 'Upload Company Logo'); ?></td>

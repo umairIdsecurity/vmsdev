@@ -51,6 +51,7 @@ SET FOREIGN_KEY_CHECKS = 1;
 
 CREATE TABLE IF NOT EXISTS `card_generated` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `card_code` varchar(9) NOT NULL,
   `date_printed` varchar(10) DEFAULT NULL,
   `date_expiration` varchar(10) DEFAULT NULL,
   `date_cancelled` varchar(50) DEFAULT NULL,
@@ -123,6 +124,7 @@ INSERT INTO `card_type` (`id`, `name`,`max_day_validity` ,`max_time_validity`, `
 
 CREATE TABLE IF NOT EXISTS `company` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `code` varchar(3) NOT NULL,
   `name` varchar(150) NOT NULL,
   `trading_name` varchar(150) DEFAULT NULL,
   `logo` bigint(20) DEFAULT NULL,
@@ -149,9 +151,9 @@ CREATE TABLE IF NOT EXISTS `company` (
 -- Dumping data for table `company`
 --
 
-INSERT INTO `company` (`id`, `name`, `trading_name`, `logo`, `contact`, `billing_address`, `email_address`, `office_number`, `mobile_number`, `website`, `created_by_user`, `created_by_visitor`, `tenant`, `tenant_agent`, `is_deleted`) VALUES
-(1, 'Test Company 1', 'Test Company 1', 1, 'Test Person', '123 street', 'testcompany@test.com', 12345, 12345, 'http://testcompany.com', NULL, NULL, 17, 18, 0),
-(2, 'Test Company 2', 'Test Company 2', 1, 'Test Person', '123 street', 'testcompany2@test.com', 12345, 12345, 'http://testcompany2.com', NULL, NULL, NULL, NULL, 0);
+INSERT INTO `company` (`id`,`code`, `name`, `trading_name`, `logo`, `contact`, `billing_address`, `email_address`, `office_number`, `mobile_number`, `website`, `created_by_user`, `created_by_visitor`, `tenant`, `tenant_agent`, `is_deleted`) VALUES
+(1,'TCA', 'Test Company 1', 'Test Company 1', 1, 'Test Person', '123 street', 'testcompany@test.com', 12345, 12345, 'http://testcompany.com', NULL, NULL, 17, 18, 0),
+(2, 'TCB','Test Company 2', 'Test Company 2', 1, 'Test Person', '123 street', 'testcompany2@test.com', 12345, 12345, 'http://testcompany2.com', NULL, NULL, NULL, NULL, 0);
 
 -- --------------------------------------------------------
 

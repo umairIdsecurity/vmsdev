@@ -77,8 +77,20 @@ class CardGeneratedController extends Controller {
         $model = Visit::model()->findByPk($id);
         $visitorModel = Visitor::model()->findByPk($model->visitor);
 
+        if ($visitorModel->company != '') {
+            $inc = 6 - (strlen($model->id));
+            $int_code = '';
+            for ($x = 1; $x <= $inc; $x++) {
+
+                $int_code .= "0";
+            }
+            $code = Company::model()->findByPk($visitorModel->company)->code . $int_code . $model->id;
+        } else {
+            $code ='';
+        }
 
         $cardGeneratedArray = array(
+            'card_code' => $code,
             'date_printed' => date("d-m-Y"),
             'date_expiration' => date("d-m-Y"),
             'visitor_id' => $model->visitor,
@@ -88,7 +100,7 @@ class CardGeneratedController extends Controller {
             'created_by' => $session['id'],
         );
         $cardGenerated->attributes = $cardGeneratedArray;
-        if ($cardGeneratedService->save($cardGenerated, $model,Yii::app()->user)) {
+        if ($cardGeneratedService->save($cardGenerated, $model, Yii::app()->user)) {
 
             $this->renderPartial('print', array(
                 'model' => $model,
@@ -105,9 +117,21 @@ class CardGeneratedController extends Controller {
         $session = new CHttpSession;
         $model = Visit::model()->findByPk($id);
         $visitorModel = Visitor::model()->findByPk($model->visitor);
+        if ($visitorModel->company != '') {
+            $inc = 6 - (strlen($model->id));
+            $int_code = '';
+            for ($x = 1; $x <= $inc; $x++) {
+
+                $int_code .= "0";
+            }
+            $code = Company::model()->findByPk($visitorModel->company)->code . $int_code . $model->id;
+        } else {
+            $code ='';
+        }
 
 
         $cardGeneratedArray = array(
+            'card_code' => $code,
             'date_printed' => date("d-m-Y"),
             'date_expiration' => date("d-m-Y"),
             'visitor_id' => $model->visitor,

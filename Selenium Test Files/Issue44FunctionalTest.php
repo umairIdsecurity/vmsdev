@@ -89,7 +89,7 @@ class Issue44FunctionalTest extends BaseFunctionalTest {
         $this->click("link=Manage Visitor Records");
         $this->clickAndWait("link=Add Visitor");
         $this->addVisitor("addvisitor2");
-        $this->addCompany("Visitor Company", "visitorcompany");
+        $this->addCompany("Visitor Company", "visitorcompany","VCA");
         $this->clickAndWait("id=submitFormVisitor");
         $this->assertEquals("testaddvisitor2@test.com", $this->getText("//div[@id='visitor-grid']/table/tbody/tr/td[3]"));
         $this->clickAndWait("link=Edit");

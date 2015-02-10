@@ -51,6 +51,7 @@ SET FOREIGN_KEY_CHECKS = 1;
 
 CREATE TABLE IF NOT EXISTS `card_generated` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+`card_code` varchar(9) NOT NULL,
   `date_printed` varchar(10) DEFAULT NULL,
   `date_expiration` varchar(10) DEFAULT NULL,
   `date_cancelled` varchar(50) DEFAULT NULL,
@@ -123,6 +124,7 @@ INSERT INTO `card_type` (`id`, `name`,`max_day_validity` ,`max_time_validity`, `
 
 CREATE TABLE IF NOT EXISTS `company` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+`code` varchar(3) NOT NULL,
   `name` varchar(150) NOT NULL,
   `trading_name` varchar(150) DEFAULT NULL,
   `logo` bigint(20) DEFAULT NULL,

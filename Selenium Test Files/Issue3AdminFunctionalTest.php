@@ -117,7 +117,7 @@ class Issue3AdminFunctionalTest extends BaseFunctionalTest {
         $this->click("link=Add Agent Administrator");
         $this->waitForPageToLoad("30000");
         $this->addUser("agentadmin2@test.com", "agentadmin2");
-        $this->addCompany("Test Company 3", "testcompany3");
+        $this->addCompany("Test Company 3", "testcompany3","TCC");
         $this->click("id=submitBtn");
         $this->click("id=submitForm");
         $this->waitForPageToLoad("30000");
@@ -290,7 +290,7 @@ class Issue3AdminFunctionalTest extends BaseFunctionalTest {
         $this->waitForPageToLoad("30000");
         $this->addUser("agentadmin3@test.com", "agentadmin3");
         $this->waitForElementPresent("id=submitBtn");
-        $this->addCompany("Test Company 4", "testcompany4");
+        $this->addCompany("Test Company 4", "testcompany4","TCD");
         $this->waitForElementPresent("id=submitBtn");
         $this->click("id=submitBtn");
         $this->click("id=submitForm");

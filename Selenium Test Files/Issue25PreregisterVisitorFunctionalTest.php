@@ -25,7 +25,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->Scenario1();
         $this->Scenario2();
         $this->Scenario3();
-        // $this->Scenario4();
+        $this->Scenario4();
         $this->Scenario5();
         $this->Scenario6();
         $this->Scenario7();
@@ -556,6 +556,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         
         $this->waitForElementPresent("id=Company_name");
         $this->type("id=Company_name", "new company");
+        $this->type("id=Company_code", "NCA");
         $this->click("id=createBtn");
         sleep(3);
         $this->assertEquals("Test Company 1Test Company 2new company", $this->getText("id=Visitor_company"));

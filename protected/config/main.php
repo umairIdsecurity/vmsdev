@@ -17,7 +17,6 @@ return array(
                 'bootstrap.gii',
             ),
         ),
-        
     ),
     // autoloading model and component classes
     'import' => array(
@@ -40,6 +39,7 @@ return array(
     ),
     // application components
     'components' => array(
+        
         'ePdf' => array(
             'class' => 'ext.yii-pdf.EYiiPdf',
             'params' => array(
@@ -105,7 +105,6 @@ return array(
                     'categories' => 'system.db.CDbCommand.query'
                 ),
             // uncomment the following to show log messages on web pages
-            
 //              array(
 //              'class'=>'CWebLogRoute',
 //              ), 

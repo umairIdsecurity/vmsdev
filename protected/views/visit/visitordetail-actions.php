@@ -86,7 +86,7 @@ $session = new CHttpSession;
 
             </li>
 <?php } else if ($model->visit_status == VisitStatus::PREREGISTERED && $session['role'] != Roles::ROLE_STAFFMEMBER) { ?>
-            <li class='has-sub' id="preregisterLi"><a href="#"><span class="icons pre-visits actionsLabel">Preregister a Visit</span></a>
+            <li class='has-sub' id="preregisterLi"><a href="#"><span class="btn btn-info actionsLabel" style="color:white !important;">Preregister a Visit</span></a>
                 <ul>
                     <li>
 
@@ -110,7 +110,7 @@ $session = new CHttpSession;
                     </li>
                 </ul>
             </li>
-            <li class='has-sub' id="activateLi"><a href="#"><span class="icons pre-visits actionsLabel">Log a Visit</span></a>
+            <li class='has-sub' id="activateLi"><a href="#"><span class="btn btn-info actionsLabel" style="color:white !important;">Log a Visit</span></a>
                 <ul>
                     <li>
     <?php

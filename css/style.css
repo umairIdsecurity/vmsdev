@@ -1077,3 +1077,11 @@ dt.tabs dt{
 	color: red;
 	font-size: 0.9em;
 }
+
+#preregisterLi{
+    margin-bottom:5px;
+}
+
+#preregisterLi a span,#activateLi a span{
+    width:220px;
+}

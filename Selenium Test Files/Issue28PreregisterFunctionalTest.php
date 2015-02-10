@@ -263,8 +263,8 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Visitor Records");
         $this->clickAndWait("link=Saved");
         $this->click("//li[@id='preregisterLi']/a/span");
-        $this->type("id=Visit_date_in", "11-02-2015");
-        $this->type("id=Visit_date_out", "11-02-2015");
+        $this->type("id=Visit_date_in", "17-02-2015");
+        $this->type("id=Visit_date_out", "17-02-2015");
         $this->clickAndWait("css=#update-log-visit-form > input.complete");
         $this->clickAndWait("link=Dashboard");
         $this->assertEquals("Visitor1", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[4]"));

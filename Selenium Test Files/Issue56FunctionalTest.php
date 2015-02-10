@@ -96,8 +96,9 @@ class Issue56FunctionalTest extends BaseFunctionalTest {
         }
         $this->assertEquals("Visit Status: Preregistered", $this->getText("link=Visit Status: Preregistered"));
         $this->click("//li[@id='activateLi']/a/span");
-        $this->clickAndWait("css=#activate-visit-form > input.complete");
+        $this->clickAndWait("css=#activate-a-visit-form > input.complete");
         $this->clickAndWait("link=Active");
+        
         $this->assertEquals("Visit Status: Active", $this->getText("link=Visit Status: Active"));
         try {
             $this->assertEquals("preloadvisitor@test.com", $this->getValue("id=Visitor_email"));

@@ -22,7 +22,7 @@ class DashboardController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'addHost','content'),
+                'actions' => array('create', 'update', 'addHost','content','ContactSupport'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -206,6 +206,18 @@ class DashboardController extends Controller {
             'userModel' => $userModel,
             'patientModel' => $patientModel
         ),false,true);
+    }
+    
+    public function actionContactSupport() {
+        $this->layout = '//layouts/column1';
+        $model = new User('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['Visit']))
+            $model->attributes = $_GET['Visit'];
+
+        $this->render('contactsupport', array(
+            'model' => $model,
+        ));
     }
 
 }

@@ -22,6 +22,16 @@ class VisitorServiceImpl implements VisitorService {
             $visitor->repeatpassword = $visitor->password;
         }
         
+        if($visitor->vehicle !=''){
+            $vehicle = new Vehicle;
+            $vehicle->vehicle_registration_plate_number=$visitor->vehicle;
+            $vehicle->save();
+            
+            $visitor->vehicle = Vehicle::model()->findByAttributes(array('vehicle_registration_plate_number' => $visitor->vehicle))->id;
+        } else {
+            $visitor->vehicle = NULL; 
+        }
+        
         if (!($visitor->save())) {
             return false;
         }

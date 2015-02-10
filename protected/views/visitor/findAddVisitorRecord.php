@@ -168,6 +168,9 @@ $session = new CHttpSession;
                         <div style="display:none;" class="errorMessage errorMessageWorkstation" >Workstation cannot be blank.</div>
 
                     </td>
+                    <td><label for="Visitor_vehicle">Vehicle Registration Number</label><br>
+                    <input type="text"  id="Visitor_vehicle" name="Visitor[vehicle]" maxlength="6" size="6">                            
+                    </td>
                 </tr>
                 <tr>
                     <td>
@@ -218,7 +221,7 @@ $session = new CHttpSession;
                         <label for="Visitor_password">Password <span class="required">*</span></label><br>
                         <input ng-model="user.passwords" data-ng-class="{
                                     'ng-invalid':registerform['Visitor[repeatpassword]'].$error.match}" type="password" id="Visitor_password" name="Visitor[password]">			
-                        <?php echo "<br>" . $form->error($model, 'password'); ?>
+                               <?php echo "<br>" . $form->error($model, 'password'); ?>
                     </td>
                     <td>
                         <label for="Visitor_repeatpassword">Repeat Password <span class="required">*</span></label><br>
@@ -288,6 +291,7 @@ $session = new CHttpSession;
                         </select><?php echo "<br>" . $form->error($model, 'tenant_agent'); ?>
                     </td>
                 </tr>
+                
 
             </table>
 
@@ -299,10 +303,10 @@ $session = new CHttpSession;
             <input type="submit" value="Save and Continue" name="yt0" id="submitFormVisitor" />
         </div>
 
-        <?php $this->endWidget(); ?>
+    <?php $this->endWidget(); ?>
     </div>
     <?php
-    if($session['role'] == Roles::ROLE_SUPERADMIN){
+    if ($session['role'] == Roles::ROLE_SUPERADMIN) {
         $class = "moveFromAlignmentA";
     } else {
         $class = "moveFromAlignmentB";
@@ -310,7 +314,7 @@ $session = new CHttpSession;
     $form = $this->beginWidget('CActiveForm', array(
         'id' => 'register-reason-form',
         'action' => Yii::app()->createUrl('/visitReason/create&register=1'),
-        'htmlOptions' => array("name" => "register-reason-form","class" => $class),
+        'htmlOptions' => array("name" => "register-reason-form", "class" => $class),
         'enableAjaxValidation' => false,
         'enableClientValidation' => true,
         'clientOptions' => array(
@@ -327,11 +331,32 @@ $session = new CHttpSession;
     <div class="errorMessage" id="visitReasonErrorMessage" style="display:none;">Reason cannot be blank.</div>
 
 
-    <?php $this->endWidget(); ?>
+<?php $this->endWidget(); ?>
 </div>
 
 <script>
     $(document).ready(function() {
+        $('#Visitor_vehicle').bind('keypress', function(event) {
+            var regex = new RegExp("^[a-zA-Z0-9\b]+$");
+            var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+            if (!regex.test(key)) {
+                event.preventDefault();
+                return false;
+            }
+        });
+        /*Remove space for vehicle number*/
+        $('#Visitor_vehicle').keydown(function(e) {
+            if (e.which === 32) {
+                e.preventDefault();
+            }
+        }).blur(function() {
+            $(this).val(function(i, oldVal) {
+                return oldVal.replace(/\s/g, '');
+            });
+
+            $("#Visitor_vehicle").val(($("#Visitor_vehicle").val()).toUpperCase());
+        });
+        
         $("#dummy-visitor-findBtn").click(function(e) {
             e.preventDefault();
             $("#Visit_reason_search").val("");

@@ -191,5 +191,16 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
         $this->setBrowser("*firefox");
         $this->setBrowserUrl("http://cvms.identitysecurity.info/");
     }
+    function clearMailcatcher(){
+        $this->start();
+        $this->open("http://localhost:1080/");
+        $this->selectWindow("title=MailCatcher");
+        $this->windowFocus();
+
+        $this->click("link=Clear");
+        $this->getConfirmation();
+        $this->chooseOkOnNextConfirmation();
+    }
+    
 
 }

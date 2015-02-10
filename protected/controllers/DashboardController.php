@@ -22,30 +22,26 @@ class DashboardController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'addHost','content','ContactSupport'),
+                'actions' => array('create', 'update', 'addHost', 'content', 'ContactSupport'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
                 'actions' => array('ViewMyVisitors'),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_STAFFMEMBER)',
-           
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
                 'actions' => array('index'),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_SUPERADMIN_DASHBOARD)',
-            
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
                 'actions' => array('AdminDashboard'),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
-            
             ),
             array('deny', // deny all users
                 'users' => array('*'),
             ),
         );
     }
-
 
     /**
      * Displays a particular model.
@@ -205,18 +201,68 @@ class DashboardController extends Controller {
         $this->renderPartial('_addhost', array(
             'userModel' => $userModel,
             'patientModel' => $patientModel
-        ),false,true);
+                ), false, true);
     }
-    
+
     public function actionContactSupport() {
-        $this->layout = '//layouts/column1';
-        $model = new User('search');
-        $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['Visit']))
-            $model->attributes = $_GET['Visit'];
+        $session = new CHttpSession;
+        $user_id = Yii::app()->user->id;
+        $userModel = User::model()->findByPk($user_id);
+
+        $model = new ContactForm;
+        if (isset($_POST['ContactForm'])) {
+            $model->attributes = $_POST['ContactForm'];
+            $model->name = $userModel->first_name . ' ' . $userModel->last_name;
+            $model->email = $userModel->email;
+
+            if ($model->validate()) {
+                $headers = "From: {$model->email}\r\nReply-To: {$model->email}";
+
+                $content = $model->message . "\r\n\r\n~This message was sent via Visitor Management System~";
+
+                switch ($session['role']) {
+                    case Roles::ROLE_SUPERADMIN:
+                        $to_address = 'support@idsecurity.com.au';
+                        break;
+
+                    case Roles::ROLE_ADMIN:
+                        if ($model->subject == 'Technical Support') {
+                            $to_address = 'support@idsecurity.com.au';
+                        } else {
+                            if ($session['tenant'] == Yii::app()->user->id) {
+                                $email = User::model()->find("role = " . Roles::ROLE_SUPERADMIN)->email;
+                            } else {
+                                $email = User::model()->findByPk($session['tenant'])->email;
+                            }
+                            $to_address = $email;
+                        }
+                        break;
+
+
+                    default:
+                        if ($model->subject == 'Technical Support') {
+                            $to_address = 'support@idsecurity.com.au';
+                        } else {
+
+                            $to_address = User::model()->findByPk($session['tenant'])->email;
+                        }
+
+                        break;
+                }
+
+
+                mail($to_address, $model->subject, $content, $headers);
+
+                Yii::app()->user->setFlash(
+                        'contact', 'Thank you for contacting us. We will respond to you as soon as possible.'
+                );
+                $this->refresh();
+            }
+        }
 
         $this->render('contactsupport', array(
             'model' => $model,
+            'userModel' => $userModel
         ));
     }
 

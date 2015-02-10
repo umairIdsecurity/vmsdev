@@ -39,20 +39,7 @@ return array(
     ),
     // application components
     'components' => array(
-        'mail' => array(
-            'class' => 'ext.yii-mail.YiiMail',
-            'transportType' => 'smtp',
-            'transportOptions' => array(
-                'host' => 'smtp.gmail.com',
-                'username' => 'XXXX@gmail.com',
-                'password' => 'XXXX',
-                'port' => '465',
-                'encryption' => 'tls',
-            ),
-            'viewPath' => 'application.views.mail',
-            'logging' => true,
-            'dryRun' => false
-        ),
+        
         'ePdf' => array(
             'class' => 'ext.yii-pdf.EYiiPdf',
             'params' => array(

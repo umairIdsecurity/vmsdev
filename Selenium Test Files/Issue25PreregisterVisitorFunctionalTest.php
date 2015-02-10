@@ -22,6 +22,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
 
     function testAll() {
         $this->resetDbWithData();
+        //scenario 1-3 is for patient type comment as of now.
       //  $this->Scenario1();
       //  $this->Scenario2();
      //   $this->Scenario3();

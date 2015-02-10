@@ -54,7 +54,7 @@ class Issue42FunctionalTest extends BaseFunctionalTest {
             if ($second >= 60)
                 $this->fail("timeout");
             try {
-                if ("Register a Visitor" == $this->getText("//div[@id='cssmenu']/ul/li[4]/ul/li/a/span"))
+                if ("Register a Visitor" == $this->getText("//div[@id='cssmenu']/ul/li[4]/ul/li[2]/a/span"))
                     break;
             } catch (Exception $e) {
                 
@@ -96,7 +96,7 @@ class Issue42FunctionalTest extends BaseFunctionalTest {
             if ($second >= 60)
                 $this->fail("timeout");
             try {
-                if ("Register a Visitor" == $this->getText("//div[@id='cssmenu']/ul/li[4]/ul/li/a/span"))
+                if ("Register a Visitor" == $this->getText("//div[@id='cssmenu']/ul/li[4]/ul/li[2]/a/span"))
                     break;
             } catch (Exception $e) {
                 

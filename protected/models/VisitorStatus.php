@@ -15,7 +15,12 @@ class VisitorStatus extends CActiveRecord
     public static $VISITOR_STATUS_LIST = array(
         1 => 'Open',
         2 => 'Access Denied',
+        3 => 'Save',
     );
+    
+    CONST VISITOR_STATUS_OPEN = 1;
+    CONST VISITOR_STATUS_ACCESS_DENIED = 2;
+    CONST VISITOR_STATUS_SAVE= 3;
     
 	/**
 	 * @return string the associated database table name

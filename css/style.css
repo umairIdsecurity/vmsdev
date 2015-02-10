@@ -1070,3 +1070,10 @@ dt.tabs dt{
 .borderTopRightRadius {
     border-top-right-radius: 5px ! important;
 }
+
+
+.errorMessage
+{
+	color: red;
+	font-size: 0.9em;
+}

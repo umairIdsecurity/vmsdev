@@ -100,6 +100,7 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
         //sleep(100);
         $this->click("id=createBtn");
         $this->waitForPageToLoad("30000");
+        sleep(1);
     }
 
     function getDisabledRoleValue($value = NULL) {
@@ -139,6 +140,7 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
         $this->select("id=Visitor_tenant", "label=Test admin");
         sleep(1);
         $this->select("id=Visitor_tenant_agent", "label=Test agentadmin");
+        sleep(1);
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
         $this->type("id=Visitor_vehicle", "ABC123");

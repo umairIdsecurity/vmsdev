@@ -50,7 +50,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Register a Visitor", $this->getText("css=a > span"));
         $this->assertEquals("Preregister a Visitor", $this->getText("//div[@id='cssmenu']/ul/li[2]/a/span"));
         $this->assertEquals("Add Host", $this->getText("id=yt0"));
-        $this->assertEquals("Find Record", $this->getText("//div[@id='cssmenu']/ul/li[4]/a/span"));
+        $this->assertEquals("Find Record", $this->getText("//div[@id='cssmenu']/ul/li[5]/a/span"));
         $this->assertEquals("Evacuation Report", $this->getText("link=Evacuation Report"));
         $this->clickAndWait("//div[@id='cssmenu']/ul/li[2]/a/span");
         $this->click("id=clicktabA");

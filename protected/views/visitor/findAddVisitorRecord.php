@@ -336,7 +336,14 @@ $session = new CHttpSession;
 
 <script>
     $(document).ready(function() {
-        
+        $('#Visitor_vehicle').bind('keypress', function(event) {
+            var regex = new RegExp("^[a-zA-Z0-9\b]+$");
+            var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+            if (!regex.test(key)) {
+                event.preventDefault();
+                return false;
+            }
+        });
         /*Remove space for vehicle number*/
         $('#Visitor_vehicle').keydown(function(e) {
             if (e.which === 32) {

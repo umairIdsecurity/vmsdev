@@ -1,29 +1,26 @@
-
 <?php
 /* @var $this CompanyController */
 /* @var $model Company */
 /* @var $form CActiveForm */
-
-
 $session = new CHttpSession;
 
 $tenant = '';
 $tenantAgent = '';
 if (isset($_GET['tenant'])) {
     $tenant = $_GET['tenant'];
-} elseif($session['role'] != Roles::ROLE_SUPERADMIN){
+} elseif ($session['role'] != Roles::ROLE_SUPERADMIN) {
     $tenant = $session['tenant'];
 }
 
 if (isset($_GET['tenant_agent'])) {
     $tenantAgent = $_GET['tenant_agent'];
-} elseif($session['role'] != Roles::ROLE_SUPERADMIN){
+} elseif ($session['role'] != Roles::ROLE_SUPERADMIN) {
     $tenantAgent = $session['tenant_agent'];
 }
 
-$companyId = '';
+$dataId = '';
 if ($this->action->id == 'update') {
-    $companyId = $_GET['id'];
+    $dataId = $_GET['id'];
 }
 ?>
 
@@ -65,12 +62,12 @@ if ($this->action->id == 'update') {
                     echo "disabled";
                 }
                 ?> value="<?php echo $model['logo']; ?>">
-                <div class="companyLogoDiv" <?php
+                <div class="photoDiv" <?php
                 if ($model['logo'] == NULL) {
                     echo "style='display:none !important;'";
                 }
                 ?>>
-                    <?php if ($companyId != '') { ?><img id='companyLogo' src="<?php echo Yii::app()->request->baseUrl . "/" . $model->getCompanyLogo($companyId); ?>"/>
+                    <?php if ($dataId != '') { ?><img id='companyLogo' src="<?php echo Yii::app()->request->baseUrl . "/" . $model->getCompanyLogo($dataId); ?>"/>
                     <?php } else { ?> 
                         <img id='companyLogo' src="<?php
                         if (isset($_POST['Company']['logo'])) {
@@ -84,6 +81,7 @@ if ($this->action->id == 'update') {
                 <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
             </td>
         </tr>
+
         <tr>
             <td><?php echo $form->labelEx($model, 'contact'); ?></td>
             <td><?php echo $form->textField($model, 'contact', array('size' => 60, 'maxlength' => 100)); ?></td>

@@ -30,6 +30,12 @@ class Company extends CActiveRecord {
         return 'company';
     }
 
+    public $cropID;
+    public $cropX;
+    public $cropY;
+    public $cropW;
+    public $cropH;
+
     /**
      * @return array validation rules for model attributes.
      */
@@ -141,13 +147,13 @@ class Company extends CActiveRecord {
     }
 
     public function getCompanyLogo($companyId) {
-        
-            $company = Company::model()->findByPK($companyId);
-            if ($company->logo != '') {
+
+        $company = Company::model()->findByPK($companyId);
+        if ($company->logo != '') {
             $photo = Photo::model()->findByPK($company->logo);
 
             return $photo->relative_path;
-            }
+        }
     }
 
     public function getPhotoRelativePath($photoId) {
@@ -216,7 +222,7 @@ class Company extends CActiveRecord {
 
         return $aArray;
     }
-    
+
     public function findAllCompanyWithSameTenant($tenant) {
         $aArray = array();
 

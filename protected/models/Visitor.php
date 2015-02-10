@@ -61,7 +61,7 @@ class Visitor extends CActiveRecord {
             array('contact_number, company, role, visitor_status, created_by, tenant, tenant_agent', 'length', 'max' => 20),
             // array('password', 'length', 'max' => 150),
             array('date_of_birth, notes,birthdayYear,birthdayMonth,birthdayDay,vehicle', 'safe'),
-            array('tenant, tenant_agent,company', 'default', 'setOnEmpty' => true, 'value' => null),
+            array('tenant, tenant_agent,company, photo', 'default', 'setOnEmpty' => true, 'value' => null),
             array('repeatpassword,password', 'required', 'on' => 'insert'),
             array('password', 'compare', 'compareAttribute' => 'repeatpassword', 'on' => 'insert'),
             
@@ -69,7 +69,7 @@ class Visitor extends CActiveRecord {
             array('email', 'email'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, first_name, last_name, email, vehicle,contact_number, date_of_birth, company, department, position, staff_id, notes, role, visitor_status, created_by, is_deleted, tenant, tenant_agent', 'safe', 'on' => 'search'),
+            array('id, first_name, photo,last_name, email, vehicle,contact_number, date_of_birth, company, department, position, staff_id, notes, role, visitor_status, created_by, is_deleted, tenant, tenant_agent', 'safe', 'on' => 'search'),
         );
     }
 
@@ -88,6 +88,7 @@ class Visitor extends CActiveRecord {
             'tenantAgent' => array(self::BELONGS_TO, 'User', 'tenant_agent'),
             'role0' => array(self::BELONGS_TO, 'Roles', 'role'),
             'vehicle0' => array(self::BELONGS_TO, 'Vehicle', 'vehicle'),
+            'photo0' => array(self::BELONGS_TO, 'Photo', 'photo'),
         );
     }
 
@@ -116,6 +117,7 @@ class Visitor extends CActiveRecord {
             'tenant_agent' => 'Tenant Agent',
             'repeatpassword' => 'Repeat Password',
             'vehicle' => 'Vehicle Registration Number',
+            'photo' => 'Photo',
         );
     }
 
@@ -146,6 +148,7 @@ class Visitor extends CActiveRecord {
         $criteria->compare('department', $this->department, true);
         $criteria->compare('position', $this->position, true);
         $criteria->compare('staff_id', $this->staff_id, true);
+        $criteria->compare('photo', $this->photo, true);
         $criteria->compare('notes', $this->notes, true);
         //$criteria->compare('password', $this->password, true);
         $criteria->compare('role', $this->role, true);

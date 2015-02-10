@@ -7,6 +7,7 @@ $cs = Yii::app()->clientScript;
 $cs->registerCoreScript('jquery');
 $cs->registerScriptFile(Yii::app()->request->baseUrl . '/js/jquery.uploadfile.min.js');
 $cs->registerScriptFile(Yii::app()->request->baseUrl . '/js/jquery.form.js');
+$cs->registerScriptFile(Yii::app()->request->baseUrl . '/js/jquery.imgareaselect.pack.js');
 
 
 $userRole = $session['role'];
@@ -28,10 +29,12 @@ $userRole = $session['role'];
         <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/style.css" />
         <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/sidebar.css" />
         <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/uploadfile.css" />
+        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/imgareaselect-default.css" />
+        
         <script  src="<?php echo Yii::app()->request->baseUrl; ?>/js/angular.min.js" ></script>
         <script  src="<?php echo Yii::app()->request->baseUrl; ?>/js/match.js" ></script>
 
-        <script   src="<?php echo Yii::app()->request->baseUrl; ?>/js/script-sidebar.js" ></script>
+        <script  src="<?php echo Yii::app()->request->baseUrl; ?>/js/script-sidebar.js" ></script>
         <script  src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.min.js" ></script>
         <script  src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.uploadfile.min.js" ></script>
         <script  src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.form.js" ></script>
@@ -81,7 +84,7 @@ $userRole = $session['role'];
                     <div class="clear"></div>
                     <nav class="navigation">
                         <ul id="tabs">
-                            <li class="<?php echo ($session['lastPage']=='dashboard' || $this->id == "dashboard" || (($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles::ROLE_STAFFMEMBER)&& ($this->id=="visitor" || $this->action->id=='evacuationReport'))) ? "active" : "" ?>">
+                            <li class="<?php echo ($session['lastPage'] == 'dashboard' || $this->id == "dashboard" || (($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles::ROLE_STAFFMEMBER) && ($this->id == "visitor" || $this->action->id == 'evacuationReport'))) ? "active" : "" ?>">
                                 <?php
                                 if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
                                     ?>
@@ -102,7 +105,7 @@ $userRole = $session['role'];
                                 <a href="<?php echo Yii::app()->createUrl("/visit/view"); ?>">Visitor Records</a>
                             </li>
                             <?php if ($session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_AGENT_ADMIN || $session['role'] == Roles::ROLE_SUPERADMIN) { ?>
-                                <li class="<?php echo ($session['lastPage']!='dashboard' && ($this->action->id == "admin" || ($this->id == 'visit' && $this->action->id != 'view') || $this->id == "user" || $this->id == "visitor" || $this->id == "company" || $this->id == "workstation" || $this->id == "visitReason")) ? "active" : "" ?>">
+                                <li class="<?php echo ($session['lastPage'] != 'dashboard' && ($this->action->id == "admin" || ($this->id == 'visit' && $this->action->id != 'view') || $this->id == "user" || $this->id == "visitor" || $this->id == "company" || $this->id == "workstation" || $this->id == "visitReason")) ? "active" : "" ?>">
                                     <a href="<?php echo Yii::app()->createUrl("/user/admin"); ?>">Administration</a>
                                 </li>
                             <?php } ?>

@@ -1,6 +1,6 @@
 <?php
 
-$usernameHash =  hash('adler32',Yii::app()->user->name);
+$usernameHash = hash('adler32', Yii::app()->user->name);
 $controllerId = $_GET['id'];
 switch ($controllerId) {
     case 'company':
@@ -9,11 +9,14 @@ switch ($controllerId) {
     case 'profile':
         $folderKey = '/profile/';
         break;
+    case 'visitor':
+        $folderKey = '/visitor/';
+        break;
     default:
         $folderKey = '';
         break;
 }
-$output_dir = Yii::getPathOfAlias('webroot')."/uploads". $folderKey;
+$output_dir = Yii::getPathOfAlias('webroot') . "/uploads" . $folderKey;
 $action = $_GET['actionId'];
 
 if (isset($_FILES["myfile"])) {
@@ -22,7 +25,7 @@ if (isset($_FILES["myfile"])) {
     $error = $_FILES["myfile"]["error"];
     if (!is_array($_FILES["myfile"]["name"])) { //single file
         $fileName = $_FILES["myfile"]["name"];
-        $uniqueFileName = $usernameHash.'-'.time() . ".jpg";
+        $uniqueFileName = $usernameHash . '-' . time() . ".jpg";
         $path = "uploads" . $folderKey . $uniqueFileName;
         move_uploaded_file($_FILES["myfile"]["tmp_name"], $output_dir . $uniqueFileName);
         //save in database
@@ -32,13 +35,12 @@ if (isset($_FILES["myfile"])) {
         $command->query();
         //update company
         if ($action == 'update') {
-            $update = $connection->createCommand('update company set logo="' . Yii::app()->db->lastInsertID . '" where id="' . $_GET['companyId'] . '"');
-            $update->query();
-            $ret = $path;
-        } else if ($action == 'create') {
-            $ret = Yii::app()->db->lastInsertID;
-        }
-        
+                    $update = $connection->createCommand('update company set logo="' . Yii::app()->db->lastInsertID . '" where id="' . $_GET['companyId'] . '"');
+                    $update->query();
+                    $ret = $path;
+                } else if ($action == 'create') {
+                    $ret = Yii::app()->db->lastInsertID;
+                }
     }
     echo $ret;
     //echo json_encode($ret);

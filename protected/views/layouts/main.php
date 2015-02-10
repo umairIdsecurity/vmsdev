@@ -1,7 +1,6 @@
 <?php
 $session = new CHttpSession;
 Yii::app()->bootstrap->register();
-
 $cs = Yii::app()->clientScript;
 
 $cs->registerCoreScript('jquery');
@@ -30,7 +29,18 @@ $userRole = $session['role'];
         <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/sidebar.css" />
         <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/uploadfile.css" />
         <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/imgareaselect-default.css" />
-        
+        <?php
+        $company = Company::model()->findByPk($session['company']);
+
+
+        if ($company->company_laf_preferences != '') {
+            $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
+            ?>
+            <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl . $companyLafPreferences->css_file_path; ?>" />
+
+            <?php
+        }
+        ?>
         <script  src="<?php echo Yii::app()->request->baseUrl; ?>/js/angular.min.js" ></script>
         <script  src="<?php echo Yii::app()->request->baseUrl; ?>/js/match.js" ></script>
 
@@ -59,7 +69,14 @@ $userRole = $session['role'];
             }
             ?>>
                 <article class="header_midbox">
-                    <div id="logo" ><?php echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl . '/images/ids-logo2.jpg')); ?>
+                    <div id="logo" >
+                        <?php
+                        if ($company->logo != '') {
+                            echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl . '/'.Photo::model()->returnLogoPhotoRelative($company->logo)));
+                        } else {
+                            echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl . '/images/companylogohere.png'));
+                        }
+                        ?>
                     </div>
                     <aside class="top_nav">
                         <ul id="tabs">
@@ -104,11 +121,11 @@ $userRole = $session['role'];
                             <li class="<?php echo ($this->action->id == "view" && $this->id == 'visit') ? "active" : "" ?>">
                                 <a href="<?php echo Yii::app()->createUrl("/visit/view"); ?>">Visitor Records</a>
                             </li>
-                            <?php if ($session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_AGENT_ADMIN || $session['role'] == Roles::ROLE_SUPERADMIN) { ?>
-                                <li class="<?php echo ($session['lastPage'] != 'dashboard' && ($this->action->id == "admin" || ($this->id == 'visit' && $this->action->id != 'view') || $this->id == "user" || $this->id == "visitor" || $this->id == "company" || $this->id == "workstation" || $this->id == "visitReason")) ? "active" : "" ?>">
+<?php if ($session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_AGENT_ADMIN || $session['role'] == Roles::ROLE_SUPERADMIN) { ?>
+                                <li class="<?php echo ($session['lastPage'] != 'dashboard' && ($this->action->id == "admin" || ($this->id == 'visit' && $this->action->id != 'view') || $this->id == "user" || $this->id == "visitor" || $this->id == "company" || $this->id == "workstation" || $this->id == "visitReason" || $this->id == "companyLafPreferences")) ? "active" : "" ?>">
                                     <a href="<?php echo Yii::app()->createUrl("/user/admin"); ?>">Administration</a>
                                 </li>
-                            <?php } ?>
+<?php } ?>
                             <li style=' float:right;'>
                                 <a style="width:334px !important;text-align:right;">Logged in as <?php echo Yii::app()->user->name . ' - ' . User::model()->getUserRole($userRole); ?></a>
                             </li> 
@@ -127,7 +144,7 @@ $userRole = $session['role'];
                 echo "style='margin-left:180px'";
             }
             ?>>
-                     <?php echo $content; ?>
+<?php echo $content; ?>
             </div>
             <div class="clear"></div>
             <br><br>

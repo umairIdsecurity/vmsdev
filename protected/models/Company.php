@@ -53,11 +53,11 @@ class Company extends CActiveRecord {
             array(' email_address, website', 'length', 'max' => 50),
             array('contact', 'length', 'max' => 100),
             array('tenant', 'length', 'max' => 100),
-            array('logo,is_deleted', 'safe'),
-            array('tenant, tenant_agent', 'default', 'setOnEmpty' => true, 'value' => null),
+            array('logo,is_deleted,company_laf_preferences', 'safe'),
+            array('tenant, tenant_agent,logo', 'default', 'setOnEmpty' => true, 'value' => null),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, name,code, trading_name, logo,tenant, contact, billing_address, email_address, office_number, mobile_number, website, created_by_user, created_by_visitor', 'safe', 'on' => 'search'),
+            array('id, name,code,company_laf_preferences, trading_name, logo,tenant, contact, billing_address, email_address, office_number, mobile_number, website, created_by_user, created_by_visitor', 'safe', 'on' => 'search'),
         );
     }
 
@@ -95,6 +95,7 @@ class Company extends CActiveRecord {
             'tenant_agent' => 'Tenant Agent',
             'is_deleted' => 'Deleted',
             'code' => 'Company Code',
+            'company_laf_preferences' => 'Look and Feel Preferences',
         );
     }
 
@@ -131,6 +132,7 @@ class Company extends CActiveRecord {
         $criteria->compare('tenant_agent', $this->tenant_agent);
         $criteria->compare('is_deleted', $this->is_deleted);
         $criteria->compare('code', $this->code);
+        $criteria->compare('company_laf_preferences', $this->company_laf_preferences);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

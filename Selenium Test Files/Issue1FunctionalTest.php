@@ -57,8 +57,7 @@ class Issue1 extends BaseFunctionalTest {
         $username = 'agentoperator@test.com';
         $this->login($username, '12345');
         $this->click("id=submitBtn");
-        $this->click("id=submit");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("id=submit");
         $this->assertTrue($this->isElementPresent("link=Logged in as " . $username . " - Agent Operator"));
     }
 
@@ -66,8 +65,7 @@ class Issue1 extends BaseFunctionalTest {
         $username = 'operator@test.com';
         $this->login($username, '12345');
         $this->click("id=submitBtn");
-        $this->click("id=submit");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("id=submit");
         $this->assertTrue($this->isElementPresent("link=Logged in as " . $username . " - Operator"));
     }
 

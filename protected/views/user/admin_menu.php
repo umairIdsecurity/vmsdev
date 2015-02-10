@@ -38,23 +38,32 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     ));
                     ?>
                     <ul <?php
-                    if ($this->id == 'company') {
+                    if ($this->id == 'company' || $this->id=='companyLafPreferences') {
                         echo "style='display:block ;'";
                     }
                     ?>>
 
-                        <li>
-
-                            <a href='<?php echo Yii::app()->createUrl('company/create'); ?>' class="addSubMenu ajaxLinkLi"><span>Add Company</span></a>
-
-                        </li>
+                        <li><a href='<?php echo Yii::app()->createUrl('company/create'); ?>' class="addSubMenu ajaxLinkLi"><span>Add Company</span></a></li>
+                        <li><a href='<?php echo Yii::app()->createUrl('CompanyLafPreferences/customisation'); ?>' class="ajaxLinkLi"><span>Customise Look and Feel</span></a></li>
                     </ul>
                 </li>
                 <?php
             } else {
                 ?>
-                <li class=''><a href='<?php echo Yii::app()->createUrl('company/update/&id=' . $session['company']) ?>'><span>Organisation Settings</span></a></li>
-
+                <li class='has-sub'>
+                   <a href='<?php echo Yii::app()->createUrl('company/update/&id=' . $session['company']); ?>'><span>Organisation Settings</span></a>
+                        
+                    
+                    <ul <?php
+                    if ($this->id == 'company' || $this->id=='companyLafPreferences') {
+                        echo "style='display:block ;'";
+                    }
+                    ?>>
+                        <li><a href='<?php echo Yii::app()->createUrl('CompanyLafPreferences/customisation'); ?>' class="ajaxLinkLi"><span>Customise Look and Feel</span></a></li>
+                    
+                </ul>
+                </li>
+                
             <?php }
             ?>
             <li class='has-sub'><?php

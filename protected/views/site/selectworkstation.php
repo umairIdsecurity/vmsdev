@@ -2,6 +2,7 @@
 /* @var $this SiteController */
 /* @var $model LoginForm */
 /* @var $form CActiveForm  */
+$session = new CHttpSession;
 
 $this->pageTitle = Yii::app()->name . ' - Select Workstation';
 

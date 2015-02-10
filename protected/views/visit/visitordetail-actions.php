@@ -75,7 +75,7 @@ $session = new CHttpSession;
                                             </tr>
                                         </table>
     <?php echo $closeVisitForm->error($model, 'date_in'); ?>
-                                        <input type='submit' value='Close'/>
+                                        <input type='submit' value='Close' class="complete"/>
                                         <?php $this->endWidget(); ?>
                                     </div>
                                 </td>
@@ -148,7 +148,7 @@ $session = new CHttpSession;
                             </tr>
                         </table>
     <?php echo $logform->error($model, 'date_in'); ?>
-                        <input type='submit' value='Activate'/>
+                        <input type='submit' value='Activate' class="complete"/>
                         <?php $this->endWidget(); ?>
                     </li>
                 </ul>

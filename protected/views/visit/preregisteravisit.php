@@ -138,7 +138,7 @@ $logform = $this->beginWidget('CActiveForm', array(
     </tr>
 </table>
 <?php echo $logform->error($model, 'date_in'); ?>
-<input type='submit' value='Update'/>
+<input type='submit' value='Update' class="complete"/>
 <?php $this->endWidget(); ?>
 <input type="text" value="<?php echo date('d-m-Y', time() + 86400); ?>" id="curDate" style="display:none;">
 <input type="text" value="<?php

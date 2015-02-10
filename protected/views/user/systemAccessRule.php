@@ -40,6 +40,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'value' => function($data) {
         return CHtml::link('Edit', '#', array(
                     'id' => $data['id'],
+                    'class' => 'actionForward',
                     'onclick' => "updateWorkstations({$data['id']},'{$data['first_name']} {$data['last_name']}')",
                     'data-target' => '#myModal',
                     'data-toggle' => 'modal',

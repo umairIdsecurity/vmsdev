@@ -90,7 +90,7 @@ class VisitReason extends CActiveRecord {
         $criteria->compare('created_by', $this->created_by, true);
         $criteria->compare('tenant', $this->tenant, true);
         $criteria->compare('tenant_agent', $this->tenant_agent, true);
-
+        
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'sort' => array(
@@ -109,13 +109,13 @@ class VisitReason extends CActiveRecord {
         return parent::model($className);
     }
 
-    public function behaviors() {
-        return array(
-            'softDelete' => array(
-                'class' => 'ext.soft_delete.SoftDeleteBehavior'
-            ),
-        );
-    }
+//    public function behaviors() {
+//        return array(
+//            'softDelete' => array(
+//                'class' => 'ext.soft_delete.SoftDeleteBehavior'
+//            ),
+//        );
+//    }
 
     public function findAllReason() {
 
@@ -152,6 +152,22 @@ class VisitReason extends CActiveRecord {
             return true;
         }
     }
+    
+    public function beforeFind() {
+        $session = new CHttpSession;
+        $criteria = new CDbCriteria;
+        $criteria->condition = "t.is_deleted = 0";
+        $this->dbCriteria->mergeWith($criteria);
+    }
+    
+    public function beforeDelete() {
+        $this->is_deleted = 1;
+        $this->save();
+
+        //prevent real deletion
+        return false;
+    }
+
     
 
 }

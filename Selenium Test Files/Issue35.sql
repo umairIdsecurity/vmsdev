@@ -1,21 +1,21 @@
 INSERT INTO `vms`.`photo` (`id`, `filename`, `unique_filename`, `relative_path`) 
-VALUES ('2', 'card5d9c084f-1418017816.png', 'card5d9c084f-1418017816.png', 
+VALUES ('3', 'card5d9c084f-1418017816.png', 'card5d9c084f-1418017816.png', 
 'uploads/card_generated/card5d9c084f-1418017816.png'); 
 
 INSERT INTO `vms`.`photo` (`id`, `filename`, `unique_filename`, `relative_path`) 
-VALUES ('3', 'card5d9c084f-1418020193.png', 'card5d9c084f-1418020193.png', 
+VALUES ('4', 'card5d9c084f-1418020193.png', 'card5d9c084f-1418020193.png', 
 'uploads/card_generated/card5d9c084f-1418020193.png'); 
 
 INSERT INTO `vms`.`card_generated` (`id`, `date_printed`, 
 `date_expiration`, `date_cancelled`, `date_returned`, `card_image_generated_filename`, 
 `visitor_id`, `card_status`, `created_by`, `tenant`, `tenant_agent`) VALUES ('2', '08-12-2014', 
-'08-12-2014', NULL, NULL, '2', 
+'08-12-2014', NULL, NULL, '3', 
 '2', '3', '16', '17', '18'); 
 
 INSERT INTO `vms`.`card_generated` (`id`, `date_printed`, 
 `date_expiration`, `date_cancelled`, `date_returned`, `card_image_generated_filename`, 
 `visitor_id`, `card_status`, `created_by`, `tenant`, `tenant_agent`) VALUES ('3', '08-12-2014', 
-'07-12-2014', NULL, NULL, '3', 
+'07-12-2014', NULL, NULL, '4', 
 '2', '3', '16', '17', '18'); 
 
 INSERT INTO `vms`.`visit` (`id`, `visitor`, `card_type`, `card`, `visitor_type`, 

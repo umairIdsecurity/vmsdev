@@ -274,7 +274,7 @@ nav.navigation ul li:last-child.active
 
 #modalBody iframe { 
     width: 600px; 
-    height: 630px; 
+    height: 730px; 
     border: none; } 
 
 #workstationsModal .modal-body iframe { 
@@ -1128,6 +1128,7 @@ dt.tabs dt{
 #photoPreview{
     height: 154px;
     width: 113px;
+    
 }
 
 .cardPhotoPreview > img {
@@ -1185,6 +1186,74 @@ dt.tabs dt{
 }
 /**/
 .photoDiv{
-    height:154px;width:113px;border:1px solid gray;
+    height:154px;width:113px;border:1px solid #EEEEEE;margin-bottom:10px;
+}
+
+.customTitle{
+    font-weight:bold;
+}
+
+.cssButtonDetails{
+    margin-left:50px;
+}
+
+.cssButtonDetails label{
+    display:inline-block !important;
+    width:150px;
+}
+
+#logoDiv{
+     margin-left: 450px;
+    position: absolute;
+}
+
+/*color picker*/
+.colorpicker input {
+    background-color: rgba(0, 0, 0, 0) !important;
+    border: 1px solid rgba(0, 0, 0, 0) !important;
+    color: #898989 !important;
+    font-family: Arial,Helvetica,sans-serif ;
+    font-size: 10px !important;
+    height: 11px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    position: absolute !important;
+    right: 11px !important;
+    text-align: right !important;
+    top: 4px !important;
+    width:20px !important;
+}
+.colorSelector2 {
+    display: inline-block !important;
+    height: 36px;
+    margin-left: -27px;
+    margin-top: 4px;
+    position: absolute;
+    width: 36px;
+}
+.colorSelector2 div {
+    position: relative;
+    /*	top: 4px;
+            left: 4px;*/
+    width: 28px;
+    height: 28px;
+    background: url(../images/select2.png) center;
+    display:inline-block !important;
+}
+.colorpickerHolder2 {
+    /*	top: 32px;
+            left: 0;*/
+    width: 356px;
+    height: 0;
+    overflow: hidden;
+    position: relative;
+}
+
+.colorpicker_hex input{
+    width:50px !important;
+}
+
+#user-laf-preferences-form input{
+    width:105px;
 }
 

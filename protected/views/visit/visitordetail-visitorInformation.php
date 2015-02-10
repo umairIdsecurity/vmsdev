@@ -57,7 +57,7 @@ $session = new CHttpSession;
                             <td>Mobile:</td>
                             <td><input type="text" value="<?php echo $visitorModel->contact_number; ?>" name="Visitor[contact_number]" id="Visitor_contact_number"></td>
                         </tr>
-                        <tr><td><input type="submit" value="Update" name="yt0" id="submitContactDetailForm" /></td></tr>
+                        <tr><td><input type="submit" value="Update" name="yt0" id="submitContactDetailForm" class="complete" /></td></tr>
                     </table>
                     <?php $this->endWidget(); ?>
                 </li>
@@ -121,7 +121,7 @@ $session = new CHttpSession;
                         </tr>
                         <?php if ($session['role'] != Roles::ROLE_STAFFMEMBER) { ?>
                             <tr>
-                                <td><input type='submit' value='Update' class='submitBtn'></td>
+                                <td><input type='submit' value='Update' class='submitBtn complete'></td>
                             </tr>
                         <?php } ?>
                     </table>
@@ -184,7 +184,7 @@ $session = new CHttpSession;
                                 <div class="errorMessage visitorReason" id="visitReason">Reason cannot be blank.</div>
                             </td>
                         </tr>
-                        <tr><td><input type="submit" value="Update" name="yt0" id="submitReasonForm" /></td></tr>
+                        <tr><td><input type="submit" value="Update" name="yt0" id="submitReasonForm" class="complete" /></td></tr>
                     </table>
                     <?php $this->endWidget(); ?>
                     <?php
@@ -213,7 +213,7 @@ $session = new CHttpSession;
                                 <div class="errorMessage visitorReason" id="visitReasonErrorMessage">Reason cannot be blank.</div>
                             </td>
                         </tr>
-                        <tr><td><input type="submit" value="Add" name="yt0" id="submitAddReasonForm" /></td></tr>
+                        <tr><td><input type="submit" value="Add" name="yt0" id="submitAddReasonForm" class="complete"/></td></tr>
                     </table>
                     <?php $this->endWidget(); ?>
                 </li>
@@ -263,7 +263,7 @@ $session = new CHttpSession;
                             <br><div style="font-weight:bold;" class="findDivTitle"></div><br>
 
                             <div>
-                                <input type="submit" id="updateVisitHostFromSearch"  value="Update"/>
+                                <input type="submit" id="updateVisitHostFromSearch"  value="Update" class="complete"/>
                             </div>
                         </div>
 
@@ -411,7 +411,7 @@ $session = new CHttpSession;
                         </tr>
                         <tr>
                             <td>
-                                <input type="submit" value="Add" name="yt0" />
+                                <input type="submit" value="Add" name="yt0" class="complete"/>
                             </td>
                         </tr>
 
@@ -520,7 +520,7 @@ $session = new CHttpSession;
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="submit" value="Add" name="yt0" style="display:inline-block;"/>
+                                    <input type="submit" value="Add" name="yt0" style="display:inline-block;" class="complete"/>
                                 </td>
                             </tr>
                         </table>
@@ -557,7 +557,7 @@ $session = new CHttpSession;
                                 </td>
                             </tr>
 
-                            <tr><td><input type="submit" value="Update" name="yt0" id="submit" /></td></tr>
+                            <tr><td><input type="submit" value="Update" name="yt0" id="submit" class="complete"/></td></tr>
                         </table>
                         <?php
                     }

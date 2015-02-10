@@ -7,14 +7,38 @@ if ($this->Id == 'visitor') {
     $dataId = '';
 }
 ?>
-<?php if ($this->action->id == 'addvisitor') { ?>
+<?php
+if ($this->action->id == 'addvisitor') {
+    ?>
     <style>
         .ajax-upload-dragdrop {
             float:left !important;
             margin-left:0px !important;
         }
         .ajax-file-upload{
-            margin-top:40px !important;
+            margin-top:80px !important;
+            position:absolute !important;
+            margin-left: -53px !important;
+        }
+
+        .editImageBtn{
+            margin-bottom: -61px !important;
+            margin-left: -102px !important;
+        }
+        .imageDimensions{
+            display:none !important;
+        }
+    </style>
+    <?php
+} elseif ($this->action->id == 'customisation') {
+    ?>
+    <style>
+        .ajax-upload-dragdrop {
+            float:left !important;
+            margin-left:0px !important;
+        }
+        .ajax-file-upload{
+            margin-top:80px !important;
             position:absolute !important;
             margin-left: -53px !important;
         }
@@ -24,14 +48,14 @@ if ($this->Id == 'visitor') {
             margin-left: -102px !important;
         }
     </style>
-<?php } elseif ($this->action->id == 'create' && $this->id !='company') { ?>
+<?php } elseif ($this->action->id == 'create') { ?>
     <style>
         .ajax-upload-dragdrop {
             //margin-right:-75px !important;
             float:none !important;
         }
         .ajax-file-upload{
-            margin-top:40px !important;
+            margin-top:80px !important;
             position:absolute !important;
             margin-left: -53px !important;
         }
@@ -47,7 +71,7 @@ if ($this->Id == 'visitor') {
             float:none !important;
         }
         .ajax-file-upload{
-            margin-top:40px !important;
+            margin-top:80px !important;
             position:absolute !important;
             margin-left: -53px !important;
         }
@@ -57,13 +81,15 @@ if ($this->Id == 'visitor') {
         }
     </style>
 <?php } ?>
+
+
 <div id="fileuploader" style="margin-bottom:5px;"><?php
-    if ($this->action->id == 'detail') {
-        echo "Upload Photo";
-    } else {
-        echo "Browse Computer";
-    }
-    ?> </div> 
+if ($this->action->id == 'detail') {
+    echo "Upload Photo";
+} else {
+    echo "Browse Computer";
+}
+?> </div> 
 <br><br>
 <input type="button"  style="display:none;" id="cropImageBtn" class="editImageBtn" value="Edit Image" onclick = "document.getElementById('light').style.display = 'block';
         document.getElementById('fade').style.display = 'block'">
@@ -87,27 +113,30 @@ if ($this->Id == 'visitor') {
             showStatusAfterSuccess: false,
             onSuccess: function(files, data, xhr)
             {
-                if ($("#controllerId").val() == 'visitor' || $("#controllerId").val() == 'visit') {
+                if ($("#controllerId").val() == 'visitor' || $("#controllerId").val() == 'visit' || $("#controllerId").val() == 'companyLafPreferences') {
                     var logo = document.getElementById('photoPreview');
-                }
-                else {
+                } else {
                     var logo = document.getElementById('companyLogo');
-
                 }
                 var currentAction = $("#actionUpload").val();
                 if (currentAction == 'update' && $("#controllerId").val() != 'visitor')
                 {
                     logo.src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + data;
-                   
                     $(".companyLogoDiv").show();
                 } else {
                     //id of photo
 
                     if ($("#controllerId").val() == 'visitor' || $("#controllerId").val() == 'visit') {
                         $("#Visitor_photo").val(data);
-                    } else {
+                    } else if ($("#controllerId").val() == 'companyLafPreferences')
+                    {
+                        $("#CompanyLafPreferences_logo").val(data);
+                    }
+
+                    else {
                         $("#Company_logo").val(data);
                     }
+
                     $.ajax({
                         type: 'POST',
                         url: '<?php echo Yii::app()->createUrl('photo/GetPathOfCompanyLogo&id='); ?>' + data,
@@ -118,9 +147,9 @@ if ($this->Id == 'visitor') {
                             $.each(r.data, function(index, value) {
                                 logo.src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 $(".photoDiv").show();
-
-                                document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
-
+                                if ($("#controllerId").val() != 'companyLafPreferences') {
+                                    document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+                                }
                                 if ($("#controllerId").val() == 'visit') {
                                     $("#submitBtnPhoto").click();
                                     $("#cropImageBtn").show();
@@ -134,7 +163,6 @@ if ($this->Id == 'visitor') {
                 }
             }
         });
-
         if ($("#actionUpload").val() == 'detail') {
             $(".ajax-upload-dragdrop span").hide();
             $('.ajax-upload-dragdrop').css({"border": "none"});

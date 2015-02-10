@@ -88,7 +88,7 @@ if (isset($_GET['id'])) {
     </table>
 
     <button class="btn btn-success" id="submitBtn" <?php if ($session['role'] == Roles::ROLE_STAFFMEMBER){ echo "style='display:none;'"; } ?>><?php echo ($this->action->Id == 'create' ? 'Add' : 'Save') ?></button>
-    <a class="btn btn-primary" id="resetPasswordBtn" onclick = "goToUpdatePassword(<?php echo $session['id'];?>)">Reset Password</a>
+    <a class="btn btn-primary actionForward" id="resetPasswordBtn" onclick = "goToUpdatePassword(<?php echo $session['id'];?>)" style="font-weight:bold;font-size:12px;height:23.4px;">Reset Password</a>
     <div class="row buttons" style='display:none;'>
         <?php echo CHtml::submitButton($model->isNewRecord ? 'Add' : 'Save', array('id' => 'submitForm',)); ?>
     </div>

@@ -1,6 +1,6 @@
 
 <h1>Visitor Registration History</h1>
-<?php echo CHtml::button('Export to CSV', array('id' => 'export-button', 'class' => 'greenBtn')); ?>
+<?php echo CHtml::button('Export to CSV', array('id' => 'export-button', 'class' => 'greenBtn complete')); ?>
 <br>
 <div class="searchDateRange" >
     <?php
@@ -28,7 +28,7 @@
         ));
     }
     ?>
-    <input type="submit" name="yt1" value="Filter" style="margin-top:-10px;height:30px;">  
+    <input type="submit" name="yt1" value="Filter" style="margin-top:-10px;height:30px;" class="neutral">  
 
     <?php $this->endWidget(); ?>
 </div>

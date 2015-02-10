@@ -4,7 +4,7 @@
 ?>
 
 <h1>Evacuation Report</h1>
-<?php echo CHtml::button('Export to CSV', array('id' => 'export-button', 'class' => 'greenBtn')); ?>
+<?php echo CHtml::button('Export to CSV', array('id' => 'export-button', 'class' => 'greenBtn complete')); ?>
 <br>
 <br>
 <div class="search-form" style="display:none;">
@@ -123,7 +123,7 @@ function formatTime($time) {
     $(document).ready(function() {
         if ($("#totalRecordsCount").val() == 0) {
             $('#export-button').removeClass('greenBtn');
-            $('#export-button').addClass('btn DeleteBtn');
+            $('#export-button').addClass('btn DeleteBtn actionForward');
             $("#export-button").attr('disabled', true);
         }
         

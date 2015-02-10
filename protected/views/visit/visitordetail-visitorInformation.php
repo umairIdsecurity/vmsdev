@@ -107,7 +107,7 @@ $session = new CHttpSession;
                                     </select>
                                     <?php
                                 } else {
-                                    echo $visitForm->dropDownList($model, 'visitor_type', VisitorType::$VISITOR_TYPE_LIST, array(
+                                    echo $visitForm->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes(), array(
                                         'onchange' => 'visitorTypeOnChange()', 'class' => 'visitortypedetails',
                                     ));
                                 }

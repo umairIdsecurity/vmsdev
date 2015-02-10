@@ -26,8 +26,8 @@ class VisitorTypeController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin', 'delete'),
-                'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_SUPERADMIN)',
+                'actions' => array('create', 'update', 'admin', 'delete','adminAjax'),
+                'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
            
             ),
             array('deny', // deny all users
@@ -43,14 +43,14 @@ class VisitorTypeController extends Controller {
      */
     public function actionCreate() {
         $model = new VisitorType;
-
+        $visitorTypeService = new VisitorTypeServiceImpl();
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['VisitorType'])) {
             $model->attributes = $_POST['VisitorType'];
-            if ($model->save())
-                $this->redirect(array('view', 'id' => $model->id));
+            if ($visitorTypeService->save($model, Yii::app()->user))
+                $this->redirect(array('admin'));
         }
 
         $this->render('create', array(
@@ -72,7 +72,7 @@ class VisitorTypeController extends Controller {
         if (isset($_POST['VisitorType'])) {
             $model->attributes = $_POST['VisitorType'];
             if ($model->save())
-                $this->redirect(array('view', 'id' => $model->id));
+                $this->redirect(array('admin'));
         }
 
         $this->render('update', array(
@@ -130,6 +130,17 @@ class VisitorTypeController extends Controller {
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }
+    }
+    
+    public function actionAdminAjax() {
+        $model = new VisitorType('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['Visitor']))
+            $model->attributes = $_GET['Visitor'];
+
+        $this->renderPartial('_admin', array(
+            'model' => $model,
+                ), false, true);
     }
 
 }

@@ -462,6 +462,10 @@ CREATE TABLE IF NOT EXISTS `visitor_type` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(25) DEFAULT NULL,
   `created_by` bigint(20) DEFAULT NULL,
+
+  `tenant` bigint(20) DEFAULT NULL,
+  `tenant_agent` bigint(20) DEFAULT NULL,
+  `is_deleted` int(1) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `created_by` (`created_by`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
@@ -470,9 +474,9 @@ CREATE TABLE IF NOT EXISTS `visitor_type` (
 -- Dumping data for table `visitor_type`
 --
 
-INSERT INTO `visitor_type` (`id`, `name`, `created_by`) VALUES
-(1, 'Patient Visitor', NULL),
-(2, 'Corporate Visitor', NULL);
+INSERT INTO `visitor_type` (`id`, `name`, `created_by`,`tenant`,`tenant_agent`) VALUES
+(1, 'Patient Visitor', '16',NULL,NULL),
+(2, 'Corporate Visitor', '16', NULL,NULL);
 
 -- --------------------------------------------------------
 

@@ -22,11 +22,11 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'name' => 'card_type',
             'value' => 'CardType::$CARD_TYPE_LIST[$data->card_type]',
             'filter' => CardType::$CARD_TYPE_LIST,
-        ),
+        ),  
         array(
             'name' => 'visitor_type',
-            'value' => 'VisitorType::$VISITOR_TYPE_LIST[$data->visitor_type]',
-            'filter' => VisitorType::$VISITOR_TYPE_LIST,
+            'value' => 'VisitorType::model()->returnVisitorTypes($data->visitor_type)',
+            'filter' => VisitorType::model()->returnVisitorTypes(),
         ),
         array(
             'name' => 'reason',

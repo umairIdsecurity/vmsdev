@@ -1,4 +1,7 @@
 <?php
+
+$src = Yii::app()->getBaseUrl(true) . '/images/cardprint-print.png';
+
 error_reporting(E_ALL);
 $session = new CHttpSession;
 // clean up the input
@@ -8,13 +11,22 @@ $companyName = "Not Available";
 $visitorName = $visitorModel->first_name . ' ' . $visitorModel->last_name;
 if ($visitorModel->company != '') {
     $companyName = Company::model()->findByPk($visitorModel->company)->name;
+    $companyLogoId = Company::model()->findByPk($visitorModel->company)->logo;
 }
 
-$dateExpiry = date('d/m/Y');
-if ($model->card_type != CardType::SAME_DAY_VISITOR) {
-    $dateExpiry = Yii::app()->dateFormatter->format("d/MM/y", strtotime($model->date_out));
+if ($companyLogoId == "") {
+    $companyLogo = Yii::app()->getBaseUrl(true) . '/images/nologoavailable.jpg';
+} else {
+    $companyLogo = Yii::app()->getBaseUrl(true) . "/" . Photo::model()->returnCompanyPhotoRelativePath($visitorModel->company);
 }
-$text = $cardType . "\n" . $visitorName . "\n" . $companyName . "\n" . $dateExpiry;
+
+$src2 = $companyLogo;
+
+$dateExpiry = date('d M y');
+if ($model->card_type != CardType::SAME_DAY_VISITOR) {
+    $dateExpiry = date("d M y", strtotime($model->date_out));
+}
+$text = $dateExpiry . "\n" . $visitorName . "\n";
 
 if (empty($text)) {
     fatal_error('Error: Text not properly formatted.');
@@ -22,9 +34,8 @@ if (empty($text)) {
 
 // customizable variables
 $font_file = Yii::app()->request->baseUrl . 'css/arialbd.ttf'; // arial bold
-$font_size = 13; // font size in pts
+$font_size = 16; // font size in pts
 $font_color = '#000';
-$image_file = Yii::app()->getBaseUrl(true) . '/images/cardprint-print.png';
 
 // x and y for the bottom right of the text
 // so it expands like right aligned text
@@ -53,7 +64,7 @@ $box = @ImageTTFBBox($font_size, 0, $font_file, $text);
 $text_width = abs($box[2] - $box[0]);
 $text_height = abs($box[5] - $box[3]);
 
-$image = imagecreatefrompng($image_file);
+$image = imagecreatefrompng($src);
 
 if (!$image || !$box) {
     fatal_error('Error: The server could not create this image.');
@@ -74,23 +85,41 @@ $x = imagesx($image) - $textWidth - 10;
 imagettftext($image, $font_size, 0, $x, 250, $font_color, $font_file, $text);
 
 
-//header('Content-Disposition: Attachment;filename=image.png');
-header('Content-type: ' . $mime_type);
-imagepng($image);
+
+//////////////////////////////////////////////////////////////
+header('Content-type:image/png');
+
+$watermark = imagecreatefromjpeg($src2);
+
+$watermark_width = imagesx($watermark);
+
+$watermark_height = imagesy($watermark);
+
+$image = imagecreatetruecolor($watermark_width, $watermark_height);
+
+$image = imagecreatefrompng($src);
+
+$size = getimagesize($src);
+
+$dest_x = $size[0] - $watermark_width - 5;
+
+$dest_y = $size[1] - $watermark_height - 5;
+imagettftext($image, $font_size, 0, $x, 250, $font_color, $font_file, $text);
+
+imagecopyresampled($image, $watermark, 17, 333, 0, 0, 80, 45, $watermark_width, $watermark_height);
+//imagecopymerge($image, $watermark, 5, 5, 0, 0, $watermark_width, $watermark_height, 50);  
 
 $usernameHash = hash('adler32', $visitorModel->email);
 $uniqueFileName = 'card' . $usernameHash . '-' . time() . ".png";
 $path = "uploads/card_generated/" . $uniqueFileName;
+imagepng($image);
 imagepng($image, $path);
-ImageDestroy($image);
 
-exit();
+imagedestroy($image);
 
-/*
-  attempt to create an image containing the error message given.
-  if this works, the image is sent to the browser. if not, an error
-  is logged, and passed back to the browser as a 500 code instead.
- */
+imagedestroy($watermark);
+
+exit;
 
 function fatal_error($message) {
     // send an image
@@ -141,5 +170,5 @@ function hex_to_rgb($hex) {
 
     return $rgb;
 }
-
 ?>
+

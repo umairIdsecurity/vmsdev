@@ -100,44 +100,18 @@ if ($this->action->id == 'update') {
                                 ?>">                            
                             </td>
                         </tr>
-                        <?php if ($this->action->id != 'update') {
-                            ?>
-                            <tr>
-                                <td>
-                                    <label for="Visitor_password">Password <span class="required">*</span></label>
-                                </td>
-                                <td>
-                                    <input ng-model="user.passwords" data-ng-class="{
-                                                                                                                                            'ng-invalid':registerform['Visitor[repeatpassword]'].$error.match}" type="password" id="Visitor_password" name="Visitor[password]">			
-                                           <?php echo "<br>" . $form->error($model, 'password'); ?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label for="Visitor_repeatpassword">Repeat Password <span class="required">*</span></label>
-                                </td>
-                                <td>
-                                    <input ng-model="user.passwordConfirm" type="password" id="Visitor_repeatpassword" data-match="user.passwords" name="Visitor[repeatpassword]"/>			
-                                    <div style='font-size:0.9em;color:red;position: static;' data-ng-show="registerform['Visitor[repeatpassword]'].$error.match">Password does not match with Repeat <br> Password. </div>
-                                    <?php echo "<br>" . $form->error($model, 'repeatpassword'); ?>
-                                </td>
-                            </tr>
-                        <?php } ?>
+
                         <tr> 
                             <td><?php echo $form->labelEx($model, 'Add Photo'); ?></td>
                             <td id="uploadRow" >
                                 <input type="hidden" id="Visitor_photo" name="Visitor[photo]"
-                                <?php
-                                if ($this->action->id == 'update') {
-                                    echo "disabled";
-                                }
-                                ?> value="<?php echo $model['photo']; ?>">
+                                value="<?php echo $model['photo']; ?>">
 
-                                <div class="photoDiv" <?php
+                                <div class="photoDiv"  style="<?php
                                 if ($model['photo'] == NULL) {
-                                    echo "style='display:none !important;'";
-                                }
-                                ?>>
+                                    echo "display:none;";
+                                } 
+                                ?>margin-bottom:5px;">
                                          <?php if ($dataId != '') { ?> 
                                         <img id='photoPreview' src="<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($dataId) ?>"/>
                                     <?php } else { ?> 
@@ -150,7 +124,7 @@ if ($this->action->id == 'update') {
                                              " />
                                          <?php } ?>
                                 </div>
-                                <br>
+
                                 <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
                             </td>
                         </tr>
@@ -206,7 +180,31 @@ if ($this->action->id == 'update') {
                                 <?php echo $form->textField($model, 'position', array('size' => 50, 'maxlength' => 50)); ?>
                                 <?php echo "<br>" . $form->error($model, 'position'); ?>
                             </td>
+
                         </tr>
+                        <?php if ($this->action->id != 'update') {
+                            ?>
+                            <tr>
+                                <td>
+                                    <label for="Visitor_password">Password <span class="required">*</span></label>
+                                </td>
+                                <td>
+                                    <input ng-model="user.passwords" data-ng-class="{
+                                                                    'ng-invalid':registerform['Visitor[repeatpassword]'].$error.match}" type="password" id="Visitor_password" name="Visitor[password]">			
+                                           <?php echo "<br>" . $form->error($model, 'password'); ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for="Visitor_repeatpassword">Repeat Password <span class="required">*</span></label>
+                                </td>
+                                <td>
+                                    <input ng-model="user.passwordConfirm" type="password" id="Visitor_repeatpassword" data-match="user.passwords" name="Visitor[repeatpassword]"/>			
+                                    <div style='font-size:0.9em;color:red;position: static;' data-ng-show="registerform['Visitor[repeatpassword]'].$error.match">Password does not match with Repeat <br> Password. </div>
+                                    <?php echo "<br>" . $form->error($model, 'repeatpassword'); ?>
+                                </td>
+                            </tr>
+                        <?php } ?>
                     </table>
                 </td>
             </tr>
@@ -218,17 +216,12 @@ if ($this->action->id == 'update') {
 
     </div>
     <div class="register-a-visitor-buttons-div" style="text-align:left !important; ">
-        <input type="submit" value="Save" name="yt0" id="submitFormVisitor" />
+        <br><br><input type="submit" value="Save" name="yt0" id="submitFormVisitor" />
     </div>
 
     <?php $this->endWidget(); ?>
 </div>
-<input type="hidden" id="x1"/>
-<input type="hidden" id="x2"/>
-<input type="hidden" id="y1"/>
-<input type="hidden" id="y2"/>
-<input type="hidden" id="width"/>
-<input type="hidden" id="height"/>
+
 <input type="hidden" id="currentAction" value="<?php echo $this->action->id; ?>">
 <input type="hidden" id="currentRoleOfLoggedInUser" value="<?php echo $session['role']; ?>">
 <input type="hidden" id="currentlyEditedVisitorId" value="<?php
@@ -239,7 +232,9 @@ if (isset($_GET['id'])) {
 <script>
     $(document).ready(function() {
         if ($("#currentAction").val() == 'update') {
-
+            if($("#Visitor_photo").val() != ''){
+                $("#cropImageBtn").show();
+            }
             if ($("#currentRoleOfLoggedInUser").val() != 5) {
                 $('#Visitor_company option[value!=""]').remove();
                 if ($("#Visitor_tenant_agent").val() == '') {
@@ -263,10 +258,10 @@ if (isset($_GET['id'])) {
             }
         }
 
-        $('#photoPreview').imgAreaSelect({
+        $('#photoCropPreview').imgAreaSelect({
             handles: true,
             onSelectEnd: function(img, selection) {
-                $("#cropImageBtn").show();
+                $("#cropPhotoBtn").show();
                 $("#x1").val(selection.x1);
                 $("#x2").val(selection.x2);
                 $("#y1").val(selection.y1);
@@ -276,7 +271,7 @@ if (isset($_GET['id'])) {
             }
         });
 
-        $("#cropImageBtn").click(function(e) {
+        $("#cropPhotoBtn").click(function(e) {
             e.preventDefault();
             $.ajax({
                 type: 'POST',
@@ -301,9 +296,12 @@ if (isset($_GET['id'])) {
 
                             $.each(r.data, function(index, value) {
                                 document.getElementById('photoPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
-
+                                document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                             });
 
+                            $("#closeCropPhoto").click();
+                            var ias = $('#photoCropPreview').imgAreaSelect({instance: true});
+                            ias.cancelSelection();
                         }
                     });
                 }
@@ -511,3 +509,29 @@ $this->widget('bootstrap.widgets.TbButton', array(
     <div id="modalBody"></div>
 
 </div>
+<!-- PHOTO CROP-->
+<div id="light" class="white_content">
+    <div style="text-align:right;">
+        <input type="button" class="btn btn-success" id="cropPhotoBtn" value="Crop" style="">
+        <input type="button" id="closeCropPhoto" onclick="document.getElementById('light').style.display = 'none';
+                document.getElementById('fade').style.display = 'none'" value="x" class="btn btn-danger">
+    </div>
+    <br>
+    <?php if ($this->action->id == 'addvisitor') { ?>
+        <img id="photoCropPreview" src="">
+    <?php } elseif ($this->action->id == 'update') { ?>
+        <img id="photoCropPreview" src="<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($model->id) ?>">
+
+    <?php } ?>
+</div>
+<div id="fade" class="black_overlay"></div>
+
+<input type="hidden" id="x1"/>
+<input type="hidden" id="x2"/>
+<input type="hidden" id="y1"/>
+<input type="hidden" id="y2"/>
+<input type="hidden" id="width"/>
+<input type="hidden" id="height"/>
+
+
+

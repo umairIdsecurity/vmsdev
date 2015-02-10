@@ -114,6 +114,14 @@ class Photo extends CActiveRecord {
             return $photo->relative_path;
         }
     }
+    public function returnCompanyPhotoRelativePath($companyId) {
+        $company = Company::model()->findByPK($companyId);
+        if ($company->logo != '') {
+            $photo = Photo::model()->findByPK($company->logo);
+
+            return $photo->relative_path;
+        }
+    }
    
 
 }

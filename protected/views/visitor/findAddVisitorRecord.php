@@ -292,15 +292,14 @@ $session = new CHttpSession;
                     </td>
                 </tr>
                 <tr> 
-                    <td><?php echo $form->labelEx($model, 'Add Photo'); ?></td>
-                    <td id="uploadRow" >
-                        <input type="hidden" id="Visitor_photo" name="Visitor[photo]">
-                        <div class="photoDiv" style='display:none !important;'>
-
+                    <td><?php echo $form->labelEx($model, 'Add Photo'); ?><br>
+                    
+                    <input type="hidden" id="Visitor_photo" name="Visitor[photo]">
+                        <div class="photoDiv" style='display:none !important;margin-left:3px;margin-bottom:5px;'>
                             <img id='photoPreview' src="">
                         </div>
-                        <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
-                    </td>
+                        <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?></td>
+                   
                 </tr>
             </table>
 
@@ -342,19 +341,12 @@ $session = new CHttpSession;
 
     <?php $this->endWidget(); ?>
 </div>
-<input type="hidden" id="x1"/>
-<input type="hidden" id="x2"/>
-<input type="hidden" id="y1"/>
-<input type="hidden" id="y2"/>
-<input type="hidden" id="width"/>
-<input type="hidden" id="height"/>
 <script>
     $(document).ready(function() {
         /*Allow crop photo*/
-        $('#photoPreview').imgAreaSelect({
+        $('#photoCropPreview').imgAreaSelect({
             handles: true,
             onSelectEnd: function(img, selection) {
-                $("#cropImageBtn").show();
                 $("#x1").val(selection.x1);
                 $("#x2").val(selection.x2);
                 $("#y1").val(selection.y1);
@@ -364,7 +356,7 @@ $session = new CHttpSession;
             }
         });
 
-        $("#cropImageBtn").click(function(e) {
+        $("#cropPhotoBtn").click(function(e) {
             e.preventDefault();
             $.ajax({
                 type: 'POST',
@@ -389,9 +381,12 @@ $session = new CHttpSession;
 
                             $.each(r.data, function(index, value) {
                                 document.getElementById('photoPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
-                                
-                            });
+                                document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
 
+                            });
+                            $("#closeCropPhoto").click();
+                            var ias = $('#photoCropPreview').imgAreaSelect({instance: true});
+                            ias.cancelSelection();
                         }
                     });
                 }
@@ -721,3 +716,27 @@ $this->widget('bootstrap.widgets.TbButton', array(
     <div id="modalBody"></div>
 
 </div>
+
+
+<!-- PHOTO CROP-->
+<div id="light" class="white_content">
+    <div style="text-align:right;">
+        <input type="button" class="btn btn-success" id="cropPhotoBtn" value="Crop" style="">
+        <input type="button" id="closeCropPhoto" onclick="document.getElementById('light').style.display = 'none';
+                document.getElementById('fade').style.display = 'none'" value="x" class="btn btn-danger">
+    </div>
+    <br>
+    <img id="photoCropPreview" src="">
+
+</div>
+<div id="fade" class="black_overlay"></div>
+
+<input type="hidden" id="x1"/>
+<input type="hidden" id="x2"/>
+<input type="hidden" id="y1"/>
+<input type="hidden" id="y2"/>
+<input type="hidden" id="width"/>
+<input type="hidden" id="height"/>
+
+
+

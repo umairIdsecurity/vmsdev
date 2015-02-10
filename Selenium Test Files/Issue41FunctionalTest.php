@@ -10,7 +10,6 @@ require_once 'BaseFunctionalTest.php';
 
 /**
  * Description of Issue40FunctionalTest
- * Scheduled Jobs
  * @author Jeremiah
  */
 class Issue41FunctionalTest extends BaseFunctionalTest {

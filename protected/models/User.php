@@ -146,7 +146,7 @@ class User extends VmsActiveRecord {
             'company' => 'Company Name',
             'department' => 'Department',
             'position' => 'Position',
-            'staff_id' => 'Staff Id',
+            'staff_id' => 'Staff ID',
             'notes' => 'Notes',
             'password' => 'Password',
             'role' => 'Role',

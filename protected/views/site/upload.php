@@ -10,6 +10,7 @@ switch ($controllerId) {
         $folderKey = '/profile/';
         break;
     case 'visitor':
+    case 'visit':
         $folderKey = '/visitor/';
         break;
     default:
@@ -34,13 +35,15 @@ if (isset($_FILES["myfile"])) {
                 . '(`filename`, `unique_filename`, `relative_path`) VALUES ("' . $fileName . '","' . $uniqueFileName . '","' . $path . '" )');
         $command->query();
         //update company
-        if ($action == 'update') {
-                    $update = $connection->createCommand('update company set logo="' . Yii::app()->db->lastInsertID . '" where id="' . $_GET['companyId'] . '"');
-                    $update->query();
-                    $ret = $path;
-                } else if ($action == 'create' || $action =='addvisitor') {
-                    $ret = Yii::app()->db->lastInsertID;
-                }
+        if ($action == 'update' && $controllerId == 'visitor') {
+            $ret = Yii::app()->db->lastInsertID;
+        } elseif ($action == 'update') {
+            $update = $connection->createCommand('update company set logo="' . Yii::app()->db->lastInsertID . '" where id="' . $_GET['companyId'] . '"');
+            $update->query();
+            $ret = $path;
+        } else if ($action == 'create' || $action == 'addvisitor' || $action == 'detail') {
+            $ret = Yii::app()->db->lastInsertID;
+        }
     }
     echo $ret;
     //echo json_encode($ret);

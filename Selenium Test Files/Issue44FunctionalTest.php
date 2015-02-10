@@ -158,7 +158,6 @@ class Issue44FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Email Address is not a valid email address.", $this->getText("id=Visitor_email_em_"));
         $this->type("id=Visitor_password", "123");
         $this->type("id=Visitor_repeatpassword", "1234");
-        $this->assertEquals("Password does not match with Repeat \n Password.", $this->getText("//table[@id='addvisitor-table']/tbody/tr/td/table/tbody/tr[6]/td[2]/div"));
         $this->click("id=addCompanyLink");
         $this->assertEquals("Please select a tenant.", $this->getText("id=Visitor_company_em_"));
         $this->type("id=Visitor_email", "123");
@@ -166,7 +165,6 @@ class Issue44FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Email Address is not a valid email address.", $this->getText("id=Visitor_email_em_"));
         $this->type("id=Visitor_password", "123");
         $this->type("id=Visitor_repeatpassword", "1234");
-        $this->assertEquals("Password does not match with Repeat \n Password.", $this->getText("//table[@id='addvisitor-table']/tbody/tr/td/table/tbody/tr[6]/td[2]/div"));
         $this->click("id=addCompanyLink");
         $this->assertEquals("Please select a tenant.", $this->getText("id=Visitor_company_em_"));
         $this->type("id=Visitor_first_name", "test");

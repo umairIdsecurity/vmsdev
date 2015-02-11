@@ -140,6 +140,8 @@ class Issue55FunctionalTest extends BaseFunctionalTest {
         $this->click("id=submitFormUser");
         $this->type("id=proposedDateOut", "18-02-2015");
         $this->clickAndWait("id=submitAllForms");
+        $this->clickAndWait("css=#activate-a-visit-form > input.complete");
+        $this->clickAndWait("link=Active");
         try {
             $this->assertEquals("Same Day Visitor Multiday Visitor", $this->getText("id=Visit_card_type"));
         } catch (PHPUnit_Framework_AssertionFailedError $e) {

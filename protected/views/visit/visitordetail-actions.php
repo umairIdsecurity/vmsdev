@@ -87,7 +87,7 @@ $session = new CHttpSession;
                 </ul>
 
             </li>
-        <?php } else if (($model->visit_status == VisitStatus::PREREGISTERED || $model->visit_status == VisitStatus::SAVED || $model->visit_status == VisitStatus::CLOSED) ) {
+        <?php } else if (($model->visit_status == VisitStatus::PREREGISTERED || $model->visit_status == VisitStatus::SAVED || $model->visit_status == VisitStatus::CLOSED)) {
             ?>
             <li class='has-sub' id="preregisterLi"><a href="#"><span class="btn btn-info actionsLabel" style="color:white !important;">Preregister a Visit</span></a>
                 <ul>
@@ -171,17 +171,33 @@ $session = new CHttpSession;
         <?php } ?>
     </ul>
 </div>
-
+<input type="hidden" value="<?php echo $session['previousVisitAction']; ?>" id="previousVisitAction"/>
+<input type="hidden" value="<?php echo $model->visit_status; ?>" id="visitStatus"/>
 <script>
     $(document).ready(function() {
 
-        $("#logvisitLi a").click();
 
-        if ($("#visitStatusActions").val() != 2) {
-            $("#preregisterLi a").click();
+        if ($("#visitStatus").val() == 5) {
+
+            if ($("#previousVisitAction").val() == 'Preregister') {
+                $("#preregisterLi ul").show();
+                $("#activateLi ul").hide();
+            } else {
+                $("#activateLi ul").show();
+                $("#preregisterLi ul").hide();
+            }
+        } else {
+            $("#logvisitLi a").click();
+
+            if ($("#visitStatusActions").val() != 2) {
+                $("#preregisterLi a").click();
+            }
+
+            $("#activateLi a").click();
+
         }
 
-        $("#activateLi a").click();
+
 
         $('#activate-a-visit-form').bind('submit', function() {
             $(this).find('#Visit_date_check_in').removeAttr('disabled');
@@ -207,6 +223,8 @@ $session = new CHttpSession;
         if ('<?php echo $model->card_type; ?>' == 1) {
             $('.ui-datepicker-trigger[title="Select Proposed Date Out"]').hide();
         }
+
+
     });
 
     function display_c() {

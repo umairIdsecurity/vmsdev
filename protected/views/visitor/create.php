@@ -16,10 +16,15 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
 ?>" style="display:none;">
 <h1><?php
     if (isset($_GET['action'])) {
-        echo "Preregister";
-    } else {
-        echo "Register";
-    };
+        if($_GET['action'] == 'register'){
+            echo "Register";
+            $session['previousVisitAction'] = 'Register';
+        } else {
+            echo "Preregister";
+            $session['previousVisitAction'] = 'Preregister';
+        }
+        
+    }
     ?> a Visitor</h1>
 
 <dl class="tabs <?php if (!isset($_GET['action'])) { ?> four-up <?php

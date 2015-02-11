@@ -862,21 +862,21 @@ $this->widget('bootstrap.widgets.TbButton', array(
 ));
 ?>
 <script>
-    function addCompany() {
-        var url = '<?php echo $this->createUrl('company/create&viewFrom=1') ?>';
-        var sessionRole = $("#currentRole").val();
-        var selectedRole = $("#User_role").val();
-        var tenant = $("#User_tenant").val();
-        var superadmin = 5;
-        var agentadmin = 6;
-        if (sessionRole == superadmin) {
-            if (selectedRole == agentadmin) {
-                url = '<?php echo $this->createUrl('company/create&viewFrom=1&tenant=') ?>' + tenant;
+function addCompany() {
+            var url = '<?php echo $this->createUrl('company/create&viewFrom=1') ?>';
+            var sessionRole = $("#currentRole").val();
+            var selectedRole = $("#User_role").val();
+            var tenant = $("#User_tenant").val();
+            var superadmin = 5;
+            var agentadmin = 6;
+            if (sessionRole == superadmin) {
+                if (selectedRole == agentadmin) {
+                    url = '<?php echo $this->createUrl('company/create&viewFrom=1&tenant=') ?>' + tenant;
+                }
             }
+            $("#modalBody").html('<iframe width="100%" id="companyModalIframe" height="88%" frameborder="0" scrolling="no" src="' + url + '" ></iframe>');
+            $("#modalBtn").click();
         }
-        $("#modalBody").html('<iframe width="100%" id="companyModalIframe" height="88%" frameborder="0" scrolling="no" src="' + url + '" ></iframe>');
-        $("#modalBtn").click();
-    }
 
     function dismissModal(id) {
         $("#dismissModal").click();

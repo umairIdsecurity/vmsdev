@@ -194,7 +194,7 @@ $session = new CHttpSession;
                         </select>
                         <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;<?php
                         if ($session['role'] != Roles::ROLE_STAFFMEMBER) {
-                        //    echo "display:none";
+                            //    echo "display:none";
                         }
                         ?>">Add New Company</a>
                            <?php echo "<br>" . $form->error($model, 'company'); ?>
@@ -296,15 +296,15 @@ $session = new CHttpSession;
                 </tr>
                 <tr> 
                     <td><?php echo $form->labelEx($model, 'Add Photo'); ?><br>
-                    
-                    <input type="hidden" id="Visitor_photo" name="Visitor[photo]">
+
+                        <input type="hidden" id="Visitor_photo" name="Visitor[photo]">
                         <div class="photoDiv" style='display:none !important;margin-left:3px;margin-bottom:5px;'>
                             <img id='photoPreview' src="">
                         </div>
                         <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
-                    <div id="photoErrorMessage" class="errorMessage" style="display:none;">Please upload a photo.</div>
+                        <div id="photoErrorMessage" class="errorMessage" style="display:none;">Please upload a photo.</div>
                     </td>
-                   
+
                 </tr>
             </table>
 
@@ -627,7 +627,7 @@ $session = new CHttpSession;
                 url = '<?php echo Yii::app()->createUrl('company/create&viewFrom=1'); ?>';
             }
 
-            $("#modalBody").html('<iframe width="100%" height="80%" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
+            $("#modalBody").html('<iframe width="100%" id="companyModalIframe" height="88%" frameborder="0" scrolling="no" src="' + url + '" ></iframe>');
             $("#modalBtn").click();
         }
     }

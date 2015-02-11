@@ -169,7 +169,8 @@ $session = new CHttpSession;
 
                     </td>
                     <td><label for="Visitor_vehicle">Vehicle Registration Number</label><br>
-                    <input type="text"  id="Visitor_vehicle" name="Visitor[vehicle]" maxlength="6" size="6">                            
+                    <input type="text"  id="Visitor_vehicle" name="Visitor[vehicle]" maxlength="6" size="6">  
+                    <?php echo "<br>" . $form->error($model, 'vehicle'); ?>
                     </td>
                 </tr>
                 <tr>
@@ -336,14 +337,14 @@ $session = new CHttpSession;
 
 <script>
     $(document).ready(function() {
-        $('#Visitor_vehicle').bind('keypress', function(event) {
-            var regex = new RegExp("^[a-zA-Z0-9\b]+$");
-            var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
-            if (!regex.test(key)) {
-                event.preventDefault();
-                return false;
-            }
-        });
+//        $('#Visitor_vehicle').bind('keypress', function(event) {
+//            var regex = new RegExp("^[a-zA-Z0-9\b]+$");
+//            var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+//            if (!regex.test(key)) {
+//                event.preventDefault();
+//                return false;
+//            }
+//        });
         /*Remove space for vehicle number*/
         $('#Visitor_vehicle').keydown(function(e) {
             if (e.which === 32) {

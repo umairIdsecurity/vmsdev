@@ -158,8 +158,6 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
         $this->type("id=User_email", "test".$host_name."@test.com");
         $this->type("id=User_contact_number", "123456");
         $this->select("id=User_tenant", "label=Test admin");
-        sleep(1);
-        $this->select("id=User_tenant_agent", "label=Test agentadmin");
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeatpassword", "12345");
         $this->click("id=User_company");

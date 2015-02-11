@@ -39,13 +39,15 @@ class Issue42FunctionalTest extends BaseFunctionalTest {
         $this->click("link=Manage Visitor Records");
         $this->clickAndWait("link=Preregister a Visitor");
         $this->click("id=clicktabA");
+        $this->select("id=Visitor_visitor_type","label=Corporate Visitor");
         $this->addVisitor('Visitor0');
         $this->select("id=workstation", "label=Workstation1");
         $this->select("id=Visit_reason", "label=Reason 1");
+        $this->select("id=Visitor_tenant", "label=Test admin");
         $this->waitForElementPresent("id=submitFormVisitor");
         $this->click("id=submitFormVisitor");
-        $this->addPatient("Patient Name 0");
-        $this->clickAndWait("id=submitFormPatientName");
+        $this->addHost("host");
+        $this->clickAndWait("id=submitFormUser");
         $this->verifyVisitorInTable('Visitor0');
         $this->clickAndWait("link=Administration");
         $this->click("id=yt3");
@@ -69,7 +71,7 @@ class Issue42FunctionalTest extends BaseFunctionalTest {
         }
     }
     
-    /* Scenario 2 - Preegister a visitor with vehicle registration number
+    /* Scenario 2 - Preregister a visitor with vehicle registration number
       Expected Behavior
       Assert "ABC123" in vehicle registration number
      */
@@ -81,12 +83,13 @@ class Issue42FunctionalTest extends BaseFunctionalTest {
         $this->click("link=Manage Visitor Records");
         $this->clickAndWait("link=Preregister a Visitor");
         $this->click("id=clicktabA");
+        $this->select("id=Visitor_visitor_type","label=Corporate Visitor");
         $this->addVisitor('Visitor5');
         $this->select("id=workstation", "label=Workstation1");
         $this->addReason('Reason 3');
         $this->waitForElementPresent("id=submitFormVisitor");
         $this->click("id=submitFormVisitor");
-        $this->addPatient("Patient Name 1");
+        $this->addHost("host1");
         $this->clickAndWait("id=submitFormPatientName");
         $this->verifyVisitorInTable('Visitor5');
         $this->clickAndWait("link=Administration");

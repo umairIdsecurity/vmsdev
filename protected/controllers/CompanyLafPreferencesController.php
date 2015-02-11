@@ -184,6 +184,10 @@ class CompanyLafPreferencesController extends Controller {
         $filename = $company->code . "-" . time() . ".css";
         $filepath = 'company_css/' . $filename;
 
+        if (!file_exists(Yii::app()->request->baseUrl . "company_css")) {
+            mkdir(Yii::app()->request->baseUrl . "company_css", 0777, true);
+        }
+
         ob_start(); // Capture all output (output buffering)
 
         require_once(Yii::app()->basePath . '/views/companyLafPreferences/css_template.php');
@@ -191,8 +195,11 @@ class CompanyLafPreferencesController extends Controller {
         $css = ob_get_clean(); // Get generated CSS (output buffering)
         file_put_contents(Yii::app()->request->baseUrl . $filepath, $css, LOCK_EX); // Save it
 
+
+
         if ($companyLafPreferences->css_file_path != '') {
-            unlink(Yii::getPathOfAlias('webroot').$companyLafPreferences->css_file_path); //delete file
+
+            unlink(Yii::getPathOfAlias('webroot') . $companyLafPreferences->css_file_path); //delete file
         }
 
         CompanyLafPreferences::model()->updateByPk($company->company_laf_preferences, array(

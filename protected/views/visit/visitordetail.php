@@ -2,6 +2,7 @@
 /* @var $this VisitorController */
 /* @var $model Visitor */
 $session = new CHttpSession;
+
 ?>
 <table id="visitorDetailDiv">
     <tr class="theadVisitorDetail">

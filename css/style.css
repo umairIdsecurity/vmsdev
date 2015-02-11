@@ -1136,7 +1136,10 @@ dt.tabs dt{
 .cardCompanyLogoPreregistered{
     height: 30px;
     margin-left: -155px;
-    margin-top: -64px;
+   // margin-top: -64px;
+    
+    margin-top: -14px;
+    //-moz-margin-start: -64px;
     position: relative;
     width: 50px;
 }

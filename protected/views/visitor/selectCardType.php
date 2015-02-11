@@ -1,4 +1,5 @@
 <?php
+$session = new CHttpSession;
 $sameday = CardType::model()->findByPk(CardType::SAME_DAY_VISITOR);
 $multiday = CardType::model()->findByPk(CardType::MULTI_DAY_VISITOR);
 ?>

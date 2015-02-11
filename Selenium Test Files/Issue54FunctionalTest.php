@@ -87,6 +87,8 @@ class Issue54FunctionalTest extends BaseFunctionalTest {
         $this->click("id=clicktabB1");
         $this->click("id=saveCurrentUserAsHost");
         $this->clickAndWait("id=submitAllForms");
+        $this->clickAndWait("css=#activate-a-visit-form > input.complete");
+        $this->clickAndWait("link=Active");
         try {
             $this->assertEquals("personpreload@test.com", $this->getValue("id=Visitor_email"));
         } catch (PHPUnit_Framework_AssertionFailedError $e) {
@@ -379,8 +381,10 @@ class Issue54FunctionalTest extends BaseFunctionalTest {
         $this->click("id=clicktabB1");
         $this->click("id=saveCurrentUserAsHost");
         $this->clickAndWait("id=submitAllForms");
+        $this->clickAndWait("css=#activate-a-visit-form > input.complete");
+        $this->clickAndWait("link=Active");
         $this->assertEquals("Visit Status: Active", $this->getText("link=Visit Status: Active"));
-       // $this->assertEquals("Select Reason Other Reason 1 Reason 2 Reason For Save Visit", $this->getText("id=Visit_reason"));
+        // $this->assertEquals("Select Reason Other Reason 1 Reason 2 Reason For Save Visit", $this->getText("id=Visit_reason"));
         try {
             $this->assertEquals("person@test.com", $this->getValue("id=Visitor_email"));
         } catch (PHPUnit_Framework_AssertionFailedError $e) {

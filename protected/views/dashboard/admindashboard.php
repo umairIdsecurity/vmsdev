@@ -41,7 +41,7 @@ foreach ($workstationList as $workstation) {
             array(
                 array(
                     'name' => 'visit_status',
-                    'filter' => VisitStatus::$VISIT_STATUS_LIST,
+                    'filter' => VisitStatus::$VISIT_STATUS_DASHBOARD_FILTER,
                     'value' => 'CHtml::link(VisitStatus::$VISIT_STATUS_LIST[$data->visit_status],Yii::app()->createUrl("visit/detail",array("id"=>$data->id)),array("class" =>"statusLink"))',
                     'type' => 'raw',
                     'header' => 'Status',

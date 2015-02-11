@@ -676,12 +676,13 @@ function populateWorkstation() {
             }
 
             if ($session['tenant_agent'] == NULL) {
-                $tenantagentsearchby = "IS NULL";
+                //$tenantagentsearchby = "and tenant_agent IS NULL";
+                $tenantagentsearchby = "";
             } else {
-                $tenantagentsearchby = "='" . $session['tenant_agent'] . "'";
+                $tenantagentsearchby = "and tenant_agent ='" . $session['tenant_agent'] . "'";
             }
             $Criteria = new CDbCriteria();
-            $Criteria->condition = "tenant $tenantsearchby and tenant_agent $tenantagentsearchby";
+            $Criteria->condition = "tenant $tenantsearchby  $tenantagentsearchby";
             $workstationList = Workstation::model()->findAll($Criteria);
             break;
 

@@ -164,7 +164,7 @@ if ($this->action->id == 'detail') {
                                 }
                             });
                             if ($("#viewFrom").val() == '1') {
-                                window.parent.document.getElementById('companyModalIframe').style.height= "715px"; 
+                                window.parent.document.getElementById('companyModalIframe').style.height= "725px"; 
                             }
                         }
                     });

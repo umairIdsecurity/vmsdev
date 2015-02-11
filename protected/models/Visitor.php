@@ -70,10 +70,6 @@ class Visitor extends CActiveRecord {
                 'pattern' => '/^[A-Za-z0-9_]+$/u',
                 'message' => 'Vehicle accepts alphanumeric characters only.'
             ),
-//            array('vehicle', 'length',
-//                'min' => 6,
-//                'tooShort' => 'You must enter minimum 6 characters',
-//            ),
             array('vehicle', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.

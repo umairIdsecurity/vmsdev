@@ -36,9 +36,13 @@ if ($this->action->id == 'update') {
     foreach (Yii::app()->user->getFlashes() as $key => $message) {
         echo '<div class="flash-' . $key . '">' . $message . "</div>\n";
     }
+    
+    if (isset($_GET['viewFrom'])) {
+        $isViewedFromModal = $_GET['viewFrom'];
+    } else {
+        echo $form->errorSummary($model);
+    }
     ?>
-    <?php echo $form->errorSummary($model); ?>
-
     <input type="hidden" id="Company_tenant" name="Company[tenant]" value="<?php echo $tenant; ?>">
     <input type="hidden" id="Company_tenant_agent" name="Company[tenant_agent]" value="<?php echo $tenantAgent; ?>">
     <table>

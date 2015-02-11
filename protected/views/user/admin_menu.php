@@ -179,7 +179,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     </ul>
                 </li>   
                  <li class='has-sub'><?php
-                echo CHtml::ajaxLink("Manage Visitor Types", CController::createUrl('visitortype/adminAjax'), array(
+                echo CHtml::ajaxLink("Manage Visitor Types", CController::createUrl('visitorType/adminAjax'), array(
                     'update' => '#content',
                     'complete' => "js:function(html){
             $('.managecompanies').next().slideUp('normal');
@@ -199,7 +199,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     echo "style='display:block ;'";
                 }
                 ?>>
-                    <li><a href='<?php echo Yii::app()->createUrl('visitortype/create'); ?>' class="addSubMenu"><span>Add Visitor Type</span></a></li>
+                    <li><a href='<?php echo Yii::app()->createUrl('visitorType/create'); ?>' class="addSubMenu"><span>Add Visitor Type</span></a></li>
                 </ul>
             </li> 
                 <li class='has-sub'><?php

@@ -77,8 +77,14 @@ $session = new CHttpSession;
                                         </table>
                                         <?php echo $closeVisitForm->error($model, 'date_in'); ?>
                                         <input type='submit' value='Close' class="complete"/>
-                                        <button class="actionForward greenBtn" style="height:25px;line-height:0px ;" id="cancelActiveVisitButton">Cancel</button>
-                                        <?php $this->endWidget(); ?>
+                                        <button class="actionForward greenBtn" style="<?php
+                                        if (strpos($_SERVER['HTTP_USER_AGENT'], 'Firefox') !== FALSE) {
+                                            echo "height:25.6px;";
+                                        } else {
+                                            echo "height:30px;";
+                                        }
+                                        ?>line-height:0px ;" id="cancelActiveVisitButton">Cancel</button>
+    <?php $this->endWidget(); ?>
                                     </div>
                                 </td>
                             </tr>
@@ -168,7 +174,7 @@ $session = new CHttpSession;
                 </ul>
             </li>
 
-        <?php } ?>
+<?php } ?>
     </ul>
 </div>
 <input type="hidden" value="<?php echo $session['previousVisitAction']; ?>" id="previousVisitAction"/>
@@ -320,9 +326,9 @@ $session = new CHttpSession;
     <input type="text" name="Visit[time_check_in]" id='Visit_time_check_in' value=''/>
     <input type="text" name="Visit[date_check_out]" id='Visit_date_check_out' value=''/>
     <input type="text" name="Visit[time_check_out]" id='Visit_time_check_out' value=''/>
-    <?php echo "<br>" . $cancelForm->error($model, 'visit_status'); ?>
+<?php echo "<br>" . $cancelForm->error($model, 'visit_status'); ?>
     <input type='submit' value='Update' class='submitBtn complete' id='cancelFormBtn'>
 
-    <?php $this->endWidget(); ?>
+<?php $this->endWidget(); ?>
 
 </div>

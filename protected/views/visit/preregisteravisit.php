@@ -138,22 +138,28 @@ $logform = $this->beginWidget('CActiveForm', array(
         </td>
     </tr>
 </table>
-<?php echo $logform->error($model, 'date_in');
+<?php
+echo $logform->error($model, 'date_in');
 if ($model->visit_status == VisitStatus::CLOSED) {
     ?>
     <button id='preregisterNewVisit' class='greenBtn actionForward'>Confirm</button><br>
 <?php } else { ?>
     <input type='submit' value='Confirm' class="complete"/>
-    <button class="actionForward greenBtn" style="height:25px;line-height:0px ;" id="cancelPreregisteredVisitButton">Cancel</button>
+    <button class="actionForward greenBtn" style="<?php
+    if (strpos($_SERVER['HTTP_USER_AGENT'], 'Firefox') !== FALSE) {
+        echo "height:25.6px;";
+    }else {
+        echo "height:30px;";
+    }?>line-height:0px ;" id="cancelPreregisteredVisitButton">Cancel</button>
 
 <?php } ?>
 
 <?php $this->endWidget(); ?>
 <input type="text" value="<?php echo date('d-m-Y', time() + 86400); ?>" id="curDate" style="display:none;">
 <input type="text" value="<?php
-echo date('d-m-Y', mktime(0, 0, 0, date('m'), date('d') + 2, date('Y')));
-;
-?>" id="curDateMultiDay" style="display:none;">
+       echo date('d-m-Y', mktime(0, 0, 0, date('m'), date('d') + 2, date('Y')));
+       ;
+       ?>" id="curDateMultiDay" style="display:none;">
 <input type='text' id='currentCardTypeValueOfEditedUser' value='<?php echo $model->card_type; ?>' style='display:none;'>
 <input type='text' id='savedTimeIn' value='<?php echo $model->time_in; ?>' style='display:none;'>
 <script>

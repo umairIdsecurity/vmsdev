@@ -874,9 +874,7 @@ function addCompany() {
                     url = '<?php echo $this->createUrl('company/create&viewFrom=1&tenant=') ?>' + tenant;
                 }
             }
-            $("#modalBody").html('<iframe width="100%" id="companyModalIframe" height="88%" frameborder="0" scrolling="no" src="' + url + '" ></iframe>');
-            $("#modalBtn").click();
-        }
+          
         $("#modalBody").html('<iframe width="100%" id="companyModalIframe" height="98%" frameborder="0" scrolling="no" src="' + url + '" ></iframe>');
         $("#modalBtn").click();
     }

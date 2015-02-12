@@ -72,7 +72,7 @@ class Issue51FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Workstation_contact_email_address", "testperson@test.com");
         $this->clickAndWait("name=yt0");
         $this->click("link=Manage Visitor Records");
-        $this->clickAndWait("link=Register a Visitor");
+        $this->clickAndWait("link=Register a Visit");
         $this->click("id=clicktabA");
         $this->select("id=workstation", "label=Second Tenant Workstation");
         $this->type("id=Visitor_first_name", "test");
@@ -156,7 +156,7 @@ class Issue51FunctionalTest extends BaseFunctionalTest {
 
         $username = 'staffmember2@test.com';
         $this->login($username, '12345');
-        $this->clickAndWait("link=Register a Visitor");
+        $this->clickAndWait("link=Register a Visit");
         $this->click("id=clicktabA");
         $this->type("id=Visitor_first_name", "test");
         $this->type("id=Visitor_last_name", "staffmembervisitor");

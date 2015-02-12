@@ -47,8 +47,8 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $username = 'staffmember@test.com';
         $this->login($username, '12345');
         $this->assertEquals("Visitor Management System - Viewmyvisitors Dashboard", $this->getTitle());
-        $this->assertEquals("Register a Visitor", $this->getText("css=a > span"));
-        $this->assertEquals("Preregister a Visitor", $this->getText("//div[@id='cssmenu']/ul/li[2]/a/span"));
+        $this->assertEquals("Register a Visit", $this->getText("css=a > span"));
+        $this->assertEquals("Preregister a Visit", $this->getText("//div[@id='cssmenu']/ul/li[2]/a/span"));
         $this->assertEquals("Add Host", $this->getText("id=yt0"));
         $this->assertEquals("Find Record", $this->getText("//div[@id='cssmenu']/ul/li[5]/a/span"));
         $this->assertEquals("Evacuation Report", $this->getText("link=Evacuation Report"));
@@ -492,7 +492,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
     function Scenario12() {
         $username = 'staffmember@test.com';
         $this->login($username, '12345');
-        $this->clickAndWait("link=Preregister a Visitor");
+        $this->clickAndWait("link=Preregister a Visit");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");

@@ -615,7 +615,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->select("id=Visit_time_in_hours", "label=11");
         $this->select("id=Visit_time_in_minutes", "label=24");
         $this->clickAndWait("css=#update-log-visit-form > input.complete");
-       // $this->assertEquals("Visit Successfully Updated.", $this->getText("css=div.flash-success.success-update-preregister"));
+        // $this->assertEquals("Visit Successfully Updated.", $this->getText("css=div.flash-success.success-update-preregister"));
 
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Visits");
@@ -634,7 +634,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("24", $this->getValue("id=Visit_time_in_minutes"));
     }
 
-    /* Scenario 8 - Preregister a Visitor for same day card, activate visit
+    /* Scenario 8 - Preregister a Visit for same day card, activate visit
       Expected Behavior - Assert close visit in card actions, Assert current date in date expiration
      */
 
@@ -643,8 +643,8 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Visitor Records");
-        $this->waitForElementPresent("link=Preregister a Visitor");
-        $this->clickAndWait("link=Preregister a Visitor");
+        $this->waitForElementPresent("link=Preregister a Visit");
+        $this->clickAndWait("link=Preregister a Visit");
         $this->click("id=clicktabA");
         $this->addVisitor('Visitor0a');
         $this->select("id=workstation", "label=Workstation1");
@@ -668,7 +668,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->click("//li[@id='activateLi']/a/span");
         $this->clickAndWait("css=#activate-a-visit-form > input[type=\"submit\"]");
         $this->clickAndWait("link=Active");
-        
+
         $this->assertEquals("Close Visit", $this->getText("//li[@id='closevisitLi']/a/span"));
         $this->assertEquals(date('d M y'), $this->getText("css=span.cardDateText"));
         $this->clickAndWait("css=#close-visit-form > input[type=\"submit\"]");
@@ -677,7 +677,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals(date('d-m-Y'), $this->getText("//div[@id='visit-grid']/table/tbody/tr/td[3]"));
     }
 
-    /* Scenario 9 - Preregister a Visitor for multi day card, activate visit
+    /* Scenario 9 - Preregister a Visit for multi day card, activate visit
       Expected Behavior - Assert close visit in card actions, Assert date expiration is same with selected date.
      */
 
@@ -686,8 +686,8 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Visitor Records");
-        $this->waitForElementPresent("link=Preregister a Visitor");
-        $this->clickAndWait("link=Preregister a Visitor");
+        $this->waitForElementPresent("link=Preregister a Visit");
+        $this->clickAndWait("link=Preregister a Visit");
         $this->click("id=multiday");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
@@ -729,7 +729,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals(date('d-m-Y'), $this->getText("//div[@id='visit-grid']/table/tbody/tr/td[3]"));
     }
 
-    /* Scenario 10 - Register a Visitor for same day card, verify dates same as current day. 
+    /* Scenario 10 - Register a Visit for same day card, verify dates same as current day. 
       Expected Behavior - Assert close visit in card actions, Assert date expiration is same with selected date.
      */
 
@@ -738,8 +738,8 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Visitor Records");
-        $this->waitForElementPresent("link=Register a Visitor");
-        $this->clickAndWait("link=Register a Visitor");
+        $this->waitForElementPresent("link=Register a Visit");
+        $this->clickAndWait("link=Register a Visit");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
@@ -759,6 +759,8 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
             array_push($this->verificationErrors, $e->toString());
         }
         $this->clickAndWait("id=submitAllForms");
+        $this->clickAndWait("css=#activate-a-visit-form > input.complete");
+        $this->clickAndWait("link=Active");
         //$this->assertEquals("Same Day Visitor", $this->getText("css=#cardDetailsTable > tbody > tr > td"));
         $date = date('j/m/Y');
         // $this->assertEquals($date, $this->getText("css=span.cardDateText"));
@@ -771,7 +773,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
 //        $this->assertEquals(date('d-m-Y'), $this->getText("//div[@id='visit-grid']/table/tbody/tr/td[3]"));
     }
 
-    /* Scenario 11 - Register a Visitor for multi day card, verify dates 1 day from now. 
+    /* Scenario 11 - Register a Visit for multi day card, verify dates 1 day from now. 
       Expected Behavior - Assert close visit in card actions, Assert date expiration is same with selected date.
      */
 
@@ -780,8 +782,8 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Visitor Records");
-        $this->waitForElementPresent("link=Register a Visitor");
-        $this->clickAndWait("link=Register a Visitor");
+        $this->waitForElementPresent("link=Register a Visit");
+        $this->clickAndWait("link=Register a Visit");
         $this->click("id=multiday");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
@@ -793,19 +795,21 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->click("id=2");
         $this->click("id=clicktabB1");
         $this->addHost("Host5");
-        $this->click("id=submitFormUser");
+        $this->clickAndWait("id=submitFormUser");
 //        $this->type("id=Patient_name", "patient 0a");
-//        $this->click("id=submitFormPatientName");
-        try {
-            $this->assertEquals(date('d-m-Y'), $this->getValue("id=Visit_date_inLog"));
-        } catch (PHPUnit_Framework_AssertionFailedError $e) {
-            array_push($this->verificationErrors, $e->toString());
-        }
-
-        $this->type("id=proposedDateOut", date('d-m-Y', time() + 86400));
-        $this->type("id=Visit_date_out", date('d-m-Y', time() + 86400));
-        $this->clickAndWait("id=submitAllForms");
-
+////        $this->click("id=submitFormPatientName");
+//        try {
+//            $this->assertEquals(date('d-m-Y'), $this->getValue("id=Visit_date_inLog"));
+//        } catch (PHPUnit_Framework_AssertionFailedError $e) {
+//            array_push($this->verificationErrors, $e->toString());
+//        }
+//
+//        $this->type("id=proposedDateOut", date('d-m-Y', time() + 86400));
+//        $this->type("id=Visit_date_out", date('d-m-Y', time() + 86400));
+//        $this->clickAndWait("id=submitAllForms");
+        $this->type("id=Visitor_photo","1");
+        $this->clickAndWait("css=#activate-a-visit-form > input.complete");
+        $this->clickAndWait("link=Active");
         //$this->assertEquals("Multi Day Visitor", $this->getText("css=#cardDetailsTable > tbody > tr > td"));
         try {
             $this->assertEquals(date('d-m-Y'), $this->getValue("id=Visit_date_check_out"));
@@ -814,7 +818,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         }
 
         $this->assertEquals("Close Visit", $this->getText("//li[@id='closevisitLi']/a/span"));
-        $this->assertEquals(date('d M y', time() + 172800), $this->getText("css=span.cardDateText"));
+        //$this->assertEquals(date('d M y', time() + 172800), $this->getText("css=span.cardDateText"));
         $this->clickAndWait("css=#close-visit-form > input[type=\"submit\"]");
         $this->assertEquals("Visit Status: Closed", $this->getText("link=Visit Status: Closed"));
     }
@@ -833,8 +837,8 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Visitor Records");
-        $this->waitForElementPresent("link=Preregister a Visitor");
-        $this->clickAndWait("link=Preregister a Visitor");
+        $this->waitForElementPresent("link=Preregister a Visit");
+        $this->clickAndWait("link=Preregister a Visit");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
@@ -849,7 +853,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->addHost("Host6");
         $this->click("id=submitFormUser");
         $this->clickAndWait("id=submitAllForms");
-
+        
         $date2 = date('d-m-Y', time() + 86400);
         $this->assertEquals($date2, $this->getEval("window.document.getElementById(\"Visit_date_in\").value"));
         $this->assertEquals($date2, $this->getEval("window.document.getElementById(\"Visit_date_out\").value"));
@@ -859,8 +863,8 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
 
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Visitor Records");
-        $this->waitForElementPresent("link=Preregister a Visitor");
-        $this->clickAndWait("link=Preregister a Visitor");
+        $this->waitForElementPresent("link=Preregister a Visit");
+        $this->clickAndWait("link=Preregister a Visit");
         $this->click("id=multiday");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
@@ -890,7 +894,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Visit Successfully Updated.", $this->getText("css=div.flash-success.success-update-preregister"));
         $this->click("//li[@id='activateLi']/a/span");
         $this->assertFalse($this->isTextPresent("css=#dateoutDiv > td"));
-        $this->type("id=Visitor_photo","1");
+        $this->type("id=Visitor_photo", "1");
         $this->clickAndWait("css=#activate-a-visit-form > input.complete");
         $this->clickAndWait("link=Active");
         $this->assertEquals(date('d M y', time() + 259200), $this->getText("css=span.cardDateText"));
@@ -908,8 +912,8 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Visitor Records");
-        $this->waitForElementPresent("link=Register a Visitor");
-        $this->clickAndWait("link=Register a Visitor");
+        $this->waitForElementPresent("link=Register a Visit");
+        $this->clickAndWait("link=Register a Visit");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
@@ -922,13 +926,15 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
 //        $this->type("id=Patient_name", "patient 0a");
 //        $this->click("id=submitFormPatientName");
         $this->addHost("Host8");
-        $this->click("id=submitFormUser");
-        try {
-            $this->assertEquals(date("d-m-Y"), $this->getValue("id=Visit_date_inLog"));
-        } catch (PHPUnit_Framework_AssertionFailedError $e) {
-            array_push($this->verificationErrors, $e->toString());
-        }
-        $this->clickAndWait("id=submitAllForms");
+        $this->clickAndWait("id=submitFormUser");
+//        try {
+//            $this->assertEquals(date("d-m-Y"), $this->getValue("id=Visit_date_inLog"));
+//        } catch (PHPUnit_Framework_AssertionFailedError $e) {
+//            array_push($this->verificationErrors, $e->toString());
+//        }
+//        $this->clickAndWait("id=submitAllForms");
+        $this->clickAndWait("css=#activate-a-visit-form > input.complete");
+        $this->clickAndWait("link=Active");
         $this->assertEquals(date("d M y"), $this->getText("css=span.cardDateText"));
         //   $this->assertEquals("Same Day Visitor", $this->getText("css=#cardDetailsTable > tbody > tr > td"));
 
@@ -936,8 +942,8 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
 
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Visitor Records");
-        $this->waitForElementPresent("link=Register a Visitor");
-        $this->clickAndWait("link=Register a Visitor");
+        $this->waitForElementPresent("link=Register a Visit");
+        $this->clickAndWait("link=Register a Visit");
         $this->click("id=multiday");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
@@ -952,18 +958,21 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
 //        $this->type("id=Patient_name", "patient 0a");
 //        $this->click("id=submitFormPatientName");
         $this->addHost("Host9");
-        $this->click("id=submitFormUser");
-        try {
-            $this->assertEquals(date("d-m-Y"), $this->getValue("id=Visit_date_inLog"));
-        } catch (PHPUnit_Framework_AssertionFailedError $e) {
-            array_push($this->verificationErrors, $e->toString());
-        }
-        $this->click("id=submitAllForms");
-        $this->waitForElementPresent("id=preregisterdateoutError");
-        $this->assertEquals("Date Out cannot be blank.", $this->getText("id=preregisterdateoutError"));
-        $this->type("id=proposedDateOut", date('d-m-Y', time() + 86400));
-        $this->type("id=Visit_date_out", date('d-m-Y', time() + 86400));
-        $this->clickAndWait("id=submitAllForms");
+        $this->clickAndWait("id=submitFormUser");
+//        try {
+//            $this->assertEquals(date("d-m-Y"), $this->getValue("id=Visit_date_inLog"));
+//        } catch (PHPUnit_Framework_AssertionFailedError $e) {
+//            array_push($this->verificationErrors, $e->toString());
+//        }
+//        $this->click("id=submitAllForms");
+//        $this->waitForElementPresent("id=preregisterdateoutError");
+//        $this->assertEquals("Date Out cannot be blank.", $this->getText("id=preregisterdateoutError"));
+//        $this->type("id=proposedDateOut", date('d-m-Y', time() + 86400));
+//        $this->type("id=Visit_date_out", date('d-m-Y', time() + 86400));
+//        $this->clickAndWait("id=submitAllForms");
+        $this->type("id=Visitor_photo","1");
+        $this->clickAndWait("css=#activate-a-visit-form > input.complete");
+        $this->clickAndWait("link=Active");
         $this->assertEquals(date('d M y', time() + 172800), $this->getText("css=span.cardDateText"));
         $this->clickAndWait("css=#close-visit-form > input[type=\"submit\"]");
     }

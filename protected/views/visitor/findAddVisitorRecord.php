@@ -105,7 +105,7 @@ $session = new CHttpSession;
                 'afterValidate' => 'js:function(form, data, hasError){
                                 if (!hasError){
                                 var vehicleValue = $("#Visitor_vehicle").val();
-                                if(vehicleValue.length < 6){
+                                if(vehicleValue.length < 6 && vehicleValue != ""){
                                     $("#Visitor_vehicle_em_").show();
                                     $("#Visitor_vehicle_em_").html("Vehicle should have a min. of 6 characters");
                                 }else if ($("#workstation").val() == ""){

@@ -39,7 +39,7 @@ if ($this->action->id == 'update') {
     foreach (Yii::app()->user->getFlashes() as $key => $message) {
         echo '<div class="flash-' . $key . '">' . $message . "</div>\n";
     }
-    
+
     if (isset($_GET['viewFrom'])) {
         $isViewedFromModal = $_GET['viewFrom'];
     } else {
@@ -73,8 +73,18 @@ if ($this->action->id == 'update') {
         </tr>
         <tr>
             <td style="width:160px;"><?php echo $form->labelEx($model, 'code'); ?></td>
-            <td style="width:240px;"><?php echo $form->textField($model, 'code', array('size' => 3, 'maxlength' => 3)); ?></td>
-            <td><?php echo $form->error($model, 'code'); ?></td>
+            <td style="width:240px;">
+                <?php
+                echo $form->textField($model, 'code', array('size' => 3, 'maxlength' => 3));
+                if (isset($_GET['viewFrom'])) {
+                    echo "<br>" . $form->error($model, 'code');
+                }
+                ?></td>
+            <td><?php
+                if (!isset($_GET['viewFrom'])) {
+                    echo "<br>" . $form->error($model, 'code');
+                }
+                ?></td>
 
         </tr>
         <tr>
@@ -210,17 +220,17 @@ if (isset($_GET['viewFrom'])) {
     $(document).ready(function() {
         $("#createBtn").click(function(e) {
             if ($("#viewFrom").val() == '1') {
-                if ($("#Company_logo").val() !=''){
+                if ($("#Company_logo").val() != '') {
                     //alert("has logo");
-                    window.parent.document.getElementById('companyModalIframe').style.height = "850px";
+                    window.parent.document.getElementById('companyModalIframe').style.height = "1015px";
                 } else {
-                   // alert("no logo");
-                    window.parent.document.getElementById('companyModalIframe').style.height = "730px";
+                    // alert("no logo");
+                    window.parent.document.getElementById('companyModalIframe').style.height = "850px";
                 }
-                  
+
             }
         });
-      
+
 
     });
 

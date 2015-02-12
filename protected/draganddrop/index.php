@@ -153,7 +153,7 @@ if ($this->action->id == 'detail') {
                             $.each(r.data, function(index, value) {
                                 logo.src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 $(".photoDiv").show();
-                                if ($("#controllerId").val() != 'companyLafPreferences') {
+                                if ($("#controllerId").val() != 'companyLafPreferences' && $("#controllerId").val() != 'company') {
                                     document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 }
                                 if ($("#controllerId").val() == 'visit') {
@@ -164,7 +164,7 @@ if ($this->action->id == 'detail') {
                                 }
                             });
                             if ($("#viewFrom").val() == '1') {
-                                window.parent.document.getElementById('companyModalIframe').style.height= "830px";
+                                window.parent.document.getElementById('companyModalIframe').style.height= "1015px";
                             }
                         }
                     });

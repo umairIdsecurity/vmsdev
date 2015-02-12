@@ -37,7 +37,7 @@ class Issue42FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Visitor Records");
-        $this->clickAndWait("link=Preregister a Visitor");
+        $this->clickAndWait("link=Preregister a Visit");
         $this->click("id=clicktabA");
         $this->select("id=Visitor_visitor_type","label=Corporate Visitor");
         $this->addVisitor('Visitor0');
@@ -56,7 +56,7 @@ class Issue42FunctionalTest extends BaseFunctionalTest {
             if ($second >= 60)
                 $this->fail("timeout");
             try {
-                if ("Register a Visitor" == $this->getText("//div[@id='cssmenu']/ul/li[4]/ul/li[2]/a/span"))
+                if ("Register a Visit" == $this->getText("//div[@id='cssmenu']/ul/li[4]/ul/li[2]/a/span"))
                     break;
             } catch (Exception $e) {
                 
@@ -81,7 +81,7 @@ class Issue42FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Visitor Records");
-        $this->clickAndWait("link=Preregister a Visitor");
+        $this->clickAndWait("link=Preregister a Visit");
         $this->click("id=clicktabA");
         $this->select("id=Visitor_visitor_type","label=Corporate Visitor");
         $this->addVisitor('Visitor5');
@@ -102,7 +102,7 @@ class Issue42FunctionalTest extends BaseFunctionalTest {
             if ($second >= 60)
                 $this->fail("timeout");
             try {
-                if ("Register a Visitor" == $this->getText("//div[@id='cssmenu']/ul/li[4]/ul/li[2]/a/span"))
+                if ("Register a Visit" == $this->getText("//div[@id='cssmenu']/ul/li[4]/ul/li[2]/a/span"))
                     break;
             } catch (Exception $e) {
                 

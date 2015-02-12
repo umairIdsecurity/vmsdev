@@ -65,6 +65,11 @@ class Visitor extends CActiveRecord {
             array('password', 'compare', 'compareAttribute' => 'repeatpassword', 'on' => 'insert'),
            // array('vehicle', 'length', 'min'=>6, 'max'=>6, 'tooShort'=>'Vehicle is too short (Should be in 6 characters)'), 
             array('email', 'email'),
+            array('vehicle', 'match',
+                'pattern' => '/^[A-Za-z0-9_]+$/u',
+                'message' => 'Vehicle accepts alphanumeric characters only.'
+            ),
+            array('vehicle', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, first_name, photo,last_name, email, vehicle,contact_number, date_of_birth, company, department, position, staff_id, notes, role, visitor_status, created_by, is_deleted, tenant, tenant_agent', 'safe', 'on' => 'search'),
@@ -137,7 +142,7 @@ class Visitor extends CActiveRecord {
         $criteria = new CDbCriteria;
 
         $criteria->compare('id', $this->id, true);
-       // $criteria->compare('first_name', $this->first_name, true);
+        // $criteria->compare('first_name', $this->first_name, true);
         $criteria->compare('last_name', $this->last_name, true);
         $criteria->compare('email', $this->email, true);
         $criteria->compare('contact_number', $this->contact_number, true);
@@ -230,7 +235,7 @@ class Visitor extends CActiveRecord {
         }
         return $aArray;
     }
-    
+
     public function saveReason($visitorId, $visitReasonId) {
 
         $post = new VisitorVisitReason;
@@ -238,8 +243,8 @@ class Visitor extends CActiveRecord {
         $post->visit_reason = $visitReasonId;
         $post->save();
     }
-    
-    public function isEmailAddressTaken($email){
+
+    public function isEmailAddressTaken($email) {
         $Criteria = new CDbCriteria();
         $Criteria->condition = "email = '" . $email . "' ";
         $visitorEmail = Visitor::model()->findAll($Criteria);
@@ -253,8 +258,8 @@ class Visitor extends CActiveRecord {
             return true;
         }
     }
-    
-    public function getIdOfUser($email){
+
+    public function getIdOfUser($email) {
         $aArray = array();
 
         $Criteria = new CDbCriteria();
@@ -268,7 +273,5 @@ class Visitor extends CActiveRecord {
         }
         return $aArray;
     }
-    
-    
 
 }

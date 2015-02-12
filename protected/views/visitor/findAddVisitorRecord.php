@@ -351,80 +351,9 @@ $session = new CHttpSession;
 
     <?php $this->endWidget(); ?>
 </div>
+
 <script>
     $(document).ready(function() {
-//        $('#Visitor_vehicle').bind('keypress', function(event) {
-//            var regex = new RegExp("^[a-zA-Z0-9\b]+$");
-//            var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
-//            if (!regex.test(key)) {
-//                event.preventDefault();
-//                return false;
-//            }
-//        });
-        /*Allow crop photo*/
-        $('#photoCropPreview').imgAreaSelect({
-            handles: true,
-            onSelectEnd: function(img, selection) {
-                $("#x1").val(selection.x1);
-                $("#x2").val(selection.x2);
-                $("#y1").val(selection.y1);
-                $("#y2").val(selection.y2);
-                $("#width").val(selection.width);
-                $("#height").val(selection.height);
-            }
-        });
-
-        $("#cropPhotoBtn").click(function(e) {
-            e.preventDefault();
-            $.ajax({
-                type: 'POST',
-                url: '<?php echo Yii::app()->createUrl('visitor/AjaxCrop'); ?>',
-                data: {
-                    x1: $("#x1").val(),
-                    x2: $("#x2").val(),
-                    y1: $("#y1").val(),
-                    y2: $("#y2").val(),
-                    width: $("#width").val(),
-                    height: $("#height").val(),
-                    imageUrl: $('#photoPreview').attr('src').substring(1, $('#photoPreview').attr('src').length),
-                    photoId: $('#Visitor_photo').val()
-                },
-                dataType: 'json',
-                success: function(r) {
-                    $.ajax({
-                        type: 'POST',
-                        url: '<?php echo Yii::app()->createUrl('photo/GetPathOfCompanyLogo&id='); ?>' + $('#Visitor_photo').val(),
-                        dataType: 'json',
-                        success: function(r) {
-
-                            $.each(r.data, function(index, value) {
-                                document.getElementById('photoPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
-                                document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
-
-                            });
-                            $("#closeCropPhoto").click();
-                            var ias = $('#photoCropPreview').imgAreaSelect({instance: true});
-                            ias.cancelSelection();
-                        }
-                    });
-                }
-            });
-        })
-
-
-        /*Remove space for vehicle number*/
-        $('#Visitor_vehicle').keydown(function(e) {
-            if (e.which === 32) {
-                e.preventDefault();
-            }
-        }).blur(function() {
-            $(this).val(function(i, oldVal) {
-                return oldVal.replace(/\s/g, '');
-            });
-
-            $("#Visitor_vehicle").val(($("#Visitor_vehicle").val()).toUpperCase());
-        });
-
         $("#dummy-visitor-findBtn").click(function(e) {
             e.preventDefault();
             $("#Visit_reason_search").val("");
@@ -442,6 +371,8 @@ $session = new CHttpSession;
                 $("#searchTextErrorMessage").html("Search Name cannot be blank.");
             }
         });
+
+
     });
 
     function findVisitorRecord() {
@@ -640,7 +571,7 @@ $session = new CHttpSession;
                 url = '<?php echo Yii::app()->createUrl('company/create&viewFrom=1'); ?>';
             }
 
-            $("#modalBody").html('<iframe width="100%" id="companyModalIframe" height="88%" frameborder="0" scrolling="no" src="' + url + '" ></iframe>');
+            $("#modalBody").html('<iframe id="companyModalIframe" width="100%" height="80%" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
             $("#modalBtn").click();
         }
     }

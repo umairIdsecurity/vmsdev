@@ -877,6 +877,9 @@ function addCompany() {
             $("#modalBody").html('<iframe width="100%" id="companyModalIframe" height="88%" frameborder="0" scrolling="no" src="' + url + '" ></iframe>');
             $("#modalBtn").click();
         }
+        $("#modalBody").html('<iframe width="100%" id="companyModalIframe" height="98%" frameborder="0" scrolling="no" src="' + url + '" ></iframe>');
+        $("#modalBtn").click();
+    }
 
     function dismissModal(id) {
         $("#dismissModal").click();

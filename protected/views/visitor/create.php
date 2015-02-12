@@ -25,7 +25,7 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
         }
         
     }
-    ?> a Visitor</h1>
+    ?> a Visit</h1>
 
 <dl class="tabs <?php if (!isset($_GET['action'])) { ?> four-up <?php
 } else {

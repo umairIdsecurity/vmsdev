@@ -4,6 +4,6 @@
 
 ?>
 
-<h1>Customise Look and Feel</h1>
+<h1>Customise Display</h1>
 
 <?php $this->renderPartial('_form', array('model'=>$model)); ?>

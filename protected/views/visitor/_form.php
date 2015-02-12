@@ -374,7 +374,7 @@ if (isset($_GET['id'])) {
                 url = '<?php echo Yii::app()->createUrl('company/create&viewFrom=1'); ?>';
             }
 
-            $("#modalBody").html('<iframe width="100%" height="80%" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
+            $("#modalBody").html('<iframe id="companyModalIframe" width="100%" height="80%" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
             $("#modalBtn").click();
         }
     }

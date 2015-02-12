@@ -218,7 +218,7 @@ $session = new CHttpSession;
                         <label for="Visitor_password">Password <span class="required">*</span></label><br>
                         <input ng-model="user.passwords" data-ng-class="{
                                     'ng-invalid':registerform['Visitor[repeatpassword]'].$error.match}" type="password" id="Visitor_password" name="Visitor[password]">			
-                        <?php echo "<br>" . $form->error($model, 'password'); ?>
+                               <?php echo "<br>" . $form->error($model, 'password'); ?>
                     </td>
                     <td>
                         <label for="Visitor_repeatpassword">Repeat Password <span class="required">*</span></label><br>
@@ -302,7 +302,7 @@ $session = new CHttpSession;
         <?php $this->endWidget(); ?>
     </div>
     <?php
-    if($session['role'] == Roles::ROLE_SUPERADMIN){
+    if ($session['role'] == Roles::ROLE_SUPERADMIN) {
         $class = "moveFromAlignmentA";
     } else {
         $class = "moveFromAlignmentB";
@@ -310,7 +310,7 @@ $session = new CHttpSession;
     $form = $this->beginWidget('CActiveForm', array(
         'id' => 'register-reason-form',
         'action' => Yii::app()->createUrl('/visitReason/create&register=1'),
-        'htmlOptions' => array("name" => "register-reason-form","class" => $class),
+        'htmlOptions' => array("name" => "register-reason-form", "class" => $class),
         'enableAjaxValidation' => false,
         'enableClientValidation' => true,
         'clientOptions' => array(
@@ -349,6 +349,8 @@ $session = new CHttpSession;
                 $("#searchTextErrorMessage").html("Search Name cannot be blank.");
             }
         });
+
+
     });
 
     function findVisitorRecord() {
@@ -547,7 +549,7 @@ $session = new CHttpSession;
                 url = '<?php echo Yii::app()->createUrl('company/create&viewFrom=1'); ?>';
             }
 
-            $("#modalBody").html('<iframe width="100%" height="80%" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
+            $("#modalBody").html('<iframe id="companyModalIframe" width="100%" height="80%" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
             $("#modalBtn").click();
         }
     }
@@ -568,6 +570,8 @@ $session = new CHttpSession;
             }
         });
     }
+
+   
 </script>
 
 <input type="text" id="visitorId" placeholder="visitor id"/>

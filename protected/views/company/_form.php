@@ -53,8 +53,19 @@ if ($this->action->id == 'update') {
     <table>
         <tr>
             <td style="width:160px;"><?php echo $form->labelEx($model, 'name'); ?></td>
-            <td style="width:240px;"><?php echo $form->textField($model, 'name', array('size' => 60, 'maxlength' => 150)); ?></td>
-            <td><?php echo $form->error($model, 'name'); ?></td>
+            <td style="width:240px;">
+                <?php
+                echo $form->textField($model, 'name', array('size' => 60, 'maxlength' => 150));
+                if (isset($_GET['viewFrom'])) {
+                    echo "<br>" . $form->error($model, 'name');
+                }
+                ?>
+            </td>
+            <td><?php
+                if (!isset($_GET['viewFrom'])) {
+                    echo $form->error($model, 'name');
+                }
+                ?></td>
 
         </tr>
         <tr>
@@ -76,12 +87,12 @@ if ($this->action->id == 'update') {
                     echo "style='display:none !important;'";
                 }
                 ?>>
-                     <?php if ($companyId != '') { ?><img id='companyLogo' src="<?php echo Yii::app()->request->baseUrl . "/" . $model->getCompanyLogo($companyId); ?>"/>
+                    <?php if ($companyId != '') { ?><img id='companyLogo' src="<?php echo Yii::app()->request->baseUrl . "/" . $model->getCompanyLogo($companyId); ?>"/>
                     <?php } else { ?> 
                         <img id='companyLogo' src="<?php
-                    if (isset($_POST['Company']['logo'])) {
-                        echo Yii::app()->request->baseUrl . "/" . $model->getPhotoRelativePath($_POST['Company']['logo']);
-                    }
+                        if (isset($_POST['Company']['logo'])) {
+                            echo Yii::app()->request->baseUrl . "/" . $model->getPhotoRelativePath($_POST['Company']['logo']);
+                        }
                         ?>
 
                              " />
@@ -102,23 +113,60 @@ if ($this->action->id == 'update') {
         </tr>
         <tr>
             <td><?php echo $form->labelEx($model, 'email_address'); ?></td>
-            <td><?php echo $form->textField($model, 'email_address', array('size' => 50, 'maxlength' => 50)); ?></td>
-            <td><?php echo $form->error($model, 'email_address'); ?></td>
+            <td><?php
+                echo $form->textField($model, 'email_address', array('size' => 50, 'maxlength' => 50));
+                if (isset($_GET['viewFrom'])) {
+                    echo "<br>" . $form->error($model, 'email_address');
+                }
+                ?>
+            </td>
+            <td><?php
+                if (!isset($_GET['viewFrom'])) {
+                    echo $form->error($model, 'email_address');
+                }
+                ?></td>
         </tr>
         <tr>
             <td><?php echo $form->labelEx($model, 'office_number'); ?></td>
-            <td><?php echo $form->textField($model, 'office_number'); ?></td>
-            <td><?php echo $form->error($model, 'office_number'); ?></td>
+            <td><?php
+                echo $form->textField($model, 'office_number');
+                if (isset($_GET['viewFrom'])) {
+                    echo "<br>" . $form->error($model, 'office_number');
+                }
+                ?></td>
+            <td><?php
+                if (!isset($_GET['viewFrom'])) {
+                    echo $form->error($model, 'office_number');
+                }
+                ?></td>
         </tr>
         <tr>
             <td><?php echo $form->labelEx($model, 'mobile_number'); ?></td>
-            <td><?php echo $form->textField($model, 'mobile_number'); ?></td>
-            <td><?php echo $form->error($model, 'mobile_number'); ?></td>
+            <td><?php
+                echo $form->textField($model, 'mobile_number');
+                if (isset($_GET['viewFrom'])) {
+                    echo "<br>" . $form->error($model, 'mobile_number');
+                }
+                ?></td>
+            <td><?php
+                if (!isset($_GET['viewFrom'])) {
+                    echo "<br>" . $form->error($model, 'mobile_number');
+                }
+                ?></td>
         </tr>
         <tr>
             <td><?php echo $form->labelEx($model, 'website'); ?></td>
-            <td><?php echo $form->textField($model, 'website', array('size' => 50, 'maxlength' => 50)); ?></td>
-            <td><?php echo $form->error($model, 'website'); ?></td>
+            <td><?php
+                echo $form->textField($model, 'website', array('size' => 50, 'maxlength' => 50));
+                if (isset($_GET['viewFrom'])) {
+                    echo "<br>" . $form->error($model, 'website');
+                }
+                ?></td>
+            <td><?php
+                if (!isset($_GET['viewFrom'])) {
+                    echo "<br>" . $form->error($model, 'website');
+                }
+                ?></td>
         </tr>
 
     </table>
@@ -144,7 +192,33 @@ if ($this->action->id == 'update') {
     <?php $this->endWidget(); ?>
 
 </div><!-- form -->
+
+<input type="hidden" id="viewFrom" value="<?php
+if (isset($_GET['viewFrom'])) {
+    echo "1";
+} else {
+    echo "0";
+}
+?>"/> 
 <script>
+
+    $(document).ready(function() {
+        $("#createBtn").click(function(e) {
+            if ($("#viewFrom").val() == '1') {
+                if ($("#Company_logo").val() !=''){
+                    //alert("has logo");
+                    window.parent.document.getElementById('companyModalIframe').style.height = "850px";
+                } else {
+                   // alert("no logo");
+                    window.parent.document.getElementById('companyModalIframe').style.height = "730px";
+                }
+                  
+            }
+        });
+      
+
+    });
+
     function closeParent() {
         window.parent.dismissModal();
     }
@@ -155,6 +229,7 @@ if ($this->action->id == 'update') {
 
     $("#company-form").submit(function(event) {
         event.preventDefault();
+
         var websiteUrl = $("#Company_website").val();
         if (websiteUrl != '')
         {
@@ -186,3 +261,5 @@ if ($this->action->id == 'update') {
     </div>
 
 </div>
+
+

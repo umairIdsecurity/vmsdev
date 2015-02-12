@@ -51,7 +51,7 @@ if (isset($_GET['id'])) {
                                 $(".companyLogoDiv").show();
                             });
                             if ($("#viewFrom").val() == '1') {
-                                window.parent.document.getElementById('companyModalIframe').style.height= "725px"; 
+                                window.parent.document.getElementById('companyModalIframe').style.height= "830px";
                             }
                         }
                     });

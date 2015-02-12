@@ -16,7 +16,13 @@ if ($this->action->id == 'update') {
             'validateOnSubmit' => true,
             'afterValidate' => 'js:function(form, data, hasError){
                                 if (!hasError){
+                                    var vehicleValue = $("#Visitor_vehicle").val();
+                                if(vehicleValue.length < 6){
+                                    $("#Visitor_vehicle_em_").show();
+                                    $("#Visitor_vehicle_em_").html("Vehicle should have a min. of 6 characters");
+                                } else {
                                     checkEmailIfUnique();
+                                    }
                                 }
                                 }'
         ),
@@ -309,14 +315,14 @@ if (isset($_GET['id'])) {
             });
         });
 
-        $('#Visitor_vehicle').bind('keypress', function(event) {
-            var regex = new RegExp("^[a-zA-Z0-9\b]+$");
-            var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
-            if (!regex.test(key)) {
-                event.preventDefault();
-                return false;
-            }
-        });
+//        $('#Visitor_vehicle').bind('keypress', function(event) {
+//            var regex = new RegExp("^[a-zA-Z0-9\b]+$");
+//            var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+//            if (!regex.test(key)) {
+//                event.preventDefault();
+//                return false;
+//            }
+//        });
 
         $('#Visitor_vehicle').keydown(function(e) {
             if (e.which === 32) {

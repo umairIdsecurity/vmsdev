@@ -205,10 +205,9 @@ $session = new CHttpSession;
 
         $('#registerNewVisit').on('click', function(e) {
             e.preventDefault();
-            $("#dateoutDiv #Visit_date_out").attr("disabled", false);
-            duplicateVisit("activate-a-visit-form");
-
+            checkIfActiveVisitConflictsWithAnotherVisit("new");
         });
+
         $('#cancelActiveVisitButton').on('click', function(e) {
             e.preventDefault();
             sendCancelVisit();
@@ -216,7 +215,11 @@ $session = new CHttpSession;
 
         $('#preregisterNewVisit').on('click', function(e) {
             e.preventDefault();
-            checkIfPreregisteredVisitConflictsWithAnotherVisit();
+            if ($("#Visit_date_in").val() == '') {
+                $("#preregisterdateinError").show();
+            } else {
+                checkIfPreregisteredVisitConflictsWithAnotherVisit("new");
+            }
         });
 
         display_ct();
@@ -244,7 +247,8 @@ $session = new CHttpSession;
         tt = display_c();
     }
 
-    function checkIfPreregisteredVisitConflictsWithAnotherVisit() {
+    function checkIfPreregisteredVisitConflictsWithAnotherVisit(visitType) {
+        visitType = (typeof visitType === "undefined") ? "defaultValue" : visitType;
         $.ajax({
             type: 'POST',
             url: '<?php echo Yii::app()->createUrl('visit/isDateConflictingWithAnotherVisit&date_in='); ?>' + $("#Visit_date_in").val() + '&date_out=' + $("#Visit_date_out").val() + '&visitorId=<?php echo $model->visitor; ?>&visitStatus=<?php echo VisitStatus::PREREGISTERED; ?>',
@@ -253,11 +257,17 @@ $session = new CHttpSession;
                 $.each(r.data, function(index, value) {
                     if (value.isConflicting == 1) {
                         alert("A visit has already been preregistered in the same day.");
-                    } else {
-
+                    } else if (visitType == 'new') {
+                        $("#dateoutDiv #Visit_date_out").attr("disabled", false);
                         $("#Visit_date_out").attr("disabled", false);
                         $("#Visit_date_in").attr("disabled", false);
-
+                        duplicateVisit("update-log-visit-form");
+                         $("#Visit_date_out").attr("disabled", true);
+                        $("#Visit_date_in").attr("disabled", true);
+                    }
+                    else {
+                        $("#Visit_date_out").attr("disabled", false);
+                        $("#Visit_date_in").attr("disabled", false);
                         sendVisitForm("update-log-visit-form");
                         $("#Visit_date_out").attr("disabled", true);
                         $("#Visit_date_in").attr("disabled", true);
@@ -265,12 +275,12 @@ $session = new CHttpSession;
                         $("#dateoutDiv").hide();
                     }
                 });
-
             }
         });
     }
 
-    function checkIfActiveVisitConflictsWithAnotherVisit() {
+    function checkIfActiveVisitConflictsWithAnotherVisit(visitType) {
+        visitType = (typeof visitType === "undefined") ? "defaultValue" : visitType;
         $.ajax({
             type: 'POST',
             url: '<?php echo Yii::app()->createUrl('visit/isDateConflictingWithAnotherVisit&date_in='); ?>' + $("#Visit_date_in").val() + '&date_out=' + $("#Visit_date_out").val() + '&visitorId=<?php echo $model->visitor; ?>&visitStatus=<?php echo VisitStatus::ACTIVE; ?>',
@@ -280,7 +290,11 @@ $session = new CHttpSession;
                     if (value.isConflicting == 1) {
                         alert("Visit cannot be activated. Please close previous active visit.");
                         $("#Visit_date_check_in").attr("disabled", true);
-                    } else {
+                    } else if (visitType == 'new') {
+                        $("#dateoutDiv #Visit_date_out").attr("disabled", false);
+                        duplicateVisit("activate-a-visit-form");
+                    }
+                    else {
 
                         $("#dateoutDiv #Visit_date_out").attr("disabled", false);
                         sendActivateVisitForm("activate-a-visit-form");

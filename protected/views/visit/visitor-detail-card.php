@@ -48,14 +48,17 @@ $photoForm = $this->beginWidget('CActiveForm', array(
                         if ($model->card_type == CardType::SAME_DAY_VISITOR) {
 
                             if ($model->date_out == '') {
-                                echo date('d M y');
+                                $date1 = date('d M y');
+                                echo date("d M y", strtotime($date1 . ' + 1 day'));
+                                
                             } else {
                                 // echo Yii::app()->dateFormatter->format("d/MM/y", strtotime($model->date_out));
                                 echo date("d M y", strtotime($model->date_out));
                             }
                         } else {
                             if ($model->date_out == '') {
-                                echo date('d M y');
+                                $date2 = date('d M y');
+                                echo date("d M y", strtotime($date2 . ' + 1 day'));
                             } else {
                                 // echo Yii::app()->dateFormatter->format("d/MM/y", strtotime($model->date_out));
                                 echo date("d M y", strtotime($model->date_out . ' + 1 day'));

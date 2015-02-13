@@ -44,7 +44,9 @@ $logform = $this->beginWidget('CActiveForm', array(
         ));
 ?>
 <div class="flash-success success-update-preregister">Visit Successfully Updated.</div>
-<input type='hidden' id='Visit_visit_status' name='Visit[visit_status]' value='<?php echo VisitStatus::PREREGISTERED; ?>'>
+<input type='hidden' id='Visit_visit_status' name='Visit[visit_status]' value='<?php
+echo VisitStatus::PREREGISTERED;
+?>'>
 <table class="detailsTable" style="font-size:12px;" id="logvisitTable">
 
     <tr>
@@ -53,25 +55,25 @@ $logform = $this->beginWidget('CActiveForm', array(
     <tr>
 
         <td><?php
-            $mindate = date("d-m-Y");
-            $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                'model' => $model,
-                'attribute' => 'date_in',
-                'htmlOptions' => array(
-                    'size' => '10', // textField size
-                    'maxlength' => '10', // textField maxlength
-                    'placeholder' => 'dd-mm-yyyy',
-                    'disabled' => 'disabled',
-                ),
-                'options' => array(
-                    'showButtonPanel' => false,
-                    'showOn' => 'both',
-                    'dateFormat' => 'dd-mm-yy',
-                    'minDate' => $mindate,
-                    'onClose' => 'js:function(selectedDate) { $("#Visit_date_in").datepicker("option", "minDate", selectedDate); }',
-                )
-            ));
-            ?>
+$mindate = date("d-m-Y");
+$this->widget('zii.widgets.jui.CJuiDatePicker', array(
+    'model' => $model,
+    'attribute' => 'date_in',
+    'htmlOptions' => array(
+        'size' => '10', // textField size
+        'maxlength' => '10', // textField maxlength
+        'placeholder' => 'dd-mm-yyyy',
+        'disabled' => 'disabled',
+    ),
+    'options' => array(
+        'showButtonPanel' => false,
+        'showOn' => 'both',
+        'dateFormat' => 'dd-mm-yy',
+        'minDate' => $mindate,
+        'onClose' => 'js:function(selectedDate) { $("#Visit_date_in").datepicker("option", "minDate", selectedDate); }',
+    )
+));
+?>
             <span style="color:red;display:none;" id="preregisterdateinError">Date In cannot be blank.</span>
         </td>
     </tr>
@@ -97,7 +99,7 @@ $logform = $this->beginWidget('CActiveForm', array(
                     'onClose' => 'js:function(selectedDate) { $("#Visit_date_out").datepicker("option", "maxDate", selectedDate); }',
                 )
             ));
-            ?>
+?>
             <span style="color:red;display:none;" id="preregisterdateoutError">Date Out cannot be blank.</span>
         </td>
     </tr>
@@ -108,7 +110,7 @@ $logform = $this->beginWidget('CActiveForm', array(
         <td>
 
             <select class="time" name='Visit[time_in_hours]' id='Visit_time_in_hours' >
-                <?php for ($i = 1; $i <= 24; $i++): ?>
+<?php for ($i = 1; $i <= 24; $i++): ?>
                     <option 
                     <?php
                     if ($timeIn[0] == $i) {
@@ -116,10 +118,10 @@ $logform = $this->beginWidget('CActiveForm', array(
                     }
                     ?>
                         value="<?= $i; ?>"><?= date("H", strtotime("$i:00")); ?></option>
-                    <?php endfor; ?>
+                <?php endfor; ?>
             </select> :
             <select class='time' name='Visit[time_in_minutes]' id='Visit_time_in_minutes'>
-                <?php for ($i = 1; $i <= 60; $i++): ?>
+<?php for ($i = 1; $i <= 60; $i++): ?>
                     <option 
                     <?php
                     if ($timeIn[1] == $i) {
@@ -127,13 +129,13 @@ $logform = $this->beginWidget('CActiveForm', array(
                     }
                     ?>
                         value="<?= $i; ?>"><?php
-                            if ($i > 0 && $i < 10) {
-                                echo '0' . $i;
-                            } else {
-                                echo $i;
-                            };
-                            ?></option>
-                <?php endfor; ?>
+                    if ($i > 0 && $i < 10) {
+                        echo '0' . $i;
+                    } else {
+                        echo $i;
+                    };
+                    ?></option>
+                        <?php endfor; ?>
             </select>
         </td>
     </tr>
@@ -179,7 +181,12 @@ if ($model->visit_status == VisitStatus::CLOSED) {
         }
 
         if ($("#currentCardTypeValueOfEditedUser").val() == 1) { //if card type is same visitor
-            if ('<?php echo $model->date_out; ?>' != '') {
+            if('<?php echo $model->visit_status?>' == 3){
+                $("#Visit_date_in").val(currentDate);
+                $("#Visit_date_out").val(currentDate);
+                $("#Visit_date_in").attr("disabled", true);
+            }
+            else if ('<?php echo $model->date_out; ?>' != '') {
                 $("#Visit_date_out").val("<?php echo $model->date_out; ?>");
                 $("#Visit_date_in").val("<?php echo $model->date_in; ?>");
             } else {

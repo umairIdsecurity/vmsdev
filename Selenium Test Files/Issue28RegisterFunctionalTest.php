@@ -73,8 +73,10 @@ class Issue28RegisterFunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_contact_number", "123456");
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeatpassword", "12345");
-        $this->click("id=submitFormUser");
-        $this->clickAndWait("id=submitAllForms");
+        $this->clickAndWait("id=submitFormUser");
+        $this->type("id=Visitor_photo","1");
+        $this->clickAndWait("css=#activate-a-visit-form > input.complete");
+        $this->clickAndWait("link=Active");
         //$this->assertEquals("Same Day Visitor", $this->getText("css=#cardDetailsTable > tbody > tr > td"));
         $this->assertEquals("Test staffmembervisitor", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[3]/td"));
         //$this->assertEquals("Test Company 1", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[3]/td"));

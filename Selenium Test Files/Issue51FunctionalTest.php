@@ -53,8 +53,7 @@ class Issue51FunctionalTest extends BaseFunctionalTest {
         $username = 'secondtenant@test.com';
         $this->login($username, '12345');
         $this->assertEquals("Error 503\n No workstations available", $this->getText("css=div.adminErrorSummary > p"));
-        $this->click("link=Visitor Records");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("link=Visitor Records");
         $this->assertEquals("No results found.", $this->getText("css=span.empty"));
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Workstations");
@@ -92,6 +91,8 @@ class Issue51FunctionalTest extends BaseFunctionalTest {
         $this->click("id=21");
         $this->click("id=clicktabB2");
         $this->clickAndWait("id=submitAllForms");
+        $this->clickAndWait("css=#activate-a-visit-form > input.complete");
+        $this->clickAndWait("link=Active");
         $this->assertEquals("secondtenantvisitor", $this->getText("//table[@id='personalDetailsTable']/tbody/tr[2]/td[2]"));
         $this->clickAndWait("link=Visitor Records");
         $this->assertEquals("secondtenantvisitor@test.com", $this->getText("//div[@id='view-visitor-records']/table/tbody/tr/td[8]"));

@@ -40,7 +40,7 @@ class Issue50FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->clickAndWait("link=Organisation Settings");
-        $this->clickAndWait("link=Customise Look and Feel");
+        $this->clickAndWait("link=Customise Display");
         $this->click("id=cp13");
         $this->type("id=CompanyLafPreferences_nav_bg_color", "#71d7f0");
         $this->type("//input[@type='file']", "C:\\xampp\\htdocs\\vms\\Selenium Test Files\\images\\Company-Icon.png");
@@ -64,7 +64,7 @@ class Issue50FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Companies");
-        $this->clickAndWait("link=Customise Look and Feel");
+        $this->clickAndWait("link=Customise Display");
         $this->click("id=cp13");
         $this->type("id=CompanyLafPreferences_nav_bg_color", "#9ED92F");
         $this->type("//input[@type='file']", "C:\\xampp\\htdocs\\vms\\Selenium Test Files\\images\\Company-Icon.png");
@@ -88,7 +88,7 @@ class Issue50FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->click("link=Organisation Settings");
-        $this->clickAndWait("link=Customise Look and Feel");
+        $this->clickAndWait("link=Customise Display");
         try {
             $this->assertEquals("#71d7f0", $this->getValue("id=CompanyLafPreferences_nav_bg_color"));
         } catch (PHPUnit_Framework_AssertionFailedError $e) {
@@ -99,7 +99,7 @@ class Issue50FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Companies");
-        $this->clickAndWait("link=Customise Look and Feel");
+        $this->clickAndWait("link=Customise Display");
         try {
             $this->assertEquals("#9ED92F", $this->getValue("id=CompanyLafPreferences_nav_bg_color"));
         } catch (PHPUnit_Framework_AssertionFailedError $e) {
@@ -117,21 +117,21 @@ class Issue50FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Companies");
-        $this->assertEquals("Customise Look and Feel", $this->getText("//div[@id='cssmenu']/ul/li/ul/li[2]/a/span"));
+        $this->assertEquals("Customise Display", $this->getText("//div[@id='cssmenu']/ul/li/ul/li[2]/a/span"));
         $this->clickAndWait("//ul[@id='tabs']/li[3]/a/p");
 
         $username = 'admin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->clickAndWait("link=Organisation Settings");
-        $this->assertEquals("Customise Look and Feel", $this->getText("css=a.ajaxLinkLi > span"));
+        $this->assertEquals("Customise Display", $this->getText("css=a.ajaxLinkLi > span"));
         $this->clickAndWait("//ul[@id='tabs']/li[3]/a/p");
 
         $username = 'agentadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->clickAndWait("link=Organisation Settings");
-        $this->assertEquals("Customise Look and Feel", $this->getText("css=a.ajaxLinkLi > span"));
+        $this->assertEquals("Customise Display", $this->getText("css=a.ajaxLinkLi > span"));
         $this->clickAndWait("//ul[@id='tabs']/li[3]/a/p");
 
         $username = 'operator@test.com';

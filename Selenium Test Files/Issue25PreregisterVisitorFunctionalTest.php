@@ -63,7 +63,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Visitor Records");
-        $this->clickAndWait("link=Preregister a Visitor");
+        $this->clickAndWait("link=Preregister a Visit");
         $this->click("id=clicktabA");
         $this->addVisitor('Visitor5');
         $this->select("id=workstation", "label=Workstation1");
@@ -102,7 +102,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Visitor Records");
-        $this->clickAndWait("link=Preregister a Visitor");
+        $this->clickAndWait("link=Preregister a Visit");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test visitor1");
         $this->click("id=dummy-visitor-findBtn");
@@ -155,7 +155,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Visitor Records");
-        $this->clickAndWait("link=Preregister a Visitor");
+        $this->clickAndWait("link=Preregister a Visit");
         $this->click("id=clicktabA");
         $this->addVisitor('Visitor2');
         $this->select("id=workstation", "label=Workstation1");
@@ -191,7 +191,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Visitor Records");
-        $this->clickAndWait("link=Preregister a Visitor");
+        $this->clickAndWait("link=Preregister a Visit");
         $this->click("id=clicktabA");
         $this->select("id=Visitor_visitor_type", "label=Corporate Visitor");
         $this->addVisitor('Visitor6');
@@ -254,7 +254,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Visitor Records");
-        $this->clickAndWait("link=Preregister a Visitor");
+        $this->clickAndWait("link=Preregister a Visit");
         $this->click("id=clicktabA");
         $this->click("id=submitFormVisitor");
         $this->select("id=workstation", "label=Workstation1");
@@ -368,7 +368,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Visitor Records");
-        $this->clickAndWait("link=Preregister a Visitor");
+        $this->clickAndWait("link=Preregister a Visit");
         $this->click("id=clicktabA");
         $this->click("id=submitFormVisitor");
         $this->select("id=workstation", "label=Workstation1");
@@ -478,7 +478,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Visitor Records");
-        $this->clickAndWait("link=Preregister a Visitor");
+        $this->clickAndWait("link=Preregister a Visit");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test visitor1");
         $this->click("id=dummy-visitor-findBtn");
@@ -530,7 +530,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Visitor Records");
-        $this->clickAndWait("link=Preregister a Visitor");
+        $this->clickAndWait("link=Preregister a Visit");
         $this->click("id=clicktabA");
         $this->select("id=Visitor_visitor_type", "label=Corporate Visitor");
         $this->select("id=workstation", "label=Workstation1");

@@ -274,7 +274,7 @@ class Issue54FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Visit Status: Saved", $this->getText("link=Visit Status: Saved"));
         $this->click("//li[@id='activateLi']/a/span");
         $this->clickAndWait("css=#activate-a-visit-form > input.complete");
-        $this->clickAndWait("link=Preregister a Visitor");
+        $this->clickAndWait("link=Preregister a Visit");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "preload2");
         $this->click("id=dummy-visitor-findBtn");

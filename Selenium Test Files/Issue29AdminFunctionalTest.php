@@ -17,7 +17,7 @@ date_default_timezone_set('Asia/Manila');
 class Issue29AdminFunctionalTest extends BaseFunctionalTest {
 
     function setUp() {
-        $this->setBrowser("*firefox");
+        $this->setBrowser("*iexplore");
         $this->setBrowserUrl("http://cvms.identitysecurity.info/");
     }
 

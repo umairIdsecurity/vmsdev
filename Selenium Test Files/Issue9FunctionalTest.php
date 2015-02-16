@@ -16,7 +16,7 @@ require_once 'BaseFunctionalTest.php';
 class Issue9FunctionalTest extends BaseFunctionalTest {
 
     function setUp() {
-        $this->setBrowser("*firefox");
+        $this->setBrowser("*iexplore");
         $this->setBrowserUrl("http://localhost/");
     }
 

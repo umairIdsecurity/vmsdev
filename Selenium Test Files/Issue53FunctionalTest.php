@@ -17,7 +17,7 @@ require_once 'BaseFunctionalTest.php';
 class Issue53FunctionalTest extends BaseFunctionalTest {
 
     function setUp() {
-        $this->setBrowser("*firefox");
+        $this->setBrowser("*iexplore");
         $this->setBrowserUrl("http://cvms.identitysecurity.info/");
     }
 

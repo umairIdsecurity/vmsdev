@@ -20,7 +20,7 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
     protected function setUp() {
 
         parent::setUp();
-        $this->setBrowser("*firefox");
+        $this->setBrowser("*iexploreproxy");
         $this->setBrowserUrl("http://cvms.identitysecurity.info/");
     }
 
@@ -188,7 +188,7 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
     }
 
     function testBlank() {
-        $this->setBrowser("*firefox");
+        $this->setBrowser("*iexplore");
         $this->setBrowserUrl("http://cvms.identitysecurity.info/");
     }
     function clearMailcatcher(){

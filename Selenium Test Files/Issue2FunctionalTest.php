@@ -19,7 +19,7 @@ class Issue2 extends BaseFunctionalTest {
 
     protected function setUp() {
         parent::setUp();
-        $this->setBrowser("*firefox");
+        $this->setBrowser("*iexplore");
         $this->setBrowserUrl("http://cvms.identitysecurity.info");
         
     }

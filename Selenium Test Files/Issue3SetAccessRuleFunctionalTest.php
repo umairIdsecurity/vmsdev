@@ -19,7 +19,7 @@ $Issue3SuperAdminFunctionalTest = new Issue3SuperAdminFunctionalTest();
 class Issue3SetAccessRuleFunctionalTest extends BaseFunctionalTest {
 
     function setUp() {
-        $this->setBrowser("*firefox");
+        $this->setBrowser("*iexplore");
         $this->setBrowserUrl("http://cvms.identitysecurity.info");
     }
 

@@ -16,7 +16,7 @@ require_once 'BaseFunctionalTest.php';
 class Issue13FunctionalTest extends BaseFunctionalTest {
 
     function setUp() {
-        $this->setBrowser("*iexplore");
+        $this->setBrowser("*iexploreproxy");
         $this->setBrowserUrl("http://cvms.identitysecurity.info");
     }
 
@@ -64,6 +64,7 @@ class Issue13FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("12345678910111213141516171819202122232425262728293031", $this->getText("id=fromDay"));
         $this->select("id=fromMonth", "label=Nov");
         $this->assertEquals("123456789101112131415161718192021222324252627282930", $this->getText("id=fromDay"));
+    
     }
 
     /* Scenario 2 – Login as super admin, add administrator and check if birthday is correct

@@ -101,8 +101,12 @@ imagettftext($image, $font_size, 0, $x, 250, $font_color, $font_file, $text);
 
 //////////////////////////////////////////////////////////////
 header('Content-type:image/png');
+if (exif_imagetype($src2) != IMAGETYPE_JPEG) {
+    $watermark = imagecreatefrompng($src2);
+} else {
+    $watermark = imagecreatefromjpeg($src2);
+}
 
-$watermark = imagecreatefromjpeg($src2);
 
 $watermark_width = imagesx($watermark);
 

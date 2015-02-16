@@ -111,7 +111,7 @@ if ($this->action->id == 'detail') {
 
         $("#fileuploader").uploadFile({
             url: "<?php echo Yii::app()->createUrl('site/upload&id=' . $this->id . '&companyId=' . $dataId . '&actionId=' . $this->action->id); ?>",
-            allowedTypes: "png,gif,jpg,jpeg",
+            allowedTypes: "png,jpg,jpeg",
             fileName: "myfile",
             // maxFileCount: 1,
             maxFileSize: 2100000,

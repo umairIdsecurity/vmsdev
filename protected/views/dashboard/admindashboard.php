@@ -31,7 +31,7 @@ foreach ($workstationList as $workstation) {
     $x++;
     echo "<h1>" . $workstation->name . "</h1>";
     $merge = new CDbCriteria;
-    $merge->addCondition('workstation ="' . $workstation->id . '" and (visit_status ="' . VisitStatus::ACTIVE . '" or visit_status ="'.VisitStatus::PREREGISTERED.'")');
+    $merge->addCondition('workstation ="' . $workstation->id . '" and (visit_status ="' . VisitStatus::ACTIVE . '" or visit_status ="' . VisitStatus::PREREGISTERED . '")');
     ?><div  class="admindashboardDiv"><?php
         $this->widget('zii.widgets.grid.CGridView', array(
             'id' => 'visit-gridDashboard' . $x,
@@ -48,8 +48,10 @@ foreach ($workstationList as $workstation) {
                     'cssClassExpression' => '"statusRow"',
                 ),
                 array(
-                    'name' => 'card',
-                    'header' => 'Card No.'
+                    'name' => 'cardcode',
+                    'header' => 'Card No.',
+                    'value' => 'CardGenerated::model()->getCardCode($data->card)',
+                     //'filter' => CardGenerated::model()->findAll(), 
                 ),
                 array(
                     'name' => 'firstname',
@@ -117,6 +119,14 @@ function formatTime($time) {
         return "-";
     } else {
         return date('h:i A', strtotime($time));
+    }
+}
+
+function getCardCode($cardId) {
+    if($cardId !=''){
+        return CardGenerated::model()->findByPk($cardId)->card_code;
+    } else {
+        return "";
     }
 }
 ?>

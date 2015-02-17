@@ -187,7 +187,10 @@ if ($this->action->id == 'update') {
     </table>
 
 
-    <div class="row buttons">
+    <div class="row buttons " style="<?php
+        if (isset($_GET['viewFrom'])) { ?>
+    margin-left:400px;
+        <?php } else { echo "text-align:right;"; } ?>">
         <?php echo CHtml::submitButton($model->isNewRecord ? 'Add' : 'Save', array('id' => 'createBtn', 'style' => 'height:30px;')); ?>
         <?php if (isset($_GET['viewFrom'])) { ?>
             <input class="yiiBtn" type='button' value='Cancel' onclick='closeParent()' style="height:30px;"></input>

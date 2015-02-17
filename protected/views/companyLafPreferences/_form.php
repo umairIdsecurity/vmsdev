@@ -543,7 +543,7 @@ $company = Company::model()->findByPk($session['company']);
             
         </div>
     </div>
-<div class="row buttons" style="margin-left:3px;">
+<div class="row buttons buttonsAlignToRight" style="margin-left:3px;">
     <input type="submit" value="Save" name="yt0" class="complete">
 </div>
 <?php $this->endWidget(); ?>

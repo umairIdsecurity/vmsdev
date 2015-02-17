@@ -648,7 +648,7 @@ dt.tabs dt{
     height:137px;
 }
 
-.register-a-visitor-buttons-div{
+.register-a-visitor-buttons-div, .buttonsAlignToRight{
     text-align:right;
 }
 

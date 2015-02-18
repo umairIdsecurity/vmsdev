@@ -96,7 +96,7 @@ if ($this->action->id == 'update') {
                     echo "disabled";
                 }
                 ?> value="<?php echo $model['logo']; ?>">
-                <div class="photoDiv" <?php
+                <div class="photoDiv companyPhotoDiv" <?php
                 if ($model['logo'] == NULL) {
                     echo "style='display:none !important;'";
                 }

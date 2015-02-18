@@ -46,7 +46,7 @@ $company = Company::model()->findByPk($session['company']);
         <div class="cssButtonDetails">
             <span class="customTitle userpreferencesLogoLabel">Logo</span><br>
             <input id="CompanyLafPreferences_logo" type="text" name="CompanyLafPreferences[logo]" style="display:none;" value="<?php echo $company->logo; ?>">
-            <div class="photoDiv" <?php
+            <div class="photoDiv companyPhotoDiv" <?php
             if ($company->logo == NULL) {
                 echo "style='display:none !important;'";
             }

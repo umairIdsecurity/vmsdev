@@ -1070,3 +1070,11 @@ dt.tabs dt{
 .borderTopRightRadius {
     border-top-right-radius: 5px ! important;
 }
+
+#visitor-grid_c4,#visitor-grid_c5{
+    display:none;
+}
+
+#visitor-grid .items .filters td:nth-child(6), #visitor-grid .items .filters td:nth-child(7){
+    display:none;
+}

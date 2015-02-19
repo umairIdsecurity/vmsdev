@@ -26,13 +26,11 @@ class VisitorController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('update', 'delete','admin','adminAjax'),
+                'actions' => array('update', 'delete', 'admin', 'adminAjax'),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
-           
             ),
-            
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create','GetIdOfUser', 'GetHostDetails', 'GetPatientDetails', 'CheckEmailIfUnique', 'GetVisitorDetails', 'FindVisitor', 'FindHost', 'GetTenantAgentWithSameTenant', 'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent'),
+                'actions' => array('create', 'GetIdOfUser', 'GetHostDetails', 'GetPatientDetails', 'CheckEmailIfUnique', 'GetVisitorDetails', 'FindVisitor', 'FindHost', 'GetTenantAgentWithSameTenant', 'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -40,8 +38,6 @@ class VisitorController extends Controller {
             ),
         );
     }
-
-    
 
     /**
      * Creates a new model. Register and Preregister a visitor page
@@ -117,12 +113,19 @@ class VisitorController extends Controller {
      */
     public function actionDelete($id) {
         $model = $this->loadModel($id);
-        if($model->delete()){
-           //throw new CHttpException(400, "This is a required field and cannot be deleted"); 
+        if ($model->delete()) {
+
+            //throw new CHttpException(400, "This is a required field and cannot be deleted"); 
         } else {
-            throw new CHttpException("Delete Failed", "Cannot delete visitor record. An existing visit exists.");
+            $visitorExists = Visit::model()->exists('is_deleted = 0 and visitor =' . $id . ' and (visit_status=' . VisitStatus::PREREGISTERED . ' or visit_status=' . VisitStatus::ACTIVE . ')');
+            $visitorExistsClosed = Visit::model()->exists('is_deleted = 0 and visitor =' . $id . ' and (visit_status=' . VisitStatus::CLOSED . ' or visit_status=' . VisitStatus::EXPIRED . ')');
+
+            if (!$visitorExists && !$visitorExistsClosed) {
+                
+                return false;
+            } 
         }
-       
+
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
         if (!isset($_GET['ajax']))
@@ -140,7 +143,7 @@ class VisitorController extends Controller {
 
         $this->render('_admin', array(
             'model' => $model,
-                ), false, true);
+                ), false, false);
     }
 
     public function actionAdminAjax() {
@@ -262,7 +265,5 @@ class VisitorController extends Controller {
         echo CJavaScript::jsonEncode($resultMessage);
         Yii::app()->end();
     }
-
-    
 
 }

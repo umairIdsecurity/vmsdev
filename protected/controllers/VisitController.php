@@ -26,7 +26,7 @@ class VisitController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'detail', 'admin', 'view','exportFile','evacuationReport','evacuationReportAjax'),
+                'actions' => array('create', 'update', 'detail', 'admin', 'view','exportFile','evacuationReport','evacuationReportAjax','DeleteAllVisitWithSameVisitorId'),
                 'users' => array('@'),
             ),
             array('allow',
@@ -34,7 +34,7 @@ class VisitController extends Controller {
                     'visitorRegistrationHistory',
                     'exportFileHistory',
                     'exportFileVisitorRecords',
-                    'exportVisitorRecords',
+                    'exportVisitorRecords','delete',
                 ),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
             ),
@@ -509,6 +509,12 @@ class VisitController extends Controller {
         echo "Scheduled Jobs - Expired <br>";
         $visit = new VisitServiceImpl();
         $visit->notreturnCardIfVisitIsExpiredAutomatically();
+    }
+    
+    public function actionDeleteAllVisitWithSameVisitorId($id){
+        Visit::model()->updateCounters(array('is_deleted'=>1),'visitor=:visitor',array(':visitor'=>$id));
+        Visitor::model()->updateByPk($id, array('is_deleted' =>'1'));
+        return true;
     }
 
 }

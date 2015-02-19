@@ -26,8 +26,9 @@ $this->widget('zii.widgets.grid.CGridView', array(
     'columns' =>
     array(
         array(
-            'name' => 'card',
+            'name' => 'cardcode',
             'header' => 'Card No.',
+            'value' => 'CardGenerated::model()->getCardCode($data->card)',
             'filter' => CHtml::textField('Visit[card]', '', array('class' => 'filterCard')),
         ),
         array(
@@ -111,6 +112,14 @@ function formatDate($date) {
         return "-";
     } else {
         return Yii::app()->dateFormatter->format("d/MM/y", strtotime($date));
+    }
+}
+
+function getCardCode($cardId) {
+    if($cardId !=''){
+        return CardGenerated::model()->findByPk($cardId)->card_code;
+    } else {
+        return "";
     }
 }
 ?>

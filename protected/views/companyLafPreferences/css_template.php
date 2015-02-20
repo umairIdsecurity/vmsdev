@@ -45,7 +45,7 @@ background: -webkit-gradient(linear, center top, center bottom, from(<?php echo 
 background: -moz-linear-gradient(center top , <?php echo $companyLafPreferences->neutral_bg_color; ?>, <?php echo $companyLafPreferences->neutral_bg_color2; ?>) repeat scroll 0 0 rgba(0, 0, 0, 0) !important;
 background: -webkit-gradient(linear, center top, center bottom, from(<?php echo $companyLafPreferences->neutral_bg_color; ?>), to(<?php echo $companyLafPreferences->neutral_bg_color2; ?>)) !important;
 background: -ms-linear-gradient(top, <?php echo $companyLafPreferences->neutral_bg_color; ?>, <?php echo $companyLafPreferences->neutral_bg_color2; ?>) !important;
-border:<?php echo $companyLafPreferences->neutral_bg_color2; ?>  !important;
+border:1px solid <?php echo $companyLafPreferences->neutral_bg_color2; ?>  !important;
 color:<?php echo $companyLafPreferences->neutral_font_color; ?> !important;
 }
 
@@ -55,7 +55,7 @@ background: -moz-linear-gradient(center top , <?php echo $companyLafPreferences-
 background: -webkit-gradient(linear, center top, center bottom, from(<?php echo $companyLafPreferences->neutral_hover_color; ?>), to(<?php echo $companyLafPreferences->neutral_hover_color2; ?>)) !important;
 background: -ms-linear-gradient(top, <?php echo $companyLafPreferences->neutral_hover_color; ?>, <?php echo $companyLafPreferences->neutral_hover_color2; ?>) !important;
 color:<?php echo $companyLafPreferences->neutral_hover_font_color; ?> !important;
-border:<?php echo $companyLafPreferences->neutral_hover_color2; ?>  !important;
+border: 1px solid <?php echo $companyLafPreferences->neutral_hover_color2; ?>  !important;
 }
 
 

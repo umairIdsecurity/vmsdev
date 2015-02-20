@@ -7,6 +7,7 @@ background: -webkit-gradient(linear, center top, center bottom, from(<?php echo 
 background: -moz-linear-gradient(center top , <?php echo $companyLafPreferences->action_forward_bg_color; ?>, <?php echo $companyLafPreferences->action_forward_bg_color2; ?>) repeat scroll 0 0 rgba(0, 0, 0, 0) !important;
 background: -webkit-gradient(linear, center top, center bottom, from(<?php echo $companyLafPreferences->action_forward_bg_color; ?>), to(<?php echo $companyLafPreferences->action_forward_bg_color2; ?>)) !important;
 background: -ms-linear-gradient(top, <?php echo $companyLafPreferences->action_forward_bg_color; ?>, <?php echo $companyLafPreferences->action_forward_bg_color2; ?>) !important;
+
 border:1px solid <?php echo $companyLafPreferences->action_forward_bg_color2; ?> !important;
 color:<?php echo $companyLafPreferences->action_forward_font_color; ?> !important;
 }

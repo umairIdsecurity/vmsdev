@@ -693,8 +693,22 @@ dt.tabs dt{
 
 #visitorInformationCssMenu ul,
 #visitorInformationCssMenu li,
-#visitorInformationCssMenu a,
-#actionsCssMenu ul{
+#visitorInformationCssMenu a{
+    margin: 2px;
+    padding: 0;
+    border: 0;
+    list-style: none;
+    font-weight: normal;
+    text-decoration: none;
+    line-height: 1;
+    font-size: 14px;
+    position: relative;
+    border-radius: 5px;
+}
+
+#actionsCssMenu ul,
+#actionsCssMenu li,
+#actionsCssMenu a{
     margin: 2px;
     padding: 0;
     border: 0;
@@ -720,6 +734,27 @@ dt.tabs dt{
     padding:8px;
 }
 
+#actionsCssMenu > .visitStatusLi > li > a  {
+    font-size: 12px;
+    display: block;
+    background: #64676e;
+    background: -moz-linear-gradient(#F1F1F1 0%, #F1F1F1 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #F1F1F1), color-stop(100%, #F1F1F1));
+    background: -webkit-linear-gradient(#F1F1F1 0%, #F1F1F1 100%);
+    background: linear-gradient(#F1F1F1 0%, #F1F1F1 100%);
+    color:#58585A;
+    font-weight:bold;
+    padding:8px;
+}
+
+#actionsCssMenu{
+    margin-top:17px;
+}
+
+.visitStatusLi > li 
+{
+    padding-bottom:10px !important;
+}
 #visitorInformationCssMenu .has-sub li {
     cursor:auto;
     padding-bottom: 0 !important;
@@ -774,15 +809,7 @@ dt.tabs dt{
     border-color: #4E5800 rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
 }
 
-/*#actionsCssMenu > ul > li.has-sub > a:before {
-    content: "";
-    position: absolute;
-    top: 12px;
-    right: 14px;
-    border: 5px solid transparent;
-    border-left: 5px solid #ffffff;
-    border-color: #4E5800 rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
-}*/
+
 
 /*visitor detail actions*/
 #actionsVisitDetails tr td, #visitorDetailDiv tr td{
@@ -1136,8 +1163,8 @@ dt.tabs dt{
 .cardCompanyLogoPreregistered{
     height: 30px;
     margin-left: -155px;
-   // margin-top: -64px;
-    
+    // margin-top: -64px;
+
     margin-top: -14px;
     //-moz-margin-start: -64px;
     position: relative;
@@ -1157,7 +1184,7 @@ dt.tabs dt{
 #photoPreview{
     height: 154px;
     width: 113px;
-    
+
 }
 
 .cardPhotoPreview > img {
@@ -1181,7 +1208,7 @@ dt.tabs dt{
     font-weight: bold;
     margin-bottom: 15px;
     margin-top: -12px;
-    padding: 3px 15px 5px;
+    padding: 3px 15px;
     text-decoration: none;
     width: 135px !important;
 }
@@ -1232,7 +1259,7 @@ dt.tabs dt{
 }
 
 #logoDiv{
-     margin-left: 450px;
+    margin-left: 450px;
     position: absolute;
 }
 
@@ -1295,3 +1322,4 @@ dt.tabs dt{
     width:200px;
     height:27px;
 }
+

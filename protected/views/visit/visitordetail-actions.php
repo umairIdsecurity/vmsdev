@@ -2,12 +2,12 @@
 $cs = Yii::app()->clientScript;
 $cs->registerScriptFile(Yii::app()->request->baseUrl . '/js/script-visitordetail-actions-cssmenu.js');
 $session = new CHttpSession;
-?><br>
+?>
 <div id='actionsCssMenu'>
-    <ul>
+    <ul class="visitStatusLi">
         <li>
-            <a style="text-decoration: none; color:red !important;">Visit Status: <?php echo VisitStatus::$VISIT_STATUS_LIST[$model->visit_status]; ?></a>
-
+            <a style="text-decoration: none; color:#84BF15 !important;">Visit Status: <?php echo VisitStatus::$VISIT_STATUS_LIST[$model->visit_status]; ?></a>
+            
         </li>
     </ul>
 
@@ -76,14 +76,9 @@ $session = new CHttpSession;
                                             </tr>
                                         </table>
                                         <?php echo $closeVisitForm->error($model, 'date_in'); ?>
-                                        <input type='submit' value='Close' class="complete"/>
-                                        <button class="actionForward greenBtn" style="<?php
-                                        if (strpos($_SERVER['HTTP_USER_AGENT'], 'Firefox') !== FALSE) {
-                                            echo "height:25.6px;";
-                                        } else {
-                                            echo "height:30px;";
-                                        }
-                                        ?>line-height:0px ;" id="cancelActiveVisitButton">Cancel</button>
+                                        <input type='submit' value='Close' class="complete" id="closeVisitBtn" style="display:none;"/>
+                                        <button  class="complete greenBtn" id="closeVisitBtnDummy"/>Close</button>
+                                        <button class="actionForward greenBtn" id="cancelActiveVisitButton">Cancel</button>
     <?php $this->endWidget(); ?>
                                     </div>
                                 </td>
@@ -212,6 +207,11 @@ $session = new CHttpSession;
         $('#registerNewVisit').on('click', function(e) {
             e.preventDefault();
             checkIfActiveVisitConflictsWithAnotherVisit("new");
+        });
+        
+        $('#closeVisitBtnDummy').on('click', function(e) {
+            e.preventDefault();
+            $("#closeVisitBtn").click();
         });
 
         $('#cancelActiveVisitButton').on('click', function(e) {

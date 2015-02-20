@@ -146,13 +146,9 @@ if ($model->visit_status == VisitStatus::CLOSED) {
     ?>
     <button id='preregisterNewVisit' class='greenBtn actionForward'>Confirm</button><br>
 <?php } else { ?>
-    <input type='submit' value='Confirm' class="complete"/>
-    <button class="actionForward greenBtn" style="<?php
-    if (strpos($_SERVER['HTTP_USER_AGENT'], 'Firefox') !== FALSE) {
-        echo "height:25.6px;";
-    }else {
-        echo "height:30px;";
-    }?>line-height:0px ;" id="cancelPreregisteredVisitButton">Cancel</button>
+    <input type='submit' value='Confirm' class="complete" style="display:none;" id="confirmPreregisterSubmit"/>
+    <button class="complete greenBtn" id="confirmPreregisterDummy"> Confirm</button>
+    <button class="actionForward greenBtn" id="cancelPreregisteredVisitButton">Cancel</button>
 
 <?php } ?>
 
@@ -207,6 +203,11 @@ if ($model->visit_status == VisitStatus::CLOSED) {
         $('#cancelPreregisteredVisitButton').on('click', function(e) {
             e.preventDefault();
             sendCancelVisit();
+        });
+        
+        $('#confirmPreregisterDummy').on('click', function(e) {
+            e.preventDefault();
+            $("#confirmPreregisterSubmit").click();
         });
 
         $('#Visit_date_in').on('change', function(e) {

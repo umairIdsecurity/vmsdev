@@ -6,7 +6,7 @@ $session = new CHttpSession;
 <div id='actionsCssMenu'>
     <ul class="visitStatusLi">
         <li>
-            <a style="text-decoration: none; color:#84BF15 !important;">Visit Status: <?php echo VisitStatus::$VISIT_STATUS_LIST[$model->visit_status]; ?></a>
+            <a style="text-decoration: none; ">Status: <span style="color:red !important; text-decoration: underline;font-weight:normal"><?php echo VisitStatus::$VISIT_STATUS_LIST[$model->visit_status]; ?></span></a>
             
         </li>
     </ul>
@@ -15,7 +15,7 @@ $session = new CHttpSession;
 
     <ul>
         <?php if ($model->visit_status == VisitStatus::ACTIVE && $session['role'] != Roles::ROLE_STAFFMEMBER) { ?>
-            <li class='has-sub' id="closevisitLi"><a href="#"><span style="color:white !important;" class="btn btn-info actionsLabel">Close Visit</span></a>
+            <li class='has-sub' id="closevisitLi"><a href="#"><span class="icons close-visit">Close Visit</span></a>
                 <ul>
                     <li>
                         <table id="actionsVisitDetails">
@@ -90,7 +90,7 @@ $session = new CHttpSession;
             </li>
         <?php } else if (($model->visit_status == VisitStatus::PREREGISTERED || $model->visit_status == VisitStatus::SAVED || $model->visit_status == VisitStatus::CLOSED)) {
             ?>
-            <li class='has-sub' id="preregisterLi"><a href="#"><span class="btn btn-info actionsLabel" style="color:white !important;">Preregister a Visit</span></a>
+            <li class='has-sub' id="preregisterLi"><a href="#"><span class="pre-visits">Preregister a Visit</span></a>
                 <ul>
                     <li>
 
@@ -114,7 +114,7 @@ $session = new CHttpSession;
                     </li>
                 </ul>
             </li>
-            <li class='has-sub' id="activateLi"><a href="#"><span class="btn btn-info actionsLabel" style="color:white !important;">Log a Visit</span></a>
+            <li class='has-sub' id="activateLi"><a href="#"><span class="log-current">Log a Visit</span></a>
                 <ul>
                     <li>
                         <?php

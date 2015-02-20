@@ -1,4 +1,4 @@
-<br>
+
 <?php
 $session = new CHttpSession;
 $timeIn = explode(":", '00:00:00');
@@ -47,7 +47,7 @@ $logform = $this->beginWidget('CActiveForm', array(
 <input type='hidden' id='Visit_visit_status' name='Visit[visit_status]' value='<?php
 echo VisitStatus::PREREGISTERED;
 ?>'>
-<table class="detailsTable" style="font-size:12px;" id="logvisitTable">
+<table class="detailsTable" style="font-size:12px;margin-top:15px;" id="logvisitTable">
 
     <tr>
         <td>Proposed Date In</td>

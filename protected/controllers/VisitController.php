@@ -34,7 +34,7 @@ class VisitController extends Controller {
                     'visitorRegistrationHistory',
                     'exportFileHistory',
                     'exportFileVisitorRecords',
-                    'exportVisitorRecords',
+                    'exportVisitorRecords','delete',
                 ),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
             ),
@@ -515,6 +515,12 @@ class VisitController extends Controller {
         echo "Scheduled Jobs - Expired <br>";
         $visit = new VisitServiceImpl();
         $visit->notreturnCardIfVisitIsExpiredAutomatically();
+    }
+    
+    public function actionDeleteAllVisitWithSameVisitorId($id){
+        Visit::model()->updateCounters(array('is_deleted'=>1),'visitor=:visitor',array(':visitor'=>$id));
+        Visitor::model()->updateByPk($id, array('is_deleted' =>'1'));
+        return true;
     }
 
     public function actionDuplicateVisit($id) {

@@ -26,7 +26,10 @@ class VisitController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'DuplicateVisit','isDateConflictingWithAnotherVisit', 'GetVisitDetailsOfVisitor', 'getVisitDetailsOfHost', 'IsVisitorHasCurrentSavedVisit', 'update', 'detail', 'admin', 'view', 'exportFile', 'evacuationReport', 'evacuationReportAjax'),
+                'actions' => array('create',
+                    'DuplicateVisit', 'isDateConflictingWithAnotherVisit',
+                    'GetVisitDetailsOfVisitor', 'getVisitDetailsOfHost', 'IsVisitorHasCurrentSavedVisit',
+                    'update', 'detail', 'admin', 'view', 'exportFile', 'evacuationReport', 'evacuationReportAjax', 'DeleteAllVisitWithSameVisitorId'),
                 'users' => array('@'),
             ),
             array('allow',
@@ -34,7 +37,7 @@ class VisitController extends Controller {
                     'visitorRegistrationHistory',
                     'exportFileHistory',
                     'exportFileVisitorRecords',
-                    'exportVisitorRecords','delete',
+                    'exportVisitorRecords', 'delete',
                 ),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
             ),
@@ -65,7 +68,6 @@ class VisitController extends Controller {
             $model->attributes = $_POST['Visit'];
             if ($visitService->save($model, $session['id'])) {
                 $this->redirect(array('visit/detail', 'id' => $model->id));
-
             }
         }
 
@@ -516,10 +518,10 @@ class VisitController extends Controller {
         $visit = new VisitServiceImpl();
         $visit->notreturnCardIfVisitIsExpiredAutomatically();
     }
-    
-    public function actionDeleteAllVisitWithSameVisitorId($id){
-        Visit::model()->updateCounters(array('is_deleted'=>1),'visitor=:visitor',array(':visitor'=>$id));
-        Visitor::model()->updateByPk($id, array('is_deleted' =>'1'));
+
+    public function actionDeleteAllVisitWithSameVisitorId($id) {
+        Visit::model()->updateCounters(array('is_deleted' => 1), 'visitor=:visitor', array(':visitor' => $id));
+        Visitor::model()->updateByPk($id, array('is_deleted' => '1'));
         return true;
     }
 
@@ -576,8 +578,8 @@ class VisitController extends Controller {
         echo CJavaScript::jsonEncode($resultMessage);
         Yii::app()->end();
     }
-    
-    public function actionIsDateConflictingWithAnotherVisit($date_in, $date_out, $visitorId, $visitStatus){
+
+    public function actionIsDateConflictingWithAnotherVisit($date_in, $date_out, $visitorId, $visitStatus) {
         if (Visit::model()->isDateConflictingWithAnotherVisit($date_in, $date_out, $visitorId, $visitStatus)) {
             $aArray[] = array(
                 'isConflicting' => 1,

@@ -163,21 +163,8 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
 
             <?php if ($session['role'] == Roles::ROLE_SUPERADMIN) {
                 ?>
-                <li class='has-sub'><?php
-                    echo CHtml::ajaxLink("Manage Visitor Records", CController::createUrl('visitor/adminAjax'), array(
-                        'update' => '#content',
-                        'complete' => "js:function(html){
-            $('.managecompanies').next().slideUp('normal');
-            $('.manageworkstations').next().slideUp('normal');
-            $('.manageusers').next().slideUp('normal');
-            $('.managevisitorrecords').next().slideDown('normal');
-            $('.managevisitreasons').next().slideUp('normal');
-            $('.managereports').next().slideUp('normal');
-        }",
-                            ), array(
-                        'class' => 'managevisitorrecords',
-                    ));
-                    ?>
+                <li class='has-sub'><a class='managevisitorrecords' href='<?php echo Yii::app()->createUrl('visitor/admin'); ?>'><span>Manage Visitor Records</span></a>
+
                     <ul <?php
                     if ($this->id == 'visitor' || $this->action->id == 'exportvisitorrecords') {
                         echo "style='display:block ;'";
@@ -257,21 +244,8 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
             <?php } else {
                 ?>
 
-                <li class='has-sub' ><?php
-                    echo CHtml::ajaxLink("Manage Visitor Records", CController::createUrl('visitor/adminAjax'), array(
-                        'update' => '#content',
-                        'complete' => "js:function(html){
-            $('.managecompanies').next().slideUp('normal');
-            $('.manageworkstations').next().slideUp('normal');
-            $('.manageusers').next().slideUp('normal');
-            $('.managevisitorrecords').next().slideDown('normal');
-            $('.managevisitreasons').next().slideUp('normal');
-            $('.managereports').next().slideUp('normal');
-        }",
-                            ), array(
-                        'class' => 'managevisitorrecords',
-                    ));
-                    ?>
+                <li class='has-sub'><a class='managevisitorrecords' href='<?php echo Yii::app()->createUrl('visitor/admin'); ?>'><span>Manage Visitor Records</span></a>
+
                     <ul <?php
                     if ($this->id == 'visitor' || $this->action->id == 'exportvisitorrecords') {
                         echo "style='display:block ;'";

@@ -6,7 +6,7 @@
             <label><b>Search Name:</b></label> 
             <input type="text" id="search-host" name="search-host" class="search-text"/> 
             <button class="host-findBtn" onclick="findHostRecord()" id="host-findBtn" style="display:none;" data-target="#findHostRecordModal" data-toggle="modal">Find Record</button>
-            <button class="host-findBtn" id="dummy-host-findBtn">Find Host</button>
+            <button class="host-findBtn" id="dummy-host-findBtn" style="padding: 8px;">Find Host</button>
             <button class="host-AddBtn" <?php
             if ($session['role'] != Roles::ROLE_STAFFMEMBER) {
                 echo " style='display:none;' ";
@@ -22,13 +22,7 @@
             <div id="searchHostTable"></div>
             <div class="register-a-visitor-buttons-div">
                 <input type="button" class="visitor-backBtn btnBackTab3" id="btnBackTab3" value="Back"/>
-                <input type="button" id="clicktabB2"  value="Save and Continue" class="<?php
-                if (isset($_GET['action'])) {
-                    echo "complete";
-                } else {
-                    echo "actionForward";
-                }
-                ?>"/>
+                <input type="button" id="clicktabB2"  value="Save and Continue" class="actionForward"/>
             </div>
         </div>
         <input type="text" id="selectedHostInSearchTable" value="0"/>
@@ -66,13 +60,7 @@
     <input type="text" id="patientIsUnique" value="0"/><br>
     <div class="register-a-visitor-buttons-div">
         <input type="button" class="visitor-backBtn btnBackTab3" id="btnBackTab3" value="Back"/>
-        <input type="submit" value="Save and Continue" name="yt0" id="submitFormPatientName" style="display:inline-block;" class="<?php
-        if (isset($_GET['action'])) {
-            echo "complete";
-        } else {
-            echo "actionForward";
-        }
-        ?>"/>
+        <input type="submit" value="Save and Continue" name="yt0" id="submitFormPatientName" style="display:inline-block;" class="actionForward"/>
 
     </div>
         <?php $this->endWidget(); ?>
@@ -221,13 +209,7 @@
             <input type="button" class="visitor-backBtn btnBackTab3" id="btnBackTab3" value="Back"/>
             <input type="button" id="clicktabC" value="Save and Continue" style="display:none;"/>
 
-            <input type="submit" value="Save and Continue" name="yt0" id="submitFormUser" class="<?php
-                            if (isset($_GET['action'])) {
-                                echo "complete";
-                            } else {
-                                echo "actionForward";
-                            }
-                            ?>"/>
+            <input type="submit" value="Save and Continue" name="yt0" id="submitFormUser" class="actionForward"/>
         </div>
                  <?php $this->endWidget(); ?>
         <br>

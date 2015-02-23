@@ -283,7 +283,7 @@ class VisitController extends Controller {
          */
         $headers = array(
             'visitorType.name',
-            'card',
+            'card0.card_code',
             'visitor0.first_name',
             'visitor0.last_name',
             'visitor0.contact_number',
@@ -357,7 +357,7 @@ class VisitController extends Controller {
          */
         $headers = array(
             'visitorType.name',
-            'card',
+            'card0.card_code',
             'visitor0.first_name',
             'visitor0.last_name',
             'visitor0.contact_number',

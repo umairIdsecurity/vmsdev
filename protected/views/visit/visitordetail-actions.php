@@ -6,7 +6,7 @@ $session = new CHttpSession;
 <div id='actionsCssMenu'>
     <ul class="visitStatusLi">
         <li>
-            <a style="text-decoration: none; ">Status: <span style="color:red !important; text-decoration: underline;font-weight:normal"><?php echo VisitStatus::$VISIT_STATUS_LIST[$model->visit_status]; ?></span></a>
+            <a style="text-decoration: none; ">Visit Status: <span style="color:#9BD62C !important; font-weight:bold"><?php echo VisitStatus::$VISIT_STATUS_LIST[$model->visit_status]; ?></span></a>
             
         </li>
     </ul>

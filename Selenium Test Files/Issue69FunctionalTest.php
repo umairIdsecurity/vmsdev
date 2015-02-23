@@ -59,12 +59,12 @@ class Issue69FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("css=#evacuationreportSidebar > span");
         $this->assertEquals("TCA000006", $this->getText("//div[@id='view-visitor-records']/table/tbody/tr/td[3]"));
         $this->clickAndWait("//ul[@id='tabs']/li[3]/a/p");
-         $username = 'staffmember@test.com';
+        $username = 'staffmember@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("css=tr.even > td > a.statusLink");
         $this->click("//li[@id='activateLi']/a/span");
         $this->clickAndWait("css=#activate-a-visit-form > input.complete");
-        
+
         $this->clickAndWait("//ul[@id='tabs']/li[3]/a/p");
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
@@ -80,9 +80,14 @@ class Issue69FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("//div[@id='cssmenu']/ul/li[6]/a/span");
         $this->assertEquals("TCA000005", $this->getText("//div[@id='view-visitor-records']/table/tbody/tr/td[3]"));
+        $username = 'superadmin@test.com';
+        $this->login($username, '12345');
+        $this->clickAndWait("link=Administration");
+        $this->click("id=yt3");
+        $this->clickAndWait("//div[@id='cssmenu']/ul/li[4]/ul/li[4]/a/span");
+        $this->assertEquals("TCA000006", $this->getText("css=tr.even > td"));
+        $this->assertEquals("TCA000005", $this->getText("//div[@id='view-export-visitor-records']/table/tbody/tr[3]/td"));
     }
-
-    
 
 }
 

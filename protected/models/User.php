@@ -75,12 +75,13 @@ class User extends VmsActiveRecord {
         // will receive user inputs.
         if (Yii::app()->controller->action->id == 'update' || Yii::app()->controller->action->id == 'profile') {
             return array(
-                array('first_name, last_name, email, contact_number, role, user_type,is_deleted,password,company', 'required'),
+                array('first_name, last_name, email, contact_number, user_type,is_deleted,password', 'required'),
                 array('company, role, user_type, user_status, created_by', 'numerical', 'integerOnly' => true),
                 array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
                 array('date_of_birth, notes,tenant,tenant_agent,birthdayYear,birthdayMonth,birthdayDay', 'safe'),
                 // array('email', 'unique'),
                 array('email', 'email'),
+                array('role,company','required','message' =>'Please select a {attribute}.'),
                 array('tenant, tenant_agent', 'default', 'setOnEmpty' => true, 'value' => null),
                 // The following rule is used by search().
                 // @todo Please remove those attributes that should not be searched.
@@ -88,12 +89,13 @@ class User extends VmsActiveRecord {
             );
         } else {
             return array(
-                array('first_name, last_name, email, contact_number, role, user_type,is_deleted,password,company', 'required'),
+                array('first_name, last_name, email, contact_number, user_type,is_deleted,password', 'required'),
                 array('company, role, user_type, user_status, created_by', 'numerical', 'integerOnly' => true),
                 array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
                 array('date_of_birth, notes,tenant,tenant_agent,birthdayYear,birthdayMonth,birthdayDay', 'safe'),
                 // array('email', 'unique'),
                 array('email', 'email'),
+                array('role,company','required','message' =>'Please select a {attribute}.'),
                 array('repeatpassword', 'required', 'on' => 'insert'),
                 array('password', 'compare', 'compareAttribute' => 'repeatpassword'),
                 array('tenant, tenant_agent', 'default', 'setOnEmpty' => true, 'value' => null),
@@ -140,7 +142,7 @@ class User extends VmsActiveRecord {
             'id' => 'ID',
             'first_name' => 'First Name',
             'last_name' => 'Last Name',
-            'email' => 'Email',
+            'email' => 'Email Address',
             'contact_number' => 'Contact No.',
             'date_of_birth' => 'Date Of Birth',
             'company' => 'Company Name',

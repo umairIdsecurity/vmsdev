@@ -46,7 +46,7 @@ $session = new CHttpSession;
                     }
                     ?>
                 </select>
-                <div style="display:none;" class="errorMessage errorMessageWorkstationSearch" >Workstation cannot be blank.</div>
+                <div style="display:none;" class="errorMessage errorMessageWorkstationSearch" >Please select a Workstation.</div>
             </div>
             <label for="Visit_reason_search">Reason</label><br>
 
@@ -62,7 +62,7 @@ $session = new CHttpSession;
                 ?>
                 <option value="Other">Other</option>
             </select>
-            <div class="errorMessage visitorReason" id="search-visitor-reason-error">Reason cannot be blank.</div>
+            <div class="errorMessage visitorReason" id="search-visitor-reason-error">Please select a Reason.</div>
         </div>
         <?php
         $form = $this->beginWidget('CActiveForm', array(
@@ -172,7 +172,7 @@ $session = new CHttpSession;
                             }
                             ?>
                         </select>
-                        <div style="display:none;" class="errorMessage errorMessageWorkstation" >Workstation cannot be blank.</div>
+                        <div style="display:none;" class="errorMessage errorMessageWorkstation" >Please select a Workstation.</div>
 
                     </td>
                     <td><label for="Visitor_vehicle">Vehicle Registration Number</label><br>
@@ -253,7 +253,7 @@ $session = new CHttpSession;
                             ?>
 
                         </select>
-                        <div class="errorMessage visitorReason" >Reason cannot be blank.</div>
+                        <div class="errorMessage visitorReason" >Please select a Reason.</div>
                     </td>
                 </tr>
                 <tr>
@@ -346,7 +346,7 @@ $session = new CHttpSession;
     ?>
     <label>Add Reason</label><br>
     <textarea id="VisitReason_reason" name="VisitReason[reason]" rows="1" maxlength="128" style="text-transform: capitalize;"></textarea> 
-    <div class="errorMessage" id="visitReasonErrorMessage" style="display:none;">Reason cannot be blank.</div>
+    <div class="errorMessage" id="visitReasonErrorMessage" style="display:none;">Please select a Reason.</div>
 
 
     <?php $this->endWidget(); ?>

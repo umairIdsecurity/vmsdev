@@ -101,11 +101,11 @@
     width: 105px;
 }
 
-.ajax-file-upload:hover{
+/*.ajax-file-upload:hover{
     background:#9ED92F;
     -moz-box-shadow:0 2px 0 0 #15719f;
     -webkit-box-shadow:0 2px 0 0 #15719f;
-    box-shadow:0 2px 0 0 #15719f}
+    box-shadow:0 2px 0 0 #15719f}*/
 
 .ajax-upload-dragdrop{
     border: 2px dotted #A5A5C7;

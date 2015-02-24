@@ -78,7 +78,7 @@ $session = new CHttpSession;
                                         <?php echo $closeVisitForm->error($model, 'date_in'); ?>
                                         <input type='submit' value='Close' class="complete" id="closeVisitBtn" style="display:none;"/>
                                         <button  class="complete greenBtn" id="closeVisitBtnDummy"/>Close</button>
-                                        <button class="actionForward greenBtn" id="cancelActiveVisitButton">Cancel</button>
+                                        <button class="neutral greenBtn" id="cancelActiveVisitButton">Cancel</button>
     <?php $this->endWidget(); ?>
                                     </div>
                                 </td>

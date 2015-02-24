@@ -196,7 +196,7 @@ class Company extends CActiveRecord {
     public function isUserAllowedToViewCompany($companyId, $user) {
 
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "company = '" . $companyId . "' and id='" . $user->id . "' and tenant='".$user->id."'";
+        $Criteria->condition = "company = '" . $companyId . "' and id='" . $user->id . "'";
         $users = User::model()->findAll($Criteria);
 
         //$users = array_filter($users);

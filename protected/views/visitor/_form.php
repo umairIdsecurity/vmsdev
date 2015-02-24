@@ -164,7 +164,7 @@ if ($this->action->id == 'update') {
                             <td>
                                 <?php echo $form->textField($model, 'email', array('size' => 50, 'maxlength' => 50)); ?>
                                 <?php echo "<br>" . $form->error($model, 'email'); ?>
-                                <div style="" class="errorMessageEmail" >Email Address has already been taken.</div>
+                                <div style="" class="errorMessageEmail" >A profile already exists for this email address.</div>
 
                             </td>
                         </tr>

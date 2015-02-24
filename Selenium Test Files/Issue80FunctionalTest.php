@@ -22,7 +22,8 @@ class Issue80FunctionalTest extends BaseFunctionalTest {
 
     function testAll() {
         $this->resetDbWithData();
-        $this->Scenario1();
+       // $this->Scenario1();
+        $this->Scenario2();
     }
 
     /* Scenario 1 – Check validation errors
@@ -78,7 +79,7 @@ class Issue80FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Please enter a Password.", $this->getText("id=Visitor_password_em_"));
         $this->assertEquals("Please enter a Repeat Password.", $this->getText("id=Visitor_repeatpassword_em_"));
         $this->assertEquals("Please select a Tenant.", $this->getText("id=Visitor_tenant_em_"));
-        
+
         $this->clickAndWait("link=Administration");
         $this->click("id=yt0");
         $this->clickAndWait("css=span");
@@ -126,6 +127,74 @@ class Issue80FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("//ul[@id='tabs']/li[2]/a/p");
         $this->clickAndWait("name=yt0");
         $this->assertEquals("Please enter a Message.", $this->getText("css=div.errorSummary > ul > li"));
+    }
+
+    /* Scenario 2 – Check validation errors for unique email
+      Expected Behavior
+      -	Assert A profile already exists for this email address.
+     */
+
+    function Scenario2() {
+        $this->login("superadmin@test.com", "12345");
+        $this->clickAndWait("css=span");
+        $this->click("id=clicktabA");
+        $this->select("id=workstation", "label=Workstation1");
+        $this->type("id=Visitor_first_name", "test");
+        $this->type("id=Visitor_last_name", "test");
+        $this->type("id=Visitor_contact_number", "123456");
+        $this->type("id=Visitor_email", "testvisitor1@test.com");
+        $this->type("id=Visitor_password", "12345");
+        $this->type("id=Visitor_repeatpassword", "12345");
+        $this->select("id=Visit_reason", "label=Reason 1");
+        $this->select("id=Visitor_tenant", "label=Test admin");
+        $this->click("id=submitFormVisitor");
+        $this->assertEquals("A profile already exists for this email address.", $this->getText("xpath=(//div[@id='Visitor_email_em_'])[2]"));
+        $this->type("id=Visitor_email", "testvisitor@test.com");
+        $this->click("id=submitFormVisitor");
+        $this->type("id=User_first_name", "test");
+        $this->type("id=User_last_name", "test");
+        $this->type("id=User_email", "superadmin@test.com");
+        $this->type("id=User_contact_number", "123");
+        $this->type("id=User_password", "123");
+        $this->type("id=User_repeatpassword", "123");
+        $this->select("id=User_tenant", "label=Test admin2");
+        $this->click("id=submitFormUser");
+        $this->assertEquals("A profile already exists for this email address.", $this->getText("xpath=(//div[@id='User_email_em_'])[2]"));
+        $this->clickAndWait("//div[@id='cssmenu']/ul/li[3]/a/span");
+        $this->type("id=Visitor_first_name", "test");
+        $this->type("id=Visitor_last_name", "test");
+        $this->type("id=Visitor_email", "testvisitor1@test.com");
+        $this->type("id=Visitor_contact_number", "123");
+        $this->type("id=Visitor_password", "123");
+        $this->type("id=Visitor_repeatpassword", "123");
+        $this->select("id=Visitor_tenant", "label=Test admin");
+        $this->click("id=submitFormVisitor");
+        $this->assertEquals("A profile already exists for this email address.", $this->getText("css=div.errorMessageEmail"));
+       
+        $this->click("id=yt0");
+        $this->waitForElementPresent("id=User_first_name");
+        $this->type("id=User_first_name", "test");
+        $this->type("id=User_last_name", "test");
+        $this->type("id=User_email", "superadmin@test.com");
+        $this->type("id=User_contact_number", "123456");
+        $this->select("id=User_tenant", "label=Test admin");
+        $this->type("id=User_password", "123");
+        $this->type("id=User_repeatpassword", "123");
+        $this->click("id=submitFormUser");
+        $this->assertEquals("A profile already exists for this email address.", $this->getText("xpath=(//div[@id='User_email_em_'])[2]"));
+        $this->clickAndWait("link=Administration");
+        $this->clickAndWait("css=a.has-sub-sub > span");
+        $this->type("id=User_first_name", "test");
+        $this->type("id=User_last_name", "test");
+        $this->type("id=User_email", "superadmin@test.com");
+        $this->type("id=User_contact_number", "123456");
+        $this->select("id=User_role", "label=Administrator");
+        $this->type("id=User_password", "123");
+        $this->type("id=User_repeat_password", "123");
+        $this->click("id=submitBtn");
+        sleep(1);
+        $this->waitForElementPresent("css=span.errorMessageEmail1");
+        $this->assertEquals("A profile already exists for this email address.", $this->getText("css=span.errorMessageEmail1"));
     }
 
 }

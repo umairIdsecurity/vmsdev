@@ -67,7 +67,7 @@ $company = Company::model()->findByPk($session['company']);
         <div class="cssButtonDetails">
             <label>Background Color</label>
 
-            <input type="text" id="CompanyLafPreferences_action_forward_bg_color" name="CompanyLafPreferences[action_forward_bg_color]" readonly value="<?php if($model->action_forward_bg_color == ''){ echo '#9ED92F'; } else { echo $model->action_forward_bg_color; }?>"/>
+            <input type="text" id="CompanyLafPreferences_action_forward_bg_color" name="CompanyLafPreferences[action_forward_bg_color]" readonly value="<?php if($model->action_forward_bg_color == ''){ echo '#c6f76b'; } else { echo $model->action_forward_bg_color; }?>"/>
             <?php
             $this->widget('application.extensions.colorpicker.EColorPicker', array(
                 'name' => 'CompanyLafPreferences_action_forward_bg_color',
@@ -79,7 +79,7 @@ $company = Company::model()->findByPk($session['company']);
                     )
             );
             ?>
-            <div class="colorSelector2"><div style="background-color:<?php if($model->action_forward_bg_color == ''){ echo '#9ED92F'; } else { echo $model->action_forward_bg_color; }?>" id="cp1"></div></div>
+            <div class="colorSelector2"><div style="background-color:<?php if($model->action_forward_bg_color == ''){ echo '#c6f76b'; } else { echo $model->action_forward_bg_color; }?>" id="cp1"></div></div>
             <div class="colorpickerHolder2">
             </div>
             <label>Background Gradient 2</label>
@@ -120,7 +120,7 @@ $company = Company::model()->findByPk($session['company']);
             <?php echo $form->error($model, 'action_forward_font_color'); ?>
             
             <label>Hover Background Color</label>
-            <input type="text" id="CompanyLafPreferences_action_forward_hover_color" name="CompanyLafPreferences[action_forward_hover_color]" readonly value="<?php if($model->action_forward_hover_color == ''){ echo '#9ED92F'; } else { echo $model->action_forward_hover_color; }?>">
+            <input type="text" id="CompanyLafPreferences_action_forward_hover_color" name="CompanyLafPreferences[action_forward_hover_color]" readonly value="<?php if($model->action_forward_hover_color == ''){ echo '#c6f76b'; } else { echo $model->action_forward_hover_color; }?>">
             <?php
             $this->widget('application.extensions.colorpicker.EColorPicker', array(
                 'name' => 'CompanyLafPreferences_action_forward_hover_color',
@@ -132,7 +132,7 @@ $company = Company::model()->findByPk($session['company']);
                     )
             );
             ?>
-            <div class="colorSelector2"><div style="background-color: <?php if($model->action_forward_hover_color == ''){ echo '#9ED92F'; } else { echo $model->action_forward_hover_color; }?>" id="cp3"></div></div>
+            <div class="colorSelector2"><div style="background-color: <?php if($model->action_forward_hover_color == ''){ echo '#c6f76b'; } else { echo $model->action_forward_hover_color; }?>" id="cp3"></div></div>
             <div class="colorpickerHolder2">
             </div>
             <label>Hover Background Color 2</label>

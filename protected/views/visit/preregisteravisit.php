@@ -148,7 +148,7 @@ if ($model->visit_status == VisitStatus::CLOSED) {
 <?php } else { ?>
     <input type='submit' value='Confirm' class="complete" style="display:none;" id="confirmPreregisterSubmit"/>
     <button class="complete greenBtn" id="confirmPreregisterDummy"> Confirm</button>
-    <button class="actionForward greenBtn" id="cancelPreregisteredVisitButton">Cancel</button>
+    <button class="neutral greenBtn" id="cancelPreregisteredVisitButton">Cancel</button>
 
 <?php } ?>
 

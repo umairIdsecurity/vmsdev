@@ -1145,11 +1145,11 @@ dt.tabs dt{
     width:50%;
 }
 .errorSummary ul li{
-    text-transform: lowercase;
+    text-transform: lowercase !important;
 }
 
 .errorSummary ul li:first-letter{
-    text-transform: uppercase;
+    text-transform: uppercase !important;
 }
 
 .errorMessage

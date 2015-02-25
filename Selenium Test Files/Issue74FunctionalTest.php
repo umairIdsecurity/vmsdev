@@ -11,7 +11,7 @@ require_once 'BaseFunctionalTest.php';
 
 /**
  * Description of Issue74FunctionalTest
- * Preload Data
+ *
  * @author Jeremiah
  */
 class Issue74FunctionalTest extends BaseFunctionalTest {

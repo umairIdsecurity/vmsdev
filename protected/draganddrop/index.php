@@ -1,5 +1,3 @@
-
-
 <?php
 
 if ($this->Id == 'visitor') {
@@ -22,6 +20,8 @@ if ($this->action->id == 'addvisitor') {
             margin-top:60px !important;
             position:absolute !important;
             margin-left: -53px !important;
+            font-size: 12px !important;
+            padding-bottom:3px;
         }
 
         .editImageBtn{
@@ -47,6 +47,8 @@ if ($this->action->id == 'addvisitor') {
             margin-top:80px !important;
             position:absolute !important;
             margin-left: -53px !important;
+            font-size: 12px !important;
+            padding-bottom:3px;
         }
 
         .editImageBtn{
@@ -64,7 +66,10 @@ if ($this->action->id == 'addvisitor') {
             margin-top:80px !important;
             position:absolute !important;
             margin-left: -53px !important;
+            font-size: 12px !important;
+            padding-bottom:3px;
         }
+        
 
         .editImageBtn{
             margin-top: -10px !important;
@@ -80,6 +85,8 @@ if ($this->action->id == 'addvisitor') {
             margin-top:80px !important;
             position:absolute !important;
             margin-left: -53px !important;
+            font-size: 12px !important;
+            padding-bottom:3px;
         }
         .editImageBtn{
             margin-left: 6px;
@@ -90,8 +97,8 @@ if ($this->action->id == 'addvisitor') {
     <style>
         .ajax-file-upload{
             font-size: 12px !important;
-            margin-left: -149px;
-            width: 110px;
+            margin-left: -185px;
+            width: 182px;
             margin-bottom:-12px;
             padding-bottom:3px;
             height: 18px;

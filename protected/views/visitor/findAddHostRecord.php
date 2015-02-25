@@ -21,7 +21,7 @@
 
             <div id="searchHostTable"></div>
             <div class="register-a-visitor-buttons-div">
-                <input type="button" class="visitor-backBtn btnBackTab3" id="btnBackTab3" value="Back"/>
+                <input type="button" class="neutral visitor-backBtn btnBackTab3" id="btnBackTab3" value="Back"/>
                 <input type="button" id="clicktabB2"  value="Save and Continue" class="<?php
                 if (isset($_GET['action'])) {
                     echo "complete";
@@ -65,7 +65,7 @@
 
     <input type="text" id="patientIsUnique" value="0"/><br>
     <div class="register-a-visitor-buttons-div">
-        <input type="button" class="visitor-backBtn btnBackTab3" id="btnBackTab3" value="Back"/>
+        <input type="button" class="neutral visitor-backBtn btnBackTab3" id="btnBackTab3" value="Back"/>
         <input type="submit" value="Save and Continue" name="yt0" id="submitFormPatientName" style="display:inline-block;" class="<?php
         if (isset($_GET['action'])) {
             echo "complete";
@@ -218,7 +218,7 @@
 
         </div>
         <div class="register-a-visitor-buttons-div">
-            <input type="button" class="visitor-backBtn btnBackTab3" id="btnBackTab3" value="Back"/>
+            <input type="button" class="neutral visitor-backBtn btnBackTab3" id="btnBackTab3" value="Back"/>
             <input type="button" id="clicktabC" value="Save and Continue" style="display:none;"/>
 
             <input type="submit" value="Save and Continue" name="yt0" id="submitFormUser" class="<?php
@@ -294,7 +294,7 @@
             </table>
 <?php $this->endWidget(); ?>
             <div class="register-a-visitor-buttons-div">
-                <input type="button" class="visitor-backBtn btnBackTab3" id="btnBackTab3" value="Back"/>
+                <input type="button" class="neutral visitor-backBtn btnBackTab3" id="btnBackTab3" value="Back"/>
 
                 <input type="button" id="saveCurrentUserAsHost" value="Save and Continue" />
 

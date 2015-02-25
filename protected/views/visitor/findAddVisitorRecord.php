@@ -88,7 +88,7 @@ $session = new CHttpSession;
 
         <div id="searchVisitorTable"></div>
         <div class="register-a-visitor-buttons-div">
-            <input type="button" class="visitor-backBtn btnBackTab2" id="btnBackTab2" value="Back"/>
+            <input type="button" class="neutral visitor-backBtn btnBackTab2" id="btnBackTab2" value="Back"/>
             <input type="button" id="clicktabB1"  value="Save and Continue" class="actionForward"/>
         </div>
     </div>
@@ -315,7 +315,7 @@ $session = new CHttpSession;
 
         </div>
         <div class="register-a-visitor-buttons-div" style="padding-top:50px;">
-            <input type="button" class="visitor-backBtn btnBackTab2" id="btnBackTab2" value="Back"/>
+            <input type="button" class="neutral visitor-backBtn btnBackTab2" id="btnBackTab2" value="Back"/>
             <input type="button" id="clicktabB" value="Save and Continue" style="display:none;"/>
 
             <input type="submit" value="Save and Continue" name="yt0" id="submitFormVisitor" class="actionForward"/>

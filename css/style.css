@@ -1153,11 +1153,11 @@ dt.tabs dt{
 }
 
 .cardCompanyLogo{
-/*    height: 30px;
-    margin-left: -104px;
-    margin-top: -38px;
-    position: absolute;
-    width: 50px;*/
+    /*    height: 30px;
+        margin-left: -104px;
+        margin-top: -38px;
+        position: absolute;
+        width: 50px;*/
     float: left;
     height: 30px;
     margin-left: -105px;
@@ -1167,15 +1167,15 @@ dt.tabs dt{
 }
 
 .cardCompanyLogoPreregistered{
-/*    height: 30px;
-    margin-left: -155px;
-    // margin-top: -64px;
+    /*    height: 30px;
+        margin-left: -155px;
+        // margin-top: -64px;
+    
+        margin-top: -14px;
+        //-moz-margin-start: -64px;
+        position: relative;
+        width: 50px;*/
 
-    margin-top: -14px;
-    //-moz-margin-start: -64px;
-    position: relative;
-    width: 50px;*/
-   
     float: left;
     height: 30px;
     margin-left: -105px;
@@ -1346,8 +1346,9 @@ dt.tabs dt{
 
 #visitor-grid .items .filters td:nth-child(6), #visitor-grid .items .filters td:nth-child(7){
     display:none;
+}
 #actionsCssMenu .complete, #actionsCssMenu .neutral{
-    width:78px ;
+    width:78px !important;
 }
 
 #visitorDetailDiv .editImageBtn{
@@ -1372,13 +1373,13 @@ dt.tabs dt{
 
 #visitorDetailDiv .editImageBtn:hover,
 #visitorDetailDiv .editImageBtn:focus {
-  color: #ffffff;
-  background-color: #51a351 !important;
-  *background-color: #499249 !important;
+    color: #ffffff;
+    background-color: #51a351 !important;
+    *background-color: #499249 !important;
 }
 
 #visitorDetailDiv #printCardBtn, #visitorDetailDiv .editImageBtn{
-    width:118px;
-    height:24px;
-    margin-left: 3px;
+    height: 24px;
+    margin-left: 4px;
+    width: 208px !important;
 }

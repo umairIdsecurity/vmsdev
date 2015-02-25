@@ -46,6 +46,7 @@ class Visit extends CActiveRecord {
     private $_contactnumber;
     private $_contactemail;
     private $_datecheckin1;
+    private $_cardcode;
 
     /**
      * @return string the associated database table name
@@ -68,7 +69,7 @@ class Visit extends CActiveRecord {
             array('patient, host,card,tenant,tenant_agent', 'default', 'setOnEmpty' => true, 'value' => null),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id,datecheckin1,company,firstname,lastname,contactnumber,contactemail,visit_status,visitor ,card,workstation, visitor_type, reason, visitor_status, host, patient, created_by, date_in, time_in, date_out, time_out, date_check_in, time_check_in, date_check_out, time_check_out, tenant, tenant_agent, is_deleted', 'safe', 'on' => 'search'),
+            array('id,cardcode,datecheckin1,company,firstname,lastname,contactnumber,contactemail,visit_status,visitor ,card,workstation, visitor_type, reason, visitor_status, host, patient, created_by, date_in, time_in, date_out, time_out, date_check_in, time_check_in, date_check_out, time_check_out, tenant, tenant_agent, is_deleted', 'safe', 'on' => 'search'),
         );
     }
 
@@ -94,6 +95,18 @@ class Visit extends CActiveRecord {
     public function setDatecheckin1($value) {
         // set private attribute for search
         $this->_datecheckin1 = $value;
+    }
+    
+    public function getCardCode() {
+        // return private attribute on search
+        if ($this->scenario == 'search') {
+            return $this->_cardcode;
+        }
+    }
+
+    public function setCardCode($value) {
+        // set private attribute for search
+        $this->_cardcode = $value;
     }
 
     public function getFirstname() {
@@ -233,12 +246,14 @@ class Visit extends CActiveRecord {
 
         $criteria = new CDbCriteria;
         $criteria->with = 'visitor0';
+        $criteria->with = 'card0';
         $criteria->compare('CONCAT(visitor0.first_name, \' \', visitor0.last_name)', $this->visitor, true);
         $criteria->compare('visitor0.first_name', $this->firstname, true);
         $criteria->compare('visitor0.last_name', $this->lastname, true);
         $criteria->compare('visitor0.contact_number', $this->contactnumber, true);
         $criteria->compare('visitor0.email', $this->contactemail, true);
         $criteria->compare('date_check_in', $this->datecheckin1, true);
+        $criteria->compare('card0.card_code', $this->cardcode, true);
 //        $criteria->with = 'company0';
 //        $criteria->compare('company0.name', $this->company, true);
 
@@ -268,7 +283,7 @@ class Visit extends CActiveRecord {
         $criteria->compare('time_check_out', $this->time_check_out, true);
         $criteria->compare('tenant', $this->tenant, true);
         $criteria->compare('tenant_agent', $this->tenant_agent, true);
-        $criteria->compare('t.is_deleted', $this->is_deleted);
+        $criteria->compare('t.is_deleted', $this->is_deleted,"0");
         $criteria->compare('visit_status', $this->visit_status);
         $criteria->compare('workstation', $this->workstation);
         if ($merge !== null) {
@@ -301,7 +316,7 @@ class Visit extends CActiveRecord {
                 $criteria->addCondition('t.workstation ="' . $session['workstation'] . '"');
                 break;
         }
-
+$criteria->addCondition('t.is_deleted = 0');
         if (Yii::app()->controller->action->id == 'admindashboard') {
             Yii::app()->user->setState('pageSize', (int) '5');
         } else {

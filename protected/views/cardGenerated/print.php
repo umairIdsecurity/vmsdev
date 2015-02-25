@@ -11,8 +11,10 @@ $companyName = "Not Available";
 $companyCode ="";
 $cardCode ="";
 $companyLogoId ="";
+
 $visitorName = $visitorModel->first_name . ' ' . $visitorModel->last_name;
 $tenant = User::model()->findByPk($visitorModel->tenant);
+$visitorName = wordwrap($visitorName, 13, "\n", true);
 if ($tenant->company != '') {
     $company = Company::model()->findByPk($tenant->company);
     $companyName = $company->name;
@@ -33,7 +35,14 @@ if ($companyLogoId == "") {
     $companyLogo = Yii::app()->getBaseUrl(true) . "/" . Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
 }
 
+if (Visitor::model()->findByPk($model->visitor)->photo == "") {
+    $userPhoto = Yii::app()->getBaseUrl(true) . '/images/nophoto.png';
+} else {
+    $userPhoto = Yii::app()->getBaseUrl(true) . "/" . Photo::model()->returnVisitorPhotoRelativePath($model->visitor);
+}
+
 $src2 = $companyLogo;
+$src3 = $userPhoto;
 
 $dateExpiry = date('d M y');
 if ($model->card_type != CardType::SAME_DAY_VISITOR) {
@@ -108,12 +117,20 @@ if (exif_imagetype($src2) != IMAGETYPE_JPEG) {
     $watermark = imagecreatefromjpeg($src2);
 }
 
+if (exif_imagetype($src3) != IMAGETYPE_JPEG) {
+    $watermark2 = imagecreatefrompng($src3);
+} else {
+    $watermark2 = imagecreatefromjpeg($src3);
+}
 
 $watermark_width = imagesx($watermark);
+$watermark_width2 = imagesx($watermark2);
 
 $watermark_height = imagesy($watermark);
+$watermark_height2 = imagesy($watermark2);
 
 $image = imagecreatetruecolor($watermark_width, $watermark_height);
+$image = imagecreatetruecolor($watermark_width2, $watermark_height2);
 
 $image = imagecreatefrompng($src);
 
@@ -122,9 +139,10 @@ $size = getimagesize($src);
 $dest_x = $size[0] - $watermark_width - 5;
 
 $dest_y = $size[1] - $watermark_height - 5;
-imagettftext($image, $font_size, 0, $x, 250, $font_color, $font_file, $text);
+imagettftext($image, $font_size, 0, $x, 225, $font_color, $font_file, $text);
 
-imagecopyresampled($image, $watermark, 17, 333, 0, 0, 80, 45, $watermark_width, $watermark_height);
+imagecopyresampled($image, $watermark, 17, 333, 0, 0, 61, 40, $watermark_width, $watermark_height);
+imagecopyresampled($image, $watermark2, 17, 7, 0, 0, 147, 191, $watermark_width2, $watermark_height2);
 //imagecopymerge($image, $watermark, 5, 5, 0, 0, $watermark_width, $watermark_height, 50);  
 
 $usernameHash = hash('adler32', $visitorModel->email);

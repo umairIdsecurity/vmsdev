@@ -150,7 +150,7 @@ $session = new CHttpSession;
         </table>
 
     </div>
-    <div >
+    <div style="text-align: right;">
         <input type="button" id="clicktabC" value="Add" style="display:none;"/>
 
         <input type="submit" value="Add" name="yt0" id="submitFormUser" class="complete" />

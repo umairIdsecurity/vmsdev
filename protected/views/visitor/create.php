@@ -402,7 +402,7 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
                     $('#findHostTableIframe').contents().find('.findHostButtonColumn a').removeClass('delete');
                     $('#findHostTableIframe').contents().find('.findHostButtonColumn a').html('Select Host');
                     $('#findHostTableIframe').contents().find('#' + id).addClass('delete');
-                    $('#findHostTableIframe').contents().find('#' + id).html('Selected Host');
+                    $('#findHostTableIframe').contents().find('#' + id).html('Host Selected');
                 }
             });
         } else {

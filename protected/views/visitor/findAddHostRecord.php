@@ -6,7 +6,7 @@
             <label><b>Search Name:</b></label> 
             <input type="text" id="search-host" name="search-host" class="search-text"/> 
             <button class="host-findBtn" onclick="findHostRecord()" id="host-findBtn" style="display:none;" data-target="#findHostRecordModal" data-toggle="modal">Search Visits</button>
-            <button class="host-findBtn" id="dummy-host-findBtn">Find Host</button>
+            <button class="host-findBtn" id="dummy-host-findBtn" style="padding: 8px;">Find Host</button>
             <button class="host-AddBtn" <?php
             if ($session['role'] != Roles::ROLE_STAFFMEMBER) {
                 echo " style='display:none;' ";

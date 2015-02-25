@@ -50,6 +50,16 @@ class Issue84FunctionalTest extends BaseFunctionalTest {
 
         $this->clickAndWait("//div[@id='cssmenu']/ul/li/ul/li[2]/a/span");
         $this->assertEquals("Side Menu and Header Text", $this->getText("css=#sideMenuDiv > span.customTitle"));
+        $this->assertEquals("Text Color", $this->getText("//div[@id='actionForwardButtonDiv']/div/label[3]"));
+        $this->assertEquals("Hover Text Color", $this->getText("//div[@id='actionForwardButtonDiv']/div/label[6]"));
+        $this->assertEquals("Text Color", $this->getText("//div[@id='completeButtonDiv']/div/label[3]"));
+        $this->assertEquals("Hover Text Color", $this->getText("//div[@id='completeButtonDiv']/div/label[6]"));
+        $this->assertEquals("Text Color", $this->getText("//div[@id='neutralButtonDiv']/div/label[3]"));
+        $this->assertEquals("Hover Text Color", $this->getText("//div[@id='neutralButtonDiv']/div/label[6]"));
+        $this->assertEquals("Text Color", $this->getText("//div[@id='navMenuDiv']/div/label[2]"));
+        $this->assertEquals("Hover Text Color", $this->getText("//div[@id='navMenuDiv']/div/label[4]"));
+        $this->assertEquals("Text Color", $this->getText("//div[@id='sideMenuDiv']/div/label[2]"));
+        $this->assertEquals("Hover Text Color", $this->getText("//div[@id='sideMenuDiv']/div/label[4]"));
     }
 
 }

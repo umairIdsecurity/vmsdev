@@ -278,7 +278,7 @@ $session = new CHttpSession;
                         <div>
                             <label style="font-size:12px;">Search Name:</label> 
                             <input type="text" id="search-host" name="search-host" class="search-text" style="width:96%;"/> 
-                            <button class="host-findBtn" onclick="findHostRecord()" id="host-findBtn" style="display:none;" data-target="#findHostRecordModal" data-toggle="modal">Find Record</button>
+                            <button class="host-findBtn" onclick="findHostRecord()" id="host-findBtn" style="display:none;" data-target="#findHostRecordModal" data-toggle="modal">Search Visits</button>
                             <div class="errorMessage" id="searchTextHostErrorMessage" style="display:none;font-size:12px;"></div>
 
                             <button class="host-findBtn" id="dummy-host-findBtn">Find Host</button>

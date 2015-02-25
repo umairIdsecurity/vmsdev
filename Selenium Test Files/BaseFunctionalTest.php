@@ -41,6 +41,12 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
         $this->assertEquals("Tables updated successfully", $this->getText("css=body"));
     }
     
+    public function issue48Sql() {
+        $this->start();
+        $this->open("http://cvms.identitysecurity.info/index.php?r=site/issue48UpdateDatabaseRecord");
+        $this->assertEquals("Tables updated successfully", $this->getText("css=body"));
+    }
+    
     
 
     public function __destruct() {
@@ -175,8 +181,8 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
     }
 
     function verifyVisitorInTable($visitor_name) {
-        $this->waitForElementPresent("link=Manage Visitor Records");
-        $this->click("link=Manage Visitor Records");
+        $this->waitForElementPresent("link=Manage Visitors");
+        $this->click("link=Manage Visitors");
         $this->waitForElementPresent("name=Visitor[first_name]");
         $this->type("name=Visitor[first_name]", "Test");
         $this->type("name=Visitor[last_name]", $visitor_name);

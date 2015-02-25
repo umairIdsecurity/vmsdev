@@ -36,8 +36,8 @@ class Issue33FunctionalTest extends BaseFunctionalTest {
         $this->login("superadmin@test.com", '12345');
         $this->clickAndWait("link=Administration");
         $this->click("link=Reports");
-        $this->waitForElementPresent("link=Export Visitor Records");
-        $this->clickAndWait("link=Export Visitor Records");
+        $this->waitForElementPresent("link=Export Visit History");
+        $this->clickAndWait("link=Export Visit History");
         $this->assertEquals("Displaying 1-7 of 7 results.", $this->getText("css=div.summary"));
         $this->selectWindow("null");
         $this->click("link=Reports");

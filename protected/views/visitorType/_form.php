@@ -30,7 +30,7 @@
             </tr>
         </table>
 
-	<div class="row buttons">
+	<div class="row buttons buttonsAlignToRight">
 		<?php echo CHtml::submitButton($model->isNewRecord ? 'Add' : 'Save', array("class" => "complete")); ?>
 	</div>
 

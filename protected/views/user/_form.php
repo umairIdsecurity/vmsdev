@@ -195,7 +195,8 @@ $currentLoggedUserId = $session['id'];
                         <tr>
                             <td><label for="User_password">Password <span class="required">*</span></label></td>
                             <td>
-                                <input ng-model="user.passwords" data-ng-class="{'ng-invalid':userform['User[repeatpassword]'].$error.match}" type="password" id="User_password" value = '<?php echo $model->password; ?>' name="User[password]">			
+                                <input ng-model="user.passwords" data-ng-class="{
+                                                'ng-invalid':userform['User[repeatpassword]'].$error.match}" type="password" id="User_password" value = '<?php echo $model->password; ?>' name="User[password]">			
                                 <?php echo "<br>" . $form->error($model, 'password'); ?>
                             </td>
                         </tr>
@@ -273,10 +274,11 @@ $currentLoggedUserId = $session['id'];
             </td>
         </tr>
     </table>
-
-    <button class="btn btn-success" id="submitBtn"><?php echo ($this->action->Id == 'create' ? 'Add' : 'Save') ?></button>
-    <div class="row buttons" style='display:none;'>
-        <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save', array('id' => 'submitForm',)); ?>
+    <div class="buttonsAlignToRight">
+        <button class="btn btn-success " id="submitBtn"><?php echo ($this->action->Id == 'create' ? 'Add' : 'Save') ?></button>
+        <div class="row buttons " style='display:none;'>
+            <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save', array('id' => 'submitForm',)); ?>
+        </div>
     </div>
 
     <?php $this->endWidget(); ?>
@@ -862,19 +864,19 @@ $this->widget('bootstrap.widgets.TbButton', array(
 ));
 ?>
 <script>
-function addCompany() {
-            var url = '<?php echo $this->createUrl('company/create&viewFrom=1') ?>';
-            var sessionRole = $("#currentRole").val();
-            var selectedRole = $("#User_role").val();
-            var tenant = $("#User_tenant").val();
-            var superadmin = 5;
-            var agentadmin = 6;
-            if (sessionRole == superadmin) {
-                if (selectedRole == agentadmin) {
-                    url = '<?php echo $this->createUrl('company/create&viewFrom=1&tenant=') ?>' + tenant;
-                }
+    function addCompany() {
+        var url = '<?php echo $this->createUrl('company/create&viewFrom=1') ?>';
+        var sessionRole = $("#currentRole").val();
+        var selectedRole = $("#User_role").val();
+        var tenant = $("#User_tenant").val();
+        var superadmin = 5;
+        var agentadmin = 6;
+        if (sessionRole == superadmin) {
+            if (selectedRole == agentadmin) {
+                url = '<?php echo $this->createUrl('company/create&viewFrom=1&tenant=') ?>' + tenant;
             }
-          
+        }
+
         $("#modalBody").html('<iframe width="100%" id="companyModalIframe" height="98%" frameborder="0" scrolling="no" src="' + url + '" ></iframe>');
         $("#modalBtn").click();
     }

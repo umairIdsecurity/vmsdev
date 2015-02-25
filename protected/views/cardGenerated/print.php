@@ -13,6 +13,7 @@ $cardCode ="";
 $companyLogoId ="";
 
 $visitorName = $visitorModel->first_name . ' ' . $visitorModel->last_name;
+$visitorName = wordwrap($visitorName, 13, "\n", true);
 if ($visitorModel->company != '') {
     $company = Company::model()->findByPk($visitorModel->company);
     $companyName = $company->name;
@@ -137,9 +138,9 @@ $size = getimagesize($src);
 $dest_x = $size[0] - $watermark_width - 5;
 
 $dest_y = $size[1] - $watermark_height - 5;
-imagettftext($image, $font_size, 0, $x, 250, $font_color, $font_file, $text);
+imagettftext($image, $font_size, 0, $x, 225, $font_color, $font_file, $text);
 
-imagecopyresampled($image, $watermark, 17, 333, 0, 0, 80, 45, $watermark_width, $watermark_height);
+imagecopyresampled($image, $watermark, 17, 333, 0, 0, 61, 40, $watermark_width, $watermark_height);
 imagecopyresampled($image, $watermark2, 17, 7, 0, 0, 147, 191, $watermark_width2, $watermark_height2);
 //imagecopymerge($image, $watermark, 5, 5, 0, 0, $watermark_width, $watermark_height, 50);  
 

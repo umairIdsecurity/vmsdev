@@ -36,8 +36,8 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
     <dd class="active borderTopLeftRadius" id="selectCard" >
         <a href="#step1" id="selectCardB" class="borderTopLeftRadius">Select Card Type</a>
     </dd>
-    <dt id="findVisitorA">Find or Add New Visitor Record</dt>
-    <dd style="display:none;" id="findVisitor"><a href="#step2" id="findVisitorB">Find or Add New Visitor Record</a></dd>
+    <dt id="findVisitorA">Find or Add New Visitor Profile</dt>
+    <dd style="display:none;" id="findVisitor"><a href="#step2" id="findVisitorB">Find or Add New Visitor Profile</a></dd>
 
     <dt id="findHostA" <?php if (isset($_GET['action'])) {
     ?> 
@@ -402,7 +402,7 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
                     $('#findHostTableIframe').contents().find('.findHostButtonColumn a').removeClass('delete');
                     $('#findHostTableIframe').contents().find('.findHostButtonColumn a').html('Select Host');
                     $('#findHostTableIframe').contents().find('#' + id).addClass('delete');
-                    $('#findHostTableIframe').contents().find('#' + id).html('Selected Host');
+                    $('#findHostTableIframe').contents().find('#' + id).html('Host Selected');
                 }
             });
         } else {

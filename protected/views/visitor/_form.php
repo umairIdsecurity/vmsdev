@@ -222,7 +222,7 @@ if ($this->action->id == 'update') {
         </table>
 
     </div>
-    <div class="register-a-visitor-buttons-div" style="text-align:left !important; ">
+    <div class="register-a-visitor-buttons-div" >
         <br><br><input type="submit" value="Save" name="yt0" id="submitFormVisitor" class="complete" />
     </div>
 

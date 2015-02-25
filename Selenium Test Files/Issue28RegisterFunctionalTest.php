@@ -51,7 +51,7 @@ class Issue28RegisterFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Visitor Management System - Viewmyvisitors Dashboard", $this->getTitle());
         $this->assertEquals("Add Host", $this->getText("id=yt0"));
         $this->assertEquals("Register a Visit", $this->getText("css=a > span"));
-        $this->assertEquals("Find Record", $this->getText("link=Find Record"));
+        $this->assertEquals("Search Visits", $this->getText("link=Search Visits"));
         $this->assertEquals("Evacuation Report", $this->getText("link=Evacuation Report"));
         $this->clickAndWait("css=a > span");
         $this->click("id=clicktabA");

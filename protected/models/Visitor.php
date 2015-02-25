@@ -186,12 +186,26 @@ class Visitor extends CActiveRecord {
         return parent::model($className);
     }
 
-    public function behaviors() {
-        return array(
-            'softDelete' => array(
-                'class' => 'ext.soft_delete.SoftDeleteBehavior'
-            ),
-        );
+    public function beforeDelete() {
+        $visitorExists = Visit::model()->exists('is_deleted = 0 and visitor =' . $this->id . ' and (visit_status=' . VisitStatus::PREREGISTERED . ' or visit_status=' . VisitStatus::ACTIVE . ')');
+        $visitorExistsClosed = Visit::model()->exists('is_deleted = 0 and visitor =' . $this->id . ' and (visit_status=' . VisitStatus::CLOSED . ' or visit_status=' . VisitStatus::EXPIRED . ')');
+
+        if ($visitorExists) {
+            return false;
+        } elseif ($visitorExistsClosed) {
+            return false;
+        } else {
+            $this->is_deleted = 1;
+            $this->save();
+            echo "true";
+            return false;
+        }
+    }
+
+    public function beforeFind() {
+        $criteria = new CDbCriteria;
+        $criteria->condition = "t.is_deleted = 0";
+        $this->dbCriteria->mergeWith($criteria);
     }
 
     protected function afterValidate() {

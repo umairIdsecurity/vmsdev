@@ -70,7 +70,7 @@ $arrSubject = array(
     </div>
     <?php endif; */?>
 
-    <div class="row submit">
+    <div class="row submit buttonsAlignToRight">
         <?php echo CHtml::submitButton('Send', array('class'=>'tobutton complete')); ?>
     </div>
 

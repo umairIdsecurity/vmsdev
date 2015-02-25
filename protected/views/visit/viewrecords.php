@@ -2,7 +2,7 @@
 /* @var $this VisitController */
 /* @var $model Visit */
 ?>
-<h1>Visitor Records</h1>
+<h1>Visit History</h1>
 
 <?php
 

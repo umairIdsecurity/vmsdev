@@ -8,7 +8,7 @@
         margin-left: 998px !important;
     }
 </style>
-<h1>Visitor Records</h1>
+<h1>Visit History</h1>
 
 <?php
 

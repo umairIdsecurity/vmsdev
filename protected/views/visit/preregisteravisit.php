@@ -1,4 +1,4 @@
-<br>
+
 <?php
 $session = new CHttpSession;
 $timeIn = explode(":", '00:00:00');
@@ -47,7 +47,7 @@ $logform = $this->beginWidget('CActiveForm', array(
 <input type='hidden' id='Visit_visit_status' name='Visit[visit_status]' value='<?php
 echo VisitStatus::PREREGISTERED;
 ?>'>
-<table class="detailsTable" style="font-size:12px;" id="logvisitTable">
+<table class="detailsTable" style="font-size:12px;margin-top:15px;" id="logvisitTable">
 
     <tr>
         <td>Proposed Date In</td>
@@ -148,7 +148,7 @@ if ($model->visit_status == VisitStatus::CLOSED) {
 <?php } else { ?>
     <input type='submit' value='Confirm' class="complete" style="display:none;" id="confirmPreregisterSubmit"/>
     <button class="complete greenBtn" id="confirmPreregisterDummy"> Confirm</button>
-    <button class="neutral greenBtn" id="cancelPreregisteredVisitButton">Cancel</button>
+    <button class="actionForward greenBtn" id="cancelPreregisteredVisitButton">Cancel</button>
 
 <?php } ?>
 

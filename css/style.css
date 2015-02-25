@@ -709,7 +709,7 @@ dt.tabs dt{
 #actionsCssMenu ul,
 #actionsCssMenu li,
 #actionsCssMenu a{
-    margin: 2px;
+  //  margin: 2px;
     padding: 0;
     border: 0;
     list-style: none;
@@ -893,15 +893,19 @@ dt.tabs dt{
 }
 
 .log-current {
-    background-position: 0px -23px;
+    background:url('../images/logvisiticon.png') 0 0 no-repeat;
+    background-position: 0px -4px;
     padding: 1px 0 1px 30px;
     display: block;
     height: 15px;
     text-decoration: none;
 }
 
+
+
 .pre-visits {
-    background-position: 0px -375px;
+   background:url('../images/preregistericon.png') 0 0 no-repeat;
+    background-position: 0px -4px;
     padding: 1px 0 1px 30px;
     display: block;
     height: 16px;
@@ -933,7 +937,6 @@ dt.tabs dt{
     font-size:12px;
     width:253px;
     text-align:left;
-
 }
 
 
@@ -1007,7 +1010,8 @@ dt.tabs dt{
 }
 
 .close-visit {
-    background-position: 0 -48px;
+    //background-position: 0 -48px;
+    background-position: 0 -438px;
     padding: 1px 0 5px 30px;
     display: block;
     height: 16px;

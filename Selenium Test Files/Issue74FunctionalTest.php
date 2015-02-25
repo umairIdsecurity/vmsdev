@@ -73,6 +73,24 @@ class Issue74FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Company_website", "123");
         $this->clickAndWait("id=createBtn");
         $this->assertEquals("Website is not a valid URL.", $this->getText("//form[@id='company-form']/table/tbody/tr[10]/td[3]/div"));
+        
+        $this->clickAndWait("link=Add Company");
+        $this->type("id=Company_website", "www.yahoo");
+        $this->click("id=createBtn");
+        $this->waitForElementPresent("id=websiteErrorMessage");
+        $this->assertEquals("Website is not a valid URL.", $this->getText("id=websiteErrorMessage"));
+        $this->type("id=Company_website", "www.yahoo.com");
+        $this->clickAndWait("id=createBtn");
+        $this->type("id=Company_name", "test");
+        $this->type("id=Company_code", "tes");
+        $this->clickAndWait("id=createBtn");
+        $this->assertEquals("test", $this->getText("css=tr.odd > td"));
+        $this->clickAndWait("link=Edit");
+        try {
+            $this->assertEquals("http://www.yahoo.com", $this->getValue("id=Company_website"));
+        } catch (PHPUnit_Framework_AssertionFailedError $e) {
+            array_push($this->verificationErrors, $e->toString());
+        }
     }
 
 }

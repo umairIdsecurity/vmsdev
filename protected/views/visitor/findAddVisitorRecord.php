@@ -6,7 +6,7 @@ $session = new CHttpSession;
         <label><b>Search Name:</b></label> 
         <input type="text" id="search-visitor" name="search-visitor" class="search-text"/> 
         <button class="visitor-findBtn" onclick="findVisitorRecord()" id="visitor-findBtn" style="display:none;" data-target="#findVisitorRecordModal" data-toggle="modal">Find Record</button>
-        <button class="visitor-findBtn neutral" id="dummy-visitor-findBtn">Find Record</button>
+        <button class="visitor-findBtn neutral" id="dummy-visitor-findBtn" style="padding:8px;">Find Record</button>
         <div class="errorMessage" id="searchTextErrorMessage" style="display:none;"></div>
     </div>
 

@@ -26,14 +26,30 @@ $photoForm = $this->beginWidget('CActiveForm', array(
 
 <div class="cardPhotoPreview">
     <?php if ($visitorModel->photo != '') { ?>
-        <img id="photoPreview" src="<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($model->visitor) ?>">
+        <img id="photoPreview" style="height:165px;" src="<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($model->visitor) ?>">
     <?php } else { ?>
-        <img id="photoPreview" src="" style="display:none;"></img>
+        <img id="photoPreview" src="" style="display:none;height:165px;"></img>
     <?php } ?>
 </div>
-<div id="cardDiv" style="background: url('../images/cardprint-new.png') no-repeat center top;">
+<div id="cardDiv" style="background: url('../images/cardprint-new.png') no-repeat center top;background-size:220px 310px; height:305px;">
 
     <div style="position: relative; padding-top:180px;padding-left:30px;">
+         <?php
+        if ($visitorModel->company != '') {
+            $companyLogoId = Company::model()->findByPk($visitorModel->company)->logo;
+
+            if ($companyLogoId == "") {
+                $companyLogo = 'images/nologoavailable.jpg';
+            } else {
+                $companyLogo = Photo::model()->returnCompanyPhotoRelativePath($visitorModel->company);
+            }
+            ?>
+        <img class='<?php if($model->visit_status != VisitStatus::ACTIVE){ echo "cardCompanyLogoPreregistered"; } else { echo "cardCompanyLogo"; } ?>' src="<?php
+            echo Yii::app()->request->baseUrl . "/" . $companyLogo;
+            ?>"/>
+                 <?php
+             }
+             ?>
         <table class="" style="width:100%;margin-left:100px;" id="cardDetailsTable">
             <tr>
                 <td>
@@ -68,7 +84,11 @@ $photoForm = $this->beginWidget('CActiveForm', array(
                 </td>
             </tr>
             <tr>
-                <td><?php echo $visitorModel->first_name . ' ' . $visitorModel->last_name; ?></td>
+                <td>
+                    <div style="width:132px">
+                    <?php echo $visitorModel->first_name . ' ' . $visitorModel->last_name; ?>
+                    </div>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -91,30 +111,7 @@ $photoForm = $this->beginWidget('CActiveForm', array(
             </tr>
         </table>
 
-        <?php
-        if ($visitorModel->company != '') {
-            $companyLogoId = Company::model()->findByPk($visitorModel->company)->logo;
-
-            if ($companyLogoId == "") {
-                $companyLogo = 'images/nologoavailable.jpg';
-            } else {
-                $companyLogo = Photo::model()->returnCompanyPhotoRelativePath($visitorModel->company);
-            }
-            ?>
-            <img class='<?php if ($model->visit_status != VisitStatus::ACTIVE) {
-                echo "cardCompanyLogoPreregistered";
-            } else {
-                echo "cardCompanyLogo";
-            } ?>' src="<?php
-                 echo Yii::app()->request->baseUrl . "/" . $companyLogo;
-                 ?>" style="<?php
-                 if (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== FALSE) {
-                     echo "position:static;margin-left:-105px;";
-                 } 
-                 ?>"/>
-    <?php
-}
-?>
+       
     </div>
 
 </div>

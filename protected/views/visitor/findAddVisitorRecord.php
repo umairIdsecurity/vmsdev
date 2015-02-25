@@ -176,8 +176,8 @@ $session = new CHttpSession;
 
                     </td>
                     <td><label for="Visitor_vehicle">Vehicle Registration Number</label><br>
-                    <input type="text"  id="Visitor_vehicle" name="Visitor[vehicle]" maxlength="6" size="6">  
-                    <?php echo "<br>" . $form->error($model, 'vehicle'); ?>
+                        <input type="text"  id="Visitor_vehicle" name="Visitor[vehicle]" maxlength="6" size="6">  
+                        <?php echo "<br>" . $form->error($model, 'vehicle'); ?>
                     </td>
                 </tr>
                 <tr>
@@ -354,6 +354,56 @@ $session = new CHttpSession;
 
 <script>
     $(document).ready(function() {
+        $('#photoCropPreview').imgAreaSelect({
+            handles: true,
+            onSelectEnd: function(img, selection) {
+                $("#cropPhotoBtn").show();
+                $("#x1").val(selection.x1);
+                $("#x2").val(selection.x2);
+                $("#y1").val(selection.y1);
+                $("#y2").val(selection.y2);
+                $("#width").val(selection.width);
+                $("#height").val(selection.height);
+            }
+        });
+        
+        $("#cropPhotoBtn").click(function(e) {
+            e.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: '<?php echo Yii::app()->createUrl('visitor/AjaxCrop'); ?>',
+                data: {
+                    x1: $("#x1").val(),
+                    x2: $("#x2").val(),
+                    y1: $("#y1").val(),
+                    y2: $("#y2").val(),
+                    width: $("#width").val(),
+                    height: $("#height").val(),
+                    imageUrl: $('#photoCropPreview').attr('src').substring(1, $('#photoCropPreview').attr('src').length),
+                    photoId: $('#Visitor_photo').val()
+                },
+                dataType: 'json',
+                success: function(r) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '<?php echo Yii::app()->createUrl('photo/GetPathOfCompanyLogo&id='); ?>' + $('#Visitor_photo').val(),
+                        dataType: 'json',
+                        success: function(r) {
+
+                            $.each(r.data, function(index, value) {
+                                document.getElementById('photoPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+                                document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+                            });
+                        }
+                    });
+
+                    $("#closeCropPhoto").click();
+                    var ias = $('#photoCropPreview').imgAreaSelect({instance: true});
+                    ias.cancelSelection();
+                }
+            });
+        });
+        
         $("#dummy-visitor-findBtn").click(function(e) {
             e.preventDefault();
             $("#Visit_reason_search").val("");

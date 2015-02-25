@@ -283,7 +283,7 @@ class Visit extends CActiveRecord {
         $criteria->compare('time_check_out', $this->time_check_out, true);
         $criteria->compare('tenant', $this->tenant, true);
         $criteria->compare('tenant_agent', $this->tenant_agent, true);
-        $criteria->compare('t.is_deleted', $this->is_deleted);
+        $criteria->compare('t.is_deleted', $this->is_deleted,"0");
         $criteria->compare('visit_status', $this->visit_status);
         $criteria->compare('workstation', $this->workstation);
         if ($merge !== null) {
@@ -316,7 +316,7 @@ class Visit extends CActiveRecord {
                 $criteria->addCondition('t.workstation ="' . $session['workstation'] . '"');
                 break;
         }
-
+$criteria->addCondition('t.is_deleted = 0');
         if (Yii::app()->controller->action->id == 'admindashboard') {
             Yii::app()->user->setState('pageSize', (int) '5');
         } else {

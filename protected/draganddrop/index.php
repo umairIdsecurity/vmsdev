@@ -1,4 +1,7 @@
+
+
 <?php
+
 if ($this->Id == 'visitor') {
     $dataId = '';
 } elseif (isset($_GET['id'])) {
@@ -16,7 +19,7 @@ if ($this->action->id == 'addvisitor') {
             margin-left:0px !important;
         }
         .ajax-file-upload{
-            margin-top:80px !important;
+            margin-top:60px !important;
             position:absolute !important;
             margin-left: -53px !important;
         }
@@ -27,6 +30,9 @@ if ($this->action->id == 'addvisitor') {
         }
         .imageDimensions{
             display:none !important;
+        }
+        #cropImageBtn{
+            margin-top:80px;
         }
     </style>
     <?php
@@ -92,7 +98,6 @@ if ($this->action->id == 'addvisitor') {
         }
     </style>    
 <?php } ?>
-
 
 <div id="fileuploader" style="margin-bottom:5px;"><?php
     if ($this->action->id == 'detail') {
@@ -190,5 +195,3 @@ if (isset($_GET['viewFrom'])) {
         }
     });
 </script>
-
-

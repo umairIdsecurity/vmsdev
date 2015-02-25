@@ -46,7 +46,7 @@ $company = Company::model()->findByPk($session['company']);
         <div class="cssButtonDetails">
             <span class="customTitle userpreferencesLogoLabel">Logo</span><br>
             <input id="CompanyLafPreferences_logo" type="text" name="CompanyLafPreferences[logo]" style="display:none;" value="<?php echo $company->logo; ?>">
-            <div class="photoDiv" <?php
+            <div class="photoDiv companyPhotoDiv" <?php
             if ($company->logo == NULL) {
                 echo "style='display:none !important;'";
             }
@@ -543,7 +543,7 @@ $company = Company::model()->findByPk($session['company']);
             
         </div>
     </div>
-<div class="row buttons" style="margin-left:3px;">
+<div class="row buttons buttonsAlignToRight" style="margin-left:3px;">
     <input type="submit" value="Save" name="yt0" class="complete">
 </div>
 <?php $this->endWidget(); ?>

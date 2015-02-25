@@ -595,6 +595,7 @@ dt.tabs dt{
 
 .errorMessageEmail, .errorMessageEmail1{
     display: none;
+    
 }
 #searchVisitorTableDiv, #visitor_fields_for_Search, 
 #search-visitor-reason-error, #searchHostTableDiv, 
@@ -1143,11 +1144,23 @@ dt.tabs dt{
     padding: 7px 7px 12px;
     width:50%;
 }
+.errorSummary ul li{
+    text-transform: lowercase;
+}
+
+.errorSummary ul li:first-letter{
+    text-transform: uppercase;
+}
 
 .errorMessage
 {
     color: red;
     font-size: 0.9em;
+    text-transform: lowercase;
+}
+
+.errorMessage:first-letter {
+    text-transform: uppercase;
 }
 
 #preregisterLi{

@@ -39,7 +39,7 @@ class Workstation extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('name', 'required'),
-            array('tenant','required','message' =>'Please select a {attribute}.'),
+            array('tenant','required','message' =>'Please select a {attribute}'),
             array('contact_number', 'safe'),
             array('contact_email_address', 'email'),
             array('number_of_operators, assign_kiosk', 'numerical', 'integerOnly' => true),

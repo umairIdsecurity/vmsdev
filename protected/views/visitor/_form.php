@@ -364,7 +364,7 @@ if (isset($_GET['id'])) {
     function addCompany() {
         var url;
         if ($("#Visitor_tenant").val() == '') {
-            $("#Visitor_company_em_").html("Please select a tenant.");
+            $("#Visitor_company_em_").html("Please select a tenant");
             $("#Visitor_company_em_").show();
         } else {
             if ($("#currentRoleOfLoggedInUser").val() == '<?php echo Roles::ROLE_SUPERADMIN; ?>') {

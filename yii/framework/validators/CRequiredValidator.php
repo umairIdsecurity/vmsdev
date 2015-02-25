@@ -61,11 +61,11 @@ class CRequiredValidator extends CValidator {
         $value = $object->$attribute;
         if ($this->requiredValue !== null) {
             if (!$this->strict && $value != $this->requiredValue || $this->strict && $value !== $this->requiredValue) {
-                $message = $this->message !== null ? $this->message : Yii::t('yii', '{attribute} must be {value}.', array('{value}' => $this->requiredValue));
+                $message = $this->message !== null ? $this->message : Yii::t('yii', '{attribute} must be {value}', array('{value}' => $this->requiredValue));
                 $this->addError($object, $attribute, $message);
             }
         } elseif ($this->isEmpty($value, $this->trim)) {
-            $message = $this->message !== null ? $this->message : Yii::t('yii', 'Please enter' . $this->provideAnForVowelsElseA($attribute) . ' {attribute}.');
+            $message = $this->message !== null ? $this->message : Yii::t('yii', 'Please enter' . $this->provideAnForVowelsElseA($attribute) . ' {attribute}');
             $this->addError($object, $attribute, $message);
         }
     }
@@ -91,7 +91,7 @@ class CRequiredValidator extends CValidator {
         $message = $this->message;
         if ($this->requiredValue !== null) {
             if ($message === null)
-                $message = Yii::t('yii', '{attribute} must be {value}.');
+                $message = Yii::t('yii', '{attribute} must be {value}');
             $message = strtr($message, array(
                 '{value}' => $this->requiredValue,
                 '{attribute}' => $object->getAttributeLabel($attribute),
@@ -104,7 +104,7 @@ if(value!=" . CJSON::encode($this->requiredValue) . ") {
         }
         else {
             if ($message === null)
-                $message = Yii::t('yii', 'Please enter' . $this->provideAnForVowelsElseA($attribute) . ' {attribute}.');
+                $message = Yii::t('yii', 'Please enter' . $this->provideAnForVowelsElseA($attribute) . ' {attribute}');
             $message = strtr($message, array(
                 '{attribute}' => $object->getAttributeLabel($attribute),
             ));

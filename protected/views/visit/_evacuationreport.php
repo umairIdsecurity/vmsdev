@@ -1,3 +1,9 @@
+<style>
+    .grid-view .summary {
+        margin-left: 758px !important;
+        margin-top: -63px !important;
+    }
+</style>
 <?php
 /* @var $this VisitController */
 /* @var $model Visit */

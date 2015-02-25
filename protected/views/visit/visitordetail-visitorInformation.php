@@ -49,7 +49,7 @@ $session = new CHttpSession;
                             <td width="100px;">Email:</td>
                             <td><?php echo $visitorForm->textField($visitorModel, 'email', array('size' => 50, 'maxlength' => 50)); ?>
                                 <?php echo "<br>" . $visitorForm->error($visitorModel, 'email'); ?>
-                                <div style="" id="Visitor_email_em_" class="errorMessage errorMessageEmail" >Email Address has already been taken.</div>
+                                <div style="" id="Visitor_email_em_" class="errorMessage errorMessageEmail" >A profile already exists for this email address.</div>
                             </td>
                         </tr>
                         <tr>
@@ -365,7 +365,7 @@ $session = new CHttpSession;
                             <td>
                                 <?php echo $form->textField($newHost, 'email', array('size' => 50, 'maxlength' => 50, 'class' => 'New_user_email')); ?>
                                 <?php echo "<br>" . $form->error($newHost, 'email'); ?>
-                                <div style="" id="New_user_email_em_" class="errorMessage errorMessageEmail2" >Email Address has already been taken.</div>
+                                <div style="" id="New_user_email_em_" class="errorMessage errorMessageEmail2" >A profile already exists for this email address.</div>
 
                             </td>
                         </tr>
@@ -503,7 +503,7 @@ $session = new CHttpSession;
                             <td>
                                 <?php echo $hostForm->textField($hostModel, 'email', array('class' => 'update_user_email', 'disabled' => 'disabled')); ?>
                                 <?php echo "<br>" . $hostForm->error($hostModel, 'email'); ?>
-                                <div style="display:none;" id="User_email_em_1a" class="errorMessage errorMessageEmail1" >Email Address has already been taken.</div>
+                                <div style="display:none;" id="User_email_em_1a" class="errorMessage errorMessageEmail1" >A profile already exists for this email address.</div>
                             </td>
                         </tr>
                         <tr>

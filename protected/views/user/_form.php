@@ -233,7 +233,7 @@ $currentLoggedUserId = $session['id'];
                         <td><?php echo $form->labelEx($model, 'email'); ?></td>
                         <td><?php echo $form->textField($model, 'email', array('size' => 50, 'maxlength' => 50)); ?>
                             <?php echo "<br>" . $form->error($model, 'email'); ?>
-                            <span class="errorMessageEmail1" style="display:none;color:red;font-size:10px;">Email has already been taken.</span>
+                            <span class="errorMessageEmail1" style="display:none;color:red;font-size:10px;">A profile already exists for this email address.</span>
                         </td>
                     </tr>
                     <tr>

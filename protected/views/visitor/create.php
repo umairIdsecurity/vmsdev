@@ -176,7 +176,7 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
             var visit_reason = $("#Visit_reason_search").val();
 
             if (($("#selectedVisitorInSearchTable").val() == '' && $("#search-visitor").val() != '') || $("#selectedVisitorInSearchTable").val() == '') {
-                $("#searchTextErrorMessage").html("Please select a visitor.");
+                $("#searchTextErrorMessage").html("Please select a visitor");
                 $("#searchTextErrorMessage").show();
             }
             else if (visit_reason == '' || visit_reason == 'undefined' || (visit_reason == 'Other' && $("#VisitReason_reason_search").val() == ''))
@@ -203,7 +203,7 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
             $("#Visit_visitor_type").val($("#Visitor_visitor_type").val());
             //checks if host is from search and verifys that a user has been selected
             if (($("#selectedHostInSearchTable").val() == '' && $("#search-host").val() != '') || $("#selectedHostInSearchTable").val() == '') {
-                $("#searchTextHostErrorMessage").html("Please select a host.");
+                $("#searchTextHostErrorMessage").html("Please select a host");
                 $("#searchTextHostErrorMessage").show();
                 //alert("host from search");
             } else if (currentURL != "") {

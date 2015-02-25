@@ -81,7 +81,7 @@ class User extends VmsActiveRecord {
                 array('date_of_birth, notes,tenant,tenant_agent,birthdayYear,birthdayMonth,birthdayDay', 'safe'),
                 // array('email', 'unique'),
                 array('email', 'email'),
-                array('role,company','required','message' =>'Please select a {attribute}.'),
+                array('role,company','required','message' =>'Please select a {attribute}'),
                 array('tenant, tenant_agent', 'default', 'setOnEmpty' => true, 'value' => null),
                 // The following rule is used by search().
                 // @todo Please remove those attributes that should not be searched.
@@ -95,7 +95,7 @@ class User extends VmsActiveRecord {
                 array('date_of_birth, notes,tenant,tenant_agent,birthdayYear,birthdayMonth,birthdayDay', 'safe'),
                 // array('email', 'unique'),
                 array('email', 'email'),
-                array('role,company','required','message' =>'Please select a {attribute}.'),
+                array('role,company','required','message' =>'Please select a {attribute}'),
                 array('repeatpassword', 'required', 'on' => 'insert'),
                 array('password', 'compare', 'compareAttribute' => 'repeatpassword'),
                 array('tenant, tenant_agent', 'default', 'setOnEmpty' => true, 'value' => null),

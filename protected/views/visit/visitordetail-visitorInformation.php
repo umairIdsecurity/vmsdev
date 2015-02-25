@@ -80,12 +80,12 @@ $session = new CHttpSession;
                                 }
                                    else if($(".visitortypedetails").val() == 1){
                                         if($(".visitortypepatient").val() == ""){
-                                            $("#visitorTypePatientHost").html("Patient Name cannot be blank.");
+                                            $("#visitorTypePatientHost").html("Patient Name cannot be blank");
                                             $("#visitorTypePatientHost").show();
                                         }
                                     } else if ($(".visitortypedetails").val() == 2) {
                                         if($(".visitortypehost").val() == ""){
-                                            $("#visitorTypePatientHost").html("Please select a host.");
+                                            $("#visitorTypePatientHost").html("Please select a host");
                                             $("#visitorTypePatientHost").show();
                                         }
                                         else {

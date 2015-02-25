@@ -104,7 +104,7 @@ if(value!=" . CJSON::encode($this->requiredValue) . ") {
         }
         else {
             if ($message === null)
-                $message = Yii::t('yii', 'Please enter' . $this->provideAnForVowelsElseA($attribute) . ' {attribute}.');
+                $message = Yii::t('yii', 'Please enter' . $this->provideAnForVowelsElseA($attribute) . ' {attribute}');
             $message = strtr($message, array(
                 '{attribute}' => $object->getAttributeLabel($attribute),
             ));

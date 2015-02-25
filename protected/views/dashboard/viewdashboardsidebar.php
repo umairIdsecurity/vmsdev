@@ -21,7 +21,7 @@ $session = new ChttpSession;
                     <span >Preregister a Visit</span>
                 </a>
             </li>
-            <li><a href='<?php echo Yii::app()->createUrl('visitor/addvisitor'); ?>' ><span>Add Visitor Record</span></a></li>
+            <li><a href='<?php echo Yii::app()->createUrl('visitor/addvisitor'); ?>' ><span>Add Visitor Profile</span></a></li>
                         
             <li class=''><?php
                 echo CHtml::ajaxLink("Add Host", CController::createUrl('dashboard/addHost'), array(
@@ -32,7 +32,7 @@ $session = new ChttpSession;
                 ?>
             </li>
 
-            <li class=''><a href='<?php echo Yii::app()->createUrl('visit/view'); ?>' id="findrecordSidebar"><span>Find Record</span></a></li>
+            <li class=''><a href='<?php echo Yii::app()->createUrl('visit/view'); ?>' id="findrecordSidebar"><span>Search Visits</span></a></li>
             <li class=''><a href='<?php echo Yii::app()->createUrl('visit/evacuationReport&p=d'); ?>' id="evacuationreportSidebar"><span>Evacuation Report</span></a></li>
         </ul>
     </div>

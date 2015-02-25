@@ -3,7 +3,7 @@
 /* @var $model Visit */
 ?>
 
-<h1>Visitor Records</h1>
+<h1>Visit History</h1>
 
 <?php echo CHtml::button('Export to CSV', array('id' => 'export-button', 'class' => 'greenBtn complete')); ?>
 <br><Br>

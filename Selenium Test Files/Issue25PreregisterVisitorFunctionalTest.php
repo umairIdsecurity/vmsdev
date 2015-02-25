@@ -62,7 +62,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->click("link=Manage Visitor Records");
+        $this->click("link=Manage Visitors");
         $this->clickAndWait("link=Preregister a Visit");
         $this->click("id=clicktabA");
         $this->addVisitor('Visitor5');
@@ -101,7 +101,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->click("link=Manage Visitor Records");
+        $this->click("link=Manage Visitors");
         $this->clickAndWait("link=Preregister a Visit");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test visitor1");
@@ -154,7 +154,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->click("link=Manage Visitor Records");
+        $this->click("link=Manage Visitors");
         $this->clickAndWait("link=Preregister a Visit");
         $this->click("id=clicktabA");
         $this->addVisitor('Visitor2');
@@ -190,7 +190,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->click("link=Manage Visitor Records");
+        $this->click("link=Manage Visitors");
         $this->clickAndWait("link=Preregister a Visit");
         $this->click("id=clicktabA");
         $this->select("id=Visitor_visitor_type", "label=Corporate Visitor");
@@ -253,7 +253,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->click("link=Manage Visitor Records");
+        $this->click("link=Manage Visitors");
         $this->clickAndWait("link=Preregister a Visit");
         $this->click("id=clicktabA");
         $this->click("id=submitFormVisitor");
@@ -367,7 +367,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->click("link=Manage Visitor Records");
+        $this->click("link=Manage Visitors");
         $this->clickAndWait("link=Preregister a Visit");
         $this->click("id=clicktabA");
         $this->click("id=submitFormVisitor");
@@ -477,7 +477,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->click("link=Manage Visitor Records");
+        $this->click("link=Manage Visitors");
         $this->clickAndWait("link=Preregister a Visit");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test visitor1");
@@ -529,7 +529,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->click("link=Manage Visitor Records");
+        $this->click("link=Manage Visitors");
         $this->clickAndWait("link=Preregister a Visit");
         $this->click("id=clicktabA");
         $this->select("id=Visitor_visitor_type", "label=Corporate Visitor");

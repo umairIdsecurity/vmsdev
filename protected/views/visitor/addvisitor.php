@@ -5,6 +5,6 @@
 
 ?>
 
-<h1>Add Visitor Record</h1>
+<h1>Add Visitor Profile</h1>
 
 <?php $this->renderPartial('_form', array('model'=>$model)); ?>

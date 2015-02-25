@@ -163,17 +163,17 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
 
             <?php if ($session['role'] == Roles::ROLE_SUPERADMIN) {
                 ?>
-                <li class='has-sub'><a class='managevisitorrecords' href='<?php echo Yii::app()->createUrl('visitor/admin'); ?>'><span>Manage Visitor Records</span></a>
+                <li class='has-sub'><a class='managevisitorrecords' href='<?php echo Yii::app()->createUrl('visitor/admin'); ?>'><span>Manage Visitors</span></a>
 
                     <ul <?php
                     if ($this->id == 'visitor' || $this->action->id == 'exportvisitorrecords') {
                         echo "style='display:block ;'";
                     }
                     ?>>
-                        <li><a href='<?php echo Yii::app()->createUrl('visitor/addvisitor'); ?>' class="addSubMenu"><span>Add Visitor Record</span></a></li>
+                        <li><a href='<?php echo Yii::app()->createUrl('visitor/addvisitor'); ?>' class="addSubMenu"><span>Add Visitor Profile</span></a></li>
                         <li><a href='<?php echo Yii::app()->createUrl('visitor/create&action=register'); ?>' class="addSubMenu"><span>Register a Visit</span></a></li>
                         <li><a href='<?php echo Yii::app()->createUrl('visitor/create&action=preregister'); ?>' class="addSubMenu"><span>Preregister a Visit</span></a></li>
-                        <li><a href='<?php echo Yii::app()->createUrl('visit/exportvisitorrecords'); ?>' ><span>Export Visitor Records</span></a></li>
+                        <li><a href='<?php echo Yii::app()->createUrl('visit/exportvisitorrecords'); ?>' ><span>Export Visit History</span></a></li>
                     </ul>
                 </li>   
                 <li class='has-sub'><?php
@@ -244,18 +244,18 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
             <?php } else {
                 ?>
 
-                <li class='has-sub'><a class='managevisitorrecords' href='<?php echo Yii::app()->createUrl('visitor/admin'); ?>'><span>Manage Visitor Records</span></a>
+                <li class='has-sub'><a class='managevisitorrecords' href='<?php echo Yii::app()->createUrl('visitor/admin'); ?>'><span>Manage Visitors</span></a>
 
                     <ul <?php
                     if ($this->id == 'visitor' || $this->action->id == 'exportvisitorrecords') {
                         echo "style='display:block ;'";
                     }
                     ?>>
-                        <li><a href='<?php echo Yii::app()->createUrl('visitor/addvisitor'); ?>' class="addSubMenu"><span>Add Visitor Record</span></a></li>
+                        <li><a href='<?php echo Yii::app()->createUrl('visitor/addvisitor'); ?>' class="addSubMenu"><span>Add Visitor Profile</span></a></li>
 
                         <li><a href='<?php echo Yii::app()->createUrl('visitor/create&action=register'); ?>' class="addSubMenu"><span>Register a Visit</span></a></li>
                         <li><a href='<?php echo Yii::app()->createUrl('visitor/create&action=preregister'); ?>' class="addSubMenu"><span>Preregister a Visit</span></a></li>
-                        <li><a href='<?php echo Yii::app()->createUrl('visit/exportvisitorrecords'); ?>' ><span>Export Visitor Records</span></a></li>
+                        <li><a href='<?php echo Yii::app()->createUrl('visit/exportvisitorrecords'); ?>' ><span>Export Visit History</span></a></li>
                     </ul>
                 </li>
             <?php }

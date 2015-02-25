@@ -117,7 +117,7 @@ $photoForm = $this->beginWidget('CActiveForm', array(
 </div>
 <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
 <?php if ($visitorModel->photo != '') { ?>
-    <input type="button" class="btn btn-success editImageBtn" id="editImageBtn" value="Edit Photo" onclick = "document.getElementById('light').style.display = 'block';
+    <input type="button" class="btn editImageBtn actionForward" id="editImageBtn" value="Edit Photo" onclick = "document.getElementById('light').style.display = 'block';
                 document.getElementById('fade').style.display = 'block'"/>
 <?php } ?>
 <div
@@ -132,10 +132,10 @@ $photoForm = $this->beginWidget('CActiveForm', array(
         'visitor_id' => $model->visitor
     ));
     if ($model->card != NULL && $model->visit_status == VisitStatus::ACTIVE) {
-        ?><input type="button" class="btn btn-info printCardBtn" value="Reprint Card" id="reprintCardBtn" onclick="regenerateCard()"/><?php
+        ?><input type="button" class="complete btn btn-info printCardBtn" value="Reprint Card" id="reprintCardBtn" onclick="regenerateCard()"/><?php
 } else {
     ?>
-        <input type="button" class="btn btn-info printCardBtn" value="Print Card" id="printCardBtn" onclick="generateCard()"/>
+        <input type="button" class="complete btn btn-info printCardBtn" value="Print Card" id="printCardBtn" onclick="generateCard()"/>
     <?php
 }
 ?>
@@ -258,3 +258,4 @@ $photoForm = $this->beginWidget('CActiveForm', array(
 <input type="hidden" id="width"/>
 <input type="hidden" id="height"/>
 
+<input type="hidden" id="visitorOriginalValue" value="<?php echo $visitorModel->photo; ?>"/>

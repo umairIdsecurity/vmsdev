@@ -1369,6 +1369,7 @@ dt.tabs dt{
     font-size:12px;
     margin-bottom:13px;
     height: 25px !important;
+    margin-top: -10px
 }
 
 #visitorDetailDiv .editImageBtn:hover,
@@ -1378,8 +1379,9 @@ dt.tabs dt{
     *background-color: #499249 !important;
 }
 
-#visitorDetailDiv #printCardBtn, #visitorDetailDiv .editImageBtn{
-    height: 24px;
+#visitorDetailDiv #printCardBtn, #visitorDetailDiv .editImageBtn, #visitorDetailDiv #reprintCardBtn{
+    height: 24px !important;
     margin-left: 4px;
+    margin-bottom: 14px;
     width: 208px !important;
 }

@@ -101,7 +101,7 @@ if ($this->action->id == 'addvisitor') {
             width: 182px;
             margin-bottom:-12px;
             padding-bottom:3px;
-            height: 18px;
+            height: 19px;
         }
     </style>    
 <?php } ?>
@@ -114,7 +114,7 @@ if ($this->action->id == 'addvisitor') {
     }
     ?> </div> 
 <br><br>
-<input type="button"  style="display:none;" id="cropImageBtn" class="btn btn-success editImageBtn" value="Edit Image" onclick = "document.getElementById('light').style.display = 'block';
+<input type="button"  style="display:none;" id="cropImageBtn" class="btn actionForward editImageBtn" value="Edit Photo" onclick = "document.getElementById('light').style.display = 'block';
         document.getElementById('fade').style.display = 'block'">
 
 <input type="hidden" id="actionUpload" value="<?php echo $this->action->id; ?>"/> 
@@ -182,7 +182,10 @@ if (isset($_GET['viewFrom'])) {
                                 }
                                 if ($("#controllerId").val() == 'visit') {
                                     $("#submitBtnPhoto").click();
-                                    $("#cropImageBtn").show();
+                                    if($("#visitorOriginalValue").val() == ''){
+                                        $("#cropImageBtn").show();
+                                    }
+                                    
                                 } else if ($("#controllerId").val() == 'visitor') {
                                     $("#cropImageBtn").show();
                                 }

@@ -470,7 +470,7 @@ $company = Company::model()->findByPk($session['company']);
     
     <br>
     <div id="sideMenuDiv">
-        <span class="customTitle">Side Menu</span> 
+        <span class="customTitle">Side Menu and Header Text</span> 
         <div class="cssButtonDetails">
             <label>Background Color</label>
             <input type="text" id="CompanyLafPreferences_sidemenu_bg_color" name="CompanyLafPreferences[sidemenu_bg_color]" readonly value="<?php if($model->sidemenu_bg_color == ''){ echo '#E7E7E7'; } else { echo $model->sidemenu_bg_color; }?>">

@@ -12,8 +12,9 @@ $companyCode ="";
 $cardCode ="";
 $companyLogoId ="";
 $visitorName = $visitorModel->first_name . ' ' . $visitorModel->last_name;
-if ($visitorModel->company != '') {
-    $company = Company::model()->findByPk($visitorModel->company);
+$tenant = User::model()->findByPk($visitorModel->tenant);
+if ($tenant->company != '') {
+    $company = Company::model()->findByPk($tenant->company);
     $companyName = $company->name;
     $companyLogoId = $company->logo;
     $companyCode = $company->code;
@@ -29,7 +30,7 @@ if ($visitorModel->company != '') {
 if ($companyLogoId == "") {
     $companyLogo = Yii::app()->getBaseUrl(true) . '/images/nologoavailable.jpg';
 } else {
-    $companyLogo = Yii::app()->getBaseUrl(true) . "/" . Photo::model()->returnCompanyPhotoRelativePath($visitorModel->company);
+    $companyLogo = Yii::app()->getBaseUrl(true) . "/" . Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
 }
 
 $src2 = $companyLogo;

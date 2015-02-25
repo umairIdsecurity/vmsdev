@@ -431,9 +431,12 @@ nav.navigation ul li:last-child.active
 }
 
 .grid-view .summary {
-    text-align: left !important;
-    font-weight:bold;
-    font-size:12px;
+    float: right;
+    font-size: 12px;
+    font-weight: bold;
+    margin-left: 748px !important;
+    margin-top: -30px !important;
+    position: absolute;
 }
 
 #page{
@@ -481,6 +484,15 @@ nav.navigation ul li:last-child.active
 }
 ul.yiiPager .hidden a {
     margin-left:-40px;
+}
+
+.grid-view .pager {
+    text-align: left !important;
+    margin-left:10px !important;
+}
+
+.pager .next > a, .pager .next > span {
+    float: none !important;
 }
 
 h1,

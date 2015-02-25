@@ -200,9 +200,9 @@ if ($this->action->id == 'update') {
              echo "text-align:right;";
          }
          ?>">
-             <?php echo CHtml::submitButton($model->isNewRecord ? 'Add' : 'Save', array('id' => 'createBtn', 'style' => 'height:30px;')); ?>
-             <?php if (isset($_GET['viewFrom'])) { ?>
-            <input class="yiiBtn" type='button' value='Cancel' onclick='closeParent()' style="height:30px;"></input>
+        <?php echo CHtml::submitButton($model->isNewRecord ? 'Add' : 'Save', array('id' => 'createBtn', 'style' => 'height:30px;','class'=>'complete')); ?>
+        <?php if (isset($_GET['viewFrom'])) { ?>
+            <input class="neutral yiiBtn" type='button' value='Cancel' onclick='closeParent()' style="height:30px;"></input>
             <?php
         } else {
             if ($session['role'] != Roles::ROLE_SUPERADMIN) {

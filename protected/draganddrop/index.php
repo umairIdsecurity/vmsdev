@@ -1,5 +1,3 @@
-
-
 <?php
 
 if ($this->Id == 'visitor') {
@@ -22,6 +20,8 @@ if ($this->action->id == 'addvisitor') {
             margin-top:60px !important;
             position:absolute !important;
             margin-left: -53px !important;
+            font-size: 12px !important;
+            padding-bottom:3px;
         }
 
         .editImageBtn{
@@ -47,6 +47,8 @@ if ($this->action->id == 'addvisitor') {
             margin-top:80px !important;
             position:absolute !important;
             margin-left: -53px !important;
+            font-size: 12px !important;
+            padding-bottom:3px;
         }
 
         .editImageBtn{
@@ -64,7 +66,10 @@ if ($this->action->id == 'addvisitor') {
             margin-top:80px !important;
             position:absolute !important;
             margin-left: -53px !important;
+            font-size: 12px !important;
+            padding-bottom:3px;
         }
+        
 
         .editImageBtn{
             margin-top: -10px !important;
@@ -80,28 +85,41 @@ if ($this->action->id == 'addvisitor') {
             margin-top:80px !important;
             position:absolute !important;
             margin-left: -53px !important;
+            font-size: 12px !important;
+            padding-bottom:3px;
         }
         .editImageBtn{
             margin-left: 6px;
             margin-top: -9px;
         }
     </style>
+<?php } elseif ($this->action->id == 'detail') { ?>
+    <style>
+        .ajax-file-upload{
+            font-size: 12px !important;
+            margin-left: -185px;
+            width: 182.9px;
+            padding-bottom:3px;
+            height: 17px;
+        }
+    </style>    
 <?php } ?>
 
 <div id="fileuploader" style="margin-bottom:5px;"><?php
-if ($this->action->id == 'detail') {
-    echo "Upload Photo";
-} else {
-    echo "Browse Computer";
-}
-?> </div> 
-    <br><br>
-<input type="button"  style="display:none;" id="cropImageBtn" class="editImageBtn" value="Edit Image" onclick = "document.getElementById('light').style.display = 'block';
+    if ($this->action->id == 'detail') {
+        echo "Upload Photo";
+    } else {
+        echo "Browse Computer";
+    }
+    ?> </div> 
+<br><br>
+<input type="button"  style="display:none;" id="cropImageBtn" class="btn actionForward editImageBtn" value="Edit Photo" onclick = "document.getElementById('light').style.display = 'block';
         document.getElementById('fade').style.display = 'block'">
 
 <input type="hidden" id="actionUpload" value="<?php echo $this->action->id; ?>"/> 
 <input type="hidden" id="controllerId" value="<?php echo $this->id; ?>"/> 
-<input type="hidden" id="viewFrom" value="<?php if (isset($_GET['viewFrom'])) {
+<input type="hidden" id="viewFrom" value="<?php
+if (isset($_GET['viewFrom'])) {
     echo "1";
 } else {
     echo "0";
@@ -163,13 +181,16 @@ if ($this->action->id == 'detail') {
                                 }
                                 if ($("#controllerId").val() == 'visit') {
                                     $("#submitBtnPhoto").click();
-                                    $("#cropImageBtn").show();
+                                    if($("#visitorOriginalValue").val() == ''){
+                                        $("#cropImageBtn").show();
+                                    }
+                                    
                                 } else if ($("#controllerId").val() == 'visitor') {
                                     $("#cropImageBtn").show();
                                 }
                             });
                             if ($("#viewFrom").val() == '1') {
-                                window.parent.document.getElementById('companyModalIframe').style.height= "1015px";
+                                window.parent.document.getElementById('companyModalIframe').style.height = "1015px";
                             }
                         }
                     });

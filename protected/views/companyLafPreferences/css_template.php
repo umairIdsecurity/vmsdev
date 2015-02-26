@@ -84,12 +84,12 @@ color:<?php echo $companyLafPreferences->nav_font_color; ?> !important;
 /* SIDE MENU*/
 
 
-#cssmenu > ul > li > a {
+.administrationMenu #cssmenu > ul > li > a { 
 background: none repeat scroll 0 0 <?php echo $companyLafPreferences->sidemenu_bg_color; ?> !important;
 color:<?php echo $companyLafPreferences->sidemenu_font_color; ?> !important;
 }
 
-#cssmenu > ul > li > a:hover {
+.administrationMenu #cssmenu > ul > li > a { {
 background: none repeat scroll 0 0 <?php echo $companyLafPreferences->sidemenu_hover_color; ?> !important;
 color:<?php echo $companyLafPreferences->sidemenu_hover_font_color; ?> !important;
 }

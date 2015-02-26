@@ -700,6 +700,7 @@ $session = new CHttpSession;
          * if visit type is patient and visit type in database is patient show update patient
          * if visit type is corporate and visit type in database is corporate show update host, hide search
          * */
+        
         var visit_type = $("#Visit_visitor_type").val();
         $("#visitorTypeUnderSearchForm").val($("#Visit_visitor_type").val());
 

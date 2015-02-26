@@ -144,11 +144,13 @@ $this->widget('zii.widgets.jui.CJuiDatePicker', array(
 echo $logform->error($model, 'date_in');
 if ($model->visit_status == VisitStatus::CLOSED) {
     ?>
-    <button id='preregisterNewVisit' class='greenBtn actionForward'>Confirm</button><br>
+    <button id='preregisterNewVisit' class='greenBtn actionForward'>Save</button><br>
 <?php } else { ?>
     <input type='submit' value='Confirm' class="complete" style="display:none;" id="confirmPreregisterSubmit"/>
-    <button class="complete greenBtn" id="confirmPreregisterDummy"> Confirm</button>
-    <button class="neutral greenBtn" id="cancelPreregisteredVisitButton">Cancel</button>
+    <button class="complete greenBtn" id="confirmPreregisterDummy"> Save</button>
+    <!--<button class="neutral greenBtn" id="cancelPreregisteredVisitButton">Cancel</button>-->
+    
+    <div style="display:inline;font-size:12px;"><b>or</b> <a id="cancelPreregisteredVisitButton" href="" class="cancelBtnVisitorDetail">Cancel</a></div>
 
 <?php } ?>
 

@@ -91,7 +91,7 @@ $session = new CHttpSession;
                                     </table>
 <?php echo $closeVisitForm->error($model, 'date_in'); ?>
                                     <input type='submit' value='Close' class="complete" id="closeVisitBtn" style="display:none;"/>
-                                    <button  class="complete greenBtn" id="closeVisitBtnDummy" style="width:92px !important"/>Close Visit</button>
+                                    <button  class="complete greenBtn" id="closeVisitBtnDummy" style="width:93px !important"/>Close Visit</button>
                                 <div style="display:inline;font-size:12px;"><b>or</b><a id="cancelActiveVisitButton" href="" class="cancelBtnVisitorDetail">Cancel</a></div>
                                    <!-- <button class="neutral greenBtn" id="cancelActiveVisitButton">Cancel</button>-->
 <?php $this->endWidget(); ?>

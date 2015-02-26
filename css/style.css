@@ -889,13 +889,23 @@ dt.tabs dt{
     background: url('../images/icons.png') 0 0 no-repeat;
 }
 .addhost{
-    background: url('../images/add_user.png') 0 0 no-repeat;
-
+    background:url('../images/addhosticon.png') 0 0 no-repeat;
+    background-position: 0px -4px;
     padding: 1px 0 1px 30px;
     display: block;
-    height: 15px;
+    height: 16px;
     text-decoration: none;
 }
+
+.addvisitorprofile{
+    background:url('../images/addvisitorprofileicon.png') 0 0 no-repeat;
+    background-position: 0px 2px;
+    padding-left:35px !important;
+    display: block;
+    height: 16px;
+    text-decoration: none;
+}
+
 .addvisitor{
     background: url('../images/addvisitor.png') 0 0 no-repeat;
     padding: 1px 0 1px 30px;
@@ -914,10 +924,8 @@ dt.tabs dt{
     text-decoration: none;
 }
 
-
-
 .pre-visits {
-   background:url('../images/preregistericon.png') 0 0 no-repeat;
+    background:url('../images/preregistericon.png') 0 0 no-repeat;
     background-position: 0px -4px;
     padding: 1px 0 1px 30px;
     display: block;
@@ -925,9 +933,25 @@ dt.tabs dt{
     text-decoration: none;
 }
 
+
+.sidemenu-icon{
+    background-position: 0px 2px !important;
+    padding-left:35px !important;
+}
+
 .findrecord {
-    background-position: 0 -537px;
-    padding: 1px 0 1px 30px;
+    background:url('../images/searchvisiticon.png') 0 0 no-repeat;
+    background-position: 0px 3px;
+    padding-left: 35px !important;
+    display: block;
+    height: 16px;
+    text-decoration: none;
+}
+
+.evacuationreport {
+    background:url('../images/evacuationreporticon.png') 0 0 no-repeat;
+    background-position: 0px 3px;
+    padding-left: 35px !important;
     display: block;
     height: 16px;
     text-decoration: none;
@@ -1413,4 +1437,9 @@ dt.tabs dt{
     margin-left: 4px;
     margin-bottom: 14px;
     width: 208px !important;
+}
+
+.submenu-icon{
+    padding-left:35px !important;
+    background-position: 0px 2px !important;
 }

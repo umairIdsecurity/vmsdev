@@ -46,11 +46,18 @@ and open the template in the editor.
 #cssmenu > ul > li > a {
     font-size: 13.4px;
     display: block;
+    color:#637280;
+    font-weight:bold;
+}
+
+.administrationMenu #cssmenu > ul > li > a {
+    font-size: 13.4px;
     background: #64676e;
     background: -moz-linear-gradient(#64676e 0%, #4c4e53 100%);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #E7E7E7), color-stop(100%, #E7E7E7));
     background: -webkit-linear-gradient(#E7E7E7 0%, #E7E7E7 100%);
     background: linear-gradient(#E7E7E7 0%, #E7E7E7 100%);
+    display: block;
     color:#637280;
     font-weight:bold;
 }

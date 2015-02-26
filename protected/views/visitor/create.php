@@ -17,7 +17,7 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
 <h1><?php
     if (isset($_GET['action'])) {
         if($_GET['action'] == 'register'){
-            echo "Register";
+            echo "Log";
             $session['previousVisitAction'] = 'Register';
         } else {
             echo "Preregister";
@@ -25,7 +25,7 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
         }
         
     }
-    ?> a Visit</h1>
+    ?> Visit</h1>
 
 <dl class="tabs <?php if (!isset($_GET['action'])) { ?> four-up <?php
 } else {

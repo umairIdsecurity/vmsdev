@@ -15,26 +15,27 @@ $session = new ChttpSession;
 <div id="sidebar2">
     <div class="sidebarTitle" style="">Main Menu</div><br><div id='cssmenu' class="dashboardMenu">
         <ul>
-            <li class=''><a href='<?php echo Yii::app()->createUrl('visitor/create&action=register'); ?>'><span >Register a Visit</span></a></li>
+            <li class=''><a href='<?php echo Yii::app()->createUrl('visitor/create&action=register'); ?>' class="submenu-icon log-current"><span >Log Visit</span></a></li>
             <li class=''>
 
-                <a href='<?php echo Yii::app()->createUrl('visitor/create&action=preregister'); ?>'>
-                    <span >Preregister a Visit</span>
+                <a href='<?php echo Yii::app()->createUrl('visitor/create&action=preregister'); ?>' class="submenu-icon pre-visits">
+                    <span >Preregister Visit</span>
                 </a>
             </li>
-            <li><a href='<?php echo Yii::app()->createUrl('visitor/addvisitor'); ?>' ><span>Add Visitor Profile</span></a></li>
-       
             <li class=''><?php
                 echo CHtml::ajaxLink("Add Host", CController::createUrl('dashboard/addHost'), array(
                     'update' => '#content', 
                         ), array(
-                    'class' => 'addhost',
+                    'class' => 'submenu-icon addhost',
                 ));
                 ?>
             </li>
+            <li><a href='<?php echo Yii::app()->createUrl('visitor/addvisitor'); ?>' class="submenu-icon addvisitorprofile"><span>Add Visitor Profile</span></a></li>
+       
+            
 
-            <li class=''><a href='<?php echo Yii::app()->createUrl('visit/view'); ?>'><span >Search Visits</span></a></li>
-            <li class=''><a href='<?php echo Yii::app()->createUrl('visit/evacuationReport'); ?>'><span>Evacuation Report</span></a></li>
+            <li class=''><a href='<?php echo Yii::app()->createUrl('visit/view'); ?>' class="submenu-icon findrecord"><span >Search Visits</span></a></li>
+            <li class=''><a href='<?php echo Yii::app()->createUrl('visit/evacuationReport'); ?>' class="submenu-icon evacuationreport"><span>Evacuation Report</span></a></li>
         </ul>
     </div>
 </div>

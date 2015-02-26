@@ -2,6 +2,7 @@
 <?php
 $session = new CHttpSession;
 date_default_timezone_set('Asia/Manila');
+$tenant = User::model()->findByPk($visitorModel->tenant);
 ?>
 <?php
 $photoForm = $this->beginWidget('CActiveForm', array(
@@ -35,13 +36,13 @@ $photoForm = $this->beginWidget('CActiveForm', array(
 
     <div style="position: relative; padding-top:180px;padding-left:30px;">
          <?php
-        if ($visitorModel->company != '') {
-            $companyLogoId = Company::model()->findByPk($visitorModel->company)->logo;
+        if ($tenant->company != '') {
+            $companyLogoId = Company::model()->findByPk($tenant->company)->logo;
 
             if ($companyLogoId == "") {
                 $companyLogo = 'images/nologoavailable.jpg';
             } else {
-                $companyLogo = Photo::model()->returnCompanyPhotoRelativePath($visitorModel->company);
+                $companyLogo = Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
             }
             ?>
         <img class='<?php if($model->visit_status != VisitStatus::ACTIVE){ echo "cardCompanyLogoPreregistered"; } else { echo "cardCompanyLogo"; } ?>' src="<?php
@@ -54,8 +55,8 @@ $photoForm = $this->beginWidget('CActiveForm', array(
             <tr>
                 <td>
                     <?php
-                    if ($visitorModel->company != '') {
-                        echo Company::model()->findByPk($visitorModel->company)->code;
+                    if ($tenant->company != '') {
+                        echo Company::model()->findByPk($tenant->company)->code;
                     }
                     ?>
                 </td>
@@ -92,26 +93,26 @@ $photoForm = $this->beginWidget('CActiveForm', array(
             </tr>
             <tr>
                 <td>
-                    <span style="<?php if ($model->visit_status != VisitStatus::ACTIVE) {
-                            echo 'display:none;';
-                        } ?>">
-                        <?php
-                        if ($visitorModel->company != '') {
-                            $inc = 6 - (strlen($model->id));
-                            $int_code = '';
-                            for ($x = 1; $x <= $inc; $x++) {
+                    <span style="<?php if($model->visit_status != VisitStatus::ACTIVE){ echo 'display:none;'; }?>">
+                    <?php
+                    if ($tenant->company != '') {
+                        $inc = 6 - (strlen($model->id));
+                        $int_code = '';
+                        for ($x = 1; $x <= $inc; $x++) {
 
                                 $int_code .= "0";
                             }
                             echo Company::model()->findByPk($visitorModel->company)->code . $int_code . $model->id;
                         }
-                        ?>
+                        echo Company::model()->findByPk($tenant->company)->code . $int_code . $model->id;
+                    }
+                    ?>
                     </span>
                 </td>
             </tr>
         </table>
 
-       
+        
     </div>
 
 </div>

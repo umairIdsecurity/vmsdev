@@ -13,9 +13,10 @@ $cardCode ="";
 $companyLogoId ="";
 
 $visitorName = $visitorModel->first_name . ' ' . $visitorModel->last_name;
+$tenant = User::model()->findByPk($visitorModel->tenant);
 $visitorName = wordwrap($visitorName, 13, "\n", true);
-if ($visitorModel->company != '') {
-    $company = Company::model()->findByPk($visitorModel->company);
+if ($tenant->company != '') {
+    $company = Company::model()->findByPk($tenant->company);
     $companyName = $company->name;
     $companyLogoId = $company->logo;
     $companyCode = $company->code;
@@ -31,7 +32,13 @@ if ($visitorModel->company != '') {
 if ($companyLogoId == "") {
     $companyLogo = Yii::app()->getBaseUrl(true) . '/images/nologoavailable.jpg';
 } else {
-    $companyLogo = Yii::app()->getBaseUrl(true) . "/" . Photo::model()->returnCompanyPhotoRelativePath($visitorModel->company);
+    $companyLogo = Yii::app()->getBaseUrl(true) . "/" . Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
+}
+
+if (Visitor::model()->findByPk($model->visitor)->photo == "") {
+    $userPhoto = Yii::app()->getBaseUrl(true) . '/images/nophoto.png';
+} else {
+    $userPhoto = Yii::app()->getBaseUrl(true) . "/" . Photo::model()->returnVisitorPhotoRelativePath($model->visitor);
 }
 
 if (Visitor::model()->findByPk($model->visitor)->photo == "") {

@@ -1216,6 +1216,12 @@ dt.tabs dt{
     margin-left: -105px;
     margin-top: 77px;
     position: absolute;
+    width: 50px;*/
+    float: left;
+    height: 30px;
+    margin-left: -105px;
+    margin-top: 77px;
+    position: absolute;
     width: 50px;
 }
 

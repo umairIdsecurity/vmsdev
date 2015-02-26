@@ -89,7 +89,7 @@ background: none repeat scroll 0 0 <?php echo $companyLafPreferences->sidemenu_b
 color:<?php echo $companyLafPreferences->sidemenu_font_color; ?> !important;
 }
 
-.administrationMenu #cssmenu > ul > li > a { {
+.administrationMenu #cssmenu > ul > li > a:hover { 
 background: none repeat scroll 0 0 <?php echo $companyLafPreferences->sidemenu_hover_color; ?> !important;
 color:<?php echo $companyLafPreferences->sidemenu_hover_font_color; ?> !important;
 }

@@ -1,7 +1,13 @@
 <?php
+
 /* @var $this VisitController */
 /* @var $model Visit */
 ?>
+<style>
+    .grid-view .summary {
+        margin-left: 998px !important;
+    }
+</style>
 <h1>Visit History</h1>
 
 <?php
@@ -31,7 +37,6 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'name' => 'cardcode',
             'header' => 'Card No.',
             'value' => 'CardGenerated::model()->getCardCode($data->card)',
-          
         ),
         array(
             'name' => 'firstname',
@@ -63,7 +68,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' => 'date_check_in',
             'type' => 'html',
-         //   'value' => 'formatDate($data->date_in)',
+        //   'value' => 'formatDate($data->date_in)',
         ),
         array(
             'name' => 'time_check_in',
@@ -73,14 +78,14 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' => 'date_check_out',
             'type' => 'html',
-          //  'value' => 'formatDate($data->date_out)',
+        //  'value' => 'formatDate($data->date_out)',
         ),
         array(
             'name' => 'time_check_out',
             'type' => 'html',
             'value' => 'formatTime($data->time_check_out)',
         ),
-       // 'card0.date_expiration',
+        // 'card0.date_expiration',
         array(
             'name' => 'date_out',
             'type' => 'html',

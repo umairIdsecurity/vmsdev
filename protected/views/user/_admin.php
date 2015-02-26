@@ -1,4 +1,8 @@
-
+<style>
+    .grid-view .summary {
+        margin-left: 755px !important;
+    }
+</style>
 <?php
 /* @var $this UserController */
 /* @var $model User */

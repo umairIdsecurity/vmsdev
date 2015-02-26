@@ -49,7 +49,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                 </li>
                 <?php
             } else {
-                if ($session['role'] == Roles::ROLE_ADMIN && Company::model()->findByPk($session['company'])->tenant == $session['id']) {
+                if ($session['role'] == Roles::ROLE_ADMIN) {
                     ?>
                     <li class='has-sub'>
 

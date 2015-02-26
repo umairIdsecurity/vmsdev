@@ -1,3 +1,4 @@
+
 <?php
 $session = new CHttpSession;
 date_default_timezone_set('Asia/Manila');
@@ -66,7 +67,6 @@ $photoForm = $this->beginWidget('CActiveForm', array(
                             if ($model->date_out == '') {
                                 $date1 = date('d M y');
                                 echo date("d M y", strtotime($date1 . ' + 1 day'));
-                                
                             } else {
                                 // echo Yii::app()->dateFormatter->format("d/MM/y", strtotime($model->date_out));
                                 echo date("d M y", strtotime($model->date_out));
@@ -92,18 +92,20 @@ $photoForm = $this->beginWidget('CActiveForm', array(
             </tr>
             <tr>
                 <td>
-                    <span style="<?php if($model->visit_status != VisitStatus::ACTIVE){ echo 'display:none;'; }?>">
-                    <?php
-                    if ($visitorModel->company != '') {
-                        $inc = 6 - (strlen($model->id));
-                        $int_code = '';
-                        for ($x = 1; $x <= $inc; $x++) {
+                    <span style="<?php if ($model->visit_status != VisitStatus::ACTIVE) {
+                            echo 'display:none;';
+                        } ?>">
+                        <?php
+                        if ($visitorModel->company != '') {
+                            $inc = 6 - (strlen($model->id));
+                            $int_code = '';
+                            for ($x = 1; $x <= $inc; $x++) {
 
-                            $int_code .= "0";
+                                $int_code .= "0";
+                            }
+                            echo Company::model()->findByPk($visitorModel->company)->code . $int_code . $model->id;
                         }
-                        echo Company::model()->findByPk($visitorModel->company)->code . $int_code . $model->id;
-                    }
-                    ?>
+                        ?>
                     </span>
                 </td>
             </tr>
@@ -115,28 +117,28 @@ $photoForm = $this->beginWidget('CActiveForm', array(
 </div>
 <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
 <?php if ($visitorModel->photo != '') { ?>
-    <input type="button" class="editImageBtn" id="editImageBtn" value="Edit Photo" onclick = "document.getElementById('light').style.display = 'block';
+    <input type="button" class="btn editImageBtn actionForward" id="editImageBtn" value="Edit Photo" onclick = "document.getElementById('light').style.display = 'block';
                 document.getElementById('fade').style.display = 'block'"/>
-       <?php } ?>
+<?php } ?>
 <div
-<?php
-if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
-    echo "style='display:none'";
+        <?php
+        if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
+            echo "style='display:none'";
+        }
+        ?>
+    >
+    <?php
+    $cardDetail = CardGenerated::model()->findAllByAttributes(array(
+        'visitor_id' => $model->visitor
+    ));
+    if ($model->card != NULL && $model->visit_status == VisitStatus::ACTIVE) {
+        ?><input type="button" class="complete btn btn-info printCardBtn" value="Reprint Card" id="reprintCardBtn" onclick="regenerateCard()"/><?php
+} else {
+    ?>
+        <input type="button" class="complete btn btn-info printCardBtn" value="Print Card" id="printCardBtn" onclick="generateCard()"/>
+    <?php
 }
 ?>
-    >
-        <?php
-        $cardDetail = CardGenerated::model()->findAllByAttributes(array(
-            'visitor_id' => $model->visitor
-        ));
-        if ($model->card != NULL && $model->visit_status == VisitStatus::ACTIVE) {
-            ?><input type="button" class="btn btn-info printCardBtn" value="Re-print Card" id="reprintCardBtn" onclick="regenerateCard()"/><?php
-    } else {
-        ?>
-        <input type="button" class="btn btn-info printCardBtn" value="Print Card" id="printCardBtn" onclick="generateCard()"/>
-        <?php
-    }
-    ?>
 </div>
 <input type="hidden" id="dummycardvalue" value="<?php echo $model->card; ?>"/>
 <script>
@@ -256,3 +258,4 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
 <input type="hidden" id="width"/>
 <input type="hidden" id="height"/>
 
+<input type="hidden" id="visitorOriginalValue" value="<?php echo $visitorModel->photo; ?>"/>

@@ -57,7 +57,7 @@ $session = new CHttpSession;
                     <?php echo $form->labelEx($userModel, 'email'); ?><br>
                     <?php echo $form->textField($userModel, 'email', array('size' => 50, 'maxlength' => 50)); ?>
                     <?php echo "<br>" . $form->error($userModel, 'email'); ?>
-                    <div style="" id="User_email_em_" class="errorMessage errorMessageEmail1" >Email Address has already been taken.</div>
+                    <div style="" id="User_email_em_" class="errorMessage errorMessageEmail1" >A profile already exists for this email address.</div>
                 </td>
                 <td>
                     <?php echo $form->labelEx($userModel, 'contact_number'); ?><br>

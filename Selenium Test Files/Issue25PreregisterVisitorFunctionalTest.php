@@ -511,7 +511,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
       8.	Select corporate visitor. Wait for add new company button.
       9.	Type test in firstame, visitornewcompany in lastname, position in position,123456 in mobile number,testvisitornewcompany@test.com in email
       select reason 1,12345 in password and repeat password,select workstation1 in workstation.
-      10.	Click add new company button. Wait for text then assert "Please select a tenant."
+      10.	Click add new company button. Wait for text then assert "Please select a tenant"
       11.	Select test admin in tenant, select test agent admin in tenant agent.
       12.	Click add new company
       13.	Wait for company form to show. Type "New Company" in Company Name.
@@ -547,7 +547,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->select("id=Visit_reason", "label=Reason 1");
         $this->click("id=addCompanyLink");
         $this->waitForElementPresent("id=Visitor_company_em_");
-        $this->assertEquals("Please select a tenant.", $this->getText("id=Visitor_company_em_"));
+        $this->assertEquals("Please select a tenant", $this->getText("id=Visitor_company_em_"));
         $this->select("id=Visitor_tenant", "label=Test admin");
         $this->click("id=Visitor_tenant_agent");
         sleep(1);

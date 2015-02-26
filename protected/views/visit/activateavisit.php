@@ -1,5 +1,5 @@
-<br>
-<table class="detailsTable" style="font-size:12px;" id="logvisitTable">
+
+<table class="detailsTable" style="font-size:12px;margin-top:15px;" id="logvisitTable">
     <tr>
         <td>Date Check In</td>
     </tr>

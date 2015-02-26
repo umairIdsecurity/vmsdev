@@ -2,11 +2,11 @@
 $cs = Yii::app()->clientScript;
 $cs->registerScriptFile(Yii::app()->request->baseUrl . '/js/script-visitordetail-actions-cssmenu.js');
 $session = new CHttpSession;
-?><br>
+?>
 <div id='actionsCssMenu'>
-    <ul>
+    <ul class="visitStatusLi">
         <li>
-            <a style="text-decoration: none; color:red !important;">Visit Status: <?php echo VisitStatus::$VISIT_STATUS_LIST[$model->visit_status]; ?></a>
+            <a style="text-decoration: none; ">Visit Status: <span style="color:#9BD62C !important; font-weight:bold"><?php echo VisitStatus::$VISIT_STATUS_LIST[$model->visit_status]; ?></span></a>
 
         </li>
     </ul>
@@ -15,7 +15,7 @@ $session = new CHttpSession;
 
     <ul>
         <?php if ($model->visit_status == VisitStatus::ACTIVE && $session['role'] != Roles::ROLE_STAFFMEMBER) { ?>
-            <li class='has-sub' id="closevisitLi"><a href="#"><span style="color:white !important;" class="btn btn-info actionsLabel">Close Visit</span></a>
+            <li class='has-sub' id="closevisitLi"><a href="#"><span class="icons close-visit">Close Visit</span></a>
                 <ul>
                     <li>
                         <table id="actionsVisitDetails">
@@ -76,15 +76,10 @@ $session = new CHttpSession;
                                             </tr>
                                         </table>
                                         <?php echo $closeVisitForm->error($model, 'date_in'); ?>
-                                        <input type='submit' value='Close' class="complete"/>
-                                        <button class="actionForward greenBtn" style="<?php
-                                        if (strpos($_SERVER['HTTP_USER_AGENT'], 'Firefox') !== FALSE) {
-                                            echo "height:25.6px;";
-                                        } else {
-                                            echo "height:30px;";
-                                        }
-                                        ?>line-height:0px ;" id="cancelActiveVisitButton">Cancel</button>
-    <?php $this->endWidget(); ?>
+                                        <input type='submit' value='Close' class="complete" id="closeVisitBtn" style="display:none;"/>
+                                        <button  class="complete greenBtn" id="closeVisitBtnDummy"/>Close</button>
+                                        <button class="neutral greenBtn" id="cancelActiveVisitButton">Cancel</button>
+                                        <?php $this->endWidget(); ?>
                                     </div>
                                 </td>
                             </tr>
@@ -95,7 +90,7 @@ $session = new CHttpSession;
             </li>
         <?php } else if (($model->visit_status == VisitStatus::PREREGISTERED || $model->visit_status == VisitStatus::SAVED || $model->visit_status == VisitStatus::CLOSED)) {
             ?>
-            <li class='has-sub' id="preregisterLi"><a href="#"><span class="btn btn-info actionsLabel" style="color:white !important;">Preregister a Visit</span></a>
+            <li class='has-sub' id="preregisterLi"><a href="#"><span class="pre-visits">Preregister a Visit</span></a>
                 <ul>
                     <li>
 
@@ -119,7 +114,7 @@ $session = new CHttpSession;
                     </li>
                 </ul>
             </li>
-            <li class='has-sub' id="activateLi"><a href="#"><span class="btn btn-info actionsLabel" style="color:white !important;">Log a Visit</span></a>
+            <li class='has-sub' id="activateLi"><a href="#"><span class="log-current">Log a Visit</span></a>
                 <ul>
                     <li>
                         <?php
@@ -174,7 +169,7 @@ $session = new CHttpSession;
                 </ul>
             </li>
 
-<?php } ?>
+        <?php } ?>
     </ul>
 </div>
 <input type="hidden" value="<?php echo $session['previousVisitAction']; ?>" id="previousVisitAction"/>
@@ -212,6 +207,11 @@ $session = new CHttpSession;
         $('#registerNewVisit').on('click', function(e) {
             e.preventDefault();
             checkIfActiveVisitConflictsWithAnotherVisit("new");
+        });
+
+        $('#closeVisitBtnDummy').on('click', function(e) {
+            e.preventDefault();
+            $("#closeVisitBtn").click();
         });
 
         $('#cancelActiveVisitButton').on('click', function(e) {
@@ -268,7 +268,7 @@ $session = new CHttpSession;
                         $("#Visit_date_out").attr("disabled", false);
                         $("#Visit_date_in").attr("disabled", false);
                         duplicateVisit("update-log-visit-form");
-                         $("#Visit_date_out").attr("disabled", true);
+                        $("#Visit_date_out").attr("disabled", true);
                         $("#Visit_date_in").attr("disabled", true);
                     }
                     else {
@@ -340,9 +340,9 @@ $session = new CHttpSession;
     <input type="text" name="Visit[time_check_in]" id='Visit_time_check_in' value=''/>
     <input type="text" name="Visit[date_check_out]" id='Visit_date_check_out' value=''/>
     <input type="text" name="Visit[time_check_out]" id='Visit_time_check_out' value=''/>
-<?php echo "<br>" . $cancelForm->error($model, 'visit_status'); ?>
+    <?php echo "<br>" . $cancelForm->error($model, 'visit_status'); ?>
     <input type='submit' value='Update' class='submitBtn complete' id='cancelFormBtn'>
 
-<?php $this->endWidget(); ?>
+    <?php $this->endWidget(); ?>
 
 </div>

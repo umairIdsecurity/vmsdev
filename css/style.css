@@ -431,9 +431,12 @@ nav.navigation ul li:last-child.active
 }
 
 .grid-view .summary {
-    text-align: left !important;
-    font-weight:bold;
-    font-size:12px;
+    float: right;
+    font-size: 12px;
+    font-weight: bold;
+    margin-left: 748px !important;
+    margin-top: -30px !important;
+    position: absolute;
 }
 
 #page{
@@ -481,6 +484,15 @@ nav.navigation ul li:last-child.active
 }
 ul.yiiPager .hidden a {
     margin-left:-40px;
+}
+
+.grid-view .pager {
+    text-align: left !important;
+    margin-left:10px !important;
+}
+
+.pager .next > a, .pager .next > span {
+    float: none !important;
 }
 
 h1,
@@ -583,6 +595,7 @@ dt.tabs dt{
 
 .errorMessageEmail, .errorMessageEmail1{
     display: none;
+    
 }
 #searchVisitorTableDiv, #visitor_fields_for_Search, 
 #search-visitor-reason-error, #searchHostTableDiv, 
@@ -693,9 +706,23 @@ dt.tabs dt{
 
 #visitorInformationCssMenu ul,
 #visitorInformationCssMenu li,
-#visitorInformationCssMenu a,
-#actionsCssMenu ul{
+#visitorInformationCssMenu a{
     margin: 2px;
+    padding: 0;
+    border: 0;
+    list-style: none;
+    font-weight: normal;
+    text-decoration: none;
+    line-height: 1;
+    font-size: 14px;
+    position: relative;
+    border-radius: 5px;
+}
+
+#actionsCssMenu ul,
+#actionsCssMenu li,
+#actionsCssMenu a{
+  //  margin: 2px;
     padding: 0;
     border: 0;
     list-style: none;
@@ -720,6 +747,27 @@ dt.tabs dt{
     padding:8px;
 }
 
+#actionsCssMenu > .visitStatusLi > li > a  {
+    font-size: 12px;
+    display: block;
+    background: #64676e;
+    background: -moz-linear-gradient(#F1F1F1 0%, #F1F1F1 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #F1F1F1), color-stop(100%, #F1F1F1));
+    background: -webkit-linear-gradient(#F1F1F1 0%, #F1F1F1 100%);
+    background: linear-gradient(#F1F1F1 0%, #F1F1F1 100%);
+    color:#58585A;
+    font-weight:bold;
+    padding:8px;
+}
+
+#actionsCssMenu{
+    margin-top:17px;
+}
+
+.visitStatusLi > li 
+{
+    padding-bottom:10px !important;
+}
 #visitorInformationCssMenu .has-sub li {
     cursor:auto;
     padding-bottom: 0 !important;
@@ -774,15 +822,7 @@ dt.tabs dt{
     border-color: #4E5800 rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
 }
 
-/*#actionsCssMenu > ul > li.has-sub > a:before {
-    content: "";
-    position: absolute;
-    top: 12px;
-    right: 14px;
-    border: 5px solid transparent;
-    border-left: 5px solid #ffffff;
-    border-color: #4E5800 rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
-}*/
+
 
 /*visitor detail actions*/
 #actionsVisitDetails tr td, #visitorDetailDiv tr td{
@@ -866,15 +906,19 @@ dt.tabs dt{
 }
 
 .log-current {
-    background-position: 0px -23px;
+    background:url('../images/logvisiticon.png') 0 0 no-repeat;
+    background-position: 0px -4px;
     padding: 1px 0 1px 30px;
     display: block;
     height: 15px;
     text-decoration: none;
 }
 
+
+
 .pre-visits {
-    background-position: 0px -375px;
+   background:url('../images/preregistericon.png') 0 0 no-repeat;
+    background-position: 0px -4px;
     padding: 1px 0 1px 30px;
     display: block;
     height: 16px;
@@ -906,7 +950,6 @@ dt.tabs dt{
     font-size:12px;
     width:253px;
     text-align:left;
-
 }
 
 
@@ -980,7 +1023,8 @@ dt.tabs dt{
 }
 
 .close-visit {
-    background-position: 0 -48px;
+    //background-position: 0 -48px;
+    background-position: 0 -438px;
     padding: 1px 0 5px 30px;
     display: block;
     height: 16px;
@@ -1100,11 +1144,23 @@ dt.tabs dt{
     padding: 7px 7px 12px;
     width:50%;
 }
+.errorSummary ul li{
+    text-transform: lowercase !important;
+}
+
+.errorSummary ul li:first-letter{
+    text-transform: uppercase !important;
+}
 
 .errorMessage
 {
     color: red;
     font-size: 0.9em;
+    text-transform: lowercase;
+}
+
+.errorMessage:first-letter {
+    text-transform: uppercase;
 }
 
 #preregisterLi{
@@ -1126,11 +1182,11 @@ dt.tabs dt{
 }
 
 .cardCompanyLogo{
-/*    height: 30px;
-    margin-left: -104px;
-    margin-top: -38px;
-    position: absolute;
-    width: 50px;*/
+    /*    height: 30px;
+        margin-left: -104px;
+        margin-top: -38px;
+        position: absolute;
+        width: 50px;*/
     float: left;
     height: 30px;
     margin-left: -105px;
@@ -1140,15 +1196,15 @@ dt.tabs dt{
 }
 
 .cardCompanyLogoPreregistered{
-/*    height: 30px;
-    margin-left: -155px;
-   // margin-top: -64px;
+    /*    height: 30px;
+        margin-left: -155px;
+        // margin-top: -64px;
     
-    margin-top: -14px;
-    //-moz-margin-start: -64px;
-    position: relative;
-    width: 50px;*/
-   
+        margin-top: -14px;
+        //-moz-margin-start: -64px;
+        position: relative;
+        width: 50px;*/
+
     float: left;
     height: 30px;
     margin-left: -105px;
@@ -1170,7 +1226,7 @@ dt.tabs dt{
 #photoPreview{
     height: 154px;
     width: 113px;
-    
+
 }
 
 .cardPhotoPreview > img {
@@ -1194,7 +1250,7 @@ dt.tabs dt{
     font-weight: bold;
     margin-bottom: 15px;
     margin-top: -12px;
-    padding: 3px 15px 5px;
+    padding: 3px 15px;
     text-decoration: none;
     width: 135px !important;
 }
@@ -1245,7 +1301,7 @@ dt.tabs dt{
 }
 
 #logoDiv{
-     margin-left: 450px;
+    margin-left: 450px;
     position: absolute;
 }
 
@@ -1319,4 +1375,42 @@ dt.tabs dt{
 
 #visitor-grid .items .filters td:nth-child(6), #visitor-grid .items .filters td:nth-child(7){
     display:none;
+}
+#actionsCssMenu .complete, #actionsCssMenu .neutral{
+    width:78px !important;
+}
+
+#visitorDetailDiv .editImageBtn{
+    color: #ffffff;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    background-color: #5bb75b;
+    *background-color: #51a351;
+    background-image: -moz-linear-gradient(top, #62c462, #51a351) ;
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#62c462), to(#51a351));
+    background-image: -webkit-linear-gradient(top, #62c462, #51a351);
+    background-image: -o-linear-gradient(top, #62c462, #51a351);
+    background-image: linear-gradient(to bottom, #62c462, #51a351);
+    background-repeat: repeat-x;
+    border-color: #51a351 #51a351 #387038;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff62c462', endColorstr='#ff51a351', GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+    font-size:12px;
+    margin-bottom:13px;
+    height: 25px !important;
+    margin-top: -11.7px;
+}
+
+#visitorDetailDiv .editImageBtn:hover,
+#visitorDetailDiv .editImageBtn:focus {
+    color: #ffffff;
+    background-color: #51a351 !important;
+    *background-color: #499249 !important;
+}
+
+#visitorDetailDiv #printCardBtn, #visitorDetailDiv .editImageBtn, #visitorDetailDiv #reprintCardBtn{
+    height: 24px !important;
+    margin-left: 4px;
+    margin-bottom: 14px;
+    width: 208px !important;
 }

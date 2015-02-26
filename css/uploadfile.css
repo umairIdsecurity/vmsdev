@@ -96,16 +96,16 @@
     margin-bottom: 10px;
     margin-left: -150px;
     margin-top: 0;
-    padding: 3px 15px 5px;
+    padding: 3px 15px;
     text-decoration: none;
     width: 105px;
 }
 
-.ajax-file-upload:hover{
+/*.ajax-file-upload:hover{
     background:#9ED92F;
     -moz-box-shadow:0 2px 0 0 #15719f;
     -webkit-box-shadow:0 2px 0 0 #15719f;
-    box-shadow:0 2px 0 0 #15719f}
+    box-shadow:0 2px 0 0 #15719f}*/
 
 .ajax-upload-dragdrop{
     border: 2px dotted #A5A5C7;

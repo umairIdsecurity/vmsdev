@@ -70,21 +70,21 @@ class CardGeneratedController extends Controller {
 
     public function actionPrint($id) {
         $this->layout = '//layouts/column1';
-
+        
         $cardGenerated = new CardGenerated;
         $cardGeneratedService = new CardGeneratedServiceImpl();
         $session = new CHttpSession;
         $model = Visit::model()->findByPk($id);
         $visitorModel = Visitor::model()->findByPk($model->visitor);
-
-        if ($visitorModel->company != '') {
+        $tenant = User::model()->findByPk($visitorModel->tenant);
+        if ($tenant->company != '') {
             $inc = 6 - (strlen($model->id));
             $int_code = '';
             for ($x = 1; $x <= $inc; $x++) {
 
                 $int_code .= "0";
             }
-            $code = Company::model()->findByPk($visitorModel->company)->code . $int_code . $model->id;
+            $code = Company::model()->findByPk($tenant->company)->code . $int_code . $model->id;
         } else {
             $code ='';
         }
@@ -117,14 +117,15 @@ class CardGeneratedController extends Controller {
         $session = new CHttpSession;
         $model = Visit::model()->findByPk($id);
         $visitorModel = Visitor::model()->findByPk($model->visitor);
-        if ($visitorModel->company != '') {
+        $tenant = User::model()->findByPk($visitorModel->tenant);
+        if ($tenant->company != '') {
             $inc = 6 - (strlen($model->id));
             $int_code = '';
             for ($x = 1; $x <= $inc; $x++) {
 
                 $int_code .= "0";
             }
-            $code = Company::model()->findByPk($visitorModel->company)->code . $int_code . $model->id;
+            $code = Company::model()->findByPk($tenant->company)->code . $int_code . $model->id;
         } else {
             $code ='';
         }

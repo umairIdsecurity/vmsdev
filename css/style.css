@@ -1230,6 +1230,12 @@ dt.tabs dt{
     margin-left: -105px;
     margin-top: 77px;
     position: absolute;
+    width: 50px;*/
+    float: left;
+    height: 30px;
+    margin-left: -105px;
+    margin-top: 77px;
+    position: absolute;
     width: 50px;
 }
 
@@ -1454,6 +1460,16 @@ dt.tabs dt{
     width: 208px !important;
 }
 
+.customIcon-adminmenu{
+    display: inline; 
+    font-weight: bold; 
+    border-radius: 4px; 
+    color: white; 
+    font-size: 14px; 
+    background-color: #8BC61C; 
+    height: 10px ! important; 
+    padding: 0px 3px;
+}
 #visitorDetailDiv #visitorInformationCssMenu .complete, #visitorDetailDiv #visitorInformationCssMenu .host-findBtn{
     width:86px !important;
     height:24px !important;

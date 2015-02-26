@@ -96,6 +96,12 @@ color:<?php echo $companyLafPreferences->sidemenu_hover_font_color; ?> !importan
 
 /*headers*/
 
-.wrapper h1,.visitor-title {
+.wrapper h1,.visitor-title,.has-sub-sub span {
     color:<?php echo $companyLafPreferences->sidemenu_font_color; ?> !important;
 }
+
+/*has sub icon*/
+.customIcon-adminmenu{
+    background-color: <?php echo $companyLafPreferences->sidemenu_font_color; ?> !important;
+}
+

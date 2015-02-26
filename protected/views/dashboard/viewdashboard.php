@@ -27,6 +27,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'type' => 'raw',
             'header' => 'Status',
             'filter' => VisitStatus::$VISIT_STATUS_DASHBOARD_FILTER,
+            'cssClassExpression' => 'changeStatusClass($data->visit_status)',
         ),
         //'date_in',
         
@@ -109,5 +110,30 @@ function getCardCode($cardId) {
     } else {
         return "";
     }
+}
+
+
+function changeStatusClass($visitStatus){
+   // return "red";
+   switch ($visitStatus) {
+       case VisitStatus::ACTIVE:
+           return "green";
+           break;
+       
+       case VisitStatus::PREREGISTERED:
+           return "blue";
+           break;
+       
+       case VisitStatus::CLOSED:
+           return "red";
+           break;
+       
+       case VisitStatus::SAVED:
+           return "grey";
+           break;
+
+       default:
+           break;
+   }
 }
 ?>

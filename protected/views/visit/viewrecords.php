@@ -18,6 +18,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'view-visitor-records',
     'dataProvider' => $model->search(),
     'filter' => $model,
+
     'columns' =>
     array(
         array(
@@ -27,6 +28,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'type' => 'raw',
             'header' => 'Status',
             'filter' => VisitStatus::$VISIT_STATUS_LIST,
+            'cssClassExpression' => 'changeStatusClass($data->visit_status)',
         ),
         array(
             'name' => 'visitor_type',
@@ -116,5 +118,29 @@ function formatDate($date) {
     } else {
         return Yii::app()->dateFormatter->format("d/MM/y", strtotime($date));
     }
+}
+
+function changeStatusClass($visitStatus){
+   // return "red";
+   switch ($visitStatus) {
+       case VisitStatus::ACTIVE:
+           return "green";
+           break;
+       
+       case VisitStatus::PREREGISTERED:
+           return "blue";
+           break;
+       
+       case VisitStatus::CLOSED:
+           return "red";
+           break;
+       
+       case VisitStatus::SAVED:
+           return "grey";
+           break;
+
+       default:
+           break;
+   }
 }
 ?>

@@ -99,7 +99,7 @@ if ($this->action->id == 'addvisitor') {
     <style>
         .ajax-file-upload{
             font-size: 12px !important;
-            margin-left: -178px;
+            margin-left: -181px;
             width: 182.9px;
             padding-bottom:3px;
             height: 17px;

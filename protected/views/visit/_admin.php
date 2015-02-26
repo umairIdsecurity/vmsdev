@@ -43,6 +43,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'name' => 'visit_status',
             'value' => 'VisitStatus::$VISIT_STATUS_LIST[$data->visit_status]',
             'filter' => VisitStatus::$VISIT_STATUS_LIST,
+            'cssClassExpression' => 'changeStatusClass($data->visit_status)',
         ),
         array(
             'header' => 'Actions',
@@ -68,5 +69,30 @@ $this->widget('zii.widgets.grid.CGridView', array(
 function getVisitorFullName($id){
     $visitor =Visitor::model()->findByPk($id);
     return $visitor->first_name.' '.$visitor->last_name;
+}
+
+
+function changeStatusClass($visitStatus){
+   // return "red";
+   switch ($visitStatus) {
+       case VisitStatus::ACTIVE:
+           return "green";
+           break;
+       
+       case VisitStatus::PREREGISTERED:
+           return "blue";
+           break;
+       
+       case VisitStatus::CLOSED:
+           return "red";
+           break;
+       
+       case VisitStatus::SAVED:
+           return "grey";
+           break;
+
+       default:
+           break;
+   }
 }
 ?>

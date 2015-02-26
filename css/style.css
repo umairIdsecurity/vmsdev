@@ -1414,3 +1414,14 @@ dt.tabs dt{
     margin-bottom: 14px;
     width: 208px !important;
 }
+
+.customIcon-adminmenu{
+    display: inline; 
+    font-weight: bold; 
+    border-radius: 4px; 
+    color: white; 
+    font-size: 14px; 
+    background-color: #8BC61C; 
+    height: 10px ! important; 
+    padding: 0px 3px;
+}

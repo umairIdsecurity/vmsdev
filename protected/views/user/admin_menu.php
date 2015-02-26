@@ -32,6 +32,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
             $('.managevisitorrecords').next().slideUp('normal');
             $('.managevisitreasons').next().slideUp('normal');
             $('.managereports').next().slideUp('normal');
+            $('.managevisitortype').next().slideUp('normal');
         }",
                             ), array(
                         'class' => 'managecompanies',
@@ -87,6 +88,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
             $('.managevisitorrecords').next().slideUp('normal');
             $('.managevisitreasons').next().slideUp('normal');
             $('.managereports').next().slideUp('normal');
+            $('.managevisitortype').next().slideUp('normal');
         }",
                         ), array(
                     'class' => 'manageworkstations',
@@ -111,6 +113,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
             $('.managevisitorrecords').next().slideUp('normal');
             $('.managevisitreasons').next().slideUp('normal');
             $('.managereports').next().slideUp('normal');
+            $('.managevisitortype').next().slideUp('normal');
         }",
                         ), array(
                     'class' => 'manageusers',
@@ -121,7 +124,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     echo "style='display:block ;'";
                 }
                 ?>>
-                    <li><a href='<?php echo Yii::app()->createUrl('user/create'); ?>' class="has-sub-sub"><span>Add User</span></a></li>
+                    <li><a href='<?php echo Yii::app()->createUrl('user/create'); ?>' class="has-sub-sub"><div class="customIcon-adminmenu">+</div><span>Add User</span></a></li>
 
                     <?php
                     switch ($session['role']) {
@@ -210,6 +213,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
             $('.managevisitorrecords').next().slideUp('normal');
             $('.managevisitreasons').next().slideDown('normal');
             $('.managereports').next().slideUp('normal');
+            $('.managevisitortype').next().slideUp('normal');
         }",
                             ), array(
                         'class' => 'managevisitreasons',
@@ -233,6 +237,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
             $('.managevisitorrecords').next().slideUp('normal');
             $('.managevisitreasons').next().slideUp('normal');
             $('.managereports').next().slideUp('normal');
+            $('.managevisitortype').next().slideUp('normal');
         }",
                             ), array(
                         'class' => 'managevisits',
@@ -270,6 +275,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
             $('.managevisitorrecords').next().slideUp('normal');
             $('.managevisitreasons').next().slideUp('normal');
             $('.managereports').next().slideDown('normal');
+            $('.managevisitortype').next().slideUp('normal');
         }",
                         ), array(
                     'class' => 'managereports',

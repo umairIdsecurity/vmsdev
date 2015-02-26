@@ -47,7 +47,7 @@ class Issue66FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Customise Display", $this->getText("css=span"));
     }
 
-    /* Scenario 2 Assert organisation settings not present in adminofadmin@test.com
+    /* Scenario 2 Assert organisation settings present in adminofadmin@test.com
       Expected Behavior
       Only top admin can change company code
      */

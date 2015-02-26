@@ -4,7 +4,7 @@
 
 ?>
 <h1>Preregistered Visitors</h1>
-<br>
+
 <?php
 $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'visit-gridDashboard',

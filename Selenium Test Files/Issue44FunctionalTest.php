@@ -28,7 +28,7 @@ class Issue44FunctionalTest extends BaseFunctionalTest {
         $this->Scenario3();
     }
 
-    /* Scenario 1 - Add Visitor Record Record 
+    /* Scenario 1 - Add Visitor Profile Record 
       Expected Behavior
       Assert testaddvisitor1@test.com in emailaddress search field
      */
@@ -37,8 +37,8 @@ class Issue44FunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->click("link=Manage Visitor Records");
-        $this->clickAndWait("link=Add Visitor Record");
+        $this->click("link=Manage Visitors");
+        $this->clickAndWait("link=Add Visitor Profile");
         $this->addVisitor("addvisitor1");
         $this->clickAndWait("id=submitFormVisitor");
         $this->assertEquals("testaddvisitor1@test.com", $this->getText("//div[@id='visitor-grid']/table/tbody/tr/td[3]"));
@@ -76,7 +76,7 @@ class Issue44FunctionalTest extends BaseFunctionalTest {
         }
     }
 
-    /* Scenario 2 - Add Visitor Record Record with new company
+    /* Scenario 2 - Add Visitor Profile Record with new company
       Expected Behavior
       Assert testaddvisitor2@test.com in emailaddress search field
      * Assert visitor company in company dropdown
@@ -86,8 +86,8 @@ class Issue44FunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->click("link=Manage Visitor Records");
-        $this->clickAndWait("link=Add Visitor Record");
+        $this->click("link=Manage Visitors");
+        $this->clickAndWait("link=Add Visitor Profile");
         $this->addVisitor("addvisitor2");
         $this->addCompany("Visitor Company", "visitorcompany","VCA");
         $this->clickAndWait("id=submitFormVisitor");
@@ -140,8 +140,8 @@ class Issue44FunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->click("link=Manage Visitor Records");
-        $this->clickAndWait("link=Add Visitor Record");
+        $this->click("link=Manage Visitors");
+        $this->clickAndWait("link=Add Visitor Profile");
         $this->click("id=submitFormVisitor");
         $this->waitForElementPresent("id=Visitor_first_name_em_");
         sleep(1);
@@ -159,14 +159,14 @@ class Issue44FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_password", "123");
         $this->type("id=Visitor_repeatpassword", "1234");
         $this->click("id=addCompanyLink");
-        $this->assertEquals("Please select a tenant.", $this->getText("id=Visitor_company_em_"));
+        $this->assertEquals("Please select a tenant", $this->getText("id=Visitor_company_em_"));
         $this->type("id=Visitor_email", "123");
         $this->type("id=Visitor_position", "123");
         $this->assertEquals("Email Address is not a valid email address.", $this->getText("id=Visitor_email_em_"));
         $this->type("id=Visitor_password", "123");
         $this->type("id=Visitor_repeatpassword", "1234");
         $this->click("id=addCompanyLink");
-        $this->assertEquals("Please select a tenant.", $this->getText("id=Visitor_company_em_"));
+        $this->assertEquals("Please select a tenant", $this->getText("id=Visitor_company_em_"));
         $this->type("id=Visitor_first_name", "test");
         $this->type("id=Visitor_last_name", "test");
         $this->type("id=Visitor_email", "testvisitor1@test.com");

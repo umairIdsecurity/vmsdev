@@ -68,7 +68,7 @@ class Issue48FunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->clickAndWait("link=Manage Visitor Records");
+        $this->clickAndWait("link=Manage Visitors");
         $this->click("id=yt0");
         $this->assertTrue((bool) preg_match('/^Are you sure you want to delete this item[\s\S]$/', $this->getConfirmation()));
         $this->assertEquals("This record has an open visit and must be cancelled before deleting.", $this->getAlert());

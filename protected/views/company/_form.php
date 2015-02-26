@@ -174,12 +174,18 @@ if ($this->action->id == 'update') {
             <td><?php
                 echo $form->textField($model, 'website', array('size' => 50, 'maxlength' => 50));
                 if (isset($_GET['viewFrom'])) {
-                    echo "<br>" . $form->error($model, 'website');
+                    echo $form->error($model, 'website');
+                    ?>
+                    <span class="errorMessage" id="websiteErrorMessage">Website is not a valid URL.</span>
+                    <?php
                 }
                 ?></td>
             <td><?php
                 if (!isset($_GET['viewFrom'])) {
-                    echo "<br>" . $form->error($model, 'website');
+                    echo $form->error($model, 'website');
+                    ?>
+                    <span class="errorMessage" id="websiteErrorMessage" style="display:none;">Website is not a valid URL.</span>
+                    <?php
                 }
                 ?></td>
         </tr>
@@ -189,7 +195,7 @@ if ($this->action->id == 'update') {
 
     <div class="row buttons " style="<?php if (isset($_GET['viewFrom'])) { ?>
              margin-left:400px;
-         <?php
+             <?php
          } else {
              echo "text-align:right;";
          }
@@ -202,7 +208,7 @@ if ($this->action->id == 'update') {
             if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                 ?>
                 <button class="yiiBtn" id="modalBtn" style="padding:1.5px 6px;margin-top:-4.1px;height:30.1px;" data-target="#viewLicense" data-toggle="modal">View License Details</button> 
-                <?php } else { ?>
+            <?php } else { ?>
                 <button class="yiiBtn actionForward" style="padding:2px 6px;margin-top:-4.1px;height:30.1px;" type='button' onclick="gotoLicensePage()">License Details</bitton>
                     <?php
                 }
@@ -210,7 +216,7 @@ if ($this->action->id == 'update') {
             ?>
     </div>
 
-<?php $this->endWidget(); ?>
+    <?php $this->endWidget(); ?>
 
 </div><!-- form -->
 
@@ -228,16 +234,32 @@ if (isset($_GET['viewFrom'])) {
             event.preventDefault();
 
             var websiteUrl = $("#Company_website").val();
-            
+
             if (websiteUrl != '')
             {
                 var httpString = websiteUrl.substr(0, 6);
-                if (httpString != 'http:/') {
-                    $("#Company_website").val("http://" + websiteUrl);
-                    $(this).unbind('submit').submit();
+                if (websiteUrl.substr(0, 3) == 'www') {
+                    //alert(websiteUrl.substr(0, 3));
+                    if (websiteUrl.match(new RegExp('\\.', 'g')).length < 2) {
+                        $("#websiteErrorMessage").show();
+                    } else {
+                        $("#websiteErrorMessage").hide();
+                        if (httpString != 'http:/') {
+                            $("#Company_website").val("http://" + websiteUrl);
+                            $(this).unbind('submit').submit();
+                        } else {
+                            $(this).unbind('submit').submit();
+                        }
+                    }
                 } else {
-                    $(this).unbind('submit').submit();
+                    if (httpString != 'http:/') {
+                        $("#Company_website").val("http://" + websiteUrl);
+                        $(this).unbind('submit').submit();
+                    } else {
+                        $(this).unbind('submit').submit();
+                    }
                 }
+
             } else {
                 $(this).unbind('submit').submit()
             }

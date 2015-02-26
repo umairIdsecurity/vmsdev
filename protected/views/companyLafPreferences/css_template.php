@@ -94,3 +94,8 @@ background: none repeat scroll 0 0 <?php echo $companyLafPreferences->sidemenu_h
 color:<?php echo $companyLafPreferences->sidemenu_hover_font_color; ?> !important;
 }
 
+/*headers*/
+
+.wrapper h1,.visitor-title {
+    color:<?php echo $companyLafPreferences->sidemenu_font_color; ?> !important;
+}

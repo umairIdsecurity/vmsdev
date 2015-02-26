@@ -245,8 +245,9 @@ class Visit extends CActiveRecord {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
-        $criteria->with = 'visitor0';
-        $criteria->with = 'card0';
+        
+        $criteria->with = array('card0','visitor0');
+        //$criteria->with .= 'visitor0';
         $criteria->compare('CONCAT(visitor0.first_name, \' \', visitor0.last_name)', $this->visitor, true);
         $criteria->compare('visitor0.first_name', $this->firstname, true);
         $criteria->compare('visitor0.last_name', $this->lastname, true);

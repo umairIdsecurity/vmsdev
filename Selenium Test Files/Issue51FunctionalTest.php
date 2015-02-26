@@ -59,7 +59,7 @@ class Issue51FunctionalTest extends BaseFunctionalTest {
         $this->click("link=Manage Workstations");
         $this->waitForElementPresent("css=span.empty");
         $this->assertEquals("No results found.", $this->getText("css=span.empty"));
-        $this->click("link=Manage Visitor Records");
+        $this->click("link=Manage Visitors");
         $this->waitForElementPresent("css=span.empty");
         $this->assertEquals("No results found.", $this->getText("css=span.empty"));
         $this->click("link=Manage Workstations");
@@ -70,7 +70,7 @@ class Issue51FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Workstation_contact_number", "123456");
         $this->type("id=Workstation_contact_email_address", "testperson@test.com");
         $this->clickAndWait("name=yt0");
-        $this->click("link=Manage Visitor Records");
+        $this->click("link=Manage Visitors");
         $this->clickAndWait("link=Register a Visit");
         $this->click("id=clicktabA");
         $this->select("id=workstation", "label=Second Tenant Workstation");

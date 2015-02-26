@@ -1,4 +1,9 @@
-
+<style>
+    .grid-view .summary {
+        margin-left: 758px !important;
+        margin-top: -107px !important;
+    }
+</style>
 <h1>Visitor Registration History</h1>
 <?php echo CHtml::button('Export to CSV', array('id' => 'export-button', 'class' => 'greenBtn complete')); ?>
 <br>

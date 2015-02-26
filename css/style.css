@@ -431,9 +431,12 @@ nav.navigation ul li:last-child.active
 }
 
 .grid-view .summary {
-    text-align: left !important;
-    font-weight:bold;
-    font-size:12px;
+    float: right;
+    font-size: 12px;
+    font-weight: bold;
+    margin-left: 748px !important;
+    margin-top: -30px !important;
+    position: absolute;
 }
 
 #page{
@@ -481,6 +484,15 @@ nav.navigation ul li:last-child.active
 }
 ul.yiiPager .hidden a {
     margin-left:-40px;
+}
+
+.grid-view .pager {
+    text-align: left !important;
+    margin-left:10px !important;
+}
+
+.pager .next > a, .pager .next > span {
+    float: none !important;
 }
 
 h1,
@@ -583,6 +595,7 @@ dt.tabs dt{
 
 .errorMessageEmail, .errorMessageEmail1{
     display: none;
+    
 }
 #searchVisitorTableDiv, #visitor_fields_for_Search, 
 #search-visitor-reason-error, #searchHostTableDiv, 
@@ -709,7 +722,7 @@ dt.tabs dt{
 #actionsCssMenu ul,
 #actionsCssMenu li,
 #actionsCssMenu a{
-    margin: 2px;
+  //  margin: 2px;
     padding: 0;
     border: 0;
     list-style: none;
@@ -893,15 +906,19 @@ dt.tabs dt{
 }
 
 .log-current {
-    background-position: 0px -23px;
+    background:url('../images/logvisiticon.png') 0 0 no-repeat;
+    background-position: 0px -4px;
     padding: 1px 0 1px 30px;
     display: block;
     height: 15px;
     text-decoration: none;
 }
 
+
+
 .pre-visits {
-    background-position: 0px -375px;
+   background:url('../images/preregistericon.png') 0 0 no-repeat;
+    background-position: 0px -4px;
     padding: 1px 0 1px 30px;
     display: block;
     height: 16px;
@@ -933,7 +950,6 @@ dt.tabs dt{
     font-size:12px;
     width:253px;
     text-align:left;
-
 }
 
 
@@ -1007,7 +1023,8 @@ dt.tabs dt{
 }
 
 .close-visit {
-    background-position: 0 -48px;
+    //background-position: 0 -48px;
+    background-position: 0 -438px;
     padding: 1px 0 5px 30px;
     display: block;
     height: 16px;
@@ -1127,11 +1144,23 @@ dt.tabs dt{
     padding: 7px 7px 12px;
     width:50%;
 }
+.errorSummary ul li{
+    text-transform: lowercase !important;
+}
+
+.errorSummary ul li:first-letter{
+    text-transform: uppercase !important;
+}
 
 .errorMessage
 {
     color: red;
     font-size: 0.9em;
+    text-transform: lowercase;
+}
+
+.errorMessage:first-letter {
+    text-transform: uppercase;
 }
 
 #preregisterLi{

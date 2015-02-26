@@ -164,7 +164,7 @@ if ($this->action->id == 'update') {
                             <td>
                                 <?php echo $form->textField($model, 'email', array('size' => 50, 'maxlength' => 50)); ?>
                                 <?php echo "<br>" . $form->error($model, 'email'); ?>
-                                <div style="" class="errorMessageEmail" >Email Address has already been taken.</div>
+                                <div style="" class="errorMessageEmail" >A profile already exists for this email address.</div>
 
                             </td>
                         </tr>
@@ -364,7 +364,7 @@ if (isset($_GET['id'])) {
     function addCompany() {
         var url;
         if ($("#Visitor_tenant").val() == '') {
-            $("#Visitor_company_em_").html("Please select a tenant.");
+            $("#Visitor_company_em_").html("Please select a tenant");
             $("#Visitor_company_em_").show();
         } else {
             if ($("#currentRoleOfLoggedInUser").val() == '<?php echo Roles::ROLE_SUPERADMIN; ?>') {

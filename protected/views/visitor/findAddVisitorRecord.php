@@ -6,7 +6,7 @@ $session = new CHttpSession;
         <label><b>Search Name:</b></label> 
         <input type="text" id="search-visitor" name="search-visitor" class="search-text"/> 
         <button class="visitor-findBtn" onclick="findVisitorRecord()" id="visitor-findBtn" style="display:none;" data-target="#findVisitorRecordModal" data-toggle="modal">Find Record</button>
-        <button class="visitor-findBtn neutral" id="dummy-visitor-findBtn">Find Record</button>
+        <button class="visitor-findBtn neutral" id="dummy-visitor-findBtn" style="padding:8px;">Find Record</button>
         <div class="errorMessage" id="searchTextErrorMessage" style="display:none;"></div>
     </div>
 
@@ -46,7 +46,7 @@ $session = new CHttpSession;
                     }
                     ?>
                 </select>
-                <div style="display:none;" class="errorMessage errorMessageWorkstationSearch" >Workstation cannot be blank.</div>
+                <div style="display:none;" class="errorMessage errorMessageWorkstationSearch" >Please select a workstation</div>
             </div>
             <label for="Visit_reason_search">Reason</label><br>
 
@@ -62,7 +62,7 @@ $session = new CHttpSession;
                 ?>
                 <option value="Other">Other</option>
             </select>
-            <div class="errorMessage visitorReason" id="search-visitor-reason-error">Reason cannot be blank.</div>
+            <div class="errorMessage visitorReason" id="search-visitor-reason-error">Please select a reason</div>
         </div>
         <?php
         $form = $this->beginWidget('CActiveForm', array(
@@ -172,7 +172,7 @@ $session = new CHttpSession;
                             }
                             ?>
                         </select>
-                        <div style="display:none;" class="errorMessage errorMessageWorkstation" >Workstation cannot be blank.</div>
+                        <div style="display:none;" class="errorMessage errorMessageWorkstation" >Please select a workstation</div>
 
                     </td>
                     <td><label for="Visitor_vehicle">Vehicle Registration Number</label><br>
@@ -221,7 +221,7 @@ $session = new CHttpSession;
                         <?php echo $form->labelEx($model, 'email'); ?><br>
                         <?php echo $form->textField($model, 'email', array('size' => 50, 'maxlength' => 50)); ?>
                         <?php echo "<br>" . $form->error($model, 'email'); ?>
-                        <div style="" id="Visitor_email_em_" class="errorMessage errorMessageEmail" >Email Address has already been taken.</div>
+                        <div style="" id="Visitor_email_em_" class="errorMessage errorMessageEmail" >A profile already exists for this email address.</div>
                     </td>
                 </tr>
                 <tr>
@@ -253,7 +253,7 @@ $session = new CHttpSession;
                             ?>
 
                         </select>
-                        <div class="errorMessage visitorReason" >Reason cannot be blank.</div>
+                        <div class="errorMessage visitorReason" >Please select a reason</div>
                     </td>
                 </tr>
                 <tr>
@@ -346,7 +346,7 @@ $session = new CHttpSession;
     ?>
     <label>Add Reason</label><br>
     <textarea id="VisitReason_reason" name="VisitReason[reason]" rows="1" maxlength="128" style="text-transform: capitalize;"></textarea> 
-    <div class="errorMessage" id="visitReasonErrorMessage" style="display:none;">Reason cannot be blank.</div>
+    <div class="errorMessage" id="visitReasonErrorMessage" style="display:none;">Please select a reason</div>
 
 
     <?php $this->endWidget(); ?>
@@ -611,7 +611,7 @@ $session = new CHttpSession;
     function addCompany() {
         var url;
         if ($("#Visitor_tenant").val() == '') {
-            $("#Visitor_company_em_").html("Please select a tenant.");
+            $("#Visitor_company_em_").html("Please select a tenant");
             $("#Visitor_company_em_").show();
         } else {
             if ($("#currentRoleOfLoggedInUser").val() == '<?php echo Roles::ROLE_SUPERADMIN; ?>') {

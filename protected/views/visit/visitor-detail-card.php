@@ -102,10 +102,10 @@ $photoForm = $this->beginWidget('CActiveForm', array(
 
                                 $int_code .= "0";
                             }
-                            echo Company::model()->findByPk($visitorModel->company)->code . $int_code . $model->id;
+                            ////echo Company::model()->findByPk($visitorModel->company)->code . $int_code . $model->id;
                         }
                         echo Company::model()->findByPk($tenant->company)->code . $int_code . $model->id;
-                    }
+                    
                     ?>
                     </span>
                 </td>

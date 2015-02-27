@@ -150,7 +150,7 @@ $this->renderPartial('visithistory', array('model' => $model,
         var visitReason = $("#VisitReason_reason").val();
         if (visitReason == '') {
             $("#visitReasonErrorMessage").show();
-            $("#visitReasonErrorMessage").html("Reason cannot be blank.");
+            $("#visitReasonErrorMessage").html("Please select a reason");
         } else {
 
             $.ajax({

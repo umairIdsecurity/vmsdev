@@ -69,7 +69,7 @@ class Issue80FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Please enter a password", $this->getText("id=User_password_em_"));
         $this->assertEquals("Please enter a repeat password", $this->getText("id=User_repeatpassword_em_"));
         $this->assertEquals("Please select a company name", $this->getText("id=User_company_em_"));
-        $this->clickAndWait("//div[@id='cssmenu']/ul/li[3]/a/span");
+        $this->clickAndWait("css=a.submenu-icon.addvisitorprofile > span");
         $this->click("id=submitFormVisitor");
         sleep(1);
         $this->assertEquals("Please enter a first name", $this->getText("id=Visitor_first_name_em_"));
@@ -92,7 +92,7 @@ class Issue80FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Please enter a name", $this->getText("css=div.errorMessage"));
         $this->assertEquals("Please select a tenant", $this->getText("//form[@id='workstations-form']/table/tbody/tr[6]/td[3]/div"));
         $this->click("id=yt3");
-        $this->clickAndWait("link=Add User");
+        $this->clickAndWait("css=div.customIcon-adminmenu");
         $this->click("id=submitBtn");
         $this->clickAndWait("id=submitForm");
         $this->assertEquals("Please enter a first name", $this->getText("//form[@id='user-form']/table/tbody/tr/td[2]/table/tbody/tr/td[2]/div"));
@@ -160,7 +160,7 @@ class Issue80FunctionalTest extends BaseFunctionalTest {
         $this->select("id=User_tenant", "label=Test admin2");
         $this->click("id=submitFormUser");
         $this->assertEquals("A profile already exists for this email address.", $this->getText("xpath=(//div[@id='User_email_em_'])[2]"));
-        $this->clickAndWait("//div[@id='cssmenu']/ul/li[3]/a/span");
+        $this->clickAndWait("css=a.submenu-icon.addvisitorprofile > span");
         $this->type("id=Visitor_first_name", "test");
         $this->type("id=Visitor_last_name", "test");
         $this->type("id=Visitor_email", "testvisitor1@test.com");

@@ -36,7 +36,10 @@ class Issue89FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("css=tr.even > td > a.statusLink");
         $this->click("//li[@id='activateLi']/a/span");
-        $this->clickAndWait("css=#activate-a-visit-form > input.complete");
+        $this->click("css=#activate-a-visit-form > input.complete");
+        sleep(1);
+        $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
+        $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("link=Active");
         $this->click("id=printCardBtn");
         $this->waitForPopUp("_blank", "30000");
@@ -62,7 +65,7 @@ class Issue89FunctionalTest extends BaseFunctionalTest {
             if ($second >= 60)
                 $this->fail("timeout");
             try {
-                if ("Displaying 1-1 of 1 result." == $this->getText("css=div.summary"))
+                if ("Displaying 1-1 of 1 result" == $this->getText("css=div.summary"))
                     break;
             } catch (Exception $e) {
                 
@@ -70,14 +73,14 @@ class Issue89FunctionalTest extends BaseFunctionalTest {
             sleep(1);
         }
 
-        $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
+        $this->assertEquals("Displaying 1-1 of 1 result", $this->getText("css=div.summary"));
         $this->type("name=Visit[cardcode]", "");
         $this->type("name=Visit[lastname]", "1");
         for ($second = 0;; $second++) {
             if ($second >= 60)
                 $this->fail("timeout");
             try {
-                if ("Displaying 1-4 of 4 results." == $this->getText("css=div.summary"))
+                if ("Displaying 1-4 of 4 results" == $this->getText("css=div.summary"))
                     break;
             } catch (Exception $e) {
                 
@@ -85,7 +88,7 @@ class Issue89FunctionalTest extends BaseFunctionalTest {
             sleep(1);
         }
 
-        $this->assertEquals("Displaying 1-4 of 4 results.", $this->getText("css=div.summary"));
+        $this->assertEquals("Displaying 1-4 of 4 results", $this->getText("css=div.summary"));
         $this->assertEquals("Visitor1", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[4]"));
         $this->assertEquals("Visitor1", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr[2]/td[4]"));
         $this->assertEquals("Visitor1", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr[3]/td[4]"));

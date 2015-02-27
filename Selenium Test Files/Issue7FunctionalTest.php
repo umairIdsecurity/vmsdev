@@ -94,14 +94,14 @@ class Issue7FunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_contact_number", "");
         $this->click("id=submitBtn");
         $this->waitForPageToLoad("30000");
-        $this->assertEquals("First Name cannot be blank.", $this->getText("css=div.errorSummary > ul > li"));
-        $this->assertEquals("Last Name cannot be blank.", $this->getText("//form[@id='user-form']/div/ul/li[2]"));
-        $this->assertEquals("Email cannot be blank.", $this->getText("//form[@id='user-form']/div/ul/li[3]"));
-        $this->assertEquals("Contact No. cannot be blank.", $this->getText("//form[@id='user-form']/div/ul/li[4]"));
+        $this->assertEquals("Please enter a First Name", $this->getText("css=div.errorSummary > ul > li"));
+        $this->assertEquals("Please enter a Last Name", $this->getText("//form[@id='user-form']/div/ul/li[2]"));
+        $this->assertEquals("Please enter an Email Address", $this->getText("//form[@id='user-form']/div/ul/li[3]"));
+        $this->assertEquals("Please enter a Contact No.", $this->getText("//form[@id='user-form']/div/ul/li[4]"));
         $this->type("id=User_email", "123");
         $this->click("id=submitBtn");
         $this->waitForPageToLoad("30000");
-        $this->assertEquals("Email is not a valid email address.", $this->getText("//form[@id='user-form']/div/ul/li[4]"));
+        $this->assertEquals("Email Address is not a valid email address.", $this->getText("//form[@id='user-form']/div/ul/li[4]"));
     }
 
     /*

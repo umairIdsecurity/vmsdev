@@ -190,7 +190,7 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
         sleep(1);
         $this->assertEquals("test" . $visitor_name . "@test.com", $this->getText("//div[@id='visitor-grid']/table/tbody/tr/td[3]"));
         sleep(1);
-        $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
+        $this->assertEquals("Displaying 1-1 of 1 result", $this->getText("css=div.summary"));
     }
 
     function testBlank() {

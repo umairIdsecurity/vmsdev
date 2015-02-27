@@ -47,9 +47,9 @@ class Issue35FunctionalTest extends BaseFunctionalTest {
         $this->open("http://dev.identitysecurity.info/index.php?r=visit/RunScheduledJobsClose");
         $this->assertEquals("Scheduled Jobs - Close \nAffected Rows : 2\nUpdate visit to close status successful.", $this->getText("css=body"));
         $this->open("http://dev.identitysecurity.info/index.php?r=dashboard");
-        $this->clickAndWait("link=Visitor Records");
+        $this->clickAndWait("link=Visit History");
         $this->clickAndWait("link=Closed");
-        $this->assertEquals("Visit Status: Closed", $this->getText("link=Visit Status: Closed"));
+        $this->assertEquals("Closed", $this->getText("css=ul.visitStatusLi > li > a > span"));
     }
 
     /* Scenario 2 - Perform Update Status To Expired for Visit for Scheduled Jobs
@@ -71,7 +71,7 @@ class Issue35FunctionalTest extends BaseFunctionalTest {
         $this->open("http://dev.identitysecurity.info/index.php?r=visit/RunScheduledJobsExpired");
         $this->assertEquals("Scheduled Jobs - Expired \nAffected Rows : 2\nUpdate visit to expired status successful.", $this->getText("css=body"));
         $this->open("http://dev.identitysecurity.info/index.php?r=dashboard");
-        $this->clickAndWait("link=Visitor Records");
+        $this->clickAndWait("link=Visit History");
         $this->assertEquals("Expired", $this->getText("link=Expired"));
     }
 

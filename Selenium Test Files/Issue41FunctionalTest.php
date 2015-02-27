@@ -32,75 +32,78 @@ class Issue41FunctionalTest extends BaseFunctionalTest {
     function Scenario1() {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
-        $this->clickAndWait("link=Visitor Records");
+        $this->clickAndWait("link=Visit History");
         $this->assertEquals("Active Preregistered Closed Expired Saved", $this->getText("name=Visit[visit_status]"));
         $this->clickAndWait("link=Preregistered");
         $this->click("//li[@id='activateLi']/a/span");
         $this->type("id=Visitor_photo","1");
-        $this->waitForElementPresent("css=#activate-a-visit-form > input.complete");
-        $this->clickAndWait("css=#activate-a-visit-form > input.complete");
-        $this->clickAndWait("link=Visitor Records");
+        $this->click("css=#activate-a-visit-form > input.complete");
+        sleep(5);
+        $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
+        $this->clickAndWait("link=Dashboard");
+        $this->clickAndWait("link=Active");
+        $this->clickAndWait("link=Visit History");
         $this->select("name=Visit[visit_status]", "label=Active");
         for ($second = 0;; $second++) {
             if ($second >= 60)
                 $this->fail("timeout");
             try {
-                if ("Displaying 1-1 of 1 result." == $this->getText("css=div.summary"))
+                if ("Displaying 1-1 of 1 result" == $this->getText("css=div.summary"))
                     break;
             } catch (Exception $e) {
                 
             }
             sleep(1);
         }
-        $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
+        $this->assertEquals("Displaying 1-1 of 1 result", $this->getText("css=div.summary"));
         $this->select("name=Visit[visit_status]", "label=Preregistered");
         for ($second = 0;; $second++) {
             if ($second >= 60)
                 $this->fail("timeout");
             try {
-                if ("Displaying 1-6 of 6 results." == $this->getText("css=div.summary"))
+                if ("Displaying 1-6 of 6 results" == $this->getText("css=div.summary"))
                     break;
             } catch (Exception $e) {
                 
             }
             sleep(1);
         }
-        $this->assertEquals("Displaying 1-6 of 6 results.", $this->getText("css=div.summary"));
+        $this->assertEquals("Displaying 1-6 of 6 results", $this->getText("css=div.summary"));
         
         $this->select("name=Visit[visit_status]", "label=Active");
         $this->waitForElementPresent("link=Active");
         $this->clickAndWait("link=Active");
         $this->click("css=#close-visit-form > input[type=\"submit\"]");
-        $this->clickAndWait("link=Visitor Records");
+        $this->clickAndWait("link=Visit History");
         $this->select("name=Visit[visit_status]", "label=Closed");
         for ($second = 0;; $second++) {
             if ($second >= 60)
                 $this->fail("timeout");
             try {
-                if ("Displaying 1-1 of 1 result." == $this->getText("css=div.summary"))
+                if ("Displaying 1-1 of 1 result" == $this->getText("css=div.summary"))
                     break;
             } catch (Exception $e) {
                 
             }
             sleep(1);
         }
-        $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
+        $this->assertEquals("Displaying 1-1 of 1 result", $this->getText("css=div.summary"));
         $this->assertEquals("Closed", $this->getText("link=Closed"));
         $this->clickAndWait("//ul[@id='tabs']/li[3]/a/p");
         $username = 'admin@test.com';
         $this->login($username, '12345');
-        $this->clickAndWait("link=Visitor Records");
+        $this->clickAndWait("link=Visit History");
         $this->assertEquals("Active Preregistered Closed Expired Saved", $this->getText("name=Visit[visit_status]"));
         $this->clickAndWait("//ul[@id='tabs']/li[3]/a/p");
         $username = 'operator@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("id=submitBtn");
-        $this->clickAndWait("link=Visitor Records");
+        $this->clickAndWait("link=Visit History");
         $this->assertEquals("Active Preregistered Closed Expired Saved", $this->getText("name=Visit[visit_status]"));
         $this->clickAndWait("//ul[@id='tabs']/li[3]/a/p");
         $username = 'staffmember@test.com';
         $this->login($username, '12345');
-        $this->clickAndWait("link=Visitor Records");
+        $this->clickAndWait("link=Visit History");
         $this->assertEquals("Active Preregistered Closed Expired Saved", $this->getText("name=Visit[visit_status]"));
     }
 

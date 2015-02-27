@@ -65,7 +65,10 @@ class Issue65FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("id=submitFormUser");
         $this->assertEquals("TCA", $this->getText("css=#cardDetailsTable > tbody > tr > td"));
         $this->click("//li[@id='activateLi']/a/span");
-        $this->clickAndWait("css=#activate-a-visit-form > input.complete");
+        $this->click("css=#activate-a-visit-form > input.complete");
+        sleep(1);
+        $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
+        $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("link=Active");
         $this->assertEquals("TCA000008", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[4]/td/span"));
         $this->click("id=printCardBtn");

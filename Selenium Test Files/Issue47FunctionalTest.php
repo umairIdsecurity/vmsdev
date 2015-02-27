@@ -37,7 +37,7 @@ class Issue47FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Visitors");
-        $this->clickAndWait("link=Preregister a Visit");
+        $this->clickAndWait("link=Preregister Visit");
         $this->click("id=clicktabA");
         $this->select("id=Visitor_visitor_type", "label=Corporate Visitor");
         $this->addVisitor('Visitor5');
@@ -93,8 +93,8 @@ class Issue47FunctionalTest extends BaseFunctionalTest {
         $this->waitForElementPresent("link=Add Company");
         $this->clickAndWait("link=Add Company");
         $this->clickAndWait("id=createBtn");
-        $this->assertEquals("Company Name cannot be blank.", $this->getText("css=div.errorMessage"));
-        $this->assertEquals("Company Code cannot be blank.", $this->getText("//form[@id='company-form']/table/tbody/tr[3]/td[3]/div"));
+        $this->assertEquals("Please enter a Company Name", $this->getText("css=div.errorMessage"));
+        $this->assertEquals("Please enter a Company Code", $this->getText("//form[@id='company-form']/table/tbody/tr[3]/td[3]/div"));
         $this->type("id=Company_code", "AB");
         $this->clickAndWait("id=createBtn");
         $this->assertEquals("Code is too short (Should be in 3 characters)", $this->getText("//form[@id='company-form']/table/tbody/tr[3]/td[3]/div"));

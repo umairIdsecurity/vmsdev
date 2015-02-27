@@ -90,14 +90,14 @@ class Issue3SuperAdminFunctionalTest extends BaseFunctionalTest {
             if ($second >= 10)
                 $this->fail("timeout");
             try {
-                if ("Displaying 1-1 of 1 result." == $this->getText("css=div.summary"))
+                if ("Displaying 1-1 of 1 result" == $this->getText("css=div.summary"))
                     break;
             } catch (Exception $e) {
                 
             }
             sleep(1);
         }
-        $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
+        $this->assertEquals("Displaying 1-1 of 1 result", $this->getText("css=div.summary"));
     }
 
     /* Scenario 2 – Login as super admin and add agent administrator
@@ -158,14 +158,14 @@ class Issue3SuperAdminFunctionalTest extends BaseFunctionalTest {
             if ($second >= 10)
                 $this->fail("timeout");
             try {
-                if ("Displaying 1-1 of 1 result." == $this->getText("css=div.summary"))
+                if ("Displaying 1-1 of 1 result" == $this->getText("css=div.summary"))
                     break;
             } catch (Exception $e) {
                 
             }
             sleep(1);
         }
-        $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
+        $this->assertEquals("Displaying 1-1 of 1 result", $this->getText("css=div.summary"));
     }
 
     /*
@@ -233,14 +233,14 @@ class Issue3SuperAdminFunctionalTest extends BaseFunctionalTest {
             if ($second >= 10)
                 $this->fail("timeout");
             try {
-                if ("Displaying 1-1 of 1 result." == $this->getText("css=div.summary"))
+                if ("Displaying 1-1 of 1 result" == $this->getText("css=div.summary"))
                     break;
             } catch (Exception $e) {
                 
             }
             sleep(1);
         }
-        $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
+        $this->assertEquals("Displaying 1-1 of 1 result", $this->getText("css=div.summary"));
     }
 
     /* Scenario 4 – Login as super admin and add agent operator
@@ -313,14 +313,14 @@ class Issue3SuperAdminFunctionalTest extends BaseFunctionalTest {
             if ($second >= 10)
                 $this->fail("timeout");
             try {
-                if ("Displaying 1-1 of 1 result." == $this->getText("css=div.summary"))
+                if ("Displaying 1-1 of 1 result" == $this->getText("css=div.summary"))
                     break;
             } catch (Exception $e) {
                 
             }
             sleep(1);
         }
-        $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
+        $this->assertEquals("Displaying 1-1 of 1 result", $this->getText("css=div.summary"));
     }
 
     /* Scenario 5 – Login as super admin and add staff member
@@ -352,7 +352,7 @@ class Issue3SuperAdminFunctionalTest extends BaseFunctionalTest {
         $this->click("link=Administration");
         $this->waitForPageToLoad("30000");
         $this->click("link=Manage Users");
-        $this->click("link=Add User");
+        $this->click("css=div.customIcon-adminmenu");
         $this->waitForPageToLoad("30000");
         $this->addUser("staffmember@test.com", "staffmember");
         $this->select("id=User_role", "label=Staff Member");
@@ -389,14 +389,14 @@ class Issue3SuperAdminFunctionalTest extends BaseFunctionalTest {
             if ($second >= 10)
                 $this->fail("timeout");
             try {
-                if ("Displaying 1-1 of 1 result." == $this->getText("css=div.summary"))
+                if ("Displaying 1-1 of 1 result" == $this->getText("css=div.summary"))
                     break;
             } catch (Exception $e) {
                 
             }
             sleep(1);
         }
-        $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
+        $this->assertEquals("Displaying 1-1 of 1 result", $this->getText("css=div.summary"));
     }
 
     /* Scenario 6 – Login as super admin and add administrator with new company

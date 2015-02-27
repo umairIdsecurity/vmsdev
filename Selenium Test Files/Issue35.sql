@@ -1,9 +1,9 @@
 INSERT INTO `photo` (`id`, `filename`, `unique_filename`, `relative_path`) 
-VALUES ('2', 'card5d9c084f-1418017816.png', 'card5d9c084f-1418017816.png', 
+VALUES ('3', 'card5d9c084f-1418017816.png', 'card5d9c084f-1418017816.png', 
 'uploads/card_generated/card5d9c084f-1418017816.png'); 
 
 INSERT INTO `photo` (`id`, `filename`, `unique_filename`, `relative_path`) 
-VALUES ('3', 'card5d9c084f-1418020193.png', 'card5d9c084f-1418020193.png', 
+VALUES ('4', 'card5d9c084f-1418020193.png', 'card5d9c084f-1418020193.png', 
 'uploads/card_generated/card5d9c084f-1418020193.png'); 
 
 INSERT INTO `card_generated` (`id`, `date_printed`, 

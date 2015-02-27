@@ -205,7 +205,7 @@ class Issue24FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Add Visit Reason");
         $this->type("id=VisitReason_reason", " THIS IS A REASON ");
         $this->clickAndWait("name=yt0");
-        $this->assertEquals("Reason \"THIS IS A REASON\" has already been taken.", $this->getText("css=div.errorSummary > ul > li"));
+        $this->assertEquals("A profile already exists for this Reason \"THIS IS A REASON\".", $this->getText("css=div.errorSummary > ul > li"));
         $this->clickAndWait("link=Add Visit Reason");
         
         $this->type("id=VisitReason_reason", "This is a valid reason ?!.,’”()@#$%^&*-+");

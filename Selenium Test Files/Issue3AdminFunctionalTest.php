@@ -75,14 +75,14 @@ class Issue3AdminFunctionalTest extends BaseFunctionalTest {
             if ($second >= 10)
                 $this->fail("timeout");
             try {
-                if ("Displaying 1-1 of 1 result." == $this->getText("css=div.summary"))
+                if ("Displaying 1-1 of 1 result" == $this->getText("css=div.summary"))
                     break;
             } catch (Exception $e) {
                 
             }
             sleep(1);
         }
-        $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
+        $this->assertEquals("Displaying 1-1 of 1 result", $this->getText("css=div.summary"));
     }
 
     /* Scenario 2 – Login as admin and add agent administrator
@@ -131,7 +131,7 @@ class Issue3AdminFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("agentadmin2", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[2]"));
         $this->assertEquals("Agent Administrator", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[3]"));
 
-        $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
+        $this->assertEquals("Displaying 1-1 of 1 result", $this->getText("css=div.summary"));
     }
 
     /*
@@ -186,14 +186,14 @@ class Issue3AdminFunctionalTest extends BaseFunctionalTest {
             if ($second >= 10)
                 $this->fail("timeout");
             try {
-                if ("Displaying 1-1 of 1 result." == $this->getText("css=div.summary"))
+                if ("Displaying 1-1 of 1 result" == $this->getText("css=div.summary"))
                     break;
             } catch (Exception $e) {
                 
             }
             sleep(1);
         }
-        $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
+        $this->assertEquals("Displaying 1-1 of 1 result", $this->getText("css=div.summary"));
     }
 
     /* Scenario 4 – Login as admin and add staff member
@@ -224,7 +224,7 @@ class Issue3AdminFunctionalTest extends BaseFunctionalTest {
         $this->click("link=Administration");
         $this->waitForPageToLoad("30000");
         $this->click("link=Manage Users");
-        $this->click("link=Add User");
+        $this->click("css=div.customIcon-adminmenu");
         $this->waitForPageToLoad("30000");
         $this->addUser("staffmember2@test.com", "staffmember2");
         $this->getDisabledCompanyValue("Test Company 1");
@@ -245,14 +245,14 @@ class Issue3AdminFunctionalTest extends BaseFunctionalTest {
             if ($second >= 10)
                 $this->fail("timeout");
             try {
-                if ("Displaying 1-1 of 1 result." == $this->getText("css=div.summary"))
+                if ("Displaying 1-1 of 1 result" == $this->getText("css=div.summary"))
                     break;
             } catch (Exception $e) {
                 
             }
             sleep(1);
         }
-        $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
+        $this->assertEquals("Displaying 1-1 of 1 result", $this->getText("css=div.summary"));
     }
 
     /* Scenario 5 – Login as admin and add agent administrator with new company
@@ -319,14 +319,14 @@ class Issue3AdminFunctionalTest extends BaseFunctionalTest {
             if ($second >= 10)
                 $this->fail("timeout");
             try {
-                if ("Displaying 1-1 of 1 result." == $this->getText("css=div.summary"))
+                if ("Displaying 1-1 of 1 result" == $this->getText("css=div.summary"))
                     break;
             } catch (Exception $e) {
                 
             }
             sleep(1);
         }
-        $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
+        $this->assertEquals("Displaying 1-1 of 1 result", $this->getText("css=div.summary"));
     }
 
 }

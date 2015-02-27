@@ -127,7 +127,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->click("id=submitBtn");
             $this->clickAndWait("id=submit");
         }
-        $this->clickAndWait("link=Register a Visit");
+        $this->clickAndWait("link=Log Visit");
 
         $this->click("id=clicktabA");
         $this->type("id=Visitor_first_name", "test");
@@ -173,7 +173,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->click("id=submitBtn");
             $this->clickAndWait("id=submit");
         }
-        $this->clickAndWait("link=Register a Visit");
+        $this->clickAndWait("link=Log Visit");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
@@ -209,7 +209,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->click("id=submitBtn");
             $this->clickAndWait("id=submit");
         }
-        $this->clickAndWait("link=Register a Visit");
+        $this->clickAndWait("link=Log Visit");
         $this->click("id=clicktabA");
         $this->select("id=Visitor_visitor_type", "label=Corporate Visitor");
         $this->type("id=Visitor_first_name", "test");
@@ -239,7 +239,10 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals($username . "visitor2@test.com", $this->getValue("id=Visitor_email"));
         $this->assertEquals("2", $this->getValue("id=Visit_visitor_type"));
         $this->assertEquals("1", $this->getValue("id=Visit_reason"));
-        $this->clickAndWait("css=#activate-a-visit-form > input.complete");
+        $this->click("css=#activate-a-visit-form > input.complete");
+        sleep(5);
+        $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
+        $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("link=Dashboard");
         if ($username == 'admin' || $username == 'agentadmin') {
             $this->assertEquals($username . "visitor2", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[4]"));
@@ -259,7 +262,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->click("id=submitBtn");
             $this->clickAndWait("id=submit");
         }
-        $this->clickAndWait("link=Register a Visit");
+        $this->clickAndWait("link=Log Visit");
         $this->click("id=clicktabA");
         $this->type("id=Visitor_first_name", "test");
         $this->select("id=Visitor_visitor_type", "label=Corporate Visitor");
@@ -283,7 +286,10 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals($username . "visitor3", $this->getText("//table[@id='personalDetailsTable']/tbody/tr[2]/td[2]"));
         $this->assertEquals($username . "visitor3@test.com", $this->getValue("id=Visitor_email"));
         $this->assertEquals("2", $this->getValue("id=Visit_visitor_type"));
-        $this->clickAndWait("css=#activate-a-visit-form > input.complete");
+        $this->click("css=#activate-a-visit-form > input.complete");
+        sleep(5);
+        $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
+        $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("link=Dashboard");
         
         if ($username == 'admin' || $username == 'agentadmin') {
@@ -305,7 +311,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->click("id=submitBtn");
             $this->clickAndWait("id=submit");
         }
-        $this->clickAndWait("link=Register a Visit");
+        $this->clickAndWait("link=Log Visit");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
@@ -329,7 +335,10 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("testVisitor3@test.com", $this->getValue("id=Visitor_email"));
         $this->assertEquals("2", $this->getValue("id=Visit_visitor_type"));
         $this->assertEquals("1", $this->getValue("id=Visit_reason"));
-        $this->clickAndWait("css=#activate-a-visit-form > input.complete");
+        $this->click("css=#activate-a-visit-form > input.complete");
+        sleep(5);
+        $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
+       
         $this->clickAndWait("link=Dashboard");
         if ($username == 'admin' || $username == 'agentadmin') {
             $this->assertEquals("Visitor3", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[4]"));
@@ -350,7 +359,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->click("id=submitBtn");
             $this->clickAndWait("id=submit");
         }
-        $this->clickAndWait("link=Register a Visit");
+        $this->clickAndWait("link=Log Visit");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
@@ -369,7 +378,10 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Visitor4", $this->getText("//table[@id='personalDetailsTable']/tbody/tr[2]/td[2]"));
         $this->assertEquals("testVisitor4@test.com", $this->getValue("id=Visitor_email"));
         $this->assertEquals("1", $this->getValue("id=Visit_reason"));
-        $this->clickAndWait("css=#activate-a-visit-form > input.complete");
+        $this->click("css=#activate-a-visit-form > input.complete");
+        sleep(5);
+        $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
+       
         $this->clickAndWait("link=Dashboard");
         if ($username == 'admin' || $username == 'agentadmin') {
             $this->assertEquals("Visitor4", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[4]"));
@@ -390,7 +402,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->click("id=submitBtn");
             $this->clickAndWait("id=submit");
         }
-        $this->clickAndWait("link=Register a Visit");
+        $this->clickAndWait("link=Log Visit");
         $this->click("id=clicktabA");
         $this->type("id=Visitor_first_name", "test");
         $this->type("id=Visitor_last_name", $username . "visitor1");
@@ -415,7 +427,10 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("1", $this->getValue("id=Visit_visitor_type"));
         $this->assertEquals("3", $this->getValue("id=Visit_reason"));
         $this->assertEquals($username . "patient1", $this->getValue("document.forms['update-patient-form'].elements['Patient[name]']"));
-        $this->clickAndWait("css=#activate-a-visit-form > input.complete");
+        $this->click("css=#activate-a-visit-form > input.complete");
+        sleep(5);
+        $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
+       
         $this->clickAndWait("link=Dashboard");
         if ($username == 'admin' || $username == 'agentadmin') {
             $this->assertEquals($username . "visitor1", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[4]"));
@@ -436,7 +451,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->click("id=submitBtn");
             $this->clickAndWait("id=submit");
         }
-        $this->clickAndWait("link=Register a Visit");
+        $this->clickAndWait("link=Log Visit");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
@@ -474,7 +489,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->click("id=submitBtn");
             $this->clickAndWait("id=submit");
         }
-        $this->clickAndWait("link=Register a Visit");
+        $this->clickAndWait("link=Log Visit");
         $this->click("id=clicktabA");
         $this->select("id=Visitor_visitor_type", "label=Corporate Visitor");
         $this->type("id=Visitor_first_name", "test");
@@ -504,7 +519,10 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals($username . "visitor2@test.com", $this->getValue("id=Visitor_email"));
         $this->assertEquals("2", $this->getValue("id=Visit_visitor_type"));
         $this->assertEquals("3", $this->getValue("id=Visit_reason"));
-        $this->clickAndWait("css=#activate-a-visit-form > input.complete");
+        $this->click("css=#activate-a-visit-form > input.complete");
+        sleep(5);
+        $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
+       
         $this->clickAndWait("link=Dashboard");
         if ($username == 'admin' || $username == 'agentadmin') {
             $this->assertEquals($username . "visitor2", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[4]"));
@@ -525,7 +543,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->click("id=submitBtn");
             $this->clickAndWait("id=submit");
         }
-        $this->clickAndWait("link=Register a Visit");
+        $this->clickAndWait("link=Log Visit");
         $this->click("id=clicktabA");
         $this->type("id=Visitor_first_name", "test");
         $this->select("id=Visitor_visitor_type", "label=Corporate Visitor");
@@ -551,7 +569,10 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals($username . "visitor3@test.com", $this->getValue("id=Visitor_email"));
         $this->assertEquals("2", $this->getValue("id=Visit_visitor_type"));
         $this->assertEquals("4", $this->getValue("id=Visit_reason"));
-        $this->clickAndWait("css=#activate-a-visit-form > input.complete");
+        $this->click("css=#activate-a-visit-form > input.complete");
+        sleep(5);
+        $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
+       
         $this->clickAndWait("link=Dashboard");
         if ($username == 'admin' || $username == 'agentadmin') {
             $this->assertEquals($username . "visitor3", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[4]"));
@@ -572,7 +593,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->click("id=submitBtn");
             $this->clickAndWait("id=submit");
         }
-        $this->clickAndWait("link=Register a Visit");
+        $this->clickAndWait("link=Log Visit");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
@@ -597,7 +618,10 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("testVisitor3@test.com", $this->getValue("id=Visitor_email"));
         $this->assertEquals("2", $this->getValue("id=Visit_visitor_type"));
         $this->assertEquals("5", $this->getValue("id=Visit_reason"));
-        $this->clickAndWait("css=#activate-a-visit-form > input.complete");
+        $this->click("css=#activate-a-visit-form > input.complete");
+        sleep(5);
+        $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
+       
         $this->clickAndWait("link=Dashboard");
         if ($username == 'admin' || $username == 'agentadmin') {
             $this->assertEquals("Visitor3", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[4]"));
@@ -618,7 +642,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->click("id=submitBtn");
             $this->clickAndWait("id=submit");
         }
-        $this->clickAndWait("link=Register a Visit");
+        $this->clickAndWait("link=Log Visit");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
@@ -638,7 +662,9 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Visitor4", $this->getText("//table[@id='personalDetailsTable']/tbody/tr[2]/td[2]"));
         $this->assertEquals("testVisitor4@test.com", $this->getValue("id=Visitor_email"));
         $this->assertEquals("6", $this->getValue("id=Visit_reason"));
-        $this->clickAndWait("css=#activate-a-visit-form > input.complete");
+        $this->click("css=#activate-a-visit-form > input.complete");        
+        sleep(5);        
+        $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());       
         $this->clickAndWait("link=Dashboard");
         if ($username == 'admin' || $username == 'agentadmin') {
             $this->assertEquals("Visitor4", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[4]"));
@@ -659,7 +685,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->click("id=submitBtn");
             $this->clickAndWait("id=submit");
         }
-        $this->clickAndWait("link=Register a Visit");
+        $this->clickAndWait("link=Log Visit");
         $this->click("id=clicktabA");
         $this->waitForElementPresent("id=submitFormVisitor");
         $this->click("id=submitFormVisitor");
@@ -680,19 +706,19 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             if ($second >= 10)
                 $this->fail("timeout");
             try {
-                if ("First Name cannot be blank." == $this->getText("id=Visitor_first_name_em_"))
+                if ("Please enter a First Name" == $this->getText("id=Visitor_first_name_em_"))
                     break;
             } catch (Exception $e) {
                 
             }
             sleep(1);
         }
-        $this->assertEquals("First Name cannot be blank.", $this->getText("id=Visitor_first_name_em_"));
-        $this->assertEquals("Last Name cannot be blank.", $this->getText("id=Visitor_last_name_em_"));
-        $this->assertEquals("Email Address cannot be blank.", $this->getText("id=Visitor_email_em_"));
-        $this->assertEquals("Mobile Number cannot be blank.", $this->getText("id=Visitor_contact_number_em_"));
-        $this->assertEquals("Password cannot be blank.", $this->getText("id=Visitor_password_em_"));
-        $this->assertEquals("Repeat Password cannot be blank.", $this->getText("id=Visitor_repeatpassword_em_"));
+        $this->assertEquals("Please enter a First Name", $this->getText("id=Visitor_first_name_em_"));
+        $this->assertEquals("Please enter a Last Name", $this->getText("id=Visitor_last_name_em_"));
+        $this->assertEquals("Please enter an Email Address", $this->getText("id=Visitor_email_em_"));
+        $this->assertEquals("Please enter a Mobile Number", $this->getText("id=Visitor_contact_number_em_"));
+        $this->assertEquals("Please enter a Password", $this->getText("id=Visitor_password_em_"));
+        $this->assertEquals("Please enter a Repeat Password", $this->getText("id=Visitor_repeatpassword_em_"));
         $this->type("id=Visitor_first_name", "test");
         $this->type("id=Visitor_last_name", "test");
         $this->type("id=Visitor_contact_number", "12345");
@@ -704,7 +730,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->select("id=workstation", "label=Workstation1");
         }
         $this->click("id=submitFormVisitor");
-        $this->assertEquals("Reason cannot be blank.", $this->getText("css=td > div.errorMessage.visitorReason"));
+        $this->assertEquals("Please select a reason", $this->getText("css=td > div.errorMessage.visitorReason"));
         $this->type("id=VisitReason_reason", "reason 1");
         $this->click("id=submitFormVisitor");
         for ($second = 0;; $second++) {
@@ -725,7 +751,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->select("id=workstation", "label=Workstation1");
         }
         $this->click("id=submitFormVisitor");
-        $this->assertEquals("Email Address has already been taken.", $this->getText("xpath=(//div[@id='Visitor_email_em_'])[2]"));
+        $this->assertEquals("A profile already exists for this email address.", $this->getText("xpath=(//div[@id='Visitor_email_em_'])[2]"));
         $this->type("id=Visitor_email", "test@test.com");
         if ($username == 'superadmin' || $username == 'admin' || $username == 'agentadmin') {
             $this->select("id=workstation", "label=Workstation1");
@@ -736,14 +762,14 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             if ($second >= 10)
                 $this->fail("timeout");
             try {
-                if ("Patient Name cannot be blank." == $this->getText("id=Patient_name_em_"))
+                if ("Please enter a Patient Name" == $this->getText("id=Patient_name_em_"))
                     break;
             } catch (Exception $e) {
                 
             }
             sleep(1);
         }
-        $this->assertEquals("Patient Name cannot be blank.", $this->getText("id=Patient_name_em_"));
+        $this->assertEquals("Please enter a Patient Name", $this->getText("id=Patient_name_em_"));
         $this->click("css=#register-host-patient-form > div.register-a-visitor-buttons-div > #btnBackTab3");
         $this->select("id=Visitor_visitor_type", "label=Corporate Visitor");
         if ($username == 'superadmin' || $username == 'admin' || $username == 'agentadmin') {
@@ -755,19 +781,19 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             if ($second >= 10)
                 $this->fail("timeout");
             try {
-                if ("First Name cannot be blank." == $this->getText("id=User_first_name_em_"))
+                if ("Please enter a First Name" == $this->getText("id=User_first_name_em_"))
                     break;
             } catch (Exception $e) {
                 
             }
             sleep(1);
         }
-        $this->assertEquals("First Name cannot be blank.", $this->getText("id=User_first_name_em_"));
-        $this->assertEquals("Last Name cannot be blank.", $this->getText("id=User_last_name_em_"));
-        $this->assertEquals("Contact No. cannot be blank.", $this->getText("id=User_contact_number_em_"));
-        $this->assertEquals("Email cannot be blank.", $this->getText("id=User_email_em_"));
-        $this->assertEquals("Repeat Password cannot be blank.", $this->getText("id=User_repeatpassword_em_"));
-        $this->assertEquals("Password cannot be blank.", $this->getText("id=User_password_em_"));
+        $this->assertEquals("Please enter a First Name", $this->getText("id=User_first_name_em_"));
+        $this->assertEquals("Please enter a Last Name", $this->getText("id=User_last_name_em_"));
+        $this->assertEquals("Please enter a Contact No.", $this->getText("id=User_contact_number_em_"));
+        $this->assertEquals("Please enter an Email Address", $this->getText("id=User_email_em_"));
+        $this->assertEquals("Please enter a Repeat Password", $this->getText("id=User_repeatpassword_em_"));
+        $this->assertEquals("Please enter a Password", $this->getText("id=User_password_em_"));
         $this->click("id=dummy-host-findBtn");
         $this->assertEquals("Search Name cannot be blank.", $this->getText("id=searchTextHostErrorMessage"));
         $this->type("id=User_first_name", "test");
@@ -779,7 +805,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("New Password does not match with \nRepeat New Password.", $this->getText("id=passwordErrorMessage"));
         $this->type("id=User_repeatpassword", "12345");
         $this->click("id=submitFormUser");
-        $this->assertEquals("Email Address has already been taken.", $this->getText("xpath=(//div[@id='User_email_em_'])[2]"));
+        $this->assertEquals("A profile already exists for this email address.", $this->getText("xpath=(//div[@id='User_email_em_'])[2]"));
     }
 
     /*
@@ -803,7 +829,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeatpassword", "12345");
         $this->clickAndWait("id=submitFormUser");
-        $this->clickAndWait("link=Register a Visit");
+        $this->clickAndWait("link=Log Visit");
         $this->click("id=clicktabA");
 
         $this->select("id=Visitor_visitor_type", "label=Corporate Visitor");
@@ -839,19 +865,19 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             if ($second >= 10)
                 $this->fail("timeout");
             try {
-                if ("First Name cannot be blank." == $this->getText("id=User_first_name_em_"))
+                if ("Please enter a First Name" == $this->getText("id=User_first_name_em_"))
                     break;
             } catch (Exception $e) {
                 
             }
             sleep(1);
         }
-        $this->assertEquals("First Name cannot be blank.", $this->getText("id=User_first_name_em_"));
-        $this->assertEquals("Last Name cannot be blank.", $this->getText("id=User_last_name_em_"));
-        $this->assertEquals("Email cannot be blank.", $this->getText("id=User_email_em_"));
-        $this->assertEquals("Contact No. cannot be blank.", $this->getText("id=User_contact_number_em_"));
-        $this->assertEquals("Password cannot be blank.", $this->getText("id=User_password_em_"));
-        $this->assertEquals("Repeat Password cannot be blank.", $this->getText("id=User_repeatpassword_em_"));
+        $this->assertEquals("Please enter a First Name", $this->getText("id=User_first_name_em_"));
+        $this->assertEquals("Please enter a Last Name", $this->getText("id=User_last_name_em_"));
+        $this->assertEquals("Please enter an Email Address", $this->getText("id=User_email_em_"));
+        $this->assertEquals("Please enter a Contact No.", $this->getText("id=User_contact_number_em_"));
+        $this->assertEquals("Please enter a Password", $this->getText("id=User_password_em_"));
+        $this->assertEquals("Please enter a Repeat Password", $this->getText("id=User_repeatpassword_em_"));
         $this->type("id=User_password", "12345");
         $this->waitForElementPresent("id=passwordErrorMessage");
         $this->assertEquals("New Password does not match with \nRepeat New Password.", $this->getText("id=passwordErrorMessage"));
@@ -864,7 +890,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_repeatpassword", "12345");
         $this->click("id=submitFormUser");
         $this->waitForElementPresent("xpath=(//div[@id='User_email_em_'])[2]");
-        $this->assertEquals("Email Address has already been taken.", $this->getText("xpath=(//div[@id='User_email_em_'])[2]"));
+        $this->assertEquals("A profile already exists for this email address.", $this->getText("xpath=(//div[@id='User_email_em_'])[2]"));
     }
 
     function ScenarioEvacuationReport($username) {
@@ -873,11 +899,11 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->click("id=submitBtn");
             $this->clickAndWait("id=submit");
         }
-        $this->clickAndWait("link=Visitor Records");
+        $this->clickAndWait("link=Visit History");
         if ($username == 'staffmember') {
-            $this->assertEquals("Displaying 1-6 of 6 results.", $this->getText("css=div.summary"));
+            $this->assertEquals("Displaying 1-6 of 6 results", $this->getText("css=div.summary"));
         }  else {
-            $this->assertEquals("Displaying 1-10 of 11 results.", $this->getText("css=div.summary"));
+            $this->assertEquals("Displaying 1-10 of 11 results", $this->getText("css=div.summary"));
         }
 
         if ($username != 'staffmember') {
@@ -887,7 +913,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
                     if ($second >= 10)
                         $this->fail("timeout");
                     try {
-                        if ("Displaying 1-4 of 4 results." == $this->getText("css=div.summary"))
+                        if ("Displaying 1-4 of 4 results" == $this->getText("css=div.summary"))
                             break;
                     } catch (Exception $e) {
                         
@@ -895,21 +921,21 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
                     sleep(1);
                 }
 
-                $this->assertEquals("Displaying 1-4 of 4 results.", $this->getText("css=div.summary"));
+                $this->assertEquals("Displaying 1-4 of 4 results", $this->getText("css=div.summary"));
             }
             $this->select("name=Visit[visit_status]", "label=Preregistered");
             for ($second = 0;; $second++) {
                 if ($second >= 10)
                     $this->fail("timeout");
                 try {
-                    if ("Displaying 1-7 of 7 results." == $this->getText("css=div.summary"))
+                    if ("Displaying 1-7 of 7 results" == $this->getText("css=div.summary"))
                         break;
                 } catch (Exception $e) {
                     
                 }
                 sleep(1);
             }
-            $this->assertEquals("Displaying 1-7 of 7 results.", $this->getText("css=div.summary"));
+            $this->assertEquals("Displaying 1-7 of 7 results", $this->getText("css=div.summary"));
         }
     }
 

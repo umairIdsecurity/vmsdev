@@ -81,7 +81,7 @@ $session = new CHttpSession;
         ));
         ?>
         <textarea id="VisitReason_reason_search" maxlength="128" name="VisitReason[reason]"></textarea> 
-        <div class="errorMessage" id="visitReasonErrorMessageSearch" style="display:none;">Reason cannot be blank.</div>
+        <div class="errorMessage" id="visitReasonErrorMessageSearch" style="display:none;">Please select a reason</div>
 
 
         <?php $this->endWidget(); ?>

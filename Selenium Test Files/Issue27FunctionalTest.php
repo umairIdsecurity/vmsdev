@@ -302,22 +302,22 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->click("id=submitContactDetailForm");
         sleep(1);
         $this->waitForElementPresent("id=Visitor_email_em_");
-        $this->assertEquals("Email Address cannot be blank.", $this->getText("id=Visitor_email_em_"));
+        $this->assertEquals("Please enter an Email Address", $this->getText("id=Visitor_email_em_"));
         $this->type("id=Visitor_email", "testVisitor3@test.com");
         $this->type("id=Visitor_contact_number", "1234567890");
         $this->click("id=submitContactDetailForm");
-        $this->assertEquals("Email Address has already been taken.", $this->getText("xpath=(//div[@id='Visitor_email_em_'])[2]"));
+        $this->assertEquals("A profile already exists for this email address.", $this->getText("xpath=(//div[@id='Visitor_email_em_'])[2]"));
         $this->select("id=Visit_reason", "label=Select Reason");
         $this->click("id=submitReasonForm");
         sleep(1);
-        $this->assertEquals("Reason cannot be blank.", $this->getText("id=Visit_reason_em_"));
+        $this->assertEquals("Please select a reason", $this->getText("id=Visit_reason_em_"));
         $this->select("id=Visit_reason", "label=Other");
         $this->click("id=submitReasonForm");
-        $this->assertEquals("Reason cannot be blank.", $this->getText("id=visitReason"));
+        $this->assertEquals("Please select a reason", $this->getText("id=visitReason"));
         $this->type("id=VisitReason_reason", "");
         $this->click("id=submitAddReasonForm");
         sleep(1);
-        $this->assertEquals("Reason cannot be blank.", $this->getText("id=VisitReason_reason_em_"));
+        $this->assertEquals("Please select a reason", $this->getText("id=VisitReason_reason_em_"));
         $this->type("id=VisitReason_reason", "reason 1");
         $this->click("id=submitAddReasonForm");
         sleep(1);
@@ -327,7 +327,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->click("id=submit");
         $this->waitForElementPresent("xpath=(//div[@id='Patient_name_em_'])[2]");
         sleep(1);
-        $this->assertEquals("Patient Name cannot be blank.", $this->getText("xpath=(//div[@id='Patient_name_em_'])[2]"));
+        $this->assertEquals("Please enter a Patient Name", $this->getText("xpath=(//div[@id='Patient_name_em_'])[2]"));
         $this->type("id=Visitor_email", "123");
         $this->waitForElementPresent("id=Visitor_email_em_");
         sleep(1);
@@ -373,10 +373,10 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->click("document.forms['register-host-form'].yt0");
         $this->waitForElementPresent("xpath=(//div[@id='User_first_name_em_'])[2]");
         sleep(1);
-        $this->assertEquals("First Name cannot be blank.", $this->getText("xpath=(//div[@id='User_first_name_em_'])[2]"));
-        $this->assertEquals("Last Name cannot be blank.", $this->getText("xpath=(//div[@id='User_last_name_em_'])[2]"));
-        $this->assertEquals("Email cannot be blank.", $this->getText("xpath=(//div[@id='User_email_em_'])[2]"));
-        $this->assertEquals("Contact No. cannot be blank.", $this->getText("xpath=(//div[@id='User_contact_number_em_'])[2]"));
+        $this->assertEquals("Please enter a First Name", $this->getText("xpath=(//div[@id='User_first_name_em_'])[2]"));
+        $this->assertEquals("Please enter a Last Name", $this->getText("xpath=(//div[@id='User_last_name_em_'])[2]"));
+        $this->assertEquals("Please enter an Email Address", $this->getText("xpath=(//div[@id='User_email_em_'])[2]"));
+        $this->assertEquals("Please enter a Contact No.", $this->getText("xpath=(//div[@id='User_contact_number_em_'])[2]"));
         $this->type("document.forms['register-host-form'].elements['User[first_name]']", "Test");
         $this->type("document.forms['register-host-form'].elements['User[last_name]']", "Host");
         $this->type("document.forms['register-host-form'].elements['User[email]']", "admin@test.com");
@@ -384,7 +384,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->click("document.forms['register-host-form'].yt0");
         sleep(1);
         $this->waitForElementPresent("id=User_email_em_1a");
-        $this->assertEquals("Email Address has already been taken.", $this->getText("id=User_email_em_1a"));
+        $this->assertEquals("A profile already exists for this email address.", $this->getText("id=User_email_em_1a"));
         $this->type("document.forms['register-host-form'].elements['User[email]']", "123");
         $this->waitForElementPresent("xpath=(//div[@id='User_email_em_'])[2]");
         sleep(1);
@@ -441,11 +441,11 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->waitForElementPresent("document.forms['register-newhost-form'].yt0");
         $this->click("document.forms['register-newhost-form'].yt0");
         sleep(1);
-        $this->assertEquals("First Name cannot be blank.", $this->getText("id=User_first_name_em_"));
-        $this->assertEquals("Last Name cannot be blank.", $this->getText("id=User_last_name_em_"));
-        $this->assertEquals("Email cannot be blank.", $this->getText("id=User_email_em_"));
-        $this->assertEquals("Contact No. cannot be blank.", $this->getText("id=User_contact_number_em_"));
-        $this->assertEquals("Company Name cannot be blank.", $this->getText("id=User_company_em_"));
+        $this->assertEquals("Please enter a First Name", $this->getText("id=User_first_name_em_"));
+        $this->assertEquals("Please enter a Last Name", $this->getText("id=User_last_name_em_"));
+        $this->assertEquals("Please enter an Email Address", $this->getText("id=User_email_em_"));
+        $this->assertEquals("Please enter a Contact No.", $this->getText("id=User_contact_number_em_"));
+        $this->assertEquals("Please select a Company Name", $this->getText("id=User_company_em_"));
         $this->type("id=User_first_name", "test");
         $this->type("id=User_last_name", "newhostA");
         $this->type("id=User_email", "admin@test.com");
@@ -458,7 +458,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->waitForElementPresent("document.forms['register-newhost-form'].yt0");
         $this->click("document.forms['register-newhost-form'].yt0");
         $this->waitForElementPresent("id=New_user_email_em_");
-        $this->assertEquals("Email Address has already been taken.", $this->getText("id=New_user_email_em_"));
+        $this->assertEquals("A profile already exists for this email address.", $this->getText("id=New_user_email_em_"));
         $this->type("id=User_email", "testnewHosts@test.com");
         sleep(1);
         $this->click("document.forms['register-newhost-form'].yt0");
@@ -634,7 +634,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("24", $this->getValue("id=Visit_time_in_minutes"));
     }
 
-    /* Scenario 8 - Preregister a Visit for same day card, activate visit
+    /* Scenario 8 - Preregister Visit for same day card, activate visit
       Expected Behavior - Assert close visit in card actions, Assert current date in date expiration
      */
 
@@ -643,8 +643,8 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Visitors");
-        $this->waitForElementPresent("link=Preregister a Visit");
-        $this->clickAndWait("link=Preregister a Visit");
+        $this->waitForElementPresent("link=Preregister Visit");
+        $this->clickAndWait("link=Preregister Visit");
         $this->click("id=clicktabA");
         $this->addVisitor('Visitor0a');
         $this->select("id=workstation", "label=Workstation1");
@@ -659,25 +659,31 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         //$this->assertEquals("Same Day Visitor", $this->getText("css=#cardDetailsTable > tbody > tr > td"));
         $date = date('d/m/Y');
         $date2 = date('d-m-Y', time() + 86400);
-        $this->assertEquals(date('d M y'), $this->getText("css=span.cardDateText"));
+        $this->assertEquals(date('d M y', time() + 86400), $this->getText("css=span.cardDateText"));
         $this->assertEquals($date2, $this->getEval("window.document.getElementById(\"Visit_date_in\").value"));
         $this->assertEquals($date2, $this->getEval("window.document.getElementById(\"Visit_date_out\").value"));
-        $this->click("css=#update-log-visit-form > input[type=\"submit\"]");
-        $this->waitForElementPresent("css=div.flash-success.success-update-preregister");
-        $this->assertEquals("Visit Successfully Updated.", $this->getText("css=div.flash-success.success-update-preregister"));
+        $this->type("id=Visit_date_in", date('d-m-Y', time() + 172800));
+        $this->type("id=Visit_date_out", date('d-m-Y', time() + 172800));
+
+        $this->clickAndWait("css=#update-log-visit-form > input[type=\"submit\"]");
+        // $this->waitForElementPresent("css=div.flash-success.success-update-preregister");
+        // $this->assertEquals("Visit Successfully Updated.", $this->getText("css=div.flash-success.success-update-preregister"));
+        $this->clickAndWait("link=Preregistered");
         $this->click("//li[@id='activateLi']/a/span");
-        $this->clickAndWait("css=#activate-a-visit-form > input[type=\"submit\"]");
+        $this->click("css=#activate-a-visit-form > input.complete");
+        sleep(5);
+        $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
+        $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("link=Active");
 
-        $this->assertEquals("Close Visit", $this->getText("//li[@id='closevisitLi']/a/span"));
         $this->assertEquals(date('d M y'), $this->getText("css=span.cardDateText"));
         $this->clickAndWait("css=#close-visit-form > input[type=\"submit\"]");
-        $this->assertEquals("Visit Status: Closed", $this->getText("link=Visit Status: Closed"));
+        $this->assertEquals("Status: Closed", $this->getText("link=Status: Closed"));
         $this->assertEquals(date('d-m-Y'), $this->getText("//div[@id='visit-grid']/table/tbody/tr/td[5]"));
         $this->assertEquals(date('d-m-Y'), $this->getText("//div[@id='visit-grid']/table/tbody/tr/td[3]"));
     }
 
-    /* Scenario 9 - Preregister a Visit for multi day card, activate visit
+    /* Scenario 9 - Preregister Visit for multi day card, activate visit
       Expected Behavior - Assert close visit in card actions, Assert date expiration is same with selected date.
      */
 
@@ -686,8 +692,8 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Visitors");
-        $this->waitForElementPresent("link=Preregister a Visit");
-        $this->clickAndWait("link=Preregister a Visit");
+        $this->waitForElementPresent("link=Preregister Visit");
+        $this->clickAndWait("link=Preregister Visit");
         $this->click("id=multiday");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
@@ -707,7 +713,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $date = date('j/m/Y');
         $date2 = date('d-m-Y', time() + 86400);
         $date3 = date('d-m-Y', time() + 172800);
-        $this->assertEquals(date('d M y'), $this->getText("css=span.cardDateText"));
+        $this->assertEquals(date('d M y', time() + 86400), $this->getText("css=span.cardDateText"));
         $this->assertEquals($date2, $this->getEval("window.document.getElementById(\"Visit_date_in\").value"));
         $this->assertEquals($date3, $this->getEval("window.document.getElementById(\"Visit_date_out\").value"));
         $this->clickAndWait("css=#update-log-visit-form > input.complete");
@@ -718,18 +724,21 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Preregistered");
         $this->click("//li[@id='activateLi']/a/span");
         $this->type("id=Visitor_photo", "1");
-        $this->clickAndWait("css=#activate-a-visit-form > input.complete");
+        $this->click("css=#activate-a-visit-form > input.complete");
+        sleep(5);
+        $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
+        $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("link=Active");
         $this->assertEquals(date('d M y', time() + 259200), $this->getText("css=span.cardDateText"));
         $this->clickAndWait("css=#close-visit-form > input.complete");
-        $this->clickAndWait("link=Visitor Records");
+        $this->clickAndWait("link=Visit History");
         $this->clickAndWait("link=Closed");
-        $this->assertEquals("Visit Status: Closed", $this->getText("link=Visit Status: Closed"));
+        $this->assertEquals("Closed", $this->getText("css=ul.visitStatusLi > li > a > span"));
         $this->assertEquals(date('d-m-Y'), $this->getText("//div[@id='visit-grid']/table/tbody/tr/td[5]"));
         $this->assertEquals(date('d-m-Y'), $this->getText("//div[@id='visit-grid']/table/tbody/tr/td[3]"));
     }
 
-    /* Scenario 10 - Register a Visit for same day card, verify dates same as current day. 
+    /* Scenario 10 - Log Visit for same day card, verify dates same as current day. 
       Expected Behavior - Assert close visit in card actions, Assert date expiration is same with selected date.
      */
 
@@ -738,8 +747,8 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Visitors");
-        $this->waitForElementPresent("link=Register a Visit");
-        $this->clickAndWait("link=Register a Visit");
+        $this->waitForElementPresent("link=Log Visit");
+        $this->clickAndWait("link=Log Visit");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
@@ -759,7 +768,10 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
             array_push($this->verificationErrors, $e->toString());
         }
         $this->clickAndWait("id=submitAllForms");
-        $this->clickAndWait("css=#activate-a-visit-form > input.complete");
+        $this->click("css=#activate-a-visit-form > input.complete");
+        sleep(5);
+        $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
+        $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("link=Active");
         //$this->assertEquals("Same Day Visitor", $this->getText("css=#cardDetailsTable > tbody > tr > td"));
         $date = date('j/m/Y');
@@ -768,12 +780,12 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Close Visit", $this->getText("//li[@id='closevisitLi']/a/span"));
 
         $this->clickAndWait("css=#close-visit-form > input[type=\"submit\"]");
-        $this->assertEquals("Visit Status: Closed", $this->getText("link=Visit Status: Closed"));
+        $this->assertEquals("Closed", $this->getText("css=ul.visitStatusLi > li > a > span"));
         $this->assertEquals(date('d-m-Y'), $this->getText("//div[@id='visit-grid']/table/tbody/tr/td[5]"));
 //        $this->assertEquals(date('d-m-Y'), $this->getText("//div[@id='visit-grid']/table/tbody/tr/td[3]"));
     }
 
-    /* Scenario 11 - Register a Visit for multi day card, verify dates 1 day from now. 
+    /* Scenario 11 - Log Visit for multi day card, verify dates 1 day from now. 
       Expected Behavior - Assert close visit in card actions, Assert date expiration is same with selected date.
      */
 
@@ -782,8 +794,8 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Visitors");
-        $this->waitForElementPresent("link=Register a Visit");
-        $this->clickAndWait("link=Register a Visit");
+        $this->waitForElementPresent("link=Log Visit");
+        $this->clickAndWait("link=Log Visit");
         $this->click("id=multiday");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
@@ -807,9 +819,13 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
 //        $this->type("id=proposedDateOut", date('d-m-Y', time() + 86400));
 //        $this->type("id=Visit_date_out", date('d-m-Y', time() + 86400));
 //        $this->clickAndWait("id=submitAllForms");
-        $this->type("id=Visitor_photo","1");
-        $this->clickAndWait("css=#activate-a-visit-form > input.complete");
+        $this->type("id=Visitor_photo", "1");
+        $this->click("css=#activate-a-visit-form > input.complete");
+        sleep(3);
+        $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
+        $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("link=Active");
+
         //$this->assertEquals("Multi Day Visitor", $this->getText("css=#cardDetailsTable > tbody > tr > td"));
         try {
             $this->assertEquals(date('d-m-Y'), $this->getValue("id=Visit_date_check_out"));
@@ -820,7 +836,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Close Visit", $this->getText("//li[@id='closevisitLi']/a/span"));
         //$this->assertEquals(date('d M y', time() + 172800), $this->getText("css=span.cardDateText"));
         $this->clickAndWait("css=#close-visit-form > input[type=\"submit\"]");
-        $this->assertEquals("Visit Status: Closed", $this->getText("link=Visit Status: Closed"));
+        $this->assertEquals("Closed", $this->getText("link=Closed"));
     }
 
     /* Scenario 12 - Check date validation for same day and muti day cards. Preregister function
@@ -837,8 +853,8 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Visitors");
-        $this->waitForElementPresent("link=Preregister a Visit");
-        $this->clickAndWait("link=Preregister a Visit");
+        $this->waitForElementPresent("link=Preregister Visit");
+        $this->clickAndWait("link=Preregister Visit");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
@@ -853,7 +869,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->addHost("Host6");
         $this->click("id=submitFormUser");
         $this->clickAndWait("id=submitAllForms");
-        
+
         $date2 = date('d-m-Y', time() + 86400);
         $this->assertEquals($date2, $this->getEval("window.document.getElementById(\"Visit_date_in\").value"));
         $this->assertEquals($date2, $this->getEval("window.document.getElementById(\"Visit_date_out\").value"));
@@ -863,8 +879,8 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
 
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Visitors");
-        $this->waitForElementPresent("link=Preregister a Visit");
-        $this->clickAndWait("link=Preregister a Visit");
+        $this->waitForElementPresent("link=Preregister Visit");
+        $this->clickAndWait("link=Preregister Visit");
         $this->click("id=multiday");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
@@ -895,8 +911,12 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->click("//li[@id='activateLi']/a/span");
         $this->assertFalse($this->isTextPresent("css=#dateoutDiv > td"));
         $this->type("id=Visitor_photo", "1");
-        $this->clickAndWait("css=#activate-a-visit-form > input.complete");
+        $this->click("css=#activate-a-visit-form > input.complete");
+        sleep(3);
+        $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
+        $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("link=Active");
+
         $this->assertEquals(date('d M y', time() + 259200), $this->getText("css=span.cardDateText"));
     }
 
@@ -912,8 +932,8 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Visitors");
-        $this->waitForElementPresent("link=Register a Visit");
-        $this->clickAndWait("link=Register a Visit");
+        $this->waitForElementPresent("link=Log Visit");
+        $this->clickAndWait("link=Log Visit");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
@@ -933,8 +953,12 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
 //            array_push($this->verificationErrors, $e->toString());
 //        }
 //        $this->clickAndWait("id=submitAllForms");
-        $this->clickAndWait("css=#activate-a-visit-form > input.complete");
+        $this->click("css=#activate-a-visit-form > input.complete");
+        sleep(3);
+        $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
+        $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("link=Active");
+
         $this->assertEquals(date("d M y"), $this->getText("css=span.cardDateText"));
         //   $this->assertEquals("Same Day Visitor", $this->getText("css=#cardDetailsTable > tbody > tr > td"));
 
@@ -942,8 +966,8 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
 
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Visitors");
-        $this->waitForElementPresent("link=Register a Visit");
-        $this->clickAndWait("link=Register a Visit");
+        $this->waitForElementPresent("link=Log Visit");
+        $this->clickAndWait("link=Log Visit");
         $this->click("id=multiday");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test");
@@ -970,10 +994,14 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
 //        $this->type("id=proposedDateOut", date('d-m-Y', time() + 86400));
 //        $this->type("id=Visit_date_out", date('d-m-Y', time() + 86400));
 //        $this->clickAndWait("id=submitAllForms");
-        $this->type("id=Visitor_photo","1");
-        $this->clickAndWait("css=#activate-a-visit-form > input.complete");
+        $this->type("id=Visitor_photo", "1");
+        $this->click("css=#activate-a-visit-form > input.complete");
+        sleep(3);
+        $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
+        $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("link=Active");
-        $this->assertEquals(date('d M y', time() + 172800), $this->getText("css=span.cardDateText"));
+
+    //    $this->assertEquals(date('d M y', time() + 172800), $this->getText("css=span.cardDateText"));
         $this->clickAndWait("css=#close-visit-form > input[type=\"submit\"]");
     }
 

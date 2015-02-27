@@ -212,7 +212,7 @@ $session = new CHttpSession;
 
                                 </select><br>
                                 <?php echo $reasonForm->error($model, 'reason'); ?>
-                                <div class="errorMessage visitorReason" id="visitReason">Reason cannot be blank.</div>
+                                <div class="errorMessage visitorReason" id="visitReason">Please select a reason</div>
                             </td>
                         </tr>
                         <tr><td><input type="submit" value="Update" name="yt0" id="submitReasonForm" class="complete" /></td></tr>
@@ -241,7 +241,7 @@ $session = new CHttpSession;
                             <td><textarea id="VisitReason_reason" name="VisitReason[reason]" style="width:200px !important;text-transform: capitalize;" cols="80" rows="3"><?php
                                     echo $reasonModel->reason;
                                     ?></textarea> <?php echo $addReasonForm->error($reasonModel, 'reason'); ?>
-                                <div class="errorMessage visitorReason" id="visitReasonErrorMessage">Reason cannot be blank.</div>
+                                <div class="errorMessage visitorReason" id="visitReasonErrorMessage">Please select a reason</div>
                             </td>
                         </tr>
                         <tr><td><input type="submit" value="Add" name="yt0" id="submitAddReasonForm" class="complete"/></td></tr>

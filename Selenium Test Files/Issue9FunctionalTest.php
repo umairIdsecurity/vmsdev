@@ -95,7 +95,7 @@ class Issue9FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Organisation Settings");
         $this->type("id=Company_name", "");
         $this->clickAndWait("id=createBtn");
-        $this->assertEquals("Company Name cannot be blank.", $this->getText("css=div.errorSummary > ul > li"));
+        $this->assertEquals("Please enter a Company Name", $this->getText("css=div.errorSummary > ul > li"));
         $this->type("id=Company_email_address", "123");
         $this->clickAndWait("id=createBtn");
         $this->assertEquals("Email Address is not a valid email address.", $this->getText("//form[@id='company-form']/div/ul/li[2]"));

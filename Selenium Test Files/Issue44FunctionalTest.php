@@ -145,13 +145,13 @@ class Issue44FunctionalTest extends BaseFunctionalTest {
         $this->click("id=submitFormVisitor");
         $this->waitForElementPresent("id=Visitor_first_name_em_");
         sleep(1);
-        $this->assertEquals("First Name cannot be blank.", $this->getText("id=Visitor_first_name_em_"));
-        $this->assertEquals("Last Name cannot be blank.", $this->getText("id=Visitor_last_name_em_"));
-        $this->assertEquals("Email Address cannot be blank.", $this->getText("id=Visitor_email_em_"));
-        $this->assertEquals("Mobile Number cannot be blank.", $this->getText("id=Visitor_contact_number_em_"));
-        $this->assertEquals("Tenant cannot be blank.", $this->getText("id=Visitor_tenant_em_"));
-        $this->assertEquals("Password cannot be blank.", $this->getText("id=Visitor_password_em_"));
-        $this->assertEquals("Repeat Password cannot be blank.", $this->getText("id=Visitor_repeatpassword_em_"));
+        $this->assertEquals("Please enter a First Name", $this->getText("id=Visitor_first_name_em_"));
+        $this->assertEquals("Please enter a Last Name", $this->getText("id=Visitor_last_name_em_"));
+        $this->assertEquals("Please enter an Email Address", $this->getText("id=Visitor_email_em_"));
+        $this->assertEquals("Please enter a Mobile Number", $this->getText("id=Visitor_contact_number_em_"));
+        $this->assertEquals("Please select a Tenant", $this->getText("id=Visitor_tenant_em_"));
+        $this->assertEquals("Please enter a Password", $this->getText("id=Visitor_password_em_"));
+        $this->assertEquals("Please enter a Repeat Password", $this->getText("id=Visitor_repeatpassword_em_"));
         $this->type("id=Visitor_email", "123");
         $this->type("id=Visitor_position", "123");
         sleep(1);
@@ -177,7 +177,7 @@ class Issue44FunctionalTest extends BaseFunctionalTest {
         $this->click("id=submitFormVisitor");
         $this->waitForElementPresent("css=div.errorMessageEmail");
         sleep(1);
-        $this->assertEquals("Email Address has already been taken.", $this->getText("css=div.errorMessageEmail"));
+        $this->assertEquals("A profile already exists for this email address.", $this->getText("css=div.errorMessageEmail"));
     }
 
 }

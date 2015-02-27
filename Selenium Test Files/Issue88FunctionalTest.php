@@ -27,9 +27,9 @@ class Issue88FunctionalTest extends BaseFunctionalTest {
 
     /* Scenario 1 Change text
       Expected Behavior
-      'Manage Visitor Records change to 'Manage Visitors'
+      'Manage Visit History change to 'Manage Visitors'
       'Add Visitor Record' change to 'Add Visitor Profile'
-      'Export Visitor Records' change to 'Export Visit History'
+      'Export Visit History' change to 'Export Visit History'
       'Find or Add New Visitor Record' change to 'Find or Add New Visitor Profile'
       Change text in Main Menu 'Find Record' to 'Search Visits'
      */
@@ -55,8 +55,8 @@ class Issue88FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Manage Visitors", $this->getText("css=h1"));
         $this->assertEquals("Add Visitor Profile", $this->getText("//div[@id='cssmenu']/ul/li[4]/ul/li/a/span"));
         $this->clickAndWait("link=Dashboard");
-        $this->assertEquals("Add Visitor Profile", $this->getText("//div[@id='cssmenu']/ul/li[3]/a/span"));
-        $this->clickAndWait("//div[@id='cssmenu']/ul/li[3]/a/span");
+        $this->assertEquals("Add Visitor Profile", $this->getText("css=a.submenu-icon.addvisitorprofile > span"));
+        $this->clickAndWait("css=a.submenu-icon.addvisitorprofile > span");
         for ($second = 0;; $second++) {
             if ($second >= 60)
                 $this->fail("timeout");
@@ -87,7 +87,7 @@ class Issue88FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Export Visit History", $this->getText("//div[@id='cssmenu']/ul/li[4]/ul/li[4]/a/span"));
         $this->clickAndWait("//div[@id='cssmenu']/ul/li[4]/ul/li[4]/a/span");
         $this->assertEquals("Visit History", $this->getText("css=h1"));
-        $this->clickAndWait("link=Register a Visit");
+        $this->clickAndWait("link=Log Visit");
         $this->assertEquals("Find or Add New Visitor Profile", $this->getText("id=findVisitorA"));
         $this->clickAndWait("link=Dashboard");
         $this->assertEquals("Search Visits", $this->getText("css=#findrecordSidebar > span"));

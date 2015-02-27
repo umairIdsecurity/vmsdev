@@ -43,6 +43,7 @@ class Issue48FunctionalTest extends BaseFunctionalTest {
         $this->assertTrue((bool) preg_match('/^Are you sure you want to delete this item[\s\S]$/', $this->getConfirmation()));
         $this->type("name=Visitor[email]", "testVisitor4@test.com");
         $this->click("name=Visitor[email]");
+        sleep(1);
         for ($second = 0;; $second++) {
             if ($second >= 60)
                 $this->fail("timeout");

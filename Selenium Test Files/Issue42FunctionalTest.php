@@ -37,7 +37,7 @@ class Issue42FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Visitors");
-        $this->clickAndWait("link=Preregister a Visit");
+        $this->clickAndWait("link=Preregister Visit");
         $this->click("id=clicktabA");
         $this->select("id=Visitor_visitor_type","label=Corporate Visitor");
         $this->addVisitor('Visitor0');
@@ -50,13 +50,13 @@ class Issue42FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("id=submitFormUser");
         $this->verifyVisitorInTable('Visitor0');
         $this->clickAndWait("link=Administration");
-        $this->click("id=yt3");
+        $this->clickAndWait("css=a.managevisitorrecords > span");
         sleep(2);
         for ($second = 0;; $second++) {
             if ($second >= 60)
                 $this->fail("timeout");
             try {
-                if ("Register a Visit" == $this->getText("//div[@id='cssmenu']/ul/li[4]/ul/li[2]/a/span"))
+                if ("Log Visit" == $this->getText("//div[@id='cssmenu']/ul/li[4]/ul/li[2]/a/span"))
                     break;
             } catch (Exception $e) {
                 
@@ -81,7 +81,7 @@ class Issue42FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Visitors");
-        $this->clickAndWait("link=Preregister a Visit");
+        $this->clickAndWait("link=Preregister Visit");
         $this->click("id=clicktabA");
         $this->select("id=Visitor_visitor_type","label=Corporate Visitor");
         $this->addVisitor('Visitor5');
@@ -96,13 +96,13 @@ class Issue42FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("id=submitFormUser");
         $this->verifyVisitorInTable('Visitor5');
         $this->clickAndWait("link=Administration");
-        $this->click("id=yt3");
+        $this->clickAndWait("css=a.managevisitorrecords > span");
         sleep(2);
         for ($second = 0;; $second++) {
             if ($second >= 60)
                 $this->fail("timeout");
             try {
-                if ("Register a Visit" == $this->getText("//div[@id='cssmenu']/ul/li[4]/ul/li[2]/a/span"))
+                if ("Log Visit" == $this->getText("//div[@id='cssmenu']/ul/li[4]/ul/li[2]/a/span"))
                     break;
             } catch (Exception $e) {
                 

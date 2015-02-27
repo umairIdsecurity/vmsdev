@@ -16,8 +16,8 @@ require_once 'BaseFunctionalTest.php';
 class Issue24FunctionalTest extends BaseFunctionalTest {
 
     function setUp() {
-        $this->setBrowser("*iexplore");
-        $this->setBrowserUrl("http://cvms.identitysecurity.info/");
+        $this->setBrowser("*firefox");
+        $this->setBrowserUrl("http://dev.identitysecurity.info/");
     }
 
     function testAll() {
@@ -36,7 +36,7 @@ class Issue24FunctionalTest extends BaseFunctionalTest {
 
 
       Steps:
-      1.	Go to cvms.identitysecurity.info/index.php?r=site/login
+      1.	Go to dev.identitysecurity.info/index.php?r=site/login
       2.	Type superadmin@test.com in username field
       3.	Type 12345 in password field
       4.	Click Login
@@ -66,7 +66,7 @@ class Issue24FunctionalTest extends BaseFunctionalTest {
 
 
       Steps:
-      1.	Go to cvms.identitysecurity.info/index.php?r=site/login
+      1.	Go to dev.identitysecurity.info/index.php?r=site/login
       2.	Type superadmin@test.com in username field
       3.	Type 12345 in password field
       4.	Click Login
@@ -99,7 +99,7 @@ class Issue24FunctionalTest extends BaseFunctionalTest {
 
 
       Steps:
-      1.	Go to cvms.identitysecurity.info/index.php?r=site/login
+      1.	Go to dev.identitysecurity.info/index.php?r=site/login
       2.	Type superadmin@test.com in username field
       3.	Type 12345 in password field
       4.	Click Login
@@ -129,7 +129,7 @@ class Issue24FunctionalTest extends BaseFunctionalTest {
       -	Only Super Admin can access visit reasons.
 
       Steps:
-      1.	Go to cvms.identitysecurity.info/index.php?r=site/login
+      1.	Go to dev.identitysecurity.info/index.php?r=site/login
       2.	Login as superadmin@test.com and use 12345 as password
       3.	Click administration
       4.	Click manage visit reasons
@@ -138,17 +138,17 @@ class Issue24FunctionalTest extends BaseFunctionalTest {
       7.	Login as admin@test.com and use 12345 as password
       8.	click administration
       9.	assert manage visit reasons not present
-      10.	go to http://cvms.identitysecurity.info/index.php?r=visitReason/admin
+      10.	go to http://dev.identitysecurity.info/index.php?r=visitReason/admin
       11.	assert text You are not authorized to perform this action.
-      14.	go to http://cvms.identitysecurity.info/index.php?r=visitReason/update
+      14.	go to http://dev.identitysecurity.info/index.php?r=visitReason/update
       15.	assert text You are not authorized to perform this action.
       16.	Click logout
       17.	Login as agentadmin@test.com and use 12345 as password
       18.	click administration
       19.	assert manage visit reasons not present
-      20.	go to http://cvms.identitysecurity.info/index.php?r=visitReason/admin
+      20.	go to http://dev.identitysecurity.info/index.php?r=visitReason/admin
       21.	assert text You are not authorized to perform this action.
-      24.	go to http://cvms.identitysecurity.info/index.php?r=visitReason/update
+      24.	go to http://dev.identitysecurity.info/index.php?r=visitReason/update
       25.	assert text You are not authorized to perform this action.
      */
 
@@ -161,9 +161,9 @@ class Issue24FunctionalTest extends BaseFunctionalTest {
         $this->login("admin@test.com", '12345');
         $this->clickAndWait("link=Administration");
         $this->assertFalse($this->isTextPresent("//div[@id='cssmenu']/ul/li[5]/a/span"));
-        $this->open("http://cvms.identitysecurity.info/index.php?r=visitReason/admin");
+        $this->open("http://dev.identitysecurity.info/index.php?r=visitReason/admin");
         $this->assertEquals("You are not authorized to perform this action.", $this->getText("css=div.error"));
-        $this->open("http://cvms.identitysecurity.info/index.php?r=visitReason/update");
+        $this->open("http://dev.identitysecurity.info/index.php?r=visitReason/update");
         $this->assertEquals("You are not authorized to perform this action.", $this->getText("css=div.error"));
     }
 
@@ -173,7 +173,7 @@ class Issue24FunctionalTest extends BaseFunctionalTest {
       -	Assert text “This is a valid reason ?!.,’”()@#$%^&*-+” in manage reason field
 
       Steps:
-      1.	Go to cvms.identitysecurity.info/index.php?r=site/login
+      1.	Go to dev.identitysecurity.info/index.php?r=site/login
       2.	Login as superadmin@test.com and use 12345 as password
       3.	Click administration
       4.	Click manage visit reasons

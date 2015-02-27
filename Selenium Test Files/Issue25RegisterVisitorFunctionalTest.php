@@ -16,8 +16,8 @@ require_once 'BaseFunctionalTest.php';
 class Issue25RegisterVisitorFunctionalTest extends BaseFunctionalTest {
 
     function setUp() {
-        $this->setBrowser("*iexplore");
-        $this->setBrowserUrl("http://cvms.identitysecurity.info/");
+        $this->setBrowser("*firefox");
+        $this->setBrowserUrl("http://dev.identitysecurity.info/");
     }
 
     function testAll() {
@@ -38,7 +38,7 @@ class Issue25RegisterVisitorFunctionalTest extends BaseFunctionalTest {
      * -Assert text testvisitor0@test.com in email field
      * 
      Steps:
-        1. Go cvms.idsecurity.com.au/index.php?r=site/login
+        1. Go dev.idsecurity.com.au/index.php?r=site/login
      2. Log in as superadmin@test.com and 12345 in password
      3. Click login 
      4. Click administration
@@ -94,7 +94,7 @@ class Issue25RegisterVisitorFunctionalTest extends BaseFunctionalTest {
 
 
       Steps:
-      1.	Go to cvms.identitysecurity.info/index.php?r=site/login
+      1.	Go to dev.identitysecurity.info/index.php?r=site/login
       2.	Type superadmin@test.com in username field
       3.	Type 12345 in password field
       4.	Click Login
@@ -133,7 +133,7 @@ class Issue25RegisterVisitorFunctionalTest extends BaseFunctionalTest {
 
 
       Steps:
-      1.	Go to cvms.identitysecurity.info/index.php?r=site/login
+      1.	Go to dev.identitysecurity.info/index.php?r=site/login
       2.	Type superadmin@test.com in username field
       3.	Type 12345 in password field
       4.	Click Login
@@ -173,7 +173,7 @@ class Issue25RegisterVisitorFunctionalTest extends BaseFunctionalTest {
 
 
       Steps:
-      1.	Go to cvms.identitysecurity.info/index.php?r=site/login
+      1.	Go to dev.identitysecurity.info/index.php?r=site/login
       2.	Type superadmin@test.com in username field
       3.	Type 12345 in password field
       4.	Click Login
@@ -211,7 +211,7 @@ class Issue25RegisterVisitorFunctionalTest extends BaseFunctionalTest {
 
 
       Steps:
-      1.	Go to cvms.identitysecurity.info/index.php?r=site/login
+      1.	Go to dev.identitysecurity.info/index.php?r=site/login
       2.	Type superadmin@test.com in username field
       3.	Type 12345 in password field
       4.	Click Login
@@ -256,7 +256,7 @@ class Issue25RegisterVisitorFunctionalTest extends BaseFunctionalTest {
       -	Assert patient name has already been taken
 
       Steps:
-      1.	Go to cvms.identitysecurity.info/index.php?r=site/login
+      1.	Go to dev.identitysecurity.info/index.php?r=site/login
       2.	Type superadmin@test.com in email field and 12345 in password field
       3.	Click login
       4.	Click administration
@@ -362,7 +362,7 @@ class Issue25RegisterVisitorFunctionalTest extends BaseFunctionalTest {
       -	Assert text contact no. cannot be blank
 
       Steps:
-      1.	Go to cvms.identitysecurity.info/index.php?r=site/login
+      1.	Go to dev.identitysecurity.info/index.php?r=site/login
       2.	Type superadmin@test.com in email field and 12345 in password field
       3.	Click login
       4.	Click administration
@@ -457,7 +457,7 @@ class Issue25RegisterVisitorFunctionalTest extends BaseFunctionalTest {
       Expected behavior
       -	Assert text testvisitor1@test.com in visitor email field.
       Steps:
-      1.	Go to cvms.identitysecurity.info/index.php?r=site/login
+      1.	Go to dev.identitysecurity.info/index.php?r=site/login
       2.	Type superadmin@test.com in email field and 12345 in password field
       3.	Click login
       4.	Click administration

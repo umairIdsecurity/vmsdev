@@ -16,8 +16,8 @@ require_once 'BaseFunctionalTest.php';
 class Issue7FunctionalTest extends BaseFunctionalTest {
 
     function setUp() {
-        $this->setBrowser("*iexplore");
-        $this->setBrowserUrl("http://cvms.identitysecurity.info/");
+        $this->setBrowser("*firefox");
+        $this->setBrowserUrl("http://dev.identitysecurity.info/");
     }
 
     function testAll() {
@@ -129,15 +129,15 @@ class Issue7FunctionalTest extends BaseFunctionalTest {
     function Scenario3() {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
-        $this->open("http://cvms.identitysecurity.info/index.php?r=user/profile&id=17");
+        $this->open("http://dev.identitysecurity.info/index.php?r=user/profile&id=17");
         $this->assertEquals("You are not authorized to perform this action.", $this->getText("css=div.error"));
-        $this->open("http://cvms.identitysecurity.info/index.php?r=user/profile&id=18");
+        $this->open("http://dev.identitysecurity.info/index.php?r=user/profile&id=18");
         $this->assertEquals("You are not authorized to perform this action.", $this->getText("css=div.error"));
-        $this->open("http://cvms.identitysecurity.info/index.php?r=user/profile&id=19");
+        $this->open("http://dev.identitysecurity.info/index.php?r=user/profile&id=19");
         $this->assertEquals("You are not authorized to perform this action.", $this->getText("css=div.error"));
-        $this->open("http://cvms.identitysecurity.info/index.php?r=user/profile&id=20");
+        $this->open("http://dev.identitysecurity.info/index.php?r=user/profile&id=20");
         $this->assertEquals("You are not authorized to perform this action.", $this->getText("css=div.error"));
-        $this->open("http://cvms.identitysecurity.info/index.php?r=user/profile&id=21");
+        $this->open("http://dev.identitysecurity.info/index.php?r=user/profile&id=21");
         $this->assertEquals("You are not authorized to perform this action.", $this->getText("css=div.error"));
     }
 

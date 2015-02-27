@@ -16,8 +16,8 @@ require_once 'BaseFunctionalTest.php';
 class Issue3ValidationsFunctionalTest extends BaseFunctionalTest {
 
     function setUp() {
-        $this->setBrowser("*iexplore");
-        $this->setBrowserUrl("http://cvms.identitysecurity.info/");
+        $this->setBrowser("*firefox");
+        $this->setBrowserUrl("http://dev.identitysecurity.info/");
     }
 
     function testAll() {
@@ -149,19 +149,19 @@ class Issue3ValidationsFunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->click("link=Administration");
         $this->waitForPageToLoad("30000");
-        $this->open("http://cvms.identitysecurity.info/index.php?r=user/update&id=17");
+        $this->open("http://dev.identitysecurity.info/index.php?r=user/update&id=17");
         $this->assertEquals("Edit User", $this->getText("css=h1"));
 
-        $this->open("http://cvms.identitysecurity.info/index.php?r=user/update&id=18");
+        $this->open("http://dev.identitysecurity.info/index.php?r=user/update&id=18");
         $this->assertEquals("Edit User", $this->getText("css=h1"));
 
-        $this->open("http://cvms.identitysecurity.info/index.php?r=user/update&id=19");
+        $this->open("http://dev.identitysecurity.info/index.php?r=user/update&id=19");
         $this->assertEquals("Edit User", $this->getText("css=h1"));
 
-        $this->open("http://cvms.identitysecurity.info/index.php?r=user/update&id=20");
+        $this->open("http://dev.identitysecurity.info/index.php?r=user/update&id=20");
         $this->assertEquals("Edit User", $this->getText("css=h1"));
 
-        $this->open("http://cvms.identitysecurity.info/index.php?r=user/update&id=21");
+        $this->open("http://dev.identitysecurity.info/index.php?r=user/update&id=21");
         $this->assertEquals("Edit User", $this->getText("css=h1"));
     }
 
@@ -248,14 +248,14 @@ class Issue3ValidationsFunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->click("link=Administration");
         $this->waitForPageToLoad("30000");
-        $this->open("http://cvms.identitysecurity.info/index.php?r=user/update&id=16");
+        $this->open("http://dev.identitysecurity.info/index.php?r=user/update&id=16");
         $this->assertEquals("You are not authorized to perform this action.", $this->getText("css=div.error"));
 
 
-        $this->open("http://cvms.identitysecurity.info/index.php?r=user/update&id=18");
+        $this->open("http://dev.identitysecurity.info/index.php?r=user/update&id=18");
         $this->assertEquals("Edit User", $this->getText("css=h1"));
 
-        $this->open("http://cvms.identitysecurity.info/index.php?r=user/update&id=19");
+        $this->open("http://dev.identitysecurity.info/index.php?r=user/update&id=19");
         $this->assertEquals("Edit User", $this->getText("css=h1"));
     }
 
@@ -332,13 +332,13 @@ class Issue3ValidationsFunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->click("link=Administration");
         $this->waitForPageToLoad("30000");
-        $this->open("http://cvms.identitysecurity.info/index.php?r=user/update&id=16");
+        $this->open("http://dev.identitysecurity.info/index.php?r=user/update&id=16");
         $this->assertEquals("You are not authorized to perform this action.", $this->getText("css=div.error"));
-        $this->open("http://cvms.identitysecurity.info/index.php?r=user/update&id=17");
+        $this->open("http://dev.identitysecurity.info/index.php?r=user/update&id=17");
         $this->assertEquals("You are not authorized to perform this action.", $this->getText("css=div.error"));
-        $this->open("http://cvms.identitysecurity.info/index.php?r=user/update&id=20");
+        $this->open("http://dev.identitysecurity.info/index.php?r=user/update&id=20");
         $this->assertEquals("Edit User", $this->getText("css=h1"));
-        $this->open("http://cvms.identitysecurity.info/index.php?r=user/update&id=21");
+        $this->open("http://dev.identitysecurity.info/index.php?r=user/update&id=21");
         $this->assertEquals("Edit User", $this->getText("css=h1"));
     }
 

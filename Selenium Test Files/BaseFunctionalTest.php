@@ -21,29 +21,29 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
 
         parent::setUp();
         $this->setBrowser("*iexploreproxy");
-        $this->setBrowserUrl("http://cvms.identitysecurity.info/");
+        $this->setBrowserUrl("http://dev.identitysecurity.info/");
     }
 
     public function resetDb() {
-        $this->open("http://cvms.identitysecurity.info/index.php?r=site/resetDb");
+        $this->open("http://dev.identitysecurity.info/index.php?r=site/resetDb");
         $this->assertEquals("Tables imported successfully", $this->getText("css=body"));
     }
 
     public function resetDbWithData() {
         $this->start();
-        $this->open("http://cvms.identitysecurity.info/index.php?r=site/resetDb2");
+        $this->open("http://dev.identitysecurity.info/index.php?r=site/resetDb2");
         $this->assertEquals("Tables imported successfully", $this->getText("css=body"));
     }
     
     public function issue35Sql() {
         $this->start();
-        $this->open("http://cvms.identitysecurity.info/index.php?r=site/issue35UpdateDatabaseRecord");
+        $this->open("http://dev.identitysecurity.info/index.php?r=site/issue35UpdateDatabaseRecord");
         $this->assertEquals("Tables updated successfully", $this->getText("css=body"));
     }
     
     public function issue48Sql() {
         $this->start();
-        $this->open("http://cvms.identitysecurity.info/index.php?r=site/issue48UpdateDatabaseRecord");
+        $this->open("http://dev.identitysecurity.info/index.php?r=site/issue48UpdateDatabaseRecord");
         $this->assertEquals("Tables updated successfully", $this->getText("css=body"));
     }
     
@@ -54,7 +54,7 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
     }
 
     function login($username = NULL, $password = NULL) {
-        $this->open("http://cvms.identitysecurity.info/index.php?r=site/login");
+        $this->open("http://dev.identitysecurity.info/index.php?r=site/login");
 
         $this->waitForPageToLoad("30000");
         $this->type("id=LoginForm_username", $username);
@@ -64,7 +64,7 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
     }
 
     function updatePassword($id = NULL) {
-        $this->open("http://cvms.identitysecurity.info/index.php?r=password/update&id=" . $id);
+        $this->open("http://dev.identitysecurity.info/index.php?r=password/update&id=" . $id);
         $this->type("id=Password_currentpassword", "12345");
         $this->type("name=Password[password]", "admin");
         $this->type("name=Password[repeatpassword]", "admin");
@@ -195,7 +195,7 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
 
     function testBlank() {
         $this->setBrowser("*iexplore");
-        $this->setBrowserUrl("http://cvms.identitysecurity.info/");
+        $this->setBrowserUrl("http://dev.identitysecurity.info/");
     }
     function clearMailcatcher(){
         $this->start();

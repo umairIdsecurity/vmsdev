@@ -122,7 +122,7 @@ class Issue9FunctionalTest extends BaseFunctionalTest {
     function Scenario3() {
         $username = 'admin@test.com';
         $this->login($username, '12345');
-        $this->open("http://cvms.identitysecurity.info/index.php?r=company/update/&id=1");
+        $this->open("http://dev.identitysecurity.info/index.php?r=company/update/&id=1");
         $this->assertEquals("You are not authorized to perform this action.", $this->getText("css=div.error"));
     }
 

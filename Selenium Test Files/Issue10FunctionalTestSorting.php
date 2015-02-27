@@ -19,7 +19,7 @@ class Issue10FunctionalTestSorting extends BaseFunctionalTest {
     protected function setUp() {
         parent::setUp();
         $this->setBrowser("*iexplore");
-        $this->setBrowserUrl("http://cvms.identitysecurity.info");
+        $this->setBrowserUrl("http://dev.identitysecurity.info");
     }
 
     function testAll() {

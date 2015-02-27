@@ -162,12 +162,20 @@ class Visitor extends CActiveRecord {
         $criteria->compare('tenant', $this->tenant, true);
         $criteria->compare('tenant_agent', $this->tenant_agent, true);
         $criteria->compare('vehicle', $this->vehicle, true);
-
+        
+        
+        
         if (Yii::app()->controller->id == 'visit') {
             $criteria->compare('CONCAT(first_name, \' \', last_name)', $this->first_name, true);
         } else {
             $criteria->compare('first_name', $this->first_name, true);
         }
+        
+        $user = User::model()->findByPK(Yii::app()->user->id);
+        if($user->role != Roles::ROLE_SUPERADMIN){
+            
+        } 
+        
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'sort' => array(
@@ -205,6 +213,9 @@ class Visitor extends CActiveRecord {
     public function beforeFind() {
         $criteria = new CDbCriteria;
         $criteria->condition = "t.is_deleted = 0";
+        if (Yii::app()->user->role != Roles::ROLE_SUPERADMIN) {
+            $criteria->condition = "t.tenant ='" . Yii::app()->user->tenant . "'";
+        }
         $this->dbCriteria->mergeWith($criteria);
     }
 

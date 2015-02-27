@@ -17,7 +17,7 @@ class Issue6FunctionalTest extends BaseFunctionalTest {
 
     function setUp() {
         $this->setBrowser("*iexplore");
-        $this->setBrowserUrl("http://cvms.identitysecurity.info/");
+        $this->setBrowserUrl("http://dev.identitysecurity.info/");
     }
 
     function testAll() {
@@ -210,7 +210,7 @@ class Issue6FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->waitForPageToLoad("30000");
-        $this->open("http://cvms.identitysecurity.info/index.php?r=company/admin");
+        $this->open("http://dev.identitysecurity.info/index.php?r=company/admin");
         $this->assertEquals("You are not authorized to perform this action.", $this->getText("css=div.error"));
     }
 

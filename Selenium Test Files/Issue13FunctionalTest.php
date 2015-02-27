@@ -17,7 +17,7 @@ class Issue13FunctionalTest extends BaseFunctionalTest {
 
     function setUp() {
         $this->setBrowser("*iexploreproxy");
-        $this->setBrowserUrl("http://cvms.identitysecurity.info");
+        $this->setBrowserUrl("http://dev.identitysecurity.info");
     }
 
     function testAll() {

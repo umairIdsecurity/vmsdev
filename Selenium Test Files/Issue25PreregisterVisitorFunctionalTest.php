@@ -17,7 +17,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
 
     function setUp() {
         $this->setBrowser("*iexplore");
-        $this->setBrowserUrl("http://cvms.identitysecurity.info/");
+        $this->setBrowserUrl("http://dev.identitysecurity.info/");
     }
 
     function testAll() {
@@ -42,7 +42,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
 
 
       Steps:
-      1.	Go to cvms.identitysecurity.info/index.php?r=site/login
+      1.	Go to dev.identitysecurity.info/index.php?r=site/login
       2.	Type superadmin@test.com in username field
       3.	Type 12345 in passtd field
       4.	Click Login
@@ -83,7 +83,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
 
 
       Steps:
-      1.	Go to cvms.identitysecurity.info/index.php?r=site/login
+      1.	Go to dev.identitysecurity.info/index.php?r=site/login
       2.	Type superadmin@test.com in username field
       3.	Type 12345 in password field
       4.	Click Login
@@ -136,7 +136,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
 
 
       Steps:
-      1.	Go to cvms.identitysecurity.info/index.php?r=site/login
+      1.	Go to dev.identitysecurity.info/index.php?r=site/login
       2.	Type superadmin@test.com in username field
       3.	Type 12345 in password field
       4.	Click Login
@@ -173,7 +173,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
 
 
       Steps:
-      1.	Go to cvms.identitysecurity.info/index.php?r=site/login
+      1.	Go to dev.identitysecurity.info/index.php?r=site/login
       2.	Type superadmin@test.com in username field
       3.	Type 12345 in password field
       4.	Click Login
@@ -228,7 +228,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
       -	Assert patient name cannot be blank
 
       Steps:
-      1.	Go to cvms.identitysecurity.info/index.php?r=site/login
+      1.	Go to dev.identitysecurity.info/index.php?r=site/login
       2.	Type superadmin@test.com in email field and 12345 in password field
       3.	Click login
       4.	Click administration
@@ -340,7 +340,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
       -	Assert text contact no. cannot be blank
 
       Steps:
-      1.	Go to cvms.identitysecurity.info/index.php?r=site/login
+      1.	Go to dev.identitysecurity.info/index.php?r=site/login
       2.	Type superadmin@test.com in email field and 12345 in password field
       3.	Click login
       4.	Click administration
@@ -450,7 +450,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
       Expected behavior
       -	Assert text testvisitor1@test.com in visitor email field.
       Steps:
-      1.	Go to cvms.identitysecurity.info/index.php?r=site/login
+      1.	Go to dev.identitysecurity.info/index.php?r=site/login
       2.	Type superadmin@test.com in email field and 12345 in password field
       3.	Click login
       4.	Click administration
@@ -501,7 +501,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
     /* Scenario 8 - Login as superadmin. Preregister a corporate visitor with new company. Check for validations. 
       Expected Behavior: Assert New Company in company row.
       Steps:
-      1.	Go to cvms.identitysecurity.info/index.php?r=site/login
+      1.	Go to dev.identitysecurity.info/index.php?r=site/login
       2.	Type superadmin@test.com in email field and 12345 in password field
       3.	Click login
       4.	Click administration

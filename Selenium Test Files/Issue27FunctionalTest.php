@@ -19,7 +19,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
 
     function setUp() {
         $this->setBrowser("*iexplore");
-        $this->setBrowserUrl("http://cvms.identitysecurity.info/");
+        $this->setBrowserUrl("http://dev.identitysecurity.info/");
     }
 
     function testAll() {
@@ -47,7 +47,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
 
 
       Steps:
-      1.	Go to cvms.identitysecurity.info/index.php?r=site/login
+      1.	Go to dev.identitysecurity.info/index.php?r=site/login
       2.	Type superadmin@test.com in username field
       3.	Type 12345 in password field
       4.	Click Login
@@ -172,17 +172,17 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
 
 
       Steps:
-      1.	Go to cvms.identitysecurity.info/index.php?r=site/login
+      1.	Go to dev.identitysecurity.info/index.php?r=site/login
       2.	Type superadmin@test.com in username field
       3.	Type 12345 in password field
       4.	Click Login
       5.	Click Administration
-      6.	Go to http://cvms.identitysecurity.info/index.php?r=visit/detail&id=5
+      6.	Go to http://dev.identitysecurity.info/index.php?r=visit/detail&id=5
       7.	Assert email field testvisitor4@Test.com in email, and corporate visitor in visitor type.
       8.	Type 09123456789 in mobile number and testvisitorC@test.com in email field for contact details. Click update button under contact details.
       9.	Select reason 2 in reason then click update button
       10.	Type testA in host first name, hostA in last name, testHost1A@test.com in email field
-      11.	Go to http://cvms.identitysecurity.info/index.php?r=visit/detail&id=5. Assert 1234567890 in mobile number, testvisitorC@test.com in email field for contact details.
+      11.	Go to http://dev.identitysecurity.info/index.php?r=visit/detail&id=5. Assert 1234567890 in mobile number, testvisitorC@test.com in email field for contact details.
       12.	Assert reason 2 in reason. TestA in host first name, HostA in last name, testHost1A@test.com in email
      */
 
@@ -245,11 +245,11 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
       -	Assert text reason has already been registered
       -	Assert patient name cannot be blank
       Steps:
-      1.	Go to cvms.identitysecurity.info/index.php?r=site/login
+      1.	Go to dev.identitysecurity.info/index.php?r=site/login
       2.	Type superadmin@test.com in email field and 12345 in password field
       3.	Click login
       4.	Click administration
-      5.	Go to http://cvms.identitysecurity.info/index.php?r=visit/detail&id=2
+      5.	Go to http://dev.identitysecurity.info/index.php?r=visit/detail&id=2
       6.	Empty field mobile number and email field. Click update button under contact details.
       7.	Assert email address cannot be blank.
       8.	Type testvisitor3@test.com in email field. Click update and assert text email has already been taken.
@@ -341,11 +341,11 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
       -	Assert text email address has already been taken.
       -	Assert text reason cannot be blank
       Steps:
-      1.	Go to cvms.identitysecurity.info/index.php?r=site/login
+      1.	Go to dev.identitysecurity.info/index.php?r=site/login
       2.	Type superadmin@test.com in email field and 12345 in password field
       3.	Click login
       4.	Click administration
-      5.	Go to http://cvms.identitysecurity.info/index.php?r=visit/detail&id=5
+      5.	Go to http://dev.identitysecurity.info/index.php?r=visit/detail&id=5
       6.	Empty all fields under host details then click update button
       7.	Assert text first name cannot be blank, last name cannot be blank, email cannot be blank and contact no. cannot be blank
       8.	Type test in first name, test in last name, staffmember@test.com in email field and 123456 in mobile field.

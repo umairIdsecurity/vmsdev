@@ -18,7 +18,7 @@ class Issue33FunctionalTest extends BaseFunctionalTest {
 
     function setUp() {
         $this->setBrowser("*iexplore");
-        $this->setBrowserUrl("http://cvms.identitysecurity.info/");
+        $this->setBrowserUrl("http://dev.identitysecurity.info/");
     }
 
     function testAll() {
@@ -52,7 +52,7 @@ class Issue33FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("css=#activate-a-visit-form > input.complete");
         $this->clickAndWait("link=Active");
         $this->clickAndWait("id=printCardBtn");
-        $this->open("http://cvms.identitysecurity.info/index.php?r=visit/detail&id=7");
+        $this->open("http://dev.identitysecurity.info/index.php?r=visit/detail&id=7");
         $this->assertEquals("", $this->getText("id=reprintCardBtn"));
         $this->clickAndWait("link=Administration");
         $this->click("link=Reports");

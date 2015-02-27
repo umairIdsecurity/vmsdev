@@ -1,3 +1,8 @@
+<style>
+    .summary{
+        display:none !important;
+    }
+</style>
 <?php
 /* @var $this VisitorController */
 /* @var $model Visitor */
@@ -49,7 +54,7 @@ function displaySelectVisitorButton($visitorData) {
 function returnVisitorDetailLink($visitorId) {
     $visit_id = Visit::model()->find("visitor='" . $visitorId . "' and visit_status=1")->id;
     $url = '/index.php?r=visit/detail&id=' . $visit_id;
-    return '<a class="linkToVisitorDetailPage" href="'.$url.'" >Visitor has an active visit</a>';
+    return '<span style="font-size:12px;">Status: <a class="linkToVisitorDetailPage" href="' . $url . '" style="display:inline;text-decoration:underline !important;">Active</a></span>';
 }
 ?>
 <script>
@@ -57,7 +62,7 @@ function returnVisitorDetailLink($visitorId) {
         $(".linkToVisitorDetailPage").click(function(e) {
             e.preventDefault();
             var addressValue = $(this).attr("href");
-            window.top.location =addressValue;
+            window.top.location = addressValue;
         });
     });
 </script>

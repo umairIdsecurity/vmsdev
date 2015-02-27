@@ -18,7 +18,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
 
     function setUp() {
         $this->setBrowser("*iexplore");
-        $this->setBrowserUrl("http://cvms.identitysecurity.info/");
+        $this->setBrowserUrl("http://dev.identitysecurity.info/");
     }
 
     function testAll() {

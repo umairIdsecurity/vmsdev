@@ -20,7 +20,7 @@ class Issue3SetAccessRuleFunctionalTest extends BaseFunctionalTest {
 
     function setUp() {
         $this->setBrowser("*iexplore");
-        $this->setBrowserUrl("http://cvms.identitysecurity.info");
+        $this->setBrowserUrl("http://dev.identitysecurity.info");
     }
 
     function testAll() {
@@ -35,7 +35,7 @@ class Issue3SetAccessRuleFunctionalTest extends BaseFunctionalTest {
       -	Asser text  'workstation updated'
 
       Steps:
-      1.	Go to http://cvms.identitysecurity.info
+      1.	Go to http://dev.identitysecurity.info
       2.	Type admin@test.com in username field
       3.	Type 12345 in password field
       4.	Click Login
@@ -72,7 +72,7 @@ class Issue3SetAccessRuleFunctionalTest extends BaseFunctionalTest {
       -	Asser text  'workstation updated'
 
       Steps:
-      1.	Go to http://cvms.identitysecurity.info
+      1.	Go to http://dev.identitysecurity.info
       2.	Type agentadmin@test.com in username field
       3.	Type 12345 in password field
       4.	Click Login
@@ -108,7 +108,7 @@ class Issue3SetAccessRuleFunctionalTest extends BaseFunctionalTest {
       -	Asser text  'workstation updated'
 
       Steps:
-      1.	Go to http://cvms.identitysecurity.info
+      1.	Go to http://dev.identitysecurity.info
       2.	Type superadmin@test.com in username field
       3.	Type 12345 in password field
       4.	Click Login

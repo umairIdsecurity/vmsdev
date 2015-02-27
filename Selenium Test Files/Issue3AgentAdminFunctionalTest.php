@@ -17,7 +17,7 @@ class Issue3AgentAdminFunctionalTest extends BaseFunctionalTest {
 
     function setUp() {
         $this->setBrowser("*iexplore");
-        $this->setBrowserUrl("http://cvms.identitysecurity.info");
+        $this->setBrowserUrl("http://dev.identitysecurity.info");
         
     }
 

@@ -17,7 +17,7 @@ class Issue85FunctionalTest extends BaseFunctionalTest {
 
     function setUp() {
         $this->setBrowser("*firefox");
-        $this->setBrowserUrl("http://cvms.identitysecurity.info/");
+        $this->setBrowserUrl("http://dev.identitysecurity.info/");
     }
 
     function testAll() {

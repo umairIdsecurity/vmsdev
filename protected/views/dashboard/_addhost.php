@@ -66,10 +66,10 @@ $session = new CHttpSession;
                 </td>
             </tr>
             <tr <?php
-                    if ($session['role'] != Roles::ROLE_SUPERADMIN) {
-                        echo "style='display:none;'";
-                    }
-                    ?>
+            if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+                echo "style='display:none;'";
+            }
+            ?>
                 >
                     <?php
                     if ($session['role'] == Roles::ROLE_SUPERADMIN) {
@@ -174,10 +174,18 @@ $session = new CHttpSession;
             data: hostform,
             success: function(data) {
 
-                if ('<?php echo $session['role']; ?>' != 9) { //if not equal to staff member
-                    window.location = "index.php?r=dashboard";
-                } else {
-                    window.location = "index.php?r=dashboard/viewmyvisitors";
+//                if ('<?php echo $session['role']; ?>' != 9) { //if not equal to staff member
+//                    window.location = "index.php?r=dashboard";
+//                } else {
+//                    window.location = "index.php?r=dashboard/viewmyvisitors";
+//                }
+
+                if ('<?php echo $session['role']; ?>' == 5 || '<?php echo $session['role']; ?>' == 8 || '<?php echo $session['role']; ?>' == 7) {
+                    window.location = 'index.php?r=dashboard';
+                } else if ('<?php echo $session['role']; ?>' == 1 || '<?php echo $session['role']; ?>' == 6) {
+                    window.location = 'index.php?r=dashboard/admindashboard';
+                } else if ('<?php echo $session['role']; ?>' == 9) {
+                    window.location = 'index.php?r=dashboard/viewmyvisitors';
                 }
             },
             error: function() {
@@ -224,7 +232,7 @@ $session = new CHttpSession;
 
                     }
                 });
-                
+
             }
         });
     }

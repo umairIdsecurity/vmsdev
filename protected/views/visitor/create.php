@@ -302,7 +302,7 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
                 $('#findVisitorTableIframe').contents().find('.findVisitorButtonColumn a').removeClass('delete');
                 $('#findVisitorTableIframe').contents().find('.findVisitorButtonColumn a').html('Select Visitor');
                 $('#findVisitorTableIframe').contents().find('#' + id).addClass('delete');
-                $('#findVisitorTableIframe').contents().find('#' + id).html('Selected Visitor');
+                $('#findVisitorTableIframe').contents().find('#' + id).html('Visitor Selected');
                 $('#findVisitorTableIframe').contents().find('.findVisitorButtonColumn .linkToVisitorDetailPage').html('Visitor has an active visit');
 
             }

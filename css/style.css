@@ -1091,7 +1091,11 @@ dt.tabs dt{
 }
 
 #export-button{
-    margin-top:-10px;
+     margin-top: -32px;
+    margin-left: 797px !important;
+    margin-top: -32px !important;
+    position: absolute;
+    
 }
 
 .admindashboardDiv{

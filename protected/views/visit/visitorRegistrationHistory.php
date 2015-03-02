@@ -1,12 +1,12 @@
 <style>
     .grid-view .summary {
-        margin-left: 758px !important;
-        margin-top: -107px !important;
+        margin-left: 760px !important;
+        margin-top: -25px !important;
     }
 </style>
 <h1>Visitor Registration History</h1>
 <?php echo CHtml::button('Export to CSV', array('id' => 'export-button', 'class' => 'greenBtn complete')); ?>
-<br>
+
 <div class="searchDateRange" >
     <?php
     /* @var $this VisitController */

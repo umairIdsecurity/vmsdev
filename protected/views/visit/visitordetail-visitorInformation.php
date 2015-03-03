@@ -2,7 +2,19 @@
 $cs = Yii::app()->clientScript;
 $cs->registerScriptFile(Yii::app()->request->baseUrl . '/js/script-visitordetail.js');
 $session = new CHttpSession;
+
+if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
+    ?>
+    <style>
+        #visitorDetailDiv #visitorInformationCssMenu .complete, #visitorDetailDiv #visitorInformationCssMenu .host-findBtn{
+            width:88px !important;
+            height:24px !important;
+        }
+    </style>
+    <?php
+}
 ?>
+
 <input type="text" id="currentSessionRole" value="<?php echo $session['role']; ?>" style="display:none;"/>
 <div id='visitorInformationCssMenu'>
     <ul>
@@ -114,9 +126,9 @@ $session = new CHttpSession;
                                     foreach ($cardType as $key => $value) {
                                         ?>
                                         <option value="<?php echo $value->id; ?>" <?php
-                                        if ($model->card_type == $value->id) {
-                                            echo " selected ";
-                                        }
+                                    if ($model->card_type == $value->id) {
+                                        echo " selected ";
+                                    }
                                         ?>><?php echo $value->name; ?></option>
                                                 <?php
                                             }
@@ -202,9 +214,9 @@ $session = new CHttpSession;
                                     foreach ($reason as $key => $value) {
                                         ?>
                                         <option value="<?php echo $value->id; ?>" <?php
-                                        if ($model->reason == $value->id) {
-                                            echo " selected ";
-                                        }
+                                    if ($model->reason == $value->id) {
+                                        echo " selected ";
+                                    }
                                         ?>><?php echo $value->reason; ?></option>
                                                 <?php
                                             }
@@ -239,8 +251,8 @@ $session = new CHttpSession;
                         <tr>
                             <td width="100px;"><label for="VisitReason_reason">Reason</label></td>
                             <td><textarea id="VisitReason_reason" name="VisitReason[reason]" style="width:200px !important;text-transform: capitalize;" cols="80" rows="3"><?php
-                                    echo $reasonModel->reason;
-                                    ?></textarea> <?php echo $addReasonForm->error($reasonModel, 'reason'); ?>
+                    echo $reasonModel->reason;
+                    ?></textarea> <?php echo $addReasonForm->error($reasonModel, 'reason'); ?>
                                 <div class="errorMessage visitorReason" id="visitReasonErrorMessage">Please select a reason</div>
                             </td>
                         </tr>
@@ -285,10 +297,10 @@ $session = new CHttpSession;
                         </div>
                         <input type="text" name="Visit[host]" id="selectedHostInSearchTable" style="display:none;"/>
                         <input type="text" name="Visit[visitor_type]" id="visitorTypeUnderSearchForm" style="display:none;" value="<?php
-                        if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
-                            echo "2";
-                        }
-                        ?>"/>
+                    if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
+                        echo "2";
+                    }
+                    ?>"/>
                                <?php echo "<br>" . $updateHostVisitForm->error($model, 'host'); ?>
                         <div id="searchHostTableDiv">
                             <br><div style="font-weight:bold;" class="findDivTitle"></div><br>
@@ -581,7 +593,7 @@ $session = new CHttpSession;
                         <table id="patientTable" class="detailsTable">
                             <tr>
                                 <td width="100px;"><?php echo $patientForm->labelEx($patientModel, 'first_name');
-                        ?></td>
+                    ?></td>
                                 <td>
                                     <?php echo $patientForm->textField($patientModel, 'name', array('size' => 50, 'maxlength' => 50)); ?>
                                     <?php echo "<br>" . $patientForm->error($patientModel, 'name'); ?>
@@ -700,7 +712,7 @@ $session = new CHttpSession;
          * if visit type is patient and visit type in database is patient show update patient
          * if visit type is corporate and visit type in database is corporate show update host, hide search
          * */
-        
+
         var visit_type = $("#Visit_visitor_type").val();
         $("#visitorTypeUnderSearchForm").val($("#Visit_visitor_type").val());
 

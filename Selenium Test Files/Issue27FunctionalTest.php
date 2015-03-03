@@ -211,7 +211,20 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_email", "testVisitorC@test.com");
         $this->type("id=Visitor_contact_number", "1234567890");
         $this->click("id=submitContactDetailForm");
-        sleep(1);
+        for ($second = 0;; $second++) {
+            if ($second >= 60)
+                $this->fail("timeout");
+            try {
+                if ("Contact Details Updated Successfully." == $this->getText("css=div.flash-success.success-update-contact-details"))
+                    break;
+            } catch (Exception $e) {
+                
+            }
+            sleep(1);
+        }
+
+        $this->assertEquals("Contact Details Updated Successfully.", $this->getText("css=div.flash-success.success-update-contact-details"));
+
         $this->select("id=Visit_reason", "label=Reason 2");
         $this->click("id=submitReasonForm");
         sleep(1);
@@ -676,7 +689,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("link=Active");
 
-        $this->assertEquals(date('d M y'), $this->getText("css=span.cardDateText"));
+        $this->assertEquals(date('d M y', time() + 86400), $this->getText("css=span.cardDateText"));
         $this->clickAndWait("css=#close-visit-form > input[type=\"submit\"]");
         $this->assertEquals("Status: Closed", $this->getText("link=Status: Closed"));
         $this->assertEquals(date('d-m-Y'), $this->getText("//div[@id='visit-grid']/table/tbody/tr/td[5]"));
@@ -836,7 +849,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Close Visit", $this->getText("//li[@id='closevisitLi']/a/span"));
         //$this->assertEquals(date('d M y', time() + 172800), $this->getText("css=span.cardDateText"));
         $this->clickAndWait("css=#close-visit-form > input[type=\"submit\"]");
-        $this->assertEquals("Closed", $this->getText("link=Closed"));
+        $this->assertEquals("Closed", $this->getText("css=ul.visitStatusLi > li > a > span"));
     }
 
     /* Scenario 12 - Check date validation for same day and muti day cards. Preregister function
@@ -959,7 +972,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("link=Active");
 
-        $this->assertEquals(date("d M y"), $this->getText("css=span.cardDateText"));
+        $this->assertEquals(date("d M y", time() + 86400), $this->getText("css=span.cardDateText"));
         //   $this->assertEquals("Same Day Visitor", $this->getText("css=#cardDetailsTable > tbody > tr > td"));
 
         $this->clickAndWait("css=#close-visit-form > input[type=\"submit\"]");
@@ -1001,7 +1014,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("link=Active");
 
-    //    $this->assertEquals(date('d M y', time() + 172800), $this->getText("css=span.cardDateText"));
+        //    $this->assertEquals(date('d M y', time() + 172800), $this->getText("css=span.cardDateText"));
         $this->clickAndWait("css=#close-visit-form > input[type=\"submit\"]");
     }
 

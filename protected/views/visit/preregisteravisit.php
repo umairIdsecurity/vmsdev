@@ -77,6 +77,7 @@ $this->widget('zii.widgets.jui.CJuiDatePicker', array(
             <span style="color:red;display:none;" id="preregisterdateinError">Date In cannot be blank.</span>
         </td>
     </tr>
+    <?php if($model->card_type != CardType::SAME_DAY_VISITOR) {?>
     <tr>
         <td>Proposed Date Out</td>
     </tr>
@@ -103,6 +104,7 @@ $this->widget('zii.widgets.jui.CJuiDatePicker', array(
             <span style="color:red;display:none;" id="preregisterdateoutError">Date Out cannot be blank.</span>
         </td>
     </tr>
+    <?php } ?>
     <tr>
         <td>Proposed Time In</td>
     </tr>

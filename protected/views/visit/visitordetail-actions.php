@@ -191,8 +191,6 @@ $session = new CHttpSession;
 <input type="hidden" value="<?php echo $model->visit_status; ?>" id="visitStatus"/>
 <script>
     $(document).ready(function() {
-
-
         if ($("#visitStatus").val() == 5) {
 
             if ($("#previousVisitAction").val() == 'Preregister') {
@@ -208,12 +206,8 @@ $session = new CHttpSession;
             if ($("#visitStatusActions").val() != 2) {
                 $("#preregisterLi a").click();
             }
-
             $("#activateLi a").click();
-
         }
-
-
 
         $('#activate-a-visit-form').bind('submit', function() {
             $(this).find('#Visit_date_check_in').removeAttr('disabled');

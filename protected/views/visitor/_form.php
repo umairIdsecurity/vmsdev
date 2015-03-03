@@ -26,7 +26,18 @@ if ($this->action->id == 'update') {
                                 if(vehicleValue.length < 6 && vehicleValue != ""){
                                     $("#Visitor_vehicle_em_").show();
                                     $("#Visitor_vehicle_em_").html("Vehicle should have a min. of 6 characters");
-                                } else {
+                                } else if($("#currentAction").val() == "update" && ($("#Visitor_password").val() == "" || $("#Visitor_repeatpassword").val() == ""))
+                                {
+                                    if($("#Visitor_password").val() == ""){
+                                        $("#Visitor_password_em_").show();
+                                    $("#Visitor_password_em_").html("Please enter a Password");
+                                    } else if ($("#Visitor_repeatpassword").val() == ""){
+                                        $("#Visitor_repeatpassword_em_").show();
+                                        $("#Visitor_repeatpassword_em_").html("Please enter a repeat password");
+                                    }
+                                    
+                                }
+                                else {
                                     checkEmailIfUnique();
                                     }
                                 }

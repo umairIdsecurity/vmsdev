@@ -208,13 +208,9 @@ $session = new CHttpSession;
             if ($("#visitStatusActions").val() != 2) {
                 $("#preregisterLi a").click();
             }
-
             $("#activateLi a").click();
-
         }
-
-
-
+        
         $('#activate-a-visit-form').bind('submit', function() {
             $(this).find('#Visit_date_check_in').removeAttr('disabled');
         });
@@ -302,9 +298,10 @@ $session = new CHttpSession;
 
     function checkIfActiveVisitConflictsWithAnotherVisit(visitType) {
         visitType = (typeof visitType === "undefined") ? "defaultValue" : visitType;
+         $("#Visit_date_check_in").attr("disabled", false);
         $.ajax({
             type: 'POST',
-            url: '<?php echo Yii::app()->createUrl('visit/isDateConflictingWithAnotherVisit&date_in='); ?>' + $("#Visit_date_in").val() + '&date_out=' + $("#Visit_date_out").val() + '&visitorId=<?php echo $model->visitor; ?>&visitStatus=<?php echo VisitStatus::ACTIVE; ?>',
+            url: '<?php echo Yii::app()->createUrl('visit/isDateConflictingWithAnotherVisit&date_in='); ?>' + $("#Visit_date_check_in").val() + '&date_out=' + $("#Visit_date_out").val() + '&visitorId=<?php echo $model->visitor; ?>&visitStatus=<?php echo VisitStatus::ACTIVE; ?>',
             dataType: 'json',
             success: function(r) {
                 $.each(r.data, function(index, value) {

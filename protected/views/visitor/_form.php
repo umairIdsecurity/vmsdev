@@ -3,8 +3,14 @@ $session = new CHttpSession;
 $dataId = '';
 if ($this->action->id == 'update') {
     $dataId = $_GET['id'];
+
 }
 ?>
+<style>
+    .ajax-upload-dragdrop{
+        margin-left:0px !important;
+    }
+    </style>
 <div data-ng-app="PwordForm">
     <?php
     $form = $this->beginWidget('CActiveForm', array(
@@ -189,7 +195,7 @@ if ($this->action->id == 'update') {
                             </td>
 
                         </tr>
-                        <?php if ($this->action->id != 'update') {
+                        <?php if ($session['role'] == Roles::ROLE_SUPERADMIN || $session['role'] == Roles::ROLE_ADMIN) {
                             ?>
                             <tr>
                                 <td>

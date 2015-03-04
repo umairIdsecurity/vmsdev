@@ -82,7 +82,7 @@ if ($visitModel->time_in != '') {
             yearRange: '1800:2099',
             showOn: "button",
             minDate: "+1",
-            buttonImage: "<?php echo Yii::app()->request->baseUrl; ?>/images/calendar.png",
+            buttonImage: "<?php echo Yii::app()->controller->assetsBase; ?>/images/calendar.png",
             buttonImageOnly: true,
             buttonText: "Select Proposed Date Out",
             dateFormat: "dd-mm-yy",

@@ -32,7 +32,7 @@ $photoForm = $this->beginWidget('CActiveForm', array(
         <img id="photoPreview" src="" style="display:none;height:165px;"></img>
     <?php } ?>
 </div>
-<div id="cardDiv" style="background: url('../images/cardprint-new.png') no-repeat center top;background-size:220px 310px; height:305px;">
+<div id="cardDiv" style="background-size:220px 310px; height:305px;">
 
     <div style="position: relative; padding-top:180px;padding-left:30px;">
          <?php

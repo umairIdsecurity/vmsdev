@@ -1,7 +1,7 @@
 
 <?php
 $cs = Yii::app()->clientScript;
-$cs->registerScriptFile(Yii::app()->request->baseUrl . '/js/script-birthday.js');
+$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/script-birthday.js');
 /* @var $this UserController */
 /* @var $model User */
 /* @var $form CActiveForm */

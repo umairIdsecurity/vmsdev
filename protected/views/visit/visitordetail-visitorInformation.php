@@ -1,6 +1,6 @@
 <?php
 $cs = Yii::app()->clientScript;
-$cs->registerScriptFile(Yii::app()->request->baseUrl . '/js/script-visitordetail.js');
+$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/script-visitordetail.js');
 $session = new CHttpSession;
 
 if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {

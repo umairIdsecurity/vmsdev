@@ -5,8 +5,8 @@ Yii::app()->bootstrap->register();
 $cs = Yii::app()->clientScript;
 
 $cs->registerCoreScript('jquery');
-$cs->registerScriptFile(Yii::app()->request->baseUrl . '/js/jquery.uploadfile.min.js');
-$cs->registerScriptFile(Yii::app()->request->baseUrl . '/js/jquery.form.js');
+$cs->registerScriptFile($this->assetsBase. '/js/jquery.uploadfile.min.js');
+$cs->registerScriptFile($this->assetsBase. '/js/jquery.form.js');
 
 
 $userRole = $session['role'];
@@ -18,24 +18,24 @@ $userRole = $session['role'];
         <meta name="language" content="en" />
 
         <!-- blueprint CSS framework -->
-        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/screen.css" media="screen, projection" />
-        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/print.css" media="print" />
+        <link rel="stylesheet" type="text/css" href="<?php echo $this->assetsBase; ?>/css/screen.css" media="screen, projection" />
+        <link rel="stylesheet" type="text/css" href="<?php echo $this->assetsBase; ?>/css/print.css" media="print" />
         <!--[if lt IE 8]>
-        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/ie.css" media="screen, projection" />
+        <link rel="stylesheet" type="text/css" href="<?php echo $this->assetsBase; ?>/css/ie.css" media="screen, projection" />
         <![endif]-->
 
-        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/main.css" />
-        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/form.css" />
-        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/style.css" />
-        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/sidebar.css" />
-        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/uploadfile.css" />
-        <script  src="<?php echo Yii::app()->request->baseUrl; ?>/js/angular.min.js" ></script>
-        <script  src="<?php echo Yii::app()->request->baseUrl; ?>/js/match.js" ></script>
+        <link rel="stylesheet" type="text/css" href="<?php echo $this->assetsBase; ?>/css/main.css" />
+        <link rel="stylesheet" type="text/css" href="<?php echo $this->assetsBase; ?>/css/form.css" />
+        <link rel="stylesheet" type="text/css" href="<?php echo $this->assetsBase; ?>/css/style.css" />
+        <link rel="stylesheet" type="text/css" href="<?php echo $this->assetsBase; ?>/css/sidebar.css" />
+        <link rel="stylesheet" type="text/css" href="<?php echo $this->assetsBase; ?>/css/uploadfile.css" />
+        <script  src="<?php echo $this->assetsBase; ?>/js/angular.min.js" ></script>
+        <script  src="<?php echo $this->assetsBase; ?>/js/match.js" ></script>
 
-        <script  src="<?php echo Yii::app()->request->baseUrl; ?>/js/script-sidebar.js" ></script>
-        <script  src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.min.js" ></script>
-        <script  src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.uploadfile.min.js" ></script>
-        <script  src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.form.js" ></script>
+        <script  src="<?php echo $this->assetsBase; ?>/js/script-sidebar.js" ></script>
+        <script  src="<?php echo $this->assetsBase; ?>/js/jquery.min.js" ></script>
+        <script  src="<?php echo $this->assetsBase; ?>/js/jquery.uploadfile.min.js" ></script>
+        <script  src="<?php echo $this->assetsBase; ?>/js/jquery.form.js" ></script>
 
 
         <title><?php echo CHtml::encode($this->pageTitle); ?></title>

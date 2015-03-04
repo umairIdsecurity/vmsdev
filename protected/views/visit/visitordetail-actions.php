@@ -1,6 +1,6 @@
 <?php
 $cs = Yii::app()->clientScript;
-$cs->registerScriptFile(Yii::app()->request->baseUrl . '/js/script-visitordetail-actions-cssmenu.js');
+$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/script-visitordetail-actions-cssmenu.js');
 $session = new CHttpSession;
 ?>
 <div id='actionsCssMenu'>

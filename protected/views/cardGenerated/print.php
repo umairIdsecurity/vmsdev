@@ -1,6 +1,6 @@
 <?php
 
-$src = Yii::app()->getBaseUrl(true) . '/images/cardprint-print.png';
+$src = Yii::getPathOfAlias('application') . '/assets/images/cardprint-print.png';
 
 error_reporting(E_ALL);
 $session = new CHttpSession;
@@ -62,7 +62,7 @@ if (empty($text)) {
 }
 
 // customizable variables
-$font_file = Yii::app()->request->baseUrl . 'css/arialbd.ttf'; // arial bold
+$font_file = Yii::getPathOfAlias('application')  . '/assets/css/arialbd.ttf'; // arial bold
 $font_size = 16; // font size in pts
 $font_color = '#000';
 

@@ -4,9 +4,9 @@ Yii::app()->bootstrap->register();
 $cs = Yii::app()->clientScript;
 
 $cs->registerCoreScript('jquery');
-$cs->registerScriptFile(Yii::app()->request->baseUrl . '/js/jquery.uploadfile.min.js');
-$cs->registerScriptFile(Yii::app()->request->baseUrl . '/js/jquery.form.js');
-$cs->registerScriptFile(Yii::app()->request->baseUrl . '/js/jquery.imgareaselect.pack.js');
+$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/jquery.uploadfile.min.js');
+$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/jquery.form.js');
+$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/jquery.imgareaselect.pack.js');
 
 
 $userRole = $session['role'];
@@ -17,18 +17,19 @@ $userRole = $session['role'];
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="language" content="en" />
         <!-- blueprint CSS framework -->
-        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/screen.css" media="screen, projection" />
-        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/print.css" media="print" />
+        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->controller->assetsBase; ?>/css/screen.css" media="screen, projection" />
+        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->controller->assetsBase; ?>/css/print.css" media="print" />
         <!--[if lt IE 8]>
-        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/ie.css" media="screen, projection" />
+        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->controller->assetsBase; ?>/css/ie.css" media="screen, projection" />
         <![endif]-->
 
-        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/main.css" />
-        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/form.css" />
-        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/style.css" />
-        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/sidebar.css" />
-        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/uploadfile.css" />
-        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/imgareaselect-default.css" />
+        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->controller->assetsBase; ?>/css/main.css" />
+        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->controller->assetsBase; ?>/css/form.css" />
+        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->controller->assetsBase; ?>/css/gridview.css" />
+        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->controller->assetsBase; ?>/css/style.css" />
+        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->controller->assetsBase; ?>/css/sidebar.css" />
+        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->controller->assetsBase; ?>/css/uploadfile.css" />
+        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->controller->assetsBase; ?>/css/imgareaselect-default.css" />
         <?php
         $company = Company::model()->findByPk($session['company']);
 
@@ -41,13 +42,13 @@ $userRole = $session['role'];
             <?php
         }
         ?>
-        <script  src="<?php echo Yii::app()->request->baseUrl; ?>/js/angular.min.js" ></script>
-        <script  src="<?php echo Yii::app()->request->baseUrl; ?>/js/match.js" ></script>
+        <script  src="<?php echo Yii::app()->controller->assetsBase; ?>/js/angular.min.js" ></script>
+        <script  src="<?php echo Yii::app()->controller->assetsBase; ?>/js/match.js" ></script>
 
-        <script  src="<?php echo Yii::app()->request->baseUrl; ?>/js/script-sidebar.js" ></script>
-        <script  src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.min.js" ></script>
-        <script  src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.uploadfile.min.js" ></script>
-        <script  src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.form.js" ></script>
+        <script  src="<?php echo Yii::app()->controller->assetsBase; ?>/js/script-sidebar.js" ></script>
+        <script  src="<?php echo Yii::app()->controller->assetsBase; ?>/js/jquery.min.js" ></script>
+        <script  src="<?php echo Yii::app()->controller->assetsBase; ?>/js/jquery.uploadfile.min.js" ></script>
+        <script  src="<?php echo Yii::app()->controller->assetsBase; ?>/js/jquery.form.js" ></script>
 
 
         <title><?php echo CHtml::encode($this->pageTitle); ?></title>
@@ -75,7 +76,7 @@ $userRole = $session['role'];
                         if ($company->logo != '') {
                             echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl . '/'.Photo::model()->returnLogoPhotoRelative($company->logo)));
                         } else {
-                            echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl . '/images/companylogohere.png'));
+                            echo CHtml::link(CHtml::image(Yii::app()->controller->assetsBase . '/images/companylogohere.png'));
                         }
                         ?>
                     </div>

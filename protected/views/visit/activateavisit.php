@@ -72,7 +72,7 @@
             changeMonth: true,
             changeYear: true,
             showOn: "button",
-            buttonImage: "<?php echo Yii::app()->request->baseUrl; ?>/images/calendar.png",
+            buttonImage: "<?php echo Yii::app()->controller->assetsBase; ?>/images/calendar.png",
             buttonImageOnly: true,
             minDate: "+1",
             dateFormat: "dd-mm-yy",

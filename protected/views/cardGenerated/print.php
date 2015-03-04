@@ -20,13 +20,14 @@ if ($tenant->company != '') {
     $companyName = $company->name;
     $companyLogoId = $company->logo;
     $companyCode = $company->code;
-    $inc = 6 - (strlen($model->id));
+    $inc = 6 - (strlen($model->id.($model->card_count-1)));
                         $int_code = '';
                         for ($x = 1; $x <= $inc; $x++) {
 
                             $int_code .= "0";
                         }
-    $cardCode = $companyCode . $int_code . $model->id;
+    $cardCode = $companyCode . $int_code . $model->id.($model->card_count);
+   
 }
 
 if ($companyLogoId == "") {

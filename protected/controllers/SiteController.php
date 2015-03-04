@@ -189,7 +189,7 @@ class SiteController extends Controller {
         }
         echo "Tables imported successfully";
     }
-    
+
     public function actionIssue35UpdateDatabaseRecord() {
         $mysql_host = 'localhost';
         $mysql_username = 'user_vms';
@@ -217,7 +217,7 @@ class SiteController extends Controller {
         }
         echo "Tables updated successfully";
     }
-    
+
     public function actionIssue48UpdateDatabaseRecord() {
         $mysql_host = 'localhost';
         $mysql_username = 'user_vms';
@@ -245,4 +245,35 @@ class SiteController extends Controller {
         }
         echo "Tables updated successfully";
     }
+
+    public function actionReset($filename) {
+        
+        $mysql_host = 'localhost';
+        $mysql_username = 'user_vms';
+        $mysql_password = 'HFz7c9dHrmPqwNGr';
+        $mysql_database = 'vms';
+
+        $filename = Yii::getPathOfAlias('webroot').'/dbpatch/' . $_GET['filename'] . '.sql';
+       
+        mysql_connect($mysql_host, $mysql_username, $mysql_password) or die('Error connecting to MySQL server: ' . mysql_error());
+        mysql_select_db($mysql_database) or die('Error selecting MySQL database: ' . mysql_error());
+
+
+
+        $templine = '';
+        $lines = file($filename);
+
+        foreach ($lines as $line) {
+            if (substr($line, 0, 2) == '--' || $line == '')
+                continue;
+
+            $templine .= $line;
+            if (substr(trim($line), -1, 1) == ';') {
+                mysql_query($templine) or print('Error performing query \'<strong>' . $templine . '\': ' . mysql_error() . '<br /><br />');
+                $templine = '';
+            }
+        }
+        echo "Tables imported successfully";
+    }
+
 }

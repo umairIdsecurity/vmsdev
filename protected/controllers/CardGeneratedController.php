@@ -69,8 +69,9 @@ class CardGeneratedController extends Controller {
     }
 
     public function actionPrint($id) {
+        $session = new CHttpSession;
         $this->layout = '//layouts/column1';
-        
+
         $cardGenerated = new CardGenerated;
         $cardGeneratedService = new CardGeneratedServiceImpl();
         $session = new CHttpSession;
@@ -78,17 +79,17 @@ class CardGeneratedController extends Controller {
         $visitorModel = Visitor::model()->findByPk($model->visitor);
         $tenant = User::model()->findByPk($visitorModel->tenant);
         if ($tenant->company != '') {
-            $inc = 6 - (strlen($model->id));
+            $inc = 6 - (strlen($model->id . ($model->card_count + 1)));
             $int_code = '';
             for ($x = 1; $x <= $inc; $x++) {
 
                 $int_code .= "0";
             }
-            $code = Company::model()->findByPk($tenant->company)->code . $int_code . $model->id;
+            $code = Company::model()->findByPk($tenant->company)->code . $int_code . $model->id . ($model->card_count + 1);
         } else {
-            $code ='';
+            $code = '';
         }
-
+        $session['cardcode'] = $code;
         $cardGeneratedArray = array(
             'card_code' => $code,
             'date_printed' => date("d-m-Y"),
@@ -100,13 +101,21 @@ class CardGeneratedController extends Controller {
             'created_by' => $session['id'],
         );
         $cardGenerated->attributes = $cardGeneratedArray;
-        if ($cardGeneratedService->save($cardGenerated, $model, Yii::app()->user)) {
+        if (CardGenerated::model()->exists('card_code = :card_code', array(":card_code" => $session['cardcode']))) {
+           
+        } else {
+            $cardGeneratedService->save($cardGenerated, $model, Yii::app()->user);
 
-            $this->renderPartial('print', array(
-                'model' => $model,
-                'visitorModel' => $visitorModel,
+            Visit::model()->updateByPk($model->id, array(
+                'card_count' => $model->card_count + 1,
             ));
+            
         }
+
+        $this->renderPartial('print', array(
+            'model' => $model,
+            'visitorModel' => $visitorModel,
+                ), false, true);
     }
 
     public function actionReprint($id) {
@@ -119,17 +128,20 @@ class CardGeneratedController extends Controller {
         $visitorModel = Visitor::model()->findByPk($model->visitor);
         $tenant = User::model()->findByPk($visitorModel->tenant);
         if ($tenant->company != '') {
-            $inc = 6 - (strlen($model->id));
+            $inc = 6 - (strlen($model->id . ($model->card_count + 1)));
             $int_code = '';
             for ($x = 1; $x <= $inc; $x++) {
 
                 $int_code .= "0";
             }
-            $code = Company::model()->findByPk($tenant->company)->code . $int_code . $model->id;
+            $code = Company::model()->findByPk($tenant->company)->code . $int_code . $model->id . ($model->card_count + 1);
         } else {
-            $code ='';
+            $code = '';
         }
 
+        Visit::model()->updateByPk($model->id, array(
+            'card_count' => $model->card_count + 1,
+        ));
 
         $cardGeneratedArray = array(
             'card_code' => $code,

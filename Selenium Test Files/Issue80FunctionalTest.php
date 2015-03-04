@@ -22,7 +22,7 @@ class Issue80FunctionalTest extends BaseFunctionalTest {
 
     function testAll() {
         $this->resetDbWithData();
-       // $this->Scenario1();
+        $this->Scenario1();
         $this->Scenario2();
     }
 

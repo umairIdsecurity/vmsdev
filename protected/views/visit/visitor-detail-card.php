@@ -35,7 +35,7 @@ $photoForm = $this->beginWidget('CActiveForm', array(
 <div id="cardDiv" style="background: url('../images/cardprint-new.png') no-repeat center top;background-size:220px 310px; height:305px;">
 
     <div style="position: relative; padding-top:180px;padding-left:30px;">
-         <?php
+        <?php
         if ($tenant->company != '') {
             $companyLogoId = Company::model()->findByPk($tenant->company)->logo;
 
@@ -45,12 +45,16 @@ $photoForm = $this->beginWidget('CActiveForm', array(
                 $companyLogo = Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
             }
             ?>
-        <img class='<?php if($model->visit_status != VisitStatus::ACTIVE){ echo "cardCompanyLogoPreregistered"; } else { echo "cardCompanyLogo"; } ?>' src="<?php
-            echo Yii::app()->request->baseUrl . "/" . $companyLogo;
-            ?>"/>
-                 <?php
-             }
-             ?>
+            <img class='<?php if ($model->visit_status != VisitStatus::ACTIVE) {
+            echo "cardCompanyLogoPreregistered";
+        } else {
+            echo "cardCompanyLogo";
+        } ?>' src="<?php
+                 echo Yii::app()->request->baseUrl . "/" . $companyLogo;
+                 ?>"/>
+    <?php
+}
+?>
         <table class="" style="width:100%;margin-left:100px;" id="cardDetailsTable">
             <tr>
                 <td>
@@ -87,39 +91,45 @@ $photoForm = $this->beginWidget('CActiveForm', array(
             <tr>
                 <td>
                     <div style="width:132px">
-                    <?php echo $visitorModel->first_name . ' ' . $visitorModel->last_name; ?>
+<?php echo $visitorModel->first_name . ' ' . $visitorModel->last_name; ?>
                     </div>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <span style="<?php if($model->visit_status != VisitStatus::ACTIVE){ echo 'display:none;'; }?>">
-                    <?php
-                    if ($tenant->company != '') {
-                        $inc = 6 - (strlen($model->id));
-                        $int_code = '';
-                        for ($x = 1; $x <= $inc; $x++) {
+                    <span style="<?php if ($model->visit_status != VisitStatus::ACTIVE) {
+    echo 'display:none;';
+} ?>">
+                        <?php
+                        if ($tenant->company != '') {
+                            $inc = 6 - (strlen($model->id . ($model->card_count + 1)));
+                            $int_code = '';
+                            for ($x = 1; $x <= $inc; $x++) {
 
                                 $int_code .= "0";
                             }
-                            ////echo Company::model()->findByPk($visitorModel->company)->code . $int_code . $model->id;
                         }
-                        echo Company::model()->findByPk($tenant->company)->code . $int_code . $model->id;
-                    
-                    ?>
+                        if ($model->card_count == 0) {
+
+
+                            echo Company::model()->findByPk($tenant->company)->code . $int_code . $model->id . ($model->card_count + 1);
+                        } else {
+                            echo Company::model()->findByPk($tenant->company)->code . $int_code . $model->id . ($model->card_count);
+                        }
+                        ?>
                     </span>
                 </td>
             </tr>
         </table>
 
-        
+
     </div>
 
 </div>
 <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
 <?php if ($visitorModel->photo != '') { ?>
     <input type="button" class="btn editImageBtn actionForward" id="editImageBtn" value="Edit Photo" onclick = "document.getElementById('light').style.display = 'block';
-                document.getElementById('fade').style.display = 'block'"/>
+            document.getElementById('fade').style.display = 'block'"/>
 <?php } ?>
 <div
         <?php
@@ -134,8 +144,8 @@ $photoForm = $this->beginWidget('CActiveForm', array(
     ));
     if ($model->card != NULL && $model->visit_status == VisitStatus::ACTIVE) {
         ?><input type="button" class="complete btn btn-info printCardBtn" value="Reprint Card" id="reprintCardBtn" onclick="regenerateCard()"/><?php
-} else {
-    ?>
+    } else {
+        ?>
         <input type="button" class="complete btn btn-info printCardBtn" value="Print Card" id="printCardBtn" onclick="generateCard()"/>
     <?php
 }
@@ -220,6 +230,7 @@ $photoForm = $this->beginWidget('CActiveForm', array(
         //change modal url to pass visit id
         var url = 'index.php?r=cardGenerated/reprint&id=<?php echo $model->id; ?>';
         window.open(url, '_blank');
+        window.location = "index.php?r=visit/detail&id=<?php echo $_GET['id']; ?>";
     }
 
     function sendPhoto() {

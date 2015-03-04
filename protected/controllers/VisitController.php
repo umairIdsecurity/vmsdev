@@ -345,7 +345,7 @@ class VisitController extends Controller {
     }
 
     public function actionExportFile() {
-        Yii::app()->request->sendFile('Evacuation Report (' . date('d-m-Y') . ').csv', Yii::app()->user->getState('export'));
+        Yii::app()->request->sendFile('Evacuation Report_' . date('dmYHis') . '.csv', Yii::app()->user->getState('export'));
         Yii::app()->user->clearState('export');
     }
 
@@ -417,7 +417,7 @@ class VisitController extends Controller {
     }
 
     public function actionExportFileHistory() {
-        Yii::app()->request->sendFile('Visitor Registration History (' . date('d-m-Y') . ').csv', Yii::app()->user->getState('export'));
+        Yii::app()->request->sendFile('Visitor Registration History_' . date('dmYHis') . '.csv', Yii::app()->user->getState('export'));
         Yii::app()->user->clearState('export');
     }
 
@@ -501,7 +501,7 @@ class VisitController extends Controller {
     }
 
     public function actionExportFileVisitorRecords() {
-        Yii::app()->request->sendFile('Visit History (' . date('d-m-Y') . ').csv', Yii::app()->user->getState('export'));
+        Yii::app()->request->sendFile('Visit History_' . date('dmYHis') . '.csv', Yii::app()->user->getState('export'));
         Yii::app()->user->clearState('export');
     }
 

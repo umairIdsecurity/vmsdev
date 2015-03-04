@@ -17,8 +17,8 @@ require_once 'BaseFunctionalTest.php';
 class Issue52FunctionalTest extends BaseFunctionalTest {
 
     function setUp() {
-        $this->setBrowser("*iexplore");
-        $this->setBrowserUrl("http://cvms.identitysecurity.info/");
+        $this->setBrowser("*firefox");
+        $this->setBrowserUrl("http://dev.identitysecurity.info/");
     }
 
     function testAll() {
@@ -29,7 +29,7 @@ class Issue52FunctionalTest extends BaseFunctionalTest {
 
     /* Scenario 1 - Close a visit
       Expected Behavior
-      Assert Visit Status: Closed
+      Assert Closed
 
      */
 
@@ -77,11 +77,15 @@ class Issue52FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Preregistered");
         $this->click("//li[@id='activateLi']/a/span");
         $this->type("id=Visitor_photo","1");
-        $this->clickAndWait("css=#activate-a-visit-form > input.complete");
+        $this->click("css=#activate-a-visit-form > input.complete");
+        sleep(5);
+        $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
+        $this->clickAndWait("link=Dashboard");
+        $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("link=Active");
         $this->clickAndWait("css=#close-visit-form > input.complete");
-        $this->assertEquals("Visit Status: Closed", $this->getText("link=Visit Status: Closed"));
-        $this->clickAndWait("link=Visitor Records");
+        $this->assertEquals("Closed", $this->getText("css=ul.visitStatusLi > li > a > span"));
+        $this->clickAndWait("link=Visit History");
     }
     
    function assertCloseVisitSpan(){
@@ -101,7 +105,11 @@ class Issue52FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Preregistered");
         $this->click("//li[@id='activateLi']/a/span");
-        $this->clickAndWait("css=#activate-a-visit-form > input.complete");
+        $this->click("css=#activate-a-visit-form > input.complete");
+        sleep(5);
+        $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
+        $this->clickAndWait("link=Dashboard");
+        $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("link=Active");
         $this->assertEquals("Close Visit", $this->getText("//li[@id='closevisitLi']/a/span"));
         $this->clickAndWait("//ul[@id='tabs']/li[3]/a/p");
@@ -140,7 +148,6 @@ class Issue52FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("id=saveCurrentUserAsHost");
         $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("link=Preregistered");
-        $this->assertFalse($this->isElementPresent("//li[@id='closevisitLi']/a/span"));
     }
 
 }

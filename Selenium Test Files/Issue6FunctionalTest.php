@@ -16,8 +16,8 @@ require_once 'BaseFunctionalTest.php';
 class Issue6FunctionalTest extends BaseFunctionalTest {
 
     function setUp() {
-        $this->setBrowser("*iexplore");
-        $this->setBrowserUrl("http://cvms.identitysecurity.info/");
+        $this->setBrowser("*firefox");
+        $this->setBrowserUrl("http://dev.identitysecurity.info/");
     }
 
     function testAll() {
@@ -144,8 +144,8 @@ class Issue6FunctionalTest extends BaseFunctionalTest {
         $this->waitForElementPresent("css=td > input[name=\"Workstation[name]\"]");
         $this->clickAndWait("link=Add Workstation");
         $this->clickAndWait("name=yt0");
-        $this->assertEquals("Name cannot be blank.", $this->getText("css=div.errorSummary > ul > li"));
-        $this->assertEquals("Tenant cannot be blank.", $this->getText("//form[@id='workstations-form']/div/ul/li[2]"));
+        $this->assertEquals("Please enter a Name", $this->getText("css=div.errorSummary > ul > li"));
+        $this->assertEquals("Please select a Tenant", $this->getText("//form[@id='workstations-form']/div/ul/li[2]"));
         $this->type("id=Workstation_contact_email_address", "123");
         $this->clickAndWait("name=yt0");
         $this->assertEquals("Contact Email Address is not a valid email address.", $this->getText("//form[@id='workstations-form']/div/ul/li[3]"));
@@ -210,7 +210,7 @@ class Issue6FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
         $this->waitForPageToLoad("30000");
-        $this->open("http://cvms.identitysecurity.info/index.php?r=company/admin");
+        $this->open("http://dev.identitysecurity.info/index.php?r=company/admin");
         $this->assertEquals("You are not authorized to perform this action.", $this->getText("css=div.error"));
     }
 

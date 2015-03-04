@@ -216,10 +216,10 @@ class Visit extends CActiveRecord {
             'time_in' => 'Proposed Time In',
             'date_out' => 'Proposed Date Out',
             'time_out' => 'Proposed Time Out',
-            'date_check_in' => 'Date Check In',
-            'time_check_in' => 'Time Check In',
-            'date_check_out' => 'Date Check Out',
-            'time_check_out' => 'Time Check Out',
+            'date_check_in' => 'Check In Date',
+            'time_check_in' => 'Check In Time',
+            'date_check_out' => 'Check Out Date',
+            'time_check_out' => 'Check Out Time',
             'tenant' => 'Tenant',
             'tenant_agent' => 'Tenant Agent',
             'is_deleted' => 'Is Deleted',
@@ -245,8 +245,9 @@ class Visit extends CActiveRecord {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
-        $criteria->with = 'visitor0';
-        $criteria->with = 'card0';
+        
+        $criteria->with = array('card0','visitor0');
+        //$criteria->with .= 'visitor0';
         $criteria->compare('CONCAT(visitor0.first_name, \' \', visitor0.last_name)', $this->visitor, true);
         $criteria->compare('visitor0.first_name', $this->firstname, true);
         $criteria->compare('visitor0.last_name', $this->lastname, true);
@@ -283,7 +284,7 @@ class Visit extends CActiveRecord {
         $criteria->compare('time_check_out', $this->time_check_out, true);
         $criteria->compare('tenant', $this->tenant, true);
         $criteria->compare('tenant_agent', $this->tenant_agent, true);
-        $criteria->compare('t.is_deleted', $this->is_deleted);
+        $criteria->compare('t.is_deleted', $this->is_deleted,"0");
         $criteria->compare('visit_status', $this->visit_status);
         $criteria->compare('workstation', $this->workstation);
         if ($merge !== null) {
@@ -316,7 +317,7 @@ class Visit extends CActiveRecord {
                 $criteria->addCondition('t.workstation ="' . $session['workstation'] . '"');
                 break;
         }
-
+$criteria->addCondition('t.is_deleted = 0');
         if (Yii::app()->controller->action->id == 'admindashboard') {
             Yii::app()->user->setState('pageSize', (int) '5');
         } else {

@@ -57,7 +57,7 @@ $session = new CHttpSession;
                     <?php echo $form->labelEx($userModel, 'email'); ?><br>
                     <?php echo $form->textField($userModel, 'email', array('size' => 50, 'maxlength' => 50)); ?>
                     <?php echo "<br>" . $form->error($userModel, 'email'); ?>
-                    <div style="" id="User_email_em_" class="errorMessage errorMessageEmail1" >Email Address has already been taken.</div>
+                    <div style="" id="User_email_em_" class="errorMessage errorMessageEmail1" >A profile already exists for this email address.</div>
                 </td>
                 <td>
                     <?php echo $form->labelEx($userModel, 'contact_number'); ?><br>
@@ -66,10 +66,10 @@ $session = new CHttpSession;
                 </td>
             </tr>
             <tr <?php
-                    if ($session['role'] != Roles::ROLE_SUPERADMIN) {
-                        echo "style='display:none;'";
-                    }
-                    ?>
+            if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+                echo "style='display:none;'";
+            }
+            ?>
                 >
                     <?php
                     if ($session['role'] == Roles::ROLE_SUPERADMIN) {
@@ -150,7 +150,7 @@ $session = new CHttpSession;
         </table>
 
     </div>
-    <div >
+    <div style="text-align: right;">
         <input type="button" id="clicktabC" value="Add" style="display:none;"/>
 
         <input type="submit" value="Add" name="yt0" id="submitFormUser" class="complete" />
@@ -174,10 +174,18 @@ $session = new CHttpSession;
             data: hostform,
             success: function(data) {
 
-                if ('<?php echo $session['role']; ?>' != 9) { //if not equal to staff member
-                    window.location = "index.php?r=dashboard";
-                } else {
-                    window.location = "index.php?r=dashboard/viewmyvisitors";
+//                if ('<?php echo $session['role']; ?>' != 9) { //if not equal to staff member
+//                    window.location = "index.php?r=dashboard";
+//                } else {
+//                    window.location = "index.php?r=dashboard/viewmyvisitors";
+//                }
+
+                if ('<?php echo $session['role']; ?>' == 5 || '<?php echo $session['role']; ?>' == 8 || '<?php echo $session['role']; ?>' == 7) {
+                    window.location = 'index.php?r=dashboard';
+                } else if ('<?php echo $session['role']; ?>' == 1 || '<?php echo $session['role']; ?>' == 6) {
+                    window.location = 'index.php?r=dashboard/admindashboard';
+                } else if ('<?php echo $session['role']; ?>' == 9) {
+                    window.location = 'index.php?r=dashboard/viewmyvisitors';
                 }
             },
             error: function() {
@@ -224,7 +232,7 @@ $session = new CHttpSession;
 
                     }
                 });
-                
+
             }
         });
     }

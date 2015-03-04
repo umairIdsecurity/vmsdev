@@ -17,8 +17,8 @@ date_default_timezone_set('Asia/Manila');
 class Issue33FunctionalTest extends BaseFunctionalTest {
 
     function setUp() {
-        $this->setBrowser("*iexplore");
-        $this->setBrowserUrl("http://cvms.identitysecurity.info/");
+        $this->setBrowser("*firefox");
+        $this->setBrowserUrl("http://dev.identitysecurity.info/");
     }
 
     function testAll() {
@@ -36,9 +36,9 @@ class Issue33FunctionalTest extends BaseFunctionalTest {
         $this->login("superadmin@test.com", '12345');
         $this->clickAndWait("link=Administration");
         $this->click("link=Reports");
-        $this->waitForElementPresent("link=Export Visitor Records");
-        $this->clickAndWait("link=Export Visitor Records");
-        $this->assertEquals("Displaying 1-7 of 7 results.", $this->getText("css=div.summary"));
+        $this->waitForElementPresent("link=Export Visit History");
+        $this->clickAndWait("link=Export Visit History");
+        $this->assertEquals("Displaying 1-7 of 7 results", $this->getText("css=div.summary"));
         $this->selectWindow("null");
         $this->click("link=Reports");
         $this->assertEquals("Evacuation Report", $this->getText("link=Evacuation Report"));
@@ -47,27 +47,30 @@ class Issue33FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Visitor Registration History");
         $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("link=Preregistered");
-        $this->click("//li[@id='activateLi']/a/span");
-        $this->type("id=Visitor_photo","1");
-        $this->clickAndWait("css=#activate-a-visit-form > input.complete");
+        $this->type("id=Visitor_photo", "1");
+        $this->click("css=span.log-current");
+        $this->click("css=#activate-a-visit-form > input.complete");
+        sleep(5);
+        $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
+        $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("link=Active");
         $this->clickAndWait("id=printCardBtn");
-        $this->open("http://cvms.identitysecurity.info/index.php?r=visit/detail&id=7");
+        $this->open("http://dev.identitysecurity.info/index.php?r=visit/detail&id=7");
         $this->assertEquals("", $this->getText("id=reprintCardBtn"));
         $this->clickAndWait("link=Administration");
         $this->click("link=Reports");
         $this->waitForElementPresent("link=Evacuation Report");
         $this->clickAndWait("link=Evacuation Report");
         $this->assertEquals("testVisitor1@test.com", $this->getText("//div[@id='view-visitor-records']/table/tbody/tr/td[8]"));
-        $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
+        $this->assertEquals("Displaying 1-1 of 1 result", $this->getText("css=div.summary"));
         $this->clickAndWait("link=Visitor Registration History");
         $this->assertEquals("No results found.", $this->getText("css=span.empty"));
         $this->clickAndWait("link=Evacuation Report");
         $this->clickAndWait("link=Active");
-        
+
         $this->clickAndWait("css=#close-visit-form > input[type=\"submit\"]");
-        $this->assertEquals("Visit Status: Closed", $this->getText("link=Visit Status: Closed"));
-       
+        $this->assertEquals("Closed", $this->getText("css=ul.visitStatusLi > li > a > span"));
+
         $this->click("link=Reports");
         $this->clickAndWait("link=Evacuation Report");
         $this->assertEquals("No results found.", $this->getText("css=span.empty"));

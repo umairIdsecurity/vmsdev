@@ -6,7 +6,7 @@ $session = new CHttpSession;
         <label><b>Search Name:</b></label> 
         <input type="text" id="search-visitor" name="search-visitor" class="search-text"/> 
         <button class="visitor-findBtn" onclick="findVisitorRecord()" id="visitor-findBtn" style="display:none;" data-target="#findVisitorRecordModal" data-toggle="modal">Find Record</button>
-        <button class="visitor-findBtn neutral" id="dummy-visitor-findBtn">Find Record</button>
+        <button class="visitor-findBtn neutral" id="dummy-visitor-findBtn" style="padding:8px;">Find Record</button>
         <div class="errorMessage" id="searchTextErrorMessage" style="display:none;"></div>
     </div>
 
@@ -46,7 +46,7 @@ $session = new CHttpSession;
                     }
                     ?>
                 </select>
-                <div style="display:none;" class="errorMessage errorMessageWorkstationSearch" >Workstation cannot be blank.</div>
+                <div style="display:none;" class="errorMessage errorMessageWorkstationSearch" >Please select a workstation</div>
             </div>
             <label for="Visit_reason_search">Reason</label><br>
 
@@ -62,7 +62,7 @@ $session = new CHttpSession;
                 ?>
                 <option value="Other">Other</option>
             </select>
-            <div class="errorMessage visitorReason" id="search-visitor-reason-error">Reason cannot be blank.</div>
+            <div class="errorMessage visitorReason" id="search-visitor-reason-error">Please select a reason</div>
         </div>
         <?php
         $form = $this->beginWidget('CActiveForm', array(
@@ -81,14 +81,14 @@ $session = new CHttpSession;
         ));
         ?>
         <textarea id="VisitReason_reason_search" maxlength="128" name="VisitReason[reason]"></textarea> 
-        <div class="errorMessage" id="visitReasonErrorMessageSearch" style="display:none;">Reason cannot be blank.</div>
+        <div class="errorMessage" id="visitReasonErrorMessageSearch" style="display:none;">Please select a reason</div>
 
 
         <?php $this->endWidget(); ?>
 
         <div id="searchVisitorTable"></div>
         <div class="register-a-visitor-buttons-div">
-            <input type="button" class="visitor-backBtn btnBackTab2" id="btnBackTab2" value="Back"/>
+            <input type="button" class="neutral visitor-backBtn btnBackTab2" id="btnBackTab2" value="Back"/>
             <input type="button" id="clicktabB1"  value="Save and Continue" class="actionForward"/>
         </div>
     </div>
@@ -172,12 +172,12 @@ $session = new CHttpSession;
                             }
                             ?>
                         </select>
-                        <div style="display:none;" class="errorMessage errorMessageWorkstation" >Workstation cannot be blank.</div>
+                        <div style="display:none;" class="errorMessage errorMessageWorkstation" >Please select a workstation</div>
 
                     </td>
                     <td><label for="Visitor_vehicle">Vehicle Registration Number</label><br>
-                    <input type="text"  id="Visitor_vehicle" name="Visitor[vehicle]" maxlength="6" size="6">  
-                    <?php echo "<br>" . $form->error($model, 'vehicle'); ?>
+                        <input type="text"  id="Visitor_vehicle" name="Visitor[vehicle]" maxlength="6" size="6">  
+                        <?php echo "<br>" . $form->error($model, 'vehicle'); ?>
                     </td>
                 </tr>
                 <tr>
@@ -221,7 +221,7 @@ $session = new CHttpSession;
                         <?php echo $form->labelEx($model, 'email'); ?><br>
                         <?php echo $form->textField($model, 'email', array('size' => 50, 'maxlength' => 50)); ?>
                         <?php echo "<br>" . $form->error($model, 'email'); ?>
-                        <div style="" id="Visitor_email_em_" class="errorMessage errorMessageEmail" >Email Address has already been taken.</div>
+                        <div style="" id="Visitor_email_em_" class="errorMessage errorMessageEmail" >A profile already exists for this email address.</div>
                     </td>
                 </tr>
                 <tr>
@@ -253,7 +253,7 @@ $session = new CHttpSession;
                             ?>
 
                         </select>
-                        <div class="errorMessage visitorReason" >Reason cannot be blank.</div>
+                        <div class="errorMessage visitorReason" >Please select a reason</div>
                     </td>
                 </tr>
                 <tr>
@@ -315,7 +315,7 @@ $session = new CHttpSession;
 
         </div>
         <div class="register-a-visitor-buttons-div" style="padding-top:50px;">
-            <input type="button" class="visitor-backBtn btnBackTab2" id="btnBackTab2" value="Back"/>
+            <input type="button" class="neutral visitor-backBtn btnBackTab2" id="btnBackTab2" value="Back"/>
             <input type="button" id="clicktabB" value="Save and Continue" style="display:none;"/>
 
             <input type="submit" value="Save and Continue" name="yt0" id="submitFormVisitor" class="actionForward"/>
@@ -346,7 +346,7 @@ $session = new CHttpSession;
     ?>
     <label>Add Reason</label><br>
     <textarea id="VisitReason_reason" name="VisitReason[reason]" rows="1" maxlength="128" style="text-transform: capitalize;"></textarea> 
-    <div class="errorMessage" id="visitReasonErrorMessage" style="display:none;">Reason cannot be blank.</div>
+    <div class="errorMessage" id="visitReasonErrorMessage" style="display:none;">Please select a reason</div>
 
 
     <?php $this->endWidget(); ?>
@@ -354,6 +354,56 @@ $session = new CHttpSession;
 
 <script>
     $(document).ready(function() {
+        $('#photoCropPreview').imgAreaSelect({
+            handles: true,
+            onSelectEnd: function(img, selection) {
+                $("#cropPhotoBtn").show();
+                $("#x1").val(selection.x1);
+                $("#x2").val(selection.x2);
+                $("#y1").val(selection.y1);
+                $("#y2").val(selection.y2);
+                $("#width").val(selection.width);
+                $("#height").val(selection.height);
+            }
+        });
+        
+        $("#cropPhotoBtn").click(function(e) {
+            e.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: '<?php echo Yii::app()->createUrl('visitor/AjaxCrop'); ?>',
+                data: {
+                    x1: $("#x1").val(),
+                    x2: $("#x2").val(),
+                    y1: $("#y1").val(),
+                    y2: $("#y2").val(),
+                    width: $("#width").val(),
+                    height: $("#height").val(),
+                    imageUrl: $('#photoCropPreview').attr('src').substring(1, $('#photoCropPreview').attr('src').length),
+                    photoId: $('#Visitor_photo').val()
+                },
+                dataType: 'json',
+                success: function(r) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '<?php echo Yii::app()->createUrl('photo/GetPathOfCompanyLogo&id='); ?>' + $('#Visitor_photo').val(),
+                        dataType: 'json',
+                        success: function(r) {
+
+                            $.each(r.data, function(index, value) {
+                                document.getElementById('photoPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+                                document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+                            });
+                        }
+                    });
+
+                    $("#closeCropPhoto").click();
+                    var ias = $('#photoCropPreview').imgAreaSelect({instance: true});
+                    ias.cancelSelection();
+                }
+            });
+        });
+        
         $("#dummy-visitor-findBtn").click(function(e) {
             e.preventDefault();
             $("#Visit_reason_search").val("");
@@ -561,7 +611,7 @@ $session = new CHttpSession;
     function addCompany() {
         var url;
         if ($("#Visitor_tenant").val() == '') {
-            $("#Visitor_company_em_").html("Please select a tenant.");
+            $("#Visitor_company_em_").html("Please select a tenant");
             $("#Visitor_company_em_").show();
         } else {
             if ($("#currentRoleOfLoggedInUser").val() == '<?php echo Roles::ROLE_SUPERADMIN; ?>') {

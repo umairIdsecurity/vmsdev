@@ -96,7 +96,7 @@ if ($this->action->id == 'update') {
                     echo "disabled";
                 }
                 ?> value="<?php echo $model['logo']; ?>">
-                <div class="photoDiv" <?php
+                <div class="photoDiv companyPhotoDiv" <?php
                 if ($model['logo'] == NULL) {
                     echo "style='display:none !important;'";
                 }
@@ -174,12 +174,18 @@ if ($this->action->id == 'update') {
             <td><?php
                 echo $form->textField($model, 'website', array('size' => 50, 'maxlength' => 50));
                 if (isset($_GET['viewFrom'])) {
-                    echo "<br>" . $form->error($model, 'website');
+                    echo $form->error($model, 'website');
+                    ?>
+                    <span class="errorMessage" id="websiteErrorMessage">Website is not a valid URL.</span>
+                    <?php
                 }
                 ?></td>
             <td><?php
                 if (!isset($_GET['viewFrom'])) {
-                    echo "<br>" . $form->error($model, 'website');
+                    echo $form->error($model, 'website');
+                    ?>
+                    <span class="errorMessage" id="websiteErrorMessage" style="display:none;">Website is not a valid URL.</span>
+                    <?php
                 }
                 ?></td>
         </tr>
@@ -187,16 +193,22 @@ if ($this->action->id == 'update') {
     </table>
 
 
-    <div class="row buttons">
-        <?php echo CHtml::submitButton($model->isNewRecord ? 'Add' : 'Save', array('id' => 'createBtn', 'style' => 'height:30px;')); ?>
+    <div class="row buttons " style="<?php if (isset($_GET['viewFrom'])) { ?>
+             margin-left:400px;
+             <?php
+         } else {
+             echo "text-align:right;";
+         }
+         ?>">
+        <?php echo CHtml::submitButton($model->isNewRecord ? 'Add' : 'Save', array('id' => 'createBtn', 'style' => 'height:30px;','class'=>'complete')); ?>
         <?php if (isset($_GET['viewFrom'])) { ?>
-            <input class="yiiBtn" type='button' value='Cancel' onclick='closeParent()' style="height:30px;"></input>
+            <input class="neutral yiiBtn" type='button' value='Cancel' onclick='closeParent()' style="height:30px;"></input>
             <?php
         } else {
             if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                 ?>
                 <button class="yiiBtn" id="modalBtn" style="padding:1.5px 6px;margin-top:-4.1px;height:30.1px;" data-target="#viewLicense" data-toggle="modal">View License Details</button> 
-            <?php } else { ?>
+                <?php } else { ?>
                 <button class="yiiBtn actionForward" style="padding:2px 6px;margin-top:-4.1px;height:30.1px;" type='button' onclick="gotoLicensePage()">License Details</bitton>
                     <?php
                 }
@@ -204,7 +216,7 @@ if ($this->action->id == 'update') {
             ?>
     </div>
 
-    <?php $this->endWidget(); ?>
+<?php $this->endWidget(); ?>
 
 </div><!-- form -->
 
@@ -218,6 +230,42 @@ if (isset($_GET['viewFrom'])) {
 <script>
 
     $(document).ready(function() {
+        $("#company-form").submit(function(event) {
+            event.preventDefault();
+
+            var websiteUrl = $("#Company_website").val();
+
+            if (websiteUrl != '')
+            {
+                var httpString = websiteUrl.substr(0, 6);
+                if (websiteUrl.substr(0, 3) == 'www') {
+                    //alert(websiteUrl.substr(0, 3));
+                    if (websiteUrl.match(new RegExp('\\.', 'g')).length < 2) {
+                        $("#websiteErrorMessage").show();
+                    } else {
+                        $("#websiteErrorMessage").hide();
+                        if (httpString != 'http:/') {
+                            $("#Company_website").val("http://" + websiteUrl);
+                            $(this).unbind('submit').submit();
+                        } else {
+                            $(this).unbind('submit').submit();
+                        }
+                    }
+                } else {
+                    if (httpString != 'http:/') {
+                        $("#Company_website").val("http://" + websiteUrl);
+                        $(this).unbind('submit').submit();
+                    } else {
+                        $(this).unbind('submit').submit();
+                    }
+                }
+
+            } else {
+                $(this).unbind('submit').submit()
+            }
+
+
+        });
         $("#createBtn").click(function(e) {
             if ($("#viewFrom").val() == '1') {
                 if ($("#Company_logo").val() != '') {
@@ -242,25 +290,7 @@ if (isset($_GET['viewFrom'])) {
         window.location = 'index.php?r=licenseDetails/update&id=1';
     }
 
-    $("#company-form").submit(function(event) {
-        event.preventDefault();
 
-        var websiteUrl = $("#Company_website").val();
-        if (websiteUrl != '')
-        {
-            var httpString = websiteUrl.substr(0, 6);
-            if (httpString != 'http:/') {
-                $("#Company_website").val("http://" + websiteUrl);
-                $(this).unbind('submit').submit();
-            } else {
-                $(this).unbind('submit').submit();
-            }
-        } else {
-            $(this).unbind('submit').submit()
-        }
-
-
-    });
 
 </script>
 

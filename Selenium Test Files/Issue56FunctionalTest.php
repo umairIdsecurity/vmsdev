@@ -17,8 +17,8 @@ require_once 'BaseFunctionalTest.php';
 class Issue56FunctionalTest extends BaseFunctionalTest {
 
     function setUp() {
-        $this->setBrowser("*iexplore");
-        $this->setBrowserUrl("http://cvms.identitysecurity.info/");
+        $this->setBrowser("*firefox");
+        $this->setBrowserUrl("http://dev.identitysecurity.info/");
     }
 
     function testAll() {
@@ -29,8 +29,8 @@ class Issue56FunctionalTest extends BaseFunctionalTest {
 
     /* Scenario 1 Preregister a visit, status should be saved first 
       Expected Behavior
-      Assert Visit Status: Saved
-      Assert Visit Status: Preregistered
+      Assert Saved
+      Assert Preregistered
 
      */
 
@@ -65,11 +65,11 @@ class Issue56FunctionalTest extends BaseFunctionalTest {
         } catch (PHPUnit_Framework_AssertionFailedError $e) {
             array_push($this->verificationErrors, $e->toString());
         }
-        $this->assertEquals("Visit Status: Saved", $this->getText("link=Visit Status: Saved"));
+        $this->assertEquals("Saved", $this->getText("css=ul.visitStatusLi > li > a > span"));
         $this->click("//li[@id='preregisterLi']/a/span");
         $this->clickAndWait("css=#update-log-visit-form > input.complete");
         $this->clickAndWait("link=Preregistered");
-        $this->assertEquals("Visit Status: Preregistered", $this->getText("link=Visit Status: Preregistered"));
+        $this->assertEquals("Preregistered", $this->getText("css=ul.visitStatusLi > li > a > span"));
         try {
             $this->assertEquals("preloadvisitor@test.com", $this->getValue("id=Visitor_email"));
         } catch (PHPUnit_Framework_AssertionFailedError $e) {
@@ -87,19 +87,22 @@ class Issue56FunctionalTest extends BaseFunctionalTest {
     function Scenario2() {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
-        $this->clickAndWait("link=Visitor Records");
+        $this->clickAndWait("link=Visit History");
         $this->clickAndWait("link=Preregistered");
         try {
             $this->assertEquals("preloadvisitor@test.com", $this->getValue("id=Visitor_email"));
         } catch (PHPUnit_Framework_AssertionFailedError $e) {
             array_push($this->verificationErrors, $e->toString());
         }
-        $this->assertEquals("Visit Status: Preregistered", $this->getText("link=Visit Status: Preregistered"));
+        $this->assertEquals("Preregistered", $this->getText("css=ul.visitStatusLi > li > a > span"));
         $this->click("//li[@id='activateLi']/a/span");
-        $this->clickAndWait("css=#activate-a-visit-form > input.complete");
+        $this->click("css=#activate-a-visit-form > input.complete");
+        sleep(1);
+        $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
+        $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("link=Active");
         
-        $this->assertEquals("Visit Status: Active", $this->getText("link=Visit Status: Active"));
+        $this->assertEquals("Active", $this->getText("css=ul.visitStatusLi > li > a > span"));
         try {
             $this->assertEquals("preloadvisitor@test.com", $this->getValue("id=Visitor_email"));
         } catch (PHPUnit_Framework_AssertionFailedError $e) {

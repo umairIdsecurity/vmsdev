@@ -16,7 +16,7 @@ require_once 'BaseFunctionalTest.php';
 class Issue9FunctionalTest extends BaseFunctionalTest {
 
     function setUp() {
-        $this->setBrowser("*iexplore");
+        $this->setBrowser("*firefox");
         $this->setBrowserUrl("http://localhost/");
     }
 
@@ -95,7 +95,7 @@ class Issue9FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Organisation Settings");
         $this->type("id=Company_name", "");
         $this->clickAndWait("id=createBtn");
-        $this->assertEquals("Company Name cannot be blank.", $this->getText("css=div.errorSummary > ul > li"));
+        $this->assertEquals("Please enter a Company Name", $this->getText("css=div.errorSummary > ul > li"));
         $this->type("id=Company_email_address", "123");
         $this->clickAndWait("id=createBtn");
         $this->assertEquals("Email Address is not a valid email address.", $this->getText("//form[@id='company-form']/div/ul/li[2]"));
@@ -122,7 +122,7 @@ class Issue9FunctionalTest extends BaseFunctionalTest {
     function Scenario3() {
         $username = 'admin@test.com';
         $this->login($username, '12345');
-        $this->open("http://cvms.identitysecurity.info/index.php?r=company/update/&id=1");
+        $this->open("http://dev.identitysecurity.info/index.php?r=company/update/&id=1");
         $this->assertEquals("You are not authorized to perform this action.", $this->getText("css=div.error"));
     }
 

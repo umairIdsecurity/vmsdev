@@ -1,8 +1,14 @@
 <?php
+
 /* @var $this VisitController */
 /* @var $model Visit */
 ?>
-<h1>Visitor Records</h1>
+<style>
+    .grid-view .summary {
+        margin-left: 998px !important;
+    }
+</style>
+<h1>Visit History</h1>
 
 <?php
 
@@ -12,6 +18,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'view-visitor-records',
     'dataProvider' => $model->search(),
     'filter' => $model,
+
     'columns' =>
     array(
         array(
@@ -21,6 +28,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'type' => 'raw',
             'header' => 'Status',
             'filter' => VisitStatus::$VISIT_STATUS_LIST,
+            'cssClassExpression' => 'changeStatusClass($data->visit_status)',
         ),
         array(
             'name' => 'visitor_type',
@@ -31,7 +39,6 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'name' => 'cardcode',
             'header' => 'Card No.',
             'value' => 'CardGenerated::model()->getCardCode($data->card)',
-          
         ),
         array(
             'name' => 'firstname',
@@ -63,7 +70,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' => 'date_check_in',
             'type' => 'html',
-         //   'value' => 'formatDate($data->date_in)',
+        //   'value' => 'formatDate($data->date_in)',
         ),
         array(
             'name' => 'time_check_in',
@@ -73,14 +80,14 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' => 'date_check_out',
             'type' => 'html',
-          //  'value' => 'formatDate($data->date_out)',
+        //  'value' => 'formatDate($data->date_out)',
         ),
         array(
             'name' => 'time_check_out',
             'type' => 'html',
             'value' => 'formatTime($data->time_check_out)',
         ),
-       // 'card0.date_expiration',
+        // 'card0.date_expiration',
         array(
             'name' => 'date_out',
             'type' => 'html',
@@ -111,5 +118,29 @@ function formatDate($date) {
     } else {
         return Yii::app()->dateFormatter->format("d/MM/y", strtotime($date));
     }
+}
+
+function changeStatusClass($visitStatus){
+   // return "red";
+   switch ($visitStatus) {
+       case VisitStatus::ACTIVE:
+           return "green";
+           break;
+       
+       case VisitStatus::PREREGISTERED:
+           return "blue";
+           break;
+       
+       case VisitStatus::CLOSED:
+           return "red";
+           break;
+       
+       case VisitStatus::SAVED:
+           return "grey";
+           break;
+
+       default:
+           break;
+   }
 }
 ?>

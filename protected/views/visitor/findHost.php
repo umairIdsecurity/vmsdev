@@ -1,3 +1,8 @@
+<style>
+    .summary{
+        display:none !important;
+    }
+    </style>
 <?php
 
 /* @var $this VisitorController */

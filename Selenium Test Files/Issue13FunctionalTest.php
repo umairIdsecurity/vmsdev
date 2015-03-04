@@ -16,8 +16,8 @@ require_once 'BaseFunctionalTest.php';
 class Issue13FunctionalTest extends BaseFunctionalTest {
 
     function setUp() {
-        $this->setBrowser("*iexploreproxy");
-        $this->setBrowserUrl("http://cvms.identitysecurity.info");
+        $this->setBrowser("*firefoxproxy");
+        $this->setBrowserUrl("http://dev.identitysecurity.info");
     }
 
     function testAll() {
@@ -54,7 +54,7 @@ class Issue13FunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->clickAndWait("link=Add User");
+        $this->clickAndWait("css=a.has-sub-sub > span");
         $this->select("id=fromMonth", "label=Feb");
         $this->assertEquals("12345678910111213141516171819202122232425262728", $this->getText("id=fromDay"));
         $this->select("id=fromYear", "label=2012");
@@ -93,7 +93,7 @@ class Issue13FunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->clickAndWait("link=Add User");
+        $this->clickAndWait("css=a.has-sub-sub > span");
         $this->type("id=User_first_name", "testbirthday");
         $this->type("id=User_last_name", "test");
         $this->type("id=User_email", "testbirthday@test.com");

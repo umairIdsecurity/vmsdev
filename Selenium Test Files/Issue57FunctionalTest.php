@@ -17,8 +17,8 @@ require_once 'BaseFunctionalTest.php';
 class Issue57FunctionalTest extends BaseFunctionalTest {
 
     function setUp() {
-        $this->setBrowser("*iexplore");
-        $this->setBrowserUrl("http://cvms.identitysecurity.info/");
+        $this->setBrowser("*firefox");
+        $this->setBrowserUrl("http://dev.identitysecurity.info/");
     }
 
     function testAll() {
@@ -116,7 +116,7 @@ class Issue57FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("//ul[@id='tabs']/li[2]/a/p");
         $this->clickAndWait("name=yt0");
-        $this->assertEquals("Message cannot be blank.", $this->getText("css=div.errorSummary > ul > li"));
+        $this->assertEquals("Please enter a Message", $this->getText("css=div.errorSummary > ul > li"));
         
     }
 
@@ -191,14 +191,14 @@ class Issue57FunctionalTest extends BaseFunctionalTest {
             if ($second >= 10)
                 $this->fail("timeout");
             try {
-                if ("Displaying 1-1 of 1 result." == $this->getText("css=div.summary"))
+                if ("Displaying 1-1 of 1 result" == $this->getText("css=div.summary"))
                     break;
             } catch (Exception $e) {
                 
             }
             sleep(1);
         }
-        $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
+        $this->assertEquals("Displaying 1-1 of 1 result", $this->getText("css=div.summary"));
     }
 
 }

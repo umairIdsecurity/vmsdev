@@ -16,8 +16,8 @@ require_once 'BaseFunctionalTest.php';
 class Issue40FunctionalTest extends BaseFunctionalTest {
 
     function setUp() {
-        $this->setBrowser("*iexplore");
-        $this->setBrowserUrl("http://cvms.identitysecurity.info/");
+        $this->setBrowser("*firefox");
+        $this->setBrowserUrl("http://dev.identitysecurity.info/");
     }
 
     function testAll() {
@@ -36,34 +36,37 @@ class Issue40FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Active Preregistered", $this->getText("name=Visit[visit_status]"));
         $this->clickAndWait("link=Preregistered");
         $this->click("//li[@id='activateLi']/a/span");
-        $this->type("id=Visitor_photo","1");
-        $this->clickAndWait("css=#activate-a-visit-form > input.complete");
+        $this->type("id=Visitor_photo", "1");
+        $this->click("css=#activate-a-visit-form > input.complete");
+        sleep(1);
+        $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
+        $this->clickAndWait("link=Dashboard");
         $this->select("name=Visit[visit_status]", "label=Active");
         for ($second = 0;; $second++) {
             if ($second >= 60)
                 $this->fail("timeout");
             try {
-                if ("Displaying 1-1 of 1 result." == $this->getText("css=div.summary"))
+                if ("Displaying 1-1 of 1 result" == $this->getText("css=div.summary"))
                     break;
             } catch (Exception $e) {
                 
             }
             sleep(1);
         }
-        $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
+        $this->assertEquals("Displaying 1-1 of 1 result", $this->getText("css=div.summary"));
         $this->select("name=Visit[visit_status]", "label=Preregistered");
         for ($second = 0;; $second++) {
             if ($second >= 60)
                 $this->fail("timeout");
             try {
-                if ("Displaying 1-6 of 6 results." == $this->getText("css=div.summary"))
+                if ("Displaying 1-6 of 6 results" == $this->getText("css=div.summary"))
                     break;
             } catch (Exception $e) {
                 
             }
             sleep(1);
         }
-        $this->assertEquals("Displaying 1-6 of 6 results.", $this->getText("css=div.summary"));
+        $this->assertEquals("Displaying 1-6 of 6 results", $this->getText("css=div.summary"));
         $this->clickAndWait("//ul[@id='tabs']/li[3]/a/p");
         $username = 'admin@test.com';
         $this->login($username, '12345');
@@ -73,27 +76,27 @@ class Issue40FunctionalTest extends BaseFunctionalTest {
             if ($second >= 60)
                 $this->fail("timeout");
             try {
-                if ("Displaying 1-1 of 1 result." == $this->getText("css=div.summary"))
+                if ("Displaying 1-1 of 1 result" == $this->getText("css=div.summary"))
                     break;
             } catch (Exception $e) {
                 
             }
             sleep(1);
         }
-        $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
+        $this->assertEquals("Displaying 1-1 of 1 result", $this->getText("css=div.summary"));
         $this->select("name=Visit[visit_status]", "label=Preregistered");
         for ($second = 0;; $second++) {
             if ($second >= 60)
                 $this->fail("timeout");
             try {
-                if ("Displaying 1-5 of 6 results." == $this->getText("css=div.summary"))
+                if ("Displaying 1-5 of 6 results" == $this->getText("css=div.summary"))
                     break;
             } catch (Exception $e) {
                 
             }
             sleep(1);
         }
-        $this->assertEquals("Displaying 1-5 of 6 results.", $this->getText("css=div.summary"));
+        $this->assertEquals("Displaying 1-5 of 6 results", $this->getText("css=div.summary"));
         $this->clickAndWait("//ul[@id='tabs']/li[3]/a/p");
         $username = 'operator@test.com';
         $this->login($username, '12345');
@@ -104,27 +107,27 @@ class Issue40FunctionalTest extends BaseFunctionalTest {
             if ($second >= 60)
                 $this->fail("timeout");
             try {
-                if ("Displaying 1-1 of 1 result." == $this->getText("css=div.summary"))
+                if ("Displaying 1-1 of 1 result" == $this->getText("css=div.summary"))
                     break;
             } catch (Exception $e) {
                 
             }
             sleep(1);
         }
-        $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
+        $this->assertEquals("Displaying 1-1 of 1 result", $this->getText("css=div.summary"));
         $this->select("name=Visit[visit_status]", "label=Preregistered");
         for ($second = 0;; $second++) {
             if ($second >= 60)
                 $this->fail("timeout");
             try {
-                if ("Displaying 1-6 of 6 results." == $this->getText("css=div.summary"))
+                if ("Displaying 1-6 of 6 results" == $this->getText("css=div.summary"))
                     break;
             } catch (Exception $e) {
                 
             }
             sleep(1);
         }
-        $this->assertEquals("Displaying 1-6 of 6 results.", $this->getText("css=div.summary"));
+        $this->assertEquals("Displaying 1-6 of 6 results", $this->getText("css=div.summary"));
     }
 
 }

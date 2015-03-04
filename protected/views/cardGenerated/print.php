@@ -13,8 +13,10 @@ $cardCode ="";
 $companyLogoId ="";
 
 $visitorName = $visitorModel->first_name . ' ' . $visitorModel->last_name;
-if ($visitorModel->company != '') {
-    $company = Company::model()->findByPk($visitorModel->company);
+$tenant = User::model()->findByPk($visitorModel->tenant);
+$visitorName = wordwrap($visitorName, 13, "\n", true);
+if ($tenant->company != '') {
+    $company = Company::model()->findByPk($tenant->company);
     $companyName = $company->name;
     $companyLogoId = $company->logo;
     $companyCode = $company->code;
@@ -30,7 +32,13 @@ if ($visitorModel->company != '') {
 if ($companyLogoId == "") {
     $companyLogo = Yii::app()->getBaseUrl(true) . '/images/nologoavailable.jpg';
 } else {
-    $companyLogo = Yii::app()->getBaseUrl(true) . "/" . Photo::model()->returnCompanyPhotoRelativePath($visitorModel->company);
+    $companyLogo = Yii::app()->getBaseUrl(true) . "/" . Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
+}
+
+if (Visitor::model()->findByPk($model->visitor)->photo == "") {
+    $userPhoto = Yii::app()->getBaseUrl(true) . '/images/nophoto.png';
+} else {
+    $userPhoto = Yii::app()->getBaseUrl(true) . "/" . Photo::model()->returnVisitorPhotoRelativePath($model->visitor);
 }
 
 if (Visitor::model()->findByPk($model->visitor)->photo == "") {
@@ -137,9 +145,9 @@ $size = getimagesize($src);
 $dest_x = $size[0] - $watermark_width - 5;
 
 $dest_y = $size[1] - $watermark_height - 5;
-imagettftext($image, $font_size, 0, $x, 250, $font_color, $font_file, $text);
+imagettftext($image, $font_size, 0, $x, 225, $font_color, $font_file, $text);
 
-imagecopyresampled($image, $watermark, 17, 333, 0, 0, 80, 45, $watermark_width, $watermark_height);
+imagecopyresampled($image, $watermark, 17, 333, 0, 0, 61, 40, $watermark_width, $watermark_height);
 imagecopyresampled($image, $watermark2, 17, 7, 0, 0, 147, 191, $watermark_width2, $watermark_height2);
 //imagecopymerge($image, $watermark, 5, 5, 0, 0, $watermark_width, $watermark_height, 50);  
 

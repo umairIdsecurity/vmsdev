@@ -1,4 +1,9 @@
-
+<style>
+    .grid-view .summary {
+        margin-top: -39px !important;
+        margin-left: 743px !important;
+    }
+</style>
 <?php
 /* @var $this VisitController */
 /* @var $model Visit */
@@ -45,7 +50,8 @@ foreach ($workstationList as $workstation) {
                     'value' => 'CHtml::link(VisitStatus::$VISIT_STATUS_LIST[$data->visit_status],Yii::app()->createUrl("visit/detail",array("id"=>$data->id)),array("class" =>"statusLink"))',
                     'type' => 'raw',
                     'header' => 'Status',
-                    'cssClassExpression' => '"statusRow"',
+                    //'cssClassExpression' => '"statusRow"',
+                    'cssClassExpression' => 'changeStatusClass($data->visit_status)',
                 ),
                 array(
                     'name' => 'cardcode',
@@ -128,5 +134,29 @@ function getCardCode($cardId) {
     } else {
         return "";
     }
+}
+
+function changeStatusClass($visitStatus){
+   // return "red";
+   switch ($visitStatus) {
+       case VisitStatus::ACTIVE:
+           return "green";
+           break;
+       
+       case VisitStatus::PREREGISTERED:
+           return "blue";
+           break;
+       
+       case VisitStatus::CLOSED:
+           return "red";
+           break;
+       
+       case VisitStatus::SAVED:
+           return "grey";
+           break;
+
+       default:
+           break;
+   }
 }
 ?>

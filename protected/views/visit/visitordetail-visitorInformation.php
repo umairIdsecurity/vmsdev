@@ -49,7 +49,7 @@ $session = new CHttpSession;
                             <td width="100px;">Email:</td>
                             <td><?php echo $visitorForm->textField($visitorModel, 'email', array('size' => 50, 'maxlength' => 50)); ?>
                                 <?php echo "<br>" . $visitorForm->error($visitorModel, 'email'); ?>
-                                <div style="" id="Visitor_email_em_" class="errorMessage errorMessageEmail" >Email Address has already been taken.</div>
+                                <div style="" id="Visitor_email_em_" class="errorMessage errorMessageEmail" >A profile already exists for this email address.</div>
                             </td>
                         </tr>
                         <tr>
@@ -80,12 +80,12 @@ $session = new CHttpSession;
                                 }
                                    else if($(".visitortypedetails").val() == 1){
                                         if($(".visitortypepatient").val() == ""){
-                                            $("#visitorTypePatientHost").html("Patient Name cannot be blank.");
+                                            $("#visitorTypePatientHost").html("Patient Name cannot be blank");
                                             $("#visitorTypePatientHost").show();
                                         }
                                     } else if ($(".visitortypedetails").val() == 2) {
                                         if($(".visitortypehost").val() == ""){
-                                            $("#visitorTypePatientHost").html("Please select a host.");
+                                            $("#visitorTypePatientHost").html("Please select a host");
                                             $("#visitorTypePatientHost").show();
                                         }
                                         else {
@@ -212,7 +212,7 @@ $session = new CHttpSession;
 
                                 </select><br>
                                 <?php echo $reasonForm->error($model, 'reason'); ?>
-                                <div class="errorMessage visitorReason" id="visitReason">Reason cannot be blank.</div>
+                                <div class="errorMessage visitorReason" id="visitReason">Please select a reason</div>
                             </td>
                         </tr>
                         <tr><td><input type="submit" value="Update" name="yt0" id="submitReasonForm" class="complete" /></td></tr>
@@ -241,7 +241,7 @@ $session = new CHttpSession;
                             <td><textarea id="VisitReason_reason" name="VisitReason[reason]" style="width:200px !important;text-transform: capitalize;" cols="80" rows="3"><?php
                                     echo $reasonModel->reason;
                                     ?></textarea> <?php echo $addReasonForm->error($reasonModel, 'reason'); ?>
-                                <div class="errorMessage visitorReason" id="visitReasonErrorMessage">Reason cannot be blank.</div>
+                                <div class="errorMessage visitorReason" id="visitReasonErrorMessage">Please select a reason</div>
                             </td>
                         </tr>
                         <tr><td><input type="submit" value="Add" name="yt0" id="submitAddReasonForm" class="complete"/></td></tr>
@@ -278,7 +278,7 @@ $session = new CHttpSession;
                         <div>
                             <label style="font-size:12px;">Search Name:</label> 
                             <input type="text" id="search-host" name="search-host" class="search-text" style="width:96%;"/> 
-                            <button class="host-findBtn" onclick="findHostRecord()" id="host-findBtn" style="display:none;" data-target="#findHostRecordModal" data-toggle="modal">Find Record</button>
+                            <button class="host-findBtn" onclick="findHostRecord()" id="host-findBtn" style="display:none;" data-target="#findHostRecordModal" data-toggle="modal">Search Visits</button>
                             <div class="errorMessage" id="searchTextHostErrorMessage" style="display:none;font-size:12px;"></div>
 
                             <button class="host-findBtn" id="dummy-host-findBtn">Find Host</button>
@@ -365,7 +365,7 @@ $session = new CHttpSession;
                             <td>
                                 <?php echo $form->textField($newHost, 'email', array('size' => 50, 'maxlength' => 50, 'class' => 'New_user_email')); ?>
                                 <?php echo "<br>" . $form->error($newHost, 'email'); ?>
-                                <div style="" id="New_user_email_em_" class="errorMessage errorMessageEmail2" >Email Address has already been taken.</div>
+                                <div style="" id="New_user_email_em_" class="errorMessage errorMessageEmail2" >A profile already exists for this email address.</div>
 
                             </td>
                         </tr>
@@ -503,7 +503,7 @@ $session = new CHttpSession;
                             <td>
                                 <?php echo $hostForm->textField($hostModel, 'email', array('class' => 'update_user_email', 'disabled' => 'disabled')); ?>
                                 <?php echo "<br>" . $hostForm->error($hostModel, 'email'); ?>
-                                <div style="display:none;" id="User_email_em_1a" class="errorMessage errorMessageEmail1" >Email Address has already been taken.</div>
+                                <div style="display:none;" id="User_email_em_1a" class="errorMessage errorMessageEmail1" >A profile already exists for this email address.</div>
                             </td>
                         </tr>
                         <tr>
@@ -700,6 +700,7 @@ $session = new CHttpSession;
          * if visit type is patient and visit type in database is patient show update patient
          * if visit type is corporate and visit type in database is corporate show update host, hide search
          * */
+        
         var visit_type = $("#Visit_visitor_type").val();
         $("#visitorTypeUnderSearchForm").val($("#Visit_visitor_type").val());
 

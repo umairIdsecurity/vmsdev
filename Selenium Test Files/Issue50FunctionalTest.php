@@ -17,8 +17,8 @@ require_once 'BaseFunctionalTest.php';
 class Issue50FunctionalTest extends BaseFunctionalTest {
 
     function setUp() {
-        $this->setBrowser("*iexplore");
-        $this->setBrowserUrl("http://cvms.identitysecurity.info/");
+        $this->setBrowser("*firefox");
+        $this->setBrowserUrl("http://dev.identitysecurity.info/");
     }
 
     function testAll() {
@@ -130,30 +130,30 @@ class Issue50FunctionalTest extends BaseFunctionalTest {
         $username = 'agentadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->clickAndWait("link=Organisation Settings");
-        $this->assertEquals("Customise Display", $this->getText("css=a.ajaxLinkLi > span"));
+        $this->clickAndWait("link=Customise Display");
+      //  $this->assertEquals("Customise Display", $this->getText("css=a.ajaxLinkLi > span"));
         $this->clickAndWait("//ul[@id='tabs']/li[3]/a/p");
 
         $username = 'operator@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("id=submit");
-        $this->assertEquals("Dashboard Visitor Records Logged in as operator@test.com - Operator", $this->getText("css=nav.navigation > #tabs"));
-        $this->open("http://cvms.identitysecurity.info/index.php?r=CompanyLafPreferences/customisation");
+        $this->assertEquals("Dashboard Visit History Logged in as operator@test.com - Operator", $this->getText("css=nav.navigation > #tabs"));
+        $this->open("http://dev.identitysecurity.info/index.php?r=CompanyLafPreferences/customisation");
         $this->assertEquals("You are not authorized to perform this action.", $this->getText("css=div.error"));
         $this->clickAndWait("//ul[@id='tabs']/li[3]/a/p");
         
         $username = 'agentoperator@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("id=submit");
-        $this->assertEquals("Dashboard Visitor Records Logged in as agentoperator@test.com - Agent Operator", $this->getText("css=nav.navigation > #tabs"));
-        $this->open("http://cvms.identitysecurity.info/index.php?r=CompanyLafPreferences/customisation");
+        $this->assertEquals("Dashboard Visit History Logged in as agentoperator@test.com - Agent Operator", $this->getText("css=nav.navigation > #tabs"));
+        $this->open("http://dev.identitysecurity.info/index.php?r=CompanyLafPreferences/customisation");
         $this->assertEquals("You are not authorized to perform this action.", $this->getText("css=div.error"));
         $this->clickAndWait("//ul[@id='tabs']/li[3]/a/p");
         
         $username = 'staffmember@test.com';
         $this->login($username, '12345');
-        $this->assertEquals("Dashboard Visitor Records Logged in as staffmember@test.com - Staff Member", $this->getText("css=nav.navigation > #tabs"));
-        $this->open("http://cvms.identitysecurity.info/index.php?r=CompanyLafPreferences/customisation");
+        $this->assertEquals("Dashboard Visit History Logged in as staffmember@test.com - Staff Member", $this->getText("css=nav.navigation > #tabs"));
+        $this->open("http://dev.identitysecurity.info/index.php?r=CompanyLafPreferences/customisation");
         $this->assertEquals("You are not authorized to perform this action.", $this->getText("css=div.error"));
         $this->clickAndWait("//ul[@id='tabs']/li[3]/a/p");
     }

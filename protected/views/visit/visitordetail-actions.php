@@ -6,91 +6,106 @@ $session = new CHttpSession;
 <div id='actionsCssMenu'>
     <ul class="visitStatusLi">
         <li>
-            <a style="text-decoration: none; ">Status: <span style="color:red !important; text-decoration: underline;font-weight:normal"><?php echo VisitStatus::$VISIT_STATUS_LIST[$model->visit_status]; ?></span></a>
-            
+            <a style="text-decoration: none; ">Status: <span style="color:#<?php 
+                if($model->visit_status == VisitStatus::CLOSED){
+                    echo "ff0000";
+                } else if($model->visit_status == VisitStatus::ACTIVE){
+                    echo "9BD62C";
+                } else if($model->visit_status == VisitStatus::PREREGISTERED){
+                    echo "2F96B4";
+                } else if($model->visit_status == VisitStatus::SAVED){
+                    echo "637280";
+                }
+            ?> !important; font-weight:bold"><?php echo VisitStatus::$VISIT_STATUS_LIST[$model->visit_status]; ?></span></a>
+
         </li>
     </ul>
 
     <input type="text" style="display:none;" value="<?php echo $model->visit_status; ?>" id="visitStatusActions"/>
 
     <ul>
-        <?php if ($model->visit_status == VisitStatus::ACTIVE && $session['role'] != Roles::ROLE_STAFFMEMBER) { ?>
-            <li class='has-sub' id="closevisitLi"><a href="#"><span class="icons close-visit">Close Visit</span></a>
-                <ul>
-                    <li>
-                        <table id="actionsVisitDetails">
-                            <tr>
-                                <td></td>
-                                <td >
 
-                                    <div id="closeVisitDiv">
-                                        <?php
-                                        $closeVisitForm = $this->beginWidget('CActiveForm', array(
-                                            'id' => 'close-visit-form',
-                                            'htmlOptions' => array("name" => "close-visit-form"),
-                                            'enableAjaxValidation' => false,
-                                            'enableClientValidation' => true,
-                                            'clientOptions' => array(
-                                                'validateOnSubmit' => true,
-                                                'afterValidate' => 'js:function(form, data, hasError){
+        <li class='has-sub' id="closevisitLi" style="<?php if ($model->visit_status == VisitStatus::ACTIVE && $session['role'] != Roles::ROLE_STAFFMEMBER) {
+            echo "display:block;";
+        } else {
+            echo "display:none;";
+        }?>"><a href="#"><span class="close-visit">Close Visit</span></a>
+            <ul>
+                <li>
+                    <table id="actionsVisitDetails" style="margin-top:15px;">
+                        <tr>
+                            <td></td>
+                            <td >
+
+                                <div id="closeVisitDiv">
+                                    <?php
+                                    $closeVisitForm = $this->beginWidget('CActiveForm', array(
+                                        'id' => 'close-visit-form',
+                                        'htmlOptions' => array("name" => "close-visit-form"),
+                                        'enableAjaxValidation' => false,
+                                        'enableClientValidation' => true,
+                                        'clientOptions' => array(
+                                            'validateOnSubmit' => true,
+                                            'afterValidate' => 'js:function(form, data, hasError){
                                                 if (!hasError){
                                                     sendCloseVisit("close-visit-form");
                                                 }
                                                 }'
-                                            ),
-                                        ));
-                                        ?>
-                                        <table class="detailsTable" style="font-size:12px;" id="logvisitTable">
-                                            <tr>
-                                                <td>Date Check Out</td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <input name="Visit[visit_status]" id="Visit_visit_status" type="text" value="<?php echo VisitStatus::CLOSED; ?>" style="display:none;">
-                                                    <input name="Visit[time_check_out]" id="Visit_time_check_out" class="timeout" type="text" style="display:none;">
-                                                    <input type="text" value="<?php echo date("d-m-Y"); ?>" id='Visit_date_check_out' name="Visit[date_check_out]" readonly>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Time Check Out</td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <select class="time visit_time_in_hours" id='Visit_time_check_out_hours' disabled style="width:70px;">
-                                                        <?php for ($i = 1; $i <= 24; $i++): ?>
-                                                            <option value="<?= $i; ?>"><?= date("H", strtotime("$i:00")); ?></option>
-                                                        <?php endfor; ?>
-                                                    </select> :
-                                                    <select class='time visit_time_in_minutes'  id='Visit_time_check_out_minutes' disabled style="width:70px;">
+                                        ),
+                                    ));
+                                    ?>
+                                    <table class="detailsTable" style="font-size:12px;" id="logvisitTable">
+                                        <tr>
+                                            <td>Check Out Date</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input name="Visit[visit_status]" id="Visit_visit_status" type="text" value="<?php echo VisitStatus::CLOSED; ?>" style="display:none;">
+                                                <input name="Visit[time_check_out]" id="Visit_time_check_out" class="timeout" type="text" style="display:none;">
+                                                <input type="text" value="<?php echo date("d-m-Y"); ?>" id='Visit_date_check_out' name="Visit[date_check_out]" readonly>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Check Out Time</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="time visit_time_in_hours" id='Visit_time_check_out_hours' disabled style="width:70px;">
+                                                    <?php for ($i = 1; $i <= 24; $i++): ?>
+                                                        <option value="<?= $i; ?>"><?= date("H", strtotime("$i:00")); ?></option>
+                                                    <?php endfor; ?>
+                                                </select> :
+                                                <select class='time visit_time_in_minutes'  id='Visit_time_check_out_minutes' disabled style="width:70px;">
                                                         <?php for ($i = 1; $i <= 60; $i++): ?>
-                                                            <option value="<?= $i; ?>"><?php
-                                                                if ($i > 0 && $i < 10) {
-                                                                    echo '0' . $i;
-                                                                } else {
-                                                                    echo $i;
-                                                                };
-                                                                ?></option>
-                                                        <?php endfor; ?>
-                                                    </select>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                        <?php echo $closeVisitForm->error($model, 'date_in'); ?>
-                                        <input type='submit' value='Close' class="complete" id="closeVisitBtn" style="display:none;"/>
-                                        <button  class="complete greenBtn" id="closeVisitBtnDummy"/>Close</button>
-                                        <button class="actionForward greenBtn" id="cancelActiveVisitButton">Cancel</button>
-    <?php $this->endWidget(); ?>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </li>
-                </ul>
+                                                        <option value="<?= $i; ?>"><?php
+                                                            if ($i > 0 && $i < 10) {
+                                                                echo '0' . $i;
+                                                            } else {
+                                                                echo $i;
+                                                            };
+                                                            ?></option>
+<?php endfor; ?>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    </table>
+<?php echo $closeVisitForm->error($model, 'date_in'); ?>
+                                    <input type='submit' value='Close' class="complete" id="closeVisitBtn" style="display:none;"/>
+                                    <button  class="complete greenBtn" id="closeVisitBtnDummy" style="width:93px !important"/>Close Visit</button>
+                                <div style="display:inline;font-size:12px;"><b>or</b><a id="cancelActiveVisitButton" href="" class="cancelBtnVisitorDetail">Cancel</a></div>
+                                   <!-- <button class="neutral greenBtn" id="cancelActiveVisitButton">Cancel</button>-->
+<?php $this->endWidget(); ?>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </li>
+            </ul>
 
-            </li>
-        <?php } else if (($model->visit_status == VisitStatus::PREREGISTERED || $model->visit_status == VisitStatus::SAVED || $model->visit_status == VisitStatus::CLOSED)) {
-            ?>
-            <li class='has-sub' id="preregisterLi"><a href="#"><span class="pre-visits">Preregister a Visit</span></a>
+        </li>
+<?php if (($model->visit_status == VisitStatus::PREREGISTERED || $model->visit_status == VisitStatus::SAVED || $model->visit_status == VisitStatus::CLOSED)) {
+    ?>
+            <li class='has-sub' id="preregisterLi"><a href="#"><span class="pre-visits">Preregister Visit</span></a>
                 <ul>
                     <li>
 
@@ -114,7 +129,7 @@ $session = new CHttpSession;
                     </li>
                 </ul>
             </li>
-            <li class='has-sub' id="activateLi"><a href="#"><span class="log-current">Log a Visit</span></a>
+            <li class='has-sub' id="activateLi"><a href="#"><span class="log-current">Log Visit</span></a>
                 <ul>
                     <li>
                         <?php
@@ -162,8 +177,8 @@ $session = new CHttpSession;
                         <?php } else { ?>
                             <input type = 'submit' value = 'Activate' class = "complete"/>
                         <?php } ?>
-                        <?php $this->endWidget();
-                        ?>
+    <?php $this->endWidget();
+    ?>
 
                     </li>
                 </ul>
@@ -208,7 +223,7 @@ $session = new CHttpSession;
             e.preventDefault();
             checkIfActiveVisitConflictsWithAnotherVisit("new");
         });
-        
+
         $('#closeVisitBtnDummy').on('click', function(e) {
             e.preventDefault();
             $("#closeVisitBtn").click();
@@ -268,7 +283,7 @@ $session = new CHttpSession;
                         $("#Visit_date_out").attr("disabled", false);
                         $("#Visit_date_in").attr("disabled", false);
                         duplicateVisit("update-log-visit-form");
-                         $("#Visit_date_out").attr("disabled", true);
+                        $("#Visit_date_out").attr("disabled", true);
                         $("#Visit_date_in").attr("disabled", true);
                     }
                     else {
@@ -340,7 +355,7 @@ $session = new CHttpSession;
     <input type="text" name="Visit[time_check_in]" id='Visit_time_check_in' value=''/>
     <input type="text" name="Visit[date_check_out]" id='Visit_date_check_out' value=''/>
     <input type="text" name="Visit[time_check_out]" id='Visit_time_check_out' value=''/>
-<?php echo "<br>" . $cancelForm->error($model, 'visit_status'); ?>
+    <?php echo "<br>" . $cancelForm->error($model, 'visit_status'); ?>
     <input type='submit' value='Update' class='submitBtn complete' id='cancelFormBtn'>
 
 <?php $this->endWidget(); ?>

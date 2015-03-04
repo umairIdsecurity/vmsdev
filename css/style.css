@@ -339,8 +339,8 @@ nav.navigation ul li:last-child.active
 }
 
 #companyLogo{
-    height:120px;
-    width: 100%;
+    height:60px;
+    width: 180px;
 }
 
 .update a{
@@ -431,9 +431,12 @@ nav.navigation ul li:last-child.active
 }
 
 .grid-view .summary {
-    text-align: left !important;
-    font-weight:bold;
-    font-size:12px;
+    float: right;
+    font-size: 12px;
+    font-weight: bold;
+    margin-left: 748px !important;
+    margin-top: -30px !important;
+    position: absolute;
 }
 
 #page{
@@ -481,6 +484,15 @@ nav.navigation ul li:last-child.active
 }
 ul.yiiPager .hidden a {
     margin-left:-40px;
+}
+
+.grid-view .pager {
+    text-align: left !important;
+    margin-left:10px !important;
+}
+
+.pager .next > a, .pager .next > span {
+    float: none !important;
 }
 
 h1,
@@ -583,6 +595,7 @@ dt.tabs dt{
 
 .errorMessageEmail, .errorMessageEmail1{
     display: none;
+    
 }
 #searchVisitorTableDiv, #visitor_fields_for_Search, 
 #search-visitor-reason-error, #searchHostTableDiv, 
@@ -648,7 +661,7 @@ dt.tabs dt{
     height:137px;
 }
 
-.register-a-visitor-buttons-div{
+.register-a-visitor-buttons-div, .buttonsAlignToRight{
     text-align:right;
 }
 
@@ -719,6 +732,7 @@ dt.tabs dt{
     font-size: 14px;
     position: relative;
     border-radius: 5px;
+    margin-right: 2px;
 }
 
 #visitorInformationCssMenu > ul > li > a  {
@@ -734,7 +748,7 @@ dt.tabs dt{
     padding:8px;
 }
 
-#actionsCssMenu > .visitStatusLi > li > a  {
+#actionsCssMenu > .visitStatusLi > li > a, #actionsCssMenu > ul > li > a  {
     font-size: 12px;
     display: block;
     background: #64676e;
@@ -876,13 +890,23 @@ dt.tabs dt{
     background: url('../images/icons.png') 0 0 no-repeat;
 }
 .addhost{
-    background: url('../images/add_user.png') 0 0 no-repeat;
-
+    background:url('../images/addhosticon.png') 0 0 no-repeat;
+    background-position: 0px -4px;
     padding: 1px 0 1px 30px;
     display: block;
-    height: 15px;
+    height: 16px;
     text-decoration: none;
 }
+
+.addvisitorprofile{
+    background:url('../images/addvisitorprofileicon.png') 0 0 no-repeat;
+    background-position: 0px 2px;
+    padding-left:35px !important;
+    display: block;
+    height: 16px;
+    text-decoration: none;
+}
+
 .addvisitor{
     background: url('../images/addvisitor.png') 0 0 no-repeat;
     padding: 1px 0 1px 30px;
@@ -893,28 +917,46 @@ dt.tabs dt{
 }
 
 .log-current {
-    background:url('../images/logvisiticon.png') 0 0 no-repeat;
-    background-position: 0px -4px;
-    padding: 1px 0 1px 30px;
+    background:url('../images/key_icon.png') 0 0 no-repeat;
+    background-position: 0px -7px;
+    padding: 0px 30px;
     display: block;
-    height: 15px;
+  //  height: 15px;
+    text-decoration: none;
+    background-size:20px 24px;
+}
+
+.pre-visits {
+    background:url('../images/preregistericon.png') 0 0 no-repeat;
+    background-position: 0px -7px;
+    padding: 0px 30px;
+    display: block;
     text-decoration: none;
 }
 
+.dashboardMenu .pre-visits {
+    background:url('../images/preregistericonsidemenu.png') 0 0 no-repeat;
+   // height: 16px;
+}
 
+.sidemenu-icon{
+    background-position: 0px 2px !important;
+    padding-left:35px !important;
+}
 
-.pre-visits {
-   background:url('../images/preregistericon.png') 0 0 no-repeat;
-    background-position: 0px -4px;
-    padding: 1px 0 1px 30px;
+.findrecord {
+    background:url('../images/searchvisiticon.png') 0 0 no-repeat;
+    background-position: 0px 3px;
+    padding-left: 35px !important;
     display: block;
     height: 16px;
     text-decoration: none;
 }
 
-.findrecord {
-    background-position: 0 -537px;
-    padding: 1px 0 1px 30px;
+.evacuationreport {
+    background:url('../images/evacuationreporticon.png') 0 0 no-repeat;
+    background-position: 0px 3px;
+    padding-left: 35px !important;
     display: block;
     height: 16px;
     text-decoration: none;
@@ -932,11 +974,16 @@ dt.tabs dt{
     list-style:none outside none;
 }
 #actionsCssMenu li a, #actionsCssMenu li a span{
-    color:#58585A !important;
+ //   color:#58585A !important;
     font-weight:bold;
     font-size:12px;
     width:253px;
     text-align:left;
+    line-height:15px;
+}
+
+#preregisterLi a span, #activateLi a span, #closevisitLi a span{
+    color:#58585A !important;
 }
 
 
@@ -1008,15 +1055,20 @@ dt.tabs dt{
     width:100% !important;
     min-width: 122px !important;
 }
-
+#closevisitLi a{
+    padding:7px !important;
+}
 .close-visit {
-    //background-position: 0 -48px;
-    background-position: 0 -438px;
-    padding: 1px 0 5px 30px;
+    
+     background:url('../images/close_icon.gif') 0 0 no-repeat;
+    background-size:16px 15px;
+    background-position: 3px 0px;
+    padding: 0px 30px;
+    height:14px;
     display: block;
     height: 16px;
     text-decoration: none;
-    margin-bottom:10px;
+   // margin-bottom:10px;
 }
 
 .admindashboardDiv > .grid-view{
@@ -1131,11 +1183,23 @@ dt.tabs dt{
     padding: 7px 7px 12px;
     width:50%;
 }
+.errorSummary ul li{
+    text-transform: lowercase !important;
+}
+
+.errorSummary ul li:first-letter{
+    text-transform: uppercase !important;
+}
 
 .errorMessage
 {
     color: red;
     font-size: 0.9em;
+    text-transform: lowercase;
+}
+
+.errorMessage:first-letter {
+    text-transform: uppercase;
 }
 
 #preregisterLi{
@@ -1157,21 +1221,40 @@ dt.tabs dt{
 }
 
 .cardCompanyLogo{
+    /*    height: 30px;
+        margin-left: -104px;
+        margin-top: -38px;
+        position: absolute;
+        width: 50px;*/
+    float: left;
     height: 30px;
-    margin-left: -104px;
-    margin-top: -38px;
+    margin-left: -105px;
+    margin-top: 77px;
+    position: absolute;
+    width: 50px;*/
+    float: left;
+    height: 30px;
+    margin-left: -105px;
+    margin-top: 77px;
     position: absolute;
     width: 50px;
 }
 
 .cardCompanyLogoPreregistered{
-    height: 30px;
-    margin-left: -155px;
-    // margin-top: -64px;
+    /*    height: 30px;
+        margin-left: -155px;
+        // margin-top: -64px;
+    
+        margin-top: -14px;
+        //-moz-margin-start: -64px;
+        position: relative;
+        width: 50px;*/
 
-    margin-top: -14px;
-    //-moz-margin-start: -64px;
-    position: relative;
+    float: left;
+    height: 30px;
+    margin-left: -105px;
+    margin-top: 77px;
+    position: absolute;
     width: 50px;
 }
 
@@ -1327,3 +1410,97 @@ dt.tabs dt{
     height:27px;
 }
 
+.companyPhotoDiv{
+    height:60px !important;
+    width:180px !important;
+}
+#visitor-grid_c4,#visitor-grid_c5{
+    display:none;
+}
+
+#visitor-grid .items .filters td:nth-child(6), #visitor-grid .items .filters td:nth-child(7){
+    display:none;
+}
+#actionsCssMenu .complete, #actionsCssMenu .neutral{
+    width:78px !important;
+    height:24px !important;
+}
+
+#visitorDetailDiv .editImageBtn{
+    color: #ffffff;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    background-color: #5bb75b;
+    *background-color: #51a351;
+    background-image: -moz-linear-gradient(top, #62c462, #51a351) ;
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#62c462), to(#51a351));
+    background-image: -webkit-linear-gradient(top, #62c462, #51a351);
+    background-image: -o-linear-gradient(top, #62c462, #51a351);
+    background-image: linear-gradient(to bottom, #62c462, #51a351);
+    background-repeat: repeat-x;
+    border-color: #51a351 #51a351 #387038;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff62c462', endColorstr='#ff51a351', GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+    font-size:12px;
+    margin-bottom:13px;
+    height: 25px !important;
+    margin-top: -11.7px;
+}
+
+#visitorDetailDiv .editImageBtn:hover,
+#visitorDetailDiv .editImageBtn:focus {
+    color: #ffffff;
+    background-color: #51a351 !important;
+    *background-color: #499249 !important;
+}
+
+#visitorDetailDiv #printCardBtn, #visitorDetailDiv .editImageBtn, #visitorDetailDiv #reprintCardBtn{
+    height: 24px !important;
+    margin-left: 4px;
+    margin-bottom: 14px;
+    width: 208px !important;
+}
+
+.customIcon-adminmenu{
+    display: inline; 
+    font-weight: bold; 
+    border-radius: 4px; 
+    color: white; 
+    font-size: 14px; 
+    background-color: #8BC61C; 
+    height: 10px ! important; 
+    padding: 0px 3px;
+}
+#visitorDetailDiv #visitorInformationCssMenu .complete, #visitorDetailDiv #visitorInformationCssMenu .host-findBtn{
+    width:86px !important;
+    height:24px !important;
+}
+
+.submenu-icon{
+    padding-left:35px !important;
+    background-position: 0px 2px !important;
+}
+
+.cancelBtnVisitorDetail{
+    text-decoration: underline !important;color:black !important;
+}
+
+.red .statusLink,.red{
+    color:#ff0000 !important;
+}
+
+.green .statusLink,.green{
+    color:#9BD62C !important;
+}
+
+.grey .statusLink,.grey{
+    color:#637280 !important;
+}
+
+.blue .statusLink,.blue{
+    color:#2F96B4 !important;
+}
+
+#view-visitor-records_c10,#view-visitor-records_c11,#view-visitor-records-history_c11{
+    width:120px !important;
+}

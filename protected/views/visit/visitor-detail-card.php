@@ -2,6 +2,7 @@
 <?php
 $session = new CHttpSession;
 date_default_timezone_set('Asia/Manila');
+$tenant = User::model()->findByPk($visitorModel->tenant);
 ?>
 <?php
 $photoForm = $this->beginWidget('CActiveForm', array(
@@ -26,20 +27,36 @@ $photoForm = $this->beginWidget('CActiveForm', array(
 
 <div class="cardPhotoPreview">
     <?php if ($visitorModel->photo != '') { ?>
-        <img id="photoPreview" src="<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($model->visitor) ?>">
+        <img id="photoPreview" style="height:165px;" src="<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($model->visitor) ?>">
     <?php } else { ?>
-        <img id="photoPreview" src="" style="display:none;"></img>
+        <img id="photoPreview" src="" style="display:none;height:165px;"></img>
     <?php } ?>
 </div>
-<div id="cardDiv" style="background: url('../images/cardprint-new.png') no-repeat center top;">
+<div id="cardDiv" style="background: url('../images/cardprint-new.png') no-repeat center top;background-size:220px 310px; height:305px;">
 
     <div style="position: relative; padding-top:180px;padding-left:30px;">
+         <?php
+        if ($tenant->company != '') {
+            $companyLogoId = Company::model()->findByPk($tenant->company)->logo;
+
+            if ($companyLogoId == "") {
+                $companyLogo = 'images/nologoavailable.jpg';
+            } else {
+                $companyLogo = Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
+            }
+            ?>
+        <img class='<?php if($model->visit_status != VisitStatus::ACTIVE){ echo "cardCompanyLogoPreregistered"; } else { echo "cardCompanyLogo"; } ?>' src="<?php
+            echo Yii::app()->request->baseUrl . "/" . $companyLogo;
+            ?>"/>
+                 <?php
+             }
+             ?>
         <table class="" style="width:100%;margin-left:100px;" id="cardDetailsTable">
             <tr>
                 <td>
                     <?php
-                    if ($visitorModel->company != '') {
-                        echo Company::model()->findByPk($visitorModel->company)->code;
+                    if ($tenant->company != '') {
+                        echo Company::model()->findByPk($tenant->company)->code;
                     }
                     ?>
                 </td>
@@ -68,59 +85,40 @@ $photoForm = $this->beginWidget('CActiveForm', array(
                 </td>
             </tr>
             <tr>
-                <td><?php echo $visitorModel->first_name . ' ' . $visitorModel->last_name; ?></td>
+                <td>
+                    <div style="width:132px">
+                    <?php echo $visitorModel->first_name . ' ' . $visitorModel->last_name; ?>
+                    </div>
+                </td>
             </tr>
             <tr>
                 <td>
-                    <span style="<?php if ($model->visit_status != VisitStatus::ACTIVE) {
-                            echo 'display:none;';
-                        } ?>">
-                        <?php
-                        if ($visitorModel->company != '') {
-                            $inc = 6 - (strlen($model->id));
-                            $int_code = '';
-                            for ($x = 1; $x <= $inc; $x++) {
+                    <span style="<?php if($model->visit_status != VisitStatus::ACTIVE){ echo 'display:none;'; }?>">
+                    <?php
+                    if ($tenant->company != '') {
+                        $inc = 6 - (strlen($model->id));
+                        $int_code = '';
+                        for ($x = 1; $x <= $inc; $x++) {
 
                                 $int_code .= "0";
                             }
-                            echo Company::model()->findByPk($visitorModel->company)->code . $int_code . $model->id;
+                            ////echo Company::model()->findByPk($visitorModel->company)->code . $int_code . $model->id;
                         }
-                        ?>
+                        echo Company::model()->findByPk($tenant->company)->code . $int_code . $model->id;
+                    
+                    ?>
                     </span>
                 </td>
             </tr>
         </table>
 
-        <?php
-        if ($visitorModel->company != '') {
-            $companyLogoId = Company::model()->findByPk($visitorModel->company)->logo;
-
-            if ($companyLogoId == "") {
-                $companyLogo = 'images/nologoavailable.jpg';
-            } else {
-                $companyLogo = Photo::model()->returnCompanyPhotoRelativePath($visitorModel->company);
-            }
-            ?>
-            <img class='<?php if ($model->visit_status != VisitStatus::ACTIVE) {
-                echo "cardCompanyLogoPreregistered";
-            } else {
-                echo "cardCompanyLogo";
-            } ?>' src="<?php
-                 echo Yii::app()->request->baseUrl . "/" . $companyLogo;
-                 ?>" style="<?php
-                 if (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== FALSE) {
-                     echo "position:static;margin-left:-105px;";
-                 } 
-                 ?>"/>
-    <?php
-}
-?>
+        
     </div>
 
 </div>
 <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
 <?php if ($visitorModel->photo != '') { ?>
-    <input type="button" class="editImageBtn" id="editImageBtn" value="Edit Photo" onclick = "document.getElementById('light').style.display = 'block';
+    <input type="button" class="btn editImageBtn actionForward" id="editImageBtn" value="Edit Photo" onclick = "document.getElementById('light').style.display = 'block';
                 document.getElementById('fade').style.display = 'block'"/>
 <?php } ?>
 <div
@@ -135,10 +133,10 @@ $photoForm = $this->beginWidget('CActiveForm', array(
         'visitor_id' => $model->visitor
     ));
     if ($model->card != NULL && $model->visit_status == VisitStatus::ACTIVE) {
-        ?><input type="button" class="btn btn-info printCardBtn" value="Re-print Card" id="reprintCardBtn" onclick="regenerateCard()"/><?php
+        ?><input type="button" class="complete btn btn-info printCardBtn" value="Reprint Card" id="reprintCardBtn" onclick="regenerateCard()"/><?php
 } else {
     ?>
-        <input type="button" class="btn btn-info printCardBtn" value="Print Card" id="printCardBtn" onclick="generateCard()"/>
+        <input type="button" class="complete btn btn-info printCardBtn" value="Print Card" id="printCardBtn" onclick="generateCard()"/>
     <?php
 }
 ?>
@@ -261,3 +259,4 @@ $photoForm = $this->beginWidget('CActiveForm', array(
 <input type="hidden" id="width"/>
 <input type="hidden" id="height"/>
 
+<input type="hidden" id="visitorOriginalValue" value="<?php echo $visitorModel->photo; ?>"/>

@@ -72,7 +72,7 @@ foreach (Yii::app()->user->getFlashes() as $key => $message) {
 
         </div>
 
-    <div>
+    <div style="margin-left:374px;">
         <?php echo CHtml::submitButton('Save Changes', array('name' => 'ApproveButton', 'id' => 'btnSubmit')); ?>
 
     </div>

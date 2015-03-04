@@ -16,8 +16,8 @@ require_once 'BaseFunctionalTest.php';
 class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
 
     function setUp() {
-        $this->setBrowser("*iexplore");
-        $this->setBrowserUrl("http://cvms.identitysecurity.info/");
+        $this->setBrowser("*firefox");
+        $this->setBrowserUrl("http://dev.identitysecurity.info/");
     }
 
     function testAll() {
@@ -27,7 +27,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
       //  $this->Scenario2();
      //   $this->Scenario3();
         $this->Scenario4();
-        $this->Scenario5();
+       // $this->Scenario5();
         $this->Scenario6();
         $this->Scenario7();
         $this->Scenario8();
@@ -42,7 +42,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
 
 
       Steps:
-      1.	Go to cvms.identitysecurity.info/index.php?r=site/login
+      1.	Go to dev.identitysecurity.info/index.php?r=site/login
       2.	Type superadmin@test.com in username field
       3.	Type 12345 in passtd field
       4.	Click Login
@@ -62,8 +62,8 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->click("link=Manage Visitor Records");
-        $this->clickAndWait("link=Preregister a Visit");
+        $this->click("link=Manage Visitors");
+        $this->clickAndWait("link=Preregister Visit");
         $this->click("id=clicktabA");
         $this->addVisitor('Visitor5');
         $this->select("id=workstation", "label=Workstation1");
@@ -83,7 +83,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
 
 
       Steps:
-      1.	Go to cvms.identitysecurity.info/index.php?r=site/login
+      1.	Go to dev.identitysecurity.info/index.php?r=site/login
       2.	Type superadmin@test.com in username field
       3.	Type 12345 in password field
       4.	Click Login
@@ -101,8 +101,8 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->click("link=Manage Visitor Records");
-        $this->clickAndWait("link=Preregister a Visit");
+        $this->click("link=Manage Visitors");
+        $this->clickAndWait("link=Preregister Visit");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test visitor1");
         $this->click("id=dummy-visitor-findBtn");
@@ -136,7 +136,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
 
 
       Steps:
-      1.	Go to cvms.identitysecurity.info/index.php?r=site/login
+      1.	Go to dev.identitysecurity.info/index.php?r=site/login
       2.	Type superadmin@test.com in username field
       3.	Type 12345 in password field
       4.	Click Login
@@ -154,8 +154,8 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->click("link=Manage Visitor Records");
-        $this->clickAndWait("link=Preregister a Visit");
+        $this->click("link=Manage Visitors");
+        $this->clickAndWait("link=Preregister Visit");
         $this->click("id=clicktabA");
         $this->addVisitor('Visitor2');
         $this->select("id=workstation", "label=Workstation1");
@@ -173,7 +173,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
 
 
       Steps:
-      1.	Go to cvms.identitysecurity.info/index.php?r=site/login
+      1.	Go to dev.identitysecurity.info/index.php?r=site/login
       2.	Type superadmin@test.com in username field
       3.	Type 12345 in password field
       4.	Click Login
@@ -190,8 +190,8 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->click("link=Manage Visitor Records");
-        $this->clickAndWait("link=Preregister a Visit");
+        $this->click("link=Manage Visitors");
+        $this->clickAndWait("link=Preregister Visit");
         $this->click("id=clicktabA");
         $this->select("id=Visitor_visitor_type", "label=Corporate Visitor");
         $this->addVisitor('Visitor6');
@@ -219,7 +219,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
 
     /* Scenario 5 –Login as super admin and Check for validations in registering a patient visitor
       Expected behavior
-      -	Assert text First Name cannot be blank.
+      -	Assert text Please enter a First Name
       -	Assert text Last Name cannot be blank
       -	Assert text mobile number cannot be blank
       -	Assert text email address cannot be blank
@@ -228,7 +228,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
       -	Assert patient name cannot be blank
 
       Steps:
-      1.	Go to cvms.identitysecurity.info/index.php?r=site/login
+      1.	Go to dev.identitysecurity.info/index.php?r=site/login
       2.	Type superadmin@test.com in email field and 12345 in password field
       3.	Click login
       4.	Click administration
@@ -240,12 +240,12 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
       12.	Type test in email address field and assert email address is not a valid email address.
       13.	Type test in firstname, visitor in last name, 12345 in mobile number, testvisitor1@test.com in email address, and select test admin in tenant field.
       14.	type 12345 in password and repeat password. select test agent admin in tenant agent. Click save and continue button
-      15.	Assert reason cannot be blank. select reason 1 in reason. Click save and continue. Assert Email Address has already been taken.
+      15.	Assert reason cannot be blank. select reason 1 in reason. Click save and continue. Assert A profile already exists for this email address.
       16.	Type visitor1@test.com in email address field
       17.	Click save and continue button
       18.	Wait for add patient name tab
       21.	Click save and continue button
-      22.	Assert Patient Name cannot be blank.
+      22.	Assert Please enter a Patient Name
 
      */
 
@@ -253,8 +253,8 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->click("link=Manage Visitor Records");
-        $this->clickAndWait("link=Preregister a Visit");
+        $this->click("link=Manage Visitors");
+        $this->clickAndWait("link=Preregister Visit");
         $this->click("id=clicktabA");
         $this->click("id=submitFormVisitor");
         $this->select("id=workstation", "label=Workstation1");
@@ -272,7 +272,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->select("id=Visitor_tenant_agent", "label=Test agentadmin");
         $this->click("id=submitFormVisitor");
         $this->waitForElementPresent("css=td > div.errorMessage.visitorReason");
-        $this->assertEquals("Reason cannot be blank.", $this->getText("css=td > div.errorMessage.visitorReason"));
+        $this->assertEquals("Please select a reason", $this->getText("css=td > div.errorMessage.visitorReason"));
         $this->select("id=Visit_reason", "label=Other");
         $this->type("id=VisitReason_reason", "reason 1");
         $this->click("id=submitFormVisitor");
@@ -292,7 +292,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->type("id=VisitReason_reason", "reason test");
         $this->click("id=submitFormVisitor");
         $this->waitForElementPresent("xpath=(//div[@id='Visitor_email_em_'])[2]");
-        $this->assertEquals("Email Address has already been taken.", $this->getText("xpath=(//div[@id='Visitor_email_em_'])[2]"));
+        $this->assertEquals("A profile already exists for this email address.", $this->getText("xpath=(//div[@id='Visitor_email_em_'])[2]"));
         $this->type("id=Visitor_email", "testvisitor6@test.com");
         $this->click("id=submitFormVisitor");
 
@@ -301,14 +301,14 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
             if ($second >= 10)
                 $this->fail("timeout");
             try {
-                if ("Patient Name cannot be blank." == $this->getText("id=Patient_name_em_"))
+                if ("Please enter a Patient Name" == $this->getText("id=Patient_name_em_"))
                     break;
             } catch (Exception $e) {
                 
             }
             sleep(1);
         }
-        $this->assertEquals("Patient Name cannot be blank.", $this->getText("id=Patient_name_em_"));
+        $this->assertEquals("Please enter a Patient Name", $this->getText("id=Patient_name_em_"));
         $this->click("css=#register-host-patient-form > div.register-a-visitor-buttons-div > #btnBackTab3");
         $this->waitForElementPresent("id=Patient_name_em_");
         $this->type("id=search-visitor", "test");
@@ -325,12 +325,12 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Reason is already registered.", $this->getText("id=visitReasonErrorMessageSearch"));
         $this->type("id=VisitReason_reason_search", "");
         $this->click("id=clicktabB1");
-        $this->assertEquals("Reason cannot be blank.", $this->getText("id=search-visitor-reason-error"));
+        $this->assertEquals("Please select a reason", $this->getText("id=search-visitor-reason-error"));
     }
 
     /* Scenario 6 –Login as super admin and Check for validations in registering a corporate visitor
       Expected behavior
-      -	Assert text First Name cannot be blank.
+      -	Assert text Please enter a First Name
       -	Assert text Last Name cannot be blank
       -	Assert text mobile number cannot be blank
       -	Assert text email address cannot be blank
@@ -340,7 +340,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
       -	Assert text contact no. cannot be blank
 
       Steps:
-      1.	Go to cvms.identitysecurity.info/index.php?r=site/login
+      1.	Go to dev.identitysecurity.info/index.php?r=site/login
       2.	Type superadmin@test.com in email field and 12345 in password field
       3.	Click login
       4.	Click administration
@@ -352,7 +352,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
       12.	Type test in email address field and assert email address is not a valid email address.
       13.	Select corporate type in visitor type. Type test in firstname, visitor in last name, 12345 in mobile number, testvisitor1@test.com in email address, and select test admin in tenant field.
       14.	Select tenant agent admin in tenant agent. type 12345 in password and repeat password. Click save and continue button
-      15.	assert reason cannot be blank. select reason 1 in reason. click save and continue button. Assert Email Address has already been taken.
+      15.	assert reason cannot be blank. select reason 1 in reason. click save and continue button. Assert A profile already exists for this email address.
       16.	Type visitor1@test.com in email address field
       17.	Click save and continue button
       18.	Wait for add host tab. Click save and continue button.
@@ -367,8 +367,8 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->click("link=Manage Visitor Records");
-        $this->clickAndWait("link=Preregister a Visit");
+        $this->click("link=Manage Visitors");
+        $this->clickAndWait("link=Preregister Visit");
         $this->click("id=clicktabA");
         $this->click("id=submitFormVisitor");
         $this->select("id=workstation", "label=Workstation1");
@@ -387,7 +387,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->select("id=Visitor_tenant_agent", "label=Test agentadmin");
         $this->click("id=submitFormVisitor");
         $this->waitForElementPresent("css=td > div.errorMessage.visitorReason");
-        $this->assertEquals("Reason cannot be blank.", $this->getText("css=td > div.errorMessage.visitorReason"));
+        $this->assertEquals("Please select a reason", $this->getText("css=td > div.errorMessage.visitorReason"));
         $this->select("id=Visit_reason", "label=Other");
         $this->type("id=VisitReason_reason", "reason 1");
         $this->click("id=submitFormVisitor");
@@ -407,7 +407,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->type("id=VisitReason_reason", "reason test");
         $this->click("id=submitFormVisitor");
         $this->waitForElementPresent("xpath=(//div[@id='Visitor_email_em_'])[2]");
-        $this->assertEquals("Email Address has already been taken.", $this->getText("xpath=(//div[@id='Visitor_email_em_'])[2]"));
+        $this->assertEquals("A profile already exists for this email address.", $this->getText("xpath=(//div[@id='Visitor_email_em_'])[2]"));
         $this->type("id=Visitor_email", "testvisitor7@test.com");
         $this->click("id=submitFormVisitor");
         $this->waitForElementPresent("id=submitFormUser");
@@ -417,18 +417,18 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
             if ($second >= 10)
                 $this->fail("timeout");
             try {
-                if ("First Name cannot be blank." == $this->getText("id=User_first_name_em_"))
+                if ("Please enter a First Name" == $this->getText("id=User_first_name_em_"))
                     break;
             } catch (Exception $e) {
                 
             }
             sleep(1);
         }
-        $this->assertEquals("First Name cannot be blank.", $this->getText("id=User_first_name_em_"));
-        $this->assertEquals("Last Name cannot be blank.", $this->getText("id=User_last_name_em_"));
-        $this->assertEquals("Email cannot be blank.", $this->getText("id=User_email_em_"));
-        $this->assertEquals("Contact No. cannot be blank.", $this->getText("id=User_contact_number_em_"));
-        $this->assertEquals("Company Name cannot be blank.", $this->getText("id=User_company_em_"));
+        $this->assertEquals("Please enter a First Name", $this->getText("id=User_first_name_em_"));
+        $this->assertEquals("Please enter a Last Name", $this->getText("id=User_last_name_em_"));
+        $this->assertEquals("Please enter an Email Address", $this->getText("id=User_email_em_"));
+        $this->assertEquals("Please enter a Contact No.", $this->getText("id=User_contact_number_em_"));
+        $this->assertEquals("Please select a Company Name", $this->getText("id=User_company_em_"));
         $this->type("id=User_email", "123");
         $this->type("id=User_first_name", "test");
         $this->type("id=User_first_name", "test");
@@ -443,14 +443,14 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_contact_number", "123456");
         $this->select("id=User_tenant", "label=Test admin");
         $this->click("id=submitFormUser");
-        $this->assertEquals("Email Address has already been taken.", $this->getText("xpath=(//div[@id='User_email_em_'])[2]"));
+        $this->assertEquals("A profile already exists for this email address.", $this->getText("xpath=(//div[@id='User_email_em_'])[2]"));
     }
 
     /* Scenario 7 – Log in as super admin and register a corporate visitor with existing host and visitor record
       Expected behavior
       -	Assert text testvisitor1@test.com in visitor email field.
       Steps:
-      1.	Go to cvms.identitysecurity.info/index.php?r=site/login
+      1.	Go to dev.identitysecurity.info/index.php?r=site/login
       2.	Type superadmin@test.com in email field and 12345 in password field
       3.	Click login
       4.	Click administration
@@ -477,8 +477,8 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->click("link=Manage Visitor Records");
-        $this->clickAndWait("link=Preregister a Visit");
+        $this->click("link=Manage Visitors");
+        $this->clickAndWait("link=Preregister Visit");
         $this->click("id=clicktabA");
         $this->type("id=search-visitor", "test visitor1");
         $this->click("id=dummy-visitor-findBtn");
@@ -501,7 +501,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
     /* Scenario 8 - Login as superadmin. Preregister a corporate visitor with new company. Check for validations. 
       Expected Behavior: Assert New Company in company row.
       Steps:
-      1.	Go to cvms.identitysecurity.info/index.php?r=site/login
+      1.	Go to dev.identitysecurity.info/index.php?r=site/login
       2.	Type superadmin@test.com in email field and 12345 in password field
       3.	Click login
       4.	Click administration
@@ -511,7 +511,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
       8.	Select corporate visitor. Wait for add new company button.
       9.	Type test in firstame, visitornewcompany in lastname, position in position,123456 in mobile number,testvisitornewcompany@test.com in email
       select reason 1,12345 in password and repeat password,select workstation1 in workstation.
-      10.	Click add new company button. Wait for text then assert "Please select a tenant."
+      10.	Click add new company button. Wait for text then assert "Please select a tenant"
       11.	Select test admin in tenant, select test agent admin in tenant agent.
       12.	Click add new company
       13.	Wait for company form to show. Type "New Company" in Company Name.
@@ -529,8 +529,8 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->click("link=Manage Visitor Records");
-        $this->clickAndWait("link=Preregister a Visit");
+        $this->click("link=Manage Visitors");
+        $this->clickAndWait("link=Preregister Visit");
         $this->click("id=clicktabA");
         $this->select("id=Visitor_visitor_type", "label=Corporate Visitor");
         $this->select("id=workstation", "label=Workstation1");
@@ -547,7 +547,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->select("id=Visit_reason", "label=Reason 1");
         $this->click("id=addCompanyLink");
         $this->waitForElementPresent("id=Visitor_company_em_");
-        $this->assertEquals("Please select a tenant.", $this->getText("id=Visitor_company_em_"));
+        $this->assertEquals("Please select a tenant", $this->getText("id=Visitor_company_em_"));
         $this->select("id=Visitor_tenant", "label=Test admin");
         $this->click("id=Visitor_tenant_agent");
         sleep(1);
@@ -586,7 +586,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         } catch (PHPUnit_Framework_AssertionFailedError $e) {
             array_push($this->verificationErrors, $e->toString());
         }
-        $this->clickAndWait("link=Visitor Records");
+        $this->clickAndWait("link=Visit History");
         $this->type("name=Visit[lastname]", "visitornewcompany");
         for ($second = 0;; $second++) {
             if ($second >= 60)

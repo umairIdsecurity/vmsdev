@@ -16,8 +16,8 @@ require_once 'BaseFunctionalTest.php';
 class Issue7FunctionalTest extends BaseFunctionalTest {
 
     function setUp() {
-        $this->setBrowser("*iexplore");
-        $this->setBrowserUrl("http://cvms.identitysecurity.info/");
+        $this->setBrowser("*firefox");
+        $this->setBrowserUrl("http://dev.identitysecurity.info/");
     }
 
     function testAll() {
@@ -94,14 +94,14 @@ class Issue7FunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_contact_number", "");
         $this->click("id=submitBtn");
         $this->waitForPageToLoad("30000");
-        $this->assertEquals("First Name cannot be blank.", $this->getText("css=div.errorSummary > ul > li"));
-        $this->assertEquals("Last Name cannot be blank.", $this->getText("//form[@id='user-form']/div/ul/li[2]"));
-        $this->assertEquals("Email cannot be blank.", $this->getText("//form[@id='user-form']/div/ul/li[3]"));
-        $this->assertEquals("Contact No. cannot be blank.", $this->getText("//form[@id='user-form']/div/ul/li[4]"));
+        $this->assertEquals("Please enter a First Name", $this->getText("css=div.errorSummary > ul > li"));
+        $this->assertEquals("Please enter a Last Name", $this->getText("//form[@id='user-form']/div/ul/li[2]"));
+        $this->assertEquals("Please enter an Email Address", $this->getText("//form[@id='user-form']/div/ul/li[3]"));
+        $this->assertEquals("Please enter a Contact No.", $this->getText("//form[@id='user-form']/div/ul/li[4]"));
         $this->type("id=User_email", "123");
         $this->click("id=submitBtn");
         $this->waitForPageToLoad("30000");
-        $this->assertEquals("Email is not a valid email address.", $this->getText("//form[@id='user-form']/div/ul/li[4]"));
+        $this->assertEquals("Email Address is not a valid email address.", $this->getText("//form[@id='user-form']/div/ul/li[4]"));
     }
 
     /*
@@ -129,15 +129,15 @@ class Issue7FunctionalTest extends BaseFunctionalTest {
     function Scenario3() {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
-        $this->open("http://cvms.identitysecurity.info/index.php?r=user/profile&id=17");
+        $this->open("http://dev.identitysecurity.info/index.php?r=user/profile&id=17");
         $this->assertEquals("You are not authorized to perform this action.", $this->getText("css=div.error"));
-        $this->open("http://cvms.identitysecurity.info/index.php?r=user/profile&id=18");
+        $this->open("http://dev.identitysecurity.info/index.php?r=user/profile&id=18");
         $this->assertEquals("You are not authorized to perform this action.", $this->getText("css=div.error"));
-        $this->open("http://cvms.identitysecurity.info/index.php?r=user/profile&id=19");
+        $this->open("http://dev.identitysecurity.info/index.php?r=user/profile&id=19");
         $this->assertEquals("You are not authorized to perform this action.", $this->getText("css=div.error"));
-        $this->open("http://cvms.identitysecurity.info/index.php?r=user/profile&id=20");
+        $this->open("http://dev.identitysecurity.info/index.php?r=user/profile&id=20");
         $this->assertEquals("You are not authorized to perform this action.", $this->getText("css=div.error"));
-        $this->open("http://cvms.identitysecurity.info/index.php?r=user/profile&id=21");
+        $this->open("http://dev.identitysecurity.info/index.php?r=user/profile&id=21");
         $this->assertEquals("You are not authorized to perform this action.", $this->getText("css=div.error"));
     }
 

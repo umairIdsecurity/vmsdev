@@ -16,8 +16,8 @@ require_once 'BaseFunctionalTest.php';
 class Issue51FunctionalTest extends BaseFunctionalTest {
 
     function setUp() {
-        $this->setBrowser("*iexplore");
-        $this->setBrowserUrl("http://cvms.identitysecurity.info/");
+        $this->setBrowser("*firefox");
+        $this->setBrowserUrl("http://dev.identitysecurity.info/");
     }
 
     function testAll() {
@@ -53,13 +53,13 @@ class Issue51FunctionalTest extends BaseFunctionalTest {
         $username = 'secondtenant@test.com';
         $this->login($username, '12345');
         $this->assertEquals("Error 503\n No workstations available", $this->getText("css=div.adminErrorSummary > p"));
-        $this->clickAndWait("link=Visitor Records");
+        $this->clickAndWait("link=Visit History");
         $this->assertEquals("No results found.", $this->getText("css=span.empty"));
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Workstations");
         $this->waitForElementPresent("css=span.empty");
         $this->assertEquals("No results found.", $this->getText("css=span.empty"));
-        $this->click("link=Manage Visitor Records");
+        $this->click("link=Manage Visitors");
         $this->waitForElementPresent("css=span.empty");
         $this->assertEquals("No results found.", $this->getText("css=span.empty"));
         $this->click("link=Manage Workstations");
@@ -70,8 +70,8 @@ class Issue51FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Workstation_contact_number", "123456");
         $this->type("id=Workstation_contact_email_address", "testperson@test.com");
         $this->clickAndWait("name=yt0");
-        $this->click("link=Manage Visitor Records");
-        $this->clickAndWait("link=Register a Visit");
+        $this->click("link=Manage Visitors");
+        $this->clickAndWait("link=Log Visit");
         $this->click("id=clicktabA");
         $this->select("id=workstation", "label=Second Tenant Workstation");
         $this->type("id=Visitor_first_name", "test");
@@ -91,15 +91,18 @@ class Issue51FunctionalTest extends BaseFunctionalTest {
         $this->click("id=21");
         $this->click("id=clicktabB2");
         $this->clickAndWait("id=submitAllForms");
-        $this->clickAndWait("css=#activate-a-visit-form > input.complete");
+        $this->click("css=#activate-a-visit-form > input.complete");
+        sleep(1);
+        $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
+        $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("link=Active");
         $this->assertEquals("secondtenantvisitor", $this->getText("//table[@id='personalDetailsTable']/tbody/tr[2]/td[2]"));
-        $this->clickAndWait("link=Visitor Records");
+        $this->clickAndWait("link=Visit History");
         $this->assertEquals("secondtenantvisitor@test.com", $this->getText("//div[@id='view-visitor-records']/table/tbody/tr/td[8]"));
         $this->clickAndWait("//ul[@id='tabs']/li[3]/a/p");
         $username = 'admin@test.com';
         $this->login($username, '12345');
-        $this->clickAndWait("link=Visitor Records");
+        $this->clickAndWait("link=Visit History");
         $this->type("name=Visit[contactemail]", "secondtenant");
         sleep(1);
         $this->assertEquals("No results found.", $this->getText("css=span.empty"));
@@ -134,7 +137,7 @@ class Issue51FunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_repeat_password", "12345");
         $this->click("id=submitBtn");
         $this->clickAndWait("id=submitForm");
-        $this->clickAndWait("link=Add User");
+        $this->clickAndWait("css=div.customIcon-adminmenu");
         $this->select("id=User_role", "label=Staff Member");
         $this->type("id=User_first_name", "new");
         $this->type("id=User_last_name", "staffmember");
@@ -150,14 +153,14 @@ class Issue51FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("id=submitBtn");
         $this->assertEquals("secondtenantvisitor@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[7]"));
-        $this->clickAndWait("link=Visitor Records");
+        $this->clickAndWait("link=Visit History");
         $this->assertEquals("secondtenantvisitor@test.com", $this->getText("//div[@id='view-visitor-records']/table/tbody/tr/td[8]"));
-        $this->assertEquals("Displaying 1-1 of 1 result.", $this->getText("css=div.summary"));
+        $this->assertEquals("Displaying 1-1 of 1 result", $this->getText("css=div.summary"));
         $this->clickAndWait("//ul[@id='tabs']/li[3]/a/p");
 
         $username = 'staffmember2@test.com';
         $this->login($username, '12345');
-        $this->clickAndWait("link=Register a Visit");
+        $this->clickAndWait("link=Log Visit");
         $this->click("id=clicktabA");
         $this->type("id=Visitor_first_name", "test");
         $this->type("id=Visitor_last_name", "staffmembervisitor");
@@ -170,7 +173,7 @@ class Issue51FunctionalTest extends BaseFunctionalTest {
         $this->click("id=submitFormVisitor");
         $this->click("id=saveCurrentUserAsHost");
         $this->clickAndWait("id=submitAllForms");
-        $this->clickAndWait("link=Visitor Records");
+        $this->clickAndWait("link=Visit History");
         $this->assertEquals("staffmembervisitor@test.com", $this->getText("//div[@id='view-visitor-records']/table/tbody/tr/td[8]"));
         $this->clickAndWait("//ul[@id='tabs']/li[3]/a/p");
     }

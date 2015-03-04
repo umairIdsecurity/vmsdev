@@ -55,7 +55,8 @@ class Visitor extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('first_name, last_name, email, contact_number,tenant', 'required'),
+            array('first_name, last_name, email, contact_number', 'required'),
+            array('tenant','required','message' =>'Please select a {attribute}'),
             array('is_deleted', 'numerical', 'integerOnly' => true),
             array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
             array('contact_number, company, role, visitor_status, created_by, tenant, tenant_agent', 'length', 'max' => 20),
@@ -67,7 +68,7 @@ class Visitor extends CActiveRecord {
             array('email', 'email'),
             array('vehicle', 'match',
                 'pattern' => '/^[A-Za-z0-9_]+$/u',
-                'message' => 'Vehicle accepts alphanumeric characters only.'
+                'message' => 'Vehicle accepts alphanumeric characters only'
             ),
             array('vehicle', 'safe'),
             // The following rule is used by search().
@@ -185,12 +186,26 @@ class Visitor extends CActiveRecord {
         return parent::model($className);
     }
 
-    public function behaviors() {
-        return array(
-            'softDelete' => array(
-                'class' => 'ext.soft_delete.SoftDeleteBehavior'
-            ),
-        );
+    public function beforeDelete() {
+        $visitorExists = Visit::model()->exists('is_deleted = 0 and visitor =' . $this->id . ' and (visit_status=' . VisitStatus::PREREGISTERED . ' or visit_status=' . VisitStatus::ACTIVE . ')');
+        $visitorExistsClosed = Visit::model()->exists('is_deleted = 0 and visitor =' . $this->id . ' and (visit_status=' . VisitStatus::CLOSED . ' or visit_status=' . VisitStatus::EXPIRED . ')');
+
+        if ($visitorExists) {
+            return false;
+        } elseif ($visitorExistsClosed) {
+            return false;
+        } else {
+            $this->is_deleted = 1;
+            $this->save();
+            echo "true";
+            return false;
+        }
+    }
+
+    public function beforeFind() {
+        $criteria = new CDbCriteria;
+        $criteria->condition = "t.is_deleted = 0";
+        $this->dbCriteria->mergeWith($criteria);
     }
 
     protected function afterValidate() {

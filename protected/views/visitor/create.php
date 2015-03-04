@@ -17,7 +17,7 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
 <h1><?php
     if (isset($_GET['action'])) {
         if($_GET['action'] == 'register'){
-            echo "Register";
+            echo "Log";
             $session['previousVisitAction'] = 'Register';
         } else {
             echo "Preregister";
@@ -25,7 +25,7 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
         }
         
     }
-    ?> a Visit</h1>
+    ?> Visit</h1>
 
 <dl class="tabs <?php if (!isset($_GET['action'])) { ?> four-up <?php
 } else {
@@ -36,8 +36,8 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
     <dd class="active borderTopLeftRadius" id="selectCard" >
         <a href="#step1" id="selectCardB" class="borderTopLeftRadius">Select Card Type</a>
     </dd>
-    <dt id="findVisitorA">Find or Add New Visitor Record</dt>
-    <dd style="display:none;" id="findVisitor"><a href="#step2" id="findVisitorB">Find or Add New Visitor Record</a></dd>
+    <dt id="findVisitorA">Find or Add New Visitor Profile</dt>
+    <dd style="display:none;" id="findVisitor"><a href="#step2" id="findVisitorB">Find or Add New Visitor Profile</a></dd>
 
     <dt id="findHostA" <?php if (isset($_GET['action'])) {
     ?> 
@@ -176,7 +176,7 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
             var visit_reason = $("#Visit_reason_search").val();
 
             if (($("#selectedVisitorInSearchTable").val() == '' && $("#search-visitor").val() != '') || $("#selectedVisitorInSearchTable").val() == '') {
-                $("#searchTextErrorMessage").html("Please select a visitor.");
+                $("#searchTextErrorMessage").html("Please select a visitor");
                 $("#searchTextErrorMessage").show();
             }
             else if (visit_reason == '' || visit_reason == 'undefined' || (visit_reason == 'Other' && $("#VisitReason_reason_search").val() == ''))
@@ -203,7 +203,7 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
             $("#Visit_visitor_type").val($("#Visitor_visitor_type").val());
             //checks if host is from search and verifys that a user has been selected
             if (($("#selectedHostInSearchTable").val() == '' && $("#search-host").val() != '') || $("#selectedHostInSearchTable").val() == '') {
-                $("#searchTextHostErrorMessage").html("Please select a host.");
+                $("#searchTextHostErrorMessage").html("Please select a host");
                 $("#searchTextHostErrorMessage").show();
                 //alert("host from search");
             } else if (currentURL != "") {
@@ -402,7 +402,7 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
                     $('#findHostTableIframe').contents().find('.findHostButtonColumn a').removeClass('delete');
                     $('#findHostTableIframe').contents().find('.findHostButtonColumn a').html('Select Host');
                     $('#findHostTableIframe').contents().find('#' + id).addClass('delete');
-                    $('#findHostTableIframe').contents().find('#' + id).html('Selected Host');
+                    $('#findHostTableIframe').contents().find('#' + id).html('Host Selected');
                 }
             });
         } else {

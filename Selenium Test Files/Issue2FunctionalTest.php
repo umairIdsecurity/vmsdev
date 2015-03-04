@@ -19,8 +19,8 @@ class Issue2 extends BaseFunctionalTest {
 
     protected function setUp() {
         parent::setUp();
-        $this->setBrowser("*iexplore");
-        $this->setBrowserUrl("http://cvms.identitysecurity.info");
+        $this->setBrowser("*firefox");
+        $this->setBrowserUrl("http://dev.identitysecurity.info");
         
     }
 
@@ -208,7 +208,7 @@ class Issue2 extends BaseFunctionalTest {
     function Scenario5() {
         $username = 'superadmin@test.com';
         $this->login($username, 'admin');
-        $this->open("http://cvms.identitysecurity.info/index.php?r=password/update&id=17");
+        $this->open("http://dev.identitysecurity.info/index.php?r=password/update&id=17");
         for ($second = 0;; $second++) {
             if ($second >= 60)
                 $this->fail("timeout");

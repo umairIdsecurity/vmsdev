@@ -17,8 +17,8 @@ require_once 'BaseFunctionalTest.php';
 class Issue53FunctionalTest extends BaseFunctionalTest {
 
     function setUp() {
-        $this->setBrowser("*iexplore");
-        $this->setBrowserUrl("http://cvms.identitysecurity.info/");
+        $this->setBrowser("*firefox");
+        $this->setBrowserUrl("http://dev.identitysecurity.info/");
     }
 
     function testAll() {
@@ -84,7 +84,7 @@ class Issue53FunctionalTest extends BaseFunctionalTest {
         $this->click("id=submitFormUser");
         $this->clickAndWait("id=submitAllForms");
         $this->assertEquals("Corporate Visitor Test Visitor Type", $this->getText("id=Visit_visitor_type"));
-        $this->clickAndWait("link=Visitor Records");
+        $this->clickAndWait("link=Visit History");
         $this->assertEquals("Corporate Visitor Test Visitor Type", $this->getText("name=Visit[visitor_type]"));
         $this->select("name=Visit[visitor_type]", "label=Test Visitor Type");
         $this->assertEquals("Test Visitor Type", $this->getText("//div[@id='view-visitor-records']/table/tbody/tr/td[2]"));
@@ -105,7 +105,7 @@ class Issue53FunctionalTest extends BaseFunctionalTest {
         $this->type("id=VisitorType_name", "");
         $this->clickAndWait("name=yt0");
         $this->assertEquals("Please fix the following input errors:", $this->getText("css=div.errorSummary > p"));
-        $this->assertEquals("Name cannot be blank.", $this->getText("css=div.errorMessage"));
+        $this->assertEquals("Please enter a Name", $this->getText("css=div.errorMessage"));
     }
 
     /* Scenario 3 : Login as admin, agent admin, operator, agent operator, staff member and assert test visitor type in visitor type dropdown 
@@ -138,7 +138,7 @@ class Issue53FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("css=span");
         $this->click("id=clicktabA");
         $this->assertEquals("Corporate Visitor Test Visitor Type", $this->getText("id=Visitor_visitor_type"));
-        $this->clickAndWait("link=Visitor Records");
+        $this->clickAndWait("link=Visit History");
         $this->assertEquals("Corporate Visitor Test Visitor Type", $this->getText("name=Visit[visitor_type]"));
         if ($username != 'staffmember@test.com') {
             $this->assertEquals("Test Visitor Type", $this->getText("//div[@id='view-visitor-records']/table/tbody/tr/td[2]"));

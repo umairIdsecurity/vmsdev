@@ -18,7 +18,7 @@ class Issue69FunctionalTest extends BaseFunctionalTest {
 
     function setUp() {
         $this->setBrowser("*firefox");
-        $this->setBrowserUrl("http://cvms.identitysecurity.info/");
+        $this->setBrowserUrl("http://dev.identitysecurity.info/");
     }
 
     function testAll() {
@@ -37,7 +37,10 @@ class Issue69FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("css=tr.even > td > a.statusLink");
         $this->click("//li[@id='activateLi']/a/span");
-        $this->clickAndWait("css=#activate-a-visit-form > input.complete");
+        $this->click("css=#activate-a-visit-form > input.complete");
+        sleep(1);
+        $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
+        $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("link=Active");
         $this->click("id=printCardBtn");
         $this->waitForPopUp("_blank", "30000");
@@ -63,7 +66,9 @@ class Issue69FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("css=tr.even > td > a.statusLink");
         $this->click("//li[@id='activateLi']/a/span");
-        $this->clickAndWait("css=#activate-a-visit-form > input.complete");
+        $this->click("css=#activate-a-visit-form > input.complete");
+        sleep(1);
+        $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
 
         $this->clickAndWait("//ul[@id='tabs']/li[3]/a/p");
         $username = 'superadmin@test.com';
@@ -75,7 +80,7 @@ class Issue69FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("//ul[@id='tabs']/li[3]/a/p");
         $username = 'staffmember@test.com';
         $this->login($username, '12345');
-        $this->clickAndWait("link=Visitor Records");
+        $this->clickAndWait("link=Visit History");
         $this->assertEquals("TCA000005", $this->getText("//div[@id='view-visitor-records']/table/tbody/tr[2]/td[3]"));
         $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("//div[@id='cssmenu']/ul/li[6]/a/span");

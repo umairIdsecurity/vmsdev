@@ -46,7 +46,7 @@ $company = Company::model()->findByPk($session['company']);
         <div class="cssButtonDetails">
             <span class="customTitle userpreferencesLogoLabel">Logo</span><br>
             <input id="CompanyLafPreferences_logo" type="text" name="CompanyLafPreferences[logo]" style="display:none;" value="<?php echo $company->logo; ?>">
-            <div class="photoDiv" <?php
+            <div class="photoDiv companyPhotoDiv" <?php
             if ($company->logo == NULL) {
                 echo "style='display:none !important;'";
             }
@@ -67,7 +67,7 @@ $company = Company::model()->findByPk($session['company']);
         <div class="cssButtonDetails">
             <label>Background Color</label>
 
-            <input type="text" id="CompanyLafPreferences_action_forward_bg_color" name="CompanyLafPreferences[action_forward_bg_color]" readonly value="<?php if($model->action_forward_bg_color == ''){ echo '#9ED92F'; } else { echo $model->action_forward_bg_color; }?>"/>
+            <input type="text" id="CompanyLafPreferences_action_forward_bg_color" name="CompanyLafPreferences[action_forward_bg_color]" readonly value="<?php if($model->action_forward_bg_color == ''){ echo '#c6f76b'; } else { echo $model->action_forward_bg_color; }?>"/>
             <?php
             $this->widget('application.extensions.colorpicker.EColorPicker', array(
                 'name' => 'CompanyLafPreferences_action_forward_bg_color',
@@ -79,7 +79,7 @@ $company = Company::model()->findByPk($session['company']);
                     )
             );
             ?>
-            <div class="colorSelector2"><div style="background-color:<?php if($model->action_forward_bg_color == ''){ echo '#9ED92F'; } else { echo $model->action_forward_bg_color; }?>" id="cp1"></div></div>
+            <div class="colorSelector2"><div style="background-color:<?php if($model->action_forward_bg_color == ''){ echo '#c6f76b'; } else { echo $model->action_forward_bg_color; }?>" id="cp1"></div></div>
             <div class="colorpickerHolder2">
             </div>
             <label>Background Gradient 2</label>
@@ -101,7 +101,7 @@ $company = Company::model()->findByPk($session['company']);
             </div>
             
             <?php echo $form->error($model, 'action_forward_bg_color'); ?>
-            <label>Font Color</label>
+            <label>Text Color</label>
             <input type="text" id="CompanyLafPreferences_action_forward_font_color" name="CompanyLafPreferences[action_forward_font_color]" readonly value="<?php if($model->action_forward_font_color == ''){ echo '#ffffff'; } else { echo $model->action_forward_font_color; }?>">
             <?php
             $this->widget('application.extensions.colorpicker.EColorPicker', array(
@@ -120,7 +120,7 @@ $company = Company::model()->findByPk($session['company']);
             <?php echo $form->error($model, 'action_forward_font_color'); ?>
             
             <label>Hover Background Color</label>
-            <input type="text" id="CompanyLafPreferences_action_forward_hover_color" name="CompanyLafPreferences[action_forward_hover_color]" readonly value="<?php if($model->action_forward_hover_color == ''){ echo '#9ED92F'; } else { echo $model->action_forward_hover_color; }?>">
+            <input type="text" id="CompanyLafPreferences_action_forward_hover_color" name="CompanyLafPreferences[action_forward_hover_color]" readonly value="<?php if($model->action_forward_hover_color == ''){ echo '#c6f76b'; } else { echo $model->action_forward_hover_color; }?>">
             <?php
             $this->widget('application.extensions.colorpicker.EColorPicker', array(
                 'name' => 'CompanyLafPreferences_action_forward_hover_color',
@@ -132,7 +132,7 @@ $company = Company::model()->findByPk($session['company']);
                     )
             );
             ?>
-            <div class="colorSelector2"><div style="background-color: <?php if($model->action_forward_hover_color == ''){ echo '#9ED92F'; } else { echo $model->action_forward_hover_color; }?>" id="cp3"></div></div>
+            <div class="colorSelector2"><div style="background-color: <?php if($model->action_forward_hover_color == ''){ echo '#c6f76b'; } else { echo $model->action_forward_hover_color; }?>" id="cp3"></div></div>
             <div class="colorpickerHolder2">
             </div>
             <label>Hover Background Color 2</label>
@@ -153,7 +153,7 @@ $company = Company::model()->findByPk($session['company']);
             </div>
             <?php echo $form->error($model, 'action_forward_hover_color'); ?>
             
-            <label>Hover Font Color</label>
+            <label>Hover Text Color</label>
             <input type="text" id="CompanyLafPreferences_action_forward_hover_font_color" name="CompanyLafPreferences[action_forward_hover_font_color]" readonly value="<?php if($model->action_forward_hover_color == ''){ echo '#ffffff'; } else { echo $model->action_forward_hover_font_color; }?>">
             <?php
             $this->widget('application.extensions.colorpicker.EColorPicker', array(
@@ -178,7 +178,7 @@ $company = Company::model()->findByPk($session['company']);
         <span class="customTitle">Complete Button (i.e Save)</span> 
         <div class="cssButtonDetails">
             <label>Background Color</label>
-            <input type="text" id="CompanyLafPreferences_complete_bg_color" name="CompanyLafPreferences[complete_bg_color]" readonly value="<?php if($model->complete_bg_color == ''){ echo '#ff0000'; } else { echo $model->complete_bg_color; }?>">
+            <input type="text" id="CompanyLafPreferences_complete_bg_color" name="CompanyLafPreferences[complete_bg_color]" readonly value="<?php if($model->complete_bg_color == ''){ echo '#e67171'; } else { echo $model->complete_bg_color; }?>">
             <?php
             $this->widget('application.extensions.colorpicker.EColorPicker', array(
                 'name' => 'CompanyLafPreferences_complete_bg_color',
@@ -190,12 +190,12 @@ $company = Company::model()->findByPk($session['company']);
                     )
             );
             ?>
-            <div class="colorSelector2"><div style="background-color: <?php if($model->complete_bg_color == ''){ echo '#ff0000'; } else { echo $model->complete_bg_color; }?>" id="cp5"></div></div>
+            <div class="colorSelector2"><div style="background-color: <?php if($model->complete_bg_color == ''){ echo '#e67171'; } else { echo $model->complete_bg_color; }?>" id="cp5"></div></div>
             <div class="colorpickerHolder2">
             </div>
             <?php echo $form->error($model, 'complete_bg_color'); ?>
             <label>Background Gradient 2</label>
-            <input type="text" id="CompanyLafPreferences_complete_bg_color2" name="CompanyLafPreferences[complete_bg_color2]" readonly value="<?php if($model->complete_bg_color2 == ''){ echo '#9ED92F'; } else { echo $model->complete_bg_color2; }?>"/>
+            <input type="text" id="CompanyLafPreferences_complete_bg_color2" name="CompanyLafPreferences[complete_bg_color2]" readonly value="<?php if($model->complete_bg_color2 == ''){ echo '#d42222'; } else { echo $model->complete_bg_color2; }?>"/>
             
             <?php
             $this->widget('application.extensions.colorpicker.EColorPicker', array(
@@ -208,10 +208,10 @@ $company = Company::model()->findByPk($session['company']);
                     )
             );
             ?>
-            <div class="colorSelector2"><div style="background-color:<?php if($model->complete_bg_color2 == ''){ echo '#9ED92F'; } else { echo $model->complete_bg_color2; }?>" id="cp21"></div></div>
+            <div class="colorSelector2"><div style="background-color:<?php if($model->complete_bg_color2 == ''){ echo '#d42222'; } else { echo $model->complete_bg_color2; }?>" id="cp21"></div></div>
             <div class="colorpickerHolder2">
             </div>
-            <label>Font Color</label>
+            <label>Text Color</label>
             <input type="text" id="CompanyLafPreferences_complete_font_color" name="CompanyLafPreferences[complete_font_color]" readonly value="<?php if($model->complete_font_color == ''){ echo '#ffffff'; } else { echo $model->complete_font_color; }?>">
             <?php
             $this->widget('application.extensions.colorpicker.EColorPicker', array(
@@ -230,7 +230,7 @@ $company = Company::model()->findByPk($session['company']);
             <?php echo $form->error($model, 'complete_font_color'); ?>
             
             <label>Hover Background Color</label>
-            <input type="text" id="CompanyLafPreferences_complete_hover_color" name="CompanyLafPreferences[complete_hover_color]" readonly value="<?php if($model->complete_hover_color == ''){ echo '#ff0000'; } else { echo $model->complete_hover_color; }?>">
+            <input type="text" id="CompanyLafPreferences_complete_hover_color" name="CompanyLafPreferences[complete_hover_color]" readonly value="<?php if($model->complete_hover_color == ''){ echo '#e67171'; } else { echo $model->complete_hover_color; }?>">
             <?php
             $this->widget('application.extensions.colorpicker.EColorPicker', array(
                 'name' => 'CompanyLafPreferences_complete_hover_color',
@@ -242,12 +242,12 @@ $company = Company::model()->findByPk($session['company']);
                     )
             );
             ?>
-            <div class="colorSelector2"><div style="background-color:<?php if($model->complete_hover_color == ''){ echo '#ff0000'; } else { echo $model->complete_hover_color; }?>" id="cp7"></div></div>
+            <div class="colorSelector2"><div style="background-color:<?php if($model->complete_hover_color == ''){ echo '#e67171'; } else { echo $model->complete_hover_color; }?>" id="cp7"></div></div>
             <div class="colorpickerHolder2">
             </div>
             <?php echo $form->error($model, 'complete_hover_color'); ?>
             <label>Hover Background Color 2</label>
-            <input type="text" id="CompanyLafPreferences_complete_hover_color2" name="CompanyLafPreferences[complete_hover_color2]" readonly value="<?php if($model->complete_hover_color2 == ''){ echo '#ff0000'; } else { echo $model->complete_hover_color2; }?>">
+            <input type="text" id="CompanyLafPreferences_complete_hover_color2" name="CompanyLafPreferences[complete_hover_color2]" readonly value="<?php if($model->complete_hover_color2 == ''){ echo '#d42222'; } else { echo $model->complete_hover_color2; }?>">
             <?php
             $this->widget('application.extensions.colorpicker.EColorPicker', array(
                 'name' => 'CompanyLafPreferences_complete_hover_color2',
@@ -259,11 +259,11 @@ $company = Company::model()->findByPk($session['company']);
                     )
             );
             ?>
-            <div class="colorSelector2"><div style="background-color:<?php if($model->complete_hover_color2 == ''){ echo '#ff0000'; } else { echo $model->complete_hover_color2; }?>" id="cp23"></div></div>
+            <div class="colorSelector2"><div style="background-color:<?php if($model->complete_hover_color2 == ''){ echo '#d42222'; } else { echo $model->complete_hover_color2; }?>" id="cp23"></div></div>
             <div class="colorpickerHolder2">
             </div>
             
-            <label>Hover Font Color</label>
+            <label>Hover Text Color</label>
             <input type="text" id="CompanyLafPreferences_complete_hover_font_color" name="CompanyLafPreferences[complete_hover_font_color]" readonly value="<?php if($model->complete_hover_font_color == ''){ echo '#ffffff'; } else { echo $model->complete_hover_font_color; }?>">
             <?php
             $this->widget('application.extensions.colorpicker.EColorPicker', array(
@@ -286,7 +286,7 @@ $company = Company::model()->findByPk($session['company']);
         <span class="customTitle">Neutral Button (i.e Find Record)</span> 
         <div class="cssButtonDetails">
             <label>Background Color</label>
-            <input type="text" id="CompanyLafPreferences_neutral_bg_color" name="CompanyLafPreferences[neutral_bg_color]" readonly value="<?php if($model->neutral_bg_color == ''){ echo '#33bcdb'; } else { echo $model->neutral_bg_color; }?>">
+            <input type="text" id="CompanyLafPreferences_neutral_bg_color" name="CompanyLafPreferences[neutral_bg_color]" readonly value="<?php if($model->neutral_bg_color == ''){ echo '#5fdaf5'; } else { echo $model->neutral_bg_color; }?>">
             <?php
             $this->widget('application.extensions.colorpicker.EColorPicker', array(
                 'name' => 'CompanyLafPreferences_neutral_bg_color',
@@ -298,7 +298,7 @@ $company = Company::model()->findByPk($session['company']);
                     )
             );
             ?>
-            <div class="colorSelector2"><div style="background-color: <?php if($model->neutral_bg_color == ''){ echo '#33bcdb'; } else { echo $model->neutral_bg_color; }?>" id="cp9"></div></div>
+            <div class="colorSelector2"><div style="background-color: <?php if($model->neutral_bg_color == ''){ echo '#5fdaf5'; } else { echo $model->neutral_bg_color; }?>" id="cp9"></div></div>
             <div class="colorpickerHolder2">
             </div> 
             <?php echo $form->error($model, 'neutral_bg_color'); ?>
@@ -320,7 +320,7 @@ $company = Company::model()->findByPk($session['company']);
             <div class="colorpickerHolder2">
             </div> 
             
-            <label>Font Color</label>
+            <label>Text Color</label>
             <input type="text" id="CompanyLafPreferences_neutral_font_color" name="CompanyLafPreferences[neutral_font_color]" readonly value="<?php if($model->neutral_font_color== ''){ echo '#ffffff'; } else { echo $model->neutral_font_color; }?>"/>
             <?php
             $this->widget('application.extensions.colorpicker.EColorPicker', array(
@@ -373,7 +373,7 @@ $company = Company::model()->findByPk($session['company']);
             <?php echo $form->error($model, 'neutral_hover_color'); ?>
            
             
-            <label>Hover Font Color</label>
+            <label>Hover Text Color</label>
             <input type="text" id="CompanyLafPreferences_neutral_hover_font_color" name="CompanyLafPreferences[neutral_hover_font_color]" readonly value="<?php if($model->neutral_hover_font_color == ''){ echo '#ffffff'; } else { echo $model->neutral_hover_font_color; }?>">
             <?php
             $this->widget('application.extensions.colorpicker.EColorPicker', array(
@@ -413,7 +413,7 @@ $company = Company::model()->findByPk($session['company']);
             <div class="colorpickerHolder2">
             </div> 
             <?php echo $form->error($model, 'nav_bg_color'); ?>
-            <label>Font Color</label>
+            <label>Text Color</label>
             <input type="text" id="CompanyLafPreferences_nav_font_color" name="CompanyLafPreferences[nav_font_color]" readonly value="<?php if($model->nav_font_color== ''){ echo '#637280'; } else { echo $model->nav_font_color; }?>"/>
             <?php
             $this->widget('application.extensions.colorpicker.EColorPicker', array(
@@ -448,7 +448,7 @@ $company = Company::model()->findByPk($session['company']);
             </div> 
             <?php echo $form->error($model, 'nav_hover_color'); ?>
 
-            <label>Hover Font Color</label>
+            <label>Hover Text Color</label>
             <input type="text" id="CompanyLafPreferences_nav_hover_font_color" name="CompanyLafPreferences[nav_hover_font_color]" readonly value="<?php if($model->nav_hover_font_color == ''){ echo '#ffffff'; } else { echo $model->nav_hover_font_color; }?>">
             <?php
             $this->widget('application.extensions.colorpicker.EColorPicker', array(
@@ -470,7 +470,7 @@ $company = Company::model()->findByPk($session['company']);
     
     <br>
     <div id="sideMenuDiv">
-        <span class="customTitle">Side Menu</span> 
+        <span class="customTitle">Side Menu and Header Text</span> 
         <div class="cssButtonDetails">
             <label>Background Color</label>
             <input type="text" id="CompanyLafPreferences_sidemenu_bg_color" name="CompanyLafPreferences[sidemenu_bg_color]" readonly value="<?php if($model->sidemenu_bg_color == ''){ echo '#E7E7E7'; } else { echo $model->sidemenu_bg_color; }?>">
@@ -489,7 +489,7 @@ $company = Company::model()->findByPk($session['company']);
             <div class="colorpickerHolder2">
             </div> 
             <?php echo $form->error($model, 'sidemenu_bg_color'); ?>
-            <label>Font Color</label>
+            <label>Text Color</label>
             <input type="text" id="CompanyLafPreferences_sidemenu_font_color" name="CompanyLafPreferences[sidemenu_font_color]" readonly value="<?php if($model->sidemenu_font_color== ''){ echo '#637280'; } else { echo $model->sidemenu_font_color; }?>"/>
             <?php
             $this->widget('application.extensions.colorpicker.EColorPicker', array(
@@ -524,7 +524,7 @@ $company = Company::model()->findByPk($session['company']);
             </div> 
             <?php echo $form->error($model, 'sidemenu_hover_color'); ?>
 
-            <label>Hover Font Color</label>
+            <label>Hover Text Color</label>
             <input type="text" id="CompanyLafPreferences_sidemenu_hover_font_color" name="CompanyLafPreferences[sidemenu_hover_font_color]" readonly value="<?php if($model->sidemenu_hover_font_color == ''){ echo '#637280'; } else { echo $model->sidemenu_hover_font_color; }?>">
             <?php
             $this->widget('application.extensions.colorpicker.EColorPicker', array(
@@ -543,7 +543,7 @@ $company = Company::model()->findByPk($session['company']);
             
         </div>
     </div>
-<div class="row buttons" style="margin-left:3px;">
+<div class="row buttons buttonsAlignToRight" style="margin-left:3px;">
     <input type="submit" value="Save" name="yt0" class="complete">
 </div>
 <?php $this->endWidget(); ?>

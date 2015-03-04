@@ -17,8 +17,8 @@ require_once 'BaseFunctionalTest.php';
 class Issue26FunctionalTest extends BaseFunctionalTest {
 
     function setUp() {
-        $this->setBrowser("*iexplore");
-        $this->setBrowserUrl("http://cvms.identitysecurity.info/");
+        $this->setBrowser("*firefox");
+        $this->setBrowserUrl("http://dev.identitysecurity.info/");
     }
 
     function testAll() {
@@ -36,17 +36,17 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
 
 
       Steps:
-      1.	Go to cvms.identitysecurity.info/index.php?r=site/login
+      1.	Go to dev.identitysecurity.info/index.php?r=site/login
       2.	Type superadmin@test.com in username field
       3.	Type 12345 in password field
       4.	Click Login
       5.	Click Administration
-      6.	Go to http://cvms.identitysecurity.info/index.php?r=visit/detail&id=1
+      6.	Go to http://dev.identitysecurity.info/index.php?r=visit/detail&id=1
       7.	Assert first name: test , last name: visitor1, email: testvisitor1@test.com, mobile: 123456, visitor type:patient visitor, reason: reason 1, Patient name: patient name 1.
       8.	Type 09123456789 in mobile number and testvisitorB@test.com in email field for contact details. Click update button under contact details.
       9.	Assert contact details updated successfully. select other in reason then Type reason 3 in reason field then click add button under reason. Assert reason added successfully. Click update under reason .
       10.	Assert reason updated successfully. Type patient name 3 in patient name field. Click update button under patient details.
-      11.	Assert patient updated successfully. Go to http://cvms.identitysecurity.info/index.php?r=visit/detail&id=1. Assert 09123456789 in mobile number, testvisitorB@test.com in email field for contact details.
+      11.	Assert patient updated successfully. Go to http://dev.identitysecurity.info/index.php?r=visit/detail&id=1. Assert 09123456789 in mobile number, testvisitorB@test.com in email field for contact details.
       Assert reason 3 in reason. Patient name 3 in patient name field.
 
      */
@@ -92,12 +92,12 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
 
 
       Steps:
-      1.	Go to cvms.identitysecurity.info/index.php?r=site/login
+      1.	Go to dev.identitysecurity.info/index.php?r=site/login
       2.	Type superadmin@test.com in username field
       3.	Type 12345 in password field
       4.	Click Login
       5.	Click Administration
-      6.	Go to http://cvms.identitysecurity.info/index.php?r=visit/detail&id=6
+      6.	Go to http://dev.identitysecurity.info/index.php?r=visit/detail&id=6
       7.	Assert email field testvisitor4@Test.com in email, and corporate visitor in visitor type.
       8.	Type 09123456789 in mobile number and testvisitorC@test.com in email field for contact details. Click update button under contact details.
       9.	Assert contact details updated successfully. Select reason 2 in reason then click update button. Assert reason updated successfully.
@@ -131,11 +131,11 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
       -	Assert text reason has already been registered
       -	Assert patient name cannot be blank
       Steps:
-      1.	Go to cvms.identitysecurity.info/index.php?r=site/login
+      1.	Go to dev.identitysecurity.info/index.php?r=site/login
       2.	Type superadmin@test.com in email field and 12345 in password field
       3.	Click login
       4.	Click administration
-      5.	Go to http://cvms.identitysecurity.info/index.php?r=visit/detail&id=1
+      5.	Go to http://dev.identitysecurity.info/index.php?r=visit/detail&id=1
       6.	Empty field mobile number and email field. Click update button under contact details.
       7.	Assert email address cannot be blank.
       8.	Type testvisitor3@test.com in email field. Click update and assert text email has already been taken.
@@ -157,22 +157,22 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
         $this->click("id=submitContactDetailForm");
         sleep(1);
         $this->waitForElementPresent("id=Visitor_email_em_");
-        $this->assertEquals("Email Address cannot be blank.", $this->getText("id=Visitor_email_em_"));
+        $this->assertEquals("Please enter an Email Address", $this->getText("id=Visitor_email_em_"));
         $this->type("id=Visitor_email", "testVisitor3@test.com");
         $this->type("id=Visitor_contact_number", "1234567890");
         $this->click("id=submitContactDetailForm");
-        $this->assertEquals("Email Address has already been taken.", $this->getText("xpath=(//div[@id='Visitor_email_em_'])[2]"));
+        $this->assertEquals("A profile already exists for this email address.", $this->getText("xpath=(//div[@id='Visitor_email_em_'])[2]"));
         $this->select("id=Visit_reason", "label=Select Reason");
         $this->click("id=submitReasonForm");
         sleep(1);
-        $this->assertEquals("Reason cannot be blank.", $this->getText("id=Visit_reason_em_"));
+        $this->assertEquals("Please enter a Reason", $this->getText("id=Visit_reason_em_"));
         $this->select("id=Visit_reason", "label=Other");
         $this->click("id=submitReasonForm");
-        $this->assertEquals("Reason cannot be blank.", $this->getText("id=visitReason"));
+        $this->assertEquals("Please select a reason", $this->getText("id=visitReason"));
         $this->type("id=VisitReason_reason", "");
         $this->click("id=submitAddReasonForm");
         sleep(1);
-        $this->assertEquals("Reason cannot be blank.", $this->getText("id=VisitReason_reason_em_"));
+        $this->assertEquals("Please enter a Reason", $this->getText("id=VisitReason_reason_em_"));
         $this->type("id=VisitReason_reason", "reason 1");
         $this->click("id=submitAddReasonForm");
         sleep(1);
@@ -181,7 +181,7 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
         $this->click("id=submit");
         $this->waitForElementPresent("xpath=(//div[@id='Patient_name_em_'])[2]");
         sleep(1);
-        $this->assertEquals("Patient Name cannot be blank.", $this->getText("xpath=(//div[@id='Patient_name_em_'])[2]"));
+        $this->assertEquals("Please enter a Patient Name", $this->getText("xpath=(//div[@id='Patient_name_em_'])[2]"));
         $this->type("id=Visitor_email", "123");
         $this->waitForElementPresent("id=Visitor_email_em_");
         sleep(1);
@@ -199,7 +199,7 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
       Steps:
       1.	Log in as superadmin@test.com with 12345  as password
       2.	Click administration
-      3.	go to cvms.idsecurity.info/index.php?r=visit/detail&id=1
+      3.	go to dev.idsecurity.info/index.php?r=visit/detail&id=1
       5.	Assert email testVisitorB@test.com
       6.	Select corporate visitor in visitor type
       7.	Wait for host details to show below
@@ -212,7 +212,7 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
       14.	Assert text email address has already been taken.
       15.	Type testnewHostA@test.com in email field. click add button
       16.	Assert host added successfully in host details and visitor type updated successfully in visitor type.
-      17.	go to cvms.idsecurity.info/index.php?r=visit/detail&id=1
+      17.	go to dev.idsecurity.info/index.php?r=visit/detail&id=1
       18.	Assert email testVisitorB@test.com
       19.	Assert corporate type in visitor type
       20.	Assert email testnewHostA@test.com in host email field
@@ -232,12 +232,12 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
         sleep(1);
         $this->click("document.forms['register-newhost-form'].yt0");
         sleep(1);
-        $this->assertEquals("First Name cannot be blank.", $this->getText("id=User_first_name_em_"));
-        $this->assertEquals("Last Name cannot be blank.", $this->getText("id=User_last_name_em_"));
-        $this->assertEquals("Email cannot be blank.", $this->getText("id=User_email_em_"));
-        $this->assertEquals("Contact No. cannot be blank.", $this->getText("id=User_contact_number_em_"));
-        $this->assertEquals("Password cannot be blank.", $this->getText("id=User_password_em_"));
-        $this->assertEquals("Repeat Password cannot be blank.", $this->getText("id=User_repeatpassword_em_"));
+        $this->assertEquals("Please enter a First Name", $this->getText("id=User_first_name_em_"));
+        $this->assertEquals("Please enter a Last Name", $this->getText("id=User_last_name_em_"));
+        $this->assertEquals("Please enter an Email Address", $this->getText("id=User_email_em_"));
+        $this->assertEquals("Please enter a Contact No.", $this->getText("id=User_contact_number_em_"));
+        $this->assertEquals("Please enter a Password", $this->getText("id=User_password_em_"));
+        $this->assertEquals("Please enter a Repeat Password", $this->getText("id=User_repeatpassword_em_"));
         $this->type("id=User_first_name", "test");
         $this->type("id=User_last_name", "newhostA");
         $this->type("id=User_email", "admin@test.com");
@@ -250,7 +250,7 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
         sleep(1);
         $this->click("document.forms['register-newhost-form'].yt0");
         sleep(1);
-        $this->assertEquals("Email Address has already been taken.", $this->getText("id=New_user_email_em_"));
+        $this->assertEquals("A profile already exists for this email address.", $this->getText("id=New_user_email_em_"));
         $this->type("id=User_email", "testnewHostA@test.com");
         $this->click("document.forms['register-newhost-form'].yt0");
         

@@ -41,7 +41,8 @@ class Issue107FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Same Day Visitor Multiday Visitor", $this->getText("id=Visit_card_type"));
         $this->clickAndWait("id=confirmPreregisterDummy");
         $this->clickAndWait("css=tr.even > td.blue > a.statusLink");
-        $this->assertEquals("04 Mar 15", $this->getText("css=span.cardDateText"));
+        $this->assertEquals(date('d M y', time() + 86400), $this->getText("css=span.cardDateText"));
+        
     }
 
     /* Scenario 2 - Preregister a multiday visitor 
@@ -59,7 +60,7 @@ class Issue107FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("", $this->getText("//img[@alt='Select Proposed Date Out']"));
         $this->clickAndWait("id=confirmPreregisterDummy");
         $this->clickAndWait("link=Preregistered");
-        $this->assertEquals("06 Mar 15", $this->getText("css=span.cardDateText"));
+        $this->assertEquals(date('d M y', time() + 259200), $this->getText("css=span.cardDateText"));
         $this->assertEquals("Preregistered", $this->getText("css=ul.visitStatusLi > li > a > span"));
     }
 

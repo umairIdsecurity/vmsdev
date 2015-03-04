@@ -92,7 +92,7 @@ class Issue51FunctionalTest extends BaseFunctionalTest {
         $this->click("id=clicktabB2");
         $this->clickAndWait("id=submitAllForms");
         $this->click("css=#activate-a-visit-form > input.complete");
-        sleep(1);
+        sleep(3);
         $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
         $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("link=Active");

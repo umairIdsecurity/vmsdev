@@ -258,7 +258,7 @@ class Issue54FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("id=clicktabB2");
         $this->click("//li[@id='preregisterLi']/a/span");
         $this->click("css=#update-log-visit-form > input.complete");
-        sleep(1);
+        sleep(5);
         $this->assertEquals("A visit has already been preregistered in the same day.", $this->getAlert());
     }
 

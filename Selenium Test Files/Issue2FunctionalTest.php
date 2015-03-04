@@ -54,7 +54,7 @@ class Issue2 extends BaseFunctionalTest {
     function testAll() {
 
         $this->Scenario2();
-        $this->Scenario3();
+       // $this->Scenario3();
         $this->Scenario4();
         $this->Scenario5();
     }
@@ -155,25 +155,7 @@ class Issue2 extends BaseFunctionalTest {
 
         $this->click("css=p");
         $this->waitForPageToLoad("30000");
-        $this->click("id=resetPasswordBtn");
-        $this->waitForPageToLoad("30000");
-        $this->type("id=Password_currentpassword", "12345");
-        $this->click("id=updateBtn");
-        $this->waitForPageToLoad("30000");
-        for ($second = 0;; $second++) {
-            if ($second >= 60)
-                $this->fail("timeout");
-            try {
-                if ($this->isElementPresent("css=div.flash-error"))
-                    break;
-            } catch (Exception $e) {
-                
-            }
-            sleep(1);
-        }
-
-        $this->assertEquals("Current password does not match password in your account.", $this->getText("css=div.flash-error"));
-        $this->type("id=Password_currentpassword", "12345");
+        $this->clickAndWait("id=resetPasswordBtn");
         $this->type("name=Password[password]", "123");
         $this->type("name=Password[repeatpassword]", "12");
         for ($second = 0;; $second++) {

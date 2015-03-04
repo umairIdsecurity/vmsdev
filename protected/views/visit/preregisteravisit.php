@@ -211,7 +211,8 @@ if ($model->visit_status == VisitStatus::CLOSED) {
         
         $('#confirmPreregisterDummy').on('click', function(e) {
             e.preventDefault();
-            $("#confirmPreregisterSubmit").click();
+            checkIfPreregisteredVisitConflictsWithAnotherVisit();
+           // $("#confirmPreregisterSubmit").click();
         });
 
         $('#Visit_date_in').on('change', function(e) {

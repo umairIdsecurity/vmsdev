@@ -458,7 +458,7 @@ $criteria->addCondition('t.is_deleted = 0');
     
     public function isDateConflictingWithAnotherVisit($date_in, $date_out, $visitorId, $visitStatus){
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "date_in = '" . $date_in . "' && date_out='".$date_out."' && visitor='".$visitorId."' && visit_status='".$visitStatus."'";
+        $Criteria->condition = "date_in = '" . $date_in . "' && visitor='".$visitorId."' && visit_status='".$visitStatus."'";
         $visit = Visit::model()->findAll($Criteria);
         
         $visitCount = count($visit);

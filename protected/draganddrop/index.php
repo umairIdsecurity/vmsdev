@@ -69,7 +69,7 @@ if ($this->action->id == 'addvisitor') {
             position:absolute !important;
             margin-left: -53px !important;
             font-size: 12px !important;
-            padding-bottom:3px;
+            padding-bottom:5px;
         }
         
 

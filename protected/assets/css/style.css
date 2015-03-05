@@ -1159,7 +1159,20 @@ dt.tabs dt{
 
 .moveFromAlignmentB{
     margin-left: 576px;
-    margin-top: -133px !important;
+    margin-top: -290px !important;
+    position:absolute;
+}
+
+.moveFromAlignmentAB{
+    margin-left: 576px;
+    margin-top: -348px !important;
+    position:absolute;
+}
+
+.moveFromAlignmentBB{
+    margin-left: 576px;
+    margin-top: -290px !important;
+    position:absolute;
 }
 
 .borderTopLeftRadius {
@@ -1230,12 +1243,7 @@ dt.tabs dt{
         margin-top: -38px;
         position: absolute;
         width: 50px;*/
-    float: left;
-    height: 30px;
-    margin-left: -105px;
-    margin-top: 77px;
-    position: absolute;
-    width: 50px;*/
+   
     float: left;
     height: 30px;
     margin-left: -105px;

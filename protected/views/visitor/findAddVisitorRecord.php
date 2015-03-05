@@ -324,11 +324,23 @@ $session = new CHttpSession;
         <?php $this->endWidget(); ?>
     </div>
     <?php
-    if ($session['role'] == Roles::ROLE_SUPERADMIN) {
-        $class = "moveFromAlignmentA";
-    } else {
-        $class = "moveFromAlignmentB";
+    if (isset($_SERVER['HTTP_USER_AGENT'])) {
+        $agent = $_SERVER['HTTP_USER_AGENT'];
     }
+    if (strlen(strstr($agent, 'Firefox')) > 0) {
+        if ($session['role'] == Roles::ROLE_SUPERADMIN) {
+            $class = "moveFromAlignmentA";
+        } else {
+            $class = "moveFromAlignmentB";
+        }
+    } else {
+        if ($session['role'] == Roles::ROLE_SUPERADMIN) {
+            $class = "moveFromAlignmentAB";
+        } else {
+            $class = "moveFromAlignmentBB";
+        }
+    }
+
     $form = $this->beginWidget('CActiveForm', array(
         'id' => 'register-reason-form',
         'action' => Yii::app()->createUrl('/visitReason/create&register=1'),
@@ -366,7 +378,7 @@ $session = new CHttpSession;
                 $("#height").val(selection.height);
             }
         });
-        
+
         $("#cropPhotoBtn").click(function(e) {
             e.preventDefault();
             $.ajax({
@@ -403,7 +415,7 @@ $session = new CHttpSession;
                 }
             });
         });
-        
+
         $("#dummy-visitor-findBtn").click(function(e) {
             e.preventDefault();
             $("#Visit_reason_search").val("");

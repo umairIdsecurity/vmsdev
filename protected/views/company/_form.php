@@ -176,7 +176,7 @@ if ($this->action->id == 'update') {
                 if (isset($_GET['viewFrom'])) {
                     echo $form->error($model, 'website');
                     ?>
-                    <span class="errorMessage" id="websiteErrorMessage">Website is not a valid URL.</span>
+                    <span class="errorMessage" id="websiteErrorMessage" style="display:none;">Website is not a valid URL.</span>
                     <?php
                 }
                 ?></td>

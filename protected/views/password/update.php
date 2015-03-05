@@ -26,17 +26,7 @@ $session = new CHttpSession;
    
     <input name="Password[passwordindb]" id="Password_passwordindb" type="hidden" value='<?php echo $model->password; ?>'>
     <table>    
-        <tr>
-            <td>
-                <div class="row">
-                    <label>Current Password:</label>
-                </div>
-            </td>
-            <td>
-                <input type='password' name="Password[currentpassword]" id="Password_currentpassword" type="text" maxlength="150" >
-                
-            </td>
-        </tr>
+      
     <tr>
         <td>
             <div class="row">

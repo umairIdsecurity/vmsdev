@@ -196,8 +196,8 @@ $currentLoggedUserId = $session['id'];
                             <td><label for="User_password">Password <span class="required">*</span></label></td>
                             <td>
                                 <input ng-model="user.passwords" data-ng-class="{
-                                                'ng-invalid':userform['User[repeatpassword]'].$error.match}" type="password" id="User_password" value = '<?php echo $model->password; ?>' name="User[password]">			
-                                <?php echo "<br>" . $form->error($model, 'password'); ?>
+                                                    'ng-invalid':userform['User[repeatpassword]'].$error.match}" type="password" id="User_password" value = '<?php echo $model->password; ?>' name="User[password]">			
+                                       <?php echo "<br>" . $form->error($model, 'password'); ?>
                             </td>
                         </tr>
                         <tr >
@@ -233,7 +233,7 @@ $currentLoggedUserId = $session['id'];
                         <td><?php echo $form->labelEx($model, 'email'); ?></td>
                         <td><?php echo $form->textField($model, 'email', array('size' => 50, 'maxlength' => 50)); ?>
                             <?php echo "<br>" . $form->error($model, 'email'); ?>
-                            <span class="errorMessageEmail1" style="display:none;color:red;font-size:10px;">A profile already exists for this email address.</span>
+                            <span class="errorMessageEmail1" style="display:none;color:red;font-size:10px;">A profile already exists for this email address</span>
                         </td>
                     </tr>
                     <tr>
@@ -496,39 +496,45 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
         });
     });
     function checkHostEmailIfUnique() {
-        var email = $("#User_email").val();
-        var tenant;
-        if ($("#currentRole").val() == 5) { //check if superadmin
-            tenant = $("#User_tenant").val();
+        if ('<?php echo $model->email; ?>' == $("#User_email").val()) {
+            $(".errorMessageEmail1").hide();
+            $("#emailunique").val("0");
+            $("#submitForm").click();
         } else {
-            tenant = '<?php echo $session['tenant']; ?>';
-        }
-        if ($("#User_role").val() == 1) {
-            var url = $("#createUrlForEmailUnique").val() + email.trim();
-        } else {
-            var url = $("#createUrlForEmailUnique").val() + email.trim() + '&tenant=' + tenant;
-        }
-
-        $.ajax({
-            type: 'POST',
-            url: url,
-            dataType: 'json',
-            data: email,
-            success: function(r) {
-                $.each(r.data, function(index, value) {
-                    if (value.isTaken == 1) {
-                        $(".errorMessageEmail1").show();
-                        $("#emailunique").val("1");
-
-                    } else {
-                        $(".errorMessageEmail1").hide();
-                        $("#emailunique").val("0");
-                        $("#submitForm").click();
-                    }
-                });
-
+            var email = $("#User_email").val();
+            var tenant;
+            if ($("#currentRole").val() == 5) { //check if superadmin
+                tenant = $("#User_tenant").val();
+            } else {
+                tenant = '<?php echo $session['tenant']; ?>';
             }
-        });
+            if ($("#User_role").val() == 1) {
+                var url = $("#createUrlForEmailUnique").val() + email.trim();
+            } else {
+                var url = $("#createUrlForEmailUnique").val() + email.trim() + '&tenant=' + tenant;
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                dataType: 'json',
+                data: email,
+                success: function(r) {
+                    $.each(r.data, function(index, value) {
+                        if (value.isTaken == 1) {
+                            $(".errorMessageEmail1").show();
+                            $("#emailunique").val("1");
+
+                        } else {
+                            $(".errorMessageEmail1").hide();
+                            $("#emailunique").val("0");
+                            $("#submitForm").click();
+                        }
+                    });
+
+                }
+            });
+        }
     }
 
     function populateDynamicFields() {

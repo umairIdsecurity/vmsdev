@@ -46,8 +46,13 @@ if ($this->action->id == 'update') {
         echo $form->errorSummary($model);
     }
     ?>
-    <input type="hidden" id="Company_tenant" name="Company[tenant]" value="<?php echo $tenant; ?>">
-    <input type="hidden" id="Company_tenant_agent" name="Company[tenant_agent]" value="<?php echo $tenantAgent; ?>">
+    <?php if ($this->action->id != 'update') {
+        ?>
+        <input type="hidden" id="Company_tenant" name="Company[tenant]" value="<?php echo $tenant; ?>">
+        <input type="hidden" id="Company_tenant_agent" name="Company[tenant_agent]" value="<?php echo $tenantAgent; ?>">
+
+        <?php }
+    ?>
     <table>
         <tr>
             <td style="width:160px;"><?php echo $form->labelEx($model, 'name'); ?></td>
@@ -200,15 +205,15 @@ if ($this->action->id == 'update') {
              echo "text-align:right;";
          }
          ?>">
-        <?php echo CHtml::submitButton($model->isNewRecord ? 'Add' : 'Save', array('id' => 'createBtn', 'style' => 'height:30px;','class'=>'complete')); ?>
-        <?php if (isset($_GET['viewFrom'])) { ?>
+             <?php echo CHtml::submitButton($model->isNewRecord ? 'Add' : 'Save', array('id' => 'createBtn', 'style' => 'height:30px;', 'class' => 'complete')); ?>
+             <?php if (isset($_GET['viewFrom'])) { ?>
             <input class="neutral yiiBtn" type='button' value='Cancel' onclick='closeParent()' style="height:30px;"></input>
             <?php
         } else {
             if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                 ?>
                 <button class="yiiBtn" id="modalBtn" style="padding:1.5px 6px;margin-top:-4.1px;height:30.1px;" data-target="#viewLicense" data-toggle="modal">View License Details</button> 
-                <?php } else { ?>
+            <?php } else { ?>
                 <button class="yiiBtn actionForward" style="padding:2px 6px;margin-top:-4.1px;height:30.1px;" type='button' onclick="gotoLicensePage()">License Details</bitton>
                     <?php
                 }
@@ -216,7 +221,7 @@ if ($this->action->id == 'update') {
             ?>
     </div>
 
-<?php $this->endWidget(); ?>
+    <?php $this->endWidget(); ?>
 
 </div><!-- form -->
 

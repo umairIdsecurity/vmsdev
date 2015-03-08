@@ -76,8 +76,6 @@ class CompanyController extends Controller {
                 } else {
                     Yii::app()->user->setFlash('error', 'Company code has already been taken');
                 }
-
-                
             } else {
                 Yii::app()->user->setFlash('error', 'Company name has already been taken');
             }
@@ -98,7 +96,7 @@ class CompanyController extends Controller {
 
         return $countCompany;
     }
-    
+
     private function isCompanyCodeUnique($sessionTenant, $sessionRole, $companyCode, $selectedTenant) {
         if ($sessionRole == Roles::ROLE_ADMIN) {
             $countCompany = Company::model()->isCompanyCodeUniqueWithinTheTenant($companyCode, $sessionTenant);
@@ -114,15 +112,55 @@ class CompanyController extends Controller {
         $model = $this->loadModel($id);
         $session = new CHttpSession;
         if (isset($_POST['Company'])) {
-            $model->attributes = $_POST['Company'];
-            if ($model->save()) {
-                switch ($session['role']) {
-                    case Roles::ROLE_SUPERADMIN:
-                        $this->redirect(array('company/admin'));
-                        break;
+            if ($model->name == $_POST['Company']['name']) {
+                if ($model->code == $_POST['Company']['code']) {
+                    $model->attributes = $_POST['Company'];
+                    if ($model->save()) {
+                        switch ($session['role']) {
+                            case Roles::ROLE_SUPERADMIN:
+                                $this->redirect(array('company/admin'));
+                                break;
 
-                    default:
-                        Yii::app()->user->setFlash('success', 'Organisation Settings Updated');
+                            default:
+                                Yii::app()->user->setFlash('success', 'Organisation Settings Updated');
+                        }
+                    }
+                } else {
+                    if ($this->isCompanyCodeUnique($session['tenant'], $session['role'], $_POST['Company']['code'], $_POST['Company']['tenant_']) == 0) {
+                        $model->attributes = $_POST['Company'];
+                        if ($model->save()) {
+                            switch ($session['role']) {
+                                case Roles::ROLE_SUPERADMIN:
+                                    $this->redirect(array('company/admin'));
+                                    break;
+
+                                default:
+                                    Yii::app()->user->setFlash('success', 'Organisation Settings Updated');
+                            }
+                        }
+                    } else {
+                        Yii::app()->user->setFlash('error', 'Company code has already been taken');
+                    }
+                }
+            } else {
+                if ($this->isCompanyUnique($session['tenant'], $session['role'], $_POST['Company']['name'], $_POST['Company']['tenant_']) == 0) {
+                    if ($this->isCompanyCodeUnique($session['tenant'], $session['role'], $_POST['Company']['code'], $_POST['Company']['tenant_']) == 0) {
+                        $model->attributes = $_POST['Company'];
+                        if ($model->save()) {
+                            switch ($session['role']) {
+                                case Roles::ROLE_SUPERADMIN:
+                                    $this->redirect(array('company/admin'));
+                                    break;
+
+                                default:
+                                    Yii::app()->user->setFlash('success', 'Organisation Settings Updated');
+                            }
+                        }
+                    } else {
+                        Yii::app()->user->setFlash('error', 'Company code has already been taken');
+                    }
+                } else {
+                    Yii::app()->user->setFlash('error', 'Company name has already been taken');
                 }
             }
         }

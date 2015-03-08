@@ -51,7 +51,13 @@ if ($this->action->id == 'update') {
         <input type="hidden" id="Company_tenant" name="Company[tenant]" value="<?php echo $tenant; ?>">
         <input type="hidden" id="Company_tenant_agent" name="Company[tenant_agent]" value="<?php echo $tenantAgent; ?>">
 
-        <?php }
+    <?php } else {
+        ?>
+        <input type="hidden" id="Company_tenant_" name="Company[tenant_]" value="<?php echo $model['tenant']; ?>">
+        <input type="hidden" id="Company_tenant_agent_" name="Company[tenant_agent_]" value="<?php echo $model['tenant_agent']; ?>">
+
+        <?php
+    }
     ?>
     <table>
         <tr>

@@ -96,20 +96,7 @@ if ($this->action->id == 'update') {
                                 </select><?php echo "<br>" . $form->error($model, 'tenant_agent'); ?>
                             </td>
                         </tr>
-                        <tr>
-                            <td id="visitorCompanyRow">
-
-                                <?php echo $form->labelEx($model, 'company'); ?>
-                            </td>
-                            <td>
-                                <select id="Visitor_company" name="Visitor[company]" >
-                                    <option value=''>Select Company</option>
-                                </select>
-                                <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;">
-                                    Add New Company</a>
-                                <?php echo "<br>" . $form->error($model, 'company'); ?>
-                            </td>
-                        </tr>
+                        
                         <tr>
                             <td>
                                 <label for="Visitor_vehicle">Vehicle Registration Number</label>
@@ -195,7 +182,20 @@ if ($this->action->id == 'update') {
                             </td>
                         </tr>
                         <tr>
+                            <td id="visitorCompanyRow">
 
+                                <?php echo $form->labelEx($model, 'company'); ?>
+                            </td>
+                            <td>
+                                <select id="Visitor_company" name="Visitor[company]" >
+                                    <option value=''>Select Company</option>
+                                </select>
+                                <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;">
+                                    Add New Company</a>
+                                <?php echo "<br>" . $form->error($model, 'company'); ?>
+                            </td>
+                        </tr>
+                        <tr>
                             <td>
                                 <?php echo $form->labelEx($model, 'position'); ?>
                             </td>

@@ -26,7 +26,8 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
       //  $this->Scenario1();
         $this->Scenario2();
         $this->Scenario3();
-        $this->Scenario5();
+        //cant be applicable no patient visitor type
+        //$this->Scenario5();
     }
 
     /* Scenario 1 – Login as super admin then perform update a visitor functionality for patient visitor type
@@ -244,7 +245,7 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_contact_number", "123456");
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeatpassword", "12345");
-        $this->select("id=User_tenant", "label=Test admin");
+        $this->select("id=User_tenant", "label=Test Company 1");
         sleep(1);
         $this->select("id=User_tenant_agent", "label=Test agentadmin");
         sleep(1);

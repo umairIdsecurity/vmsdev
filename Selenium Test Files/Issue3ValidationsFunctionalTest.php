@@ -419,50 +419,50 @@ class Issue3ValidationsFunctionalTest extends BaseFunctionalTest {
     function Scenario8() {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
-        $this->click("link=Administration");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("link=Administration");
         $this->click("link=Manage Users");
-        $this->click("css=div.customIcon-adminmenu");
-        $this->waitForPageToLoad("30000");
-
+        $this->clickAndWait("css=div.customIcon-adminmenu");
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeat_password", "12");
-        $this->assertTrue($this->isElementPresent("//form[@id='user-form']/table/tbody/tr/td/table/tbody/tr[10]/td[2]/div"));
+        sleep(1);
+        $this->assertTrue($this->isElementPresent("//form[@id='userform']/table/tbody/tr/td/table/tbody/tr[9]/td[2]/div"));
         $this->type("id=User_repeat_password", "12345");
-        $this->assertFalse($this->isTextPresent("//form[@id='user-form']/table/tbody/tr/td/table/tbody/tr[10]/td[2]/div"));
+        $this->assertFalse($this->isTextPresent("//form[@id='userform']/table/tbody/tr/td/table/tbody/tr[9]/td[2]/div"));
 
         $this->type("id=User_password", "");
         $this->type("id=User_repeat_password", "");
-
-        $this->click("id=submitBtn");
-        $this->clickAndWait("id=submitForm");
+        $this->click("id=submitForm");
+        sleep(1);
+        $this->waitForElementPresent("css=div.errorSummary > p");
         $this->assertEquals("Please fix the following input errors:", $this->getText("css=div.errorSummary > p"));
-        $this->assertEquals("Please select a Role", $this->getText("css=div.errorMessage"));
-        $this->assertEquals("Please select a Company Name", $this->getText("css=#companyRow > div.errorMessage"));
-        $this->assertEquals("Please enter a First Name", $this->getText("//form[@id='user-form']/table/tbody/tr/td[2]/table/tbody/tr/td[2]/div"));
-        $this->assertEquals("Please enter a Last Name", $this->getText("//form[@id='user-form']/table/tbody/tr/td[2]/table/tbody/tr[2]/td[2]/div"));
-        $this->assertEquals("Please enter an Email Address", $this->getText("//form[@id='user-form']/table/tbody/tr/td[2]/table/tbody/tr[3]/td[2]/div"));
-        $this->assertEquals("Please enter a Contact No.", $this->getText("//form[@id='user-form']/table/tbody/tr/td[2]/table/tbody/tr[4]/td[2]/div"));
-        $this->assertEquals("Please enter a Password", $this->getText("//form[@id='user-form']/table/tbody/tr/td/table/tbody/tr[9]/td[2]/div"));
+        $this->assertEquals("Please select a Role", $this->getText("id=User_role_em_"));
+        $this->assertEquals("Please select a Company Name", $this->getText("id=User_company_em_"));
+        $this->assertEquals("Please enter a First Name", $this->getText("id=User_first_name_em_"));
+        $this->assertEquals("Please enter a Last Name", $this->getText("id=User_last_name_em_"));
+        $this->assertEquals("Please enter an Email Address", $this->getText("id=User_email_em_"));
+        $this->assertEquals("Please enter a Contact No.", $this->getText("id=User_contact_number_em_"));
+        $this->assertEquals("Please enter a Password", $this->getText("id=User_password_em_"));
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeat_password", "123456");
         $this->type("id=User_email", "testemail");
-        $this->click("id=submitBtn");
         $this->click("id=submitForm");
-        $this->waitForPageToLoad("30000");
-        $this->assertEquals("Email Address is not a valid email address.", $this->getText("//form[@id='user-form']/table/tbody/tr/td[2]/table/tbody/tr[3]/td[2]/div"));
-        $this->assertEquals("Password must be repeated exactly.", $this->getText("//form[@id='user-form']/table/tbody/tr/td/table/tbody/tr[9]/td[2]/div"));
-
+        sleep(1);
+        $this->assertEquals("Email Address is not a valid email address.", $this->getText("id=User_email_em_"));
         $this->type("id=User_email", "superadmin@test.com");
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeat_password", "12345");
-        $this->click("id=submitBtn");
         $this->click("id=submitForm");
-        $this->waitForPageToLoad("30000");
-//        $this->assertEquals("Email \"superadmin@test.com\" has already been taken.", $this->getText("//form[@id='user-form']/table/tbody/tr/td[2]/table/tbody/tr[3]/td[2]/div"));
+        $this->click("link=Manage Users");
+        $this->clickAndWait("link=Add Administrator");
+        $this->addUser("superadmin@test.com", "admin");
+        $this->select("id=User_company", "label=Test Company 1");
+        
+        $this->click("id=submitForm");
+        sleep(1);
+        $this->assertEquals("A profile already exists for this email address", $this->getText("css=span.errorMessageEmail1"));
         $this->type("id=User_password", "test");
         $this->type("id=User_repeat_password", "Test");
-        $this->assertTrue($this->isElementPresent("//form[@id='user-form']/table/tbody/tr/td/table/tbody/tr[10]/td[2]/div"));
+        $this->assertTrue($this->isElementPresent("//form[@id='userform']/table/tbody/tr/td/table/tbody/tr[9]/td[2]/div"));
     }
 
     /* Scenario 9 – Login as agent admin, go to set access rule and check data control
@@ -580,42 +580,40 @@ class Issue3ValidationsFunctionalTest extends BaseFunctionalTest {
 
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeat_password", "12");
-        $this->assertTrue($this->isElementPresent("//form[@id='user-form']/table/tbody/tr/td/table/tbody/tr[10]/td[2]/div"));
+        $this->assertTrue($this->isElementPresent("//form[@id='userform']/table/tbody/tr/td/table/tbody/tr[9]/td[2]/div"));
         $this->type("id=User_repeat_password", "12345");
-        $this->assertFalse($this->isTextPresent("//form[@id='user-form']/table/tbody/tr/td/table/tbody/tr[10]/td[2]/div"));
+        $this->assertFalse($this->isTextPresent("//form[@id='userform']/table/tbody/tr/td/table/tbody/tr[9]/td[2]/div"));
 
         $this->type("id=User_password", "");
         $this->type("id=User_repeat_password", "");
 
-        $this->click("id=submitBtn");
         $this->click("id=submitForm");
-        $this->waitForPageToLoad("30000");
+        sleep(1);
         $this->assertEquals("Please fix the following input errors:", $this->getText("css=div.errorSummary > p"));
-        $this->assertEquals("Please select a Role", $this->getText("css=div.errorMessage"));
-        $this->assertEquals("Please enter a First Name", $this->getText("//form[@id='user-form']/table/tbody/tr/td[2]/table/tbody/tr/td[2]/div"));
-        $this->assertEquals("Please enter a Last Name", $this->getText("//form[@id='user-form']/table/tbody/tr/td[2]/table/tbody/tr[2]/td[2]/div"));
-        $this->assertEquals("Please enter an Email Address", $this->getText("//form[@id='user-form']/table/tbody/tr/td[2]/table/tbody/tr[3]/td[2]/div"));
-        $this->assertEquals("Please enter a Contact No.", $this->getText("//form[@id='user-form']/table/tbody/tr/td[2]/table/tbody/tr[4]/td[2]/div"));
-        $this->assertEquals("Please enter a Password", $this->getText("//form[@id='user-form']/table/tbody/tr/td/table/tbody/tr[9]/td[2]/div"));
+        $this->assertEquals("Please select a Role", $this->getText("id=User_role_em_"));
+        $this->assertEquals("Please enter a First Name", $this->getText("id=User_first_name_em_"));
+        $this->assertEquals("Please enter a Last Name", $this->getText("id=User_last_name_em_"));
+        $this->assertEquals("Please enter an Email Address", $this->getText("id=User_email_em_"));
+        $this->assertEquals("Please enter a Contact No.", $this->getText("id=User_contact_number_em_"));
+        $this->assertEquals("Please enter a Password", $this->getText("id=User_password_em_"));
+        
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeat_password", "123456");
         $this->type("id=User_email", "testemail");
-        $this->click("id=submitBtn");
         $this->click("id=submitForm");
-        $this->waitForPageToLoad("30000");
-        $this->assertEquals("Email Address is not a valid email address.", $this->getText("//form[@id='user-form']/table/tbody/tr/td[2]/table/tbody/tr[3]/td[2]/div"));
-        $this->assertEquals("Password must be repeated exactly.", $this->getText("//form[@id='user-form']/table/tbody/tr/td/table/tbody/tr[9]/td[2]/div"));
-
-        $this->type("id=User_email", "superadmin@test.com");
-        $this->type("id=User_password", "12345");
-        $this->type("id=User_repeat_password", "12345");
-        $this->click("id=submitBtn");
+        sleep(1);
+        $this->assertEquals("Email Address is not a valid email address.", $this->getText("id=User_email_em_"));
+        $this->click("link=Manage Users");
+        $this->clickAndWait("link=Add Administrator");
+        $this->addUser("superadmin@test.com", "admin");
+        $this->select("id=User_company", "label=Test Company 1");
+        
         $this->click("id=submitForm");
-        $this->waitForPageToLoad("30000");
-//        $this->assertEquals("Email \"superadmin@test.com\" has already been taken.", $this->getText("//form[@id='user-form']/table/tbody/tr/td[2]/table/tbody/tr[3]/td[2]/div"));
+        sleep(1);
+        $this->assertEquals("A profile already exists for this email address", $this->getText("css=span.errorMessageEmail1"));
         $this->type("id=User_password", "test");
         $this->type("id=User_repeat_password", "Test");
-        $this->assertTrue($this->isElementPresent("//form[@id='user-form']/table/tbody/tr/td/table/tbody/tr[10]/td[2]/div"));
+        $this->assertTrue($this->isElementPresent("//form[@id='userform']/table/tbody/tr/td/table/tbody/tr[9]/td[2]/div"));
     }
 
     /* Scenario 12 – Login as agentadmin and create user agent operator, check for errors
@@ -647,50 +645,46 @@ class Issue3ValidationsFunctionalTest extends BaseFunctionalTest {
     function Scenario12() {
         $username = 'agentadmin@test.com';
         $this->login($username, '12345');
-        $this->click("link=Administration");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("link=Administration");
         $this->click("link=Manage Users");
         $this->click("css=div.customIcon-adminmenu");
         $this->waitForPageToLoad("30000");
 
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeat_password", "12");
-        $this->assertTrue($this->isElementPresent("//form[@id='user-form']/table/tbody/tr/td/table/tbody/tr[10]/td[2]/div"));
+        $this->assertTrue($this->isElementPresent("//form[@id='userform']/table/tbody/tr/td/table/tbody/tr[9]/td[2]/div"));
         $this->type("id=User_repeat_password", "12345");
-        $this->assertFalse($this->isTextPresent("//form[@id='user-form']/table/tbody/tr/td/table/tbody/tr[10]/td[2]/div"));
+        $this->assertFalse($this->isTextPresent("//form[@id='userform']/table/tbody/tr/td/table/tbody/tr[9]/td[2]/div"));
 
         $this->type("id=User_password", "");
         $this->type("id=User_repeat_password", "");
-
-        $this->click("id=submitBtn");
         $this->click("id=submitForm");
-        $this->waitForPageToLoad("30000");
+        sleep(1);
         $this->assertEquals("Please fix the following input errors:", $this->getText("css=div.errorSummary > p"));
-        $this->assertEquals("Please select a Role", $this->getText("css=div.errorMessage"));
-        $this->assertEquals("Please enter a Contact No.", $this->getText("//form[@id='user-form']/table/tbody/tr/td/table/tbody/tr[4]/td[2]/div"));
-        $this->assertEquals("Please enter a First Name", $this->getText("//form[@id='user-form']/table/tbody/tr/td[2]/table/tbody/tr/td[2]/div"));
-        $this->assertEquals("Please enter a Last Name", $this->getText("//form[@id='user-form']/table/tbody/tr/td[2]/table/tbody/tr[2]/td[2]/div"));
-        $this->assertEquals("Please enter an Email Address", $this->getText("//form[@id='user-form']/table/tbody/tr/td[2]/table/tbody/tr[3]/td[2]/div"));
-        $this->assertEquals("Please enter a Contact No.", $this->getText("//form[@id='user-form']/table/tbody/tr/td[2]/table/tbody/tr[4]/td[2]/div"));
-        $this->assertEquals("Please enter a Password", $this->getText("//form[@id='user-form']/table/tbody/tr/td/table/tbody/tr[9]/td[2]/div"));
+        $this->assertEquals("Please select a Role", $this->getText("id=User_role_em_"));
+        $this->assertEquals("Please enter a Contact No.", $this->getText("id=User_contact_number_em_"));
+        $this->assertEquals("Please enter a First Name", $this->getText("id=User_first_name_em_"));
+        $this->assertEquals("Please enter a Last Name", $this->getText("id=User_last_name_em_"));
+        $this->assertEquals("Please enter an Email Address", $this->getText("id=User_email_em_"));
+        $this->assertEquals("Please enter a Contact No.", $this->getText("id=User_contact_number_em_"));
+        $this->assertEquals("Please enter a Password", $this->getText("id=User_password_em_"));
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeat_password", "123456");
         $this->type("id=User_email", "testemail");
-        $this->click("id=submitBtn");
         $this->click("id=submitForm");
-        $this->waitForPageToLoad("30000");
-        $this->assertEquals("Email Address is not a valid email address.", $this->getText("//form[@id='user-form']/table/tbody/tr/td[2]/table/tbody/tr[3]/td[2]/div"));
-        $this->assertEquals("Password must be repeated exactly.", $this->getText("//form[@id='user-form']/table/tbody/tr/td/table/tbody/tr[9]/td[2]/div"));
-
-        $this->type("id=User_email", "superadmin@test.com");
-        $this->type("id=User_password", "12345");
-        $this->type("id=User_repeat_password", "12345");
-        $this->click("id=submitBtn");
-        $this->clickAndWait("id=submitForm");
-     //   $this->assertEquals("Email \"superadmin@test.com\" has already been taken.", $this->getText("//form[@id='user-form']/table/tbody/tr/td[2]/table/tbody/tr[3]/td[2]/div"));
+        sleep(1);
+        $this->assertEquals("Email Address is not a valid email address.", $this->getText("id=User_email_em_"));
+        
+        $this->click("link=Manage Users");
+        $this->clickAndWait("link=Add Agent Operator");
+        $this->addUser("admin@test.com", "admin");
+        
+        $this->click("id=submitForm");
+        sleep(1);
+        $this->assertEquals("A profile already exists for this email address", $this->getText("css=span.errorMessageEmail1"));
         $this->type("id=User_password", "test");
         $this->type("id=User_repeat_password", "Test");
-        $this->assertTrue($this->isElementPresent("//form[@id='user-form']/table/tbody/tr/td/table/tbody/tr[10]/td[2]/div"));
+        $this->assertTrue($this->isElementPresent("//form[@id='userform']/table/tbody/tr/td/table/tbody/tr[9]/td[2]/div"));
     }
 
 }

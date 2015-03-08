@@ -201,14 +201,14 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
             if ($second >= 10)
                 $this->fail("timeout");
             try {
-                if ("Test Company 1" == $this->getText("id=Visitor_company"))
+                if ("Test Company 2" == $this->getText("id=Visitor_company"))
                     break;
             } catch (Exception $e) {
                 
             }
             sleep(1);
         }
-        $this->assertEquals("Test Company 1", $this->getText("id=Visitor_company"));
+        $this->assertEquals("Test Company 2", $this->getText("id=Visitor_company"));
         $this->click("id=submitFormVisitor");
         $this->waitForElementPresent("id=User_first_name");
         $this->addHost("staffmemberHostA");
@@ -263,13 +263,13 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_position", "position");
         $this->type("id=Visitor_contact_number", "123456");
         $this->type("id=Visitor_email", "test");
-        $this->select("id=Visitor_tenant", "label=Test admin");
+        $this->select("id=Visitor_tenant", "label=Test Company 1");
         $this->type("id=Visitor_email", "testvisitor1@test.com");
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
         $this->waitForElementPresent("id=Visitor_tenant_agent");
         sleep(1);
-        $this->select("id=Visitor_tenant_agent", "label=Test agentadmin");
+        $this->select("id=Visitor_tenant_agent", "label=Test Company 2");
         $this->click("id=submitFormVisitor");
         $this->waitForElementPresent("css=td > div.errorMessage.visitorReason");
         $this->assertEquals("Please select a reason", $this->getText("css=td > div.errorMessage.visitorReason"));
@@ -371,20 +371,21 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Preregister Visit");
         $this->click("id=clicktabA");
         $this->click("id=submitFormVisitor");
-        $this->select("id=workstation", "label=Workstation1");
+        
         $this->select("id=Visitor_visitor_type", "label=Corporate Visitor");
         $this->type("id=Visitor_first_name", "Test");
         $this->type("id=Visitor_last_name", "test");
         $this->type("id=Visitor_position", "position");
         $this->type("id=Visitor_contact_number", "123456");
         $this->type("id=Visitor_email", "test");
-        $this->select("id=Visitor_tenant", "label=Test admin");
+        $this->select("id=Visitor_tenant", "label=Test Company 1");
         $this->waitForElementPresent("id=Visitor_email");
         $this->type("id=Visitor_email", "testvisitor1@test.com");
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
         sleep(1);
-        $this->select("id=Visitor_tenant_agent", "label=Test agentadmin");
+        $this->select("id=Visitor_tenant_agent", "label=Test Company 2");
+        $this->select("id=workstation", "label=Workstation1");
         $this->click("id=submitFormVisitor");
         $this->waitForElementPresent("css=td > div.errorMessage.visitorReason");
         $this->assertEquals("Please select a reason", $this->getText("css=td > div.errorMessage.visitorReason"));
@@ -441,7 +442,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         //$this->assertEquals("Email is not a valid email address.", $this->getText("id=User_email_em_"));
         $this->type("id=User_email", "staffmember@test.com");
         $this->type("id=User_contact_number", "123456");
-        $this->select("id=User_tenant", "label=Test admin");
+        $this->select("id=User_tenant", "label=Test Company 1");
         $this->click("id=submitFormUser");
         $this->assertEquals("A profile already exists for this email address.", $this->getText("xpath=(//div[@id='User_email_em_'])[2]"));
     }
@@ -548,10 +549,10 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->click("id=addCompanyLink");
         $this->waitForElementPresent("id=Visitor_company_em_");
         $this->assertEquals("Please select a tenant", $this->getText("id=Visitor_company_em_"));
-        $this->select("id=Visitor_tenant", "label=Test admin");
+        $this->select("id=Visitor_tenant", "label=Test Company 1");
         $this->click("id=Visitor_tenant_agent");
         sleep(1);
-        $this->select("id=Visitor_tenant_agent", "label=Test agentadmin");
+        $this->select("id=Visitor_tenant_agent", "label=Test Company 2");
         $this->click("id=addCompanyLink");
         $this->waitForElementPresent("css=h1");
         
@@ -560,7 +561,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->type("id=Company_code", "NCA");
         $this->click("id=createBtn");
         sleep(3);
-        $this->assertEquals("Identity SecurityTest Company 1Test Company 2new company", $this->getText("id=Visitor_company"));
+        $this->assertEquals("Test Company 1Test Company 2new company", $this->getText("id=Visitor_company"));
         $this->click("id=submitFormVisitor");
         $this->waitForElementPresent("id=search-host");
         $this->type("id=search-host", "test");

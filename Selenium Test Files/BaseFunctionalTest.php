@@ -65,7 +65,6 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
 
     function updatePassword($id = NULL) {
         $this->open("http://dev.identitysecurity.info/index.php?r=password/update&id=" . $id);
-        $this->type("id=Password_currentpassword", "12345");
         $this->type("name=Password[password]", "admin");
         $this->type("name=Password[repeatpassword]", "admin");
         $this->click("id=updateBtn");
@@ -105,8 +104,7 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
         $this->type("id=Company_website", "http://" . $companyemail . ".com");
         $this->waitForElementPresent("id=createBtn");
         //sleep(100);
-        $this->click("id=createBtn");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("id=createBtn");
         sleep(1);
     }
 
@@ -145,9 +143,9 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
         $this->type("id=Visitor_contact_number", "1234567");
         $this->type("id=Visitor_position", "Position");
         $this->type("id=Visitor_email", "test" . $visitor_name . "@test.com");
-        $this->select("id=Visitor_tenant", "label=Test admin");
+        $this->select("id=Visitor_tenant", "label=Test Company 1");
         sleep(1);
-        $this->select("id=Visitor_tenant_agent", "label=Test agentadmin");
+        $this->select("id=Visitor_tenant_agent", "label=Test Company 2");
         sleep(1);
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
@@ -167,12 +165,11 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
         $this->type("id=User_staff_id", "123456");
         $this->type("id=User_email", "test".$host_name."@test.com");
         $this->type("id=User_contact_number", "123456");
-        $this->select("id=User_tenant", "label=Test admin");
+        $this->select("id=User_tenant", "label=Test Company 1");
         sleep(1);
-        $this->select("id=User_tenant_agent", "label=Test agentadmin");
+        $this->select("id=User_tenant_agent", "label=Test Company 2");
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeatpassword", "12345");
-        $this->click("id=User_company");
         sleep(1);
     }
 

@@ -81,7 +81,7 @@ class User extends VmsActiveRecord {
                 array('date_of_birth, notes,tenant,tenant_agent,birthdayYear,birthdayMonth,birthdayDay', 'safe'),
                 // array('email', 'unique'),
                 array('email', 'email'),
-                array('role,company','required','message' =>'Please select a {attribute}'),
+                array('role,company', 'required', 'message' => 'Please select a {attribute}'),
                 array('tenant, tenant_agent', 'default', 'setOnEmpty' => true, 'value' => null),
                 // The following rule is used by search().
                 // @todo Please remove those attributes that should not be searched.
@@ -95,9 +95,8 @@ class User extends VmsActiveRecord {
                 array('date_of_birth, notes,tenant,tenant_agent,birthdayYear,birthdayMonth,birthdayDay', 'safe'),
                 // array('email', 'unique'),
                 array('email', 'email'),
-                array('role,company','required','message' =>'Please select a {attribute}'),
-                array('repeatpassword', 'required', 'on' => 'insert'),
-                array('password', 'compare', 'compareAttribute' => 'repeatpassword'),
+                array('role,company', 'required', 'message' => 'Please select a {attribute}'),
+                //array('repeatpassword', 'required', 'on' => 'insert'),
                 array('tenant, tenant_agent', 'default', 'setOnEmpty' => true, 'value' => null),
                 // The following rule is used by search().
                 // @todo Please remove those attributes that should not be searched.
@@ -307,6 +306,15 @@ class User extends VmsActiveRecord {
         return $name;
     }
 
+    public function findAllCompanyTenant() {
+        return Yii::app()->db->createCommand()
+                        ->select('c.id as id, c.name as name,c.tenant')
+                        ->from('user u')
+                        ->join('company c', 'u.company=c.id')
+                        ->where('u.id=c.tenant and c.id !=1')
+                        ->queryAll();
+    }
+
     public function findAllAdmin() {
 
         $criteria = new CDbCriteria;
@@ -357,15 +365,22 @@ class User extends VmsActiveRecord {
     }
 
     public function findAllTenantAgent($tenantId) {
+        //select all companies of tenant agents with same tenant
         $tenantId = trim($tenantId);
         $aArray = array();
-        $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = '" . $tenantId . "' and role=" . Roles::ROLE_AGENT_ADMIN;
-        $User = User::model()->findAll($Criteria);
-        foreach ($User as $index => $value) {
+        $company =  Yii::app()->db->createCommand()
+                        ->selectdistinct(' c.id as id, c.name as name,c.tenant,c.tenant_agent')
+                        ->from('user u')
+                        ->join('company c', 'u.company=c.id')
+                        ->where('u.tenant="'.$tenantId.'" and u.role ='.Roles::ROLE_AGENT_ADMIN)
+                        ->queryAll();
+        
+        foreach ($company as $index => $value) {
             $aArray[] = array(
                 'id' => $value['id'],
-                'name' => $value['first_name'] . ' ' . $value['last_name'],
+                'name' => $value['name'],
+                'tenant' => $value['tenant'],
+                'tenant_agent' => $value['tenant_agent'],
             );
         }
 
@@ -374,14 +389,23 @@ class User extends VmsActiveRecord {
 
     public function findCompanyDetailsOfUser($userId) {
         $aArray = array();
+        //find all company with same tenant except users company
+        $user = User::model()->findByPk($userId);
 
-        $usercompany = User::model()->findByPK($userId);
-        $company = Company::model()->findByPK($usercompany->company);
+        $Criteria = new CDbCriteria();
+        
+            $Criteria->condition = "tenant ='" . $userId . "' and id !=1 and id != " . $user->company;
+        
 
-        $aArray[] = array(
-            'id' => $company->id,
-            'name' => $company->name,
-        );
+        $companyList = Company::model()->findAll($Criteria);
+
+        foreach ($companyList as $index => $value) {
+            $aArray[] = array(
+                'id' => $value['id'],
+                'name' => $value['name'],
+                'tenant' => $value['tenant'],
+            );
+        }
 
         return $aArray;
     }
@@ -433,7 +457,7 @@ class User extends VmsActiveRecord {
         return false;
     }
 
-    public function isEmailAddressUnique($email, $tenantId ) {
+    public function isEmailAddressUnique($email, $tenantId) {
         $Criteria = new CDbCriteria();
         $session = new CHttpSession;
         if ($tenantId != '') {
@@ -443,8 +467,7 @@ class User extends VmsActiveRecord {
                 $Criteria->condition = "email = '" . $email . "' and tenant = '" . $session['tenant'] . "'";
             }
         } else { //if position is admin compare to email only
-                $Criteria->condition = "email = '" . $email . "'";
-           
+            $Criteria->condition = "email = '" . $email . "'";
         }
 
 
@@ -470,6 +493,26 @@ class User extends VmsActiveRecord {
         foreach ($userId as $index => $value) {
             $aArray[] = array(
                 'id' => $value['id'],
+            );
+        }
+        return $aArray;
+    }
+    
+    public function findCompanyOfTenant($tenantId, $tenantAgentId) {
+        $aArray = array();
+        if($tenantAgentId !=''){
+            $user = User::model()->findByPk($tenantAgentId);
+        } else {
+            $user = User::model()->findByPk($tenantId);
+        }
+        $Criteria = new CDbCriteria();
+        $Criteria->condition = "id = '$user->company'";
+        $company = Company::model()->findAll($Criteria);
+
+        foreach ($company as $index => $value) {
+            $aArray[] = array(
+                'id' => $value['id'],
+                'name' => $value['name'],
             );
         }
         return $aArray;

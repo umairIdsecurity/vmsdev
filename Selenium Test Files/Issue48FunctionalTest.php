@@ -108,6 +108,7 @@ class Issue48FunctionalTest extends BaseFunctionalTest {
         $this->chooseCancelOnNextConfirmation();
         $this->assertTrue((bool) preg_match('/^Are you sure you want to delete this item[\s\S]$/', $this->getConfirmation()));
         sleep(1);
+        
         $this->assertTrue((bool) preg_match('/^This Visitor Record has visit data recorded\. Do you wish to delete this visitor record and its visit history[\s\S]$/', $this->getConfirmation()));
         $this->assertEquals("testVisitor1@test.com", $this->getText("//div[@id='visitor-grid']/table/tbody/tr[2]/td[3]"));
         $this->click("id=yt1");

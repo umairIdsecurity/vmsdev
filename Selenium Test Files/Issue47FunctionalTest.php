@@ -47,14 +47,14 @@ class Issue47FunctionalTest extends BaseFunctionalTest {
             if ($second >= 10)
                 $this->fail("timeout");
             try {
-                if ("Test Company 1" == $this->getText("id=Visitor_company"))
+                if ("Test Company 2" == $this->getText("id=Visitor_company"))
                     break;
             } catch (Exception $e) {
                 
             }
             sleep(1);
         }
-        $this->assertEquals("Test Company 1", $this->getText("id=Visitor_company"));
+        $this->assertEquals("Test Company 2", $this->getText("id=Visitor_company"));
         $this->addCompany("Visitor Company 1", "visitorcompany", "TCA");
         $this->click("id=submitFormVisitor");
         $this->waitForElementPresent("id=User_first_name");

@@ -465,7 +465,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_contact_number", "123456");
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeatpassword", "12345");
-        $this->select("id=User_tenant", "label=Test admin");
+        $this->select("id=User_tenant", "label=Test Company 1");
         sleep(1);
         $this->select("id=User_tenant_agent", "label=Test agentadmin");
         $this->waitForElementPresent("document.forms['register-newhost-form'].yt0");
@@ -583,8 +583,8 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Edit");
         $this->assertEquals(date('d-m-Y', time() + 86400), $this->getEval("window.document.getElementById(\"Visit_date_in\").value"));
         $this->assertEquals(date('d-m-Y', time() + 86400), $this->getEval("window.document.getElementById(\"Visit_date_out\").value"));
-        if ($currentHour == '24') {
-            $currentHour = '00';
+        if ($currentHour == '00') {
+            $currentHour = '24';
         }
         $this->assertEquals($currentHour, $this->getValue("id=Visit_time_in_hours"));
         $this->assertEquals($currentMinute, $this->getValue("id=Visit_time_in_minutes"));
@@ -877,19 +877,10 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->waitForElementPresent("id=2");
         $this->click("id=2");
         $this->click("id=clicktabB1");
-//        $this->type("id=Patient_name", "patient 0a");
-//        $this->clickAndWait("id=submitFormPatientName");
         $this->addHost("Host6");
-        $this->click("id=submitFormUser");
-        $this->clickAndWait("id=submitAllForms");
-
+        $this->clickAndWait("id=submitFormUser");
         $date2 = date('d-m-Y', time() + 86400);
         $this->assertEquals($date2, $this->getEval("window.document.getElementById(\"Visit_date_in\").value"));
-        $this->assertEquals($date2, $this->getEval("window.document.getElementById(\"Visit_date_out\").value"));
-
-
-        //$this->assertEquals("Same Day Visitor", $this->getText("css=#cardDetailsTable > tbody > tr > td"));
-
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Visitors");
         $this->waitForElementPresent("link=Preregister Visit");

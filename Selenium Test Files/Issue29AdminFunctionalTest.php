@@ -329,8 +329,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_contact_number", "123456");
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeatpassword", "12345");
-        $this->click("id=submitFormUser");
-        $this->clickAndWait("id=submitAllForms");
+        $this->clickAndWait("id=submitFormUser");
         $this->assertEquals("Visitor3", $this->getText("//table[@id='personalDetailsTable']/tbody/tr[2]/td[2]"));
         $this->assertEquals("testVisitor3@test.com", $this->getValue("id=Visitor_email"));
         $this->assertEquals("2", $this->getValue("id=Visit_visitor_type"));
@@ -792,7 +791,6 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Please enter a Last Name", $this->getText("id=User_last_name_em_"));
         $this->assertEquals("Please enter a Contact No.", $this->getText("id=User_contact_number_em_"));
         $this->assertEquals("Please enter an Email Address", $this->getText("id=User_email_em_"));
-        $this->assertEquals("Please enter a Repeat Password", $this->getText("id=User_repeatpassword_em_"));
         $this->assertEquals("Please enter a Password", $this->getText("id=User_password_em_"));
         $this->click("id=dummy-host-findBtn");
         $this->assertEquals("Search Name cannot be blank.", $this->getText("id=searchTextHostErrorMessage"));
@@ -877,7 +875,6 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Please enter an Email Address", $this->getText("id=User_email_em_"));
         $this->assertEquals("Please enter a Contact No.", $this->getText("id=User_contact_number_em_"));
         $this->assertEquals("Please enter a Password", $this->getText("id=User_password_em_"));
-        $this->assertEquals("Please enter a Repeat Password", $this->getText("id=User_repeatpassword_em_"));
         $this->type("id=User_password", "12345");
         $this->waitForElementPresent("id=passwordErrorMessage");
         $this->assertEquals("New Password does not match with \nRepeat New Password.", $this->getText("id=passwordErrorMessage"));

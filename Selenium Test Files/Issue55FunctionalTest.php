@@ -43,13 +43,15 @@ class Issue55FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_first_name", "test");
         $this->type("id=Visitor_last_name", "preload");
         $this->type("id=Visitor_contact_number", "123456");
-        $this->select("id=workstation", "label=Workstation1");
+        
         $this->type("id=Visitor_email", "preloadvisitor2@test.com");
         $this->type("id=Visitor_email", "preloadvisitor@test.com");
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
-        $this->select("id=Visitor_tenant", "label=Test admin");
+        $this->select("id=Visitor_tenant", "label=Test Company 1");
         $this->select("id=Visit_reason", "label=Reason 1");
+        sleep(1);
+        $this->select("id=workstation", "label=Workstation1");
         $this->click("id=submitFormVisitor");
         $this->type("id=User_first_name", "test");
         $this->type("id=User_last_name", "host1");
@@ -57,7 +59,7 @@ class Issue55FunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_contact_number", "12345");
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeatpassword", "12345");
-        $this->select("id=User_tenant", "label=Test admin");
+        $this->select("id=User_tenant", "label=Test Company 1");
         $this->type("id=User_department", "department");
         $this->type("id=User_staff_id", "123123");
         sleep(1);
@@ -120,7 +122,8 @@ class Issue55FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_contact_number", "1234567");
         $this->type("id=Visitor_vehicle", "ABC123");
         $this->select("id=Visit_reason", "label=Reason 1");
-        $this->select("id=Visitor_tenant", "label=Test admin");
+        $this->select("id=Visitor_tenant", "label=Test Company 1");
+        sleep(1);
         $this->select("id=workstation", "label=Workstation1");
         $this->click("id=submitFormVisitor");
         $this->waitForElementPresent("id=photoErrorMessage");
@@ -136,10 +139,10 @@ class Issue55FunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_contact_number", "1234567");
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeatpassword", "12345");
-        $this->select("id=User_tenant", "label=Test admin");
-        $this->click("id=submitFormUser");
-        $this->type("id=proposedDateOut", "18-02-2015");
-        $this->clickAndWait("id=submitAllForms");
+        sleep(1);
+        $this->select("id=User_tenant", "label=Test Company 1");
+        $this->type("id=User_repeatpassword", "12345");
+        $this->clickAndWait("id=submitFormUser");
         $this->click("css=#activate-a-visit-form > input.complete");
         sleep(3);
         $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());

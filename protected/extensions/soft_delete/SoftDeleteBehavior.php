@@ -18,6 +18,7 @@ class SoftDeleteBehavior extends CActiveRecordBehavior {
         if ($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] != ''  ) {
             $criteria->condition = "t.tenant ='" . $session['tenant'] . "'";
         }
+        
         $this->owner->dbCriteria->mergeWith($criteria);
     }
 

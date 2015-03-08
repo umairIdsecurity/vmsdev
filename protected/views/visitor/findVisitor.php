@@ -4,6 +4,7 @@
     }
 </style>
 <?php
+$session = new CHttpSession;
 /* @var $this VisitorController */
 /* @var $model Visitor */
 $visitorName = $_GET['id'];

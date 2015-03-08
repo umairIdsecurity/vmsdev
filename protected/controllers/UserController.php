@@ -33,7 +33,7 @@ class UserController extends Controller {
                     'CheckEmailIfUnique',
                     'GetTenantAgentAjax',
                     'GetTenantOrTenantAgentCompany',
-                    'GetTenantWorkstation', 'GetTenantAgentWorkstation'),
+                    'GetTenantWorkstation', 'GetTenantAgentWorkstation','getCompanyOfTenant'),
                 'users' => array('@'),
             ),
             array('allow',
@@ -204,6 +204,13 @@ class UserController extends Controller {
 
     public function actionGetTenantWorkstation($id) {
         $resultMessage['data'] = User::model()->findWorkstationsWithSameTenant($id);
+
+        echo CJavaScript::jsonEncode($resultMessage);
+        Yii::app()->end();
+    }
+    
+    public function actionGetCompanyOfTenant($id,$tenantAgentId = NULL) {
+        $resultMessage['data'] = User::model()->findCompanyOfTenant($id, $tenantAgentId);
 
         echo CJavaScript::jsonEncode($resultMessage);
         Yii::app()->end();

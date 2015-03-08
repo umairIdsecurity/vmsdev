@@ -37,7 +37,7 @@ class Issue65FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("//div[@id='cssmenu']/ul/li[2]/a/span");
         $this->click("id=clicktabA");
-        $this->select("id=workstation", "label=Workstation1");
+        
         $this->type("id=Visitor_first_name", "test");
         $this->type("id=Visitor_last_name", "test");
         $this->type("id=Visitor_contact_number", "123456");
@@ -45,13 +45,15 @@ class Issue65FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
         $this->select("id=Visit_reason", "label=Reason 1");
-        $this->select("id=Visitor_tenant", "label=Test admin");
+        $this->select("id=Visitor_tenant", "label=Test Company 1");
+        sleep(1);
+        $this->select("id=workstation", "label=Workstation1");
         $this->click("id=addCompanyLink");
         $this->waitForElementPresent("id=Company_name");
         sleep(1);
         $this->type("id=Company_name", "TESTCOMPANY");
         $this->type("id=Company_code", "TCC");
-        $this->type("//input[@type='file']", "C:\\xampp\\htdocs\\vms\\images\\admin_lifehouse.png");
+        $this->type("//input[@type='file']", "C:\\xampp\\htdocs\\vms\\protected\\assets\\images\\admin_lifehouse.png");
         $this->clickAndWait("id=createBtn");
         $this->click("id=submitFormVisitor");
         $this->type("id=User_first_name", "TEST");
@@ -60,7 +62,7 @@ class Issue65FunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_contact_number", "123456");
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeatpassword", "12345");
-        $this->select("id=User_tenant", "label=Test admin");
+        $this->select("id=User_tenant", "label=Test Company 1");
         sleep(1);
         $this->clickAndWait("id=submitFormUser");
         $this->assertEquals("TCA", $this->getText("css=#cardDetailsTable > tbody > tr > td"));

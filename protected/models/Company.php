@@ -133,7 +133,7 @@ class Company extends CActiveRecord {
         $criteria->compare('is_deleted', $this->is_deleted);
         $criteria->compare('code', $this->code);
         $criteria->compare('company_laf_preferences', $this->company_laf_preferences);
-
+        
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'sort' => array(
@@ -218,7 +218,9 @@ class Company extends CActiveRecord {
 
     public function findAllCompany() {
         $aArray = array();
-        $company = Company::model()->findAll();
+        $criteria = new CDbCriteria;
+        $criteria->condition = 'id != 1';
+        $company = Company::model()->findAll($criteria);
         foreach ($company as $index => $value) {
             $aArray[] = array(
                 'id' => $value['id'],

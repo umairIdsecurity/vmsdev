@@ -461,7 +461,7 @@ $criteria->addCondition('t.is_deleted = 0');
         if($visitStatus == VisitStatus::ACTIVE){
             $Criteria->condition = "visitor='".$visitorId."' && visit_status='".$visitStatus."'";
         } else {
-        $Criteria->condition = "date_in = '" . $date_in . "' && date_out='".$date_out."' && visitor='".$visitorId."' && visit_status='".$visitStatus."'";
+        $Criteria->condition = "date_in = '" . $date_in . "' && visitor='".$visitorId."' && visit_status='".$visitStatus."'";
         }
         $visit = Visit::model()->findAll($Criteria);
         

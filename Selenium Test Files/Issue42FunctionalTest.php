@@ -43,7 +43,7 @@ class Issue42FunctionalTest extends BaseFunctionalTest {
         $this->addVisitor('Visitor0');
         $this->select("id=workstation", "label=Workstation1");
         $this->select("id=Visit_reason", "label=Reason 1");
-        $this->select("id=Visitor_tenant", "label=Test admin");
+        $this->select("id=Visitor_tenant", "label=Test Company 1");
         $this->waitForElementPresent("id=submitFormVisitor");
         $this->click("id=submitFormVisitor");
         $this->addHost("host");

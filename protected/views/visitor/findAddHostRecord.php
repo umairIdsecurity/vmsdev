@@ -43,6 +43,7 @@
                                     showHideTabs("logVisitB", "logVisitA", "logVisit", "findHostA", "findHost", "findVisitorA", "findVisitor");   
                             
                                 } else {
+                                
                                     sendReasonForm();
                                 }
                             }
@@ -76,6 +77,7 @@
                 'validateOnSubmit' => true,
                 'afterValidate' => 'js:function(form,data,hasError){
                         if(!hasError){
+                        document.getElementById("User_company").disabled = false;
                                 checkHostEmailIfUnique();
                                 }
                         }'
@@ -147,7 +149,7 @@
                     ?>>
 
                             <?php echo $form->labelEx($userModel, 'company'); ?><br>
-                        <select id="User_company" name="User[company]" >
+                        <select id="User_company" disabled name="User[company]" >
                             <option value=''>Select Company</option>
                             <?php
                             if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
@@ -171,18 +173,18 @@
                     <td id="hostTenantRow"><?php echo $form->labelEx($userModel, 'tenant'); ?><br>
 
                         <select id="User_tenant" onchange="populateHostTenantAgentAndCompanyField()" name="User[tenant]"  >
-                            <option value='' selected>Select Admin</option>
+                            <option value='' selected>Select Tenant</option>
                             <?php
-                            $allAdminNames = User::model()->findAllAdmin();
-                            foreach ($allAdminNames as $key => $value) {
+                            $allTenantCompanyNames = User::model()->findAllCompanyTenant();
+                            foreach ($allTenantCompanyNames as $key => $value) {
                                 ?>
-                                <option value="<?php echo $value->tenant; ?>"
+                                <option value="<?php echo $value['tenant']; ?>"
                                 <?php
-                                if ($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value->tenant) {
+                                if ($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant']) {
                                     echo " selected ";
                                 }
                                 ?>
-                                        ><?php echo $value->first_name . " " . $value->last_name; ?></option>
+                                        ><?php echo $value['name']; ?></option>
     <?php
 }
 ?>

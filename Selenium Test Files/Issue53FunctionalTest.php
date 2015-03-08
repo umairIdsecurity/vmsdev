@@ -54,7 +54,7 @@ class Issue53FunctionalTest extends BaseFunctionalTest {
         $this->click("id=clicktabA");
         $this->assertEquals("Corporate Visitor Test Visitor Type", $this->getText("id=Visitor_visitor_type"));
         $this->select("id=Visitor_visitor_type", "label=Test Visitor Type");
-        $this->select("id=workstation", "label=Workstation1");
+       
         $this->type("id=Visitor_first_name", "Test");
         $this->type("id=Visitor_last_name", "VisitorType");
         $this->type("id=Visitor_position", "test position");
@@ -64,10 +64,12 @@ class Issue53FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
         $this->select("id=Visit_reason", "label=Reason 1");
-        $this->select("id=Visitor_tenant", "label=Test admin");
+        $this->select("id=Visitor_tenant", "label=Test Company 1");
         sleep(1);
         $this->click("id=Visitor_tenant_agent");
-        $this->select("id=Visitor_tenant_agent", "label=Test agentadmin");
+        $this->select("id=Visitor_tenant_agent", "label=Test Company 2");
+        sleep(1);
+        $this->select("id=workstation", "label=Workstation1");
         $this->click("id=submitFormVisitor");
         $this->type("id=User_first_name", "test");
         $this->type("id=User_last_name", "newhost");
@@ -77,12 +79,10 @@ class Issue53FunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_contact_number", "123456");
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeatpassword", "12345");
-        $this->select("id=User_tenant", "label=Test admin");
+        $this->select("id=User_tenant", "label=Test Company 1");
         sleep(1);
-        $this->select("id=User_tenant_agent", "label=Test agentadmin");
-        $this->click("id=submitFormUser");
-        $this->click("id=submitFormUser");
-        $this->clickAndWait("id=submitAllForms");
+        $this->select("id=User_tenant_agent", "label=Test Company 2");
+        $this->clickAndWait("id=submitFormUser");
         $this->assertEquals("Corporate Visitor Test Visitor Type", $this->getText("id=Visit_visitor_type"));
         $this->clickAndWait("link=Visit History");
         $this->assertEquals("Corporate Visitor Test Visitor Type", $this->getText("name=Visit[visitor_type]"));

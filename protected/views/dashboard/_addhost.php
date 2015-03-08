@@ -76,12 +76,12 @@ $session = new CHttpSession;
                         ?>
                     <td id="hostTenantRow"><?php echo $form->labelEx($userModel, 'tenant'); ?><br>
                         <select id="User_tenant" onchange="populateHostTenantAgentAndCompanyField()" name="User[tenant]"  >
-                            <option value='' selected>Select Admin</option>
+                            <option value='' selected>Select Tenant</option>
                             <?php
-                            $allAdminNames = User::model()->findAllAdmin();
-                            foreach ($allAdminNames as $key => $value) {
+                            $allTenantCompanyNames = User::model()->findAllCompanyTenant();
+                            foreach ($allTenantCompanyNames as $key => $value) {
                                 ?>
-                                <option value="<?php echo $value->tenant; ?>" ><?php echo $value->first_name . " " . $value->last_name; ?></option>
+                                <option value="<?php echo $value['tenant']; ?>" ><?php echo $value['name']; ?></option>
                                 <?php
                             }
                             ?>
@@ -99,7 +99,7 @@ $session = new CHttpSession;
 
                     <td id="hostCompanyRow">
                         <?php echo $form->labelEx($userModel, 'company'); ?><br>
-                        <select id="User_company" name="User[company]" >
+                        <select id="User_company" name="User[company]" disabled>
                             <option value=''>Select Company</option>
                         </select>
                         <?php echo "<br>" . $form->error($userModel, 'company'); ?>
@@ -166,7 +166,7 @@ $session = new CHttpSession;
 
     });
     function sendHostForm() {
-
+        document.getElementById('User_company').disabled = false;
         var hostform = $("#registerhostform").serialize();
         $.ajax({
             type: "POST",
@@ -278,7 +278,7 @@ $session = new CHttpSession;
             data: tenant,
             success: function(r) {
                 $.each(r.data, function(index, value) {
-                    $('#User_tenant_agent').append('<option value="' + value.id + '">' + value.name + '</option>');
+                    $('#User_tenant_agent').append('<option value="' + value.tenant_agent + '">' + value.name + '</option>');
                 });
             }
         });

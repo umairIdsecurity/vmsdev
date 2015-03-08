@@ -265,19 +265,19 @@ $session = new CHttpSession;
                     ?>><?php echo $form->labelEx($model, 'tenant'); ?><br>
 
                         <select id="Visitor_tenant" onchange="populateTenantAgentAndCompanyField()" name="Visitor[tenant]"  >
-                            <option value='' selected>Select Admin</option>
+                            <option value='' selected>Select Tenant</option>
                             <?php
-                            $allAdminNames = User::model()->findAllAdmin();
-                            foreach ($allAdminNames as $key => $value) {
+                            $allTenantCompanyNames = User::model()->findAllCompanyTenant();
+                            foreach ($allTenantCompanyNames as $key => $value) {
                                 ?>
-                                <option value="<?php echo $value->tenant; ?>"
+                                <option value="<?php echo $value['tenant']; ?>"
                                 <?php
-                                if ($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value->tenant) {
+                                if ($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant']) {
                                     echo " selected ";
                                 }
                                 ?>
 
-                                        ><?php echo $value->first_name . " " . $value->last_name; ?></option>
+                                        ><?php echo $value['name']; ?></option>
                                         <?php
                                     }
                                     ?>
@@ -454,6 +454,7 @@ $session = new CHttpSession;
 
         $("#Visit_workstation").val(value.value);
     }
+    
     function autoResize() {
         var newheight;
 

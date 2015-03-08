@@ -4,7 +4,7 @@
     }
     </style>
 <?php
-
+$session = new CHttpSession;
 /* @var $this VisitorController */
 /* @var $model Visitor */
 $visitorName = $_GET['id'];
@@ -12,7 +12,7 @@ $visitorType = $_GET['visitortype'];
 
 $model = new User;
 $criteria = new CDbCriteria;
-$criteria->addCondition('role="9" and (CONCAT(first_name," ",last_name) like "%' . $visitorName . '%" or first_name like "%' . $visitorName . '%" or last_name like "%' . $visitorName . '%")');
+$criteria->addCondition('tenant="'.$session['tenant'].'" and role="9" and (CONCAT(first_name," ",last_name) like "%' . $visitorName . '%" or first_name like "%' . $visitorName . '%" or last_name like "%' . $visitorName . '%")');
 
 $model->unsetAttributes();
 

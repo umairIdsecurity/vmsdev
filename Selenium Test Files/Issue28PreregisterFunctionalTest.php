@@ -23,19 +23,19 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
     }
 
     function testAll() {
-//        $this->resetDbWithData();
-//        $this->Scenario1();
-//        $this->Scenario2();
-//        $this->Scenario3();
-//        $this->Scenario4();
-//        $this->Scenario5();
-//        $this->Scenario6();
-//        $this->Scenario7();
-//        $this->Scenario8();
-//        $this->Scenario9();
-//        $this->Scenario10();
-//        $this->Scenario11();
-//        $this->Scenario12();
+        $this->resetDbWithData();
+        $this->Scenario1();
+        $this->Scenario2();
+        $this->Scenario3();
+        $this->Scenario4();
+        $this->Scenario5();
+        $this->Scenario6();
+        $this->Scenario7();
+        $this->Scenario8();
+        $this->Scenario9();
+        $this->Scenario10();
+        $this->Scenario11();
+        $this->Scenario12();
         $this->Scenario13();
     }
 
@@ -590,7 +590,6 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Please enter a Last Name", $this->getText("id=User_last_name_em_"));
         $this->assertEquals("Please enter an Email Address", $this->getText("id=User_email_em_"));
         $this->assertEquals("Please enter a Contact No.", $this->getText("id=User_contact_number_em_"));
-        $this->assertEquals("Please enter a Repeat Password", $this->getText("id=User_repeatpassword_em_"));
         $this->assertEquals("Please enter a Password", $this->getText("id=User_password_em_"));
         $this->type("id=User_first_name", "test");
         $this->type("id=User_last_name", "test");

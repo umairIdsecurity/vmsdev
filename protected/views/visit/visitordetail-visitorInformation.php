@@ -414,10 +414,10 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                             <td ><?php echo $form->labelEx($newHost, 'tenant'); ?></td>
                             <td>
                                 <select id="User_tenant" class="New_user_tenant" onchange="populateHostTenantAgentAndCompanyField()" name="User[tenant]"  >
-                                    <option value='' selected>Select Admin</option>
+                                    <option value='' selected>Select Tenant</option>
                                     <?php
-                                    $allAdminNames = User::model()->findAllAdmin();
-                                    foreach ($allAdminNames as $key => $value) {
+                                    $allTenantCompanyNames = User::model()->findAllAdmin();
+                                    foreach ($allTenantCompanyNames as $key => $value) {
                                         ?>
                                         <option value="<?php echo $value->tenant; ?>"><?php echo $value->first_name . " " . $value->last_name; ?></option>
                                         <?php

@@ -105,7 +105,6 @@ class Issue13FunctionalTest extends BaseFunctionalTest {
         $this->select("id=fromYear", "label=1993");
         $this->type("id=User_password", "123");
         $this->type("id=User_repeat_password", "123");
-        $this->click("id=submitBtn");
         $this->clickAndWait("id=submitForm");
         $this->type("name=User[first_name]", "testbirthday");
         $this->type("name=User[last_name]", "test");

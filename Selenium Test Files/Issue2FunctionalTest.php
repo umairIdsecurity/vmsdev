@@ -153,8 +153,7 @@ class Issue2 extends BaseFunctionalTest {
         $username = 'admin@test.com';
         $this->login($username, 'admin');
 
-        $this->click("css=p");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("css=p");
         $this->clickAndWait("id=resetPasswordBtn");
         $this->type("name=Password[password]", "123");
         $this->type("name=Password[repeatpassword]", "12");
@@ -162,7 +161,7 @@ class Issue2 extends BaseFunctionalTest {
             if ($second >= 60)
                 $this->fail("timeout");
             try {
-                if ($this->isElementPresent("//form[@id='password-form']/table/tbody/tr[4]/td/div"))
+                if ($this->isElementPresent("//form[@id='password-form']/table/tbody/tr[3]/td/div"))
                     break;
             } catch (Exception $e) {
                 
@@ -170,7 +169,7 @@ class Issue2 extends BaseFunctionalTest {
             sleep(1);
         }
 
-        $this->assertEquals("New Password does not match with Repeat New Password.", $this->getText("//form[@id='password-form']/table/tbody/tr[4]/td/div"));
+        $this->assertEquals("New Password does not match with Repeat New Password.", $this->getText("//form[@id='password-form']/table/tbody/tr[3]/td/div"));
     }
 
     /* Scenario 5– Login as superadmin and update another user id

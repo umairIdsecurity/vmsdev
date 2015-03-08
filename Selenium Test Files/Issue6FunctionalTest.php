@@ -64,7 +64,7 @@ class Issue6FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Workstation_contact_name", "Test Person");
         $this->type("id=Workstation_contact_number", "1234-567");
         $this->type("id=Workstation_contact_email_address", "workstation2@test.com");
-        $this->select("id=Workstation_tenant", "label=Test admin2");
+        $this->select("id=Workstation_tenant", "label=Test Company 1");
         $this->click("name=yt0");
         $this->waitForPageToLoad("30000");
         $this->type("css=td > input[name=\"Workstation[name]\"]", "Workstation 2");

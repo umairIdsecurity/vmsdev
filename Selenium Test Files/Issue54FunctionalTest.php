@@ -47,7 +47,6 @@ class Issue54FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("//div[@id='cssmenu']/ul/li[2]/a/span");
         $this->click("id=clicktabA");
-        $this->select("id=workstation", "label=Workstation1");
         $this->type("id=Visitor_vehicle", "BAC123");
         $this->type("id=Visitor_first_name", "test");
         $this->type("id=Visitor_last_name", "personpreload");
@@ -56,8 +55,10 @@ class Issue54FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
         $this->select("id=Visit_reason", "label=Reason 1");
-        $this->select("id=Visitor_tenant", "label=Test admin");
+        $this->select("id=Visitor_tenant", "label=Test Company 1");
         $this->click("id=Visitor_tenant_agent");
+        sleep(1);
+        $this->select("id=workstation", "label=Workstation1");
         $this->click("id=submitFormVisitor");
         $this->type("id=User_first_name", "New");
         $this->type("id=User_last_name", "PreloadHost");
@@ -65,7 +66,7 @@ class Issue54FunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_contact_number", "123456");
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeatpassword", "12345");
-        $this->select("id=User_tenant", "label=Test admin");
+        $this->select("id=User_tenant", "label=Test Company 1");
         sleep(1);
         $this->clickAndWait("id=submitFormUser");
         try {
@@ -123,7 +124,7 @@ class Issue54FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
         $this->select("id=Visit_reason", "label=Reason 1");
-        $this->select("id=Visitor_tenant", "label=Test admin");
+        $this->select("id=Visitor_tenant", "label=Test Company 1");
         $this->click("id=submitFormVisitor");
         $this->type("id=User_first_name", "test");
         $this->type("id=User_last_name", "host1");
@@ -134,7 +135,7 @@ class Issue54FunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_staff_id", "12345");
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeatpassword", "12345");
-        $this->select("id=User_tenant", "label=Test admin");
+        $this->select("id=User_tenant", "label=Test Company 1");
         sleep(1);
         $this->clickAndWait("id=submitFormUser");
         try {
@@ -251,11 +252,15 @@ class Issue54FunctionalTest extends BaseFunctionalTest {
         $this->select("id=workstation_search", "label=Workstation1");
         $this->select("id=Visit_reason_search", "label=Reason 1");
         $this->click("id=clicktabB1");
-        $this->type("id=search-host", "staffmember");
-        $this->click("id=dummy-host-findBtn");
-        $this->waitForElementPresent("id=21");
-        $this->click("id=21");
-        $this->clickAndWait("id=clicktabB2");
+        $this->type("id=User_first_name", "test");
+        $this->type("id=User_last_name", "test");
+        $this->type("id=User_email", "test@test.com");
+        $this->type("id=User_contact_number", "123456");
+        $this->type("id=User_password", "12345");
+        $this->type("id=User_repeatpassword", "12345");
+        $this->select("id=User_tenant", "label=Test Company 1");
+        sleep(1);
+        $this->clickAndWait("id=submitFormUser");
         $this->click("//li[@id='preregisterLi']/a/span");
         $this->click("css=#update-log-visit-form > input.complete");
         sleep(5);
@@ -366,13 +371,13 @@ class Issue54FunctionalTest extends BaseFunctionalTest {
         $this->select("id=workstation", "label=Workstation1");
         $this->select("id=Visit_reason", "label=Reason 1");
         $this->type("id=Visitor_contact_number", "1234567");
-        $this->select("id=Visitor_tenant", "label=Test admin");
+        $this->select("id=Visitor_tenant", "label=Test Company 1");
         $this->click("id=submitFormVisitor");
         $this->type("id=User_first_name", "hostperson");
         $this->type("id=User_last_name", "hostperson");
         $this->type("id=User_email", "hostperson@test.com");
         $this->type("id=User_contact_number", "123456");
-        $this->select("id=User_tenant", "label=Test admin");
+        $this->select("id=User_tenant", "label=Test Company 1");
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeatpassword", "12345");
         $this->type("id=User_department", "department");

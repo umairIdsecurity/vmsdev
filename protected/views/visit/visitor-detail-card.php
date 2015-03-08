@@ -40,13 +40,13 @@ $photoForm = $this->beginWidget('CActiveForm', array(
             $companyLogoId = Company::model()->findByPk($tenant->company)->logo;
 
             if ($companyLogoId == "") {
-                $companyLogo = 'images/nologoavailable.jpg';
+                $companyLogo = Yii::app()->controller->assetsBase."/".'images/companylogohere.png';
             } else {
-                $companyLogo = Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
+                $companyLogo = Yii::app()->request->baseUrl."/".Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
             }
             ?>
         <img class='<?php if($model->visit_status != VisitStatus::ACTIVE){ echo "cardCompanyLogoPreregistered"; } else { echo "cardCompanyLogo"; } ?>' src="<?php
-            echo Yii::app()->request->baseUrl . "/" . $companyLogo;
+            echo $companyLogo;
             ?>"/>
                  <?php
              }

@@ -109,14 +109,6 @@ class VisitReason extends CActiveRecord {
         return parent::model($className);
     }
 
-//    public function behaviors() {
-//        return array(
-//            'softDelete' => array(
-//                'class' => 'ext.soft_delete.SoftDeleteBehavior'
-//            ),
-//        );
-//    }
-
     public function findAllReason() {
 
         $criteria = new CDbCriteria;

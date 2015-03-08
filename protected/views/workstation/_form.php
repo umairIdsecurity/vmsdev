@@ -51,14 +51,14 @@ $session = new CHttpSession;
                         <option disabled value='' selected>Select Tenant</option>
                         <?php
 
-                        $companyList = User::model()->findAllAdmin();
+                        $companyList = User::model()->findAllCompanyTenant();
                         foreach ($companyList as $key => $value) {
                             ?>
                             <option <?php
-                            if ($model['tenant'] == $value->id) {
+                            if ($model['tenant'] == $value['id']) {
                                 echo " selected ";
                             }
-                            ?> value="<?php echo $value->tenant; ?>"><?php echo $value->first_name . " " . $value->last_name; ?></option>
+                            ?> value="<?php echo $value['tenant']; ?>"><?php echo $value['name']; ?></option>
                                 <?php
                             }
                             ?>
@@ -120,7 +120,7 @@ $session = new CHttpSession;
             success: function(r) {
                 $('#Workstation_tenant_agent option[value!=""]').remove();
                 $.each(r.data, function(index, value) {
-                    $('#Workstation_tenant_agent').append('<option value="' + value.id + '">' + value.name + '</option>');
+                    $('#Workstation_tenant_agent').append('<option value="' + value.tenant_agent + '">' + value.name + '</option>');
 
                 });
             }

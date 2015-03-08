@@ -3,14 +3,13 @@ $session = new CHttpSession;
 $dataId = '';
 if ($this->action->id == 'update') {
     $dataId = $_GET['id'];
-
 }
 ?>
 <style>
     .ajax-upload-dragdrop{
         margin-left:0px !important;
     }
-    </style>
+</style>
 <div data-ng-app="PwordForm">
     <?php
     $form = $this->beginWidget('CActiveForm', array(
@@ -52,26 +51,26 @@ if ($this->action->id == 'update') {
                 <td>
                     <table>
                         <tr <?php
-                        if ($session['role'] != Roles::ROLE_SUPERADMIN) {
-                            echo " class='hidden' ";
-                        }
-                        ?>>
+    if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+        echo " class='hidden' ";
+    }
+    ?>>
                             <td id="visitorTenantRow">
                                 <?php echo $form->labelEx($model, 'tenant'); ?>
                             </td>
                             <td>
                                 <select id="Visitor_tenant" onchange="populateTenantAgentAndCompanyField()" name="Visitor[tenant]"  >
-                                    <option value='' selected>Select Admin</option>
+                                    <option value='' selected>Select Tenant</option>
                                     <?php
-                                    $allAdminNames = User::model()->findAllAdmin();
-                                    foreach ($allAdminNames as $key => $value) {
+                                    $allTenantCompanyNames = User::model()->findAllCompanyTenant();
+                                    foreach ($allTenantCompanyNames as $key => $value) {
                                         ?>
-                                        <option value="<?php echo $value->tenant; ?>"
+                                        <option value="<?php echo $value['tenant']; ?>"
                                         <?php
-                                        if (($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value->tenant && $this->action->id != 'update') || ($model->tenant == $value->tenant)) {
+                                        if (($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant'] && $this->action->id != 'update') || ($model['tenant'] == $value['tenant'])) {
                                             echo "selected ";
                                         }
-                                        ?> ><?php echo $value->first_name . " " . $value->last_name; ?></option>
+                                        ?> ><?php echo $value['name']; ?></option>
                                                 <?php
                                             }
                                             ?>
@@ -79,10 +78,10 @@ if ($this->action->id == 'update') {
                             </td>
                         </tr>
                         <tr <?php
-                        if ($session['role'] != Roles::ROLE_SUPERADMIN) {
-                            echo " class='hidden' ";
-                        }
-                        ?>>
+                                            if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+                                                echo " class='hidden' ";
+                                            }
+                                            ?>>
                             <td id="visitorTenantAgentRow" >
                                 <?php echo $form->labelEx($model, 'tenant_agent'); ?>
                             </td>
@@ -132,10 +131,10 @@ if ($this->action->id == 'update') {
                                        value="<?php echo $model['photo']; ?>">
 
                                 <div class="photoDiv"  style="<?php
-                                if ($model['photo'] == NULL) {
-                                    echo "display:none;";
-                                }
-                                ?>margin-bottom:5px;">
+                                       if ($model['photo'] == NULL) {
+                                           echo "display:none;";
+                                       }
+                                       ?>margin-bottom:5px;">
                                      <?php if ($dataId != '') { ?> 
                                         <img id='photoPreview' src="<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($dataId) ?>"/>
                                     <?php } else { ?> 
@@ -214,7 +213,7 @@ if ($this->action->id == 'update') {
                                 </td>
                                 <td>
                                     <input ng-model="user.passwords" data-ng-class="{
-                                                    'ng-invalid':registerform['Visitor[repeatpassword]'].$error.match}" type="password" id="Visitor_password" name="Visitor[password]">			
+                                                        'ng-invalid':registerform['Visitor[repeatpassword]'].$error.match}" type="password" id="Visitor_password" name="Visitor[password]">			
                                            <?php echo "<br>" . $form->error($model, 'password'); ?>
                                 </td>
                             </tr>
@@ -249,10 +248,10 @@ if ($this->action->id == 'update') {
 <input type="hidden" id="currentAction" value="<?php echo $this->action->id; ?>">
 <input type="hidden" id="currentRoleOfLoggedInUser" value="<?php echo $session['role']; ?>">
 <input type="hidden" id="currentlyEditedVisitorId" value="<?php
-if (isset($_GET['id'])) {
-    echo $_GET['id'];
-}
-?>">
+    if (isset($_GET['id'])) {
+        echo $_GET['id'];
+    }
+    ?>">
 <script>
     $(document).ready(function() {
         if ($("#currentAction").val() == 'update') {
@@ -425,7 +424,7 @@ if (isset($_GET['id'])) {
             data: tenant,
             success: function(r) {
                 $.each(r.data, function(index, value) {
-                    $('#Visitor_tenant_agent').append('<option value="' + value.id + '">' + value.name + '</option>');
+                    $('#Visitor_tenant_agent').append('<option value="' + value.tenant_agent + '">' + value.name + '</option>');
                 });
                 $("#Visitor_tenant_agent").val(selected);
             }
@@ -507,7 +506,24 @@ if (isset($_GET['id'])) {
             url: url,
             data: form,
             success: function(data) {
-                window.location = 'index.php?r=visitor/admin';
+                if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7 ) {
+                    window.location = 'index.php?r=dashboard';
+                } else if($("#currentRoleOfLoggedInUser").val() == 9) {
+                    window.location = 'index.php?r=dashboard/viewmyvisitors';
+                }
+                else {
+                    window.location = 'index.php?r=visitor/admin';
+                }
+            },
+            error:function(data){
+                if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7 ) {
+                    window.location = 'index.php?r=dashboard';
+                } else if($("#currentRoleOfLoggedInUser").val() == 9) {
+                    window.location = 'index.php?r=dashboard/viewmyvisitors';
+                }
+                else {
+                    window.location = 'index.php?r=visitor/admin';
+                }
             },
         });
     }

@@ -303,7 +303,7 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
                 $('#findVisitorTableIframe').contents().find('.findVisitorButtonColumn a').html('Select Visitor');
                 $('#findVisitorTableIframe').contents().find('#' + id).addClass('delete');
                 $('#findVisitorTableIframe').contents().find('#' + id).html('Visitor Selected');
-                $('#findVisitorTableIframe').contents().find('.findVisitorButtonColumn .linkToVisitorDetailPage').html('Visitor has an active visit');
+                $('#findVisitorTableIframe').contents().find('.findVisitorButtonColumn .linkToVisitorDetailPage').html('Active');
 
             }
         });
@@ -480,6 +480,7 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
                             else if ($("#selectedVisitorInSearchTable").val() == 0) {
                                 sendVisitorForm();
                             } else {
+                                
                                 sendHostForm();
                             }
                         } else {
@@ -494,6 +495,24 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
 
     function populateTenantAgentAndCompanyField()
     {
+        //workstation be based on selected tenant
+        $('#workstation option[value!=""]').remove();
+       
+        $.ajax({
+                    type: 'POST',
+                    url: '<?php echo Yii::app()->createUrl('user/getTenantWorkstation&id='); ?>' + $("#Visitor_tenant").val(),
+                    dataType: 'json',
+                    data: tenant,
+                    success: function(r) {
+                        $('#workstation option[value!=""]').remove();
+
+                        $.each(r.data, function(index, value) {
+                            $('#workstation').append('<option value="' + value.id + '">' + value.name + '</option>');
+                        });
+
+                    }
+                });
+        //populate tenant agent and company dropdown
         $('#Visitor_company option[value!=""]').remove();
         $('#Visitor_tenant_agent option[value!=""]').remove();
         var visitor_type = $("#Visitor_visitor_type").val();
@@ -528,7 +547,7 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
             data: tenant,
             success: function(r) {
                 $.each(r.data, function(index, value) {
-                    $('#Visitor_tenant_agent').append('<option value="' + value.id + '">' + value.name + '</option>');
+                    $('#Visitor_tenant_agent').append('<option value="' + value.tenant_agent + '">' + value.name + '</option>');
                 });
                 $("#Visitor_tenant_agent").val(selected);
             }
@@ -545,7 +564,7 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
             data: tenant,
             success: function(r) {
                 $.each(r.data, function(index, value) {
-                    $('#User_tenant_agent').append('<option value="' + value.id + '">' + value.name + '</option>');
+                    $('#User_tenant_agent').append('<option value="' + value.tenant_agent + '">' + value.name + '</option>');
                 });
             }
         });

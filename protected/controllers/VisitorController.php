@@ -114,7 +114,6 @@ class VisitorController extends Controller {
     public function actionDelete($id) {
         $model = $this->loadModel($id);
         if ($model->delete()) {
-
             //throw new CHttpException(400, "This is a required field and cannot be deleted"); 
         } else {
             $visitorExists = Visit::model()->exists('is_deleted = 0 and visitor =' . $id . ' and (visit_status=' . VisitStatus::PREREGISTERED . ' or visit_status=' . VisitStatus::ACTIVE . ')');

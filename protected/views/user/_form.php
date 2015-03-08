@@ -1,6 +1,4 @@
 <?php
-
-
 $cs = Yii::app()->clientScript;
 $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/script-birthday.js');
 /* @var $this UserController */
@@ -22,15 +20,15 @@ $currentLoggedUserId = $session['id'];
 ?>
 
 <div class="form" data-ng-app="PwordForm">
-    <?php
-    $form = $this->beginWidget('CActiveForm', array(
-        'id' => 'userform',
-        'htmlOptions' => array("name" => "userform"),
-        'enableAjaxValidation' => false,
-        'enableClientValidation' => true,
-        'clientOptions' => array(
-            'validateOnSubmit' => true,
-            'afterValidate' => 'js:function(form,data,hasError){
+<?php
+$form = $this->beginWidget('CActiveForm', array(
+    'id' => 'userform',
+    'htmlOptions' => array("name" => "userform"),
+    'enableAjaxValidation' => false,
+    'enableClientValidation' => true,
+    'clientOptions' => array(
+        'validateOnSubmit' => true,
+        'afterValidate' => 'js:function(form,data,hasError){
                         if(!hasError){
                             if($("#User_role").val() == 7 && $("#User_tenant_agent").val() == "" && $("#currentRole").val() != 6){
                                 $("#User_tenant_agent_em_").show();
@@ -48,9 +46,9 @@ $currentLoggedUserId = $session['id'];
                                 
                                 }
                         }'
-        ),
-    ));
-    ?>
+    ),
+        ));
+?>
 
 
 <?php echo $form->errorSummary($model); ?>
@@ -171,7 +169,7 @@ if ($this->action->Id != 'create' || isset($_POST['User'])) {
                             <td><label for="User_password">Password <span class="required">*</span></label></td>
                             <td>
                                 <input ng-model="user.passwords" data-ng-class="{
-                                                                'ng-invalid':userform['User[repeatpassword]'].$error.match}" type="password" id="User_password" value = '<?php echo $model->password; ?>' name="User[password]">			
+                                                                    'ng-invalid':userform['User[repeatpassword]'].$error.match}" type="password" id="User_password" value = '<?php echo $model->password; ?>' name="User[password]">			
                                        <?php echo "<br>" . $form->error($model, 'password'); ?>
                             </td>
                         </tr>
@@ -226,10 +224,7 @@ if ($session['role'] == Roles::ROLE_AGENT_ADMIN || $currentRoleinUrl == Roles::R
 ?>>
                                 <option value='' selected>Select Company</option>
                                     <?php
-                                    $criteria = new CDbCriteria();
-
-                                    $criteria->addCondition("id!= 1");
-                                    $companyList = CHtml::listData(Company::model()->findAll($criteria), 'id', 'name');
+                                    $companyList = CHtml::listData(Company::model()->findAllCompany(), 'id', 'name');
                                     if (isset($_GET['role'])) {
                                         $urlRole = $_GET['role'];
                                     } else {
@@ -257,11 +252,11 @@ if ($session['role'] == Roles::ROLE_AGENT_ADMIN || $currentRoleinUrl == Roles::R
 <?php
 $criteria = new CDbCriteria();
 if ($session['role'] != Roles::ROLE_SUPERADMIN) {
-    $criteria->addCondition("id!= 1 and id!=" . $session['company']);
+    $criteria->addCondition("tenant='".$session['tenant']."' and id!= 1 and id!=" . $session['company']);
 } else {
     $criteria->addCondition("id!= 1");
 }
-$companyList = CHtml::listData(Company::model()->findAll($criteria), 'id', 'name');
+$companyList = CHtml::listData(Company::model()->findAllCompany(), 'id', 'name');
 foreach ($companyList as $key => $value) {
     ?>
                                     <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
@@ -357,7 +352,7 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
         $("#tenantAgentRow").hide();
         $("#tenantRow").hide();
         $(".workstationRow").hide();
-        
+
         document.getElementById('User_tenant').disabled = true;
         document.getElementById('User_tenant_agent').disabled = true;
         document.getElementById('User_company').disabled = true;
@@ -367,7 +362,7 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
             $("#fromDay").val($("#dateofBirthBreakdownValueDay").val());
 
         }
-      
+
         if ((getRole != admin && getRole != '') && sessionRole == superadmin) {
             if (getRole == agentadmin) {
 
@@ -401,6 +396,7 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
             }
         } else if (getRole == admin && sessionRole == superadmin) {
             $("#addCompanyLink").show();
+            document.getElementById('User_company').disabled = false;
             document.getElementById("companyRow").style.paddingBottom = "10px";
         }
         else if (sessionRole == admin) {
@@ -630,7 +626,7 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
         var superadmin = 5;
         var agentadmin = 6;
         //hide required * label if role is staffmember
-        if(selectedRole == staffmember){
+        if (selectedRole == staffmember) {
             $(".tenantField").hide();
         } else {
             $(".tenantField").show();
@@ -692,6 +688,7 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
         }
         else if (sessionRole == superadmin)
         {
+            $("#User_company_em_").hide();
             if (selectedRole != admin) { // if selected is not equal to admin enable tenant
                 if (selectedRole == operator) {
                     document.getElementById('User_tenant_agent').disabled = true;
@@ -729,7 +726,7 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
 
                 }
                 else if (selectedRole == 7) {
-                    
+
                     $("#tenantAgentRow").show();
                     document.getElementById('User_company').disabled = true;
                     $("#tenantRow").show();
@@ -920,7 +917,7 @@ function getAssignableRoles($user_role) {
             if ($session['id'] == $userIdOnUpdate) {
                 $assignableRoles = array(Roles::ROLE_AGENT_ADMIN, Roles::ROLE_AGENT_OPERATOR, Roles::ROLE_STAFFMEMBER); //keys
             } else {
-                $assignableRoles = array(Roles::ROLE_AGENT_ADMIN,Roles::ROLE_AGENT_OPERATOR, Roles::ROLE_STAFFMEMBER); //keys
+                $assignableRoles = array(Roles::ROLE_AGENT_ADMIN, Roles::ROLE_AGENT_OPERATOR, Roles::ROLE_STAFFMEMBER); //keys
             }
             foreach ($assignableRoles as $roles) {
                 if (isset(User::$USER_ROLE_LIST[$roles])) {
@@ -1007,8 +1004,8 @@ $this->widget('bootstrap.widgets.TbButton', array(
             url: '<?php echo Yii::app()->createUrl('company/GetCompanyList&lastId='); ?>',
             dataType: 'json',
             success: function(r) {
-              //  $('#User_company option[value!=""]').remove();
-              //  $('#User_company_base option[value!=""]').remove();
+                  $('#User_company option[value!=""]').remove();
+                  $('#User_company_base option[value!=""]').remove();
 
                 $.each(r.data, function(index, value) {
                     $('#User_company').append('<option value="' + value.id + '">' + value.name + '</option>');
@@ -1017,15 +1014,15 @@ $this->widget('bootstrap.widgets.TbButton', array(
                     $("#User_company").val(value.id);
                 });
 
-                var duplicateChk = {};
-
-                $('#User_company').each(function() {
-                    if (duplicateChk.hasOwnProperty(this.id)) {
-                        $(this).remove();
-                    } else {
-                        duplicateChk[this.id] = 'true';
-                    }
-                });
+//                var duplicateChk = {};
+//
+//                $('#User_company').each(function() {
+//                    if (duplicateChk.hasOwnProperty(this.id)) {
+//                        $(this).remove();
+//                    } else {
+//                        duplicateChk[this.id] = 'true';
+//                    }
+//                });
             }
         });
     }

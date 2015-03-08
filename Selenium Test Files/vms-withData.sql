@@ -156,8 +156,8 @@ CREATE TABLE IF NOT EXISTS `company` (
 
 INSERT INTO `company` (`id`,`code`, `name`, `trading_name`, `logo`, `contact`, `billing_address`, `email_address`, `office_number`, `mobile_number`, `website`, `created_by_user`, `created_by_visitor`, `tenant`, `tenant_agent`, `is_deleted`) VALUES
 (1,'IDS', 'Identity Security', 'Identity Security', 2, 'Test Person', '123 street', 'idescurity@test.com', 12345, 12345, 'http://idsecurity.com.au', NULL, NULL, 16, 16, 0),
-(2,'TCA', 'Test Company 1', 'Test Company 1', 1, 'Test Person', '123 street', 'testcompany@test.com', 12345, 12345, 'http://testcompany.com', NULL, NULL, 17, 18, 0),
-(3, 'TCB','Test Company 2', 'Test Company 2', 1, 'Test Person', '123 street', 'testcompany2@test.com', 12345, 12345, 'http://testcompany2.com', NULL, NULL, 17, 18, 0);
+(2,'NAI', 'NAIA Airport', 'NAIA Airport', 1, 'Test Person', '123 street', 'testcompany@test.com', 12345, 12345, 'http://testcompany.com', NULL, NULL, 17, 18, 0),
+(3, 'PAL','Philippine Airline', 'Philippine Airline', 1, 'Test Person', '123 street', 'testcompany2@test.com', 12345, 12345, 'http://testcompany2.com', NULL, NULL, 17, 18, 0);
 
 -- --------------------------------------------------------
 
@@ -599,7 +599,7 @@ CREATE TABLE IF NOT EXISTS `vehicle`(
 
 INSERT INTO `workstation` (`id`, `name`, `location`, `contact_name`, `contact_number`, `contact_email_address`, `number_of_operators`, `assign_kiosk`, `password`, `created_by`, `tenant`, `tenant_agent`, `is_deleted`) VALUES
 (8, 'Workstation1', 'PAL', 'Test Person', 123456, 'workstation1@test.com', NULL, 0, NULL, 16, 17, 18, 0),
-(9, 'Workstation2', 'PAL', 'Test Person', 123456, 'workstation1@test.com', NULL, 0, NULL, 16, 17, 20, 0),
+(9, 'Workstation2', 'PAL', 'Test Person', 123456, 'workstation1@test.com', NULL, 0, NULL, 16, 17, 18, 0),
 (10, 'Workstation3', 'PAL', 'Test Person', 123456, 'workstation1@test.com', NULL, 0, NULL, 16, 17, NULL, 0);
 
 

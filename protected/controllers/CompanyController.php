@@ -58,22 +58,28 @@ class CompanyController extends Controller {
             $model->attributes = $_POST['Company'];
 
             if ($this->isCompanyUnique($session['tenant'], $session['role'], $_POST['Company']['name'], $_POST['Company']['tenant']) == 0) {
-                if ($companyService->save($model, $session['tenant'], $session['role'], 'create')) {
-                    $lastId = $model->id;
-                    $cs = Yii::app()->clientScript;
-                    $cs->registerScript('closeParentModal', 'window.parent.dismissModal(' . $lastId . ');', CClientScript::POS_READY);
-                    $model->unsetAttributes();
+                if ($this->isCompanyCodeUnique($session['tenant'], $session['role'], $_POST['Company']['code'], $_POST['Company']['tenant']) == 0) {
+                    if ($companyService->save($model, $session['tenant'], $session['role'], 'create')) {
+                        $lastId = $model->id;
+                        $cs = Yii::app()->clientScript;
+                        $cs->registerScript('closeParentModal', 'window.parent.dismissModal(' . $lastId . ');', CClientScript::POS_READY);
+                        $model->unsetAttributes();
 
-                    switch ($isUserViewingFromModal) {
-                        case 1:
-                            Yii::app()->user->setFlash('success', 'Company Successfully added!');
-                            break;
-                        default:
-                            $this->redirect(array('company/admin'));
+                        switch ($isUserViewingFromModal) {
+                            case 1:
+                                Yii::app()->user->setFlash('success', 'Company Successfully added!');
+                                break;
+                            default:
+                                $this->redirect(array('company/admin'));
+                        }
                     }
+                } else {
+                    Yii::app()->user->setFlash('error', 'Company code has already been taken');
                 }
+
+                
             } else {
-                Yii::app()->user->setFlash('error', 'Company name has already been taken.');
+                Yii::app()->user->setFlash('error', 'Company name has already been taken');
             }
         }
 
@@ -88,6 +94,16 @@ class CompanyController extends Controller {
             $countCompany = Company::model()->isCompanyUniqueWithinTheTenant($companyName, $sessionTenant);
         } else {
             $countCompany = Company::model()->isCompanyUniqueWithinTheTenant($companyName, $selectedTenant);
+        }
+
+        return $countCompany;
+    }
+    
+    private function isCompanyCodeUnique($sessionTenant, $sessionRole, $companyCode, $selectedTenant) {
+        if ($sessionRole == Roles::ROLE_ADMIN) {
+            $countCompany = Company::model()->isCompanyCodeUniqueWithinTheTenant($companyCode, $sessionTenant);
+        } else {
+            $countCompany = Company::model()->isCompanyCodeUniqueWithinTheTenant($companyCode, $selectedTenant);
         }
 
         return $countCompany;
@@ -194,7 +210,5 @@ class CompanyController extends Controller {
         echo CJavaScript::jsonEncode($resultMessage);
         Yii::app()->end();
     }
-
-    
 
 }

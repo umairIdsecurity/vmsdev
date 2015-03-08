@@ -55,7 +55,7 @@ $session = new CHttpSession;
                         foreach ($companyList as $key => $value) {
                             ?>
                             <option <?php
-                            if ($model['tenant'] == $value['id']) {
+                            if ($model['tenant'] == $value['tenant']) {
                                 echo " selected ";
                             }
                             ?> value="<?php echo $value['tenant']; ?>"><?php echo $value['name']; ?></option>
@@ -69,6 +69,7 @@ $session = new CHttpSession;
             <tr>
                 <td><?php echo $form->labelEx($model, 'tenant_agent'); ?></td>
                 <td><select id="Workstation_tenant_agent" name="Workstation[tenant_agent]">
+                        <option disabled value='' selected>Select Tenant Agent</option>
                         <?php
                         if ($this->action->Id != 'create') {
                             
@@ -76,10 +77,10 @@ $session = new CHttpSession;
                             foreach ($companyList as $key => $value) {
                                 ?>
                                 <option <?php
-                                if ($model['tenant_agent'] == $value['id']) {
+                                if ($model['tenant_agent'] == $value['tenant_agent']) {
                                     echo " selected ";
                                 }
-                                ?> value="<?php echo $value['id']; ?>"><?php echo $value['name'] ; ?></option>
+                                ?> value="<?php echo $value['tenant_agent']; ?>"><?php echo $value['name'] ; ?></option>
                                     <?php
                                 }
                             } else {

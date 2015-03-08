@@ -1430,7 +1430,9 @@ dt.tabs dt{
     display:none;
 }
 
-#visitor-grid .items .filters td:nth-child(6), #visitor-grid .items .filters td:nth-child(7){
+#visitor-grid .items .filters td:nth-child(6), #visitor-grid .items .filters td:nth-child(7),
+#workstation-grid_c5,#workstation-grid .items .filters td:nth-child(6),#workstation-grid_c6,#workstation-grid .items .filters td:nth-child(7)
+{
     display:none;
 }
 #actionsCssMenu .complete, #actionsCssMenu .neutral{
@@ -1516,4 +1518,3 @@ dt.tabs dt{
 #view-visitor-records_c10,#view-visitor-records_c11,#view-visitor-records-history_c11{
     width:120px !important;
 }
-

@@ -311,7 +311,7 @@ class User extends VmsActiveRecord {
                         ->select('c.id as id, c.name as name,c.tenant')
                         ->from('user u')
                         ->join('company c', 'u.company=c.id')
-                        ->where('u.id=c.tenant and c.id !=1')
+                        ->where('u.id=c.tenant and c.id !=1 and u.is_deleted = 0')
                         ->queryAll();
     }
 
@@ -372,7 +372,7 @@ class User extends VmsActiveRecord {
                         ->selectdistinct(' c.id as id, c.name as name,c.tenant,c.tenant_agent')
                         ->from('user u')
                         ->join('company c', 'u.company=c.id')
-                        ->where('u.tenant="'.$tenantId.'" and u.role ='.Roles::ROLE_AGENT_ADMIN)
+                        ->where('u.is_deleted = 0 and u.tenant="'.$tenantId.'" and u.role ='.Roles::ROLE_AGENT_ADMIN)
                         ->queryAll();
         
         foreach ($company as $index => $value) {
@@ -414,7 +414,7 @@ class User extends VmsActiveRecord {
         $aArray = array();
 
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = '$tenantId'";
+        $Criteria->condition = "tenant = '$tenantId' and (tenant_agent IS NULL or tenant_agent = 0 or tenant_agent = '') ";
         $workstation = Workstation::model()->findAll($Criteria);
 
         foreach ($workstation as $index => $value) {

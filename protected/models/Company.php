@@ -30,7 +30,6 @@ class Company extends CActiveRecord {
         return 'company';
     }
 
-
     /**
      * @return array validation rules for model attributes.
      */
@@ -39,13 +38,17 @@ class Company extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('name,code', 'required'),
-            array('code', 'unique'),
-            array('code', 'length', 'min'=>3, 'max'=>3, 'tooShort'=>'Code is too short (Should be in 3 characters)'),        
-            
+//            array('code', 'unique'),
+//            array('code', 'unique', 'criteria' => array(
+//                    'condition' => '`tenant`=:tenant',
+//                    'params' => array(
+//                        ':tenant' => Yii::app()->user->tenant
+//                    )
+//                )),
+            array('code', 'length', 'min' => 3, 'max' => 3, 'tooShort' => 'Code is too short (Should be in 3 characters)'),
             array('code', 'match',
                 'pattern' => '/^[a-zA-Z\s]+$/',
                 'message' => 'Code can only contain letters'),
-            
             array('email_address', 'email'),
             array('website', 'url'),
             array('office_number, mobile_number, created_by_user, created_by_visitor', 'numerical', 'integerOnly' => true),
@@ -133,7 +136,7 @@ class Company extends CActiveRecord {
         $criteria->compare('is_deleted', $this->is_deleted);
         $criteria->compare('code', $this->code);
         $criteria->compare('company_laf_preferences', $this->company_laf_preferences);
-        
+
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'sort' => array(
@@ -216,11 +219,31 @@ class Company extends CActiveRecord {
         return count($company);
     }
 
+    public function isCompanyCodeUniqueWithinTheTenant($companyCode, $tenant) {
+        $Criteria = new CDbCriteria();
+        $Criteria->condition = "code = '" . $companyCode . "' and tenant='" . $tenant . "'";
+        $company = Company::model()->findAll($Criteria);
+
+        $company = array_filter($company);
+        return count($company);
+    }
+
     public function findAllCompany() {
         $aArray = array();
-        $criteria = new CDbCriteria;
-        $criteria->condition = 'id != 1';
-        $company = Company::model()->findAll($criteria);
+        if (Yii::app()->user->role != Roles::ROLE_SUPERADMIN) {
+            $company = Yii::app()->db->createCommand()
+                    ->selectdistinct('*')
+                    ->from('company')
+                    ->where('id != 1 and tenant="'.Yii::app()->user->tenant.'"')
+                    ->queryAll();
+        } else {
+            $company = Yii::app()->db->createCommand()
+                    ->selectdistinct('*')
+                    ->from('company')
+                    ->where('id != 1')
+                    ->queryAll();
+        }
+
         foreach ($company as $index => $value) {
             $aArray[] = array(
                 'id' => $value['id'],

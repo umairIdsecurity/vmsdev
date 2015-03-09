@@ -75,7 +75,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("id=submitFormUser");
         //$this->assertEquals("Same Day Visitor", $this->getText("css=#cardDetailsTable > tbody > tr > td"));
         $this->assertEquals("Test staffmembervisitor", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[3]/td"));
-        //$this->assertEquals("Test Company 1", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[3]/td"));
+        //$this->assertEquals("NAIA Airport", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[3]/td"));
         $this->clickAndWait("//ul[@id='tabs']/li[3]/a/p");
         $username = 'staffmemberhost@test.com';
         $this->login($username, '12345');

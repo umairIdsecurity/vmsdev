@@ -12,7 +12,13 @@ $visitorType = $_GET['visitortype'];
 
 $model = new User;
 $criteria = new CDbCriteria;
-$criteria->addCondition('tenant="'.$session['tenant'].'" and role="9" and (CONCAT(first_name," ",last_name) like "%' . $visitorName . '%" or first_name like "%' . $visitorName . '%" or last_name like "%' . $visitorName . '%")');
+if($session['role'] == Roles::ROLE_SUPERADMIN){
+    $criteria->addCondition('role="9" and (CONCAT(first_name," ",last_name) like "%' . $visitorName . '%" or first_name like "%' . $visitorName . '%" or last_name like "%' . $visitorName . '%")');
+
+} else {
+    $criteria->addCondition('tenant="'.$session['tenant'].'" and role="9" and (CONCAT(first_name," ",last_name) like "%' . $visitorName . '%" or first_name like "%' . $visitorName . '%" or last_name like "%' . $visitorName . '%")');
+
+}
 
 $model->unsetAttributes();
 

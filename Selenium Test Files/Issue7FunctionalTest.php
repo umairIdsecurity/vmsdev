@@ -165,7 +165,7 @@ class Issue7FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Test", $this->getEval("window.document.getElementById(\"User_first_name\").value"));
         $this->assertFalse($this->isElementPresent("id='User_last_name'"));
         $this->assertEquals("staffmember", $this->getEval("window.document.getElementById(\"User_last_name\").value"));
-        $this->getDisabledCompanyValue("Test Company 1");
+        $this->getDisabledCompanyValue("NAIA Airport");
         $this->assertFalse($this->isElementPresent("id='User_email'"));
         $this->assertEquals("staffmember@test.com", $this->getEval("window.document.getElementById(\"User_email\").value"));
         $this->assertFalse($this->isElementPresent("id='User_contact_number'"));

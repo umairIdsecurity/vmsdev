@@ -455,7 +455,7 @@ class Issue3ValidationsFunctionalTest extends BaseFunctionalTest {
         $this->click("link=Manage Users");
         $this->clickAndWait("link=Add Administrator");
         $this->addUser("superadmin@test.com", "admin");
-        $this->select("id=User_company", "label=Test Company 1");
+        $this->select("id=User_company", "label=NAIA Airport");
         
         $this->click("id=submitForm");
         sleep(1);
@@ -606,7 +606,7 @@ class Issue3ValidationsFunctionalTest extends BaseFunctionalTest {
         $this->click("link=Manage Users");
         $this->clickAndWait("link=Add Administrator");
         $this->addUser("superadmin@test.com", "admin");
-        $this->select("id=User_company", "label=Test Company 1");
+        $this->select("id=User_company", "label=NAIA Airport");
         
         $this->click("id=submitForm");
         sleep(1);

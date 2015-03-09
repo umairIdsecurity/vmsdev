@@ -144,7 +144,7 @@ class CompanyController extends Controller {
                 }
             } else {
                 if ($this->isCompanyUnique($session['tenant'], $session['role'], $_POST['Company']['name'], $_POST['Company']['tenant_']) == 0) {
-                    if ($this->isCompanyCodeUnique($session['tenant'], $session['role'], $_POST['Company']['code'], $_POST['Company']['tenant_']) == 0) {
+                    if ($model->code == $_POST['Company']['code']) {
                         $model->attributes = $_POST['Company'];
                         if ($model->save()) {
                             switch ($session['role']) {
@@ -157,7 +157,21 @@ class CompanyController extends Controller {
                             }
                         }
                     } else {
-                        Yii::app()->user->setFlash('error', 'Company code has already been taken');
+                        if ($this->isCompanyCodeUnique($session['tenant'], $session['role'], $_POST['Company']['code'], $_POST['Company']['tenant_']) == 0) {
+                            $model->attributes = $_POST['Company'];
+                            if ($model->save()) {
+                                switch ($session['role']) {
+                                    case Roles::ROLE_SUPERADMIN:
+                                        $this->redirect(array('company/admin'));
+                                        break;
+
+                                    default:
+                                        Yii::app()->user->setFlash('success', 'Organisation Settings Updated');
+                                }
+                            }
+                        } else {
+                            Yii::app()->user->setFlash('error', 'Company code has already been taken');
+                        }
                     }
                 } else {
                     Yii::app()->user->setFlash('error', 'Company name has already been taken');

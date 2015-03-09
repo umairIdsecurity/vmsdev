@@ -143,9 +143,9 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
         $this->type("id=Visitor_contact_number", "1234567");
         $this->type("id=Visitor_position", "Position");
         $this->type("id=Visitor_email", "test" . $visitor_name . "@test.com");
-        $this->select("id=Visitor_tenant", "label=Test Company 1");
+        $this->select("id=Visitor_tenant", "label=NAIA Airport");
         sleep(1);
-        $this->select("id=Visitor_tenant_agent", "label=Test Company 2");
+        $this->select("id=Visitor_tenant_agent", "label=Philippine Airline");
         sleep(1);
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
@@ -165,9 +165,9 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
         $this->type("id=User_staff_id", "123456");
         $this->type("id=User_email", "test".$host_name."@test.com");
         $this->type("id=User_contact_number", "123456");
-        $this->select("id=User_tenant", "label=Test Company 1");
+        $this->select("id=User_tenant", "label=NAIA Airport");
         sleep(1);
-        $this->select("id=User_tenant_agent", "label=Test Company 2");
+        $this->select("id=User_tenant_agent", "label=Philippine Airline");
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeatpassword", "12345");
         sleep(1);

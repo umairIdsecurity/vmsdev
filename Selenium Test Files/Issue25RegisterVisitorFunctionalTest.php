@@ -60,7 +60,7 @@ class Issue25RegisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Preregister Visit");
         $this->click("id=clicktabA");
         $this->addVisitor('Visitor0');
-        $this->select("id=workstation", "label=Workstation1");
+        $this->select("id=workstation", "label=Workstation3");
         $this->select("id=Visit_reason", "label=Reason 1");
         $this->waitForElementPresent("id=submitFormVisitor");
         $this->click("id=submitFormVisitor");
@@ -77,7 +77,7 @@ class Issue25RegisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Preregister Visit");
         $this->click("id=clicktabA");
         $this->addVisitor('Visitor0a');
-        $this->select("id=workstation", "label=Workstation1");
+        $this->select("id=workstation", "label=Workstation3");
         $this->select("id=Visit_reason", "label=Reason 1");
         $this->waitForElementPresent("id=submitFormVisitor");
         $this->click("id=submitFormVisitor");
@@ -116,7 +116,7 @@ class Issue25RegisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Log Visit");
         $this->click("id=clicktabA");
         $this->addVisitor('Visitor2');
-        $this->select("id=workstation", "label=Workstation1");
+        $this->select("id=workstation", "label=Workstation3");
         $this->addReason('Reason 3');
         $this->click("id=submitFormVisitor");
         $this->addPatient("Patient Name 1");
@@ -195,7 +195,7 @@ class Issue25RegisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Log Visit");
         $this->click("id=clicktabA");
         $this->addVisitor('Visitor5');
-        $this->select("id=workstation", "label=Workstation1");
+        $this->select("id=workstation", "label=Workstation3");
         $this->select("id=Visit_reason", "label=Reason 1");
         $this->click("id=submitFormVisitor");
         $this->addPatient("Patient Name 3");
@@ -233,14 +233,14 @@ class Issue25RegisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->click("id=clicktabA");
         $this->select("id=Visitor_visitor_type", "label=Corporate Visitor");
         $this->addVisitor('Visitor6');
-        $this->select("id=workstation", "label=Workstation1");
+        $this->select("id=workstation", "label=Workstation3");
         $this->select("id=Visit_reason", "label=Reason 1");
         sleep(1);
         for ($second = 0;; $second++) {
             if ($second >= 60)
                 $this->fail("timeout");
             try {
-                if ("Test Company 2" == $this->getText("id=Visitor_company"))
+                if ("Philippine Airline" == $this->getText("id=Visitor_company"))
                     break;
             } catch (Exception $e) {
                 
@@ -248,7 +248,7 @@ class Issue25RegisterVisitorFunctionalTest extends BaseFunctionalTest {
             sleep(1);
         }
 
-        $this->assertEquals("Test Company 2", $this->getText("id=Visitor_company"));
+        $this->assertEquals("Philippine Airline", $this->getText("id=Visitor_company"));
         $this->click("id=submitFormVisitor");
         $this->addHost("Host1");
         $this->click("id=submitFormUser");
@@ -301,18 +301,18 @@ class Issue25RegisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Log Visit");
         $this->click("id=clicktabA");
         $this->click("id=submitFormVisitor");
-        $this->select("id=workstation", "label=Workstation1");
+        $this->select("id=workstation", "label=Workstation3");
         $this->type("id=Visitor_first_name", "Test");
         $this->type("id=Visitor_last_name", "test");
         $this->type("id=Visitor_position", "position");
         $this->type("id=Visitor_contact_number", "123456");
         $this->type("id=Visitor_email", "test");
-        $this->select("id=Visitor_tenant", "label=Test Company 1");
+        $this->select("id=Visitor_tenant", "label=NAIA Airport");
         $this->type("id=Visitor_email", "testvisitor1@test.com");
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
         sleep(1);
-        $this->select("id=Visitor_tenant_agent", "label=Test Company 2");
+        $this->select("id=Visitor_tenant_agent", "label=Philippine Airline");
         $this->click("id=submitFormVisitor");
         $this->waitForElementPresent("css=td > div.errorMessage.visitorReason");
         $this->assertEquals("Please select a reason", $this->getText("css=td > div.errorMessage.visitorReason"));
@@ -352,7 +352,7 @@ class Issue25RegisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->select("id=Visit_reason_search", "label=Select Reason");
         $this->select("id=Visit_reason_search", "label=Other");
         $this->type("id=VisitReason_reason_search", "reason 2");
-        $this->select("id=workstation_search", "label=Workstation1");
+        $this->select("id=workstation_search", "label=Workstation3");
         $this->click("id=clicktabB1");
         $this->waitForElementPresent("id=visitReasonErrorMessageSearch");
         $this->waitForTextPresent("Reason is already registered.");
@@ -413,13 +413,13 @@ class Issue25RegisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_last_name", "test");
         $this->type("id=Visitor_position", "position");
         $this->type("id=Visitor_contact_number", "123456");
-        $this->select("id=Visitor_tenant", "label=Test Company 1");
+        $this->select("id=Visitor_tenant", "label=NAIA Airport");
         $this->type("id=Visitor_email", "testvisitor1@test.com");
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
         sleep(1);
-        $this->select("id=Visitor_tenant_agent", "label=Test Company 2");
-        $this->select("id=workstation", "label=Workstation1");
+        $this->select("id=Visitor_tenant_agent", "label=Philippine Airline");
+        $this->select("id=workstation", "label=Workstation3");
         $this->click("id=submitFormVisitor");
         $this->waitForElementPresent("css=td > div.errorMessage.visitorReason");
         $this->assertEquals("Please select a reason", $this->getText("css=td > div.errorMessage.visitorReason"));
@@ -460,7 +460,7 @@ class Issue25RegisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->click("id=submitFormUser");
         $this->type("id=User_email", "staffmember@test.com");
         $this->type("id=User_contact_number", "123456");
-        $this->select("id=User_tenant", "label=Test Company 1");
+        $this->select("id=User_tenant", "label=NAIA Airport");
         $this->click("id=submitFormUser");
         $this->assertEquals("A profile already exists for this email address.", $this->getText("xpath=(//div[@id='User_email_em_'])[2]"));
     }

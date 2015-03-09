@@ -88,7 +88,7 @@ foreach (Yii::app()->user->getFlashes() as $key => $message) {
                 $("input[type='text']").val("0");
                 $("label").html("Set Primary");
                 $("input[type='checkbox']").prop("disabled", false);
-                $("input[type='checkbox']").prop("checked", false);
+             //   $("input[type='checkbox']").prop("checked", false);
 
                 $(this).closest('td.radioButtonTd').find('input[type=text]').val("1");
                 $(this).closest('td.radioButtonTd').find('label').html("Primary");

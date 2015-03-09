@@ -1,0 +1,103 @@
+.actionForward,.update, #addCompanyLink {	 
+background: -webkit-gradient(linear, center top, center bottom, from(#c6f76b), to(#9ED92F)) !important;
+background: -moz-linear-gradient(center top , #c6f76b, #9ED92F) repeat scroll 0 0 rgba(0, 0, 0, 0) !important;
+background: -webkit-gradient(linear, center top, center bottom, from(#c6f76b), to(#9ED92F)) !important;
+background: -ms-linear-gradient(top, #c6f76b, #9ED92F) !important;
+
+border:1px solid #9ED92F !important;
+color:#ffffff !important;
+}
+.actionForward:hover,.update:hover, #addCompanyLink:hover{
+background: -webkit-gradient(linear, center top, center bottom, from(#c6f76b), to(#9ED92F)) !important;
+background: -moz-linear-gradient(center top , #c6f76b, #9ED92F) repeat scroll 0 0 rgba(0, 0, 0, 0) !important;
+background: -webkit-gradient(linear, center top, center bottom, from(#c6f76b), to(#9ED92F)) !important;
+background: -ms-linear-gradient(top, #c6f76b, #9ED92F) !important;
+color:#ffffff !important;
+border:1px solid #9ED92F !important;
+}
+/* COMPLETE */
+.complete:not([disabled]), .btn-success, #btnSubmit{	 
+background: -webkit-gradient(linear, center top, center bottom, from(#e67171), to(#d42222)) !important;
+background: -moz-linear-gradient(center top , #e67171, #d42222) repeat scroll 0 0 rgba(0, 0, 0, 0) !important;
+background: -webkit-gradient(linear, center top, center bottom, from(#e67171), to(#d42222)) !important;
+background: -ms-linear-gradient(top, #e67171, #d42222) !important;
+border:1px solid #d42222 !important;
+color:#ffffff !important;
+}
+
+.complete:hover:not([disabled]), .btn-success:hover, #btnSubmit:hover{
+background: -webkit-gradient(linear, center top, center bottom, from(#e67171), to(#d42222)) !important;
+background: -moz-linear-gradient(center top , #e67171, #d42222) repeat scroll 0 0 rgba(0, 0, 0, 0) !important;
+background: -webkit-gradient(linear, center top, center bottom, from(#e67171), to(#d42222)) !important;
+background: -ms-linear-gradient(top, #e67171, #d42222) !important;
+color:#ffffff !important;
+border:1px solid #d42222 !important;
+}
+
+/* NEUTRAL*/
+
+.visitor-findBtn,.delete,.host-findBtn,.neutral{
+background: -webkit-gradient(linear, center top, center bottom, from(#5fdaf5), to(#33bcdb)) !important;
+background: -moz-linear-gradient(center top , #5fdaf5, #33bcdb) repeat scroll 0 0 rgba(0, 0, 0, 0) !important;
+background: -webkit-gradient(linear, center top, center bottom, from(#5fdaf5), to(#33bcdb)) !important;
+background: -ms-linear-gradient(top, #5fdaf5, #33bcdb) !important;
+border:1px solid #33bcdb  !important;
+color:#ffffff !important;
+}
+
+.visitor-findBtn:hover,.delete:hover,.host-findBtn:hover,.neutral:hover{
+background: -webkit-gradient(linear, center top, center bottom, from(#33bcdb), to(#33bcdb)) !important;
+background: -moz-linear-gradient(center top , #33bcdb, #33bcdb) repeat scroll 0 0 rgba(0, 0, 0, 0) !important;
+background: -webkit-gradient(linear, center top, center bottom, from(#33bcdb), to(#33bcdb)) !important;
+background: -ms-linear-gradient(top, #33bcdb, #33bcdb) !important;
+color:#ffffff !important;
+border: 1px solid #33bcdb  !important;
+}
+
+
+/* NAVIGATION MENU*/
+
+nav.navigation ul:after,nav.navigation ul {
+background-color:#71d7f0 !important;
+}
+
+nav.navigation ul li.active a
+{
+color:#ffffff !important;
+background:#9ED92F !important;
+}
+
+nav.navigation ul li a:hover, nav.navigation ul li.active:hover
+{
+background:#9ED92F !important;
+color:#ffffff !important;
+}
+
+nav.navigation ul li a{
+color:#637280 !important;
+}
+
+/* SIDE MENU*/
+
+
+.administrationMenu #cssmenu > ul > li > a { 
+background: none repeat scroll 0 0 #E7E7E7 !important;
+color:#637280 !important;
+}
+
+.administrationMenu #cssmenu > ul > li > a:hover { 
+background: none repeat scroll 0 0 #E7E7E7 !important;
+color:#637280 !important;
+}
+
+/*headers*/
+
+.wrapper h1,.visitor-title,.has-sub-sub span {
+    color:#637280 !important;
+}
+
+/*has sub icon*/
+.customIcon-adminmenu{
+    background-color: #637280 !important;
+}
+

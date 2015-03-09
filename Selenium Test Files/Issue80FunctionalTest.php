@@ -134,9 +134,9 @@ class Issue80FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
         $this->select("id=Visit_reason", "label=Reason 1");
-        $this->select("id=Visitor_tenant", "label=Test Company 1");
+        $this->select("id=Visitor_tenant", "label=NAIA Airport");
         sleep(1);
-        $this->select("id=workstation", "label=Workstation1");
+        $this->select("id=workstation", "label=Workstation3");
         $this->click("id=submitFormVisitor");
         $this->waitForElementPresent("xpath=(//div[@id='Visitor_email_em_'])[2]");
         $this->assertEquals("A profile already exists for this email address.", $this->getText("xpath=(//div[@id='Visitor_email_em_'])[2]"));
@@ -148,7 +148,7 @@ class Issue80FunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_contact_number", "123");
         $this->type("id=User_password", "123");
         $this->type("id=User_repeatpassword", "123");
-        $this->select("id=User_tenant", "label=Test Company 1");
+        $this->select("id=User_tenant", "label=NAIA Airport");
         $this->click("id=submitFormUser");
         $this->assertEquals("A profile already exists for this email address.", $this->getText("xpath=(//div[@id='User_email_em_'])[2]"));
         $this->clickAndWait("css=a.submenu-icon.addvisitorprofile > span");
@@ -158,7 +158,7 @@ class Issue80FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_contact_number", "123");
         $this->type("id=Visitor_password", "123");
         $this->type("id=Visitor_repeatpassword", "123");
-        $this->select("id=Visitor_tenant", "label=Test Company 1");
+        $this->select("id=Visitor_tenant", "label=NAIA Airport");
         $this->click("id=submitFormVisitor");
         $this->assertEquals("A profile already exists for this email address.", $this->getText("css=div.errorMessageEmail"));
        
@@ -168,7 +168,7 @@ class Issue80FunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_last_name", "test");
         $this->type("id=User_email", "superadmin@test.com");
         $this->type("id=User_contact_number", "123456");
-        $this->select("id=User_tenant", "label=Test Company 1");
+        $this->select("id=User_tenant", "label=NAIA Airport");
         $this->type("id=User_password", "123");
         $this->type("id=User_repeatpassword", "123");
         $this->click("id=submitFormUser");

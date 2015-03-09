@@ -162,8 +162,8 @@ class Issue3AdminFunctionalTest extends BaseFunctionalTest {
         $this->waitForPageToLoad("30000");
         $this->addUser("operator2@test.com", "operator2");
         $this->getDisabledRoleValue("8");
-        $this->getDisabledCompanyValue("Test Company 1");
-        $this->assertEquals("Workstation1", $this->getEval("window.document.getElementById(\"User_workstation\").options[window.document.getElementById(\"User_workstation\").selectedIndex].text"));
+        $this->getDisabledCompanyValue("NAIA Airport");
+        $this->assertEquals("Workstation3", $this->getEval("window.document.getElementById(\"User_workstation\").options[window.document.getElementById(\"User_workstation\").selectedIndex].text"));
 
         $this->clickAndWait("id=submitForm");
         $this->type("css=td > input[name=\"User[first_name]\"]", "Test");
@@ -219,7 +219,7 @@ class Issue3AdminFunctionalTest extends BaseFunctionalTest {
         $this->click("css=div.customIcon-adminmenu");
         $this->waitForPageToLoad("30000");
         $this->addUser("staffmember2@test.com", "staffmember2");
-        $this->getDisabledCompanyValue("Test Company 1");
+        $this->getDisabledCompanyValue("NAIA Airport");
         $this->select("id=User_role", "label=Staff Member");
 
         $this->clickAndWait("id=submitForm");

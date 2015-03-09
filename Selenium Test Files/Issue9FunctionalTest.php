@@ -30,7 +30,7 @@ class Issue9FunctionalTest extends BaseFunctionalTest {
 
     /* Scenario 1 – Login as admin then view and update organisation settings.
       Expected Behavior
-      -	Assert text ’Test Company 1’ in company name field
+      -	Assert text ’NAIA Airport’ in company name field
       -	Assert text ’Organisation settings updated’ in company name field
 
       Steps:
@@ -40,8 +40,8 @@ class Issue9FunctionalTest extends BaseFunctionalTest {
       4.	Click Login
       5.	Click Administrator
       6.     Click organisation settings
-      7. 	Assert Text 'Test Company 1 in email field'
-      8.	Type Test Company 1 - update in display name field
+      7. 	Assert Text 'NAIA Airport in email field'
+      8.	Type NAIA Airport - update in display name field
       9.     Click save wait for page to reload
       10.   Asser text organisation settings updated
       11.   Assert text last name 'test company 1 - update'
@@ -54,11 +54,11 @@ class Issue9FunctionalTest extends BaseFunctionalTest {
         $this->login("admin@test.com", "12345");
         $this->clickAndWait("link=Administration");
         $this->clickAndWait("link=Organisation Settings");
-        $this->assertEquals("Test Company 1", $this->getValue("id=Company_name"));
-        $this->type("id=Company_trading_name", "Test Company 1 - Update");
+        $this->assertEquals("NAIA Airport", $this->getValue("id=Company_name"));
+        $this->type("id=Company_trading_name", "NAIA Airport - Update");
         $this->clickAndWait("id=createBtn");
         $this->assertEquals("Organisation Settings Updated", $this->getText("css=div.flash-success"));
-        $this->assertEquals("Test Company 1 - Update", $this->getValue("id=Company_trading_name"));
+        $this->assertEquals("NAIA Airport - Update", $this->getValue("id=Company_trading_name"));
         $this->click("id=modalBtn");
         $this->assertEquals("This is a sample license detail.", $this->getText("id=modalBody"));
     }
@@ -94,14 +94,15 @@ class Issue9FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Administration");
         $this->clickAndWait("link=Organisation Settings");
         $this->type("id=Company_name", "");
+        $this->type("id=Company_code", "");
         $this->clickAndWait("id=createBtn");
         $this->assertEquals("Please enter a Company Name", $this->getText("css=div.errorSummary > ul > li"));
         $this->type("id=Company_email_address", "123");
         $this->clickAndWait("id=createBtn");
-        $this->assertEquals("Email Address is not a valid email address.", $this->getText("//form[@id='company-form']/div/ul/li[2]"));
+        $this->assertEquals("Email Address is not a valid email address.", $this->getText("//form[@id='company-form']/div/ul/li[3]"));
         $this->type("id=Company_website", "123");
         $this->clickAndWait("id=createBtn");
-        $this->assertEquals("Website is not a valid URL.", $this->getText("//form[@id='company-form']/div/ul/li[3]"));
+        $this->assertEquals("Website is not a valid URL.", $this->getText("//form[@id='company-form']/div/ul/li[4]"));
     }
 
     /*
@@ -138,11 +139,11 @@ class Issue9FunctionalTest extends BaseFunctionalTest {
       4.	Click Login
       5.	Click manage companies
       6.     Click view companies
-      7.     Type Test Company 1 in company name and click edit
+      7.     Type NAIA Airport in company name and click edit
       8.      Wait for page to load and click license details
       9.      wait for page to load and  type 'this is a sample license details update'
       10.    Click save
-      11.    Wait for page to load and type Test Company 1 in company name field
+      11.    Wait for page to load and type NAIA Airport in company name field
       12.    Click edit
       13.     Click license details and assert text 'this is a sample license details update'
 
@@ -154,14 +155,14 @@ class Issue9FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Administration");
         $this->click("link=Manage Companies");
         $this->waitForElementPresent("css=td > input[name=\"Company[name]\"]");
-        $this->type("css=td > input[name=\"Company[name]\"]", "Test Company 1");
+        $this->type("css=td > input[name=\"Company[name]\"]", "NAIA Airport");
         $this->waitForElementPresent("link=Edit");
         $this->clickAndWait("link=Edit");
         $this->clickAndWait("css=button.yiiBtn");
         $this->click("css=a.redactor_btn_html > span");
         $this->type("id=LicenseDetails_description", "This is a sample license details update");
         $this->clickAndWait("name=yt0");
-        $this->type("css=td > input[name=\"Company[name]\"]", "Test Company 1");
+        $this->type("css=td > input[name=\"Company[name]\"]", "NAIA Airport");
         sleep(5);
         $this->clickAndWait("link=Edit");
         $this->clickAndWait("css=button.yiiBtn");

@@ -41,21 +41,21 @@ class Issue47FunctionalTest extends BaseFunctionalTest {
         $this->click("id=clicktabA");
         $this->select("id=Visitor_visitor_type", "label=Corporate Visitor");
         $this->addVisitor('Visitor5');
-        $this->select("id=workstation", "label=Workstation1");
+        $this->select("id=workstation", "label=Workstation3");
         $this->select("id=Visit_reason", "label=Reason 1");
         for ($second = 0;; $second++) {
             if ($second >= 10)
                 $this->fail("timeout");
             try {
-                if ("Test Company 2" == $this->getText("id=Visitor_company"))
+                if ("Philippine Airline" == $this->getText("id=Visitor_company"))
                     break;
             } catch (Exception $e) {
                 
             }
             sleep(1);
         }
-        $this->assertEquals("Test Company 2", $this->getText("id=Visitor_company"));
-        $this->addCompany("Visitor Company 1", "visitorcompany", "TCA");
+        $this->assertEquals("Philippine Airline", $this->getText("id=Visitor_company"));
+        $this->addCompany("Visitor Company 1", "visitorcompany", "NAI");
         $this->click("id=submitFormVisitor");
         $this->waitForElementPresent("id=User_first_name");
         $this->addHost("staffmemberHostA");
@@ -65,14 +65,14 @@ class Issue47FunctionalTest extends BaseFunctionalTest {
 
         $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("link=Preregistered");
-        $this->assertEquals("TCA", $this->getText("css=#cardDetailsTable > tbody > tr > td"));
-        //$this->assertEquals("TCA000008", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[4]/td"));
+        $this->assertEquals("NAI", $this->getText("css=#cardDetailsTable > tbody > tr > td"));
+        //$this->assertEquals("NAI000008", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[4]/td"));
         $this->clickAndWait("link=Administration");
         $this->click("id=yt0");
         $this->waitForElementPresent("name=Company[name]");
         $this->clickAndWait("link=Edit");
         try {
-            $this->assertEquals("TCB", $this->getValue("id=Company_code"));
+            $this->assertEquals("PAL", $this->getValue("id=Company_code"));
         } catch (PHPUnit_Framework_AssertionFailedError $e) {
             array_push($this->verificationErrors, $e->toString());
         }

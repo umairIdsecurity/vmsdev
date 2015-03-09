@@ -55,10 +55,10 @@ class Issue54FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
         $this->select("id=Visit_reason", "label=Reason 1");
-        $this->select("id=Visitor_tenant", "label=Test Company 1");
+        $this->select("id=Visitor_tenant", "label=NAIA Airport");
         $this->click("id=Visitor_tenant_agent");
         sleep(1);
-        $this->select("id=workstation", "label=Workstation1");
+        $this->select("id=workstation", "label=Workstation3");
         $this->click("id=submitFormVisitor");
         $this->type("id=User_first_name", "New");
         $this->type("id=User_last_name", "PreloadHost");
@@ -66,7 +66,7 @@ class Issue54FunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_contact_number", "123456");
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeatpassword", "12345");
-        $this->select("id=User_tenant", "label=Test Company 1");
+        $this->select("id=User_tenant", "label=NAIA Airport");
         sleep(1);
         $this->clickAndWait("id=submitFormUser");
         try {
@@ -124,7 +124,7 @@ class Issue54FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
         $this->select("id=Visit_reason", "label=Reason 1");
-        $this->select("id=Visitor_tenant", "label=Test Company 1");
+        $this->select("id=Visitor_tenant", "label=NAIA Airport");
         $this->click("id=submitFormVisitor");
         $this->type("id=User_first_name", "test");
         $this->type("id=User_last_name", "host1");
@@ -135,7 +135,7 @@ class Issue54FunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_staff_id", "12345");
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeatpassword", "12345");
-        $this->select("id=User_tenant", "label=Test Company 1");
+        $this->select("id=User_tenant", "label=NAIA Airport");
         sleep(1);
         $this->clickAndWait("id=submitFormUser");
         try {
@@ -161,16 +161,12 @@ class Issue54FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Visit History");
         $this->clickAndWait("link=Saved");
         $this->assertEquals("Saved", $this->getText("css=ul.visitStatusLi > li > a > span"));
-        $this->click("//li[@id='preregisterLi']/a/span");
-        $this->clickAndWait("css=#update-log-visit-form > input.complete");
+        $this->click("css=span.pre-visits");
+        $this->clickAndWait("id=confirmPreregisterDummy");
         $this->clickAndWait("link=Preregistered");
         $this->assertEquals("Preregistered", $this->getText("css=ul.visitStatusLi > li > a > span"));
         //$this->clickAndWait("css=ul.visitStatusLi > li > a > span");
-        try {
-            $this->assertEquals("Preregistered", $this->getText("css=#actionsCssMenu > ul > li"));
-        } catch (PHPUnit_Framework_AssertionFailedError $e) {
-            array_push($this->verificationErrors, $e->toString());
-        }
+     
         try {
             $this->assertEquals("preloadvisitor2@test.com", $this->getValue("id=Visitor_email"));
         } catch (PHPUnit_Framework_AssertionFailedError $e) {
@@ -258,7 +254,7 @@ class Issue54FunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_contact_number", "123456");
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeatpassword", "12345");
-        $this->select("id=User_tenant", "label=Test Company 1");
+        $this->select("id=User_tenant", "label=NAIA Airport");
         sleep(1);
         $this->clickAndWait("id=submitFormUser");
         $this->click("//li[@id='preregisterLi']/a/span");
@@ -371,13 +367,13 @@ class Issue54FunctionalTest extends BaseFunctionalTest {
         $this->select("id=workstation", "label=Workstation1");
         $this->select("id=Visit_reason", "label=Reason 1");
         $this->type("id=Visitor_contact_number", "1234567");
-        $this->select("id=Visitor_tenant", "label=Test Company 1");
+        $this->select("id=Visitor_tenant", "label=NAIA Airport");
         $this->click("id=submitFormVisitor");
         $this->type("id=User_first_name", "hostperson");
         $this->type("id=User_last_name", "hostperson");
         $this->type("id=User_email", "hostperson@test.com");
         $this->type("id=User_contact_number", "123456");
-        $this->select("id=User_tenant", "label=Test Company 1");
+        $this->select("id=User_tenant", "label=NAIA Airport");
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeatpassword", "12345");
         $this->type("id=User_department", "department");

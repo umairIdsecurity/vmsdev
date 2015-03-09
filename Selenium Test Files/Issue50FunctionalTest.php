@@ -29,7 +29,7 @@ class Issue50FunctionalTest extends BaseFunctionalTest {
         $this->Scenario4();
     }
 
-    /* Scenario 1 - Change look and feel for Test Company 1
+    /* Scenario 1 - Change look and feel for NAIA Airport
       Expected Behavior
       Assert Customisation Successfully updated !
       Assert #71d7f0 in nav background color

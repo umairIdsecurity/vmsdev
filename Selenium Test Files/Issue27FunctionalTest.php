@@ -465,7 +465,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_contact_number", "123456");
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeatpassword", "12345");
-        $this->select("id=User_tenant", "label=Test Company 1");
+        $this->select("id=User_tenant", "label=NAIA Airport");
         sleep(1);
         $this->select("id=User_tenant_agent", "label=Test agentadmin");
         $this->waitForElementPresent("document.forms['register-newhost-form'].yt0");
@@ -627,6 +627,8 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         sleep(1);
         $this->select("id=Visit_time_in_hours", "label=11");
         $this->select("id=Visit_time_in_minutes", "label=24");
+        $this->type("id=Visit_date_in",date('d-m-Y', time() + 172800));
+        $this->type("id=Visit_date_out",date('d-m-Y', time() + 259200));
         $this->clickAndWait("css=#update-log-visit-form > input.complete");
         // $this->assertEquals("Visit Successfully Updated.", $this->getText("css=div.flash-success.success-update-preregister"));
 
@@ -641,8 +643,8 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Edit");
         $this->click("//li[@id='preregisterLi']/a/span");
         sleep(1);
-        $this->assertEquals(date('d-m-Y', time() + 86400), $this->getValue("id=Visit_date_in"));
-        $this->assertEquals(date('d-m-Y', time() + 172800), $this->getValue("id=Visit_date_out"));
+        $this->assertEquals(date('d-m-Y', time() + 172800), $this->getValue("id=Visit_date_in"));
+        $this->assertEquals(date('d-m-Y', time() + 259200), $this->getValue("id=Visit_date_out"));
         $this->assertEquals("11", $this->getValue("id=Visit_time_in_hours"));
         $this->assertEquals("24", $this->getValue("id=Visit_time_in_minutes"));
     }
@@ -660,16 +662,13 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Preregister Visit");
         $this->click("id=clicktabA");
         $this->addVisitor('Visitor0a');
-        $this->select("id=workstation", "label=Workstation1");
+        $this->select("id=workstation", "label=Workstation3");
         $this->select("id=Visitor_visitor_type", "label=Corporate Visitor");
         $this->select("id=Visit_reason", "label=Reason 1");
         $this->click("id=submitFormVisitor");
-//        $this->addPatient("Patient Name 0");
-//        $this->clickAndWait("id=submitFormPatientName");
         $this->addHost("Host1");
         $this->click("id=submitFormUser");
         $this->clickAndWait("id=submitAllForms");
-        //$this->assertEquals("Same Day Visitor", $this->getText("css=#cardDetailsTable > tbody > tr > td"));
         $date = date('d/m/Y');
         $date2 = date('d-m-Y', time() + 86400);
         $this->assertEquals(date('d M y', time() + 86400), $this->getText("css=span.cardDateText"));

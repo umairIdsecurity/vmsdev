@@ -139,7 +139,7 @@ class Issue3SetAccessRuleFunctionalTest extends BaseFunctionalTest {
         $this->type("id=Workstation_contact_name", "Person Name");
         $this->type("id=Workstation_contact_number", "09367941012");
         $this->type("id=Workstation_contact_email_address", "test@test.com");
-        $this->select("id=Workstation_tenant", "label=Test Company 1");
+        $this->select("id=Workstation_tenant", "label=NAIA Airport");
         $this->clickAndWait("name=yt0");
         $this->click("link=Manage Users");
         $this->waitForElementPresent("link=Set Access Rules");
@@ -163,10 +163,10 @@ class Issue3SetAccessRuleFunctionalTest extends BaseFunctionalTest {
         $this->type("id=Workstation_contact_name", "Test Person");
         $this->type("id=Workstation_contact_number", "3585795");
         $this->type("id=Workstation_contact_email_address", "test@test.com");
-        $this->select("id=Workstation_tenant", "label=Test Company 1");
+        $this->select("id=Workstation_tenant", "label=NAIA Airport");
         $this->waitForElementPresent("id=Workstation_tenant_agent");
         sleep(1);
-        $this->select("id=Workstation_tenant_agent", "label=Test Company 2");
+        $this->select("id=Workstation_tenant_agent", "label=Philippine Airline");
         $this->clickAndWait("name=yt0");
         $this->click("link=Manage Users");
         $this->waitForElementPresent("link=Set Access Rules");

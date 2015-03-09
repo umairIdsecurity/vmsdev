@@ -60,7 +60,7 @@ class Issue3SuperAdminFunctionalTest extends BaseFunctionalTest {
         $this->click("link=Add Administrator");
         $this->waitForPageToLoad("30000");
         $this->addUser("admin@test.com", "admin");
-        $this->addCompany("Test Company 1", "testcompany","TCA");
+        $this->addCompany("NAIA Airport", "testcompany","NAI");
         sleep(1);
         $this->waitForElementPresent("id=submitBtn");
         $this->click("id=submitBtn");
@@ -131,7 +131,7 @@ class Issue3SuperAdminFunctionalTest extends BaseFunctionalTest {
         $this->click("link=Add Agent Administrator");
         $this->waitForPageToLoad("30000");
         $this->addUser("agentadmin@test.com", "agentadmin");
-        $this->select("id=User_tenant", "label=Test Company 1");
+        $this->select("id=User_tenant", "label=NAIA Airport");
         $this->waitForElementPresent("id=User_company");
         sleep(1);
         $this->click("id=submitBtn");
@@ -201,9 +201,9 @@ class Issue3SuperAdminFunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Add Operator");
         $this->addUser("operator@test.com", "operator");
         $this->getDisabledRoleValue("8");
-        $this->select("id=User_tenant", "label=Test Company 1");
+        $this->select("id=User_tenant", "label=NAIA Airport");
         sleep(1);
-        $this->getDisabledCompanyValue("Test Company 1");
+        $this->getDisabledCompanyValue("NAIA Airport");
         $this->assertEquals("Workstation1", $this->getEval("window.document.getElementById(\"User_workstation\").options[window.document.getElementById(\"User_workstation\").selectedIndex].text"));
     
 
@@ -277,13 +277,13 @@ class Issue3SuperAdminFunctionalTest extends BaseFunctionalTest {
         $this->waitForPageToLoad("30000");
         $this->addUser("agentoperator@test.com", "agentoperator");
         $this->getDisabledRoleValue("7");
-        $this->select("id=User_tenant", "label=Test Company 1");
+        $this->select("id=User_tenant", "label=NAIA Airport");
         $this->waitForElementPresent("id=User_tenant_agent");
         sleep(1);
         $this->select("id=User_tenant_agent", "label=Test agentadmin");
         $this->waitForElementPresent("id=User_company");
         sleep(1);
-        $this->getDisabledCompanyValue("Test Company 1");
+        $this->getDisabledCompanyValue("NAIA Airport");
         $this->waitForElementPresent("id=User_workstation");
         $this->assertEquals("Workstation1", $this->getText("id=User_workstation"));
 
@@ -356,12 +356,12 @@ class Issue3SuperAdminFunctionalTest extends BaseFunctionalTest {
         $this->waitForPageToLoad("30000");
         $this->addUser("staffmember@test.com", "staffmember");
         $this->select("id=User_role", "label=Staff Member");
-        $this->select("id=User_tenant", "label=Test Company 1");
+        $this->select("id=User_tenant", "label=NAIA Airport");
         $this->waitForElementPresent("id=User_tenant_agent");
         sleep(1);
         $this->select("id=User_tenant_agent", "label=Test agentadmin");
         $this->waitForElementPresent("id=User_tenant_agent");
-        $this->getDisabledCompanyValue("Test Company 1");
+        $this->getDisabledCompanyValue("NAIA Airport");
         $this->waitForElementPresent("id=submitBtn");
         $this->click("id=submitBtn");
         $this->clickAndWait("id=submitForm");
@@ -434,7 +434,7 @@ class Issue3SuperAdminFunctionalTest extends BaseFunctionalTest {
         $this->waitForPageToLoad("30000");
         $this->addUser("admin2@test.com", "admin2");
         $this->waitForElementPresent("id=submitBtn");
-        $this->addCompany("Test Company 2", "testcompany2","TCB");
+        $this->addCompany("Philippine Airline", "testcompany2","PAL");
         $this->waitForElementPresent("id=submitBtn");
         sleep(1);
         $this->click("id=submitBtn");

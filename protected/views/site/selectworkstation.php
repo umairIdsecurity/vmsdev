@@ -4,7 +4,7 @@
 /* @var $form CActiveForm  */
 $session = new CHttpSession;
 
-$this->pageTitle = Yii::app()->name . ' - Select Workstation';
+$this->pageTitle = Yii::app()->name . ' - Please select a workstation';
 
 $workstationsList = array();
 $arrayCount = count($workstations);

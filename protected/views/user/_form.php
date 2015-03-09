@@ -94,7 +94,7 @@ if ($this->action->Id == 'create' && isset($_GET['role'])) { //if action create 
                         <td><?php echo $form->labelEx($model, 'tenant'); ?><span class="required">*</span></td>
                         <td>
                             <select id="User_tenant" name="User[tenant]"  >
-                                <option value='' selected>Select Tenant</option>
+                                <option value='' selected>Please select a tenant</option>
 <?php
 $allTenantCompanyNames = User::model()->findAllCompanyTenant();
 foreach ($allTenantCompanyNames as $key => $value) {
@@ -129,7 +129,7 @@ if ($this->action->Id != 'create' || isset($_POST['User'])) {
                                         <?php
                                         }
                                     } else {
-                                        echo "<option value='' selected>Select Tenant Agent</option>";
+                                        echo "<option value='' selected>Please select a tenant agent</option>";
                                     }
                                     ?>
                             </select><?php echo "<br>" . $form->error($model, 'tenant_agent'); ?>
@@ -222,7 +222,7 @@ if ($session['role'] == Roles::ROLE_AGENT_ADMIN || $currentRoleinUrl == Roles::R
     echo " disabled ";
 } //if currently logged in user is agent admin or if selected role=operator or owner is editing his account
 ?>>
-                                <option value='' selected>Select Company</option>
+                                <option value='' selected>Please select a company</option>
                                     <?php
                                     $companyList = CHtml::listData(Company::model()->findAllCompany(), 'id', 'name');
                                     if (isset($_GET['role'])) {
@@ -463,7 +463,7 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                 success: function(r) {
                     document.getElementById('User_tenant_agent').disabled = false;
                     $('#User_tenant_agent option[value!=""]').remove();
-                    $('#User_tenant_agent').append('<option value="">Select Tenant Agent</option>');
+                    $('#User_tenant_agent').append('<option value="">Please select a tenant agent</option>');
                     $.each(r.data, function(index, value) {
                         $('#User_tenant_agent').append('<option value="' + value.tenant_agent + '">' + value.name + '</option>');
                     });
@@ -667,7 +667,7 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                     data: selectedUserId,
                     success: function(r) {
                         $('#User_tenant_agent option[value!=""]').remove();
-                        $('#User_tenant_agent').append('<option value="">Select Tenant Agent</option>');
+                        $('#User_tenant_agent').append('<option value="">Please select a tenant agent</option>');
                         $.each(r.data, function(index, value) {
                             $('#User_tenant_agent').append('<option value="' + value.id + '">' + value.name + '</option>');
 

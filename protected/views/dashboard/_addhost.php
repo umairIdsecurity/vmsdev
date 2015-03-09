@@ -76,7 +76,7 @@ $session = new CHttpSession;
                         ?>
                     <td id="hostTenantRow"><?php echo $form->labelEx($userModel, 'tenant'); ?><br>
                         <select id="User_tenant" onchange="populateHostTenantAgentAndCompanyField()" name="User[tenant]"  >
-                            <option value='' selected>Select Tenant</option>
+                            <option value='' selected>Please select a tenant</option>
                             <?php
                             $allTenantCompanyNames = User::model()->findAllCompanyTenant();
                             foreach ($allTenantCompanyNames as $key => $value) {
@@ -91,7 +91,7 @@ $session = new CHttpSession;
                     <td id="hostTenantAgentRow"><?php echo $form->labelEx($userModel, 'tenant_agent'); ?><br>
                         <select id="User_tenant_agent" name="User[tenant_agent]" onchange="populateHostCompanyWithSameTenantAndTenantAgent()" >
                             <?php
-                            echo "<option value='' selected>Select Tenant Agent</option>";
+                            echo "<option value='' selected>Please select a tenant agent</option>";
                             ?>
                         </select>
                         <?php echo "<br>" . $form->error($userModel, 'tenant_agent'); ?>
@@ -100,7 +100,7 @@ $session = new CHttpSession;
                     <td id="hostCompanyRow">
                         <?php echo $form->labelEx($userModel, 'company'); ?><br>
                         <select id="User_company" name="User[company]" disabled>
-                            <option value=''>Select Company</option>
+                            <option value=''>Please select a company</option>
                         </select>
                         <?php echo "<br>" . $form->error($userModel, 'company'); ?>
                     </td>
@@ -270,7 +270,7 @@ $session = new CHttpSession;
 
     function getHostTenantAgentWithSameTenant(tenant) {
         $('#User_tenant_agent').empty();
-        $('#User_tenant_agent').append('<option value="">Select Tenant Agent</option>');
+        $('#User_tenant_agent').append('<option value="">Please select a tenant agent</option>');
         $.ajax({
             type: 'POST',
             url: '<?php echo Yii::app()->createUrl('visitor/GetTenantAgentWithSameTenant&id='); ?>' + tenant,

@@ -92,7 +92,7 @@ class Issue28RegisterFunctionalTest extends BaseFunctionalTest {
         $currentDate = date("d-m-Y");
         $this->assertEquals($currentDate, $this->getText("//div[@id='view-visitor-records']/table/tbody/tr/td[9]"));
         $this->clickAndWait("link=Active");
-        $this->assertEquals("Select Reason Other Reason 1 Reason 2", $this->getText("id=Visit_reason"));
+        $this->assertEquals("Please select a reason Other Reason 1 Reason 2", $this->getText("id=Visit_reason"));
     }
 
     /* Scenario 2 – Login as staffmember, add new visitor, current staffmember as host
@@ -122,7 +122,7 @@ class Issue28RegisterFunctionalTest extends BaseFunctionalTest {
         $currentDate = date("d-m-Y");
 //        $this->assertEquals($currentDate, $this->getText("//div[@id='view-visitor-records']/table/tbody/tr/td[9]"));
         $this->clickAndWait("link=Saved");
-        $this->assertEquals("Select Reason Other Reason 1 Reason 2", $this->getText("id=Visit_reason"));
+        $this->assertEquals("Please select a reason Other Reason 1 Reason 2", $this->getText("id=Visit_reason"));
     }
 
     /* Scenario 3 –Login as staff member add visitor and find host 
@@ -166,7 +166,7 @@ class Issue28RegisterFunctionalTest extends BaseFunctionalTest {
         $currentDate = date("d-m-Y");
         //$this->assertEquals($currentDate, $this->getText("//div[@id='view-visitor-records']/table/tbody/tr/td[9]"));
         $this->clickAndWait("link=Saved");
-        $this->assertEquals("Select Reason Other Reason 1 Reason 2", $this->getText("id=Visit_reason"));
+        $this->assertEquals("Please select a reason Other Reason 1 Reason 2", $this->getText("id=Visit_reason"));
     }
 
     /* Scenario 4 –Login as super admin and Check for validations in updating a corporate visitor
@@ -209,7 +209,7 @@ class Issue28RegisterFunctionalTest extends BaseFunctionalTest {
         $currentDate = date("d-m-Y");
       //  $this->assertEquals($currentDate, $this->getText("//div[@id='view-visitor-records']/table/tbody/tr/td[9]"));
         $this->clickAndWait("link=Saved");
-        $this->assertEquals("Select Reason Other Reason 1 Reason 2", $this->getText("id=Visit_reason"));
+        $this->assertEquals("Please select a reason Other Reason 1 Reason 2", $this->getText("id=Visit_reason"));
     }
 
     /* Scenario 5 – Login as saffmember register a visitor : find visitor use current logged in as host
@@ -238,7 +238,7 @@ class Issue28RegisterFunctionalTest extends BaseFunctionalTest {
         $currentDate = date("d-m-Y");
         //$this->assertEquals($currentDate, $this->getText("//div[@id='view-visitor-records']/table/tbody/tr/td[9]"));
         $this->clickAndWait("link=Saved");
-        $this->assertEquals("Select Reason Other Reason 1 Reason 2", $this->getText("id=Visit_reason"));
+        $this->assertEquals("Please select a reason Other Reason 1 Reason 2", $this->getText("id=Visit_reason"));
     }
 
     /*
@@ -275,7 +275,7 @@ class Issue28RegisterFunctionalTest extends BaseFunctionalTest {
        $currentDate = date("d-m-Y");
        //$this->assertEquals($currentDate, $this->getText("//div[@id='view-visitor-records']/table/tbody/tr/td[9]"));
         $this->clickAndWait("link=Saved");
-        $this->assertEquals("Select Reason Other Reason 1 Reason 2", $this->getText("id=Visit_reason"));
+        $this->assertEquals("Please select a reason Other Reason 1 Reason 2", $this->getText("id=Visit_reason"));
     }
 
     /*
@@ -322,7 +322,7 @@ class Issue28RegisterFunctionalTest extends BaseFunctionalTest {
         $currentDate = date("d-m-Y");
      //   $this->assertEquals($currentDate, $this->getText("//div[@id='view-visitor-records']/table/tbody/tr/td[9]"));
         $this->clickAndWait("link=Saved");
-        $this->assertEquals("Select Reason Other Reason 1 Reason 2 Reason 3", $this->getText("id=Visit_reason"));
+        $this->assertEquals("Please select a reason Other Reason 1 Reason 2 Reason 3", $this->getText("id=Visit_reason"));
     }
 
     /*
@@ -356,7 +356,7 @@ class Issue28RegisterFunctionalTest extends BaseFunctionalTest {
         $currentDate = date("d-m-Y");
       //  $this->assertEquals($currentDate, $this->getText("//div[@id='view-visitor-records']/table/tbody/tr/td[9]"));
         $this->clickAndWait("link=Saved");
-        $this->assertEquals("Select Reason Other Reason 1 Reason 2 Reason 3 Reason 4", $this->getText("id=Visit_reason"));
+        $this->assertEquals("Please select a reason Other Reason 1 Reason 2 Reason 3 Reason 4", $this->getText("id=Visit_reason"));
     }
 
     /*
@@ -398,7 +398,7 @@ class Issue28RegisterFunctionalTest extends BaseFunctionalTest {
         $currentDate = date("d-m-Y");
         //$this->assertEquals($currentDate, $this->getText("//div[@id='view-visitor-records']/table/tbody/tr/td[9]"));
         $this->clickAndWait("link=Saved");
-        $this->assertEquals("Select Reason Other Reason 1 Reason 2 Reason 3 Reason 4 Reason 5", $this->getText("id=Visit_reason"));
+        $this->assertEquals("Please select a reason Other Reason 1 Reason 2 Reason 3 Reason 4 Reason 5", $this->getText("id=Visit_reason"));
     }
 
     /*
@@ -443,7 +443,7 @@ class Issue28RegisterFunctionalTest extends BaseFunctionalTest {
         $currentDate = date("d-m-Y");
         //$this->assertEquals($currentDate, $this->getText("//div[@id='view-visitor-records']/table/tbody/tr/td[9]"));
         $this->clickAndWait("link=Saved");
-        $this->assertEquals("Select Reason Other Reason 1 Reason 2 Reason 3 Reason 4 Reason 5 Reason 6", $this->getText("id=Visit_reason"));
+        $this->assertEquals("Please select a reason Other Reason 1 Reason 2 Reason 3 Reason 4 Reason 5 Reason 6", $this->getText("id=Visit_reason"));
     }
 
     /*
@@ -474,7 +474,7 @@ class Issue28RegisterFunctionalTest extends BaseFunctionalTest {
         $currentDate = date("d-m-Y");
         //$this->assertEquals($currentDate, $this->getText("//div[@id='view-visitor-records']/table/tbody/tr/td[9]"));
         $this->clickAndWait("link=Saved");
-        $this->assertEquals("Select Reason Other Reason 1 Reason 2 Reason 3 Reason 4 Reason 5 Reason 6 Reason 7", $this->getText("id=Visit_reason"));
+        $this->assertEquals("Please select a reason Other Reason 1 Reason 2 Reason 3 Reason 4 Reason 5 Reason 6 Reason 7", $this->getText("id=Visit_reason"));
     }
 
     /*
@@ -511,7 +511,7 @@ class Issue28RegisterFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Visitor4", $this->getText("//div[@id='view-visitor-records']/table/tbody/tr/td[5]"));
         $this->assertEquals("testVisitor4@test.com", $this->getText("//div[@id='view-visitor-records']/table/tbody/tr/td[8]"));
         $this->clickAndWait("link=Saved");
-        $this->assertEquals("Select Reason Other Reason 1 Reason 2 Reason 3 Reason 4 Reason 5 Reason 6 Reason 7 Reason 8", $this->getText("id=Visit_reason"));
+        $this->assertEquals("Please select a reason Other Reason 1 Reason 2 Reason 3 Reason 4 Reason 5 Reason 6 Reason 7 Reason 8", $this->getText("id=Visit_reason"));
     }
 
     /*

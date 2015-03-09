@@ -551,7 +551,7 @@ dt.tabs dt{
     padding:3px;
 }
 
-.visitor-findBtn ,.host-findBtn{
+.visitor-findBtn ,.host-findBtn, #host-AddBtn{
     vertical-align: top;
    padding:7px !important;
 }
@@ -1522,3 +1522,4 @@ dt.tabs dt{
 .nav-tabs > li > a{
     color:#3C3C3C;
 }
+

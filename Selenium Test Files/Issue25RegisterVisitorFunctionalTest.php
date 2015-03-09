@@ -275,7 +275,7 @@ class Issue25RegisterVisitorFunctionalTest extends BaseFunctionalTest {
       5.	Click manage visitor records
       6.	Click register a visitor
       7.	Select same day visitor then click continue
-      8.	Select Reason 1 in reason field
+      8.	Please select a reason 1 in reason field
       9.	Click save and continue button
       10.	Click save and continue button for add patient name tab
       11.	Assert text first name cannot be blank, last name cannot be blank, mobile number cannot be blank, email address cannot be blank, tenant cannot be blank.
@@ -349,7 +349,7 @@ class Issue25RegisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->click("id=dummy-visitor-findBtn");
         $this->waitForElementPresent("id=6");
         $this->click("id=6");
-        $this->select("id=Visit_reason_search", "label=Select Reason");
+        $this->select("id=Visit_reason_search", "label=Please select a reason");
         $this->select("id=Visit_reason_search", "label=Other");
         $this->type("id=VisitReason_reason_search", "reason 2");
         $this->select("id=workstation_search", "label=Workstation3");
@@ -381,7 +381,7 @@ class Issue25RegisterVisitorFunctionalTest extends BaseFunctionalTest {
       5.	Click manage visitor records
       6.	Click register a visitor
       7.	Select same day visitor then click continue
-      8.	Select Reason 1 in reason field and corporate visitor in visitor type
+      8.	Please select a reason 1 in reason field and corporate visitor in visitor type
       9.	Click save and continue button
       10.	Click save and continue button for add host tab
       11.	Assert text first name cannot be blank, last name cannot be blank, mobile number cannot be blank, email address cannot be blank, tenant cannot be blank.

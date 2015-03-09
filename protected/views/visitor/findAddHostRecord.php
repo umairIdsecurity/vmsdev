@@ -3,7 +3,7 @@
 
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="active"><a href="#addhost" aria-controls="home" role="tab" data-toggle="tab">Add Host</a></li>
+        <li role="presentation" class="active"><a href="#addhost" aria-controls="home" role="tab" data-toggle="tab" id='addhostTab'>Add Host</a></li>
         <li role="presentation"><a href="#searchost" aria-controls="profile" role="tab" data-toggle="tab">Search Host</a></li>
     </ul>
 
@@ -64,6 +64,8 @@
                             'afterValidate' => 'js:function(form,data,hasError){
                         if(!hasError){
                         document.getElementById("User_company").disabled = false;
+                        document.getElementById("User_tenant").disabled = false;
+                        document.getElementById("User_tenant_agent").disabled = false;
                                 checkHostEmailIfUnique();
                                 }
                         }'
@@ -136,7 +138,7 @@
 
                                     <?php echo $form->labelEx($userModel, 'company'); ?><br>
                                     <select id="User_company" disabled name="User[company]" >
-                                        <option value=''>Select Company</option>
+                                        <option value=''>Please select a company</option>
                                         <?php
                                         if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
                                             echo "<option value='" . $session['company'] . "' selected>Company</option>";
@@ -158,8 +160,8 @@
                             ?>>
                                 <td id="hostTenantRow"><?php echo $form->labelEx($userModel, 'tenant'); ?><br>
 
-                                    <select id="User_tenant" onchange="populateHostTenantAgentAndCompanyField()" name="User[tenant]"  >
-                                        <option value='' selected>Select Tenant</option>
+                                    <select id="User_tenant" onchange="populateHostTenantAgentAndCompanyField()" name="User[tenant]" disabled >
+                                        <option value='' selected>Please select a tenant</option>
                                         <?php
                                         $allTenantCompanyNames = User::model()->findAllCompanyTenant();
                                         foreach ($allTenantCompanyNames as $key => $value) {
@@ -178,9 +180,9 @@
                                 </td>
                                 <td id="hostTenantAgentRow"><?php echo $form->labelEx($userModel, 'tenant_agent'); ?><br>
 
-                                    <select id="User_tenant_agent" name="User[tenant_agent]" onchange="populateHostCompanyWithSameTenantAndTenantAgent()" >
+                                    <select id="User_tenant_agent" name="User[tenant_agent]" onchange="populateHostCompanyWithSameTenantAndTenantAgent()" disabled>
                                         <?php
-                                        echo "<option value='' selected>Select Tenant Agent</option>";
+                                        echo "<option value='' selected>Please select a tenant agent</option>";
                                         if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                                             echo "<option value='" . $session['tenant_agent'] . "' selected>Tenant Agent</option>";
                                         }
@@ -282,7 +284,7 @@
                             if (searchText != '') {
                                 $("#searchTextHostErrorMessage").hide();
                                 $("#host-findBtn").click();
-                               // $("#currentHostDetailsDiv").hide();
+                                // $("#currentHostDetailsDiv").hide();
                                 $(".host-AddBtn").hide();
                             } else {
                                 $("#searchTextHostErrorMessage").show();
@@ -312,6 +314,7 @@
                             $("#searchHostDiv").show();
                             $("#currentHostDetailsDiv").hide();
                             $(".host-AddBtn").hide();
+                            $("#addhostTab").click();
                         });
                     });
 
@@ -320,14 +323,21 @@
                         $("#selectedHostInSearchTable").val("");
                         $("#searchHostTableDiv h4").html("Search Results for : " + $("#search-host").val());
                         $("#searchHostTableDiv").show();
-                       // $("#register-host-form").hide();
+                        // $("#register-host-form").hide();
                         $("#register-host-patient-form").hide();
                         //append searched text in modal
                         var searchText = $("#search-host").val();
-
-
+                        var tenant;
+                        var tenant_agent;
+                        if ($("#selectedVisitorInSearchTable").val() == '') {
+                            tenant = $("#Visitor_tenant").val();
+                            tenant_agent = $("#Visitor_tenant_agent").val();
+                        } else {
+                            tenant = $("#search_visitor_tenant").val();
+                            tenant_agent = $("#search_visitor_tenant_agent").val();
+                        }
                         //change modal url to pass user searched text
-                        var url = 'index.php?r=visitor/findhost&id=' + searchText + '&visitortype=' + $("#Visitor_visitor_type").val()+'&tenant='+$("#search_visitor_tenant").val()+'&tenant_agent='+$("#search_visitor_tenant_agent").val();
+                        var url = 'index.php?r=visitor/findhost&id=' + searchText + '&visitortype=' + $("#Visitor_visitor_type").val() + '&tenant=' + tenant + '&tenant_agent=' + tenant_agent;
                         $("#searchHostTable").html('<iframe id="findHostTableIframe" onLoad="autoResize2();" width="100%" height="100%" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
                     }
 
@@ -406,12 +416,13 @@
                     <h4>Search Results for : <span id='searchhostname'></span></h4>
 
                     <div id="searchHostTable"></div>
-                    <div class="register-a-visitor-buttons-div">
-                        <input type="button" class="neutral visitor-backBtn btnBackTab3" id="btnBackTab3" value="Back"/>
-                        <input type="button" id="clicktabB2"  value="Save and Continue" class="actionForward"/>
-                    </div>
+
                 </div>
                 <input type="text" id="selectedHostInSearchTable" value="0"/>
+            </div>
+            <div class="register-a-visitor-buttons-div">
+                <input type="button" class="neutral visitor-backBtn btnBackTab3" id="btnBackTab3" value="Back"/>
+                <input type="button" id="clicktabB2"  value="Save and Continue" class="actionForward"/>
             </div>
         </div>
     </div>

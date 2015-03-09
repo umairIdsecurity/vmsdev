@@ -315,7 +315,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->click("id=dummy-visitor-findBtn");
         $this->waitForElementPresent("id=2");
         $this->click("id=2");
-        $this->select("id=Visit_reason_search", "label=Select Reason");
+        $this->select("id=Visit_reason_search", "label=Please select a reason");
         $this->select("id=Visit_reason_search", "label=Other");
         $this->type("id=VisitReason_reason_search", "reason 2");
         $this->select("id=workstation_search", "label=Workstation1");

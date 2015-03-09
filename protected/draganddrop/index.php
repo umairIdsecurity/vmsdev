@@ -1,7 +1,6 @@
 
 
 <?php
-
 if ($this->Id == 'visitor') {
     $dataId = '';
 } elseif (isset($_GET['id'])) {
@@ -27,8 +26,13 @@ if ($this->action->id == 'addvisitor') {
         }
 
         .editImageBtn{
-            margin-bottom: -61px !important;
-            margin-left: -102px !important;
+            margin-left: -103px !important;
+            color:white;
+            font-weight:bold;
+            text-shadow: 0 0 !important;
+            font-size:12px !important;
+            height:23px;
+            width:131px !important;
         }
         .imageDimensions{
             display:none !important;
@@ -71,11 +75,17 @@ if ($this->action->id == 'addvisitor') {
             font-size: 12px !important;
             padding-bottom:5px;
         }
-        
+
 
         .editImageBtn{
             margin-top: -10px !important;
-            margin-left:7px !important;
+            margin-left:6px !important;
+            color:white;
+            font-weight:bold;
+            text-shadow: 0 0 !important;
+            font-size:12px !important;
+            height:23px;
+            width:131px !important;
         }
     </style>
 <?php } elseif ($this->action->id == 'update') { ?>
@@ -108,12 +118,12 @@ if ($this->action->id == 'addvisitor') {
 <?php } ?>
 
 <div id="fileuploader" style="margin-bottom:5px;"><?php
-    if ($this->action->id == 'detail') {
-        echo "Upload Photo";
-    } else {
-        echo "Browse Computer";
-    }
-    ?> </div> 
+if ($this->action->id == 'detail') {
+    echo "Upload Photo";
+} else {
+    echo "Browse Computer";
+}
+?> </div> 
 <br><br>
 <input type="button"  style="display:none;" id="cropImageBtn" class="btn actionForward editImageBtn" value="Edit Photo" onclick = "document.getElementById('light').style.display = 'block';
         document.getElementById('fade').style.display = 'block'">
@@ -121,11 +131,11 @@ if ($this->action->id == 'addvisitor') {
 <input type="hidden" id="actionUpload" value="<?php echo $this->action->id; ?>"/> 
 <input type="hidden" id="controllerId" value="<?php echo $this->id; ?>"/> 
 <input type="hidden" id="viewFrom" value="<?php
-if (isset($_GET['viewFrom'])) {
-    echo "1";
-} else {
-    echo "0";
-}
+    if (isset($_GET['viewFrom'])) {
+        echo "1";
+    } else {
+        echo "0";
+    }
 ?>"/> 
 <div id="status1"></div>
 <script>
@@ -183,10 +193,10 @@ if (isset($_GET['viewFrom'])) {
                                 }
                                 if ($("#controllerId").val() == 'visit') {
                                     $("#submitBtnPhoto").click();
-                                    if($("#visitorOriginalValue").val() == ''){
+                                    if ($("#visitorOriginalValue").val() == '') {
                                         $("#cropImageBtn").show();
                                     }
-                                    
+
                                 } else if ($("#controllerId").val() == 'visitor') {
                                     $("#cropImageBtn").show();
                                 }

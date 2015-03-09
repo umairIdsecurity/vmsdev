@@ -207,7 +207,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                             <td width="100px;"><label for="Visit_reason">Reason</label></td>
                             <td>
                                 <select id="Visit_reason" name="Visit[reason]" onchange="ifSelectedIsOtherShowAddReasonDiv(this)">
-                                    <option value='' selected>Select Reason</option>
+                                    <option value='' selected>Please select a reason</option>
                                     <option value="Other">Other</option>
                                     <?php
                                     $reason = VisitReason::model()->findAllReason();
@@ -421,7 +421,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                             <td ><?php echo $form->labelEx($newHost, 'tenant'); ?></td>
                             <td>
                                 <select id="User_tenant" class="New_user_tenant" onchange="populateHostTenantAgentAndCompanyField()" name="User[tenant]"  >
-                                    <option value='' selected>Select Tenant</option>
+                                    <option value='' selected>Please select a tenant</option>
                                     <?php
                                     $allTenantCompanyNames = User::model()->findAllAdmin();
                                     foreach ($allTenantCompanyNames as $key => $value) {
@@ -438,7 +438,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                             <td>
                                 <select id="User_tenant_agent" class="New_user_tenant_agent" name="User[tenant_agent]" onchange="populateHostCompanyWithSameTenantAndTenantAgent()" >
                                     <?php
-                                    echo "<option value='' selected>Select Tenant Agent</option>";
+                                    echo "<option value='' selected>Please select a tenant agent</option>";
                                     ?>
                                 </select><?php echo "<br>" . $form->error($newHost, 'tenant_agent'); ?>
                             </td>
@@ -447,7 +447,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                             <td><?php echo $form->labelEx($newHost, 'company'); ?></td>
                             <td>
                                 <select id="User_company" name="User[company]" class="New_user_company">
-                                    <option value=''>Select Company</option>
+                                    <option value=''>Please select a company</option>
                                 </select>
 
                                 <?php echo "<br>" . $form->error($newHost, 'company'); ?>
@@ -766,7 +766,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
 
     function getHostTenantAgentWithSameTenant(tenant) {
         $('.New_user_tenant_agent').empty();
-        $('.New_user_tenant_agent').append('<option value="">Select Tenant Agent</option>');
+        $('.New_user_tenant_agent').append('<option value="">Please select a tenant agent</option>');
         $.ajax({
             type: 'POST',
             url: '<?php echo Yii::app()->createUrl('visitor/GetTenantAgentWithSameTenant&id='); ?>' + tenant,

@@ -163,7 +163,7 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_contact_number", "1234567890");
         $this->click("id=submitContactDetailForm");
         $this->assertEquals("A profile already exists for this email address.", $this->getText("xpath=(//div[@id='Visitor_email_em_'])[2]"));
-        $this->select("id=Visit_reason", "label=Select Reason");
+        $this->select("id=Visit_reason", "label=Please select a reason");
         $this->click("id=submitReasonForm");
         sleep(1);
         $this->assertEquals("Please enter a Reason", $this->getText("id=Visit_reason_em_"));

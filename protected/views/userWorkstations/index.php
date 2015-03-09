@@ -27,7 +27,7 @@ foreach (Yii::app()->user->getFlashes() as $key => $message) {
                     <th id="user_workstationsGrid_c1" style="text-align:center;">
                         <a href="/index.php?r=userWorkstations/index&amp;id=<?php echo $_GET['id']; ?>&amp;Workstation_sort=location" class="sort-link">Location</a>
                     </th>
-                    <th id="cbColumn" class="checkbox-column" style="text-align:center;"><input type="checkbox" id="cbColumnAll" name="cbColumn_all"></th>
+                    <th id="cbColumn" class="checkbox-column" style="text-align:center;">Assigned?<input type="checkbox" id="cbColumnAll" name="cbColumn_all"></th>
                     <th style="text-align:center;">Set Primary</th>
                 </tr>
             </thead>

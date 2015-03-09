@@ -48,7 +48,7 @@ $session = new CHttpSession;
             <tr>
                 <td><?php echo $form->labelEx($model, 'tenant'); ?></td>
                 <td><select  onchange="getTenantAgent()"  id="Workstation_tenant" name="Workstation[tenant]">
-                        <option disabled value='' selected>Select Tenant</option>
+                        <option disabled value='' selected>Please select a tenant</option>
                         <?php
 
                         $companyList = User::model()->findAllCompanyTenant();
@@ -69,7 +69,7 @@ $session = new CHttpSession;
             <tr>
                 <td><?php echo $form->labelEx($model, 'tenant_agent'); ?></td>
                 <td><select id="Workstation_tenant_agent" name="Workstation[tenant_agent]">
-                        <option disabled value='' selected>Select Tenant Agent</option>
+                        <option disabled value='' selected>Please select a tenant agent</option>
                         <?php
                         if ($this->action->Id != 'create') {
                             
@@ -85,7 +85,7 @@ $session = new CHttpSession;
                                 }
                             } else {
                                 ?>
-                            <option disabled value='' selected>Select Tenant Agent</option>
+                            <option disabled value='' selected>Please select a tenant agent</option>
                         <?php } ?>
                     </select></td>
                 <td><?php echo $form->error($model, 'tenant_agent'); ?></td>

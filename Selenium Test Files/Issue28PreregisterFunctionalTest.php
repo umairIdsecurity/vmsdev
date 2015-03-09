@@ -320,7 +320,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("staffmembervisitor4", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[4]"));
         $this->assertEquals("staffmembervisitor4@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[7]"));
         $this->clickAndWait("link=Preregistered");
-        $this->assertEquals("Select Reason Other Reason 1 Reason 2", $this->getText("id=Visit_reason"));
+        $this->assertEquals("Please select a reason Other Reason 1 Reason 2", $this->getText("id=Visit_reason"));
     }
 
     /*
@@ -357,7 +357,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Dashboard");
         $this->assertEquals("staffmembervisitor5", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[4]"));
         $this->clickAndWait("link=Preregistered");
-        $this->assertEquals("Select Reason Other Reason 1 Reason 2 Reason 4", $this->getText("id=Visit_reason"));
+        $this->assertEquals("Please select a reason Other Reason 1 Reason 2 Reason 4", $this->getText("id=Visit_reason"));
     }
 
     /*
@@ -402,7 +402,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("staffmembervisitor6", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[4]"));
         $this->assertEquals("staffmembervisitor6@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[7]"));
         $this->clickAndWait("link=Preregistered");
-        $this->assertEquals("Select Reason Other Reason 1 Reason 2 Reason 4 Reason 5", $this->getText("id=Visit_reason"));
+        $this->assertEquals("Please select a reason Other Reason 1 Reason 2 Reason 4 Reason 5", $this->getText("id=Visit_reason"));
     }
 
     /*
@@ -449,7 +449,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("staffmembervisitor", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[4]"));
         $this->assertEquals("staffmembervisitor@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[7]"));
         $this->clickAndWait("link=Preregistered");
-        $this->assertEquals("Select Reason Other Reason 1 Reason 2 Reason 4 Reason 5 Reason 6", $this->getText("id=Visit_reason"));
+        $this->assertEquals("Please select a reason Other Reason 1 Reason 2 Reason 4 Reason 5 Reason 6", $this->getText("id=Visit_reason"));
     }
 
     /*
@@ -482,7 +482,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Visitor1", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[4]"));
         $this->assertEquals("testVisitor1@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[7]"));
         $this->clickAndWait("link=Preregistered");
-        $this->assertEquals("Select Reason Other Reason 1 Reason 2 Reason 4 Reason 5 Reason 6 Reason 7", $this->getText("id=Visit_reason"));
+        $this->assertEquals("Please select a reason Other Reason 1 Reason 2 Reason 4 Reason 5 Reason 6 Reason 7", $this->getText("id=Visit_reason"));
     }
 
     /*
@@ -522,7 +522,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("staffmembervisitor", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[4]"));
         $this->assertEquals("staffmembervisitor@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[7]"));
         $this->clickAndWait("link=Preregistered");
-        $this->assertEquals("Select Reason Other Reason 1 Reason 2 Reason 4 Reason 5 Reason 6 Reason 7 Reason 8", $this->getText("id=Visit_reason"));
+        $this->assertEquals("Please select a reason Other Reason 1 Reason 2 Reason 4 Reason 5 Reason 6 Reason 7 Reason 8", $this->getText("id=Visit_reason"));
     }
 
     /*

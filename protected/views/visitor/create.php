@@ -173,8 +173,11 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
             e.preventDefault();
             $("#register-reason-form").hide();
             var visit_reason = $("#Visit_reason_search").val();
-
-            if (($("#selectedVisitorInSearchTable").val() == '' && $("#search-visitor").val() != '') || $("#selectedVisitorInSearchTable").val() == '') {
+            if ($("#search-visitor").val() == "") {
+                $("#searchTextErrorMessage").html("Please enter a name");
+                $("#searchTextErrorMessage").show();
+            }
+            else if (($("#selectedVisitorInSearchTable").val() == '' && $("#search-visitor").val() != '') || $("#selectedVisitorInSearchTable").val() == '') {
                 $("#searchTextErrorMessage").html("Please select a visitor");
                 $("#searchTextErrorMessage").show();
             }
@@ -196,18 +199,19 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
 
         $("#clicktabB2").click(function(e) {
             e.preventDefault();
-            //var currentURL = location.href.split("=");
             var currentURL = $("#getcurrentUrl").val();
 
             $("#Visit_visitor_type").val($("#Visitor_visitor_type").val());
             //checks if host is from search and verifys that a user has been selected
-            if (($("#selectedHostInSearchTable").val() == '' && $("#search-host").val() != '') || $("#selectedHostInSearchTable").val() == '') {
+            if ($("#search-host").val() == '' || $("#selectedHostInSearchTable").val() == '0' || $("#selectedHostInSearchTable").val() == '') {
+                $("#searchTextHostErrorMessage").html("Please enter a name");
+                $("#searchTextHostErrorMessage").show();
+            }
+            else if (($("#selectedHostInSearchTable").val() == '' && $("#search-host").val() != '') || $("#selectedHostInSearchTable").val() == '') {
                 $("#searchTextHostErrorMessage").html("Please select a host");
                 $("#searchTextHostErrorMessage").show();
-                //alert("host from search");
             } else if (currentURL != "") {
                 showHideTabs("logVisitB", "logVisitA", "logVisit", "findHostA", "findHost", "findVisitorA", "findVisitor");
-                // alert("preregister");
             } else if ($("#selectedVisitorInSearchTable").val() != '0') { // if visitor is from search
 
                 if ($("#VisitReason_reason_search").val() != 0 && $("#Visit_reason_search").val() == 'Other') {
@@ -439,6 +443,22 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
                     } else {
                         $(".errorMessageEmail").hide();
                         $("#emailIsUnique").val("1");
+                        //tenant and tenant agent of visitor and host should be the same
+                        var options = $("#Visitor_tenant > option").clone();
+                        $('#User_tenant option').remove();
+                        $('#User_tenant').append(options);
+                        $('#User_tenant').val($("#Visitor_tenant").val());
+
+                        var options = $("#Visitor_tenant_agent > option").clone();
+                        $('#User_tenant_agent option').remove();
+                        $('#User_tenant_agent').append(options);
+                        $('#User_tenant_agent').val($("#Visitor_tenant_agent").val());
+
+                        var options = $("#Visitor_company > option").clone();
+                        $('#User_company option').remove();
+                        $('#User_company').append(options);
+                        $('#User_company').val($("#Visitor_company").val());
+
                         $("#clicktabB").click();
                     }
                 });
@@ -497,6 +517,8 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
         isSearch = (typeof isSearch === "undefined") ? "defaultValue" : isSearch;
 
         if (isSearch == 'search') {
+            $("#searchVisitorTableDiv").hide();
+            $("#selectedVisitorInSearchTable").val("");
             $('#workstation_search option[value!=""]').remove();
 
             $.ajax({
@@ -516,7 +538,7 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
             //populate tenant agent
             $('#search_visitor_tenant_agent option[value!=""]').remove();
             var tenant = $("#search_visitor_tenant").val();
-            getTenantAgentWithSameTenant(tenant,'','search');
+            getTenantAgentWithSameTenant(tenant, '', 'search');
 
         } else {
             $('#workstation option[value!=""]').remove();
@@ -567,7 +589,7 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
         isSearch = (typeof isSearch === "undefined") ? "defaultValue" : isSearch;
 
         $('#Visitor_tenant_agent').empty();
-        $('#Visitor_tenant_agent').append('<option value="">Select Tenant Agent</option>');
+        $('#Visitor_tenant_agent').append('<option value="">Please select a tenant agent</option>');
         $.ajax({
             type: 'POST',
             url: '<?php echo Yii::app()->createUrl('visitor/GetTenantAgentWithSameTenant&id='); ?>' + tenant,
@@ -588,7 +610,7 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
 
     function getHostTenantAgentWithSameTenant(tenant) {
         $('#User_tenant_agent').empty();
-        $('#User_tenant_agent').append('<option value="">Select Tenant Agent</option>');
+        $('#User_tenant_agent').append('<option value="">Please select a tenant agent</option>');
         $.ajax({
             type: 'POST',
             url: '<?php echo Yii::app()->createUrl('visitor/GetTenantAgentWithSameTenant&id='); ?>' + tenant,
@@ -618,6 +640,7 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
     }
 
     function getHostCompanyWithSameTenant(tenant) {
+        $('#User_company option').remove();
         $.ajax({
             type: 'POST',
             url: '<?php echo Yii::app()->createUrl('company/GetCompanyWithSameTenant&id='); ?>' + tenant,
@@ -659,6 +682,7 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
     }
 
     function getHostCompanyWithSameTenantAndTenantAgent(tenant, tenant_agent) {
+        $('#User_company option').remove();
         $.ajax({
             type: 'POST',
             url: '<?php echo Yii::app()->createUrl('visitor/GetCompanyWithSameTenantAndTenantAgent&id='); ?>' + tenant + '&tenantagent=' + tenant_agent,
@@ -785,6 +809,22 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
                             } else {
                                 $("#findHostA").html("Find or Add Host");
                                 $("#findHostB").html("Find or Add Host");
+                            }
+                            //tenant and tenant agent of visitor and host should be the same
+                            var options = $("#search_visitor_tenant > option").clone();
+                            $('#User_tenant option').remove();
+                            $('#User_tenant').append(options);
+                            $('#User_tenant').val($("#search_visitor_tenant").val());
+
+                            var options = $("#search_visitor_tenant_agent > option").clone();
+                            $('#User_tenant_agent option').remove();
+                            $('#User_tenant_agent').append(options);
+                            $('#User_tenant_agent').val($("#search_visitor_tenant_agent").val());
+
+                            if ($("#search_visitor_tenant_agent").val() == '') {
+                                getHostCompanyWithSameTenant($("#search_visitor_tenant").val());
+                            } else {
+                                getHostCompanyWithSameTenantAndTenantAgent($("#search_visitor_tenant").val(), $("#search_visitor_tenant_agent").val());
                             }
                             showHideTabs('findHostB', 'findHostA', 'findHost', 'findVisitorA', 'findVisitor', 'selectCardA', 'selectCard');
                         }

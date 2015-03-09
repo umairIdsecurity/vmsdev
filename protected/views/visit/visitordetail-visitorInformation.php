@@ -126,9 +126,9 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                     foreach ($cardType as $key => $value) {
                                         ?>
                                         <option value="<?php echo $value->id; ?>" <?php
-                                    if ($model->card_type == $value->id) {
-                                        echo " selected ";
-                                    }
+                                        if ($model->card_type == $value->id) {
+                                            echo " selected ";
+                                        }
                                         ?>><?php echo $value->name; ?></option>
                                                 <?php
                                             }
@@ -214,9 +214,9 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                     foreach ($reason as $key => $value) {
                                         ?>
                                         <option value="<?php echo $value->id; ?>" <?php
-                                    if ($model->reason == $value->id) {
-                                        echo " selected ";
-                                    }
+                                        if ($model->reason == $value->id) {
+                                            echo " selected ";
+                                        }
                                         ?>><?php echo $value->reason; ?></option>
                                                 <?php
                                             }
@@ -251,8 +251,8 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                         <tr>
                             <td width="100px;"><label for="VisitReason_reason">Reason</label></td>
                             <td><textarea id="VisitReason_reason" name="VisitReason[reason]" style="width:200px !important;text-transform: capitalize;" cols="80" rows="3"><?php
-                    echo $reasonModel->reason;
-                    ?></textarea> <?php echo $addReasonForm->error($reasonModel, 'reason'); ?>
+                                    echo $reasonModel->reason;
+                                    ?></textarea> <?php echo $addReasonForm->error($reasonModel, 'reason'); ?>
                                 <div class="errorMessage visitorReason" id="visitReasonErrorMessage">Please select a reason</div>
                             </td>
                         </tr>
@@ -276,8 +276,15 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                             'validateOnSubmit' => true,
                             'afterValidate' => 'js:function(form,data,hasError){
                         if(!hasError){
-                                sendVisitForm("update-host-visit-form");
-                                sendVisitForm("update-visit-form");
+                        
+                        if($("#selectedHostInSearchTable").val() == ""){
+                            $("#searchTextHostErrorMessage").show();
+                            $("#searchTextHostErrorMessage").html("Please assign a host");
+                        } else {
+                            sendVisitForm("update-host-visit-form");
+                            sendVisitForm("update-visit-form");
+                        }
+                                
                                 
                                 }
                         }'
@@ -293,14 +300,14 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                             <button class="host-findBtn" onclick="findHostRecord()" id="host-findBtn" style="display:none;" data-target="#findHostRecordModal" data-toggle="modal">Search Visits</button>
                             <div class="errorMessage" id="searchTextHostErrorMessage" style="display:none;font-size:12px;"></div>
 
-                            <button class="host-findBtn" id="dummy-host-findBtn">Find Host</button>
+                            <button class="host-findBtn" id="dummy-host-findBtn" style="line-height:0px;">Find Host</button>
                         </div>
                         <input type="text" name="Visit[host]" id="selectedHostInSearchTable" style="display:none;"/>
                         <input type="text" name="Visit[visitor_type]" id="visitorTypeUnderSearchForm" style="display:none;" value="<?php
-                    if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
-                        echo "2";
-                    }
-                    ?>"/>
+                        if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
+                            echo "2";
+                        }
+                        ?>"/>
                                <?php echo "<br>" . $updateHostVisitForm->error($model, 'host'); ?>
                         <div id="searchHostTableDiv">
                             <br><div style="font-weight:bold;" class="findDivTitle"></div><br>
@@ -593,7 +600,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                         <table id="patientTable" class="detailsTable">
                             <tr>
                                 <td width="100px;"><?php echo $patientForm->labelEx($patientModel, 'first_name');
-                    ?></td>
+                        ?></td>
                                 <td>
                                     <?php echo $patientForm->textField($patientModel, 'name', array('size' => 50, 'maxlength' => 50)); ?>
                                     <?php echo "<br>" . $patientForm->error($patientModel, 'name'); ?>
@@ -666,7 +673,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
 
         $("#findHostModalBtn").click();
         //change modal url to pass user searched text
-        var url = 'index.php?r=visitor/findhost&id=' + $("#search-host").val() + '&visitortype=2';
+        var url = 'index.php?r=visitor/findhost&id=' + $("#search-host").val() + '&visitortype=2&tenant=<?php echo $model->tenant; ?>&tenant_agent=<?php echo $model->tenant_agent; ?>';
         $("#findHostModalBody #modalIframe").html('<iframe id="findHostTableIframe" scrolling="no" onLoad="autoResize2();" width="100%" height="100%" style="max-height:400px !important;" frameborder="0" src="' + url + '"></iframe>');
     }
 
@@ -696,8 +703,11 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                 $('#findHostTableIframe').contents().find('.findHostButtonColumn a').html('Select Host');
                 $('#findHostTableIframe').contents().find('#' + id).addClass('delete');
                 $('#findHostTableIframe').contents().find('#' + id).html('Selected Host');
+                alert(id);
+
                 $("#selectedHostInSearchTable").val(id);
                 $(".visitortypehost").val(id);
+                alert($("#selectedHostInSearchTable").val());
             }
         });
     }

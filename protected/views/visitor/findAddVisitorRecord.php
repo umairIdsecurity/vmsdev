@@ -1,108 +1,36 @@
 <?php
 $session = new CHttpSession;
 ?>
-<div id="findAddVisitorRecordDiv" class="findAddVisitorRecordDiv form">
-    <div>
-        <label><b>Search Name:</b></label> 
-        <input type="text" id="search-visitor" name="search-visitor" class="search-text"/> 
-        <button class="visitor-findBtn" onclick="findVisitorRecord()" id="visitor-findBtn" style="display:none;" data-target="#findVisitorRecordModal" data-toggle="modal">Find Record</button>
-        <button class="visitor-findBtn neutral" id="dummy-visitor-findBtn" style="padding:8px;">Find Record</button>
-        <div class="errorMessage" id="searchTextErrorMessage" style="display:none;"></div>
-    </div>
+<br>
+<div role="tabpanel">
 
-    <div id="searchVisitorTableDiv">
-        <h4>Search Results for : <span id='search'></span></h4>
-        <div id="visitor_fields_for_Search">
-            <label for="Visitor_visitor_type_search">Visitor Type</label><br>
-            <?php
-            echo CHtml::dropDownList('Visitor_visitor_type_search', 'visitor_type', VisitorType::model()->returnVisitorTypes(), array(
-                'onchange' => 'showHideHostPatientName(this)',
-            ));
-            ?>
-            <?php echo "<br>" . CHtml::error($model, 'visitor_type'); ?>
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#addvisitor" aria-controls="profile" role="tab" data-toggle="tab">Add Visitor Profile</a></li>
+        <li role="presentation" ><a href="#searchvisitor" aria-controls="home" role="tab" data-toggle="tab">Search Visitor Profile</a></li>
+    </ul>
 
+    <!-- Tab panes -->
+    <div class="tab-content">
 
-            <div id="workstationRowSearch" <?php
-            if ($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
-                echo " class='hidden' ";
-            }
-            ?>><label>Workstation</label><span class="required">*</span><br>
+        <div role="tabpanel" class="tab-pane active" id="addvisitor">
+            <div id="findAddVisitorRecordDiv" class="findAddVisitorRecordDiv form">
 
-                <select id="workstation_search" onchange="populateVisitWorkstation(this)">
+                <div data-ng-app="PwordForm">
                     <?php
-                    if ($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
-                        echo '';
-                    } else {
-                        echo '<option value="">Select Workstation</option>';
-                    }
-                    ?>
-
-                    <?php
-                    $workstationList = populateWorkstation();
-                    foreach ($workstationList as $key => $value) {
-                        ?>
-                        <option value="<?php echo $value->id; ?>"><?php echo $value->name; ?></option>
-                        <?php
-                    }
-                    ?>
-                </select>
-                <div style="display:none;" class="errorMessage errorMessageWorkstationSearch" >Please select a workstation</div>
-            </div>
-            <label for="Visit_reason_search">Reason</label><br>
-
-            <select id="Visit_reason_search" name="Visitor[reason]" onchange="ifSelectedIsOtherShowAddReasonDivSearch(this)">
-                <option value='' selected>Select Reason</option>
-                <?php
-                $reason = VisitReason::model()->findAllReason();
-                foreach ($reason as $key => $value) {
-                    ?>
-                    <option value="<?php echo $value->id; ?>"><?php echo $value->reason; ?></option>
-                    <?php
-                }
-                ?>
-                <option value="Other">Other</option>
-            </select>
-            <div class="errorMessage visitorReason" id="search-visitor-reason-error">Please select a reason</div>
-        </div>
-        <?php
-        $form = $this->beginWidget('CActiveForm', array(
-            'id' => 'register-reason-form-search',
-            'action' => Yii::app()->createUrl('/visitReason/create&register=1'),
-            'htmlOptions' => array("name" => "register-reason-form"),
-            'enableAjaxValidation' => false,
-            'enableClientValidation' => true,
-            'clientOptions' => array(
-                'validateOnSubmit' => true,
-                'afterValidate' => 'js:function(form, data, hasError){
-                                if (!hasError){                               
-                           }
-                        }'
-            ),
-        ));
-        ?>
-        <textarea id="VisitReason_reason_search" maxlength="128" name="VisitReason[reason]"></textarea> 
-        <div class="errorMessage" id="visitReasonErrorMessageSearch" style="display:none;">Please select a reason</div>
-
-
-        <?php $this->endWidget(); ?>
-
-        <div id="searchVisitorTable"></div>
-        <div class="register-a-visitor-buttons-div">
-            <input type="button" class="neutral visitor-backBtn btnBackTab2" id="btnBackTab2" value="Back"/>
-            <input type="button" id="clicktabB1"  value="Save and Continue" class="actionForward"/>
-        </div>
-    </div>
-    <input type="text" id="selectedVisitorInSearchTable" value="0"></input>
-    <div data-ng-app="PwordForm">
-        <?php
-        $form = $this->beginWidget('CActiveForm', array(
-            'id' => 'register-form',
-            'htmlOptions' => array("name" => "registerform"),
-            'enableAjaxValidation' => false,
-            'enableClientValidation' => true,
-            'clientOptions' => array(
-                'validateOnSubmit' => true,
-                'afterValidate' => 'js:function(form, data, hasError){
+                    $form = $this->beginWidget('CActiveForm', array(
+                        'id' => 'register-form',
+                        'htmlOptions' => array("name" => "registerform"),
+                        'enableAjaxValidation' => false,
+                        'enableClientValidation' => true,
+                        'clientOptions' => array(
+                            'validateOnSubmit' => true,
+                            'afterValidate' => 'js:function(form, data, hasError){
+                                $("#selectedVisitorInSearchTable").val("");
+                                $("#register-host-form").show();
+                $("#searchHostDiv").show();
+                $("#currentHostDetailsDiv").hide();
+                $(".host-AddBtn").hide();
                                 if (!hasError){
                                 var vehicleValue = $("#Visitor_vehicle").val();
                                 if(vehicleValue.length < 6 && vehicleValue != ""){
@@ -130,31 +58,295 @@ $session = new CHttpSession;
                                     }
                                 }
                                 }'
-            ),
-        ));
-        ?>
-        <?php echo $form->errorSummary($model); ?>
-        <input type="hidden" id="emailIsUnique" value="0"/>
-        <div class="visitor-title">Add New Visitor Record</div>
-        <div >
-            <table  id="addvisitor-table" data-ng-app="PwordForm">
-                <tr>
-                    <td>
-                        <?php echo $form->labelEx($model, 'visitor_type'); ?><br>
-                        <?php
-                        echo $form->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes(), array(
-                            'onchange' => 'showHideHostPatientName(this)',
-                        ));
+                        ),
+                    ));
+                    ?>
+                    <?php echo $form->errorSummary($model); ?>
+                    <input type="hidden" id="emailIsUnique" value="0"/>
+                    <div class="visitor-title">Add Visitor Profile</div>
+                    <div >
+                        <table  id="addvisitor-table" data-ng-app="PwordForm">
+                            <tr>
+                                <td>
+                                    <?php echo $form->labelEx($model, 'visitor_type'); ?><br>
+                                    <?php
+                                    echo $form->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes(), array(
+                                        'onchange' => 'showHideHostPatientName(this)',
+                                    ));
+                                    ?>
+                                    <?php echo "<br>" . $form->error($model, 'visitor_type'); ?>
+                                </td>
+                                <td id="workstationRow" <?php
+                                if ($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
+                                    echo " class='hidden' ";
+                                }
+                                ?>><label>Workstation</label><span class="required">*</span><br>
+
+                                    <select id="workstation" onchange="populateVisitWorkstation(this)">
+                                        <?php
+                                        if ($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
+                                            echo '';
+                                        } else {
+                                            echo '<option value="">Select Workstation</option>';
+                                        }
+                                        ?>
+
+                                        <?php
+                                        $workstationList = populateWorkstation();
+                                        foreach ($workstationList as $key => $value) {
+                                            ?>
+                                            <option value="<?php echo $value->id; ?>"><?php echo $value->name; ?></option>
+                                            <?php
+                                        }
+                                        ?>
+                                    </select>
+                                    <div style="display:none;" class="errorMessage errorMessageWorkstation" >Please select a workstation</div>
+
+                                </td>
+                                <td><label for="Visitor_vehicle">Vehicle Registration Number</label><br>
+                                    <input type="text"  id="Visitor_vehicle" name="Visitor[vehicle]" maxlength="6" size="6">  
+                                    <?php echo "<br>" . $form->error($model, 'vehicle'); ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <?php echo $form->labelEx($model, 'first_name'); ?><br>
+                                    <?php echo $form->textField($model, 'first_name', array('size' => 50, 'maxlength' => 50)); ?>
+                                    <?php echo "<br>" . $form->error($model, 'first_name'); ?>
+                                </td>
+                                <td>
+                                    <?php echo $form->labelEx($model, 'last_name'); ?><br>
+                                    <?php echo $form->textField($model, 'last_name', array('size' => 50, 'maxlength' => 50)); ?>
+                                    <?php echo "<br>" . $form->error($model, 'last_name'); ?>
+                                </td>
+                                <td id="visitorCompanyRow">
+
+                                    <?php echo $form->labelEx($model, 'company'); ?><br>
+                                    <select id="Visitor_company" name="Visitor[company]" >
+                                        <option value=''>Select Company</option>
+                                    </select>
+                                    <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;<?php
+                                    if ($session['role'] != Roles::ROLE_STAFFMEMBER) {
+                                        //    echo "display:none";
+                                    }
+                                    ?>">Add New Company</a>
+                                       <?php echo "<br>" . $form->error($model, 'company'); ?>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <?php echo $form->labelEx($model, 'position'); ?><br>
+                                    <?php echo $form->textField($model, 'position', array('size' => 50, 'maxlength' => 50)); ?>
+                                    <?php echo "<br>" . $form->error($model, 'position'); ?>
+                                </td>
+                                <td>
+                                    <?php echo $form->labelEx($model, 'contact_number'); ?><br>
+                                    <?php echo $form->textField($model, 'contact_number', array('size' => 50, 'maxlength' => 50)); ?>
+                                    <?php echo "<br>" . $form->error($model, 'contact_number'); ?>
+                                </td>
+                                <td>
+                                    <?php echo $form->labelEx($model, 'email'); ?><br>
+                                    <?php echo $form->textField($model, 'email', array('size' => 50, 'maxlength' => 50)); ?>
+                                    <?php echo "<br>" . $form->error($model, 'email'); ?>
+                                    <div style="" id="Visitor_email_em_" class="errorMessage errorMessageEmail" >A profile already exists for this email address.</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for="Visitor_password">Password <span class="required">*</span></label><br>
+                                    <input ng-model="user.passwords" data-ng-class="{
+                                    'ng-invalid':registerform['Visitor[repeatpassword]'].$error.match}" type="password" id="Visitor_password" name="Visitor[password]">			
+                                           <?php echo "<br>" . $form->error($model, 'password'); ?>
+                                </td>
+                                <td>
+                                    <label for="Visitor_repeatpassword">Repeat Password <span class="required">*</span></label><br>
+                                    <input ng-model="user.passwordConfirm" type="password" id="Visitor_repeatpassword" data-match="user.passwords" name="Visitor[repeatpassword]"/>			
+                                    <div style='font-size:0.9em;color:red;position: absolute;' data-ng-show="registerform['Visitor[repeatpassword]'].$error.match">New Password does not match with Repeat <br> New Password. </div>
+                                    <?php echo "<br>" . $form->error($model, 'repeatpassword'); ?>
+                                </td>
+                                <td>
+                                    <label for="Visit_reason">Reason</label><br>
+
+                                    <select id="Visit_reason" name="Visitor[reason]" onchange="ifSelectedIsOtherShowAddReasonDiv(this)">
+                                        <option value='' selected>Select Reason</option>
+                                        <option value="Other">Other</option>
+                                        <?php
+                                        $reason = VisitReason::model()->findAllReason();
+                                        foreach ($reason as $key => $value) {
+                                            ?>
+                                            <option value="<?php echo $value->id; ?>"><?php echo $value->reason; ?></option>
+                                            <?php
+                                        }
+                                        ?>
+
+                                    </select>
+                                    <div class="errorMessage visitorReason" >Please select a reason</div>
+                                </td>
+                            </tr>
+                            <tr>
+
+                                <td id="visitorTenantRow" <?php
+                                if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+                                    echo " class='hidden' ";
+                                }
+                                ?>><?php echo $form->labelEx($model, 'tenant'); ?><br>
+
+                                    <select id="Visitor_tenant" onchange="populateTenantAgentAndCompanyField()" name="Visitor[tenant]"  >
+                                        <option value='' selected>Select Tenant</option>
+                                        <?php
+                                        $allTenantCompanyNames = User::model()->findAllCompanyTenant();
+                                        foreach ($allTenantCompanyNames as $key => $value) {
+                                            ?>
+                                            <option value="<?php echo $value['tenant']; ?>"
+                                            <?php
+                                            if ($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant']) {
+                                                echo " selected ";
+                                            }
+                                            ?>
+
+                                                    ><?php echo $value['name']; ?></option>
+                                                    <?php
+                                                }
+                                                ?>
+                                    </select><?php echo "<br>" . $form->error($model, 'tenant'); ?>
+                                </td>
+                                <td id="visitorTenantAgentRow" <?php
+                                if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+                                    echo " class='hidden' ";
+                                }
+                                ?>><?php echo $form->labelEx($model, 'tenant_agent'); ?><br>
+
+                                    <select id="Visitor_tenant_agent" name="Visitor[tenant_agent]" onchange="populateCompanyWithSameTenantAndTenantAgent()" >
+                                        <?php
+                                        echo "<option value='' selected>Select Tenant Agent</option>";
+                                        if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+                                            echo "<option value='" . $session['tenant_agent'] . "' selected>TenantAgent</option>";
+                                        }
+                                        ?>
+                                    </select><?php echo "<br>" . $form->error($model, 'tenant_agent'); ?>
+                                </td>
+                            </tr>
+                            <tr> 
+                                <td><?php echo $form->labelEx($model, 'Add Photo'); ?><br>
+
+                                    <input type="hidden" id="Visitor_photo" name="Visitor[photo]">
+                                    <div class="photoDiv" style='display:none !important;margin-left:3px;margin-bottom:5px;'>
+                                        <img id='photoPreview' src="">
+                                    </div>
+                                    <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
+                                    <div id="photoErrorMessage" class="errorMessage" style="display:none;">Please upload a photo.</div>
+                                </td>
+
+                            </tr>
+                        </table>
+
+                    </div>
+                    <div class="register-a-visitor-buttons-div" style="padding-top:50px;">
+                        <input type="button" class="neutral visitor-backBtn btnBackTab2" id="btnBackTab2" value="Back"/>
+                        <input type="button" id="clicktabB" value="Save and Continue" style="display:none;"/>
+
+                        <input type="submit" value="Save and Continue" name="yt0" id="submitFormVisitor" class="actionForward"/>
+                    </div>
+
+                    <?php $this->endWidget(); ?>
+                </div>
+                <?php
+                if (isset($_SERVER['HTTP_USER_AGENT'])) {
+                    $agent = $_SERVER['HTTP_USER_AGENT'];
+                }
+                if (strlen(strstr($agent, 'Firefox')) > 0) {
+                    if ($session['role'] == Roles::ROLE_SUPERADMIN) {
+                        $class = "moveFromAlignmentA";
+                    } else {
+                        $class = "moveFromAlignmentB";
+                    }
+                } else {
+                    if ($session['role'] == Roles::ROLE_SUPERADMIN) {
+                        $class = "moveFromAlignmentAB";
+                    } else {
+                        $class = "moveFromAlignmentBB";
+                    }
+                }
+
+                $form = $this->beginWidget('CActiveForm', array(
+                    'id' => 'register-reason-form',
+                    'action' => Yii::app()->createUrl('/visitReason/create&register=1'),
+                    'htmlOptions' => array("name" => "register-reason-form", "class" => $class),
+                    'enableAjaxValidation' => false,
+                    'enableClientValidation' => true,
+                    'clientOptions' => array(
+                        'validateOnSubmit' => true,
+                        'afterValidate' => 'js:function(form, data, hasError){
+                                if (!hasError){                               
+                           }
+                        }'
+                    ),
+                ));
+                ?>
+                <label>Add Reason</label><br>
+                <textarea id="VisitReason_reason" name="VisitReason[reason]" rows="1" maxlength="128" style="text-transform: capitalize;"></textarea> 
+                <div class="errorMessage" id="visitReasonErrorMessage" style="display:none;">Please select a reason</div>
+
+
+                <?php $this->endWidget(); ?>
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="searchvisitor">
+            <div>
+                <label><b>Search Name:</b></label> 
+                <input type="text" id="search-visitor" name="search-visitor" class="search-text"/> 
+                <button class="visitor-findBtn" onclick="findVisitorRecord()" id="visitor-findBtn" style="display:none;" data-target="#findVisitorRecordModal" data-toggle="modal">Find Record</button>
+                <button class="visitor-findBtn neutral" id="dummy-visitor-findBtn" style="padding:8px;">Find Record</button>
+                <div class="errorMessage" id="searchTextErrorMessage" style="display:none;"></div>
+            </div>
+            <label>Tenant <span class="required">*</span></label>
+            <select id="search_visitor_tenant" onchange="populateTenantAgentAndCompanyField('search')" >
+                <option value='' selected>Please select a tenant</option>
+                <?php
+                $allTenantCompanyNames = User::model()->findAllCompanyTenant();
+                foreach ($allTenantCompanyNames as $key => $value) {
+                    ?>
+                    <option value="<?php echo $value['tenant']; ?>"
+                    <?php
+                    if ($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant']) {
+                        echo " selected ";
+                    }
+                    ?>><?php echo $value['name']; ?></option>
+                            <?php
+                        }
                         ?>
-                        <?php echo "<br>" . $form->error($model, 'visitor_type'); ?>
-                    </td>
-                    <td id="workstationRow" <?php
+            </select><br>
+            <label>Tenant Agent </label>
+            <select id="search_visitor_tenant_agent" onchange="populateAgentAdminWorkstations('search')">
+                <?php
+                echo "<option value='' selected>Please select a tenant agent</option>";
+                if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+                    echo "<option value='" . $session['tenant_agent'] . "' selected>TenantAgent</option>";
+                }
+                ?>
+            </select>
+
+
+            <div id="searchVisitorTableDiv">
+                <h4>Search Results for : <span id='search'></span></h4>
+                <div id="visitor_fields_for_Search">
+                    <label for="Visitor_visitor_type_search">Visitor Type</label>
+                    <?php
+                    echo CHtml::dropDownList('Visitor_visitor_type_search', 'visitor_type', VisitorType::model()->returnVisitorTypes(), array(
+                        'onchange' => 'showHideHostPatientName(this)',
+                    ));
+                    ?>
+                    <?php echo "<br>" . CHtml::error($model, 'visitor_type'); ?>
+
+
+                    <div id="workstationRowSearch" <?php
                     if ($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
                         echo " class='hidden' ";
                     }
-                    ?>><label>Workstation</label><span class="required">*</span><br>
+                    ?>><label>Workstation<span class="required" style="display:inline;">*</span></label>
 
-                        <select id="workstation" onchange="populateVisitWorkstation(this)">
+                        <select id="workstation_search" onchange="populateVisitWorkstation(this)">
                             <?php
                             if ($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
                                 echo '';
@@ -172,197 +364,58 @@ $session = new CHttpSession;
                             }
                             ?>
                         </select>
-                        <div style="display:none;" class="errorMessage errorMessageWorkstation" >Please select a workstation</div>
+                        <div style="display:none;" class="errorMessage errorMessageWorkstationSearch" >Please select a workstation</div>
+                    </div>
+                    <label for="Visit_reason_search">Reason</label>
 
-                    </td>
-                    <td><label for="Visitor_vehicle">Vehicle Registration Number</label><br>
-                        <input type="text"  id="Visitor_vehicle" name="Visitor[vehicle]" maxlength="6" size="6">  
-                        <?php echo "<br>" . $form->error($model, 'vehicle'); ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <?php echo $form->labelEx($model, 'first_name'); ?><br>
-                        <?php echo $form->textField($model, 'first_name', array('size' => 50, 'maxlength' => 50)); ?>
-                        <?php echo "<br>" . $form->error($model, 'first_name'); ?>
-                    </td>
-                    <td>
-                        <?php echo $form->labelEx($model, 'last_name'); ?><br>
-                        <?php echo $form->textField($model, 'last_name', array('size' => 50, 'maxlength' => 50)); ?>
-                        <?php echo "<br>" . $form->error($model, 'last_name'); ?>
-                    </td>
-                    <td id="visitorCompanyRow">
-
-                        <?php echo $form->labelEx($model, 'company'); ?><br>
-                        <select id="Visitor_company" name="Visitor[company]" >
-                            <option value=''>Select Company</option>
-                        </select>
-                        <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;<?php
-                        if ($session['role'] != Roles::ROLE_STAFFMEMBER) {
-                            //    echo "display:none";
+                    <select id="Visit_reason_search" name="Visitor[reason]" onchange="ifSelectedIsOtherShowAddReasonDivSearch(this)">
+                        <option value='' selected>Select Reason</option>
+                        <?php
+                        $reason = VisitReason::model()->findAllReason();
+                        foreach ($reason as $key => $value) {
+                            ?>
+                            <option value="<?php echo $value->id; ?>"><?php echo $value->reason; ?></option>
+                            <?php
                         }
-                        ?>">Add New Company</a>
-                           <?php echo "<br>" . $form->error($model, 'company'); ?>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <?php echo $form->labelEx($model, 'position'); ?><br>
-                        <?php echo $form->textField($model, 'position', array('size' => 50, 'maxlength' => 50)); ?>
-                        <?php echo "<br>" . $form->error($model, 'position'); ?>
-                    </td>
-                    <td>
-                        <?php echo $form->labelEx($model, 'contact_number'); ?><br>
-                        <?php echo $form->textField($model, 'contact_number', array('size' => 50, 'maxlength' => 50)); ?>
-                        <?php echo "<br>" . $form->error($model, 'contact_number'); ?>
-                    </td>
-                    <td>
-                        <?php echo $form->labelEx($model, 'email'); ?><br>
-                        <?php echo $form->textField($model, 'email', array('size' => 50, 'maxlength' => 50)); ?>
-                        <?php echo "<br>" . $form->error($model, 'email'); ?>
-                        <div style="" id="Visitor_email_em_" class="errorMessage errorMessageEmail" >A profile already exists for this email address.</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="Visitor_password">Password <span class="required">*</span></label><br>
-                        <input ng-model="user.passwords" data-ng-class="{
-                                    'ng-invalid':registerform['Visitor[repeatpassword]'].$error.match}" type="password" id="Visitor_password" name="Visitor[password]">			
-                               <?php echo "<br>" . $form->error($model, 'password'); ?>
-                    </td>
-                    <td>
-                        <label for="Visitor_repeatpassword">Repeat Password <span class="required">*</span></label><br>
-                        <input ng-model="user.passwordConfirm" type="password" id="Visitor_repeatpassword" data-match="user.passwords" name="Visitor[repeatpassword]"/>			
-                        <div style='font-size:0.9em;color:red;position: absolute;' data-ng-show="registerform['Visitor[repeatpassword]'].$error.match">New Password does not match with Repeat <br> New Password. </div>
-                        <?php echo "<br>" . $form->error($model, 'repeatpassword'); ?>
-                    </td>
-                    <td>
-                        <label for="Visit_reason">Reason</label><br>
-
-                        <select id="Visit_reason" name="Visitor[reason]" onchange="ifSelectedIsOtherShowAddReasonDiv(this)">
-                            <option value='' selected>Select Reason</option>
-                            <option value="Other">Other</option>
-                            <?php
-                            $reason = VisitReason::model()->findAllReason();
-                            foreach ($reason as $key => $value) {
-                                ?>
-                                <option value="<?php echo $value->id; ?>"><?php echo $value->reason; ?></option>
-                                <?php
-                            }
-                            ?>
-
-                        </select>
-                        <div class="errorMessage visitorReason" >Please select a reason</div>
-                    </td>
-                </tr>
-                <tr>
-
-                    <td id="visitorTenantRow" <?php
-                    if ($session['role'] != Roles::ROLE_SUPERADMIN) {
-                        echo " class='hidden' ";
-                    }
-                    ?>><?php echo $form->labelEx($model, 'tenant'); ?><br>
-
-                        <select id="Visitor_tenant" onchange="populateTenantAgentAndCompanyField()" name="Visitor[tenant]"  >
-                            <option value='' selected>Select Tenant</option>
-                            <?php
-                            $allTenantCompanyNames = User::model()->findAllCompanyTenant();
-                            foreach ($allTenantCompanyNames as $key => $value) {
-                                ?>
-                                <option value="<?php echo $value['tenant']; ?>"
-                                <?php
-                                if ($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant']) {
-                                    echo " selected ";
-                                }
-                                ?>
-
-                                        ><?php echo $value['name']; ?></option>
-                                        <?php
-                                    }
-                                    ?>
-                        </select><?php echo "<br>" . $form->error($model, 'tenant'); ?>
-                    </td>
-                    <td id="visitorTenantAgentRow" <?php
-                    if ($session['role'] != Roles::ROLE_SUPERADMIN) {
-                        echo " class='hidden' ";
-                    }
-                    ?>><?php echo $form->labelEx($model, 'tenant_agent'); ?><br>
-
-                        <select id="Visitor_tenant_agent" name="Visitor[tenant_agent]" onchange="populateCompanyWithSameTenantAndTenantAgent()" >
-                            <?php
-                            echo "<option value='' selected>Select Tenant Agent</option>";
-                            if ($session['role'] != Roles::ROLE_SUPERADMIN) {
-                                echo "<option value='" . $session['tenant_agent'] . "' selected>TenantAgent</option>";
-                            }
-                            ?>
-                        </select><?php echo "<br>" . $form->error($model, 'tenant_agent'); ?>
-                    </td>
-                </tr>
-                <tr> 
-                    <td><?php echo $form->labelEx($model, 'Add Photo'); ?><br>
-
-                        <input type="hidden" id="Visitor_photo" name="Visitor[photo]">
-                        <div class="photoDiv" style='display:none !important;margin-left:3px;margin-bottom:5px;'>
-                            <img id='photoPreview' src="">
-                        </div>
-                        <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
-                        <div id="photoErrorMessage" class="errorMessage" style="display:none;">Please upload a photo.</div>
-                    </td>
-
-                </tr>
-            </table>
-
-        </div>
-        <div class="register-a-visitor-buttons-div" style="padding-top:50px;">
-            <input type="button" class="neutral visitor-backBtn btnBackTab2" id="btnBackTab2" value="Back"/>
-            <input type="button" id="clicktabB" value="Save and Continue" style="display:none;"/>
-
-            <input type="submit" value="Save and Continue" name="yt0" id="submitFormVisitor" class="actionForward"/>
-        </div>
-
-        <?php $this->endWidget(); ?>
-    </div>
-    <?php
-    if (isset($_SERVER['HTTP_USER_AGENT'])) {
-        $agent = $_SERVER['HTTP_USER_AGENT'];
-    }
-    if (strlen(strstr($agent, 'Firefox')) > 0) {
-        if ($session['role'] == Roles::ROLE_SUPERADMIN) {
-            $class = "moveFromAlignmentA";
-        } else {
-            $class = "moveFromAlignmentB";
-        }
-    } else {
-        if ($session['role'] == Roles::ROLE_SUPERADMIN) {
-            $class = "moveFromAlignmentAB";
-        } else {
-            $class = "moveFromAlignmentBB";
-        }
-    }
-
-    $form = $this->beginWidget('CActiveForm', array(
-        'id' => 'register-reason-form',
-        'action' => Yii::app()->createUrl('/visitReason/create&register=1'),
-        'htmlOptions' => array("name" => "register-reason-form", "class" => $class),
-        'enableAjaxValidation' => false,
-        'enableClientValidation' => true,
-        'clientOptions' => array(
-            'validateOnSubmit' => true,
-            'afterValidate' => 'js:function(form, data, hasError){
+                        ?>
+                        <option value="Other">Other</option>
+                    </select>
+                    <div class="errorMessage visitorReason" id="search-visitor-reason-error">Please select a reason</div>
+                </div>
+                <?php
+                $form = $this->beginWidget('CActiveForm', array(
+                    'id' => 'register-reason-form-search',
+                    'action' => Yii::app()->createUrl('/visitReason/create&register=1'),
+                    'htmlOptions' => array("name" => "register-reason-form"),
+                    'enableAjaxValidation' => false,
+                    'enableClientValidation' => true,
+                    'clientOptions' => array(
+                        'validateOnSubmit' => true,
+                        'afterValidate' => 'js:function(form, data, hasError){
                                 if (!hasError){                               
                            }
                         }'
-        ),
-    ));
-    ?>
-    <label>Add Reason</label><br>
-    <textarea id="VisitReason_reason" name="VisitReason[reason]" rows="1" maxlength="128" style="text-transform: capitalize;"></textarea> 
-    <div class="errorMessage" id="visitReasonErrorMessage" style="display:none;">Please select a reason</div>
+                    ),
+                ));
+                ?>
+                <textarea id="VisitReason_reason_search" maxlength="128" name="VisitReason[reason]"></textarea> 
+                <div class="errorMessage" id="visitReasonErrorMessageSearch" style="display:none;">Please select a reason</div>
 
 
-    <?php $this->endWidget(); ?>
+                <?php $this->endWidget(); ?>
+
+                <div id="searchVisitorTable"></div>
+                <div class="register-a-visitor-buttons-div">
+                    <input type="button" class="neutral visitor-backBtn btnBackTab2" id="btnBackTab2" value="Back"/>
+                    <input type="button" id="clicktabB1"  value="Save and Continue" class="actionForward"/>
+                </div>
+            </div>
+            <input type="text" id="selectedVisitorInSearchTable" value="0"></input>
+        </div>
+    </div>
+
 </div>
+
 
 <script>
     $(document).ready(function() {
@@ -423,12 +476,15 @@ $session = new CHttpSession;
             $("#register-reason-form").hide();
 
             var searchText = $("#search-visitor").val();
-            if (searchText != '') {
+            if ($("#search_visitor_tenant").val() == '') {
+                $("#searchTextErrorMessage").show();
+                $("#searchTextErrorMessage").html("Please select a tenant");
+            } else if (searchText != '') {
                 $("#searchTextErrorMessage").hide();
                 $("#visitor-findBtn").click();
-
                 $("#visitor_fields_for_Search").show();
-            } else {
+            }
+            else {
                 $("#searchTextErrorMessage").show();
                 $("#searchTextErrorMessage").html("Search Name cannot be blank.");
             }
@@ -442,19 +498,19 @@ $session = new CHttpSession;
         $("#selectedVisitorInSearchTable").val("");
         $("#searchVisitorTableDiv h4").html("Search Results for : " + $("#search-visitor").val());
         $("#searchVisitorTableDiv").show();
-        $("#register-form").hide();
+        //  $("#register-form").hide();
         //append searched text in modal
         var searchText = $("#search-visitor").val();
 
         //change modal url to pass user searched text
-        var url = 'index.php?r=visitor/findvisitor&id=' + searchText;
+        var url = 'index.php?r=visitor/findvisitor&id=' + searchText + '&tenant=' + $("#search_visitor_tenant").val() + '&tenant_agent=' + $("#search_visitor_tenant_agent").val();
         $("#searchVisitorTable").html('<iframe id="findVisitorTableIframe" onLoad="autoResize();" width="100%" height="100%" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
     }
     function populateVisitWorkstation(value) {
 
         $("#Visit_workstation").val(value.value);
     }
-    
+
     function autoResize() {
         var newheight;
 
@@ -651,6 +707,43 @@ $session = new CHttpSession;
                 $.each(r.data, function(index, value) {
                     $('#Visitor_company').append('<option value="' + value.id + '">' + value.name + '</option>');
                     $("#Visitor_company").val(value.id);
+                });
+            }
+        });
+    }
+
+    function populateAgentAdminWorkstations(isSearch) {
+        isSearch = (typeof isSearch === "undefined") ? "defaultValue" : isSearch;
+        var tenant;
+        var tenant_agent;
+
+        if (isSearch == 'search') {
+            tenant = $("#search_visitor_tenant").val();
+            tenant_agent = $("#search_visitor_tenant_agent").val();
+
+            $('#workstation_search option[value!=""]').remove();
+        } else {
+            tenant = $("#Visitor_tenant").val();
+            tenant_agent = $("#Visitor_tenant_agent").val();
+            $('#workstation option[value!=""]').remove();
+        }
+
+
+
+        $.ajax({
+            type: 'POST',
+            url: '<?php echo Yii::app()->createUrl('user/getTenantAgentWorkstation&id='); ?>' + tenant_agent + '&tenant=' + tenant,
+            dataType: 'json',
+            data: tenant_agent,
+            success: function(r) {
+
+                $.each(r.data, function(index, value) {
+                    if (isSearch == 'search') {
+                        $('#workstation_search').append('<option value="' + value.id + '">' + value.name + '</option>');
+                    } else {
+                        $('#workstation').append('<option value="' + value.id + '">' + value.name + '</option>');
+                    }
+
                 });
             }
         });

@@ -9,9 +9,16 @@ $session = new CHttpSession;
 /* @var $model Visitor */
 $visitorName = $_GET['id'];
 
+if(isset($_GET['tenant_agent']) && $_GET['tenant_agent'] !='' ){
+    $tenant_agent = 'tenant_agent="'.$_GET['tenant_agent'].'" and';
+} else {
+    $tenant_agent='(tenant_agent IS NULL or tenant_agent =0 or tenant_agent="") and';
+}
 $model = new Visitor;
 $criteria = new CDbCriteria;
-$criteria->addCondition('CONCAT(first_name," ",last_name) like "%' . $visitorName . '%" or first_name like "%' . $visitorName . '%" or last_name like "%' . $visitorName . '%"');
+
+
+$criteria->addCondition('tenant="'.$_GET['tenant'].'" and '.$tenant_agent.' (CONCAT(first_name," ",last_name) like "%' . $visitorName . '%" or first_name like "%' . $visitorName . '%" or last_name like "%' . $visitorName . '%")');
 
 $model->unsetAttributes();
 

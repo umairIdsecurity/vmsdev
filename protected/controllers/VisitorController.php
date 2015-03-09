@@ -201,7 +201,7 @@ class VisitorController extends Controller {
         Yii::app()->end();
     }
 
-    public function actionFindVisitor($id) {
+    public function actionFindVisitor($id,$tenant,$tenant_agent) {
         $this->layout = '//layouts/column1';
         $model = new Visitor('search');
         $model->unsetAttributes();  // clear any default values
@@ -213,7 +213,7 @@ class VisitorController extends Controller {
                 ), false, true);
     }
 
-    public function actionFindHost($id) {
+    public function actionFindHost($id,$tenant,$tenant_agent) {
         $this->layout = '//layouts/column1';
         $model = new User('search');
         $model->unsetAttributes();  // clear any default values

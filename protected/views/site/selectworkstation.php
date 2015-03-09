@@ -30,7 +30,11 @@ for ($i = 0; $i < $arrayCount; $i++) {
                     <select style='font-size:12px;' name='userWorkstation' id='userWorkstation'>
                         <?php
                         foreach ($workstationsList as $key => $value) {
-                            echo "<option  value='" . $key . "'>" . $value . "</option>";
+                            ?>
+                        <option  value='<?php echo $key; ?>' <?php if(checkIfWorkstationIsPrimary($key)){
+                                echo "selected";
+                            }?>><?php echo $value; ?></option>
+                            <?php
                         }
                         ?>
                     </select>
@@ -66,3 +70,15 @@ for ($i = 0; $i < $arrayCount; $i++) {
         });
     });
 </script>
+
+
+<?php 
+function checkIfWorkstationIsPrimary($workstationId){
+    $userWorkstation = UserWorkstations::model()->find('workstation="'.$workstationId.'" and user="'.Yii::app()->user->id.'"');
+    if($userWorkstation->is_primary ==1){
+        return true;
+    } else {
+        return false;
+    }
+}
+?>

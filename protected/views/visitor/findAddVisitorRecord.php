@@ -300,33 +300,38 @@ $session = new CHttpSession;
                 <button class="visitor-findBtn neutral" id="dummy-visitor-findBtn" style="padding:8px;">Find Record</button>
                 <div class="errorMessage" id="searchTextErrorMessage" style="display:none;"></div>
             </div>
-            <label>Tenant <span class="required">*</span></label>
-            <select id="search_visitor_tenant" onchange="populateTenantAgentAndCompanyField('search')" >
-                <option value='' selected>Please select a tenant</option>
-                <?php
-                $allTenantCompanyNames = User::model()->findAllCompanyTenant();
-                foreach ($allTenantCompanyNames as $key => $value) {
-                    ?>
-                    <option value="<?php echo $value['tenant']; ?>"
+            <div <?php
+            if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+                echo "style='display:none;'";
+            }
+            ?>>
+                <label>Tenant <span class="required">*</span></label>
+                <select id="search_visitor_tenant" onchange="populateTenantAgentAndCompanyField('search')" >
+                    <option value='' selected>Please select a tenant</option>
                     <?php
-                    if ($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant']) {
-                        echo " selected ";
-                    }
-                    ?>><?php echo $value['name']; ?></option>
-                            <?php
-                        }
+                    $allTenantCompanyNames = User::model()->findAllCompanyTenant();
+                    foreach ($allTenantCompanyNames as $key => $value) {
                         ?>
-            </select><br>
-            <label>Tenant Agent </label>
-            <select id="search_visitor_tenant_agent" onchange="populateAgentAdminWorkstations('search')">
-                <?php
-                echo "<option value='' selected>Please select a tenant agent</option>";
-                if ($session['role'] != Roles::ROLE_SUPERADMIN) {
-                    echo "<option value='" . $session['tenant_agent'] . "' selected>TenantAgent</option>";
-                }
-                ?>
-            </select>
-
+                        <option value="<?php echo $value['tenant']; ?>"
+                        <?php
+                        if ($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant']) {
+                            echo " selected ";
+                        }
+                        ?>><?php echo $value['name']; ?></option>
+                                <?php
+                            }
+                            ?>
+                </select><br>
+                <label>Tenant Agent </label>
+                <select id="search_visitor_tenant_agent" onchange="populateAgentAdminWorkstations('search')">
+                    <?php
+                    echo "<option value='' selected>Please select a tenant agent</option>";
+                    if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+                        echo "<option value='" . $session['tenant_agent'] . "' selected>TenantAgent</option>";
+                    }
+                    ?>
+                </select>
+            </div>
 
             <div id="searchVisitorTableDiv">
                 <h4>Search Results for : <span id='search'></span></h4>
@@ -483,6 +488,27 @@ $session = new CHttpSession;
                 $("#searchTextErrorMessage").hide();
                 $("#visitor-findBtn").click();
                 $("#visitor_fields_for_Search").show();
+                //if tenant only search tenant 
+                if ($("#currentRoleOfLoggedInUser").val() != 5 && $("#search_visitor_tenant_agent").val() == '') {
+                    $('#workstation_search option[value!=""]').remove();
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '<?php echo Yii::app()->createUrl('user/getTenantWorkstation&id='); ?>' + $("#search_visitor_tenant").val(),
+                        dataType: 'json',
+                        data: $("#search_visitor_tenant").val(),
+                        success: function(r) {
+                            $('#workstation_search option[value!=""]').remove();
+
+                            $.each(r.data, function(index, value) {
+                                $('#workstation_search').append('<option value="' + value.id + '">' + value.name + '</option>');
+                            });
+
+                        }
+                    });
+                } else if($("#currentRoleOfLoggedInUser").val() != 5 && $("#search_visitor_tenant_agent").val() != '') {
+                    populateAgentAdminWorkstations('search');
+                }
             }
             else {
                 $("#searchTextErrorMessage").show();

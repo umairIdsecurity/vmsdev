@@ -25,7 +25,7 @@ $photoForm = $this->beginWidget('CActiveForm', array(
 <input type="submit" id="submitBtnPhoto">
 <?php $this->endWidget(); ?>
 
-<div class="cardPhotoPreview">
+<div class="cardPhotoPreview" style="height:0px;">
     <?php if ($visitorModel->photo != '') { ?>
         <img id="photoPreview" style="height:165px;" src="<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($model->visitor) ?>">
     <?php } else { ?>

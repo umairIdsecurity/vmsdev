@@ -30,19 +30,19 @@ if ($tenant->company != '') {
 }
 
 if ($companyLogoId == "") {
-    $companyLogo = Yii::app()->getBaseUrl(true) . '/images/nologoavailable.jpg';
+    $companyLogo = Yii::app()->getBaseUrl(true) . '/uploads/card_generated/nologoavailable.jpg';
 } else {
     $companyLogo = Yii::app()->getBaseUrl(true) . "/" . Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
 }
 
 if (Visitor::model()->findByPk($model->visitor)->photo == "") {
-    $userPhoto = Yii::app()->getBaseUrl(true) . '/images/nophoto.png';
+    $userPhoto = Yii::app()->getBaseUrl(true) . '/uploads/card_generated/nophoto.png';
 } else {
     $userPhoto = Yii::app()->getBaseUrl(true) . "/" . Photo::model()->returnVisitorPhotoRelativePath($model->visitor);
 }
 
 if (Visitor::model()->findByPk($model->visitor)->photo == "") {
-    $userPhoto = Yii::app()->getBaseUrl(true) . '/images/nophoto.png';
+    $userPhoto = Yii::app()->getBaseUrl(true) . '/uploads/card_generated/nophoto.png';
 } else {
     $userPhoto = Yii::app()->getBaseUrl(true) . "/" . Photo::model()->returnVisitorPhotoRelativePath($model->visitor);
 }

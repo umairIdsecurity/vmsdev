@@ -26,45 +26,6 @@ $session = new CHttpSession;
     <div class="visitor-title">Add Host</div>
     <div >
         <table  id="addhost-table" data-ng-app="PwordForm">
-
-            <tr>
-                <td>
-                    <?php echo $form->labelEx($userModel, 'first_name'); ?><br>
-                    <?php echo $form->textField($userModel, 'first_name', array('size' => 50, 'maxlength' => 50)); ?>
-                    <?php echo "<br>" . $form->error($userModel, 'first_name'); ?>
-                </td>
-                <td>
-                    <?php echo $form->labelEx($userModel, 'last_name'); ?><br>
-                    <?php echo $form->textField($userModel, 'last_name', array('size' => 50, 'maxlength' => 50)); ?>
-                    <?php echo "<br>" . $form->error($userModel, 'last_name'); ?>
-                </td>
-                <td>
-
-                    <?php echo $form->labelEx($userModel, 'department'); ?><br>
-                    <?php echo $form->textField($userModel, 'department', array('size' => 50, 'maxlength' => 50)); ?>
-                    <?php echo "<br>" . $form->error($userModel, 'department'); ?>
-                </td>
-            </tr>
-
-            <tr>
-                <td>
-                    <?php echo $form->labelEx($userModel, 'staff_id'); ?><br>
-                    <?php echo $form->textField($userModel, 'staff_id', array('size' => 50, 'maxlength' => 50)); ?>
-                    <?php echo "<br>" . $form->error($userModel, 'staff_id'); ?>
-                </td>
-
-                <td>
-                    <?php echo $form->labelEx($userModel, 'email'); ?><br>
-                    <?php echo $form->textField($userModel, 'email', array('size' => 50, 'maxlength' => 50)); ?>
-                    <?php echo "<br>" . $form->error($userModel, 'email'); ?>
-                    <div style="" id="User_email_em_" class="errorMessage errorMessageEmail1" >A profile already exists for this email address.</div>
-                </td>
-                <td>
-                    <?php echo $form->labelEx($userModel, 'contact_number'); ?><br>
-                    <?php echo $form->textField($userModel, 'contact_number', array('size' => 50, 'maxlength' => 50)); ?>
-                    <?php echo "<br>" . $form->error($userModel, 'contact_number'); ?>
-                </td>
-            </tr>
             <tr <?php
             if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                 echo "style='display:none;'";
@@ -123,6 +84,45 @@ $session = new CHttpSession;
                     </td>
                 <?php } ?>
             </tr>
+            <tr>
+                <td>
+                    <?php echo $form->labelEx($userModel, 'first_name'); ?><br>
+                    <?php echo $form->textField($userModel, 'first_name', array('size' => 50, 'maxlength' => 50)); ?>
+                    <?php echo "<br>" . $form->error($userModel, 'first_name'); ?>
+                </td>
+                <td>
+                    <?php echo $form->labelEx($userModel, 'last_name'); ?><br>
+                    <?php echo $form->textField($userModel, 'last_name', array('size' => 50, 'maxlength' => 50)); ?>
+                    <?php echo "<br>" . $form->error($userModel, 'last_name'); ?>
+                </td>
+                <td>
+
+                    <?php echo $form->labelEx($userModel, 'department'); ?><br>
+                    <?php echo $form->textField($userModel, 'department', array('size' => 50, 'maxlength' => 50)); ?>
+                    <?php echo "<br>" . $form->error($userModel, 'department'); ?>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <?php echo $form->labelEx($userModel, 'staff_id'); ?><br>
+                    <?php echo $form->textField($userModel, 'staff_id', array('size' => 50, 'maxlength' => 50)); ?>
+                    <?php echo "<br>" . $form->error($userModel, 'staff_id'); ?>
+                </td>
+
+                <td>
+                    <?php echo $form->labelEx($userModel, 'email'); ?><br>
+                    <?php echo $form->textField($userModel, 'email', array('size' => 50, 'maxlength' => 50)); ?>
+                    <?php echo "<br>" . $form->error($userModel, 'email'); ?>
+                    <div style="" id="User_email_em_" class="errorMessage errorMessageEmail1" >A profile already exists for this email address.</div>
+                </td>
+                <td>
+                    <?php echo $form->labelEx($userModel, 'contact_number'); ?><br>
+                    <?php echo $form->textField($userModel, 'contact_number', array('size' => 50, 'maxlength' => 50)); ?>
+                    <?php echo "<br>" . $form->error($userModel, 'contact_number'); ?>
+                </td>
+            </tr>
+
 
             <tr>
                 <td>

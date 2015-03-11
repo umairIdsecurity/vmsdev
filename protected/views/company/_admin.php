@@ -19,7 +19,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
            'name'=>'isTenant',
             'type'=>'raw',
-            'header' => "Is Tenant",
+            'header' => "Is Tenant?",
             'filter'=>array(0=>"No",1=>"Yes"),
             'value' => '$data->isTenant?"Yes":"No"',
             'htmlOptions' => array('style' => "text-align:center;"),

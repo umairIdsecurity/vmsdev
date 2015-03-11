@@ -21,8 +21,12 @@ if ($this->action->id == 'update') {
             'validateOnSubmit' => true,
             'afterValidate' => 'js:function(form, data, hasError){
                                 if (!hasError){
-                                    var vehicleValue = $("#Visitor_vehicle").val();
-                                if(vehicleValue.length < 6 && vehicleValue != ""){
+                                var vehicleValue = $("#Visitor_vehicle").val();
+                                if($("#Visitor_company").val() == ""){
+                                    $("#Visitor_company_em_").show();
+                                    $("#Visitor_company_em_").html("Please select a company");
+                                }
+                                else if(vehicleValue.length < 6 && vehicleValue != ""){
                                     $("#Visitor_vehicle_em_").show();
                                     $("#Visitor_vehicle_em_").html("Vehicle should have a min. of 6 characters");
                                 } else if($("#currentAction").val() == "update" && ($("#Visitor_password").val() == "" || $("#Visitor_repeatpassword").val() == ""))
@@ -54,33 +58,32 @@ if ($this->action->id == 'update') {
                             <td id="uploadRow" rowspan="7" style='width:300px;'><?php echo $form->labelEx($model, 'Add Photo'); ?><br>
                                 <input type="hidden" id="Visitor_photo" name="Visitor[photo]"
                                        value="<?php echo $model['photo']; ?>">
-
-                                <div class="photoDiv"  style="margin-bottom:5px;height:174px;width:133px;'">
-                                     <?php if ($dataId != '' && $model['photo'] != NULL) { ?> 
-                                        <img id='photoPreview' src="<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($dataId) ?>" style='display:block;height:174px;width:133px;'/>
-                                    <?php } elseif($model['photo'] == NULL){
-                                            ?>
-                                                <img id='photoPreview' src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png" style='display:block;height:174px;width:133px;'/>
-                                    <?php
-                                    }else { ?> 
-                                        <img id='photoPreview' src="<?php
-                                        if ($this->action->id == 'update' && $model->photo != '') {
-                                            echo Yii::app()->request->baseUrl . "/" . Company::model()->getPhotoRelativePath($model->photo);
+                                       <?php if ($model['photo'] != NULL) { ?>
+                                    <style>
+                                        .ajax-upload-dragdrop {
+                                            background: url('<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($dataId) ?>') no-repeat center top !important;
+                                            background-size:100% 100% !important;
                                         }
-                                        ?>
-
-                                             " style='display:block;height:174px;width:133px;'/>
-                                         <?php } ?>
-                                </div>
-
+                                    </style>
+                                    <?php }
+                                ?>
+                            
+                                    <br>
                                 <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
+                                    <div class='uploadAddVisitorNote'>
+                                        <b>Drag &amp; Drop File</b> <br> Max Size: 2MB ;File Ext. : jpeg/png<br>
+                                          
+                                                Dimensions: 180px(Width) x 60px(Height)
+                                          
+                                    
+                                    </div>
                             </td>
                             <td id="visitorTenantRow" <?php
-    if ($session['role'] != Roles::ROLE_SUPERADMIN) {
-        echo " class='hidden' ";
-    }
-    ?>>
-                                <?php echo $form->labelEx($model, 'tenant'); ?>
+                            if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+                                echo " class='hidden' ";
+                            }
+                            ?>>
+                                    <?php echo $form->labelEx($model, 'tenant'); ?>
                                 <select id="Visitor_tenant" onchange="populateTenantAgentAndCompanyField()" name="Visitor[tenant]"  >
                                     <option value='' selected>Please select a tenant</option>
                                     <?php
@@ -99,11 +102,11 @@ if ($this->action->id == 'update') {
                                 </select><?php echo "<br>" . $form->error($model, 'tenant'); ?>
                             </td>
                             <td id="visitorTenantAgentRow" <?php
-                                            if ($session['role'] != Roles::ROLE_SUPERADMIN) {
-                                                echo " class='hidden' ";
-                                            }
-                                            ?> >
-                                <?php echo $form->labelEx($model, 'tenant_agent'); ?>
+                            if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+                                echo " class='hidden' ";
+                            }
+                            ?> >
+                                    <?php echo $form->labelEx($model, 'tenant_agent'); ?>
                                 <select id="Visitor_tenant_agent" name="Visitor[tenant_agent]" onchange="populateCompanyWithSameTenantAndTenantAgent()" >
                                     <?php
                                     echo "<option value='' selected>Please select a tenant agent</option>";
@@ -114,7 +117,7 @@ if ($this->action->id == 'update') {
                                 </select><?php echo "<br>" . $form->error($model, 'tenant_agent'); ?>
                             </td>
                         </tr>
-                      
+
                         <tr>
                             <td>
                                 <?php echo $form->labelEx($model, 'first_name'); ?>
@@ -126,15 +129,15 @@ if ($this->action->id == 'update') {
                                 <?php echo $form->textField($model, 'last_name', array('size' => 50, 'maxlength' => 50)); ?>
                                 <?php echo "<br>" . $form->error($model, 'last_name'); ?>
                             </td>
-                            
+
                         </tr>
-                        <?php if ((($session['role'] == Roles::ROLE_SUPERADMIN || $session['role'] == Roles::ROLE_ADMIN) && $this->action->id =='update') || $this->action->id=='addvisitor') {
+                        <?php if ((($session['role'] == Roles::ROLE_SUPERADMIN || $session['role'] == Roles::ROLE_ADMIN) && $this->action->id == 'update') || $this->action->id == 'addvisitor') {
                             ?>
                             <tr>
                                 <td>
                                     <label for="Visitor_password">Password <span class="required">*</span></label>
                                     <input ng-model="user.passwords" data-ng-class="{
-                                                        'ng-invalid':registerform['Visitor[repeatpassword]'].$error.match}" type="password" id="Visitor_password" name="Visitor[password]">			
+                                                            'ng-invalid':registerform['Visitor[repeatpassword]'].$error.match}" type="password" id="Visitor_password" name="Visitor[password]">			
                                            <?php echo "<br>" . $form->error($model, 'password'); ?>
                                 </td>
                                 <td>
@@ -159,7 +162,7 @@ if ($this->action->id == 'update') {
                                 <?php echo "<br>" . $form->error($model, 'contact_number'); ?>
                             </td>
                         </tr>
-                         <tr>
+                        <tr>
                             <td id="visitorCompanyRow">
 
                                 <?php echo $form->labelEx($model, 'company'); ?>
@@ -168,7 +171,7 @@ if ($this->action->id == 'update') {
                                 </select>
                                 <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;">
                                     Add New Company</a>
-                                <?php echo "<br>" . $form->error($model, 'company'); ?>
+                                <?php echo $form->error($model, 'company'); ?>
                             </td>
                             <td>
                                 <?php echo $form->labelEx($model, 'position'); ?>
@@ -188,10 +191,10 @@ if ($this->action->id == 'update') {
                             </td>
                         </tr>
 
-                        
+
                     </table>
                 </td>
-            
+
             </tr>
 
 
@@ -210,10 +213,10 @@ if ($this->action->id == 'update') {
 <input type="hidden" id="currentAction" value="<?php echo $this->action->id; ?>">
 <input type="hidden" id="currentRoleOfLoggedInUser" value="<?php echo $session['role']; ?>">
 <input type="hidden" id="currentlyEditedVisitorId" value="<?php
-    if (isset($_GET['id'])) {
-        echo $_GET['id'];
-    }
-    ?>">
+if (isset($_GET['id'])) {
+    echo $_GET['id'];
+}
+?>">
 <script>
     $(document).ready(function() {
         if ($("#currentAction").val() == 'update') {
@@ -384,14 +387,13 @@ if ($this->action->id == 'update') {
         });
     }
 
-    function getCompanyWithSameTenant(tenant,newcompanyId) {
+    function getCompanyWithSameTenant(tenant, newcompanyId) {
         $.ajax({
             type: 'POST',
             url: '<?php echo Yii::app()->createUrl('visitor/GetCompanyWithSameTenant&id='); ?>' + tenant,
             dataType: 'json',
             data: tenant,
             success: function(r) {
-                $('#Visitor_company option[value=""]').remove();
                 $.each(r.data, function(index, value) {
                     $('#Visitor_company').append('<option value="' + value.id + '">' + value.name + '</option>');
                 });
@@ -399,7 +401,7 @@ if ($this->action->id == 'update') {
                 if ($("#currentAction").val() == 'update') {
                     $("#Visitor_company").val("<?php echo $model->company; ?>")
                 }
-                
+
                 newcompanyId = (typeof newcompanyId === "undefined") ? "defaultValue" : newcompanyId;
 
                 if (newcompanyId != 'defaultValue') {
@@ -407,8 +409,8 @@ if ($this->action->id == 'update') {
                 }
             }
         });
-        
-        if($("#Visitor_tenant_agent") != ''){
+
+        if ($("#Visitor_tenant_agent") != '') {
             getCompanyWithSameTenantAndTenantAgent($("#Visitor_tenant").val(), '<?php echo $model->tenant_agent; ?>');
         }
     }
@@ -418,14 +420,14 @@ if ($this->action->id == 'update') {
         getCompanyWithSameTenantAndTenantAgent($("#Visitor_tenant").val(), $("#Visitor_tenant_agent").val());
     }
 
-    function getCompanyWithSameTenantAndTenantAgent(tenant, tenant_agent,newcompanyId) {
+    function getCompanyWithSameTenantAndTenantAgent(tenant, tenant_agent, newcompanyId) {
         $.ajax({
             type: 'POST',
             url: '<?php echo Yii::app()->createUrl('visitor/GetCompanyWithSameTenantAndTenantAgent&id='); ?>' + tenant + '&tenantagent=' + tenant_agent,
             dataType: 'json',
             data: tenant,
             success: function(r) {
-                $('#Visitor_company option[value=""]').remove();
+                // $('#Visitor_company option[value=""]').remove();
                 $.each(r.data, function(index, value) {
                     $('#Visitor_company').append('<option value="' + value.id + '">' + value.name + '</option>');
                 });
@@ -433,7 +435,7 @@ if ($this->action->id == 'update') {
                 if ($("#currentAction").val() == 'update') {
                     $("#Visitor_company").val("<?php echo $model->company; ?>")
                 }
-                
+
                 newcompanyId = (typeof newcompanyId === "undefined") ? "defaultValue" : newcompanyId;
 
                 if (newcompanyId != 'defaultValue') {
@@ -447,10 +449,10 @@ if ($this->action->id == 'update') {
         $("#dismissModal").click();
         $('#Visitor_company option[value!=""]').remove();
         if ($("#Visitor_tenant_agent").val() == "") {
-           // populateCompanyofTenant($("#Visitor_tenant").val(), id);
-            getCompanyWithSameTenant($("#Visitor_tenant").val(),id)
+            // populateCompanyofTenant($("#Visitor_tenant").val(), id);
+            getCompanyWithSameTenant($("#Visitor_tenant").val(), id)
         } else {
-            getCompanyWithSameTenantAndTenantAgent($("#Visitor_tenant").val(), $("#Visitor_tenant_agent").val(),id);
+            getCompanyWithSameTenantAndTenantAgent($("#Visitor_tenant").val(), $("#Visitor_tenant_agent").val(), id);
         }
     }
 
@@ -467,19 +469,19 @@ if ($this->action->id == 'update') {
             url: url,
             data: form,
             success: function(data) {
-                if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7 ) {
+                if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
                     window.location = 'index.php?r=dashboard';
-                } else if($("#currentRoleOfLoggedInUser").val() == 9) {
+                } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
                     window.location = 'index.php?r=dashboard/viewmyvisitors';
                 }
                 else {
                     window.location = 'index.php?r=visitor/admin';
                 }
             },
-            error:function(data){
-                if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7 ) {
+            error: function(data) {
+                if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
                     window.location = 'index.php?r=dashboard';
-                } else if($("#currentRoleOfLoggedInUser").val() == 9) {
+                } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
                     window.location = 'index.php?r=dashboard/viewmyvisitors';
                 }
                 else {

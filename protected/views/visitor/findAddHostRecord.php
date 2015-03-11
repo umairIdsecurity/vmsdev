@@ -77,6 +77,44 @@
                     <div class="visitor-title">Add Host</div>
                     <div>
                         <table  id="addhost-table">
+                            <tr <?php
+                            if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+                                echo "style='display:none;'";
+                            }
+                            ?>>
+                                <td id="hostTenantRow"><?php echo $form->labelEx($userModel, 'tenant'); ?><br>
+
+                                    <select id="User_tenant" onchange="populateHostTenantAgentAndCompanyField()" name="User[tenant]" disabled >
+                                        <option value='' selected>Please select a tenant</option>
+                                        <?php
+                                        $allTenantCompanyNames = User::model()->findAllCompanyTenant();
+                                        foreach ($allTenantCompanyNames as $key => $value) {
+                                            ?>
+                                            <option value="<?php echo $value['tenant']; ?>"
+                                            <?php
+                                            if ($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant']) {
+                                                echo " selected ";
+                                            }
+                                            ?>
+                                                    ><?php echo $value['name']; ?></option>
+                                                    <?php
+                                                }
+                                                ?>
+                                    </select><?php echo "<br>" . $form->error($userModel, 'tenant'); ?>
+                                </td>
+                                <td id="hostTenantAgentRow"><?php echo $form->labelEx($userModel, 'tenant_agent'); ?><br>
+
+                                    <select id="User_tenant_agent" name="User[tenant_agent]" onchange="populateHostCompanyWithSameTenantAndTenantAgent()" disabled>
+                                        <?php
+                                        echo "<option value='' selected>Please select a tenant agent</option>";
+                                        if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+                                            echo "<option value='" . $session['tenant_agent'] . "' selected>Tenant Agent</option>";
+                                        }
+                                        ?>
+                                    </select><?php echo "<br>" . $form->error($userModel, 'tenant_agent'); ?>
+                                </td>
+                            </tr>
+
 
                             <tr>
                                 <td>
@@ -153,44 +191,6 @@
                                     <input name="User[user_type]" id="User_user_type" value="<?php echo UserType::USERTYPE_INTERNAL; ?>"/>
                                 </td>
                             </tr>
-                            <tr <?php
-                            if ($session['role'] != Roles::ROLE_SUPERADMIN) {
-                                echo "style='display:none;'";
-                            }
-                            ?>>
-                                <td id="hostTenantRow"><?php echo $form->labelEx($userModel, 'tenant'); ?><br>
-
-                                    <select id="User_tenant" onchange="populateHostTenantAgentAndCompanyField()" name="User[tenant]" disabled >
-                                        <option value='' selected>Please select a tenant</option>
-                                        <?php
-                                        $allTenantCompanyNames = User::model()->findAllCompanyTenant();
-                                        foreach ($allTenantCompanyNames as $key => $value) {
-                                            ?>
-                                            <option value="<?php echo $value['tenant']; ?>"
-                                            <?php
-                                            if ($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant']) {
-                                                echo " selected ";
-                                            }
-                                            ?>
-                                                    ><?php echo $value['name']; ?></option>
-                                                    <?php
-                                                }
-                                                ?>
-                                    </select><?php echo "<br>" . $form->error($userModel, 'tenant'); ?>
-                                </td>
-                                <td id="hostTenantAgentRow"><?php echo $form->labelEx($userModel, 'tenant_agent'); ?><br>
-
-                                    <select id="User_tenant_agent" name="User[tenant_agent]" onchange="populateHostCompanyWithSameTenantAndTenantAgent()" disabled>
-                                        <?php
-                                        echo "<option value='' selected>Please select a tenant agent</option>";
-                                        if ($session['role'] != Roles::ROLE_SUPERADMIN) {
-                                            echo "<option value='" . $session['tenant_agent'] . "' selected>Tenant Agent</option>";
-                                        }
-                                        ?>
-                                    </select><?php echo "<br>" . $form->error($userModel, 'tenant_agent'); ?>
-                                </td>
-                            </tr>
-
 
                         </table>
 

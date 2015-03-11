@@ -53,6 +53,8 @@ class Issue112FunctionalTest extends BaseFunctionalTest {
         $this->Scenario12();
         $this->Scenario13();
         $this->Scenario14();
+       // $this->checkCompanyDropdown();
+        
     }
 
     function scenariosForOperatorDataControl() {

@@ -10,19 +10,25 @@ if ($this->Id == 'visitor') {
 }
 ?>
 <?php
-if ($this->action->id == 'addvisitor') {
+if ($this->action->id == 'addvisitor' || ($this->action->id == 'update' && $this->id == 'visitor')) {
     ?>
     <style>
         .ajax-upload-dragdrop {
             float:left !important;
-            margin-left:0px !important;
+            margin-left: 64px !important;
+            margin-top: -30px;
+            background: url('<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png') no-repeat center top;
+            background-size:137px;
+            height: 150px;
+            width: 120px !important;
         }
         .ajax-file-upload{
-            margin-top:60px !important;
+            margin-left: -66px !important;
+            margin-top: 220px !important;
             position:absolute !important;
-            margin-left: -53px !important;
             font-size: 12px !important;
             padding-bottom:3px;
+            height:17px;
         }
 
         .editImageBtn{
@@ -31,14 +37,17 @@ if ($this->action->id == 'addvisitor') {
             font-weight:bold;
             text-shadow: 0 0 !important;
             font-size:12px !important;
-            height:23px;
+            height:24px;
             width:131px !important;
         }
         .imageDimensions{
             display:none !important;
         }
         #cropImageBtn{
-            margin-top:80px;
+            float: left;
+            margin-left: -17px !important;
+            margin-top: 210px;
+            position: absolute;
         }
     </style>
     <?php
@@ -118,12 +127,12 @@ if ($this->action->id == 'addvisitor') {
 <?php } ?>
 
 <div id="fileuploader" style="margin-bottom:5px;"><?php
-if ($this->action->id == 'detail') {
-    echo "Upload Photo";
-} else {
-    echo "Browse Computer";
-}
-?> </div> 
+    if ($this->action->id == 'detail') {
+        echo "Upload Photo";
+    } else {
+        echo "Browse Computer";
+    }
+    ?> </div> 
 <br><br>
 <input type="button"  style="display:none;" id="cropImageBtn" class="btn actionForward editImageBtn" value="Edit Photo" onclick = "document.getElementById('light').style.display = 'block';
         document.getElementById('fade').style.display = 'block'">
@@ -131,11 +140,11 @@ if ($this->action->id == 'detail') {
 <input type="hidden" id="actionUpload" value="<?php echo $this->action->id; ?>"/> 
 <input type="hidden" id="controllerId" value="<?php echo $this->id; ?>"/> 
 <input type="hidden" id="viewFrom" value="<?php
-    if (isset($_GET['viewFrom'])) {
-        echo "1";
-    } else {
-        echo "0";
-    }
+if (isset($_GET['viewFrom'])) {
+    echo "1";
+} else {
+    echo "0";
+}
 ?>"/> 
 <div id="status1"></div>
 <script>
@@ -172,9 +181,7 @@ if ($this->action->id == 'detail') {
                     } else if ($("#controllerId").val() == 'companyLafPreferences')
                     {
                         $("#CompanyLafPreferences_logo").val(data);
-                    }
-
-                    else {
+                    } else {
                         $("#Company_logo").val(data);
                     }
 
@@ -186,8 +193,16 @@ if ($this->action->id == 'detail') {
                         success: function(r) {
 
                             $.each(r.data, function(index, value) {
-                                logo.src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
-                                $(".photoDiv").show();
+                                if ($("#actionUpload").val() == 'addvisitor') {
+                                    $(".ajax-upload-dragdrop").css("background", "url(<?php echo Yii::app()->request->baseUrl; ?>" + value.relative_path + ") no-repeat");
+                                    $(".ajax-upload-dragdrop").css({
+                                        "background-size": "100% 100%"
+                                    });
+                                } else {
+                                    logo.src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+                                    $(".photoDiv").show();
+                                }
+
                                 if ($("#controllerId").val() != 'companyLafPreferences' && $("#controllerId").val() != 'company') {
                                     document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 }
@@ -209,6 +224,9 @@ if ($this->action->id == 'detail') {
                 }
             }
         });
+        if ($("#actionUpload").val() == 'addvisitor') {
+            $(".uploadnotetext").html('');
+        }
         if ($("#actionUpload").val() == 'detail') {
             $(".ajax-upload-dragdrop span").hide();
             $('.ajax-upload-dragdrop').css({"border": "none"});

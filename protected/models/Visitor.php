@@ -249,8 +249,9 @@ class Visitor extends CActiveRecord {
     public function findAllCompanyWithSameTenantAndTenantAgent($id, $tenantAgentId) {
         $aArray = array();
         $tenant = User::model()->findByPk($id);
+        $tenantagent = User::model()->findByPk($tenantAgentId);
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = '$id' and tenant_agent= '$tenantAgentId' and id !='".$tenant->company."'";
+        $Criteria->condition = "(tenant = '$id' and tenant_agent= '$tenantAgentId') and id !='".$tenant->company."' and id !='".$tenantagent->company."'";
         $company = Company::model()->findAll($Criteria);
 
         foreach ($company as $index => $value) {

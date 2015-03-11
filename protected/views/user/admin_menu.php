@@ -65,17 +65,8 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                         </ul>
                     </li>
                     <?php
-                } else {
-                    ?>
-                    <li>
-                    <a href='<?php echo Yii::app()->createUrl('CompanyLafPreferences/customisation'); ?>' class="ajaxLinkLi"><span>Customise Display</span></a>
-                    </li>
-                        <?php }
+                } 
                 ?>
-
-
-
-
             <?php }
             ?>
             <li class='has-sub'><a class='manageworkstations' href='<?php echo Yii::app()->createUrl('workstation/admin'); ?>'><span>Manage Workstations</span></a>

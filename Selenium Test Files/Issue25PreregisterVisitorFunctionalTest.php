@@ -195,7 +195,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->click("id=clicktabA");
         $this->select("id=Visitor_visitor_type", "label=Corporate Visitor");
         $this->addVisitor('Visitor6');
-        $this->select("id=workstation", "label=Workstation3");
+        $this->select("id=workstation", "label=Workstation1");
         $this->select("id=Visit_reason", "label=Reason 1");
         for ($second = 0;; $second++) {
             if ($second >= 10)
@@ -385,7 +385,8 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_repeatpassword", "12345");
         sleep(1);
         $this->select("id=Visitor_tenant_agent", "label=Philippine Airline");
-        $this->select("id=workstation", "label=Workstation3");
+        sleep(1);
+        $this->select("id=workstation", "label=Workstation1");
         $this->click("id=submitFormVisitor");
         $this->waitForElementPresent("css=td > div.errorMessage.visitorReason");
         $this->assertEquals("Please select a reason", $this->getText("css=td > div.errorMessage.visitorReason"));
@@ -481,6 +482,10 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->click("link=Manage Visitors");
         $this->clickAndWait("link=Preregister Visit");
         $this->click("id=clicktabA");
+        $this->click("link=Search Visitor Profile");
+        $this->select("id=search_visitor_tenant","label=NAIA Airport");
+        sleep(1);
+        $this->select("id=search_visitor_tenant_agent","label=Philippine Airline");
         $this->type("id=search-visitor", "test visitor1");
         $this->click("id=dummy-visitor-findBtn");
         $this->waitForElementPresent("id=2");
@@ -534,7 +539,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Preregister Visit");
         $this->click("id=clicktabA");
         $this->select("id=Visitor_visitor_type", "label=Corporate Visitor");
-        $this->select("id=workstation", "label=Workstation1");
+        
         $this->waitForElementPresent("id=addCompanyLink");
         $this->assertEquals("Add New Company", $this->getText("id=addCompanyLink"));
         $this->type("id=Visitor_first_name", "test");
@@ -553,6 +558,8 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->click("id=Visitor_tenant_agent");
         sleep(1);
         $this->select("id=Visitor_tenant_agent", "label=Philippine Airline");
+        sleep(1);
+        $this->select("id=workstation", "label=Workstation1");
         $this->click("id=addCompanyLink");
         $this->waitForElementPresent("css=h1");
         
@@ -561,11 +568,16 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->type("id=Company_code", "NCA");
         $this->click("id=createBtn");
         sleep(3);
-        $this->assertEquals("NAIA AirportPhilippine Airlinenew company", $this->getText("id=Visitor_company"));
+        $this->assertEquals("Philippine Airlinenew company", $this->getText("id=Visitor_company"));
+        sleep(1);
+        $this->select("id=workstation", "label=Workstation1");
         $this->click("id=submitFormVisitor");
+        $this->click("link=Search Host");
         $this->waitForElementPresent("id=search-host");
         $this->type("id=search-host", "test");
         $this->click("id=dummy-host-findBtn");
+        $this->click("id=dummy-host-findBtn");
+        sleep(1);
         $this->waitForElementPresent("id=21");
         $this->click("id=21");
         for ($second = 0;; $second++) {

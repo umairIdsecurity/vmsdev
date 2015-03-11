@@ -20,15 +20,15 @@ $currentLoggedUserId = $session['id'];
 ?>
 
 <div class="form" data-ng-app="PwordForm">
-<?php
-$form = $this->beginWidget('CActiveForm', array(
-    'id' => 'userform',
-    'htmlOptions' => array("name" => "userform"),
-    'enableAjaxValidation' => false,
-    'enableClientValidation' => true,
-    'clientOptions' => array(
-        'validateOnSubmit' => true,
-        'afterValidate' => 'js:function(form,data,hasError){
+    <?php
+    $form = $this->beginWidget('CActiveForm', array(
+        'id' => 'userform',
+        'htmlOptions' => array("name" => "userform"),
+        'enableAjaxValidation' => false,
+        'enableClientValidation' => true,
+        'clientOptions' => array(
+            'validateOnSubmit' => true,
+            'afterValidate' => 'js:function(form,data,hasError){
                         if(!hasError){
                             if($("#User_role").val() == 7 && $("#User_tenant_agent").val() == "" && $("#currentRole").val() != 6){
                                 $("#User_tenant_agent_em_").show();
@@ -46,12 +46,12 @@ $form = $this->beginWidget('CActiveForm', array(
                                 
                                 }
                         }'
-    ),
-        ));
-?>
+        ),
+    ));
+    ?>
 
 
-<?php echo $form->errorSummary($model); ?>
+    <?php echo $form->errorSummary($model); ?>
     <table>
         <tr>
             <td style="vertical-align: top;">
@@ -59,33 +59,33 @@ $form = $this->beginWidget('CActiveForm', array(
                     <tr>
                         <td><?php echo $form->labelEx($model, 'role'); ?></td>
                         <td><select  onchange="populateDynamicFields()" <?php
-if ($this->action->Id == 'create' && isset($_GET['role'])) { //if action create with user roles selected in url
-    echo "disabled";
-}
-?> id="User_role" name="User[role]">
+                            if ($this->action->Id == 'create' && isset($_GET['role'])) { //if action create with user roles selected in url
+                                echo "disabled";
+                            }
+                            ?> id="User_role" name="User[role]">
                                 <option disabled value='' selected>Select Role</option>
-                                     <?php
-                                     $assignableRowsArray = getAssignableRoles($session['role']); // roles with access rules from getaccess function
-                                     foreach ($assignableRowsArray as $assignableRoles) {
-                                         foreach ($assignableRoles as $key => $value) {
-                                             ?>
+                                <?php
+                                $assignableRowsArray = getAssignableRoles($session['role']); // roles with access rules from getaccess function
+                                foreach ($assignableRowsArray as $assignableRoles) {
+                                    foreach ($assignableRoles as $key => $value) {
+                                        ?>
 
                                         <option id= "<?php echo $key; ?>" value="<?php echo $key; ?>" <?php
-                                if (isset($_GET['role'])) { //if url with selected role 
-                                    if ($currentRoleinUrl == $key) {
-                                        echo "selected ";
-                                    }
-                                } elseif ($this->action->Id == 'update') { //if update and $key == to role of user being updated
-                                    if ($key == $model->role) {
-                                        echo " selected ";
+                                        if (isset($_GET['role'])) { //if url with selected role 
+                                            if ($currentRoleinUrl == $key) {
+                                                echo "selected ";
+                                            }
+                                        } elseif ($this->action->Id == 'update') { //if update and $key == to role of user being updated
+                                            if ($key == $model->role) {
+                                                echo " selected ";
+                                            }
+                                        }
+                                        ?>>
+                                            <?php echo $value; ?></option>
+                                        <?php
                                     }
                                 }
-                                             ?>>
-                                        <?php echo $value; ?></option>
-                                                <?php
-                                        }
-                                    }
-                                    ?>
+                                ?>
 
                             </select><?php echo "<br>" . $form->error($model, 'role'); ?></td>
 
@@ -95,16 +95,16 @@ if ($this->action->Id == 'create' && isset($_GET['role'])) { //if action create 
                         <td>
                             <select id="User_tenant" name="User[tenant]"  >
                                 <option value='' selected>Please select a tenant</option>
-<?php
-$allTenantCompanyNames = User::model()->findAllCompanyTenant();
-foreach ($allTenantCompanyNames as $key => $value) {
-    ?>
+                                <?php
+                                $allTenantCompanyNames = User::model()->findAllCompanyTenant();
+                                foreach ($allTenantCompanyNames as $key => $value) {
+                                    ?>
                                     <option <?php
-                                    if ($session['role'] == Roles::ROLE_AGENT_ADMIN && $session['tenant'] == $value['id']) {
+                                    if (($session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_AGENT_ADMIN) && $session['tenant'] == $value['tenant']) {
                                         echo " selected "; //if logged in is agent admin and tenant of agent admin = admin id in adminList
                                     }
                                     ?> value="<?php echo $value['tenant']; ?>"><?php echo $value['name']; ?></option>
-                                    <?php
+                                        <?php
                                     }
                                     ?>
                             </select><?php echo "<br>" . $form->error($model, 'tenant'); ?>
@@ -115,18 +115,18 @@ foreach ($allTenantCompanyNames as $key => $value) {
                         <td>
                             <select id="User_tenant_agent" onchange='getCompanyTenantAgent()' name="User[tenant_agent]" >
 
-<?php
-if ($this->action->Id != 'create' || isset($_POST['User'])) {
+                                <?php
+                                if ($this->action->Id != 'create' || isset($_POST['User'])) {
 
-    $allAgentAdminNames = User::model()->findAllTenantAgent($model['tenant_agent']);
-    foreach ($allAgentAdminNames as $key => $value) {
-        ?>
+                                    $allAgentAdminNames = User::model()->findAllTenantAgent($model['tenant_agent']);
+                                    foreach ($allAgentAdminNames as $key => $value) {
+                                        ?>
                                         <option <?php
                                         if ($session['role'] == Roles::ROLE_AGENT_ADMIN && $session['tenant_agent'] == $value['id']) {
                                             echo " selected "; //if logged in is agent admin and tenant agent of logged in user is = agentadminname
                                         }
                                         ?> value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
-                                        <?php
+                                            <?php
                                         }
                                     } else {
                                         echo "<option value='' selected>Please select a tenant agent</option>";
@@ -146,30 +146,30 @@ if ($this->action->Id != 'create' || isset($_POST['User'])) {
                     <tr>
                         <td><?php echo $form->labelEx($model, 'user_type'); ?></td>
                         <td><?php echo $form->dropDownList($model, 'user_type', User::$USER_TYPE_LIST); ?>
-<?php echo "<br>" . $form->error($model, 'user_type'); ?>
+                            <?php echo "<br>" . $form->error($model, 'user_type'); ?>
                         </td>
 
                     </tr>
                     <tr>
                         <td><?php echo $form->labelEx($model, 'user_status'); ?></td>
                         <td><?php echo $form->dropDownList($model, 'user_status', User::$USER_STATUS_LIST); ?>
-<?php echo "<br>" . $form->error($model, 'user_status'); ?>
+                            <?php echo "<br>" . $form->error($model, 'user_status'); ?>
                         </td>
 
                     </tr>
                     <tr>
                         <td><?php echo $form->labelEx($model, 'notes'); ?></td>
                         <td><?php echo $form->textArea($model, 'notes', array('rows' => 6, 'cols' => 50)); ?>
-<?php echo "<br>" . $form->error($model, 'notes'); ?>
+                            <?php echo "<br>" . $form->error($model, 'notes'); ?>
                         </td>
 
                     </tr>
-<?php if ($this->action->id == 'create') { ?>
+                    <?php if ($this->action->id == 'create') { ?>
                         <tr>
                             <td><label for="User_password">Password <span class="required">*</span></label></td>
                             <td>
                                 <input ng-model="user.passwords" data-ng-class="{
-                                                                    'ng-invalid':userform['User[repeatpassword]'].$error.match}" type="password" id="User_password" value = '<?php echo $model->password; ?>' name="User[password]">			
+                                                                                        'ng-invalid':userform['User[repeatpassword]'].$error.match}" type="password" id="User_password" value = '<?php echo $model->password; ?>' name="User[password]">			
                                        <?php echo "<br>" . $form->error($model, 'password'); ?>
                             </td>
                         </tr>
@@ -178,12 +178,12 @@ if ($this->action->Id != 'create' || isset($_POST['User'])) {
                             <td >
                                 <input ng-model="user.passwordConfirm" type="password" id="User_repeat_password" data-match="user.passwords" name="User[repeatpassword]"/>			
                                 <div style='font-size: 0.9em;color: #FF0000;'  data-ng-show="userform['User[repeatpassword]'].$error.match">New Password does not match with <br>Repeat New Password. </div>
-    <?php echo "<br>" . $form->error($model, 'repeatpassword'); ?>
+                                <?php echo "<br>" . $form->error($model, 'repeatpassword'); ?>
                             </td>
 
                         </tr>
 
-<?php } ?>
+                    <?php } ?>
 
 
                 </table>
@@ -193,46 +193,46 @@ if ($this->action->Id != 'create' || isset($_POST['User'])) {
                     <tr>
                         <td style="width:110 !important;"><?php echo $form->labelEx($model, 'first_name'); ?></td>
                         <td><?php echo $form->textField($model, 'first_name', array('size' => 50, 'maxlength' => 50)); ?>
-<?php echo "<br>" . $form->error($model, 'first_name'); ?>
+                            <?php echo "<br>" . $form->error($model, 'first_name'); ?>
                         </td>
                     </tr>
                     <tr>
                         <td><?php echo $form->labelEx($model, 'last_name'); ?></td>
                         <td><?php echo $form->textField($model, 'last_name', array('size' => 50, 'maxlength' => 50)); ?>
-<?php echo "<br>" . $form->error($model, 'last_name'); ?>
+                            <?php echo "<br>" . $form->error($model, 'last_name'); ?>
                         </td>
                     </tr>
                     <tr>
                         <td><?php echo $form->labelEx($model, 'email'); ?></td>
                         <td><?php echo $form->textField($model, 'email', array('size' => 50, 'maxlength' => 50)); ?>
-<?php echo "<br>" . $form->error($model, 'email'); ?>
+                            <?php echo "<br>" . $form->error($model, 'email'); ?>
                             <span class="errorMessageEmail1" style="display:none;color:red;font-size:10px;">A profile already exists for this email address</span>
                         </td>
                     </tr>
                     <tr>
                         <td><?php echo $form->labelEx($model, 'contact_number'); ?></td>
                         <td><?php echo $form->textField($model, 'contact_number'); ?>
-<?php echo "<br>" . $form->error($model, 'contact_number'); ?></td>
+                            <?php echo "<br>" . $form->error($model, 'contact_number'); ?></td>
                     </tr>
                     <tr id="companyTr">
                         <td><?php echo $form->labelEx($model, 'company'); ?></td>
                         <td id='companyRow'>
                             <select id="User_company" name="User[company]" <?php
-if ($session['role'] == Roles::ROLE_AGENT_ADMIN || $currentRoleinUrl == Roles::ROLE_OPERATOR || $currentLoggedUserId == $currentlyEditedUserId) {
-    echo " disabled ";
-} //if currently logged in user is agent admin or if selected role=operator or owner is editing his account
-?>>
+                            if ($session['role'] == Roles::ROLE_AGENT_ADMIN || $currentRoleinUrl == Roles::ROLE_OPERATOR || $currentLoggedUserId == $currentlyEditedUserId) {
+                                echo " disabled ";
+                            } //if currently logged in user is agent admin or if selected role=operator or owner is editing his account
+                            ?>>
                                 <option value='' selected>Please select a company</option>
-                                    <?php
-                                    $companyList = CHtml::listData(Company::model()->findAllCompany(), 'id', 'name');
-                                    if (isset($_GET['role'])) {
-                                        $urlRole = $_GET['role'];
-                                    } else {
-                                        $urlRole = '';
-                                    }
-                                    if ($this->action->id != 'create' || $session['role'] == Roles::ROLE_ADMIN || $urlRole == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_AGENT_ADMIN || $urlRole == Roles::ROLE_AGENT_ADMIN) {
-                                        foreach ($companyList as $key => $value) {
-                                            ?>
+                                <?php
+                                $companyList = CHtml::listData(Company::model()->findAllCompany(), 'id', 'name');
+                                if (isset($_GET['role'])) {
+                                    $urlRole = $_GET['role'];
+                                } else {
+                                    $urlRole = '';
+                                }
+                                if ($this->action->id != 'create' || $session['role'] == Roles::ROLE_ADMIN || $urlRole == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_AGENT_ADMIN || $urlRole == Roles::ROLE_AGENT_ADMIN) {
+                                    foreach ($companyList as $key => $value) {
+                                        ?>
                                         <option <?php
                                         if ($this->action->id == 'update') {
                                             $company = User::model()->getCompany($currentlyEditedUserId);
@@ -243,47 +243,47 @@ if ($session['role'] == Roles::ROLE_AGENT_ADMIN || $currentRoleinUrl == Roles::R
                                             echo " selected ";
                                         }
                                         ?> value="<?php echo $key; ?>"><?php echo $value; ?></option>
-                                        <?php
+                                            <?php
                                         }
                                     }
                                     ?>
                             </select>
                             <select id="User_company_base" style="display:none;">
-<?php
-$criteria = new CDbCriteria();
-if ($session['role'] != Roles::ROLE_SUPERADMIN) {
-    $criteria->addCondition("tenant='".$session['tenant']."' and id!= 1 and id!=" . $session['company']);
-} else {
-    $criteria->addCondition("id!= 1");
-}
-$companyList = CHtml::listData(Company::model()->findAllCompany(), 'id', 'name');
-foreach ($companyList as $key => $value) {
-    ?>
+                                <?php
+                                $criteria = new CDbCriteria();
+                                if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+                                    $criteria->addCondition("tenant='" . $session['tenant'] . "' and id!= 1 and id!=" . $session['company']);
+                                } else {
+                                    $criteria->addCondition("id!= 1");
+                                }
+                                $companyList = CHtml::listData(Company::model()->findAllCompany(), 'id', 'name');
+                                foreach ($companyList as $key => $value) {
+                                    ?>
                                     <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
                                     <?php
                                 }
                                 ?>
                             </select>
                             <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;display:none;">Add New Company</a>
-<?php echo $form->error($model, 'company'); ?>
+                            <?php echo $form->error($model, 'company'); ?>
                         </td>
                         <td></td></tr>
                     <tr>
                         <td><?php echo $form->labelEx($model, 'department'); ?></td>
                         <td><?php echo $form->textField($model, 'department', array('size' => 50, 'maxlength' => 50)); ?>
-<?php echo "<br>" . $form->error($model, 'department'); ?>
+                            <?php echo "<br>" . $form->error($model, 'department'); ?>
                         </td>
                     </tr>
                     <tr>
                         <td><?php echo $form->labelEx($model, 'position'); ?></td>
                         <td><?php echo $form->textField($model, 'position', array('size' => 50, 'maxlength' => 50)); ?>
-<?php echo "<br>" . $form->error($model, 'position'); ?>
+                            <?php echo "<br>" . $form->error($model, 'position'); ?>
                         </td>
                     </tr>
                     <tr>
                         <td>Staff ID</td>
                         <td><?php echo $form->textField($model, 'staff_id', array('size' => 50, 'maxlength' => 50)); ?>
-<?php echo "<br>" . $form->error($model, 'staff_id'); ?></td>
+                            <?php echo "<br>" . $form->error($model, 'staff_id'); ?></td>
                     </tr>
                     <tr>
                         <td><?php echo $form->labelEx($model, 'date_of_birth'); ?></td>
@@ -305,11 +305,11 @@ foreach ($companyList as $key => $value) {
     <div class="buttonsAlignToRight">
         <!--<button class="btn btn-success " id="submitBtn"><?php echo ($this->action->Id == 'create' ? 'Add' : 'Save') ?></button>-->
         <div class="row buttons " >
-<?php echo CHtml::submitButton($model->isNewRecord ? 'Add' : 'Save', array('id' => 'submitForm', 'class' => 'complete')); ?>
+            <?php echo CHtml::submitButton($model->isNewRecord ? 'Add' : 'Save', array('id' => 'submitForm', 'class' => 'complete')); ?>
         </div>
     </div>
 
-<?php $this->endWidget(); ?>
+    <?php $this->endWidget(); ?>
 
 </div><!-- form -->
 
@@ -480,23 +480,7 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
             $("#User_workstation").empty();
 
             if ($("#User_role").val() == agentadmin) {
-                $.ajax({
-                    type: 'POST',
-                    url: '<?php echo Yii::app()->createUrl('user/GetTenantOrTenantAgentCompany&id='); ?>' + tenant,
-                    dataType: 'json',
-                    data: tenant,
-                    success: function(r) {
-                        $('#User_company option[value!=""]').remove();
-
-                        $.each(r.data, function(index, value) {
-                            $('#User_company').append('<option value="' + value.id + '">' + value.name + '</option>');
-
-                        });
-                        if ($("#User_role").val() == 6) {
-                            document.getElementById('User_company').disabled = false;
-                        }
-                    }
-                });
+                populateCompanyofTenant(tenant);
             }
             if ($("#User_role").val() == operator || $("#User_role").val() == staffmember || $("#User_role").val() == agentoperator) {
                 if (sessionRole == superadmin)
@@ -545,7 +529,6 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
 
         });
     });
-
     function sendUserForm() {
 
         var userform = $("#userform").serialize();
@@ -608,7 +591,35 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
             });
         }
     }
+    function populateCompanyofTenant(tenant, newcompanyId) {
+        $('#User_company option[value!=""]').remove();
 
+        $.ajax({
+            type: 'POST',
+            url: '<?php echo Yii::app()->createUrl('user/GetTenantOrTenantAgentCompany&id='); ?>' + tenant,
+            dataType: 'json',
+            data: tenant,
+            success: function(r) {
+                $('#User_company option[value!=""]').remove();
+
+                $.each(r.data, function(index, value) {
+                    $('#User_company').append('<option value="' + value.id + '">' + value.name + '</option>');
+
+                });
+                if ($("#User_role").val() == 6) {
+                    document.getElementById('User_company').disabled = false;
+                    newcompanyId = (typeof newcompanyId === "undefined") ? "defaultValue" : newcompanyId;
+
+                    if (newcompanyId != 'defaultValue') {
+                        $("#User_company").val(newcompanyId);
+                    }
+                }
+
+            }
+        });
+
+
+    }
     function populateDynamicFields() {
         /*if superadmin user company set to empty*/
         if (<?php echo $session['role'] ?> == 5)
@@ -981,50 +992,52 @@ $this->widget('bootstrap.widgets.TbButton', array(
 ?>
 <script>
     function addCompany() {
-        var url = '<?php echo $this->createUrl('company/create&viewFrom=1') ?>';
-        var sessionRole = $("#currentRole").val();
-        var selectedRole = $("#User_role").val();
-        var tenant = $("#User_tenant").val();
-        var superadmin = 5;
-        var agentadmin = 6;
-        if (sessionRole == superadmin) {
-            if (selectedRole == agentadmin) {
-                url = '<?php echo $this->createUrl('company/create&viewFrom=1&tenant=') ?>' + tenant;
+        if ($("#User_tenant").val() == '' && $("#currentRole").val() != 5) {
+            $("#User_company_em_").show();
+            $("#User_company_em_").html('Please select a tenant');
+        } else {
+            var url = '<?php echo $this->createUrl('company/create&viewFrom=1') ?>';
+            var sessionRole = $("#currentRole").val();
+            var selectedRole = $("#User_role").val();
+            var tenant = $("#User_tenant").val();
+            var superadmin = 5;
+            var agentadmin = 6;
+            if (sessionRole == superadmin) {
+                if (selectedRole == agentadmin) {
+                    url = '<?php echo $this->createUrl('company/create&viewFrom=1&tenant=') ?>' + tenant;
+                }
             }
-        }
 
-        $("#modalBody").html('<iframe width="100%" id="companyModalIframe" height="98%" frameborder="0" scrolling="no" src="' + url + '" ></iframe>');
-        $("#modalBtn").click();
+            $("#modalBody").html('<iframe width="100%" id="companyModalIframe" height="98%" frameborder="0" scrolling="no" src="' + url + '" ></iframe>');
+            $("#modalBtn").click();
+        }
     }
 
     function dismissModal(id) {
         $("#dismissModal").click();
-        $.ajax({
-            type: 'POST',
-            url: '<?php echo Yii::app()->createUrl('company/GetCompanyList&lastId='); ?>',
-            dataType: 'json',
-            success: function(r) {
-                  $('#User_company option[value!=""]').remove();
-                  $('#User_company_base option[value!=""]').remove();
+        if ($("#User_role").val() == "6") {
+            populateCompanyofTenant($("#User_tenant").val(), id);
+        } else if ($("#User_role" == 1 && $("#currentRole").val() == 5)) {
+            $.ajax({
+                type: 'POST',
+                url: '<?php echo Yii::app()->createUrl('company/GetCompanyList&lastId='); ?>',
+                dataType: 'json',
+                success: function(r) {
+                    $('#User_company option[value!=""]').remove();
+                    $('#User_company_base option[value!=""]').remove();
 
-                $.each(r.data, function(index, value) {
-                    $('#User_company').append('<option value="' + value.id + '">' + value.name + '</option>');
-                    $('#User_company_base').append('<option value="' + value.id + '">' + value.name + '</option>');
-                    document.getElementById('User_company').disabled = false;
-                    $("#User_company").val(value.id);
-                });
+                    $.each(r.data, function(index, value) {
+                        $('#User_company').append('<option value="' + value.id + '">' + value.name + '</option>');
+                        $('#User_company_base').append('<option value="' + value.id + '">' + value.name + '</option>');
+                        document.getElementById('User_company').disabled = false;
+                        $("#User_company").val(value.id);
+                    });
 
-//                var duplicateChk = {};
-//
-//                $('#User_company').each(function() {
-//                    if (duplicateChk.hasOwnProperty(this.id)) {
-//                        $(this).remove();
-//                    } else {
-//                        duplicateChk[this.id] = 'true';
-//                    }
-//                });
-            }
-        });
+                }
+            });
+        }
+
+
     }
 </script>
 

@@ -47,6 +47,10 @@ $photoForm = $this->beginWidget('CActiveForm', array(
             ?>
         <img class='<?php if($model->visit_status != VisitStatus::ACTIVE){ echo "cardCompanyLogoPreregistered"; } else { echo "cardCompanyLogo"; } ?>' src="<?php
             echo $companyLogo;
+            ?>" style="<?php 
+            if(strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false){
+                ?>margin-left:42px;<?php
+            }
             ?>"/>
                  <?php
              }

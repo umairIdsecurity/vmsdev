@@ -51,7 +51,7 @@ div.form label{
 }
 
 .host-AddBtn{
-    padding:8px;
+    margin-top:-9px;padding:7px;
 }
 
 .login-area .errorMessage{
@@ -1152,26 +1152,26 @@ dt.tabs dt{
 }
 
 .moveFromAlignmentA{
-    margin-left: 576px;
-    margin-top: -353px !important;
-    position:absolute;
+    margin-left: 300px;
+    margin-top: -113px !important;
+    position:relative;
 }
 
 .moveFromAlignmentB{
-    margin-left: 576px;
-    margin-top: -290px !important;
-    position:absolute;
+    margin-left: 300px;
+    margin-top: -115px !important;
+    position:relative;
 }
 
 .moveFromAlignmentAB{
-    margin-left: 576px;
-    margin-top: -348px !important;
+    margin-left: 300px;
+    margin-top: -115px !important;
     position:absolute;
 }
 
 .moveFromAlignmentBB{
-    margin-left: 576px;
-    margin-top: -290px !important;
+    margin-left: 300px;
+    margin-top: -115px !important;
     position:absolute;
 }
 

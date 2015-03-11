@@ -59,6 +59,7 @@ class Issue3AgentAdminFunctionalTest extends BaseFunctionalTest {
         $this->getDisabledRoleValue("7");
 
         $this->getDisabledCompanyValue("Philippine Airline");
+        sleep(1);
         $this->assertEquals("Workstation1Workstation2", $this->getText("id=User_workstation"));
         $this->clickAndWait("id=submitForm");
         $this->type("css=td > input[name=\"User[first_name]\"]", "test");

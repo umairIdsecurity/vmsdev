@@ -69,13 +69,14 @@ $session = new CHttpSession;
             <tr>
                 <td><?php echo $form->labelEx($model, 'tenant_agent'); ?></td>
                 <td><select id="Workstation_tenant_agent" name="Workstation[tenant_agent]">
-                        <option disabled value='' selected>Please select a tenant agent</option>
                         <?php
                         if ($this->action->Id != 'create') {
                             
                             $companyList = User::model()->findAllTenantAgent($model['tenant']);
                             foreach ($companyList as $key => $value) {
                                 ?>
+                        
+                        <option disabled value='' selected>Please select a tenant agent</option>
                                 <option <?php
                                 if ($model['tenant_agent'] == $value['tenant_agent']) {
                                     echo " selected ";

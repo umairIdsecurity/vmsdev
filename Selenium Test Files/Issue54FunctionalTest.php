@@ -22,15 +22,15 @@ class Issue54FunctionalTest extends BaseFunctionalTest {
     }
 
     function testAll() {
-        $this->resetDbWithData();
-        $this->Scenario1();
-        $this->Scenario2();
-        $this->Scenario3();
-        $this->Scenario4();
-        $this->Scenario5();
-        $this->Scenario6();
-        $this->Scenario7();
-        $this->Scenario8();
+//        $this->resetDbWithData();
+//        $this->Scenario1();
+//        $this->Scenario2();
+//        $this->Scenario3();
+//        $this->Scenario4();
+//        $this->Scenario5();
+//        $this->Scenario6();
+//        $this->Scenario7();
+//        $this->Scenario8();
         $this->resetDbWithData();
         $this->Scenario9();
     }
@@ -78,16 +78,18 @@ class Issue54FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("css=span");
         $this->click("id=clicktabA");
+        $this->click("link=Search Visitor Profile");
+        $this->select("id=search_visitor_tenant","label=NAIA Airport");
+        sleep(1);
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
         $this->waitForElementPresent("id=5");
         $this->click("id=5");
         sleep(1);
-        $this->assertEquals("Please select a workstation Workstation1 Workstation2 Workstation3", $this->getText("id=workstation_search"));
+        $this->assertEquals("Please select a workstation Workstation3", $this->getText("id=workstation_search"));
         $this->assertEquals("Please select a reason Reason 1 Reason 2 Other", $this->getText("id=Visit_reason_search"));
         $this->click("id=clicktabB1");
-        $this->click("id=saveCurrentUserAsHost");
-        $this->clickAndWait("id=submitAllForms");
+        $this->clickAndWait("id=saveCurrentUserAsHost");
         $this->click("css=#activate-a-visit-form > input.complete");
         sleep(5);
         $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
@@ -115,6 +117,10 @@ class Issue54FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("//div[@id='cssmenu']/ul/li[2]/a/span");
         $this->click("id=clicktabA");
+        $this->select("id=Visitor_tenant", "label=NAIA Airport");
+        sleep(1);
+        $this->select("id=Visitor_tenant_agent", "label=Philippine Airline");
+        sleep(1);
         $this->select("id=workstation", "label=Workstation1");
         $this->type("id=Visitor_vehicle", "ABC123");
         $this->type("id=Visitor_first_name", "test");
@@ -124,7 +130,6 @@ class Issue54FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
         $this->select("id=Visit_reason", "label=Reason 1");
-        $this->select("id=Visitor_tenant", "label=NAIA Airport");
         $this->click("id=submitFormVisitor");
         $this->type("id=User_first_name", "test");
         $this->type("id=User_last_name", "host1");
@@ -241,6 +246,10 @@ class Issue54FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Preregistered", $this->getText("css=ul.visitStatusLi > li > a > span"));
         $this->clickAndWait("//div[@id='cssmenu']/ul/li[2]/a/span");
         $this->click("id=clicktabA");
+        $this->click("link=Search Visitor Profile");
+        $this->select("id=search_visitor_tenant","label=NAIA Airport");
+        sleep(1);
+        $this->select("id=search_visitor_tenant_agent","label=Philippine Airline");
         $this->type("id=search-visitor", "preload2");
         $this->click("id=dummy-visitor-findBtn");
         $this->waitForElementPresent("id=6");
@@ -289,6 +298,10 @@ class Issue54FunctionalTest extends BaseFunctionalTest {
 
         $this->clickAndWait("link=Preregister Visit");
         $this->click("id=clicktabA");
+        $this->click("link=Search Visitor Profile");
+        $this->select("id=search_visitor_tenant","label=NAIA Airport");
+        sleep(1);
+        $this->select("id=search_visitor_tenant_agent","label=Philippine Airline");
         $this->type("id=search-visitor", "preload2");
         $this->click("id=dummy-visitor-findBtn");
         $this->waitForElementPresent("id=6");
@@ -368,12 +381,15 @@ class Issue54FunctionalTest extends BaseFunctionalTest {
         $this->select("id=Visit_reason", "label=Reason 1");
         $this->type("id=Visitor_contact_number", "1234567");
         $this->select("id=Visitor_tenant", "label=NAIA Airport");
+        sleep(1);
+        $this->select("id=Visitor_tenant_agent","label=Philippine Airline");
+        sleep(1);
+        $this->select("id=workstation", "label=Workstation1");
         $this->click("id=submitFormVisitor");
         $this->type("id=User_first_name", "hostperson");
         $this->type("id=User_last_name", "hostperson");
         $this->type("id=User_email", "hostperson@test.com");
         $this->type("id=User_contact_number", "123456");
-        $this->select("id=User_tenant", "label=NAIA Airport");
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeatpassword", "12345");
         $this->type("id=User_department", "department");
@@ -382,6 +398,10 @@ class Issue54FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Saved", $this->getText("css=ul.visitStatusLi > li > a > span"));
         $this->clickAndWait("css=span");
         $this->click("id=clicktabA");
+        $this->click("link=Search Visitor Profile");
+        $this->select("id=search_visitor_tenant","label=NAIA Airport");
+        sleep(1);
+        $this->select("id=search_visitor_tenant_agent","label=Philippine Airline");
         $this->type("id=search-visitor", "person person");
         $this->click("id=dummy-visitor-findBtn");
         $this->waitForElementPresent("id=5");

@@ -69,7 +69,7 @@ class Issue53FunctionalTest extends BaseFunctionalTest {
         $this->click("id=Visitor_tenant_agent");
         $this->select("id=Visitor_tenant_agent", "label=Philippine Airline");
         sleep(1);
-        $this->select("id=workstation", "label=Workstation3");
+        $this->select("id=workstation", "label=Workstation1");
         $this->click("id=submitFormVisitor");
         $this->type("id=User_first_name", "test");
         $this->type("id=User_last_name", "newhost");
@@ -120,7 +120,7 @@ class Issue53FunctionalTest extends BaseFunctionalTest {
         $this->checkVisitorType();
         $username = 'operator@test.com';
         $this->login($username, '12345');
-        $this->select("id=userWorkstation", "label=Workstation3");
+        $this->select("id=userWorkstation", "label=Workstation1");
         $this->click("id=submitBtn");
         $this->clickAndWait("id=submit");
         $this->checkVisitorType();

@@ -233,7 +233,7 @@ class Visitor extends CActiveRecord {
         $aArray = array();
         $user = User::model()->findByPk($tenantId);
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = '$tenantId' and (id!=1 and id !='".$user->company."')";
+        $Criteria->condition = "tenant_agent IS NULL and tenant = '$tenantId' and (id!=1 and id !='".$user->company."')";
         $company = Company::model()->findAll($Criteria);
 
         foreach ($company as $index => $value) {

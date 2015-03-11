@@ -73,6 +73,7 @@ class Issue51FunctionalTest extends BaseFunctionalTest {
         $this->click("link=Manage Visitors");
         $this->clickAndWait("link=Log Visit");
         $this->click("id=clicktabA");
+        sleep(1);
         $this->select("id=workstation", "label=Second Tenant Workstation");
         $this->type("id=Visitor_first_name", "test");
         $this->type("id=Visitor_last_name", "secondtenantvisitor");

@@ -662,7 +662,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Preregister Visit");
         $this->click("id=clicktabA");
         $this->addVisitor('Visitor0a');
-        $this->select("id=workstation", "label=Workstation3");
+        $this->select("id=workstation", "label=Workstation1");
         $this->select("id=Visitor_visitor_type", "label=Corporate Visitor");
         $this->select("id=Visit_reason", "label=Reason 1");
         $this->click("id=submitFormVisitor");
@@ -708,6 +708,10 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Preregister Visit");
         $this->click("id=multiday");
         $this->click("id=clicktabA");
+        $this->click("link=Search Visitor Profile");
+        $this->select("id=search_visitor_tenant","label=NAIA Airport");
+        sleep(1);
+        $this->select("id=search_visitor_tenant_agent","label=Philippine Airline");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
         $this->select("id=Visit_reason_search", "label=Reason 1");
@@ -762,16 +766,20 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->waitForElementPresent("link=Log Visit");
         $this->clickAndWait("link=Log Visit");
         $this->click("id=clicktabA");
+        $this->click("link=Search Visitor Profile");
+        $this->select("id=search_visitor_tenant","label=NAIA Airport");
+        sleep(1);
+        $this->select("id=search_visitor_tenant_agent","label=Philippine Airline");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
+        $this->click("id=dummy-visitor-findBtn");
         $this->select("id=Visit_reason_search", "label=Reason 1");
+        sleep(1);
         $this->select("id=workstation_search", "label=Workstation1");
         $this->select("id=Visitor_visitor_type_search", "label=Corporate Visitor");
         $this->waitForElementPresent("id=2");
         $this->click("id=2");
         $this->click("id=clicktabB1");
-//        $this->type("id=Patient_name", "patient 0a");
-//        $this->click("id=submitFormPatientName");
         $this->addHost("Host2");
         $this->click("id=submitFormUser");
         try {
@@ -810,6 +818,10 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Log Visit");
         $this->click("id=multiday");
         $this->click("id=clicktabA");
+        $this->click("link=Search Visitor Profile");
+        $this->select("id=search_visitor_tenant","label=NAIA Airport");
+        sleep(1);
+        $this->select("id=search_visitor_tenant_agent","label=Philippine Airline");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
         $this->select("id=Visit_reason_search", "label=Reason 1");
@@ -820,17 +832,6 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->click("id=clicktabB1");
         $this->addHost("Host5");
         $this->clickAndWait("id=submitFormUser");
-//        $this->type("id=Patient_name", "patient 0a");
-////        $this->click("id=submitFormPatientName");
-//        try {
-//            $this->assertEquals(date('d-m-Y'), $this->getValue("id=Visit_date_inLog"));
-//        } catch (PHPUnit_Framework_AssertionFailedError $e) {
-//            array_push($this->verificationErrors, $e->toString());
-//        }
-//
-//        $this->type("id=proposedDateOut", date('d-m-Y', time() + 86400));
-//        $this->type("id=Visit_date_out", date('d-m-Y', time() + 86400));
-//        $this->clickAndWait("id=submitAllForms");
         $this->type("id=Visitor_photo", "1");
         $this->click("css=#activate-a-visit-form > input.complete");
         sleep(3);
@@ -868,6 +869,10 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->waitForElementPresent("link=Preregister Visit");
         $this->clickAndWait("link=Preregister Visit");
         $this->click("id=clicktabA");
+        $this->click("link=Search Visitor Profile");
+        $this->select("id=search_visitor_tenant","label=NAIA Airport");
+        sleep(1);
+        $this->select("id=search_visitor_tenant_agent","label=Philippine Airline");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
         $this->select("id=Visit_reason_search", "label=Reason 1");
@@ -886,6 +891,10 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Preregister Visit");
         $this->click("id=multiday");
         $this->click("id=clicktabA");
+        $this->click("link=Search Visitor Profile");
+        $this->select("id=search_visitor_tenant","label=NAIA Airport");
+        sleep(1);
+        $this->select("id=search_visitor_tenant_agent","label=Philippine Airline");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
         $this->select("id=Visit_reason_search", "label=Reason 1");
@@ -938,6 +947,10 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->waitForElementPresent("link=Log Visit");
         $this->clickAndWait("link=Log Visit");
         $this->click("id=clicktabA");
+        $this->click("link=Search Visitor Profile");
+        $this->select("id=search_visitor_tenant","label=NAIA Airport");
+        sleep(1);
+        $this->select("id=search_visitor_tenant_agent","label=Philippine Airline");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
         $this->select("id=Visit_reason_search", "label=Reason 1");
@@ -946,16 +959,8 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->waitForElementPresent("id=3");
         $this->click("id=3");
         $this->click("id=clicktabB1");
-//        $this->type("id=Patient_name", "patient 0a");
-//        $this->click("id=submitFormPatientName");
         $this->addHost("Host8");
         $this->clickAndWait("id=submitFormUser");
-//        try {
-//            $this->assertEquals(date("d-m-Y"), $this->getValue("id=Visit_date_inLog"));
-//        } catch (PHPUnit_Framework_AssertionFailedError $e) {
-//            array_push($this->verificationErrors, $e->toString());
-//        }
-//        $this->clickAndWait("id=submitAllForms");
         $this->click("css=#activate-a-visit-form > input.complete");
         sleep(3);
         $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
@@ -963,8 +968,6 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Active");
 
         $this->assertEquals(date("d M y", time() + 86400), $this->getText("css=span.cardDateText"));
-        //   $this->assertEquals("Same Day Visitor", $this->getText("css=#cardDetailsTable > tbody > tr > td"));
-
         $this->clickAndWait("css=#close-visit-form > input[type=\"submit\"]");
 
         $this->clickAndWait("link=Administration");
@@ -973,6 +976,10 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Log Visit");
         $this->click("id=multiday");
         $this->click("id=clicktabA");
+        $this->click("link=Search Visitor Profile");
+        $this->select("id=search_visitor_tenant","label=NAIA Airport");
+        sleep(1);
+        $this->select("id=search_visitor_tenant_agent","label=Philippine Airline");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
         $this->select("id=Visit_reason_search", "label=Reason 1");
@@ -982,29 +989,14 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->waitForElementPresent("id=3");
         $this->click("id=3");
         $this->click("id=clicktabB1");
-//        $this->type("id=Patient_name", "patient 0a");
-//        $this->click("id=submitFormPatientName");
         $this->addHost("Host9");
         $this->clickAndWait("id=submitFormUser");
-//        try {
-//            $this->assertEquals(date("d-m-Y"), $this->getValue("id=Visit_date_inLog"));
-//        } catch (PHPUnit_Framework_AssertionFailedError $e) {
-//            array_push($this->verificationErrors, $e->toString());
-//        }
-//        $this->click("id=submitAllForms");
-//        $this->waitForElementPresent("id=preregisterdateoutError");
-//        $this->assertEquals("Date Out cannot be blank.", $this->getText("id=preregisterdateoutError"));
-//        $this->type("id=proposedDateOut", date('d-m-Y', time() + 86400));
-//        $this->type("id=Visit_date_out", date('d-m-Y', time() + 86400));
-//        $this->clickAndWait("id=submitAllForms");
         $this->type("id=Visitor_photo", "1");
         $this->click("css=#activate-a-visit-form > input.complete");
         sleep(3);
         $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
         $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("link=Active");
-
-        //    $this->assertEquals(date('d M y', time() + 172800), $this->getText("css=span.cardDateText"));
         $this->clickAndWait("css=#close-visit-form > input[type=\"submit\"]");
     }
 

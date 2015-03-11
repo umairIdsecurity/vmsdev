@@ -1,6 +1,7 @@
 <?php
 /* @var $this CompanyController */
 /* @var $model Company */
+
 ?>
 
 <h1>Manage Companies</h1>
@@ -15,6 +16,17 @@ $this->widget('zii.widgets.grid.CGridView', array(
         'trading_name',
         'contact',
         'billing_address',
+        array(
+           'name'=>'isTenant',
+            'type'=>'raw',
+            'header' => "Is Tenant",
+            'filter'=>array(0=>"No",1=>"Yes"),
+            'value' => '$data->isTenant?"Yes":"No"',
+            'htmlOptions' => array('style' => "text-align:center;"),
+            
+        ),
+        
+      
         array(
             'header' => 'Actions',
             'class' => 'CButtonColumn',
@@ -33,4 +45,19 @@ $this->widget('zii.widgets.grid.CGridView', array(
         ),
     ),
 ));
+
+function isCompanyTenant($companyId) {
+
+    $company = Yii::app()->db->createCommand()
+                    ->select('c.id')
+                    ->from('user u')
+                    ->join('company c', 'u.company=c.id')
+                    ->where('u.id=c.tenant and c.id !=1 and c.id="' . $companyId . '"')
+                    ->queryAll();
+    if(count($company) != 0){
+        return  "1";
+    } else {
+        return "0";
+    }
+}
 ?>

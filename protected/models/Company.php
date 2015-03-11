@@ -23,11 +23,25 @@
  */
 class Company extends CActiveRecord {
 
+    public $isTenant;
+
     /**
      * @return string the associated database table name
      */
     public function tableName() {
         return 'company';
+    }
+
+    public function getIsTenant() {
+        // return private attribute on search
+        if ($this->scenario == 'search') {
+            return $this->_isTenant;
+        }
+    }
+
+    public function setIsTenant($value) {
+        // set private attribute for search
+        $this->_isTenant = $value;
     }
 
     /**
@@ -60,7 +74,7 @@ class Company extends CActiveRecord {
             array('tenant, tenant_agent,logo', 'default', 'setOnEmpty' => true, 'value' => null),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, name,code,company_laf_preferences, trading_name, logo,tenant, contact, billing_address, email_address, office_number, mobile_number, website, created_by_user, created_by_visitor', 'safe', 'on' => 'search'),
+            array('id,isTenant, name,code,company_laf_preferences, trading_name, logo,tenant, contact, billing_address, email_address, office_number, mobile_number, website, created_by_user, created_by_visitor', 'safe', 'on' => 'search'),
         );
     }
 
@@ -118,6 +132,18 @@ class Company extends CActiveRecord {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
+        $post_table = User::model()->tableName();
+        $post_count_sql = "(SELECT COUNT(c.id)
+FROM `user` u
+LEFT JOIN company c ON u.company=c.id
+WHERE u.id=c.tenant AND c.id !=1 AND c.id=t.id)";
+
+
+        // select
+        $criteria->select = array(
+            '*',
+            $post_count_sql . " as isTenant",
+        );
 
         $criteria->compare('id', $this->id);
         $criteria->compare('name', $this->name, true);
@@ -136,6 +162,7 @@ class Company extends CActiveRecord {
         $criteria->compare('is_deleted', $this->is_deleted);
         $criteria->compare('code', $this->code);
         $criteria->compare('company_laf_preferences', $this->company_laf_preferences);
+        $criteria->compare($post_count_sql, $this->isTenant);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -234,7 +261,7 @@ class Company extends CActiveRecord {
             $company = Yii::app()->db->createCommand()
                     ->selectdistinct('*')
                     ->from('company')
-                    ->where('id != 1 and tenant="'.Yii::app()->user->tenant.'"')
+                    ->where('id != 1 and tenant="' . Yii::app()->user->tenant . '"')
                     ->queryAll();
         } else {
             $company = Yii::app()->db->createCommand()

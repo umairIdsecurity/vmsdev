@@ -56,7 +56,7 @@ if ($this->action->id == 'update') {
                                        value="<?php echo $model['photo']; ?>">
 
                                 <div class="photoDiv"  style="margin-bottom:5px;height:174px;width:133px;'">
-                                     <?php if ($dataId != '') { ?> 
+                                     <?php if ($dataId != '' && $model['photo'] != NULL) { ?> 
                                         <img id='photoPreview' src="<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($dataId) ?>" style='display:block;height:174px;width:133px;'/>
                                     <?php } elseif($model['photo'] == NULL){
                                             ?>
@@ -128,6 +128,23 @@ if ($this->action->id == 'update') {
                             </td>
                             
                         </tr>
+                        <?php if ((($session['role'] == Roles::ROLE_SUPERADMIN || $session['role'] == Roles::ROLE_ADMIN) && $this->action->id =='update') || $this->action->id=='addvisitor') {
+                            ?>
+                            <tr>
+                                <td>
+                                    <label for="Visitor_password">Password <span class="required">*</span></label>
+                                    <input ng-model="user.passwords" data-ng-class="{
+                                                        'ng-invalid':registerform['Visitor[repeatpassword]'].$error.match}" type="password" id="Visitor_password" name="Visitor[password]">			
+                                           <?php echo "<br>" . $form->error($model, 'password'); ?>
+                                </td>
+                                <td>
+                                    <label for="Visitor_repeatpassword">Repeat Password <span class="required">*</span></label>
+                                    <input ng-model="user.passwordConfirm" type="password" id="Visitor_repeatpassword" data-match="user.passwords" name="Visitor[repeatpassword]"/>			
+                                    <div style='font-size:0.9em;color:red;position: static;' data-ng-show="registerform['Visitor[repeatpassword]'].$error.match">Password does not match with Repeat <br> Password. </div>
+                                    <?php echo "<br>" . $form->error($model, 'repeatpassword'); ?>
+                                </td>
+                            </tr>
+                        <?php } ?>
                         <tr>
                             <td>
                                 <?php echo $form->labelEx($model, 'email'); ?>
@@ -170,23 +187,7 @@ if ($this->action->id == 'update') {
                                        <?php echo "<br>" . $form->error($model, 'vehicle'); ?>
                             </td>
                         </tr>
-<?php if ($session['role'] == Roles::ROLE_SUPERADMIN || $session['role'] == Roles::ROLE_ADMIN) {
-                            ?>
-                            <tr>
-                                <td>
-                                    <label for="Visitor_password">Password <span class="required">*</span></label>
-                                    <input ng-model="user.passwords" data-ng-class="{
-                                                        'ng-invalid':registerform['Visitor[repeatpassword]'].$error.match}" type="password" id="Visitor_password" name="Visitor[password]">			
-                                           <?php echo "<br>" . $form->error($model, 'password'); ?>
-                                </td>
-                                <td>
-                                    <label for="Visitor_repeatpassword">Repeat Password <span class="required">*</span></label>
-                                    <input ng-model="user.passwordConfirm" type="password" id="Visitor_repeatpassword" data-match="user.passwords" name="Visitor[repeatpassword]"/>			
-                                    <div style='font-size:0.9em;color:red;position: static;' data-ng-show="registerform['Visitor[repeatpassword]'].$error.match">Password does not match with Repeat <br> Password. </div>
-                                    <?php echo "<br>" . $form->error($model, 'repeatpassword'); ?>
-                                </td>
-                            </tr>
-                        <?php } ?>
+
                         
                     </table>
                 </td>
@@ -292,15 +293,6 @@ if ($this->action->id == 'update') {
             });
         });
 
-//        $('#Visitor_vehicle').bind('keypress', function(event) {
-//            var regex = new RegExp("^[a-zA-Z0-9\b]+$");
-//            var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
-//            if (!regex.test(key)) {
-//                event.preventDefault();
-//                return false;
-//            }
-//        });
-
         $('#Visitor_vehicle').keydown(function(e) {
             if (e.which === 32) {
                 e.preventDefault();
@@ -390,11 +382,9 @@ if ($this->action->id == 'update') {
                 $("#Visitor_tenant_agent").val(selected);
             }
         });
-
-
     }
 
-    function getCompanyWithSameTenant(tenant) {
+    function getCompanyWithSameTenant(tenant,newcompanyId) {
         $.ajax({
             type: 'POST',
             url: '<?php echo Yii::app()->createUrl('visitor/GetCompanyWithSameTenant&id='); ?>' + tenant,
@@ -409,8 +399,18 @@ if ($this->action->id == 'update') {
                 if ($("#currentAction").val() == 'update') {
                     $("#Visitor_company").val("<?php echo $model->company; ?>")
                 }
+                
+                newcompanyId = (typeof newcompanyId === "undefined") ? "defaultValue" : newcompanyId;
+
+                if (newcompanyId != 'defaultValue') {
+                    $("#Visitor_company").val(newcompanyId);
+                }
             }
         });
+        
+        if($("#Visitor_tenant_agent") != ''){
+            getCompanyWithSameTenantAndTenantAgent($("#Visitor_tenant").val(), '<?php echo $model->tenant_agent; ?>');
+        }
     }
 
     function populateCompanyWithSameTenantAndTenantAgent() {
@@ -418,7 +418,7 @@ if ($this->action->id == 'update') {
         getCompanyWithSameTenantAndTenantAgent($("#Visitor_tenant").val(), $("#Visitor_tenant_agent").val());
     }
 
-    function getCompanyWithSameTenantAndTenantAgent(tenant, tenant_agent) {
+    function getCompanyWithSameTenantAndTenantAgent(tenant, tenant_agent,newcompanyId) {
         $.ajax({
             type: 'POST',
             url: '<?php echo Yii::app()->createUrl('visitor/GetCompanyWithSameTenantAndTenantAgent&id='); ?>' + tenant + '&tenantagent=' + tenant_agent,
@@ -433,25 +433,25 @@ if ($this->action->id == 'update') {
                 if ($("#currentAction").val() == 'update') {
                     $("#Visitor_company").val("<?php echo $model->company; ?>")
                 }
+                
+                newcompanyId = (typeof newcompanyId === "undefined") ? "defaultValue" : newcompanyId;
+
+                if (newcompanyId != 'defaultValue') {
+                    $("#Visitor_company").val(newcompanyId);
+                }
             }
         });
     }
 
     function dismissModal(id) {
         $("#dismissModal").click();
-        $.ajax({
-            type: 'POST',
-            url: '<?php echo Yii::app()->createUrl('company/GetCompanyList&lastId='); ?>',
-            dataType: 'json',
-            success: function(r) {
-                $('#Visitor_company option[value!=""]').remove();
-
-                $.each(r.data, function(index, value) {
-                    $('#Visitor_company').append('<option value="' + value.id + '">' + value.name + '</option>');
-                    $("#Visitor_company").val(value.id);
-                });
-            }
-        });
+        $('#Visitor_company option[value!=""]').remove();
+        if ($("#Visitor_tenant_agent").val() == "") {
+           // populateCompanyofTenant($("#Visitor_tenant").val(), id);
+            getCompanyWithSameTenant($("#Visitor_tenant").val(),id)
+        } else {
+            getCompanyWithSameTenantAndTenantAgent($("#Visitor_tenant").val(), $("#Visitor_tenant_agent").val(),id);
+        }
     }
 
     function sendVisitorForm() {

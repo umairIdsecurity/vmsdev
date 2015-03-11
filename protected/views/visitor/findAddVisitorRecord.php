@@ -29,8 +29,15 @@ $session = new CHttpSession;
                                 $("#selectedVisitorInSearchTable").val("");
                                 $("#register-host-form").show();
                                 $("#searchHostDiv").show();
-                                $("#currentHostDetailsDiv").hide();
-                                $(".host-AddBtn").hide();
+                                if($("#currentRoleOfLoggedInUser").val() == 9){
+                                    $("#currentHostDetailsDiv").show();
+                                    $("#register-host-form").hide();
+                                    $(".host-AddBtn").show();
+                                } else {
+                                    $("#currentHostDetailsDiv").hide();
+                                    $("#register-host-form").show();
+                                    $(".host-AddBtn").hide();
+                                }
                                 if (!hasError){
                                 var vehicleValue = $("#Visitor_vehicle").val();
                                 if(vehicleValue.length < 6 && vehicleValue != ""){
@@ -107,7 +114,7 @@ $session = new CHttpSession;
                                     echo " class='hidden' ";
                                 }
                                 ?>><label>Workstation</label><span class="required">*</span><br>
-
+                                   
                                     <select id="workstation" onchange="populateVisitWorkstation(this)">
                                         <?php
                                         if ($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
@@ -121,7 +128,11 @@ $session = new CHttpSession;
                                         $workstationList = populateWorkstation();
                                         foreach ($workstationList as $key => $value) {
                                             ?>
-                                            <option value="<?php echo $value->id; ?>"><?php echo $value->name; ?></option>
+                                            <option value="<?php echo $value->id; ?>" <?php
+                            if (($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) && $value->id == $session['workstation']) {
+                                echo 'selected';
+                            } 
+                            ?>><?php echo $value->name; ?></option>
                                             <?php
                                         }
                                         ?>
@@ -169,6 +180,20 @@ $session = new CHttpSession;
                                 </td>
                             </tr>
                             <tr>
+                                <td>
+                                    <label for="Visitor_password">Password <span class="required">*</span></label><br>
+                                    <input ng-model="user.passwords" data-ng-class="{
+                                                'ng-invalid':registerform['Visitor[repeatpassword]'].$error.match}" type="password" id="Visitor_password" name="Visitor[password]">			
+                                           <?php echo "<br>" . $form->error($model, 'password'); ?>
+                                </td>
+                                <td>
+                                    <label for="Visitor_repeatpassword">Repeat Password <span class="required">*</span></label><br>
+                                    <input ng-model="user.passwordConfirm" type="password" id="Visitor_repeatpassword" data-match="user.passwords" name="Visitor[repeatpassword]"/>			
+                                    <div style='font-size:0.9em;color:red;' data-ng-show="registerform['Visitor[repeatpassword]'].$error.match">New Password does not match with Repeat <br> New Password. </div>
+                                    <?php echo "<br>" . $form->error($model, 'repeatpassword'); ?>
+                                </td>
+                            </tr>
+                            <tr>
                                 <td id="visitorCompanyRow">
 
                                     <?php echo $form->labelEx($model, 'company'); ?><br>
@@ -201,13 +226,7 @@ $session = new CHttpSession;
                                     <?php echo "<br>" . $form->error($model, 'vehicle'); ?>
                                 </td>
                             </tr>
-                            <tr>
-                                <td>
-                                    <?php echo $form->labelEx($model, 'contact_number'); ?><br>
-                                    <?php echo $form->textField($model, 'contact_number', array('size' => 50, 'maxlength' => 50)); ?>
-                                    <?php echo "<br>" . $form->error($model, 'contact_number'); ?>
-                                </td>
-                                <td>
+                            <tr><td>
                                     <label for="Visit_reason">Reason</label><br>
 
                                     <select id="Visit_reason" name="Visitor[reason]" onchange="ifSelectedIsOtherShowAddReasonDiv(this)">
@@ -225,21 +244,13 @@ $session = new CHttpSession;
                                     </select>
                                     <div class="errorMessage visitorReason" >Please select a reason</div>
                                 </td>
-                            </tr>
-                            <tr>
                                 <td>
-                                    <label for="Visitor_password">Password <span class="required">*</span></label><br>
-                                    <input ng-model="user.passwords" data-ng-class="{
-                                                'ng-invalid':registerform['Visitor[repeatpassword]'].$error.match}" type="password" id="Visitor_password" name="Visitor[password]">			
-                                           <?php echo "<br>" . $form->error($model, 'password'); ?>
-                                </td>
-                                <td>
-                                    <label for="Visitor_repeatpassword">Repeat Password <span class="required">*</span></label><br>
-                                    <input ng-model="user.passwordConfirm" type="password" id="Visitor_repeatpassword" data-match="user.passwords" name="Visitor[repeatpassword]"/>			
-                                    <div style='font-size:0.9em;color:red;position: absolute;' data-ng-show="registerform['Visitor[repeatpassword]'].$error.match">New Password does not match with Repeat <br> New Password. </div>
-                                    <?php echo "<br>" . $form->error($model, 'repeatpassword'); ?>
+                                    <?php echo $form->labelEx($model, 'contact_number'); ?><br>
+                                    <?php echo $form->textField($model, 'contact_number', array('size' => 50, 'maxlength' => 50)); ?>
+                                    <?php echo "<br>" . $form->error($model, 'contact_number'); ?>
                                 </td>
                             </tr>
+                            
 
 
                         </table>
@@ -377,7 +388,11 @@ $session = new CHttpSession;
                             $workstationList = populateWorkstation();
                             foreach ($workstationList as $key => $value) {
                                 ?>
-                                <option value="<?php echo $value->id; ?>"><?php echo $value->name; ?></option>
+                                <option value="<?php echo $value->id; ?>" <?php
+                            if (($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) && $value->id == $session['workstation']) {
+                                echo 'selected';
+                            } 
+                            ?>><?php echo $value->name; ?></option>
                                 <?php
                             }
                             ?>
@@ -499,6 +514,7 @@ $session = new CHttpSession;
                 $("#searchTextErrorMessage").show();
                 $("#searchTextErrorMessage").html("Please select a tenant");
             } else if (searchText != '') {
+                
                 $("#searchTextErrorMessage").hide();
                 $("#visitor-findBtn").click();
                 $("#visitor_fields_for_Search").show();
@@ -534,18 +550,19 @@ $session = new CHttpSession;
     });
 
     function findVisitorRecord() {
-        $("#visitor_fields_for_Search").hide();
+        $("#visitor_fields_for_Search").show();
         $("#selectedVisitorInSearchTable").val("");
         $("#searchVisitorTableDiv h4").html("Search Results for : " + $("#search-visitor").val());
         $("#searchVisitorTableDiv").show();
+        $("#searchVisitorTable").show();
         //  $("#register-form").hide();
-        //append searched text in modal
+       // append searched text in modal
         var searchText = $("#search-visitor").val();
-
-        //change modal url to pass user searched text
+//change modal url to pass user searched text
         var url = 'index.php?r=visitor/findvisitor&id=' + searchText + '&tenant=' + $("#search_visitor_tenant").val() + '&tenant_agent=' + $("#search_visitor_tenant_agent").val();
         $("#searchVisitorTable").html('<iframe id="findVisitorTableIframe" onLoad="autoResize();" width="100%" height="100%" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
     }
+    
     function populateVisitWorkstation(value) {
 
         $("#Visit_workstation").val(value.value);
@@ -569,8 +586,9 @@ $session = new CHttpSession;
                 $('#Visit_reason option[value!="Other"]').remove();
                 $('#Visit_reason_search option[value!="Other"]').remove();
                 var textToFind;
-                if ($("#Visit_reason_search").val() == 'Other' && $("#selectedVisitorInSearchTable").val() != 0) {
-                    textToFind = $("#VisitReason_reason_search").val();
+                if ($("#Visit_reason_search").val() == 'Other' && ($("#selectedVisitorInSearchTable").val() != 0 && $("#selectedVisitorInSearchTable").val() != '')) {
+                  
+            textToFind = $("#VisitReason_reason_search").val();
                 } else
                 {
                     textToFind = $("#VisitReason_reason").val();
@@ -609,9 +627,9 @@ $session = new CHttpSession;
                  * else if not from search pass patient form if patient, host form if corporate
                  * */
                 $("#visitReasonFormField").val($("#Visit_reason_search").val());
-                if ($("#selectedVisitorInSearchTable").val() == '0') { //if visitor is not from search
+                if ($("#selectedVisitorInSearchTable").val() == '0' || $("#selectedVisitorInSearchTable").val() == '') { //if visitor is not from search
                     sendVisitorForm();
-                } else if ($("#selectedVisitorInSearchTable").val() != '0') { //if visitor is from search
+                } else if ($("#selectedVisitorInSearchTable").val() != '0' && $("#selectedVisitorInSearchTable").val() != '') { //if visitor is from search
                     if ($("#selectedHostInSearchTable").val() != 0) { //if host is from search
                         $("#visitReasonFormField").val($("#Visit_reason_search").val());
                         $("#Visit_patient").val($("#hostId").val());
@@ -664,6 +682,7 @@ $session = new CHttpSession;
             success: function(data) {
 
                 if ($("#selectedHostInSearchTable").val() != 0) { //if host is from search
+                
                     $("#visitReasonFormField").val($("#Visit_reason").val());
                     $("#Visit_patient").val($("#hostId").val());
                     $("#Visit_host").val($("#hostId").val());
@@ -671,9 +690,6 @@ $session = new CHttpSession;
 
                     // if visitor is not from search;
                     if ($("#selectedVisitorInSearchTable").val() == 0) {
-                        //alert("visitor is not from search host from search");
-
-                        // $.when(getLastVisitorId()).done(populateVisitFormFields());
                         getLastVisitorId(function(data) {
                             populateVisitFormFields(); // Do what you want with the data returned
                         });
@@ -697,7 +713,7 @@ $session = new CHttpSession;
         var reasonForm;
         if ($("#Visit_reason").val() == 'Other' || $("#Visit_reason_search").val() == 'Other')
         {
-            if ($("#selectedVisitorInSearchTable").val() != '0') {
+            if ($("#selectedVisitorInSearchTable").val() != '0' && $("#selectedVisitorInSearchTable").val() != '') {
                 reasonForm = $("#register-reason-form-search").serialize();
             } else {
                 reasonForm = $("#register-reason-form").serialize();
@@ -737,19 +753,14 @@ $session = new CHttpSession;
 
     function dismissModal(id) {
         $("#dismissModal").click();
-        $.ajax({
-            type: 'POST',
-            url: '<?php echo Yii::app()->createUrl('company/GetCompanyList&lastId='); ?>',
-            dataType: 'json',
-            success: function(r) {
-                $('#Visitor_company option[value!=""]').remove();
-
-                $.each(r.data, function(index, value) {
-                    $('#Visitor_company').append('<option value="' + value.id + '">' + value.name + '</option>');
-                    $("#Visitor_company").val(value.id);
-                });
-            }
-        });
+        $('#Visitor_company option[value!=""]').remove();
+        if ($("#Visitor_tenant_agent").val() == "") {
+           // populateCompanyofTenant($("#Visitor_tenant").val(), id);
+            getCompanyWithSameTenant($("#Visitor_tenant").val(),id)
+        } else {
+            getCompanyWithSameTenantAndTenantAgent($("#Visitor_tenant").val(), $("#Visitor_tenant_agent").val(),id);
+        }
+    
     }
 
     function populateAgentAdminWorkstations(isSearch) {
@@ -759,7 +770,7 @@ $session = new CHttpSession;
 
 
         if (isSearch == 'search') {
-            $("#searchVisitorTableDiv").hide();
+        //    $("#searchVisitorTableDiv").show();
             $("#selectedVisitorInSearchTable").val("");
             tenant = $("#search_visitor_tenant").val();
             tenant_agent = $("#search_visitor_tenant_agent").val();

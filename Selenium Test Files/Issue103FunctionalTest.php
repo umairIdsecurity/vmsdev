@@ -35,6 +35,10 @@ class Issue103FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("css=span");
         $this->click("id=clicktabA");
+        $this->click("link=Search Visitor Profile");
+        $this->select("id=search_visitor_tenant","label=NAIA Airport");
+        sleep(1);
+        $this->select("id=search_visitor_tenant_agent","label=Philippine Airline");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
         $this->waitForElementPresent("id=2");
@@ -44,6 +48,7 @@ class Issue103FunctionalTest extends BaseFunctionalTest {
         $this->select("id=workstation_search", "label=Workstation2");
         $this->select("id=Visit_reason_search", "label=Reason 1");
         $this->click("id=clicktabB1");
+        $this->click("link=Search Host");
         $this->type("id=search-host", "test");
         $this->click("id=dummy-host-findBtn");
         $this->waitForElementPresent("id=21");

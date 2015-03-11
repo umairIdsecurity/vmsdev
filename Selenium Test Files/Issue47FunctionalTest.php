@@ -41,7 +41,8 @@ class Issue47FunctionalTest extends BaseFunctionalTest {
         $this->click("id=clicktabA");
         $this->select("id=Visitor_visitor_type", "label=Corporate Visitor");
         $this->addVisitor('Visitor5');
-        $this->select("id=workstation", "label=Workstation3");
+        sleep(1);
+        $this->select("id=workstation", "label=Workstation1");
         $this->select("id=Visit_reason", "label=Reason 1");
         for ($second = 0;; $second++) {
             if ($second >= 10)

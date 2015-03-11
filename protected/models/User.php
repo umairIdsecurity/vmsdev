@@ -462,12 +462,12 @@ class User extends VmsActiveRecord {
         $session = new CHttpSession;
         if ($tenantId != '') {
             if ($session['role'] == Roles::ROLE_SUPERADMIN) {
-                $Criteria->condition = "email = '" . $email . "' and tenant = '" . $tenantId . "'";
+                $Criteria->condition = "email = '" . $email . "' and tenant = '" . $tenantId . "' and is_deleted!=1";
             } else {
-                $Criteria->condition = "email = '" . $email . "' and tenant = '" . $session['tenant'] . "'";
+                $Criteria->condition = "email = '" . $email . "' and tenant = '" . $session['tenant'] . "' and is_deleted!=1";
             }
         } else { //if position is admin compare to email only
-            $Criteria->condition = "email = '" . $email . "'";
+            $Criteria->condition = "email = '" . $email . "' and is_deleted!=1";
         }
 
 

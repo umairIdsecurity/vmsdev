@@ -184,7 +184,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     ));
                     ?>
                     <ul <?php
-                    if ($this->id == 'visitortype') {
+                    if ($this->id == 'visitorType') {
                         echo "style='display:block ;'";
                     }
                     ?>>

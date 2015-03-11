@@ -41,9 +41,11 @@ class Issue42FunctionalTest extends BaseFunctionalTest {
         $this->click("id=clicktabA");
         $this->select("id=Visitor_visitor_type","label=Corporate Visitor");
         $this->addVisitor('Visitor0');
-        $this->select("id=workstation", "label=Workstation3");
+        
         $this->select("id=Visit_reason", "label=Reason 1");
         $this->select("id=Visitor_tenant", "label=NAIA Airport");
+        sleep(1);
+        $this->select("id=workstation", "label=Workstation1");
         $this->waitForElementPresent("id=submitFormVisitor");
         $this->click("id=submitFormVisitor");
         $this->addHost("host");
@@ -85,13 +87,12 @@ class Issue42FunctionalTest extends BaseFunctionalTest {
         $this->click("id=clicktabA");
         $this->select("id=Visitor_visitor_type","label=Corporate Visitor");
         $this->addVisitor('Visitor5');
-        $this->select("id=workstation", "label=Workstation3");
+        sleep(1);
+        $this->select("id=workstation", "label=Workstation1");
         $this->select("id=Visitor_visitor_type_search", "label=Corporate Visitor");
         $this->addReason('Reason 3');
         $this->waitForElementPresent("id=submitFormVisitor");
         $this->click("id=submitFormVisitor");
-//        $this->addPatient("Patient Name 1");
-//        $this->clickAndWait("id=submitFormPatientName");
         $this->addHost("Host6");
         $this->clickAndWait("id=submitFormUser");
         $this->verifyVisitorInTable('Visitor5');

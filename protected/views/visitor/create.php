@@ -119,7 +119,8 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
             $('#Visitor_company option[value!=""]').remove();
             if ($("#currentRoleOfLoggedInUser").val() != 5) { //not superadmin
                 if ($("#Visitor_tenant_agent").val() == '') {
-                    getCompanyWithSameTenant($("#Visitor_tenant").val());
+                    //getCompanyWithSameTenant($("#Visitor_tenant").val());
+                    populateTenantAgentAndCompanyField();
                 } else {
                     getCompanyWithSameTenantAndTenantAgent($("#Visitor_tenant").val(), $("#Visitor_tenant_agent").val());
                 }
@@ -212,9 +213,10 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
                 $("#searchTextHostErrorMessage").show();
             } else if (currentURL != "") {
                 showHideTabs("logVisitB", "logVisitA", "logVisit", "findHostA", "findHost", "findVisitorA", "findVisitor");
-            } else if ($("#selectedVisitorInSearchTable").val() != '0') { // if visitor is from search
+            } else if ($("#selectedVisitorInSearchTable").val() != '0' && $("#selectedVisitorInSearchTable").val() != '') { // if visitor is from search
 
                 if ($("#VisitReason_reason_search").val() != 0 && $("#Visit_reason_search").val() == 'Other') {
+
                     sendReasonForm();
                 } else {
                     populateVisitFormFields();
@@ -380,10 +382,7 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
                     $("#staffmember-host-form #User_staff_id").val(value.staff_id);
                     $("#staffmember-host-form #User_email").val(value.email);
                     $("#staffmember-host-form #User_contact_number").val(value.contact_number);
-                    //alert(value.email);
                 });
-
-                //  alert($("#staffmember-host-form #User_email").val());
             }
         });
     }
@@ -458,6 +457,10 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
                         $('#User_company option').remove();
                         $('#User_company').append(options);
                         $('#User_company').val($("#Visitor_company").val());
+
+                        if ($("#Visitor_tenant_agent").val() == '') {
+                            getHostCompanyWithSameTenant($("#Visitor_tenant").val());
+                        }
 
                         $("#clicktabB").click();
                     }
@@ -541,22 +544,27 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
             getTenantAgentWithSameTenant(tenant, '', 'search');
 
         } else {
-            $('#workstation option[value!=""]').remove();
+            if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
 
-            $.ajax({
-                type: 'POST',
-                url: '<?php echo Yii::app()->createUrl('user/getTenantWorkstation&id='); ?>' + $("#Visitor_tenant").val(),
-                dataType: 'json',
-                data: tenant,
-                success: function(r) {
-                    $('#workstation option[value!=""]').remove();
+                $("#workstation").val("<?php echo $session['workstation']; ?>");
+                $("#workstation_search").val("<?php echo $session['workstation']; ?>");
+            } else {
+                $('#workstation option[value!=""]').remove();
+                $.ajax({
+                    type: 'POST',
+                    url: '<?php echo Yii::app()->createUrl('user/getTenantWorkstation&id='); ?>' + $("#Visitor_tenant").val(),
+                    dataType: 'json',
+                    data: tenant,
+                    success: function(r) {
+                        $('#workstation option[value!=""]').remove();
 
-                    $.each(r.data, function(index, value) {
-                        $('#workstation').append('<option value="' + value.id + '">' + value.name + '</option>');
-                    });
+                        $.each(r.data, function(index, value) {
+                            $('#workstation').append('<option value="' + value.id + '">' + value.name + '</option>');
+                        });
+                    }
+                });
+            }
 
-                }
-            });
             //populate tenant agent and company dropdown
             $('#Visitor_company option[value!=""]').remove();
             $('#Visitor_tenant_agent option[value!=""]').remove();
@@ -624,7 +632,7 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
         });
     }
 
-    function getCompanyWithSameTenant(tenant) {
+    function getCompanyWithSameTenant(tenant, newcompanyId) {
         $.ajax({
             type: 'POST',
             url: '<?php echo Yii::app()->createUrl('visitor/GetCompanyWithSameTenant&id='); ?>' + tenant,
@@ -635,6 +643,13 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
                 $.each(r.data, function(index, value) {
                     $('#Visitor_company').append('<option value="' + value.id + '">' + value.name + '</option>');
                 });
+
+                document.getElementById('Visitor_company').disabled = false;
+                newcompanyId = (typeof newcompanyId === "undefined") ? "defaultValue" : newcompanyId;
+
+                if (newcompanyId != 'defaultValue') {
+                    $("#Visitor_company").val(newcompanyId);
+                }
             }
         });
     }
@@ -665,7 +680,7 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
         getHostCompanyWithSameTenantAndTenantAgent($("#User_tenant").val(), $("#User_tenant_agent").val());
     }
 
-    function getCompanyWithSameTenantAndTenantAgent(tenant, tenant_agent) {
+    function getCompanyWithSameTenantAndTenantAgent(tenant, tenant_agent, newcompanyId) {
         $.ajax({
             type: 'POST',
             url: '<?php echo Yii::app()->createUrl('visitor/GetCompanyWithSameTenantAndTenantAgent&id='); ?>' + tenant + '&tenantagent=' + tenant_agent,
@@ -676,6 +691,12 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
                 $.each(r.data, function(index, value) {
                     $('#Visitor_company').append('<option value="' + value.id + '">' + value.name + '</option>');
                 });
+                document.getElementById('Visitor_company').disabled = false;
+                newcompanyId = (typeof newcompanyId === "undefined") ? "defaultValue" : newcompanyId;
+
+                if (newcompanyId != 'defaultValue') {
+                    $("#Visitor_company").val(newcompanyId);
+                }
             }
         });
         populateAgentAdminWorkstations();
@@ -730,10 +751,8 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
                 });
             }
         }).done(callback).complete(function() {
-            //alert("complete");
         });
 
-        //ajaxcall.complete(function(){ alert("second complete"); });
 
     }
 
@@ -799,10 +818,31 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
                         $("#visitReasonErrorMessageSearch").hide();
                         $("#visitReasonErrorMessage").hide();
                         $(".visitorReason").hide();
-                        if ($("#selectedVisitorInSearchTable").val() == '0')
+
+
+                        if ($("#selectedVisitorInSearchTable").val() == '0' || $("#selectedVisitorInSearchTable").val() == '')
                         {
                             checkEmailIfUnique();
                         } else {
+                            var options = $("#Visitor_tenant > option").clone();
+                            $('#User_tenant option').remove();
+                            $('#User_tenant').append(options);
+                            $('#User_tenant').val($("#Visitor_tenant").val());
+
+                            var options = $("#Visitor_tenant_agent > option").clone();
+                            $('#User_tenant_agent option').remove();
+                            $('#User_tenant_agent').append(options);
+                            $('#User_tenant_agent').val($("#Visitor_tenant_agent").val());
+
+                            var options = $("#Visitor_company > option").clone();
+                            $('#User_company option').remove();
+                            $('#User_company').append(options);
+                            $('#User_company').val($("#Visitor_company").val());
+
+                            if ($("#Visitor_tenant_agent").val() == '') {
+                                getHostCompanyWithSameTenant($("#Visitor_tenant").val());
+                            }
+
                             if ($("#Visitor_visitor_type").val() == 1 || $("#Visitor_visitor_type_search").val() == 1) {
                                 $("#findHostA").html("Add Patient Details");
                                 $("#findHostB").html("Add Patient Details");

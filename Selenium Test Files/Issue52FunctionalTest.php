@@ -65,6 +65,7 @@ class Issue52FunctionalTest extends BaseFunctionalTest {
 
         $username = 'operator@test.com';
         $this->login($username, '12345');
+        $this->select("id=userWorkstation", "label=Workstation1");
         $this->click("id=submitBtn");
         $this->clickAndWait("id=submit");
         $this->closeVisit();
@@ -124,6 +125,7 @@ class Issue52FunctionalTest extends BaseFunctionalTest {
         
         $username = 'operator@test.com';
         $this->login($username, '12345');
+        $this->select("id=userWorkstation", "label=Workstation1");
         $this->click("id=submitBtn");
         $this->clickAndWait("id=submit");
         $this->assertCloseVisitSpan();
@@ -138,8 +140,11 @@ class Issue52FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("//div[@id='cssmenu']/ul/li[2]/a/span");
         $this->click("id=clicktabA");
+        $this->click("link=Search Visitor Profile");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
+        $this->click("id=dummy-visitor-findBtn");
+        sleep(1);
         $this->select("id=workstation_search", "label=Workstation1");
         $this->select("id=Visit_reason_search", "label=Reason 1");
         $this->waitForElementPresent("id=3");

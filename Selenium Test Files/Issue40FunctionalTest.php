@@ -100,6 +100,7 @@ class Issue40FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("//ul[@id='tabs']/li[3]/a/p");
         $username = 'operator@test.com';
         $this->login($username, '12345');
+        $this->select("id=userWorkstation", "label=Workstation1");
         $this->clickAndWait("id=submitBtn");
         $this->assertEquals("Active Preregistered", $this->getText("name=Visit[visit_status]"));
         $this->select("name=Visit[visit_status]", "label=Active");

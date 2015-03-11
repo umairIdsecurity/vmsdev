@@ -1,5 +1,5 @@
 <?php
-
+$session = new CHttpSession;
 /* @var $this VisitController */
 /* @var $model Visit */
 $session = new CHttpSession();

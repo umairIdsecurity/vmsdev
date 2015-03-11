@@ -215,6 +215,7 @@ if (isset($_GET['viewFrom'])) {
                 } else {
                     var logo = document.getElementById('companyLogo');
                 }
+                
                 var currentAction = $("#actionUpload").val();
                 if (currentAction == 'update' && $("#controllerId").val() != 'visitor')
                 {
@@ -222,8 +223,9 @@ if (isset($_GET['viewFrom'])) {
                     $(".companyLogoDiv").show();
                 } else {
                     //id of photo
-
+                    
                     if ($("#controllerId").val() == 'visitor' || $("#controllerId").val() == 'visit') {
+                        
                         $("#Visitor_photo").val(data);
                     } else if ($("#controllerId").val() == 'companyLafPreferences')
                     {
@@ -245,6 +247,7 @@ if (isset($_GET['viewFrom'])) {
                                     $(".ajax-upload-dragdrop").css({
                                         "background-size": "137px 190px"
                                     });
+                                    logo.src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 } else {
                                     logo.src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                     $(".photoDiv").show();

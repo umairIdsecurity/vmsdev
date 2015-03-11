@@ -78,7 +78,9 @@ $session = new CHttpSession;
                                 <td rowspan="7"  style="width:300px;"><?php echo $form->labelEx($model, 'Add Photo'); ?><br>
 
                                     <input type="hidden" id="Visitor_photo" name="Visitor[photo]">
-                                    
+                                    <div class="photoDiv" style='display:none;'>
+                                        <img id='photoPreview' src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png" style='display:none;'/>
+                                    </div>
                                     <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
                                     <div id="photoErrorMessage" class="errorMessage" style="display:none;">Please upload a photo.</div>
                                 </td>
@@ -107,39 +109,6 @@ $session = new CHttpSession;
                                                 ?>
                                     </select><?php echo "<br>" . $form->error($model, 'tenant'); ?>
                                 </td>
-                                <td id="workstationRow" <?php
-                                if ($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
-                                    echo " class='hidden' ";
-                                }
-                                ?>><label>Workstation</label><span class="required">*</span><br>
-                                   
-                                    <select id="workstation" onchange="populateVisitWorkstation(this)">
-                                        <?php
-                                        if ($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
-                                            echo '';
-                                        } else {
-                                            echo '<option value="">Please select a workstation</option>';
-                                        }
-                                        ?>
-
-                                        <?php
-                                        $workstationList = populateWorkstation();
-                                        foreach ($workstationList as $key => $value) {
-                                            ?>
-                                            <option value="<?php echo $value->id; ?>" <?php
-                            if (($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) && $value->id == $session['workstation']) {
-                                echo 'selected';
-                            } 
-                            ?>><?php echo $value->name; ?></option>
-                                            <?php
-                                        }
-                                        ?>
-                                    </select>
-                                    <div style="display:none;" class="errorMessage errorMessageWorkstation" >Please select a workstation</div>
-
-                                </td>
-                            </tr>
-                            <tr>
                                 <td id="visitorTenantAgentRow" <?php
                                 if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                                     echo " class='hidden' ";
@@ -154,6 +123,40 @@ $session = new CHttpSession;
                                         }
                                         ?>
                                     </select><?php echo "<br>" . $form->error($model, 'tenant_agent'); ?>
+                                </td>
+                               
+                            </tr>
+                            <tr>
+                                 <td id="workstationRow" <?php
+                                if ($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
+                                    echo " class='hidden' ";
+                                }
+                                ?>><label>Workstation</label><span class="required">*</span><br>
+
+                                    <select id="workstation" onchange="populateVisitWorkstation(this)">
+                                        <?php
+                                        if ($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
+                                            echo '';
+                                        } else {
+                                            echo '<option value="">Please select a workstation</option>';
+                                        }
+                                        ?>
+
+                                        <?php
+                                        $workstationList = populateWorkstation();
+                                        foreach ($workstationList as $key => $value) {
+                                            ?>
+                                            <option value="<?php echo $value->id; ?>" <?php
+                                            if (($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) && $value->id == $session['workstation']) {
+                                                echo 'selected';
+                                            }
+                                            ?>><?php echo $value->name; ?></option>
+                                                    <?php
+                                                }
+                                                ?>
+                                    </select>
+                                    <div style="display:none;" class="errorMessage errorMessageWorkstation" >Please select a workstation</div>
+
                                 </td>
                                 <td>
                                     <?php echo $form->labelEx($model, 'visitor_type'); ?><br>
@@ -248,7 +251,7 @@ $session = new CHttpSession;
                                     <?php echo "<br>" . $form->error($model, 'contact_number'); ?>
                                 </td>
                             </tr>
-                            
+
 
 
                         </table>
@@ -387,13 +390,13 @@ $session = new CHttpSession;
                             foreach ($workstationList as $key => $value) {
                                 ?>
                                 <option value="<?php echo $value->id; ?>" <?php
-                            if (($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) && $value->id == $session['workstation']) {
-                                echo 'selected';
-                            } 
-                            ?>><?php echo $value->name; ?></option>
-                                <?php
-                            }
-                            ?>
+                                if (($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) && $value->id == $session['workstation']) {
+                                    echo 'selected';
+                                }
+                                ?>><?php echo $value->name; ?></option>
+                                        <?php
+                                    }
+                                    ?>
                         </select>
                         <div style="display:none;" class="errorMessage errorMessageWorkstationSearch" >Please select a workstation</div>
                     </div>
@@ -490,6 +493,10 @@ $session = new CHttpSession;
                             $.each(r.data, function(index, value) {
                                 document.getElementById('photoPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+                                $(".ajax-upload-dragdrop").css("background", "url(<?php echo Yii::app()->request->baseUrl; ?>" + value.relative_path + ") no-repeat center top");
+                                $(".ajax-upload-dragdrop").css({
+                                    "background-size": "137px 190px"
+                                });
                             });
                         }
                     });
@@ -512,7 +519,7 @@ $session = new CHttpSession;
                 $("#searchTextErrorMessage").show();
                 $("#searchTextErrorMessage").html("Please select a tenant");
             } else if (searchText != '') {
-                
+
                 $("#searchTextErrorMessage").hide();
                 $("#visitor-findBtn").click();
                 $("#visitor_fields_for_Search").show();
@@ -554,13 +561,13 @@ $session = new CHttpSession;
         $("#searchVisitorTableDiv").show();
         $("#searchVisitorTable").show();
         //  $("#register-form").hide();
-       // append searched text in modal
+        // append searched text in modal
         var searchText = $("#search-visitor").val();
 //change modal url to pass user searched text
         var url = 'index.php?r=visitor/findvisitor&id=' + searchText + '&tenant=' + $("#search_visitor_tenant").val() + '&tenant_agent=' + $("#search_visitor_tenant_agent").val();
         $("#searchVisitorTable").html('<iframe id="findVisitorTableIframe" onLoad="autoResize();" width="100%" height="100%" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
     }
-    
+
     function populateVisitWorkstation(value) {
 
         $("#Visit_workstation").val(value.value);
@@ -585,8 +592,8 @@ $session = new CHttpSession;
                 $('#Visit_reason_search option[value!="Other"]').remove();
                 var textToFind;
                 if ($("#Visit_reason_search").val() == 'Other' && ($("#selectedVisitorInSearchTable").val() != 0 && $("#selectedVisitorInSearchTable").val() != '')) {
-                  
-            textToFind = $("#VisitReason_reason_search").val();
+
+                    textToFind = $("#VisitReason_reason_search").val();
                 } else
                 {
                     textToFind = $("#VisitReason_reason").val();
@@ -680,7 +687,7 @@ $session = new CHttpSession;
             success: function(data) {
 
                 if ($("#selectedHostInSearchTable").val() != 0) { //if host is from search
-                
+
                     $("#visitReasonFormField").val($("#Visit_reason").val());
                     $("#Visit_patient").val($("#hostId").val());
                     $("#Visit_host").val($("#hostId").val());
@@ -753,12 +760,12 @@ $session = new CHttpSession;
         $("#dismissModal").click();
         $('#Visitor_company option[value!=""]').remove();
         if ($("#Visitor_tenant_agent").val() == "") {
-           // populateCompanyofTenant($("#Visitor_tenant").val(), id);
-            getCompanyWithSameTenant($("#Visitor_tenant").val(),id)
+            // populateCompanyofTenant($("#Visitor_tenant").val(), id);
+            getCompanyWithSameTenant($("#Visitor_tenant").val(), id)
         } else {
-            getCompanyWithSameTenantAndTenantAgent($("#Visitor_tenant").val(), $("#Visitor_tenant_agent").val(),id);
+            getCompanyWithSameTenantAndTenantAgent($("#Visitor_tenant").val(), $("#Visitor_tenant_agent").val(), id);
         }
-    
+
     }
 
     function populateAgentAdminWorkstations(isSearch) {
@@ -768,7 +775,7 @@ $session = new CHttpSession;
 
 
         if (isSearch == 'search') {
-        //    $("#searchVisitorTableDiv").show();
+            //    $("#searchVisitorTableDiv").show();
             $("#selectedVisitorInSearchTable").val("");
             tenant = $("#search_visitor_tenant").val();
             tenant_agent = $("#search_visitor_tenant_agent").val();

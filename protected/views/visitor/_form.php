@@ -67,7 +67,7 @@ if ($this->action->id == 'update') {
                                     <style>
                                         .ajax-upload-dragdrop {
                                             background: url('<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($dataId) ?>') no-repeat center top !important;
-                                            background-size:100% 100% !important;
+                                            background-size:137px 190px !important;
                                         }
                                         .uploadnotetext{
                                             //display:none;
@@ -78,6 +78,30 @@ if ($this->action->id == 'update') {
 
                                 <br>
                                 <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
+
+
+                                <div class="photoDiv"  style="display:none;">
+                                    <?php if ($dataId != '' && $model['photo'] != NULL) { ?> 
+                                        <img id='photoPreview' src="<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($dataId) ?>" style='display:block;height:174px;width:133px;'/>
+                                    <?php } elseif ($model['photo'] == NULL) {
+                                        ?>
+                                        <img id='photoPreview' src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png" style='display:block;height:174px;width:133px;'/>
+                                        <?php } else {
+                                        ?> 
+                                        <img id='photoPreview' src="<?php
+                                        if ($this->action->id == 'update' && $model->photo != '') {
+                                            echo Yii::app()->request->baseUrl . "/" . Company::model()->getPhotoRelativePath($model->photo);
+                                        }
+                                        ?>
+
+                                             " style='display:none;'/>
+                                         <?php } ?>
+                                </div>
+
+
+
+
+
 
                             </td>
                             <td id="visitorTenantRow" <?php
@@ -139,7 +163,7 @@ if ($this->action->id == 'update') {
                                 <td>
                                     <label for="Visitor_password">Password <span class="required">*</span></label>
                                     <input ng-model="user.passwords" data-ng-class="{
-                                                                    'ng-invalid':registerform['Visitor[repeatpassword]'].$error.match}" type="password" id="Visitor_password" name="Visitor[password]">			
+                                                                        'ng-invalid':registerform['Visitor[repeatpassword]'].$error.match}" type="password" id="Visitor_password" name="Visitor[password]">			
                                            <?php echo "<br>" . $form->error($model, 'password'); ?>
                                 </td>
                                 <td>
@@ -288,6 +312,10 @@ if (isset($_GET['id'])) {
                                 document.getElementById('photoPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
 
+                                $(".ajax-upload-dragdrop").css("background", "url(<?php echo Yii::app()->request->baseUrl; ?>" + value.relative_path + ") no-repeat center top");
+                                $(".ajax-upload-dragdrop").css({
+                                    "background-size": "137px 190px"
+                                });
                             });
 
                             $("#closeCropPhoto").click();

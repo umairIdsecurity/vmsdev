@@ -439,7 +439,7 @@ if (isset($_GET['id'])) {
             }
         });
 
-        if ($("#Visitor_tenant_agent") != '') {
+        if ($("#Visitor_tenant_agent").val() != '') {
             getCompanyWithSameTenantAndTenantAgent($("#Visitor_tenant").val(), '<?php echo $model->tenant_agent; ?>');
         }
     }

@@ -245,7 +245,7 @@ $session = new CHttpSession;
     function getHostCompanyWithSameTenantAndTenantAgent(tenant, tenant_agent) {
         $.ajax({
             type: 'POST',
-            url: '<?php echo Yii::app()->createUrl('visitor/GetCompanyWithSameTenantAndTenantAgent&id='); ?>' + tenant + '&tenantagent=' + tenant_agent,
+            url: '<?php echo Yii::app()->createUrl('user/getCompanyOfTenant&id='); ?>' + $("#User_tenant").val() + '&tenantAgentId=' + $("#User_tenant_agent").val(),
             dataType: 'json',
             data: tenant,
             success: function(r) {

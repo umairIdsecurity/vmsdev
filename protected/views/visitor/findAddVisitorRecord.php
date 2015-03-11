@@ -125,10 +125,10 @@ $session = new CHttpSession;
                                         ?>
                                     </select><?php echo "<br>" . $form->error($model, 'tenant_agent'); ?>
                                 </td>
-                               
+
                             </tr>
                             <tr>
-                                 <td id="workstationRow" <?php
+                                <td id="workstationRow" <?php
                                 if ($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
                                     echo " class='hidden' ";
                                 }

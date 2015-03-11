@@ -504,6 +504,7 @@ class Issue112FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Workstation_name", "workstation for NAIA");
         $this->select("id=Workstation_tenant", "label=Kalibo Airport");
         $this->select("id=Workstation_tenant", "label=NAIA Airport");
+        sleep(1);
         for ($second = 0;; $second++) {
             if ($second >= 60)
                 $this->fail("timeout");
@@ -625,7 +626,7 @@ class Issue112FunctionalTest extends BaseFunctionalTest {
         $this->waitForPageToLoad("30000");
         $this->waitForElementPresent("id=Visitor_company");
         sleep(1);
-        $this->assertEquals("Japan Airline", $this->getText("id=Visitor_company"));
+        $this->assertEquals("Philippine AirlineJapan Airline", $this->getText("id=Visitor_company"));
         $this->assertEquals("Please select a workstation Workstation3workstation for NAIA", $this->getText("id=workstation"));
 
         $this->select("id=Visitor_tenant", "label=Kalibo Airport");
@@ -638,7 +639,7 @@ class Issue112FunctionalTest extends BaseFunctionalTest {
         $this->click("id=createBtn");
         $this->waitForPageToLoad("30000");
         sleep(1);
-        $this->assertEquals("Japan Airline - Kalibo", $this->getText("id=Visitor_company"));
+        $this->assertEquals("Philippine Airline - KaliboJapan Airline - Kalibo", $this->getText("id=Visitor_company"));
         $this->select("id=workstation", "label=workstation for KAL");
         $this->type("id=Visitor_first_name", "testvisitor");
         $this->type("id=Visitor_last_name", "testvisitor");
@@ -652,7 +653,7 @@ class Issue112FunctionalTest extends BaseFunctionalTest {
         $this->click("css=#register-host-form > div.register-a-visitor-buttons-div > #btnBackTab3");
         $this->select("id=Visitor_tenant_agent", "label=Philippine Airline - Kalibo");
         sleep(1);
-        $this->assertEquals("Philippine Airline - Kalibo", $this->getText("id=Visitor_company"));
+        $this->assertEquals("Kalibo Airport", $this->getText("id=Visitor_company"));
         $this->assertEquals("Please select a workstation workstation for PAL-KAL", $this->getText("id=workstation"));
         $this->select("id=workstation", "label=workstation for PAL-KAL");
         $this->click("id=submitFormVisitor");
@@ -718,7 +719,7 @@ class Issue112FunctionalTest extends BaseFunctionalTest {
         sleep(1);
         $this->assertEquals("Please select a workstation Workstation3workstation for NAIA", $this->getText("id=workstation"));
         $this->select("id=workstation", "label=workstation for NAIA");
-        $this->assertEquals("Japan Airline", $this->getText("id=Visitor_company"));
+        $this->assertEquals("Philippine AirlineJapan Airline", $this->getText("id=Visitor_company"));
         $this->type("id=Visitor_first_name", "visitor");
         $this->type("id=Visitor_last_name", "visitor");
         $this->type("id=Visitor_email", "visitor@test.com");
@@ -871,6 +872,7 @@ class Issue112FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_contact_number", "12345");
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
+        $this->select("id=Visitor_company","label=Philippine Airline");
         $this->clickAndWait("id=submitFormVisitor");
         $this->assertEquals("newvisitor@test.com", $this->getText("//div[@id='visitor-grid']/table/tbody/tr/td[3]"));
         $this->click("link=Dashboard");
@@ -1096,6 +1098,7 @@ class Issue112FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_contact_number", "12345");
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
+        $this->select("id=Visitor_company","label=NAIA Airport");
         $this->clickAndWait("id=submitFormVisitor");
         $this->assertEquals("newvisitoragentadmin@test.com", $this->getText("//div[@id='visitor-grid']/table/tbody/tr/td[3]"));
         $this->click("link=Log Visit");
@@ -1171,6 +1174,7 @@ class Issue112FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_contact_number", "12345");
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
+        $this->select("id=Visitor_company","label=Philippine Airline");
         $this->clickAndWait("id=submitFormVisitor");
         $this->click("css=span");
         $this->waitForPageToLoad("30000");
@@ -1209,7 +1213,7 @@ class Issue112FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_email", "visitor2@test.com");
         $this->select("id=Visit_reason", "label=Reason 1");
         $this->type("id=Visitor_contact_number", "12345");
-        $this->assertEquals("Japan Airline", $this->getText("id=Visitor_company"));
+        $this->assertEquals("Philippine AirlineJapan Airline", $this->getText("id=Visitor_company"));
         $this->click("id=submitFormVisitor");
         $this->click("css=#register-host-form > div.register-a-visitor-buttons-div > #btnBackTab3");
         $this->click("link=Search Visitor Profile");
@@ -1243,7 +1247,7 @@ class Issue112FunctionalTest extends BaseFunctionalTest {
         }
         $this->clickAndWait("id=confirmPreregisterDummy");
         $this->assertEquals("Preregistered", $this->getText("link=Preregistered"));
-        $this->assertEquals("Japan Airline", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
+        $this->assertEquals("Philippine Airline", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
         $this->assertEquals("operatorvisitor@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[7]"));
         $this->click("//ul[@id='tabs']/li[3]/a/p");
         $this->waitForPageToLoad("30000");
@@ -1295,9 +1299,9 @@ class Issue112FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_repeatpassword", "12345");
         $this->type("id=Visitor_email", "operatorvisitor2@test.com");
         $this->type("id=Visitor_contact_number", "12345");
-        $this->assertEquals("Japan Airline", $this->getText("id=Visitor_company"));
-        $this->click("id=submitFormVisitor");
-        $this->waitForPageToLoad("30000");
+        $this->select("id=Visitor_company", "label=Philippine Airline");
+        $this->assertEquals("Please select a company Philippine AirlineJapan Airline", $this->getText("id=Visitor_company"));
+        $this->clickAndWait("id=submitFormVisitor");
         $this->clickAndWait("link=Dashboard");
         $this->click("css=span");
         $this->waitForPageToLoad("30000");

@@ -78,9 +78,7 @@ $session = new CHttpSession;
                                 <td rowspan="7"  style="width:300px;"><?php echo $form->labelEx($model, 'Add Photo'); ?><br>
 
                                     <input type="hidden" id="Visitor_photo" name="Visitor[photo]">
-                                    <div class="photoDiv" style='margin-left:47px;margin-bottom:5px;height:174px;width:133px;'>
-                                        <img id='photoPreview' src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png" style='display:block;height:174px;width:133px;'/>
-                                    </div>
+                                    
                                     <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
                                     <div id="photoErrorMessage" class="errorMessage" style="display:none;">Please upload a photo.</div>
                                 </td>

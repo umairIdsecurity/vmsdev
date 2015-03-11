@@ -9,7 +9,12 @@ if ($this->action->id == 'update') {
     .ajax-upload-dragdrop{
         margin-left:0px !important;
     }
+    .uploadnotetext{
+        margin-top:110px;
+        margin-left: -80px;
+    }
 </style>
+
 <div data-ng-app="PwordForm">
     <?php
     $form = $this->beginWidget('CActiveForm', array(
@@ -64,19 +69,16 @@ if ($this->action->id == 'update') {
                                             background: url('<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($dataId) ?>') no-repeat center top !important;
                                             background-size:100% 100% !important;
                                         }
+                                        .uploadnotetext{
+                                            //display:none;
+                                        }
                                     </style>
-                                    <?php }
+                                <?php }
                                 ?>
-                            
-                                    <br>
+
+                                <br>
                                 <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
-                                    <div class='uploadAddVisitorNote'>
-                                        <b>Drag &amp; Drop File</b> <br> Max Size: 2MB ;File Ext. : jpeg/png<br>
-                                          
-                                                Dimensions: 180px(Width) x 60px(Height)
-                                          
-                                    
-                                    </div>
+
                             </td>
                             <td id="visitorTenantRow" <?php
                             if ($session['role'] != Roles::ROLE_SUPERADMIN) {
@@ -137,7 +139,7 @@ if ($this->action->id == 'update') {
                                 <td>
                                     <label for="Visitor_password">Password <span class="required">*</span></label>
                                     <input ng-model="user.passwords" data-ng-class="{
-                                                            'ng-invalid':registerform['Visitor[repeatpassword]'].$error.match}" type="password" id="Visitor_password" name="Visitor[password]">			
+                                                                    'ng-invalid':registerform['Visitor[repeatpassword]'].$error.match}" type="password" id="Visitor_password" name="Visitor[password]">			
                                            <?php echo "<br>" . $form->error($model, 'password'); ?>
                                 </td>
                                 <td>
@@ -285,6 +287,7 @@ if (isset($_GET['id'])) {
                             $.each(r.data, function(index, value) {
                                 document.getElementById('photoPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+
                             });
 
                             $("#closeCropPhoto").click();

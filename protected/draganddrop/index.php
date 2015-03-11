@@ -15,16 +15,17 @@ if ($this->action->id == 'addvisitor' || ($this->action->id == 'update' && $this
     <style>
         .ajax-upload-dragdrop {
             float:left !important;
-            margin-left: 64px !important;
             margin-top: -30px;
             background: url('<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png') no-repeat center top;
             background-size:137px;
             height: 150px;
             width: 120px !important;
+            padding: 87px 5px 12px 90px;
+            margin-left: 20px !important;
         }
         .ajax-file-upload{
-            margin-left: -66px !important;
-            margin-top: 220px !important;
+            margin-left: -107px !important;
+            margin-top: 170px !important;
             position:absolute !important;
             font-size: 12px !important;
             padding-bottom:3px;
@@ -45,8 +46,8 @@ if ($this->action->id == 'addvisitor' || ($this->action->id == 'update' && $this
         }
         #cropImageBtn{
             float: left;
-            margin-left: -17px !important;
-            margin-top: 210px;
+            margin-left: -54px !important;
+            margin-top: 218px;
             position: absolute;
         }
     </style>
@@ -71,10 +72,56 @@ if ($this->action->id == 'addvisitor' || ($this->action->id == 'update' && $this
             margin-left: -102px !important;
         }
     </style>
-<?php } elseif ($this->action->id == 'create') { ?>
+<?php } elseif ($this->action->id == 'create' && $this->id == 'visitor') {
+    ?>
     <style>
         .ajax-upload-dragdrop {
-            //margin-right:-75px !important;
+            float:left !important;
+            margin-left: 25px !important;
+            margin-top: 10px;
+            background: url('<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png') no-repeat center top;
+            background-size:137px;
+            height: 150px;
+            width: 120px !important;
+            padding: 87px 5px 12px 90px;
+        }
+        .ajax-file-upload{
+            margin-left: -107px !important;
+            margin-top: 170px !important;
+            position:absolute !important;
+            font-size: 12px !important;
+            padding-bottom:3px;
+            height:17px;
+        }
+
+        .editImageBtn{
+            margin-left: -103px !important;
+            color:white;
+            font-weight:bold;
+            text-shadow: 0 0 !important;
+            font-size:12px !important;
+            height:24px;
+            width:131px !important;
+        }
+        .imageDimensions{
+            display:none !important;
+        }
+        #cropImageBtn{
+            float: left;
+            margin-left: -54px !important;
+            margin-top: 257px;
+            position: absolute;
+        }
+        .uploadnotetext{
+            margin-top:102px;
+            margin-left: -83px;
+        }
+    </style>
+    <?php
+} elseif ($this->action->id == 'create') {
+    ?>
+    <style>
+        .ajax-upload-dragdrop {
             float:none !important;
         }
         .ajax-file-upload{
@@ -193,10 +240,10 @@ if (isset($_GET['viewFrom'])) {
                         success: function(r) {
 
                             $.each(r.data, function(index, value) {
-                                if ($("#actionUpload").val() == 'addvisitor') {
-                                    $(".ajax-upload-dragdrop").css("background", "url(<?php echo Yii::app()->request->baseUrl; ?>" + value.relative_path + ") no-repeat");
+                                if ($("#actionUpload").val() == 'addvisitor' || ($("#actionUpload").val() == 'create' && $("#controllerId").val() == 'visitor')) {
+                                    $(".ajax-upload-dragdrop").css("background", "url(<?php echo Yii::app()->request->baseUrl; ?>" + value.relative_path + ") no-repeat center top");
                                     $(".ajax-upload-dragdrop").css({
-                                        "background-size": "100% 100%"
+                                        "background-size": "137px 190px"
                                     });
                                 } else {
                                     logo.src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
@@ -225,7 +272,7 @@ if (isset($_GET['viewFrom'])) {
             }
         });
         if ($("#actionUpload").val() == 'addvisitor') {
-            $(".uploadnotetext").html('');
+            //   $(".uploadnotetext").html('');
         }
         if ($("#actionUpload").val() == 'detail') {
             $(".ajax-upload-dragdrop span").hide();

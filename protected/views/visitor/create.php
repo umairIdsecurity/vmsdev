@@ -639,7 +639,7 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
             dataType: 'json',
             data: tenant,
             success: function(r) {
-                $('#Visitor_company option[value=""]').remove();
+                $('#Visitor_company option[value!=""]').remove();
                 $.each(r.data, function(index, value) {
                     $('#Visitor_company').append('<option value="' + value.id + '">' + value.name + '</option>');
                 });
@@ -687,7 +687,7 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
             dataType: 'json',
             data: tenant,
             success: function(r) {
-                $('#Visitor_company option[value=""]').remove();
+                $('#Visitor_company option[value!=""]').remove();
                 $.each(r.data, function(index, value) {
                     $('#Visitor_company').append('<option value="' + value.id + '">' + value.name + '</option>');
                 });

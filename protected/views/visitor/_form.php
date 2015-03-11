@@ -60,7 +60,8 @@ if ($this->action->id == 'update') {
                 <td>
                     <table>
                         <tr> 
-                            <td id="uploadRow" rowspan="7" style='width:300px;'><?php echo $form->labelEx($model, 'Add Photo'); ?><br>
+                            <td id="uploadRow" rowspan="7" style='width:300px;'>
+                                <label for="Visitor_Add_Photo" style="margin-left:22px;">Add  Photo</label><br>
                                 <input type="hidden" id="Visitor_photo" name="Visitor[photo]"
                                        value="<?php echo $model['photo']; ?>">
                                        <?php if ($model['photo'] != NULL) { ?>
@@ -68,9 +69,6 @@ if ($this->action->id == 'update') {
                                         .ajax-upload-dragdrop {
                                             background: url('<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($dataId) ?>') no-repeat center top !important;
                                             background-size:137px 190px !important;
-                                        }
-                                        .uploadnotetext{
-                                            //display:none;
                                         }
                                     </style>
                                 <?php }

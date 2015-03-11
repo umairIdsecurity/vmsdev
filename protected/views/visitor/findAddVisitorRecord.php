@@ -75,7 +75,8 @@ $session = new CHttpSession;
                         <table  id="addvisitor-table" data-ng-app="PwordForm">
                             <tr> 
 
-                                <td rowspan="7"  style="width:300px;"><?php echo $form->labelEx($model, 'Add Photo'); ?><br>
+                                <td rowspan="7"  style="width:300px;">
+                                    <label for="Visitor_Add_Photo" style="margin-left:27px;">Add  Photo</label><br>
 
                                     <input type="hidden" id="Visitor_photo" name="Visitor[photo]">
                                     <div class="photoDiv" style='display:none;'>

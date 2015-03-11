@@ -55,7 +55,7 @@ class Visitor extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('first_name, last_name, email, contact_number', 'required'),
+            array('first_name, last_name, email, contact_number,company', 'required'),
             array('tenant','required','message' =>'Please select a {attribute}'),
             array('is_deleted', 'numerical', 'integerOnly' => true),
             array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),

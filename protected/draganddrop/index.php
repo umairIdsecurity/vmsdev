@@ -274,8 +274,8 @@ if (isset($_GET['viewFrom'])) {
                 }
             }
         });
-        if ($("#actionUpload").val() == 'addvisitor') {
-            //   $(".uploadnotetext").html('');
+        if ($("#actionUpload").val() == 'detail') {
+               $(".uploadnotetext").html('');
         }
         if ($("#actionUpload").val() == 'detail') {
             $(".ajax-upload-dragdrop span").hide();

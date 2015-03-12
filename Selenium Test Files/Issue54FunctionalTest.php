@@ -376,7 +376,6 @@ class Issue54FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_email", "person@test.com");
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
-        $this->select("id=workstation", "label=Workstation2");
         $this->select("id=workstation", "label=Workstation1");
         $this->select("id=Visit_reason", "label=Reason 1");
         $this->type("id=Visitor_contact_number", "1234567");
@@ -384,6 +383,7 @@ class Issue54FunctionalTest extends BaseFunctionalTest {
         sleep(1);
         $this->select("id=Visitor_tenant_agent","label=Philippine Airline");
         sleep(1);
+        $this->select("id=Visitor_company", "label=NAIA Airport");
         $this->select("id=workstation", "label=Workstation1");
         $this->click("id=submitFormVisitor");
         $this->type("id=User_first_name", "hostperson");

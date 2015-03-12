@@ -47,6 +47,8 @@ class Issue65FunctionalTest extends BaseFunctionalTest {
         $this->select("id=Visit_reason", "label=Reason 1");
         $this->select("id=Visitor_tenant", "label=NAIA Airport");
         sleep(1);
+        $this->select("id=Visitor_company", "label=Philippine Airline");
+        sleep(1);
         $this->select("id=workstation", "label=Workstation3");
         $this->click("id=addCompanyLink");
         $this->waitForElementPresent("id=Company_name");
@@ -55,6 +57,7 @@ class Issue65FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Company_code", "TCC");
         $this->type("//input[@type='file']", "C:\\xampp\\htdocs\\vms\\protected\\assets\\images\\admin_lifehouse.png");
         $this->clickAndWait("id=createBtn");
+        sleep(1);
         $this->click("id=submitFormVisitor");
         $this->type("id=User_first_name", "TEST");
         $this->type("id=User_last_name", "TEST");
@@ -62,7 +65,6 @@ class Issue65FunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_contact_number", "123456");
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeatpassword", "12345");
-        $this->select("id=User_tenant", "label=NAIA Airport");
         sleep(1);
         $this->clickAndWait("id=submitFormUser");
         $this->assertEquals("NAI", $this->getText("css=#cardDetailsTable > tbody > tr > td"));

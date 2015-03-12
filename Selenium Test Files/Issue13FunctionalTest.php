@@ -16,7 +16,7 @@ require_once 'BaseFunctionalTest.php';
 class Issue13FunctionalTest extends BaseFunctionalTest {
 
     function setUp() {
-        $this->setBrowser("*firefoxproxy");
+        $this->setBrowser("*firefox");
         $this->setBrowserUrl("http://dev.identitysecurity.info");
     }
 

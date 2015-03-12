@@ -62,7 +62,7 @@ if ($this->action->id == 'addvisitor' || ($this->action->id == 'update' && $this
         .ajax-file-upload{
             margin-top:80px !important;
             position:absolute !important;
-            margin-left: -53px !important;
+            margin-left: -113px !important;
             font-size: 12px !important;
             padding-bottom:3px;
         }
@@ -127,11 +127,10 @@ if ($this->action->id == 'addvisitor' || ($this->action->id == 'update' && $this
         .ajax-file-upload{
             margin-top:80px !important;
             position:absolute !important;
-            margin-left: -53px !important;
+            margin-left: -112px !important;
             font-size: 12px !important;
             padding-bottom:5px;
         }
-
 
         .editImageBtn{
             margin-top: -10px !important;
@@ -152,7 +151,7 @@ if ($this->action->id == 'addvisitor' || ($this->action->id == 'update' && $this
         .ajax-file-upload{
             margin-top:80px !important;
             position:absolute !important;
-            margin-left: -53px !important;
+            margin-left: -113px !important;
             font-size: 12px !important;
             padding-bottom:3px;
         }
@@ -242,7 +241,7 @@ if (isset($_GET['viewFrom'])) {
                         success: function(r) {
 
                             $.each(r.data, function(index, value) {
-                                if ($("#actionUpload").val() == 'addvisitor' || ($("#actionUpload").val() == 'create' && $("#controllerId").val() == 'visitor')) {
+                                if (($("#actionUpload").val() == 'update' ||$("#actionUpload").val() == 'addvisitor' || ($("#actionUpload").val() == 'create') && $("#controllerId").val() == 'visitor')) {
                                     $(".ajax-upload-dragdrop").css("background", "url(<?php echo Yii::app()->request->baseUrl; ?>" + value.relative_path + ") no-repeat center top");
                                     $(".ajax-upload-dragdrop").css({
                                         "background-size": "137px 190px"

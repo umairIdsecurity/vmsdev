@@ -237,8 +237,12 @@ class User extends VmsActiveRecord {
                 $queryCondition = 't.is_deleted=0';
                 break;
         }
-        $criteria->addCondition('role in ' . $rolein . ' and (' . $queryCondition . ')');
-
+        if(Yii::app()->controller->id == 'user' && Yii::app()->controller->action->id == 'admin'){
+            $criteria->addCondition('t.id !="'.$user->id.'" and role in ' . $rolein . ' and (' . $queryCondition . ')');
+        } else {
+            $criteria->addCondition('role in ' . $rolein . ' and (' . $queryCondition . ')');
+        }
+        
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'sort' => array(
@@ -255,6 +259,34 @@ class User extends VmsActiveRecord {
      */
     public static function model($className = __CLASS__) {
         return parent::model($className);
+    }
+
+    public function beforeDelete() {
+        $visitExists = Visit::model()->exists('is_deleted = 0 and host ="' . $this->id . '"');
+        $isTenant = Company::model()->exists('is_deleted = 0 and tenant ="' . $this->id . '"');
+        $userWorkstation = UserWorkstations::model()->exists('user = "' . $this->id . '"');
+        $visitorExists = Visitor::model()->exists('tenant = "' . $this->id . '" and is_deleted=0');
+        $isTenantAgent = Company::model()->exists('tenant_agent = "' . $this->id . '" and is_deleted=0');
+        if ($visitExists || $isTenant || $userWorkstation || $visitorExists || $isTenantAgent) {
+            return false;
+        } else {
+            $this->is_deleted = 1;
+            $this->save();
+            echo "true";
+            return false;
+        }
+    }
+
+    public function beforeFind() {
+        $criteria = new CDbCriteria;
+        $criteria->condition = "t.is_deleted = 0";
+        if (Yii::app()->controller->action->id != 'login') {
+            if (Yii::app()->user->role != Roles::ROLE_SUPERADMIN) {
+                $criteria->condition = "t.is_deleted = 0 and t.tenant ='" . Yii::app()->user->tenant . "'";
+            }
+        } 
+
+        $this->dbCriteria->mergeWith($criteria);
     }
 
     protected function afterValidate() {
@@ -368,13 +400,13 @@ class User extends VmsActiveRecord {
         //select all companies of tenant agents with same tenant
         $tenantId = trim($tenantId);
         $aArray = array();
-        $company =  Yii::app()->db->createCommand()
-                        ->selectdistinct(' c.id as id, c.name as name,c.tenant,c.tenant_agent')
-                        ->from('user u')
-                        ->join('company c', 'u.company=c.id')
-                        ->where('u.is_deleted = 0 and u.tenant="'.$tenantId.'" and u.role ='.Roles::ROLE_AGENT_ADMIN)
-                        ->queryAll();
-        
+        $company = Yii::app()->db->createCommand()
+                ->selectdistinct(' c.id as id, c.name as name,c.tenant,c.tenant_agent')
+                ->from('user u')
+                ->join('company c', 'u.company=c.id')
+                ->where('u.is_deleted = 0 and u.tenant="' . $tenantId . '" and u.role =' . Roles::ROLE_AGENT_ADMIN)
+                ->queryAll();
+
         foreach ($company as $index => $value) {
             $aArray[] = array(
                 'id' => $value['id'],
@@ -393,9 +425,9 @@ class User extends VmsActiveRecord {
         $user = User::model()->findByPk($userId);
 
         $Criteria = new CDbCriteria();
-        
-            $Criteria->condition = "tenant ='" . $userId . "' and id !=1 and id != " . $user->company;
-        
+
+        $Criteria->condition = "tenant ='" . $userId . "' and id !=1 and id != " . $user->company;
+
 
         $companyList = Company::model()->findAll($Criteria);
 
@@ -451,12 +483,6 @@ class User extends VmsActiveRecord {
         return parent::afterFind();
     }
 
-    public function beforeDelete() {
-        $this->is_deleted = 1;
-        $this->update();
-        return false;
-    }
-
     public function isEmailAddressUnique($email, $tenantId) {
         $Criteria = new CDbCriteria();
         $session = new CHttpSession;
@@ -497,10 +523,10 @@ class User extends VmsActiveRecord {
         }
         return $aArray;
     }
-    
+
     public function findCompanyOfTenant($tenantId, $tenantAgentId) {
         $aArray = array();
-        if($tenantAgentId !=''){
+        if ($tenantAgentId != '') {
             $user = User::model()->findByPk($tenantAgentId);
         } else {
             $user = User::model()->findByPk($tenantId);

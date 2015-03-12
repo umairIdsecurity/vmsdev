@@ -42,6 +42,7 @@ class Issue98FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
         $this->clickAndWait("id=submitFormVisitor");
+        
         $this->assertEquals("testVisitor1@test.com", $this->getText("//div[@id='visitor-grid']/table/tbody/tr[3]/td[3]"));
         $this->clickAndWait("//ul[@id='tabs']/li[3]/a/p");
         $username = 'admin@test.com';

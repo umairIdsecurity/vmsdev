@@ -83,7 +83,7 @@ $session = new CHttpSession;
                                         <img id='photoPreview' src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png" style='display:none;'/>
                                     </div>
                                     <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
-                                    <div id="photoErrorMessage" class="errorMessage" style="display:none;">Please upload a photo.</div>
+                                    <div id="photoErrorMessage" class="errorMessage" style="display:none;  margin-top: 200px;margin-left: 71px !important;position: absolute;">Please upload a photo.</div>
                                 </td>
                                 <td id="visitorTenantRow" <?php
                                 if ($session['role'] != Roles::ROLE_SUPERADMIN) {

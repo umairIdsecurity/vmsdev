@@ -51,6 +51,7 @@ class Issue55FunctionalTest extends BaseFunctionalTest {
         $this->select("id=Visitor_tenant", "label=NAIA Airport");
         $this->select("id=Visit_reason", "label=Reason 1");
         sleep(1);
+        $this->select("id=Visitor_company", "label=Philippine Airline");
         $this->select("id=workstation", "label=Workstation3");
         $this->click("id=submitFormVisitor");
         $this->type("id=User_first_name", "test");
@@ -124,6 +125,7 @@ class Issue55FunctionalTest extends BaseFunctionalTest {
         $this->select("id=Visit_reason", "label=Reason 1");
         $this->select("id=Visitor_tenant", "label=NAIA Airport");
         sleep(1);
+        $this->select("id=Visitor_company", "label=Philippine Airline");
         $this->select("id=workstation", "label=Workstation3");
         $this->click("id=submitFormVisitor");
         $this->waitForElementPresent("id=photoErrorMessage");

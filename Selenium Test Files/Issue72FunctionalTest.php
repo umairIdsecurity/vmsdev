@@ -38,10 +38,9 @@ class Issue72FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Administration");
         $this->click("id=yt0");
         $this->clickAndWait("css=span");
-        $this->assertEquals("Max Size: 2MB ;File Ext. : jpeg/png\nDimensions: 180px(Width) x 60px(Height)", $this->getText("css=span > span"));
+        $this->assertEquals("Dimensions: 180px(Width) x 60px(Height)", $this->getText("css=span > span"));
         $this->clickAndWait("//div[@id='cssmenu']/ul/li/ul/li[2]/a/span");
-        $this->assertEquals("Dimensions: 180px(Width) x 60px(Height)", $this->getText("css=span.imageDimensions"));
-    }
+        }
 
 }
 

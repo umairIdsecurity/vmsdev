@@ -117,15 +117,21 @@ imagettftext($image, $font_size, 0, $x, 250, $font_color, $font_file, $text);
 
 //////////////////////////////////////////////////////////////
 header('Content-type:image/png');
-if (exif_imagetype($src2) != IMAGETYPE_JPEG) {
+if (exif_imagetype($src2) == IMAGETYPE_PNG) {
     $watermark = imagecreatefrompng($src2);
-} else {
+} elseif(exif_imagetype($src2) == IMAGETYPE_GIF){
+    $watermark = imagecreatefromgif($src2);
+}
+else{
     $watermark = imagecreatefromjpeg($src2);
 }
 
-if (exif_imagetype($src3) != IMAGETYPE_JPEG) {
+if (exif_imagetype($src3) == IMAGETYPE_PNG) {
     $watermark2 = imagecreatefrompng($src3);
-} else {
+} elseif(exif_imagetype($src3) == IMAGETYPE_GIF){
+    $watermark2 = imagecreatefromgif($src3);
+}
+else {
     $watermark2 = imagecreatefromjpeg($src3);
 }
 

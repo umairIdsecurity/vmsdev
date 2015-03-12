@@ -22,12 +22,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
 
     function testAll() {
         $this->resetDbWithData();
-        //scenario 1-3 is for patient type comment as of now.
-      //  $this->Scenario1();
-      //  $this->Scenario2();
-     //   $this->Scenario3();
         $this->Scenario4();
-       // $this->Scenario5();
         $this->Scenario6();
         $this->Scenario7();
         $this->Scenario8();
@@ -197,19 +192,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->addVisitor('Visitor6');
         $this->select("id=workstation", "label=Workstation1");
         $this->select("id=Visit_reason", "label=Reason 1");
-        for ($second = 0;; $second++) {
-            if ($second >= 10)
-                $this->fail("timeout");
-            try {
-                if ("Philippine Airline" == $this->getText("id=Visitor_company"))
-                    break;
-            } catch (Exception $e) {
-                
-            }
-            sleep(1);
-        }
-        $this->assertEquals("Philippine Airline", $this->getText("id=Visitor_company"));
-        $this->click("id=submitFormVisitor");
+       $this->click("id=submitFormVisitor");
         $this->waitForElementPresent("id=User_first_name");
         $this->addHost("staffmemberHostA");
         $this->waitForElementPresent("id=submitFormUser");
@@ -257,7 +240,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Preregister Visit");
         $this->click("id=clicktabA");
         $this->click("id=submitFormVisitor");
-        $this->select("id=workstation", "label=Workstation1");
+        
         $this->type("id=Visitor_first_name", "Test");
         $this->type("id=Visitor_last_name", "test");
         $this->type("id=Visitor_position", "position");
@@ -270,6 +253,9 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->waitForElementPresent("id=Visitor_tenant_agent");
         sleep(1);
         $this->select("id=Visitor_tenant_agent", "label=Philippine Airline");
+        sleep(1);
+        $this->select("id=Visitor_company", "label=NAIA Airport");
+        $this->select("id=workstation", "label=Workstation1");
         $this->click("id=submitFormVisitor");
         $this->waitForElementPresent("css=td > div.errorMessage.visitorReason");
         $this->assertEquals("Please select a reason", $this->getText("css=td > div.errorMessage.visitorReason"));
@@ -386,6 +372,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         sleep(1);
         $this->select("id=Visitor_tenant_agent", "label=Philippine Airline");
         sleep(1);
+        $this->select("id=Visitor_company", "label=NAIA Airport");
         $this->select("id=workstation", "label=Workstation1");
         $this->click("id=submitFormVisitor");
         $this->waitForElementPresent("css=td > div.errorMessage.visitorReason");
@@ -549,7 +536,6 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_email", "testvisitornewcompany@test.com");
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
-        $this->click("id=Visit_reason");
         $this->select("id=Visit_reason", "label=Reason 1");
         $this->click("id=addCompanyLink");
         $this->waitForElementPresent("id=Visitor_company_em_");
@@ -559,6 +545,8 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         sleep(1);
         $this->select("id=Visitor_tenant_agent", "label=Philippine Airline");
         sleep(1);
+        $this->select("id=Visitor_company", "label=NAIA Airport");
+        sleep(1);
         $this->select("id=workstation", "label=Workstation1");
         $this->click("id=addCompanyLink");
         $this->waitForElementPresent("css=h1");
@@ -566,9 +554,9 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->waitForElementPresent("id=Company_name");
         $this->type("id=Company_name", "new company");
         $this->type("id=Company_code", "NCA");
-        $this->click("id=createBtn");
-        sleep(3);
-        $this->assertEquals("Philippine Airlinenew company", $this->getText("id=Visitor_company"));
+        $this->clickAndWait("id=createBtn");
+        sleep(1);
+        $this->assertEquals("Please select a company NAIA Airportnew company", $this->getText("id=Visitor_company"));
         sleep(1);
         $this->select("id=workstation", "label=Workstation1");
         $this->click("id=submitFormVisitor");
@@ -577,7 +565,6 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->type("id=search-host", "test");
         $this->click("id=dummy-host-findBtn");
         $this->click("id=dummy-host-findBtn");
-        sleep(1);
         $this->waitForElementPresent("id=21");
         $this->click("id=21");
         for ($second = 0;; $second++) {

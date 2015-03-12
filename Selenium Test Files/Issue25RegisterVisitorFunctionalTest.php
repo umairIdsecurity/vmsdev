@@ -21,14 +21,8 @@ class Issue25RegisterVisitorFunctionalTest extends BaseFunctionalTest {
     }
 
     function testAll() {
-        $this->resetDbWithData();
-        //$this->Scenario1();
-        // $this->scenario0();
-        //  $this->Scenario2();
-        //  $this->Scenario3();
+//        $this->resetDbWithData();
         $this->Scenario4();
-        //  $this->scenario0a();
-        //  $this->Scenario5();
         $this->Scenario6();
         $this->Scenario7();
     }
@@ -236,19 +230,6 @@ class Issue25RegisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->select("id=workstation", "label=Workstation1");
         $this->select("id=Visit_reason", "label=Reason 1");
         sleep(1);
-        for ($second = 0;; $second++) {
-            if ($second >= 60)
-                $this->fail("timeout");
-            try {
-                if ("Philippine Airline" == $this->getText("id=Visitor_company"))
-                    break;
-            } catch (Exception $e) {
-                
-            }
-            sleep(1);
-        }
-
-        $this->assertEquals("Philippine Airline", $this->getText("id=Visitor_company"));
         $this->click("id=submitFormVisitor");
         $this->addHost("Host1");
         $this->click("id=submitFormUser");
@@ -422,6 +403,7 @@ class Issue25RegisterVisitorFunctionalTest extends BaseFunctionalTest {
         sleep(1);
         $this->select("id=Visitor_tenant_agent", "label=Philippine Airline");
         sleep(1);
+        $this->select("id=Visitor_company", "label=NAIA Airport");
         $this->select("id=workstation", "label=Workstation1");
         $this->click("id=submitFormVisitor");
         $this->waitForElementPresent("css=td > div.errorMessage.visitorReason");

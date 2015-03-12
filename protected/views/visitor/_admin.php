@@ -1,5 +1,5 @@
-
 <?php
+
 /* @var $this VisitorController */
 /* @var $model Visitor */
 ?>

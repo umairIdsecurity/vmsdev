@@ -130,7 +130,6 @@ class Issue50FunctionalTest extends BaseFunctionalTest {
         $username = 'agentadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->clickAndWait("link=Customise Display");
       //  $this->assertEquals("Customise Display", $this->getText("css=a.ajaxLinkLi > span"));
         $this->clickAndWait("//ul[@id='tabs']/li[3]/a/p");
 

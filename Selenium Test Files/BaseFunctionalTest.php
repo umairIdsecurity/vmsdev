@@ -20,7 +20,7 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
     protected function setUp() {
 
         parent::setUp();
-        $this->setBrowser("*firefoxproxy");
+        $this->setBrowser("*firefox");
         $this->setBrowserUrl("http://dev.identitysecurity.info/");
     }
 
@@ -146,6 +146,8 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
         $this->select("id=Visitor_tenant", "label=NAIA Airport");
         sleep(1);
         $this->select("id=Visitor_tenant_agent", "label=Philippine Airline");
+        sleep(1);
+        $this->select("id=Visitor_company", "label=NAIA Airport");
         sleep(1);
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");

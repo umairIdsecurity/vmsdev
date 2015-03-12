@@ -81,22 +81,9 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                 </ul>
             </li>
 
-            <li class='has-sub'><?php
-                echo CHtml::ajaxLink("Manage Users", CController::createUrl('user/adminAjax'), array(
-                    'update' => '#content',
-                    'complete' => "js:function(html){
-            $('.managecompanies').next().slideUp('normal');
-            $('.manageworkstations').next().slideUp('normal');
-            $('.manageusers').next().slideDown('normal');
-            $('.managevisitorrecords').next().slideUp('normal');
-            $('.managevisitreasons').next().slideUp('normal');
-            $('.managereports').next().slideUp('normal');
-            $('.managevisitortype').next().slideUp('normal');
-        }",
-                        ), array(
-                    'class' => 'manageusers',
-                ));
-                ?>
+           <li class='has-sub'><a class='manageusers' href='<?php echo Yii::app()->createUrl('user/admin'); ?>'><span>Manage Users</span></a>
+
+                
                 <ul <?php
                 if ($this->id == 'user') {
                     echo "style='display:block ;'";

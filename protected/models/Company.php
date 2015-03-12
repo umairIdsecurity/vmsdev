@@ -226,7 +226,7 @@ WHERE u.id=c.tenant AND c.id !=1 AND c.id=t.id)";
     public function isUserAllowedToViewCompany($companyId, $user) {
 
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "company = '" . $companyId . "' and id='" . $user->id . "'";
+        $Criteria->condition = 'company = "' . $companyId . '" and id="' . $user->id . '"';
         $users = User::model()->findAll($Criteria);
 
         //$users = array_filter($users);
@@ -239,7 +239,7 @@ WHERE u.id=c.tenant AND c.id !=1 AND c.id=t.id)";
 
     public function isCompanyUniqueWithinTheTenant($companyName, $tenant) {
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "name = '" . $companyName . "' and tenant='" . $tenant . "'";
+        $Criteria->condition = 'name = "' . $companyName . '" and tenant="' . $tenant . '"';
         $company = Company::model()->findAll($Criteria);
 
         $company = array_filter($company);
@@ -248,7 +248,7 @@ WHERE u.id=c.tenant AND c.id !=1 AND c.id=t.id)";
 
     public function isCompanyCodeUniqueWithinTheTenant($companyCode, $tenant) {
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "code = '" . $companyCode . "' and tenant='" . $tenant . "'";
+        $Criteria->condition = 'code = "' . $companyCode . '" and tenant="' . $tenant . '"';
         $company = Company::model()->findAll($Criteria);
 
         $company = array_filter($company);
@@ -285,7 +285,7 @@ WHERE u.id=c.tenant AND c.id !=1 AND c.id=t.id)";
         $aArray = array();
 
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = '$tenant'";
+        $Criteria->condition = "tenant = '".$tenant."'";
         $company = Company::model()->findAll($Criteria);
 
         foreach ($company as $index => $value) {

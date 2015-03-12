@@ -212,9 +212,9 @@ class Visitor extends CActiveRecord {
 
     public function beforeFind() {
         $criteria = new CDbCriteria;
-        $criteria->condition = "t.is_deleted = 0";
+        $criteria->condition = 't.is_deleted = 0';
         if (Yii::app()->user->role != Roles::ROLE_SUPERADMIN) {
-            $criteria->condition = "t.is_deleted = 0 and t.tenant ='" . Yii::app()->user->tenant . "'";
+            $criteria->condition = 't.is_deleted = 0 and t.tenant ="' . Yii::app()->user->tenant . '"';
         }
         $this->dbCriteria->mergeWith($criteria);
     }
@@ -234,7 +234,7 @@ class Visitor extends CActiveRecord {
         $aArray = array();
         $tenant = User::model()->findByPk($tenantId);
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = '$tenantId' and (id!=1 and id !='".$tenant->company."')";
+        $Criteria->condition = 'tenant = "'.$tenantId.'" and (id!=1 and id !="'.$tenant->company.'")';
         $company = Company::model()->findAll($Criteria);
 
         foreach ($company as $index => $value) {

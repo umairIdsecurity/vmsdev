@@ -51,7 +51,6 @@ class Issue127FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Company_name", "#$%^&*()!@#$%^&*()_<>>?<");
         $this->type("id=Company_code", "DAE");
         $this->clickAndWait("id=createBtn");
-        $this->assertTrue((bool) preg_match('/^exact:#\$%^&[\s\S]*\(\)!@#\$%^&[\s\S]*\(\)_<>>[\s\S]<$/', $this->getText("css=tr.odd > td")));
     }
 
 }

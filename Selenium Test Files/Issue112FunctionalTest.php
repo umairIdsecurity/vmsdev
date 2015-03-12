@@ -457,7 +457,7 @@ class Issue112FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->click("link=Administration");
         $this->waitForPageToLoad("30000");
-        $this->assertEquals("Displaying 1-7 of 7 results", $this->getText("css=div.summary"));
+        $this->assertEquals("Displaying 1-6 of 6 results", $this->getText("css=div.summary"));
         $this->click("//ul[@id='tabs']/li[3]/a/p");
         $this->waitForPageToLoad("30000");
         $this->type("id=LoginForm_username", "kalibo@test.com");
@@ -891,9 +891,7 @@ class Issue112FunctionalTest extends BaseFunctionalTest {
         $this->click("name=yt0");
         $this->click("name=yt0");
         $this->waitForPageToLoad("30000");
-        $this->click("link=Administration");
-        $this->waitForPageToLoad("30000");
-        $this->click("id=yt0");
+        $this->clickAndWait("link=Administration");
         $this->type("name=User[first_name]", "new");
         sleep(1);
         $this->assertEquals("No results found.", $this->getText("css=span.empty"));

@@ -21,7 +21,7 @@ class Issue25RegisterVisitorFunctionalTest extends BaseFunctionalTest {
     }
 
     function testAll() {
-//        $this->resetDbWithData();
+        $this->resetDbWithData();
         $this->Scenario4();
         $this->Scenario6();
         $this->Scenario7();

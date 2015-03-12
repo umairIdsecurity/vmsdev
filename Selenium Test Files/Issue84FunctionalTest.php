@@ -35,7 +35,8 @@ class Issue84FunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->click("id=yt0");
+        $this->click("id=yt7");
+        $this->waitForElementPresent("css=span");
         for ($second = 0;; $second++) {
             if ($second >= 60)
                 $this->fail("timeout");

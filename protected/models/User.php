@@ -280,11 +280,6 @@ class User extends VmsActiveRecord {
     public function beforeFind() {
         $criteria = new CDbCriteria;
         $criteria->condition = "t.is_deleted = 0";
-        if (Yii::app()->controller->action->id != 'login') {
-            if (Yii::app()->user->role != Roles::ROLE_SUPERADMIN) {
-                $criteria->condition = "t.is_deleted = 0 and t.tenant ='" . Yii::app()->user->tenant . "'";
-            }
-        } 
 
         $this->dbCriteria->mergeWith($criteria);
     }

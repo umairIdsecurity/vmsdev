@@ -55,9 +55,8 @@ class Issue47FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("link=Preregistered");
         $this->assertEquals("NAI", $this->getText("css=#cardDetailsTable > tbody > tr > td"));
-        //$this->assertEquals("NAI000008", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[4]/td"));
         $this->clickAndWait("link=Administration");
-        $this->click("id=yt0");
+        $this->click("id=yt8");
         $this->waitForElementPresent("name=Company[name]");
         $this->clickAndWait("link=Edit");
         try {
@@ -76,9 +75,8 @@ class Issue47FunctionalTest extends BaseFunctionalTest {
     function Scenario2() {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
-        $this->click("link=Administration");
-        $this->waitForPageToLoad("30000");
-        $this->click("id=yt0");
+        $this->clickAndWait("link=Administration");
+        $this->click("id=yt8");
         $this->waitForElementPresent("link=Add Company");
         $this->clickAndWait("link=Add Company");
         $this->clickAndWait("id=createBtn");

@@ -36,7 +36,8 @@ class Issue74FunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->click("id=yt0");
+        $this->click("id=yt7");
+        $this->waitForElementPresent("css=span");
         $this->clickAndWait("link=Add Company");
         $this->type("id=Company_website", "stableapps.com");
         $this->clickAndWait("id=createBtn");

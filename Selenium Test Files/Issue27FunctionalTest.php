@@ -900,8 +900,6 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->waitForElementPresent("id=2");
         $this->click("id=2");
         $this->click("id=clicktabB1");
-//        $this->type("id=Patient_name", "patient 0a");
-//        $this->clickAndWait("id=submitFormPatientName");
         $this->addHost("Host7");
         $this->click("id=submitFormUser");
         $this->clickAndWait("id=submitAllForms");

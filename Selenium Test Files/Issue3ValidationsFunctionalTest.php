@@ -66,23 +66,7 @@ class Issue3ValidationsFunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->click("link=Administration");
         $this->waitForPageToLoad("30000");
-        $this->assertEquals("Displaying 1-8 of 8 results", $this->getText("css=div.summary"));
-        $this->select("css=select[name=\"User[role]\"]", "label=Super Administrator");
-        sleep(1);
-        $this->assertEquals("Super Administrator", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[3]"));
-        for ($second = 0;; $second++) {
-            if ($second >= 10)
-                $this->fail("timeout");
-            try {
-                if ("Displaying 1-1 of 1 result" == $this->getText("css=div.summary"))
-                    break;
-            } catch (Exception $e) {
-                
-            }
-            sleep(1);
-        }
-        $this->assertEquals("Displaying 1-1 of 1 result", $this->getText("css=div.summary"));
-        sleep(1);
+        $this->assertEquals("Displaying 1-7 of 7 results", $this->getText("css=div.summary"));
         $this->select("css=select[name=\"User[role]\"]", "label=Administrator");
         sleep(1);
         $this->assertEquals("Administrator", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[3]"));
@@ -282,11 +266,6 @@ class Issue3ValidationsFunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->click("link=Administration");
         $this->waitForPageToLoad("30000");
-
-        $this->select("css=select[name=\"User[role]\"]", "label=Agent Administrator");
-        sleep(1);
-        $this->assertEquals("Agent Administrator", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[3]"));
-
         $this->select("css=select[name=\"User[role]\"]", "label=Agent Operator");
         sleep(1);
         $this->assertEquals("Agent Operator", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[3]"));
@@ -574,7 +553,7 @@ class Issue3ValidationsFunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->click("link=Administration");
         $this->waitForPageToLoad("30000");
-        $this->click("link=Manage Users");
+        $this->clickAndWait("link=Manage Users");
         $this->click("css=div.customIcon-adminmenu");
         $this->waitForPageToLoad("30000");
 

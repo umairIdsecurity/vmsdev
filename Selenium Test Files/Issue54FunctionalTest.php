@@ -22,15 +22,15 @@ class Issue54FunctionalTest extends BaseFunctionalTest {
     }
 
     function testAll() {
-//        $this->resetDbWithData();
-//        $this->Scenario1();
-//        $this->Scenario2();
-//        $this->Scenario3();
-//        $this->Scenario4();
-//        $this->Scenario5();
-//        $this->Scenario6();
-//        $this->Scenario7();
-//        $this->Scenario8();
+        $this->resetDbWithData();
+        $this->Scenario1();
+        $this->Scenario2();
+        $this->Scenario3();
+        $this->Scenario4();
+        $this->Scenario5();
+        $this->Scenario6();
+        $this->Scenario7();
+        $this->Scenario8();
         $this->resetDbWithData();
         $this->Scenario9();
     }
@@ -58,6 +58,7 @@ class Issue54FunctionalTest extends BaseFunctionalTest {
         $this->select("id=Visitor_tenant", "label=NAIA Airport");
         $this->click("id=Visitor_tenant_agent");
         sleep(1);
+        $this->select("id=Visitor_company", "label=Philippine Airline");
         $this->select("id=workstation", "label=Workstation3");
         $this->click("id=submitFormVisitor");
         $this->type("id=User_first_name", "New");
@@ -130,6 +131,7 @@ class Issue54FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
         $this->select("id=Visit_reason", "label=Reason 1");
+        $this->select("id=Visitor_company", "label=NAIA Airport");
         $this->click("id=submitFormVisitor");
         $this->type("id=User_first_name", "test");
         $this->type("id=User_last_name", "host1");

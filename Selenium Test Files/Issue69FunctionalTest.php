@@ -88,7 +88,7 @@ class Issue69FunctionalTest extends BaseFunctionalTest {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->click("id=yt3");
+        $this->click("id=yt11");
         $this->clickAndWait("//div[@id='cssmenu']/ul/li[4]/ul/li[4]/a/span");
         $this->assertEquals("NAI000006", $this->getText("css=tr.even > td"));
         $this->assertEquals("NAI000005", $this->getText("//div[@id='view-export-visitor-records']/table/tbody/tr[3]/td"));

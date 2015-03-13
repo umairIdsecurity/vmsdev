@@ -730,7 +730,7 @@ ALTER TABLE `card_status`
 ALTER TABLE `workstation`
   ADD CONSTRAINT `workstation_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`);
 
-ALTER TABLE `company` ADD COLUMN `card_count` BIGINT DEFAULT 0 NULL AFTER `tenant_agent`;
+ALTER TABLE `visit` DROP COLUMN `card_count`; 
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

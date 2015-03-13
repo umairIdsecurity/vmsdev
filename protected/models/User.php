@@ -79,7 +79,7 @@ class User extends VmsActiveRecord {
                 array('company, role, user_type, user_status, created_by', 'numerical', 'integerOnly' => true),
                 array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
                 array('date_of_birth, notes,tenant,tenant_agent,birthdayYear,birthdayMonth,birthdayDay', 'safe'),
-                // array('email', 'unique'),
+                array('email', 'filter', 'filter' => 'trim'),
                 array('email', 'email'),
                 array('role,company', 'required', 'message' => 'Please select a {attribute}'),
                 array('tenant, tenant_agent', 'default', 'setOnEmpty' => true, 'value' => null),
@@ -93,10 +93,10 @@ class User extends VmsActiveRecord {
                 array('company, role, user_type, user_status, created_by', 'numerical', 'integerOnly' => true),
                 array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
                 array('date_of_birth, notes,tenant,tenant_agent,birthdayYear,birthdayMonth,birthdayDay', 'safe'),
-                // array('email', 'unique'),
+                array('email', 'filter', 'filter' => 'trim'),
                 array('email', 'email'),
+                
                 array('role,company', 'required', 'message' => 'Please select a {attribute}'),
-                //array('repeatpassword', 'required', 'on' => 'insert'),
                 array('tenant, tenant_agent', 'default', 'setOnEmpty' => true, 'value' => null),
                 // The following rule is used by search().
                 // @todo Please remove those attributes that should not be searched.
@@ -237,12 +237,12 @@ class User extends VmsActiveRecord {
                 $queryCondition = 't.is_deleted=0';
                 break;
         }
-        if(Yii::app()->controller->id == 'user' && Yii::app()->controller->action->id == 'admin'){
-            $criteria->addCondition('t.id !="'.$user->id.'" and role in ' . $rolein . ' and (' . $queryCondition . ')');
+        if (Yii::app()->controller->id == 'user' && Yii::app()->controller->action->id == 'admin') {
+            $criteria->addCondition('t.id !="' . $user->id . '" and role in ' . $rolein . ' and (' . $queryCondition . ')');
         } else {
             $criteria->addCondition('role in ' . $rolein . ' and (' . $queryCondition . ')');
         }
-        
+
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'sort' => array(
@@ -260,6 +260,12 @@ class User extends VmsActiveRecord {
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }
+    
+    public function beforeSave() {
+      $this->email = trim($this->email);
+
+      return parent::beforeSave();
+   }
 
     public function beforeDelete() {
         $visitExists = Visit::model()->exists('is_deleted = 0 and host ="' . $this->id . '"');
@@ -483,12 +489,12 @@ class User extends VmsActiveRecord {
         $session = new CHttpSession;
         if ($tenantId != '') {
             if ($session['role'] == Roles::ROLE_SUPERADMIN) {
-                $Criteria->condition = "email = '" . $email . "' and tenant = '" . $tenantId . "' and is_deleted!=1";
+                $Criteria->condition = 'email = "' . $email . '" and tenant = "' . $tenantId . '" and is_deleted!=1';
             } else {
-                $Criteria->condition = "email = '" . $email . "' and tenant = '" . $session['tenant'] . "' and is_deleted!=1";
+                $Criteria->condition = 'email = "' . $email . '" and tenant = "' . $session['tenant'] . '" and is_deleted!=1';
             }
         } else { //if position is admin compare to email only
-            $Criteria->condition = "email = '" . $email . "' and is_deleted!=1";
+            $Criteria->condition = 'email = "' . $email . '" and is_deleted!=1';
         }
 
 

@@ -144,7 +144,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_repeatpassword", "12345");
         $this->select("id=workstation", "label=Workstation1");
         $this->click("id=submitFormVisitor");
-        $this->click("link=Search Host");
+        $this->click("link=Find Host");
         $this->type("id=search-host", "test");
         $this->click("id=dummy-host-findBtn");
         $this->waitForElementPresent("id=21");
@@ -387,7 +387,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->type("id=VisitReason_reason", "Reason 5");
         $this->select("id=workstation", "label=Workstation1");
         $this->click("id=submitFormVisitor");
-        $this->click("link=Search Host");
+        $this->click("link=Find Host");
         $this->waitForElementPresent("id=search-host");
         $this->type("id=search-host", "test");
         $this->click("id=dummy-host-findBtn");
@@ -421,7 +421,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("//div[@id='cssmenu']/ul/li[2]/a/span");
         $this->click("id=clicktabA");
-        $this->click("link=Search Visitor Profile");
+        $this->click("link=Find Visitor Profile");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
         $this->waitForElementPresent("id=5");
@@ -430,7 +430,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->type("id=VisitReason_reason_search", "Reason 6");
         $this->select("id=workstation_search", "label=Workstation1");
         $this->click("id=clicktabB1");
-        $this->click("link=Search Host");
+        $this->click("link=Find Host");
         $this->waitForElementPresent("css=button.host-AddBtn");
         $this->click("css=button.host-AddBtn");
         $this->type("id=User_first_name", "test");
@@ -471,7 +471,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->click("//div[@id='cssmenu']/ul/li[2]/a/span");
         $this->waitForPageToLoad("30000");
         $this->click("id=clicktabA");
-        $this->click("link=Search Visitor Profile");
+        $this->click("link=Find Visitor Profile");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
         $this->waitForElementPresent("id=2");
@@ -505,7 +505,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Preregister Visit");
         $this->click("id=clicktabA");
-        $this->click("link=Search Visitor Profile");
+        $this->click("link=Find Visitor Profile");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
         $this->waitForElementPresent("id=5");
@@ -514,7 +514,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->type("id=VisitReason_reason_search", "reason 8");
         $this->select("id=workstation_search", "label=Workstation1");
         $this->click("id=clicktabB1");
-        $this->click("link=Search Host");
+        $this->click("link=Find Host");
         $this->type("id=search-host", "test");
         $this->click("id=dummy-host-findBtn");
         $this->click("id=dummy-host-findBtn");
@@ -615,7 +615,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_repeatpassword", "12345");
         $this->click("id=submitFormUser");
         $this->assertEquals("A profile already exists for this email address.", $this->getText("xpath=(//div[@id='User_email_em_'])[2]"));
-        $this->click("link=Search Host");
+        $this->click("link=Find Host");
         $this->click("id=dummy-host-findBtn");
         $this->assertEquals("Search Name cannot be blank.", $this->getText("id=searchTextHostErrorMessage"));
         

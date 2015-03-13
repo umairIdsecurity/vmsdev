@@ -7,7 +7,7 @@ $session = new CHttpSession;
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" role="tablist">
         <li role="presentation" class="active"><a href="#addvisitor" aria-controls="profile" role="tab" data-toggle="tab">Add Visitor Profile</a></li>
-        <li role="presentation" ><a href="#searchvisitor" aria-controls="home" role="tab" data-toggle="tab">Search Visitor Profile</a></li>
+        <li role="presentation" ><a href="#searchvisitor" aria-controls="home" role="tab" data-toggle="tab">Find Visitor Profile</a></li>
     </ul>
 
     <!-- Tab panes -->

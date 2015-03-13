@@ -54,7 +54,7 @@ class Issue92FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
         $this->clickAndWait("css=span");
         $this->click("id=clicktabA");
-        $this->click("link=Search Visitor Profile");
+        $this->click("link=Find Visitor Profile");
         $this->select("id=search_visitor_tenant","label=NAIA Airport");
         sleep(1);
         $this->select("id=search_visitor_tenant_agent","label=Philippine Airline");

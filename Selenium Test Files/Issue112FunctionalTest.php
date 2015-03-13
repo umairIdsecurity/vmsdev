@@ -729,7 +729,7 @@ class Issue112FunctionalTest extends BaseFunctionalTest {
         $this->click("id=submitFormVisitor");
         $this->assertEquals("2", $this->getEval("window.document.getElementById(\"User_company\").value"));
         $this->click("css=#register-host-form > div.register-a-visitor-buttons-div > #btnBackTab3");
-        $this->click("link=Search Visitor Profile");
+        $this->click("link=Find Visitor Profile");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
         sleep(1);
@@ -738,7 +738,7 @@ class Issue112FunctionalTest extends BaseFunctionalTest {
 
         $this->click("css=ul.nav.nav-tabs > li > a");
         $this->click("id=submitFormVisitor");
-        $this->click("link=Search Host");
+        $this->click("link=Find Host");
         $this->type("id=search-host", "test");
         $this->click("id=dummy-host-findBtn");
         $this->waitForElementPresent("//div[@id='findHost-grid']/table/tbody/tr/td[2]");
@@ -790,7 +790,7 @@ class Issue112FunctionalTest extends BaseFunctionalTest {
         $this->click("id=clicktabA");
         sleep(1);
         $this->assertEquals("Please select a workstation Workstation3workstation for NAIAsecond workstation for NAIA", $this->getText("id=workstation"));
-        $this->click("link=Search Visitor Profile");
+        $this->click("link=Find Visitor Profile");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
         for ($second = 0;; $second++) {
@@ -843,7 +843,7 @@ class Issue112FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
         $this->click("id=submitFormVisitor");
-        $this->click("link=Search Host");
+        $this->click("link=Find Host");
         $this->type("id=search-host", "new");
         $this->click("id=dummy-host-findBtn");
         $this->waitForElementPresent("//div[@id='findHost-grid']/table/tbody/tr/td[3]");
@@ -878,7 +878,7 @@ class Issue112FunctionalTest extends BaseFunctionalTest {
         $this->click("css=span");
         $this->waitForPageToLoad("30000");
         $this->click("id=clicktabA");
-        $this->click("link=Search Visitor Profile");
+        $this->click("link=Find Visitor Profile");
         $this->type("id=search-visitor", "new");
         $this->click("id=dummy-visitor-findBtn");
         sleep(1);
@@ -902,7 +902,7 @@ class Issue112FunctionalTest extends BaseFunctionalTest {
         $this->click("//div[@id='cssmenu']/ul/li[4]/ul/li[2]/a/span");
         $this->waitForPageToLoad("30000");
         $this->click("id=clicktabA");
-        $this->click("link=Search Visitor Profile");
+        $this->click("link=Find Visitor Profile");
         $this->type("id=search-visitor", "new");
         $this->click("id=dummy-visitor-findBtn");
         sleep(1);
@@ -918,7 +918,7 @@ class Issue112FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
         $this->click("id=submitFormVisitor");
-        $this->click("link=Search Host");
+        $this->click("link=Find Host");
         $this->type("id=search-host", "new");
         $this->click("id=dummy-host-findBtn");
         for ($second = 0;; $second++) {
@@ -979,7 +979,7 @@ class Issue112FunctionalTest extends BaseFunctionalTest {
         $this->click("css=span");
         $this->waitForPageToLoad("30000");
         $this->click("id=clicktabA");
-        $this->click("link=Search Visitor Profile");
+        $this->click("link=Find Visitor Profile");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
         sleep(1);
@@ -992,7 +992,7 @@ class Issue112FunctionalTest extends BaseFunctionalTest {
         $this->select("id=Visit_reason_search", "label=Reason 1");
         $this->click("id=2");
         $this->click("id=clicktabB1");
-        $this->click("link=Search Host");
+        $this->click("link=Find Host");
         $this->type("id=search-host", "test");
         $this->click("id=dummy-host-findBtn");
         sleep(1);
@@ -1032,7 +1032,7 @@ class Issue112FunctionalTest extends BaseFunctionalTest {
         $this->click("id=clicktabA");
         sleep(1);
         $this->assertEquals("Please select a workstation Workstation1Workstation2workstation for PALsecond workstation PAL", $this->getText("id=workstation"));
-        $this->click("link=Search Visitor Profile");
+        $this->click("link=Find Visitor Profile");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
         sleep(1);
@@ -1075,7 +1075,7 @@ class Issue112FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
         $this->click("id=submitFormVisitor");
-        $this->click("link=Search Host");
+        $this->click("link=Find Host");
         $this->type("id=search-host", "new");
         $this->click("id=dummy-host-findBtn");
         sleep(1);
@@ -1100,7 +1100,7 @@ class Issue112FunctionalTest extends BaseFunctionalTest {
         $this->click("link=Log Visit");
         $this->waitForPageToLoad("30000");
         $this->click("id=clicktabA");
-        $this->click("link=Search Visitor Profile");
+        $this->click("link=Find Visitor Profile");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
         sleep(1);
@@ -1148,14 +1148,14 @@ class Issue112FunctionalTest extends BaseFunctionalTest {
         $this->click("css=span");
         $this->waitForPageToLoad("30000");
         $this->click("id=clicktabA");
-        $this->click("link=Search Visitor Profile");
+        $this->click("link=Find Visitor Profile");
         $this->type("id=search-visitor", "new");
         $this->click("id=dummy-visitor-findBtn");
         $this->select("id=Visit_reason_search", "label=Reason 1");
         $this->waitForElementPresent("id=5");
         $this->click("id=5");
         $this->click("id=clicktabB1");
-        $this->click("link=Search Host");
+        $this->click("link=Find Host");
         $this->type("id=search-host", "test");
         $this->click("id=dummy-host-findBtn");
         sleep(1);
@@ -1175,7 +1175,7 @@ class Issue112FunctionalTest extends BaseFunctionalTest {
         $this->click("css=span");
         $this->waitForPageToLoad("30000");
         $this->click("id=clicktabA");
-        $this->click("link=Search Visitor Profile");
+        $this->click("link=Find Visitor Profile");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
         sleep(1);
@@ -1212,7 +1212,7 @@ class Issue112FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Please select a company Philippine AirlineJapan Airline", $this->getText("id=Visitor_company"));
         $this->click("id=submitFormVisitor");
         $this->click("css=#register-host-form > div.register-a-visitor-buttons-div > #btnBackTab3");
-        $this->click("link=Search Visitor Profile");
+        $this->click("link=Find Visitor Profile");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
         $this->waitForElementPresent("id=7");
@@ -1222,7 +1222,7 @@ class Issue112FunctionalTest extends BaseFunctionalTest {
         $this->waitForElementPresent("id=7");
         $this->click("id=7");
         $this->click("id=clicktabB1");
-        $this->click("link=Search Host");
+        $this->click("link=Find Host");
         $this->type("id=search-host", "test");
         $this->click("id=dummy-host-findBtn");
         sleep(1);
@@ -1302,7 +1302,7 @@ class Issue112FunctionalTest extends BaseFunctionalTest {
         $this->click("css=span");
         $this->waitForPageToLoad("30000");
         $this->click("id=clicktabA");
-        $this->click("link=Search Visitor Profile");
+        $this->click("link=Find Visitor Profile");
         $this->type("id=search-visitor", "visitor");
         $this->click("id=dummy-visitor-findBtn");
         sleep(1);
@@ -1311,7 +1311,7 @@ class Issue112FunctionalTest extends BaseFunctionalTest {
         $this->waitForElementPresent("id=8");
         $this->click("id=8");
         $this->click("id=clicktabB1");
-        $this->click("link=Search Host");
+        $this->click("link=Find Host");
         $this->type("id=search-host", "host");
         $this->click("id=dummy-host-findBtn");
         sleep(1);

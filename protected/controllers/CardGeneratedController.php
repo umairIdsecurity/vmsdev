@@ -78,14 +78,15 @@ class CardGeneratedController extends Controller {
         $model = Visit::model()->findByPk($id);
         $visitorModel = Visitor::model()->findByPk($model->visitor);
         $tenant = User::model()->findByPk($visitorModel->tenant);
+        $companyTenant = Company::model()->findByPk($tenant->company);
         if ($tenant->company != '') {
-            $inc = 6 - (strlen($model->id . ($model->card_count + 1)));
+            $inc = 6 - (strlen(($companyTenant->card_count + 1)));
             $int_code = '';
             for ($x = 1; $x <= $inc; $x++) {
 
                 $int_code .= "0";
             }
-            $code = Company::model()->findByPk($tenant->company)->code . $int_code . $model->id . ($model->card_count + 1);
+            $code = Company::model()->findByPk($tenant->company)->code . $int_code . ($companyTenant->card_count + 1);
         } else {
             $code = '';
         }
@@ -104,8 +105,8 @@ class CardGeneratedController extends Controller {
         if ($session['count'] == 1) {
 
             $cardGeneratedService->save($cardGenerated, $model, Yii::app()->user);
-            Visit::model()->updateByPk($model->id, array(
-                'card_count' => $model->card_count + 1,
+            Company::model()->updateByPk($tenant->company, array(
+                'card_count' => $companyTenant->card_count + 1,
             ));
         }
 
@@ -125,14 +126,15 @@ class CardGeneratedController extends Controller {
         $model = Visit::model()->findByPk($id);
         $visitorModel = Visitor::model()->findByPk($model->visitor);
         $tenant = User::model()->findByPk($visitorModel->tenant);
+        $companyTenant = Company::model()->findByPk($tenant->company);
         if ($tenant->company != '') {
-            $inc = 6 - (strlen($model->id . ($model->card_count + 1)));
+            $inc = 6 - (strlen(($companyTenant->card_count + 1)));
             $int_code = '';
             for ($x = 1; $x <= $inc; $x++) {
 
                 $int_code .= "0";
             }
-            $code = Company::model()->findByPk($tenant->company)->code . $int_code . $model->id . ($model->card_count + 1);
+            $code = Company::model()->findByPk($tenant->company)->code . $int_code . ($companyTenant->card_count + 1);
         } else {
             $code = '';
         }
@@ -150,8 +152,8 @@ class CardGeneratedController extends Controller {
         );
         $cardGenerated->attributes = $cardGeneratedArray;
         if ($session['count'] == 1) {
-            Visit::model()->updateByPk($model->id, array(
-                'card_count' => $model->card_count + 1,
+            Company::model()->updateByPk($tenant->company, array(
+                'card_count' => $companyTenant->card_count + 1,
             ));
             $cardGeneratedService->updateCard($cardGenerated, $model, Yii::app()->user);
         }

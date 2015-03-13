@@ -25,12 +25,7 @@ class Issue81FunctionalTest extends BaseFunctionalTest {
         $this->Scenario1();
     }
 
-    /* Scenario 1 – Check validation errors
-      Expected Behavior
-      -	Assert Please enter a first name
-      - Assert Please enter an email address
-      - Assert Please select a Role
-
+    /* Scenario 1 – reprint card assert card code increments
      */
 
     function Scenario1() {
@@ -42,17 +37,16 @@ class Issue81FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
         $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("link=Active");
-        $this->assertEquals("TCA000061", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[4]/td/span"));
+        $this->assertEquals("NAI000001", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[4]/td/span"));
         $this->click("id=printCardBtn");
         $this->waitForPopUp("_blank", "30000");
-        $this->waitForPageToLoad("30000");
-        $this->assertEquals("TCA000061", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[4]/td/span"));
         $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("link=Active");
         $this->click("id=reprintCardBtn");
         $this->waitForPopUp("_blank", "30000");
-        $this->waitForPageToLoad("30000");
-        $this->assertEquals("TCA000063", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[4]/td/span"));
+        $this->clickAndWait("link=Dashboard");
+        $this->clickAndWait("link=Active");
+        $this->assertEquals("NAI000002", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[4]/td/span"));
     }
 
 }

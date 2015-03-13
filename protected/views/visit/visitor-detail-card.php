@@ -101,20 +101,21 @@ $photoForm = $this->beginWidget('CActiveForm', array(
     echo 'display:none;';
 } ?>">
                         <?php
+                        $companyTenant = Company::model()->findByPk($tenant->company);
                         if ($tenant->company != '') {
-                            $inc = 6 - (strlen($model->id . ($model->card_count + 1)));
+                            $inc = 6 - (strlen(($companyTenant->card_count + 1)));
                             $int_code = '';
                             for ($x = 1; $x <= $inc; $x++) {
 
                                 $int_code .= "0";
                             }
                         }
-                        if ($model->card_count == 0) {
+                        if ($companyTenant->card_count == 0) {
 
 
-                            echo Company::model()->findByPk($tenant->company)->code . $int_code . $model->id . ($model->card_count + 1);
+                            echo Company::model()->findByPk($tenant->company)->code . $int_code . ($companyTenant->card_count + 1);
                         } else {
-                            echo Company::model()->findByPk($tenant->company)->code . $int_code . $model->id . ($model->card_count);
+                            echo Company::model()->findByPk($tenant->company)->code . $int_code . ($companyTenant->card_count);
                         }
                         ?>
                     </span>

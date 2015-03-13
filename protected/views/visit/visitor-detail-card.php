@@ -1,10 +1,10 @@
 
 <?php
 $session = new CHttpSession;
+$session['count'] = 1;
 date_default_timezone_set('Asia/Manila');
 $tenant = User::model()->findByPk($visitorModel->tenant);
-?>
-<?php
+
 $photoForm = $this->beginWidget('CActiveForm', array(
     'id' => 'update-photo-form',
     'action' => Yii::app()->createUrl('/visitor/update&id=' . $model->visitor . '&view=1'),
@@ -223,14 +223,12 @@ $photoForm = $this->beginWidget('CActiveForm', array(
         //change modal url to pass visit id
         var url = 'index.php?r=cardGenerated/print&id=<?php echo $model->id; ?>';
         window.open(url, '_blank');
-        window.location = "index.php?r=visit/detail&id=<?php echo $_GET['id']; ?>";
     }
 
     function regenerateCard() {
         //change modal url to pass visit id
         var url = 'index.php?r=cardGenerated/reprint&id=<?php echo $model->id; ?>';
         window.open(url, '_blank');
-        window.location = "index.php?r=visit/detail&id=<?php echo $_GET['id']; ?>";
     }
 
     function sendPhoto() {

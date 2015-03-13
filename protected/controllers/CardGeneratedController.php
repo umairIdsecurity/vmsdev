@@ -101,16 +101,14 @@ class CardGeneratedController extends Controller {
             'created_by' => $session['id'],
         );
         $cardGenerated->attributes = $cardGeneratedArray;
-        if (CardGenerated::model()->exists('card_code = :card_code', array(":card_code" => $session['cardcode']))) {
-           
-        } else {
-            $cardGeneratedService->save($cardGenerated, $model, Yii::app()->user);
+        if ($session['count'] == 1) {
 
+            $cardGeneratedService->save($cardGenerated, $model, Yii::app()->user);
             Visit::model()->updateByPk($model->id, array(
                 'card_count' => $model->card_count + 1,
             ));
-            
         }
+
 
         $this->renderPartial('print', array(
             'model' => $model,
@@ -139,9 +137,6 @@ class CardGeneratedController extends Controller {
             $code = '';
         }
 
-        Visit::model()->updateByPk($model->id, array(
-            'card_count' => $model->card_count + 1,
-        ));
 
         $cardGeneratedArray = array(
             'card_code' => $code,
@@ -154,13 +149,17 @@ class CardGeneratedController extends Controller {
             'created_by' => $session['id'],
         );
         $cardGenerated->attributes = $cardGeneratedArray;
-
-        if ($cardGeneratedService->updateCard($cardGenerated, $model, Yii::app()->user)) {
-            $this->render('print', array(
-                'model' => $model,
-                'visitorModel' => $visitorModel,
+        if ($session['count'] == 1) {
+            Visit::model()->updateByPk($model->id, array(
+                'card_count' => $model->card_count + 1,
             ));
+            $cardGeneratedService->updateCard($cardGenerated, $model, Yii::app()->user);
         }
+        
+        $this->render('print', array(
+                    'model' => $model,
+                    'visitorModel' => $visitorModel,
+                ));
     }
 
     /**

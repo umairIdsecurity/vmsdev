@@ -38,7 +38,7 @@ class Issue69FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("css=tr.even > td > a.statusLink");
         $this->click("//li[@id='activateLi']/a/span");
         $this->click("css=#activate-a-visit-form > input.complete");
-        sleep(1);
+        sleep(3);
         $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
         $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("link=Active");
@@ -46,28 +46,28 @@ class Issue69FunctionalTest extends BaseFunctionalTest {
         $this->waitForPopUp("_blank", "30000");
         $this->waitForPageToLoad("30000");
         $this->clickAndWait("link=Dashboard");
-        $this->assertEquals("TCA000006", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr[2]/td[2]"));
+        $this->assertEquals("NAI000006", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr[2]/td[2]"));
         $this->clickAndWait("css=#findrecordSidebar > span");
-        $this->assertEquals("TCA000006", $this->getText("//div[@id='view-visitor-records']/table/tbody/tr[2]/td[3]"));
+        $this->assertEquals("NAI000006", $this->getText("//div[@id='view-visitor-records']/table/tbody/tr[2]/td[3]"));
         $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("css=#evacuationreportSidebar > span");
-        $this->assertEquals("TCA000006", $this->getText("//div[@id='view-visitor-records']/table/tbody/tr/td[3]"));
+        $this->assertEquals("NAI000006", $this->getText("//div[@id='view-visitor-records']/table/tbody/tr/td[3]"));
         $this->clickAndWait("//ul[@id='tabs']/li[3]/a/p");
         $username = 'admin@test.com';
         $this->login($username, '12345');
-        $this->assertEquals("TCA000006", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr[2]/td[2]"));
+        $this->assertEquals("NAI000006", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr[2]/td[2]"));
         $this->clickAndWait("id=findrecordSidebar");
-        $this->assertEquals("TCA000006", $this->getText("//div[@id='view-visitor-records']/table/tbody/tr[2]/td[3]"));
+        $this->assertEquals("NAI000006", $this->getText("//div[@id='view-visitor-records']/table/tbody/tr[2]/td[3]"));
         $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("css=#evacuationreportSidebar > span");
-        $this->assertEquals("TCA000006", $this->getText("//div[@id='view-visitor-records']/table/tbody/tr/td[3]"));
+        $this->assertEquals("NAI000006", $this->getText("//div[@id='view-visitor-records']/table/tbody/tr/td[3]"));
         $this->clickAndWait("//ul[@id='tabs']/li[3]/a/p");
         $username = 'staffmember@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("css=tr.even > td > a.statusLink");
         $this->click("//li[@id='activateLi']/a/span");
         $this->click("css=#activate-a-visit-form > input.complete");
-        sleep(1);
+        sleep(4);
         $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
 
         $this->clickAndWait("//ul[@id='tabs']/li[3]/a/p");
@@ -81,17 +81,17 @@ class Issue69FunctionalTest extends BaseFunctionalTest {
         $username = 'staffmember@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Visit History");
-        $this->assertEquals("TCA000005", $this->getText("//div[@id='view-visitor-records']/table/tbody/tr[2]/td[3]"));
+        $this->assertEquals("NAI000005", $this->getText("//div[@id='view-visitor-records']/table/tbody/tr[2]/td[3]"));
         $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("//div[@id='cssmenu']/ul/li[6]/a/span");
-        $this->assertEquals("TCA000005", $this->getText("//div[@id='view-visitor-records']/table/tbody/tr/td[3]"));
+        $this->assertEquals("NAI000005", $this->getText("//div[@id='view-visitor-records']/table/tbody/tr/td[3]"));
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->click("id=yt3");
+        $this->click("id=yt11");
         $this->clickAndWait("//div[@id='cssmenu']/ul/li[4]/ul/li[4]/a/span");
-        $this->assertEquals("TCA000006", $this->getText("css=tr.even > td"));
-        $this->assertEquals("TCA000005", $this->getText("//div[@id='view-export-visitor-records']/table/tbody/tr[3]/td"));
+        $this->assertEquals("NAI000006", $this->getText("css=tr.even > td"));
+        $this->assertEquals("NAI000005", $this->getText("//div[@id='view-export-visitor-records']/table/tbody/tr[3]/td"));
     }
 
 }

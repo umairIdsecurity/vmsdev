@@ -245,6 +245,12 @@ class SiteController extends Controller {
         }
         echo "Tables updated successfully";
     }
+    
+    public function actionTouch(){
+          if(touch(Yii::getPathOfAlias('application').'/assets')){
+              echo 'Assets folder modified successfully';
+          }
+    }
 
     public function actionReset($filename) {
         

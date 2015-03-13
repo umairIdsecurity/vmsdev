@@ -40,7 +40,7 @@ class Issue82FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Administration");
         $this->clickAndWait("xpath=(//a[contains(text(),'Edit')])[7]");
         $this->type("id=User_contact_number", "99999");
-        $this->clickAndWait("id=submitBtn");
+        $this->clickAndWait("id=submitForm");
         $this->assertEquals("99999", $this->getText("//div[@id='user-grid']/table/tbody/tr[7]/td[6]"));
         $this->assertEquals("admin", $this->getText("//div[@id='user-grid']/table/tbody/tr[7]/td[2]"));
         $this->clickAndWait("xpath=(//a[contains(text(),'Edit')])[7]");
@@ -68,7 +68,7 @@ class Issue82FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Administration");
         $this->clickAndWait("xpath=(//a[contains(text(),'Edit')])[7]");
         $this->type("id=User_email", "admintest@test.com");
-        $this->clickAndWait("id=submitBtn");
+        $this->clickAndWait("id=submitForm");
         $this->clickAndWait("xpath=(//a[contains(text(),'Edit')])[7]");
         try {
             $this->assertEquals("admintest@test.com", $this->getValue("id=User_email"));
@@ -93,7 +93,7 @@ class Issue82FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Administration");
         $this->clickAndWait("xpath=(//a[contains(text(),'Edit')])[7]");
         $this->type("id=User_email", "staffmember@test.com");
-        $this->click("id=submitBtn");
+        $this->click("id=submitForm");
         for ($second = 0;; $second++) {
             if ($second >= 60)
                 $this->fail("timeout");

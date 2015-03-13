@@ -55,14 +55,14 @@ class Visitor extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('first_name, last_name, email, contact_number', 'required'),
+            array('first_name, last_name, email, contact_number,company', 'required'),
             array('tenant','required','message' =>'Please select a {attribute}'),
             array('is_deleted', 'numerical', 'integerOnly' => true),
             array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
             array('contact_number, company, role, visitor_status, created_by, tenant, tenant_agent', 'length', 'max' => 20),
             array('date_of_birth, notes,birthdayYear,birthdayMonth,birthdayDay,vehicle', 'safe'),
             array('tenant, tenant_agent,company, photo,vehicle', 'default', 'setOnEmpty' => true, 'value' => null),
-            array('repeatpassword,password', 'required', 'on' => 'insert'),
+            array('repeatpassword,password', 'required','on'=>'insert'),
             array('password', 'compare', 'compareAttribute' => 'repeatpassword', 'on' => 'insert'),
            // array('vehicle', 'length', 'min'=>6, 'max'=>6, 'tooShort'=>'Vehicle is too short (Should be in 6 characters)'), 
             array('email', 'email'),
@@ -162,12 +162,20 @@ class Visitor extends CActiveRecord {
         $criteria->compare('tenant', $this->tenant, true);
         $criteria->compare('tenant_agent', $this->tenant_agent, true);
         $criteria->compare('vehicle', $this->vehicle, true);
-
+        
+        
+        
         if (Yii::app()->controller->id == 'visit') {
             $criteria->compare('CONCAT(first_name, \' \', last_name)', $this->first_name, true);
         } else {
             $criteria->compare('first_name', $this->first_name, true);
         }
+        
+        $user = User::model()->findByPK(Yii::app()->user->id);
+        if($user->role != Roles::ROLE_SUPERADMIN){
+            
+        } 
+        
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'sort' => array(
@@ -204,7 +212,10 @@ class Visitor extends CActiveRecord {
 
     public function beforeFind() {
         $criteria = new CDbCriteria;
-        $criteria->condition = "t.is_deleted = 0";
+        $criteria->condition = 't.is_deleted = 0';
+        if (Yii::app()->user->role != Roles::ROLE_SUPERADMIN) {
+            $criteria->condition = 't.is_deleted = 0 and t.tenant ="' . Yii::app()->user->tenant . '"';
+        }
         $this->dbCriteria->mergeWith($criteria);
     }
 
@@ -219,10 +230,11 @@ class Visitor extends CActiveRecord {
     }
 
     public function findAllCompanyWithSameTenant($tenantId) {
+        $session = new CHttpSession;
         $aArray = array();
-
+        $tenant = User::model()->findByPk($tenantId);
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = '$tenantId'";
+        $Criteria->condition = 'tenant = "'.$tenantId.'" and (id!=1 and id !="'.$tenant->company.'")';
         $company = Company::model()->findAll($Criteria);
 
         foreach ($company as $index => $value) {
@@ -237,15 +249,17 @@ class Visitor extends CActiveRecord {
 
     public function findAllCompanyWithSameTenantAndTenantAgent($id, $tenantAgentId) {
         $aArray = array();
-
+        $tenant = User::model()->findByPk($id);
+        $tenantagent = User::model()->findByPk($tenantAgentId);
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = '$id' and tenant_agent= '$tenantAgentId'";
+        $Criteria->condition = "((tenant = '$id' and tenant_agent= '$tenantAgentId') || id ='".$tenant->company."') and id !='".$tenantagent->company."'";
         $company = Company::model()->findAll($Criteria);
 
         foreach ($company as $index => $value) {
             $aArray[] = array(
                 'id' => $value['id'],
                 'name' => $value['name'],
+                'tenant_agent' => $value['tenant_agent'],
             );
         }
         return $aArray;

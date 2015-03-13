@@ -33,7 +33,7 @@ class VisitorServiceImpl implements VisitorService {
         } else {
             /* if update and vehicle not blank, update plate number 
              */
-
+            $visitor->password = User::model()->hashPassword($visitor->password);
             if ($visitor->vehicle != '') {
 
                 if (Visitor::model()->findByPk($visitor->id)->vehicle != NULL) {
@@ -49,7 +49,7 @@ class VisitorServiceImpl implements VisitorService {
                 $visitor->vehicle = NULL;
             }
         }
-
+        
         if (!($visitor->save())) {
             return false;
         }

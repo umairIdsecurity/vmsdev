@@ -44,7 +44,6 @@ class Issue66FunctionalTest extends BaseFunctionalTest {
         $username = 'agentadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
-        $this->assertEquals("Customise Display", $this->getText("css=span"));
     }
 
     /* Scenario 2 Assert organisation settings present in adminofadmin@test.com
@@ -65,20 +64,15 @@ class Issue66FunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_contact_number", "12345");
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeat_password", "12345");
-        $this->click("id=submitBtn");
         $this->type("id=User_email", "adminofadmin@test.com");
-        $this->click("id=submitBtn");
-        $this->click("id=submitForm");
-        $this->waitForPageToLoad("30000");
-        $this->click("//ul[@id='tabs']/li[3]/a/p");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("id=submitForm");
+        $this->clickAndWait("//ul[@id='tabs']/li[3]/a/p");
         $this->type("id=LoginForm_username", "adminofadmin@test.com");
         $this->type("id=LoginForm_password", "12345");
         $this->click("name=yt0");
         $this->click("name=yt0");
         $this->waitForPageToLoad("30000");
-        $this->click("link=Administration");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("link=Administration");
         $this->assertEquals("Customise Display", $this->getText("link=Customise Display"));
     }
 

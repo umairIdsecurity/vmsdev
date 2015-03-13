@@ -1,12 +1,14 @@
-<?php
-/* @var $this VisitController */
-/* @var $model Visit */
-?>
+<style>
+    .grid-view .summary {
+        margin-left: 760px !important;
+        margin-top: -25px !important;
+    }
+</style>
 
 <h1>Visit History</h1>
 
 <?php echo CHtml::button('Export to CSV', array('id' => 'export-button', 'class' => 'greenBtn complete')); ?>
-<br><Br>
+<br>
 <div class="search-form" style="display:none;">
     <?php
     $this->renderPartial('_search', array(
@@ -51,8 +53,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'header' => 'Status',
             'cssClassExpression' => 'changeStatusClass($data->visit_status)',
         ),
-       
-         array(
+        array(
             'name' => 'contactemail',
             'value' => 'Visitor::model()->findByPk($data->visitor)->email',
             'header' => 'Contact Email'
@@ -67,8 +68,6 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'value' => 'VisitorType::model()->returnVisitorTypes($data->visitor_type)',
             'filter' => VisitorType::model()->returnVisitorTypes(),
         ),
-        
-        
         array(
             'name' => 'company',
             'value' => 'getCompany($data->visitor)',
@@ -76,19 +75,16 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'cssClassExpression' => '( getCompany($data->visitor)== "Not Available" ? "errorNotAvailable" : "" ) ',
             'type' => 'raw'
         ),
-        
-       
         array(
             'name' => 'date_check_in',
             'type' => 'html',
-          //  'value' => 'formatDate($data->date_in)',
+        //  'value' => 'formatDate($data->date_in)',
         ),
         array(
             'name' => 'time_check_in',
             'type' => 'html',
             'value' => 'formatTime($data->time_check_in)',
         ),
-        
     ),
 ));
 
@@ -117,46 +113,45 @@ function formatDate($date) {
 }
 
 function getCardCode($cardId) {
-    if($cardId !=''){
+    if ($cardId != '') {
         return CardGenerated::model()->findByPk($cardId)->card_code;
     } else {
         return "";
     }
 }
 
+function changeStatusClass($visitStatus) {
+    // return "red";
+    switch ($visitStatus) {
+        case VisitStatus::ACTIVE:
+            return "green";
+            break;
 
-function changeStatusClass($visitStatus){
-   // return "red";
-   switch ($visitStatus) {
-       case VisitStatus::ACTIVE:
-           return "green";
-           break;
-       
-       case VisitStatus::PREREGISTERED:
-           return "blue";
-           break;
-       
-       case VisitStatus::CLOSED:
-           return "red";
-           break;
-       
-       case VisitStatus::SAVED:
-           return "grey";
-           break;
+        case VisitStatus::PREREGISTERED:
+            return "blue";
+            break;
 
-       default:
-           break;
-   }
+        case VisitStatus::CLOSED:
+            return "red";
+            break;
+
+        case VisitStatus::SAVED:
+            return "grey";
+            break;
+
+        default:
+            break;
+    }
 }
 ?>
 <script>
     $(document).ready(function() {
-        
+
         if ($("#totalRecordsCount").val() == 0) {
             $('#export-button').removeClass('greenBtn');
             $('#export-button').addClass('btn DeleteBtn actionForward');
             $("#export-button").attr('disabled', true);
-        }  
+        }
         $('#export-button').on('click', function() {
             $.fn.yiiGridView.export();
         });

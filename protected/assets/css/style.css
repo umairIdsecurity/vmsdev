@@ -51,7 +51,7 @@ div.form label{
 }
 
 .host-AddBtn{
-    margin-top:-4px;
+    margin-top:-9px;padding:7px;
 }
 
 .login-area .errorMessage{
@@ -539,7 +539,7 @@ dt.tabs dt{
 .visitor-title{
     font-size:18px;
     font-weight:bold;
-    margin: 20px 0px;
+    margin: 5px 0 5px 0;
     color:#5C5C5E;
 }
 
@@ -551,9 +551,9 @@ dt.tabs dt{
     padding:3px;
 }
 
-.visitor-findBtn ,.host-findBtn{
+.visitor-findBtn ,.host-findBtn, #host-AddBtn{
     vertical-align: top;
-    margin-top:2.5px;
+    padding:7px !important;
 }
 
 .search-text{
@@ -595,7 +595,7 @@ dt.tabs dt{
 
 .errorMessageEmail, .errorMessageEmail1{
     display: none;
-    
+
 }
 #searchVisitorTableDiv, #visitor_fields_for_Search, 
 #search-visitor-reason-error, #searchHostTableDiv, 
@@ -722,7 +722,7 @@ dt.tabs dt{
 #actionsCssMenu ul,
 #actionsCssMenu li,
 #actionsCssMenu a{
-  //  margin: 2px;
+    //  margin: 2px;
     padding: 0;
     border: 0;
     list-style: none;
@@ -921,7 +921,7 @@ dt.tabs dt{
     background-position: 0px -7px;
     padding: 0px 30px;
     display: block;
-  //  height: 15px;
+    //  height: 15px;
     text-decoration: none;
     background-size:20px 24px;
 }
@@ -936,7 +936,7 @@ dt.tabs dt{
 
 .dashboardMenu .pre-visits {
     background:url('../images/preregistericonsidemenu.png') 0 0 no-repeat;
-   // height: 16px;
+    // height: 16px;
 }
 
 .sidemenu-icon{
@@ -974,7 +974,7 @@ dt.tabs dt{
     list-style:none outside none;
 }
 #actionsCssMenu li a, #actionsCssMenu li a span{
- //   color:#58585A !important;
+    //   color:#58585A !important;
     font-weight:bold;
     font-size:12px;
     width:253px;
@@ -1059,8 +1059,8 @@ dt.tabs dt{
     padding:7px !important;
 }
 .close-visit {
-    
-     background:url('../images/close_icon.gif') 0 0 no-repeat;
+
+    background:url('../images/close_icon.gif') 0 0 no-repeat;
     background-size:16px 15px;
     background-position: 3px 0px;
     padding: 0px 30px;
@@ -1068,7 +1068,7 @@ dt.tabs dt{
     display: block;
     height: 16px;
     text-decoration: none;
-   // margin-bottom:10px;
+    // margin-bottom:10px;
 }
 
 .admindashboardDiv > .grid-view{
@@ -1091,7 +1091,11 @@ dt.tabs dt{
 }
 
 #export-button{
-    margin-top:-10px;
+    margin-top: -32px;
+    margin-left: 797px !important;
+    margin-top: -32px !important;
+    position: absolute;
+
 }
 
 .admindashboardDiv{
@@ -1148,14 +1152,27 @@ dt.tabs dt{
 }
 
 .moveFromAlignmentA{
-    margin-left: 576px;
-    margin-top: -353px !important;
-    position:absolute;
+    margin-left: 300px;
+    margin-top: -113px !important;
+    position:relative;
 }
 
 .moveFromAlignmentB{
-    margin-left: 576px;
-    margin-top: -133px !important;
+    margin-left: 300px;
+    margin-top: -115px !important;
+    position:relative;
+}
+
+.moveFromAlignmentAB{
+    margin-left: 300px;
+    margin-top: -115px !important;
+    position:absolute;
+}
+
+.moveFromAlignmentBB{
+    margin-left: 300px;
+    margin-top: -115px !important;
+    position:absolute;
 }
 
 .borderTopLeftRadius {
@@ -1226,12 +1243,7 @@ dt.tabs dt{
         margin-top: -38px;
         position: absolute;
         width: 50px;*/
-    float: left;
-    height: 30px;
-    margin-left: -105px;
-    margin-top: 77px;
-    position: absolute;
-    width: 50px;*/
+
     float: left;
     height: 30px;
     margin-left: -105px;
@@ -1261,10 +1273,10 @@ dt.tabs dt{
 .cardPhotoPreview{
     background-color: #FFF;
     height: 154px;
-    margin-left: 76px;
-    margin-top: 12px;
+    margin-left: 68px;
+    margin-top: 13px;
     position: absolute;
-    width: 113px;
+    width: 120px;
     color:white;
 }
 
@@ -1418,7 +1430,15 @@ dt.tabs dt{
     display:none;
 }
 
-#visitor-grid .items .filters td:nth-child(6), #visitor-grid .items .filters td:nth-child(7){
+#visitor-grid .items .filters td:nth-child(6), #visitor-grid .items .filters td:nth-child(7),
+#workstation-grid_c5,#workstation-grid .items .filters td:nth-child(6),#workstation-grid_c6,
+#workstation-grid .items .filters td:nth-child(7),
+#user-grid_c6,#user-grid .items .filters td:nth-child(6),
+#user-grid_c7,#user-grid .items .filters td:nth-child(7),
+#user-grid_c8,#user-grid .items .filters td:nth-child(8),
+#user-grid_c9,#user-grid .items .filters td:nth-child(9),
+#user-grid_c10,#user-grid .items .filters td:nth-child(10)
+{
     display:none;
 }
 #actionsCssMenu .complete, #actionsCssMenu .neutral{
@@ -1504,3 +1524,15 @@ dt.tabs dt{
 #view-visitor-records_c10,#view-visitor-records_c11,#view-visitor-records-history_c11{
     width:120px !important;
 }
+
+.nav-tabs > li > a{
+    color:#3C3C3C;
+}
+.uploadAddVisitorNote{
+    float: left;
+    font-size: 10px;
+    margin-left: 15px;
+    margin-top: -6px;
+    position: relative;
+    text-align: center;
+    width: 250px;}

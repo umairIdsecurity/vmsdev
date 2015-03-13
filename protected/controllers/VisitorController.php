@@ -114,7 +114,6 @@ class VisitorController extends Controller {
     public function actionDelete($id) {
         $model = $this->loadModel($id);
         if ($model->delete()) {
-
             //throw new CHttpException(400, "This is a required field and cannot be deleted"); 
         } else {
             $visitorExists = Visit::model()->exists('is_deleted = 0 and visitor =' . $id . ' and (visit_status=' . VisitStatus::PREREGISTERED . ' or visit_status=' . VisitStatus::ACTIVE . ')');
@@ -202,7 +201,7 @@ class VisitorController extends Controller {
         Yii::app()->end();
     }
 
-    public function actionFindVisitor($id) {
+    public function actionFindVisitor($id,$tenant,$tenant_agent) {
         $this->layout = '//layouts/column1';
         $model = new Visitor('search');
         $model->unsetAttributes();  // clear any default values
@@ -214,7 +213,7 @@ class VisitorController extends Controller {
                 ), false, true);
     }
 
-    public function actionFindHost($id) {
+    public function actionFindHost($id,$tenant,$tenant_agent) {
         $this->layout = '//layouts/column1';
         $model = new User('search');
         $model->unsetAttributes();  // clear any default values

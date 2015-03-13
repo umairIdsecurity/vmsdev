@@ -154,13 +154,28 @@ class Workstation extends CActiveRecord {
             return "0";
         }
     }
+    
+    public function beforeDelete() {
+        //before delete check user workstation if has record
+        $userWorkstation = UserWorkstations::model()->exists('workstation ="'.$this->id.'" ');
+        $visit = Visit::model()->exists('workstation="'.$this->id.'"');
+        if ($userWorkstation || $visit) {
+            return false;
+        } else {
+            $this->is_deleted = 1;
+            $this->save();
+            echo "true";
+            return false;
+        }
+    }
 
-    public function behaviors() {
-        return array(
-            'softDelete' => array(
-                'class' => 'ext.soft_delete.SoftDeleteBehavior'
-            ),
-        );
+    public function beforeFind() {
+        $criteria = new CDbCriteria;
+        $criteria->condition = "t.is_deleted = 0";
+        if (Yii::app()->user->role != Roles::ROLE_SUPERADMIN) {
+            $criteria->condition = "t.tenant ='" . Yii::app()->user->tenant . "' and t.is_deleted = 0";
+        }
+        $this->dbCriteria->mergeWith($criteria);
     }
 
     protected function afterValidate() {

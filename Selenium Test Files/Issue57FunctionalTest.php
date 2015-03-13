@@ -176,7 +176,6 @@ class Issue57FunctionalTest extends BaseFunctionalTest {
         $this->click("link=Manage Users");
         $this->clickAndWait("link=Add Administrator");
         $this->addUser("admin3@test.com", "admin3");
-        $this->click("id=submitBtn");
         $this->clickAndWait("id=submitForm");
         $this->type("css=td > input[name=\"User[first_name]\"]", "Test");
         $this->click("//td[2]/input");

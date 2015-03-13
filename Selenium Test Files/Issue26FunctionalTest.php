@@ -26,7 +26,8 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
       //  $this->Scenario1();
         $this->Scenario2();
         $this->Scenario3();
-        $this->Scenario5();
+        //cant be applicable no patient visitor type
+        //$this->Scenario5();
     }
 
     /* Scenario 1 – Login as super admin then perform update a visitor functionality for patient visitor type
@@ -162,7 +163,7 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_contact_number", "1234567890");
         $this->click("id=submitContactDetailForm");
         $this->assertEquals("A profile already exists for this email address.", $this->getText("xpath=(//div[@id='Visitor_email_em_'])[2]"));
-        $this->select("id=Visit_reason", "label=Select Reason");
+        $this->select("id=Visit_reason", "label=Please select a reason");
         $this->click("id=submitReasonForm");
         sleep(1);
         $this->assertEquals("Please enter a Reason", $this->getText("id=Visit_reason_em_"));
@@ -244,7 +245,7 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_contact_number", "123456");
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeatpassword", "12345");
-        $this->select("id=User_tenant", "label=Test admin");
+        $this->select("id=User_tenant", "label=NAIA Airport");
         sleep(1);
         $this->select("id=User_tenant_agent", "label=Test agentadmin");
         sleep(1);

@@ -60,14 +60,14 @@ class PasswordController extends Controller {
             $model->attributes = $_POST['Password'];
             $user = User::model()->findByPK($id);
             
-            if (User::model()->validatePassword($_POST['Password']['currentpassword'], $user->password)) {
+           // if (User::model()->validatePassword($_POST['Password']['currentpassword'], $user->password)) {
                 if ($model->save()) {
                     Yii::app()->user->setFlash('success', 'Password successfully updated');
                     $this->redirect(array('user/profile', 'id' => $model->id));
                 }
-            } else {
-                Yii::app()->user->setFlash('error', "Current password does not match password in your account. ");
-            }
+//            } else {
+//                Yii::app()->user->setFlash('error', "Current password does not match password in your account. ");
+//            }
         }
 
         $this->render('update', array(

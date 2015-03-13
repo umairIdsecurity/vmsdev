@@ -68,7 +68,7 @@ class Issue44FunctionalTest extends BaseFunctionalTest {
         } catch (PHPUnit_Framework_AssertionFailedError $e) {
             array_push($this->verificationErrors, $e->toString());
         }
-        $this->assertEquals("Select Admin Test admin Test admin2", $this->getText("id=Visitor_tenant"));
+        $this->assertEquals("Please select a tenant NAIA Airport", $this->getText("id=Visitor_tenant"));
         try {
             $this->assertEquals("ABC123", $this->getValue("id=Visitor_vehicle"));
         } catch (PHPUnit_Framework_AssertionFailedError $e) {
@@ -118,7 +118,7 @@ class Issue44FunctionalTest extends BaseFunctionalTest {
         } catch (PHPUnit_Framework_AssertionFailedError $e) {
             array_push($this->verificationErrors, $e->toString());
         }
-        $this->assertEquals("Select Admin Test admin Test admin2", $this->getText("id=Visitor_tenant"));
+        $this->assertEquals("Please select a tenant NAIA Airport", $this->getText("id=Visitor_tenant"));
         sleep(1);
         $this->assertEquals("Visitor Company", $this->getEval("window.document.getElementById(\"Visitor_company\").options[window.document.getElementById(\"Visitor_company\").selectedIndex].text"));
 
@@ -172,7 +172,7 @@ class Issue44FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_email", "testvisitor1@test.com");
         $this->type("id=Visitor_contact_number", "123456");
         $this->type("id=Visitor_position", "position");
-        $this->select("id=Visitor_tenant", "label=Test admin");
+        $this->select("id=Visitor_tenant", "label=NAIA Airport");
         $this->type("id=Visitor_password", "1234");
         $this->click("id=submitFormVisitor");
         $this->waitForElementPresent("css=div.errorMessageEmail");

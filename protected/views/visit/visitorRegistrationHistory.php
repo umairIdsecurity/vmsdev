@@ -1,12 +1,12 @@
 <style>
     .grid-view .summary {
-        margin-left: 758px !important;
-        margin-top: -107px !important;
+        margin-left: 760px !important;
+        margin-top: -25px !important;
     }
 </style>
 <h1>Visitor Registration History</h1>
 <?php echo CHtml::button('Export to CSV', array('id' => 'export-button', 'class' => 'greenBtn complete')); ?>
-<br>
+
 <div class="searchDateRange" >
     <?php
     /* @var $this VisitController */
@@ -164,7 +164,7 @@ function formatTime($time) {
             changeMonth: true,
             changeYear: true,
             showOn: "button",
-            buttonImage: "<?php echo Yii::app()->request->baseUrl; ?>/images/calendar.png",
+            buttonImage: "<?php echo Yii::app()->controller->assetsBase; ?>/images/calendar.png",
             buttonImageOnly: true,
             buttonText: "Select Date From",
             dateFormat: "dd-mm-yy",
@@ -174,7 +174,7 @@ function formatTime($time) {
             changeMonth: true,
             changeYear: true,
             showOn: "button",
-            buttonImage: "<?php echo Yii::app()->request->baseUrl; ?>/images/calendar.png",
+            buttonImage: "<?php echo Yii::app()->controller->assetsBase; ?>/images/calendar.png",
             buttonImageOnly: true,
             buttonText: "Select Date To",
             dateFormat: "dd-mm-yy",

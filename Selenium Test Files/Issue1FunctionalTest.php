@@ -18,7 +18,7 @@ class Issue1 extends BaseFunctionalTest {
 
     protected function setUp() {
         parent::setUp();
-        $this->setBrowser("*firefoxproxy");
+        $this->setBrowser("*firefox");
         $this->setBrowserUrl("http://dev.identitysecurity.info");
         
     }

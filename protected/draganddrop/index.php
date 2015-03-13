@@ -1,7 +1,6 @@
 
 
 <?php
-
 if ($this->Id == 'visitor') {
     $dataId = '';
 } elseif (isset($_GET['id'])) {
@@ -11,30 +10,45 @@ if ($this->Id == 'visitor') {
 }
 ?>
 <?php
-if ($this->action->id == 'addvisitor') {
+if ($this->action->id == 'addvisitor' || ($this->action->id == 'update' && $this->id == 'visitor')) {
     ?>
     <style>
         .ajax-upload-dragdrop {
             float:left !important;
-            margin-left:0px !important;
+            margin-top: -30px;
+            background: url('<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png') no-repeat center top;
+            background-size:137px;
+            height: 150px;
+            width: 120px !important;
+            padding: 87px 5px 12px 90px;
+            margin-left: 20px !important;
         }
         .ajax-file-upload{
-            margin-top:60px !important;
+            margin-left: -107px !important;
+            margin-top: 170px !important;
             position:absolute !important;
-            margin-left: -53px !important;
             font-size: 12px !important;
             padding-bottom:3px;
+            height:17px;
         }
 
         .editImageBtn{
-            margin-bottom: -61px !important;
-            margin-left: -102px !important;
+            margin-left: -103px !important;
+            color:white;
+            font-weight:bold;
+            text-shadow: 0 0 !important;
+            font-size:12px !important;
+            height:24px;
+            width:131px !important;
         }
         .imageDimensions{
             display:none !important;
         }
         #cropImageBtn{
-            margin-top:80px;
+            float: left;
+            margin-left: -54px !important;
+            margin-top: 218px;
+            position: absolute;
         }
     </style>
     <?php
@@ -48,7 +62,7 @@ if ($this->action->id == 'addvisitor') {
         .ajax-file-upload{
             margin-top:80px !important;
             position:absolute !important;
-            margin-left: -53px !important;
+            margin-left: -113px !important;
             font-size: 12px !important;
             padding-bottom:3px;
         }
@@ -58,24 +72,75 @@ if ($this->action->id == 'addvisitor') {
             margin-left: -102px !important;
         }
     </style>
-<?php } elseif ($this->action->id == 'create') { ?>
+<?php } elseif ($this->action->id == 'create' && $this->id == 'visitor') {
+    ?>
     <style>
         .ajax-upload-dragdrop {
-            //margin-right:-75px !important;
+            float:left !important;
+            margin-left: 25px !important;
+            margin-top: 10px;
+            background: url('<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png') no-repeat center top;
+            background-size:137px;
+            height: 150px;
+            width: 120px !important;
+            padding: 87px 5px 12px 90px;
+        }
+        .ajax-file-upload{
+            margin-left: -107px !important;
+            margin-top: 170px !important;
+            position:absolute !important;
+            font-size: 12px !important;
+            padding-bottom:3px;
+            height:17px;
+        }
+
+        .editImageBtn{
+            margin-left: -103px !important;
+            color:white;
+            font-weight:bold;
+            text-shadow: 0 0 !important;
+            font-size:12px !important;
+            height:24px;
+            width:131px !important;
+        }
+        .imageDimensions{
+            display:none !important;
+        }
+        #cropImageBtn{
+            float: left;
+            margin-left: -54px !important;
+            margin-top: 257px;
+            position: absolute;
+        }
+        .uploadnotetext{
+            margin-top:102px;
+            margin-left: -83px;
+        }
+    </style>
+    <?php
+} elseif ($this->action->id == 'create') {
+    ?>
+    <style>
+        .ajax-upload-dragdrop {
             float:none !important;
         }
         .ajax-file-upload{
             margin-top:80px !important;
             position:absolute !important;
-            margin-left: -53px !important;
+            margin-left: -112px !important;
             font-size: 12px !important;
-            padding-bottom:3px;
+            padding-bottom:5px;
         }
-        
 
         .editImageBtn{
             margin-top: -10px !important;
-            margin-left:7px !important;
+            margin-left:6px !important;
+            color:white;
+            font-weight:bold;
+            text-shadow: 0 0 !important;
+            font-size:12px !important;
+            height:23px;
+            width:131px !important;
         }
     </style>
 <?php } elseif ($this->action->id == 'update') { ?>
@@ -86,7 +151,7 @@ if ($this->action->id == 'addvisitor') {
         .ajax-file-upload{
             margin-top:80px !important;
             position:absolute !important;
-            margin-left: -53px !important;
+            margin-left: -113px !important;
             font-size: 12px !important;
             padding-bottom:3px;
         }
@@ -149,6 +214,7 @@ if (isset($_GET['viewFrom'])) {
                 } else {
                     var logo = document.getElementById('companyLogo');
                 }
+                
                 var currentAction = $("#actionUpload").val();
                 if (currentAction == 'update' && $("#controllerId").val() != 'visitor')
                 {
@@ -156,15 +222,14 @@ if (isset($_GET['viewFrom'])) {
                     $(".companyLogoDiv").show();
                 } else {
                     //id of photo
-
+                    
                     if ($("#controllerId").val() == 'visitor' || $("#controllerId").val() == 'visit') {
+                        
                         $("#Visitor_photo").val(data);
                     } else if ($("#controllerId").val() == 'companyLafPreferences')
                     {
                         $("#CompanyLafPreferences_logo").val(data);
-                    }
-
-                    else {
+                    } else {
                         $("#Company_logo").val(data);
                     }
 
@@ -176,17 +241,26 @@ if (isset($_GET['viewFrom'])) {
                         success: function(r) {
 
                             $.each(r.data, function(index, value) {
-                                logo.src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
-                                $(".photoDiv").show();
+                                if (($("#actionUpload").val() == 'update' ||$("#actionUpload").val() == 'addvisitor' || ($("#actionUpload").val() == 'create') && $("#controllerId").val() == 'visitor')) {
+                                    $(".ajax-upload-dragdrop").css("background", "url(<?php echo Yii::app()->request->baseUrl; ?>" + value.relative_path + ") no-repeat center top");
+                                    $(".ajax-upload-dragdrop").css({
+                                        "background-size": "137px 190px"
+                                    });
+                                    logo.src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+                                } else {
+                                    logo.src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+                                    $(".photoDiv").show();
+                                }
+
                                 if ($("#controllerId").val() != 'companyLafPreferences' && $("#controllerId").val() != 'company') {
                                     document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 }
                                 if ($("#controllerId").val() == 'visit') {
                                     $("#submitBtnPhoto").click();
-                                    if($("#visitorOriginalValue").val() == ''){
+                                    if ($("#visitorOriginalValue").val() == '') {
                                         $("#cropImageBtn").show();
                                     }
-                                    
+
                                 } else if ($("#controllerId").val() == 'visitor') {
                                     $("#cropImageBtn").show();
                                 }
@@ -199,6 +273,9 @@ if (isset($_GET['viewFrom'])) {
                 }
             }
         });
+        if ($("#actionUpload").val() == 'detail') {
+               $(".uploadnotetext").html('');
+        }
         if ($("#actionUpload").val() == 'detail') {
             $(".ajax-upload-dragdrop span").hide();
             $('.ajax-upload-dragdrop').css({"border": "none"});

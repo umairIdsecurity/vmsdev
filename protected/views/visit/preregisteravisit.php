@@ -77,6 +77,7 @@ $this->widget('zii.widgets.jui.CJuiDatePicker', array(
             <span style="color:red;display:none;" id="preregisterdateinError">Date In cannot be blank.</span>
         </td>
     </tr>
+    <?php if($model->card_type != CardType::SAME_DAY_VISITOR) {?>
     <tr>
         <td>Proposed Date Out</td>
     </tr>
@@ -93,7 +94,7 @@ $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                     'placeholder' => 'dd-mm-yyyy',
                 ),
                 'options' => array(
-                    'buttonImage' => Yii::app()->request->baseUrl . '/images/Calendar.png',
+                    'buttonImage' => Yii::app()->controller->assetsBase . '/images/Calendar.png',
                     'buttonImageOnly' => true,
                     'dateFormat' => 'dd-mm-yy',
                     'onClose' => 'js:function(selectedDate) { $("#Visit_date_out").datepicker("option", "maxDate", selectedDate); }',
@@ -103,6 +104,7 @@ $this->widget('zii.widgets.jui.CJuiDatePicker', array(
             <span style="color:red;display:none;" id="preregisterdateoutError">Date Out cannot be blank.</span>
         </td>
     </tr>
+    <?php } ?>
     <tr>
         <td>Proposed Time In</td>
     </tr>
@@ -209,7 +211,8 @@ if ($model->visit_status == VisitStatus::CLOSED) {
         
         $('#confirmPreregisterDummy').on('click', function(e) {
             e.preventDefault();
-            $("#confirmPreregisterSubmit").click();
+            checkIfPreregisteredVisitConflictsWithAnotherVisit();
+           // $("#confirmPreregisterSubmit").click();
         });
 
         $('#Visit_date_in').on('change', function(e) {
@@ -226,7 +229,7 @@ if ($model->visit_status == VisitStatus::CLOSED) {
             changeMonth: true,
             changeYear: true,
             showOn: "button",
-            buttonImage: "<?php echo Yii::app()->request->baseUrl; ?>/images/calendar.png",
+            buttonImage: "<?php echo Yii::app()->controller->assetsBase; ?>/images/calendar.png",
             buttonImageOnly: true,
             buttonText: "Select Proposed Date In",
             minDate: "+1",
@@ -251,7 +254,7 @@ if ($model->visit_status == VisitStatus::CLOSED) {
             changeMonth: true,
             changeYear: true,
             showOn: "button",
-            buttonImage: "<?php echo Yii::app()->request->baseUrl; ?>/images/calendar.png",
+            buttonImage: "<?php echo Yii::app()->controller->assetsBase; ?>/images/calendar.png",
             buttonImageOnly: true,
             buttonText: "Select Proposed Date Out",
             dateFormat: "dd-mm-yy",

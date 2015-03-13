@@ -156,8 +156,8 @@ CREATE TABLE IF NOT EXISTS `company` (
 
 INSERT INTO `company` (`id`,`code`, `name`, `trading_name`, `logo`, `contact`, `billing_address`, `email_address`, `office_number`, `mobile_number`, `website`, `created_by_user`, `created_by_visitor`, `tenant`, `tenant_agent`, `is_deleted`) VALUES
 (1,'IDS', 'Identity Security', 'Identity Security', 2, 'Test Person', '123 street', 'idescurity@test.com', 12345, 12345, 'http://idsecurity.com.au', NULL, NULL, 16, 16, 0),
-(2,'TCA', 'Test Company 1', 'Test Company 1', 1, 'Test Person', '123 street', 'testcompany@test.com', 12345, 12345, 'http://testcompany.com', NULL, NULL, 17, 18, 0),
-(3, 'TCB','Test Company 2', 'Test Company 2', 1, 'Test Person', '123 street', 'testcompany2@test.com', 12345, 12345, 'http://testcompany2.com', NULL, NULL, NULL, NULL, 0);
+(2,'NAI', 'NAIA Airport', 'NAIA Airport', 1, 'Test Person', '123 street', 'testcompany@test.com', 12345, 12345, 'http://testcompany.com', NULL, NULL, 17, 18, 0),
+(3, 'PAL','Philippine Airline', 'Philippine Airline', 1, 'Test Person', '123 street', 'testcompany2@test.com', 12345, 12345, 'http://testcompany2.com', NULL, NULL, 17, 18, 0);
 
 -- --------------------------------------------------------
 
@@ -286,9 +286,9 @@ CREATE TABLE IF NOT EXISTS `user` (
 INSERT INTO `user` (`id`, `first_name`, `last_name`, `email`, `contact_number`, `date_of_birth`, `company`, `department`, `position`, `staff_id`, `notes`, `password`, `role`, `user_type`, `user_status`, `created_by`, `is_deleted`, `tenant`, `tenant_agent`) VALUES
 (16, 'IDS', 'Test', 'superadmin@test.com', '9998798', '1993-01-01', 1, '', '', '', '', '$2a$13$wv.A6T0CCHXczYv/tlJP6./6qUvDdOy.g8KX.FqSos1Mf6MA7Xl66', 5, 1, 1, 16, 0, 16, 16),
 (17, 'Test', 'admin', 'admin@test.com', '123456', '2014-09-14', 2, 'Test Department', 'Test Position', '123456', 'Test Notes', '$2a$13$6qNEkuI21Coug38E485YweOeVqPpe4tgpb8v9Eb.z.1Skierdhpie', 1, 1, 1, 16, 0, 17, NULL),
-(18, 'Test', 'agentadmin', 'agentadmin@test.com', '123456', '2014-09-14', 2, 'Test Department', 'Test Position', '123456', 'Test Notes', '$2a$13$Jnj1TVTdBZD3GOitBD7HGea4OOr6YZi63vSWQPFiJchipiDJorTqm', 6, 1, 1, 16, 0, 17, 18),
+(18, 'Test', 'agentadmin', 'agentadmin@test.com', '123456', '2014-09-14', 3, 'Test Department', 'Test Position', '123456', 'Test Notes', '$2a$13$Jnj1TVTdBZD3GOitBD7HGea4OOr6YZi63vSWQPFiJchipiDJorTqm', 6, 1, 1, 16, 0, 17, 18),
 (19, 'Test', 'operator', 'operator@test.com', '123456', '2014-09-14', 2, 'Test Department', 'Test Position', '123456', 'Test Notes', '$2a$13$b1b.63axWWCFUjhIFjGLSutoYkNU6DBgRzxUJvv6QJxfdKoOz89We', 8, 1, 1, 16, 0, 17, NULL),
-(20, 'Test', 'agentoperator', 'agentoperator@test.com', '123456', '2014-09-14', 2, 'Test Department', 'Test Position', '123456', 'Test Notes', '$2a$13$VCQIjGBIohdn8xa30FGFj.OJkeFdZH7gVybPn9muggcD9B8CqfOgy', 7, 1, 1, 16, 0, 17, 18),
+(20, 'Test', 'agentoperator', 'agentoperator@test.com', '123456', '2014-09-14', 3, 'Test Department', 'Test Position', '123456', 'Test Notes', '$2a$13$VCQIjGBIohdn8xa30FGFj.OJkeFdZH7gVybPn9muggcD9B8CqfOgy', 7, 1, 1, 16, 0, 17, 18),
 (21, 'Test', 'staffmember', 'staffmember@test.com', '123456', '2014-09-14', 2, 'Test Department', 'Test Position', '123456', 'Test Notes', '$2a$13$w1Kro.V4SJPkFBu5HChiEeHwRDBSccKKqWW1qPZbEqDZEZc/V9sna', 9, 1, 1, 16, 0, 17, 18),
 (22, 'Test', 'admin2', 'admin2@test.com', '123456', '2014-09-14', 2, 'Test Department', 'Test Position', '123456', 'Test Notes', '$2a$13$5X3fP8TUNc/0sVUi9fwlkOqboosSxQxbpiR0GAi83GUedz9hLyTfC', 1, 1, 1, 16, 0, 17, NULL),
 (23, 'Test', 'host1', 'testHost1@test.com', '123456', '2014-09-14', 2, 'Test Department', 'Test Position', '123456', 'Test Notes', '$2a$13$5X3fP8TUNc/0sVUi9fwlkOqboosSxQxbpiR0GAi83GUedz9hLyTfC', 9, 1, 1, 16, 0, 17, 18);
@@ -461,9 +461,9 @@ CREATE TABLE IF NOT EXISTS `visitor` (
 
 
 INSERT INTO `visitor` (`id`, `first_name`, `last_name`, `email`, `contact_number`, `date_of_birth`, `company`, `department`, `position`, `staff_id`, `notes`, `password`, `role`, `visitor_type`, `visitor_status`, `created_by`, `is_deleted`, `tenant`, `tenant_agent`) VALUES
-(2, 'Test', 'Visitor1', 'testVisitor1@test.com', '1234567', '1970-01-01', 2, NULL, 'Position', NULL, NULL, NULL, 10, 1, 1, 16, 0, 17, 18),
-(3, 'Test', 'Visitor3', 'testVisitor3@test.com', '1234567', '1970-01-01', 2, NULL, 'Position', NULL, NULL, NULL, 10, 1, 1, 16, 0, 17, 18),
-(4, 'Test', 'Visitor4', 'testVisitor4@test.com', '1234567', '1970-01-01', 2, NULL, 'Position', NULL, NULL, NULL, 10, 2, 1, 16, 0, 17, 18);
+(2, 'Test', 'Visitor1', 'testVisitor1@test.com', '1234567', '1970-01-01', 3, NULL, 'Position', NULL, NULL, NULL, 10, 1, 1, 16, 0, 17, 18),
+(3, 'Test', 'Visitor3', 'testVisitor3@test.com', '1234567', '1970-01-01', 3, NULL, 'Position', NULL, NULL, NULL, 10, 1, 1, 16, 0, 17, 18),
+(4, 'Test', 'Visitor4', 'testVisitor4@test.com', '1234567', '1970-01-01', 3, NULL, 'Position', NULL, NULL, NULL, 10, 2, 1, 16, 0, 17, 18);
 
 -- --------------------------------------------------------
 
@@ -599,7 +599,7 @@ CREATE TABLE IF NOT EXISTS `vehicle`(
 
 INSERT INTO `workstation` (`id`, `name`, `location`, `contact_name`, `contact_number`, `contact_email_address`, `number_of_operators`, `assign_kiosk`, `password`, `created_by`, `tenant`, `tenant_agent`, `is_deleted`) VALUES
 (8, 'Workstation1', 'PAL', 'Test Person', 123456, 'workstation1@test.com', NULL, 0, NULL, 16, 17, 18, 0),
-(9, 'Workstation2', 'PAL', 'Test Person', 123456, 'workstation1@test.com', NULL, 0, NULL, 16, 17, 20, 0),
+(9, 'Workstation2', 'PAL', 'Test Person', 123456, 'workstation1@test.com', NULL, 0, NULL, 16, 17, 18, 0),
 (10, 'Workstation3', 'PAL', 'Test Person', 123456, 'workstation1@test.com', NULL, 0, NULL, 16, 17, NULL, 0);
 
 

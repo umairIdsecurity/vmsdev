@@ -1,6 +1,6 @@
 <?php
 $cs = Yii::app()->clientScript;
-$cs->registerScriptFile(Yii::app()->request->baseUrl . '/js/script-visitordetail-actions-cssmenu.js');
+$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/script-visitordetail-actions-cssmenu.js');
 $session = new CHttpSession;
 ?>
 <div id='actionsCssMenu'>
@@ -191,8 +191,6 @@ $session = new CHttpSession;
 <input type="hidden" value="<?php echo $model->visit_status; ?>" id="visitStatus"/>
 <script>
     $(document).ready(function() {
-
-
         if ($("#visitStatus").val() == 5) {
 
             if ($("#previousVisitAction").val() == 'Preregister') {

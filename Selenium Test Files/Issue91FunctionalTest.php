@@ -89,6 +89,7 @@ class Issue91FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("//ul[@id='tabs']/li[3]/a/p");
         $username = 'operator@test.com';
         $this->login($username, '12345');
+        $this->select("id=userWorkstation", "label=Workstation1");
         $this->click("id=submitBtn");
         $this->click("id=submit");
         $this->waitForPageToLoad("30000");

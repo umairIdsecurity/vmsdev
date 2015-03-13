@@ -1,6 +1,6 @@
 <?php
 
-$src = Yii::app()->getBaseUrl(true) . '/images/cardprint-print.png';
+$src = Yii::getPathOfAlias('application') . '/assets/images/cardprint-print.png';
 
 error_reporting(E_ALL);
 $session = new CHttpSession;
@@ -31,19 +31,19 @@ if ($tenant->company != '') {
 }
 
 if ($companyLogoId == "") {
-    $companyLogo = Yii::app()->getBaseUrl(true) . '/images/nologoavailable.jpg';
+    $companyLogo = Yii::app()->getBaseUrl(true) . '/uploads/card_generated/nologoavailable.jpg';
 } else {
     $companyLogo = Yii::app()->getBaseUrl(true) . "/" . Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
 }
 
 if (Visitor::model()->findByPk($model->visitor)->photo == "") {
-    $userPhoto = Yii::app()->getBaseUrl(true) . '/images/nophoto.png';
+    $userPhoto = Yii::app()->getBaseUrl(true) . '/uploads/card_generated/nophoto.png';
 } else {
     $userPhoto = Yii::app()->getBaseUrl(true) . "/" . Photo::model()->returnVisitorPhotoRelativePath($model->visitor);
 }
 
 if (Visitor::model()->findByPk($model->visitor)->photo == "") {
-    $userPhoto = Yii::app()->getBaseUrl(true) . '/images/nophoto.png';
+    $userPhoto = Yii::app()->getBaseUrl(true) . '/uploads/card_generated/nophoto.png';
 } else {
     $userPhoto = Yii::app()->getBaseUrl(true) . "/" . Photo::model()->returnVisitorPhotoRelativePath($model->visitor);
 }
@@ -63,7 +63,7 @@ if (empty($text)) {
 }
 
 // customizable variables
-$font_file = Yii::app()->request->baseUrl . 'css/arialbd.ttf'; // arial bold
+$font_file = Yii::getPathOfAlias('application')  . '/assets/css/arialbd.ttf'; // arial bold
 $font_size = 16; // font size in pts
 $font_color = '#000';
 
@@ -123,16 +123,21 @@ header("Cache-control: no-cache");
 header("Pragma: no-cache");
 header("Expires: 0");
 header('Content-type:image/png');
-
-if (exif_imagetype($src2) != IMAGETYPE_JPEG) {
+if (exif_imagetype($src2) == IMAGETYPE_PNG) {
     $watermark = imagecreatefrompng($src2);
-} else {
+} elseif(exif_imagetype($src2) == IMAGETYPE_GIF){
+    $watermark = imagecreatefromgif($src2);
+}
+else{
     $watermark = imagecreatefromjpeg($src2);
 }
 
-if (exif_imagetype($src3) != IMAGETYPE_JPEG) {
+if (exif_imagetype($src3) == IMAGETYPE_PNG) {
     $watermark2 = imagecreatefrompng($src3);
-} else {
+} elseif(exif_imagetype($src3) == IMAGETYPE_GIF){
+    $watermark2 = imagecreatefromgif($src3);
+}
+else {
     $watermark2 = imagecreatefromjpeg($src3);
 }
 

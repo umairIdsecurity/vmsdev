@@ -1,8 +1,20 @@
 <?php
 $cs = Yii::app()->clientScript;
-$cs->registerScriptFile(Yii::app()->request->baseUrl . '/js/script-visitordetail.js');
+$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/script-visitordetail.js');
 $session = new CHttpSession;
+
+if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
+    ?>
+    <style>
+        #visitorDetailDiv #visitorInformationCssMenu .complete, #visitorDetailDiv #visitorInformationCssMenu .host-findBtn{
+            width:88px !important;
+            height:24px !important;
+        }
+    </style>
+    <?php
+}
 ?>
+
 <input type="text" id="currentSessionRole" value="<?php echo $session['role']; ?>" style="display:none;"/>
 <div id='visitorInformationCssMenu'>
     <ul>
@@ -195,7 +207,7 @@ $session = new CHttpSession;
                             <td width="100px;"><label for="Visit_reason">Reason</label></td>
                             <td>
                                 <select id="Visit_reason" name="Visit[reason]" onchange="ifSelectedIsOtherShowAddReasonDiv(this)">
-                                    <option value='' selected>Select Reason</option>
+                                    <option value='' selected>Please select a reason</option>
                                     <option value="Other">Other</option>
                                     <?php
                                     $reason = VisitReason::model()->findAllReason();
@@ -264,8 +276,15 @@ $session = new CHttpSession;
                             'validateOnSubmit' => true,
                             'afterValidate' => 'js:function(form,data,hasError){
                         if(!hasError){
-                                sendVisitForm("update-host-visit-form");
-                                sendVisitForm("update-visit-form");
+                        
+                        if($("#selectedHostInSearchTable").val() == ""){
+                            $("#searchTextHostErrorMessage").show();
+                            $("#searchTextHostErrorMessage").html("Please assign a host");
+                        } else {
+                            sendVisitForm("update-host-visit-form");
+                            sendVisitForm("update-visit-form");
+                        }
+                                
                                 
                                 }
                         }'
@@ -281,7 +300,7 @@ $session = new CHttpSession;
                             <button class="host-findBtn" onclick="findHostRecord()" id="host-findBtn" style="display:none;" data-target="#findHostRecordModal" data-toggle="modal">Search Visits</button>
                             <div class="errorMessage" id="searchTextHostErrorMessage" style="display:none;font-size:12px;"></div>
 
-                            <button class="host-findBtn" id="dummy-host-findBtn">Find Host</button>
+                            <button class="host-findBtn" id="dummy-host-findBtn" style="line-height:0px;">Find Host</button>
                         </div>
                         <input type="text" name="Visit[host]" id="selectedHostInSearchTable" style="display:none;"/>
                         <input type="text" name="Visit[visitor_type]" id="visitorTypeUnderSearchForm" style="display:none;" value="<?php
@@ -402,10 +421,10 @@ $session = new CHttpSession;
                             <td ><?php echo $form->labelEx($newHost, 'tenant'); ?></td>
                             <td>
                                 <select id="User_tenant" class="New_user_tenant" onchange="populateHostTenantAgentAndCompanyField()" name="User[tenant]"  >
-                                    <option value='' selected>Select Admin</option>
+                                    <option value='' selected>Please select a tenant</option>
                                     <?php
-                                    $allAdminNames = User::model()->findAllAdmin();
-                                    foreach ($allAdminNames as $key => $value) {
+                                    $allTenantCompanyNames = User::model()->findAllAdmin();
+                                    foreach ($allTenantCompanyNames as $key => $value) {
                                         ?>
                                         <option value="<?php echo $value->tenant; ?>"><?php echo $value->first_name . " " . $value->last_name; ?></option>
                                         <?php
@@ -419,7 +438,7 @@ $session = new CHttpSession;
                             <td>
                                 <select id="User_tenant_agent" class="New_user_tenant_agent" name="User[tenant_agent]" onchange="populateHostCompanyWithSameTenantAndTenantAgent()" >
                                     <?php
-                                    echo "<option value='' selected>Select Tenant Agent</option>";
+                                    echo "<option value='' selected>Please select a tenant agent</option>";
                                     ?>
                                 </select><?php echo "<br>" . $form->error($newHost, 'tenant_agent'); ?>
                             </td>
@@ -428,7 +447,7 @@ $session = new CHttpSession;
                             <td><?php echo $form->labelEx($newHost, 'company'); ?></td>
                             <td>
                                 <select id="User_company" name="User[company]" class="New_user_company">
-                                    <option value=''>Select Company</option>
+                                    <option value=''>Please select a company</option>
                                 </select>
 
                                 <?php echo "<br>" . $form->error($newHost, 'company'); ?>
@@ -654,7 +673,7 @@ $session = new CHttpSession;
 
         $("#findHostModalBtn").click();
         //change modal url to pass user searched text
-        var url = 'index.php?r=visitor/findhost&id=' + $("#search-host").val() + '&visitortype=2';
+        var url = 'index.php?r=visitor/findhost&id=' + $("#search-host").val() + '&visitortype=2&tenant=<?php echo $model->tenant; ?>&tenant_agent=<?php echo $model->tenant_agent; ?>';
         $("#findHostModalBody #modalIframe").html('<iframe id="findHostTableIframe" scrolling="no" onLoad="autoResize2();" width="100%" height="100%" style="max-height:400px !important;" frameborder="0" src="' + url + '"></iframe>');
     }
 
@@ -684,8 +703,11 @@ $session = new CHttpSession;
                 $('#findHostTableIframe').contents().find('.findHostButtonColumn a').html('Select Host');
                 $('#findHostTableIframe').contents().find('#' + id).addClass('delete');
                 $('#findHostTableIframe').contents().find('#' + id).html('Selected Host');
+                alert(id);
+
                 $("#selectedHostInSearchTable").val(id);
                 $(".visitortypehost").val(id);
+                alert($("#selectedHostInSearchTable").val());
             }
         });
     }
@@ -700,7 +722,7 @@ $session = new CHttpSession;
          * if visit type is patient and visit type in database is patient show update patient
          * if visit type is corporate and visit type in database is corporate show update host, hide search
          * */
-        
+
         var visit_type = $("#Visit_visitor_type").val();
         $("#visitorTypeUnderSearchForm").val($("#Visit_visitor_type").val());
 
@@ -744,7 +766,7 @@ $session = new CHttpSession;
 
     function getHostTenantAgentWithSameTenant(tenant) {
         $('.New_user_tenant_agent').empty();
-        $('.New_user_tenant_agent').append('<option value="">Select Tenant Agent</option>');
+        $('.New_user_tenant_agent').append('<option value="">Please select a tenant agent</option>');
         $.ajax({
             type: 'POST',
             url: '<?php echo Yii::app()->createUrl('visitor/GetTenantAgentWithSameTenant&id='); ?>' + tenant,

@@ -58,12 +58,10 @@ class Issue3AgentAdminFunctionalTest extends BaseFunctionalTest {
         $this->addUser("agentoperator2@test.com", "agentoperator2");
         $this->getDisabledRoleValue("7");
 
-        $this->getDisabledCompanyValue("Test Company 1");
-        $this->assertEquals("Workstation1", $this->getText("id=User_workstation"));
-        
-        $this->click("id=submitBtn");
+        $this->getDisabledCompanyValue("Philippine Airline");
+        sleep(1);
+        $this->assertEquals("Workstation1Workstation2", $this->getText("id=User_workstation"));
         $this->clickAndWait("id=submitForm");
-        
         $this->type("css=td > input[name=\"User[first_name]\"]", "test");
         $this->click("//td[2]/input");
         $this->type("//td[2]/input", "agentoperator2");
@@ -116,8 +114,7 @@ class Issue3AgentAdminFunctionalTest extends BaseFunctionalTest {
         $this->addUser("staffmember3@test.com", "staffmember3");
         $this->select("id=User_role", "label=Staff Member");
         
-        $this->getDisabledCompanyValue("Test Company 1");
-        $this->click("id=submitBtn");
+        $this->getDisabledCompanyValue("Philippine Airline");
         $this->clickAndWait("id=submitForm");
         $this->type("css=td > input[name=\"User[first_name]\"]", "Test");
         $this->click("//td[2]/input");

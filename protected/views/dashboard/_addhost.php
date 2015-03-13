@@ -26,7 +26,64 @@ $session = new CHttpSession;
     <div class="visitor-title">Add Host</div>
     <div >
         <table  id="addhost-table" data-ng-app="PwordForm">
+            <tr <?php
+            if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+                echo "style='display:none;'";
+            }
+            ?>
+                >
+                    <?php
+                    if ($session['role'] == Roles::ROLE_SUPERADMIN) {
+                        ?>
+                    <td id="hostTenantRow"><?php echo $form->labelEx($userModel, 'tenant'); ?><br>
+                        <select id="User_tenant" onchange="populateHostTenantAgentAndCompanyField()" name="User[tenant]"  >
+                            <option value='' selected>Please select a tenant</option>
+                            <?php
+                            $allTenantCompanyNames = User::model()->findAllCompanyTenant();
+                            foreach ($allTenantCompanyNames as $key => $value) {
+                                ?>
+                                <option value="<?php echo $value['tenant']; ?>" ><?php echo $value['name']; ?></option>
+                                <?php
+                            }
+                            ?>
+                        </select>
+                        <?php echo "<br>" . $form->error($userModel, 'tenant'); ?>
+                    </td>
+                    <td id="hostTenantAgentRow"><?php echo $form->labelEx($userModel, 'tenant_agent'); ?><br>
+                        <select id="User_tenant_agent" name="User[tenant_agent]" onchange="populateHostCompanyWithSameTenantAndTenantAgent()" >
+                            <?php
+                            echo "<option value='' selected>Please select a tenant agent</option>";
+                            ?>
+                        </select>
+                        <?php echo "<br>" . $form->error($userModel, 'tenant_agent'); ?>
+                    </td>
 
+                    <td id="hostCompanyRow">
+                        <?php echo $form->labelEx($userModel, 'company'); ?><br>
+                        <select id="User_company" name="User[company]" disabled>
+                            <option value=''>Please select a company</option>
+                        </select>
+                        <?php echo "<br>" . $form->error($userModel, 'company'); ?>
+                    </td>
+                    <?php
+                } else {
+                    ?>
+                    <td id="hostTenantRow"><?php echo $form->labelEx($userModel, 'tenant'); ?><br>
+                        <input type="text" id="User_tenant" name="User[tenant]" value="<?php echo $session['tenant']; ?>"/>
+                        <?php echo "<br>" . $form->error($userModel, 'tenant'); ?>
+                    </td>
+                    <td id="hostTenantAgentRow"><?php echo $form->labelEx($userModel, 'tenant_agent'); ?><br>
+                        <input type="text" id="User_tenant_agent" name="User[tenant_agent]" value="<?php echo $session['tenant_agent']; ?>"/>
+                        <?php echo "<br>" . $form->error($userModel, 'tenant_agent'); ?>
+                    </td>
+
+                    <td id="hostCompanyRow">
+                        <?php echo $form->labelEx($userModel, 'company'); ?><br>
+                        <input type="text" id="User_company" name="User[company]" value="<?php echo $session['company']; ?>"/>
+                        <?php echo "<br>" . $form->error($userModel, 'company'); ?>
+                    </td>
+                <?php } ?>
+            </tr>
             <tr>
                 <td>
                     <?php echo $form->labelEx($userModel, 'first_name'); ?><br>
@@ -65,64 +122,7 @@ $session = new CHttpSession;
                     <?php echo "<br>" . $form->error($userModel, 'contact_number'); ?>
                 </td>
             </tr>
-            <tr <?php
-            if ($session['role'] != Roles::ROLE_SUPERADMIN) {
-                echo "style='display:none;'";
-            }
-            ?>
-                >
-                    <?php
-                    if ($session['role'] == Roles::ROLE_SUPERADMIN) {
-                        ?>
-                    <td id="hostTenantRow"><?php echo $form->labelEx($userModel, 'tenant'); ?><br>
-                        <select id="User_tenant" onchange="populateHostTenantAgentAndCompanyField()" name="User[tenant]"  >
-                            <option value='' selected>Select Admin</option>
-                            <?php
-                            $allAdminNames = User::model()->findAllAdmin();
-                            foreach ($allAdminNames as $key => $value) {
-                                ?>
-                                <option value="<?php echo $value->tenant; ?>" ><?php echo $value->first_name . " " . $value->last_name; ?></option>
-                                <?php
-                            }
-                            ?>
-                        </select>
-                        <?php echo "<br>" . $form->error($userModel, 'tenant'); ?>
-                    </td>
-                    <td id="hostTenantAgentRow"><?php echo $form->labelEx($userModel, 'tenant_agent'); ?><br>
-                        <select id="User_tenant_agent" name="User[tenant_agent]" onchange="populateHostCompanyWithSameTenantAndTenantAgent()" >
-                            <?php
-                            echo "<option value='' selected>Select Tenant Agent</option>";
-                            ?>
-                        </select>
-                        <?php echo "<br>" . $form->error($userModel, 'tenant_agent'); ?>
-                    </td>
 
-                    <td id="hostCompanyRow">
-                        <?php echo $form->labelEx($userModel, 'company'); ?><br>
-                        <select id="User_company" name="User[company]" >
-                            <option value=''>Select Company</option>
-                        </select>
-                        <?php echo "<br>" . $form->error($userModel, 'company'); ?>
-                    </td>
-                    <?php
-                } else {
-                    ?>
-                    <td id="hostTenantRow"><?php echo $form->labelEx($userModel, 'tenant'); ?><br>
-                        <input type="text" id="User_tenant" name="User[tenant]" value="<?php echo $session['tenant']; ?>"/>
-                        <?php echo "<br>" . $form->error($userModel, 'tenant'); ?>
-                    </td>
-                    <td id="hostTenantAgentRow"><?php echo $form->labelEx($userModel, 'tenant_agent'); ?><br>
-                        <input type="text" id="User_tenant_agent" name="User[tenant_agent]" value="<?php echo $session['tenant_agent']; ?>"/>
-                        <?php echo "<br>" . $form->error($userModel, 'tenant_agent'); ?>
-                    </td>
-
-                    <td id="hostCompanyRow">
-                        <?php echo $form->labelEx($userModel, 'company'); ?><br>
-                        <input type="text" id="User_company" name="User[company]" value="<?php echo $session['company']; ?>"/>
-                        <?php echo "<br>" . $form->error($userModel, 'company'); ?>
-                    </td>
-                <?php } ?>
-            </tr>
 
             <tr>
                 <td>
@@ -166,7 +166,7 @@ $session = new CHttpSession;
 
     });
     function sendHostForm() {
-
+        document.getElementById('User_company').disabled = false;
         var hostform = $("#registerhostform").serialize();
         $.ajax({
             type: "POST",
@@ -245,7 +245,7 @@ $session = new CHttpSession;
     function getHostCompanyWithSameTenantAndTenantAgent(tenant, tenant_agent) {
         $.ajax({
             type: 'POST',
-            url: '<?php echo Yii::app()->createUrl('visitor/GetCompanyWithSameTenantAndTenantAgent&id='); ?>' + tenant + '&tenantagent=' + tenant_agent,
+            url: '<?php echo Yii::app()->createUrl('user/getCompanyOfTenant&id='); ?>' + $("#User_tenant").val() + '&tenantAgentId=' + $("#User_tenant_agent").val(),
             dataType: 'json',
             data: tenant,
             success: function(r) {
@@ -270,7 +270,7 @@ $session = new CHttpSession;
 
     function getHostTenantAgentWithSameTenant(tenant) {
         $('#User_tenant_agent').empty();
-        $('#User_tenant_agent').append('<option value="">Select Tenant Agent</option>');
+        $('#User_tenant_agent').append('<option value="">Please select a tenant agent</option>');
         $.ajax({
             type: 'POST',
             url: '<?php echo Yii::app()->createUrl('visitor/GetTenantAgentWithSameTenant&id='); ?>' + tenant,
@@ -278,7 +278,7 @@ $session = new CHttpSession;
             data: tenant,
             success: function(r) {
                 $.each(r.data, function(index, value) {
-                    $('#User_tenant_agent').append('<option value="' + value.id + '">' + value.name + '</option>');
+                    $('#User_tenant_agent').append('<option value="' + value.tenant_agent + '">' + value.name + '</option>');
                 });
             }
         });

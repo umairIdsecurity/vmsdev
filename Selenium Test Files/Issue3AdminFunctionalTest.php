@@ -59,9 +59,7 @@ class Issue3AdminFunctionalTest extends BaseFunctionalTest {
         $this->click("link=Add Administrator");
         $this->waitForPageToLoad("30000");
         $this->addUser("admin3@test.com", "admin3");
-        $this->click("id=submitBtn");
-        $this->click("id=submitForm");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("id=submitForm");
         $this->type("css=td > input[name=\"User[first_name]\"]", "Test");
         $this->click("//td[2]/input");
         $this->type("//td[2]/input", "Admin3");
@@ -118,9 +116,7 @@ class Issue3AdminFunctionalTest extends BaseFunctionalTest {
         $this->waitForPageToLoad("30000");
         $this->addUser("agentadmin2@test.com", "agentadmin2");
         $this->addCompany("Test Company 3", "testcompany3","TCC");
-        $this->click("id=submitBtn");
-        $this->click("id=submitForm");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("id=submitForm");
         $this->type("css=td > input[name=\"User[first_name]\"]", "Test");
         $this->click("//td[2]/input");
         $this->type("name=User[last_name]", "agentadmin2");
@@ -166,14 +162,10 @@ class Issue3AdminFunctionalTest extends BaseFunctionalTest {
         $this->waitForPageToLoad("30000");
         $this->addUser("operator2@test.com", "operator2");
         $this->getDisabledRoleValue("8");
-        $this->getDisabledCompanyValue("Test Company 1");
-        $this->assertEquals("Workstation1", $this->getEval("window.document.getElementById(\"User_workstation\").options[window.document.getElementById(\"User_workstation\").selectedIndex].text"));
+        $this->getDisabledCompanyValue("NAIA Airport");
+        $this->assertEquals("Workstation3", $this->getEval("window.document.getElementById(\"User_workstation\").options[window.document.getElementById(\"User_workstation\").selectedIndex].text"));
 
-        $this->waitForElementPresent("id=submitBtn");
-        $this->click("id=submitBtn");
-        $this->click("id=submitForm");
-
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("id=submitForm");
         $this->type("css=td > input[name=\"User[first_name]\"]", "Test");
         $this->click("//td[2]/input");
         $this->type("//td[2]/input", "Operator2");
@@ -227,12 +219,10 @@ class Issue3AdminFunctionalTest extends BaseFunctionalTest {
         $this->click("css=div.customIcon-adminmenu");
         $this->waitForPageToLoad("30000");
         $this->addUser("staffmember2@test.com", "staffmember2");
-        $this->getDisabledCompanyValue("Test Company 1");
+        $this->getDisabledCompanyValue("NAIA Airport");
         $this->select("id=User_role", "label=Staff Member");
 
-        $this->click("id=submitBtn");
-        $this->click("id=submitForm");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("id=submitForm");
         $this->type("css=td > input[name=\"User[first_name]\"]", "Test");
         $this->click("//td[2]/input");
         $this->type("//td[2]/input", "staffmember2");
@@ -286,15 +276,11 @@ class Issue3AdminFunctionalTest extends BaseFunctionalTest {
         $this->click("link=Administration");
         $this->waitForPageToLoad("30000");
         $this->click("link=Manage Users");
-        $this->click("link=Add Agent Administrator");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("link=Add Agent Administrator");
         $this->addUser("agentadmin3@test.com", "agentadmin3");
-        $this->waitForElementPresent("id=submitBtn");
+        
         $this->addCompany("Test Company 4", "testcompany4","TCD");
-        $this->waitForElementPresent("id=submitBtn");
-        $this->click("id=submitBtn");
-        $this->click("id=submitForm");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("id=submitForm");
         $this->type("css=td > input[name=\"User[first_name]\"]", "Test");
         $this->click("//td[2]/input");
         $this->type("//td[2]/input", "agentadmin3");

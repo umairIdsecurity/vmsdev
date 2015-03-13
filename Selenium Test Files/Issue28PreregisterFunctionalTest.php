@@ -55,7 +55,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("//div[@id='cssmenu']/ul/li[2]/a/span");
         $this->click("id=clicktabA");
         $this->assertEquals("Corporate Visitor", $this->getText("id=Visitor_visitor_type"));
-        $this->select("id=workstation", "label=Workstation1");
+        
         $this->type("id=Visitor_first_name", "Test");
         $this->type("id=Visitor_last_name", "staffmembervisitor");
         $this->type("id=Visitor_contact_number", "123456");
@@ -63,6 +63,8 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->select("id=Visit_reason", "label=Reason 1");
         $this->type("id=Visitor_password", "123");
         $this->type("id=Visitor_repeatpassword", "123");
+        sleep(1);
+        $this->select("id=workstation", "label=Workstation1");
         $this->click("id=submitFormVisitor");
 
         $this->click("css=button.host-AddBtn");
@@ -75,7 +77,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("id=submitFormUser");
         //$this->assertEquals("Same Day Visitor", $this->getText("css=#cardDetailsTable > tbody > tr > td"));
         $this->assertEquals("Test staffmembervisitor", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[3]/td"));
-        //$this->assertEquals("Test Company 1", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[3]/td"));
+        //$this->assertEquals("NAIA Airport", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[3]/td"));
         $this->clickAndWait("//ul[@id='tabs']/li[3]/a/p");
         $username = 'staffmemberhost@test.com';
         $this->login($username, '12345');
@@ -131,6 +133,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("//div[@id='cssmenu']/ul/li[2]/a/span");
         $this->click("id=clicktabA");
+        sleep(1);
         $this->select("id=workstation", "label=Workstation1");
         $this->type("id=Visitor_first_name", "test");
         $this->type("id=Visitor_last_name", "staffmembervisitor3");
@@ -141,6 +144,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_repeatpassword", "12345");
         $this->select("id=workstation", "label=Workstation1");
         $this->click("id=submitFormVisitor");
+        $this->click("link=Search Host");
         $this->type("id=search-host", "test");
         $this->click("id=dummy-host-findBtn");
         $this->waitForElementPresent("id=21");
@@ -280,6 +284,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("//div[@id='cssmenu']/ul/li[2]/a/span");
         $this->click("id=clicktabA");
+        sleep(1);
         $this->select("id=workstation", "label=Workstation1");
         $this->type("id=Visitor_first_name", "test");
         $this->type("id=Visitor_last_name", "staffmembervisitor4");
@@ -320,7 +325,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("staffmembervisitor4", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[4]"));
         $this->assertEquals("staffmembervisitor4@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[7]"));
         $this->clickAndWait("link=Preregistered");
-        $this->assertEquals("Select Reason Other Reason 1 Reason 2", $this->getText("id=Visit_reason"));
+        $this->assertEquals("Please select a reason Other Reason 1 Reason 2", $this->getText("id=Visit_reason"));
     }
 
     /*
@@ -332,6 +337,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("//div[@id='cssmenu']/ul/li[2]/a/span");
         $this->click("id=clicktabA");
+        sleep(1);
         $this->select("id=workstation", "label=Workstation1");
         $this->type("id=Visitor_first_name", "test");
         $this->type("id=Visitor_last_name", "staffmembervisitor5");
@@ -339,7 +345,6 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_contact_number", "123456");
         $this->type("id=Visitor_email", "staffmembervisitor5@test.com");
         $this->select("id=Visit_reason", "label=Other");
-        $this->type("id=Visitor_password", "1234");
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
         $this->type("id=VisitReason_reason", "Reason 4");
@@ -357,7 +362,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Dashboard");
         $this->assertEquals("staffmembervisitor5", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[4]"));
         $this->clickAndWait("link=Preregistered");
-        $this->assertEquals("Select Reason Other Reason 1 Reason 2 Reason 4", $this->getText("id=Visit_reason"));
+        $this->assertEquals("Please select a reason Other Reason 1 Reason 2 Reason 4", $this->getText("id=Visit_reason"));
     }
 
     /*
@@ -369,6 +374,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("//div[@id='cssmenu']/ul/li[2]/a/span");
         $this->click("id=clicktabA");
+        sleep(1);
         $this->select("id=workstation", "label=Workstation1");
         $this->type("id=Visitor_first_name", "test");
         $this->type("id=Visitor_last_name", "staffmembervisitor6");
@@ -381,6 +387,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->type("id=VisitReason_reason", "Reason 5");
         $this->select("id=workstation", "label=Workstation1");
         $this->click("id=submitFormVisitor");
+        $this->click("link=Search Host");
         $this->waitForElementPresent("id=search-host");
         $this->type("id=search-host", "test");
         $this->click("id=dummy-host-findBtn");
@@ -402,7 +409,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("staffmembervisitor6", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[4]"));
         $this->assertEquals("staffmembervisitor6@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[7]"));
         $this->clickAndWait("link=Preregistered");
-        $this->assertEquals("Select Reason Other Reason 1 Reason 2 Reason 4 Reason 5", $this->getText("id=Visit_reason"));
+        $this->assertEquals("Please select a reason Other Reason 1 Reason 2 Reason 4 Reason 5", $this->getText("id=Visit_reason"));
     }
 
     /*
@@ -414,6 +421,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("//div[@id='cssmenu']/ul/li[2]/a/span");
         $this->click("id=clicktabA");
+        $this->click("link=Search Visitor Profile");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
         $this->waitForElementPresent("id=5");
@@ -422,6 +430,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->type("id=VisitReason_reason_search", "Reason 6");
         $this->select("id=workstation_search", "label=Workstation1");
         $this->click("id=clicktabB1");
+        $this->click("link=Search Host");
         $this->waitForElementPresent("css=button.host-AddBtn");
         $this->click("css=button.host-AddBtn");
         $this->type("id=User_first_name", "test");
@@ -449,7 +458,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("staffmembervisitor", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[4]"));
         $this->assertEquals("staffmembervisitor@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[7]"));
         $this->clickAndWait("link=Preregistered");
-        $this->assertEquals("Select Reason Other Reason 1 Reason 2 Reason 4 Reason 5 Reason 6", $this->getText("id=Visit_reason"));
+        $this->assertEquals("Please select a reason Other Reason 1 Reason 2 Reason 4 Reason 5 Reason 6", $this->getText("id=Visit_reason"));
     }
 
     /*
@@ -462,12 +471,14 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->click("//div[@id='cssmenu']/ul/li[2]/a/span");
         $this->waitForPageToLoad("30000");
         $this->click("id=clicktabA");
+        $this->click("link=Search Visitor Profile");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
         $this->waitForElementPresent("id=2");
         $this->click("id=2");
         $this->select("id=Visit_reason_search", "label=Other");
         $this->type("id=VisitReason_reason_search", "Reason 7");
+        sleep(1);
         $this->select("id=workstation_search", "label=Workstation1");
         $this->click("id=clicktabB1");
         $this->waitForElementPresent("id=saveCurrentUserAsHost");
@@ -482,7 +493,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Visitor1", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[4]"));
         $this->assertEquals("testVisitor1@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[7]"));
         $this->clickAndWait("link=Preregistered");
-        $this->assertEquals("Select Reason Other Reason 1 Reason 2 Reason 4 Reason 5 Reason 6 Reason 7", $this->getText("id=Visit_reason"));
+        $this->assertEquals("Please select a reason Other Reason 1 Reason 2 Reason 4 Reason 5 Reason 6 Reason 7", $this->getText("id=Visit_reason"));
     }
 
     /*
@@ -494,6 +505,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("link=Preregister Visit");
         $this->click("id=clicktabA");
+        $this->click("link=Search Visitor Profile");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
         $this->waitForElementPresent("id=5");
@@ -502,8 +514,9 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->type("id=VisitReason_reason_search", "reason 8");
         $this->select("id=workstation_search", "label=Workstation1");
         $this->click("id=clicktabB1");
-
+        $this->click("link=Search Host");
         $this->type("id=search-host", "test");
+        $this->click("id=dummy-host-findBtn");
         $this->click("id=dummy-host-findBtn");
         $this->waitForElementPresent("id=24");
         $this->click("id=24");
@@ -522,7 +535,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("staffmembervisitor", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[4]"));
         $this->assertEquals("staffmembervisitor@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[7]"));
         $this->clickAndWait("link=Preregistered");
-        $this->assertEquals("Select Reason Other Reason 1 Reason 2 Reason 4 Reason 5 Reason 6 Reason 7 Reason 8", $this->getText("id=Visit_reason"));
+        $this->assertEquals("Please select a reason Other Reason 1 Reason 2 Reason 4 Reason 5 Reason 6 Reason 7 Reason 8", $this->getText("id=Visit_reason"));
     }
 
     /*
@@ -560,7 +573,7 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->select("id=workstation", "label=Workstation1");
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "1234");
-        $this->waitForElementPresent("//table[@id='addvisitor-table']/tbody/tr[4]/td[3]/div");
+        $this->waitForElementPresent("//table[@id='addvisitor-table']/tbody/tr[4]/td[2]/div");
         $this->assertEquals("New Password does not match with Repeat \n New Password.", $this->getText("//table[@id='addvisitor-table']/tbody/tr[4]/td[2]/div"));
         $this->click("id=submitFormVisitor");
         $this->type("id=Visitor_repeatpassword", "12345");
@@ -590,7 +603,6 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Please enter a Last Name", $this->getText("id=User_last_name_em_"));
         $this->assertEquals("Please enter an Email Address", $this->getText("id=User_email_em_"));
         $this->assertEquals("Please enter a Contact No.", $this->getText("id=User_contact_number_em_"));
-        $this->assertEquals("Please enter a Repeat Password", $this->getText("id=User_repeatpassword_em_"));
         $this->assertEquals("Please enter a Password", $this->getText("id=User_password_em_"));
         $this->type("id=User_first_name", "test");
         $this->type("id=User_last_name", "test");
@@ -603,12 +615,14 @@ class Issue28PreregisterFunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_repeatpassword", "12345");
         $this->click("id=submitFormUser");
         $this->assertEquals("A profile already exists for this email address.", $this->getText("xpath=(//div[@id='User_email_em_'])[2]"));
+        $this->click("link=Search Host");
         $this->click("id=dummy-host-findBtn");
         $this->assertEquals("Search Name cannot be blank.", $this->getText("id=searchTextHostErrorMessage"));
+        
         $this->type("id=search-host", "test");
         $this->click("id=dummy-host-findBtn");
         $this->click("id=clicktabB2");
-        $this->assertEquals("Please select a host", $this->getText("id=searchTextHostErrorMessage"));
+        $this->assertEquals("Please enter a name", $this->getText("id=searchTextHostErrorMessage"));
     }
 
 }

@@ -23,6 +23,8 @@
  */
 class Company extends CActiveRecord {
 
+    public $isTenant;
+
     /**
      * @return string the associated database table name
      */
@@ -30,6 +32,17 @@ class Company extends CActiveRecord {
         return 'company';
     }
 
+    public function getIsTenant() {
+        // return private attribute on search
+        if ($this->scenario == 'search') {
+            return $this->_isTenant;
+        }
+    }
+
+    public function setIsTenant($value) {
+        // set private attribute for search
+        $this->_isTenant = $value;
+    }
 
     /**
      * @return array validation rules for model attributes.
@@ -39,13 +52,17 @@ class Company extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('name,code', 'required'),
-            array('code', 'unique'),
-            array('code', 'length', 'min'=>3, 'max'=>3, 'tooShort'=>'Code is too short (Should be in 3 characters)'),        
-            
+//            array('code', 'unique'),
+//            array('code', 'unique', 'criteria' => array(
+//                    'condition' => '`tenant`=:tenant',
+//                    'params' => array(
+//                        ':tenant' => Yii::app()->user->tenant
+//                    )
+//                )),
+            array('code', 'length', 'min' => 3, 'max' => 3, 'tooShort' => 'Code is too short (Should be in 3 characters)'),
             array('code', 'match',
                 'pattern' => '/^[a-zA-Z\s]+$/',
                 'message' => 'Code can only contain letters'),
-            
             array('email_address', 'email'),
             array('website', 'url'),
             array('office_number, mobile_number, created_by_user, created_by_visitor', 'numerical', 'integerOnly' => true),
@@ -57,7 +74,7 @@ class Company extends CActiveRecord {
             array('tenant, tenant_agent,logo', 'default', 'setOnEmpty' => true, 'value' => null),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, name,code,company_laf_preferences, trading_name, logo,tenant, contact, billing_address, email_address, office_number, mobile_number, website, created_by_user, created_by_visitor', 'safe', 'on' => 'search'),
+            array('id,isTenant, name,code,company_laf_preferences, trading_name, logo,tenant, contact, billing_address, email_address, office_number, mobile_number, website, created_by_user, created_by_visitor', 'safe', 'on' => 'search'),
         );
     }
 
@@ -115,6 +132,18 @@ class Company extends CActiveRecord {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
+        $post_table = User::model()->tableName();
+        $post_count_sql = "(SELECT COUNT(c.id)
+FROM `user` u
+LEFT JOIN company c ON u.company=c.id
+WHERE u.id=c.tenant AND c.id !=1 AND c.id=t.id)";
+
+
+        // select
+        $criteria->select = array(
+            '*',
+            $post_count_sql . " as isTenant",
+        );
 
         $criteria->compare('id', $this->id);
         $criteria->compare('name', $this->name, true);
@@ -133,6 +162,7 @@ class Company extends CActiveRecord {
         $criteria->compare('is_deleted', $this->is_deleted);
         $criteria->compare('code', $this->code);
         $criteria->compare('company_laf_preferences', $this->company_laf_preferences);
+        $criteria->compare($post_count_sql, $this->isTenant);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -196,7 +226,7 @@ class Company extends CActiveRecord {
     public function isUserAllowedToViewCompany($companyId, $user) {
 
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "company = '" . $companyId . "' and id='" . $user->id . "'";
+        $Criteria->condition = 'company = "' . $companyId . '" and id="' . $user->id . '"';
         $users = User::model()->findAll($Criteria);
 
         //$users = array_filter($users);
@@ -209,7 +239,16 @@ class Company extends CActiveRecord {
 
     public function isCompanyUniqueWithinTheTenant($companyName, $tenant) {
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "name = '" . $companyName . "' and tenant='" . $tenant . "'";
+        $Criteria->condition = 'name = "' . $companyName . '" and tenant="' . $tenant . '"';
+        $company = Company::model()->findAll($Criteria);
+
+        $company = array_filter($company);
+        return count($company);
+    }
+
+    public function isCompanyCodeUniqueWithinTheTenant($companyCode, $tenant) {
+        $Criteria = new CDbCriteria();
+        $Criteria->condition = 'code = "' . $companyCode . '" and tenant="' . $tenant . '"';
         $company = Company::model()->findAll($Criteria);
 
         $company = array_filter($company);
@@ -218,7 +257,20 @@ class Company extends CActiveRecord {
 
     public function findAllCompany() {
         $aArray = array();
-        $company = Company::model()->findAll();
+        if (Yii::app()->user->role != Roles::ROLE_SUPERADMIN) {
+            $company = Yii::app()->db->createCommand()
+                    ->selectdistinct('*')
+                    ->from('company')
+                    ->where('id != 1 and tenant="' . Yii::app()->user->tenant . '"')
+                    ->queryAll();
+        } else {
+            $company = Yii::app()->db->createCommand()
+                    ->selectdistinct('*')
+                    ->from('company')
+                    ->where('id != 1')
+                    ->queryAll();
+        }
+
         foreach ($company as $index => $value) {
             $aArray[] = array(
                 'id' => $value['id'],
@@ -233,7 +285,7 @@ class Company extends CActiveRecord {
         $aArray = array();
 
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = '$tenant'";
+        $Criteria->condition = "tenant = '".$tenant."'";
         $company = Company::model()->findAll($Criteria);
 
         foreach ($company as $index => $value) {

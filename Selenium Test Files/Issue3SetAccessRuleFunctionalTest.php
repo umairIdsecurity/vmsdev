@@ -130,8 +130,7 @@ class Issue3SetAccessRuleFunctionalTest extends BaseFunctionalTest {
     function Scenario3() {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
-        $this->click("link=Administration");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("link=Administration");
         $this->click("link=Manage Workstations");
         $this->waitForElementPresent("link=Add Workstation");
         $this->clickAndWait("link=Add Workstation");
@@ -140,7 +139,7 @@ class Issue3SetAccessRuleFunctionalTest extends BaseFunctionalTest {
         $this->type("id=Workstation_contact_name", "Person Name");
         $this->type("id=Workstation_contact_number", "09367941012");
         $this->type("id=Workstation_contact_email_address", "test@test.com");
-        $this->select("id=Workstation_tenant", "label=Test admin");
+        $this->select("id=Workstation_tenant", "label=NAIA Airport");
         $this->clickAndWait("name=yt0");
         $this->click("link=Manage Users");
         $this->waitForElementPresent("link=Set Access Rules");
@@ -164,12 +163,11 @@ class Issue3SetAccessRuleFunctionalTest extends BaseFunctionalTest {
         $this->type("id=Workstation_contact_name", "Test Person");
         $this->type("id=Workstation_contact_number", "3585795");
         $this->type("id=Workstation_contact_email_address", "test@test.com");
-        $this->select("id=Workstation_tenant", "label=Test admin");
+        $this->select("id=Workstation_tenant", "label=NAIA Airport");
         $this->waitForElementPresent("id=Workstation_tenant_agent");
         sleep(1);
-        $this->select("id=Workstation_tenant_agent", "label=Test agentadmin");
-        $this->click("name=yt0");
-        $this->waitForPageToLoad("30000");
+        $this->select("id=Workstation_tenant_agent", "label=Philippine Airline");
+        $this->clickAndWait("name=yt0");
         $this->click("link=Manage Users");
         $this->waitForElementPresent("link=Set Access Rules");
         $this->clickAndWait("link=Set Access Rules");

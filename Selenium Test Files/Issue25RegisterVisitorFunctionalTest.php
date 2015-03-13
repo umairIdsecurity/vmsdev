@@ -22,36 +22,31 @@ class Issue25RegisterVisitorFunctionalTest extends BaseFunctionalTest {
 
     function testAll() {
         $this->resetDbWithData();
-        //$this->Scenario1();
-       // $this->scenario0();
-      //  $this->Scenario2();
-      //  $this->Scenario3();
         $this->Scenario4();
-      //  $this->scenario0a();
-      //  $this->Scenario5();
         $this->Scenario6();
-        $this->Scenario7(); 
+        $this->Scenario7();
     }
-    
-    /*Scenarion 0 - Log in as super admin and preregister a visitor
+
+    /* Scenarion 0 - Log in as super admin and preregister a visitor
      * Expected Behavior 
      * -Assert text testvisitor0@test.com in email field
      * 
-     Steps:
-        1. Go dev.idsecurity.com.au/index.php?r=site/login
-     2. Log in as superadmin@test.com and 12345 in password
-     3. Click login 
-     4. Click administration
-     5. Click manage visitor records 
-     6, Click pre register a visitor
-     7. Click same day visitor then click continue button
-     8. Type test in firstname, visitor0 in lastname, testvisitor0@test.com in email, 1234567 in contact number, select
+      Steps:
+      1. Go dev.idsecurity.com.au/index.php?r=site/login
+      2. Log in as superadmin@test.com and 12345 in password
+      3. Click login
+      4. Click administration
+      5. Click manage visitor records
+      6, Click pre register a visitor
+      7. Click same day visitor then click continue button
+      8. Type test in firstname, visitor0 in lastname, testvisitor0@test.com in email, 1234567 in contact number, select
       reason 1 in reason, type 12345 in password and repeat password, select tenant in tenant field and tenant agent in tenant field.
-     9. Click save and continue button 
-     10. Type patient name 0 in patient name field. Click save and continue button
-     11. Wait for page to load and assert testvisitor0@test.com in email field.
+      9. Click save and continue button
+      10. Type patient name 0 in patient name field. Click save and continue button
+      11. Wait for page to load and assert testvisitor0@test.com in email field.
      */
-    function scenario0(){
+
+    function scenario0() {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
@@ -59,7 +54,7 @@ class Issue25RegisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Preregister Visit");
         $this->click("id=clicktabA");
         $this->addVisitor('Visitor0');
-        $this->select("id=workstation", "label=Workstation1");
+        $this->select("id=workstation", "label=Workstation3");
         $this->select("id=Visit_reason", "label=Reason 1");
         $this->waitForElementPresent("id=submitFormVisitor");
         $this->click("id=submitFormVisitor");
@@ -67,8 +62,8 @@ class Issue25RegisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("id=submitFormPatientName");
         $this->verifyVisitorInTable('Visitor0');
     }
-    
-    function scenario0a(){
+
+    function scenario0a() {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
         $this->clickAndWait("link=Administration");
@@ -76,7 +71,7 @@ class Issue25RegisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Preregister Visit");
         $this->click("id=clicktabA");
         $this->addVisitor('Visitor0a');
-        $this->select("id=workstation", "label=Workstation1");
+        $this->select("id=workstation", "label=Workstation3");
         $this->select("id=Visit_reason", "label=Reason 1");
         $this->waitForElementPresent("id=submitFormVisitor");
         $this->click("id=submitFormVisitor");
@@ -84,7 +79,6 @@ class Issue25RegisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("id=submitFormPatientName");
         $this->verifyVisitorInTable('Visitor0a');
     }
-    
 
     /* Scenario 1 – Login as super admin then perform register a visitor functionality for patient visitor type. Add new patient and add new reason
 
@@ -116,7 +110,7 @@ class Issue25RegisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Log Visit");
         $this->click("id=clicktabA");
         $this->addVisitor('Visitor2');
-        $this->select("id=workstation", "label=Workstation1");
+        $this->select("id=workstation", "label=Workstation3");
         $this->addReason('Reason 3');
         $this->click("id=submitFormVisitor");
         $this->addPatient("Patient Name 1");
@@ -195,7 +189,7 @@ class Issue25RegisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Log Visit");
         $this->click("id=clicktabA");
         $this->addVisitor('Visitor5');
-        $this->select("id=workstation", "label=Workstation1");
+        $this->select("id=workstation", "label=Workstation3");
         $this->select("id=Visit_reason", "label=Reason 1");
         $this->click("id=submitFormVisitor");
         $this->addPatient("Patient Name 3");
@@ -236,7 +230,6 @@ class Issue25RegisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->select("id=workstation", "label=Workstation1");
         $this->select("id=Visit_reason", "label=Reason 1");
         sleep(1);
-        $this->assertEquals("Test Company 1", $this->getText("id=Visitor_company"));
         $this->click("id=submitFormVisitor");
         $this->addHost("Host1");
         $this->click("id=submitFormUser");
@@ -263,7 +256,7 @@ class Issue25RegisterVisitorFunctionalTest extends BaseFunctionalTest {
       5.	Click manage visitor records
       6.	Click register a visitor
       7.	Select same day visitor then click continue
-      8.	Select Reason 1 in reason field
+      8.	Please select a reason 1 in reason field
       9.	Click save and continue button
       10.	Click save and continue button for add patient name tab
       11.	Assert text first name cannot be blank, last name cannot be blank, mobile number cannot be blank, email address cannot be blank, tenant cannot be blank.
@@ -289,18 +282,20 @@ class Issue25RegisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Log Visit");
         $this->click("id=clicktabA");
         $this->click("id=submitFormVisitor");
-        $this->select("id=workstation", "label=Workstation1");
+        
         $this->type("id=Visitor_first_name", "Test");
         $this->type("id=Visitor_last_name", "test");
         $this->type("id=Visitor_position", "position");
         $this->type("id=Visitor_contact_number", "123456");
         $this->type("id=Visitor_email", "test");
-        $this->select("id=Visitor_tenant", "label=Test admin");
+        $this->select("id=Visitor_tenant", "label=NAIA Airport");
         $this->type("id=Visitor_email", "testvisitor1@test.com");
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
         sleep(1);
-        $this->select("id=Visitor_tenant_agent", "label=Test agentadmin");
+        $this->select("id=Visitor_tenant_agent", "label=Philippine Airline");
+        sleep(1);
+        $this->select("id=workstation", "label=Workstation3");
         $this->click("id=submitFormVisitor");
         $this->waitForElementPresent("css=td > div.errorMessage.visitorReason");
         $this->assertEquals("Please select a reason", $this->getText("css=td > div.errorMessage.visitorReason"));
@@ -337,10 +332,10 @@ class Issue25RegisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->click("id=dummy-visitor-findBtn");
         $this->waitForElementPresent("id=6");
         $this->click("id=6");
-        $this->select("id=Visit_reason_search", "label=Select Reason");
+        $this->select("id=Visit_reason_search", "label=Please select a reason");
         $this->select("id=Visit_reason_search", "label=Other");
         $this->type("id=VisitReason_reason_search", "reason 2");
-        $this->select("id=workstation_search", "label=Workstation1");
+        $this->select("id=workstation_search", "label=Workstation3");
         $this->click("id=clicktabB1");
         $this->waitForElementPresent("id=visitReasonErrorMessageSearch");
         $this->waitForTextPresent("Reason is already registered.");
@@ -369,7 +364,7 @@ class Issue25RegisterVisitorFunctionalTest extends BaseFunctionalTest {
       5.	Click manage visitor records
       6.	Click register a visitor
       7.	Select same day visitor then click continue
-      8.	Select Reason 1 in reason field and corporate visitor in visitor type
+      8.	Please select a reason 1 in reason field and corporate visitor in visitor type
       9.	Click save and continue button
       10.	Click save and continue button for add host tab
       11.	Assert text first name cannot be blank, last name cannot be blank, mobile number cannot be blank, email address cannot be blank, tenant cannot be blank.
@@ -395,19 +390,21 @@ class Issue25RegisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Log Visit");
         $this->click("id=clicktabA");
         $this->click("id=submitFormVisitor");
-        $this->select("id=workstation", "label=Workstation1");
+        
         $this->select("id=Visitor_visitor_type", "label=Corporate Visitor");
         $this->type("id=Visitor_first_name", "Test");
         $this->type("id=Visitor_last_name", "test");
         $this->type("id=Visitor_position", "position");
         $this->type("id=Visitor_contact_number", "123456");
-        $this->type("id=Visitor_email", "test");
-        $this->select("id=Visitor_tenant", "label=Test admin");
+        $this->select("id=Visitor_tenant", "label=NAIA Airport");
         $this->type("id=Visitor_email", "testvisitor1@test.com");
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
         sleep(1);
-        $this->select("id=Visitor_tenant_agent", "label=Test agentadmin");
+        $this->select("id=Visitor_tenant_agent", "label=Philippine Airline");
+        sleep(1);
+        $this->select("id=Visitor_company", "label=NAIA Airport");
+        $this->select("id=workstation", "label=Workstation1");
         $this->click("id=submitFormVisitor");
         $this->waitForElementPresent("css=td > div.errorMessage.visitorReason");
         $this->assertEquals("Please select a reason", $this->getText("css=td > div.errorMessage.visitorReason"));
@@ -448,7 +445,7 @@ class Issue25RegisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->click("id=submitFormUser");
         $this->type("id=User_email", "staffmember@test.com");
         $this->type("id=User_contact_number", "123456");
-        $this->select("id=User_tenant", "label=Test admin");
+        $this->select("id=User_tenant", "label=NAIA Airport");
         $this->click("id=submitFormUser");
         $this->assertEquals("A profile already exists for this email address.", $this->getText("xpath=(//div[@id='User_email_em_'])[2]"));
     }
@@ -487,12 +484,14 @@ class Issue25RegisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->click("link=Manage Visitors");
         $this->clickAndWait("link=Log Visit");
         $this->click("id=clicktabA");
-        //$this->type("id=search-visitor", "test visitor0a");
+        $this->click("link=Search Visitor Profile");
+        $this->select("id=search_visitor_tenant","label=NAIA Airport");
+        sleep(1);
+        $this->select("id=search_visitor_tenant_agent","label=Philippine Airline");
         $this->type("id=search-visitor", "test visitor1");
         $this->click("id=dummy-visitor-findBtn");
-        //$this->waitForElementPresent("id=9");
         $this->waitForElementPresent("id=2");
-        
+
         //$this->click("id=9");
         $this->click("id=2");
         $this->waitForElementPresent("css=h4");
@@ -501,6 +500,7 @@ class Issue25RegisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("testVisitor1@test.com", $this->getText("//div[@id='findvisitor-grid']/table/tbody/tr/td[3]"));
         $this->select("id=Visitor_visitor_type_search", "label=Corporate Visitor");
         $this->click("id=clicktabB1");
+        $this->click("link=Search Host");
         $this->type("id=search-host", "staffmember");
         $this->click("id=dummy-host-findBtn");
         $this->waitForElementPresent("id=21");

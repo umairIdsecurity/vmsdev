@@ -5,7 +5,7 @@
  * and open the template in the editor.
  */
 $cs = Yii::app()->clientScript;
-$cs->registerScriptFile(Yii::app()->request->baseUrl . '/js/script-sidebar.js');
+$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/script-sidebar.js');
 /* @var $this UserController */
 /* @var $model User */
 $session = new ChttpSession;
@@ -65,35 +65,13 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                         </ul>
                     </li>
                     <?php
-                } else {
-                    ?>
-                    <li>
-                    <a href='<?php echo Yii::app()->createUrl('CompanyLafPreferences/customisation'); ?>' class="ajaxLinkLi"><span>Customise Display</span></a>
-                    </li>
-                        <?php }
+                } 
                 ?>
-
-
-
-
             <?php }
             ?>
-            <li class='has-sub'><?php
-                echo CHtml::ajaxLink("Manage Workstations", CController::createUrl('workstation/adminAjax'), array(
-                    'update' => '#content',
-                    'complete' => "js:function(html){
-            $('.managecompanies').next().slideUp('normal');
-            $('.manageworkstations').next().slideDown('normal');
-            $('.manageusers').next().slideUp('normal');
-            $('.managevisitorrecords').next().slideUp('normal');
-            $('.managevisitreasons').next().slideUp('normal');
-            $('.managereports').next().slideUp('normal');
-            $('.managevisitortype').next().slideUp('normal');
-        }",
-                        ), array(
-                    'class' => 'manageworkstations',
-                ));
-                ?>
+            <li class='has-sub'><a class='manageworkstations' href='<?php echo Yii::app()->createUrl('workstation/admin'); ?>'><span>Manage Workstations</span></a>
+
+            
                 <ul <?php
                 if ($this->id == 'workstation') {
                     echo "style='display:block ;'";
@@ -103,22 +81,9 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                 </ul>
             </li>
 
-            <li class='has-sub'><?php
-                echo CHtml::ajaxLink("Manage Users", CController::createUrl('user/adminAjax'), array(
-                    'update' => '#content',
-                    'complete' => "js:function(html){
-            $('.managecompanies').next().slideUp('normal');
-            $('.manageworkstations').next().slideUp('normal');
-            $('.manageusers').next().slideDown('normal');
-            $('.managevisitorrecords').next().slideUp('normal');
-            $('.managevisitreasons').next().slideUp('normal');
-            $('.managereports').next().slideUp('normal');
-            $('.managevisitortype').next().slideUp('normal');
-        }",
-                        ), array(
-                    'class' => 'manageusers',
-                ));
-                ?>
+           <li class='has-sub'><a class='manageusers' href='<?php echo Yii::app()->createUrl('user/admin'); ?>'><span>Manage Users</span></a>
+
+                
                 <ul <?php
                 if ($this->id == 'user') {
                     echo "style='display:block ;'";
@@ -148,6 +113,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
 
                         case Roles::ROLE_AGENT_ADMIN:
                             ?>
+                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create/&role=6'); ?>'><span>Add Agent Administrator</span></a></li>
                             <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create/&role=7'); ?>'><span>Add Agent Operator</span></a></li>
                             <?php
                             break;
@@ -196,7 +162,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     ));
                     ?>
                     <ul <?php
-                    if ($this->id == 'visitortype') {
+                    if ($this->id == 'visitorType') {
                         echo "style='display:block ;'";
                     }
                     ?>>

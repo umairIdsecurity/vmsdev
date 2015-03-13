@@ -1,7 +1,7 @@
 <style>
     .grid-view .summary {
-        margin-left: 758px !important;
-        margin-top: -63px !important;
+        margin-left: 760px !important;
+        margin-top: -25px !important;
     }
 </style>
 <?php
@@ -12,7 +12,7 @@
 <h1>Evacuation Report</h1>
 <?php echo CHtml::button('Export to CSV', array('id' => 'export-button', 'class' => 'greenBtn complete')); ?>
 <br>
-<br>
+
 <div class="search-form" style="display:none;">
     <?php
     $this->renderPartial('_search', array(

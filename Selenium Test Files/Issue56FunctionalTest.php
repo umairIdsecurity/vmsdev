@@ -42,12 +42,14 @@ class Issue56FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_first_name", "test");
         $this->type("id=Visitor_last_name", "preload");
         $this->type("id=Visitor_contact_number", "123456");
-        $this->select("id=workstation", "label=Workstation1");
         $this->type("id=Visitor_email", "preloadvisitor@test.com");
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
-        $this->select("id=Visitor_tenant", "label=Test admin");
+        $this->select("id=Visitor_tenant", "label=NAIA Airport");
         $this->select("id=Visit_reason", "label=Reason 1");
+        sleep(1);
+        $this->select("id=Visitor_company", "label=Philippine Airline");
+        $this->select("id=workstation", "label=Workstation3");
         $this->click("id=submitFormVisitor");
         $this->type("id=User_first_name", "test");
         $this->type("id=User_last_name", "host1");
@@ -55,7 +57,7 @@ class Issue56FunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_contact_number", "12345");
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeatpassword", "12345");
-        $this->select("id=User_tenant", "label=Test admin");
+        $this->select("id=User_tenant", "label=NAIA Airport");
         $this->type("id=User_department", "department");
         $this->type("id=User_staff_id", "123123");
         sleep(1);
@@ -97,7 +99,7 @@ class Issue56FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Preregistered", $this->getText("css=ul.visitStatusLi > li > a > span"));
         $this->click("//li[@id='activateLi']/a/span");
         $this->click("css=#activate-a-visit-form > input.complete");
-        sleep(1);
+        sleep(3);
         $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
         $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("link=Active");

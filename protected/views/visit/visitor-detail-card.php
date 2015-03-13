@@ -25,14 +25,14 @@ $photoForm = $this->beginWidget('CActiveForm', array(
 <input type="submit" id="submitBtnPhoto">
 <?php $this->endWidget(); ?>
 
-<div class="cardPhotoPreview">
+<div class="cardPhotoPreview" style="height:0px;">
     <?php if ($visitorModel->photo != '') { ?>
         <img id="photoPreview" style="height:165px;" src="<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($model->visitor) ?>">
     <?php } else { ?>
         <img id="photoPreview" src="" style="display:none;height:165px;"></img>
     <?php } ?>
 </div>
-<div id="cardDiv" style="background: url('../images/cardprint-new.png') no-repeat center top;background-size:220px 310px; height:305px;">
+<div id="cardDiv" style="background-size:220px 310px; height:305px;">
 
     <div style="position: relative; padding-top:180px;padding-left:30px;">
         <?php
@@ -40,21 +40,21 @@ $photoForm = $this->beginWidget('CActiveForm', array(
             $companyLogoId = Company::model()->findByPk($tenant->company)->logo;
 
             if ($companyLogoId == "") {
-                $companyLogo = 'images/nologoavailable.jpg';
+                $companyLogo = Yii::app()->controller->assetsBase."/".'images/companylogohere.png';
             } else {
-                $companyLogo = Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
+                $companyLogo = Yii::app()->request->baseUrl."/".Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
             }
             ?>
-            <img class='<?php if ($model->visit_status != VisitStatus::ACTIVE) {
-            echo "cardCompanyLogoPreregistered";
-        } else {
-            echo "cardCompanyLogo";
-        } ?>' src="<?php
-                 echo Yii::app()->request->baseUrl . "/" . $companyLogo;
-                 ?>"/>
-    <?php
-}
-?>
+        <img class='<?php if($model->visit_status != VisitStatus::ACTIVE){ echo "cardCompanyLogoPreregistered"; } else { echo "cardCompanyLogo"; } ?>' src="<?php
+            echo $companyLogo;
+            ?>" style="<?php 
+            if(strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false){
+                ?>margin-left:42px;<?php
+            }
+            ?>"/>
+                 <?php
+             }
+             ?>
         <table class="" style="width:100%;margin-left:100px;" id="cardDetailsTable">
             <tr>
                 <td>

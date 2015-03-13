@@ -14,10 +14,11 @@ class SoftDeleteBehavior extends CActiveRecordBehavior {
     public function beforeFind($event) {
         $session = new CHttpSession;
         $criteria = new CDbCriteria;
-        $criteria->condition = "t.is_deleted = 0";
+        $criteria->condition = "t.is_deleted = 0 ";
         if ($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] != ''  ) {
-            $criteria->condition = "t.tenant ='" . $session['tenant'] . "'";
+            $criteria->condition = "t.is_deleted = 0 and t.tenant ='" . $session['tenant'] . "'";
         }
+        
         $this->owner->dbCriteria->mergeWith($criteria);
     }
 

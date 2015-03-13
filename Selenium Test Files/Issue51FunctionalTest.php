@@ -42,10 +42,10 @@ class Issue51FunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_last_name", "secondtenant");
         $this->type("id=User_email", "secondtenant@test.com");
         $this->type("id=User_contact_number", "12345");
-        $this->select("id=User_company", "label=Test Company 2");
+        $this->addCompany("New company", "newcompany", "NCC");
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeat_password", "12345");
-        $this->click("id=submitBtn");
+
         $this->clickAndWait("id=submitForm");
         $this->assertEquals("secondtenant", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[2]"));
         $this->clickAndWait("//ul[@id='tabs']/li[3]/a/p");
@@ -73,6 +73,7 @@ class Issue51FunctionalTest extends BaseFunctionalTest {
         $this->click("link=Manage Visitors");
         $this->clickAndWait("link=Log Visit");
         $this->click("id=clicktabA");
+        sleep(1);
         $this->select("id=workstation", "label=Second Tenant Workstation");
         $this->type("id=Visitor_first_name", "test");
         $this->type("id=Visitor_last_name", "secondtenantvisitor");
@@ -83,16 +84,24 @@ class Issue51FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
         $this->select("id=Visit_reason", "label=Reason 2");
-        $this->click("id=submitFormVisitor");
-        $this->click("id=search-host");
-        $this->type("id=search-host", "test");
-        $this->click("id=dummy-host-findBtn");
-        $this->waitForElementPresent("id=21");
-        $this->click("id=21");
-        $this->click("id=clicktabB2");
-        $this->clickAndWait("id=submitAllForms");
-        $this->click("css=#activate-a-visit-form > input.complete");
+        $this->click("id=addCompanyLink");
+        $this->waitForElementPresent("id=Company_name");
         sleep(1);
+        $this->type("id=Company_name", "TESTCOMPANY");
+        $this->type("id=Company_code", "TCC");
+        $this->type("//input[@type='file']", "C:\\xampp\\htdocs\\vms\\protected\\assets\\images\\admin_lifehouse.png");
+        $this->clickAndWait("id=createBtn");
+        sleep(1);
+        $this->click("id=submitFormVisitor");
+        $this->type("id=User_first_name", "test");
+        $this->type("id=User_last_name", "test");
+        $this->type("id=User_email", "test@test.com");
+        $this->type("id=User_contact_number", "123456");
+        $this->type("id=User_password", "12345");
+        $this->type("id=User_repeatpassword", "12345");
+        $this->clickAndWait("id=submitFormUser");
+        $this->click("css=#activate-a-visit-form > input.complete");
+        sleep(3);
         $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
         $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("link=Active");
@@ -126,7 +135,7 @@ class Issue51FunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_contact_number", "12345");
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeat_password", "12345");
-        $this->click("id=submitBtn");
+        $this->addCompany("New Company 2", "newcompany2", "NCB");
         $this->clickAndWait("id=submitForm");
         $this->clickAndWait("link=Add Operator");
         $this->type("id=User_first_name", "new");
@@ -135,7 +144,6 @@ class Issue51FunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_contact_number", "123456");
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeat_password", "12345");
-        $this->click("id=submitBtn");
         $this->clickAndWait("id=submitForm");
         $this->clickAndWait("css=div.customIcon-adminmenu");
         $this->select("id=User_role", "label=Staff Member");
@@ -145,7 +153,6 @@ class Issue51FunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_contact_number", "12345");
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeat_password", "12345");
-        $this->click("id=submitBtn");
         $this->clickAndWait("id=submitForm");
         $this->clickAndWait("//ul[@id='tabs']/li[3]/a/p");
 
@@ -170,6 +177,7 @@ class Issue51FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_repeatpassword", "12345");
         $this->select("id=Visit_reason", "label=Reason 1");
         $this->select("id=workstation", "label=Second Tenant Workstation");
+        $this->select("id=Visitor_company", "label=TESTCOMPANY");
         $this->click("id=submitFormVisitor");
         $this->click("id=saveCurrentUserAsHost");
         $this->clickAndWait("id=submitAllForms");

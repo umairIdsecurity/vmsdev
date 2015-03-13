@@ -1,11 +1,24 @@
+<style>
+    .summary{
+        display:none !important;
+    }
+</style>
 <?php
+$session = new CHttpSession;
 /* @var $this VisitorController */
 /* @var $model Visitor */
 $visitorName = $_GET['id'];
 
+if(isset($_GET['tenant_agent']) && $_GET['tenant_agent'] !='' ){
+    $tenant_agent = 'tenant_agent="'.$_GET['tenant_agent'].'" and';
+} else {
+    $tenant_agent='(tenant_agent IS NULL or tenant_agent =0 or tenant_agent="") and';
+}
 $model = new Visitor;
 $criteria = new CDbCriteria;
-$criteria->addCondition('CONCAT(first_name," ",last_name) like "%' . $visitorName . '%" or first_name like "%' . $visitorName . '%" or last_name like "%' . $visitorName . '%"');
+
+
+$criteria->addCondition('tenant="'.$_GET['tenant'].'" and '.$tenant_agent.' (CONCAT(first_name," ",last_name) like "%' . $visitorName . '%" or first_name like "%' . $visitorName . '%" or last_name like "%' . $visitorName . '%")');
 
 $model->unsetAttributes();
 
@@ -49,7 +62,7 @@ function displaySelectVisitorButton($visitorData) {
 function returnVisitorDetailLink($visitorId) {
     $visit_id = Visit::model()->find("visitor='" . $visitorId . "' and visit_status=1")->id;
     $url = '/index.php?r=visit/detail&id=' . $visit_id;
-    return '<a class="linkToVisitorDetailPage" href="'.$url.'" >Visitor has an active visit</a>';
+    return '<span style="font-size:12px;">Status: <a class="linkToVisitorDetailPage" href="' . $url . '" style="display:inline;text-decoration:underline !important;">Active</a></span>';
 }
 ?>
 <script>
@@ -57,7 +70,7 @@ function returnVisitorDetailLink($visitorId) {
         $(".linkToVisitorDetailPage").click(function(e) {
             e.preventDefault();
             var addressValue = $(this).attr("href");
-            window.top.location =addressValue;
+            window.top.location = addressValue;
         });
     });
 </script>

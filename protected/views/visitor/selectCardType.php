@@ -9,12 +9,12 @@ $multiday = CardType::model()->findByPk(CardType::MULTI_DAY_VISITOR);
         <tr>
             <td>
                 <label for="sameday" id="labelforsameday">
-                    <img src="<?php echo Yii::app()->request->baseUrl . '/' . $sameday->card_icon_type; ?>"/>
+                    <img src="<?php echo Yii::app()->controller->assetsBase . '/' . $sameday->card_icon_type; ?>"/>
                 </label>
             </td>
             <td>
                 <label for="multiday" id="labelformultiday">
-                    <img src="<?php echo Yii::app()->request->baseUrl . '/' . $multiday->card_icon_type; ?>"/>
+                    <img src="<?php echo Yii::app()->controller->assetsBase . '/' . $multiday->card_icon_type; ?>"/>
                 </label>
             </td>
         </tr>

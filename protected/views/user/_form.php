@@ -205,7 +205,7 @@ $currentLoggedUserId = $session['id'];
                     <tr>
                         <td><?php echo $form->labelEx($model, 'email'); ?></td>
                         <td>
-                            <input type="text" id="User_email" name="User[email]" maxlength="50" size="50" onchange="return trim(this)" value="<?php echo $model->email; ?>"/>
+                            <input type="text" id="User_email" name="User[email]" maxlength="50" size="50"  value="<?php echo $model->email; ?>"/>
                             <?php echo "<br>" . $form->error($model, 'email'); ?>
                             <span class="errorMessageEmail1" style="display:none;color:red;font-size:10px;">A profile already exists for this email address</span>
                         </td>

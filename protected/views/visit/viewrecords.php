@@ -36,9 +36,9 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'filter' => VisitorType::model()->returnVisitorTypes(),
         ),
         array(
-            'name' => 'cardcode',
+            'name' => 'card',
             'header' => 'Card No.',
-            'value' => 'CardGenerated::model()->getCardCode($data->card)',
+            'value' => 'CardGenerated::model()->getCardCode($data->card,$data->id)',
         ),
         array(
             'name' => 'firstname',

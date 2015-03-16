@@ -136,7 +136,7 @@ $userRole = $session['role'];
                                 </li>
                             <?php } ?>
                             <li style=' float:right;'>
-                                <a style="width:334px !important;text-align:right;">Logged in as <?php echo Yii::app()->user->name . ' - ' . User::model()->getUserRole($userRole); ?></a>
+                                <a style="width:334px !important;text-align:right;">Logged in as <?php echo User::model()->getUserRole($userRole); ?></a>
                             </li> 
 
                         </ul>

@@ -72,7 +72,7 @@ class CEmailValidator extends CValidator
 			return;
 		if(!$this->validateValue($value))
 		{
-			$message=$this->message!==null?$this->message:Yii::t('yii','{attribute} is not a valid email address.');
+			$message=$this->message!==null?$this->message:Yii::t('yii','{attribute} is not in a recognised format. Please revise.');
 			$this->addError($object,$attribute,$message);
 		}
 	}
@@ -123,7 +123,7 @@ if (info)
 		else
 			$validateIDN='';
 
-		$message=$this->message!==null ? $this->message : Yii::t('yii','{attribute} is not a valid email address.');
+		$message=$this->message!==null ? $this->message : Yii::t('yii','{attribute} is not in a recognised format. Please revise.');
 		$message=strtr($message, array(
 			'{attribute}'=>$object->getAttributeLabel($attribute),
 		));

@@ -54,7 +54,7 @@ $currentLoggedUserId = $session['id'];
     <?php echo $form->errorSummary($model); ?>
     <table>
         <tr>
-            <td style="vertical-align: top;">
+            <td style="vertical-align: top; width:50%;">
                 <table>
                     <tr>
                         <td><?php echo $form->labelEx($model, 'role'); ?></td>
@@ -203,9 +203,9 @@ $currentLoggedUserId = $session['id'];
                         </td>
                     </tr>
                     <tr>
-                        <td><?php echo $form->labelEx($model, 'email'); ?></td>
+                        <td width="30%"><?php echo $form->labelEx($model, 'email'); ?></td>
                         <td><?php echo $form->textField($model, 'email', array('size' => 50, 'maxlength' => 50)); ?>
-                            <?php echo "<br>" . $form->error($model, 'email'); ?>
+                            <?php echo "<br>" . $form->error($model, 'email',array('style'=>'text-transform:none;')); ?>
                             <span class="errorMessageEmail1" style="display:none;color:red;font-size:10px;">A profile already exists for this email address</span>
                         </td>
                     </tr>

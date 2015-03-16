@@ -402,21 +402,25 @@ $this->renderPartial('visithistory', array('model' => $model,
                 $("#activateLi").hide();
                 $("#closevisitLi").show();
                 $("#printCardBtn").attr('disabled', false);
+                $("#printCardBtn").show();
                 $("#printCardBtn").removeClass("disabledButton");
                 $(".visitStatusLi li a span").html("Active");
                 $(".visitStatusLi li a span").css('color', '#9BD62C !important');
+                
+                sendCardForm();
                 alert("Visit is now activated. You can now print the visitor badge.");
-                
-                //window.location = "index.php?r=visit/detail&id=<?php echo $_GET['id'];  ?>";
-//                if ($("#currentRoleOfLoggedInUser").val() == 5 || $("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
-//                   // window.location = 'index.php?r=dashboard';
-//                } else if ($("#currentRoleOfLoggedInUser").val() == 1 || $("#currentRoleOfLoggedInUser").val() == 6) {
-//                   // window.location = 'index.php?r=dashboard/admindashboard';
-//                } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
-//                   // window.location = 'index.php?r=dashboard/viewmyvisitors';
-                
-               // }
             },
+        });
+    }
+    
+    function sendCardForm() {
+        var cardForm = $("#update-card-form").serialize();
+        $.ajax({
+            type: "POST",
+            url: "<?php echo CHtml::normalizeUrl(array("cardGenerated/create&visitId=".$model->id))?>",
+            data: cardForm,
+            success: function(data) {
+            }
         });
     }
 

@@ -254,7 +254,6 @@ class Visit extends CActiveRecord {
         $criteria->compare('visitor0.contact_number', $this->contactnumber, true);
         $criteria->compare('visitor0.email', $this->contactemail, true);
         $criteria->compare('date_check_in', $this->datecheckin1, true);
-        $criteria->compare('card0.card_code', $this->cardcode, true);
 //        $criteria->with = 'company0';
 //        $criteria->compare('company0.name', $this->company, true);
 

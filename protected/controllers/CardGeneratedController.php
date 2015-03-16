@@ -49,7 +49,7 @@ class CardGeneratedController extends Controller {
      * Creates a new model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
-    public function actionCreate() {
+    public function actionCreate($visitId) {
         $model = new CardGenerated;
 
         // Uncomment the following line if AJAX validation is needed
@@ -58,9 +58,10 @@ class CardGeneratedController extends Controller {
         if (isset($_POST['CardGenerated'])) {
             $model->attributes = $_POST['CardGenerated'];
             if ($model->save()) {
-                
+                Visit::model()->updateByPk($visitId, array(
+                    'card' => $model->id,
+                ));
             }
-            //$this->redirect(array('view','id'=>$model->id));
         }
 
         $this->render('create', array(
@@ -68,7 +69,7 @@ class CardGeneratedController extends Controller {
         ));
     }
 
-    public function actionPrint($id) {
+    public function actionPrint($id = NULL) {
         $session = new CHttpSession;
         $this->layout = '//layouts/column1';
 
@@ -79,37 +80,49 @@ class CardGeneratedController extends Controller {
         $visitorModel = Visitor::model()->findByPk($model->visitor);
         $tenant = User::model()->findByPk($visitorModel->tenant);
         $companyTenant = Company::model()->findByPk($tenant->company);
-        if ($tenant->company != '') {
-            $inc = 6 - (strlen(($companyTenant->card_count + 1)));
-            $int_code = '';
-            for ($x = 1; $x <= $inc; $x++) {
 
-                $int_code .= "0";
-            }
-            $code = Company::model()->findByPk($tenant->company)->code . $int_code . ($companyTenant->card_count + 1);
-        } else {
-            $code = '';
+        /* get card code */
+        $card = CardGenerated::model()->findByPk($model->card);
+
+        $inc = 6 - (strlen(($card->card_count)));
+        $int_code = '';
+        for ($x = 1; $x <= $inc; $x++) {
+
+            $int_code .= "0";
         }
-        $session['cardcode'] = $code;
-        $cardGeneratedArray = array(
-            'card_code' => $code,
-            'date_printed' => date("d-m-Y"),
-            'date_expiration' => date("d-m-Y"),
-            'visitor_id' => $model->visitor,
-            'tenant' => $model->tenant,
-            'tenant_agent' => $model->tenant_agent,
-            'card_status' => CardStatus::ACTIVE,
-            'created_by' => $session['id'],
-        );
-        $cardGenerated->attributes = $cardGeneratedArray;
+        $print_count = CardGenerated::model()->findByPk($model->card)->print_count;
+
         if ($session['count'] == 1) {
 
-            $cardGeneratedService->save($cardGenerated, $model, Yii::app()->user);
-            Company::model()->updateByPk($tenant->company, array(
-                'card_count' => $companyTenant->card_count + 1,
+            CardGenerated::model()->updateByPk($model->card, array(
+                'date_printed' => date("d-m-Y"),
+                'date_expiration' => date("d-m-Y"),
+                'visitor_id' => $model->visitor,
+                'tenant' => $model->tenant,
+                'tenant_agent' => $model->tenant_agent,
+                'card_status' => CardStatus::ACTIVE,
+                'created_by' => $session['id'],
+                'print_count' => $print_count + 1,
             ));
-        }
 
+            $usernameHash = hash('adler32', $visitorModel->email);
+            $unique_fileName = 'card' . $usernameHash . '-' . time() . ".png";
+            $path = "uploads/card_generated/" . $unique_fileName;
+            Yii::app()->params['photo_unique_filename'] = $unique_fileName;
+
+            $connection = Yii::app()->db;
+            $command = $connection->createCommand('INSERT INTO `photo` '
+                    . '(`filename`, `unique_filename`, `relative_path`) VALUES ("' . $unique_fileName . '","' . $unique_fileName . '","' . $path . '" )');
+            $command->query();
+
+
+            $photoUpload = Photo::model()->findByAttributes(array('unique_filename' => $unique_fileName));
+            if (count($photoUpload) > 0) {
+                CardGenerated::model()->updateByPk($model->card, array(
+                    'card_image_generated_filename' => $photoUpload->id,
+                ));
+            }
+        }
 
         $this->renderPartial('print', array(
             'model' => $model,
@@ -117,53 +130,7 @@ class CardGeneratedController extends Controller {
                 ), false, true);
     }
 
-    public function actionReprint($id) {
-        $this->layout = '//layouts/column1';
-
-        $cardGenerated = new CardGenerated;
-        $cardGeneratedService = new CardGeneratedServiceImpl();
-        $session = new CHttpSession;
-        $model = Visit::model()->findByPk($id);
-        $visitorModel = Visitor::model()->findByPk($model->visitor);
-        $tenant = User::model()->findByPk($visitorModel->tenant);
-        $companyTenant = Company::model()->findByPk($tenant->company);
-        if ($tenant->company != '') {
-            $inc = 6 - (strlen(($companyTenant->card_count + 1)));
-            $int_code = '';
-            for ($x = 1; $x <= $inc; $x++) {
-
-                $int_code .= "0";
-            }
-            $code = Company::model()->findByPk($tenant->company)->code . $int_code . ($companyTenant->card_count + 1);
-        } else {
-            $code = '';
-        }
-
-
-        $cardGeneratedArray = array(
-            'card_code' => $code,
-            'date_printed' => date("d-m-Y"),
-            'date_expiration' => date("d-m-Y"),
-            'visitor_id' => $model->visitor,
-            'tenant' => $model->tenant,
-            'tenant_agent' => $model->tenant_agent,
-            'card_status' => CardStatus::ACTIVE,
-            'created_by' => $session['id'],
-        );
-        $cardGenerated->attributes = $cardGeneratedArray;
-        if ($session['count'] == 1) {
-            Company::model()->updateByPk($tenant->company, array(
-                'card_count' => $companyTenant->card_count + 1,
-            ));
-            $cardGeneratedService->updateCard($cardGenerated, $model, Yii::app()->user);
-        }
-        
-        $this->render('print', array(
-                    'model' => $model,
-                    'visitorModel' => $visitorModel,
-                ));
-    }
-
+   
     /**
      * Updates a particular model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -172,8 +139,8 @@ class CardGeneratedController extends Controller {
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
 
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
+// Uncomment the following line if AJAX validation is needed
+// $this->performAjaxValidation($model);
 
         if (isset($_POST['CardGenerated'])) {
             $model->attributes = $_POST['CardGenerated'];
@@ -194,7 +161,7 @@ class CardGeneratedController extends Controller {
     public function actionDelete($id) {
         $this->loadModel($id)->delete();
 
-        // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
         if (!isset($_GET['ajax']))
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
     }

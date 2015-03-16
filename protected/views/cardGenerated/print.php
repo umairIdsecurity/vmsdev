@@ -16,19 +16,22 @@ $companyLogoId = "";
 $visitorName = $visitorModel->first_name . ' ' . $visitorModel->last_name;
 $tenant = User::model()->findByPk($visitorModel->tenant);
 $companyTenant = Company::model()->findByPk($tenant->company);
+$card = CardGenerated::model()->findByPk($model->card);
 $visitorName = wordwrap($visitorName, 13, "\n", true);
+
+
 if ($tenant->company != '') {
     $company = Company::model()->findByPk($tenant->company);
     $companyName = $company->name;
     $companyLogoId = $company->logo;
     $companyCode = $company->code;
-    $inc = 6 - (strlen(($companyTenant->card_count - 1)));
+    $inc = 6 - (strlen(($card->card_count)));
     $int_code = '';
     for ($x = 1; $x <= $inc; $x++) {
 
         $int_code .= "0";
     }
-    $cardCode = $companyCode . $int_code . ($companyTenant->card_count);
+    $cardCode = $companyCode . $int_code . ($card->card_count);
 }
 
 if ($companyLogoId == "") {

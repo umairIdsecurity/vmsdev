@@ -388,6 +388,7 @@ class Issue54FunctionalTest extends BaseFunctionalTest {
         $this->select("id=Visitor_company", "label=NAIA Airport");
         $this->select("id=workstation", "label=Workstation1");
         $this->click("id=submitFormVisitor");
+        sleep(1);
         $this->type("id=User_first_name", "hostperson");
         $this->type("id=User_last_name", "hostperson");
         $this->type("id=User_email", "hostperson@test.com");

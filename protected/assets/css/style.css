@@ -618,6 +618,7 @@ dt.tabs dt{
 
 #register-reason-form{
     margin-top: -80px;
+    width:300px;
 }
 
 #register-reason-form input[type="text"]{

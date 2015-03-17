@@ -675,7 +675,7 @@ $session = new CHttpSession;
             $("#register-reason-form-search").hide();
         }
 
-        $("#Visit_reason").val(reason.value);
+        //$("#Visit_reason").val(reason.value);
         $("#Visit_reason_search").val(reason.value);
     }
 

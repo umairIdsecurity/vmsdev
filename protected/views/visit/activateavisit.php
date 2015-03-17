@@ -68,6 +68,7 @@
 <script>
     $(document).ready(function() {
         refreshTimeIn();
+        $("#Visit_date_out").datepicker("option", "minDate", $("#Visit_date_check_in").val());
         $("#dateoutDiv #Visit_date_out").datepicker({
             changeMonth: true,
             changeYear: true,
@@ -77,8 +78,8 @@
             minDate: "+1",
             dateFormat: "dd-mm-yy",
             onClose: function(selectedDate) {
+                
                 $("#dateoutDiv #Visit_date_out").val($("#Visit_date_out").val());
-                // $('.ui-datepicker-trigger[title="Select Proposed Check Out Date"]').hide();
             }
         });
     });

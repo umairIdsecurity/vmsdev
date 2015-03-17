@@ -82,11 +82,11 @@ color:<?php echo $companyLafPreferences->nav_font_color; ?> !important;
 }
 
 .top_nav ul li a {
-color:<?php echo $companyLafPreferences->nav_font_color; ?> !important;
+color:<?php echo $companyLafPreferences->nav_bg_color; ?> !important;
 }
 
 .top_nav ul li a:hover {
-color:<?php echo $companyLafPreferences->nav_hover_font_color; ?> !important;
+color:<?php echo $companyLafPreferences->nav_hover_color; ?> !important;
 }
 /* SIDE MENU*/
 
@@ -149,4 +149,17 @@ border:1px solid <?php echo $companyLafPreferences->nav_bg_color; ?> !important;
 .pager li > a:focus {
 background-color:<?php echo $companyLafPreferences->nav_hover_color; ?> !important;
 color:<?php echo $companyLafPreferences->nav_hover_font_color; ?> !important;
+}
+
+
+ul.yiiPager .selected a {
+    background: none repeat scroll 0 0 <?php echo $companyLafPreferences->nav_hover_color; ?> !important;
+    color:<?php echo $companyLafPreferences->nav_hover_font_color; ?> !important;
+}
+
+/*footer*/
+
+
+#footer {
+    border-top: 1px solid <?php echo $companyLafPreferences->nav_hover_color; ?> !important;
 }

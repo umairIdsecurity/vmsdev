@@ -1204,7 +1204,7 @@ dt.tabs dt{
     text-transform: lowercase !important;
 }
 
-.errorSummary ul li:first-letter{
+.errorSummary ul li:first-letter, .emailErr:first-letter{
     text-transform: uppercase !important;
 }
 
@@ -1536,3 +1536,5 @@ dt.tabs dt{
     position: relative;
     text-align: center;
     width: 250px;}
+
+

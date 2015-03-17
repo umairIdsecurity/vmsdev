@@ -29,7 +29,7 @@ class Vehicle extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('vehicle_registration_plate_number', 'required'),
-			array('vehicle_registration_plate_number', 'length', 'max'=>6),
+			array('vehicle_registration_plate_number', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('id, vehicle_registration_plate_number', 'safe', 'on'=>'search'),

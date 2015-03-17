@@ -164,7 +164,6 @@ $currentLoggedUserId = $session['id'];
                         </td>
 
                     </tr>
-                    <?php if ($this->action->id == 'create') { ?>
                         <tr>
                             <td><label for="User_password">Password <span class="required">*</span></label></td>
                             <td>
@@ -182,9 +181,6 @@ $currentLoggedUserId = $session['id'];
                             </td>
 
                         </tr>
-
-                    <?php } ?>
-
 
                 </table>
             </td>

@@ -194,6 +194,7 @@ nav.navigation ul li a:hover{
 nav.navigation ul li.active a 
 {
     color:#fff;
+    border-top-left-radius: 8px !important;
 }
 nav.navigation ul li:first-child a:hover
 {

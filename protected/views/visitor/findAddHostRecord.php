@@ -4,7 +4,7 @@
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" role="tablist">
         <li role="presentation" class="active"><a href="#addhost" aria-controls="home" role="tab" data-toggle="tab" id='addhostTab'>Add Host</a></li>
-        <li role="presentation"><a href="#searchost" aria-controls="profile" role="tab" data-toggle="tab">Search Host</a></li>
+        <li role="presentation"><a href="#searchost" aria-controls="profile" role="tab" data-toggle="tab">Find Host</a></li>
     </ul>
 
     <!-- Tab panes -->

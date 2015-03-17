@@ -175,6 +175,8 @@ if ($this->action->id == 'update') {
                         <tr>
                             <td width="37%">
                                 <?php echo $form->labelEx($model, 'email'); ?>
+                                <input type="text" id="Visitor_email" name="Visitor[email]" maxlength="50" size="50" value="<?php echo $model->email; ?>"/>
+                                <?php echo "<br>" . $form->error($model, 'email'); ?>
                                 <?php echo $form->textField($model, 'email', array('size' => 50, 'maxlength' => 50)); ?>
                                 <?php echo "<br>" . $form->error($model, 'email',array('style'=>'text-transform:none;')); ?>
                                 <div style="" class="errorMessageEmail" >A profile already exists for this email address.</div>
@@ -473,7 +475,15 @@ if (isset($_GET['id'])) {
             }
         });
     }
-
+    
+    function trim(el) {
+        el.value = el.value.
+                replace(/(^\s*)|(\s*$)/gi, "").// removes leading and trailing spaces
+                replace(/[ ]{2,}/gi, " ").// replaces multiple spaces with one space 
+                replace(/\n +/, "\n");           // Removes spaces after newlines
+        return;
+    }
+    
     function dismissModal(id) {
         $("#dismissModal").click();
         $('#Visitor_company option[value!=""]').remove();

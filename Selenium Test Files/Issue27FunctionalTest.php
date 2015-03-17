@@ -705,7 +705,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Preregister Visit");
         $this->click("id=multiday");
         $this->click("id=clicktabA");
-        $this->click("link=Search Visitor Profile");
+        $this->click("link=Find Visitor Profile");
         $this->select("id=search_visitor_tenant","label=NAIA Airport");
         sleep(1);
         $this->select("id=search_visitor_tenant_agent","label=Philippine Airline");
@@ -763,7 +763,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->waitForElementPresent("link=Log Visit");
         $this->clickAndWait("link=Log Visit");
         $this->click("id=clicktabA");
-        $this->click("link=Search Visitor Profile");
+        $this->click("link=Find Visitor Profile");
         $this->select("id=search_visitor_tenant","label=NAIA Airport");
         sleep(1);
         $this->select("id=search_visitor_tenant_agent","label=Philippine Airline");
@@ -815,7 +815,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Log Visit");
         $this->click("id=multiday");
         $this->click("id=clicktabA");
-        $this->click("link=Search Visitor Profile");
+        $this->click("link=Find Visitor Profile");
         $this->select("id=search_visitor_tenant","label=NAIA Airport");
         sleep(1);
         $this->select("id=search_visitor_tenant_agent","label=Philippine Airline");
@@ -866,7 +866,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->waitForElementPresent("link=Preregister Visit");
         $this->clickAndWait("link=Preregister Visit");
         $this->click("id=clicktabA");
-        $this->click("link=Search Visitor Profile");
+        $this->click("link=Find Visitor Profile");
         $this->select("id=search_visitor_tenant","label=NAIA Airport");
         sleep(1);
         $this->select("id=search_visitor_tenant_agent","label=Philippine Airline");
@@ -888,7 +888,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Preregister Visit");
         $this->click("id=multiday");
         $this->click("id=clicktabA");
-        $this->click("link=Search Visitor Profile");
+        $this->click("link=Find Visitor Profile");
         $this->select("id=search_visitor_tenant","label=NAIA Airport");
         sleep(1);
         $this->select("id=search_visitor_tenant_agent","label=Philippine Airline");
@@ -942,7 +942,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->waitForElementPresent("link=Log Visit");
         $this->clickAndWait("link=Log Visit");
         $this->click("id=clicktabA");
-        $this->click("link=Search Visitor Profile");
+        $this->click("link=Find Visitor Profile");
         $this->select("id=search_visitor_tenant","label=NAIA Airport");
         sleep(1);
         $this->select("id=search_visitor_tenant_agent","label=Philippine Airline");
@@ -971,7 +971,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Log Visit");
         $this->click("id=multiday");
         $this->click("id=clicktabA");
-        $this->click("link=Search Visitor Profile");
+        $this->click("link=Find Visitor Profile");
         $this->select("id=search_visitor_tenant","label=NAIA Airport");
         sleep(1);
         $this->select("id=search_visitor_tenant_agent","label=Philippine Airline");

@@ -469,7 +469,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         $this->click("link=Manage Visitors");
         $this->clickAndWait("link=Preregister Visit");
         $this->click("id=clicktabA");
-        $this->click("link=Search Visitor Profile");
+        $this->click("link=Find Visitor Profile");
         $this->select("id=search_visitor_tenant","label=NAIA Airport");
         sleep(1);
         $this->select("id=search_visitor_tenant_agent","label=Philippine Airline");
@@ -560,7 +560,7 @@ class Issue25PreregisterVisitorFunctionalTest extends BaseFunctionalTest {
         sleep(1);
         $this->select("id=workstation", "label=Workstation1");
         $this->click("id=submitFormVisitor");
-        $this->click("link=Search Host");
+        $this->click("link=Find Host");
         $this->waitForElementPresent("id=search-host");
         $this->type("id=search-host", "test");
         $this->click("id=dummy-host-findBtn");

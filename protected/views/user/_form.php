@@ -169,7 +169,7 @@ $currentLoggedUserId = $session['id'];
                             <td><label for="User_password">Password <span class="required">*</span></label></td>
                             <td>
                                 <input ng-model="user.passwords" data-ng-class="{
-                                                                                        'ng-invalid':userform['User[repeatpassword]'].$error.match}" type="password" id="User_password" value = '<?php echo $model->password; ?>' name="User[password]">			
+                                                                                                'ng-invalid':userform['User[repeatpassword]'].$error.match}" type="password" id="User_password" value = '<?php echo $model->password; ?>' name="User[password]">			
                                        <?php echo "<br>" . $form->error($model, 'password'); ?>
                             </td>
                         </tr>
@@ -203,6 +203,10 @@ $currentLoggedUserId = $session['id'];
                         </td>
                     </tr>
                     <tr>
+                        <td><?php echo $form->labelEx($model, 'email'); ?></td>
+                        <td>
+                            <input type="text" id="User_email" name="User[email]" maxlength="50" size="50"  value="<?php echo $model->email; ?>"/>
+                            <?php echo "<br>" . $form->error($model, 'email'); ?>
                         <td width="30%"><?php echo $form->labelEx($model, 'email'); ?></td>
                         <td><?php echo $form->textField($model, 'email', array('size' => 50, 'maxlength' => 50)); ?>
                             <?php echo "<br>" . $form->error($model, 'email',array('style'=>'text-transform:none;')); ?>
@@ -452,6 +456,7 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
 
         });
 
+
         function populateTenantAgentField(tenant) {
             $("#User_tenant_agent").empty();
             //$("#User_company").empty();
@@ -529,6 +534,15 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
 
         });
     });
+
+    function trim(el) {
+        el.value = el.value.
+                replace(/(^\s*)|(\s*$)/gi, "").// removes leading and trailing spaces
+                replace(/[ ]{2,}/gi, " ").// replaces multiple spaces with one space 
+                replace(/\n +/, "\n");           // Removes spaces after newlines
+        return;
+    }
+
     function sendUserForm() {
 
         var userform = $("#userform").serialize();

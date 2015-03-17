@@ -72,6 +72,7 @@ class Issue53FunctionalTest extends BaseFunctionalTest {
         $this->select("id=Visitor_company", "label=NAIA Airport");
         $this->select("id=workstation", "label=Workstation1");
         $this->click("id=submitFormVisitor");
+        sleep(1);
         $this->type("id=User_first_name", "test");
         $this->type("id=User_last_name", "newhost");
         $this->type("id=User_department", "test department");
@@ -80,6 +81,7 @@ class Issue53FunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_contact_number", "123456");
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeatpassword", "12345");
+        
         $this->clickAndWait("id=submitFormUser");
         $this->assertEquals("Corporate Visitor Test Visitor Type", $this->getText("id=Visit_visitor_type"));
         $this->clickAndWait("link=Visit History");

@@ -42,6 +42,7 @@ class Issue126FunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_email", " testemail@test.com ");
         $this->type("id=User_contact_number", "12345");
         $this->select("id=User_tenant", "label=NAIA Airport");
+        sleep(1);
         $this->type("id=User_password", "123");
         $this->type("id=User_repeat_password", "123");
         $this->clickAndWait("id=submitForm");

@@ -38,8 +38,6 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
         $this->open("http://dev.identitysecurity.info/index.php?r=site/resetDb2");
         $this->assertEquals("Tables imported successfully", $this->getText("css=body"));
         
-        $this->open("http://dev.identitysecurity.info/index.php?r=site/reset&filename=Issue81");
-        $this->assertEquals("Tables imported successfully", $this->getText("css=body"));
         
     }
     

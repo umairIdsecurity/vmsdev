@@ -22,6 +22,14 @@ class Issue81FunctionalTest extends BaseFunctionalTest {
 
     function testAll() {
         $this->resetDbWithData();
+        $this->open("http://dev.identitysecurity.info/index.php?r=site/reset&filename=test-data");
+        $this->assertEquals("Tables imported successfully", $this->getText("css=body"));
+
+        $this->open("http://dev.identitysecurity.info/index.php?r=site/reset&filename=Issue81");
+        $this->assertEquals("Tables imported successfully", $this->getText("css=body"));
+
+        $this->open("http://dev.identitysecurity.info/index.php?r=site/DBpatch");
+        $this->assertEquals("--== Starting Patcher ==-- \nDone patch for issue81", $this->getText("css=body"));
         $this->Scenario1();
     }
 
@@ -30,23 +38,23 @@ class Issue81FunctionalTest extends BaseFunctionalTest {
 
     function Scenario1() {
         $this->login("superadmin@test.com", "12345");
-        $this->clickAndWait("css=tr.even > td.blue > a.statusLink");
-        $this->click("css=span.log-current");
-        $this->click("css=#activate-a-visit-form > input.complete");
-        sleep(3);
-        $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
-        $this->clickAndWait("link=Dashboard");
-        $this->clickAndWait("link=Active");
-        $this->assertEquals("NAI000001", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[4]/td/span"));
-        $this->click("id=printCardBtn");
-        $this->waitForPopUp("_blank", "30000");
-        $this->clickAndWait("link=Dashboard");
-        $this->clickAndWait("link=Active");
-        $this->click("id=reprintCardBtn");
-        $this->waitForPopUp("_blank", "30000");
-        $this->clickAndWait("link=Dashboard");
-        $this->clickAndWait("link=Active");
-        $this->assertEquals("NAI000002", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[4]/td/span"));
+        $this->assertEquals("KLO000004", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[2]"));
+        $this->assertEquals("KLO000002", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr[2]/td[2]"));
+        $this->assertEquals("NAI000004", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr[3]/td[2]"));
+        $this->assertEquals("NAI000003", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr[5]/td[2]"));
+        $this->click("link=Active");
+        $this->waitForPageToLoad("30000");
+        $this->assertEquals("KLO000004", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[4]/td/span"));
+        $this->click("link=Dashboard");
+        $this->waitForPageToLoad("30000");
+        $this->click("css=tr.even > td.green > a.statusLink");
+        $this->waitForPageToLoad("30000");
+        $this->assertEquals("KLO000002", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[4]/td/span"));
+        $this->click("link=Dashboard");
+        $this->waitForPageToLoad("30000");
+        $this->click("xpath=(//a[contains(text(),'Active')])[3]");
+        $this->waitForPageToLoad("30000");
+        $this->assertEquals("NAI000004", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[4]/td/span"));
     }
 
 }

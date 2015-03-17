@@ -280,6 +280,11 @@ class SiteController extends Controller {
             }
         }
         echo "Tables imported successfully";
+        
+    }
+    
+    public function actionDBpatch() {
+        GeneralPatcher::startPatcher();
     }
 
 }

@@ -8,10 +8,6 @@ $session['count'] = $session['count'] + 1;
 // clean up the input
 $model = Visit::model()->findByPk($_GET['id']);
 $cardType = CardType::$CARD_TYPE_LIST[$model->card_type];
-$companyName = "Not Available";
-$companyCode = "";
-$cardCode = "";
-$companyLogoId = "";
 
 $visitorName = $visitorModel->first_name . ' ' . $visitorModel->last_name;
 $tenant = User::model()->findByPk($visitorModel->tenant);
@@ -20,7 +16,7 @@ $card = CardGenerated::model()->findByPk($model->card);
 $visitorName = wordwrap($visitorName, 13, "\n", true);
 
 
-if ($tenant->company != '') {
+
     $company = Company::model()->findByPk($tenant->company);
     $companyName = $company->name;
     $companyLogoId = $company->logo;
@@ -32,7 +28,7 @@ if ($tenant->company != '') {
         $int_code .= "0";
     }
     $cardCode = $companyCode . $int_code . ($card->card_count);
-}
+
 
 if ($companyLogoId == "") {
     $companyLogo = Yii::app()->getBaseUrl(true) . '/uploads/card_generated/nologoavailable.jpg';
@@ -61,6 +57,7 @@ if ($model->card_type != CardType::SAME_DAY_VISITOR) {
 }
 
 $text = $companyCode . "\n" . $dateExpiry . "\n" . $visitorName . "\n" . $cardCode."\n";
+
 
 if (empty($text)) {
     fatal_error('Error: Text not properly formatted.');

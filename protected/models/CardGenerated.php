@@ -129,7 +129,8 @@ class CardGenerated extends CActiveRecord {
     public function getCardCode($cardId, $visitId) {
         $session = new CHttpSession;
         if ($cardId != '' && (Visit::model()->findByPk($visitId)->visit_status == VisitStatus::ACTIVE)) {
-            $tenant = User::model()->findByPk($session['tenant']);
+            
+            $tenant = User::model()->findByPk(Visit::model()->findByPk($visitId)->tenant);
             $tenantCompany = Company::model()->findByPk($tenant->company);
             $card_count = CardGenerated::model()->findByPk($cardId)->card_count;
 

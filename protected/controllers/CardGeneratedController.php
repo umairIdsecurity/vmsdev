@@ -56,7 +56,13 @@ class CardGeneratedController extends Controller {
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['CardGenerated'])) {
+            if($_POST['CardGenerated']['tenant_agent'] == '' ){
+                $_POST['CardGenerated']['tenant_agent'] = NULL;
+            } else {
+                $_POST['CardGenerated']['tenant_agent'] = $_POST['CardGenerated']['tenant_agent'];
+            }
             $model->attributes = $_POST['CardGenerated'];
+           
             if ($model->save()) {
                 Visit::model()->updateByPk($visitId, array(
                     'card' => $model->id,

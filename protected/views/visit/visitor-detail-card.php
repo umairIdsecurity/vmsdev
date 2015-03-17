@@ -158,7 +158,7 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
             <input type="button" class="complete btn btn-info printCardBtn" value="Print Card" id="printCardBtn" onclick="generateCard()"/>
             <?php
         }
-    }
+        }
     ?>
 </div>
 <input type="hidden" id="dummycardvalue" value="<?php echo $model->card; ?>"/>
@@ -166,7 +166,7 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
     $(document).ready(function() {
 
 
-        if (<?php echo $model->visit_status; ?> == '1' && $("#dummycardvalue").val() == '') { //1 is active
+        if (<?php echo $model->visit_status; ?> == '1' && $("#dummycardvalue").val() == '' && <?php echo $model->card; ?> != '') { //1 is active
             document.getElementById('printCardBtn').disabled = false;
 
         }

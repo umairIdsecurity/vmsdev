@@ -310,6 +310,7 @@ $session = new CHttpSession;
                         $("#Visit_date_check_in").attr("disabled", true);
                     } else if (visitType == 'new') {
                         $("#dateoutDiv #Visit_date_out").attr("disabled", false);
+                        
                         duplicateVisit("activate-a-visit-form");
                     }
                     else {
@@ -377,7 +378,8 @@ $session = new CHttpSession;
     <input type="text" id="CardGenerated_visitor_id" name="CardGenerated[visitor_id]" value="<?php echo $model->visitor; ?>">
     <input type="text" id="CardGenerated_created_by" name="CardGenerated[created_by]" value="<?php echo Yii::app()->user->id; ?>">
     <input type="text" id="CardGenerated_tenant" name="CardGenerated[tenant]" value="<?php echo $model->tenant; ?>">
-    <input type="text" id="CardGenerated_tenant_agent" name="CardGenerated[tenant_agent]" value="<?php echo $model->tenant_agent; ?>">
+    <input type="text" id="CardGenerated_tenant_agent" name="CardGenerated[tenant_agent]" value="<?php echo $model->tenant_agent; 
+    ?>">
     <input type="text" id="CardGenerated_company_code" name="CardGenerated[company_code]" value="<?php
     $tenantCompany = User::model()->findByPk($model['tenant']);
     echo Company::model()->findByPk($tenantCompany->company)->code;

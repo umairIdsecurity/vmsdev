@@ -2,7 +2,6 @@
 /* @var $this VisitorController */
 /* @var $model Visitor */
 $session = new CHttpSession;
-
 ?>
 <table id="visitorDetailDiv">
     <tr class="theadVisitorDetail">
@@ -406,21 +405,30 @@ $this->renderPartial('visithistory', array('model' => $model,
                 $("#printCardBtn").removeClass("disabledButton");
                 $(".visitStatusLi li a span").html("Active");
                 $(".visitStatusLi li a span").css('color', '#9BD62C !important');
-                
+
                 sendCardForm();
                 alert("Visit is now activated. You can now print the visitor badge.");
-                window.location= "<?php echo CHtml::normalizeUrl(array("visit/detail&id=" . $model->id)); ?>";
+                window.location = "<?php echo CHtml::normalizeUrl(array("visit/detail&id=" . $model->id)); ?>";
             },
         });
     }
-    
-    function sendCardForm() {
+
+    function sendCardForm(visitId) {
         var cardForm = $("#update-card-form").serialize();
+        visitId = (typeof visitId === "undefined") ? "defaultValue" : visitId;
+        if (visitId != "defaultValue") {
+            var id = visitId;
+        } else {
+            var id = '<?php echo $model->id; ?>';
+        }
         $.ajax({
             type: "POST",
-            url: "<?php echo CHtml::normalizeUrl(array("cardGenerated/create&visitId=".$model->id))?>",
+            url: "<?php echo CHtml::normalizeUrl(array("cardGenerated/create&visitId=")) ?>" + id,
             data: cardForm,
             success: function(data) {
+                if (visitId != "defaultValue") {
+                    window.location = "index.php?r=visit/detail&id=" + id;
+                }
             }
         });
     }
@@ -456,7 +464,9 @@ $this->renderPartial('visithistory', array('model' => $model,
             url: "<?php echo CHtml::normalizeUrl(array("visit/duplicateVisit&id=" . $model->id)); ?>",
             data: visitForm,
             success: function(data) {
-                window.location = "index.php?r=visit/detail&id=" + data;
+                sendCardForm(data);
+                
+              //  window.location = "index.php?r=visit/detail&id=" + data;
                 //  alert(data);
             },
         });

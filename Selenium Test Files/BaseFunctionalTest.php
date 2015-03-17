@@ -28,8 +28,8 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
         $this->open("http://dev.identitysecurity.info/index.php?r=site/resetDb");
         $this->assertEquals("Tables imported successfully", $this->getText("css=body"));
         
-        $this->open("http://dev.identitysecurity.info/index.php?r=site/reset&filename=Issue81");
-        $this->assertEquals("Tables imported successfully", $this->getText("css=body"));
+        $this->open("http://dev.identitysecurity.info/index.php?r=site/DBpatch");
+        $this->assertEquals("--== Starting Patcher ==-- \nDone patch for issue81", $this->getText("css=body"));
         
     }
 
@@ -38,7 +38,8 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
         $this->open("http://dev.identitysecurity.info/index.php?r=site/resetDb2");
         $this->assertEquals("Tables imported successfully", $this->getText("css=body"));
         
-        
+        $this->open("http://dev.identitysecurity.info/index.php?r=site/DBpatch");
+        $this->assertEquals("--== Starting Patcher ==-- \nDone patch for issue81", $this->getText("css=body"));
     }
     
     public function issue35Sql() {

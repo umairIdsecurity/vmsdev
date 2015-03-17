@@ -341,7 +341,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_email", "123");
         $this->waitForElementPresent("id=Visitor_email_em_");
         sleep(1);
-        $this->assertEquals("Email Address is not a valid email address.", $this->getText("id=Visitor_email_em_"));
+        $this->assertEquals("Email Address is not in a recognised format. Please revise.", $this->getText("id=Visitor_email_em_"));
     }
 
     /* Scenario 4 –Login as super admin and Check for validations in updating a corporate visitor

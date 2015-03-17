@@ -101,7 +101,7 @@ class Issue7FunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_email", "123");
         $this->click("id=submitBtn");
         $this->waitForPageToLoad("30000");
-        $this->assertEquals("Email Address is not a valid email address.", $this->getText("//form[@id='user-form']/div/ul/li[4]"));
+        $this->assertEquals("Email Address is not in a recognised format. Please revise.", $this->getText("//form[@id='user-form']/div/ul/li[4]"));
     }
 
     /*

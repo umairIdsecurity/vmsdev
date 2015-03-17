@@ -47,6 +47,10 @@ class Issue80FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Please enter a Password", $this->getText("id=Visitor_password_em_"));
         $this->assertEquals("Please enter a Repeat Password", $this->getText("id=Visitor_repeatpassword_em_"));
         $this->assertEquals("Please select a Tenant", $this->getText("id=Visitor_tenant_em_"));
+        $this->click("link=Find Visitor Profile");
+        $this->select("id=search_visitor_tenant","label=NAIA Airport");
+        sleep(1);
+        $this->select("id=search_visitor_tenant_agent","label=Philippine Airline");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
         $this->waitForElementPresent("id=2");
@@ -80,16 +84,17 @@ class Issue80FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Please select a Tenant", $this->getText("id=Visitor_tenant_em_"));
 
         $this->clickAndWait("link=Administration");
-        $this->click("id=yt0");
-        $this->clickAndWait("css=span");
+        $this->click("id=yt7");
+        $this->waitForElementPresent("link=Add Company");
+        $this->clickAndWait("link=Add Company");
         $this->clickAndWait("id=createBtn");
         $this->assertEquals("Please enter a Company Name", $this->getText("css=div.errorMessage"));
         $this->assertEquals("Please enter a Company Code", $this->getText("//form[@id='company-form']/table/tbody/tr[3]/td[3]/div"));
-        $this->click("id=yt2");
+        $this->clickAndWait("css=a.manageworkstations > span");
         $this->clickAndWait("//div[@id='cssmenu']/ul/li[2]/ul/li/a/span");
         $this->clickAndWait("name=yt0");
-        $this->assertEquals("Please enter a Name", $this->getText("css=div.errorMessage"));
-        $this->assertEquals("Please select a Tenant", $this->getText("//form[@id='workstations-form']/table/tbody/tr[6]/td[3]/div"));
+        $this->assertEquals("Please enter a Name", $this->getText("css=div.errorSummary > ul > li"));
+        $this->assertEquals("Please select a Tenant", $this->getText("//form[@id='workstations-form']/div/ul/li[2]"));
         $this->click("id=yt3");
         $this->clickAndWait("css=div.customIcon-adminmenu");
         $this->click("id=submitForm");
@@ -107,7 +112,8 @@ class Issue80FunctionalTest extends BaseFunctionalTest {
         $this->click("//div[@id='cssmenu']/ul/li[5]/ul/li/a/span");
         $this->clickAndWait("name=yt0");
         $this->assertEquals("Please enter a Name", $this->getText("css=div.errorMessage"));
-        $this->click("id=yt6");
+        $this->click("id=yt3");
+        $this->waitForElementPresent("//div[@id='cssmenu']/ul/li[6]/ul/li/a/span");
         $this->clickAndWait("//div[@id='cssmenu']/ul/li[6]/ul/li/a/span");
         $this->clickAndWait("name=yt0");
         $this->assertEquals("Please enter a Reason", $this->getText("css=div.errorMessage"));

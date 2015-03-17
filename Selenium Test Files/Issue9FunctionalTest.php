@@ -99,7 +99,7 @@ class Issue9FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Please enter a Company Name", $this->getText("css=div.errorSummary > ul > li"));
         $this->type("id=Company_email_address", "123");
         $this->clickAndWait("id=createBtn");
-        $this->assertEquals("Email Address is not a valid email address.", $this->getText("//form[@id='company-form']/div/ul/li[3]"));
+        $this->assertEquals("Email Address is not in a recognised format. Please revise.", $this->getText("//form[@id='company-form']/div/ul/li[3]"));
         $this->type("id=Company_website", "123");
         $this->clickAndWait("id=createBtn");
         $this->assertEquals("Website is not a valid URL.", $this->getText("//form[@id='company-form']/div/ul/li[4]"));

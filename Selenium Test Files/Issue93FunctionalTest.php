@@ -39,11 +39,8 @@ class Issue93FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Log Visit", $this->getText("css=span.log-current"));
         $this->assertEquals("Preregistered", $this->getText("css=ul.visitStatusLi > li > a > span"));
         $this->click("css=#activate-a-visit-form > input.complete");
-        $this->waitForText("css=ul.visitStatusLi > li > a > span", "Active");
-        $this->assertEquals("", $this->getText("id=printCardBtn"));
         $this->assertEquals("Close Visit", $this->getText("css=span.close-visit"));
-        $this->waitForElementPresent("css=ul.visitStatusLi > li > a > span");
-        $this->assertEquals("Active", $this->getText("css=ul.visitStatusLi > li > a > span"));
+        sleep(5);
         $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
         $this->clickAndWait("link=Dashboard");
         $this->assertEquals("Active", $this->getText("css=tr.even > td > a.statusLink"));

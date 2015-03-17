@@ -166,7 +166,7 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
     $(document).ready(function() {
 
 
-        if (<?php echo $model->visit_status; ?> == '1' && $("#dummycardvalue").val() == '' && <?php echo $model->card; ?> != '') { //1 is active
+        if (<?php echo $model->visit_status; ?> == '1' && $("#dummycardvalue").val() == '' && '<?php echo $model->card; ?>' != '') { //1 is active
             document.getElementById('printCardBtn').disabled = false;
 
         }

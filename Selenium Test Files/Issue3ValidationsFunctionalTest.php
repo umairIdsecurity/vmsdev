@@ -426,7 +426,7 @@ class Issue3ValidationsFunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_email", "testemail");
         $this->click("id=submitForm");
         sleep(1);
-        $this->assertEquals("Email Address is not a valid email address.", $this->getText("id=User_email_em_"));
+        $this->assertEquals("Email Address is not in a recognised format. Please revise.", $this->getText("id=User_email_em_"));
         $this->type("id=User_email", "superadmin@test.com");
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeat_password", "12345");
@@ -581,7 +581,7 @@ class Issue3ValidationsFunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_email", "testemail");
         $this->click("id=submitForm");
         sleep(1);
-        $this->assertEquals("Email Address is not a valid email address.", $this->getText("id=User_email_em_"));
+        $this->assertEquals("Email Address is not in a recognised format. Please revise.", $this->getText("id=User_email_em_"));
         $this->click("link=Manage Users");
         $this->clickAndWait("link=Add Administrator");
         $this->addUser("superadmin@test.com", "admin");
@@ -652,7 +652,7 @@ class Issue3ValidationsFunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_email", "testemail");
         $this->click("id=submitForm");
         sleep(1);
-        $this->assertEquals("Email Address is not a valid email address.", $this->getText("id=User_email_em_"));
+        $this->assertEquals("Email Address is not in a recognised format. Please revise.", $this->getText("id=User_email_em_"));
         
         $this->click("link=Manage Users");
         $this->clickAndWait("link=Add Agent Operator");

@@ -78,7 +78,7 @@ class Issue82FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("//ul[@id='tabs']/li[3]/a/p");
         $username = 'admintest@test.com';
         $this->login($username, '12345');
-        $this->assertEquals("Logged in as admintest@test.com - Administrator", $this->getText("link=Logged in as admintest@test.com - Administrator"));
+        $this->assertEquals("Logged in as Administrator", $this->getText("link=Logged in as Administrator"));
     }
 
     /* Scenario 3 Update email of admintest@test.com to staffmember@test.com. Should not update

@@ -43,7 +43,7 @@
 <?php if ($model->date_out == '' && $model->card_type == CardType::MULTI_DAY_VISITOR) {
     ?>
         <tr id="dateoutDiv">
-            <td>Proposed Date Out
+            <td>Proposed Check Out Date
                 <br><?php
     $this->widget('zii.widgets.jui.CJuiDatePicker', array(
         'model' => $model,
@@ -78,7 +78,7 @@
             dateFormat: "dd-mm-yy",
             onClose: function(selectedDate) {
                 $("#dateoutDiv #Visit_date_out").val($("#Visit_date_out").val());
-                // $('.ui-datepicker-trigger[title="Select Proposed Date Out"]').hide();
+                // $('.ui-datepicker-trigger[title="Select Proposed Check Out Date"]').hide();
             }
         });
     });

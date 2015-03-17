@@ -50,7 +50,7 @@ echo VisitStatus::PREREGISTERED;
 <table class="detailsTable" style="font-size:12px;margin-top:15px;" id="logvisitTable">
 
     <tr>
-        <td>Proposed Date In</td>
+        <td>Proposed Check In Date</td>
     </tr>
     <tr>
 
@@ -77,36 +77,8 @@ $this->widget('zii.widgets.jui.CJuiDatePicker', array(
             <span style="color:red;display:none;" id="preregisterdateinError">Date In cannot be blank.</span>
         </td>
     </tr>
-    <?php if($model->card_type != CardType::SAME_DAY_VISITOR) {?>
     <tr>
-        <td>Proposed Date Out</td>
-    </tr>
-    <tr>
-        <td><?php
-            $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                'model' => $model,
-                'attribute' => 'date_out',
-                'htmlOptions' => array(
-                    'size' => '10', // textField size
-                    'maxlength' => '10', // textField maxlength
-                    'disabled' => 'disabled',
-                    // 'readonly' => 'readonly',
-                    'placeholder' => 'dd-mm-yyyy',
-                ),
-                'options' => array(
-                    'buttonImage' => Yii::app()->controller->assetsBase . '/images/Calendar.png',
-                    'buttonImageOnly' => true,
-                    'dateFormat' => 'dd-mm-yy',
-                    'onClose' => 'js:function(selectedDate) { $("#Visit_date_out").datepicker("option", "maxDate", selectedDate); }',
-                )
-            ));
-?>
-            <span style="color:red;display:none;" id="preregisterdateoutError">Date Out cannot be blank.</span>
-        </td>
-    </tr>
-    <?php } ?>
-    <tr>
-        <td>Proposed Time In</td>
+        <td>Proposed Check In Time</td>
     </tr>
     <tr>
         <td>
@@ -231,7 +203,7 @@ if ($model->visit_status == VisitStatus::CLOSED) {
             showOn: "button",
             buttonImage: "<?php echo Yii::app()->controller->assetsBase; ?>/images/calendar.png",
             buttonImageOnly: true,
-            buttonText: "Select Proposed Date In",
+            buttonText: "Select Proposed Check In Date",
             minDate: "+1",
             dateFormat: "dd-mm-yy",
             onClose: function(selectedDate, test) {
@@ -239,7 +211,7 @@ if ($model->visit_status == VisitStatus::CLOSED) {
 
                 if ($("#currentCardTypeValueOfEditedUser").val() == 1) { //same day
                     $("#Visit_date_out").datepicker("option", "minDate", selectedDate);
-                    $('.ui-datepicker-trigger[title="Select Proposed Date Out"]').hide();
+                    $('.ui-datepicker-trigger[title="Select Proposed Check Out Date"]').hide();
                 } else {
 
                     var newDateString = ('0' + (parseInt(test.selectedDay) + 1)).slice(-2) + '-'
@@ -256,7 +228,7 @@ if ($model->visit_status == VisitStatus::CLOSED) {
             showOn: "button",
             buttonImage: "<?php echo Yii::app()->controller->assetsBase; ?>/images/calendar.png",
             buttonImageOnly: true,
-            buttonText: "Select Proposed Date Out",
+            buttonText: "Select Proposed Check Out Date",
             dateFormat: "dd-mm-yy",
             onClose: function(selectedDate) {
                 $("#Visit_date_in").datepicker("option", "maxDate", selectedDate);

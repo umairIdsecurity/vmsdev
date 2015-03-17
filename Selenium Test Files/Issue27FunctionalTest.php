@@ -904,7 +904,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->click("id=submitFormUser");
         $this->clickAndWait("id=submitAllForms");
         $this->click("//li[@id='activateLi']/a/span");
-        $this->assertEquals("Proposed Date Out", $this->getText("css=#dateoutDiv > td"));
+        $this->assertEquals("Proposed Check Out Date", $this->getText("css=#dateoutDiv > td"));
         $this->click("//li[@id='preregisterLi']/a/span");
         $date2 = date('d-m-Y', time() + 86400);
         $date3 = date('d-m-Y', time() + 172800);

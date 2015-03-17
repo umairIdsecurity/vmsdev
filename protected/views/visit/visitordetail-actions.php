@@ -239,7 +239,7 @@ $session = new CHttpSession;
 
         display_ct();
         if ('<?php echo $model->card_type; ?>' == 1) {
-            $('.ui-datepicker-trigger[title="Select Proposed Date Out"]').hide();
+            $('.ui-datepicker-trigger[title="Select Proposed Check Out Date"]').hide();
         }
 
 

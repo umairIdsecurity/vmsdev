@@ -47,7 +47,7 @@ class Issue107FunctionalTest extends BaseFunctionalTest {
 
     /* Scenario 2 - Preregister a multiday visitor 
      * Expected Behavior
-     * - Assert proposed date out present
+     * - Assert proposed date out not present in multi day visit
      *   
      * 
      */
@@ -57,10 +57,10 @@ class Issue107FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->click("link=Preregistered");
         $this->waitForPageToLoad("30000");
-        $this->assertEquals("", $this->getText("//img[@alt='Select Proposed Date Out']"));
+        $this->assertEquals("", $this->getText("//img[@alt='Select Proposed Check Out Date']"));
         $this->clickAndWait("id=confirmPreregisterDummy");
         $this->clickAndWait("link=Preregistered");
-        $this->assertEquals(date('d M y', time() + 259200), $this->getText("css=span.cardDateText"));
+        $this->assertEquals(date('d M y', time() + 86400), $this->getText("css=span.cardDateText"));
         $this->assertEquals("Preregistered", $this->getText("css=ul.visitStatusLi > li > a > span"));
     }
 

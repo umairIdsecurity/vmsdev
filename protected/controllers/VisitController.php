@@ -540,7 +540,6 @@ class VisitController extends Controller {
         $model->time_check_out = '';
         $model->date_check_out = '';
         $model->card = NULL;
-        $tenant->card_count = 0;
 
         $model->isNewRecord = true;
         $model->attributes = $_POST['Visit'];

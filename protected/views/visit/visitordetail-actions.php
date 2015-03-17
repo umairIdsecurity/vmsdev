@@ -379,7 +379,7 @@ $session = new CHttpSession;
     <input type="text" id="CardGenerated_tenant" name="CardGenerated[tenant]" value="<?php echo $model->tenant; ?>">
     <input type="text" id="CardGenerated_tenant_agent" name="CardGenerated[tenant_agent]" value="<?php echo $model->tenant_agent; ?>">
     <input type="text" id="CardGenerated_company_code" name="CardGenerated[company_code]" value="<?php
-    $tenantCompany = User::model()->findByPk($session['tenant']);
+    $tenantCompany = User::model()->findByPk($model['tenant']);
     echo Company::model()->findByPk($tenantCompany->company)->code;
     ?>">
     <input type="text" id="CardGenerated_card_count" name="CardGenerated[card_count]" value="<?php

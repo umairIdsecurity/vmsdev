@@ -6,17 +6,17 @@ $session = new CHttpSession;
 <div id='actionsCssMenu'>
     <ul class="visitStatusLi">
         <li>
-            <a style="text-decoration: none; ">Status: <span style="color:#<?php 
-                if($model->visit_status == VisitStatus::CLOSED){
+            <a style="text-decoration: none; ">Status: <span style="color:#<?php
+                if ($model->visit_status == VisitStatus::CLOSED) {
                     echo "ff0000";
-                } else if($model->visit_status == VisitStatus::ACTIVE){
+                } else if ($model->visit_status == VisitStatus::ACTIVE) {
                     echo "9BD62C";
-                } else if($model->visit_status == VisitStatus::PREREGISTERED){
+                } else if ($model->visit_status == VisitStatus::PREREGISTERED) {
                     echo "2F96B4";
-                } else if($model->visit_status == VisitStatus::SAVED){
+                } else if ($model->visit_status == VisitStatus::SAVED) {
                     echo "637280";
                 }
-            ?> !important; font-weight:bold"><?php echo VisitStatus::$VISIT_STATUS_LIST[$model->visit_status]; ?></span></a>
+                ?> !important; font-weight:bold"><?php echo VisitStatus::$VISIT_STATUS_LIST[$model->visit_status]; ?></span></a>
 
         </li>
     </ul>
@@ -25,11 +25,13 @@ $session = new CHttpSession;
 
     <ul>
 
-        <li class='has-sub' id="closevisitLi" style="<?php if ($model->visit_status == VisitStatus::ACTIVE && $session['role'] != Roles::ROLE_STAFFMEMBER) {
+        <li class='has-sub' id="closevisitLi" style="<?php
+        if ($model->visit_status == VisitStatus::ACTIVE && $session['role'] != Roles::ROLE_STAFFMEMBER) {
             echo "display:block;";
         } else {
             echo "display:none;";
-        }?>"><a href="#"><span class="close-visit">Close Visit</span></a>
+        }
+        ?>"><a href="#"><span class="close-visit">Close Visit</span></a>
             <ul>
                 <li>
                     <table id="actionsVisitDetails" style="margin-top:15px;">
@@ -76,7 +78,7 @@ $session = new CHttpSession;
                                                     <?php endfor; ?>
                                                 </select> :
                                                 <select class='time visit_time_in_minutes'  id='Visit_time_check_out_minutes' disabled style="width:70px;">
-                                                        <?php for ($i = 1; $i <= 60; $i++): ?>
+                                                    <?php for ($i = 1; $i <= 60; $i++): ?>
                                                         <option value="<?= $i; ?>"><?php
                                                             if ($i > 0 && $i < 10) {
                                                                 echo '0' . $i;
@@ -84,12 +86,12 @@ $session = new CHttpSession;
                                                                 echo $i;
                                                             };
                                                             ?></option>
-<?php endfor; ?>
+                                                    <?php endfor; ?>
                                                 </select>
                                             </td>
                                         </tr>
                                     </table>
-<?php echo $closeVisitForm->error($model, 'date_in'); ?>
+                                    <?php echo $closeVisitForm->error($model, 'date_in'); ?>
                                     <input type='submit' value='Close' class="complete" id="closeVisitBtn" style="display:none;"/>
                                     <button  class="complete greenBtn" id="closeVisitBtnDummy" style="width:94px !important"/>Close Visit</button>
                                 <div style="display:inline;font-size:12px;"><b>or</b><a id="cancelActiveVisitButton" href="" class="cancelBtnVisitorDetail">Cancel</a></div>
@@ -103,8 +105,8 @@ $session = new CHttpSession;
             </ul>
 
         </li>
-<?php if (($model->visit_status == VisitStatus::PREREGISTERED || $model->visit_status == VisitStatus::SAVED || $model->visit_status == VisitStatus::CLOSED)) {
-    ?>
+        <?php if (($model->visit_status == VisitStatus::PREREGISTERED || $model->visit_status == VisitStatus::SAVED || $model->visit_status == VisitStatus::CLOSED)) {
+            ?>
             <li class='has-sub' id="preregisterLi"><a href="#"><span class="pre-visits">Preregister Visit</span></a>
                 <ul>
                     <li>
@@ -177,14 +179,14 @@ $session = new CHttpSession;
                         <?php } else { ?>
                             <input type = 'submit' value = 'Activate' class = "complete"/>
                         <?php } ?>
-    <?php $this->endWidget();
-    ?>
+                        <?php $this->endWidget();
+                        ?>
 
                     </li>
                 </ul>
             </li>
 
-<?php } ?>
+        <?php } ?>
     </ul>
 </div>
 <input type="hidden" value="<?php echo $session['previousVisitAction']; ?>" id="previousVisitAction"/>
@@ -208,7 +210,7 @@ $session = new CHttpSession;
             }
             $("#activateLi a").click();
         }
-        
+
         $('#activate-a-visit-form').bind('submit', function() {
             $(this).find('#Visit_date_check_in').removeAttr('disabled');
         });
@@ -296,7 +298,7 @@ $session = new CHttpSession;
 
     function checkIfActiveVisitConflictsWithAnotherVisit(visitType) {
         visitType = (typeof visitType === "undefined") ? "defaultValue" : visitType;
-         $("#Visit_date_check_in").attr("disabled", false);
+        $("#Visit_date_check_in").attr("disabled", false);
         $.ajax({
             type: 'POST',
             url: '<?php echo Yii::app()->createUrl('visit/isDateConflictingWithAnotherVisit&date_in='); ?>' + $("#Visit_date_check_in").val() + '&date_out=' + $("#Visit_date_out").val() + '&visitorId=<?php echo $model->visitor; ?>&visitStatus=<?php echo VisitStatus::ACTIVE; ?>',
@@ -308,6 +310,7 @@ $session = new CHttpSession;
                         $("#Visit_date_check_in").attr("disabled", true);
                     } else if (visitType == 'new') {
                         $("#dateoutDiv #Visit_date_out").attr("disabled", false);
+                        
                         duplicateVisit("activate-a-visit-form");
                     }
                     else {
@@ -353,6 +356,48 @@ $session = new CHttpSession;
     <?php echo "<br>" . $cancelForm->error($model, 'visit_status'); ?>
     <input type='submit' value='Update' class='submitBtn complete' id='cancelFormBtn'>
 
-<?php $this->endWidget(); ?>
+    <?php $this->endWidget(); ?>
+
+    <?php
+    $cardForm = $this->beginWidget('CActiveForm', array(
+        'id' => 'update-card-form',
+        //'action' => Yii::app()->createUrl('/cardGenerated/create&id=' . $model->visitor . '&visitId='.$model->id.''),
+        'action' => Yii::app()->createUrl('/cardGenerated/create&visitId=' . $model->id),
+        'htmlOptions' => array("name" => "update-card-form"),
+        'enableAjaxValidation' => false,
+        'enableClientValidation' => true,
+        'clientOptions' => array(
+            'validateOnSubmit' => true,
+            'afterValidate' => 'js:function(form, data, hasError){
+                                if (!hasError){
+                                }
+                                }'
+        ),
+    ));
+    ?>
+    <input type="text" id="CardGenerated_visitor_id" name="CardGenerated[visitor_id]" value="<?php echo $model->visitor; ?>">
+    <input type="text" id="CardGenerated_created_by" name="CardGenerated[created_by]" value="<?php echo Yii::app()->user->id; ?>">
+    <input type="text" id="CardGenerated_tenant" name="CardGenerated[tenant]" value="<?php echo $model->tenant; ?>">
+    <input type="text" id="CardGenerated_tenant_agent" name="CardGenerated[tenant_agent]" value="<?php echo $model->tenant_agent; 
+    ?>">
+    <input type="text" id="CardGenerated_company_code" name="CardGenerated[company_code]" value="<?php
+    $tenantCompany = User::model()->findByPk($model['tenant']);
+    echo Company::model()->findByPk($tenantCompany->company)->code;
+    ?>">
+    <input type="text" id="CardGenerated_card_count" name="CardGenerated[card_count]" value="<?php
+    $criteria = new CDbCriteria;
+    $criteria->select = 'MAX(card_count) as card_count';
+    $criteria->condition = 'tenant="'.$model->tenant.'"';
+    $card = CardGenerated::model()->find($criteria);
+
+    if (count($card->card_count) == '') {
+        echo "1";
+    } else {
+        echo $card->card_count+1;
+    }
+    ?>">
+    <input type="text" id="CardGenerated_print_count" name="CardGenerated[print_count]" value="">
+    <input type="submit" value="Create" name="yt0" id="submitCardForm">
+    <?php $this->endWidget(); ?>
 
 </div>

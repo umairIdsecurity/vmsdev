@@ -35,7 +35,7 @@ $session = new CHttpSession;
                 array(
                     'header' => 'Card No.',
                     'name' => 'card',
-                    'value' => 'CardGenerated::model()->getCardCode($data->card)',
+                    'value' => 'CardGenerated::model()->getCardCode($data->card,$data->id)',
                 ),
                 array(
                     'header' => 'Open by',

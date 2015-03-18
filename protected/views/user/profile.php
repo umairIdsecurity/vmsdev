@@ -77,7 +77,7 @@ if (isset($_GET['id'])) {
         <tr>
             <td><?php echo $form->labelEx($model, 'email'); ?></td>
             <td><?php echo $form->textField($model, 'email', array('size' => 50, 'maxlength' => 50)); ?></td>
-            <td><?php echo $form->error($model, 'email'); ?></td>
+            <td><?php echo $form->error($model, 'email',array('style' => 'text-transform:none;')); ?></td>
         </tr>
        
         <tr>

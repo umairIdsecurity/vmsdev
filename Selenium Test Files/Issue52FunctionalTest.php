@@ -140,7 +140,7 @@ class Issue52FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("//div[@id='cssmenu']/ul/li[2]/a/span");
         $this->click("id=clicktabA");
-        $this->click("link=Search Visitor Profile");
+        $this->click("link=Find Visitor Profile");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
         $this->click("id=dummy-visitor-findBtn");

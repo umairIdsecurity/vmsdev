@@ -7,7 +7,7 @@ $session = new CHttpSession;
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" role="tablist">
         <li role="presentation" class="active"><a href="#addvisitor" aria-controls="profile" role="tab" data-toggle="tab">Add Visitor Profile</a></li>
-        <li role="presentation" ><a href="#searchvisitor" aria-controls="home" role="tab" data-toggle="tab">Search Visitor Profile</a></li>
+        <li role="presentation" ><a href="#searchvisitor" aria-controls="home" role="tab" data-toggle="tab">Find Visitor Profile</a></li>
     </ul>
 
     <!-- Tab panes -->
@@ -217,10 +217,10 @@ $session = new CHttpSession;
                             </tr>
 
                             <tr>
-                                <td>
+                                <td width="37%">
                                     <?php echo $form->labelEx($model, 'email'); ?><br>
                                     <?php echo $form->textField($model, 'email', array('size' => 50, 'maxlength' => 50)); ?>
-                                    <?php echo "<br>" . $form->error($model, 'email'); ?>
+                                    <?php echo "<br>" . $form->error($model, 'email',array('style'=>'text-transform:none;')); ?>
                                     <div style="" id="Visitor_email_em_" class="errorMessage errorMessageEmail" >A profile already exists for this email address.</div>
                                 </td>
                                 <td><label for="Visitor_vehicle">Vehicle Registration Number</label><br>

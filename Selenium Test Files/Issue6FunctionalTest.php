@@ -148,7 +148,7 @@ class Issue6FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Please select a Tenant", $this->getText("//form[@id='workstations-form']/div/ul/li[2]"));
         $this->type("id=Workstation_contact_email_address", "123");
         $this->clickAndWait("name=yt0");
-        $this->assertEquals("Contact Email Address is not a valid email address.", $this->getText("//form[@id='workstations-form']/div/ul/li[3]"));
+        $this->assertEquals("Contact Email Address is not in a recognised format. Please revise.", $this->getText("//form[@id='workstations-form']/div/ul/li[3]"));
     }
     
     /*Scenario 4 – Login as admin and add workstation

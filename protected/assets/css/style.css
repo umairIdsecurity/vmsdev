@@ -191,9 +191,10 @@ nav.navigation ul li a:hover{
     color: #fff;
 }
 
-nav.navigation ul li.active a 
+nav.navigation ul li:first-child.active a
 {
     color:#fff;
+    border-top-left-radius: 8px !important;
 }
 nav.navigation ul li:first-child a:hover
 {
@@ -201,7 +202,7 @@ nav.navigation ul li:first-child a:hover
 }
 nav.navigation ul li:last-child a:hover
 {
-    //border-top-right-radius:8px;
+    border-top-right-radius:8px;
 }
 nav.navigation ul li:first-child.active
 {
@@ -1205,7 +1206,7 @@ dt.tabs dt{
     text-transform: lowercase !important;
 }
 
-.errorSummary ul li:first-letter{
+.errorSummary ul li:first-letter, .emailErr:first-letter{
     text-transform: uppercase !important;
 }
 
@@ -1537,3 +1538,5 @@ dt.tabs dt{
     position: relative;
     text-align: center;
     width: 250px;}
+
+

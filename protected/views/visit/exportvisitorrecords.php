@@ -28,9 +28,9 @@ $this->widget('zii.widgets.grid.CGridView', array(
     'columns' =>
     array(
         array(
-            'name' => 'cardcode',
+            'name' => 'card',
             'header' => 'Card No.',
-            'value' => 'CardGenerated::model()->getCardCode($data->card)',
+            'value' => 'CardGenerated::model()->getCardCode($data->card,$data->id)',
             'filter' => CHtml::textField('Visit[card]', '', array('class' => 'filterCard')),
         ),
         array(

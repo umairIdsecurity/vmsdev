@@ -1,4 +1,5 @@
 <?php
+
 $session = new CHttpSession;
 /* @var $this VisitController */
 /* @var $model Visit */
@@ -11,8 +12,8 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
 
 
 $merge = new CDbCriteria;
-$merge->addCondition('visit_status ="' . VisitStatus::ACTIVE . '" or visit_status ="'.VisitStatus::PREREGISTERED.'"');
-            
+$merge->addCondition('visit_status ="' . VisitStatus::ACTIVE . '" or visit_status ="' . VisitStatus::PREREGISTERED . '"');
+
 $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'visit-gridDashboard',
     'dataProvider' => $model->search($merge),
@@ -29,12 +30,10 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'cssClassExpression' => 'changeStatusClass($data->visit_status)',
         ),
         //'date_in',
-        
-        
         array(
-            'name' => 'cardcode',
+            'name' => 'card',
             'header' => 'Card No.',
-            'value' => 'CardGenerated::model()->getCardCode($data->card)',
+            'value' => 'CardGenerated::model()->getCardCode($data->card,$data->id)',
         ),
         array(
             'name' => 'firstname',
@@ -66,7 +65,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' => 'date_check_in',
             'type' => 'html',
-            //'value' => 'formatDate($data->date_in)',
+        //'value' => 'formatDate($data->date_in)',
         ),
         array(
             'name' => 'time_check_in',
@@ -76,7 +75,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' => 'date_check_out',
             'type' => 'html',
-            //'value' => 'formatDate($data->date_out)',
+        //'value' => 'formatDate($data->date_out)',
         ),
     ),
 ));
@@ -104,35 +103,47 @@ function formatTime($time) {
 }
 
 function getCardCode($cardId) {
-    if($cardId !=''){
-        return CardGenerated::model()->findByPk($cardId)->card_code;
+    if ($cardId != '') {
+        $tenant = User::model()->findByPk($session['tenant']);
+        $tenantCompany = Company::model()->findByPk($tenant->company);
+        $card_count = CardGenerated::model()->findByPk($cardId)->card_count;
+
+        
+            $inc = 6 - (strlen(($card_count)));
+            $int_code = '';
+            for ($x = 1; $x <= $inc; $x++) {
+
+                $int_code .= "0";
+            }
+        
+        return $tenantCompany->code . $int_code . ($card_count);
     } else {
         return "";
     }
 }
 
+function changeStatusClass($visitStatus) {
+    // return "red";
+    switch ($visitStatus) {
+        case VisitStatus::ACTIVE:
+            return "green";
+            break;
 
-function changeStatusClass($visitStatus){
-   // return "red";
-   switch ($visitStatus) {
-       case VisitStatus::ACTIVE:
-           return "green";
-           break;
-       
-       case VisitStatus::PREREGISTERED:
-           return "blue";
-           break;
-       
-       case VisitStatus::CLOSED:
-           return "red";
-           break;
-       
-       case VisitStatus::SAVED:
-           return "grey";
-           break;
+        case VisitStatus::PREREGISTERED:
+            return "blue";
+            break;
 
-       default:
-           break;
-   }
+        case VisitStatus::CLOSED:
+            return "red";
+            break;
+
+        case VisitStatus::SAVED:
+            return "grey";
+            break;
+
+        default:
+            break;
+    }
 }
+
 ?>

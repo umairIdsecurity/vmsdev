@@ -36,7 +36,7 @@ class Issue86FunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("css=span");
         $this->click("id=clicktabA");
-        $this->click("link=Search Visitor Profile");
+        $this->click("link=Find Visitor Profile");
         $this->select("id=search_visitor_tenant","label=NAIA Airport");
         sleep(1);
         $this->select("id=search_visitor_tenant_agent","label=Philippine Airline");
@@ -58,7 +58,7 @@ class Issue86FunctionalTest extends BaseFunctionalTest {
         $this->select("id=Visit_reason_search", "label=Reason 1");
         $this->click("id=2");
         $this->click("id=clicktabB1");
-        $this->click("link=Search Host");
+        $this->click("link=Find Host");
         $this->type("id=search-host", "test");
         $this->click("id=dummy-host-findBtn");
         for ($second = 0;; $second++) {

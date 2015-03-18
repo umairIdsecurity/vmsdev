@@ -285,7 +285,7 @@ class VisitController extends Controller {
          */
         $headers = array(
             'visitorType.name',
-            'card',
+            'card0.card_code',
             'visitor0.first_name',
             'visitor0.last_name',
             'visitor0.contact_number',
@@ -345,7 +345,7 @@ class VisitController extends Controller {
     }
 
     public function actionExportFile() {
-        Yii::app()->request->sendFile('Evacuationreport' . time() . '.csv', Yii::app()->user->getState('export'));
+        Yii::app()->request->sendFile('Evacuation Report_' . date('dmYHis') . '.csv', Yii::app()->user->getState('export'));
         Yii::app()->user->clearState('export');
     }
 
@@ -359,7 +359,7 @@ class VisitController extends Controller {
          */
         $headers = array(
             'visitorType.name',
-            'card',
+            'card0.card_code',
             'visitor0.first_name',
             'visitor0.last_name',
             'visitor0.contact_number',
@@ -417,7 +417,7 @@ class VisitController extends Controller {
     }
 
     public function actionExportFileHistory() {
-        Yii::app()->request->sendFile('ViewRegistrationHistory' . time() . '.csv', Yii::app()->user->getState('export'));
+        Yii::app()->request->sendFile('Visitor Registration History_' . date('dmYHis') . '.csv', Yii::app()->user->getState('export'));
         Yii::app()->user->clearState('export');
     }
 
@@ -445,7 +445,7 @@ class VisitController extends Controller {
          * Write a header of csv file
          */
         $headers = array(
-            'card',
+            'card0.card_code',
             'visitor0.first_name',
             'visitor0.last_name',
             'visitor0.visitor_status',
@@ -501,7 +501,7 @@ class VisitController extends Controller {
     }
 
     public function actionExportFileVisitorRecords() {
-        Yii::app()->request->sendFile('VisitorRecords' . time() . '.csv', Yii::app()->user->getState('export'));
+        Yii::app()->request->sendFile('Visit History_' . date('dmYHis') . '.csv', Yii::app()->user->getState('export'));
         Yii::app()->user->clearState('export');
     }
 
@@ -539,6 +539,7 @@ class VisitController extends Controller {
         $model->time_check_in = '';
         $model->time_check_out = '';
         $model->date_check_out = '';
+        $model->card = NULL;
 
         $model->isNewRecord = true;
         $model->attributes = $_POST['Visit'];

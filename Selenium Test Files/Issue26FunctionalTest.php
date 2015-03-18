@@ -23,11 +23,8 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
 
     function testAll() {
         $this->resetDbWithData();
-      //  $this->Scenario1();
         $this->Scenario2();
         $this->Scenario3();
-        //cant be applicable no patient visitor type
-        //$this->Scenario5();
     }
 
     /* Scenario 1 – Login as super admin then perform update a visitor functionality for patient visitor type
@@ -186,7 +183,7 @@ class Issue26FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_email", "123");
         $this->waitForElementPresent("id=Visitor_email_em_");
         sleep(1);
-        $this->assertEquals("Email Address is not a valid email address.", $this->getText("id=Visitor_email_em_"));
+        $this->assertEquals("Email Address is not in a recognised format. Please revise.", $this->getText("id=Visitor_email_em_"));
     }
 
     /* Scenario 5 – Login as super admin update a patient visitor to corporate visitor. Add new host and check validations

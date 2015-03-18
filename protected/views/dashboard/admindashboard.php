@@ -54,10 +54,9 @@ foreach ($workstationList as $workstation) {
                     'cssClassExpression' => 'changeStatusClass($data->visit_status)',
                 ),
                 array(
-                    'name' => 'cardcode',
+                    'name' => 'card',
                     'header' => 'Card No.',
-                    'value' => 'CardGenerated::model()->getCardCode($data->card)',
-                     //'filter' => CardGenerated::model()->findAll(), 
+                    'value' => 'CardGenerated::model()->getCardCode($data->card, $data->id)',
                 ),
                 array(
                     'name' => 'firstname',
@@ -128,13 +127,6 @@ function formatTime($time) {
     }
 }
 
-function getCardCode($cardId) {
-    if($cardId !=''){
-        return CardGenerated::model()->findByPk($cardId)->card_code;
-    } else {
-        return "";
-    }
-}
 
 function changeStatusClass($visitStatus){
    // return "red";

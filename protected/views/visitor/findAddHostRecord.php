@@ -4,7 +4,7 @@
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" role="tablist">
         <li role="presentation" class="active"><a href="#addhost" aria-controls="home" role="tab" data-toggle="tab" id='addhostTab'>Add Host</a></li>
-        <li role="presentation"><a href="#searchost" aria-controls="profile" role="tab" data-toggle="tab">Search Host</a></li>
+        <li role="presentation"><a href="#searchost" aria-controls="profile" role="tab" data-toggle="tab">Find Host</a></li>
     </ul>
 
     <!-- Tab panes -->
@@ -142,10 +142,10 @@
                                     <?php echo "<br>" . $form->error($userModel, 'staff_id'); ?>
                                 </td>
 
-                                <td>
+                                <td width="35%">
                                     <?php echo $form->labelEx($userModel, 'email'); ?><br>
                                     <?php echo $form->textField($userModel, 'email', array('size' => 50, 'maxlength' => 50)); ?>
-                                    <?php echo "<br>" . $form->error($userModel, 'email'); ?>
+                                    <?php echo "<br>" . $form->error($userModel, 'email',array('style'=>'text-transform:none;')); ?>
                                     <div style="" id="User_email_em_" class="errorMessage errorMessageEmail1" >A profile already exists for this email address.</div>
                                 </td>
                                 <td>

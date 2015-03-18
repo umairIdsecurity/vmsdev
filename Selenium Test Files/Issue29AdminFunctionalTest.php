@@ -289,7 +289,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->select("id=workstation", "label=Workstation3");
         }
         $this->click("id=submitFormVisitor");
-        $this->click("link=Search Host");
+        $this->click("link=Find Host");
         $this->type("id=search-host", "test");
         $this->click("id=dummy-host-findBtn");
         $this->click("id=dummy-host-findBtn");
@@ -329,7 +329,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         }
         $this->clickAndWait("link=Log Visit");
         $this->click("id=clicktabA");
-        $this->click("link=Search Visitor Profile");
+        $this->click("link=Find Visitor Profile");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
         if ($username == 'admin' || $username == 'operator') {
@@ -406,7 +406,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         }
         $this->clickAndWait("link=Log Visit");
         $this->click("id=clicktabA");
-        $this->click("link=Search Visitor Profile");
+        $this->click("link=Find Visitor Profile");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
         if ($username == 'admin' || $username == 'operator') {
@@ -426,7 +426,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         }
 
         $this->click("id=clicktabB1");
-        $this->click("link=Search Host");
+        $this->click("link=Find Host");
         $this->type("id=search-host", "test");
         $this->click("id=dummy-host-findBtn");
         if ($username == 'admin' || $username == 'operator') {
@@ -532,7 +532,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         }
         $this->clickAndWait("link=Log Visit");
         $this->click("id=clicktabA");
-        $this->click("link=Search Visitor Profile");
+        $this->click("link=Find Visitor Profile");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
         $this->waitForElementPresent("id=2");
@@ -657,7 +657,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
             $this->select("id=Visitor_company", "label=NAIA Airport");
         }
         $this->click("id=submitFormVisitor");
-        $this->click("link=Search Host");
+        $this->click("link=Find Host");
         $this->type("id=search-host", "test");
         $this->click("id=dummy-host-findBtn");
         if ($username == 'admin' || $username == 'operator') {
@@ -701,7 +701,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         }
         $this->clickAndWait("link=Log Visit");
         $this->click("id=clicktabA");
-        $this->click("link=Search Visitor Profile");
+        $this->click("link=Find Visitor Profile");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
         if ($username == 'admin' || $username == 'operator') {
@@ -778,7 +778,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         }
         $this->clickAndWait("link=Log Visit");
         $this->click("id=clicktabA");
-        $this->click("link=Search Visitor Profile");
+        $this->click("link=Find Visitor Profile");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
         if ($username == 'admin' || $username == 'operator') {
@@ -801,7 +801,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
 
         $this->select("id=Visitor_visitor_type_search", "label=Corporate Visitor");
         $this->click("id=clicktabB1");
-        $this->click("link=Search Host");
+        $this->click("link=Find Host");
         $this->type("id=search-host", "test");
         $this->click("id=dummy-host-findBtn");
         if ($username == 'admin' || $username == 'operator') {
@@ -856,7 +856,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Log Visit");
         $this->click("id=clicktabA");
         $this->waitForElementPresent("id=submitFormVisitor");
-        $this->click("link=Search Visitor Profile");
+        $this->click("link=Find Visitor Profile");
         $this->click("id=clicktabB1");
         $this->click("id=dummy-visitor-findBtn");
         for ($second = 0;; $second++) {
@@ -986,7 +986,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         }
         $this->click("id=submitFormVisitor");
         $this->waitForElementPresent("id=search-host");
-        $this->click("link=Search Host");
+        $this->click("link=Find Host");
         $this->type("id=search-host", "new" . $username . "host");
         $this->click("id=dummy-host-findBtn");
         if ($username == 'staffmember' || $username == 'admin' || $username == 'operator') {

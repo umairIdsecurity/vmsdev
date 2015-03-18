@@ -1,4 +1,6 @@
-
+<?php 
+$session = new CHttpSession;
+?>
 <table class="detailsTable" style="font-size:12px;margin-top:15px;" id="logvisitTable">
     <tr>
         <td>Check In Date</td>
@@ -23,47 +25,47 @@
     <tr>
         <td>
             <select class="time visit_time_in_hours" id='Visit_time_in_hours' disabled style="width:70px;">
-<?php for ($i = 1; $i <= 24; $i++): ?>
+                <?php for ($i = 1; $i <= 24; $i++): ?>
                     <option value="<?= $i; ?>"><?= date("H", strtotime("$i:00")); ?></option>
                 <?php endfor; ?>
             </select> :
             <select class='time visit_time_in_minutes'  id='Visit_time_in_minutes' disabled style="width:70px;">
-<?php for ($i = 1; $i <= 60; $i++): ?>
+                <?php for ($i = 1; $i <= 60; $i++): ?>
                     <option value="<?= $i; ?>"><?php
-                    if ($i > 0 && $i < 10) {
-                        echo '0' . $i;
-                    } else {
-                        echo $i;
-                    };
-                    ?></option>
-                    <?php endfor; ?>
+                        if ($i > 0 && $i < 10) {
+                            echo '0' . $i;
+                        } else {
+                            echo $i;
+                        };
+                        ?></option>
+                <?php endfor; ?>
             </select>
         </td>
     </tr>
-<?php if ($model->date_out == '' && $model->card_type == CardType::MULTI_DAY_VISITOR) {
-    ?>
+    <?php if ($model->date_out == '' && $model->card_type == CardType::MULTI_DAY_VISITOR) {
+        ?>
         <tr id="dateoutDiv">
             <td>Proposed Date Out
                 <br><?php
-    $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-        'model' => $model,
-        'attribute' => 'date_out',
-        'htmlOptions' => array(
-            'size' => '10', // textField size
-            'maxlength' => '10', // textField maxlength
-            'disabled' => 'disabled',
-            // 'readonly' => 'readonly',
-            'placeholder' => 'dd-mm-yyyy',
-        ),
-        'options' => array(
-            'dateFormat' => 'dd-mm-yy',
-        )
-    ));
-    ?>
+                $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                    'model' => $model,
+                    'attribute' => 'date_out',
+                    'htmlOptions' => array(
+                        'size' => '10', // textField size
+                        'maxlength' => '10', // textField maxlength
+                        'disabled' => 'disabled',
+                        // 'readonly' => 'readonly',
+                        'placeholder' => 'dd-mm-yyyy',
+                    ),
+                    'options' => array(
+                        'dateFormat' => 'dd-mm-yy',
+                    )
+                ));
+                ?>
                 <span style="color:red;display:none;" id="preregisterdateoutError">Date Out cannot be blank.</span>
             </td>
         </tr>
-<?php } ?>
+    <?php } ?>
 </table>
 <script>
     $(document).ready(function() {
@@ -100,3 +102,4 @@
     }
 
 </script>
+

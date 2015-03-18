@@ -142,13 +142,13 @@ if ($this->action->id == 'update') {
             <td><?php
                 echo $form->textField($model, 'email_address', array('size' => 50, 'maxlength' => 50));
                 if (isset($_GET['viewFrom'])) {
-                    echo "<br>" . $form->error($model, 'email_address');
+                    echo "<br>" . $form->error($model, 'email_address',array('style'=>'text-transform:none;'));
                 }
                 ?>
             </td>
             <td><?php
                 if (!isset($_GET['viewFrom'])) {
-                    echo $form->error($model, 'email_address');
+                    echo $form->error($model, 'email_address', array('style'=>'text-transform:none;'));
                 }
                 ?></td>
         </tr>

@@ -149,7 +149,7 @@ class Issue28RegisterFunctionalTest extends BaseFunctionalTest {
         $this->select("id=Visitor_company", "label=NAIA Airport");
         $this->select("id=workstation", "label=Workstation1");
         $this->click("id=submitFormVisitor");
-        $this->click("link=Search Host");
+        $this->click("link=Find Host");
         $this->type("id=search-host", "test");
         $this->click("id=dummy-host-findBtn");
         $this->waitForElementPresent("id=21");
@@ -389,7 +389,7 @@ class Issue28RegisterFunctionalTest extends BaseFunctionalTest {
         $this->type("id=VisitReason_reason", "Reason 5");
         $this->select("id=workstation", "label=Workstation1");
         $this->click("id=submitFormVisitor");
-        $this->click("link=Search Host");
+        $this->click("link=Find Host");
         $this->waitForElementPresent("id=search-host");
         $this->type("id=search-host", "test");
         $this->click("id=dummy-host-findBtn");
@@ -421,7 +421,7 @@ class Issue28RegisterFunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->clickAndWait("css=a > span");
         $this->click("id=clicktabA");
-        $this->click("link=Search Visitor Profile");
+        $this->click("link=Find Visitor Profile");
         $this->type("id=search-visitor", "test");
         $this->click("id=dummy-visitor-findBtn");
         $this->waitForElementPresent("id=2");
@@ -641,7 +641,7 @@ class Issue28RegisterFunctionalTest extends BaseFunctionalTest {
         $this->select("id=workstation", "label=Workstation1");
         $this->select("id=Visitor_company", "label=NAIA Airport");
         $this->click("id=submitFormVisitor");
-        $this->click("link=Search Host");
+        $this->click("link=Find Host");
         $this->waitForElementPresent("id=search-host");
         $this->type("id=search-host", "test");
         $this->click("id=dummy-host-findBtn");

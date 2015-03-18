@@ -74,13 +74,8 @@ class Issue65FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
         $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("link=Active");
-        $this->assertEquals("NAI000008", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[4]/td/span"));
-        $this->click("id=printCardBtn");
-        $this->waitForPopUp("_blank", "30000");
-        $this->waitForPageToLoad("30000");
-        $this->clickAndWait("link=Dashboard");
-        $this->assertEquals("NAI000008", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[2]"));
-    }
+        $this->assertEquals("NAI000001", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[4]/td/span"));
+     }
 
 }
 

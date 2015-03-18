@@ -54,9 +54,6 @@ class Issue33FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
         $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("link=Active");
-        $this->clickAndWait("id=printCardBtn");
-        $this->open("http://dev.identitysecurity.info/index.php?r=visit/detail&id=7");
-        $this->assertEquals("", $this->getText("id=reprintCardBtn"));
         $this->clickAndWait("link=Administration");
         $this->click("link=Reports");
         $this->waitForElementPresent("link=Evacuation Report");

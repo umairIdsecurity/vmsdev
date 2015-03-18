@@ -121,7 +121,7 @@ $session = new CHttpSession;
         <tr>
             <td><?php echo $form->labelEx($model, 'contact_email_address'); ?></td>
             <td><?php echo $form->textField($model, 'contact_email_address', array('size' => 50, 'maxlength' => 50)); ?></td>
-            <td><?php echo $form->error($model, 'contact_email_address'); ?></td>
+            <td><?php echo $form->error($model, 'contact_email_address',array('style'=>'text-transform:none;')); ?></td>
         </tr>
 
 

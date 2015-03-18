@@ -36,9 +36,9 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'filter' => VisitorType::model()->returnVisitorTypes(),
         ),
         array(
-            'name' => 'cardcode',
+            'name' => 'card',
             'header' => 'Card No.',
-            'value' => 'CardGenerated::model()->getCardCode($data->card)',
+            'value' => 'CardGenerated::model()->getCardCode($data->card,$data->id)',
         ),
         array(
             'name' => 'firstname',
@@ -105,7 +105,7 @@ function getCompany($id) {
 }
 
 function formatTime($time) {
-    if ($time == '') {
+    if ($time == '' || $time == '00:00:00') {
         return "-";
     } else {
         return date('h:i A', strtotime($time));
@@ -113,7 +113,7 @@ function formatTime($time) {
 }
 
 function formatDate($date) {
-    if ($date == '') {
+    if ($date == '' ) {
         return "-";
     } else {
         return Yii::app()->dateFormatter->format("d/MM/y", strtotime($date));

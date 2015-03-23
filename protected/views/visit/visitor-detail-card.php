@@ -54,7 +54,7 @@ $photoForm = $this->beginWidget('CActiveForm', array(
             ?>' src="<?php
                  echo $companyLogo;
                  ?>" style="<?php
-                 if (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false) {
+                 if (strpos($_SERVER['HTTP_USER_AGENT'], 'Trident/7.0; rv:11.0') !== false) {
                      ?>margin-left:42px;<?php
                  }
                  ?>"/>

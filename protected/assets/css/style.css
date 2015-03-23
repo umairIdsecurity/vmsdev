@@ -976,10 +976,8 @@ dt.tabs dt{
     list-style:none outside none;
 }
 #actionsCssMenu li a, #actionsCssMenu li a span{
-    //   color:#58585A !important;
     font-weight:bold;
     font-size:12px;
-    width:253px;
     text-align:left;
     line-height:15px;
 }

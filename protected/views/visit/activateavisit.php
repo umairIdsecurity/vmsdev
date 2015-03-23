@@ -45,7 +45,7 @@ $session = new CHttpSession;
     <?php if ($model->date_out == '' && $model->card_type == CardType::MULTI_DAY_VISITOR) {
         ?>
         <tr id="dateoutDiv">
-            <td>Proposed Date Out
+            <td>Proposed Check Out Date
                 <br><?php
                 $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                     'model' => $model,
@@ -70,6 +70,7 @@ $session = new CHttpSession;
 <script>
     $(document).ready(function() {
         refreshTimeIn();
+        $("#Visit_date_out").datepicker("option", "minDate", $("#Visit_date_check_in").val());
         $("#dateoutDiv #Visit_date_out").datepicker({
             changeMonth: true,
             changeYear: true,
@@ -79,8 +80,8 @@ $session = new CHttpSession;
             minDate: "+1",
             dateFormat: "dd-mm-yy",
             onClose: function(selectedDate) {
+                
                 $("#dateoutDiv #Visit_date_out").val($("#Visit_date_out").val());
-                // $('.ui-datepicker-trigger[title="Select Proposed Date Out"]').hide();
             }
         });
     });

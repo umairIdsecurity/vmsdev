@@ -163,3 +163,7 @@ ul.yiiPager .selected a {
 #footer {
     border-top: 1px solid <?php echo $companyLafPreferences->nav_hover_color; ?> !important;
 }
+
+.grid-view th a.asc:after {
+    border-bottom: 5px solid <?php echo $companyLafPreferences->nav_bg_color; ?> !important;
+    }

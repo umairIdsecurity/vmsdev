@@ -1,114 +1,121 @@
 .grid-view-loading
 {
-	background:url(loading.gif) no-repeat;
+    background:url(loading.gif) no-repeat;
 }
 
-
-.grid-view table.items th a.asc
-{
-	background:url('../images/up.color.png') right center no-repeat !important;
-	padding-right: 10px;
+.grid-view th a.asc:after{
+    border:none !important;
 }
+
+.grid-view th:has(a){
+    border:none !important;
+}
+
 .grid-view a.sort-link 
 {
-	background:url('../images/up.color.png') right center no-repeat !important;
-	padding-right: 10px !important;
+    //background:url('../images/up.color.png') right center no-repeat !important;
+    padding-right: 10px !important;
 }
 
-.grid-view table.items th a.desc
+.grid-view table.items th a.desc:after
 {
-	background:url('../images/down.color.png') right center no-repeat !important;
-	padding-right: 10px;
+    /*    background:url('../images/down.color.png') right center no-repeat !important;
+        padding-right: 10px;*/
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color: #323232 rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
+    border-image: none;
+    border-style: solid;
+    border-width: 5px;
+    content: "";
+    position: absolute;
+    right: 10px;
+    top: 15px;
 }
 
 .grid-view table.items tr.even
 {
-	background: #F8F8F8;
+    background: #F8F8F8;
 }
 
 .grid-view table.items tr.selected
 {
-	background: #BCE774;
+    background: #BCE774;
 }
 
 .grid-view table.items tr:hover.selected
 {
-	background: #CCFF66;
+    background: #CCFF66;
 }
 
 .grid-view table.items tbody tr:hover
 {
-	background: #ECFBD4;
+    background: #ECFBD4;
 }
 
 .grid-view .link-column img
 {
-	border: 0;
+    border: 0;
 }
 
 .grid-view .button-column
 {
-	text-align: center;
-	width: 60px;
+    text-align: center;
+    width: 60px;
 }
 
 .grid-view .button-column img
 {
-	border: 0;
+    border: 0;
 }
 
 .grid-view .checkbox-column
 {
-	width: 15px;
+    width: 15px;
 }
 
 .grid-view .summary
 {
-	margin: 0 0 5px 0;
-	text-align: right;
+    margin: 0 0 5px 0;
+    text-align: right;
 }
 
 .grid-view .pager
 {
-	margin: 5px 0 0 0;
-	text-align: right;
+    margin: 5px 0 0 0;
+    text-align: right;
 }
 
 .grid-view .empty
 {
-	font-style: italic;
+    font-style: italic;
 }
 
 .grid-view .filters input,
 .grid-view .filters select
 {
-	width: 90%;
-	border: 1px solid #ccc;
+    width: 90%;
+    border: 1px solid #ccc;
 }
 
 
 
 .grid-view table .items th,table th,.grid-view table.items th a{
     background-color: #FBFBFB !important;
-    //background-image:none !important;
     background-repeat: repeat-x;
-    //  box-shadow: 0 1px 0 #FFFFFF inset;
     list-style: none outside none;
-    //margin: 0 0 18px;
-   // padding: 4px;
     position: relative; 
     color:#323232 !important;
     text-decoration: none;
     font-weight:bold;
     text-align:center;
-   // padding:6px;
     color:#323232 !important;
     font-size:12px;
-    background:url('../images/icon-updown.png') right center no-repeat !important;
-	padding-right: 12px !important;
-      
-    
-    
+    //background:url('../images/icon-updown.png') right center no-repeat !important;
+    background:right center no-repeat !important;
+    padding-right: 12px !important;  
 }
 
 .grid-view{

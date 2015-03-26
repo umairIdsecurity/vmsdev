@@ -180,7 +180,7 @@ class User extends VmsActiveRecord {
         $criteria->compare('t.id', $this->id);
         $criteria->compare('last_name', $this->last_name, true);
         $criteria->compare('email', $this->email, true);
-        $criteria->compare('t.contact_number', $this->contact_number);
+        $criteria->compare('t.contact_number', $this->contact_number,true);
         $criteria->compare('date_of_birth', $this->date_of_birth, true);
         $criteria->compare('company', $this->company);
         $criteria->compare('department', $this->department, true);

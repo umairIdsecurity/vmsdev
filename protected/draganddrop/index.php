@@ -164,7 +164,7 @@ if ($this->action->id == 'addvisitor' || ($this->action->id == 'update' && $this
     <style>
         .ajax-file-upload{
             font-size: 12px !important;
-            margin-left: -181px;
+            margin-left: -186px;
             width: 182.9px;
             padding-bottom:3px;
             height: 17px;

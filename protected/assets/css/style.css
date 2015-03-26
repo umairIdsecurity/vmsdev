@@ -185,10 +185,11 @@ nav.navigation ul li a
 }
 nav.navigation ul li a:hover, nav.navigation ul li.active
 {
-    background:#9BD62C;	
+    background:#9BD62C;
 }
-nav.navigation ul li a:hover{
-    color: #fff;
+
+nav.navigation ul li a:hover, nav.navigation ul .active a{
+    color: #fff !important;
 }
 
 nav.navigation ul li:first-child.active a

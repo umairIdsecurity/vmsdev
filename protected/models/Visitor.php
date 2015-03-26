@@ -204,10 +204,18 @@ class Visitor extends CActiveRecord {
     public function beforeDelete() {
         $visitorExists = Visit::model()->exists('is_deleted = 0 and visitor =' . $this->id . ' and (visit_status=' . VisitStatus::PREREGISTERED . ' or visit_status=' . VisitStatus::ACTIVE . ')');
         $visitorExistsClosed = Visit::model()->exists('is_deleted = 0 and visitor =' . $this->id . ' and (visit_status=' . VisitStatus::CLOSED . ' or visit_status=' . VisitStatus::EXPIRED . ')');
-
+        $visitorHasSavedVisitOnly = Visit::model()->exists('is_deleted = 0 and visitor =' . $this->id . ' and visit_status="'.VisitStatus::SAVED.'"');
+        
         if ($visitorExists) {
             return false;
         } elseif ($visitorExistsClosed) {
+            return false;
+        } elseif($visitorHasSavedVisitOnly){
+            
+            $this->is_deleted = 1;
+            $this->save();
+            echo "true";
+            Visit::model()->updateCounters(array('is_deleted' => 1), 'visitor=:visitor', array(':visitor' => $this->id));
             return false;
         } else {
             $this->is_deleted = 1;

@@ -40,7 +40,6 @@ $userRole = $session['role'];
         $tenantCompany = User::model()->findByPk($session['tenant'])->company;
         $company = Company::model()->findByPk($tenantCompany);
 
-
         if ($company->company_laf_preferences != '') {
             $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
             ?>

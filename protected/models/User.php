@@ -42,6 +42,8 @@ class User extends VmsActiveRecord {
     public $birthdayMonth;
     public $birthdayYear;
     public $birthdayDay;
+    private $_companyname;
+    
     public static $USER_ROLE_LIST = array(
         5 => 'Super Administrator',
         1 => 'Administrator',
@@ -85,7 +87,7 @@ class User extends VmsActiveRecord {
                 array('tenant, tenant_agent', 'default', 'setOnEmpty' => true, 'value' => null),
                 // The following rule is used by search().
                 // @todo Please remove those attributes that should not be searched.
-                array('id, first_name, last_name,email,is_deleted ,contact_number, date_of_birth, company, department, position, staff_id, notes, role_id, user_type_id, user_status_id, created_by', 'safe', 'on' => 'search'),
+                array('id, companyname,first_name, last_name,email,is_deleted ,contact_number, date_of_birth, company, department, position, staff_id, notes, role_id, user_type_id, user_status_id, created_by', 'safe', 'on' => 'search'),
             );
         } else {
             return array(
@@ -100,11 +102,21 @@ class User extends VmsActiveRecord {
                 array('tenant, tenant_agent', 'default', 'setOnEmpty' => true, 'value' => null),
                 // The following rule is used by search().
                 // @todo Please remove those attributes that should not be searched.
-                array('id, first_name, last_name,email,is_deleted,assignedWorkstations,contact_number, date_of_birth, company, department, position, staff_id, notes, role_id, user_type_id, user_status_id, created_by', 'safe', 'on' => 'search'),
+                array('id, first_name, companyname,last_name,email,is_deleted,assignedWorkstations,contact_number, date_of_birth, company, department, position, staff_id, notes, role_id, user_type_id, user_status_id, created_by', 'safe', 'on' => 'search'),
             );
         }
     }
+    public function getCompanyname() {
+        // return private attribute on search
+        if ($this->scenario == 'search') {
+            return $this->_companyname;
+        }
+    }
 
+    public function setCompanyname($value) {
+        // set private attribute for search
+        $this->_companyname = $value;
+    }
     /* set empty fields to null */
 
     function empty2null($value) {
@@ -183,6 +195,7 @@ class User extends VmsActiveRecord {
         $criteria->compare('t.contact_number', $this->contact_number,true);
         $criteria->compare('date_of_birth', $this->date_of_birth, true);
         $criteria->compare('company', $this->company);
+        $criteria->compare('company.name', $this->companyname, true);
         $criteria->compare('department', $this->department, true);
         $criteria->compare('position', $this->position, true);
         $criteria->compare('staff_id', $this->staff_id, true);
@@ -196,7 +209,7 @@ class User extends VmsActiveRecord {
         $criteria->compare('t.tenant_agent', $this->tenant_agent);
 
         $criteria->compare('workstation', $this->assignedWorkstations);
-        $criteria->with = array('userWorkstation1');
+        $criteria->with = array('userWorkstation1','company');
         $criteria->together = true;
 
         $user = User::model()->findByPK(Yii::app()->user->id);

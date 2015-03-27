@@ -42,6 +42,11 @@ foreach ($workstationList as $workstation) {
             'id' => 'visit-gridDashboard' . $x,
             'dataProvider' => $model->search($merge),
             'filter' => $model,
+            'afterAjaxUpdate' => "
+    function(id, data) {
+        $('th > .asc').append('<div></div>');
+        $('th > .desc').append('<div></div>');
+    }",
             'columns' =>
             array(
                 array(
@@ -127,28 +132,27 @@ function formatTime($time) {
     }
 }
 
+function changeStatusClass($visitStatus) {
+    // return "red";
+    switch ($visitStatus) {
+        case VisitStatus::ACTIVE:
+            return "green";
+            break;
 
-function changeStatusClass($visitStatus){
-   // return "red";
-   switch ($visitStatus) {
-       case VisitStatus::ACTIVE:
-           return "green";
-           break;
-       
-       case VisitStatus::PREREGISTERED:
-           return "blue";
-           break;
-       
-       case VisitStatus::CLOSED:
-           return "red";
-           break;
-       
-       case VisitStatus::SAVED:
-           return "grey";
-           break;
+        case VisitStatus::PREREGISTERED:
+            return "blue";
+            break;
 
-       default:
-           break;
-   }
+        case VisitStatus::CLOSED:
+            return "red";
+            break;
+
+        case VisitStatus::SAVED:
+            return "grey";
+            break;
+
+        default:
+            break;
+    }
 }
 ?>

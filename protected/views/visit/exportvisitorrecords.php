@@ -25,6 +25,11 @@ $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'view-export-visitor-records',
     'dataProvider' => $model->search(),
     'filter' => $model,
+    'afterAjaxUpdate' => "
+    function(id, data) {
+        $('th > .asc').append('<div></div>');
+        $('th > .desc').append('<div></div>');
+    }",
     'columns' =>
     array(
         array(

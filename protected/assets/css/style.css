@@ -1548,43 +1548,37 @@ dt.tabs dt{
 
 
 /*sort*/
-.grid-view th a:after{
+.asc div{
+    border-color: #9bd62c;
+    content: "";
+    position: absolute;
+    top:8px;
+    right:7.8px;
+    width: 0; 
+    height: 0; 
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-bottom: 4px solid #9bd62c;
+}
+
+.desc div{
     -moz-border-bottom-colors: none;
     -moz-border-left-colors: none;
     -moz-border-right-colors: none;
     -moz-border-top-colors: none;
-    border-color: #323232  rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
+    border-color: #9bd62c  rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
     border-image: none;
     border-style: solid;
-    border-width: 5px;
+    border-width: 4px;
     content: "";
-    
+
     position: absolute;
-    right: 10px;
+    right: 7px;
     top: 15px;
 }
 
-.grid-view th:after{
-    border-color: #323232;
-    content: "";
-    position: absolute;
-    top:12px;
-    right:22px;
-    width: 0; 
-    height: 0; 
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
-    border-bottom: 5px solid #323232;
-}
 
-#user-grid th:after{
-    top:18px;
-}
-#user-grid{
+#user-grid {
     padding-right: 30px !important;
-    width: 1180px;
-}
-
-#user-grid_c8:after, #user-grid_c3:after{
-    border:none !important;
+    width: 1280px;
 }

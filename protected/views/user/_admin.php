@@ -18,6 +18,11 @@ $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'user-grid',
     'dataProvider' => $model->search(),
     'filter' => $model,
+    'afterAjaxUpdate' => "
+    function(id, data) {
+        $('th > .asc').append('<div></div>');
+        $('th > .desc').append('<div></div>');
+    }",
     'columns' => array(
         'first_name',
         'last_name',
@@ -38,7 +43,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'filter' => User::$USER_TYPE_LIST,
         ),
         array(
-            'name' => 'company',
+            'name' => 'companyname',
             'value' => 'getCompany($data->id)',
             'header' => 'Company',
             'type' => 'raw'
@@ -197,6 +202,9 @@ function isUserTenantAgent($userId) {
 }
 
 function getCompany($id) {
-        return Company::model()->findByPk(User::model()->findByPk($id)->company)->name;
+    return Company::model()->findByPk(User::model()->findByPk($id)->company)->name;
 }
 ?>
+<script>
+    
+</script>

@@ -48,6 +48,11 @@ $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'view-visitor-records-history',
     'dataProvider' => $model->search($merge),
     'filter' => $model,
+    'afterAjaxUpdate' => "
+    function(id, data) {
+        $('th > .asc').append('<div></div>');
+        $('th > .desc').append('<div></div>');
+    }",
     'columns' =>
     array(
         array(

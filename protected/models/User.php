@@ -43,7 +43,6 @@ class User extends VmsActiveRecord {
     public $birthdayYear;
     public $birthdayDay;
     private $_companyname;
-    
     public static $USER_ROLE_LIST = array(
         5 => 'Super Administrator',
         1 => 'Administrator',
@@ -97,7 +96,6 @@ class User extends VmsActiveRecord {
                 array('date_of_birth, notes,tenant,tenant_agent,birthdayYear,birthdayMonth,birthdayDay', 'safe'),
                 array('email', 'filter', 'filter' => 'trim'),
                 array('email', 'email'),
-                
                 array('role,company', 'required', 'message' => 'Please select a {attribute}'),
                 array('tenant, tenant_agent', 'default', 'setOnEmpty' => true, 'value' => null),
                 // The following rule is used by search().
@@ -106,6 +104,7 @@ class User extends VmsActiveRecord {
             );
         }
     }
+
     public function getCompanyname() {
         // return private attribute on search
         if ($this->scenario == 'search') {
@@ -117,6 +116,7 @@ class User extends VmsActiveRecord {
         // set private attribute for search
         $this->_companyname = $value;
     }
+
     /* set empty fields to null */
 
     function empty2null($value) {
@@ -192,7 +192,7 @@ class User extends VmsActiveRecord {
         $criteria->compare('t.id', $this->id);
         $criteria->compare('last_name', $this->last_name, true);
         $criteria->compare('email', $this->email, true);
-        $criteria->compare('t.contact_number', $this->contact_number,true);
+        $criteria->compare('t.contact_number', $this->contact_number, true);
         $criteria->compare('date_of_birth', $this->date_of_birth, true);
         $criteria->compare('company', $this->company);
         $criteria->compare('company.name', $this->companyname, true);
@@ -209,7 +209,7 @@ class User extends VmsActiveRecord {
         $criteria->compare('t.tenant_agent', $this->tenant_agent);
 
         $criteria->compare('workstation', $this->assignedWorkstations);
-        $criteria->with = array('userWorkstation1','company');
+        $criteria->with = array('userWorkstation1', 'company');
         $criteria->together = true;
 
         $user = User::model()->findByPK(Yii::app()->user->id);
@@ -259,6 +259,12 @@ class User extends VmsActiveRecord {
             'criteria' => $criteria,
             'sort' => array(
                 'defaultOrder' => 't.ID DESC',
+                'attributes' => array(
+                    'companyname' => array(
+                        'asc' => 'company.name',
+                        'desc' => 'company.name DESC',
+                    ),
+                ),
             ),
         ));
     }
@@ -272,12 +278,12 @@ class User extends VmsActiveRecord {
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }
-    
-    public function beforeSave() {
-      $this->email = trim($this->email);
 
-      return parent::beforeSave();
-   }
+    public function beforeSave() {
+        $this->email = trim($this->email);
+
+        return parent::beforeSave();
+    }
 
     public function beforeDelete() {
         $visitExists = Visit::model()->exists('is_deleted = 0 and host ="' . $this->id . '"');

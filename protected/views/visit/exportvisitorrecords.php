@@ -33,7 +33,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
     'columns' =>
     array(
         array(
-            'name' => 'card',
+            'name' => 'cardcode',
             'header' => 'Card No.',
             'value' => 'CardGenerated::model()->getCardCode($data->card,$data->id)',
             'filter' => CHtml::textField('Visit[card]', '', array('class' => 'filterCard')),

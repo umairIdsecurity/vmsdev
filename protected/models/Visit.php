@@ -192,7 +192,10 @@ class Visit extends CActiveRecord {
             'createdBy' => array(self::BELONGS_TO, 'User', 'created_by'),
             'tenant0' => array(self::BELONGS_TO, 'User', 'tenant'),
             'workstation0' => array(self::BELONGS_TO, 'Workstation', 'workstation'),
-            //'company0' => array(self::BELONGS_TO, 'Company', 'visitor0.id'),
+           // 'company0' => array(self::BELONGS_TO, 'Company', 'visitor0->company'),
+            'company0'=>array(
+                self::BELONGS_TO,'Company',array('company'=>'id'),'through'=>'visitor0'
+            ),
             'visitStatus' => array(self::BELONGS_TO, 'VisitStatus', 'visit_status'),
         );
     }
@@ -246,7 +249,7 @@ class Visit extends CActiveRecord {
 
         $criteria = new CDbCriteria;
         
-        $criteria->with = array('card0','visitor0');
+        $criteria->with = array('card0','visitor0','company0');
         //$criteria->with .= 'visitor0';
         $criteria->compare('CONCAT(visitor0.first_name, \' \', visitor0.last_name)', $this->visitor, true);
         $criteria->compare('visitor0.first_name', $this->firstname, true);
@@ -254,8 +257,8 @@ class Visit extends CActiveRecord {
         $criteria->compare('visitor0.contact_number', $this->contactnumber, true);
         $criteria->compare('visitor0.email', $this->contactemail, true);
         $criteria->compare('date_check_in', $this->datecheckin1, true);
-//        $criteria->with = 'company0';
-//        $criteria->compare('company0.name', $this->company, true);
+        $criteria->compare('card0.company_code', $this->cardcode, true);
+        $criteria->compare('company0.name', $this->company, true);
 
         $criteria->compare('id', $this->id, true);
         //  $criteria->compare('visitor', $this->visitor, true);
@@ -346,6 +349,14 @@ $criteria->addCondition('t.is_deleted = 0');
                     'contactemail' => array(
                         'asc' => 'visitor0.email',
                         'desc' => 'visitor0.email DESC',
+                    ),
+                    'cardcode' => array(
+                        'asc' => 'card0.company_code, card0.card_count',
+                        'desc' => 'card0.company_code, card0.card_count DESC',
+                    ),
+                    'company' => array(
+                        'asc' => 'company0.name',
+                        'desc' => 'company0.name DESC',
                     ),
                     '*',
                 ),

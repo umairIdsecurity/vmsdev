@@ -36,7 +36,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         ),
         //'date_in',
         array(
-            'name' => 'card',
+            'name' => 'cardcode',
             'header' => 'Card No.',
             'value' => 'CardGenerated::model()->getCardCode($data->card,$data->id)',
         ),

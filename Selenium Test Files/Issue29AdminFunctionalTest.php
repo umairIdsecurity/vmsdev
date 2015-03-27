@@ -1044,7 +1044,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         } elseif ($username == 'admin') {
             $this->assertEquals("Displaying 1-8 of 8 results", $this->getText("css=div.summary"));
         } else if ($username == 'agentadmin') {
-            $this->assertEquals("Displaying 1-7 of 7 results", $this->getText("css=div.summary"));
+            $this->assertEquals("Displaying 1-11 of 11 results", $this->getText("css=div.summary"));
         } else if ($username == 'operator') {
             $this->assertEquals("Displaying 1-1 of 1 result", $this->getText("css=div.summary"));
         } else {

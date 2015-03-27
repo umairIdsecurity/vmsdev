@@ -23,13 +23,13 @@ class Issue28RegisterFunctionalTest extends BaseFunctionalTest {
     }
 
     function testAll() {
-        $this->resetDbWithData();
-        $this->Scenario1();
-        $this->Scenario2();
-        $this->Scenario3();
-        $this->Scenario4();
-        $this->Scenario5();
-        $this->Scenario6();
+//        $this->resetDbWithData();
+//        $this->Scenario1();
+//        $this->Scenario2();
+//        $this->Scenario3();
+//        $this->Scenario4();
+//        $this->Scenario5();
+//        $this->Scenario6();
         $this->resetDbWithData();
         $this->Scenario7();
         $this->Scenario8();
@@ -352,6 +352,7 @@ class Issue28RegisterFunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
         $this->type("id=VisitReason_reason", "Reason 4");
+        sleep(1);
         $this->select("id=Visitor_company", "label=NAIA Airport");
         $this->select("id=workstation", "label=Workstation1");
         $this->click("id=submitFormVisitor");
@@ -433,7 +434,6 @@ class Issue28RegisterFunctionalTest extends BaseFunctionalTest {
         $this->waitForElementPresent("css=button.host-AddBtn");
         $this->click("css=button.host-AddBtn");
         $this->type("id=User_first_name", "test");
-        $this->type("id=User_last_name", "staffmember3");
         $this->type("id=User_last_name", "staffmemberhost4");
         $this->type("id=User_department", "department");
         $this->type("id=User_staff_id", "123456");

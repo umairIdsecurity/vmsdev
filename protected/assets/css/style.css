@@ -1582,3 +1582,17 @@ dt.tabs dt{
     padding-right: 30px !important;
     width: 1280px;
 }
+
+#view-visitor-records table th, .grid-view table th{
+    min-width:150px;
+}
+
+#company-grid_c5, #company-grid_c4, #workstation-grid_c7, #user-grid_c8,
+#user-access-grid_c3,#user-access-grid_c1,#cbColumn,#user_workstationsGrid_c1,#visitor-grid_c6,
+#visitor-type-grid_c1,#visit-reason-grid_c1,#visit-grid_c6,#visit-grid_c5{
+    min-width:50px;
+}
+
+#user-access-grid_c1,#cbColumn,#visit-reason-grid_c1{
+    width:20px;
+}

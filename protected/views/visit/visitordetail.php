@@ -407,6 +407,7 @@ $this->renderPartial('visithistory', array('model' => $model,
                 $(".visitStatusLi li a span").css('color', '#9BD62C !important');
 
                 sendCardForm();
+                
                 alert("Visit is now activated. You can now print the visitor badge.");
                 window.location = "<?php echo CHtml::normalizeUrl(array("visit/detail&id=" . $model->id)); ?>";
             },

@@ -35,9 +35,9 @@ class Issue69FunctionalTest extends BaseFunctionalTest {
     function Scenario1() {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
-        $this->clickAndWait("css=tr.even > td > a.statusLink");
+        $this->clickAndWait("css=tr.even > td.blue > a.statusLink");
         $this->click("//li[@id='activateLi']/a/span");
-        $this->click("css=#activate-a-visit-form > input.complete");
+        $this->clickAndWait("css=#activate-a-visit-form > input.complete");
         sleep(5);
         $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
         $this->assertEquals("NAI000001", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[4]/td/span"));$this->clickAndWait("link=Dashboard");

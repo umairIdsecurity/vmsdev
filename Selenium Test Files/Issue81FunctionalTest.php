@@ -25,7 +25,7 @@ class Issue81FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Tables imported successfully", $this->getText("css=body"));
 
         $this->open("http://dev.identitysecurity.info/index.php?r=site/DBpatch");
-        $this->assertEquals("--== Starting Patcher ==-- \nDone patch for issue81", $this->getText("css=body"));
+        $this->assertEquals("--== Starting Patcher ==-- \nDone patch for issue81\nDone patch for issue137", $this->getText("css=body"));
         $this->Scenario1();
         $this->Scenario3();
     }
@@ -51,7 +51,7 @@ class Issue81FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("PER000005", $this->getText("//div[@id='view-visitor-records']/table/tbody/tr[6]/td[3]"));
         $this->click("link=Closed");
         $this->waitForPageToLoad("30000");
-        $this->click("link=Visit History");
+        $this->clickAndWait("link=Visit History");
         $this->waitForPageToLoad("30000");
         $this->assertEquals("PER000004", $this->getText("//div[@id='view-visitor-records']/table/tbody/tr[7]/td[3]"));
         $this->assertEquals("PER000003", $this->getText("//div[@id='view-visitor-records']/table/tbody/tr[8]/td[3]"));

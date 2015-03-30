@@ -41,7 +41,7 @@ class Issue82FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("xpath=(//a[contains(text(),'Edit')])[7]");
         $this->type("id=User_contact_number", "99999");
         $this->clickAndWait("id=submitForm");
-        $this->assertEquals("99999", $this->getText("//div[@id='user-grid']/table/tbody/tr[7]/td[6]"));
+        $this->assertEquals("99999", $this->getText("//div[@id='user-grid']/table/tbody/tr[7]/td[7]"));
         $this->assertEquals("admin", $this->getText("//div[@id='user-grid']/table/tbody/tr[7]/td[2]"));
         $this->clickAndWait("xpath=(//a[contains(text(),'Edit')])[7]");
         try {

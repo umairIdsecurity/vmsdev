@@ -27,34 +27,31 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
     public function resetDb() {
         $this->open("http://dev.identitysecurity.info/index.php?r=site/resetDb");
         $this->assertEquals("Tables imported successfully", $this->getText("css=body"));
-        
+
         $this->open("http://dev.identitysecurity.info/index.php?r=site/DBpatch");
-        $this->assertEquals("--== Starting Patcher ==-- \nDone patch for issue81", $this->getText("css=body"));
-        
-    }
+        $this->assertEquals("--== Starting Patcher ==-- \nDone patch for issue81\nDone patch for issue137", $this->getText("css=body"));
+   }
 
     public function resetDbWithData() {
         $this->start();
         $this->open("http://dev.identitysecurity.info/index.php?r=site/resetDb2");
         $this->assertEquals("Tables imported successfully", $this->getText("css=body"));
-        
+
         $this->open("http://dev.identitysecurity.info/index.php?r=site/DBpatch");
-        $this->assertEquals("--== Starting Patcher ==-- \nDone patch for issue81", $this->getText("css=body"));
+        $this->assertEquals("--== Starting Patcher ==-- \nDone patch for issue81\nDone patch for issue137", $this->getText("css=body"));
     }
-    
+
     public function issue35Sql() {
         $this->start();
         $this->open("http://dev.identitysecurity.info/index.php?r=site/issue35UpdateDatabaseRecord");
         $this->assertEquals("Tables updated successfully", $this->getText("css=body"));
     }
-    
+
     public function issue48Sql() {
         $this->start();
         $this->open("http://dev.identitysecurity.info/index.php?r=site/issue48UpdateDatabaseRecord");
         $this->assertEquals("Tables updated successfully", $this->getText("css=body"));
     }
-    
-    
 
     public function __destruct() {
         parent::__destruct();
@@ -144,7 +141,7 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
     }
 
     function addVisitor($visitor_name) {
-        
+
         $this->type("id=Visitor_first_name", "Test");
         $this->type("id=Visitor_last_name", $visitor_name);
         $this->type("id=Visitor_contact_number", "1234567");
@@ -159,7 +156,6 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
         $this->type("id=Visitor_password", "12345");
         $this->type("id=Visitor_repeatpassword", "12345");
         $this->type("id=Visitor_vehicle", "ABC123");
-        
     }
 
     function addReason($reason) {
@@ -172,7 +168,7 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
         $this->type("id=User_last_name", $host_name);
         $this->type("id=User_department", "Department");
         $this->type("id=User_staff_id", "123456");
-        $this->type("id=User_email", "test".$host_name."@test.com");
+        $this->type("id=User_email", "test" . $host_name . "@test.com");
         $this->type("id=User_contact_number", "123456");
         $this->select("id=User_tenant", "label=NAIA Airport");
         sleep(1);
@@ -203,7 +199,8 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
         $this->setBrowser("*firefox");
         $this->setBrowserUrl("http://dev.identitysecurity.info/");
     }
-    function clearMailcatcher(){
+
+    function clearMailcatcher() {
         $this->start();
         $this->open("http://localhost:1080/");
         $this->selectWindow("title=MailCatcher");
@@ -213,6 +210,5 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
         $this->getConfirmation();
         $this->chooseOkOnNextConfirmation();
     }
-    
 
 }

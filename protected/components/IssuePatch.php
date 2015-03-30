@@ -16,7 +16,7 @@ class IssuePatch extends CComponent {
             $checkIfColumnExists2 = $db->createCommand("SHOW COLUMNS FROM `card_generated` LIKE 'card_number'");
             $result2 = $checkIfColumnExists2->query();
             
-            if ($result->rowCount == 0 && $result->rowCount != 0) {
+            if ($result->rowCount == 0 && $result->rowCount == 0) {
                 $sql = 'ALTER TABLE `card_generated` DROP `card_code`; 
                     ALTER TABLE `card_generated` ADD COLUMN `company_code` VARCHAR(3) DEFAULT 0 NULL AFTER `tenant_agent`;
                     ALTER TABLE `card_generated` ADD COLUMN `card_count` BIGINT DEFAULT 0 NULL AFTER `company_code`;

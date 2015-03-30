@@ -34,7 +34,7 @@ class Issue89FunctionalTest extends BaseFunctionalTest {
     function Scenario1() {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
-        $this->clickAndWait("css=tr.even > td > a.statusLink");
+        $this->clickAndWait("css=tr.even > td.blue > a.statusLink");
         $this->click("//li[@id='activateLi']/a/span");
         $this->click("css=#activate-a-visit-form > input.complete");
         sleep(3);

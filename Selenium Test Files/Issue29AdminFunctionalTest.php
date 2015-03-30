@@ -358,7 +358,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_contact_number", "123456");
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeatpassword", "12345");
-
+        sleep(1);
         $this->clickAndWait("id=submitFormUser");
         if ($username == 'admin') {
             $this->assertEquals("adminvisitor2", $this->getText("//table[@id='personalDetailsTable']/tbody/tr[2]/td[2]"));
@@ -1044,7 +1044,7 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         } elseif ($username == 'admin') {
             $this->assertEquals("Displaying 1-8 of 8 results", $this->getText("css=div.summary"));
         } else if ($username == 'agentadmin') {
-            $this->assertEquals("Displaying 1-11 of 11 results", $this->getText("css=div.summary"));
+            $this->assertEquals("Displaying 1-10 of 11 results", $this->getText("css=div.summary"));
         } else if ($username == 'operator') {
             $this->assertEquals("Displaying 1-1 of 1 result", $this->getText("css=div.summary"));
         } else {

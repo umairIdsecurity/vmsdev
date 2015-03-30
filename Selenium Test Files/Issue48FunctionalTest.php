@@ -105,44 +105,16 @@ class Issue48FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Administration");
         $this->clickAndWait("css=a.managevisitorrecords > span");
         $this->click("id=yt1");
-        $this->chooseCancelOnNextConfirmation();
+        
         $this->assertTrue((bool) preg_match('/^Are you sure you want to delete this item[\s\S]$/', $this->getConfirmation()));
         sleep(1);
-        
-        $this->assertTrue((bool) preg_match('/^This Visitor Record has visit data recorded\. Do you wish to delete this visitor record and its visit history[\s\S]$/', $this->getConfirmation()));
-        $this->assertEquals("testVisitor1@test.com", $this->getText("//div[@id='visitor-grid']/table/tbody/tr[2]/td[3]"));
-        $this->click("id=yt1");
-        $this->assertTrue((bool) preg_match('/^Are you sure you want to delete this item[\s\S]$/', $this->getConfirmation()));
         $this->assertTrue((bool) preg_match('/^This Visitor Record has visit data recorded\. Do you wish to delete this visitor record and its visit history[\s\S]$/', $this->getConfirmation()));
         $this->type("name=Visitor[email]", "testvisitor1@test.com");
-        for ($second = 0;; $second++) {
-            if ($second >= 60)
-                $this->fail("timeout");
-            try {
-                if ("No results found." == $this->getText("css=span.empty"))
-                    break;
-            } catch (Exception $e) {
-                
-            }
-            sleep(1);
-        }
-
+        $this->waitForElementPresent("css=span.empty");
         $this->assertEquals("No results found.", $this->getText("css=span.empty"));
-        $this->click("link=Dashboard");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("link=Dashboard");
         $this->type("name=Visit[lastname]", "visitor1");
-        for ($second = 0;; $second++) {
-            if ($second >= 60)
-                $this->fail("timeout");
-            try {
-                if ("No results found." == $this->getText("css=span.empty"))
-                    break;
-            } catch (Exception $e) {
-                
-            }
-            sleep(1);
-        }
-
+        $this->waitForElementPresent("css=span.empty");
         $this->assertEquals("No results found.", $this->getText("css=span.empty"));
     }
 

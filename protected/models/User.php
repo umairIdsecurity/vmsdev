@@ -264,6 +264,7 @@ class User extends VmsActiveRecord {
                         'asc' => 'company.name',
                         'desc' => 'company.name DESC',
                     ),
+                    '*',
                 ),
             ),
         ));

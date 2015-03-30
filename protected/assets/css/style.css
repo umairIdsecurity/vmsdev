@@ -436,12 +436,12 @@ nav.navigation ul li:last-child.active
 }
 
 .grid-view .summary {
-    float: right;
     font-size: 12px;
     font-weight: bold;
-    margin-left: 748px !important;
-    margin-top: -30px !important;
+    margin-right: 100px !important;
+    margin-top: -25px !important;
     position: absolute;
+    right:0
 }
 
 #page{
@@ -1096,11 +1096,10 @@ dt.tabs dt{
 }
 
 #export-button{
-    margin-top: -32px;
-    margin-left: 797px !important;
+    margin-right: 100px !important;
     margin-top: -32px !important;
     position: absolute;
-
+    right: 0;
 }
 
 .admindashboardDiv{

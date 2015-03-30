@@ -53,9 +53,9 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'filter' => VisitorType::model()->returnVisitorTypes(),
         ),
         array(
-            'name' => 'cardcode',
+            'name' => 'cardnumber',
             'header' => 'Card No.',
-            'value' => 'CardGenerated::model()->getCardCode($data->card, $data->id)',
+            'value'=>  'CardGenerated::model()->getCardCode($data->card)',
         ),
         
         array(
@@ -157,16 +157,6 @@ function formatTime($time) {
 </script>
 
 <?php 
-function getCardCode($cardId) {
-    if($cardId !=''){
-        return CardGenerated::model()->findByPk($cardId)->card_code;
-    } else {
-        return "";
-    }
-}
-
-
-
 function changeStatusClass($visitStatus){
    // return "red";
    switch ($visitStatus) {

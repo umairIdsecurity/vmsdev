@@ -52,7 +52,6 @@ SET FOREIGN_KEY_CHECKS = 1;
 
 CREATE TABLE IF NOT EXISTS `card_generated` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `card_code` varchar(9) NOT NULL,
   `date_printed` varchar(10) DEFAULT NULL,
   `date_expiration` varchar(10) DEFAULT NULL,
   `date_cancelled` varchar(50) DEFAULT NULL,
@@ -63,6 +62,9 @@ CREATE TABLE IF NOT EXISTS `card_generated` (
   `created_by` bigint(20) DEFAULT NULL,
   `tenant` bigint(20) DEFAULT NULL,
   `tenant_agent` bigint(20) DEFAULT NULL,
+  `company_code` varchar(3) DEFAULT '0',
+  `card_count` bigint(20) DEFAULT '0',
+  `print_count` bigint(20) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `card_image_generated_filename` (`card_image_generated_filename`),
   KEY `created_by` (`created_by`),
@@ -70,19 +72,152 @@ CREATE TABLE IF NOT EXISTS `card_generated` (
   KEY `tenant_agent` (`tenant_agent`),
   KEY `card_status` (`card_status`),
   KEY `visitor_id` (`visitor_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=140 ;
 
 --
 -- Dumping data for table `card_generated`
 --
 
-INSERT INTO `card_generated` (`id`, `card_code`, `date_printed`, `date_expiration`, `date_cancelled`, `date_returned`, `card_image_generated_filename`, `visitor_id`, `card_status`, `created_by`, `tenant`, `tenant_agent`) VALUES
-(1, 'NAI000001', '09-03-2015', '09-03-2015', NULL, NULL, 16, 2, 3, 18, 18, NULL),
-(2, 'NAI000001', '09-03-2015', '09-03-2015', NULL, '11-03-2015', 17, 2, 2, 18, 18, NULL),
-(3, 'KLO000006', '11-03-2015', '11-03-2015', NULL, NULL, 22, 5, 3, 24, 19, 24),
-(4, 'KLO000006', '11-03-2015', '11-03-2015', NULL, NULL, 22, 5, 3, 24, 19, 24),
-(5, 'KLO000007', '11-03-2015', '11-03-2015', NULL, NULL, 25, 6, 3, 19, 19, NULL),
-(6, 'KLO000007', '11-03-2015', '11-03-2015', NULL, NULL, 26, 6, 3, 19, 19, NULL);
+INSERT INTO `card_generated` (`id`, `date_printed`, `date_expiration`, `date_cancelled`, `date_returned`, `card_image_generated_filename`, `visitor_id`, `card_status`, `created_by`, `tenant`, `tenant_agent`, `company_code`, `card_count`, `print_count`) VALUES
+(1, '11-03-2015', '24-03-2015', '12-03-2015', NULL, 11, 2, 1, 19, 19, NULL, 'SYD', 1, 0),
+(2, '11-03-2015', '31-03-2015', '12-03-2015', NULL, 14, 4, 1, 19, 19, 21, 'SYD', 2, 0),
+(3, '12-03-2015', '27-03-2015', '12-03-2015', NULL, 15, 3, 1, 19, 19, NULL, 'SYD', 3, 0),
+(4, '12-03-2015', '31-03-2015', '12-03-2015', NULL, 16, 4, 1, 16, 19, 21, 'SYD', 4, 0),
+(5, '12-03-2015', '31-03-2015', NULL, NULL, 17, 4, 3, 16, 19, 21, 'SYD', 5, 0),
+(6, '12-03-2015', '31-03-2015', NULL, NULL, 18, 4, 3, 16, 19, 21, 'SYD', 6, 0),
+(7, '12-03-2015', '31-03-2015', NULL, NULL, 19, 4, 3, 16, 19, 21, 'SYD', 7, 0),
+(8, '12-03-2015', '31-03-2015', NULL, NULL, 20, 4, 3, 16, 19, 21, 'SYD', 8, 0),
+(9, '12-03-2015', '31-03-2015', NULL, NULL, 21, 4, 3, 16, 19, 21, 'SYD', 9, 0),
+(10, '12-03-2015', '31-03-2015', NULL, NULL, 22, 4, 3, 16, 19, 21, 'SYD', 10, 0),
+(11, '12-03-2015', '31-03-2015', NULL, NULL, 23, 4, 3, 16, 19, 21, 'SYD', 11, 0),
+(12, '12-03-2015', '31-03-2015', NULL, NULL, 23, 4, 3, 16, 19, 21, 'SYD', 12, 0),
+(13, '12-03-2015', '31-03-2015', NULL, NULL, 25, 4, 3, 16, 19, 21, 'SYD', 13, 0),
+(14, '12-03-2015', '31-03-2015', NULL, NULL, 25, 4, 3, 16, 19, 21, 'SYD', 14, 0),
+(15, '12-03-2015', '31-03-2015', NULL, NULL, 27, 4, 3, 16, 19, 21, 'SYD', 15, 0),
+(16, '12-03-2015', '31-03-2015', NULL, NULL, 28, 4, 3, 16, 19, 21, 'SYD', 16, 0),
+(17, '12-03-2015', '31-03-2015', NULL, NULL, 29, 4, 3, 16, 19, 21, 'SYD', 17, 0),
+(18, '12-03-2015', '31-03-2015', NULL, NULL, 30, 4, 3, 16, 19, 21, 'SYD', 18, 0),
+(19, '12-03-2015', '31-03-2015', NULL, NULL, 31, 4, 3, 16, 19, 21, 'SYD', 19, 0),
+(20, '12-03-2015', '31-03-2015', NULL, NULL, 32, 4, 3, 16, 19, 21, 'SYD', 20, 0),
+(21, '12-03-2015', '31-03-2015', NULL, NULL, 32, 4, 3, 16, 19, 21, 'SYD', 21, 0),
+(22, '12-03-2015', '31-03-2015', NULL, NULL, 34, 4, 3, 16, 19, 21, 'SYD', 22, 0),
+(23, '12-03-2015', '31-03-2015', NULL, NULL, 35, 4, 3, 16, 19, 21, 'SYD', 23, 0),
+(24, '12-03-2015', '31-03-2015', NULL, NULL, 36, 4, 3, 16, 19, 21, 'SYD', 24, 0),
+(25, '12-03-2015', '31-03-2015', NULL, NULL, 37, 4, 3, 16, 19, 21, 'SYD', 25, 0),
+(26, '12-03-2015', '31-03-2015', NULL, NULL, 38, 4, 3, 16, 19, 21, 'SYD', 26, 0),
+(27, '12-03-2015', '31-03-2015', NULL, NULL, 39, 4, 3, 16, 19, 21, 'SYD', 27, 0),
+(28, '12-03-2015', '31-03-2015', NULL, NULL, 40, 4, 3, 16, 19, 21, 'SYD', 28, 0),
+(29, '12-03-2015', '31-03-2015', NULL, NULL, 41, 4, 3, 16, 19, 21, 'SYD', 29, 0),
+(30, '12-03-2015', '31-03-2015', NULL, NULL, 42, 4, 3, 16, 19, 21, 'SYD', 30, 0),
+(31, '12-03-2015', '31-03-2015', NULL, NULL, 43, 4, 3, 16, 19, 21, 'SYD', 31, 0),
+(32, '12-03-2015', '31-03-2015', NULL, NULL, 44, 4, 3, 16, 19, 21, 'SYD', 32, 0),
+(33, '12-03-2015', '31-03-2015', NULL, NULL, 45, 4, 3, 16, 19, 21, 'SYD', 33, 0),
+(34, '12-03-2015', '31-03-2015', NULL, NULL, 46, 4, 3, 16, 19, 21, 'SYD', 34, 0),
+(35, '12-03-2015', '31-03-2015', NULL, NULL, 47, 4, 3, 16, 19, 21, 'SYD', 35, 0),
+(36, '12-03-2015', '31-03-2015', NULL, NULL, 48, 4, 3, 16, 19, 21, 'SYD', 36, 0),
+(37, '12-03-2015', '31-03-2015', NULL, NULL, 49, 4, 3, 16, 19, 21, 'SYD', 37, 0),
+(38, '12-03-2015', '31-03-2015', NULL, NULL, 50, 4, 3, 16, 19, 21, 'SYD', 38, 0),
+(39, '12-03-2015', '31-03-2015', NULL, NULL, 51, 4, 3, 16, 19, 21, 'SYD', 39, 0),
+(40, '12-03-2015', '31-03-2015', NULL, NULL, 52, 4, 3, 16, 19, 21, 'SYD', 40, 0),
+(41, '12-03-2015', '31-03-2015', NULL, NULL, 53, 4, 3, 16, 19, 21, 'SYD', 41, 0),
+(42, '12-03-2015', '31-03-2015', NULL, NULL, 54, 4, 3, 16, 19, 21, 'SYD', 42, 0),
+(43, '12-03-2015', '31-03-2015', NULL, NULL, 55, 4, 3, 16, 19, 21, 'SYD', 43, 0),
+(44, '12-03-2015', '31-03-2015', NULL, NULL, 56, 4, 3, 16, 19, 21, 'SYD', 44, 0),
+(45, '12-03-2015', '31-03-2015', NULL, NULL, 57, 4, 3, 16, 19, 21, 'SYD', 45, 0),
+(46, '12-03-2015', '31-03-2015', NULL, NULL, 58, 4, 3, 16, 19, 21, 'SYD', 46, 0),
+(47, '12-03-2015', '31-03-2015', NULL, NULL, 59, 4, 3, 16, 19, 21, 'SYD', 47, 0),
+(48, '12-03-2015', '31-03-2015', NULL, NULL, 60, 4, 3, 16, 19, 21, 'SYD', 48, 0),
+(49, '12-03-2015', '31-03-2015', NULL, NULL, 61, 4, 3, 16, 19, 21, 'SYD', 49, 0),
+(50, '12-03-2015', '31-03-2015', NULL, NULL, 62, 4, 3, 16, 19, 21, 'SYD', 50, 0),
+(51, '12-03-2015', '31-03-2015', NULL, NULL, 63, 4, 3, 16, 19, 21, 'SYD', 51, 0),
+(52, '12-03-2015', '31-03-2015', NULL, NULL, 63, 4, 3, 16, 19, 21, 'SYD', 52, 0),
+(53, '12-03-2015', '31-03-2015', NULL, NULL, 65, 4, 3, 16, 19, 21, 'SYD', 53, 0),
+(54, '12-03-2015', '31-03-2015', NULL, NULL, 66, 4, 3, 16, 19, 21, 'SYD', 54, 0),
+(55, '12-03-2015', '31-03-2015', NULL, NULL, 67, 4, 3, 16, 19, 21, 'SYD', 55, 0),
+(56, '12-03-2015', '31-03-2015', NULL, NULL, 68, 4, 3, 16, 19, 21, 'SYD', 56, 0),
+(57, '12-03-2015', '31-03-2015', NULL, NULL, 69, 4, 3, 16, 19, 21, 'SYD', 57, 0),
+(58, '12-03-2015', '31-03-2015', NULL, NULL, 70, 4, 3, 16, 19, 21, 'SYD', 58, 0),
+(59, '12-03-2015', '31-03-2015', NULL, NULL, 71, 4, 3, 16, 19, 21, 'SYD', 59, 0),
+(60, '12-03-2015', '31-03-2015', NULL, NULL, 72, 4, 3, 16, 19, 21, 'SYD', 60, 0),
+(61, '12-03-2015', '31-03-2015', NULL, NULL, 73, 4, 3, 16, 19, 21, 'SYD', 61, 0),
+(62, '12-03-2015', '31-03-2015', NULL, NULL, 74, 4, 3, 16, 19, 21, 'SYD', 62, 0),
+(63, '12-03-2015', '31-03-2015', NULL, NULL, 75, 4, 3, 16, 19, 21, 'SYD', 63, 0),
+(64, '12-03-2015', '31-03-2015', NULL, NULL, 76, 4, 3, 16, 19, 21, 'SYD', 64, 0),
+(65, '12-03-2015', '31-03-2015', NULL, NULL, 77, 4, 3, 16, 19, 21, 'SYD', 65, 0),
+(66, '12-03-2015', '31-03-2015', NULL, NULL, 78, 4, 3, 16, 19, 21, 'SYD', 66, 0),
+(67, '12-03-2015', '31-03-2015', NULL, NULL, 78, 4, 3, 16, 19, 21, 'SYD', 67, 0),
+(68, '12-03-2015', '31-03-2015', NULL, NULL, 80, 4, 3, 16, 19, 21, 'SYD', 68, 0),
+(69, '12-03-2015', '31-03-2015', NULL, NULL, 80, 4, 3, 16, 19, 21, 'SYD', 69, 0),
+(70, '12-03-2015', '31-03-2015', NULL, NULL, 82, 4, 3, 16, 19, 21, 'SYD', 70, 0),
+(71, '12-03-2015', '31-03-2015', NULL, NULL, 83, 4, 3, 16, 19, 21, 'SYD', 71, 0),
+(72, '12-03-2015', '31-03-2015', NULL, NULL, 84, 4, 3, 16, 19, 21, 'SYD', 72, 0),
+(73, '12-03-2015', '31-03-2015', NULL, NULL, 85, 4, 3, 16, 19, 21, 'SYD', 73, 0),
+(74, '12-03-2015', '31-03-2015', NULL, NULL, 86, 4, 3, 16, 19, 21, 'SYD', 74, 0),
+(75, '12-03-2015', '31-03-2015', NULL, NULL, 87, 4, 3, 16, 19, 21, 'SYD', 75, 0),
+(76, '12-03-2015', '31-03-2015', NULL, NULL, 88, 4, 3, 16, 19, 21, 'SYD', 76, 0),
+(77, '12-03-2015', '31-03-2015', NULL, NULL, 89, 4, 3, 16, 19, 21, 'SYD', 77, 0),
+(78, '12-03-2015', '31-03-2015', NULL, NULL, 90, 4, 3, 16, 19, 21, 'SYD', 78, 0),
+(79, '12-03-2015', '31-03-2015', NULL, NULL, 91, 4, 3, 16, 19, 21, 'SYD', 79, 0),
+(80, '12-03-2015', '31-03-2015', NULL, NULL, 92, 4, 3, 16, 19, 21, 'SYD', 80, 0),
+(81, '12-03-2015', '31-03-2015', NULL, NULL, 93, 4, 3, 16, 19, 21, 'SYD', 81, 0),
+(82, '12-03-2015', '31-03-2015', NULL, NULL, 94, 4, 3, 16, 19, 21, 'SYD', 82, 0),
+(83, '12-03-2015', '31-03-2015', NULL, NULL, 95, 4, 3, 16, 19, 21, 'SYD', 83, 0),
+(84, '12-03-2015', '31-03-2015', NULL, NULL, 96, 4, 3, 16, 19, 21, 'SYD', 84, 0),
+(85, '12-03-2015', '31-03-2015', NULL, NULL, 97, 4, 3, 16, 19, 21, 'SYD', 85, 0),
+(86, '12-03-2015', '31-03-2015', NULL, NULL, 98, 4, 3, 16, 19, 21, 'SYD', 86, 0),
+(87, '12-03-2015', '31-03-2015', NULL, NULL, 99, 4, 3, 16, 19, 21, 'SYD', 87, 0),
+(88, '12-03-2015', '31-03-2015', NULL, NULL, 100, 4, 3, 16, 19, 21, 'SYD', 88, 0),
+(89, '12-03-2015', '31-03-2015', NULL, NULL, 101, 4, 3, 16, 19, 21, 'SYD', 89, 0),
+(90, '12-03-2015', '31-03-2015', NULL, NULL, 103, 4, 3, 16, 19, 21, 'SYD', 90, 0),
+(91, '12-03-2015', '31-03-2015', NULL, NULL, 104, 4, 3, 16, 19, 21, 'SYD', 91, 0),
+(92, '12-03-2015', '31-03-2015', NULL, NULL, 105, 4, 3, 16, 19, 21, 'SYD', 92, 0),
+(93, '12-03-2015', '31-03-2015', NULL, NULL, 106, 4, 3, 16, 19, 21, 'SYD', 93, 0),
+(94, '12-03-2015', '31-03-2015', NULL, NULL, 107, 4, 3, 16, 19, 21, 'SYD', 94, 0),
+(95, '12-03-2015', '31-03-2015', NULL, NULL, 108, 4, 3, 16, 19, 21, 'SYD', 95, 0),
+(96, '12-03-2015', '31-03-2015', '12-03-2015', NULL, 109, 4, 1, 16, 19, 21, 'SYD', 96, 0),
+(97, '12-03-2015', '31-03-2015', '12-03-2015', NULL, 110, 4, 1, 16, 19, 21, 'SYD', 97, 0),
+(98, '12-03-2015', '31-03-2015', '12-03-2015', NULL, 111, 4, 1, 16, 19, 21, 'SYD', 98, 0),
+(99, '12-03-2015', '27-03-2015', '12-03-2015', NULL, 112, 3, 1, 16, 19, NULL, 'SYD', 99, 0),
+(100, '12-03-2015', '27-03-2015', '12-03-2015', NULL, 113, 3, 1, 16, 19, NULL, 'SYD', 100, 0),
+(101, '12-03-2015', '24-03-2015', '12-03-2015', NULL, 114, 2, 1, 16, 19, NULL, 'SYD', 101, 0),
+(102, '12-03-2015', '24-03-2015', NULL, NULL, 115, 2, 3, 16, 19, NULL, 'SYD', 102, 0),
+(103, '12-03-2015', '31-03-2015', '12-03-2015', NULL, 116, 4, 1, 16, 19, 21, 'SYD', 103, 0),
+(104, '12-03-2015', '31-03-2015', '12-03-2015', NULL, 117, 4, 1, 16, 19, 21, 'SYD', 104, 0),
+(105, '12-03-2015', '12-03-2015', '12-03-2015', NULL, 120, 5, 1, 24, 24, NULL, 'ENS', 1, 0),
+(106, '12-03-2015', '12-03-2015', '12-03-2015', NULL, 122, 5, 1, 24, 24, NULL, 'ENS', 2, 0),
+(107, '12-03-2015', '31-03-2015', '12-03-2015', NULL, 123, 4, 1, 16, 19, 21, 'SYD', 105, 0),
+(108, '12-03-2015', '31-03-2015', '12-03-2015', NULL, 124, 4, 1, 16, 19, 21, 'SYD', 106, 0),
+(109, '12-03-2015', '31-03-2015', '12-03-2015', NULL, 125, 4, 1, 16, 19, 21, 'SYD', 107, 0),
+(110, '12-03-2015', '31-03-2015', '12-03-2015', NULL, 126, 4, 1, 16, 19, 21, 'SYD', 108, 0),
+(111, '12-03-2015', '31-03-2015', '12-03-2015', NULL, 127, 4, 1, 16, 19, 21, 'SYD', 109, 0),
+(112, '12-03-2015', '31-03-2015', '12-03-2015', NULL, 128, 4, 1, 16, 19, 21, 'SYD', 110, 0),
+(113, '12-03-2015', '31-03-2015', '12-03-2015', NULL, 129, 4, 1, 16, 19, 21, 'SYD', 111, 0),
+(114, '12-03-2015', '31-03-2015', '12-03-2015', NULL, 130, 4, 1, 16, 19, 21, 'SYD', 0, 0),
+(115, '12-03-2015', '31-03-2015', '12-03-2015', NULL, 131, 4, 1, 16, 19, 21, 'SYD', 0, 0),
+(116, '12-03-2015', '31-03-2015', '12-03-2015', NULL, 132, 4, 1, 16, 19, 21, 'SYD', 0, 0),
+(117, '12-03-2015', '31-03-2015', '12-03-2015', NULL, 133, 4, 1, 16, 19, 21, 'SYD', 0, 0),
+(118, '12-03-2015', '31-03-2015', '12-03-2015', NULL, 134, 4, 1, 16, 19, 21, 'SYD', 0, 0),
+(119, '12-03-2015', '31-03-2015', '12-03-2015', NULL, 135, 4, 1, 16, 19, 21, 'SYD', 0, 0),
+(120, '12-03-2015', '31-03-2015', '12-03-2015', NULL, 136, 4, 1, 16, 19, 21, 'SYD', 0, 0),
+(121, '12-03-2015', '31-03-2015', '12-03-2015', NULL, 137, 4, 1, 16, 19, 21, 'SYD', 0, 0),
+(122, '12-03-2015', '31-03-2015', '12-03-2015', NULL, 137, 4, 1, 16, 19, 21, 'SYD', 0, 0),
+(123, '12-03-2015', '31-03-2015', '12-03-2015', NULL, 139, 4, 1, 16, 19, 21, 'SYD', 0, 0),
+(124, '12-03-2015', '31-03-2015', '12-03-2015', NULL, 140, 4, 1, 16, 19, 21, 'SYD', 0, 0),
+(125, '12-03-2015', '12-03-2015', '12-03-2015', NULL, 141, 5, 1, 24, 24, NULL, 'ENS', 0, 0),
+(126, '12-03-2015', '12-03-2015', '12-03-2015', NULL, 143, 5, 1, 16, 24, NULL, 'ENS', 0, 0),
+(127, '12-03-2015', '12-03-2015', NULL, '12-03-2015', 144, 5, 2, 16, 24, NULL, 'ENS', 0, 0),
+(128, '12-03-2015', '14-03-2015', NULL, '12-03-2015', 146, 6, 2, 26, 26, NULL, '0', 0, 0),
+(129, '12-03-2015', '14-03-2015', '12-03-2015', NULL, 149, 8, 1, 26, 26, NULL, '0', 0, 0),
+(130, '12-03-2015', '14-03-2015', '12-03-2015', NULL, 152, 8, 1, 16, 26, NULL, '0', 0, 0),
+(131, '12-03-2015', '14-03-2015', '12-03-2015', NULL, 153, 8, 1, 16, 26, NULL, '0', 0, 0),
+(132, '12-03-2015', '31-03-2015', '12-03-2015', NULL, 154, 4, 1, 16, 19, 21, 'SYD', 0, 0),
+(133, '12-03-2015', '31-03-2015', NULL, NULL, 155, 4, 3, 16, 19, 21, 'SYD', 0, 0),
+(134, '12-03-2015', '14-03-2015', '12-03-2015', NULL, 157, 8, 1, 26, 26, NULL, '0', 0, 0),
+(135, '12-03-2015', '27-03-2015', NULL, NULL, 158, 3, 3, 16, 19, NULL, 'SYD', 0, 0),
+(136, '12-03-2015', '14-03-2015', '12-03-2015', NULL, 162, 8, 1, 16, 26, NULL, '0', 0, 0),
+(137, '12-03-2015', '14-03-2015', NULL, NULL, 163, 8, 3, 16, 26, NULL, '0', 0, 0),
+(138, '14-03-2015', '14-03-2015', NULL, '16-03-2015', 169, 12, 2, 34, 34, NULL, '0', 0, 0),
+(139, '17-03-2015', '19-03-2015', NULL, NULL, 176, 19, 3, 34, 34, NULL, '0', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -166,28 +301,29 @@ CREATE TABLE IF NOT EXISTS `company` (
   KEY `tenant` (`tenant`),
   KEY `company_laf_preferences` (`company_laf_preferences`),
   KEY `logo` (`logo`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=17 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=18 ;
 
 --
 -- Dumping data for table `company`
 --
 
 INSERT INTO `company` (`id`, `code`, `name`, `trading_name`, `logo`, `contact`, `billing_address`, `email_address`, `office_number`, `mobile_number`, `website`, `company_laf_preferences`, `created_by_user`, `created_by_visitor`, `tenant`, `tenant_agent`, `is_deleted`) VALUES
-(1, 'IDS', 'Identity Security', 'Identity Security', 2, 'Test Person', '123 street', 'idescurity@test.com', 12345, 12345, 'http://idsecurity.com.au', NULL, NULL, NULL, 16, 16, 0),
-(3, 'SAI', 'Stableapps', 'Stableapps', 3, '', '', '', NULL, NULL, '', NULL, NULL, NULL, 17, NULL, 1),
-(4, 'NAI', 'NAIA', 'Ninoy Aquino International Airport', 4, '', '', '', NULL, NULL, 'http://www.miaa.gov.ph/', 2, NULL, NULL, 18, NULL, 0),
-(5, 'CRK', 'Clark International Airport', 'Clark International Airport', 5, '', '', '', NULL, NULL, 'http://www.clarkairport.com/', 3, NULL, NULL, 26, NULL, 0),
-(6, 'KLO', 'Kalibo International Airport', 'Kalibo International Airport', 6, '', '', '', NULL, NULL, '', NULL, NULL, NULL, 19, NULL, 0),
-(7, 'PAL', 'Philippine Airlines', 'Philippine Airlines', 7, '', '', '', NULL, NULL, '', 1, NULL, NULL, 18, 21, 0),
-(8, 'CEB', 'Cebu Pacific', 'Cebu Pacific Air', 8, '', '', '', NULL, NULL, '', NULL, NULL, NULL, 18, 23, 0),
-(9, 'JAL', 'Japan Airlines', 'Japan Airlines', 9, '', '', '', NULL, NULL, '', NULL, NULL, NULL, 19, 24, 0),
-(10, 'KAL', 'Korean Air', 'Korean Air', 10, '', '', '', NULL, NULL, '', NULL, NULL, NULL, 26, 27, 0),
-(11, 'PAL', 'Philippine Airlines-KALIBO', 'Philippine Airlines-KALIBO', 12, '', 'Kalibo', '', NULL, NULL, '', NULL, NULL, NULL, 19, 28, 0),
-(12, 'VCO', 'Visitor Company', 'Visitor Company', 13, '', '', '', NULL, NULL, '', NULL, NULL, NULL, 18, NULL, 0),
-(13, 'GOO', 'Google', 'Google', 14, '', '', '', NULL, NULL, '', NULL, NULL, NULL, NULL, NULL, 0),
-(14, 'YHO', 'Yahoo', 'Yahoo', 18, '', '', '', NULL, NULL, '', NULL, NULL, NULL, 26, 27, 0),
-(15, 'SAM', 'Samsung', 'Samsung', 21, '', '', '', NULL, NULL, '', NULL, NULL, NULL, 19, 24, 0),
-(16, 'YHO', 'Yahoo', 'Yahoo', 24, '', '', '', NULL, NULL, '', NULL, NULL, NULL, 19, NULL, 0);
+(1, 'IDS', 'Identity Security', 'Identity Security', 2, 'Julie Stewart Rose', 'PO BOX 710 Port Melbourne VIC 3207', 'julie.stewart@idsecurity.com.au', 396453450, 2147483647, 'http://idsecurity.com.au', 2, NULL, NULL, 16, 16, 0),
+(3, 'IDS', 'Identity Security', 'Identity Security', 4, '', '', '', NULL, NULL, '', 3, NULL, NULL, 17, NULL, 1),
+(4, 'SYD', 'Sydney Airport', 'Sydney Airport', 6, 'Kyile White', '', '', NULL, NULL, '', 4, NULL, NULL, 19, NULL, 0),
+(5, 'QNT', 'Qantas', '', 7, 'Qantas', '', '', NULL, NULL, '', NULL, NULL, NULL, NULL, NULL, 0),
+(6, 'QNT', 'Qantas', '', 8, '', '', '', NULL, NULL, '', NULL, NULL, NULL, 19, 21, 0),
+(7, 'IDS', 'Identity Security', '', 10, 'Julie Stewart', '', '', NULL, NULL, '', NULL, NULL, NULL, 19, NULL, 0),
+(8, 'ENS', 'Ensign Laboratories', 'Ensign Laboratories', 121, 'Josh Thornborrow', '', '', NULL, NULL, 'http://www.ensignlab.com.au/', 5, NULL, NULL, 24, NULL, 0),
+(9, 'IDS', 'Identity Security', 'Identity Security', 119, '', '', '', NULL, NULL, '', NULL, NULL, NULL, 24, NULL, 0),
+(10, 'KER', 'Kerry', 'Kerry', 156, 'Rudy Choong', '', '', NULL, NULL, '', 6, NULL, NULL, 26, NULL, 0),
+(11, 'IDS', 'Identity Security', '', NULL, '', '', '', NULL, NULL, '', NULL, NULL, NULL, 26, NULL, 0),
+(12, 'PLN', 'Parliaments of NSW', 'Parliament of NSW', 151, '', '', '', NULL, NULL, '', NULL, NULL, NULL, NULL, NULL, 0),
+(13, 'CLH', 'Chris O''Brien Lifehouse', 'Chris O''Brien Lifehouse', 164, '', '', '', NULL, NULL, '', NULL, NULL, NULL, 32, NULL, 0),
+(14, 'SYU', 'The University of Sydney', '', 165, '', '', '', NULL, NULL, 'http://sydney.edu.au/', NULL, NULL, NULL, 33, NULL, 0),
+(15, 'PER', 'Perth Airport', 'Per', 168, '', '', '', NULL, NULL, '', 7, NULL, NULL, 34, NULL, 0),
+(16, 'QAN', 'Qantas', '', NULL, '', '', '', NULL, NULL, '', NULL, NULL, NULL, 34, 40, 0),
+(17, 'VIR', 'Virgin', '', NULL, '', '', '', NULL, NULL, '', NULL, NULL, NULL, 34, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -225,16 +361,19 @@ CREATE TABLE IF NOT EXISTS `company_laf_preferences` (
   `sidemenu_hover_font_color` varchar(7) DEFAULT NULL,
   `css_file_path` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
 
 --
 -- Dumping data for table `company_laf_preferences`
 --
 
 INSERT INTO `company_laf_preferences` (`id`, `action_forward_bg_color`, `action_forward_bg_color2`, `action_forward_font_color`, `action_forward_hover_color`, `action_forward_hover_color2`, `action_forward_hover_font_color`, `complete_bg_color`, `complete_bg_color2`, `complete_hover_color`, `complete_hover_color2`, `complete_font_color`, `complete_hover_font_color`, `neutral_bg_color`, `neutral_bg_color2`, `neutral_hover_color`, `neutral_hover_color2`, `neutral_font_color`, `neutral_hover_font_color`, `nav_bg_color`, `nav_hover_color`, `nav_font_color`, `nav_hover_font_color`, `sidemenu_bg_color`, `sidemenu_hover_color`, `sidemenu_font_color`, `sidemenu_hover_font_color`, `css_file_path`) VALUES
-(1, '#6b7df7', '#c3d1aa', '#ffffff', '#9395b5', '#9487c9', '#ffffff', '#e67171', '#d42222', '#e67171', '#d42222', '#ffffff', '#ffffff', '#5fdaf5', '#33bcdb', '#33bcdb', '#33bcdb', '#ffffff', '#ffffff', '#E7E7E7', '#cb30d9', '#637280', '#ffffff', '#E7E7E7', '#E7E7E7', '#637280', '#637280', '/company_css/PAL-1426051998.css'),
-(2, '#c6f76b', '#9ED92F', '#ffffff', '#c6f76b', '#9ED92F', '#ffffff', '#e67171', '#d42222', '#e67171', '#d42222', '#ffffff', '#ffffff', '#5fdaf5', '#33bcdb', '#33bcdb', '#33bcdb', '#ffffff', '#ffffff', '#E7E7E7', '#2b4fba', '#637280', '#ffffff', '#E7E7E7', '#E7E7E7', '#637280', '#637280', '/company_css/NAI-1426052053.css'),
-(3, '#c6f76b', '#9ED92F', '#ffffff', '#c6f76b', '#9ED92F', '#ffffff', '#e67171', '#d42222', '#e67171', '#d42222', '#ffffff', '#ffffff', '#5fdaf5', '#33bcdb', '#33bcdb', '#33bcdb', '#ffffff', '#ffffff', '#E7E7E7', '#d97330', '#637280', '#ffffff', '#E7E7E7', '#E7E7E7', '#637280', '#637280', '/company_css/CRK-1426053301.css');
+(2, '#9ED92F', '#9ED92F', '#ffffff', '#9ED92F', '#9ED92F', '#ffffff', '#0d0d0c', '#a1999a', '#998e8e', '#b0a9a9', '#ffffff', '#ffffff', '#33bcdb', '#33bcdb', '#33bcdb', '#33bcdb', '#ffffff', '#ffffff', '#E7E7E7', '#30c5d9', '#637280', '#ffffff', '#E7E7E7', '#E7E7E7', '#1670c4', '#157cdb', '/company_css/IDS-1424944653.css'),
+(3, '#c6f76b', '#9ED92F', '#ffffff', '#c6f76b', '#9ED92F', '#ffffff', '#e67171', '#d42222', '#e67171', '#d42222', '#ffffff', '#ffffff', '#5fdaf5', '#33bcdb', '#33bcdb', '#33bcdb', '#ffffff', '#ffffff', '#E7E7E7', '#30a3d9', '#637280', '#ffffff', '#E7E7E7', '#E7E7E7', '#637280', '#637280', '/company_css/IDS-1426105493.css'),
+(4, '#c6f76b', '#9ED92F', '#ffffff', '#c6f76b', '#9ED92F', '#ffffff', '#393d78', '#a5a5b5', '#5a5d61', '#657378', '#ffffff', '#ffffff', '#5fdaf5', '#33bcdb', '#33bcdb', '#33bcdb', '#ffffff', '#ffffff', '#E7E7E7', '#46aceb', '#637280', '#ffffff', '#E7E7E7', '#E7E7E7', '#637280', '#637280', '/company_css/SYD-1426119453.css'),
+(5, '#6bf7e4', '#30ced9', '#ffffff', '#5acbd1', '#7b7999', '#ffffff', '#ad1a1a', '#c71c4f', '#948484', '#9e6d6d', '#ffffff', '#ffffff', '#5fdaf5', '#33bcdb', '#33bcdb', '#33bcdb', '#ffffff', '#6287b3', '#E7E7E7', '#3c538c', '#637280', '#ffffff', '#E7E7E7', '#E7E7E7', '#637280', '#637280', '/company_css/ENS-1426135889.css'),
+(6, '#6c9c13', '#7ab015', '#ffffff', '#688a28', '#6f8f34', '#ffffff', '#edbb57', '#e6996a', '#e3831c', '#e39f16', '#ffffff', '#ffffff', '#5fdaf5', '#33bcdb', '#33bcdb', '#33bcdb', '#ffffff', '#ffffff', '#E7E7E7', '#1d406b', '#637280', '#ffffff', '#E7E7E7', '#E7E7E7', '#637280', '#637280', '/company_css/KER-1426165018.css'),
+(7, '#c6f76b', '#9ED92F', '#ffffff', '#c6f76b', '#9ED92F', '#ffffff', '#3f33a6', '#3d438c', '#4d528a', '#5b60b3', '#ffffff', '#ffffff', '#5fdaf5', '#33bcdb', '#33bcdb', '#33bcdb', '#ffffff', '#ffffff', '#E7E7E7', '#3960b0', '#637280', '#ffffff', '#E7E7E7', '#E7E7E7', '#e07a1b', '#e87015', '/company_css/PER-1426326111.css');
 
 -- --------------------------------------------------------
 
@@ -279,7 +418,7 @@ CREATE TABLE IF NOT EXISTS `photo` (
   `unique_filename` text,
   `relative_path` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=29 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=177 ;
 
 --
 -- Dumping data for table `photo`
@@ -288,32 +427,180 @@ CREATE TABLE IF NOT EXISTS `photo` (
 INSERT INTO `photo` (`id`, `filename`, `unique_filename`, `relative_path`) VALUES
 (1, 'personal.png', '29200577-1411087522.jpg', 'uploads/company_logo/29200577-1411087522.jpg'),
 (2, 'ids-logo2.jpg', '1411087524.jpg', 'uploads/company_logo/1411087524.jpg'),
-(3, 'Logo_bite_2.png', '4e5607a6-1425798711.jpg', 'uploads/company_logo/4e5607a6-1425798711.jpg'),
-(4, 'NAIA.png', '4e5607a6-1425799334.jpg', 'uploads/company_logo/4e5607a6-1425799334.jpg'),
-(5, 'Clark_Airport_Logo.png', '4e5607a6-1425799450.jpg', 'uploads/company_logo/4e5607a6-1425799450.jpg'),
-(6, 'kalibo_Airport.png', '4e5607a6-1425801358.jpg', 'uploads/company_logo/4e5607a6-1425801358.jpg'),
-(7, 'pal.png', '4e5607a6-1425801808.jpg', 'uploads/company_logo/4e5607a6-1425801808.jpg'),
-(8, 'cebupacific.png', '4e5607a6-1425801984.jpg', 'uploads/company_logo/4e5607a6-1425801984.jpg'),
-(9, 'jal.png', '4e5607a6-1425802221.jpg', 'uploads/company_logo/4e5607a6-1425802221.jpg'),
-(10, 'KAL.png', '4e5607a6-1425804326.jpg', 'uploads/company_logo/4e5607a6-1425804326.jpg'),
-(11, 'pal.png', '4e5607a6-1425820977.jpg', 'uploads/company_logo/4e5607a6-1425820977.jpg'),
-(12, 'pal.png', '4e5607a6-1425827107.jpg', 'uploads/company_logo/4e5607a6-1425827107.jpg'),
-(13, 'visitor_company_logo.png', '4e5607a6-1425827975.jpg', 'uploads/company_logo/4e5607a6-1425827975.jpg'),
-(14, 'google.jpg', '4e5607a6-1425889321.jpg', 'uploads/company_logo/4e5607a6-1425889321.jpg'),
-(15, 'tuxedo.png', '2c2d0581-1425892162.jpg', 'uploads/visitor/2c2d0581-1425892162.jpg'),
-(16, 'card367b0637-1425892196.png', 'card367b0637-1425892196.png', 'uploads/card_generated/card367b0637-1425892196.png'),
-(17, 'card367b0637-1425892197.png', 'card367b0637-1425892197.png', 'uploads/card_generated/card367b0637-1425892197.png'),
-(18, 'yahoo.jpg', '4e5607a6-1426054208.jpg', 'uploads/company_logo/4e5607a6-1426054208.jpg'),
-(19, 'IMG_1176.JPG', '4e5607a6-1426054300.jpg', 'uploads/visitor/4e5607a6-1426054300.jpg'),
-(20, 'golden-retriever-0007.jpg', '495f072e-1426055548.jpg', 'uploads/visitor/495f072e-1426055548.jpg'),
-(21, 'Samsung.png', '495f072e-1426055643.jpg', 'uploads/company_logo/495f072e-1426055643.jpg'),
-(22, 'card54be07ed-1426055717.png', 'card54be07ed-1426055717.png', 'uploads/card_generated/card54be07ed-1426055717.png'),
-(23, 'card54be07ed-1426055717.png', 'card54be07ed-1426055717.png', 'uploads/card_generated/card54be07ed-1426055717.png'),
-(24, 'yahoo.jpg', '26e0052e-1426055847.jpg', 'uploads/company_logo/26e0052e-1426055847.jpg'),
-(25, 'card5db80855-1426056044.png', 'card5db80855-1426056044.png', 'uploads/card_generated/card5db80855-1426056044.png'),
-(26, 'card5db80855-1426056045.png', 'card5db80855-1426056045.png', 'uploads/card_generated/card5db80855-1426056045.png'),
-(27, 'yahoo.jpg', '4e5607a6-1426068484.jpg', 'uploads/visitor/4e5607a6-1426068484.jpg'),
-(28, 'yahoo.jpg', '4e5607a6-1426068499.jpg', 'uploads/visitor/4e5607a6-1426068499.jpg');
+(3, '228581_4162904777_6339_n.jpg', '4e5607a6-1426104762.jpg', 'uploads/visitor/4e5607a6-1426104762.jpg'),
+(4, 'Logo_Email 180px.jpg', '4e5607a6-1426104930.jpg', 'uploads/company_logo/4e5607a6-1426104930.jpg'),
+(5, 'P1000231.jpg', 'c7260c48-1426105270.jpg', 'uploads/visitor/c7260c48-1426105270.jpg'),
+(6, 'Logo Sydney Airport.jpg', '4e5607a6-1426111282.jpg', 'uploads/company_logo/4e5607a6-1426111282.jpg'),
+(7, 'index.png', '4e5607a6-1426112518.jpg', 'uploads/company_logo/4e5607a6-1426112518.jpg'),
+(8, 'index.png', '4e5607a6-1426112636.jpg', 'uploads/company_logo/4e5607a6-1426112636.jpg'),
+(9, 'P1000231.jpg', '634e086f-1426115657.jpg', 'uploads/visitor/634e086f-1426115657.jpg'),
+(10, 'Logo_Email 180px.jpg', '634e086f-1426115706.jpg', 'uploads/company_logo/634e086f-1426115706.jpg'),
+(11, 'cardc7260c48-1426115883.png', 'cardc7260c48-1426115883.png', 'uploads/card_generated/cardc7260c48-1426115883.png'),
+(12, 'Screenshot 2015-03-05 10.02.22.png', '4cda076e-1426116792.jpg', 'uploads/visitor/4cda076e-1426116792.jpg'),
+(13, 'ids-logo-lock-1.png', '3c90068a-1426117084.jpg', 'uploads/visitor/3c90068a-1426117084.jpg'),
+(14, 'card88d80a16-1426117257.png', 'card88d80a16-1426117257.png', 'uploads/card_generated/card88d80a16-1426117257.png'),
+(15, 'card3f6c06b3-1426119242.png', 'card3f6c06b3-1426119242.png', 'uploads/card_generated/card3f6c06b3-1426119242.png'),
+(16, 'card88d80a16-1426125073.png', 'card88d80a16-1426125073.png', 'uploads/card_generated/card88d80a16-1426125073.png'),
+(17, 'card88d80a16-1426125413.png', 'card88d80a16-1426125413.png', 'uploads/card_generated/card88d80a16-1426125413.png'),
+(18, 'card88d80a16-1426125418.png', 'card88d80a16-1426125418.png', 'uploads/card_generated/card88d80a16-1426125418.png'),
+(19, 'card88d80a16-1426125567.png', 'card88d80a16-1426125567.png', 'uploads/card_generated/card88d80a16-1426125567.png'),
+(20, 'card88d80a16-1426125568.png', 'card88d80a16-1426125568.png', 'uploads/card_generated/card88d80a16-1426125568.png'),
+(21, 'card88d80a16-1426125590.png', 'card88d80a16-1426125590.png', 'uploads/card_generated/card88d80a16-1426125590.png'),
+(22, 'card88d80a16-1426125591.png', 'card88d80a16-1426125591.png', 'uploads/card_generated/card88d80a16-1426125591.png'),
+(23, 'card88d80a16-1426125620.png', 'card88d80a16-1426125620.png', 'uploads/card_generated/card88d80a16-1426125620.png'),
+(24, 'card88d80a16-1426125620.png', 'card88d80a16-1426125620.png', 'uploads/card_generated/card88d80a16-1426125620.png'),
+(25, 'card88d80a16-1426125653.png', 'card88d80a16-1426125653.png', 'uploads/card_generated/card88d80a16-1426125653.png'),
+(26, 'card88d80a16-1426125653.png', 'card88d80a16-1426125653.png', 'uploads/card_generated/card88d80a16-1426125653.png'),
+(27, 'card88d80a16-1426125673.png', 'card88d80a16-1426125673.png', 'uploads/card_generated/card88d80a16-1426125673.png'),
+(28, 'card88d80a16-1426125675.png', 'card88d80a16-1426125675.png', 'uploads/card_generated/card88d80a16-1426125675.png'),
+(29, 'card88d80a16-1426125735.png', 'card88d80a16-1426125735.png', 'uploads/card_generated/card88d80a16-1426125735.png'),
+(30, 'card88d80a16-1426125790.png', 'card88d80a16-1426125790.png', 'uploads/card_generated/card88d80a16-1426125790.png'),
+(31, 'card88d80a16-1426125812.png', 'card88d80a16-1426125812.png', 'uploads/card_generated/card88d80a16-1426125812.png'),
+(32, 'card88d80a16-1426125849.png', 'card88d80a16-1426125849.png', 'uploads/card_generated/card88d80a16-1426125849.png'),
+(33, 'card88d80a16-1426125849.png', 'card88d80a16-1426125849.png', 'uploads/card_generated/card88d80a16-1426125849.png'),
+(34, 'card88d80a16-1426125905.png', 'card88d80a16-1426125905.png', 'uploads/card_generated/card88d80a16-1426125905.png'),
+(35, 'card88d80a16-1426125951.png', 'card88d80a16-1426125951.png', 'uploads/card_generated/card88d80a16-1426125951.png'),
+(36, 'card88d80a16-1426125960.png', 'card88d80a16-1426125960.png', 'uploads/card_generated/card88d80a16-1426125960.png'),
+(37, 'card88d80a16-1426125990.png', 'card88d80a16-1426125990.png', 'uploads/card_generated/card88d80a16-1426125990.png'),
+(38, 'card88d80a16-1426126024.png', 'card88d80a16-1426126024.png', 'uploads/card_generated/card88d80a16-1426126024.png'),
+(39, 'card88d80a16-1426126211.png', 'card88d80a16-1426126211.png', 'uploads/card_generated/card88d80a16-1426126211.png'),
+(40, 'card88d80a16-1426126212.png', 'card88d80a16-1426126212.png', 'uploads/card_generated/card88d80a16-1426126212.png'),
+(41, 'card88d80a16-1426126262.png', 'card88d80a16-1426126262.png', 'uploads/card_generated/card88d80a16-1426126262.png'),
+(42, 'card88d80a16-1426126297.png', 'card88d80a16-1426126297.png', 'uploads/card_generated/card88d80a16-1426126297.png'),
+(43, 'card88d80a16-1426126346.png', 'card88d80a16-1426126346.png', 'uploads/card_generated/card88d80a16-1426126346.png'),
+(44, 'card88d80a16-1426126353.png', 'card88d80a16-1426126353.png', 'uploads/card_generated/card88d80a16-1426126353.png'),
+(45, 'card88d80a16-1426126551.png', 'card88d80a16-1426126551.png', 'uploads/card_generated/card88d80a16-1426126551.png'),
+(46, 'card88d80a16-1426126575.png', 'card88d80a16-1426126575.png', 'uploads/card_generated/card88d80a16-1426126575.png'),
+(47, 'card88d80a16-1426126616.png', 'card88d80a16-1426126616.png', 'uploads/card_generated/card88d80a16-1426126616.png'),
+(48, 'card88d80a16-1426126653.png', 'card88d80a16-1426126653.png', 'uploads/card_generated/card88d80a16-1426126653.png'),
+(49, 'card88d80a16-1426126655.png', 'card88d80a16-1426126655.png', 'uploads/card_generated/card88d80a16-1426126655.png'),
+(50, 'card88d80a16-1426126725.png', 'card88d80a16-1426126725.png', 'uploads/card_generated/card88d80a16-1426126725.png'),
+(51, 'card88d80a16-1426126727.png', 'card88d80a16-1426126727.png', 'uploads/card_generated/card88d80a16-1426126727.png'),
+(52, 'card88d80a16-1426126737.png', 'card88d80a16-1426126737.png', 'uploads/card_generated/card88d80a16-1426126737.png'),
+(53, 'card88d80a16-1426126801.png', 'card88d80a16-1426126801.png', 'uploads/card_generated/card88d80a16-1426126801.png'),
+(54, 'card88d80a16-1426126836.png', 'card88d80a16-1426126836.png', 'uploads/card_generated/card88d80a16-1426126836.png'),
+(55, 'card88d80a16-1426126857.png', 'card88d80a16-1426126857.png', 'uploads/card_generated/card88d80a16-1426126857.png'),
+(56, 'card88d80a16-1426126880.png', 'card88d80a16-1426126880.png', 'uploads/card_generated/card88d80a16-1426126880.png'),
+(57, 'card88d80a16-1426126918.png', 'card88d80a16-1426126918.png', 'uploads/card_generated/card88d80a16-1426126918.png'),
+(58, 'card88d80a16-1426126919.png', 'card88d80a16-1426126919.png', 'uploads/card_generated/card88d80a16-1426126919.png'),
+(59, 'card88d80a16-1426126951.png', 'card88d80a16-1426126951.png', 'uploads/card_generated/card88d80a16-1426126951.png'),
+(60, 'card88d80a16-1426126952.png', 'card88d80a16-1426126952.png', 'uploads/card_generated/card88d80a16-1426126952.png'),
+(61, 'card88d80a16-1426126966.png', 'card88d80a16-1426126966.png', 'uploads/card_generated/card88d80a16-1426126966.png'),
+(62, 'card88d80a16-1426126967.png', 'card88d80a16-1426126967.png', 'uploads/card_generated/card88d80a16-1426126967.png'),
+(63, 'card88d80a16-1426127026.png', 'card88d80a16-1426127026.png', 'uploads/card_generated/card88d80a16-1426127026.png'),
+(64, 'card88d80a16-1426127026.png', 'card88d80a16-1426127026.png', 'uploads/card_generated/card88d80a16-1426127026.png'),
+(65, 'card88d80a16-1426127040.png', 'card88d80a16-1426127040.png', 'uploads/card_generated/card88d80a16-1426127040.png'),
+(66, 'card88d80a16-1426127303.png', 'card88d80a16-1426127303.png', 'uploads/card_generated/card88d80a16-1426127303.png'),
+(67, 'card88d80a16-1426127325.png', 'card88d80a16-1426127325.png', 'uploads/card_generated/card88d80a16-1426127325.png'),
+(68, 'card88d80a16-1426127380.png', 'card88d80a16-1426127380.png', 'uploads/card_generated/card88d80a16-1426127380.png'),
+(69, 'card88d80a16-1426127381.png', 'card88d80a16-1426127381.png', 'uploads/card_generated/card88d80a16-1426127381.png'),
+(70, 'card88d80a16-1426127439.png', 'card88d80a16-1426127439.png', 'uploads/card_generated/card88d80a16-1426127439.png'),
+(71, 'card88d80a16-1426127466.png', 'card88d80a16-1426127466.png', 'uploads/card_generated/card88d80a16-1426127466.png'),
+(72, 'card88d80a16-1426127478.png', 'card88d80a16-1426127478.png', 'uploads/card_generated/card88d80a16-1426127478.png'),
+(73, 'card88d80a16-1426127491.png', 'card88d80a16-1426127491.png', 'uploads/card_generated/card88d80a16-1426127491.png'),
+(74, 'card88d80a16-1426127492.png', 'card88d80a16-1426127492.png', 'uploads/card_generated/card88d80a16-1426127492.png'),
+(75, 'card88d80a16-1426127502.png', 'card88d80a16-1426127502.png', 'uploads/card_generated/card88d80a16-1426127502.png'),
+(76, 'card88d80a16-1426127523.png', 'card88d80a16-1426127523.png', 'uploads/card_generated/card88d80a16-1426127523.png'),
+(77, 'card88d80a16-1426127602.png', 'card88d80a16-1426127602.png', 'uploads/card_generated/card88d80a16-1426127602.png'),
+(78, 'card88d80a16-1426127619.png', 'card88d80a16-1426127619.png', 'uploads/card_generated/card88d80a16-1426127619.png'),
+(79, 'card88d80a16-1426127619.png', 'card88d80a16-1426127619.png', 'uploads/card_generated/card88d80a16-1426127619.png'),
+(80, 'card88d80a16-1426127767.png', 'card88d80a16-1426127767.png', 'uploads/card_generated/card88d80a16-1426127767.png'),
+(81, 'card88d80a16-1426127767.png', 'card88d80a16-1426127767.png', 'uploads/card_generated/card88d80a16-1426127767.png'),
+(82, 'card88d80a16-1426127777.png', 'card88d80a16-1426127777.png', 'uploads/card_generated/card88d80a16-1426127777.png'),
+(83, 'card88d80a16-1426127833.png', 'card88d80a16-1426127833.png', 'uploads/card_generated/card88d80a16-1426127833.png'),
+(84, 'card88d80a16-1426127834.png', 'card88d80a16-1426127834.png', 'uploads/card_generated/card88d80a16-1426127834.png'),
+(85, 'card88d80a16-1426127851.png', 'card88d80a16-1426127851.png', 'uploads/card_generated/card88d80a16-1426127851.png'),
+(86, 'card88d80a16-1426128022.png', 'card88d80a16-1426128022.png', 'uploads/card_generated/card88d80a16-1426128022.png'),
+(87, 'card88d80a16-1426128023.png', 'card88d80a16-1426128023.png', 'uploads/card_generated/card88d80a16-1426128023.png'),
+(88, 'card88d80a16-1426128074.png', 'card88d80a16-1426128074.png', 'uploads/card_generated/card88d80a16-1426128074.png'),
+(89, 'card88d80a16-1426128075.png', 'card88d80a16-1426128075.png', 'uploads/card_generated/card88d80a16-1426128075.png'),
+(90, 'card88d80a16-1426128101.png', 'card88d80a16-1426128101.png', 'uploads/card_generated/card88d80a16-1426128101.png'),
+(91, 'card88d80a16-1426128131.png', 'card88d80a16-1426128131.png', 'uploads/card_generated/card88d80a16-1426128131.png'),
+(92, 'card88d80a16-1426128132.png', 'card88d80a16-1426128132.png', 'uploads/card_generated/card88d80a16-1426128132.png'),
+(93, 'card88d80a16-1426128165.png', 'card88d80a16-1426128165.png', 'uploads/card_generated/card88d80a16-1426128165.png'),
+(94, 'card88d80a16-1426128166.png', 'card88d80a16-1426128166.png', 'uploads/card_generated/card88d80a16-1426128166.png'),
+(95, 'card88d80a16-1426128187.png', 'card88d80a16-1426128187.png', 'uploads/card_generated/card88d80a16-1426128187.png'),
+(96, 'card88d80a16-1426128383.png', 'card88d80a16-1426128383.png', 'uploads/card_generated/card88d80a16-1426128383.png'),
+(97, 'card88d80a16-1426128410.png', 'card88d80a16-1426128410.png', 'uploads/card_generated/card88d80a16-1426128410.png'),
+(98, 'card88d80a16-1426128411.png', 'card88d80a16-1426128411.png', 'uploads/card_generated/card88d80a16-1426128411.png'),
+(99, 'card88d80a16-1426128569.png', 'card88d80a16-1426128569.png', 'uploads/card_generated/card88d80a16-1426128569.png'),
+(100, 'card88d80a16-1426128650.png', 'card88d80a16-1426128650.png', 'uploads/card_generated/card88d80a16-1426128650.png'),
+(101, 'card88d80a16-1426128688.png', 'card88d80a16-1426128688.png', 'uploads/card_generated/card88d80a16-1426128688.png'),
+(102, 'ensignlogo.jpg', '4e5607a6-1426128747.jpg', 'uploads/company_logo/4e5607a6-1426128747.jpg'),
+(103, 'card88d80a16-1426128762.png', 'card88d80a16-1426128762.png', 'uploads/card_generated/card88d80a16-1426128762.png'),
+(104, 'card88d80a16-1426128763.png', 'card88d80a16-1426128763.png', 'uploads/card_generated/card88d80a16-1426128763.png'),
+(105, 'card88d80a16-1426128910.png', 'card88d80a16-1426128910.png', 'uploads/card_generated/card88d80a16-1426128910.png'),
+(106, 'card88d80a16-1426128913.png', 'card88d80a16-1426128913.png', 'uploads/card_generated/card88d80a16-1426128913.png'),
+(107, 'card88d80a16-1426128920.png', 'card88d80a16-1426128920.png', 'uploads/card_generated/card88d80a16-1426128920.png'),
+(108, 'card88d80a16-1426128965.png', 'card88d80a16-1426128965.png', 'uploads/card_generated/card88d80a16-1426128965.png'),
+(109, 'card88d80a16-1426128966.png', 'card88d80a16-1426128966.png', 'uploads/card_generated/card88d80a16-1426128966.png'),
+(110, 'card88d80a16-1426129110.png', 'card88d80a16-1426129110.png', 'uploads/card_generated/card88d80a16-1426129110.png'),
+(111, 'card88d80a16-1426129111.png', 'card88d80a16-1426129111.png', 'uploads/card_generated/card88d80a16-1426129111.png'),
+(112, 'card3f6c06b3-1426129123.png', 'card3f6c06b3-1426129123.png', 'uploads/card_generated/card3f6c06b3-1426129123.png'),
+(113, 'card3f6c06b3-1426129124.png', 'card3f6c06b3-1426129124.png', 'uploads/card_generated/card3f6c06b3-1426129124.png'),
+(114, 'cardc7260c48-1426129137.png', 'cardc7260c48-1426129137.png', 'uploads/card_generated/cardc7260c48-1426129137.png'),
+(115, 'cardc7260c48-1426129138.png', 'cardc7260c48-1426129138.png', 'uploads/card_generated/cardc7260c48-1426129138.png'),
+(116, 'card88d80a16-1426130546.png', 'card88d80a16-1426130546.png', 'uploads/card_generated/card88d80a16-1426130546.png'),
+(117, 'card88d80a16-1426130547.png', 'card88d80a16-1426130547.png', 'uploads/card_generated/card88d80a16-1426130547.png'),
+(118, 'bond.jpg', 'visitor0c460311-1426130980.png', 'uploads/visitor/visitor0c460311-1426130980.png'),
+(119, 'ids-logo-lock-1.png', 'e2a70d0d-1426131056.jpg', 'uploads/company_logo/e2a70d0d-1426131056.jpg'),
+(120, 'card9de20ad8-1426131303.png', 'card9de20ad8-1426131303.png', 'uploads/card_generated/card9de20ad8-1426131303.png'),
+(121, 'aVXI8JcbaPS-0Z4JKuLYNnCoqBnMSIutruIc7wKrbsE.png', 'e2a70d0d-1426131412.jpg', 'uploads/company_logo/e2a70d0d-1426131412.jpg'),
+(122, 'card9de20ad8-1426131509.png', 'card9de20ad8-1426131509.png', 'uploads/card_generated/card9de20ad8-1426131509.png'),
+(123, 'card88d80a16-1426131547.png', 'card88d80a16-1426131547.png', 'uploads/card_generated/card88d80a16-1426131547.png'),
+(124, 'card88d80a16-1426131579.png', 'card88d80a16-1426131579.png', 'uploads/card_generated/card88d80a16-1426131579.png'),
+(125, 'card88d80a16-1426131581.png', 'card88d80a16-1426131581.png', 'uploads/card_generated/card88d80a16-1426131581.png'),
+(126, 'card88d80a16-1426131602.png', 'card88d80a16-1426131602.png', 'uploads/card_generated/card88d80a16-1426131602.png'),
+(127, 'card88d80a16-1426131603.png', 'card88d80a16-1426131603.png', 'uploads/card_generated/card88d80a16-1426131603.png'),
+(128, 'card88d80a16-1426131741.png', 'card88d80a16-1426131741.png', 'uploads/card_generated/card88d80a16-1426131741.png'),
+(129, 'card88d80a16-1426131773.png', 'card88d80a16-1426131773.png', 'uploads/card_generated/card88d80a16-1426131773.png'),
+(130, 'card88d80a16-1426131776.png', 'card88d80a16-1426131776.png', 'uploads/card_generated/card88d80a16-1426131776.png'),
+(131, 'card88d80a16-1426132074.png', 'card88d80a16-1426132074.png', 'uploads/card_generated/card88d80a16-1426132074.png'),
+(132, 'card88d80a16-1426132077.png', 'card88d80a16-1426132077.png', 'uploads/card_generated/card88d80a16-1426132077.png'),
+(133, 'card88d80a16-1426132249.png', 'card88d80a16-1426132249.png', 'uploads/card_generated/card88d80a16-1426132249.png'),
+(134, 'card88d80a16-1426132250.png', 'card88d80a16-1426132250.png', 'uploads/card_generated/card88d80a16-1426132250.png'),
+(135, 'card88d80a16-1426132296.png', 'card88d80a16-1426132296.png', 'uploads/card_generated/card88d80a16-1426132296.png'),
+(136, 'card88d80a16-1426132297.png', 'card88d80a16-1426132297.png', 'uploads/card_generated/card88d80a16-1426132297.png'),
+(137, 'card88d80a16-1426132337.png', 'card88d80a16-1426132337.png', 'uploads/card_generated/card88d80a16-1426132337.png'),
+(138, 'card88d80a16-1426132337.png', 'card88d80a16-1426132337.png', 'uploads/card_generated/card88d80a16-1426132337.png'),
+(139, 'card88d80a16-1426132392.png', 'card88d80a16-1426132392.png', 'uploads/card_generated/card88d80a16-1426132392.png'),
+(140, 'card88d80a16-1426132393.png', 'card88d80a16-1426132393.png', 'uploads/card_generated/card88d80a16-1426132393.png'),
+(141, 'card9de20ad8-1426132484.png', 'card9de20ad8-1426132484.png', 'uploads/card_generated/card9de20ad8-1426132484.png'),
+(142, 'logo_lrge.png', '4e5607a6-1426133091.jpg', 'uploads/company_logo/4e5607a6-1426133091.jpg'),
+(143, 'card9de20ad8-1426133520.png', 'card9de20ad8-1426133520.png', 'uploads/card_generated/card9de20ad8-1426133520.png'),
+(144, 'card9de20ad8-1426133522.png', 'card9de20ad8-1426133522.png', 'uploads/card_generated/card9de20ad8-1426133522.png'),
+(145, 'Keely.jpg', '5bdf084b-1426133868.jpg', 'uploads/visitor/5bdf084b-1426133868.jpg'),
+(146, 'card595c07f5-1426133958.png', 'card595c07f5-1426133958.png', 'uploads/card_generated/card595c07f5-1426133958.png'),
+(147, 'Sheila.jpg', '4d6f07a4-1426134449.jpg', 'uploads/visitor/4d6f07a4-1426134449.jpg'),
+(148, 'bond.jpg', 'visitor0c460311-1426134584.png', 'uploads/visitor/visitor0c460311-1426134584.png'),
+(149, 'card9de20ad8-1426134729.png', 'card9de20ad8-1426134729.png', 'uploads/card_generated/card9de20ad8-1426134729.png'),
+(150, 'bond.jpg', '83a909d1-1426136001.jpg', 'uploads/visitor/83a909d1-1426136001.jpg'),
+(151, 'NSWlogoMob.png', '4e5607a6-1426139164.jpg', 'uploads/company_logo/4e5607a6-1426139164.jpg'),
+(152, 'card9de20ad8-1426139660.png', 'card9de20ad8-1426139660.png', 'uploads/card_generated/card9de20ad8-1426139660.png'),
+(153, 'card9de20ad8-1426139663.png', 'card9de20ad8-1426139663.png', 'uploads/card_generated/card9de20ad8-1426139663.png'),
+(154, 'card88d80a16-1426139698.png', 'card88d80a16-1426139698.png', 'uploads/card_generated/card88d80a16-1426139698.png'),
+(155, 'card88d80a16-1426139704.png', 'card88d80a16-1426139704.png', 'uploads/card_generated/card88d80a16-1426139704.png'),
+(156, 'logo_lrge.png', '5bdf084b-1426140207.jpg', 'uploads/company_logo/5bdf084b-1426140207.jpg'),
+(157, 'card9de20ad8-1426140245.png', 'card9de20ad8-1426140245.png', 'uploads/card_generated/card9de20ad8-1426140245.png'),
+(158, 'card3f6c06b3-1426141394.png', 'card3f6c06b3-1426141394.png', 'uploads/card_generated/card3f6c06b3-1426141394.png'),
+(159, 'lifehouselogo.png', '4e5607a6-1426152070.jpg', 'uploads/company_logo/4e5607a6-1426152070.jpg'),
+(160, 'lifehouselogo.png', '4e5607a6-1426152102.jpg', 'uploads/company_logo/4e5607a6-1426152102.jpg'),
+(161, 'Keely.jpg', '5bdf084b-1426165071.jpg', 'uploads/visitor/5bdf084b-1426165071.jpg'),
+(162, 'card9de20ad8-1426176295.png', 'card9de20ad8-1426176295.png', 'uploads/card_generated/card9de20ad8-1426176295.png'),
+(163, 'card9de20ad8-1426176297.png', 'card9de20ad8-1426176297.png', 'uploads/card_generated/card9de20ad8-1426176297.png'),
+(164, 'lifehouselogo.png', '4e5607a6-1426210740.jpg', 'uploads/company_logo/4e5607a6-1426210740.jpg'),
+(165, 'index.jpg', '4e5607a6-1426211249.jpg', 'uploads/company_logo/4e5607a6-1426211249.jpg'),
+(166, 'Rene.jpg', '57f807e3-1426319879.jpg', 'uploads/visitor/57f807e3-1426319879.jpg'),
+(167, 'Perth Airport Logo (Portrait - Colour with Black Font).jpg', '4e5607a6-1426321343.jpg', 'uploads/company_logo/4e5607a6-1426321343.jpg'),
+(168, 'Perth Airport Logo (Landscape - Colour with Black Font)(1).jpg', '7ef409bf-1426322945.jpg', 'uploads/company_logo/7ef409bf-1426322945.jpg'),
+(169, 'card74850939-1426326930.png', 'card74850939-1426326930.png', 'uploads/card_generated/card74850939-1426326930.png'),
+(170, 'aerplane.jpg', '7ef409bf-1426326940.jpg', 'uploads/visitor/7ef409bf-1426326940.jpg'),
+(171, 'images.jpg', '7ef409bf-1426333973.jpg', 'uploads/visitor/7ef409bf-1426333973.jpg'),
+(172, 'images.jpg', '7ef409bf-1426402872.jpg', 'uploads/visitor/7ef409bf-1426402872.jpg'),
+(173, 'images.jpg', '7ef409bf-1426411414.jpg', 'uploads/visitor/7ef409bf-1426411414.jpg'),
+(174, 'images.jpg', '3ae3066e-1426479162.jpg', 'uploads/visitor/3ae3066e-1426479162.jpg'),
+(175, 'PA_Logo Vertical White.png', '7ef409bf-1426564991.jpg', 'uploads/visitor/7ef409bf-1426564991.jpg'),
+(176, 'card2928056d-1426567353.png', 'card2928056d-1426567353.png', 'uploads/card_generated/card2928056d-1426567353.png');
 
 -- --------------------------------------------------------
 
@@ -376,47 +663,39 @@ CREATE TABLE IF NOT EXISTS `user` (
   KEY `created_by` (`created_by`),
   KEY `tenant` (`tenant`),
   KEY `tenant_agent` (`tenant_agent`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=50 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=42 ;
 
 --
 -- Dumping data for table `user`
 --
 
 INSERT INTO `user` (`id`, `first_name`, `last_name`, `email`, `contact_number`, `date_of_birth`, `company`, `department`, `position`, `staff_id`, `notes`, `password`, `role`, `user_type`, `user_status`, `created_by`, `is_deleted`, `tenant`, `tenant_agent`) VALUES
-(16, 'IDS', 'Test', 'superadmin@test.com', '9998798', '1993-01-01', 1, '', '', '', '', '$2a$13$wv.A6T0CCHXczYv/tlJP6./6qUvDdOy.g8KX.FqSos1Mf6MA7Xl66', 5, 1, 1, 16, 0, 16, 16),
-(17, 'Admin1', 'Stableapps', 'admin1@sai.com', '123456', '2015-03-08', 3, '', '', '', '', '$2a$13$jFC48AFC3sXaFn/T3NQOAe/up8las.9ajcdyTS9vo2uvuN5eC9eom', 1, 1, 1, 16, 1, 17, NULL),
-(18, 'Admin1', 'NAIA', 'admin1@naia.com', '1242124', '2015-03-08', 4, '', '', '', '', '$2a$13$H5cj5CcApJC3G/Pyqmg04eB3UFPExid77NRvlqKb8rKRJsjw.Jn7G', 1, 1, 1, 16, 0, 18, NULL),
-(19, 'Admin1', 'Kalibo', 'admin1@klo.com', '12255', '2015-03-08', 6, '', '', '', '', '$2a$13$sQspbOdfFByrzbY2zMzD3O4By.VWX32vHpFvOXXdPXeBinhXKb.fe', 1, 1, 1, 16, 0, 19, NULL),
-(20, 'Admin2', 'NAIA', 'admin2@naia.com', '163326', '2015-03-08', 4, '', '', '', '', '$2a$13$tk7KVuVRK8cidYzIONdqUO/s49.3657bqt6WSrivprg0LhXOk/gnO', 1, 1, 1, 16, 0, 18, NULL),
-(21, 'AgentAdmin1', 'PAL', 'agentadmin1@pal.com', '573437', '2015-03-08', 7, '', '', '', '', '$2a$13$N0FiVaOjzPWkIGdheeBUiOw.YRCZRKISDOTlakhDUV2ZbwrpB81iq', 6, 1, 1, 16, 0, 18, 21),
-(22, 'AgentAdmin2', 'PAL', 'agentadmin2@pal.com', '5848888', '2015-03-08', 7, '', '', '', '', '$2a$13$7kVUYK6zF1S6bgYzOgLrweHZg47l3Kr8Vds7ITIdS07jeZM6cDBHy', 6, 1, 1, 16, 0, 18, 21),
-(23, 'AgentAdmin1', 'Cebu', 'agentadmin1@ceb.com', '435255', '2015-03-08', 8, '', '', '', '', '$2a$13$LJZZ.CNekPOdaVIzPYdU1eCuO4ib5NSWYGv3Y1nMviIWNkHHA/xQa', 6, 1, 1, 16, 0, 18, 23),
-(24, 'AgentAdmin1', 'JAL', 'agentadmin1@jal.com', '5325151', '2015-03-08', 9, '', '', '', '', '$2a$13$JM1C8KnAUCtOL47LF.EObOsTMi5BVXbNdobjpq40gE.i1lzsujpH6', 6, 1, 1, 16, 0, 19, 24),
-(25, 'Operator1', 'NAIA', 'operator1@naia.com', '983552', '2015-03-08', 4, '', '', '', '', '$2a$13$bb9HS3XMLtRQTLG9axa0M.3QPMdXPujqHExKMhxOwLl2fyxZixtQO', 8, 1, 1, 16, 0, 18, NULL),
-(26, 'Admin1', 'Clark', 'admin@clark.com', '1842424', '2015-03-08', 5, '', '', '', '', '$2a$13$H40xkISGPuziQhp5779vxuZaZ653Xymk7/JPPYhRh5OCnsocAbKWO', 1, 1, 1, 16, 0, 26, NULL),
-(27, 'AgentAdmin1', 'KAL', 'agentadmin1@kal.com', '7855225', '2015-03-08', 10, '', '', '', '', '$2a$13$P7o0/mLjpPG.RYZ2GHR30.udIbdsf7o0KGPRoDTzzhQUD7iio8sFm', 6, 1, 1, 16, 0, 26, 27),
-(28, 'Operator1', 'Clark', 'operator1@clark.com', '34636463', '2015-03-08', 5, '', '', '', '', '$2a$13$FntnAMfxGMsLVSpHNsAnlO5VikwxANCcHcQXp4BVcnSCC1gXEHlou', 8, 1, 1, 16, 0, 26, NULL),
-(29, 'AgentOperator1', 'KAL', 'agentoperator1@kal.com', '43636336', '2015-03-08', 10, '', '', '', '', '$2a$13$qP0sboL1wRKm4GKrjJupTOsE7cyYzBfrtSQBeAd5Z/lomo2kJzpdW', 7, 1, 1, 16, 0, 26, 27),
-(30, 'Staff1', 'NAIA', 'staff1@naia.com', '352526', '2015-03-08', 4, '', '', '', '', '$2a$13$fmjftvPGWRACIIhgIBy/6uSsXquqBYFivFDpa9GIppMZf7k/T6S5C', 9, 1, 1, 16, 0, 18, NULL),
-(31, 'Staff1', 'Clark', 'staff1@clark.com', '3637777', '2015-03-08', 5, '', '', '', '', '$2a$13$uMdper8qobO5xBe3feXo4.B8YpN63Fr7WtF12xTGPa.0ljMBFXJqe', 9, 1, 1, 16, 0, 26, NULL),
-(32, 'Staff1', 'Kalibo', 'staff1@kalibo.com', '3465436', '2015-03-08', 6, '', '', '', '', '$2a$13$IpXlHNsH.xmwA1EwDOWDh.L1Fh/HUlHuMhqV0XEG/HwLnu9up3FWO', 9, 1, 1, 16, 0, 19, NULL),
-(33, 'Staff2', 'Kalibo', 'staff2@kalibo.com', '5647677', '2015-03-08', 6, '', '', '', '', '$2a$13$1utHlCq.ssB3HLgy/e3lFuzZ66rGRy8xsYsSlH/p9H7ZJ8E1TgWwS', 9, 1, 1, 16, 0, 19, NULL),
-(34, 'Staff1', 'PAL', 'staff1@pal.com', '1234522', '2015-03-08', 7, '', '', '', '', '$2a$13$jY1VfCHSAqaW2pH9q4rN0ufHuNdM2DkH3XfBoHisb9C2AQXVex9ti', 9, 1, 1, 16, 0, 18, 21),
-(35, 'Staff1', 'Cebu', 'staff1@ceb.com', '857396', '2015-03-08', 8, '', '', '', '', '$2a$13$YJeSXtJjXJIjyRLzZHc6huIy3tYLOH8i6jpoyVtNnnm69qKzWSej.', 9, 1, 1, 16, 1, 18, 23),
-(36, 'Staff1', 'KAL', 'staff1@kal.com', '86863', '2015-03-08', 10, '', '', '', '', '$2a$13$EzsFEVswn83Z9AZSJomt4enYQyRIHMMTmxHoCc4gMaQoS6ZGB5x/G', 9, 1, 1, 16, 0, 26, 27),
-(37, 'Staff1', 'JAL', 'staff1@jal.com', '77482842', '2015-03-08', 9, '', '', '', '', '$2a$13$ccmJg7BLv10SkE9Yh5HmzOBvhjY1bflBm20jKE3gy6wF3roLOb0Hm', 9, 1, 1, 16, 0, 19, 24),
-(38, 'AgentOperator1', 'PAL', 'agentoperator1@pal.com', '644774', '2015-03-08', 7, '', '', '', '', '$2a$13$kBJgcViRX4unpLt5DQtcc.uZ.Wg2MiupcbGZSY8d5sM.K2rv.tdb.', 7, 1, 1, 16, 0, 18, 21),
-(39, 'AgentOperator1', 'Cebu', 'agentoperator1@ceb.com', '74843', '2015-03-08', 8, '', '', '', '', '$2a$13$dgBuU2dit9Xc/4wl3dWqouu3YZXeEgLPNB7.EEOHf0EgWbMt6hqKm', 7, 1, 1, 16, 0, 18, 23),
-(40, 'AgentOperator1', 'JAL', 'agentoperator1@jal.com', '47777', '2015-03-08', 9, '', '', '', '', '$2a$13$qOn8RJNenp/d.JDhwa0gFu1zWIiAaf6Fhn9LpchiNkzdKAa1Li8cS', 7, 1, 1, 16, 0, 19, 24),
-(41, 'Operator2', 'NAIA', 'operator2@naia.com', '879022', '2015-03-08', 4, '', '', '', '', '$2a$13$dvPsldIEPwtpRO.oYfavHeNYmCvlK7aUB0SFufKc2zQCnluP0fcJu', 8, 1, 1, 16, 0, 18, NULL),
-(42, 'Operator1', 'Kalibo', 'operator1@kalibo.com', '999399', '2015-03-08', 6, '', '', '', '', '$2a$13$zEgur4weiI.CdEmApcIQb.9.o3z5NLcmteANPL1DDcLj7/bkSg7pi', 8, 1, 1, 16, 0, 19, NULL),
-(43, 'AgentAdmin2', 'KAL', 'agentadmin2@kal.com', '89472', '2015-03-08', 10, '', '', '', '', '$2a$13$LWby6GPoFsUEJUomv5OGzORacPQ7fchxXtwrKIgu6MgYHFdZv/4Qi', 6, 1, 1, 26, 0, 26, 27),
-(44, 'Admin2', 'Clark', 'admin2@clark.com', '56282', '2015-03-08', 5, '', '', '', '', '$2a$13$Pg0xMKS8EPujFPZOtN/k8OurVzxyjHDuA//0AKXKhppdckHT76as2', 1, 1, 1, 26, 0, 26, NULL),
-(45, 'AgentAdmin2', 'Cebu', 'agentadmin2@ceb.com', '947722', '2015-03-08', 8, '', '', '', '', '$2a$13$La2kfepBwmaan/c8j5NRFub41zrVyHbjgmXiQM.8r3hzRNOVcKlSK', 6, 1, 1, 23, 0, 18, 23),
-(46, 'Admin2', 'Kalibo', 'admin2@kalibo.com', '966262', '2015-03-08', 6, '', '', '', '', '$2a$13$PKXLBAzDP/PkcVdU/mwxHuJsTFaXWOZ8pmUQJpWlxZVRPcdPKCvFa', 1, 1, 1, 16, 0, 19, NULL),
-(47, 'AgentAdmin1', 'PAL-Kalibo', 'agentadmin1klo@pal.com', '64647', '2015-03-08', 11, '', '', '', '', '$2a$13$YaOGFU1lmwKqwHmNzffim.fDTszSM9dtzXi9Eq2rZbfsPt8wUd0rm', 6, 1, 1, 16, 0, 19, 47),
-(48, 'AgentAdmin2', 'PAL-Kalibo', 'agentadmin2klo@pal.com', '63666', '2015-03-09', 11, '', '', '', '', '$2a$13$B6hsEeOveV/IBdCHcinatuaEDr7/wMGiZB3hwZZeoZbT6MYvL3gYK', 6, 1, 1, 16, 0, 19, 28),
-(49, 'Staff1ReAdded', 'Cebu', 'staff1@ceb.com', '626262', '2015-03-11', 8, '', '', '', '', '$2a$13$p2DsSj2m4TYC937e0JwcHO2xcG5CXg96zTp7miUXArl54TgKdeJiG', 9, 1, 1, 16, 0, 18, 23);
+(16, 'SuperAdmin', 'IDS', 'superadmin@test.com', '9998798', '1993-01-01', 1, '', '', '', '', '$2a$13$wv.A6T0CCHXczYv/tlJP6./6qUvDdOy.g8KX.FqSos1Mf6MA7Xl66', 5, 1, 1, 16, 0, 16, 16),
+(17, 'Julie', 'Stewart', 'julie.stewart@idsecurity.com.au', '0423121888', '2015-03-12', 3, '', '', '', '', '$2a$13$f2eB1EBP3ClpfqdfiAZwA.dottUM9ye/fUVjDSNabvqE.ZW.bw9I6', 1, 1, 1, 16, 1, 17, NULL),
+(18, 'Julie', 'Stewart', 'julie.stewart@idsecurity.com.au', '0423121888', '2015-03-12', 3, '', '', '', '', '$2a$13$ehahXyNH5r0I/oju2vD2ueJF9bX34RHYSb4yiWceDGDw9XW8Tv4Za', 1, 1, 1, 16, 0, 17, NULL),
+(19, 'Kyile', 'White', 'kyile.white@syd.com.au', '02 9667 6025 ', '2015-03-12', 4, '', '', '', '', '$2a$13$y8Rwl6LuKv5R.dyI/UKsLucD.ZW7woGaB3kdPttCKKHsXCuj2Hcem', 1, 1, 1, 16, 0, 19, NULL),
+(20, 'Airport', 'operator', 'operator@syd.com.au', '02 9667 6025 ', '2015-03-12', 4, '', '', '', '', '$2a$13$ZcM1BOI3avLynbfruHwHzuLpIVUvdfuHsT6EPVe0NlPangpii.xta', 8, 1, 1, 16, 0, 19, NULL),
+(21, 'Qantas', 'Airways', 'Qantas@syd.com.au', '02 9667 6025 ', '2015-03-12', 6, '', '', '', '', '$2a$13$O/jQznLV6zlbboSIIS83jOFzUAOMSQ3q6.oihbjnFZ0oI/Xhvz9Oi', 6, 1, 1, 16, 0, 19, 21),
+(22, 'James', 'Bond', 'james.bond@syd.com.au', '02 666666666', '1970-01-01', 4, '', NULL, '', NULL, '$2a$13$r.a1MLXdBhXQOqc5MevTb.O4uG1AtudZ1P2t/JQbu8z12CiIWwlDC', 9, 1, 1, 20, 0, 19, NULL),
+(23, 'James', 'Pacemaker', 'james@qantas.com.au', '1212121212', '1970-01-01', 4, '', NULL, '', NULL, '$2a$13$Comz47o/ghtpU9QGoTieduIfWOu.Bo.0SOmE73PEK7iip4UvB/lvW', 9, 1, 1, 21, 0, 19, 21),
+(24, 'Josh', 'Thornborrow', 'josh.thornborrow@ensignlab.com.au', '+61 3 9550 1500', '2015-03-12', 8, '', '', '', '', '$2a$13$sgmpWO7hdaNlsxM4vQ6zR.bRkdQdcmQCGUGPWDhrmneF6f9LBHsAu', 1, 1, 1, 16, 0, 24, NULL),
+(25, 'Reception', 'Superstar', 'reception@ensignlab.com.au', '03 95501584', '2015-03-12', 8, '', '', '', '', '$2a$13$e1XWeQgUN.VnUxqjUrPTHe2GXBA9G.Uo.GQWE.bKrAhRUWbBj7Wye', 1, 1, 1, 24, 0, 24, NULL),
+(26, 'Rudy', 'Choong', 'Rudy.choong@kerry.com', '+65 6715 3452', '2015-03-12', 10, '', '', '', '', '$2a$13$MbVviWD.OsGwE4dnoe.TI.pM3s2/3liW8RVfVfWo3tZoKmEM.9jfS', 1, 1, 1, 16, 0, 26, NULL),
+(27, 'Reception', 'Kerry', 'reception@kerry.com', '5555555', '2015-03-12', 10, '', '', '', '', '$2a$13$EvvvRot9zu2pf8/mzUIVmeOMWRld.Vf.u9EE4XUfoZkHGZOWpY/sG', 8, 1, 1, 26, 1, 26, NULL),
+(28, 'Reception', 'Kerry', 'reception@kerry.com', '5555555', '2015-03-12', 10, '', '', '', '', '$2a$13$fS3T52P.qpKye13HHSqucOAy6f.0.JLz5nFGGSnDEdJbF3Y1YYe3O', 8, 1, 1, 26, 1, 26, NULL),
+(29, 'Ensign', 'Operator', 'operator@ensignlab.com.au', '03 95501584', '2015-03-12', 8, '', '', '', '', '$2a$13$/E52BrOIDjF57H0KxF4AY.JsADOok8IUai2InnRzk3bbtvYZ61orW', 8, 1, 1, 24, 0, 24, NULL),
+(30, 'Staff', 'member', 'staff@ensign.com', '0423121888', '1970-01-01', 8, '', NULL, '', NULL, '$2a$13$9nsp7gK79JBfa4F7GkHW8uhBvryfWOjynXCGgWefuEwacE3zeqzzG', 9, 1, 1, 24, 0, 24, NULL),
+(31, 'Kerry', '2', 'operator2@kerry.com', '12121212', '2015-03-12', 10, '', '', '', '', '$2a$13$CA1cFTEjqyaGrQuQ3B07O.f7eiUy6ttVaHJSJLbeQgoV3506RiJty', 8, 1, 1, 26, 0, 26, NULL),
+(32, 'Chris', 'O''Brien', 'Admin@lh.org.au', '0285140880', '2015-03-13', 13, '', '', '', '', '$2a$13$W8vN9j5CJtqBPes6HMNy1.JUSAkGwf/akCEPYtmrA/K4KdzEDCSsC', 1, 1, 1, 16, 0, 32, NULL),
+(33, 'Admin', 'Sydney Uni', 'admin@syd.edu.au', '042323232323', '2015-03-13', 14, '', '', '', '', '$2a$13$9nn7iMP0NWGK5kjcv2nGFuY4JbjzHKsugWp9WAEJ0q.uijGnq/Utq', 1, 1, 1, 16, 0, 33, NULL),
+(34, 'Issuing', 'Administrator', 'Admin@perthairport.com.au', '12121212', '2015-03-14', 15, '', '', '', '', '$2a$13$QZnyOPJn7j.uw2yBmYcsy.N3CFf/1g7OwP5sV0tFzaNzhGn/3klna', 1, 1, 1, 16, 0, 34, NULL),
+(35, 'Julie', 'Stewart', 'julie.stewart@rose.com.au', '1212121212', '1970-01-01', 15, '', NULL, '', NULL, '$2a$13$x5IP3IO21KvPys0vH.FwqekkLPgZsIdB80i353P5bGmJU3e3ssapi', 9, 1, 1, 34, 0, 34, NULL),
+(36, 'Julie', 'Stewart', 'julie.agentadministrator@ids.com.au', '1212121212', '1970-01-01', 15, '', NULL, '', NULL, '$2a$13$DSrdgGz3qcz2X1kg/1smgu3sp3Yr5ls42IkgPAuTqXO8EQ9UiGNge', 9, 1, 1, 34, 0, 34, NULL),
+(37, 'Adrian', 'P', 'Adrian.P@perth.com.au', '1212121212', '1970-01-01', 15, '', NULL, '', NULL, '$2a$13$ukbwJ1oFC7.5ggVJla4R/.cFgt22t4q4FL8s3sqQ1Xg2Eko6ErwXa', 9, 1, 1, 34, 0, 34, NULL),
+(38, 'John', 'Rose', 'john.horner@ids.com.au', '1212121212', '1970-01-01', 15, '', NULL, '', NULL, '$2a$13$m9RUhOs9QrjazGqfX8Bgh.du5.pWBZ7ZVIYLLZSyd/PnU/OCjQXm6', 9, 1, 1, 34, 0, 34, NULL),
+(39, 'John', 'Rose', 'john.horner@ids.com.au', '1212121212', '1970-01-01', 15, '', NULL, '', NULL, '$2a$13$hEPO/EeYUbKdlsZBw7vMxup46zjlTwVAQ/ez6xqptZYn7ZphZuN3e', 9, 1, 1, 34, 0, 34, NULL),
+(40, 'Agent', 'Administrator', 'agent@papl.com.au', '12121212', '2015-03-16', 16, '', '', '', '', '$2a$13$bZVU0dQ3eSf7b4Z4bHHkkeqsTQ/.qUoLBgaL8mIz2/KvcfFAsS/uC', 6, 1, 1, 34, 0, 34, 40),
+(41, 'operator', 'qantas', 'james@qantas.com.au', '1212122', '2015-03-16', 16, '', '', '', '', '$2a$13$uFkBuMOTNmyilp81Z01eFeY9YA1XIRy1uMZZTCTYcD3IV4XfvNqL.', 7, 1, 1, 40, 0, 34, 40);
 
 -- --------------------------------------------------------
 
@@ -478,22 +757,20 @@ CREATE TABLE IF NOT EXISTS `user_workstation` (
   KEY `workstation` (`workstation`),
   KEY `created_by` (`created_by`),
   KEY `user` (`user`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=25 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
 
 --
 -- Dumping data for table `user_workstation`
 --
 
 INSERT INTO `user_workstation` (`id`, `user`, `workstation`, `created_by`, `is_primary`) VALUES
-(5, 28, 15, 16, 1),
-(6, 29, 16, 16, 1),
-(8, 39, 11, 16, 1),
-(10, 41, 18, 16, 1),
-(11, 42, 14, 16, 1),
-(12, 25, 18, 16, 0),
-(19, 40, 12, 16, 0),
-(23, 38, 8, 21, 0),
-(24, 38, 13, 21, 1);
+(4, 20, 13, 16, 1),
+(5, 27, 17, 26, 1),
+(6, 28, 17, 26, 1),
+(8, 29, 15, 24, 1),
+(9, 29, 16, 24, 0),
+(10, 31, 17, 26, 1),
+(11, 41, 22, 40, 1);
 
 -- --------------------------------------------------------
 
@@ -550,20 +827,30 @@ CREATE TABLE IF NOT EXISTS `visit` (
   KEY `card_type` (`card_type`),
   KEY `visit_status` (`visit_status`),
   KEY `workstation` (`workstation`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=19 ;
 
 --
 -- Dumping data for table `visit`
 --
 
 INSERT INTO `visit` (`id`, `visitor`, `card_type`, `card`, `visitor_type`, `reason`, `visitor_status`, `host`, `patient`, `created_by`, `date_in`, `time_in`, `date_out`, `time_out`, `date_check_in`, `time_check_in`, `date_check_out`, `time_check_out`, `visit_status`, `workstation`, `tenant`, `tenant_agent`, `is_deleted`) VALUES
-(1, 2, 1, 2, 2, 1, 1, 30, NULL, 16, NULL, NULL, '10-03-2015', '00:00:00', '09-03-2015', '17:09:48', '11-03-2015', '14:06:08', 3, 18, 18, NULL, 0),
-(2, 3, 1, NULL, 2, 1, 1, 35, NULL, 23, NULL, NULL, '12-03-2015', '00:00:00', '11-03-2015', '13:36:34', NULL, '00:00:00', 1, 11, 18, 23, 0),
-(3, 2, 2, 2, 2, 1, 1, 30, NULL, 16, '13-03-2015', '14:01:00', '', '00:00:00', '', '00:00:00', '', '00:00:00', 2, 18, 18, NULL, 0),
-(4, 4, 2, NULL, 2, 1, 1, 36, NULL, 16, NULL, NULL, NULL, '00:00:00', NULL, NULL, NULL, '00:00:00', 5, 16, 26, 27, 0),
-(5, 2, 1, NULL, 2, 1, 1, 30, NULL, 30, NULL, NULL, '12-03-2015', '00:00:00', '11-03-2015', '15:21:07', NULL, '00:00:00', 1, 18, 18, NULL, 0),
-(6, 5, 1, 4, 2, 1, 1, 37, NULL, 24, NULL, NULL, '12-03-2015', '00:00:00', '11-03-2015', '14:35:08', NULL, '00:00:00', 1, 12, 19, 24, 0),
-(7, 6, 1, 6, 2, 1, 1, 42, NULL, 19, NULL, NULL, '12-03-2015', '00:00:00', '11-03-2015', '14:40:36', NULL, '00:00:00', 1, 14, 19, NULL, 0);
+(1, 2, 2, 102, 2, 1, 1, 19, NULL, 19, NULL, NULL, '24-03-2015', '00:00:00', '12-03-2015', '10:17:44', NULL, '00:00:00', 1, 13, 19, NULL, 0),
+(2, 3, 2, 135, 2, 1, 1, 22, NULL, 19, '13-03-2015', '10:01:00', '27-03-2015', '00:00:00', '12-03-2015', '11:13:54', NULL, '00:00:00', 1, 13, 19, NULL, 0),
+(3, 4, 2, 133, 2, 1, 1, 23, NULL, 21, NULL, NULL, '31-03-2015', '00:00:00', '12-03-2015', '10:40:06', NULL, '00:00:00', 1, 14, 19, 21, 0),
+(4, 5, 1, 127, 2, 1, 1, 24, NULL, 29, NULL, NULL, '13-03-2015', '00:00:00', '12-03-2015', '14:34:59', '12-03-2015', '16:33:57', 3, 15, 24, NULL, 0),
+(5, 6, 2, 128, 2, 1, 1, 26, NULL, 16, NULL, NULL, '14-03-2015', '00:00:00', '12-03-2015', '15:19:15', '13-03-2015', '09:15:12', 3, 17, 26, NULL, 0),
+(6, 7, 2, NULL, 2, 1, 1, 26, NULL, 26, '20-03-2015', '15:58:00', '31-03-2015', '00:00:00', NULL, NULL, NULL, '00:00:00', 2, 17, 26, NULL, 0),
+(7, 8, 2, 137, 2, 1, 1, 26, NULL, 26, NULL, NULL, '14-03-2015', '00:00:00', '12-03-2015', '15:32:04', NULL, '00:00:00', 1, 17, 26, NULL, 0),
+(8, 11, 2, NULL, 2, 1, 1, 22, NULL, 22, '15-03-2015', '19:31:00', '16-03-2015', '00:00:00', NULL, NULL, NULL, '00:00:00', 2, 13, 19, NULL, 0),
+(10, 12, 1, 138, 2, 2, 1, 36, NULL, 34, NULL, NULL, '15-03-2015', '00:00:00', '14-03-2015', '20:54:39', '16-03-2015', '15:20:37', 3, 20, 34, NULL, 0),
+(11, 13, 2, NULL, 2, 1, 1, 37, NULL, 34, NULL, NULL, '16-03-2015', '00:00:00', '14-03-2015', '22:53:53', '14-03-2015', '22:54:52', 3, 19, 34, NULL, 0),
+(12, 13, 2, NULL, 2, 1, 1, 37, NULL, 34, NULL, NULL, '16-03-2015', '00:00:00', '14-03-2015', '23:54:29', '15-03-2015', '20:14:38', 3, 19, 34, NULL, 0),
+(13, 14, 1, NULL, 2, 1, 1, 37, NULL, 34, NULL, NULL, '16-03-2015', '00:00:00', '15-03-2015', '17:54:45', '15-03-2015', '17:58:23', 3, 19, 34, NULL, 0),
+(14, 15, 2, NULL, 2, 1, 1, 37, NULL, 34, NULL, NULL, NULL, '00:00:00', NULL, NULL, NULL, '00:00:00', 5, 20, 34, NULL, 0),
+(15, 13, 2, NULL, 2, 1, 1, 37, NULL, 34, NULL, NULL, NULL, '00:00:00', NULL, NULL, NULL, '00:00:00', 5, 20, 34, NULL, 0),
+(16, 18, 2, NULL, 2, 1, 1, 38, NULL, 34, NULL, NULL, NULL, '00:00:00', NULL, NULL, NULL, '00:00:00', 5, 19, 34, NULL, 0),
+(17, 16, 2, NULL, 2, 1, 1, 39, NULL, 34, NULL, NULL, NULL, '00:00:00', NULL, NULL, NULL, '00:00:00', 5, 19, 34, NULL, 0),
+(18, 19, 2, 139, 2, 2, 1, 38, NULL, 34, NULL, NULL, '19-03-2015', '00:00:00', '17-03-2015', '15:05:23', NULL, '00:00:00', 1, 19, 34, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -603,18 +890,31 @@ CREATE TABLE IF NOT EXISTS `visitor` (
   KEY `visitor_status` (`visitor_status`),
   KEY `photo` (`photo`),
   KEY `vehicle` (`vehicle`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=20 ;
 
 --
 -- Dumping data for table `visitor`
 --
 
 INSERT INTO `visitor` (`id`, `first_name`, `last_name`, `email`, `contact_number`, `date_of_birth`, `company`, `department`, `position`, `staff_id`, `notes`, `password`, `role`, `visitor_type`, `visitor_status`, `vehicle`, `photo`, `created_by`, `is_deleted`, `tenant`, `tenant_agent`) VALUES
-(2, 'Visitor1-NAIA', 'VCO', 'visitor1@vco.com', '83742', '1970-01-01', 12, NULL, '', NULL, NULL, '$2a$13$/tFx6ghFOfMzszQI2xOMHuPe1KNB3TNFf2YrSMlcGt67iuwNRA1FC', 10, NULL, 3, NULL, 15, 18, 0, 18, NULL),
-(3, 'Visitor2-NAIACeb', 'Google', 'visitor2@goo.com', '64777', '1970-01-01', 8, NULL, '', NULL, NULL, '$2a$13$4tC9yBO6ZaS01oZOWk/QE.nnKXmiDcdWOISbTgSdhYm0jDq3Ew4Jy', 10, NULL, 3, NULL, NULL, 16, 0, 18, 23),
-(4, 'Visitor3-CRK-KAL', 'Yahoo', 'vistor3@yahoo.com', '32542566', '1970-01-01', 14, NULL, '', NULL, NULL, '$2a$13$uBZTbnQd.me3xErG2S1dnuH3w4qxED/P.s0llQwoq8hjB0yAD5W/.', 10, NULL, 1, NULL, 19, 16, 0, 26, 27),
-(5, 'Visitor1-KLO-JAL', 'Samsung', 'visitor1@samsung.com', '182834', '1970-01-01', 15, NULL, '', NULL, NULL, '$2a$13$0Z9YoA3i0RjWI8aDZ7ndXO6D22oP22SJR2pNTwD8DKUqlEcLE.5jO', 10, NULL, 3, NULL, 20, 24, 0, 19, 24),
-(6, 'Visitor1-KLO', 'Yahoo', 'visitor1klo@yahoo.com', '35525', '1970-01-01', 16, NULL, '', NULL, NULL, '$2a$13$GsG7ngquk5QNi16TDukoRuCy3wiQTh.ZC6yyJg6j6vh5h33FDFEI6', 10, NULL, 1, NULL, NULL, 19, 0, 19, NULL);
+(2, 'Julie', 'Stewart', 'julie.stewart@idsecurity.com.au', '0423121888', '1970-01-01', 7, NULL, 'Director', NULL, NULL, '$2a$13$yQVdycWNkBUZJARmRh81lOhFLj.7ddtPUVkPJuvgNY/lumCwOvqTa', 10, NULL, 1, NULL, 9, 19, 0, 19, NULL),
+(3, 'Jack', 'Rose', 'Jack@qantas.com.au', '0408888888', '1970-01-01', 6, NULL, '', NULL, NULL, '$2a$13$w69y7AIdqZdMtYiHSsEU6.lXCi9vsww/WdEcQT8j6CxG/uHtDCKei', 10, NULL, 1, NULL, 12, 20, 0, 19, NULL),
+(4, 'Key', 'Hole', 'key.hole@idsecurity.com.au', '0444000444', '1970-01-01', 4, NULL, '', NULL, NULL, '$2a$13$M0.TYewE/yyfJthpPD.l5u8rFUdfoue2wsfh8E0F2zgJqgk2yasee', 10, NULL, 1, NULL, 13, 21, 0, 19, 21),
+(5, 'James', 'Bond', 'james.bond@idsecurity.com.au', '0408888888', '1970-01-01', 9, NULL, '', NULL, NULL, '$2a$13$5mIJX2JJzecB7AH8hWLTkeVz2ZkeYbUmt5UhzhepCil38O4KdoTNy', 10, NULL, 1, NULL, 118, 24, 0, 24, NULL),
+(6, 'Kelly', 'Kerry', 'kelly.kerr@ids.com.au', '0444000444', '1970-01-01', 11, NULL, '', NULL, NULL, '$2a$13$TKFRdhX/U.L3tE7WLrSRH.btsuB1n2nsEOyp1UY9.zBbiBx.b3rVC', 10, NULL, 1, NULL, 145, 26, 0, 26, NULL),
+(7, 'Jane', 'Pattison', 'jane@ids.com.au', '0408888888', '1970-01-01', 11, NULL, '', NULL, NULL, '$2a$13$xq.WnxTZqw9kQ4R93j/0xOsFoYarIz.KXQqISxPZePOdn6CQo/i/.', 10, NULL, 1, NULL, 147, 27, 0, 26, NULL),
+(8, 'James', 'Bond', 'james.bond@idsecurity.com.au', '0408888888', '1970-01-01', 11, NULL, '', NULL, NULL, '$2a$13$YKiT8TP3HDp1vHRxqUauV.RhbBebavWWyfZ6S95E3a8kFHnYV48fe', 10, NULL, 1, NULL, 148, 27, 0, 26, NULL),
+(9, 'Renee', 'Z', 'renee.z@gmail.com', '12121212', '1970-01-01', 4, NULL, '', NULL, NULL, '$2a$13$KZNk9qidOCvXGalrNNKrV.VjgooYgExh.XAM8JCu1B9dYWGA.oLwq', 10, NULL, 3, NULL, NULL, 16, 0, 19, 21),
+(10, 'Renee', 'Z', 'renee.z@gmail.com', '12121212', '1970-01-01', 4, NULL, '', NULL, NULL, '$2a$13$BtSKYmqe21dmgHATN3499.NgWEJi8nPDQ9ZjO6TAR/D23NRPZjASi', 10, NULL, 3, NULL, NULL, 16, 0, 19, 21),
+(11, 'Julie', 'Stewart', 'julie.stewart2@idsecurity.com.au', '12121212', '1970-01-01', 6, NULL, '', NULL, NULL, '$2a$13$18R3ShOH3N1vlybXDkHNqOjEOaJUbjtUG475vThgsnzWdTKNHf0Vq', 10, NULL, 1, NULL, 166, 22, 0, 19, NULL),
+(12, 'Jo', 'Pearson', 'jo.pearson@qantas.com.au', '21212121212', '1970-01-01', 16, NULL, '', NULL, NULL, '$2a$13$09H8dbHH91Nap2XMvxmpfOvfadDSWs3iYLUv24F.kv6ss/UMIv5RW', 10, NULL, 1, NULL, 170, 34, 0, 34, NULL),
+(13, 'Geoff', 'Stewart', 'geoff.Stewart@idsecurity.com.au', '121212122', '1970-01-01', 16, NULL, '', NULL, NULL, '$2a$13$QBjJqJcq1MmWCwsgQ9G3DOFn62H0BSLbhRJww5GPjZtAoebuHVcB2', 10, NULL, 1, NULL, 171, 34, 0, 34, NULL),
+(14, 'Same', 'Day', 'Virgin@vurgin.com', '0408888888', '1970-01-01', 17, NULL, '', NULL, NULL, '$2a$13$mm5./V.ZNYBAvmV70xScN.z2qY4nWgLflTlGn0SWdvYhKdxmYAcn.', 10, NULL, 1, NULL, NULL, 34, 0, 34, NULL),
+(15, '24 ', 'Bleed', 'demo@demo.com', '121212122', '1970-01-01', 16, NULL, '', NULL, NULL, '$2a$13$H2voUAhtqRs6TFfFlzMzu.Uw6ThWEz1E3qKsHiW.pXSz.1Q71vnq6', 10, NULL, 1, NULL, 172, 34, 0, 34, NULL),
+(16, 'Preregister', 'VIC ', 'pre@VIC.com.au', '121212122', '1970-01-01', 16, NULL, '', NULL, NULL, '$2a$13$TdHhSMvUFo1N7jS4A/B8MO0bp6E8DkNGjUZXuTkOpZi7XKCdmmUIu', 10, NULL, 1, NULL, 173, 34, 0, 34, NULL),
+(17, 'Preregister', 'VIC ', 'pre@VIC.com.au', '121212122', '1970-01-01', 16, NULL, '', NULL, NULL, '$2a$13$vUCXIRG42fDVi7eD5MY4Xu3tsg/oajzmfbFNtc6ITa9iI3oLVM1Pm', 10, NULL, 1, NULL, 173, 34, 0, 34, NULL),
+(18, 'Preregister', 'VIC ', 'pre@VIC.com.au', '121212122', '1970-01-01', 16, NULL, '', NULL, NULL, '$2a$13$mqtw/uSgi3lVkaFBeMEArOheYhO1jzA9S4dAeJbgj6CQskiaPGrqm', 10, NULL, 1, NULL, 173, 34, 0, 34, NULL),
+(19, 'Papl Logo', 'Logo', 'papal@logo.com', '0408888888', '1970-01-01', 16, NULL, '', NULL, NULL, '$2a$13$T6KBqSpKglaaHDPe81LGUOjj0HyR650OSO2tUeAusg6FqVIt0Zft2', 10, NULL, 1, NULL, 175, 34, 0, 34, NULL);
 
 -- --------------------------------------------------------
 
@@ -679,14 +979,15 @@ CREATE TABLE IF NOT EXISTS `visit_reason` (
   KEY `created_by` (`created_by`),
   KEY `tenant` (`tenant`),
   KEY `tenant_agent` (`tenant_agent`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
 -- Dumping data for table `visit_reason`
 --
 
 INSERT INTO `visit_reason` (`id`, `reason`, `created_by`, `tenant`, `tenant_agent`, `is_deleted`) VALUES
-(1, 'Inspection', 18, NULL, NULL, 0);
+(1, 'Testing Software', 16, NULL, NULL, 0),
+(2, 'ASICs', 34, NULL, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -742,19 +1043,19 @@ CREATE TABLE IF NOT EXISTS `workstation` (
 --
 
 INSERT INTO `workstation` (`id`, `name`, `location`, `contact_name`, `contact_number`, `contact_email_address`, `number_of_operators`, `assign_kiosk`, `password`, `created_by`, `tenant`, `tenant_agent`, `is_deleted`) VALUES
-(8, 'PAL Workstation 1', 'PAL Gate 1 NAIA', 'Test Person', 123456, 'workstation1@test.com', NULL, 0, NULL, 16, 18, 21, 0),
-(11, 'CEB Workstation 1', 'CEB Gate 1 - NAIA', 'Operator CEB', 532525, '', NULL, 0, '$2a$13$PXAOJIFAFrN/B8is93dNyuzxkDH6PiUzeRidP/x8zWo', 16, 18, 23, 0),
-(12, 'JAL Workstation 1', 'JAL Gate 1 - KLO', '', NULL, '', NULL, 0, '$2a$13$MgiKPFOeuT0XMuvKU4x4LOZOLM1tBGmQkVwgdaNqSJz', 16, 19, 24, 0),
-(13, 'PAL Workstation 2', 'PAL Gate 2 - NAIA', '', NULL, '', NULL, 0, '$2a$13$bAZtcdegsDzhvh897J7rduvLBSF5JyWk8MvS.g8NrmN', 16, 18, 21, 0),
-(14, 'Kalibo Workstation 1', 'Gate 1 - KLO', '', NULL, '', NULL, 0, '$2a$13$w7a8Pd2cLj8cumGlcNQaSO497PgMjSkQVdVC79LkPxk', 16, 19, NULL, 0),
-(15, 'Clark Workstation 1', 'Clark Gate 1', '', NULL, '', NULL, 0, '$2a$13$.zpTL8VyFRR72NH15HKoz.d9G3faeKE2foPz2LKsJZ8', 16, 26, NULL, 0),
-(16, 'KAL Workstation 1', 'KAL Gate 1 - Clark', '', NULL, '', NULL, 0, '$2a$13$tkVvcIsW0RWGY2oxC...7uS7ST2foOovqy/sLTTjYiw', 16, 26, 27, 0),
-(17, 'NAIA Workstation 1', 'Gate 1 - NAIA', '', NULL, '', NULL, 0, '$2a$13$ifVC1mza1zOhc/ADp.xAVemQVRAtUT2ccQbfmuoybN/', 16, 18, NULL, 1),
-(18, 'NAIA Workstation 1', 'NAIA Gate 1', '', NULL, '', NULL, 0, '$2a$13$g7N3NULZdsafowcfBYRT5eXNgYd/K/uta6AZgLN17QG', 16, 18, NULL, 0),
-(19, 'NAIA Workstation 2', 'NAIA Gate 2', '', NULL, '', NULL, 0, '$2a$13$RrcIV7mOEbnahHIA3MAru./qOwnRfbXPeZzZ0XGOfRo', 16, 18, NULL, 1),
-(20, 'PAL Workstation 3', 'PAL Gate 3 - NAIA', '', NULL, '', NULL, 0, '$2a$13$yjuaZGuUpZDTR4iYSo1dy.V0W0jraFMLLz23VX6lIbD', 21, 18, 21, 1),
-(21, 'PAL Workstation 4', 'PAL Gate 4 - NAIA', '', NULL, '', NULL, 0, '$2a$13$Ryak/IaaPvbLt3jfAwFsQO17pcfztwCc4Zpvh98m0.B', 18, 18, 21, 1),
-(22, 'Clark Workstation 3', 'Clark Gate 3', '', NULL, '', NULL, 0, '$2a$13$0XkB15QecAhNGeAqDiVwzOu0sx2onrgm51eAj8m055h', 16, 26, NULL, 1);
+(8, 'Workstation1', 'PAL', 'Test Person', 123456, 'workstation1@test.com', NULL, 0, NULL, 16, 17, 18, 1),
+(11, 'Reception', '', '', NULL, '', NULL, 0, '$2a$13$1D3gqduvl2aUtKi4zaKlwebblX5JZHnBFXuDEXjQRFl', 17, 17, NULL, 0),
+(12, 'Workstation 1', '', '', NULL, '', NULL, 0, '$2a$13$HzVKa.ZrOe274mZ3/FawGOk7JG/QloWXWJFYosOS9ne', 17, 17, NULL, 0),
+(13, 'Sydney Airport Office Reception', '', '', NULL, '', NULL, 0, '$2a$13$V2zYs76vA5hxmpR2q41AGO7Rr2Zq0WYugLArh5uLCBj', 16, 19, NULL, 0),
+(14, 'Qantas Reception', '', '', NULL, '', NULL, 0, '$2a$13$7sfYh2RLVNzM65HzrTpYwewWiubUP/DPvEp4TdZIPlc', 19, 19, 21, 0),
+(15, 'Ensign Reception', '', '', NULL, '', NULL, 0, '$2a$13$N3xGVUibfMuujva7jlshq.zDYiU/YmYMlxI0q7Lz20s', 16, 24, NULL, 0),
+(16, 'Ensign Engineering', '', '', NULL, '', NULL, 0, '$2a$13$Ws7gXv1Iu5FI5Pp4P2LeseGVRJhtRjfpDso6QHpLhK8', 16, 24, NULL, 0),
+(17, 'Reception', '', '', NULL, '', NULL, 0, '$2a$13$N/NW6dBaOpBmWS9bax2gPub.Jd4gC1vLZbYGbi5apIa', 26, 26, NULL, 0),
+(18, 'Lifehouse Reception', '', '', NULL, '', NULL, 0, '$2a$13$YxxxQ5L0ink1PYnIGO8SL.ixNg9QoK23SqwfLRWUM2a', 16, 32, NULL, 0),
+(19, 'Gate 4', '', '', NULL, '', NULL, 0, '$2a$13$Br0PVATNnZFX23MUAeyCUejTiJQ6JPPh2DfPlY4JQ9c', 16, 34, NULL, 0),
+(20, 'ASIC Office', '', '', NULL, '', NULL, 0, '$2a$13$zf9YCnQm7fyJ4OXYHA6NB.VrMAnBJgAzDqORFcIr/Xk', 16, 34, NULL, 0),
+(21, 'Gate 1', '', '', NULL, '', NULL, 0, '$2a$13$n.FP3YDC38zgIihQN.9ahuWG3h0EfNNJdCoBD5j8bRa', 16, 34, NULL, 0),
+(22, 'Qantas Reception', '', '', NULL, '', NULL, 0, '$2a$13$Dcw2aWKlHJ90qwUNUZ/sAe7bMECMqv/kL9M21UDBjly', 40, 34, 40, 0);
 
 --
 -- Constraints for dumped tables
@@ -764,12 +1065,12 @@ INSERT INTO `workstation` (`id`, `name`, `location`, `contact_name`, `contact_nu
 -- Constraints for table `card_generated`
 --
 ALTER TABLE `card_generated`
-  ADD CONSTRAINT `card_generated_ibfk_5` FOREIGN KEY (`visitor_id`) REFERENCES `visitor` (`id`),
-  ADD CONSTRAINT `card_generated_ibfk_6` FOREIGN KEY (`card_status`) REFERENCES `card_status` (`id`),
   ADD CONSTRAINT `card_generated_ibfk_1` FOREIGN KEY (`card_image_generated_filename`) REFERENCES `photo` (`id`),
   ADD CONSTRAINT `card_generated_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`),
   ADD CONSTRAINT `card_generated_ibfk_3` FOREIGN KEY (`tenant`) REFERENCES `user` (`id`),
-  ADD CONSTRAINT `card_generated_ibfk_4` FOREIGN KEY (`tenant_agent`) REFERENCES `user` (`id`);
+  ADD CONSTRAINT `card_generated_ibfk_4` FOREIGN KEY (`tenant_agent`) REFERENCES `user` (`id`),
+  ADD CONSTRAINT `card_generated_ibfk_5` FOREIGN KEY (`visitor_id`) REFERENCES `visitor` (`id`),
+  ADD CONSTRAINT `card_generated_ibfk_6` FOREIGN KEY (`card_status`) REFERENCES `card_status` (`id`);
 
 --
 -- Constraints for table `card_status`

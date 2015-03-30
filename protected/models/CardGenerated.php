@@ -39,10 +39,10 @@ class CardGenerated extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('card_image_generated_filename, visitor_id, created_by, tenant, tenant_agent', 'length', 'max' => 20),
-            array('company_code,card_count,print_count,card_status,date_printed,date_expiration', 'safe'),
+            array('company_code,card_number,print_count,card_status,date_printed,date_expiration', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id,company_code,card_count,print_count, card_status,date_printed, date_expiration, card_image_generated_filename, visitor_id, created_by, tenant, tenant_agent', 'safe', 'on' => 'search'),
+            array('id,card_number,print_count, card_status,date_printed, date_expiration, card_image_generated_filename, visitor_id, created_by, tenant, tenant_agent', 'safe', 'on' => 'search'),
         );
     }
 
@@ -75,8 +75,7 @@ class CardGenerated extends CActiveRecord {
             'tenant' => 'Tenant',
             'tenant_agent' => 'Tenant Agent',
             'card_status' => 'Card Status',
-            'company_code' => 'Company Code',
-            'card_count' => 'Card Count',
+            'card_number' => 'Card Number',
             'print_count' => 'Print Count',
         );
     }
@@ -107,8 +106,7 @@ class CardGenerated extends CActiveRecord {
         $criteria->compare('tenant', $this->tenant, true);
         $criteria->compare('tenant_agent', $this->tenant_agent, true);
         $criteria->compare('card_status', $this->card_status, true);
-        $criteria->compare('company_code', $this->company_code, true);
-        $criteria->compare('card_count', $this->card_count, true);
+        $criteria->compare('card_number', $this->card_number, true);
         $criteria->compare('print_count', $this->print_count, true);
 
         return new CActiveDataProvider($this, array(
@@ -125,28 +123,13 @@ class CardGenerated extends CActiveRecord {
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }
-
-    public function getCardCode($cardId, $visitId) {
-        $session = new CHttpSession;
-        $status = Visit::model()->findByPk($visitId)->visit_status;
-        if ($cardId != '' && ($status == VisitStatus::ACTIVE || $status == VisitStatus::CLOSED)) {
-            
-            $tenant = User::model()->findByPk(Visit::model()->findByPk($visitId)->tenant);
-            $tenantCompany = Company::model()->findByPk($tenant->company);
-            $card_count = CardGenerated::model()->findByPk($cardId)->card_count;
-
-
-            $inc = 6 - (strlen(($card_count)));
-            $int_code = '';
-            for ($x = 1; $x <= $inc; $x++) {
-
-                $int_code .= "0";
-            }
-
-            return $tenantCompany->code . $int_code . ($card_count);
+    
+    public function getCardCode($cardId){
+        if($cardId != ''){
+            return CardGenerated::model()->findByPk($cardId)->card_number;
         } else {
-            return "";
+            return '-';
         }
+        
     }
-
 }

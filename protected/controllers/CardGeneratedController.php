@@ -56,16 +56,20 @@ class CardGeneratedController extends Controller {
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['CardGenerated'])) {
-            if($_POST['CardGenerated']['tenant_agent'] == '' ){
+            if ($_POST['CardGenerated']['tenant_agent'] == '') {
                 $_POST['CardGenerated']['tenant_agent'] = NULL;
             } else {
                 $_POST['CardGenerated']['tenant_agent'] = $_POST['CardGenerated']['tenant_agent'];
             }
             $model->attributes = $_POST['CardGenerated'];
-           
+
             if ($model->save()) {
                 Visit::model()->updateByPk($visitId, array(
                     'card' => $model->id,
+                ));
+                $tenant = User::model()->findByPk($model->tenant);
+                Company::model()->updateByPk($tenant->company, array(
+                    'card_count' => (Company::model()->findByPk($tenant->company)->card_count)+1,
                 ));
             }
         }
@@ -90,12 +94,7 @@ class CardGeneratedController extends Controller {
         /* get card code */
         $card = CardGenerated::model()->findByPk($model->card);
 
-        $inc = 6 - (strlen(($card->card_count)));
-        $int_code = '';
-        for ($x = 1; $x <= $inc; $x++) {
-
-            $int_code .= "0";
-        }
+ 
         $print_count = CardGenerated::model()->findByPk($model->card)->print_count;
 
         if ($session['count'] == 1) {
@@ -136,7 +135,6 @@ class CardGeneratedController extends Controller {
                 ), false, true);
     }
 
-   
     /**
      * Updates a particular model.
      * If update is successful, the browser will be redirected to the 'view' page.

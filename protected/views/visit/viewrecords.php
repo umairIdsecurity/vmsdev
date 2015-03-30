@@ -41,9 +41,9 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'filter' => VisitorType::model()->returnVisitorTypes(),
         ),
         array(
-            'name' => 'cardcode',
+            'name' => 'cardnumber',
             'header' => 'Card No.',
-            'value' => 'CardGenerated::model()->getCardCode($data->card,$data->id)',
+            'value'=>  'CardGenerated::model()->getCardCode($data->card)',
         ),
         array(
             'name' => 'firstname',
@@ -58,9 +58,6 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' => 'company',
             'value' => 'getCompany($data->visitor)',
-//            'header' => 'Company Name',
-//            'cssClassExpression' => '( getCompany($data->visitor)== "Not Available" ? "errorNotAvailable" : "" ) ',
-//            'type' => 'raw'
         ),
         array(
             'name' => 'contactnumber',

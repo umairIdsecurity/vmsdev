@@ -310,7 +310,7 @@ $session = new CHttpSession;
                         $("#Visit_date_check_in").attr("disabled", true);
                     } else if (visitType == 'new') {
                         $("#dateoutDiv #Visit_date_out").attr("disabled", false);
-                        
+
                         duplicateVisit("activate-a-visit-form");
                     }
                     else {
@@ -378,26 +378,29 @@ $session = new CHttpSession;
     <input type="text" id="CardGenerated_visitor_id" name="CardGenerated[visitor_id]" value="<?php echo $model->visitor; ?>">
     <input type="text" id="CardGenerated_created_by" name="CardGenerated[created_by]" value="<?php echo Yii::app()->user->id; ?>">
     <input type="text" id="CardGenerated_tenant" name="CardGenerated[tenant]" value="<?php echo $model->tenant; ?>">
-    <input type="text" id="CardGenerated_tenant_agent" name="CardGenerated[tenant_agent]" value="<?php echo $model->tenant_agent; 
+    <input type="text" id="CardGenerated_tenant_agent" name="CardGenerated[tenant_agent]" value="<?php echo $model->tenant_agent;
     ?>">
-    <input type="text" id="CardGenerated_company_code" name="CardGenerated[company_code]" value="<?php
-    $tenantCompany = User::model()->findByPk($model['tenant']);
-    echo Company::model()->findByPk($tenantCompany->company)->code;
-    ?>">
-    <input type="text" id="CardGenerated_card_count" name="CardGenerated[card_count]" value="<?php
-    $criteria = new CDbCriteria;
-    $criteria->select = 'MAX(card_count) as card_count';
-    $criteria->condition = 'tenant="'.$model->tenant.'"';
-    $card = CardGenerated::model()->find($criteria);
-
-    if (count($card->card_count) == '') {
-        echo "1";
+    <input type="text" id="CardGenerated_card_number" name="CardGenerated[card_number]" value="<?php
+    $tenant = User::model()->findByPk($model->tenant);
+    if (Company::model()->findByPk($tenant->company)->card_count != '') {
+        $card_count = (Company::model()->findByPk($tenant->company)->card_count)+1;
     } else {
-        echo $card->card_count+1;
+        $card_count = 1;
     }
+
+    if ($tenant->company != '') {
+        $inc = 6 - (strlen(($card_count)));
+        $int_code = '';
+        for ($x = 1; $x <= $inc; $x++) {
+
+            $int_code .= "0";
+        }
+    }
+    echo Company::model()->findByPk($tenant->company)->code . $int_code . ($card_count);
     ?>">
+
     <input type="text" id="CardGenerated_print_count" name="CardGenerated[print_count]" value="">
     <input type="submit" value="Create" name="yt0" id="submitCardForm">
-    <?php $this->endWidget(); ?>
+<?php $this->endWidget(); ?>
 
 </div>

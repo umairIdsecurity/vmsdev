@@ -59,9 +59,9 @@ foreach ($workstationList as $workstation) {
                     'cssClassExpression' => 'changeStatusClass($data->visit_status)',
                 ),
                 array(
-                    'name' => 'card',
+                    'name' => 'cardnumber',
                     'header' => 'Card No.',
-                    'value' => 'CardGenerated::model()->getCardCode($data->card, $data->id)',
+                    'value' => 'CardGenerated::model()->getCardCode($data->card)',
                 ),
                 array(
                     'name' => 'firstname',

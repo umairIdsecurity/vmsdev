@@ -62,14 +62,9 @@
 		<?php echo $form->error($model,'tenant_agent'); ?>
 	</div>
 	<div class="row">
-		<?php echo $form->labelEx($model,'company_code'); ?>
-		<?php echo $form->textField($model,'company_code',array('size'=>20,'maxlength'=>20)); ?>
-		<?php echo $form->error($model,'company_code'); ?>
-	</div>
-	<div class="row">
-		<?php echo $form->labelEx($model,'card_count'); ?>
-		<?php echo $form->textField($model,'card_count',array('size'=>20,'maxlength'=>20)); ?>
-		<?php echo $form->error($model,'card_count'); ?>
+		<?php echo $form->labelEx($model,'card_number'); ?>
+		<?php echo $form->textField($model,'card_number',array('size'=>20,'maxlength'=>20)); ?>
+		<?php echo $form->error($model,'card_number'); ?>
 	</div>
 	<div class="row">
 		<?php echo $form->labelEx($model,'print_count'); ?>

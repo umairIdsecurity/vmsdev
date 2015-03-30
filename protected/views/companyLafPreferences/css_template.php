@@ -163,3 +163,21 @@ ul.yiiPager .selected a {
 #footer {
     border-top: 1px solid <?php echo $companyLafPreferences->nav_hover_color; ?> !important;
 }
+
+.grid-view th a.asc:after {
+    border-bottom: 5px solid <?php echo $companyLafPreferences->nav_bg_color; ?> !important;
+    }
+
+    /*sort arrows*/
+    
+.asc div{
+    border-color: <?php echo $companyLafPreferences->nav_bg_color; ?> transparent !important;
+}
+
+.desc div{
+    border-color: <?php echo $companyLafPreferences->nav_bg_color; ?>  rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) !important;
+}
+
+.sidebarTitle{
+background: none repeat scroll 0 0 <?php echo $companyLafPreferences->sidemenu_bg_color; ?> !important;
+}

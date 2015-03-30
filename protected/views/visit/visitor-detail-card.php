@@ -1,6 +1,7 @@
 
 <?php
 $session = new CHttpSession;
+
 $session['count'] = 1;
 date_default_timezone_set('Asia/Manila');
 $tenant = User::model()->findByPk($visitorModel->tenant);
@@ -109,21 +110,9 @@ $photoForm = $this->beginWidget('CActiveForm', array(
                     }
                     ?>">
                               <?php
-                              if ($model->card != '') {
-                                  $card_count = CardGenerated::model()->findByPk($model->card)->card_count;
-                              } else {
-                                  $card_count = 1;
+                              if($model->card !=''){
+                                  echo CardGenerated::model()->findByPk($model->card)->card_number;
                               }
-
-                              if ($tenant->company != '') {
-                                  $inc = 6 - (strlen(($card_count)));
-                                  $int_code = '';
-                                  for ($x = 1; $x <= $inc; $x++) {
-
-                                      $int_code .= "0";
-                                  }
-                              }
-                              echo Company::model()->findByPk($tenant->company)->code . $int_code . ($card_count);
                               ?>
                     </span>
                 </td>

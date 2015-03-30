@@ -10,6 +10,11 @@ $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'visit-gridDashboard',
     'dataProvider' => $model->search(),
     'filter' => $model,
+    'afterAjaxUpdate' => "
+    function(id, data) {
+        $('th > .asc').append('<div></div>');
+        $('th > .desc').append('<div></div>');
+    }",
     'columns' =>
     array(
         array(
@@ -20,11 +25,10 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'header' => 'Status',
             'cssClassExpression' => 'changeStatusClass($data->visit_status)',
         ),
-        
         array(
-            'name' => 'card',
+            'name' => 'cardnumber',
             'header' => 'Card No.',
-            'value' => 'CardGenerated::model()->getCardCode($data->card, $data->id)',
+            'value'=>  'CardGenerated::model()->getCardCode($data->card)',
         ),
         
         array(
@@ -87,21 +91,12 @@ function getCompany($id) {
 }
 
 function formatTime($time) {
-    if ($time == '') {
+    if ($time == '' || $time == '00:00:00') {
         return "-";
     } else {
         return date('h:i A', strtotime($time));
     }
 }
-
-function getCardCode($cardId) {
-    if($cardId !=''){
-        return CardGenerated::model()->findByPk($cardId)->card_code;
-    } else {
-        return "";
-    }
-}
-
 
 function changeStatusClass($visitStatus){
    // return "red";

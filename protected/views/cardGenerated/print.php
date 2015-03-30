@@ -21,13 +21,8 @@ $visitorName = wordwrap($visitorName, 13, "\n", true);
     $companyName = $company->name;
     $companyLogoId = $company->logo;
     $companyCode = $company->code;
-    $inc = 6 - (strlen(($card->card_count)));
-    $int_code = '';
-    for ($x = 1; $x <= $inc; $x++) {
 
-        $int_code .= "0";
-    }
-    $cardCode = $companyCode . $int_code . ($card->card_count);
+    $cardCode = $card->card_number;
 
 
 if ($companyLogoId == "") {

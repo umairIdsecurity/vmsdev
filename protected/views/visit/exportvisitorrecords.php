@@ -25,13 +25,17 @@ $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'view-export-visitor-records',
     'dataProvider' => $model->search(),
     'filter' => $model,
+    'afterAjaxUpdate' => "
+    function(id, data) {
+        $('th > .asc').append('<div></div>');
+        $('th > .desc').append('<div></div>');
+    }",
     'columns' =>
     array(
         array(
-            'name' => 'card',
+            'name' => 'cardnumber',
             'header' => 'Card No.',
-            'value' => 'CardGenerated::model()->getCardCode($data->card,$data->id)',
-            'filter' => CHtml::textField('Visit[card]', '', array('class' => 'filterCard')),
+            'value'=>  'CardGenerated::model()->getCardCode($data->card)',
         ),
         array(
             'name' => 'firstname',
@@ -97,7 +101,7 @@ function getCompany($id) {
 }
 
 function formatTime($time) {
-    if ($time == '') {
+    if ($time == '' || $time == '00:00:00') {
         return "-";
     } else {
         return date('h:i A', strtotime($time));
@@ -109,14 +113,6 @@ function formatDate($date) {
         return "-";
     } else {
         return Yii::app()->dateFormatter->format("d/MM/y", strtotime($date));
-    }
-}
-
-function getCardCode($cardId) {
-    if ($cardId != '') {
-        return CardGenerated::model()->findByPk($cardId)->card_code;
-    } else {
-        return "";
     }
 }
 

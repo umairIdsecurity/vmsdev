@@ -1,5 +1,4 @@
 <?php
-
 $session = new CHttpSession;
 /* @var $this VisitController */
 /* @var $model Visit */
@@ -18,6 +17,11 @@ $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'visit-gridDashboard',
     'dataProvider' => $model->search($merge),
     'filter' => $model,
+    'afterAjaxUpdate' => "
+    function(id, data) {
+        $('th > .asc').append('<div></div>');
+        $('th > .desc').append('<div></div>');
+    }",
     'columns' =>
     array(
         array(
@@ -31,9 +35,9 @@ $this->widget('zii.widgets.grid.CGridView', array(
         ),
         //'date_in',
         array(
-            'name' => 'card',
+            'name' => 'cardnumber',
             'header' => 'Card No.',
-            'value' => 'CardGenerated::model()->getCardCode($data->card,$data->id)',
+            'value'=>  'CardGenerated::model()->getCardCode($data->card)',
         ),
         array(
             'name' => 'firstname',
@@ -95,35 +99,15 @@ function getCompany($id) {
 }
 
 function formatTime($time) {
-    if ($time == '') {
+    if ($time == '' || $time == '00:00:00') {
         return "-";
     } else {
         return date('h:i A', strtotime($time));
     }
 }
 
-function getCardCode($cardId) {
-    if ($cardId != '') {
-        $tenant = User::model()->findByPk($session['tenant']);
-        $tenantCompany = Company::model()->findByPk($tenant->company);
-        $card_count = CardGenerated::model()->findByPk($cardId)->card_count;
-
-        
-            $inc = 6 - (strlen(($card_count)));
-            $int_code = '';
-            for ($x = 1; $x <= $inc; $x++) {
-
-                $int_code .= "0";
-            }
-        
-        return $tenantCompany->code . $int_code . ($card_count);
-    } else {
-        return "";
-    }
-}
 
 function changeStatusClass($visitStatus) {
-    // return "red";
     switch ($visitStatus) {
         case VisitStatus::ACTIVE:
             return "green";

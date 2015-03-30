@@ -11,12 +11,17 @@ class GeneralPatcher extends CComponent {
 	public static function startPatcher() {
 		echo '  --==  Starting Patcher  ==--  ';
 		// ISSUE 81 Patch ( Reprint card patcher ) 
-		$status = Issue81Patch::Issue81Process();
+		$status = IssuePatch::Issue81Process();
 		$info[0] = 'Issue 81 Patch Status';
 		$info[1] = $status ? 'Successful' : 'Failed';
 		$msg[] = $info;
-
 		
+                // ISSUE 137 Patch ( Card Number ) 
+		$status = IssuePatch::Issue137Process();
+		$info[0] = 'Issue 137 Patch Status';
+		$info[1] = $status ? 'Successful' : 'Failed';
+		$msg[] = $info;
+                
                 return $msg;
         }
 

@@ -18,6 +18,11 @@ $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'view-visitor-records',
     'dataProvider' => $model->search(),
     'filter' => $model,
+    'afterAjaxUpdate' => "
+    function(id, data) {
+        $('th > .asc').append('<div></div>');
+        $('th > .desc').append('<div></div>');
+    }",
 
     'columns' =>
     array(
@@ -36,9 +41,9 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'filter' => VisitorType::model()->returnVisitorTypes(),
         ),
         array(
-            'name' => 'card',
+            'name' => 'cardnumber',
             'header' => 'Card No.',
-            'value' => 'CardGenerated::model()->getCardCode($data->card,$data->id)',
+            'value'=>  'CardGenerated::model()->getCardCode($data->card)',
         ),
         array(
             'name' => 'firstname',
@@ -53,9 +58,6 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' => 'company',
             'value' => 'getCompany($data->visitor)',
-            'header' => 'Company Name',
-            'cssClassExpression' => '( getCompany($data->visitor)== "Not Available" ? "errorNotAvailable" : "" ) ',
-            'type' => 'raw'
         ),
         array(
             'name' => 'contactnumber',

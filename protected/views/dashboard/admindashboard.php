@@ -42,6 +42,11 @@ foreach ($workstationList as $workstation) {
             'id' => 'visit-gridDashboard' . $x,
             'dataProvider' => $model->search($merge),
             'filter' => $model,
+            'afterAjaxUpdate' => "
+    function(id, data) {
+        $('th > .asc').append('<div></div>');
+        $('th > .desc').append('<div></div>');
+    }",
             'columns' =>
             array(
                 array(
@@ -54,9 +59,9 @@ foreach ($workstationList as $workstation) {
                     'cssClassExpression' => 'changeStatusClass($data->visit_status)',
                 ),
                 array(
-                    'name' => 'card',
+                    'name' => 'cardnumber',
                     'header' => 'Card No.',
-                    'value' => 'CardGenerated::model()->getCardCode($data->card, $data->id)',
+                    'value' => 'CardGenerated::model()->getCardCode($data->card)',
                 ),
                 array(
                     'name' => 'firstname',
@@ -120,35 +125,34 @@ function getCompany($id) {
 }
 
 function formatTime($time) {
-    if ($time == '') {
+    if ($time == '' || $time == '00:00:00') {
         return "-";
     } else {
         return date('h:i A', strtotime($time));
     }
 }
 
+function changeStatusClass($visitStatus) {
+    // return "red";
+    switch ($visitStatus) {
+        case VisitStatus::ACTIVE:
+            return "green";
+            break;
 
-function changeStatusClass($visitStatus){
-   // return "red";
-   switch ($visitStatus) {
-       case VisitStatus::ACTIVE:
-           return "green";
-           break;
-       
-       case VisitStatus::PREREGISTERED:
-           return "blue";
-           break;
-       
-       case VisitStatus::CLOSED:
-           return "red";
-           break;
-       
-       case VisitStatus::SAVED:
-           return "grey";
-           break;
+        case VisitStatus::PREREGISTERED:
+            return "blue";
+            break;
 
-       default:
-           break;
-   }
+        case VisitStatus::CLOSED:
+            return "red";
+            break;
+
+        case VisitStatus::SAVED:
+            return "grey";
+            break;
+
+        default:
+            break;
+    }
 }
 ?>

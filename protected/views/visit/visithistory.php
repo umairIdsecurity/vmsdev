@@ -1,4 +1,4 @@
-<?php 
+<?php
 date_default_timezone_set("Asia/Manila");
 $session = new CHttpSession;
 ?>
@@ -20,9 +20,9 @@ $session = new CHttpSession;
         $visitor = $model->visitor;
         $model = new Visit;
         $criteria = new CDbCriteria;
-        $criteria->order='date_check_out,time_check_out DESC';
-        $criteria->addCondition('visit_status="'.VisitStatus::CLOSED.'" and visitor="' . $visitor . '"');
-        
+        $criteria->order = 'date_check_out,time_check_out DESC';
+        $criteria->addCondition('visit_status="' . VisitStatus::CLOSED . '" and visitor="' . $visitor . '"');
+
 
         $model->unsetAttributes();
         $visitData = new CActiveDataProvider($model, array(
@@ -33,9 +33,9 @@ $session = new CHttpSession;
             'dataProvider' => $visitData,
             'columns' => array(
                 array(
+                    'name' => 'cardnumber',
                     'header' => 'Card No.',
-                    'name' => 'card',
-                    'value' => 'CardGenerated::model()->getCardCode($data->card,$data->id)',
+                    'value' => 'CardGenerated::model()->getCardCode($data->card)',
                 ),
                 array(
                     'header' => 'Open by',
@@ -46,7 +46,7 @@ $session = new CHttpSession;
                 array(
                     'name' => 'date_check_in',
                     'type' => 'html',
-                 //   'value' => 'Yii::app()->dateFormatter->format("d/MM/y",strtotime($data->date_in))',
+                //   'value' => 'Yii::app()->dateFormatter->format("d/MM/y",strtotime($data->date_in))',
                 ),
                 array(
                     'name' => 'Host',
@@ -56,14 +56,13 @@ $session = new CHttpSession;
                 array(
                     'name' => 'date_check_out',
                     'type' => 'html',
-                  //  'value' => 'Yii::app()->dateFormatter->format("d/MM/y",strtotime($data->date_out))',
+                //  'value' => 'Yii::app()->dateFormatter->format("d/MM/y",strtotime($data->date_out))',
                 ),
                 array(
                     'name' => 'time_check_out',
                     'type' => 'html',
                     'value' => 'formatTime($data->time_check_out)',
                 ),
-                
                 array(
                     'header' => 'Closed by',
                     'name' => 'created_by',
@@ -79,7 +78,7 @@ $session = new CHttpSession;
                             'label' => 'Delete', // text label of the button
                             'imageUrl' => false, // image URL of the button. If not set or false, a text link is used, The image must be 16X16 pixels
                             'visible' => 'isRoleAllowedToDelete()',
-                            ),
+                        ),
                     ),
                 ),
             ),
@@ -93,28 +92,28 @@ $session = new CHttpSession;
 
 function returnPatientOrHostName($visit_id, $userHost) {
     $visitDetails = Visit::model()->findByPk($visit_id);
-    if($visitDetails['visitor_type'] == VisitorType::PATIENT_VISITOR){
+    if ($visitDetails['visitor_type'] == VisitorType::PATIENT_VISITOR) {
         $hostFullName = Patient::model()->findByPk($visitDetails['patient'])->name;
     } else {
         $fname = User::model()->findByPk($visitDetails['host'])->first_name;
         $lname = User::model()->findByPk($visitDetails['host'])->last_name;
-        $hostFullName = $fname." ".$lname;
+        $hostFullName = $fname . " " . $lname;
     }
-    
+
     return $hostFullName;
 }
 
 function formatTime($time) {
-    if ($time == '') {
+    if ($time == '' || $time == '00:00:00') {
         return "-";
     } else {
         return date('h:i A', strtotime($time));
     }
 }
 
-function isRoleAllowedToDelete(){
+function isRoleAllowedToDelete() {
     $session = new CHttpSession;
-    if($session['role'] != Roles::ROLE_STAFFMEMBER ){
+    if ($session['role'] != Roles::ROLE_STAFFMEMBER) {
         return true;
     } else {
         return false;

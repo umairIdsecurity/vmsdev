@@ -173,7 +173,7 @@ $currentLoggedUserId = $session['id'];
                             </td>
                         </tr>
                         <tr >
-                            <td style="vertical-align: top !important;padding-top: 11px;"><label for="User_repeat_password">Repeat Password <span class="required">*</span></label></td>
+                            <td style="vertical-align: top !important;padding-top: 11px;width:150px;"><label for="User_repeat_password">Repeat Password <span class="required">*</span></label></td>
                             <td >
                                 <input ng-model="user.passwordConfirm" type="password" id="User_repeat_password" data-match="user.passwords" name="User[repeatpassword]"/>			
                                 <div style='font-size: 0.9em;color: #FF0000;'  data-ng-show="userform['User[repeatpassword]'].$error.match">New Password does not match with <br>Repeat New Password. </div>
@@ -203,7 +203,7 @@ $currentLoggedUserId = $session['id'];
                         <td>
                             <input type="text" id="User_email" name="User[email]" maxlength="50" size="50"  value="<?php echo $model->email; ?>"/>
                             <?php echo "<br>" . $form->error($model, 'email', array('style' => 'text-transform:none;')); ?>
-                            <span class="errorMessageEmail1" style="display:none;color:red;font-size:10px;">A profile already exists for this email address</span>
+                            <span class="errorMessageEmail1" style="display:none;color:red;font-size:0.9em;">A profile already exists for this email address</span>
                         </td>
                     </tr>
                     <tr>

@@ -76,10 +76,10 @@ class User extends VmsActiveRecord {
         // will receive user inputs.
         if (Yii::app()->controller->action->id == 'update' || Yii::app()->controller->action->id == 'profile') {
             return array(
-                array('first_name, last_name, email, contact_number, user_type,is_deleted,password', 'required'),
+                array('first_name, last_name, email, contact_number, user_type,is_deleted', 'required'),
                 array('company, role, user_type, user_status, created_by', 'numerical', 'integerOnly' => true),
                 array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
-                array('date_of_birth, notes,tenant,tenant_agent,birthdayYear,birthdayMonth,birthdayDay', 'safe'),
+                array('date_of_birth, notes,tenant,tenant_agent,birthdayYear,birthdayMonth,password,birthdayDay', 'safe'),
                 array('email', 'filter', 'filter' => 'trim'),
                 array('email', 'email'),
                 array('role,company', 'required', 'message' => 'Please select a {attribute}'),

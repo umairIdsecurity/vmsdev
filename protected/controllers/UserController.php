@@ -96,6 +96,11 @@ class UserController extends Controller {
         $session = new CHttpSession;
 
         if (isset($_POST['User'])) {
+            if($_POST['User']['password'] == ''){
+                $_POST['User']['password'] = $model->password;
+            } else {
+                $_POST['User']['password'] = User::model()->hashPassword($_POST['User']['password']);
+            }
             $model->attributes = $_POST['User'];
 
             if ($userService->save($model,Yii::app()->user, NULL)) {

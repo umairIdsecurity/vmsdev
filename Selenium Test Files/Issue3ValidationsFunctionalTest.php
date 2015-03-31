@@ -426,7 +426,7 @@ class Issue3ValidationsFunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_email", "testemail");
         $this->click("id=submitForm");
         sleep(1);
-        $this->assertEquals("Email Address is not a valid email address.", $this->getText("id=User_email_em_"));
+        $this->assertEquals("Email Address is not in a recognised format. Please revise.", $this->getText("id=User_email_em_"));
         $this->type("id=User_email", "superadmin@test.com");
         $this->type("id=User_password", "12345");
         $this->type("id=User_repeat_password", "12345");
@@ -468,15 +468,13 @@ class Issue3ValidationsFunctionalTest extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->click("link=Administration");
         $this->waitForPageToLoad("30000");
-        $this->click("link=Manage Users");
-        $this->click("link=Set Access Rules");
-        $this->waitForPageToLoad("30000");
+        $this->clickAndWait("link=Set Access Rules");
         $this->assertEquals("Displaying 1-1 of 1 result", $this->getText("css=div.summary"));
         $this->type("xpath=(//input[@name='User[email]'])[2]", "agentoperator@test.com");
         $this->click("css=select[name=\"User[user_type]\"]");
         $this->select("css=select[name=\"User[user_type]\"]", "label=Internal");
         sleep(1);
-        $this->assertEquals("agentoperator@test.com", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[3]"));
+        $this->assertEquals("agentoperator@test.com", $this->getText("//div[@id='user-access-grid']/table/tbody/tr/td[3]"));
         $this->assertEquals("Displaying 1-1 of 1 result", $this->getText("css=div.summary"));
     }
 
@@ -512,13 +510,13 @@ class Issue3ValidationsFunctionalTest extends BaseFunctionalTest {
         $this->type("css=td > input[name=\"User[first_name]\"]", "Test Operator");
 
         sleep(1);
-        $this->assertEquals("operator@test.com", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[3]"));
+        $this->assertEquals("operator@test.com", $this->getText("//div[@id='user-access-grid']/table/tbody/tr/td[3]"));
         $this->assertEquals("Displaying 1-1 of 1 result", $this->getText("css=div.summary"));
 
         $this->type("xpath=(//input[@name='User[email]'])[2]", "agentoperator@test.com");
         $this->type("css=td > input[name=\"User[first_name]\"]", "Test AgentOperator");
         sleep(1);
-        $this->assertEquals("agentoperator@test.com", $this->getText("//div[@id='user-grid']/table/tbody/tr/td[3]"));
+        $this->assertEquals("agentoperator@test.com", $this->getText("//div[@id='user-access-grid']/table/tbody/tr/td[3]"));
         $this->assertEquals("Displaying 1-1 of 1 result", $this->getText("css=div.summary"));
     }
 
@@ -581,7 +579,7 @@ class Issue3ValidationsFunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_email", "testemail");
         $this->click("id=submitForm");
         sleep(1);
-        $this->assertEquals("Email Address is not a valid email address.", $this->getText("id=User_email_em_"));
+        $this->assertEquals("Email Address is not in a recognised format. Please revise.", $this->getText("id=User_email_em_"));
         $this->click("link=Manage Users");
         $this->clickAndWait("link=Add Administrator");
         $this->addUser("superadmin@test.com", "admin");
@@ -652,7 +650,7 @@ class Issue3ValidationsFunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_email", "testemail");
         $this->click("id=submitForm");
         sleep(1);
-        $this->assertEquals("Email Address is not a valid email address.", $this->getText("id=User_email_em_"));
+        $this->assertEquals("Email Address is not in a recognised format. Please revise.", $this->getText("id=User_email_em_"));
         
         $this->click("link=Manage Users");
         $this->clickAndWait("link=Add Agent Operator");

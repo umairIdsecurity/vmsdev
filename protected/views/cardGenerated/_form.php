@@ -61,6 +61,18 @@
 		<?php echo $form->textField($model,'tenant_agent',array('size'=>20,'maxlength'=>20)); ?>
 		<?php echo $form->error($model,'tenant_agent'); ?>
 	</div>
+	<div class="row">
+		<?php echo $form->labelEx($model,'card_number'); ?>
+		<?php echo $form->textField($model,'card_number',array('size'=>20,'maxlength'=>20)); ?>
+		<?php echo $form->error($model,'card_number'); ?>
+	</div>
+	<div class="row">
+		<?php echo $form->labelEx($model,'print_count'); ?>
+		<?php echo $form->textField($model,'print_count',array('size'=>20,'maxlength'=>20)); ?>
+		<?php echo $form->error($model,'print_count'); ?>
+	</div>
+        
+        
 
 	<div class="row buttons">
 		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>

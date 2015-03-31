@@ -4,30 +4,26 @@ $src = Yii::getPathOfAlias('application') . '/assets/images/cardprint-print.png'
 
 error_reporting(E_ALL);
 $session = new CHttpSession;
+$session['count'] = $session['count'] + 1;
 // clean up the input
 $model = Visit::model()->findByPk($_GET['id']);
 $cardType = CardType::$CARD_TYPE_LIST[$model->card_type];
-$companyName = "Not Available";
-$companyCode ="";
-$cardCode ="";
-$companyLogoId ="";
 
 $visitorName = $visitorModel->first_name . ' ' . $visitorModel->last_name;
 $tenant = User::model()->findByPk($visitorModel->tenant);
+$companyTenant = Company::model()->findByPk($tenant->company);
+$card = CardGenerated::model()->findByPk($model->card);
 $visitorName = wordwrap($visitorName, 13, "\n", true);
-if ($tenant->company != '') {
+
+
+
     $company = Company::model()->findByPk($tenant->company);
     $companyName = $company->name;
     $companyLogoId = $company->logo;
     $companyCode = $company->code;
-    $inc = 6 - (strlen($model->id));
-                        $int_code = '';
-                        for ($x = 1; $x <= $inc; $x++) {
 
-                            $int_code .= "0";
-                        }
-    $cardCode = $companyCode . $int_code . $model->id;
-}
+    $cardCode = $card->card_number;
+
 
 if ($companyLogoId == "") {
     $companyLogo = Yii::app()->getBaseUrl(true) . '/uploads/card_generated/nologoavailable.jpg';
@@ -55,7 +51,8 @@ if ($model->card_type != CardType::SAME_DAY_VISITOR) {
     $dateExpiry = date("d M y", strtotime($model->date_out));
 }
 
-$text = $companyCode."\n".$dateExpiry . "\n" . $visitorName . "\n" . $cardCode;
+$text = $companyCode . "\n" . $dateExpiry . "\n" . $visitorName . "\n" . $cardCode."\n";
+
 
 if (empty($text)) {
     fatal_error('Error: Text not properly formatted.');
@@ -116,6 +113,11 @@ imagettftext($image, $font_size, 0, $x, 250, $font_color, $font_file, $text);
 
 
 //////////////////////////////////////////////////////////////
+header("Pragma-directive: no-cache");
+header("Cache-directive: no-cache");
+header("Cache-control: no-cache");
+header("Pragma: no-cache");
+header("Expires: 0");
 header('Content-type:image/png');
 if (exif_imagetype($src2) == IMAGETYPE_PNG) {
     $watermark = imagecreatefrompng($src2);
@@ -155,7 +157,7 @@ imagettftext($image, $font_size, 0, $x, 225, $font_color, $font_file, $text);
 
 imagecopyresampled($image, $watermark, 17, 333, 0, 0, 61, 40, $watermark_width, $watermark_height);
 imagecopyresampled($image, $watermark2, 17, 7, 0, 0, 147, 191, $watermark_width2, $watermark_height2);
-//imagecopymerge($image, $watermark, 5, 5, 0, 0, $watermark_width, $watermark_height, 50);  
+
 
 $usernameHash = hash('adler32', $visitorModel->email);
 $uniqueFileName = 'card' . $usernameHash . '-' . time() . ".png";
@@ -164,7 +166,6 @@ imagepng($image);
 imagepng($image, $path);
 
 imagedestroy($image);
-
 imagedestroy($watermark);
 
 exit;

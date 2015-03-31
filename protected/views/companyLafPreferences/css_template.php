@@ -81,6 +81,13 @@ nav.navigation ul li a{
 color:<?php echo $companyLafPreferences->nav_font_color; ?> !important;
 }
 
+.top_nav ul li a {
+color:<?php echo $companyLafPreferences->nav_bg_color; ?> !important;
+}
+
+.top_nav ul li a:hover {
+color:<?php echo $companyLafPreferences->nav_hover_color; ?> !important;
+}
 /* SIDE MENU*/
 
 
@@ -97,11 +104,80 @@ color:<?php echo $companyLafPreferences->sidemenu_hover_font_color; ?> !importan
 /*headers*/
 
 .wrapper h1,.visitor-title,.has-sub-sub span {
-    color:<?php echo $companyLafPreferences->sidemenu_font_color; ?> !important;
+color:<?php echo $companyLafPreferences->sidemenu_font_color; ?> !important;
 }
 
 /*has sub icon*/
 .customIcon-adminmenu{
-    background-color: <?php echo $companyLafPreferences->sidemenu_font_color; ?> !important;
+background-color: <?php echo $companyLafPreferences->sidemenu_font_color; ?> !important;
 }
 
+/*PAGER*/
+
+ul.yiiPager .selected a {
+background-color:<?php echo $companyLafPreferences->nav_bg_color; ?> !important;
+color:<?php echo $companyLafPreferences->nav_font_color; ?> !important;
+
+}
+ul.yiiPager a {
+color:<?php echo $companyLafPreferences->nav_font_color; ?> !important;
+border:<?php echo $companyLafPreferences->nav_font_color; ?> !important;
+}
+
+ul.yiiPager a:hover {
+background-color:<?php echo $companyLafPreferences->nav_hover_color; ?> !important;
+color:<?php echo $companyLafPreferences->nav_hover_font_color; ?> !important;
+}
+
+ul.yiiPager a:hover
+{
+border:solid 1px <?php echo $companyLafPreferences->nav_hover_color; ?> !important;
+background-color: <?php echo $companyLafPreferences->nav_hover_color; ?> !important;
+color:<?php echo $companyLafPreferences->nav_hover_font_color; ?> !important;
+}
+
+ul.yiiPager a:link, ul.yiiPager a:visited {
+background-color:<?php echo $companyLafPreferences->nav_bg_color; ?> !important;
+border:1px solid <?php echo $companyLafPreferences->nav_bg_color; ?> !important;
+}
+
+.pagination ul > li > a:hover,
+.pagination ul > li > a:focus,
+.pagination ul > .active > a,
+.pagination ul > .active > span,
+.pager li > a:hover,
+.pager li > a:focus {
+background-color:<?php echo $companyLafPreferences->nav_hover_color; ?> !important;
+color:<?php echo $companyLafPreferences->nav_hover_font_color; ?> !important;
+}
+
+
+ul.yiiPager .selected a {
+    background: none repeat scroll 0 0 <?php echo $companyLafPreferences->nav_hover_color; ?> !important;
+    color:<?php echo $companyLafPreferences->nav_hover_font_color; ?> !important;
+}
+
+/*footer*/
+
+
+#footer {
+    border-top: 1px solid <?php echo $companyLafPreferences->nav_hover_color; ?> !important;
+}
+
+.grid-view th a.asc:after {
+    border-bottom: 5px solid <?php echo $companyLafPreferences->nav_bg_color; ?> !important;
+    }
+
+    /*sort arrows*/
+    
+.asc div{
+    border-color: <?php echo $companyLafPreferences->nav_bg_color; ?> transparent !important;
+}
+
+.desc div{
+    border-color: <?php echo $companyLafPreferences->nav_bg_color; ?>  rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) !important;
+}
+
+.sidebarTitle{
+background: none repeat scroll 0 0 <?php echo $companyLafPreferences->sidemenu_bg_color; ?> !important;
+}

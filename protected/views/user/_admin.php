@@ -18,6 +18,11 @@ $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'user-grid',
     'dataProvider' => $model->search(),
     'filter' => $model,
+    'afterAjaxUpdate' => "
+    function(id, data) {
+        $('th > .asc').append('<div></div>');
+        $('th > .desc').append('<div></div>');
+    }",
     'columns' => array(
         'first_name',
         'last_name',
@@ -37,50 +42,14 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'value' => 'UserType::model()->getUserType($data->user_type)',
             'filter' => User::$USER_TYPE_LIST,
         ),
+        array(
+            'name' => 'companyname',
+            'value' => 'getCompany($data->id)',
+            'header' => 'Company',
+            'type' => 'raw'
+        ),
         'contact_number',
-        array(
-            'name' => 'id',
-            'type' => 'raw',
-            'value' => 'CHtml::textField("visitExists".$data->id,isUserInVisitExists($data->id))',
-            'visible' => true,
-            'cssClassExpression' => '"hidden"',
-            'filter' =>false,
-        ),
-        array(
-            'name' => 'id',
-            'type' => 'raw',
-            'value' => 'CHtml::textField("isTenant".$data->id,isUserTenantOfCompany($data->id))',
-            'visible' => true,
-            'cssClassExpression' => '"hidden"',
-            'filter' =>false,
-        ),
-        
-        array(
-            'name' => 'id',
-            'type' => 'raw',
-            'value' => 'CHtml::textField("isUserWorkstation".$data->id,isUserAssignedToAWorkstation($data->id))',
-            'visible' => true,
-            'cssClassExpression' => '"hidden"',
-            'filter' =>false,
-        ),
-        
-        array(
-            'name' => 'id',
-            'type' => 'raw',
-            'value' => 'CHtml::textField("isUserTenantOfVisitor".$data->id,isUserTenantOfVisitor($data->id))',
-            'visible' => true,
-            'cssClassExpression' => '"hidden"',
-            'filter' =>false,
-        ),
-        
-        array(
-            'name' => 'id',
-            'type' => 'raw',
-            'value' => 'CHtml::textField("isUserTenantAgent".$data->id,isUserTenantAgent($data->id))',
-            'visible' => true,
-            'cssClassExpression' => '"hidden"',
-            'filter' =>false,
-        ),
+        'email',
         array(
             'header' => 'Actions',
             'class' => 'CButtonColumn',
@@ -90,7 +59,6 @@ $this->widget('zii.widgets.grid.CGridView', array(
                     'label' => 'Edit', // text label of the button
                     'imageUrl' => false, // image URL of the button. If not set or false, a text link is used, The image must be 16X16 pixels
                 ),
-               
                 'delete' => array(//the name {reply} must be same
                     'label' => 'Delete', // text label of the button
                     'imageUrl' => false, // image URL of the button. If not set or false, a text link is used, The image must be 16X16 pixels
@@ -133,6 +101,46 @@ $this->widget('zii.widgets.grid.CGridView', array(
                 ),
             ),
         ),
+        array(
+            'name' => 'id',
+            'type' => 'raw',
+            'value' => 'CHtml::textField("visitExists".$data->id,isUserInVisitExists($data->id))',
+            'visible' => true,
+            'cssClassExpression' => '"hidden"',
+            'filter' => false,
+        ),
+        array(
+            'name' => 'id',
+            'type' => 'raw',
+            'value' => 'CHtml::textField("isTenant".$data->id,isUserTenantOfCompany($data->id))',
+            'visible' => true,
+            'cssClassExpression' => '"hidden"',
+            'filter' => false,
+        ),
+        array(
+            'name' => 'id',
+            'type' => 'raw',
+            'value' => 'CHtml::textField("isUserWorkstation".$data->id,isUserAssignedToAWorkstation($data->id))',
+            'visible' => true,
+            'cssClassExpression' => '"hidden"',
+            'filter' => false,
+        ),
+        array(
+            'name' => 'id',
+            'type' => 'raw',
+            'value' => 'CHtml::textField("isUserTenantOfVisitor".$data->id,isUserTenantOfVisitor($data->id))',
+            'visible' => true,
+            'cssClassExpression' => '"hidden"',
+            'filter' => false,
+        ),
+        array(
+            'name' => 'id',
+            'type' => 'raw',
+            'value' => 'CHtml::textField("isUserTenantAgent".$data->id,isUserTenantAgent($data->id))',
+            'visible' => true,
+            'cssClassExpression' => '"hidden"',
+            'filter' => false,
+        ),
     ),
 ));
 
@@ -173,24 +181,30 @@ function getAssignableRoles($user_role) {
     return $assignableRoles;
 }
 
-
 function isUserInVisitExists($userId) {
     return Visit::model()->exists('is_deleted = 0 and host ="' . $userId . '"');
 }
 
 function isUserTenantOfCompany($userId) {
-    return Company::model()->exists('is_deleted = 0 and tenant ="' . $userId. '"');
+    return Company::model()->exists('is_deleted = 0 and tenant ="' . $userId . '"');
 }
 
 function isUserAssignedToAWorkstation($userId) {
-    return UserWorkstations::model()->exists('user = "' . $userId  . '"');
+    return UserWorkstations::model()->exists('user = "' . $userId . '"');
 }
 
 function isUserTenantOfVisitor($userId) {
-    return Visitor::model()->exists('tenant = "' . $userId  . '" and is_deleted=0');
+    return Visitor::model()->exists('tenant = "' . $userId . '" and is_deleted=0');
 }
 
 function isUserTenantAgent($userId) {
-    return Company::model()->exists('tenant_agent = "' . $userId  . '" and is_deleted=0');
+    return Company::model()->exists('tenant_agent = "' . $userId . '" and is_deleted=0');
+}
+
+function getCompany($id) {
+    return Company::model()->findByPk(User::model()->findByPk($id)->company)->name;
 }
 ?>
+<script>
+    
+</script>

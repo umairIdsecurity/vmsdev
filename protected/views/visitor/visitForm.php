@@ -141,7 +141,13 @@ date_default_timezone_set('Asia/Manila');
         }
         $("#Visit_visitor").val($("#visitorId").val());
         $("#Visit_visitor_type").val($("#Visitor_visitor_type").val());
-        $("#visitReasonFormField").val($("#Visit_reason").val());
+        
+        if($("#selectedVisitorInSearchTable").val() == 0 || $("#selectedVisitorInSearchTable").val() == ''){
+            $("#visitReasonFormField").val($("#Visit_reason").val());
+        } else {
+            $("#visitReasonFormField").val($("#Visit_reason_search").val());
+        }
+        
         $("#Visit_visitor_status").val("1");
         if ($("#visitSessionRole").val() == 7 || $("#visitSessionRole").val() == 8) {
             $("#Visit_workstation").val($("#workstation").val());

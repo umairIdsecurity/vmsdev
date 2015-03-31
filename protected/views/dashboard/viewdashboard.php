@@ -11,12 +11,17 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
 
 
 $merge = new CDbCriteria;
-$merge->addCondition('visit_status ="' . VisitStatus::ACTIVE . '" or visit_status ="'.VisitStatus::PREREGISTERED.'"');
-            
+$merge->addCondition('visit_status ="' . VisitStatus::ACTIVE . '" or visit_status ="' . VisitStatus::PREREGISTERED . '"');
+
 $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'visit-gridDashboard',
     'dataProvider' => $model->search($merge),
     'filter' => $model,
+    'afterAjaxUpdate' => "
+    function(id, data) {
+        $('th > .asc').append('<div></div>');
+        $('th > .desc').append('<div></div>');
+    }",
     'columns' =>
     array(
         array(
@@ -29,12 +34,10 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'cssClassExpression' => 'changeStatusClass($data->visit_status)',
         ),
         //'date_in',
-        
-        
         array(
-            'name' => 'cardcode',
+            'name' => 'cardnumber',
             'header' => 'Card No.',
-            'value' => 'CardGenerated::model()->getCardCode($data->card)',
+            'value'=>  'CardGenerated::model()->getCardCode($data->card)',
         ),
         array(
             'name' => 'firstname',
@@ -66,7 +69,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' => 'date_check_in',
             'type' => 'html',
-            //'value' => 'formatDate($data->date_in)',
+        //'value' => 'formatDate($data->date_in)',
         ),
         array(
             'name' => 'time_check_in',
@@ -76,7 +79,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' => 'date_check_out',
             'type' => 'html',
-            //'value' => 'formatDate($data->date_out)',
+        //'value' => 'formatDate($data->date_out)',
         ),
     ),
 ));
@@ -96,43 +99,35 @@ function getCompany($id) {
 }
 
 function formatTime($time) {
-    if ($time == '') {
+    if ($time == '' || $time == '00:00:00') {
         return "-";
     } else {
         return date('h:i A', strtotime($time));
     }
 }
 
-function getCardCode($cardId) {
-    if($cardId !=''){
-        return CardGenerated::model()->findByPk($cardId)->card_code;
-    } else {
-        return "";
+
+function changeStatusClass($visitStatus) {
+    switch ($visitStatus) {
+        case VisitStatus::ACTIVE:
+            return "green";
+            break;
+
+        case VisitStatus::PREREGISTERED:
+            return "blue";
+            break;
+
+        case VisitStatus::CLOSED:
+            return "red";
+            break;
+
+        case VisitStatus::SAVED:
+            return "grey";
+            break;
+
+        default:
+            break;
     }
 }
 
-
-function changeStatusClass($visitStatus){
-   // return "red";
-   switch ($visitStatus) {
-       case VisitStatus::ACTIVE:
-           return "green";
-           break;
-       
-       case VisitStatus::PREREGISTERED:
-           return "blue";
-           break;
-       
-       case VisitStatus::CLOSED:
-           return "red";
-           break;
-       
-       case VisitStatus::SAVED:
-           return "grey";
-           break;
-
-       default:
-           break;
-   }
-}
 ?>

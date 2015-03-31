@@ -12,6 +12,11 @@ $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'visitor-type-grid',
     'dataProvider' => $model->search(),
     'filter' => $model,
+    'afterAjaxUpdate' => "
+    function(id, data) {
+        $('th > .asc').append('<div></div>');
+        $('th > .desc').append('<div></div>');
+    }",
     'columns' => array(
         'name',
         array(

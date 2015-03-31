@@ -38,6 +38,11 @@ if ($visitorType != VisitorType::PATIENT_VISITOR) {
     $this->widget('zii.widgets.grid.CGridView', array(
         'id' => 'findHost-grid',
         'dataProvider' => $customDataProvider,
+        'afterAjaxUpdate' => "
+    function(id, data) {
+        $('th > .asc').append('<div></div>');
+        $('th > .desc').append('<div></div>');
+    }",
         'columns' => array(
             array(
                 'name' => 'first_name',

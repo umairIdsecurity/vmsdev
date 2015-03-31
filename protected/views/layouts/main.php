@@ -14,8 +14,14 @@ $userRole = $session['role'];
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" >
     <head>
+        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\" />
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="language" content="en" />
+        <meta Http-Equiv="Cache-Control" Content="no-cache"/>
+        <meta Http-Equiv="Pragma" Content="no-cache"/>
+        <meta Http-Equiv="Expires" Content="0"/>
+        <meta Http-Equiv="Pragma-directive: no-cache"/>
+        <meta Http-Equiv="Cache-directive: no-cache"/>
         <!-- blueprint CSS framework -->
         <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->controller->assetsBase; ?>/css/screen.css" media="screen, projection" />
         <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->controller->assetsBase; ?>/css/print.css" media="print" />
@@ -25,15 +31,14 @@ $userRole = $session['role'];
 
         <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->controller->assetsBase; ?>/css/main.css" />
         <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->controller->assetsBase; ?>/css/form.css" />
-        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->controller->assetsBase; ?>/css/gridview.css" />
         <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->controller->assetsBase; ?>/css/style.css" />
         <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->controller->assetsBase; ?>/css/sidebar.css" />
         <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->controller->assetsBase; ?>/css/uploadfile.css" />
         <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->controller->assetsBase; ?>/css/imgareaselect-default.css" />
+        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->controller->assetsBase; ?>/css/gridview.css" />
         <?php
         $tenantCompany = User::model()->findByPk($session['tenant'])->company;
         $company = Company::model()->findByPk($tenantCompany);
-
 
         if ($company->company_laf_preferences != '') {
             $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
@@ -51,9 +56,8 @@ $userRole = $session['role'];
         <script  src="<?php echo Yii::app()->controller->assetsBase; ?>/js/jquery.uploadfile.min.js" ></script>
         <script  src="<?php echo Yii::app()->controller->assetsBase; ?>/js/jquery.form.js" ></script>
 
-
         <title><?php echo CHtml::encode($this->pageTitle); ?></title>
-        
+
     </head>
 
     <body>
@@ -75,7 +79,7 @@ $userRole = $session['role'];
                     <div id="logo" >
                         <?php
                         if ($company->logo != '') {
-                            echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl . '/'.Photo::model()->returnLogoPhotoRelative($company->logo)));
+                            echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl . '/' . Photo::model()->returnLogoPhotoRelative($company->logo)));
                         } else {
                             echo CHtml::link(CHtml::image(Yii::app()->controller->assetsBase . '/images/companylogohere.png'));
                         }
@@ -124,13 +128,13 @@ $userRole = $session['role'];
                             <li class="<?php echo ($this->action->id == "view" && $this->id == 'visit') ? "active" : "" ?>">
                                 <a href="<?php echo Yii::app()->createUrl("/visit/view"); ?>">Visit History</a>
                             </li>
-<?php if ($session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_AGENT_ADMIN || $session['role'] == Roles::ROLE_SUPERADMIN) { ?>
+                            <?php if ($session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_AGENT_ADMIN || $session['role'] == Roles::ROLE_SUPERADMIN) { ?>
                                 <li class="<?php echo ($session['lastPage'] != 'dashboard' && ($this->action->id == "admin" || ($this->id == 'visit' && $this->action->id != 'view') || $this->id == "user" || $this->id == "visitor" || $this->id == "company" || $this->id == "workstation" || $this->id == "visitReason" || $this->id == "companyLafPreferences")) ? "active" : "" ?>">
                                     <a href="<?php echo Yii::app()->createUrl("/user/admin"); ?>">Administration</a>
                                 </li>
-<?php } ?>
+                            <?php } ?>
                             <li style=' float:right;'>
-                                <a style="width:334px !important;text-align:right;">Logged in as <?php echo Yii::app()->user->name . ' - ' . User::model()->getUserRole($userRole); ?></a>
+                                <a style="width:334px !important;text-align:right;">Logged in as <?php echo User::model()->getUserRole($userRole); ?></a>
                             </li> 
 
                         </ul>
@@ -147,7 +151,7 @@ $userRole = $session['role'];
                 echo "style='margin-left:180px'";
             }
             ?>>
-<?php echo $content; ?>
+                     <?php echo $content; ?>
             </div>
             <div class="clear"></div>
             <br><br>

@@ -11,6 +11,11 @@ $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'workstation-grid',
     'dataProvider' => $model->search(),
     'filter' => $model,
+    'afterAjaxUpdate' => "
+    function(id, data) {
+        $('th > .asc').append('<div></div>');
+        $('th > .desc').append('<div></div>');
+    }",
     'columns' => array(
         'name',
         'location',
@@ -23,7 +28,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'value' => 'CHtml::hiddenField("workstationExists1".$data->id,isWorkstationExists($data->id))',
             'visible' => true,
             'cssClassExpression' => '"hidden"',
-            'filter' =>false,
+            'filter' => false,
         ),
         array(
             'name' => 'id',
@@ -31,7 +36,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'value' => 'CHtml::hiddenField("visitExists2".$data->id,isVisitExistsInClosedVisits($data->id))',
             'visible' => true,
             'cssClassExpression' => '"hidden"',
-            'filter' =>false,
+            'filter' => false,
         ),
         array(
             'header' => 'Actions',
@@ -47,7 +52,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
                     'imageUrl' => false, // image URL of the button. If not set or false, a text link is used, The image must be 16X16 pixels
                     'url' => 'Yii::app()->controller->createUrl("workstation/delete",array("id"=>$data->id))',
                     'options' => array(// this is the 'html' array but we specify the 'ajax' element
-                       'confirm' => "Are you sure you want to delete this item?",
+                        'confirm' => "Are you sure you want to delete this item?",
                         'ajax' => array(
                             'type' => 'POST',
                             'url' => "js:$(this).attr('href')", // ajax post will use 'url' specified above
@@ -73,7 +78,6 @@ $this->widget('zii.widgets.grid.CGridView', array(
                                             }',
                         ),
                     ),
-                    
                 ),
             ),
         ),
@@ -81,16 +85,10 @@ $this->widget('zii.widgets.grid.CGridView', array(
 ));
 
 function isWorkstationExists($workstationId) {
-    return UserWorkstations::model()->exists('workstation="'.$workstationId.'"');
-   
+    return UserWorkstations::model()->exists('workstation="' . $workstationId . '"');
 }
 
 function isVisitExistsInClosedVisits($workstationId) {
-    return Visit::model()->exists('workstation="'.$workstationId.'"');
+    return Visit::model()->exists('workstation="' . $workstationId . '"');
 }
-
-
-
-
-
 ?>

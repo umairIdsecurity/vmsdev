@@ -11,6 +11,11 @@ $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'company-grid',
     'dataProvider' => $model->search(),
     'filter' => $model,
+    'afterAjaxUpdate' => "
+    function(id, data) {
+        $('th > .asc').append('<div></div>');
+        $('th > .desc').append('<div></div>');
+    }",
     'columns' => array(
         'name',
         'trading_name',

@@ -46,7 +46,7 @@ class Visit extends CActiveRecord {
     private $_contactnumber;
     private $_contactemail;
     private $_datecheckin1;
-    private $_cardcode;
+    private $_cardnumber;
 
     /**
      * @return string the associated database table name
@@ -69,7 +69,7 @@ class Visit extends CActiveRecord {
             array('patient, host,card,tenant,tenant_agent', 'default', 'setOnEmpty' => true, 'value' => null),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id,cardcode,datecheckin1,company,firstname,lastname,contactnumber,contactemail,visit_status,visitor ,card,workstation, visitor_type, reason, visitor_status, host, patient, created_by, date_in, time_in, date_out, time_out, date_check_in, time_check_in, date_check_out, time_check_out, tenant, tenant_agent, is_deleted', 'safe', 'on' => 'search'),
+            array('id,datecheckin1,cardnumber,company,firstname,lastname,contactnumber,contactemail,visit_status,visitor ,card,workstation, visitor_type, reason, visitor_status, host, patient, created_by, date_in, time_in, date_out, time_out, date_check_in, time_check_in, date_check_out, time_check_out, tenant, tenant_agent, is_deleted', 'safe', 'on' => 'search'),
         );
     }
 
@@ -96,18 +96,6 @@ class Visit extends CActiveRecord {
         // set private attribute for search
         $this->_datecheckin1 = $value;
     }
-    
-    public function getCardCode() {
-        // return private attribute on search
-        if ($this->scenario == 'search') {
-            return $this->_cardcode;
-        }
-    }
-
-    public function setCardCode($value) {
-        // set private attribute for search
-        $this->_cardcode = $value;
-    }
 
     public function getFirstname() {
         // return private attribute on search
@@ -119,6 +107,18 @@ class Visit extends CActiveRecord {
     public function setFirstname($value) {
         // set private attribute for search
         $this->_firstname = $value;
+    }
+    
+    public function getCardNumber() {
+        // return private attribute on search
+        if ($this->scenario == 'search') {
+            return $this->_cardnumber;
+        }
+    }
+
+    public function setCardNumber($value) {
+        // set private attribute for search
+        $this->_cardnumber = $value;
     }
 
     public function getLastname() {
@@ -192,7 +192,10 @@ class Visit extends CActiveRecord {
             'createdBy' => array(self::BELONGS_TO, 'User', 'created_by'),
             'tenant0' => array(self::BELONGS_TO, 'User', 'tenant'),
             'workstation0' => array(self::BELONGS_TO, 'Workstation', 'workstation'),
-            //'company0' => array(self::BELONGS_TO, 'Company', 'visitor0.id'),
+           // 'company0' => array(self::BELONGS_TO, 'Company', 'visitor0->company'),
+            'company0'=>array(
+                self::BELONGS_TO,'Company',array('company'=>'id'),'through'=>'visitor0'
+            ),
             'visitStatus' => array(self::BELONGS_TO, 'VisitStatus', 'visit_status'),
         );
     }
@@ -212,9 +215,9 @@ class Visit extends CActiveRecord {
             'host' => 'Host',
             'patient' => 'Patient',
             'created_by' => 'Created By',
-            'date_in' => 'Proposed Date In',
-            'time_in' => 'Proposed Time In',
-            'date_out' => 'Proposed Date Out',
+            'date_in' => 'Proposed Check In Date',
+            'time_in' => 'Proposed Check In Time',
+            'date_out' => 'Proposed Check Out Date',
             'time_out' => 'Proposed Time Out',
             'date_check_in' => 'Check In Date',
             'time_check_in' => 'Check In Time',
@@ -246,7 +249,7 @@ class Visit extends CActiveRecord {
 
         $criteria = new CDbCriteria;
         
-        $criteria->with = array('card0','visitor0');
+        $criteria->with = array('card0','visitor0','company0');
         //$criteria->with .= 'visitor0';
         $criteria->compare('CONCAT(visitor0.first_name, \' \', visitor0.last_name)', $this->visitor, true);
         $criteria->compare('visitor0.first_name', $this->firstname, true);
@@ -254,9 +257,8 @@ class Visit extends CActiveRecord {
         $criteria->compare('visitor0.contact_number', $this->contactnumber, true);
         $criteria->compare('visitor0.email', $this->contactemail, true);
         $criteria->compare('date_check_in', $this->datecheckin1, true);
-        $criteria->compare('card0.card_code', $this->cardcode, true);
-//        $criteria->with = 'company0';
-//        $criteria->compare('company0.name', $this->company, true);
+        $criteria->compare('company0.name', $this->company, true);
+        $criteria->compare('card0.card_number', $this->cardnumber, true);
 
         $criteria->compare('id', $this->id, true);
         //  $criteria->compare('visitor', $this->visitor, true);
@@ -347,6 +349,14 @@ $criteria->addCondition('t.is_deleted = 0');
                     'contactemail' => array(
                         'asc' => 'visitor0.email',
                         'desc' => 'visitor0.email DESC',
+                    ),
+                    'cardnumber' => array(
+                        'asc' => 'card0.card_number',
+                        'desc' => 'card0.card_number DESC',
+                    ),
+                    'company' => array(
+                        'asc' => 'company0.name',
+                        'desc' => 'company0.name DESC',
                     ),
                     '*',
                 ),

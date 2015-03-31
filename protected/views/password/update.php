@@ -47,11 +47,11 @@ $session = new CHttpSession;
     </tr>
     <tr><td colspan='3'><div style='font-size:10px;color:red;' data-ng-show="passwordform['Password[repeatpassword]'].$error.match">New Password does not match with Repeat New Password. </div></td></tr>
     </table>
-       <div >
+       <div class="buttonsAlignToRight">
         <button id='updateBtn'>Save</button>
         <button id='cancelBtn' class="btn btn-primary">Cancel</button>
     </div>
-    <div class="row buttons" style='display:none;'>
+    <div class="row buttons " style='display:none;'>
         <?php echo CHtml::submitButton($model->isNewRecord ? 'Add' : 'Save', array('class'=>'tobutton btn','id'=>'save')); ?>
     </div>
     

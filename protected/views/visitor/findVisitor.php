@@ -9,16 +9,16 @@ $session = new CHttpSession;
 /* @var $model Visitor */
 $visitorName = $_GET['id'];
 
-if(isset($_GET['tenant_agent']) && $_GET['tenant_agent'] !='' ){
-    $tenant_agent = 'tenant_agent="'.$_GET['tenant_agent'].'" and';
+if (isset($_GET['tenant_agent']) && $_GET['tenant_agent'] != '') {
+    $tenant_agent = 'tenant_agent="' . $_GET['tenant_agent'] . '" and';
 } else {
-    $tenant_agent='(tenant_agent IS NULL or tenant_agent =0 or tenant_agent="") and';
+    $tenant_agent = '(tenant_agent IS NULL or tenant_agent =0 or tenant_agent="") and';
 }
 $model = new Visitor;
 $criteria = new CDbCriteria;
 
 
-$criteria->addCondition('tenant="'.$_GET['tenant'].'" and '.$tenant_agent.' (CONCAT(first_name," ",last_name) like "%' . $visitorName . '%" or first_name like "%' . $visitorName . '%" or last_name like "%' . $visitorName . '%")');
+$criteria->addCondition('tenant="' . $_GET['tenant'] . '" and ' . $tenant_agent . ' (CONCAT(first_name," ",last_name) like "%' . $visitorName . '%" or first_name like "%' . $visitorName . '%" or last_name like "%' . $visitorName . '%")');
 
 $model->unsetAttributes();
 
@@ -29,6 +29,11 @@ $customDataProvider = new CActiveDataProvider($model, array(
 $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'findvisitor-grid',
     'dataProvider' => $customDataProvider,
+    'afterAjaxUpdate' => "
+    function(id, data) {
+        $('th > .asc').append('<div></div>');
+        $('th > .desc').append('<div></div>');
+    }",
     'columns' => array(
         array(
             'name' => 'first_name',

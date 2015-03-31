@@ -539,6 +539,7 @@ class VisitController extends Controller {
         $model->time_check_in = '';
         $model->time_check_out = '';
         $model->date_check_out = '';
+        $model->card = NULL;
 
         $model->isNewRecord = true;
         $model->attributes = $_POST['Visit'];

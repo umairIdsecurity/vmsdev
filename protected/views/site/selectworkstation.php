@@ -23,7 +23,7 @@ for ($i = 0; $i < $arrayCount; $i++) {
 
         <table class="selectworkstation-area" style="padding:12px;">
             <tr>
-                <td style="font-size:12px;font-weight: bold;text-align: center">Please select which Workstation you want to access : </td>
+                <td style="font-size:12px;font-weight: bold;text-align: center">Please select your workstation</td>
             </tr>
             <tr>
                 <td style="text-align: center">

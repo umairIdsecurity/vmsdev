@@ -41,7 +41,7 @@ ul.yiiPager .page a
 ul.yiiPager a:hover
 {
 	border:solid 1px #A0DB31;
-        background-color: #A0DB31 !important;
+        background-color: #A0DB31;
         color:white;
 }
 

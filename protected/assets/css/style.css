@@ -159,8 +159,7 @@ nav.navigation ul li
     float:left;
     font-size:12px;
     color:#969696;
-    font-weight:bold;
-    //background:url(images/li_right.png) right top repeat-y;	
+    font-weight:bold;	
 }
 nav.navigation ul li:last-child
 {
@@ -183,15 +182,21 @@ nav.navigation ul li a
     width: 170px;
     text-align:center;
 }
-nav.navigation ul li a:hover, nav.navigation ul li.active
-{
-    background:#9BD62C;	
-}
-nav.navigation ul li a:hover{
-    color: #fff;
+
+nav.navigation ul li.active a{
+    color:white;
 }
 
-nav.navigation ul li.active a 
+nav.navigation ul li a:hover, nav.navigation ul li.active 
+{
+    background:#9BD62C;
+}
+
+nav.navigation ul li a:hover, nav.navigation ul .active a{
+    color: #fff !important;
+}
+
+nav.navigation ul li:first-child.active a
 {
     color:#fff;
     border-top-left-radius: 8px !important;
@@ -432,12 +437,12 @@ nav.navigation ul li:last-child.active
 }
 
 .grid-view .summary {
-    float: right;
     font-size: 12px;
     font-weight: bold;
-    margin-left: 748px !important;
-    margin-top: -30px !important;
+    margin-right: 100px !important;
+    margin-top: -25px !important;
     position: absolute;
+    right:0
 }
 
 #page{
@@ -619,6 +624,7 @@ dt.tabs dt{
 
 #register-reason-form{
     margin-top: -80px;
+    width:300px;
 }
 
 #register-reason-form input[type="text"]{
@@ -975,10 +981,8 @@ dt.tabs dt{
     list-style:none outside none;
 }
 #actionsCssMenu li a, #actionsCssMenu li a span{
-    //   color:#58585A !important;
     font-weight:bold;
     font-size:12px;
-    width:253px;
     text-align:left;
     line-height:15px;
 }
@@ -1092,11 +1096,10 @@ dt.tabs dt{
 }
 
 #export-button{
-    margin-top: -32px;
-    margin-left: 797px !important;
+    margin-right: 100px !important;
     margin-top: -32px !important;
     position: absolute;
-
+    right: 0;
 }
 
 .admindashboardDiv{
@@ -1205,7 +1208,7 @@ dt.tabs dt{
     text-transform: lowercase !important;
 }
 
-.errorSummary ul li:first-letter{
+.errorSummary ul li:first-letter, .emailErr:first-letter{
     text-transform: uppercase !important;
 }
 
@@ -1434,13 +1437,17 @@ dt.tabs dt{
 #visitor-grid .items .filters td:nth-child(6), #visitor-grid .items .filters td:nth-child(7),
 #workstation-grid_c5,#workstation-grid .items .filters td:nth-child(6),#workstation-grid_c6,
 #workstation-grid .items .filters td:nth-child(7),
-#user-grid_c6,#user-grid .items .filters td:nth-child(6),
-#user-grid_c7,#user-grid .items .filters td:nth-child(7),
-#user-grid_c8,#user-grid .items .filters td:nth-child(8),
 #user-grid_c9,#user-grid .items .filters td:nth-child(9),
-#user-grid_c10,#user-grid .items .filters td:nth-child(10)
+#user-grid_c10,#user-grid .items .filters td:nth-child(10),
+#user-grid_c11,#user-grid .items .filters td:nth-child(11),
+#user-grid_c12,#user-grid .items .filters td:nth-child(12),
+#user-grid_c13,#user-grid .items .filters td:nth-child(13)
 {
     display:none;
+}
+
+#user-grid_c5,#user-grid_c6,#user-grid_c1{
+    min-width:100px;
 }
 #actionsCssMenu .complete, #actionsCssMenu .neutral{
     width:78px !important;
@@ -1537,3 +1544,54 @@ dt.tabs dt{
     position: relative;
     text-align: center;
     width: 250px;}
+
+
+/*sort*/
+.asc div{
+    border-color: #9bd62c;
+    content: "";
+    position: absolute;
+    top:8px;
+    right:7.8px;
+    width: 0; 
+    height: 0; 
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-bottom: 4px solid #9bd62c;
+}
+
+.desc div{
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color: #9bd62c  rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
+    border-image: none;
+    border-style: solid;
+    border-width: 4px;
+    content: "";
+
+    position: absolute;
+    right: 7px;
+    top: 15px;
+}
+
+
+#user-grid {
+    padding-right: 30px !important;
+    width: 1280px;
+}
+
+#view-visitor-records table th, .grid-view table th{
+    min-width:150px;
+}
+
+#company-grid_c5, #company-grid_c4, #workstation-grid_c7, #user-grid_c8,
+#user-access-grid_c3,#user-access-grid_c1,#cbColumn,#user_workstationsGrid_c1,#visitor-grid_c6,
+#visitor-type-grid_c1,#visit-reason-grid_c1,#visit-grid_c6,#visit-grid_c5{
+    min-width:50px;
+}
+
+#user-access-grid_c1,#cbColumn,#visit-reason-grid_c1{
+    width:20px;
+}

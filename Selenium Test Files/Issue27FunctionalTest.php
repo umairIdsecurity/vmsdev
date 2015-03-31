@@ -341,7 +341,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_email", "123");
         $this->waitForElementPresent("id=Visitor_email_em_");
         sleep(1);
-        $this->assertEquals("Email Address is not a valid email address.", $this->getText("id=Visitor_email_em_"));
+        $this->assertEquals("Email Address is not in a recognised format. Please revise.", $this->getText("id=Visitor_email_em_"));
     }
 
     /* Scenario 4 –Login as super admin and Check for validations in updating a corporate visitor
@@ -640,8 +640,8 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("link=Edit");
         $this->click("//li[@id='preregisterLi']/a/span");
         sleep(1);
-        $this->assertEquals(date('d-m-Y', time() + 172800), $this->getValue("id=Visit_date_in"));
-        $this->assertEquals(date('d-m-Y', time() + 259200), $this->getValue("id=Visit_date_out"));
+        $this->assertEquals(date('d-m-Y', time() + 86400), $this->getValue("id=Visit_date_in"));
+        $this->assertEquals(date('d-m-Y', time() + 172800), $this->getValue("id=Visit_date_out"));
         $this->assertEquals("11", $this->getValue("id=Visit_time_in_hours"));
         $this->assertEquals("24", $this->getValue("id=Visit_time_in_minutes"));
     }
@@ -904,7 +904,7 @@ class Issue27FunctionalTest extends BaseFunctionalTest {
         $this->click("id=submitFormUser");
         $this->clickAndWait("id=submitAllForms");
         $this->click("//li[@id='activateLi']/a/span");
-        $this->assertEquals("Proposed Date Out", $this->getText("css=#dateoutDiv > td"));
+        $this->assertEquals("Proposed Check Out Date", $this->getText("css=#dateoutDiv > td"));
         $this->click("//li[@id='preregisterLi']/a/span");
         $date2 = date('d-m-Y', time() + 86400);
         $date3 = date('d-m-Y', time() + 172800);

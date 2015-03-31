@@ -14,7 +14,7 @@ if ($visitModel->time_in != '') {
     </tr>
 
     <tr id="dateoutDiv">
-        <td>Proposed Date Out
+        <td>Proposed Check Out Date
             <br><?php
     $this->widget('zii.widgets.jui.CJuiDatePicker', array(
         'htmlOptions' => array(
@@ -84,7 +84,7 @@ if ($visitModel->time_in != '') {
             minDate: "+1",
             buttonImage: "<?php echo Yii::app()->controller->assetsBase; ?>/images/calendar.png",
             buttonImageOnly: true,
-            buttonText: "Select Proposed Date Out",
+            buttonText: "Select Proposed Check Out Date",
             dateFormat: "dd-mm-yy",
             onClose: function(selectedDate) {
                 $("#Visit_date_out").val($("#proposedDateOut").val());

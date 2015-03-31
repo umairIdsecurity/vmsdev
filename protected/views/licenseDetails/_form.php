@@ -21,7 +21,7 @@
     <?php $this->widget('ext.widgets.redactorjs.Redactor', array('name' => 'LicenseDetails[description]','model' => $model, 'attribute' => 'description')); ?>
 
 
-    <div class="row buttons">
+    <div class="row buttons buttonsAlignToRight">
     <?php echo CHtml::submitButton($model->isNewRecord ? 'Add' : 'Save',array('class'=>'complete')); ?>
     </div>
     

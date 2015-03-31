@@ -173,10 +173,10 @@ if ($this->action->id == 'update') {
                             </tr>
                         <?php } ?>
                         <tr>
-                            <td>
+                            <td width="37%">
                                 <?php echo $form->labelEx($model, 'email'); ?>
                                 <input type="text" id="Visitor_email" name="Visitor[email]" maxlength="50" size="50" value="<?php echo $model->email; ?>"/>
-                                <?php echo "<br>" . $form->error($model, 'email'); ?>
+                               <?php echo "<br>" . $form->error($model, 'email',array('style'=>'text-transform:none;')); ?>
                                 <div style="" class="errorMessageEmail" >A profile already exists for this email address.</div>
 
                             </td>

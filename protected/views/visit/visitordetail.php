@@ -2,7 +2,6 @@
 /* @var $this VisitorController */
 /* @var $model Visitor */
 $session = new CHttpSession;
-
 ?>
 <table id="visitorDetailDiv">
     <tr class="theadVisitorDetail">
@@ -402,21 +401,36 @@ $this->renderPartial('visithistory', array('model' => $model,
                 $("#activateLi").hide();
                 $("#closevisitLi").show();
                 $("#printCardBtn").attr('disabled', false);
+                $("#printCardBtn").show();
                 $("#printCardBtn").removeClass("disabledButton");
                 $(".visitStatusLi li a span").html("Active");
                 $(".visitStatusLi li a span").css('color', '#9BD62C !important');
+
+                sendCardForm();
+                
                 alert("Visit is now activated. You can now print the visitor badge.");
-                
-                //window.location = "index.php?r=visit/detail&id=<?php echo $_GET['id'];  ?>";
-//                if ($("#currentRoleOfLoggedInUser").val() == 5 || $("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
-//                   // window.location = 'index.php?r=dashboard';
-//                } else if ($("#currentRoleOfLoggedInUser").val() == 1 || $("#currentRoleOfLoggedInUser").val() == 6) {
-//                   // window.location = 'index.php?r=dashboard/admindashboard';
-//                } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
-//                   // window.location = 'index.php?r=dashboard/viewmyvisitors';
-                
-               // }
+                window.location = "<?php echo CHtml::normalizeUrl(array("visit/detail&id=" . $model->id)); ?>";
             },
+        });
+    }
+
+    function sendCardForm(visitId) {
+        var cardForm = $("#update-card-form").serialize();
+        visitId = (typeof visitId === "undefined") ? "defaultValue" : visitId;
+        if (visitId != "defaultValue") {
+            var id = visitId;
+        } else {
+            var id = '<?php echo $model->id; ?>';
+        }
+        $.ajax({
+            type: "POST",
+            url: "<?php echo CHtml::normalizeUrl(array("cardGenerated/create&visitId=")) ?>" + id,
+            data: cardForm,
+            success: function(data) {
+                if (visitId != "defaultValue") {
+                    window.location = "index.php?r=visit/detail&id=" + id;
+                }
+            }
         });
     }
 
@@ -451,7 +465,9 @@ $this->renderPartial('visithistory', array('model' => $model,
             url: "<?php echo CHtml::normalizeUrl(array("visit/duplicateVisit&id=" . $model->id)); ?>",
             data: visitForm,
             success: function(data) {
-                window.location = "index.php?r=visit/detail&id=" + data;
+                sendCardForm(data);
+                
+              //  window.location = "index.php?r=visit/detail&id=" + data;
                 //  alert(data);
             },
         });

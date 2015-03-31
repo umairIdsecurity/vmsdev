@@ -54,7 +54,7 @@ $currentLoggedUserId = $session['id'];
     <?php echo $form->errorSummary($model); ?>
     <table>
         <tr>
-            <td style="vertical-align: top;">
+            <td style="vertical-align: top; width:50%;">
                 <table>
                     <tr>
                         <td><?php echo $form->labelEx($model, 'role'); ?></td>
@@ -168,7 +168,7 @@ $currentLoggedUserId = $session['id'];
                             <td><label for="User_password">Password <span class="required">*</span></label></td>
                             <td>
                                 <input ng-model="user.passwords" data-ng-class="{
-                                                                                                'ng-invalid':userform['User[repeatpassword]'].$error.match}" type="password" id="User_password" value = '<?php echo $model->password; ?>' name="User[password]">			
+                                                                                                    'ng-invalid':userform['User[repeatpassword]'].$error.match}" type="password" id="User_password" value = '<?php echo $model->password; ?>' name="User[password]">			
                                        <?php echo "<br>" . $form->error($model, 'password'); ?>
                             </td>
                         </tr>
@@ -199,10 +199,10 @@ $currentLoggedUserId = $session['id'];
                         </td>
                     </tr>
                     <tr>
-                        <td><?php echo $form->labelEx($model, 'email'); ?></td>
+                        <td width="30%"><?php echo $form->labelEx($model, 'email'); ?></td>
                         <td>
                             <input type="text" id="User_email" name="User[email]" maxlength="50" size="50"  value="<?php echo $model->email; ?>"/>
-                            <?php echo "<br>" . $form->error($model, 'email'); ?>
+                            <?php echo "<br>" . $form->error($model, 'email', array('style' => 'text-transform:none;')); ?>
                             <span class="errorMessageEmail1" style="display:none;color:red;font-size:10px;">A profile already exists for this email address</span>
                         </td>
                     </tr>

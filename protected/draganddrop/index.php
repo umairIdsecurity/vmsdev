@@ -164,10 +164,15 @@ if ($this->action->id == 'addvisitor' || ($this->action->id == 'update' && $this
     <style>
         .ajax-file-upload{
             font-size: 12px !important;
-            margin-left: -181px;
+            margin-left: -186px;
             width: 182.9px;
             padding-bottom:3px;
             height: 17px;
+        }
+        .ajax-file-upload-error {
+            position: absolute;
+            width: 200px;
+            margin-left:60px;
         }
     </style>    
 <?php } ?>
@@ -214,7 +219,7 @@ if (isset($_GET['viewFrom'])) {
                 } else {
                     var logo = document.getElementById('companyLogo');
                 }
-                
+
                 var currentAction = $("#actionUpload").val();
                 if (currentAction == 'update' && $("#controllerId").val() != 'visitor')
                 {
@@ -222,9 +227,9 @@ if (isset($_GET['viewFrom'])) {
                     $(".companyLogoDiv").show();
                 } else {
                     //id of photo
-                    
+
                     if ($("#controllerId").val() == 'visitor' || $("#controllerId").val() == 'visit') {
-                        
+
                         $("#Visitor_photo").val(data);
                     } else if ($("#controllerId").val() == 'companyLafPreferences')
                     {
@@ -241,7 +246,7 @@ if (isset($_GET['viewFrom'])) {
                         success: function(r) {
 
                             $.each(r.data, function(index, value) {
-                                if (($("#actionUpload").val() == 'update' ||$("#actionUpload").val() == 'addvisitor' || ($("#actionUpload").val() == 'create') && $("#controllerId").val() == 'visitor')) {
+                                if (($("#actionUpload").val() == 'update' || $("#actionUpload").val() == 'addvisitor' || ($("#actionUpload").val() == 'create') && $("#controllerId").val() == 'visitor')) {
                                     $(".ajax-upload-dragdrop").css("background", "url(<?php echo Yii::app()->request->baseUrl; ?>" + value.relative_path + ") no-repeat center top");
                                     $(".ajax-upload-dragdrop").css({
                                         "background-size": "137px 190px"
@@ -274,7 +279,7 @@ if (isset($_GET['viewFrom'])) {
             }
         });
         if ($("#actionUpload").val() == 'detail') {
-               $(".uploadnotetext").html('');
+            $(".uploadnotetext").html('');
         }
         if ($("#actionUpload").val() == 'detail') {
             $(".ajax-upload-dragdrop span").hide();

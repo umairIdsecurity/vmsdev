@@ -110,7 +110,7 @@ $session = new CHttpSession;
                     <?php echo "<br>" . $form->error($userModel, 'staff_id'); ?>
                 </td>
 
-                <td>
+                <td width="35%">
                     <?php echo $form->labelEx($userModel, 'email'); ?><br>
                     <?php echo $form->textField($userModel, 'email', array('size' => 50, 'maxlength' => 50)); ?>
                     <?php echo "<br>" . $form->error($userModel, 'email'); ?>

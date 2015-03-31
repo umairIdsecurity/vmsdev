@@ -1,10 +1,11 @@
 
 <?php
 $session = new CHttpSession;
+
+$session['count'] = 1;
 date_default_timezone_set('Asia/Manila');
 $tenant = User::model()->findByPk($visitorModel->tenant);
-?>
-<?php
+
 $photoForm = $this->beginWidget('CActiveForm', array(
     'id' => 'update-photo-form',
     'action' => Yii::app()->createUrl('/visitor/update&id=' . $model->visitor . '&view=1'),
@@ -35,23 +36,29 @@ $photoForm = $this->beginWidget('CActiveForm', array(
 <div id="cardDiv" style="background-size:220px 310px; height:305px;">
 
     <div style="position: relative; padding-top:180px;padding-left:30px;">
-         <?php
+        <?php
         if ($tenant->company != '') {
             $companyLogoId = Company::model()->findByPk($tenant->company)->logo;
 
             if ($companyLogoId == "") {
-                $companyLogo = Yii::app()->controller->assetsBase."/".'images/companylogohere.png';
+                $companyLogo = Yii::app()->controller->assetsBase . "/" . 'images/companylogohere.png';
             } else {
-                $companyLogo = Yii::app()->request->baseUrl."/".Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
+                $companyLogo = Yii::app()->request->baseUrl . "/" . Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
             }
             ?>
-        <img class='<?php if($model->visit_status != VisitStatus::ACTIVE){ echo "cardCompanyLogoPreregistered"; } else { echo "cardCompanyLogo"; } ?>' src="<?php
-            echo $companyLogo;
-            ?>" style="<?php 
-            if(strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false){
-                ?>margin-left:42px;<?php
+            <img class='<?php
+            if ($model->visit_status != VisitStatus::ACTIVE) {
+                echo "cardCompanyLogoPreregistered";
+            } else {
+                echo "cardCompanyLogo";
             }
-            ?>"/>
+            ?>' src="<?php
+                 echo $companyLogo;
+                 ?>" style="<?php
+                 if (strpos($_SERVER['HTTP_USER_AGENT'], 'Trident/7.0; rv:11.0') !== false) {
+                     ?>margin-left:42px;<?php
+                 }
+                 ?>"/>
                  <?php
              }
              ?>
@@ -91,71 +98,72 @@ $photoForm = $this->beginWidget('CActiveForm', array(
             <tr>
                 <td>
                     <div style="width:132px">
-                    <?php echo $visitorModel->first_name . ' ' . $visitorModel->last_name; ?>
+                        <?php echo $visitorModel->first_name . ' ' . $visitorModel->last_name; ?>
                     </div>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <span style="<?php if($model->visit_status != VisitStatus::ACTIVE){ echo 'display:none;'; }?>">
-                    <?php
-                    if ($tenant->company != '') {
-                        $inc = 6 - (strlen($model->id));
-                        $int_code = '';
-                        for ($x = 1; $x <= $inc; $x++) {
-
-                                $int_code .= "0";
-                            }
-                            ////echo Company::model()->findByPk($visitorModel->company)->code . $int_code . $model->id;
-                        }
-                        echo Company::model()->findByPk($tenant->company)->code . $int_code . $model->id;
-                    
-                    ?>
+                    <span style="<?php
+                    if ($model->visit_status != VisitStatus::ACTIVE) {
+                        echo 'display:none;';
+                    }
+                    ?>">
+                              <?php
+                              if($model->card !=''){
+                                  echo CardGenerated::model()->findByPk($model->card)->card_number;
+                              }
+                              ?>
                     </span>
                 </td>
             </tr>
         </table>
 
-        
+
     </div>
 
 </div>
 <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
 <?php if ($visitorModel->photo != '') { ?>
     <input type="button" class="btn editImageBtn actionForward" id="editImageBtn" value="Edit Photo" onclick = "document.getElementById('light').style.display = 'block';
-                document.getElementById('fade').style.display = 'block'"/>
-<?php } ?>
+            document.getElementById('fade').style.display = 'block'"/>
+       <?php } ?>
 <div
-        <?php
-        if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
-            echo "style='display:none'";
-        }
-        ?>
-    >
-    <?php
-    $cardDetail = CardGenerated::model()->findAllByAttributes(array(
-        'visitor_id' => $model->visitor
-    ));
-    if ($model->card != NULL && $model->visit_status == VisitStatus::ACTIVE) {
-        ?><input type="button" class="complete btn btn-info printCardBtn" value="Reprint Card" id="reprintCardBtn" onclick="regenerateCard()"/><?php
-} else {
-    ?>
-        <input type="button" class="complete btn btn-info printCardBtn" value="Print Card" id="printCardBtn" onclick="generateCard()"/>
-    <?php
+<?php
+if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
+    echo "style='display:none'";
 }
 ?>
+    >
+        <?php
+        $cardDetail = CardGenerated::model()->findAllByAttributes(array(
+            'visitor_id' => $model->visitor
+        ));
+        if ($model->card != '') {
+            if ((CardGenerated::model()->findByPk($model->card)->print_count > 0) && $model->visit_status == VisitStatus::ACTIVE) {
+                ?><input type="button" class="complete btn btn-info printCardBtn" value="Reprint Card" id="reprintCardBtn" onclick="generateCard()"/><?php
+        } else {
+            ?>
+            <input type="button" class="complete btn btn-info printCardBtn" value="Print Card" id="printCardBtn" onclick="generateCard()"/>
+            <?php
+        }
+        }
+    ?>
 </div>
 <input type="hidden" id="dummycardvalue" value="<?php echo $model->card; ?>"/>
 <script>
     $(document).ready(function() {
 
 
-        if (<?php echo $model->visit_status; ?> == '1' && $("#dummycardvalue").val() == '') { //1 is active
+        if (<?php echo $model->visit_status; ?> == '1' && $("#dummycardvalue").val() == '' && '<?php echo $model->card; ?>' != '') { //1 is active
             document.getElementById('printCardBtn').disabled = false;
 
-        } else if (<?php echo $model->visit_status; ?> != '1') {
-            document.getElementById('printCardBtn').disabled = true;
-            $("#printCardBtn").addClass("disabledButton");
+        }
+        else if ('<?php echo $model->card; ?>' != ''){
+            if (<?php echo $model->visit_status; ?> != '1') {
+                document.getElementById('printCardBtn').disabled = true;
+                $("#printCardBtn").addClass("disabledButton");
+            }
         }
 
         $('#photoCropPreview').imgAreaSelect({
@@ -217,7 +225,6 @@ $photoForm = $this->beginWidget('CActiveForm', array(
         //change modal url to pass visit id
         var url = 'index.php?r=cardGenerated/print&id=<?php echo $model->id; ?>';
         window.open(url, '_blank');
-        window.location = "index.php?r=visit/detail&id=<?php echo $_GET['id']; ?>";
     }
 
     function regenerateCard() {

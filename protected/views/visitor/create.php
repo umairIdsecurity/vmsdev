@@ -499,7 +499,7 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
                         var currentURL = $("#getcurrentUrl").val();
                         if (currentURL == "") {
 //                    //if visitor is not from search sendvisitorform
-                            if ($("#Visit_reason").val() == 'Other') {
+                            if ($("#Visit_reason").val() == 'Other' || $("#Visit_reason_search").val() == 'Other') {
                                 sendReasonForm();
                             }
                             else if ($("#selectedVisitorInSearchTable").val() == 0) {

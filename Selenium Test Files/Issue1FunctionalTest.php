@@ -38,19 +38,19 @@ class Issue1 extends BaseFunctionalTest {
     function Scenario1() {
         $username = 'superadmin@test.com';
         $this->login($username, '12345');
-        $this->assertTrue($this->isElementPresent("link=Logged in as " . $username . " - Super Administrator"));
+        $this->assertTrue($this->isElementPresent("link=Logged in as Super Administrator"));
     }
 
     function Scenario2() {
         $username = 'admin@test.com';
         $this->login($username, '12345');
-        $this->assertTrue($this->isElementPresent("link=Logged in as " . $username . " - Administrator"));
+        $this->assertTrue($this->isElementPresent("link=Logged in as Administrator"));
     }
 
     function Scenario3() {
         $username = 'agentadmin@test.com';
         $this->login($username, '12345');
-        $this->assertTrue($this->isElementPresent("link=Logged in as " . $username . " - Agent Administrator"));
+        $this->assertTrue($this->isElementPresent("link=Logged in as Agent Administrator"));
     }
 
     function Scenario4() {
@@ -58,7 +58,7 @@ class Issue1 extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->click("id=submitBtn");
         $this->clickAndWait("id=submit");
-        $this->assertTrue($this->isElementPresent("link=Logged in as " . $username . " - Agent Operator"));
+        $this->assertTrue($this->isElementPresent("link=Logged in as Agent Operator"));
     }
 
     function Scenario5() {
@@ -66,14 +66,14 @@ class Issue1 extends BaseFunctionalTest {
         $this->login($username, '12345');
         $this->click("id=submitBtn");
         $this->clickAndWait("id=submit");
-        $this->assertTrue($this->isElementPresent("link=Logged in as " . $username . " - Operator"));
+        $this->assertTrue($this->isElementPresent("link=Logged in as Operator"));
     }
 
     function Scenario6() {
         $username = 'staffmember@test.com';
         $this->login($username, '12345');
 
-        $this->assertTrue($this->isElementPresent("link=Logged in as " . $username . " - Staff Member"));
+        $this->assertTrue($this->isElementPresent("link=Logged in as Staff Member"));
     }
 
 }

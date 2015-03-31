@@ -41,7 +41,7 @@ class Issue82FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("xpath=(//a[contains(text(),'Edit')])[7]");
         $this->type("id=User_contact_number", "99999");
         $this->clickAndWait("id=submitForm");
-        $this->assertEquals("99999", $this->getText("//div[@id='user-grid']/table/tbody/tr[7]/td[6]"));
+        $this->assertEquals("99999", $this->getText("//div[@id='user-grid']/table/tbody/tr[7]/td[7]"));
         $this->assertEquals("admin", $this->getText("//div[@id='user-grid']/table/tbody/tr[7]/td[2]"));
         $this->clickAndWait("xpath=(//a[contains(text(),'Edit')])[7]");
         try {
@@ -78,7 +78,7 @@ class Issue82FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("//ul[@id='tabs']/li[3]/a/p");
         $username = 'admintest@test.com';
         $this->login($username, '12345');
-        $this->assertEquals("Logged in as admintest@test.com - Administrator", $this->getText("link=Logged in as admintest@test.com - Administrator"));
+        $this->assertEquals("Logged in as Administrator", $this->getText("link=Logged in as Administrator"));
     }
 
     /* Scenario 3 Update email of admintest@test.com to staffmember@test.com. Should not update

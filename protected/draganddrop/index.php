@@ -22,6 +22,7 @@ if ($this->action->id == 'addvisitor' || ($this->action->id == 'update' && $this
             width: 120px !important;
             padding: 87px 5px 12px 90px;
             margin-left: 20px !important;
+            border:none;
         }
         .ajax-file-upload{
             margin-left: -107px !important;
@@ -84,6 +85,7 @@ if ($this->action->id == 'addvisitor' || ($this->action->id == 'update' && $this
             height: 150px;
             width: 120px !important;
             padding: 87px 5px 12px 90px;
+            border:none;
         }
         .ajax-file-upload{
             margin-left: -107px !important;
@@ -178,10 +180,10 @@ if ($this->action->id == 'addvisitor' || ($this->action->id == 'update' && $this
 <?php } ?>
 
 <div id="fileuploader" style="margin-bottom:5px;"><?php
-    if ($this->action->id == 'detail') {
+    if ($this->id != 'company' && $this->id !='companyLafPreferences') {
         echo "Upload Photo";
     } else {
-        echo "Browse Computer";
+        echo "Upload Logo";
     }
     ?> </div> 
 <br><br>

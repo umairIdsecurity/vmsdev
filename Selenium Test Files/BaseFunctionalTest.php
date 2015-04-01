@@ -23,34 +23,39 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
         $this->setBrowser("*firefox");
         $this->setBrowserUrl("http://dev.identitysecurity.info/");
     }
-
+    
     public function resetDb() {
-        $this->open("http://dev.identitysecurity.info/index.php?r=site/resetDb");
+        
+        $this->login('superadmin@test.com', '12345');
+        $this->open("http://dev.identitysecurity.info/index.php?r=resetDatabase/reset&filename=vms&folder=Selenium+Test+Files");
         $this->assertEquals("Tables imported successfully", $this->getText("css=body"));
 
-        $this->open("http://dev.identitysecurity.info/index.php?r=site/DBpatch");
+        $this->open("http://dev.identitysecurity.info/index.php?r=resetDatabase/dbPatch");
         $this->assertEquals("--== Starting Patcher ==-- \nDone patch for issue81\nDone patch for issue137", $this->getText("css=body"));
    }
 
     public function resetDbWithData() {
         $this->start();
-        $this->open("http://dev.identitysecurity.info/index.php?r=site/resetDb2");
+        $this->login('superadmin@test.com', '12345');
+        $this->open("http://dev.identitysecurity.info/index.php?r=resetDatabase/reset&filename=vms-withData&folder=Selenium+Test+Files");
         $this->assertEquals("Tables imported successfully", $this->getText("css=body"));
 
-        $this->open("http://dev.identitysecurity.info/index.php?r=site/DBpatch");
+        $this->open("http://dev.identitysecurity.info/index.php?r=resetDatabase/dbPatch");
         $this->assertEquals("--== Starting Patcher ==-- \nDone patch for issue81\nDone patch for issue137", $this->getText("css=body"));
     }
 
     public function issue35Sql() {
         $this->start();
-        $this->open("http://dev.identitysecurity.info/index.php?r=site/issue35UpdateDatabaseRecord");
-        $this->assertEquals("Tables updated successfully", $this->getText("css=body"));
+        $this->login('superadmin@test.com', '12345');
+        $this->open("http://dev.identitysecurity.info/index.php?r=resetDatabase/reset&filename=Issue35&folder=Selenium+Test+Files");
+        $this->assertEquals("Tables imported successfully", $this->getText("css=body"));
     }
 
     public function issue48Sql() {
         $this->start();
-        $this->open("http://dev.identitysecurity.info/index.php?r=site/issue48UpdateDatabaseRecord");
-        $this->assertEquals("Tables updated successfully", $this->getText("css=body"));
+        $this->login('superadmin@test.com', '12345');
+        $this->open("http://dev.identitysecurity.info/index.php?r=resetDatabase/reset&filename=Issue48&folder=Selenium+Test+Files");
+        $this->assertEquals("Tables imported successfully", $this->getText("css=body"));
     }
 
     public function __destruct() {

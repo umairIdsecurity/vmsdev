@@ -24,7 +24,7 @@ class Issue81FunctionalTest extends BaseFunctionalTest {
         $this->open("http://dev.identitysecurity.info/index.php?r=site/reset&filename=live-demo");
         $this->assertEquals("Tables imported successfully", $this->getText("css=body"));
 
-        $this->open("http://dev.identitysecurity.info/index.php?r=site/DBpatch");
+        $this->open("http://dev.identitysecurity.info/index.php?r=resetDatabase/dbPatch");
         $this->assertEquals("--== Starting Patcher ==-- \nDone patch for issue81\nDone patch for issue137", $this->getText("css=body"));
         $this->Scenario1();
         $this->Scenario3();

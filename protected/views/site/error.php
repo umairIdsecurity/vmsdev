@@ -1,6 +1,7 @@
 <?php
 /* @var $this SiteController */
 /* @var $error array */
+error_reporting(0);
 $session = new CHttpSession;
 $this->pageTitle = Yii::app()->name . ' - Error';
 

@@ -183,6 +183,8 @@ class DashboardController extends Controller {
 
     public function actionAdminDashboard() {
         $this->layout = '//layouts/column2';
+        $session = new CHttpSession;
+        $session['lastPage'] = 'dashboard';
         $model = new Visit('search');
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['Visit'])) {

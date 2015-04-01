@@ -312,7 +312,7 @@ class User extends VmsActiveRecord {
     protected function afterValidate() {
         parent::afterValidate();
         if (!$this->hasErrors()) {
-            if (Yii::app()->controller->action->id == 'create') {
+            if (Yii::app()->controller->action->id == 'create' && $this->password != '(NULL)') {
                 $this->password = $this->hashPassword($this->password);
             }
             //disable if action is update 

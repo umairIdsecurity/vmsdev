@@ -181,16 +181,16 @@ $session = new CHttpSession;
                                     <?php echo "<br>" . $form->error($model, 'last_name'); ?>
                                 </td>
                             </tr>
-                            <tr>
-                                <td>
+                            <tr class="hidden">
+                                <td >
                                     <label for="Visitor_password">Password <span class="required">*</span></label><br>
                                     <input ng-model="user.passwords" data-ng-class="{
-                                                'ng-invalid':registerform['Visitor[repeatpassword]'].$error.match}" type="password" id="Visitor_password" name="Visitor[password]">			
+                                                'ng-invalid':registerform['Visitor[repeatpassword]'].$error.match}" type="password" id="Visitor_password" name="Visitor[password]" value="(NULL)">			
                                            <?php echo "<br>" . $form->error($model, 'password'); ?>
                                 </td>
                                 <td>
                                     <label for="Visitor_repeatpassword">Repeat Password <span class="required">*</span></label><br>
-                                    <input ng-model="user.passwordConfirm" type="password" id="Visitor_repeatpassword" data-match="user.passwords" name="Visitor[repeatpassword]"/>			
+                                    <input ng-model="user.passwordConfirm" type="password" id="Visitor_repeatpassword" data-match="user.passwords" name="Visitor[repeatpassword]" value="(NULL)"/>			
                                     <div style='font-size:0.9em;color:red;' data-ng-show="registerform['Visitor[repeatpassword]'].$error.match">New Password does not match with Repeat <br> New Password. </div>
                                     <?php echo "<br>" . $form->error($model, 'repeatpassword'); ?>
                                 </td>
@@ -455,6 +455,8 @@ $session = new CHttpSession;
 
 <script>
     $(document).ready(function() {
+        $("#Visitor_password").val("(NULL)");
+        $("#Visitor_repeatpassword").val("(NULL)");
         $('#photoCropPreview').imgAreaSelect({
             handles: true,
             onSelectEnd: function(img, selection) {

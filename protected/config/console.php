@@ -2,19 +2,16 @@
 
 // This is the configuration for yiic console application.
 // Any writable CConsoleApplication properties can be configured here.
+
+$mainConfigArray = include dirname(__FILE__).DIRECTORY_SEPARATOR.'main.php';
+
 return array(
     'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . '..',
-    'name' => 'cron',
+    'name' => 'Cron Application',
     // preloading 'log' component
     'preload' => array('log'),
-    'import' => array(
-        'application.models.*',
-        'application.components.*',
-        'application.components.*',
-        'application.extensions.bootstrap.widgets.*',
-        'application.service.impl.*',
-        'application.service.*',
-    ),
+    'import' => $mainConfigArray['import'],
+
     // application components
     'components' => array(
         'ePdf' => array(
@@ -51,23 +48,8 @@ return array(
           ),
           ),
          */
-        'db' => array(
-            'connectionString' => 'mysql:host=localhost;dbname=vms',
-            'username' => 'user_vms',
-            'password' => 'HFz7c9dHrmPqwNGr',
-            'charset' => 'utf8',
-            'enableParamLogging' => true,
-            'enableProfiling' => true,
-        ),
-        //uncomment for live
-//        'db' => array(
-//            'connectionString' => 'mysql:host=localhost;dbname=identity_cvms',
-//            'username' => 'identity_vms',
-//            'password' => 'HFz7c9dHrmPqwNGr',
-//            'charset' => 'utf8',
-//            'enableParamLogging' => true,
-//            'enableProfiling' => true,
-//        ),
+        'db' => $mainConfigArray['components']['db'],
+
         'errorHandler' => array(
             // use 'site/error' action to display errors
             'errorAction' => 'site/error',

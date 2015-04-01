@@ -31,6 +31,11 @@ $session = new CHttpSession;
         $this->widget('zii.widgets.grid.CGridView', array(
             'id' => 'visit-grid',
             'dataProvider' => $visitData,
+            'afterAjaxUpdate' => "
+    function(id, data) {
+        $('th > .asc').append('<div></div>');
+        $('th > .desc').append('<div></div>');
+    }",
             'columns' => array(
                 array(
                     'name' => 'cardnumber',

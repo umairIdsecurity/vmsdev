@@ -1595,3 +1595,8 @@ dt.tabs dt{
 #user-access-grid_c1,#cbColumn,#visit-reason-grid_c1{
     width:20px;
 }
+
+
+#visit-grid table th{
+    min-width:20px;
+}

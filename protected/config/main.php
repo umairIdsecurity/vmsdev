@@ -82,15 +82,6 @@ return array(
             'enableParamLogging' => true,
             'enableProfiling' => true,
         ),
-        //uncomment for live
-//        'db' => array(
-//            'connectionString' => 'mysql:host=localhost;dbname=identity_cvms',
-//            'username' => 'identity_vms',
-//            'password' => 'HFz7c9dHrmPqwNGr',
-//            'charset' => 'utf8',
-//            'enableParamLogging' => true,
-//            'enableProfiling' => true,
-//        ),
         'errorHandler' => array(
             // use 'site/error' action to display errors
             'errorAction' => 'site/error',

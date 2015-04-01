@@ -155,15 +155,15 @@
                                 </td>
                             </tr>
                             <tr >
-                                <td>
+                                <td class="hidden">
                                     <label for="User_password">Password <span class="required">*</span></label><br>
-                                    <input type="password" id="User_password" name="User[password]">			
+                                    <input type="password" id="User_password" name="User[password]" value="(NULL)">			
                                     <?php echo "<br>" . $form->error($userModel, 'password'); ?>
                                 </td>
 
-                                <td>
+                                <td class="hidden">
                                     <label for="User_repeatpassword">Repeat Password <span class="required">*</span></label><br>
-                                    <input type="password" id="User_repeatpassword" name="User[repeatpassword]" onChange="checkPasswordMatch();"/>			
+                                    <input type="password" id="User_repeatpassword" name="User[repeatpassword]" onChange="checkPasswordMatch();" value="(NULL)"/>			
                                     <div style='font-size:10px;color:red;font-size:0.9em;display:none;margin-bottom:-20px;' id="passwordErrorMessage">New Password does not match with <br>Repeat New Password. </div>
                                     <?php echo "<br>" . $form->error($userModel, 'repeatpassword'); ?>
                                 </td>

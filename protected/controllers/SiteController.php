@@ -147,7 +147,7 @@ class SiteController extends Controller {
             $session = new CHttpSession;
             $session->open();
             $session['workstation'] = $_POST['userWorkstation'];
-            $this->redirect('index.php?r=dashboard');
+            $this->redirect('index.php?r=dashboard/adminDashboard');
         }
 
         // display the login form
@@ -159,5 +159,4 @@ class SiteController extends Controller {
               echo 'Assets folder modified successfully';
           }
     }
-
 }

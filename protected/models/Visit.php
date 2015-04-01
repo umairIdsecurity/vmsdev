@@ -84,7 +84,7 @@ class Visit extends CActiveRecord {
         // set private attribute for search
         $this->_visitor = $value;
     }
-    
+
     public function getDatecheckin1() {
         // return private attribute on search
         if ($this->scenario == 'search') {
@@ -108,7 +108,7 @@ class Visit extends CActiveRecord {
         // set private attribute for search
         $this->_firstname = $value;
     }
-    
+
     public function getCardNumber() {
         // return private attribute on search
         if ($this->scenario == 'search') {
@@ -192,9 +192,9 @@ class Visit extends CActiveRecord {
             'createdBy' => array(self::BELONGS_TO, 'User', 'created_by'),
             'tenant0' => array(self::BELONGS_TO, 'User', 'tenant'),
             'workstation0' => array(self::BELONGS_TO, 'Workstation', 'workstation'),
-           // 'company0' => array(self::BELONGS_TO, 'Company', 'visitor0->company'),
-            'company0'=>array(
-                self::BELONGS_TO,'Company',array('company'=>'id'),'through'=>'visitor0'
+            // 'company0' => array(self::BELONGS_TO, 'Company', 'visitor0->company'),
+            'company0' => array(
+                self::BELONGS_TO, 'Company', array('company' => 'id'), 'through' => 'visitor0'
             ),
             'visitStatus' => array(self::BELONGS_TO, 'VisitStatus', 'visit_status'),
         );
@@ -248,8 +248,8 @@ class Visit extends CActiveRecord {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
-        
-        $criteria->with = array('card0','visitor0','company0');
+
+        $criteria->with = array('card0', 'visitor0', 'company0');
         //$criteria->with .= 'visitor0';
         $criteria->compare('CONCAT(visitor0.first_name, \' \', visitor0.last_name)', $this->visitor, true);
         $criteria->compare('visitor0.first_name', $this->firstname, true);
@@ -278,7 +278,7 @@ class Visit extends CActiveRecord {
         $criteria->compare('date_out', $this->date_out, true);
         $criteria->compare('time_out', $this->time_out, true);
 
-       // $criteria->compare('date_check_in', $this->date_check_in, true);
+        // $criteria->compare('date_check_in', $this->date_check_in, true);
         $criteria->mergeWith($this->dateRangeSearchCriteria('date_check_in', $this->date_check_in));
 
         $criteria->compare('time_check_in', $this->time_check_in, true);
@@ -286,7 +286,7 @@ class Visit extends CActiveRecord {
         $criteria->compare('time_check_out', $this->time_check_out, true);
         $criteria->compare('tenant', $this->tenant, true);
         $criteria->compare('tenant_agent', $this->tenant_agent, true);
-        $criteria->compare('t.is_deleted', $this->is_deleted,"0");
+        $criteria->compare('t.is_deleted', $this->is_deleted, "0");
         $criteria->compare('visit_status', $this->visit_status);
         $criteria->compare('workstation', $this->workstation);
         if ($merge !== null) {
@@ -316,10 +316,17 @@ class Visit extends CActiveRecord {
 
             case Roles::ROLE_OPERATOR:
             case Roles::ROLE_AGENT_OPERATOR:
-                $criteria->addCondition('t.workstation ="' . $session['workstation'] . '"');
+                $workstations = Workstation::model()->findWorkstationAvailableForUser(Yii::app()->user->id);
+                $text = "";
+                foreach ($workstations as $key => $value) {
+                    $text .="'" . $value['id'] . "',";
+                }
+                $workstations = "IN (" . rtrim($text, ',') . ")";
+
+                $criteria->addCondition('t.workstation '.$workstations.'');
                 break;
         }
-$criteria->addCondition('t.is_deleted = 0');
+        $criteria->addCondition('t.is_deleted = 0');
         if (Yii::app()->controller->action->id == 'admindashboard') {
             Yii::app()->user->setState('pageSize', (int) '5');
         } else {
@@ -408,19 +415,19 @@ $criteria->addCondition('t.is_deleted = 0');
          */
         try {
             $commandUpdateCard = "";
-            
+
             $command = Yii::app()->db->createCommand("UPDATE visit
                     LEFT JOIN card_generated ON card_generated.id = visit.`card` 
-                    SET visit_status = '" . VisitStatus::CLOSED . "',card_status ='".CardStatus::NOT_RETURNED."'
+                    SET visit_status = '" . VisitStatus::CLOSED . "',card_status ='" . CardStatus::NOT_RETURNED . "'
                     WHERE 'd-m-Y' > date_out AND date_out != 'd-m-Y' AND visit_status = '" . VisitStatus::ACTIVE . "'
                     AND card_status ='" . CardStatus::ACTIVE . "' and card_type= '" . CardType::SAME_DAY_VISITOR . "'")->execute();
-            echo "Affected Rows : ".$command."<br>";
-            if($command > 0){
+            echo "Affected Rows : " . $command . "<br>";
+            if ($command > 0) {
                 echo "Update visit to close status successful.";
             } else {
                 echo "No record to update.";
             }
-            
+
             return true;
         } catch (Exception $ex) {
             echo 'Query failed', $ex->getMessage();
@@ -436,27 +443,28 @@ $criteria->addCondition('t.is_deleted = 0');
         try {
             $command = Yii::app()->db->createCommand("UPDATE visit
                     LEFT JOIN card_generated ON card_generated.id = visit.`card` 
-                    SET visit_status = '" . VisitStatus::EXPIRED . "',card_status ='".CardStatus::NOT_RETURNED."'
+                    SET visit_status = '" . VisitStatus::EXPIRED . "',card_status ='" . CardStatus::NOT_RETURNED . "'
                     WHERE 'd-m-Y' > date_expiration AND visit_status = '" . VisitStatus::ACTIVE . "'
                     AND card_status ='" . CardStatus::ACTIVE . "' and card_type='" . CardType::MULTI_DAY_VISITOR . "'")->execute();
-            echo "Affected Rows : ".$command."<br>";
-            if($command > 0){
+            echo "Affected Rows : " . $command . "<br>";
+            if ($command > 0) {
                 echo "Update visit to expired status successful.";
             } else {
                 echo "No record to update.";
             }
-            
+
             return true;
         } catch (Exception $ex) {
             echo 'Query failed', $ex->getMessage();
             return false;
         }
     }
-    public function isVisitorHasCurrentSavedVisit($visitorId){
+
+    public function isVisitorHasCurrentSavedVisit($visitorId) {
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "visitor = '" . $visitorId . "' && visit_status='".VisitStatus::SAVED."'";
+        $Criteria->condition = "visitor = '" . $visitorId . "' && visit_status='" . VisitStatus::SAVED . "'";
         $visit = Visit::model()->findAll($Criteria);
-        
+
         $visitCount = count($visit);
 
         if ($visitCount == 0) {
@@ -465,16 +473,16 @@ $criteria->addCondition('t.is_deleted = 0');
             return true;
         }
     }
-    
-    public function isDateConflictingWithAnotherVisit($date_in, $date_out, $visitorId, $visitStatus){
+
+    public function isDateConflictingWithAnotherVisit($date_in, $date_out, $visitorId, $visitStatus) {
         $Criteria = new CDbCriteria();
-        if($visitStatus == VisitStatus::ACTIVE){
-            $Criteria->condition = "visitor='".$visitorId."' && visit_status='".$visitStatus."'";
+        if ($visitStatus == VisitStatus::ACTIVE) {
+            $Criteria->condition = "visitor='" . $visitorId . "' && visit_status='" . $visitStatus . "'";
         } else {
-        $Criteria->condition = "date_in = '" . $date_in . "' && visitor='".$visitorId."' && visit_status='".$visitStatus."'";
+            $Criteria->condition = "date_in = '" . $date_in . "' && visitor='" . $visitorId . "' && visit_status='" . $visitStatus . "'";
         }
         $visit = Visit::model()->findAll($Criteria);
-        
+
         $visitCount = count($visit);
 
         if ($visitCount == 0) {
@@ -483,6 +491,5 @@ $criteria->addCondition('t.is_deleted = 0');
             return true;
         }
     }
-    
-    
+
 }

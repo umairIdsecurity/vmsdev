@@ -220,7 +220,7 @@ $session = new CHttpSession;
                                 <td width="37%">
                                     <?php echo $form->labelEx($model, 'email'); ?><br>
                                     <?php echo $form->textField($model, 'email', array('size' => 50, 'maxlength' => 50)); ?>
-                                    <?php echo "<br>" . $form->error($model, 'email',array('style'=>'text-transform:none;')); ?>
+                                    <?php echo "<br>" . $form->error($model, 'email', array('style' => 'text-transform:none;')); ?>
                                     <div style="" id="Visitor_email_em_" class="errorMessage errorMessageEmail" >A profile already exists for this email address.</div>
                                 </td>
                                 <td><label for="Visitor_vehicle">Vehicle Registration Number</label><br>
@@ -788,8 +788,6 @@ $session = new CHttpSession;
             $('#workstation option[value!=""]').remove();
         }
 
-
-
         $.ajax({
             type: 'POST',
             url: '<?php echo Yii::app()->createUrl('user/getTenantAgentWorkstation&id='); ?>' + tenant_agent + '&tenant=' + tenant,
@@ -803,10 +801,12 @@ $session = new CHttpSession;
                     } else {
                         $('#workstation').append('<option value="' + value.id + '">' + value.name + '</option>');
                     }
-
                 });
             }
         });
+
+
+        
     }
 </script>
 

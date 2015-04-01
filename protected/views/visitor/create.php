@@ -386,8 +386,8 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
             }
         });
         $("#currentHostDetailsDiv").show();
-                                    $("#register-host-form").hide();
-                                    $(".host-AddBtn").show();
+        $("#register-host-form").hide();
+        $(".host-AddBtn").show();
     }
 
     function populateFieldHost(id) {
@@ -702,15 +702,17 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
                 }
             }
         });
-        populateAgentAdminWorkstations();
+        if ($("#currentRoleOfLoggedInUser").val() != 8 && $("#currentRoleOfLoggedInUser").val() != 7) {
+            populateAgentAdminWorkstations();
+        }
+
     }
 
     function getHostCompanyWithSameTenantAndTenantAgent(tenant, tenant_agent) {
         $('#User_company option').remove();
         $.ajax({
             type: 'POST',
-             url: '<?php echo Yii::app()->createUrl('user/getCompanyOfTenant&id='); ?>' + tenant + '&tenantAgentId=' + tenant_agent,
-           
+            url: '<?php echo Yii::app()->createUrl('user/getCompanyOfTenant&id='); ?>' + tenant + '&tenantAgentId=' + tenant_agent,
             dataType: 'json',
             data: tenant,
             success: function(r) {

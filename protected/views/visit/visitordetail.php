@@ -271,9 +271,9 @@ $this->renderPartial('visithistory', array('model' => $model,
                     $(".success-update-host-details").show();
                 } else if (formId == 'update-log-visit-form') {
                     $(".success-update-preregister").show();
-                    if ($("#currentRoleOfLoggedInUser").val() == 5 || $("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
+                    if ($("#currentRoleOfLoggedInUser").val() == 5 ) {
                         window.location = 'index.php?r=dashboard';
-                    } else if ($("#currentRoleOfLoggedInUser").val() == 1 || $("#currentRoleOfLoggedInUser").val() == 6) {
+                    } else if ($("#currentRoleOfLoggedInUser").val() == 1 || $("#currentRoleOfLoggedInUser").val() == 6 || $("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
                         window.location = 'index.php?r=dashboard/admindashboard';
                     } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
                         window.location = 'index.php?r=dashboard/viewmyvisitors';

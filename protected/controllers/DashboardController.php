@@ -35,7 +35,7 @@ class DashboardController extends Controller {
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
                 'actions' => array('AdminDashboard'),
-                'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
+                'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION_DASHBOARD)',
             ),
             array('deny', // deny all users
                 'users' => array('*'),

@@ -114,7 +114,7 @@ $userRole = $session['role'];
                                     ?>
                                     <a href="<?php echo Yii::app()->createUrl("/dashboard/viewmyvisitors"); ?>">Dashboard</a>
                                     <?php
-                                } elseif ($session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_AGENT_ADMIN) {
+                                } elseif ($session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_AGENT_ADMIN || $session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
                                     ?>
                                     <a href="<?php echo Yii::app()->createUrl("/dashboard/admindashboard"); ?>">Dashboard</a>
                                     <?php

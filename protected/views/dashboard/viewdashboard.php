@@ -9,7 +9,6 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
     echo "<h1>Dashboard</h1>";
 }
 
-
 $merge = new CDbCriteria;
 $merge->addCondition('visit_status ="' . VisitStatus::ACTIVE . '" or visit_status ="' . VisitStatus::PREREGISTERED . '"');
 

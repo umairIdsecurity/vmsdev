@@ -5,6 +5,7 @@
     }
 </style>
 <?php
+
 /* @var $this VisitController */
 /* @var $model Visit */
 $session = new CHttpSession();
@@ -20,6 +21,13 @@ switch ($session['role']) {
         $Criteria->condition = "tenant ='" . $session['tenant'] . "' and tenant_agent ='" . $session['tenant_agent'] . "'";
         $workstationList = Workstation::model()->findAll($Criteria);
         break;
+    
+    case Roles::ROLE_OPERATOR:
+    case Roles::ROLE_AGENT_OPERATOR:
+        $Criteria = new CDbCriteria();
+        $Criteria->condition = "`user`  IN ('".Yii::app()->user->id."')";
+        $workstationList = UserWorkstations::model()->findAll($Criteria);
+        break;
 }
 $x = 0; //initiate variable for foreach
 if (empty($workstationList)) {
@@ -34,9 +42,19 @@ if (empty($workstationList)) {
 foreach ($workstationList as $workstation) {
 
     $x++;
-    echo "<h1>" . $workstation->name . "</h1>";
+    if($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR){
+        $workstationName = Workstation::model()->findByPk($workstation->workstation)->name;
+    } else {
+        $workstationName = $workstation->name;
+    }
+    echo "<h1>" . $workstationName . "</h1>";
     $merge = new CDbCriteria;
-    $merge->addCondition('workstation ="' . $workstation->id . '" and (visit_status ="' . VisitStatus::ACTIVE . '" or visit_status ="' . VisitStatus::PREREGISTERED . '")');
+    if($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR){
+        $workstationId = $workstation->workstation;
+    } else {
+        $workstationId = $workstation->id;
+    }
+    $merge->addCondition('workstation ="' . $workstationId . '" and (visit_status ="' . VisitStatus::ACTIVE . '" or visit_status ="' . VisitStatus::PREREGISTERED . '")');
     ?><div  class="admindashboardDiv"><?php
         $this->widget('zii.widgets.grid.CGridView', array(
             'id' => 'visit-gridDashboard' . $x,

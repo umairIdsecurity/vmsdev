@@ -26,7 +26,7 @@ class Issue142FunctionalTest extends BaseFunctionalTest {
         $this->Scenario2();
         $this->Scenario3();
         $this->Scenario4();
-        $this->open("http://dev.identitysecurity.info/index.php?r=site/reset&filename=Issue142");
+        $this->open("http://dev.identitysecurity.info/index.php?r=resetDatabase/reset&filename=Issue142&folder=dbpatch");
         $this->assertEquals("Tables imported successfully", $this->getText("css=body"));
         $this->Scenario5();
     }

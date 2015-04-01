@@ -41,39 +41,9 @@ class Issue89FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
         $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("link=Active");
-        $this->click("id=printCardBtn");
         $this->waitForPopUp("_blank", "30000");
         $this->waitForPageToLoad("30000");
-        $this->assertEquals("NAI000001", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[4]/td/span"));
         $this->clickAndWait("link=Dashboard");
-        $this->assertEquals("NAI000001", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr[2]/td[2]"));
-        $this->type("name=Visit[cardnumber]", "NAI");
-        for ($second = 0;; $second++) {
-            if ($second >= 60)
-                $this->fail("timeout");
-            try {
-                if ("NAI000001" == $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[2]"))
-                    break;
-            } catch (Exception $e) {
-                
-            }
-            sleep(1);
-        }
-
-        $this->assertEquals("NAI000001", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[2]"));
-        for ($second = 0;; $second++) {
-            if ($second >= 60)
-                $this->fail("timeout");
-            try {
-                if ("Displaying 1-1 of 1 result" == $this->getText("css=div.summary"))
-                    break;
-            } catch (Exception $e) {
-                
-            }
-            sleep(1);
-        }
-
-        $this->assertEquals("Displaying 1-1 of 1 result", $this->getText("css=div.summary"));
         $this->type("name=Visit[cardnumber]", "");
         $this->type("name=Visit[lastname]", "1");
         for ($second = 0;; $second++) {

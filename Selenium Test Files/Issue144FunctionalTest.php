@@ -118,8 +118,6 @@ class Issue144FunctionalTest extends BaseFunctionalTest {
         $this->click("id=clicktabA");
         $this->type("id=Visitor_first_name", "operator1");
         $this->type("id=Visitor_last_name", "operator1");
-        $this->type("id=Visitor_password", "12345");
-        $this->type("id=Visitor_repeatpassword", "12345");
         sleep(1);
         $this->select("id=Visitor_company", "label=Philippine Airline");
         $this->type("id=Visitor_email", "operator1@test.com");
@@ -131,8 +129,6 @@ class Issue144FunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_last_name", "operator1");
         $this->type("id=User_email", "operator1@test.com");
         $this->type("id=User_contact_number", "1234");
-        $this->type("id=User_password", "12345");
-        $this->type("id=User_repeatpassword", "12345");
         $this->clickAndWait("id=submitFormUser");
         $this->assertEquals("operator1", $this->getText("//table[@id='personalDetailsTable']/tbody/tr/td[2]"));
         $this->assertEquals("Saved", $this->getText("css=ul.visitStatusLi > li > a > span"));

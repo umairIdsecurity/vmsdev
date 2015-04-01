@@ -21,7 +21,9 @@ class Issue81FunctionalTest extends BaseFunctionalTest {
     }
 
     function testAll() {
-        $this->open("http://dev.identitysecurity.info/index.php?r=site/reset&filename=live-demo");
+        $this->open("http://dev.identitysecurity.info/index.php?r=resetDatabase/updateSuperAdminPassword");
+        $this->login('superadmin@test.com', '12345');
+        $this->open("http://dev.identitysecurity.info/index.php?r=resetDatabase/reset&filename=live-demo&folder=dbpatch");
         $this->assertEquals("Tables imported successfully", $this->getText("css=body"));
 
         $this->open("http://dev.identitysecurity.info/index.php?r=resetDatabase/dbPatch");

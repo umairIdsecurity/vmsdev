@@ -180,9 +180,9 @@ $session = new CHttpSession;
 //                    window.location = "index.php?r=dashboard/viewmyvisitors";
 //                }
 
-                if ('<?php echo $session['role']; ?>' == 5 || '<?php echo $session['role']; ?>' == 8 || '<?php echo $session['role']; ?>' == 7) {
+                if ('<?php echo $session['role']; ?>' == 5) {
                     window.location = 'index.php?r=dashboard';
-                } else if ('<?php echo $session['role']; ?>' == 1 || '<?php echo $session['role']; ?>' == 6) {
+                } else if ('<?php echo $session['role']; ?>' == 1 || '<?php echo $session['role']; ?>' == 6 || '<?php echo $session['role']; ?>' == 8 || '<?php echo $session['role']; ?>' == 7) {
                     window.location = 'index.php?r=dashboard/admindashboard';
                 } else if ('<?php echo $session['role']; ?>' == 9) {
                     window.location = 'index.php?r=dashboard/viewmyvisitors';

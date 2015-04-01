@@ -44,8 +44,6 @@ class Issue80FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Please enter a Last Name", $this->getText("id=Visitor_last_name_em_"));
         $this->assertEquals("Please enter a Mobile Number", $this->getText("id=Visitor_contact_number_em_"));
         $this->assertEquals("Please enter an Email Address", $this->getText("id=Visitor_email_em_"));
-        $this->assertEquals("Please enter a Password", $this->getText("id=Visitor_password_em_"));
-        $this->assertEquals("Please enter a Repeat Password", $this->getText("id=Visitor_repeatpassword_em_"));
         $this->assertEquals("Please select a Tenant", $this->getText("id=Visitor_tenant_em_"));
         $this->click("link=Find Visitor Profile");
         $this->select("id=search_visitor_tenant","label=NAIA Airport");
@@ -70,7 +68,6 @@ class Issue80FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Please enter a Last Name", $this->getText("id=User_last_name_em_"));
         $this->assertEquals("Please enter an Email Address", $this->getText("id=User_email_em_"));
         $this->assertEquals("Please enter a Contact No.", $this->getText("id=User_contact_number_em_"));
-        $this->assertEquals("Please enter a Password", $this->getText("id=User_password_em_"));
         $this->assertEquals("Please select a Company Name", $this->getText("id=User_company_em_"));
         $this->clickAndWait("css=a.submenu-icon.addvisitorprofile > span");
         $this->click("id=submitFormVisitor");
@@ -79,8 +76,6 @@ class Issue80FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Please enter a Last Name", $this->getText("id=Visitor_last_name_em_"));
         $this->assertEquals("Please enter an Email Address", $this->getText("id=Visitor_email_em_"));
         $this->assertEquals("Please enter a Mobile Number", $this->getText("id=Visitor_contact_number_em_"));
-        $this->assertEquals("Please enter a Password", $this->getText("id=Visitor_password_em_"));
-        $this->assertEquals("Please enter a Repeat Password", $this->getText("id=Visitor_repeatpassword_em_"));
         $this->assertEquals("Please select a Tenant", $this->getText("id=Visitor_tenant_em_"));
 
         $this->clickAndWait("link=Administration");
@@ -105,7 +100,6 @@ class Issue80FunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Please enter a Contact No.", $this->getText("id=User_contact_number_em_"));
         $this->assertEquals("Please select a Role", $this->getText("css=div.errorMessage"));
         $this->assertEquals("Please select a Company Name", $this->getText("css=#companyRow > div.errorMessage"));
-        $this->assertEquals("Please enter a Password", $this->getText("id=User_password_em_"));
         $this->click("id=yt4");
         $this->click("id=yt5");
         $this->clickAndWait("//div[@id='cssmenu']/ul/li[5]/ul/li/a/span");

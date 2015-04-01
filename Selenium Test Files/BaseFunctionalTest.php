@@ -25,7 +25,7 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
     }
     
     public function resetDb() {
-        
+        $this->open("http://dev.identitysecurity.info/index.php?r=resetDatabase/updateSuperAdminPassword");
         $this->login('superadmin@test.com', '12345');
         $this->open("http://dev.identitysecurity.info/index.php?r=resetDatabase/reset&filename=vms&folder=Selenium+Test+Files");
         $this->assertEquals("Tables imported successfully", $this->getText("css=body"));
@@ -36,6 +36,8 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
 
     public function resetDbWithData() {
         $this->start();
+        $this->open("http://dev.identitysecurity.info/index.php?r=resetDatabase/updateSuperAdminPassword");
+        
         $this->login('superadmin@test.com', '12345');
         $this->open("http://dev.identitysecurity.info/index.php?r=resetDatabase/reset&filename=vms-withData&folder=Selenium+Test+Files");
         $this->assertEquals("Tables imported successfully", $this->getText("css=body"));
@@ -46,6 +48,8 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
 
     public function issue35Sql() {
         $this->start();
+        $this->open("http://dev.identitysecurity.info/index.php?r=resetDatabase/updateSuperAdminPassword");
+        
         $this->login('superadmin@test.com', '12345');
         $this->open("http://dev.identitysecurity.info/index.php?r=resetDatabase/reset&filename=Issue35&folder=Selenium+Test+Files");
         $this->assertEquals("Tables imported successfully", $this->getText("css=body"));
@@ -53,6 +57,8 @@ class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
 
     public function issue48Sql() {
         $this->start();
+        $this->open("http://dev.identitysecurity.info/index.php?r=resetDatabase/updateSuperAdminPassword");
+        
         $this->login('superadmin@test.com', '12345');
         $this->open("http://dev.identitysecurity.info/index.php?r=resetDatabase/reset&filename=Issue48&folder=Selenium+Test+Files");
         $this->assertEquals("Tables imported successfully", $this->getText("css=body"));

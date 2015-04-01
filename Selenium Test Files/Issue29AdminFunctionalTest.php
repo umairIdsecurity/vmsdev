@@ -129,8 +129,6 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_contact_number", "1234567");
         $this->type("id=Visitor_email", $username . "visitor1@test.com");
         $this->select("id=Visit_reason", "label=Reason 1");
-        $this->type("id=Visitor_password", "12345");
-        $this->type("id=Visitor_repeatpassword", "12345");
         if ($username == 'superadmin' || $username == 'admin' || $username == 'agentadmin') {
             $this->select("id=workstation", "label=Workstation1");
         }
@@ -211,8 +209,6 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_contact_number", "123456");
         $this->type("id=Visitor_email", $username . "visitor2@test.com");
         $this->select("id=Visit_reason", "label=Reason 1");
-        $this->type("id=Visitor_password", "12345");
-        $this->type("id=Visitor_repeatpassword", "12345");
         if ($username == 'admin' || $username == 'operator') {
             $this->click("id=addCompanyLink");
             $this->waitForElementPresent("id=Company_name");
@@ -238,8 +234,6 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_staff_id", "123456");
         $this->type("id=User_email", $username . "host1@test.com");
         $this->type("id=User_contact_number", "123456");
-        $this->type("id=User_password", "12345");
-        $this->type("id=User_repeatpassword", "12345");
         $this->click("id=submitFormUser");
 
         $this->clickAndWait("id=submitAllForms");
@@ -274,8 +268,6 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_contact_number", "123456");
         $this->type("id=Visitor_email", $username . "visitor3@test.com");
         $this->select("id=Visit_reason", "label=Reason 1");
-        $this->type("id=Visitor_password", "12345");
-        $this->type("id=Visitor_repeatpassword", "12345");
         if ($username == 'admin' || $username == 'operator') {
             $this->select("id=Visitor_company", "label=Philippine Airline");
         } else {
@@ -356,8 +348,6 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_staff_id", "123456");
         $this->type("id=User_email", $username . "host2@test.com");
         $this->type("id=User_contact_number", "123456");
-        $this->type("id=User_password", "12345");
-        $this->type("id=User_repeatpassword", "12345");
         sleep(1);
         $this->clickAndWait("id=submitFormUser");
         if ($username == 'admin') {
@@ -389,8 +379,8 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         } elseif ($username == 'operator') {
             $this->assertEquals("operatorvisitor2", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[4]"));
         } else {
-            $this->assertEquals("Visitor3", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[4]"));
-            $this->assertEquals("testVisitor3@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[7]"));
+            $this->assertEquals("Visitor3", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[4]"));
+            $this->assertEquals("testVisitor3@test.com", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[7]"));
         }
     }
 
@@ -485,8 +475,6 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_email", $username . "visitor1@test.com");
         $this->select("id=Visit_reason", "label=Other");
         $this->type("id=VisitReason_reason", "reason 3");
-        $this->type("id=Visitor_password", "12345");
-        $this->type("id=Visitor_repeatpassword", "12345");
         if ($username == 'superadmin' || $username == 'admin' || $username == 'agentadmin') {
             $this->select("id=workstation", "label=Workstation1");
         }
@@ -579,8 +567,6 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_email", $username . "visitor2@test.com");
         $this->select("id=Visit_reason", "label=Other");
         $this->type("id=VisitReason_reason", "reason 5");
-        $this->type("id=Visitor_password", "12345");
-        $this->type("id=Visitor_repeatpassword", "12345");
         if ($username == 'admin') {
             $this->select("id=workstation", "label=Workstation3");
         } else if ($username == 'superadmin' || $username == 'agentadmin') {
@@ -598,8 +584,6 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_staff_id", "123456");
         $this->type("id=User_email", $username . "host1@test.com");
         $this->type("id=User_contact_number", "123456");
-        $this->type("id=User_password", "12345");
-        $this->type("id=User_repeatpassword", "12345");
         $this->click("id=submitFormUser");
         $this->clickAndWait("id=submitAllForms");
         $this->assertEquals($username . "visitor2", $this->getText("//table[@id='personalDetailsTable']/tbody/tr[2]/td[2]"));
@@ -642,8 +626,6 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_email", $username . "visitor3@test.com");
         $this->select("id=Visit_reason", "label=Other");
         $this->type("id=VisitReason_reason", "reason 6");
-        $this->type("id=Visitor_password", "12345");
-        $this->type("id=Visitor_repeatpassword", "12345");
 
 
         if ($username == 'admin') {
@@ -729,8 +711,6 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_staff_id", "123456");
         $this->type("id=User_email", $username . "host2@test.com");
         $this->type("id=User_contact_number", "123456");
-        $this->type("id=User_password", "12345");
-        $this->type("id=User_repeatpassword", "12345");
         sleep(1);
         $this->clickAndWait("id=submitFormUser");
         if ($username == 'admin') {
@@ -888,15 +868,11 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Please enter a Last Name", $this->getText("id=Visitor_last_name_em_"));
         $this->assertEquals("Please enter an Email Address", $this->getText("id=Visitor_email_em_"));
         $this->assertEquals("Please enter a Mobile Number", $this->getText("id=Visitor_contact_number_em_"));
-        $this->assertEquals("Please enter a Password", $this->getText("id=Visitor_password_em_"));
-        $this->assertEquals("Please enter a Repeat Password", $this->getText("id=Visitor_repeatpassword_em_"));
         $this->type("id=Visitor_first_name", "test");
         $this->type("id=Visitor_last_name", "test");
         $this->type("id=Visitor_contact_number", "12345");
         $this->type("id=Visitor_email", "admin@test.com");
         $this->select("id=Visit_reason", "label=Other");
-        $this->type("id=Visitor_repeatpassword", "12345");
-        $this->type("id=Visitor_password", "12345");
         if ($username == 'admin') {
             $this->select("id=workstation", "label=Workstation3");
         } else if ($username == 'superadmin' || $username == 'agentadmin') {
@@ -972,8 +948,6 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->type("id=Visitor_contact_number", "123456");
         $this->type("id=Visitor_email", "testtest@test.com");
         $this->select("id=Visit_reason", "label=Reason 1");
-        $this->type("id=Visitor_password", "12345");
-        $this->type("id=Visitor_repeatpassword", "12345");
         if ($username == 'admin') {
             $this->select("id=workstation", "label=Workstation3");
         } elseif ($username == 'superadmin' || $username == 'agentadmin') {
@@ -1016,17 +990,12 @@ class Issue29AdminFunctionalTest extends BaseFunctionalTest {
         $this->assertEquals("Please enter a Last Name", $this->getText("id=User_last_name_em_"));
         $this->assertEquals("Please enter an Email Address", $this->getText("id=User_email_em_"));
         $this->assertEquals("Please enter a Contact No.", $this->getText("id=User_contact_number_em_"));
-        $this->assertEquals("Please enter a Password", $this->getText("id=User_password_em_"));
-        $this->type("id=User_password", "12345");
-        $this->waitForElementPresent("id=passwordErrorMessage");
-        $this->assertEquals("New Password does not match with \nRepeat New Password.", $this->getText("id=passwordErrorMessage"));
         $this->type("id=User_first_name", "test");
         $this->type("id=User_last_name", "test");
         $this->type("id=User_department", "department");
         $this->type("id=User_staff_id", "123456");
         $this->type("id=User_email", "staffmember@test.com");
         $this->type("id=User_contact_number", "123456");
-        $this->type("id=User_repeatpassword", "12345");
         $this->click("id=submitFormUser");
         $this->waitForElementPresent("xpath=(//div[@id='User_email_em_'])[2]");
         $this->assertEquals("A profile already exists for this email address.", $this->getText("xpath=(//div[@id='User_email_em_'])[2]"));

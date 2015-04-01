@@ -22,15 +22,15 @@ class Issue54FunctionalTest extends BaseFunctionalTest {
     }
 
     function testAll() {
-//        $this->resetDbWithData();
-//        $this->Scenario1();
-//        $this->Scenario2();
-//        $this->Scenario3();
-//        $this->Scenario4();
-//        $this->Scenario5();
-//        $this->Scenario6();
-//        $this->Scenario7();
-//        $this->Scenario8();
+        $this->resetDbWithData();
+        $this->Scenario1();
+        $this->Scenario2();
+        $this->Scenario3();
+        $this->Scenario4();
+        $this->Scenario5();
+        $this->Scenario6();
+        $this->Scenario7();
+        $this->Scenario8();
         $this->resetDbWithData();
         $this->Scenario9();
     }
@@ -418,7 +418,7 @@ class Issue54FunctionalTest extends BaseFunctionalTest {
         $this->click("id=saveCurrentUserAsHost");
         $this->clickAndWait("id=submitAllForms");
         $this->click("css=#activate-a-visit-form > input.complete");
-        sleep(2);
+        sleep(5);
         $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
         $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("link=Active");

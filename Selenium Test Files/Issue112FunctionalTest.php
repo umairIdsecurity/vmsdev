@@ -51,7 +51,6 @@ class Issue112FunctionalTest extends BaseFunctionalTest {
         $this->Scenario12();
         $this->Scenario13();
         $this->Scenario14();
-       // $this->checkCompanyDropdown();
         
     }
 
@@ -899,7 +898,7 @@ class Issue112FunctionalTest extends BaseFunctionalTest {
         $this->waitForPageToLoad("30000");
         $this->click("link=Add Visitor Profile");
         $this->waitForPageToLoad("30000");
-        $this->click("//div[@id='cssmenu']/ul/li[4]/ul/li[2]/a/span");
+        $this->click("css=a.sidemenu-icon.pre-visits > span");
         $this->waitForPageToLoad("30000");
         $this->click("id=clicktabA");
         $this->click("link=Find Visitor Profile");
@@ -1079,6 +1078,7 @@ class Issue112FunctionalTest extends BaseFunctionalTest {
         $this->type("id=search-host", "new");
         $this->click("id=dummy-host-findBtn");
         sleep(1);
+        $this->waitForElementPresent("id=28");
         $this->assertEquals("newhostagentadmin@test.com", $this->getText("//div[@id='findHost-grid']/table/tbody/tr/td[3]"));
         $this->click("link=Administration");
         $this->waitForPageToLoad("30000");
@@ -1197,8 +1197,8 @@ class Issue112FunctionalTest extends BaseFunctionalTest {
         $this->click("id=submitBtn");
         $this->click("id=submit");
         $this->waitForPageToLoad("30000");
-        $this->assertEquals("Visitor Management System - Dashboard", $this->getTitle());
-        $this->assertEquals("Workstation3", $this->getText("css=h1"));
+        $this->assertEquals("Visitor Management System - AdminDashboard Dashboard", $this->getTitle());
+        $this->assertEquals("Workstation1", $this->getText("css=h1"));
         $this->click("link=Preregister Visit");
         $this->waitForPageToLoad("30000");
         $this->click("id=clicktabA");
@@ -1243,8 +1243,8 @@ class Issue112FunctionalTest extends BaseFunctionalTest {
         }
         $this->clickAndWait("id=confirmPreregisterDummy");
         $this->assertEquals("Preregistered", $this->getText("link=Preregistered"));
-        $this->assertEquals("Philippine Airline", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[5]"));
-        $this->assertEquals("operatorvisitor@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[7]"));
+        $this->assertEquals("Philippine Airline", $this->getText("//div[@id='visit-gridDashboard2']/table/tbody/tr/td[5]"));
+        $this->assertEquals("operatorvisitor@test.com", $this->getText("//div[@id='visit-gridDashboard2']/table/tbody/tr/td[7]"));
         $this->click("//ul[@id='tabs']/li[3]/a/p");
         $this->waitForPageToLoad("30000");
         $username = 'operator@test.com';

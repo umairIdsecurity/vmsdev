@@ -158,8 +158,10 @@ class Issue51FunctionalTest extends BaseFunctionalTest {
 
         $username = 'operator2@test.com';
         $this->login($username, '12345');
-        $this->clickAndWait("id=submitBtn");
-        $this->assertEquals("secondtenantvisitor@test.com", $this->getText("//div[@id='visit-gridDashboard']/table/tbody/tr/td[7]"));
+        $this->click("id=submitBtn");
+        $this->click("id=submit");
+        $this->waitForPageToLoad("3000");
+        $this->assertEquals("secondtenantvisitor@test.com", $this->getText("//div[@id='visit-gridDashboard1']/table/tbody/tr/td[7]"));
         $this->clickAndWait("link=Visit History");
         $this->assertEquals("secondtenantvisitor@test.com", $this->getText("//div[@id='view-visitor-records']/table/tbody/tr/td[8]"));
         $this->assertEquals("Displaying 1-1 of 1 result", $this->getText("css=div.summary"));

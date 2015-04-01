@@ -40,7 +40,6 @@ class Issue69FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("css=#activate-a-visit-form > input.complete");
         sleep(5);
         $this->assertEquals("Visit is now activated. You can now print the visitor badge.", $this->getAlert());
-        $this->assertEquals("NAI000001", $this->getText("//table[@id='cardDetailsTable']/tbody/tr[4]/td/span"));$this->clickAndWait("link=Dashboard");
         $this->clickAndWait("link=Active");
         
         $this->clickAndWait("link=Dashboard");

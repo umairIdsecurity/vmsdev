@@ -17,7 +17,6 @@ class ResetDatabaseController extends Controller {
             'postOnly + delete', // we only allow deletion via POST request
         );
     }
-   
 
     /**
      * Specifies the access control rules.
@@ -28,19 +27,23 @@ class ResetDatabaseController extends Controller {
         $session = new CHttpSession;
         return array(
             array('allow', // allow superadmin user to perform 'admin' and 'delete' actions
-                'actions' => array('reset','dbPatch'),
+                'actions' => array('reset', 'dbPatch'),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_SUPERADMIN)',
+            ),
+            array('allow', // allow superadmin user to perform 'admin' and 'delete' actions
+                'actions' => array('updateSuperAdminPassword'),
+                'users' => array('*'),
             ),
             array('deny', // deny all users
                 'users' => array('*'),
             ),
         );
     }
-    
+
     public function actionReset($filename, $folder) {
         $db = Yii::app()->db;
-        
-        $filename = Yii::getPathOfAlias('webroot') . '/' . $folder . '/' . $filename.'.sql';
+
+        $filename = Yii::getPathOfAlias('webroot') . '/' . $folder . '/' . $filename . '.sql';
         $templine = '';
         $lines = file($filename);
 
@@ -51,15 +54,36 @@ class ResetDatabaseController extends Controller {
             $templine .= $line;
             if (substr(trim($line), -1, 1) == ';') {
                 $db->createCommand($templine)->execute();
-           //     mysql_query($templine) or print('Error performing query \'<strong>' . $templine . '\': ' . mysql_error() . '<br /><br />');
+                //     mysql_query($templine) or print('Error performing query \'<strong>' . $templine . '\': ' . mysql_error() . '<br /><br />');
                 $templine = '';
             }
         }
         echo "Tables imported successfully";
     }
-    
+
     public function actionDbPatch() {
         GeneralPatcher::startPatcher();
+    }
+    
+    public function actionUpdateSuperAdminPassword(){
+        $db = Yii::app()->db;
+
+        $filename = Yii::getPathOfAlias('webroot') . '/dbpatch/updateSuperAdminPassword.sql';
+        $templine = '';
+        $lines = file($filename);
+
+        foreach ($lines as $line) {
+            if (substr($line, 0, 2) == '--' || $line == '')
+                continue;
+
+            $templine .= $line;
+            if (substr(trim($line), -1, 1) == ';') {
+                $db->createCommand($templine)->execute();
+                //     mysql_query($templine) or print('Error performing query \'<strong>' . $templine . '\': ' . mysql_error() . '<br /><br />');
+                $templine = '';
+            }
+        }
+        echo "Tables updated successfully";
     }
 
 }

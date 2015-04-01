@@ -77,10 +77,10 @@ class Issue91FunctionalTest extends BaseFunctionalTest {
         $this->clickAndWait("id=addvisitorSidebar");
         $this->assertEquals("Log Visit", $this->getText("css=h1"));
         $this->assertEquals("Log Visit", $this->getText("link=Log Visit"));
-        $this->assertEquals("Preregister Visit", $this->getText("//div[@id='cssmenu']/ul/li[4]/ul/li[3]/a/span"));
-        $this->clickAndWait("//div[@id='cssmenu']/ul/li[4]/ul/li[3]/a/span");
+        $this->assertEquals("Preregister Visit", $this->getText("css=a.sidemenu-icon.pre-visits > span"));
+        $this->clickAndWait("css=a.sidemenu-icon.pre-visits > span");
         $this->assertEquals("Preregister Visit", $this->getText("css=h1"));
-        $this->clickAndWait("//div[@id='cssmenu']/ul/li[4]/ul/li/a/span");
+        $this->clickAndWait("css=a.submenu-icon.addvisitorprofile > span");
         $this->assertEquals("Add Visitor Profile", $this->getText("css=h1"));
         $this->clickAndWait("link=Dashboard");
         $this->clickAndWait("link=Preregistered");

@@ -126,15 +126,15 @@ class SiteController extends Controller {
      */
     public function actionForgot() {
 
-        $model = new ForgotForm;
+        $model = new PasswordForgotForm();
 
         if (isset($_POST['ajax']) && $_POST['ajax'] === 'forgot-form') {
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }
 
-        if (isset($_POST['ForgotForm'])) {
-            $model->attributes = $_POST['ForgotForm'];
+        if (isset($_POST['PasswordForgotForm'])) {
+            $model->attributes = $_POST['PasswordForgotForm'];
             if ($model->validate() && $model->restore()) {
                 Yii::app()->user->setFlash('success', "Please check your email for reset password instructions");
                 $this->redirect('index.php?r=site/login');
@@ -142,6 +142,47 @@ class SiteController extends Controller {
         }
 
         $this->render('forgot', array('model' => $model));
+    }
+
+    /**
+     * Reset password
+     */
+    public function actionReset() {
+
+        $model = new PasswordResetForm();
+
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'password-reset-form') {
+            echo CActiveForm::validate($model);
+            Yii::app()->end();
+        }
+
+        $hash = Yii::app()->request->getParam('hash');
+
+        /** @var PasswordChangeRequest $passwordRequest */
+        $passwordRequest = PasswordChangeRequest::model()->findByAttributes(array('hash' => $hash));
+
+        if (!$passwordRequest) {
+            Yii::app()->user->setFlash('error', "Reset password hash '$hash' not found. Looks like your reset password link is broken.");
+        }
+
+        if ($error = $passwordRequest->checkPasswordRequestByHash()) {
+            Yii::app()->user->setFlash('error', $error);
+            $this->redirect('index.php?r=site/forgot');
+        }
+
+        if (isset($_POST['PasswordResetForm'])) {
+            $model->attributes = $_POST['PasswordResetForm'];
+            if ($model->validate()) {
+                /** @var User $user */
+                $user = User::model()->findByPk($passwordRequest->user_id);
+                $user->changePassword($model->password);
+                $passwordRequest->markAsUsed();
+                Yii::app()->user->setFlash('success', "Your password has been changed successfully");
+                $this->redirect('index.php?r=site/login');
+            }
+        }
+
+        $this->render('reset', array('model' => $model));
     }
 
     public function actionUpload($id) {

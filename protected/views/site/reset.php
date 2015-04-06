@@ -9,7 +9,7 @@
     <div class="form">
         <?php
         $form = $this->beginWidget('CActiveForm', array(
-            'id' => 'forgot-form',
+            'id' => 'password-reset-form',
             'enableClientValidation' => true,
             'enableAjaxValidation' => true,
             'clientOptions' => array(
@@ -20,23 +20,28 @@
 
         <table class="login-area" style="border-collapse: none !important;">
             <tr>
-                <td colspan="2">
-                    <p>Please enter your email for restore password:</p>
-                </td>
-            </tr>
-            <tr>
-                <td><?php echo $form->labelEx($model, 'email'); ?></td>
-                <td><?php echo $form->textField($model, 'email'); ?></td>
+                <td><?php echo $form->labelEx($model, 'password'); ?></td>
+                <td><?php echo $form->textField($model, 'password'); ?></td>
 
             </tr>
             <tr>
                 <td ></td>
-                <td colspan="2"><?php echo $form->error($model,'email'); ?></td>
+                <td colspan="2"><?php echo $form->error($model,'password'); ?></td>
             </tr>
+            <tr>
+                <td><?php echo $form->labelEx($model, 'passwordConfirmation'); ?></td>
+                <td><?php echo $form->textField($model, 'passwordConfirmation'); ?></td>
+
+            </tr>
+            <tr>
+                <td ></td>
+                <td colspan="2"><?php echo $form->error($model,'passwordConfirmation'); ?></td>
+            </tr>
+
             <tr>
                 <td></td>
                 <td colspan="2">
-                    <?php echo CHtml::submitButton('Restore'); ?>
+                    <?php echo CHtml::submitButton('Set new password'); ?>
                 </td>
             </tr>
 

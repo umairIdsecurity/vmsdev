@@ -3,11 +3,12 @@
 /**
  * This is the model class for table "password_change_request".
  *
+ * @author Yuri Vodolazsky
  */
 class PasswordChangeRequest extends CActiveRecord
 {
-    const IS_SENT_YES = 'YES';
-    const IS_SENT_NO = 'NO';
+    const IS_USED_YES = 'YES';
+    const IS_USED_NO = 'NO';
 
     const ALLOWED_GENERATION_INTERVAL = 24; // in hours
     const NUMBER_OF_ATTEMPTS = 3; // during allowed generation interval
@@ -31,23 +32,17 @@ class PasswordChangeRequest extends CActiveRecord
         return parent::model($className);
     }
 
+    /**
+     * Generate reset password record
+     *
+     * @param User $user
+     * @return string
+     */
     public function generateResetLink(User $user)
     {
-        $date = new DateTime();
-        $date->modify('- ' . self::ALLOWED_GENERATION_INTERVAL . 'hours');
-        $date = $date->format('Y-m-d H:i:s');
+        $generatedRequestsCount = $this->count($this->getAlreadyGeneratedUnexpiredUnusedCriteria($user));
 
-        $criteria = new CDbCriteria();
-        $criteria->condition = "user_id = :userId and is_used = :isUsed and created_at >= :createdAt";
-        $criteria->params = array(
-            'userId' => $user->id,
-            'isUsed' => self::IS_SENT_NO,
-            'createdAt' => $date,
-        );
-
-        $requests = $this->findAll($criteria);
-
-        if (count($requests) >= self::NUMBER_OF_ATTEMPTS) {
+        if ($generatedRequestsCount >= self::NUMBER_OF_ATTEMPTS) {
             return "You have exceeded the maximum number of password recovery attempts";
         }
 
@@ -55,7 +50,7 @@ class PasswordChangeRequest extends CActiveRecord
 
         $request = new self();
         $request->user_id = $user->id;
-        $request->hash = md5($date . $user->id . $user->email . 'Some salt 9ht3ldjnhuy)jnt47thlJ&');
+        $request->hash = $this->getHash($user);
         $request->created_at = $now->format('Y-m-d H:i:s');
 
         $result = $request->save();
@@ -65,5 +60,79 @@ class PasswordChangeRequest extends CActiveRecord
         }
 
         // TODO send email with hash link
+    }
+
+    /**
+     * @param User $user
+     * @return string
+     */
+    public function getHash(User $user)
+    {
+        return md5(time() . $user->id . $user->email . 'Some salt 9ht3ldjnhuy)jnt47thlJ&');
+    }
+
+    /**
+     * @param User $user
+     * @return CDbCriteria
+     */
+    public function getAlreadyGeneratedUnexpiredUnusedCriteria(User $user)
+    {
+        $date = $this->getStartOfExpiredPeriod();
+
+        $criteria = new CDbCriteria();
+        $criteria->condition = "user_id = :userId and is_used = :isUsed and created_at >= :createdAt";
+        $criteria->params = array(
+            'userId' => $user->id,
+            'isUsed' => self::IS_USED_NO,
+            'createdAt' => $date,
+        );
+
+        return $criteria;
+    }
+
+    /**
+     * Rest password by hash generated early
+     *
+     * @return string
+     */
+    public function checkPasswordRequestByHash()
+    {
+        if ($this->isExpired()) {
+            return "Your reset password link is already expired. Please generate it again.";
+        }
+
+        if ($this->isUsed()) {
+            return "Your reset password link is already used. Please generate it again.";
+        }
+    }
+
+    public function isExpired()
+    {
+        $expiredDate = $this->getStartOfExpiredPeriod(false);
+        $requestDate = DateTime::createFromFormat('Y-m-d H:i:s', $this->created_at);
+
+        return $expiredDate > $requestDate;
+    }
+
+    public function isUsed()
+    {
+        return $this->is_used == self::IS_USED_YES;
+    }
+
+    /**
+     * @param bool $asString
+     * @return string
+     */
+    public function getStartOfExpiredPeriod($asString = true)
+    {
+        $date = new DateTime();
+        $date->modify('- ' . self::ALLOWED_GENERATION_INTERVAL . 'hours');
+        return $asString ? $date->format('Y-m-d H:i:s') : $date;
+    }
+
+    public function markAsUsed()
+    {
+        $this->is_used = self::IS_USED_YES;
+        $this->save(false, 'is_used');
     }
 }

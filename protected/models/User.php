@@ -572,4 +572,10 @@ class User extends VmsActiveRecord {
             return "Email address does not exist in system.";
         }
     }
+
+    public function changePassword($newPassword)
+    {
+        $this->password = $this->hashPassword($newPassword);
+        $this->save(false, 'password');
+    }
 }

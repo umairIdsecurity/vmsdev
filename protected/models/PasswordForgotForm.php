@@ -5,7 +5,7 @@
  * ForgotForm is the data structure for keeping
  * user restore password. It is used by the 'forgot' action of 'SiteController'.
  */
-class ForgotForm extends CFormModel {
+class PasswordForgotForm extends CFormModel {
 
     public $email;
 

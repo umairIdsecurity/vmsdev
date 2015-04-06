@@ -42,7 +42,10 @@ $this->pageTitle=Yii::app()->name . ' - Login';
         </tr>
         <tr >
             <td></td>
-            <td colspan="2"><?php echo CHtml::submitButton('Login',array('class'=>'actionForward')); ?></td>
+            <td colspan="2">
+                <?php echo CHtml::submitButton('Login',array('class'=>'actionForward')); ?>
+                <a class="btn btn-link" href="<?=$this->createUrl('site/forgot')?>">Forgot password?</a>
+            </td>
         </tr>
         
     </table>

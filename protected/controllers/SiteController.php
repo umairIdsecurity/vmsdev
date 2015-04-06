@@ -121,6 +121,29 @@ class SiteController extends Controller {
         $this->redirect('index.php?r=site/login');
     }
 
+    /**
+     * Forgot password
+     */
+    public function actionForgot() {
+
+        $model = new ForgotForm;
+
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'forgot-form') {
+            echo CActiveForm::validate($model);
+            Yii::app()->end();
+        }
+
+        if (isset($_POST['ForgotForm'])) {
+            $model->attributes = $_POST['ForgotForm'];
+            if ($model->validate() && $model->restore()) {
+                Yii::app()->user->setFlash('success', "Please check your email for the new password");
+                $this->redirect('login');
+            }
+        }
+
+        $this->render('forgot', array('model' => $model));
+    }
+
     public function actionUpload($id) {
         $this->renderpartial('upload');
     }

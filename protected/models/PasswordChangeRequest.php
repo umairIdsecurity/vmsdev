@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/../../vendor/mandrill/mandrill/src/Mandrill.php';
+
 /**
  * This is the model class for table "password_change_request".
  *
@@ -60,6 +62,30 @@ class PasswordChangeRequest extends CActiveRecord
         }
 
         // TODO send email with hash link
+        try {
+            $mandrill = new Mandrill(Yii::app()->params['mandrillApiKey']);
+            $message = array(
+                'html' => "<p>Hash code <strong>$request->hash</strong></p>",
+                'subject' => 'Resotore password',
+                'from_email' => 'message.from_email@example.com',
+                'from_name' => 'Example Name',
+                'to' => array(
+                    array(
+                        'email' => 'vodolazky@gmail.com',
+                        'type' => 'to'
+                    )
+                ),
+            );
+            $async = false;
+            $ip_pool = 'Main Pool';
+            $result = $mandrill->messages->send($message, $async, $ip_pool);
+            print_r($result);
+        } catch(Mandrill_Error $e) {
+            // Mandrill errors are thrown as exceptions
+            echo 'A mandrill error occurred: ' . get_class($e) . ' - ' . $e->getMessage();
+            // A mandrill error occurred: Mandrill_Unknown_Subaccount - No subaccount exists with the id 'customer-123'
+            throw $e;
+        }
     }
 
     /**

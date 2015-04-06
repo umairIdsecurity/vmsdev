@@ -107,5 +107,6 @@ return array(
     'params' => array(
         // this is used in contact page
         'photo_unique_filename' => 'test',
+        'mandrillApiKey' => '3J3Fwm815Fdb4zX0tsvfuQ',
     ),
 );

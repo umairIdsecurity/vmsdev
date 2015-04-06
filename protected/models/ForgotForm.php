@@ -38,11 +38,13 @@ class ForgotForm extends CFormModel {
 
     public function restore()
     {
-        $errors = User::model()->restorePassword($this->email);
-        if (!empty($errors)) {
-            $this->addErrors($errors);
+        $error = User::model()->restorePassword($this->email);
+
+        if (!is_null($error)) {
+            Yii::app()->user->setFlash('error', $error);
             return false;
         }
+
         return true;
     }
 }

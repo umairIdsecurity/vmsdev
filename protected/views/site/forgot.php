@@ -1,5 +1,11 @@
 
 
+<div style="text-align:center;" id="usercontent">
+    <?php
+    foreach(Yii::app()->user->getFlashes() as $key => $message) {
+        echo '<div class="flash-' . $key . '">' . $message . "</div>\n";
+    }
+    ?>
 <div class="form">
     <?php
     $form = $this->beginWidget('CActiveForm', array(
@@ -12,7 +18,7 @@
     ));
     ?>
 
-    <?php echo $form->errorSummary($model); ?>
+<!--    --><?php //echo $form->errorSummary($model); ?>
 
 
     <table class="login-area" style="border-collapse: none !important;">
@@ -41,3 +47,4 @@
 
     <?php $this->endWidget()?>
 </div><!-- form -->
+</div>

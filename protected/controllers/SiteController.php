@@ -136,8 +136,8 @@ class SiteController extends Controller {
         if (isset($_POST['ForgotForm'])) {
             $model->attributes = $_POST['ForgotForm'];
             if ($model->validate() && $model->restore()) {
-                Yii::app()->user->setFlash('success', "Please check your email for the new password");
-                $this->redirect('login');
+                Yii::app()->user->setFlash('success', "Please check your email for reset password instructions");
+                $this->redirect('index.php?r=site/login');
             }
         }
 

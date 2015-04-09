@@ -21,7 +21,7 @@
         <table class="login-area" style="border-collapse: none !important;">
             <tr>
                 <td colspan="2">
-                    <p>Please enter your email for restore password:</p>
+                    <p>Please enter your email to reset password</p>
                 </td>
             </tr>
             <tr>

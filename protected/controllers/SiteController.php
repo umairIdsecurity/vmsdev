@@ -176,7 +176,7 @@ class SiteController extends Controller {
                 /** @var User $user */
                 $user = User::model()->findByPk($passwordRequest->user_id);
                 $user->changePassword($model->password);
-                $passwordRequest->markAsUsed();
+                $passwordRequest->markAsUsed($user);
                 Yii::app()->user->setFlash('success', "Your password has been changed successfully");
                 $this->redirect('index.php?r=site/login');
             }

@@ -76,8 +76,8 @@ return array(
          */
         'db' => array(
             'connectionString' => 'mysql:host=localhost;dbname=vms',
-            'username' => 'user_vms',
-            'password' => 'HFz7c9dHrmPqwNGr',
+            'username' => 'root',
+            'password' => 'mysql',
             'charset' => 'utf8',
             'enableParamLogging' => true,
             'enableProfiling' => true,
@@ -107,6 +107,6 @@ return array(
     'params' => array(
         // this is used in contact page
         'photo_unique_filename' => 'test',
-        'mandrillApiKey' => '3J3Fwm815Fdb4zX0tsvfuQ',
+        'mandrillApiKey' => '49tRGdzmJDhovnkkygttuQ',
     ),
 );

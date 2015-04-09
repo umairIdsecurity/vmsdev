@@ -22,3 +22,8 @@
 /assets/19031d9d/langs/pl.js
 /assets/19031d9d/plugins/image_edit.html
 /assets/
+.idea/**
+
+composer.phar
+/vendor/*
+/protected/runtime/*

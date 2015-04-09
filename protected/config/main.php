@@ -76,8 +76,8 @@ return array(
          */
         'db' => array(
             'connectionString' => 'mysql:host=localhost;dbname=vms',
-            'username' => 'root',
-            'password' => 'mysql',
+            'username' => 'user_vms',
+            'password' => 'HFz7c9dHrmPqwNGr',
             'charset' => 'utf8',
             'enableParamLogging' => true,
             'enableProfiling' => true,

@@ -2,10 +2,41 @@
 <div role="tabpanel">
 
     <!-- Nav tabs -->
-    <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="active"><a href="#addhost" aria-controls="home" role="tab" data-toggle="tab" id='addhostTab'>Add Host</a></li>
-        <li role="presentation"><a href="#searchost" aria-controls="profile" role="tab" data-toggle="tab">Find Host</a></li>
-    </ul>
+    
+         <div style="float:left;width:372px">
+    <div class="visitor-title-host" style="cursor:pointer;color:#2f96b4;font-size: 18px;font-weight: bold;margin: 5px 0">Add Host</div>
+    </div>
+        
+        
+       <div role="tabpanel" class="tab-pane" id="searchost">
+            <div id="searchHostDiv">
+                <div>
+                    <label><b>Search Name:</b></label> 
+                    <input type="text" id="search-host" name="search-host" class="search-text"/> 
+                    <button class="host-findBtn" onclick="findHostRecord()" id="host-findBtn" style="display:none;" data-target="#findHostRecordModal" data-toggle="modal">Search Visits</button>
+                    <button class="host-findBtn" id="dummy-host-findBtn" style="padding: 8px;background:#5b7aa5 !important">Find Host</button>
+                    <button class="host-AddBtn" <?php
+                    if ($session['role'] != Roles::ROLE_STAFFMEMBER) {
+                        echo " style='display:none;' ";
+                    }
+                    ?>>Add Host</button>
+
+                    <div class="errorMessage" id="searchTextHostErrorMessage" style="display:none;"></div>
+                </div>
+
+                <div id="searchHostTableDiv" class="data-ifr">
+                    <h4>Search Results for : <span id='searchhostname'></span></h4>
+
+                    <div id="searchHostTable"></div>
+
+                </div>
+                <input type="text" id="selectedHostInSearchTable" value="0"/>
+            </div>
+            <div class="register-a-visitor-buttons-div" id="subm">
+                <input type="button" class="neutral visitor-backBtn btnBackTab3" id="btnBackTab3" value="Back"/>
+                <input type="button" id="clicktabB2"  value="Save and Continue" class="actionForward"/>
+            </div>
+        </div>
 
     <!-- Tab panes -->
     <div class="tab-content">
@@ -74,7 +105,7 @@
                     ?>
                     <?php echo $form->errorSummary($userModel); ?>
                     <input type="text" id="hostEmailIsUnique" value="0"/>
-                    <div class="visitor-title">Add Host</div>
+                    
                     <div>
                         <table  id="addhost-table">
                             <tr <?php
@@ -195,12 +226,7 @@
                         </table>
 
                     </div>
-                    <div class="register-a-visitor-buttons-div">
-                        <input type="button" class="neutral visitor-backBtn btnBackTab3" id="btnBackTab3" value="Back"/>
-                        <input type="button" id="clicktabC" value="Save and Continue" style="display:none;"/>
-
-                        <input type="submit" value="Save and Continue" name="yt0" id="submitFormUser" class="actionForward"/>
-                    </div>
+                    
                     <?php $this->endWidget(); ?>
                     <br>
                     <div id="currentHostDetailsDiv" <?php
@@ -278,6 +304,13 @@
 
                 <script>
                     $(document).ready(function() {
+						$("#subm").hide();
+						$( ".visitor-title-host" ).click(function() {
+	
+  		$('.tab-content').show();
+		$(".data-ifr").hide();
+		$("#subm").hide();
+});
                         $("#dummy-host-findBtn").click(function(e) {
                             e.preventDefault();
                             var searchText = $("#search-host").val();
@@ -323,6 +356,9 @@
                         $("#selectedHostInSearchTable").val("");
                         $("#searchHostTableDiv h4").html("Search Results for : " + $("#search-host").val());
                         $("#searchHostTableDiv").show();
+						$(".tab-content").hide();
+						$("#subm").show();
+						$(".data-ifr").show();
                         // $("#register-host-form").hide();
                         $("#register-host-patient-form").hide();
                         //append searched text in modal
@@ -397,29 +433,7 @@
             </div>
         </div>
         <div role="tabpanel" class="tab-pane" id="searchost">
-            <div id="searchHostDiv">
-                <div>
-                    <label><b>Search Name:</b></label> 
-                    <input type="text" id="search-host" name="search-host" class="search-text"/> 
-                    <button class="host-findBtn" onclick="findHostRecord()" id="host-findBtn" style="display:none;" data-target="#findHostRecordModal" data-toggle="modal">Search Visits</button>
-                    <button class="host-findBtn" id="dummy-host-findBtn" style="padding: 8px;">Find Host</button>
-                    <button class="host-AddBtn" <?php
-                    if ($session['role'] != Roles::ROLE_STAFFMEMBER) {
-                        echo " style='display:none;' ";
-                    }
-                    ?>>Add Host</button>
-
-                    <div class="errorMessage" id="searchTextHostErrorMessage" style="display:none;"></div>
-                </div>
-
-                <div id="searchHostTableDiv">
-                    <h4>Search Results for : <span id='searchhostname'></span></h4>
-
-                    <div id="searchHostTable"></div>
-
-                </div>
-                <input type="text" id="selectedHostInSearchTable" value="0"/>
-            </div>
+            
             <div class="register-a-visitor-buttons-div">
                 <input type="button" class="neutral visitor-backBtn btnBackTab3" id="btnBackTab3" value="Back"/>
                 <input type="button" id="clicktabB2"  value="Save and Continue" class="actionForward"/>

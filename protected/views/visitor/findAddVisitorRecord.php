@@ -5,10 +5,16 @@ $session = new CHttpSession;
 <div role="tabpanel">
 
     <!-- Nav tabs -->
-    <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="active"><a href="#addvisitor" aria-controls="profile" role="tab" data-toggle="tab">Add Visitor Profile</a></li>
-        <li role="presentation" ><a href="#searchvisitor" aria-controls="home" role="tab" data-toggle="tab">Find Visitor Profile</a></li>
-    </ul>
+    <div style="float:left;width:372px">
+    <div class="visitor-title" style="cursor:pointer;color:#2f96b4">Add Visitor Profile</div>
+    </div>
+   
+                <input type="text" id="search-visitor" name="search-visitor" placeholder="Enter name, email, driver license" class="search-text"/> 
+                <button class="visitor-findBtn" onclick="findVisitorRecord()" id="visitor-findBtn" style="display:none;" data-target="#findVisitorRecordModal" data-toggle="modal">Find Record</button>
+                <button class="visitor-findBtn neutral" id="dummy-visitor-findBtn" style="padding:8px;background:#5b7aa5 !important">Find Visitor Profile</button>
+                <div class="errorMessage" id="searchTextErrorMessage" style="display:none;text-align:center"></div>
+            
+    
 
     <!-- Tab panes -->
     <div class="tab-content">
@@ -70,7 +76,7 @@ $session = new CHttpSession;
                     ?>
                     <?php echo $form->errorSummary($model); ?>
                     <input type="hidden" id="emailIsUnique" value="0"/>
-                    <div class="visitor-title">Add Visitor Profile</div>
+                    
                     <div >
                         <table  id="addvisitor-table" data-ng-app="PwordForm">
                             <tr> 
@@ -350,18 +356,13 @@ $session = new CHttpSession;
                         </td>
                 </table>
             </div>
-            <div>
-                <label><b>Search Name:</b></label> 
-                <input type="text" id="search-visitor" name="search-visitor" class="search-text"/> 
-                <button class="visitor-findBtn" onclick="findVisitorRecord()" id="visitor-findBtn" style="display:none;" data-target="#findVisitorRecordModal" data-toggle="modal">Find Record</button>
-                <button class="visitor-findBtn neutral" id="dummy-visitor-findBtn" style="padding:8px;">Find Record</button>
-                <div class="errorMessage" id="searchTextErrorMessage" style="display:none;"></div>
-            </div>
+            
 
 
             <div id="searchVisitorTableDiv">
                 <h4>Search Results for : <span id='search'></span></h4>
                 <div id="visitor_fields_for_Search">
+                <div style="float:left;width:250px">
                     <label for="Visitor_visitor_type_search">Visitor Type</label>
                     <?php
                     echo CHtml::dropDownList('Visitor_visitor_type_search', 'visitor_type', VisitorType::model()->returnVisitorTypes(), array(
@@ -370,7 +371,8 @@ $session = new CHttpSession;
                     ?>
                     <?php echo "<br>" . CHtml::error($model, 'visitor_type'); ?>
 
-
+</div>
+<div style="float:left;width:250px">
                     <div id="workstationRowSearch" <?php
                     if ($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
                         echo " class='hidden' ";
@@ -401,6 +403,8 @@ $session = new CHttpSession;
                         </select>
                         <div style="display:none;" class="errorMessage errorMessageWorkstationSearch" >Please select a workstation</div>
                     </div>
+                    </div>
+                    <div style="float:left;width:250px">
                     <label for="Visit_reason_search">Reason</label>
 
                     <select id="Visit_reason_search" name="Visitor[reason]" onchange="ifSelectedIsOtherShowAddReasonDivSearch(this)">
@@ -416,6 +420,7 @@ $session = new CHttpSession;
                         <option value="Other">Other</option>
                     </select>
                     <div class="errorMessage visitorReason" id="search-visitor-reason-error">Please select a reason</div>
+                    </div>
                 </div>
                 <?php
                 $form = $this->beginWidget('CActiveForm', array(
@@ -455,6 +460,13 @@ $session = new CHttpSession;
 
 <script>
     $(document).ready(function() {
+		$( ".visitor-title" ).click(function() {
+	
+  		$('#addvisitor').show();
+		$("#searchvisitor").hide();
+});
+		
+		
         $("#Visitor_password").val("(NULL)");
         $("#Visitor_repeatpassword").val("(NULL)");
         $('#photoCropPreview').imgAreaSelect({
@@ -518,12 +530,12 @@ $session = new CHttpSession;
             $("#register-reason-form").hide();
 
             var searchText = $("#search-visitor").val();
-            if ($("#search_visitor_tenant").val() == '') {
+           /* if ($("#search_visitor_tenant").val() == '') {
                 $("#searchTextErrorMessage").show();
                 $("#searchTextErrorMessage").html("Please select a tenant");
-            } else if (searchText != '') {
-
-                $("#searchTextErrorMessage").hide();
+            } else */if (searchText != '') {
+				
+                
                 $("#visitor-findBtn").click();
                 $("#visitor_fields_for_Search").show();
                 //if tenant only search tenant 
@@ -545,10 +557,13 @@ $session = new CHttpSession;
                         }
                     });
                 } else if ($("#currentRoleOfLoggedInUser").val() != 5 && $("#search_visitor_tenant_agent").val() != '') {
+					
+					$("#searchTextErrorMessage").hide();
                     populateAgentAdminWorkstations('search');
                 }
             }
             else {
+				
                 $("#searchTextErrorMessage").show();
                 $("#searchTextErrorMessage").html("Please enter a name");
             }
@@ -556,19 +571,27 @@ $session = new CHttpSession;
 
 
     });
+	
 
     function findVisitorRecord() {
+		
         $("#visitor_fields_for_Search").show();
         $("#selectedVisitorInSearchTable").val("");
         $("#searchVisitorTableDiv h4").html("Search Results for : " + $("#search-visitor").val());
         $("#searchVisitorTableDiv").show();
         $("#searchVisitorTable").show();
+		
+		$('#addvisitor').hide();
+		$("#searchvisitor").show();
         //  $("#register-form").hide();
         // append searched text in modal
         var searchText = $("#search-visitor").val();
+		
 //change modal url to pass user searched text
         var url = 'index.php?r=visitor/findvisitor&id=' + searchText + '&tenant=' + $("#search_visitor_tenant").val() + '&tenant_agent=' + $("#search_visitor_tenant_agent").val();
+		
         $("#searchVisitorTable").html('<iframe id="findVisitorTableIframe" onLoad="autoResize();" width="100%" height="100%" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
+		return false;
     }
 
     function populateVisitWorkstation(value) {

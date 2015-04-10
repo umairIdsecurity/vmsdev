@@ -82,6 +82,9 @@ if ($this->action->id == 'update') {
             <td><?php echo $form->textField($model, 'trading_name', array('size' => 60, 'maxlength' => 150)); ?></td>
             <td><?php echo $form->error($model, 'trading_name'); ?></td>
         </tr>
+		
+		<!--WangFu Modified-->
+		<?php if ($session['role'] != Roles::ROLE_ADMIN) {?>
         <tr>
             <td style="width:160px;"><?php echo $form->labelEx($model, 'code'); ?></td>
             <td style="width:240px;">
@@ -98,6 +101,9 @@ if ($this->action->id == 'update') {
                 ?></td>
 
         </tr>
+		<?php } ?>
+		
+		<!--WangFu Modified-->
         <tr>
             <td><?php echo $form->labelEx($model, 'Upload Company Logo'); ?></td>
             <td id="uploadRow" >

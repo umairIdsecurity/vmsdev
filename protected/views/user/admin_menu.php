@@ -52,6 +52,39 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
             } else {
                 if ($session['role'] == Roles::ROLE_ADMIN) {
                     ?>
+					<!--WangFu Modified-->
+					
+					<li class='has-sub'><?php
+                    echo CHtml::ajaxLink("Manage Companies", CController::createUrl('company/adminAjax'), array(
+                        'update' => '#content',
+                        'complete' => "js:function(html){
+				            $('.manageworkstations').next().slideUp('normal');
+				            $('.managecompanies').next().slideDown('normal');
+				            $('.manageusers').next().slideUp('normal');
+				            //$('.manageusers').next().hide();
+				            $('.managevisitorrecords').next().slideUp('normal');
+				            $('.managevisitreasons').next().slideUp('normal');
+				            $('.managereports').next().slideUp('normal');
+				            $('.managevisitortype').next().slideUp('normal');
+				        }",
+	                            ), array(
+	                        'class' => 'managecompanies',
+	                    ));
+	                    ?>
+	                    <ul <?php
+	                    if ($this->id == 'company' || $this->id == 'companyLafPreferences') {
+	                        echo "style='display:block ;'";
+	                    }
+	                    ?>>
+	
+	                        <li><a href='<?php echo Yii::app()->createUrl('company/create'); ?>' class="addSubMenu ajaxLinkLi"><span>Add Company</span></a></li>
+	                        <li><a href='<?php echo Yii::app()->createUrl('CompanyLafPreferences/customisation'); ?>' class="ajaxLinkLi"><span>Customise Display</span></a></li>
+	                    </ul>
+	                </li>
+						
+					<!--WangFu Modified-->
+					
+					
                     <li class='has-sub'>
 
                         <a href='<?php echo Yii::app()->createUrl('company/update/&id=' . $session['company']); ?>'><span>Organisation Settings</span></a>

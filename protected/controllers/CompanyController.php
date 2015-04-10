@@ -58,8 +58,28 @@ class CompanyController extends Controller {
             $model->attributes = $_POST['Company'];
 
             if ($this->isCompanyUnique($session['tenant'], $session['role'], $_POST['Company']['name'], $_POST['Company']['tenant']) == 0) {
-                if ($this->isCompanyCodeUnique($session['tenant'], $session['role'], $_POST['Company']['code'], $_POST['Company']['tenant']) == 0) {
-                    if ($companyService->save($model, $session['tenant'], $session['role'], 'create')) {
+				if(isset($_POST['Company']['code'])){					
+					 if ((($this->isCompanyCodeUnique($session['tenant'], $session['role'], $_POST['Company']['code'], $_POST['Company']['tenant']) == 0)) && ($session['role'] != Roles::ROLE_ADMIN)) {
+	                    if ($companyService->save($model, $session['tenant'], $session['role'], 'create')) {
+	                        $lastId = $model->id;
+	                        $cs = Yii::app()->clientScript;
+	                        $cs->registerScript('closeParentModal', 'window.parent.dismissModal(' . $lastId . ');', CClientScript::POS_READY);
+	                        $model->unsetAttributes();
+	
+	                        switch ($isUserViewingFromModal) {
+	                            case 1:
+	                                Yii::app()->user->setFlash('success', 'Company Successfully added!');
+	                                break;
+	                            default:
+	                                $this->redirect(array('company/admin'));
+	                        }
+	                    }
+	                } else {
+	                    Yii::app()->user->setFlash('error', 'Company code has already been taken');
+	                }
+				}
+				else{
+					if ($companyService->save($model, $session['tenant'], $session['role'], 'create')) {
                         $lastId = $model->id;
                         $cs = Yii::app()->clientScript;
                         $cs->registerScript('closeParentModal', 'window.parent.dismissModal(' . $lastId . ');', CClientScript::POS_READY);
@@ -73,9 +93,8 @@ class CompanyController extends Controller {
                                 $this->redirect(array('company/admin'));
                         }
                     }
-                } else {
-                    Yii::app()->user->setFlash('error', 'Company code has already been taken');
-                }
+				}
+               
             } else {
                 Yii::app()->user->setFlash('error', 'Company name has already been taken');
             }

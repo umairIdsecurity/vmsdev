@@ -48,6 +48,9 @@ class CompanyController extends Controller {
     public function actionCreate() {
         //     $this->layout = '//layouts/contentIframeLayout';
         $model = new Company;
+		if (isset($_POST['user_role'])) {
+			$model->userRole = $_POST['user_role'] ;
+		}
         $session = new CHttpSession;
         $companyService = new CompanyServiceImpl();
         $isUserViewingFromModal = '';
@@ -56,7 +59,7 @@ class CompanyController extends Controller {
         }
         if (isset($_POST['Company'])) {
             $model->attributes = $_POST['Company'];
-
+			
             if ($this->isCompanyUnique($session['tenant'], $session['role'], $_POST['Company']['name'], $_POST['Company']['tenant']) == 0) {
 				if(isset($_POST['Company']['code'])){					
 					 if ((($this->isCompanyCodeUnique($session['tenant'], $session['role'], $_POST['Company']['code'], $_POST['Company']['tenant']) == 0)) && ($session['role'] != Roles::ROLE_ADMIN)) {
@@ -78,7 +81,7 @@ class CompanyController extends Controller {
 	                    Yii::app()->user->setFlash('error', 'Company code has already been taken');
 	                }
 				}
-				else{
+				else{				
 					if ($companyService->save($model, $session['tenant'], $session['role'], 'create')) {
                         $lastId = $model->id;
                         $cs = Yii::app()->clientScript;
@@ -180,7 +183,7 @@ class CompanyController extends Controller {
                             $model->attributes = $_POST['Company'];
                             if ($model->save()) {
                                 switch ($session['role']) {
-                                    case Roles::ROLE_SUPERADMIN:
+                                    case Roles::ROLE_ADMIN:
                                         $this->redirect(array('company/admin'));
                                         break;
 
@@ -221,6 +224,7 @@ class CompanyController extends Controller {
      * Manages all models.
      */
     public function actionAdmin() {
+	echo "aaad";
         //  $this->layout = '//layouts/contentIframeLayout';
         $model = new Company('search');
         $model->unsetAttributes();  // clear any default values

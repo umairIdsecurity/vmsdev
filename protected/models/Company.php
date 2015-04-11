@@ -279,7 +279,17 @@ WHERE u.id=c.tenant AND c.id !=1 AND c.id=t.id)";
         $company = array_filter($company);
         return count($company);
     }
+	
+	public function isWithoutCompanyCodeUniqueWithinTheTenant($tenant) {
+        $Criteria = new CDbCriteria();
+        $Criteria->condition = 'tenant="' . $tenant . '"';
+        $company = Company::model()->findAll($Criteria);
 
+        $company = array_filter($company);
+        return count($company);
+    }
+
+	
     public function findAllCompany() {
         $aArray = array();
         if (Yii::app()->user->role != Roles::ROLE_SUPERADMIN) {

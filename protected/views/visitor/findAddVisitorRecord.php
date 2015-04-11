@@ -5,7 +5,7 @@ $session = new CHttpSession;
 <div role="tabpanel">
 
     <!-- Nav tabs -->
-    <div style="float:left;width:372px">
+    <div style="float:left;width:300px">
     <div class="visitor-title" style="cursor:pointer;color:#2f96b4">Add Visitor Profile</div>
     </div>
    
@@ -82,7 +82,7 @@ $session = new CHttpSession;
                             <tr> 
 
                                 <td rowspan="7"  style="width:300px;">
-                                    <label for="Visitor_Add_Photo" style="margin-left:27px;">Add  Photo</label><br>
+                                   <!-- <label for="Visitor_Add_Photo" style="margin-left:27px;">Add  Photo</label><br>-->
 
                                     <input type="hidden" id="Visitor_photo" name="Visitor[photo]">
                                     <div class="photoDiv" style='display:none;'>

@@ -35,20 +35,20 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
     <dd class="active borderTopLeftRadius" id="selectCard" >
         <a href="#step1" id="selectCardB" class="borderTopLeftRadius">Select Card Type</a>
     </dd>
-    <dt id="findVisitorA">Find or Add New Visitor Profile</dt>
-    <dd style="display:none;" id="findVisitor"><a href="#step2" id="findVisitorB">Find or Add New Visitor Profile</a></dd>
+    <dt id="findVisitorA">Add or Find Visitor Profile</dt>
+    <dd style="display:none;" id="findVisitor"><a href="#step2" id="findVisitorB">Add or Find Visitor Profile</a></dd>
 
     <dt id="findHostA" <?php if (isset($_GET['action'])) {
     ?> 
             class="borderTopLeftRadius" 
-        <?php } ?>>Find or Add Host</dt>
+        <?php } ?>>Add or Find Hos</dt>
 
     <dd style="display:none;" <?php
     if (isset($_GET['action'])) {
         echo "class='borderTopRightRadius'";
     }
     ?>" id="findHost">
-        <a href="#step3" id="findHostB" <?php if (isset($_GET['action'])) { ?> class="borderTopRightRadius" <?php } ?>>Find or Add Host</a>
+   <a href="#step3" id="findHostB" <?php if (isset($_GET['action'])) { ?> class="borderTopRightRadius" <?php } ?>>Add or Find Hos</a>
     </dd>
     <?php if (!isset($_GET['action'])) { ?>
         <dt id = "logVisitA" class="borderTopRightRadius">Log Visit</dt>

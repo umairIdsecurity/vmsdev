@@ -30,6 +30,10 @@ class CompanyController extends Controller {
                 'actions' => array('admin', 'adminAjax', 'delete'),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_SUPERADMIN)',
             ),
+			array('allow', // allow superadmin user to perform 'admin' and 'delete' actions
+                'actions' => array('admin', 'adminAjax', 'delete'),
+                'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
+            ),
             array('deny', // deny all users
                 'users' => array('*'),
             ),
@@ -224,7 +228,6 @@ class CompanyController extends Controller {
      * Manages all models.
      */
     public function actionAdmin() {
-	echo "aaad";
         //  $this->layout = '//layouts/contentIframeLayout';
         $model = new Company('search');
         $model->unsetAttributes();  // clear any default values

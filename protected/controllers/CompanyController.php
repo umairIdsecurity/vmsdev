@@ -34,6 +34,10 @@ class CompanyController extends Controller {
                 'actions' => array('admin', 'adminAjax', 'delete'),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
             ),
+			array('allow', // allow superadmin user to perform 'admin' and 'delete' actions
+                'actions' => array('update'),
+                'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
+            ),
             array('deny', // deny all users
                 'users' => array('*'),
             ),
@@ -125,7 +129,7 @@ class CompanyController extends Controller {
 
     private function isCompanyCodeUnique($sessionTenant, $sessionRole, $companyCode, $selectedTenant) {
         if ($sessionRole == Roles::ROLE_ADMIN) {
-            $countCompany = Company::model()->isCompanyCodeUniqueWithinTheTenant($companyCode, $sessionTenant);
+            $countCompany = Company::model()->isWithoutCompanyCodeUniqueWithinTheTenant($sessionTenant);
         } else {
             $countCompany = Company::model()->isCompanyCodeUniqueWithinTheTenant($companyCode, $selectedTenant);
         }
@@ -136,6 +140,9 @@ class CompanyController extends Controller {
     public function actionUpdate($id) {
         //$this->layout = '//layouts/contentIframeLayout';
         $model = $this->loadModel($id);
+		if (isset($_POST['user_role'])) {
+			$model->userRole = $_POST['user_role'] ;
+		}
         $session = new CHttpSession;
         if (isset($_POST['Company'])) {
             if ($model->name == $_POST['Company']['name']) {
@@ -170,7 +177,7 @@ class CompanyController extends Controller {
                 }
             } else {
                 if ($this->isCompanyUnique($session['tenant'], $session['role'], $_POST['Company']['name'], $_POST['Company']['tenant_']) == 0) {
-                    if ($model->code == $_POST['Company']['code']) {
+                    if (isset($_POST['Company']['code']) && $model->code == $_POST['Company']['code']) {
                         $model->attributes = $_POST['Company'];
                         if ($model->save()) {
                             switch ($session['role']) {
@@ -183,21 +190,18 @@ class CompanyController extends Controller {
                             }
                         }
                     } else {
-                        if ($this->isCompanyCodeUnique($session['tenant'], $session['role'], $_POST['Company']['code'], $_POST['Company']['tenant_']) == 0) {
-                            $model->attributes = $_POST['Company'];
-                            if ($model->save()) {
-                                switch ($session['role']) {
-                                    case Roles::ROLE_ADMIN:
-                                        $this->redirect(array('company/admin'));
-                                        break;
+                        $model->attributes = $_POST['Company'];
+                        if ($model->save()) {
+                            switch ($session['role']) {
+                                case Roles::ROLE_ADMIN:
+                                    $this->redirect(array('company/admin'));
+                                    break;
 
-                                    default:
-                                        Yii::app()->user->setFlash('success', 'Organisation Settings Updated');
-                                }
+                                default:
+                                    Yii::app()->user->setFlash('success', 'Organisation Settings Updated');
                             }
-                        } else {
-                            Yii::app()->user->setFlash('error', 'Company code has already been taken');
                         }
+                        
                     }
                 } else {
                     Yii::app()->user->setFlash('error', 'Company name has already been taken');

@@ -28,3 +28,8 @@ composer.phar
 /vendor/*
 /protected/runtime/*.log*
 company_css/**
+.buildpath
+.settings
+.settings/**
+.project
+

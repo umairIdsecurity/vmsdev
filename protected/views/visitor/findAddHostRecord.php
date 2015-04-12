@@ -3,7 +3,7 @@
 
     <!-- Nav tabs -->
     
-         <div style="float:left;width:372px">
+         <div style="float:left;width:288px">
     <div class="visitor-title-host" style="cursor:pointer;color:#2f96b4;font-size: 18px;font-weight: bold;margin: 5px 0">Add Host</div>
     </div>
         
@@ -11,15 +11,15 @@
        <div role="tabpanel" class="tab-pane" id="searchost">
             <div id="searchHostDiv">
                 <div>
-                    <label><b>Search Name:</b></label> 
-                    <input type="text" id="search-host" name="search-host" class="search-text"/> 
+                   <!-- <label><b>Search Name:</b></label> -->
+                    <input type="text" id="search-host" name="search-host" placeholder="Enter name, email address" class="search-text"/> 
                     <button class="host-findBtn" onclick="findHostRecord()" id="host-findBtn" style="display:none;" data-target="#findHostRecordModal" data-toggle="modal">Search Visits</button>
                     <button class="host-findBtn" id="dummy-host-findBtn" style="padding: 8px;background:#5b7aa5 !important">Find Host</button>
-                    <button class="host-AddBtn" <?php
+                   <!-- <button class="host-AddBtn" <?php
                     if ($session['role'] != Roles::ROLE_STAFFMEMBER) {
                         echo " style='display:none;' ";
                     }
-                    ?>>Add Host</button>
+                    ?>>Add Host</button>-->
 
                     <div class="errorMessage" id="searchTextHostErrorMessage" style="display:none;"></div>
                 </div>

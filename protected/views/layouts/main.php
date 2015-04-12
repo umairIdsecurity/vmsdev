@@ -160,7 +160,7 @@ $userRole = $session['role'];
                              echo "style='display:none'";
                          }
                          ?>>
-                        Visitor Management System v<?php Yii::app()->name ?> - Copyright &copy; <?php echo date('Y'); ?> by <a href="http://idsecurity.com.au">Identity Security Pty Ltd </a>©.<br/>
+                        Visitor Management System <?php Yii::app()->name ?> - Copyright &copy; <?php echo date('Y'); ?> by <a href="http://idsecurity.com.au">Identity Security Pty Ltd </a>©.<br/>
                         All Rights Reserved.<br/>
 
                     </div><!-- footer -->

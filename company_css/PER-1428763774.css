@@ -1,0 +1,179 @@
+.actionForward,.update, #addCompanyLink {	 
+background: -webkit-gradient(linear, center top, center bottom, from(#c6f76b), to(#9ED92F)) !important;
+background: -moz-linear-gradient(center top , #c6f76b, #9ED92F) repeat scroll 0 0 rgba(0, 0, 0, 0) !important;
+background: -webkit-gradient(linear, center top, center bottom, from(#c6f76b), to(#9ED92F)) !important;
+background: -ms-linear-gradient(top, #c6f76b, #9ED92F) !important;
+
+border:1px solid #9ED92F !important;
+color:#ffffff !important;
+}
+.actionForward:hover,.update:hover, #addCompanyLink:hover{
+background: -webkit-gradient(linear, center top, center bottom, from(#c6f76b), to(#9ED92F)) !important;
+background: -moz-linear-gradient(center top , #c6f76b, #9ED92F) repeat scroll 0 0 rgba(0, 0, 0, 0) !important;
+background: -webkit-gradient(linear, center top, center bottom, from(#c6f76b), to(#9ED92F)) !important;
+background: -ms-linear-gradient(top, #c6f76b, #9ED92F) !important;
+color:#ffffff !important;
+border:1px solid #9ED92F !important;
+}
+/* COMPLETE */
+.complete:not([disabled]), .btn-success, #btnSubmit{	 
+background: -webkit-gradient(linear, center top, center bottom, from(#3f33a6), to(#3d438c)) !important;
+background: -moz-linear-gradient(center top , #3f33a6, #3d438c) repeat scroll 0 0 rgba(0, 0, 0, 0) !important;
+background: -webkit-gradient(linear, center top, center bottom, from(#3f33a6), to(#3d438c)) !important;
+background: -ms-linear-gradient(top, #3f33a6, #3d438c) !important;
+border:1px solid #3d438c !important;
+color:#ffffff !important;
+}
+
+.complete:hover:not([disabled]), .btn-success:hover, #btnSubmit:hover{
+background: -webkit-gradient(linear, center top, center bottom, from(#4d528a), to(#5b60b3)) !important;
+background: -moz-linear-gradient(center top , #4d528a, #5b60b3) repeat scroll 0 0 rgba(0, 0, 0, 0) !important;
+background: -webkit-gradient(linear, center top, center bottom, from(#4d528a), to(#5b60b3)) !important;
+background: -ms-linear-gradient(top, #4d528a, #5b60b3) !important;
+color:#ffffff !important;
+border:1px solid #5b60b3 !important;
+}
+
+/* NEUTRAL*/
+
+.visitor-findBtn,.delete,.host-findBtn,.neutral{
+background: -webkit-gradient(linear, center top, center bottom, from(#5fdaf5), to(#33bcdb)) !important;
+background: -moz-linear-gradient(center top , #5fdaf5, #33bcdb) repeat scroll 0 0 rgba(0, 0, 0, 0) !important;
+background: -webkit-gradient(linear, center top, center bottom, from(#5fdaf5), to(#33bcdb)) !important;
+background: -ms-linear-gradient(top, #5fdaf5, #33bcdb) !important;
+border:1px solid #33bcdb  !important;
+color:#ffffff !important;
+}
+
+.visitor-findBtn:hover,.delete:hover,.host-findBtn:hover,.neutral:hover{
+background: -webkit-gradient(linear, center top, center bottom, from(#33bcdb), to(#33bcdb)) !important;
+background: -moz-linear-gradient(center top , #33bcdb, #33bcdb) repeat scroll 0 0 rgba(0, 0, 0, 0) !important;
+background: -webkit-gradient(linear, center top, center bottom, from(#33bcdb), to(#33bcdb)) !important;
+background: -ms-linear-gradient(top, #33bcdb, #33bcdb) !important;
+color:#ffffff !important;
+border: 1px solid #33bcdb  !important;
+}
+
+
+/* NAVIGATION MENU*/
+
+nav.navigation ul:after,nav.navigation ul {
+background-color:#E7E7E7 !important;
+}
+
+nav.navigation ul li.active a
+{
+color:#ffffff !important;
+background:#3960b0 !important;
+}
+
+nav.navigation ul li a:hover, nav.navigation ul li.active:hover
+{
+background:#3960b0 !important;
+color:#ffffff !important;
+}
+
+nav.navigation ul li a{
+color:#637280 !important;
+}
+
+.top_nav ul li a {
+color:#E7E7E7 !important;
+}
+
+.top_nav ul li a:hover {
+color:#3960b0 !important;
+}
+/* SIDE MENU*/
+
+
+.administrationMenu #cssmenu > ul > li > a { 
+background: none repeat scroll 0 0 #E7E7E7 !important;
+color:#e07a1b !important;
+}
+
+.administrationMenu #cssmenu > ul > li > a:hover { 
+background: none repeat scroll 0 0 #E7E7E7 !important;
+color:#e87015 !important;
+}
+
+/*headers*/
+
+.wrapper h1,.visitor-title,.has-sub-sub span {
+color:#e07a1b !important;
+}
+
+/*has sub icon*/
+.customIcon-adminmenu{
+background-color: #e07a1b !important;
+}
+
+/*PAGER*/
+
+ul.yiiPager .selected a {
+background-color:#E7E7E7 !important;
+color:#637280 !important;
+
+}
+ul.yiiPager a {
+color:#637280 !important;
+border:#637280 !important;
+}
+
+ul.yiiPager a:hover {
+background-color:#3960b0 !important;
+color:#ffffff !important;
+}
+
+ul.yiiPager a:hover
+{
+border:solid 1px #3960b0 !important;
+background-color: #3960b0 !important;
+color:#ffffff !important;
+}
+
+ul.yiiPager a:link, ul.yiiPager a:visited {
+background-color:#E7E7E7 !important;
+border:1px solid #E7E7E7 !important;
+}
+
+.pagination ul > li > a:hover,
+.pagination ul > li > a:focus,
+.pagination ul > .active > a,
+.pagination ul > .active > span,
+.pager li > a:hover,
+.pager li > a:focus {
+background-color:#3960b0 !important;
+color:#ffffff !important;
+}
+
+
+ul.yiiPager .selected a {
+    background: none repeat scroll 0 0 #3960b0 !important;
+    color:#ffffff !important;
+}
+
+/*footer*/
+
+
+#footer {
+    border-top: 1px solid #3960b0 !important;
+}
+
+.grid-view th a.asc:after {
+    border-bottom: 5px solid #E7E7E7 !important;
+    }
+
+    /*sort arrows*/
+    
+.asc div{
+    border-color: #E7E7E7 transparent !important;
+}
+
+.desc div{
+    border-color: #E7E7E7  rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) !important;
+}
+
+.sidebarTitle{
+background: none repeat scroll 0 0 #E7E7E7 !important;
+}

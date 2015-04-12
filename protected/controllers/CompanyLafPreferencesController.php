@@ -197,9 +197,12 @@ class CompanyLafPreferencesController extends Controller {
 
 
 
-        if ($companyLafPreferences->css_file_path != '') {
+        if ($companyLafPreferences->css_file_path != '' ) {
 
-            unlink(Yii::getPathOfAlias('webroot') . $companyLafPreferences->css_file_path); //delete file
+            if(file_exists($companyLafPreferences->css_file_path)) {
+
+                unlink(Yii::getPathOfAlias('webroot') . $companyLafPreferences->css_file_path); //delete file
+            }
         }
 
         CompanyLafPreferences::model()->updateByPk($company->company_laf_preferences, array(

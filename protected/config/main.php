@@ -7,7 +7,7 @@ Yii::setPathOfAlias('bootstrap', dirname(__FILE__) . '/../extensions/bootstrap')
 // CWebApplication properties can be configured here.
 return array(
     'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . '..',
-    'name' => 'Visitor Management System',
+    'name' => 'Visitor Management System v<version_number>',
     // preloading 'log' component
     'preload' => array('log', 'foundation'),
     'theme' => 'bootstrap',
@@ -27,16 +27,16 @@ return array(
         'application.service.impl.*',
         'application.service.*',
     ),
-    'modules' => array(
-        // uncomment the following to enable the Gii tool
-
-        'gii' => array(
-            'class' => 'system.gii.GiiModule',
-            'password' => '12345',
-            // If removed, Gii defaults to localhost only. Edit carefully to taste.
-            'ipFilters' => array('127.0.0.1', '::1'),
-        ),
-    ),
+//    'modules' => array(
+//        // uncomment the following to enable the Gii tool
+//
+//        'gii' => array(
+//            'class' => 'system.gii.GiiModule',
+//            'password' => '12345',
+//            // If removed, Gii defaults to localhost only. Edit carefully to taste.
+//            'ipFilters' => array('127.0.0.1', '::1'),
+//        ),
+//    ),
     // application components
     'components' => array(
         

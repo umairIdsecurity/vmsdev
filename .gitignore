@@ -27,3 +27,4 @@
 composer.phar
 /vendor/*
 /protected/runtime/*.log*
+company_css

@@ -146,7 +146,7 @@ class CompanyController extends Controller {
         $session = new CHttpSession;
         if (isset($_POST['Company'])) {
             if ($model->name == $_POST['Company']['name']) {
-                if ($model->code == $_POST['Company']['code']) {
+                if (isset($_POST['Company']['code']) && $model->code == $_POST['Company']['code']) {
                     $model->attributes = $_POST['Company'];
                     if ($model->save()) {
                         switch ($session['role']) {

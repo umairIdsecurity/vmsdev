@@ -15,7 +15,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
    
                 <input type="text" id="search-visitor" name="search-visitor" placeholder="Enter name, email, driver license" class="search-text"/> 
                 <button class="visitor-findBtn" onclick="findVisitorRecord()" id="visitor-findBtn" style="display:none;" data-target="#findVisitorRecordModal" data-toggle="modal">Find Record</button>
-                <button class="visitor-findBtn neutral" id="dummy-visitor-findBtn" style="padding:8px;background:<?php echo $companyLafPreferences->neutral_bg_color; ?> !important;width:211px;">Find Visitor Profile</button>
+                <button class="visitor-findBtn neutral" id="dummy-visitor-findBtn" style="padding:8px;background:<?php echo $companyLafPreferences->neutral_bg_color; ?> !important;">Find Visitor Profile</button>
                 <div class="errorMessage" id="searchTextErrorMessage" style="display:none;text-align:center"></div>
             
     
@@ -932,6 +932,3 @@ $this->widget('bootstrap.widgets.TbButton', array(
 <input type="hidden" id="y2"/>
 <input type="hidden" id="width"/>
 <input type="hidden" id="height"/>
-
-
-

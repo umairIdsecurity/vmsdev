@@ -41,7 +41,7 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
     <dt id="findHostA" <?php if (isset($_GET['action'])) {
     ?> 
             class="borderTopLeftRadius" 
-        <?php } ?>>Add or Find Hos</dt>
+        <?php } ?>>Add or Find Host</dt>
 
     <dd style="display:none;" <?php
     if (isset($_GET['action'])) {
@@ -163,8 +163,8 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
                 $("#findHostA").html("Add Patient Details");
                 $("#findHostB").html("Add Patient Details");
             } else {
-                $("#findHostA").html("Find or Add Host");
-                $("#findHostB").html("Find or Add Host");
+                $("#findHostA").html("Add or Find Host");
+                $("#findHostB").html("Add or Find Host");
             }
             showHideTabs('findHostB', 'findHostA', 'findHost', 'findVisitorA', 'findVisitor', 'selectCardA', 'selectCard');
 
@@ -853,8 +853,8 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
                                 $("#findHostA").html("Add Patient Details");
                                 $("#findHostB").html("Add Patient Details");
                             } else {
-                                $("#findHostA").html("Find or Add Host");
-                                $("#findHostB").html("Find or Add Host");
+                                $("#findHostA").html("Add or Find Host");
+                                $("#findHostB").html("Add or Find Host");
                             }
                             //tenant and tenant agent of visitor and host should be the same
                             var options = $("#search_visitor_tenant > option").clone();

@@ -36,7 +36,7 @@
             <tr>
                 <td></td>
                 <td colspan="2">
-                    <?php echo CHtml::submitButton('Restore'); ?>
+                    <?php echo CHtml::submitButton('Reset'); ?>
                 </td>
             </tr>
 

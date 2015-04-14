@@ -1,20 +1,23 @@
-<?php $session = new CHttpSession; ?>
+<?php $session = new CHttpSession;
+$company = Company::model()->findByPk($session['company']);
+$companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
+ ?>
 <div role="tabpanel">
 
     <!-- Nav tabs -->
     
-         <div style="float:left;width:288px">
+         <div style="float:left;width:280px">
     <div class="visitor-title-host" style="cursor:pointer;color:#2f96b4;font-size: 18px;font-weight: bold;margin: 5px 0">Add Host</div>
     </div>
         
         
-       <div role="tabpanel" class="tab-pane" id="searchost">
+       <div role="tabpanel" class="tab-pane" id="searchost" style="width:882px">
             <div id="searchHostDiv">
                 <div>
                    <!-- <label><b>Search Name:</b></label> -->
-                    <input type="text" id="search-host" name="search-host" placeholder="Enter name, email address" class="search-text"/> 
+                    <input type="text" id="search-host"  style="width:370px"name="search-host" placeholder="Enter name, email address" class="search-text"/> 
                     <button class="host-findBtn" onclick="findHostRecord()" id="host-findBtn" style="display:none;" data-target="#findHostRecordModal" data-toggle="modal">Search Visits</button>
-                    <button class="host-findBtn" id="dummy-host-findBtn" style="padding: 8px;background:#5b7aa5 !important">Find Host</button>
+                    <button class="host-findBtn" id="dummy-host-findBtn" style="padding: 8px;background:<?php echo $companyLafPreferences->neutral_bg_color; ?> !important;width:211px">Find Host</button>
                    <!-- <button class="host-AddBtn" <?php
                     if ($session['role'] != Roles::ROLE_STAFFMEMBER) {
                         echo " style='display:none;' ";
@@ -32,7 +35,7 @@
                 </div>
                 <input type="text" id="selectedHostInSearchTable" value="0"/>
             </div>
-            <div class="register-a-visitor-buttons-div" id="subm">
+            <div class="register-a-visitor-buttons-div" id="subm" style="padding-right:20px">
                 <input type="button" class="neutral visitor-backBtn btnBackTab3" id="btnBackTab3" value="Back"/>
                 <input type="button" id="clicktabB2"  value="Save and Continue" class="actionForward"/>
             </div>
@@ -291,7 +294,7 @@
                             </tr>
                         </table>
                         <?php $this->endWidget(); ?>
-                        <div class="register-a-visitor-buttons-div">
+                        <div class="register-a-visitor-buttons-div"  style="padding-right:67px">
                             <input type="button" class="neutral visitor-backBtn btnBackTab3" id="btnBackTab3" value="Back"/>
 
                             <input type="button" id="saveCurrentUserAsHost" value="Save and Continue" />

@@ -1,17 +1,21 @@
 <?php
 $session = new CHttpSession;
+$company = Company::model()->findByPk($session['company']);
+$companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
 ?>
 <br>
-<div role="tabpanel">
+<div role="tabpanel" style="width:882px">
 
+   
     <!-- Nav tabs -->
     <div style="float:left;width:300px">
     <div class="visitor-title" style="cursor:pointer;color:#2f96b4">Add Visitor Profile</div>
     </div>
    
+   
                 <input type="text" id="search-visitor" name="search-visitor" placeholder="Enter name, email, driver license" class="search-text"/> 
                 <button class="visitor-findBtn" onclick="findVisitorRecord()" id="visitor-findBtn" style="display:none;" data-target="#findVisitorRecordModal" data-toggle="modal">Find Record</button>
-                <button class="visitor-findBtn neutral" id="dummy-visitor-findBtn" style="padding:8px;background:#5b7aa5 !important">Find Visitor Profile</button>
+                <button class="visitor-findBtn neutral" id="dummy-visitor-findBtn" style="padding:8px;background:<?php echo $companyLafPreferences->neutral_bg_color; ?> !important;width:211px;">Find Visitor Profile</button>
                 <div class="errorMessage" id="searchTextErrorMessage" style="display:none;text-align:center"></div>
             
     
@@ -264,7 +268,7 @@ $session = new CHttpSession;
                         </table>
 
                     </div>
-                    <div class="register-a-visitor-buttons-div" style="padding-top:50px;">
+                    <div class="register-a-visitor-buttons-div" style="padding-top:50px;padding-right:30px;">
                         <input type="button" class="neutral visitor-backBtn btnBackTab2" id="btnBackTab2" value="Back"/>
                         <input type="button" id="clicktabB" value="Save and Continue" style="display:none;"/>
 
@@ -447,7 +451,7 @@ $session = new CHttpSession;
                 <div id="searchVisitorTable"></div>
 
             </div>
-            <div class="register-a-visitor-buttons-div">
+            <div class="register-a-visitor-buttons-div" style="padding-right:23px;">
                 <input type="button" class="neutral visitor-backBtn btnBackTab2" id="btnBackTab2" value="Back"/>
                 <input type="button" id="clicktabB1"  value="Save and Continue" class="actionForward"/>
             </div>

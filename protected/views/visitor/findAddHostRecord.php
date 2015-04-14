@@ -17,7 +17,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                    <!-- <label><b>Search Name:</b></label> -->
                     <input type="text" id="search-host"  style="width:370px"name="search-host" placeholder="Enter name, email address" class="search-text"/> 
                     <button class="host-findBtn" onclick="findHostRecord()" id="host-findBtn" style="display:none;" data-target="#findHostRecordModal" data-toggle="modal">Search Visits</button>
-                    <button class="host-findBtn" id="dummy-host-findBtn" style="padding: 8px;background:<?php echo $companyLafPreferences->neutral_bg_color; ?> !important;width:211px">Find Host</button>
+                    <button class="host-findBtn" id="dummy-host-findBtn" style="padding: 8px;background:<?php echo $companyLafPreferences->neutral_bg_color; ?> !important;">Find Host</button>
                    <!-- <button class="host-AddBtn" <?php
                     if ($session['role'] != Roles::ROLE_STAFFMEMBER) {
                         echo " style='display:none;' ";

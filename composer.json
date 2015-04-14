@@ -1,5 +1,5 @@
 {
   "require": {
-    "mandrill/mandrill": "1.0.*"
+    "daily/mandrill-dm": "dev-master"
   }
 }

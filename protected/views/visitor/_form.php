@@ -57,11 +57,14 @@ if ($this->action->id == 'update') {
     <input type="hidden" id="emailIsUnique" value="0"/>
     <div>
         <table  id="addvisitor-table" data-ng-app="PwordForm">
+        
+        <tr><td><table style="margin-left:70px;width:120px;margin-top:10px;"><td class="ico1" width="40">&nbsp;</td><td class="ico2" width="40">&nbsp;</td><td class="ico3" width="40">&nbsp;</td><table><td></tr>
             <tr>
                 <td>
                     <table style="width:300px;float:left">
+                    
                         <tr> 
-                            <td id="uploadRow" rowspan="7" style='width:300px;padding-top:30px;'>
+                            <td id="uploadRow" rowspan="7" style='width:300px;padding-top:10px;'>
                                 
                                 <input type="hidden" id="Visitor_photo" name="Visitor[photo]"
                                        value="<?php echo $model['photo']; ?>">
@@ -212,10 +215,19 @@ if ($this->action->id == 'update') {
                             </td>
                         </tr>
                         <tr><td>
+                        <?php 
+						
+						if($_REQUEST['r']== 'visitor/update')
+						{ ?>
                                 <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;">
+                                    Add Company</a>
+                       <?php } 
+                       else
+                       {
+                       ?>
+                       <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;">
                                     Add New Company</a>
-                       
-                                
+                       <?php } ?>         
                        </td></tr>         
                            
                             

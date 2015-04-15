@@ -30,6 +30,7 @@ $session = new ChttpSession;
                 ?>
             </li>
             <li><a href='<?php echo Yii::app()->createUrl('visitor/addvisitor'); ?>' class="submenu-icon addvisitorprofile"><span>Add Visitor Profile</span></a></li>
+             <li><a onclick="addCompany2()" class="submenu-icon addcompanymenu"><span>Add Company</span></a></li>
                         
             
 
@@ -38,5 +39,38 @@ $session = new ChttpSession;
         </ul>
     </div>
 </div>
+<?php
+$this->widget('bootstrap.widgets.TbButton', array(
+    'label' => 'Click me',
+    'type' => 'primary',
+    'htmlOptions' => array(
+        'data-toggle' => 'modal',
+        'data-target' => '#addCompanyModal',
+        'id' => 'modalBtn',
+        'style' => 'display:none',
+    ),
+));
+?>
 
+<div class="modal hide fade" id="addCompanyModal" style="width:600px;">
+    <div class="modal-header">
+        <a data-dismiss="modal" class="close" id="dismissModal" >×</a>
+        <br>
+    </div>
+    <div id="modalBody"></div>
 
+</div>
+
+<script>
+ function addCompany2() {
+        
+            
+                /* if role is superadmin tenant is required. Pass selected tenant and tenant agent of user to company. */
+                url = '<?php echo Yii::app()->createUrl('company/create&viewFrom=1'); ?>';
+            
+
+            $("#modalBody").html('<iframe id="companyModalIframe" width="100%" height="80%" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
+            $("#modalBtn").click();
+        
+    }
+</script>

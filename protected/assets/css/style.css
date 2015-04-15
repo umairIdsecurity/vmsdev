@@ -904,7 +904,24 @@ dt.tabs dt{
     height: 16px;
     text-decoration: none;
 }
-
+.addcompanymenu{  background:url('../images/company.png') 0 0 no-repeat;
+    background-position: 0px -4px;
+    padding: 1px 0 1px 30px;
+    display: block;
+    height: 16px;
+    text-decoration: none; }
+.ico1{  background:url('../images/ico1.jpg') 0 0 no-repeat;
+    height:40px;
+	
+     }
+.ico2{  background:url('../images/ico2.jpg') 0 0 no-repeat;
+    height:40px;
+	
+     }
+.ico3{  background:url('../images/ico3.jpg') 0 0 no-repeat;
+    height:40px;
+	
+     }
 .addvisitorprofile{
     background:url('../images/addvisitorprofileicon.png') 0 0 no-repeat;
     background-position: 0px 2px;

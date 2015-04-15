@@ -8,12 +8,12 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
 
    
     <!-- Nav tabs -->
-    <div style="float:left;width:300px">
+    <div style="float:left;width:270px;text-align:center">
     <div class="visitor-title" style="cursor:pointer;color:#2f96b4">Add Visitor Profile</div>
     </div>
    
    
-                <input type="text" id="search-visitor" name="search-visitor" placeholder="Enter name, email, driver license" class="search-text"/> 
+                <input type="text" id="search-visitor" name="search-visitor" placeholder="Enter name, email, driver license" class="search-text" style="margin-left:30px;" /> 
                 <button class="visitor-findBtn" onclick="findVisitorRecord()" id="visitor-findBtn" style="display:none;" data-target="#findVisitorRecordModal" data-toggle="modal">Find Record</button>
                 <button class="visitor-findBtn neutral" id="dummy-visitor-findBtn" style="padding:8px;background:<?php echo $companyLafPreferences->neutral_bg_color; ?> !important;">Find Visitor Profile</button>
                 <div class="errorMessage" id="searchTextErrorMessage" style="display:none;text-align:center"></div>

@@ -1,6 +1,10 @@
 <?php
 $session = new CHttpSession;
 ?>
+<style type="text/css">
+.required{ padding-left:10px;}
+
+</style>
 <div id="findAddHostRecordDiv" class="findAddHostRecordDiv form">
     <input type="text" id="sessionRole" value="<?php echo $session['role']; ?>" style="display:none;" >
 
@@ -35,7 +39,7 @@ $session = new CHttpSession;
                     <?php
                     if ($session['role'] == Roles::ROLE_SUPERADMIN) {
                         ?>
-                    <td id="hostTenantRow"><?php echo $form->labelEx($userModel, 'tenant'); ?><br>
+                    <td id="hostTenantRow">
                         <select id="User_tenant" onchange="populateHostTenantAgentAndCompanyField()" name="User[tenant]"  >
                             <option value='' selected>Please select a tenant</option>
                             <?php
@@ -49,7 +53,7 @@ $session = new CHttpSession;
                         </select>
                         <?php echo "<br>" . $form->error($userModel, 'tenant'); ?>
                     </td>
-                    <td id="hostTenantAgentRow"><?php echo $form->labelEx($userModel, 'tenant_agent'); ?><br>
+                    <td id="hostTenantAgentRow">
                         <select id="User_tenant_agent" name="User[tenant_agent]" onchange="populateHostCompanyWithSameTenantAndTenantAgent()" >
                             <?php
                             echo "<option value='' selected>Please select a tenant agent</option>";
@@ -59,66 +63,72 @@ $session = new CHttpSession;
                     </td>
 
                     <td id="hostCompanyRow">
-                        <?php echo $form->labelEx($userModel, 'company'); ?><br>
+                       
                         <select id="User_company" name="User[company]" disabled>
                             <option value=''>Please select a company</option>
                         </select>
+                        <span class="required">*</span>
+                       
                         <?php echo "<br>" . $form->error($userModel, 'company'); ?>
                     </td>
                     <?php
                 } else {
                     ?>
-                    <td id="hostTenantRow"><?php echo $form->labelEx($userModel, 'tenant'); ?><br>
+                    <td id="hostTenantRow">
                         <input type="text" id="User_tenant" name="User[tenant]" value="<?php echo $session['tenant']; ?>"/>
                         <?php echo "<br>" . $form->error($userModel, 'tenant'); ?>
                     </td>
-                    <td id="hostTenantAgentRow"><?php echo $form->labelEx($userModel, 'tenant_agent'); ?><br>
+                    <td id="hostTenantAgentRow">
                         <input type="text" id="User_tenant_agent" name="User[tenant_agent]" value="<?php echo $session['tenant_agent']; ?>"/>
                         <?php echo "<br>" . $form->error($userModel, 'tenant_agent'); ?>
                     </td>
 
                     <td id="hostCompanyRow">
-                        <?php echo $form->labelEx($userModel, 'company'); ?><br>
+                        
                         <input type="text" id="User_company" name="User[company]" value="<?php echo $session['company']; ?>"/>
+                        
                         <?php echo "<br>" . $form->error($userModel, 'company'); ?>
                     </td>
                 <?php } ?>
             </tr>
             <tr>
                 <td>
-                    <?php echo $form->labelEx($userModel, 'first_name'); ?><br>
-                    <?php echo $form->textField($userModel, 'first_name', array('size' => 50, 'maxlength' => 50)); ?>
+                    
+                    <?php echo $form->textField($userModel, 'first_name', array('size' => 50, 'maxlength' => 50 ,'placeholder'=>'First Name')); ?>
+                    <span class="required">*</span>
                     <?php echo "<br>" . $form->error($userModel, 'first_name'); ?>
                 </td>
                 <td>
-                    <?php echo $form->labelEx($userModel, 'last_name'); ?><br>
-                    <?php echo $form->textField($userModel, 'last_name', array('size' => 50, 'maxlength' => 50)); ?>
+                   
+                    <?php echo $form->textField($userModel, 'last_name', array('size' => 50, 'maxlength' => 50 ,'placeholder'=>'Last Name')); ?>
+                    <span class="required">*</span>
                     <?php echo "<br>" . $form->error($userModel, 'last_name'); ?>
                 </td>
                 <td>
 
-                    <?php echo $form->labelEx($userModel, 'department'); ?><br>
-                    <?php echo $form->textField($userModel, 'department', array('size' => 50, 'maxlength' => 50)); ?>
+                  
+                    <?php echo $form->textField($userModel, 'department', array('size' => 50, 'maxlength' => 50 ,'placeholder'=>'Department')); ?>
+                    <span class="required">*</span>
                     <?php echo "<br>" . $form->error($userModel, 'department'); ?>
                 </td>
             </tr>
 
             <tr>
                 <td>
-                    <?php echo $form->labelEx($userModel, 'staff_id'); ?><br>
-                    <?php echo $form->textField($userModel, 'staff_id', array('size' => 50, 'maxlength' => 50)); ?>
+                    <?php echo $form->textField($userModel, 'staff_id', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Staff ID')); ?>
+                    <span class="required">*</span>
                     <?php echo "<br>" . $form->error($userModel, 'staff_id'); ?>
                 </td>
 
                 <td width="35%">
-                    <?php echo $form->labelEx($userModel, 'email'); ?><br>
-                    <?php echo $form->textField($userModel, 'email', array('size' => 50, 'maxlength' => 50)); ?>
+                    <?php echo $form->textField($userModel, 'email', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Email')); ?>
+                    <span class="required">*</span>
                     <?php echo "<br>" . $form->error($userModel, 'email'); ?>
                     <div style="" id="User_email_em_" class="errorMessage errorMessageEmail1" >A profile already exists for this email address.</div>
                 </td>
                 <td>
-                    <?php echo $form->labelEx($userModel, 'contact_number'); ?><br>
-                    <?php echo $form->textField($userModel, 'contact_number', array('size' => 50, 'maxlength' => 50)); ?>
+                    <?php echo $form->textField($userModel, 'contact_number', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Contact Number')); ?>
+                    <span class="required">*</span>
                     <?php echo "<br>" . $form->error($userModel, 'contact_number'); ?>
                 </td>
             </tr>
@@ -126,14 +136,14 @@ $session = new CHttpSession;
 
             <tr>
                 <td>
-                    <label for="User_password">Password <span class="required">*</span></label><br>
-                    <input type="password" id="User_password" name="User[password]" onChange="checkPasswordMatch();">			
+                    <input type="password" id="User_password" placeholder="Password" name="User[password]" onChange="checkPasswordMatch();">	
+                    <span class="required">*</span>		
                     <?php echo "<br>" . $form->error($userModel, 'password'); ?>
                 </td>
 
                 <td>
-                    <label for="User_repeatpassword">Repeat Password <span class="required">*</span></label><br>
-                    <input type="password" id="User_repeatpassword" name="User[repeatpassword]" onChange="checkPasswordMatch();"/>			
+                    <input type="password" placeholder="Repeat Password" id="User_repeatpassword" name="User[repeatpassword]" onChange="checkPasswordMatch();"/>		
+                    <span class="required">*</span>	
                     <div style='font-size:10px;color:red;font-size:0.9em;display:none;margin-bottom:-20px;' id="passwordErrorMessage">New Password does not match with <br>Repeat New Password. </div>
                     <?php echo "<br>" . $form->error($userModel, 'repeatpassword'); ?>
                 </td>

@@ -10,6 +10,9 @@ $cs->registerScriptFile(Yii::app()->controller->assetsBase. '/js/script-sidebar.
 /* @var $model User */
 $session = new ChttpSession;
 ?> 
+<style type="text/css">
+.addcompanymenu{   background-position-x: 3px !important;background-position-y: 5px !important;}
+</style>
 <input type="hidden" value="<?php echo $session['role'] ?>" id="sessionRoleForSideBar">
 
 <div id="sidebar2">

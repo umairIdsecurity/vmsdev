@@ -33,3 +33,4 @@ company_css/**
 .settings/**
 .project
 
+/nbproject/private/

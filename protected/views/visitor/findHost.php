@@ -18,15 +18,21 @@ if (isset($_GET['tenant_agent']) && $_GET['tenant_agent'] != '') {
 
 $model = new User;
 $criteria = new CDbCriteria;
+$tenant = '';
+if($_GET['tenant'] && $_GET['tenant']!=''){
+  $tenant = 'tenant='.$_GET['tenant'].' AND ';
+}else{
+    $tenant = '';
+}
 if ($session['role'] == Roles::ROLE_SUPERADMIN) {
-    $criteria->addCondition('tenant="' . $_GET['tenant'] . '"  and ' . $tenant_agent . '  (CONCAT(first_name," ",last_name) like "%' . $visitorName . '%" or first_name like "%' . $visitorName . '%" or last_name like "%' . $visitorName . '%")');
+    $criteria->addCondition($tenant.$tenant_agent . '  (CONCAT(first_name," ",last_name) like "%' . $visitorName . '%" or first_name like "%' . $visitorName . '%" or last_name like "%' . $visitorName . '%" or email like "%' . $visitorName . '%")');
 } else {
     if (isset($_GET['tenant_agent']) && $_GET['tenant_agent'] != '') {
         $tenant_agent = 'tenant_agent="' . $session['tenant_agent'] . '" and';
     } else {
         $tenant_agent = '(tenant_agent IS NULL or tenant_agent =0 or tenant_agent="") and';
     }
-    $criteria->addCondition('tenant="' . $session['tenant'] . '" and '.$tenant_agent.'  (CONCAT(first_name," ",last_name) like "%' . $visitorName . '%" or first_name like "%' . $visitorName . '%" or last_name like "%' . $visitorName . '%")');
+    $criteria->addCondition($tenant.$tenant_agent.'  (CONCAT(first_name," ",last_name) like "%' . $visitorName . '%" or first_name like "%' . $visitorName . '%" or last_name like "%' . $visitorName . '%" or email like "%' . $visitorName . '%")');
 }
 
 $model->unsetAttributes();

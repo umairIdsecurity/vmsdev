@@ -59,7 +59,7 @@ if ($this->action->id == 'update') {
     <div>
         <table  id="addvisitor-table" data-ng-app="PwordForm">
         
-        <tr><td><table style="margin-left:70px;width:120px;margin-top:10px;"><td class="ico1" width="40">&nbsp;</td><td class="ico2" width="40">&nbsp;</td><td class="ico3" width="40">&nbsp;</td><table><td></tr>
+        <tr><td><table style="margin-left:70px;width:120px;margin-top:10px;"><td class="ico1" width="40">&nbsp;</td><td class="ico3" width="40">&nbsp;</td><td class="ico2" width="40">&nbsp;</td><table><td></tr>
             <tr>
                 <td>
                     <table style="width:300px;float:left">

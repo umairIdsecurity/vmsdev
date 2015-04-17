@@ -33,7 +33,7 @@ $session = new ChttpSession;
                 ?>
             </li>
             <li><a href='<?php echo Yii::app()->createUrl('visitor/addvisitor'); ?>' class="submenu-icon addvisitorprofile"><span>Add Visitor Profile</span></a></li>
-             <li><a onclick="addCompany2()" class="submenu-icon addcompanymenu"><span>Add Company</span></a></li>
+             <li><a onclick="addCompany2()" class="addcompanymenu"><span>Add Company</span></a></li>
                         
             
 

@@ -144,69 +144,43 @@ class CompanyController extends Controller {
 			$model->userRole = $_POST['user_role'] ;
 		}
         $session = new CHttpSession;
+
         if (isset($_POST['Company'])) {
-            if ($model->name == $_POST['Company']['name']) {
-                if (isset($_POST['Company']['code']) && $model->code == $_POST['Company']['code']) {
-                    $model->attributes = $_POST['Company'];
-                    if ($model->save()) {
-                        switch ($session['role']) {
-                            case Roles::ROLE_SUPERADMIN:
-                                $this->redirect(array('company/admin'));
-                                break;
 
-                            default:
-                                Yii::app()->user->setFlash('success', 'Organisation Settings Updated');
-                        }
-                    }
-                } else {
-                    if ($this->isCompanyCodeUnique($session['tenant'], $session['role'], $_POST['Company']['code'], $_POST['Company']['tenant_']) == 0) {
-                        $model->attributes = $_POST['Company'];
-                        if ($model->save()) {
-                            switch ($session['role']) {
-                                case Roles::ROLE_SUPERADMIN:
-                                    $this->redirect(array('company/admin'));
-                                    break;
+            if ($model->name != $_POST['Company']['name']) {
 
-                                default:
-                                    Yii::app()->user->setFlash('success', 'Organisation Settings Updated');
-                            }
-                        }
-                    } else {
-                        Yii::app()->user->setFlash('error', 'Company code has already been taken');
-                    }
-                }
-            } else {
-                if ($this->isCompanyUnique($session['tenant'], $session['role'], $_POST['Company']['name'], $_POST['Company']['tenant_']) == 0) {
-                    if (isset($_POST['Company']['code']) && $model->code == $_POST['Company']['code']) {
-                        $model->attributes = $_POST['Company'];
-                        if ($model->save()) {
-                            switch ($session['role']) {
-                                case Roles::ROLE_SUPERADMIN:
-                                    $this->redirect(array('company/admin'));
-                                    break;
-
-                                default:
-                                    Yii::app()->user->setFlash('success', 'Organisation Settings Updated');
-                            }
-                        }
-                    } else {
-                        $model->attributes = $_POST['Company'];
-                        if ($model->save()) {
-                            switch ($session['role']) {
-                                case Roles::ROLE_ADMIN:
-                                    $this->redirect(array('company/admin'));
-                                    break;
-
-                                default:
-                                    Yii::app()->user->setFlash('success', 'Organisation Settings Updated');
-                            }
-                        }
-                        
-                    }
-                } else {
+                if (0 != $this->isCompanyUnique($session['tenant'], $session['role'], $_POST['Company']['name'], $_POST['Company']['tenant_'])) {
                     Yii::app()->user->setFlash('error', 'Company name has already been taken');
                 }
             }
+
+            if (isset($_POST['Company']['code']) && $model->code != $_POST['Company']['code']) {
+
+                if (0 != $this->isCompanyCodeUnique($session['tenant'], $session['role'], $_POST['Company']['code'], $_POST['Company']['tenant_'])) {
+                    Yii::app()->user->setFlash('error', 'Company code has already been taken');
+                }
+            }
+
+            if (is_null($errorFlashMessage = Yii::app()->user->getFlash('error'))) {
+
+                $model->attributes = $_POST['Company'];
+
+                if ($model->save()) {
+                    switch ($session['role']) {
+                        case Roles::ROLE_SUPERADMIN:
+                            $this->redirect(array('company/admin'));
+                            break;
+
+                        default:
+                            Yii::app()->user->setFlash('success', 'Organisation Settings Updated');
+                    }
+                }
+
+            } else {
+                // Because of flash is a stack return back encountered error in order it can be displayed in the view
+                Yii::app()->user->setFlash('error', $errorFlashMessage);
+            }
+
         }
 
         $this->render('update', array(

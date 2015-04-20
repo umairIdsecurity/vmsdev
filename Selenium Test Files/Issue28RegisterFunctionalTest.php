@@ -531,7 +531,7 @@ class Issue28RegisterFunctionalTest extends BaseFunctionalTest {
         $this->type("id=User_email", "staffmember@test.com");
         $this->type("id=User_contact_number", "123456");
         $this->type("id=User_staff_id", "123456");
-        this->click("id=submitFormUser");
+        $this->click("id=submitFormUser");
         $this->assertEquals("A profile already exists for this email address.", $this->getText("xpath=(//div[@id='User_email_em_'])[2]"));
         $this->click("id=dummy-host-findBtn");
         $this->assertEquals("Search Name cannot be blank.", $this->getText("id=searchTextHostErrorMessage"));

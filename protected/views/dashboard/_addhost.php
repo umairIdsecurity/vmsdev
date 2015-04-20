@@ -79,7 +79,7 @@ $session = new CHttpSession;
                                 </tr>
                                 </table>
         
-        <table  id="addhost-table" data-ng-app="PwordForm" style="width:530px;float:left;">
+        <table  id="addhost-table" data-ng-app="PwordForm" style="width:277px;float:left;">
         <tr <?php
                     if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                         echo "style='display:none;'";
@@ -224,7 +224,22 @@ $session = new CHttpSession;
             </tr>
 
 
+            
+
             <tr>
+                <td style="display:none;">
+                    <input name="User[role]" id="User_role" value="<?php echo Roles::ROLE_STAFFMEMBER ?>"/>
+                    <input name="User[user_type]" id="User_user_type" value="<?php echo UserType::USERTYPE_INTERNAL; ?>"/>             
+                </td>
+            </tr>
+            
+           
+
+
+        </table>
+        
+        <table style="float:left; width:280px">
+       <tr>
                 <td>
                     <input type="password" id="User_password" placeholder="Password" name="User[password]" onChange="checkPasswordMatch();">	
                     <span class="required">*</span>		
@@ -240,24 +255,18 @@ $session = new CHttpSession;
                     <?php echo "<br>" . $form->error($userModel, 'repeatpassword'); ?>
                 </td>
             </tr>
-
-            <tr>
-                <td style="display:none;">
-                    <input name="User[role]" id="User_role" value="<?php echo Roles::ROLE_STAFFMEMBER ?>"/>
-                    <input name="User[user_type]" id="User_user_type" value="<?php echo UserType::USERTYPE_INTERNAL; ?>"/>             
-                </td>
-            </tr>
             
-            <tr>
-            <td>
-             <input type="button" id="clicktabC" value="Add" style="display:none;"/>
-
-        <input type="submit" value="Add" name="yt0" id="submitFormUser" class="complete" />
-            </td>
-            </tr>
-
-
+           
         </table>
+        <div style="clear:both;"></div>
+        <div style="float:right;padding-right:104px">
+        
+        <input type="button" id="clicktabC" value="Add" style="display:none;"/>
+
+        <input type="submit" value="Save" name="yt0" id="submitFormUser" class="complete" />
+           
+            </tr>
+        </div>
 
     </div>
  

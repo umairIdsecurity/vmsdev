@@ -1142,13 +1142,7 @@ dt.tabs dt{
     display:none;
 }
 
-#addCompanyLink {
-    width: 130px;
-    height: 20px;
-    padding-right: 0px;
-    margin-right: 0px;
-    padding-bottom: 0px;
-    display:block;
+#addCompanyLink {width: 106px;height: 23px;padding-right: 0px;margin-right: 0px;padding-bottom: 0px;display: block;
 }
 
 #companyTr td{
@@ -1468,7 +1462,7 @@ dt.tabs dt{
     min-width:100px;
 }
 #actionsCssMenu .complete, #actionsCssMenu .neutral{
-    width:78px !important;
+   	width: 131px !important;
     height:24px !important;
 }
 

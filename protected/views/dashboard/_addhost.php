@@ -2,7 +2,47 @@
 $session = new CHttpSession;
 ?>
 <style type="text/css">
+.uploadnotetext{margin-left: -80px;margin-top: 110px;}
 .required{ padding-left:10px;}
+
+        .ajax-upload-dragdrop {
+            float:left !important;
+            margin-top: -30px;
+            background: url('<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png') no-repeat center top;
+            background-size:137px;
+            height: 150px;
+            width: 120px !important;
+            padding: 87px 5px 12px 90px;
+            margin-left: 20px !important;
+            border:none;
+        }
+        .ajax-file-upload{
+            margin-left: -107px !important;
+            margin-top: 170px !important;
+            position:absolute !important;
+            font-size: 12px !important;
+            padding-bottom:3px;
+            height:17px;
+        }
+
+        .editImageBtn{
+            margin-left: -103px !important;
+            color:white;
+            font-weight:bold;
+            text-shadow: 0 0 !important;
+            font-size:12px !important;
+            height:24px;
+            width:131px !important;
+        }
+        .imageDimensions{
+            display:none !important;
+        }
+        #cropImageBtn{
+            float: left;
+            margin-left: -54px !important;
+            margin-top: 218px;
+            position: absolute;
+        }
 
 </style>
 <div id="findAddHostRecordDiv" class="findAddHostRecordDiv form">
@@ -29,13 +69,22 @@ $session = new CHttpSession;
     <input type="text" id="hostEmailIsUnique" value="0"/>
     <div class="visitor-title">Add Host</div>
     <div >
-        <table  id="addhost-table" data-ng-app="PwordForm">
-            <tr <?php
-            if ($session['role'] != Roles::ROLE_SUPERADMIN) {
-                echo "style='display:none;'";
-            }
-            ?>
-                >
+    
+    	<table style="width:300px;float:left;">
+                            <tr> 
+
+                                <td style="width:300px;">
+                                  <div class="ajax-upload-dragdrop" style="vertical-align: top; width: 200px;margin-top:0px;"><div class="actionForward ajax-file-upload btn btn-info" style="position: relative; overflow: hidden; cursor: default;">Upload Photo <form method="POST" action="/vms/index.php?r=site/upload&amp;id=visitor&amp;companyId=&amp;actionId=create" enctype="multipart/form-data" style="margin: 0px; padding: 0px;"><input type="file" id="ajax-upload-id-1429303468602" name="myfile[]" accept="*" multiple="" style="position: absolute; cursor: pointer; top: 0px; width: 100%; height: 100%; left: 0px; z-index: 100; opacity: 0;"></form></div><div class="uploadnotetext"><b>Drag &amp; Drop File</b><br><span style="font-size:10px;">Max Size: 2MB ;File Ext. : jpeg/png<br><span class="imageDimensions">Dimensions: 180px(Width) x 60px(Height)</span></span></div></div>
+                                </td>
+                                </tr>
+                                </table>
+        
+        <table  id="addhost-table" data-ng-app="PwordForm" style="width:530px;float:left;">
+        <tr <?php
+                    if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+                        echo "style='display:none;'";
+                    }
+                    ?>>
                     <?php
                     if ($session['role'] == Roles::ROLE_SUPERADMIN) {
                         ?>
@@ -53,6 +102,12 @@ $session = new CHttpSession;
                         </select>
                         <?php echo "<br>" . $form->error($userModel, 'tenant'); ?>
                     </td>
+                    </tr>
+                    <tr <?php
+                    if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+                        echo "style='display:none;'";
+                    }
+                    ?>>
                     <td id="hostTenantAgentRow">
                         <select id="User_tenant_agent" name="User[tenant_agent]" onchange="populateHostCompanyWithSameTenantAndTenantAgent()" >
                             <?php
@@ -61,7 +116,13 @@ $session = new CHttpSession;
                         </select>
                         <?php echo "<br>" . $form->error($userModel, 'tenant_agent'); ?>
                     </td>
-
+                    
+                    </tr>
+					 <tr <?php
+                    if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+                        echo "style='display:none;'";
+                    }
+                    ?>>
                     <td id="hostCompanyRow">
                        
                         <select id="User_company" name="User[company]" disabled>
@@ -71,17 +132,38 @@ $session = new CHttpSession;
                        
                         <?php echo "<br>" . $form->error($userModel, 'company'); ?>
                     </td>
+                    </tr>
                     <?php
                 } else {
                     ?>
+                    
+                     <tr <?php
+                    if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+                        echo "style='display:none;'";
+                    }
+                    ?>>
                     <td id="hostTenantRow">
                         <input type="text" id="User_tenant" name="User[tenant]" value="<?php echo $session['tenant']; ?>"/>
                         <?php echo "<br>" . $form->error($userModel, 'tenant'); ?>
                     </td>
+                    </tr>
+                     <tr <?php
+                    if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+                        echo "style='display:none;'";
+                    }
+                    ?>>
                     <td id="hostTenantAgentRow">
                         <input type="text" id="User_tenant_agent" name="User[tenant_agent]" value="<?php echo $session['tenant_agent']; ?>"/>
                         <?php echo "<br>" . $form->error($userModel, 'tenant_agent'); ?>
                     </td>
+                    
+                    </tr>
+                    
+                     <tr <?php
+                    if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+                        echo "style='display:none;'";
+                    }
+                    ?>>
 
                     <td id="hostCompanyRow">
                         
@@ -89,26 +171,31 @@ $session = new CHttpSession;
                         
                         <?php echo "<br>" . $form->error($userModel, 'company'); ?>
                     </td>
+                    
+                    </tr>
                 <?php } ?>
-            </tr>
-            <tr>
+            	<tr>
                 <td>
                     
                     <?php echo $form->textField($userModel, 'first_name', array('size' => 50, 'maxlength' => 50 ,'placeholder'=>'First Name')); ?>
                     <span class="required">*</span>
                     <?php echo "<br>" . $form->error($userModel, 'first_name'); ?>
                 </td>
+                </tr>
+                <tr>
                 <td>
                    
                     <?php echo $form->textField($userModel, 'last_name', array('size' => 50, 'maxlength' => 50 ,'placeholder'=>'Last Name')); ?>
                     <span class="required">*</span>
                     <?php echo "<br>" . $form->error($userModel, 'last_name'); ?>
                 </td>
+                </tr>
+                <tr>
                 <td>
 
                   
                     <?php echo $form->textField($userModel, 'department', array('size' => 50, 'maxlength' => 50 ,'placeholder'=>'Department')); ?>
-                    <span class="required">*</span>
+                    
                     <?php echo "<br>" . $form->error($userModel, 'department'); ?>
                 </td>
             </tr>
@@ -116,16 +203,19 @@ $session = new CHttpSession;
             <tr>
                 <td>
                     <?php echo $form->textField($userModel, 'staff_id', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Staff ID')); ?>
-                    <span class="required">*</span>
+                  
                     <?php echo "<br>" . $form->error($userModel, 'staff_id'); ?>
                 </td>
-
+               </tr>
+ 				<tr>
                 <td width="35%">
                     <?php echo $form->textField($userModel, 'email', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Email')); ?>
                     <span class="required">*</span>
                     <?php echo "<br>" . $form->error($userModel, 'email'); ?>
                     <div style="" id="User_email_em_" class="errorMessage errorMessageEmail1" >A profile already exists for this email address.</div>
                 </td>
+                </tr>
+                 <tr>
                 <td>
                     <?php echo $form->textField($userModel, 'contact_number', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Contact Number')); ?>
                     <span class="required">*</span>
@@ -140,7 +230,9 @@ $session = new CHttpSession;
                     <span class="required">*</span>		
                     <?php echo "<br>" . $form->error($userModel, 'password'); ?>
                 </td>
-
+             </tr>
+				
+                 <tr>
                 <td>
                     <input type="password" placeholder="Repeat Password" id="User_repeatpassword" name="User[repeatpassword]" onChange="checkPasswordMatch();"/>		
                     <span class="required">*</span>	
@@ -155,16 +247,20 @@ $session = new CHttpSession;
                     <input name="User[user_type]" id="User_user_type" value="<?php echo UserType::USERTYPE_INTERNAL; ?>"/>             
                 </td>
             </tr>
+            
+            <tr>
+            <td>
+             <input type="button" id="clicktabC" value="Add" style="display:none;"/>
+
+        <input type="submit" value="Add" name="yt0" id="submitFormUser" class="complete" />
+            </td>
+            </tr>
 
 
         </table>
 
     </div>
-    <div style="text-align: right;">
-        <input type="button" id="clicktabC" value="Add" style="display:none;"/>
-
-        <input type="submit" value="Add" name="yt0" id="submitFormUser" class="complete" />
-    </div>
+ 
     <?php $this->endWidget(); ?>
 
 </div>

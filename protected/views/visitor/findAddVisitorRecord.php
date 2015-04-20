@@ -86,6 +86,9 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                     <input type="hidden" id="emailIsUnique" value="0"/>
                     
                     <div >
+                    
+                    
+                    
                         <table style="width:300px;float:left;">
                             <tr> 
 
@@ -239,7 +242,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                                     if ($session['role'] != Roles::ROLE_STAFFMEMBER) {
                                         //    echo "display:none";
                                     }
-                                    ?>">Add New Company</a>
+                                    ?>">Add Company</a>
                                     
                                        <?php echo "<br>" . $form->error($model, 'company'); ?>
                                 </td>

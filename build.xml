@@ -12,7 +12,7 @@
 <target name="build"
           depends="prepare,lint,phpcs-ci,phpcpd-ci"
           description=""/>
-		  
+		  ß
  <target name="build-parallel"
          depends="prepare,lint,tools-parallel,phpunit,phpdox"
          description=""/>
@@ -63,7 +63,7 @@
     <modified />
    </fileset>
 
-   <fileset dir="${basedir}/Selenium test Files">
+   <fileset dir="${basedir}/Selenium Test Files">
     <include name="**/*.php" />
     <modified />
    </fileset>
@@ -78,7 +78,7 @@
   <exec executable="${toolsdir}phploc" taskname="phploc">
    <arg value="--count-tests" />
    <arg path="${basedir}/protected" />
-   <arg path="${basedir}/Selenium test Files" />
+   <arg path="${basedir}/Selenium Test Files" />
   </exec>
 
   <property name="phploc.done" value="true"/>
@@ -95,7 +95,7 @@
    <arg value="--log-xml" />
    <arg path="${basedir}/build/logs/phploc.xml" />
    <arg path="${basedir}/protected" />
-   <arg path="${basedir}/Selenium test Files" />
+   <arg path="${basedir}/Selenium Test Files" />
   </exec>
 
   <property name="phploc.done" value="true"/>
@@ -150,7 +150,7 @@
    <arg value="--extensions=php" />
    <arg value="--ignore=autoload.php" />
    <arg path="${basedir}/protected" />
-   <arg path="${basedir}/Selenium test Files" />
+   <arg path="${basedir}/Selenium Test Files" />
   </exec>
 
   <property name="phpcs.done" value="true"/>

@@ -16,9 +16,14 @@ if (isset($_GET['tenant_agent']) && $_GET['tenant_agent'] != '') {
 }
 $model = new Visitor;
 $criteria = new CDbCriteria;
+$tenant = '';
+if($_GET['tenant'] && $_GET['tenant']!=''){
+  $tenant = 'tenant='.$_GET['tenant'].' AND ';
+}else{
+    $tenant = '';
+}
 
-
-$criteria->addCondition('tenant="' . $_GET['tenant'] . '" and ' . $tenant_agent . ' (CONCAT(first_name," ",last_name) like "%' . $visitorName . '%" or first_name like "%' . $visitorName . '%" or last_name like "%' . $visitorName . '%")');
+$criteria->addCondition($tenant. $tenant_agent . ' (CONCAT(first_name," ",last_name) like "%' . $visitorName . '%" or first_name like "%' . $visitorName . '%" or last_name like "%' . $visitorName . '%" or email like "%' . $visitorName . '%")');
 
 $model->unsetAttributes();
 

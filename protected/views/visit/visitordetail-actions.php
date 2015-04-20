@@ -92,6 +92,7 @@ $session = new CHttpSession;
                                         </tr>
                                     </table>
                                     <?php echo $closeVisitForm->error($model, 'date_in'); ?>
+                                   
                                     <input type='submit' value='Close' class="complete" id="closeVisitBtn" style="display:none;"/>
                                     <button  class="complete greenBtn" id="closeVisitBtnDummy" style="width:94px !important"/>Close Visit</button>
                                 <div style="display:inline;font-size:12px;"><b>or</b><a id="cancelActiveVisitButton" href="" class="cancelBtnVisitorDetail">Cancel</a></div>
@@ -169,15 +170,16 @@ $session = new CHttpSession;
                                         ));
                                         ?>
                                     </div>
+                                    
                                 </td>
                             </tr>
                         </table>
                         <?php echo $logform->error($model, 'date_in'); ?>
                         <?php if ($model->visit_status == VisitStatus::CLOSED) {
                             ?>
-                            <button id='registerNewVisit' class='greenBtn'>Activate</button> 
+                            <button id='registerNewVisit' class='greenBtn'>Activate Visit</button> 
                         <?php } else { ?>
-                            <input type = 'submit' value = 'Activate' class = "complete"/>
+                            <input type = 'submit' value = 'Activate Visit' class = "complete"/>
                         <?php } ?>
                         <?php $this->endWidget();
                         ?>

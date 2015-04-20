@@ -904,7 +904,25 @@ dt.tabs dt{
     height: 16px;
     text-decoration: none;
 }
+.addcompanymenu{  background:url('../images/company.png') 3px 5px no-repeat;
+     background-position: 3px 5px !important;
+    padding-left:35px !important;
+    display: block;
+    height: 16px;
+    text-decoration: none; }
 
+.ico1{  background:url('../images/ico1.jpg') 0 0 no-repeat;
+    height:40px;
+	
+     }
+.ico2{  background:url('../images/ico2.jpg') 0 0 no-repeat;
+    height:40px;
+	
+     }
+.ico3{  background:url('../images/ico3.jpg') 0 0 no-repeat;
+    height:40px;
+	
+     }
 .addvisitorprofile{
     background:url('../images/addvisitorprofileicon.png') 0 0 no-repeat;
     background-position: 0px 2px;
@@ -1124,13 +1142,7 @@ dt.tabs dt{
     display:none;
 }
 
-#addCompanyLink {
-    width: 130px;
-    height: 20px;
-    padding-right: 0px;
-    margin-right: 0px;
-    padding-bottom: 0px;
-    display:block;
+#addCompanyLink {width: 106px;height: 23px;padding-right: 0px;margin-right: 0px;padding-bottom: 0px;display: block;
 }
 
 #companyTr td{
@@ -1450,7 +1462,7 @@ dt.tabs dt{
     min-width:100px;
 }
 #actionsCssMenu .complete, #actionsCssMenu .neutral{
-    width:78px !important;
+   	width: 131px !important;
     height:24px !important;
 }
 

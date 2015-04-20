@@ -105,6 +105,7 @@ if ($this->action->id == 'update') {
 		<?php } ?>
 		
 		<!--WangFu Modified-->
+        <?php if ($model->isTenant()) {?>
         <tr>
             <td><?php echo $form->labelEx($model, 'Upload Company Logo'); ?></td>
             <td id="uploadRow" >
@@ -133,6 +134,7 @@ if ($this->action->id == 'update') {
                 <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
             </td>
         </tr>
+        <?php } ?>
 
         <tr>
             <td><?php echo $form->labelEx($model, 'contact'); ?></td>

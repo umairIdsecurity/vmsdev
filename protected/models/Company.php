@@ -26,6 +26,11 @@ class Company extends CActiveRecord {
     public $isTenant;
 	public $userRole;
 
+    protected $tenantQuery = "SELECT COUNT(c.id)
+FROM `user` u
+LEFT JOIN company c ON u.company=c.id
+WHERE u.id=c.tenant AND c.id !=1";
+
     /**
      * @return string the associated database table name
      */
@@ -157,11 +162,7 @@ class Company extends CActiveRecord {
 
         $criteria = new CDbCriteria;
         $post_table = User::model()->tableName();
-        $post_count_sql = "(SELECT COUNT(c.id)
-FROM `user` u
-LEFT JOIN company c ON u.company=c.id
-WHERE u.id=c.tenant AND c.id !=1 AND c.id=t.id)";
-
+        $post_count_sql = "( " . $this->tenantQuery . " AND c.id=t.id)";
 
         // select
         $criteria->select = array(
@@ -195,6 +196,13 @@ WHERE u.id=c.tenant AND c.id !=1 AND c.id=t.id)";
                 'defaultOrder' => 'ID DESC',
             ),
         ));
+    }
+
+    public function isTenant()
+    {
+        $sql = $this->tenantQuery . " AND c.id = " . $this->id;
+        $result = $this->getCommandBuilder()->createSqlCommand($sql)->queryScalar();
+        return (bool) $result;
     }
 
     /**

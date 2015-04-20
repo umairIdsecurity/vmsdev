@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../../vendor/mandrill/mandrill/src/Mandrill.php';
+require_once __DIR__ . '/../../vendor/daily/mandrill-dm/src/Mandrill.php';
 
 class EmailTransport
 {

@@ -90,6 +90,12 @@ class VisitController extends Controller {
 
         if (isset($_POST['Visit'])) {
             $model->attributes = $_POST['Visit'];
+            if ($model->date_check_in > date('d-m-Y')) {
+                $visitStatus = VisitStatus::model()->findByAttributes(array('name' => 'Pre-registered'));
+                if ($visitStatus) {
+                    $model->visit_status = $visitStatus->id;
+                }
+            }
             if ($visitService->save($model, $session['id'])) {
                 $this->redirect(array('visit/detail', 'id' => $id));
             }
@@ -187,7 +193,6 @@ class VisitController extends Controller {
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
-
         if (isset($_POST['Visit'])) {
             $model->attributes = $_POST['Visit'];
             if ($model->save()) {

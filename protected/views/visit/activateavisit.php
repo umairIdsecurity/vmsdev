@@ -9,7 +9,24 @@ $session = new CHttpSession;
         <td>
             <input name="Visit[visit_status]" id="Visit_visit_status" type="text" value="1" style="display:none;">
             <input name="Visit[time_check_in]" id="Visit_time_check_in" class="activatevisittimein" type="text" style="display:none;">
-            <input type="text" value="<?php echo date("d-m-Y"); ?>" id='Visit_date_check_in' name="Visit[date_check_in]" disabled>
+            <?php
+            if (empty($model->date_check_in)) {
+                $model->date_check_in = date('d-m-Y');
+            }
+            $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                'model' => $model,
+                'attribute' => 'date_check_in',
+                'htmlOptions' => array(
+                    'size' => '10', // textField size
+                    'maxlength' => '10', // textField maxlength
+                    // 'readonly' => 'readonly',
+                    'placeholder' => 'dd-mm-yyyy',
+                ),
+                'options' => array(
+                    'dateFormat' => 'dd-mm-yy',
+                )
+            ));
+            ?>
             <?php if ($model->card_type == CardType::SAME_DAY_VISITOR) { ?>
                 <input type="text" style="display:none;" value="<?php
                 echo date("d-m-Y");

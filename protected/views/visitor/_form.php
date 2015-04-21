@@ -209,7 +209,7 @@ if ($this->action->id == 'update') {
                             <td id="visitorCompanyRow">
 
                                 <select id="Visitor_company" name="Visitor[company]" >
-                                    <option value=''>Please select a company</option>
+                                    <option value=''>Select Company</option>
                                 </select>
                                 <?php echo $form->error($model, 'company'); ?>
                               </td>

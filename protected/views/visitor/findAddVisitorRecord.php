@@ -232,19 +232,24 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                               
                               <tr>
                                 <td id="visitorCompanyRow">
-
-                                   
-                                    <select id="Visitor_company" name="Visitor[company]" >
-                                        <option value=''>Please select a company</option>
-                                    </select>
-                                     <span class="required">*</span>
+                                    <div style="margin-bottom: 5px;">
+                                        <?php echo $form->error($model, 'company'); ?>
+                                        <?php
+                                            $this->widget('application.extensions.select2.Select2', array(
+                                            'model' => $model,
+                                            'attribute' => 'company',
+                                            'items' => CHtml::listData(Visitor::model()->findAllCompanyByTenant($session['tenant']), 'id', 'name'),
+                                            'selectedItems' => array(), // Items to be selected as default
+                                            'placeHolder' => 'Please select a company'
+                                        ));
+                                        ?>
+                                        <span class="required">*</span>
+                                    </div>
                                     <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;<?php
                                     if ($session['role'] != Roles::ROLE_STAFFMEMBER) {
                                         //    echo "display:none";
                                     }
-                                    ?>">Add Company</a>
-                                    
-                                       <?php echo "<br>" . $form->error($model, 'company'); ?>
+                                    ?>">Add Company</a><br/>
                                 </td>
                                 </tr>
                               

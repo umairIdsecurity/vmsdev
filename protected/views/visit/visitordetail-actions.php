@@ -12,7 +12,7 @@ $session = new CHttpSession;
                 } else if ($model->visit_status == VisitStatus::ACTIVE) {
                     echo "9BD62C";
                 } else if ($model->visit_status == VisitStatus::PREREGISTERED) {
-                    echo "2F96B4";
+                    echo "FFA500";
                 } else if ($model->visit_status == VisitStatus::SAVED) {
                     echo "637280";
                 }
@@ -108,7 +108,7 @@ $session = new CHttpSession;
         </li>
         <?php if (($model->visit_status == VisitStatus::PREREGISTERED || $model->visit_status == VisitStatus::SAVED || $model->visit_status == VisitStatus::CLOSED)) {
             ?>
-            <li class='has-sub' id="preregisterLi" style="display: none;"><a href="#"><span class="pre-visits">Preregister Visit</span></a>
+            <li class='has-sub' style="display: none;" id="preregisterLi"><a href="#"><span class="pre-visits">Preregister Visit</span></a>
                 <ul>
                     <li>
 

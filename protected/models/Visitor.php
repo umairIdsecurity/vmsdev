@@ -262,6 +262,13 @@ class Visitor extends CActiveRecord {
         return $aArray;
     }
 
+    public function findAllCompanyByTenant($tenantId) {
+        $tenant = User::model()->findByPk($tenantId);
+        $Criteria = new CDbCriteria();
+        $Criteria->condition = 'tenant = "'.$tenantId.'" and (id!=1 and id !="'.$tenant->company.'")';
+        return Company::model()->findAll($Criteria);
+    }
+
     public function findAllCompanyWithSameTenantAndTenantAgent($id, $tenantAgentId) {
         $aArray = array();
         $tenant = User::model()->findByPk($id);
@@ -318,4 +325,8 @@ class Visitor extends CActiveRecord {
         return $aArray;
     }
 
+    public function getModelName()
+    {
+        return __CLASS__;
+    }
 }

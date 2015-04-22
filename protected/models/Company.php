@@ -200,7 +200,11 @@ WHERE u.id=c.tenant AND c.id !=1";
 
     public function isTenant()
     {
-        $sql = $this->tenantQuery . " AND c.id = " . $this->id;
+        if (!$this->isNewRecord) {
+            $sql = $this->tenantQuery . " AND c.id = " . $this->id;
+        } else {
+            $sql = $this->tenantQuery;
+        }
         $result = $this->getCommandBuilder()->createSqlCommand($sql)->queryScalar();
         return (bool) $result;
     }

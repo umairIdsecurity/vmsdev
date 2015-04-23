@@ -87,16 +87,7 @@ $userRole = $session['role'];
                     </div>
                     <aside class="top_nav">
                         <ul id="tabs">
-                            <li>
-                                <a href="#">
-                                    <?php echo CHtml::link(CHtml::image(Yii::app()->controller->assetsBase . '/images/icon-notification.png')); ?>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <?php echo CHtml::link(CHtml::image(Yii::app()->controller->assetsBase . '/images/icon-help.jpg')); ?>
-                                </a>
-                            </li>
+                            
                             <li>
                                 <a href="<?php echo Yii::app()->createUrl("/user/profile&id=" . $session['id']); ?>">
                                     <?php echo CHtml::link(CHtml::image(Yii::app()->controller->assetsBase . '/images/icon-user.jpg')); ?>

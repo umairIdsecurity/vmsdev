@@ -88,16 +88,26 @@ $userRole = $session['role'];
                     <aside class="top_nav">
                         <ul id="tabs">
                             <li>
+                                <a href="#">
+                                    <?php echo CHtml::link(CHtml::image(Yii::app()->controller->assetsBase . '/images/icon-notification.png')); ?>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <?php echo CHtml::link(CHtml::image(Yii::app()->controller->assetsBase . '/images/icon-help.jpg')); ?>
+                                </a>
+                            </li>
+                            <li>
                                 <a href="<?php echo Yii::app()->createUrl("/user/profile&id=" . $session['id']); ?>">
-                                    <p>My Profile</p>
+                                    <?php echo CHtml::link(CHtml::image(Yii::app()->controller->assetsBase . '/images/icon-user.jpg')); ?>
                                 </a>
                             </li>
                             <li><a href="<?php echo Yii::app()->createUrl("/dashboard/contactsupport"); ?>">
-                                    <p>Contact Support</p>
+                                    <?php echo CHtml::link(CHtml::image(Yii::app()->controller->assetsBase . '/images/icon-contact-support.jpg')); ?>
                                 </a>
                             </li>
                             <?php
-                            echo '<li><a href="' . Yii::app()->createUrl("/site/logout") . '"><p>Log Out</p></a></li>';
+                            echo '<li><a href="' . Yii::app()->createUrl("/site/logout") . '"> '.CHtml::link(CHtml::image(Yii::app()->controller->assetsBase . '/images/icon-logout.jpg')).' </a></li>';
                             ?>
                         </ul>
                         <div class="clear"></div>

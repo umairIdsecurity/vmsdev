@@ -95,6 +95,12 @@ return array(
                     'logFile' => 'console.profile_db.log',
                     'categories' => 'system.db.CDbCommand.query'
                 ),
+                array(
+                    'class' => 'CFileLogRoute',
+                    'levels' => 'trace',
+                    'logFile' => 'trace.log',
+                    'categories' => 'system.*'
+                ),
             // uncomment the following to show log messages on web pages
 //              array(
 //              'class'=>'CWebLogRoute',

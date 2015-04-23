@@ -59,6 +59,8 @@ foreach ($workstationList as $workstation) {
         $this->widget('zii.widgets.grid.CGridView', array(
             'id' => 'visit-gridDashboard' . $x,
             'dataProvider' => $model->search($merge),
+            'enableSorting' => false,
+            'hideHeader'=>true,
             'filter' => $model,
             'afterAjaxUpdate' => "
     function(id, data) {
@@ -75,52 +77,71 @@ foreach ($workstationList as $workstation) {
                     'header' => 'Status',
                     //'cssClassExpression' => '"statusRow"',
                     'cssClassExpression' => 'changeStatusClass($data->visit_status)',
+                    'htmlOptions'=>array('width'=>'40px'),
                 ),
                 array(
                     'name' => 'cardnumber',
                     'header' => 'Card No.',
+                    'filter'=>CHtml::activeTextField($model, 'cardnumber', array('placeholder'=>'Card No.')),
                     'value' => 'CardGenerated::model()->getCardCode($data->card)',
+                    'htmlOptions'=>array('width'=>'90px'),
                 ),
                 array(
                     'name' => 'firstname',
+                    'filter'=>CHtml::activeTextField($model, 'firstname', array('placeholder'=>'First Name')),
                     'value' => 'Visitor::model()->findByPk($data->visitor)->first_name',
-                    'header' => 'First Name'
+                    'header' => 'First Name',
+                    'htmlOptions'=>array('width'=>'120px'),
                 ),
                 array(
                     'name' => 'lastname',
+                    'filter'=>CHtml::activeTextField($model, 'lastname', array('placeholder'=>'Last Name')),
                     'value' => 'Visitor::model()->findByPk($data->visitor)->last_name',
-                    'header' => 'Last Name'
+                    'header' => 'Last Name',
+                    'htmlOptions'=>array('width'=>'120px'),
                 ),
                 array(
                     'name' => 'company',
+                    'filter'=>CHtml::activeTextField($model, 'company', array('placeholder'=>'Company')),
                     'value' => 'getCompany($data->visitor)',
                     'header' => 'Company',
                     'cssClassExpression' => '( getCompany($data->visitor)== "Not Available" ? "errorNotAvailable" : "" ) ',
-                    'type' => 'raw'
+                    'type' => 'raw',
+                    'htmlOptions'=>array('width'=>'120px'),
                 ),
                 array(
                     'name' => 'contactnumber',
+                    'filter'=>CHtml::activeTextField($model, 'contactnumber', array('placeholder'=>'Contact Number')),
                     'value' => 'Visitor::model()->findByPk($data->visitor)->contact_number',
-                    'header' => 'Contact Number'
+                    'header' => 'Contact Number',
+                    'htmlOptions'=>array('width'=>'120px'),
                 ),
                 array(
                     'name' => 'contactemail',
+                    'filter'=>CHtml::activeTextField($model, 'contactemail', array('placeholder'=>'Contact Email')),
                     'value' => 'Visitor::model()->findByPk($data->visitor)->email',
-                    'header' => 'Contact Email'
+                    'header' => 'Contact Email',
+                    'htmlOptions'=>array('width'=>'100px'),
                 ),
                 array(
                     'name' => 'date_check_in',
+                    'filter'=>CHtml::activeTextField($model, 'date_check_in', array('placeholder'=>'Check In Date')),
                     'type' => 'html',
+                    'htmlOptions'=>array('width'=>'90px'),
                 //  'value' => 'formatDate($data->date_in)',
                 ),
                 array(
                     'name' => 'time_check_in',
+                    'filter'=>CHtml::activeTextField($model, 'time_check_in', array('placeholder'=>'Check In Time')),
                     'type' => 'html',
                     'value' => 'formatTime($data->time_check_in)',
+                    'htmlOptions'=>array('width'=>'90px'),
                 ),
                 array(
                     'name' => 'date_check_out',
+                    'filter'=>CHtml::activeTextField($model, 'date_check_out', array('placeholder'=>'Check Out Date')),
                     'type' => 'html',
+                    'htmlOptions'=>array('width'=>'90px'),
                 //    'value' => 'formatDate($data->date_out)',
                 ),
             ),

@@ -84,7 +84,7 @@ foreach ($workstationList as $workstation) {
                     'header' => 'Card No.',
                     'filter'=>CHtml::activeTextField($model, 'cardnumber', array('placeholder'=>'Card No.')),
                     'value' => 'CardGenerated::model()->getCardCode($data->card)',
-                    'htmlOptions'=>array('width'=>'90px'),
+                    'htmlOptions'=>array('width'=>'150px'),
                 ),
                 array(
                     'name' => 'firstname',
@@ -127,7 +127,7 @@ foreach ($workstationList as $workstation) {
                     'name' => 'date_check_in',
                     'filter'=>CHtml::activeTextField($model, 'date_check_in', array('placeholder'=>'Check In Date')),
                     'type' => 'html',
-                    'htmlOptions'=>array('width'=>'90px'),
+                    'htmlOptions'=>array('width'=>'100px'),
                 //  'value' => 'formatDate($data->date_in)',
                 ),
                 array(
@@ -135,13 +135,13 @@ foreach ($workstationList as $workstation) {
                     'filter'=>CHtml::activeTextField($model, 'time_check_in', array('placeholder'=>'Check In Time')),
                     'type' => 'html',
                     'value' => 'formatTime($data->time_check_in)',
-                    'htmlOptions'=>array('width'=>'90px'),
+                    'htmlOptions'=>array('width'=>'100px'),
                 ),
                 array(
                     'name' => 'date_check_out',
                     'filter'=>CHtml::activeTextField($model, 'date_check_out', array('placeholder'=>'Check Out Date')),
                     'type' => 'html',
-                    'htmlOptions'=>array('width'=>'90px'),
+                    'htmlOptions'=>array('width'=>'110px'),
                 //    'value' => 'formatDate($data->date_out)',
                 ),
             ),

@@ -24,6 +24,7 @@ class VisitStatus extends CActiveRecord
     
     
     public static $VISIT_STATUS_DASHBOARD_FILTER = array(
+		''=> 'Status',
         1 => 'Active',
         2 => 'Preregistered'
     );

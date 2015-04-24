@@ -19,29 +19,21 @@ $this->widget('zii.widgets.grid.CGridView', array(
         $('th > .desc').append('<div></div>');
     }",
     'columns' => array(
-        //'name',
         array(
             'name' => 'name',
             'filter'=>CHtml::activeTextField($model, 'name', array('placeholder'=>'Company Name')),
-            //'htmlOptions'=>array('width'=>'120px'),
         ),
-        //'trading_name',
         array(
             'name' => 'trading_name',
             'filter'=>CHtml::activeTextField($model, 'trading_name', array('placeholder'=>'Trading/Display Name')),
-            //'htmlOptions'=>array('width'=>'120px'),
         ),
-        //'contact',
         array(
             'name' => 'contact',
             'filter'=>CHtml::activeTextField($model, 'contact', array('placeholder'=>'Company Contact Person')),
-            //'htmlOptions'=>array('width'=>'120px'),
         ),
-        //'billing_address',
         array(
             'name' => 'billing_address',
             'filter'=>CHtml::activeTextField($model, 'billing_address', array('placeholder'=>'Billing Address')),
-            //'htmlOptions'=>array('width'=>'120px'),
         ),
         array(
            'name'=>'isTenant',

@@ -108,7 +108,7 @@ $session = new CHttpSession;
         </li>
         <?php if (($model->visit_status == VisitStatus::PREREGISTERED || $model->visit_status == VisitStatus::SAVED || $model->visit_status == VisitStatus::CLOSED)) {
             ?>
-            <li class='has-sub' style="display: none;" id="preregisterLi"><a href="#"><span class="pre-visits">Preregister Visit</span></a>
+            <li class='has-sub' id="preregisterLi"><a href="#"><span class="pre-visits">Preregister Visit</span></a>
                 <ul>
                     <li>
 

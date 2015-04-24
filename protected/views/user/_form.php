@@ -20,6 +20,14 @@ $currentLoggedUserId = $session['id'];
 ?>
 <style type="text/css">
 #modalBody_gen {padding-top: 10px !important;height: 204px !important;}
+#addCompanyLink {
+    display: block;
+    height: 23px;
+    margin-right: 0;
+    padding-bottom: 0;
+    padding-right: 0;
+    width: 124px;
+}
 .uploadnotetext{margin-left: -80px;margin-top: 79px;}
 .required{ padding-left:10px;}
 

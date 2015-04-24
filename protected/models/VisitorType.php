@@ -129,7 +129,9 @@ class VisitorType extends CActiveRecord {
         foreach ($visitorType as $key => $value) {
             $VISITOR_TYPE_LIST[$value['id']] = $value['name'];
         }
+
         if ($visitorTypeId == NULL) {
+            $VISITOR_TYPE_LIST=array(""=>'Visitor Type')+$VISITOR_TYPE_LIST;
             return $VISITOR_TYPE_LIST;
         } else {
             if ($visitorTypeId != 1) {

@@ -15,6 +15,7 @@ class VisitStatus extends CActiveRecord
 {
     
     public static $VISIT_STATUS_LIST = array(
+		""=> 'Status',
         1 => 'Active',
         2 => 'Preregistered',
         3 => 'Closed',

@@ -9,7 +9,7 @@ $session = new CHttpSession;
 .visitor-title {
   font-size: 18px;
   font-weight: bold;
-  margin: 5px 0 5px 85px;
+  margin: 5px 0 5px 84px;
   color: #5C5C5E;
 }
 .uploadnotetext{margin-left: -80px;margin-top: 110px;}

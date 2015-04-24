@@ -15,7 +15,7 @@ if ($this->action->id == 'update') {
 <style>
 
 #addCompanyLink {
-  width: 125px;
+  width: 124px;
   height: 23px;
   padding-right: 0px;
   margin-right: 0px;

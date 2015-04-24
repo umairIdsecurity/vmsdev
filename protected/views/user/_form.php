@@ -26,7 +26,7 @@ $currentLoggedUserId = $session['id'];
     margin-right: 0;
     padding-bottom: 0;
     padding-right: 0;
-    width: 122px;
+    width: 124px;
 }
 .uploadnotetext{margin-left: -80px;margin-top: 79px;}
 .required{ padding-left:10px;}

@@ -299,9 +299,10 @@ class VisitorController extends Controller {
 
         if (isset($_POST['Visitor'])) {
             $model->attributes = $_POST['Visitor'];
-            if ($visitorService->save($model, NULL, $session['id'])) {
+            if ($result = $visitorService->save($model, NULL, $session['id'])) {
                 $this->redirect(array('admin'));
             }
+            var_dump($model->getErrors());
         }
 
         $this->render('addvisitor', array(

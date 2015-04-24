@@ -128,9 +128,7 @@ if ($this->action->id == 'update') {
         <table  id="addvisitor-table" data-ng-app="PwordForm">
 
         
-
-        <tr><td><table style="margin-left:70px;width:120px;margin-top:10px;"><td class="ico1" width="40">&nbsp;</td><td class="ico3" width="40">&nbsp;</td><td class="ico2" width="40">&nbsp;</td><table><td></tr>
-
+        <tr><td><table style="margin-left:70px;width:120px;margin-top:10px;"><td class="ico1" width="40">&nbsp;</td><td class="ico3" width="40">&nbsp;</td><td class="ico2" width="40">&nbsp;</td><table><tr></tr>
             <tr>
 
                 <td>
@@ -143,8 +141,9 @@ if ($this->action->id == 'update') {
 
                             <td id="uploadRow" rowspan="7" style='width:300px;padding-top:10px;'>
 
-                                
 
+
+                                <table>
                                 <input type="hidden" id="Visitor_photo" name="Visitor[photo]"
 
                                        value="<?php echo $model['photo']; ?>">
@@ -318,10 +317,87 @@ if ($this->action->id == 'update') {
 								
 
 								<?php echo "<br>" . $form->error($model, 'tenant_agent'); ?>
+                                </table>
+
+                                <table style="margin-top: 70px;">
+                                    <tr>
+                                        <td>
+                                            <?php echo $form->dropDownList($model, 'visitor_card_status', Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC], array('empty' => 'Card Status')); ?>
+                                            <?php echo "<br>" . $form->error($model, 'visitor_card_status'); ?>
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td id="visitorTenantRow" <?php
+                                        if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+                                            echo " class='hidden' ";
+                                        }
+                                        ?>>
+                                            <select id="Visitor_tenant" onchange="populateTenantAgentAndCompanyField()" name="Visitor[tenant]"  >
+                                                <option value='' selected>Please select a tenant</option>
+                                                <?php
+                                                $allTenantCompanyNames = User::model()->findAllCompanyTenant();
+                                                foreach ($allTenantCompanyNames as $key => $value) {
+                                                    ?>
+                                                    <option value="<?php echo $value['tenant']; ?>"
+                                                        <?php
+                                                        if (($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant'] && $this->action->id != 'update') || ($model['tenant'] == $value['tenant'])) {
+                                                            echo "selected ";
+                                                        }
+                                                        ?> ><?php echo $value['name']; ?></option>
+                                                <?php
+                                                }
+                                                ?>
+                                            </select>
+                                            <span class="required">*</span>
+                                            <?php echo "<br>" . $form->error($model, 'tenant'); ?>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td id="visitorTenantAgentRow" <?php
+                                        if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+                                            echo " class='hidden' ";
+                                        }
+                                        ?> >
+                                            <select id="Visitor_tenant_agent" name="Visitor[tenant_agent]" onchange="populateCompanyWithSameTenantAndTenantAgent()" >
+                                                <?php
+                                                echo "<option value='' selected>Please select a tenant agent</option>";
+                                                if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+                                                    echo "<option value='" . $session['tenant_agent'] . "' selected>TenantAgent</option>";
+                                                }
+                                                ?>
+                                            </select>
+
+                                            <?php echo "<br>" . $form->error($model, 'tenant_agent'); ?>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="workstationRow">
+                                            <select id="User_workstation" name="Visitor[visitor_workstation]" disabled>
+                                            </select>
+                                            <?php echo "<br>" . $form->error($model, 'visitor_workstation'); ?>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            <?php
+                                            echo $form->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes());
+                                            ?>
+                                            <span class="required">*</span>
+                                            <?php echo "<br>" . $form->error($model, 'visitor_type'); ?>
+                                        </td>
+                                    </tr>
+                                </table>
 
                             </td>
 
                         </tr>
+                    </table>
+
+
+                    <table style="float:left;width:300px;">
 
 
 
@@ -329,31 +405,20 @@ if ($this->action->id == 'update') {
 
                             <td>
 
-                                
-
-                 <?php echo $form->textField($model, 'first_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'First Name')); ?><span class="required">*</span>
-
+                                <?php echo $form->textField($model, 'first_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'First Name')); ?><span class="required">*</span>
                                 <?php echo "<br>" . $form->error($model, 'first_name'); ?>
 
                             </td>
-
-                          </tr>
-
-                          <tr>
-
-                            <td>                              
-
+                        </tr>
+                        <tr>
+                            <td>
                                 <?php echo $form->textField($model, 'last_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Last Name')); ?><span class="required">*</span>
 
                                 <?php echo "<br>" . $form->error($model, 'last_name'); ?>
 
                             </td>
 
-
-
-                        </tr>                      
-
-                        
+                        </tr>
 
                         <tr>
 
@@ -578,7 +643,8 @@ if (isset($_GET['id'])) {
 <script>
 
     $(document).ready(function() {
-
+        $(".workstationRow").show();
+        getWorkstation();
         if ($("#currentAction").val() == 'update') {
 
             if ($("#Visitor_photo").val() != '') {
@@ -588,7 +654,7 @@ if (isset($_GET['id'])) {
             }
 
             if ($("#currentRoleOfLoggedInUser").val() != 5) {
-
+                $("#User_workstation").prop("disabled", false);
                 $('#Visitor_company option[value!=""]').remove();
 
                 if ($("#Visitor_tenant_agent").val() == '') {
@@ -614,7 +680,7 @@ if (isset($_GET['id'])) {
 
 
             if ($("#currentRoleOfLoggedInUser").val() != 5) {
-
+                $("#User_workstation").prop("disabled", false);
                 $('#Visitor_company option[value!=""]').remove();
 
                 if ($("#Visitor_tenant_agent").val() == '') {
@@ -860,7 +926,9 @@ if (isset($_GET['id'])) {
         $('#Visitor_company option[value!=""]').remove();
 
         $('#Visitor_tenant_agent option[value!=""]').remove();
-
+        $("#User_workstation").empty();
+        getWorkstation();
+        $("#User_workstation").prop("disabled", false);
         var tenant = $("#Visitor_tenant").val();
 
         var selected;
@@ -1141,8 +1209,42 @@ if (isset($_GET['id'])) {
 
                 }
 
-            },
+            }
 
+            }
+        });
+    }
+
+    function getWorkstation() { /*get workstations for operator*/
+        var sessionRole = '<?php echo $session['role']; ?>';
+        var superadmin = 5;
+
+        if (sessionRole == superadmin)
+        {
+            var tenant = $("#Visitor_tenant").val();
+        }
+        else {
+            var tenant = '<?php echo $session['tenant'] ?>';
+        }
+        populateOperatorWorkstations(tenant);
+
+    }
+
+    function populateOperatorWorkstations(tenant, value) {
+        $.ajax({
+            type: 'POST',
+            url: '<?php echo Yii::app()->createUrl('user/getTenantWorkstation&id='); ?>' + tenant,
+            dataType: 'json',
+            data: tenant,
+            success: function(r) {
+                $('#User_workstation option[value!=""]').remove();
+
+                $('#User_workstation').append('<option value="">Workstation</option>');
+                $.each(r.data, function(index, value) {
+                    $('#User_workstation').append('<option value="' + value.id + '">' + value.name + '</option>');
+                });
+                $("#User_workstation").val(value);
+            }
         });
 
     }

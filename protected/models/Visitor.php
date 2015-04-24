@@ -41,6 +41,19 @@ class Visitor extends CActiveRecord {
     public $birthdayDay;
     public $repeatpassword;
 
+    const PROFILE_TYPE_VIC = 'VIC';
+    const PROFILE_TYPE_ASIC = 'ASIC';
+
+    public static $VISITOR_CARD_TYPE_LIST = array(
+        self::PROFILE_TYPE_VIC => array(
+            1 => 'Saved',
+            2 => 'VIC holder',
+            3 => 'ASIC Pending',
+            4 => 'ASIC Issued',
+            5 => 'ASIC Denied',
+        ),
+    );
+
     /**
      * @return string the associated database table name
      */
@@ -55,13 +68,13 @@ class Visitor extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('first_name, last_name, email, contact_number,company', 'required'),
+            array('first_name, last_name, email, contact_number,company, visitor_card_status', 'required'),
             array('tenant','required','message' =>'Please select a {attribute}'),
             array('is_deleted', 'numerical', 'integerOnly' => true),
             array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
             array('contact_number, company, role, visitor_status, created_by, tenant, tenant_agent', 'length', 'max' => 20),
             array('date_of_birth, notes,birthdayYear,birthdayMonth,birthdayDay,vehicle', 'safe'),
-            array('tenant, tenant_agent,company, photo,vehicle', 'default', 'setOnEmpty' => true, 'value' => null),
+            array('tenant, tenant_agent,company, photo,vehicle, visitor_card_status, visitor_workstation', 'default', 'setOnEmpty' => true, 'value' => null),
             array('repeatpassword,password', 'required','on'=>'insert'),
             array('password', 'compare', 'compareAttribute' => 'repeatpassword', 'on' => 'insert'),
            // array('vehicle', 'length', 'min'=>6, 'max'=>6, 'tooShort'=>'Vehicle is too short (Should be in 6 characters)'), 

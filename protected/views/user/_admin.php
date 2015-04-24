@@ -202,7 +202,14 @@ function isUserTenantAgent($userId) {
 }
 
 function getCompany($id) {
-    return Company::model()->findByPk(User::model()->findByPk($id)->company)->name;
+	$company_id	=	User::model()->findByPk($id)->company;
+	if (!is_null($id) && !empty(Company::model()->findByPk($company_id)->name)) {
+	return $comapny	= Company::model()->findByPk($company_id)->name;
+	} else {
+	return 'NO COMPANY';
+	}
+	
+	
 }
 ?>
 <script>

@@ -247,6 +247,28 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
 
     }
 
+    $(document).ready(function () {
+        blink("#printCardBtn", -1, 1000);
+    });
+    function blink(elem, times, speed) {
+        if (times > 0 || times < 0) {
+            if ($(elem).hasClass("blink"))
+                $(elem).removeClass("blink");
+            else
+                $(elem).addClass("blink");
+        }
+
+        clearTimeout(function () {
+            blink(elem, times, speed);
+        });
+
+        if (times > 0 || times < 0) {
+            setTimeout(function () {
+                blink(elem, times, speed);
+            }, speed);
+            times -= .5;
+        }
+    }
 
 </script>
 <!--POP UP FOR CROP PHOTO -->

@@ -408,8 +408,8 @@ $this->renderPartial('visithistory', array('model' => $model,
 
                 sendCardForm();
                 
-                alert("Visit is now activated. You can now print the visitor badge.");
-                window.location = "<?php echo CHtml::normalizeUrl(array("visit/detail&id=" . $model->id)); ?>";
+                //alert("Visit is now activated. You can now print the visitor badge.");
+                //window.location = "<?php //echo CHtml::normalizeUrl(array("visit/detail&id=" . $model->id)); ?>";
             },
         });
     }
@@ -427,9 +427,9 @@ $this->renderPartial('visithistory', array('model' => $model,
             url: "<?php echo CHtml::normalizeUrl(array("cardGenerated/create&visitId=")) ?>" + id,
             data: cardForm,
             success: function(data) {
-                if (visitId != "defaultValue") {
+                //if (visitId != "defaultValue") {
                     window.location = "index.php?r=visit/detail&id=" + id;
-                }
+                //}
             }
         });
     }

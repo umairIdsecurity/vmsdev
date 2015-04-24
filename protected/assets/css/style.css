@@ -1612,3 +1612,10 @@ dt.tabs dt{
 #visit-grid table th{
     min-width:20px;
 }
+
+/* blink / flash object */
+.blink {
+    color: #000000 !important;
+    background: #f2f2f2 !important;
+    background-image: none !important;
+}

@@ -10,6 +10,8 @@
 $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'company-grid',
     'dataProvider' => $model->search(),
+    'enableSorting' => false,
+    'hideHeader'=>true,
     'filter' => $model,
     'afterAjaxUpdate' => "
     function(id, data) {
@@ -17,15 +19,35 @@ $this->widget('zii.widgets.grid.CGridView', array(
         $('th > .desc').append('<div></div>');
     }",
     'columns' => array(
-        'name',
-        'trading_name',
-        'contact',
-        'billing_address',
+        //'name',
+        array(
+            'name' => 'name',
+            'filter'=>CHtml::activeTextField($model, 'name', array('placeholder'=>'Company Name')),
+            //'htmlOptions'=>array('width'=>'120px'),
+        ),
+        //'trading_name',
+        array(
+            'name' => 'trading_name',
+            'filter'=>CHtml::activeTextField($model, 'trading_name', array('placeholder'=>'Trading/Display Name')),
+            //'htmlOptions'=>array('width'=>'120px'),
+        ),
+        //'contact',
+        array(
+            'name' => 'contact',
+            'filter'=>CHtml::activeTextField($model, 'contact', array('placeholder'=>'Company Contact Person')),
+            //'htmlOptions'=>array('width'=>'120px'),
+        ),
+        //'billing_address',
+        array(
+            'name' => 'billing_address',
+            'filter'=>CHtml::activeTextField($model, 'billing_address', array('placeholder'=>'Billing Address')),
+            //'htmlOptions'=>array('width'=>'120px'),
+        ),
         array(
            'name'=>'isTenant',
             'type'=>'raw',
             'header' => "Is Tenant?",
-            'filter'=>array(0=>"No",1=>"Yes"),
+            'filter'=>array(""=>"Is Tenant?",0=>"No",1=>"Yes"),
             'value' => '$data->isTenant?"Yes":"No"',
             'htmlOptions' => array('style' => "text-align:center;"),
             

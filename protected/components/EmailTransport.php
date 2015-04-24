@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../../vendor/daily/mandrill-dm/src/Mandrill.php';
+require_once('mandril/src/Mandrill.php');
 
 class EmailTransport
 {
@@ -42,7 +42,9 @@ class EmailTransport
             ),
         );
 
-        $this->sendEmail('resetpassword', $params, $to);
+       $this->sendEmail('resetpassword', $params, $to);
+		
+		
     }
 
     public function sendResetPasswordConfirmationEmail($params, $toEmail, $toName)

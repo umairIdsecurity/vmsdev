@@ -18,8 +18,57 @@ if (isset($_GET['id'])) {
 
 $currentLoggedUserId = $session['id'];
 ?>
+<style type="text/css">
+#modalBody_gen {padding-top: 10px !important;height: 204px !important;}
+.uploadnotetext{margin-left: -80px;margin-top: 79px;}
+.required{ padding-left:10px;}
+
+        .ajax-upload-dragdrop {
+            float:left !important;
+            margin-top: -30px;
+            background: url('<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png') no-repeat center top;
+            background-size:137px;
+            height: 104px;
+            width: 120px !important;
+            padding: 87px 5px 12px 72px;
+            margin-left: 20px !important;
+            border:none;
+        }
+        .ajax-file-upload{
+            margin-left: -107px !important;
+            margin-top: 128px !important;
+            position:absolute !important;
+            font-size: 12px !important;
+            padding-bottom:3px;
+            height:17px;
+        }
+
+        .editImageBtn{
+            margin-left: -103px !important;
+            color:white;
+            font-weight:bold;
+            text-shadow: 0 0 !important;
+            font-size:12px !important;
+            height:24px;
+            width:131px !important;
+        }
+        .imageDimensions{
+            display:none !important;
+        }
+        #cropImageBtn{
+            float: left;
+            margin-left: -54px !important;
+            margin-top: 218px;
+            position: absolute;
+        }
+.required { padding-left:10px; }
+#content h1 { color: #E07D22;font-size: 18px;font-weight: bold;margin-left:88px; }
+</style>
+
+
 
 <div class="form" data-ng-app="PwordForm">
+<h1>Add User </h1>
     <?php
     $form = $this->beginWidget('CActiveForm', array(
         'id' => 'userform',
@@ -30,15 +79,34 @@ $currentLoggedUserId = $session['id'];
             'validateOnSubmit' => true,
             'afterValidate' => 'js:function(form,data,hasError){
                         if(!hasError){
-                            if($("#User_role").val() == 7 && $("#User_tenant_agent").val() == "" && $("#currentRole").val() != 6){
+							
+							
+							
+							if($(".pass_option").is(":checked")== false){
+							
+							$("#pass_error_").show();
+							
+							$("#User_password_em_").html("select one option");	
+							}
+							else if($(".pass_option").is(":checked")== true && $(".pass_option:checked").val()==1 && ($("#User_password").val()== "" || $("#User_repeat_password").val()=="")){
+							   
+                            $("#pass_error_").show();
+							$("#pass_error_").html("type password or generate");	
+                            	
+							}
+							
+                            else if($("#User_role").val() == 7 && $("#User_tenant_agent").val() == "" && $("#currentRole").val() != 6){
                                 $("#User_tenant_agent_em_").show();
                                 $("#User_tenant_agent_em_").html("Please select a tenant agent");
                             }
+							
                             else if($("#User_password").val() != $("#User_repeat_password").val()){
                                 $("#User_tenant_agent_em_").hide();
                                 $("#User_password_em_").show();
                                 $("#User_password_em_").html("Password does not match with repeat password");
-                             } else {
+                             }
+							 
+							  else {
                                 $("#User_password_em_").hide();
                                 checkHostEmailIfUnique();
                                 
@@ -52,12 +120,28 @@ $currentLoggedUserId = $session['id'];
 
 
     <?php echo $form->errorSummary($model); ?>
-    <table>
+    <table >
         <tr>
-            <td style="vertical-align: top; width:50%;">
-                <table>
-                    <tr>
-                        <td><?php echo $form->labelEx($model, 'role'); ?></td>
+         <td style="vertical-align: top; float:left; width:300px">
+         
+         <table>
+                            <tr> 
+
+                                <td style="width:300px;">
+                                  <div class="ajax-upload-dragdrop" style="vertical-align: top; width: 200px;margin-top:0px;"><div class="actionForward ajax-file-upload btn btn-info" style="position: relative; overflow: hidden; cursor: default;">Upload Photo <form method="POST" action="/vms/index.php?r=site/upload&amp;id=visitor&amp;companyId=&amp;actionId=create" enctype="multipart/form-data" style="margin: 0px; padding: 0px;"><input type="file" id="ajax-upload-id-1429303468602" name="myfile[]" accept="*" multiple="" style="position: absolute; cursor: pointer; top: 0px; width: 100%; height: 100%; left: 0px; z-index: 100; opacity: 0;"></form></div><div class="uploadnotetext"><b>Drag &amp; Drop File</b><br><span style="font-size:10px;">Max Size: 2MB ;File Ext. : jpeg/png<br><span class="imageDimensions">Dimensions: 180px(Width) x 60px(Height)</span></span></div></div>
+                                </td>
+                                </tr>
+                                <td>&nbsp;
+                                
+								</td>                                
+                                <tr>
+                                </tr>
+                                <td>&nbsp;
+                                
+								</td>                                
+                                <tr>
+                                </tr>
+                                <tr>
                         <td><select  onchange="populateDynamicFields()" <?php
                             if ($this->action->Id == 'create' && isset($_GET['role'])) { //if action create with user roles selected in url
                                 echo "disabled";
@@ -90,8 +174,54 @@ $currentLoggedUserId = $session['id'];
                             </select><?php echo "<br>" . $form->error($model, 'role'); ?></td>
 
                     </tr>
-                    <tr id="tenantRow" class='hiddenElement'>
-                        <td><?php echo $form->labelEx($model, 'tenant'); ?><span class="required">*</span></td>
+                    			<tr>
+                        
+                        <td><?php echo $form->dropDownList($model, 'user_type', User::$USER_TYPE_LIST); ?>
+                            <?php echo "<br>" . $form->error($model, 'user_type'); ?>
+                        </td>
+
+                    </tr>
+                    			<tr>
+                        <td><?php echo $form->dropDownList($model, 'user_status', User::$USER_STATUS_LIST); ?>
+                            <?php echo "<br>" . $form->error($model, 'user_status'); ?>
+                        </td>
+
+                    </tr>
+                                
+                                </table>
+         
+         </td>
+        
+            <td style="vertical-align: top; float:left; width:300px;">
+                <table>
+                
+                	<tr>
+                        <td><?php echo $form->textField($model, 'first_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'First Name')); ?>
+                        <span class="required">*</span>
+                        
+                            <?php echo "<br>" . $form->error($model, 'first_name'); ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><?php echo $form->textField($model, 'last_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Last Name')); ?>
+                        <span class="required">*</span>
+                            <?php echo "<br>" . $form->error($model, 'last_name'); ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="text" id="User_email" placeholder="Email" name="User[email]" maxlength="50" size="50"  value="<?php echo $model->email; ?>"/>
+                           <span class="required">*</span>
+                            <?php echo "<br>" . $form->error($model, 'email', array('style' => 'text-transform:none;')); ?>
+                            <span class="errorMessageEmail1" style="display:none;color:red;font-size:0.9em;">A profile already exists for this email address</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><?php echo $form->textField($model, 'contact_number', array('size' => 50, 'placeholder'=>'Mobile Number')); ?>
+                        <span class="required">*</span>
+                            <?php echo "<br>" . $form->error($model, 'contact_number'); ?></td>
+                    </tr>
+                      <tr id="tenantRow" class='hiddenElement'>
                         <td>
                             <select id="User_tenant" name="User[tenant]"  >
                                 <option value='' selected>Please select a tenant</option>
@@ -111,7 +241,7 @@ $currentLoggedUserId = $session['id'];
                         </td>
                     </tr>
                     <tr id="tenantAgentRow" class='hiddenElement'>
-                        <td><?php echo $form->labelEx($model, 'tenant_agent'); ?><span class="required tenantField">*</span></td>
+                        
                         <td>
                             <select id="User_tenant_agent" onchange='getCompanyTenantAgent()' name="User[tenant_agent]" >
 
@@ -132,87 +262,12 @@ $currentLoggedUserId = $session['id'];
                                         echo "<option value='' selected>Please select a tenant agent</option>";
                                     }
                                     ?>
-                            </select><?php echo "<br>" . $form->error($model, 'tenant_agent'); ?>
+                            </select>
+							<span class="required tenantField">*</span>
+							<?php echo "<br>" . $form->error($model, 'tenant_agent'); ?>
                         </td>
-                    </tr>
-
-                    <tr >
-                        <td class="workstationRow"> Primary Workstation</td>
-                        <td class="workstationRow">
-                            <select id="User_workstation" name="User[workstation]" disabled></select>
-                        </td>
-                        <td class="workstationRow"></td>
-                    </tr>
-                    <tr>
-                        <td><?php echo $form->labelEx($model, 'user_type'); ?></td>
-                        <td><?php echo $form->dropDownList($model, 'user_type', User::$USER_TYPE_LIST); ?>
-                            <?php echo "<br>" . $form->error($model, 'user_type'); ?>
-                        </td>
-
-                    </tr>
-                    <tr>
-                        <td><?php echo $form->labelEx($model, 'user_status'); ?></td>
-                        <td><?php echo $form->dropDownList($model, 'user_status', User::$USER_STATUS_LIST); ?>
-                            <?php echo "<br>" . $form->error($model, 'user_status'); ?>
-                        </td>
-
-                    </tr>
-                    <tr>
-                        <td><?php echo $form->labelEx($model, 'notes'); ?></td>
-                        <td><?php echo $form->textArea($model, 'notes', array('rows' => 6, 'cols' => 50)); ?>
-                            <?php echo "<br>" . $form->error($model, 'notes'); ?>
-                        </td>
-
-                    </tr>
-                        <tr>
-                            <td><label for="User_password">Password <span class="required">*</span></label></td>
-                            <td>
-                                <input ng-model="user.passwords" data-ng-class="{
-                                                                                                    'ng-invalid':userform['User[repeatpassword]'].$error.match}" type="password" id="User_password" value = '<?php echo $model->password; ?>' name="User[password]">			
-                                       <?php echo "<br>" . $form->error($model, 'password'); ?>
-                            </td>
-                        </tr>
-                        <tr >
-                            <td style="vertical-align: top !important;padding-top: 11px;width:150px;"><label for="User_repeat_password">Repeat Password <span class="required">*</span></label></td>
-                            <td >
-                                <input ng-model="user.passwordConfirm" type="password" id="User_repeat_password" data-match="user.passwords" name="User[repeatpassword]"/>			
-                                <div style='font-size: 0.9em;color: #FF0000;'  data-ng-show="userform['User[repeatpassword]'].$error.match">New Password does not match with <br>Repeat New Password. </div>
-                                <?php echo "<br>" . $form->error($model, 'repeatpassword'); ?>
-                            </td>
-
-                        </tr>
-
-                </table>
-            </td>
-            <td style="vertical-align: top;">
-                <table>
-                    <tr>
-                        <td style="width:110 !important;"><?php echo $form->labelEx($model, 'first_name'); ?></td>
-                        <td><?php echo $form->textField($model, 'first_name', array('size' => 50, 'maxlength' => 50)); ?>
-                            <?php echo "<br>" . $form->error($model, 'first_name'); ?>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><?php echo $form->labelEx($model, 'last_name'); ?></td>
-                        <td><?php echo $form->textField($model, 'last_name', array('size' => 50, 'maxlength' => 50)); ?>
-                            <?php echo "<br>" . $form->error($model, 'last_name'); ?>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td width="30%"><?php echo $form->labelEx($model, 'email'); ?></td>
-                        <td>
-                            <input type="text" id="User_email" name="User[email]" maxlength="50" size="50"  value="<?php echo $model->email; ?>"/>
-                            <?php echo "<br>" . $form->error($model, 'email', array('style' => 'text-transform:none;')); ?>
-                            <span class="errorMessageEmail1" style="display:none;color:red;font-size:0.9em;">A profile already exists for this email address</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><?php echo $form->labelEx($model, 'contact_number'); ?></td>
-                        <td><?php echo $form->textField($model, 'contact_number'); ?>
-                            <?php echo "<br>" . $form->error($model, 'contact_number'); ?></td>
                     </tr>
                     <tr id="companyTr">
-                        <td><?php echo $form->labelEx($model, 'company'); ?></td>
                         <td id='companyRow'>
                             <select id="User_company" name="User[company]" <?php
                             if ($session['role'] == Roles::ROLE_AGENT_ADMIN || $currentRoleinUrl == Roles::ROLE_OPERATOR || $currentLoggedUserId == $currentlyEditedUserId) {
@@ -245,6 +300,7 @@ $currentLoggedUserId = $session['id'];
                                     }
                                     ?>
                             </select>
+                           <span class="required">*</span>
                             <select id="User_company_base" style="display:none;">
                                 <?php
                                 $criteria = new CDbCriteria();
@@ -265,25 +321,22 @@ $currentLoggedUserId = $session['id'];
                             <?php echo $form->error($model, 'company'); ?>
                         </td>
                         <td></td></tr>
+                      
                     <tr>
-                        <td><?php echo $form->labelEx($model, 'department'); ?></td>
-                        <td><?php echo $form->textField($model, 'department', array('size' => 50, 'maxlength' => 50)); ?>
+                        <td><?php echo $form->textField($model, 'department', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Department')); ?>
                             <?php echo "<br>" . $form->error($model, 'department'); ?>
                         </td>
                     </tr>
                     <tr>
-                        <td><?php echo $form->labelEx($model, 'position'); ?></td>
-                        <td><?php echo $form->textField($model, 'position', array('size' => 50, 'maxlength' => 50)); ?>
+                        <td><?php echo $form->textField($model, 'position', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Postion')); ?>
                             <?php echo "<br>" . $form->error($model, 'position'); ?>
                         </td>
                     </tr>
                     <tr>
-                        <td>Staff ID</td>
-                        <td><?php echo $form->textField($model, 'staff_id', array('size' => 50, 'maxlength' => 50)); ?>
+                        <td><?php echo $form->textField($model, 'staff_id', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Staff ID')); ?>
                             <?php echo "<br>" . $form->error($model, 'staff_id'); ?></td>
                     </tr>
                     <tr>
-                        <td><?php echo $form->labelEx($model, 'date_of_birth'); ?></td>
                         <td class="birthdayDropdown">
                             <input type="hidden" id="dateofBirthBreakdownValueYear" value="<?php echo date("Y", strtotime($model->date_of_birth)); ?>">
                             <input type="hidden" id="dateofBirthBreakdownValueMonth" value="<?php echo date("n", strtotime($model->date_of_birth)); ?>">
@@ -294,17 +347,101 @@ $currentLoggedUserId = $session['id'];
                             <select id="fromYear" name="User[birthdayYear]" class='yearSelect'></select>
                         </td>
                     </tr>
+                    
+                    
+
+                    <tr >
+                        <td class="workstationRow">
+                            <select id="User_workstation" name="User[workstation]" disabled></select>
+                        </td>
+                        <td class="workstationRow"></td>
+                    </tr>
+                   
+                    	
 
                 </table>
             </td>
+            <td style="vertical-align: top; float:left; width:300px">
+                <table>
+                   <tr>
+                        <td>
+						<?php echo $form->textArea($model, 'notes', array('rows' => 6, 'cols' => 70,'placeholder'=>'Notes','style'=>'width:237px;')); ?>
+                            <?php echo "<br>" . $form->error($model, 'notes'); ?>
+                        </td>
+
+                    </tr>
+                  <tr>
+                  <td><strong>Password Options</strong></td>
+                  
+                  </tr>  
+                   
+                  
+                  <tr>
+                  <td>
+                  <table style="border:2px solid #CCC; margin-top:18px !important; width:253px; border-left-style:none; border-top-style:none">
+                    <tr>
+                    <td id="pass_error_" style='font-size: 0.9em;color: #FF0000; display:none'>Select Atleast One option</td>
+                    </tr>
+                    
+                    
+                    
+                   <tr id="third_option" class='hiddenElement'>
+                   
+                   </tr> 
+                    
+                   <tr>
+                   <td><input type="radio" value="1" class="pass_option" name="User[password_option]" />&nbsp;Create Password on behalf of user</td>
+                   </tr> 
+                   <tr>
+                  
+                    <td>
+                        <input ng-model="user.passwords" data-ng-class="{
+                                                                                            'ng-invalid':userform['User[repeatpassword]'].$error.match}" placeholder="Password" type="password" id="User_password" value = '<?php echo $model->password; ?>' name="User[password]">	
+                    <span class="required">*</span>                                                                        		
+                               <?php echo "<br>" . $form->error($model, 'password'); ?>
+                    </td>
+                </tr>
+                   <tr >
+                    <td >
+                        <input ng-model="user.passwordConfirm" placeholder="Repeat Password" type="password" id="User_repeat_password" data-match="user.passwords" name="User[repeatpassword]"/>			
+                        <div style='font-size: 0.9em;color: #FF0000;'  data-ng-show="userform['User[repeatpassword]'].$error.match">New Password does not match with <br>Repeat New Password. </div>
+                      <span class="required">*</span>
+                        <?php echo "<br>" . $form->error($model, 'repeatpassword'); ?>
+                    </td>
+
+                </tr>
+                
+                <tr>
+                <td align="center">
+                    <div class="row buttons ">
+                    <input onclick="generatepassword();" class="complete btn btn-info" style="position: relative; width:222px; overflow: hidden; cursor: default;" type="button" value="Autogenerate Password" />
+                        
+                    </div>
+    			
+   				 </td>
+                </tr>
+                
+                 <tr>
+                   <td><input class="pass_option" type="radio" name="User[password_option]" value="2"/>&nbsp;Send User Invitation</td>
+                   </tr>
+                   
+                 </table>
+                 </td>
+                 </tr>
+                   
+                   <tr><td>
+                    
+        <div class="row buttons ">
+            <?php echo CHtml::submitButton($model->isNewRecord ? 'Save' : 'Save', array('id' => 'submitForm', 'class' => 'complete','style'=>'width:222px;')); ?>
+        </div>
+                   </td></tr>
+
+                </table>
+            </td>
+            
         </tr>
     </table>
-    <div class="buttonsAlignToRight">
-        <!--<button class="btn btn-success " id="submitBtn"><?php echo ($this->action->Id == 'create' ? 'Add' : 'Save') ?></button>-->
-        <div class="row buttons " >
-            <?php echo CHtml::submitButton($model->isNewRecord ? 'Add' : 'Save', array('id' => 'submitForm', 'class' => 'complete')); ?>
-        </div>
-    </div>
+   
 
     <?php $this->endWidget(); ?>
 
@@ -328,6 +465,8 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
 <input type="text" id="emailunique" style="display:none;" />
 
 <script>
+
+
 
     $(document).ready(function() {
 
@@ -550,6 +689,7 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
             url: url,
             data: userform,
             success: function(data) {
+				
                 window.location = 'index.php?r=user/admin';
             },
         });
@@ -628,6 +768,8 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
 
     }
     function populateDynamicFields() {
+		
+		$('#third_option').empty();
         /*if superadmin user company set to empty*/
         if (<?php echo $session['role'] ?> == 5)
         {
@@ -636,7 +778,9 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
         $("#User_workstation").empty();
 
         var selectedRole = $("#User_role").val();
+		
         var sessionRole = $("#currentRole").val(); //session role of currently logged in user
+		
         var actionId = $("#currentAction").val(); // current action
         var admin = 1;
         var operator = 8;
@@ -645,6 +789,8 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
         var agentadmin = 6;
         //hide required * label if role is staffmember
         if (selectedRole == staffmember) {
+			$('#third_option').append('<td><input type="radio" value="3" class="pass_option" name="User[password_option]" />&nbsp;User does not require a password</td>');
+			$("#third_option").show();
             $(".tenantField").hide();
         } else {
             $(".tenantField").show();
@@ -670,6 +816,10 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                 getWorkstation();
             }
             else if (selectedRole == staffmember) {
+				
+				
+				
+				
                 $('#User_company').find('option[value=<?php echo $session['company']; ?>]').show();
                 $("#User_company").val("<?php echo $session['company']; ?>");
                 document.getElementById('User_workstation').disabled = true;
@@ -721,6 +871,9 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
 
                 }
                 else if (selectedRole == 9) {
+					
+					
+					
                     document.getElementById('User_tenant_agent').disabled = false;
                     $("#tenantAgentRow").show();
                     $("#tenantRow").show();
@@ -985,6 +1138,41 @@ function getAssignableRoles($user_role) {
     <div id="modalBody"></div>
 
 </div>
+
+<div class="modal hide fade" id="generate_password" style="width: 410px">
+<div style="border:5px solid #BEBEBE; width:405px">
+    <div class="modal-header" style=" border:none !important; height: 60px !important;padding: 0px !important;width: 405px !important;">
+    <div style="background-color:#E8E8E8; padding-top:2px; width:405px; height:56px;">
+    <a data-dismiss="modal" class="close" id="close_generate" >×</a>
+    <h1 style="color: #000;font-size: 15px;font-weight: bold;margin-left: 9px;padding-top: 0px !important;">				     Autogenerated Password
+    </h1>
+    
+    </div>
+        
+        <br>
+    </div>
+    <div id="modalBody_gen">
+     
+    <table >
+   
+    <div id="error_msg" style='font-size: 0.9em;color: #FF0000;padding-left: 11px; display:none' >Please Generate Password </div>
+    		
+    <tr><td colspan="2" style="padding-left:10px">Your randomly generated password is :</td></tr>
+    <tr><td colspan="2"></td></tr>
+    	<tr><td colspan="2"style="padding-left:55px; padding-top:24px;"><input readonly="readonly" type="text" placeholder="Random Password" value="" id="random_password" /></td></tr>
+        
+        <tr><td colspan="2"style="padding-left:10px; font:italic">Note:Please copy and save this password somewhere safe.</td></tr>
+        <tr><td  style="padding-left: 11px;padding-top: 26px !important; width:50%"> <input onclick="copy_password();"  style="border-radius: 4px; height: 35px; " type="button" value="Use Password" /></td>
+        <td style="padding-right:10px;padding-top: 25px;"> <input  onclick="cancel();" style="border-radius: 4px; height: 35px;" type="button" value="Cancel" /></td>
+        </tr>
+        
+    </table>
+          
+    
+    </div>
+<a data-toggle="modal" data-target="#generate_password" id="gen_pass" style="display:none" class="btn btn-primary">Click me</a>
+</div>
+</div>
 <?php
 $this->widget('bootstrap.widgets.TbButton', array(
     'label' => 'Click me',
@@ -998,6 +1186,43 @@ $this->widget('bootstrap.widgets.TbButton', array(
 ));
 ?>
 <script>
+	function cancel(){
+	$('#User_repeat_password').val('');	
+	$('#User_password').val('');
+	$("#random_password").val('');	
+	$("#close_generate").click();
+	}
+	
+	function copy_password(){
+	if($('#random_password').val()==''){
+	$('#error_msg').show();
+	}else{
+	
+	$('#User_password').val($('#random_password').val());
+	$('#User_repeat_password').val($('#random_password').val());
+	$("#close_generate").click();
+		
+	}
+		
+	}
+	
+	
+	function generatepassword() {
+		
+		 $("#random_password").val('');
+		$( "#pass_option" ).prop( "checked", true );
+		
+		var text = "";
+    	var possible = "abcdefghijklmnopqrstuvwxyz0123456789";
+
+		for( var i=0; i < 6; i++ ){
+			text += possible.charAt(Math.floor(Math.random() * possible.length));
+		}
+    	document.getElementById('random_password').value	=	text;
+		
+	 
+	  $("#gen_pass").click();
+	}
     function addCompany() {
         if ($("#User_tenant").val() == '' && $("#currentRole").val() != 5) {
             $("#User_company_em_").show();

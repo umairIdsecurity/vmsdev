@@ -14,11 +14,17 @@
 class UserServiceImpl implements UserService {
 
     public function save($user, $userLoggedIn, $workstation) {
+		//print_r($user);exit;
         $user->date_of_birth = date('Y-m-d', strtotime($user->birthdayYear.'-'.$user->birthdayMonth.'-'.$user->birthdayDay));
-
+		if($user['password']==''){
+			
+		$user->password	=	(NULL);
+		}
 
         if ($user->isNewRecord) {
+			
             $user->created_by = $userLoggedIn->id;
+			
         } else {
             if (Yii::app()->user->role == Roles::ROLE_SUPERADMIN) {
 
@@ -31,10 +37,14 @@ class UserServiceImpl implements UserService {
                 }
             }
         }
-
+		
         if (!($user->save())) {
             return false;
-        }
+        }else{
+			if($user->password_option==2)
+			User::model()->restorePassword($user['email']);
+			
+		}
 
         /** set tenant id if superadmin and user created is admin.. tenant id = admin_id 
          * set tenant_agent if superadmin and user created is agentadmin.. tenant id = admin_id ,tenant_agent
@@ -44,9 +54,11 @@ class UserServiceImpl implements UserService {
          * * */
         $company = Company::model()->findByPK($user->company);
         if (Yii::app()->controller->action->id == 'create') {
+			
             switch ($userLoggedIn->role) {
+				
                 case Roles::ROLE_SUPERADMIN:
-
+					echo $user->role; exit;
                     if ($user->role == Roles::ROLE_ADMIN) {
                         $this->assignTenantOfUserAndCompanyForRoleAdmin($user, $company->tenant);
                     } else if ($user->role == Roles::ROLE_AGENT_ADMIN) {

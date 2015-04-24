@@ -17,6 +17,8 @@ $session['lastPage'] = 'admin';
 $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'user-grid',
     'dataProvider' => $model->search(),
+    'enableSorting' => false,
+    'hideHeader'=>true,
     'filter' => $model,
     'afterAjaxUpdate' => "
     function(id, data) {
@@ -24,32 +26,54 @@ $this->widget('zii.widgets.grid.CGridView', array(
         $('th > .desc').append('<div></div>');
     }",
     'columns' => array(
-        'first_name',
-        'last_name',
+        array(
+            'name' => 'first_name',
+            'filter'=>CHtml::activeTextField($model, 'first_name', array('placeholder'=>'First Name')),
+            'htmlOptions'=>array('width'=>'120px'),
+        ),
+        array(
+            'name' => 'last_name',
+            'filter'=>CHtml::activeTextField($model, 'last_name', array('placeholder'=>'Last Name')),
+            'htmlOptions'=>array('width'=>'120px')
+        ),
         array(
             'name' => 'role',
             'value' => 'User::model()->getUserRole($data->role)',
             'filter' => getAssignableRoles($session['role']),
+            'htmlOptions'=>array('width'=>'120px')
         ),
         array(
             'name' => 'assignedWorkstations',
-            'filter' => CHtml::listData(Workstation::model()->findAll(array('order' => 'name ASC')), 'id', 'name'),
+            'filter' => assignedWorkstation(),
             'type' => 'html',
             'value' => 'UserWorkstations::model()->getAllworkstations($data->id)',
+            'htmlOptions'=>array('width'=>'150px')
         ),
         array(
             'name' => 'user_type',
             'value' => 'UserType::model()->getUserType($data->user_type)',
             'filter' => User::$USER_TYPE_LIST,
+            'htmlOptions'=>array('width'=>'50px')
         ),
         array(
             'name' => 'companyname',
             'value' => 'getCompany($data->id)',
             'header' => 'Company',
-            'type' => 'raw'
+            'type' => 'raw',
+            'filter'=>CHtml::activeTextField($model, 'companyname', array('placeholder'=>'Company')),
         ),
-        'contact_number',
-        'email',
+
+        array(
+            'name' => 'contact_number',
+            'filter'=>CHtml::activeTextField($model, 'contact_number', array('placeholder'=>'Contact No.')),
+        ),
+
+        array(
+            'name' => 'email',
+            'filter'=>CHtml::activeTextField($model, 'email', array('placeholder'=>'Email Address')),
+            'htmlOptions'=>array('width'=>'80px'),
+        ),
+
         array(
             'header' => 'Actions',
             'class' => 'CButtonColumn',
@@ -144,6 +168,13 @@ $this->widget('zii.widgets.grid.CGridView', array(
     ),
 ));
 
+function assignedWorkstation(){
+    $data = CHtml::listData(Workstation::model()->findAll(array('order' => 'name ASC')), 'id', 'name');
+    $data=array(""=>'Assigned Workstations')+$data;
+    return $data;
+}
+
+
 function getAssignableRoles($user_role) {
     //$assignableRolesArray = array();
     switch ($user_role) {
@@ -157,6 +188,7 @@ function getAssignableRoles($user_role) {
 
         case Roles::ROLE_SUPERADMIN: //superadmin
             $assignableRoles = array(
+                '' => 'Role',
                 Roles::ROLE_SUPERADMIN => 'Super Administrator',
                 Roles::ROLE_ADMIN => 'Administrator',
                 Roles::ROLE_AGENT_ADMIN => 'Agent Administrator',

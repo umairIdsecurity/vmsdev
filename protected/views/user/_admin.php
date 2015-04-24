@@ -180,6 +180,7 @@ function getAssignableRoles($user_role) {
     switch ($user_role) {
         case Roles::ROLE_AGENT_ADMIN: //agentadmin
             $assignableRoles = array(
+                '' => 'Role',
                 Roles::ROLE_AGENT_ADMIN => 'Agent Administrator',
                 Roles::ROLE_AGENT_OPERATOR => 'Agent Operator',
                 Roles::ROLE_STAFFMEMBER => 'Staff Member'); //keys
@@ -202,6 +203,7 @@ function getAssignableRoles($user_role) {
         case Roles::ROLE_ADMIN: //admin
 
             $assignableRoles = array(
+                '' => 'Role',
                 Roles::ROLE_ADMIN => 'Administrator',
                 Roles::ROLE_AGENT_ADMIN => 'Agent Administrator',
                 Roles::ROLE_AGENT_OPERATOR => 'Agent Operator',

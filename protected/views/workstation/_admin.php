@@ -10,6 +10,8 @@
 $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'workstation-grid',
     'dataProvider' => $model->search(),
+    'enableSorting' => false,
+    'hideHeader'=>true,
     'filter' => $model,
     'afterAjaxUpdate' => "
     function(id, data) {
@@ -17,11 +19,26 @@ $this->widget('zii.widgets.grid.CGridView', array(
         $('th > .desc').append('<div></div>');
     }",
     'columns' => array(
-        'name',
-        'location',
-        'contact_name',
-        'contact_number',
-        'contact_email_address',
+        array(
+            'name' => 'name',
+            'filter'=>CHtml::activeTextField($model, 'name', array('placeholder'=>'Name')),
+        ),
+        array(
+            'name' => 'location',
+            'filter'=>CHtml::activeTextField($model, 'location', array('placeholder'=>'Location')),
+        ),
+        array(
+            'name' => 'contact_name',
+            'filter'=>CHtml::activeTextField($model, 'contact_name', array('placeholder'=>'Contact Person Name')),
+        ),
+        array(
+            'name' => 'contact_number',
+            'filter'=>CHtml::activeTextField($model, 'contact_number', array('placeholder'=>'Contact No.')),
+        ),
+        array(
+            'name' => 'contact_email_address',
+            'filter'=>CHtml::activeTextField($model, 'contact_email_address', array('placeholder'=>'Contact Email Address')),
+        ),
         array(
             'name' => 'id',
             'type' => 'raw',

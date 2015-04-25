@@ -12,6 +12,7 @@ switch ($controllerId) {
         break;
     case 'visitor':
     case 'visit':
+	case 'user':
         $folderKey = '/visitor/';
         break;
     default:
@@ -36,7 +37,7 @@ if (isset($_FILES["myfile"])) {
                 . '(`filename`, `unique_filename`, `relative_path`) VALUES ("' . $fileName . '","' . $uniqueFileName . '","' . $path . '" )');
         $command->query();
         //update company
-        if ($action == 'update' && $controllerId == 'visitor') {
+        if ($action == 'update' && ($controllerId == 'visitor' || $controllerId == 'user') ) {
             $ret = Yii::app()->db->lastInsertID;
         } elseif ($action == 'update') {
             $update = $connection->createCommand('update company set logo="' . Yii::app()->db->lastInsertID . '" where id="' . $_GET['companyId'] . '"');

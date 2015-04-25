@@ -11,7 +11,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'visit-grid',
     'dataProvider' => $model->search(),
     'enableSorting' => false,
-    //'hideHeader'=>true,
+    'hideHeader'=>true,
     'filter' => $model,
     'afterAjaxUpdate' => "
     function(id, data) {

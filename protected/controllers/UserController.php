@@ -86,6 +86,26 @@ class UserController extends Controller {
         ));
     }
 
+  public function actionAddColumn() {
+  
+     $db = Yii::app()->db;
+            /* update */
+            $checkIfColumnExists = $db->createCommand("SHOW COLUMNS FROM `user` LIKE 'photo' ");
+            $result = $checkIfColumnExists->query();
+			
+			echo  $result->rowCount;
+            
+              if ($result->rowCount == 0) {
+                $sql = 'ALTER TABLE  `user` ADD  `photo` BIGINT( 20 ) NOT NULL';
+                $db->createCommand($sql)->execute();
+			  }
+			  
+			   $checkIfColumnExists = $db->createCommand("SHOW COLUMNS FROM `user` LIKE 'photo' ");
+            $result = $checkIfColumnExists->query();
+			
+			echo  $result->rowCount;
+  }
+
     /**
      * Updates a particular model.
      * If update is successful, the browser will be redirected to the 'view' page.

@@ -23,7 +23,8 @@
 /assets/19031d9d/plugins/image_edit.html
 /assets/**
 .idea/**
-
+/tools/composer.lock
+composer.lock
 composer.phar
 /vendor/*
 /tools/vendor/*

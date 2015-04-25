@@ -95,7 +95,7 @@ if (isset($_GET['viewFrom'])) {
         $("a.active").parents('li').css("property", "value");
 
         $("#fileuploader2").uploadFile({
-            url: "<?php echo Yii::app()->createUrl('site/upload&id=' . $this->id . '&companyId=' . $dataId . '&actionId=' . $this->action->id); ?>",
+            url: "<?php echo Yii::app()->createUrl('site/upload&id=user&companyId=' . $dataId . '&actionId=' . $this->action->id); ?>",
             allowedTypes: "png,jpg,jpeg",
             fileName: "myfile2",
 			dragDropContainerClass: "ajax-upload-dragdrop2",

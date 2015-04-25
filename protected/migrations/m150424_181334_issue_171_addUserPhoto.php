@@ -5,15 +5,24 @@ class m150424_181334_issue_171_addUserPhoto extends CDbMigration
 	public function up()
 	{
 		
-		  // Fetch the table schema
-		  $table = 'user';
-		  $column = 'photo';
-		  $type='BIGINT( 20 )';
-		  $table_to_check = Yii::app()->db->schema->getTable($table);
-		  if ( ! isset( $table_to_check->columns[$column] )) {
-			$this->addColumn($table, $column, $type);
-		  }
-		
+		 try {
+
+            $db = Yii::app()->db;
+            /* update */
+            $checkIfColumnExists = $db->createCommand("SHOW COLUMNS FROM `user` LIKE 'photo' ");
+            $result = $checkIfColumnExists->query();
+			
+			  if ($result->rowCount == 0) {
+                $sql = 'ALTER TABLE  `user` ADD  `photo` BIGINT( 20 ) NOT NULL';
+                $db->createCommand($sql)->execute();
+			  }
+			
+		 return true;
+        } catch (Exception $ex) {
+            echo 'ERROR IN PATCH 171 PATCHER';
+            return false;
+        }	
+			
 	}
 
 	public function down()

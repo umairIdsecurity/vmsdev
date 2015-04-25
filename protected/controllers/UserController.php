@@ -33,6 +33,7 @@ class UserController extends Controller {
                     'CheckEmailIfUnique',
                     'GetTenantAgentAjax',
                     'GetTenantOrTenantAgentCompany',
+					'AddColumn',
                     'GetTenantWorkstation', 'GetTenantAgentWorkstation','getCompanyOfTenant'),
                 'users' => array('@'),
             ),

@@ -1,10 +1,9 @@
 <?php
 
-class m150424_181334_issue_171_addUserPhoto extends CDbMigration
+class m150425_081700_issue_170_addPhoTotoUser extends CDbMigration
 {
 	public function up()
 	{
-		
 		 try {
 
             $db = Yii::app()->db;
@@ -19,15 +18,14 @@ class m150424_181334_issue_171_addUserPhoto extends CDbMigration
 			
 		 return true;
         } catch (Exception $ex) {
-            echo 'ERROR IN PATCH 171 PATCHER';
+            echo 'ERROR IN PATCH 170 PATCHER';
             return false;
         }	
-			
 	}
 
 	public function down()
 	{
-		 try {
+		try {
 
             $db = Yii::app()->db;
             /* update */
@@ -41,7 +39,7 @@ class m150424_181334_issue_171_addUserPhoto extends CDbMigration
 			
 		 return true;
         } catch (Exception $ex) {
-            echo 'ERROR IN PATCH 171 PATCHER';
+            echo 'ERROR IN PATCH 170 PATCHER';
             return false;
         }	
 	}

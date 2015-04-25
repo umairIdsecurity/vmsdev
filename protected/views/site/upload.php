@@ -49,4 +49,27 @@ if (isset($_FILES["myfile"])) {
     echo $ret;
     //echo json_encode($ret);
 }
+
+
+if (isset($_FILES["myfile2"])) {
+    //$ret = array();
+
+    $error = $_FILES["myfile2"]["error"];
+    if (!is_array($_FILES["myfile2"]["name"])) { //single file
+        $fileName = $_FILES["myfile2"]["name"];
+        $uniqueFileName = $usernameHash . '-' . time() . ".jpg";
+        $path = "uploads" . $folderKey . $uniqueFileName;
+        move_uploaded_file($_FILES["myfile2"]["tmp_name"], $output_dir . $uniqueFileName);
+        //save in database
+        $connection = Yii::app()->db;
+        $command = $connection->createCommand('INSERT INTO `photo` '
+                . '(`filename`, `unique_filename`, `relative_path`) VALUES ("' . $fileName . '","' . $uniqueFileName . '","' . $path . '" )');
+        $command->query();
+        
+            $ret = Yii::app()->db->lastInsertID;
+       
+    }
+    echo $ret;
+    //echo json_encode($ret);
+}
 ?> 

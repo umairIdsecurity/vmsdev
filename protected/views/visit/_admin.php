@@ -10,6 +10,8 @@
 $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'visit-grid',
     'dataProvider' => $model->search(),
+    'enableSorting' => false,
+    //'hideHeader'=>true,
     'filter' => $model,
     'afterAjaxUpdate' => "
     function(id, data) {
@@ -21,7 +23,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name'=>'visitor',
             'value'=>'getVisitorFullName($data->visitor)',
-            
+            'filter'=>CHtml::activeTextField($model, 'visitor', array('placeholder'=>'Visitor')),
         ),
         array(
             'name' => 'card_type',
@@ -36,8 +38,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' => 'reason',
             'value' => 'VisitReason::model()->findByPk($data->reason)->reason',
-            'filter' => CHtml::listData(VisitReason::model()->findAll(array('order' => 'reason ASC')), 'id', 'reason'),
-            
+            'filter' => getVisitReason(),
         ),
         array(
             'name' => 'visitor_status',
@@ -74,6 +75,12 @@ $this->widget('zii.widgets.grid.CGridView', array(
 function getVisitorFullName($id){
     $visitor =Visitor::model()->findByPk($id);
     return $visitor->first_name.' '.$visitor->last_name;
+}
+
+function getVisitReason(){
+    $data = CHtml::listData(VisitReason::model()->findAll(array('order' => 'reason ASC')), 'id', 'reason');
+    $data=array(""=>'Reason')+$data;
+    return $data;
 }
 
 

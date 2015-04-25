@@ -129,7 +129,9 @@ if ($this->action->id == 'update') {
 
         
 
-        <tr><td><table style="margin-left:70px;width:120px;margin-top:10px;"><td class="ico1" width="40">&nbsp;</td><td class="ico3" width="40">&nbsp;</td><td class="ico2" width="40">&nbsp;</td><table><td></tr>
+        <tr><td><table style="margin-left:70px;width:120px;margin-top:10px;">
+           <tr><td class="ico1" width="40">&nbsp;</td><td class="ico3" width="40">&nbsp;</td><td class="ico2" width="40">&nbsp;</td>
+           </tr></table><td></tr>
 
             <tr>
 

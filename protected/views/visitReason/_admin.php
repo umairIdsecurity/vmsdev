@@ -11,6 +11,8 @@
 $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'visit-reason-grid',
     'dataProvider' => $model->search(),
+    'enableSorting' => false,
+    'hideHeader'=>true,
     'filter' => $model,
     'afterAjaxUpdate' => "
     function(id, data) {
@@ -18,7 +20,10 @@ $this->widget('zii.widgets.grid.CGridView', array(
         $('th > .desc').append('<div></div>');
     }",
     'columns' => array(
-        'reason',
+        array(
+            'name' => 'reason',
+            'filter'=>CHtml::activeTextField($model, 'reason', array('placeholder'=>'Reason'))
+        ),
         array(
             'header' => 'Actions',
             'class' => 'CButtonColumn',

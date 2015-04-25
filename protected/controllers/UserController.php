@@ -33,7 +33,6 @@ class UserController extends Controller {
                     'CheckEmailIfUnique',
                     'GetTenantAgentAjax',
                     'GetTenantOrTenantAgentCompany',
-					'AddColumn',
                     'GetTenantWorkstation', 'GetTenantAgentWorkstation','getCompanyOfTenant'),
                 'users' => array('@'),
             ),
@@ -86,26 +85,6 @@ class UserController extends Controller {
             'model' => $model,
         ));
     }
-
-  public function actionAddColumn() {
-  
-     $db = Yii::app()->db;
-            /* update */
-            $checkIfColumnExists = $db->createCommand("SHOW COLUMNS FROM `user` LIKE 'photo' ");
-            $result = $checkIfColumnExists->query();
-			
-			echo  $result->rowCount;
-            
-              if ($result->rowCount == 0) {
-                $sql = 'ALTER TABLE  `user` ADD  `photo` BIGINT( 20 ) NOT NULL';
-                $db->createCommand($sql)->execute();
-			  }
-			  
-			   $checkIfColumnExists = $db->createCommand("SHOW COLUMNS FROM `user` LIKE 'photo' ");
-            $result = $checkIfColumnExists->query();
-			
-			echo  $result->rowCount;
-  }
 
     /**
      * Updates a particular model.

@@ -11,6 +11,8 @@
 $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'visitor-type-grid',
     'dataProvider' => $model->search(),
+    'enableSorting' => false,
+    'hideHeader'=>true,
     'filter' => $model,
     'afterAjaxUpdate' => "
     function(id, data) {
@@ -18,7 +20,10 @@ $this->widget('zii.widgets.grid.CGridView', array(
         $('th > .desc').append('<div></div>');
     }",
     'columns' => array(
-        'name',
+        array(
+            'name' => 'name',
+            'filter'=>CHtml::activeTextField($model, 'name', array('placeholder'=>'Name')),
+        ),
         array(
             'header' => 'Actions',
             'class' => 'CButtonColumn',

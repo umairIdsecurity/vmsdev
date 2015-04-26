@@ -10,6 +10,8 @@
 $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'visitor-grid',
     'dataProvider' => $model->search(),
+    'enableSorting' => false,
+    'hideHeader'=>true,
     'filter' => $model,
     'afterAjaxUpdate' => "
     function(id, data) {
@@ -17,10 +19,23 @@ $this->widget('zii.widgets.grid.CGridView', array(
         $('th > .desc').append('<div></div>');
     }",
     'columns' => array(
-        'first_name',
-        'last_name',
-        'email',
-        'contact_number',
+        array(
+            'name' => 'first_name',
+            'filter'=>CHtml::activeTextField($model, 'first_name', array('placeholder'=>'First Name')),
+        ),
+        array(
+            'name' => 'last_name',
+            'filter'=>CHtml::activeTextField($model, 'last_name', array('placeholder'=>'Last Name')),
+        ),
+        array(
+            'name' => 'email',
+            'filter'=>CHtml::activeTextField($model, 'email', array('placeholder'=>'Email Address')),
+        ),
+        array(
+            'name' => 'contact_number',
+            'filter'=>CHtml::activeTextField($model, 'contact_number', array('placeholder'=>'Mobile Number')),
+        ),
+
         array(
             'name' => 'id',
             'type' => 'raw',

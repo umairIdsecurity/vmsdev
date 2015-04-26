@@ -18,6 +18,7 @@
 class CardType extends CActiveRecord {
 
     public static $CARD_TYPE_LIST = array(
+        ''=>'Card Type',
         1 => 'Same Day Visitor',
         2 => 'Multi Day Visitor',
     );

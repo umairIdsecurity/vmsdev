@@ -42,7 +42,6 @@ class User extends VmsActiveRecord {
     public $birthdayMonth;
     public $birthdayYear;
     public $birthdayDay;
-	public $password_option;
     private $_companyname;
     public static $USER_ROLE_LIST = array(
         5 => 'Super Administrator',
@@ -54,7 +53,7 @@ class User extends VmsActiveRecord {
         10 => 'Visitor',
     );
     public static $USER_TYPE_LIST = array(
-        ""=>'User Type',
+        ''=>'User Type',
         1 => 'Internal',
         2 => 'External',
     );
@@ -85,24 +84,24 @@ class User extends VmsActiveRecord {
                 array('email', 'filter', 'filter' => 'trim'),
                 array('email', 'email'),
                 array('role,company', 'required', 'message' => 'Please select a {attribute}'),
-                array('tenant, tenant_agent', 'default', 'setOnEmpty' => true, 'value' => null),
+                array('tenant, tenant_agent, photo', 'default', 'setOnEmpty' => true, 'value' => null),
                 // The following rule is used by search().
                 // @todo Please remove those attributes that should not be searched.
-                array('id, companyname,first_name, last_name,email,is_deleted ,contact_number, date_of_birth, company, department, position, staff_id, notes, role_id, user_type_id, user_status_id, created_by', 'safe', 'on' => 'search'),
+                array('id, companyname,first_name, last_name,email,photo,is_deleted ,contact_number, date_of_birth, company, department, position, staff_id, notes, role_id, user_type_id, user_status_id, created_by', 'safe', 'on' => 'search'),
             );
         } else {
             return array(
-                array('first_name, last_name, email, contact_number, user_type,is_deleted', 'required'),
+                array('first_name, last_name, email, contact_number, user_type,is_deleted,password', 'required'),
                 array('company, role, user_type, user_status, created_by', 'numerical', 'integerOnly' => true),
                 array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
-                array('date_of_birth, notes,tenant,tenant_agent,birthdayYear,birthdayMonth,birthdayDay,password', 'safe'),
+                array('date_of_birth, notes,tenant,tenant_agent,birthdayYear,birthdayMonth,birthdayDay', 'safe'),
                 array('email', 'filter', 'filter' => 'trim'),
                 array('email', 'email'),
                 array('role,company', 'required', 'message' => 'Please select a {attribute}'),
-                array('tenant, tenant_agent', 'default', 'setOnEmpty' => true, 'value' => null),
+                array('tenant, tenant_agent,photo','default', 'setOnEmpty' => true, 'value' => null),
                 // The following rule is used by search().
                 // @todo Please remove those attributes that should not be searched.
-                array('id, first_name, companyname,last_name,email,is_deleted,assignedWorkstations,contact_number, date_of_birth, company, department, position, staff_id, notes, role_id, user_type_id, user_status_id, created_by', 'safe', 'on' => 'search'),
+                array('id, first_name, companyname,last_name,email,photo,is_deleted,assignedWorkstations,contact_number, date_of_birth, company, department, position, staff_id, notes, role_id, user_type_id, user_status_id, created_by', 'safe', 'on' => 'search'),
             );
         }
     }
@@ -144,6 +143,7 @@ class User extends VmsActiveRecord {
             'userTypes' => array(self::HAS_MANY, 'UserType', 'created_by'),
             'workstation' => array(self::HAS_MANY, 'user_workstation', 'id'),
             'userWorkstation1' => array(self::MANY_MANY, 'Workstation', 'user_workstation(user, workstation)'),
+			'photo1' => array(self::BELONGS_TO, 'Photo', 'photo'),
         );
     }
 
@@ -172,6 +172,7 @@ class User extends VmsActiveRecord {
             'tenant' => 'Tenant',
             'tenant_agent' => 'Tenant Agent',
             'repeatpassword' => 'Repeat Password',
+			 'photo' => 'Photo',
         );
     }
 
@@ -201,6 +202,7 @@ class User extends VmsActiveRecord {
         $criteria->compare('department', $this->department, true);
         $criteria->compare('position', $this->position, true);
         $criteria->compare('staff_id', $this->staff_id, true);
+		$criteria->compare('photo', $this->photo, true);
         $criteria->compare('notes', $this->notes, true);
         $criteria->compare('role', $this->role);
         $criteria->compare('user_type', $this->user_type);

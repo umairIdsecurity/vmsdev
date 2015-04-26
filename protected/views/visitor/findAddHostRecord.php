@@ -7,7 +7,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
     <!-- Nav tabs -->
     
          <div style="float:left;width:280px">
-    <div class="visitor-title-host" style="cursor:pointer;color:#2f96b4;font-size: 18px;font-weight: bold;margin: 5px 0">Add Host</div>
+    <div class="visitor-title-host" style="cursor:pointer;color:#2f96b4;font-size: 18px;font-weight: bold;margin: 5px 0;padding-left: 85px;">Add Host</div>
     </div>
         
         
@@ -110,13 +110,30 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                     <input type="text" id="hostEmailIsUnique" value="0"/>
                     
                     <div>
-                        <table  id="addhost-table">
-                            <tr <?php
-                            if ($session['role'] != Roles::ROLE_SUPERADMIN) {
-                                echo "style='display:none;'";
-                            }
-                            ?>>
-                                <td id="hostTenantRow"><?php echo $form->labelEx($userModel, 'tenant'); ?><br>
+                    
+                    <table style="width:300px;float:left;">
+                            <tr> 
+
+                                <td style="width:300px;">
+                                   <!-- <label for="Visitor_Add_Photo" style="margin-left:27px;">Add  Photo</label><br>-->
+
+                                    <input type="hidden" id="Host_photo" name="User[photo]">
+                                    <div class="photoDiv" style='display:none;'>
+                                        <img id='photoPreview2' src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png" style='display:none;'/>
+                                    </div>
+                                    <?php require_once(Yii::app()->basePath . '/draganddrop/host.php'); ?>
+                                    <div id="photoErrorMessage" class="errorMessage" style="display:none;  margin-top: 200px;margin-left: 71px !important;position: absolute;">Please upload a photo.</div>
+                                </td>
+                                </tr>
+                               
+                                <tr><td>&nbsp;</td></tr>
+                               
+                               
+                              </table>
+                        <table  id="addhost-table" style="width: 492px;float: left;">
+                              
+                                <tr <?php if ($session['role'] != Roles::ROLE_SUPERADMIN){ echo "style='display:none;'";} ?> >
+                                  <td id="hostTenantRow">
 
                                     <select id="User_tenant" onchange="populateHostTenantAgentAndCompanyField()" name="User[tenant]" disabled >
                                         <option value='' selected>Please select a tenant</option>
@@ -136,7 +153,9 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                                                 ?>
                                     </select><?php echo "<br>" . $form->error($userModel, 'tenant'); ?>
                                 </td>
-                                <td id="hostTenantAgentRow"><?php echo $form->labelEx($userModel, 'tenant_agent'); ?><br>
+                                </tr>
+                                <tr <?php if ($session['role'] != Roles::ROLE_SUPERADMIN){ echo "style='display:none;'";} ?> >
+                                <td id="hostTenantAgentRow">
 
                                     <select id="User_tenant_agent" name="User[tenant_agent]" onchange="populateHostCompanyWithSameTenantAndTenantAgent()" disabled>
                                         <?php
@@ -152,64 +171,65 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
 
                             <tr>
                                 <td>
-                                    <?php echo $form->labelEx($userModel, 'first_name'); ?><br>
-                                    <?php echo $form->textField($userModel, 'first_name', array('size' => 50, 'maxlength' => 50)); ?>
+                                    <?php echo $form->textField($userModel, 'first_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'First Name')); ?> <span class="required">*</span>
                                     <?php echo "<br>" . $form->error($userModel, 'first_name'); ?>
                                 </td>
+                            </tr>  
+                            <tr>  
                                 <td>
-                                    <?php echo $form->labelEx($userModel, 'last_name'); ?><br>
-                                    <?php echo $form->textField($userModel, 'last_name', array('size' => 50, 'maxlength' => 50)); ?>
+                                    <?php echo $form->textField($userModel, 'last_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Last Name')); ?><span class="required">*</span>
                                     <?php echo "<br>" . $form->error($userModel, 'last_name'); ?>
                                 </td>
+                             </tr>  
+                            <tr>     
                                 <td>
-
-                                    <?php echo $form->labelEx($userModel, 'department'); ?><br>
-                                    <?php echo $form->textField($userModel, 'department', array('size' => 50, 'maxlength' => 50)); ?>
+                                    <?php echo $form->textField($userModel, 'department', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Department')); ?>
                                     <?php echo "<br>" . $form->error($userModel, 'deprtment'); ?>
                                 </td>
                             </tr>
 
                             <tr>
                                 <td>
-                                    <?php echo $form->labelEx($userModel, 'staff_id'); ?><br>
-                                    <?php echo $form->textField($userModel, 'staff_id', array('size' => 50, 'maxlength' => 50)); ?>
+                                 <?php echo $form->textField($userModel, 'staff_id', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Staff ID')); ?>
                                     <?php echo "<br>" . $form->error($userModel, 'staff_id'); ?>
                                 </td>
-
+                           </tr>  
+                            <tr>  
                                 <td width="35%">
-                                    <?php echo $form->labelEx($userModel, 'email'); ?><br>
-                                    <?php echo $form->textField($userModel, 'email', array('size' => 50, 'maxlength' => 50)); ?>
+                                    <?php echo $form->textField($userModel, 'email', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Email Address')); ?><span class="required">*</span>
                                     <?php echo "<br>" . $form->error($userModel, 'email',array('style'=>'text-transform:none;')); ?>
                                     <div style="" id="User_email_em_" class="errorMessage errorMessageEmail1" >A profile already exists for this email address.</div>
                                 </td>
+                            </tr>  
+                            <tr>      
                                 <td>
-                                    <?php echo $form->labelEx($userModel, 'contact_number'); ?><br>
-                                    <?php echo $form->textField($userModel, 'contact_number', array('size' => 50, 'maxlength' => 50)); ?>
+                                    <?php echo $form->textField($userModel, 'contact_number', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Contact No. ')); ?><span class="required">*</span>
                                     <?php echo "<br>" . $form->error($userModel, 'contact_number'); ?>
                                 </td>
                             </tr>
-                            <tr >
+                            <tr>
                                 <td class="hidden">
                                     <label for="User_password">Password <span class="required">*</span></label><br>
                                     <input type="password" id="User_password" name="User[password]" value="(NULL)">			
                                     <?php echo "<br>" . $form->error($userModel, 'password'); ?>
                                 </td>
-
+                             </tr>  
+                            <tr>  
                                 <td class="hidden">
                                     <label for="User_repeatpassword">Repeat Password <span class="required">*</span></label><br>
                                     <input type="password" id="User_repeatpassword" name="User[repeatpassword]" onChange="checkPasswordMatch();" value="(NULL)"/>			
                                     <div style='font-size:10px;color:red;font-size:0.9em;display:none;margin-bottom:-20px;' id="passwordErrorMessage">New Password does not match with <br>Repeat New Password. </div>
                                     <?php echo "<br>" . $form->error($userModel, 'repeatpassword'); ?>
                                 </td>
-
+                             </tr>  
+                            <tr>  
                                 <td id="hostCompanyRow" <?php
                                 if ($session['role'] == Roles::ROLE_AGENT_ADMIN || $session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles::ROLE_STAFFMEMBER) {
                                     echo "style='display:none;'";
                                 }
                                 ?>>
 
-                                    <?php echo $form->labelEx($userModel, 'company'); ?><br>
-                                    <select id="User_company" disabled name="User[company]" >
+                                     <select id="User_company" disabled name="User[company]" >
                                         <option value=''>Please select a company</option>
                                         <?php
                                         if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
@@ -217,15 +237,25 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                                         }
                                         ?>
                                     </select>
-
+                                    <span class="required">*</span>
                                     <?php echo "<br>" . $form->error($userModel, 'company'); ?>
                                 </td>
+                             </tr>  
+                            <tr>     
                                 <td >
                                     <input name="User[role]" id="User_role" value="<?php echo Roles::ROLE_STAFFMEMBER ?>"/>
                                     <input name="User[user_type]" id="User_user_type" value="<?php echo UserType::USERTYPE_INTERNAL; ?>"/>
                                 </td>
                             </tr>
+                            
+                           <tr>     
+                                <td > 
+                             <input type="button" class="neutral visitor-backBtn btnBackTab3" id="btnBackTab3" value="Back"/>
+                        <input type="button" id="clicktabC" value="Save and Continue" style="display:none;"/>
 
+                        <input type="submit" value="Save and Continue" name="yt0" id="submitFormHost" class="actionForward"/>
+                                 </td>
+                            </tr>
                         </table>
 
                     </div>
@@ -247,27 +277,50 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                                  'htmlOptions' => array("name" => "staffmember-host-form"),
                              ));
                              ?>
-                        <table  id="currentHostDetails">
+                              <table style="width:300px;float:left;">
+                            <tr> 
+
+                                <td style="width:300px;">
+                                   <!-- <label for="Visitor_Add_Photo" style="margin-left:27px;">Add  Photo</label><br>-->
+
+                                    <input type="hidden" id="Host_photo3" name="User[photo]" >
+                                    <div class="photoDiv3" style='display:none;'>
+                                        <img id='photoPreview3' src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png" style='display:none;'/>
+                                    </div>
+                                    <?php require_once(Yii::app()->basePath . '/draganddrop/host3.php'); ?>
+                                    <div id="photoErrorMessage" class="errorMessage" style="display:none;  margin-top: 200px;margin-left: 71px !important;position: absolute;">Please upload a photo.</div>
+                                </td>
+                                </tr>
+                               
+                                <tr><td>&nbsp;</td></tr>
+                               
+                               
+                              </table>
+                        <table  id="currentHostDetails" style="width: 300px;  float: left;">
 
                             <tr>
                                 <td>
 
-                                    <?php echo $staffmemberform->labelEx($userStaffMemberModel, 'first_name'); ?><br>
+                                    
                                     <?php
-                                    echo $staffmemberform->textField($userStaffMemberModel, 'first_name', array(
+       echo $staffmemberform->textField($userStaffMemberModel, 'first_name', array(
                                         'size' => 50, 'maxlength' => 50, 'disabled' => 'disabled'
                                     ));
                                     ?>
                                     <?php echo "<br>" . $staffmemberform->error($userStaffMemberModel, 'first_name'); ?>
                                 </td>
+                                  <tr>
+                                </tr>
                                 <td>
-                                    <?php echo $staffmemberform->labelEx($userStaffMemberModel, 'last_name'); ?><br>
+                                  
                                     <?php echo $staffmemberform->textField($userStaffMemberModel, 'last_name', array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled')); ?>
                                     <?php echo "<br>" . $staffmemberform->error($userStaffMemberModel, 'last_name'); ?>
                                 </td>
+                                  <tr>
+                                </tr>
                                 <td>
 
-                                    <?php echo $staffmemberform->labelEx($userStaffMemberModel, 'department'); ?><br>
+                                  
                                     <?php echo $staffmemberform->textField($userStaffMemberModel, 'department', array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled')); ?>
                                     <?php echo "<br>" . $staffmemberform->error($userStaffMemberModel, 'department'); ?>
                                 </td>
@@ -275,19 +328,22 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
 
                             <tr>
                                 <td>
-                                    <?php echo $staffmemberform->labelEx($userStaffMemberModel, 'staff_id'); ?><br>
+                                    
                                     <?php echo $staffmemberform->textField($userStaffMemberModel, 'staff_id', array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled')); ?>
                                     <?php echo "<br>" . $staffmemberform->error($userStaffMemberModel, 'staff_id'); ?>
                                 </td>
-
+                                   <tr>
+                                </tr>
                                 <td>
-                                    <?php echo $staffmemberform->labelEx($userStaffMemberModel, 'email'); ?><br>
+                                  
                                     <?php echo $staffmemberform->textField($userStaffMemberModel, 'email', array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled')); ?>
                                     <?php echo "<br>" . $staffmemberform->error($userStaffMemberModel, 'email'); ?>
                                     <div style="" id="User_email_em_" class="errorMessage errorMessageEmail1" >A profile already exists for this email address.</div>
                                 </td>
+                                  <tr>
+                                </tr>
                                 <td>
-                                    <?php echo $staffmemberform->labelEx($userStaffMemberModel, 'contact_number'); ?><br>
+                                  
                                     <?php echo $staffmemberform->textField($userStaffMemberModel, 'contact_number', array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled')); ?>
                                     <?php echo "<br>" . $staffmemberform->error($userStaffMemberModel, 'contact_number'); ?>
                                 </td>
@@ -352,6 +408,127 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                             $(".host-AddBtn").hide();
                             $("#addhostTab").click();
                         });
+						
+												
+						
+						  $('#photoCropPreview2').imgAreaSelect({
+            handles: true,
+            onSelectEnd: function(img, selection) {
+                $("#cropPhotoBtn2").show();
+                $("#x12").val(selection.x1);
+                $("#x22").val(selection.x2);
+                $("#y12").val(selection.y1);
+                $("#y22").val(selection.y2);
+                $("#width2").val(selection.width);
+                $("#height2").val(selection.height);
+            }
+        });
+/*Added by farhat aziz for upload host photo*/
+        $("#cropPhotoBtn2").click(function(e) {
+            e.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: '<?php echo Yii::app()->createUrl('visitor/AjaxCrop'); ?>',
+                data: {
+                    x1: $("#x12").val(),
+                    x2: $("#x22").val(),
+                    y1: $("#y12").val(),
+                    y2: $("#y22").val(),
+                    width: $("#width2").val(),
+                    height: $("#height2").val(),
+                    imageUrl: $('#photoCropPreview2').attr('src').substring(1, $('#photoCropPreview2').attr('src').length),
+                    photoId: $('#Host_photo').val()
+                },
+                dataType: 'json',
+                success: function(r) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '<?php echo Yii::app()->createUrl('photo/GetPathOfCompanyLogo&id='); ?>' + $('#Host_photo').val(),
+                        dataType: 'json',
+                        success: function(r) {
+
+                            $.each(r.data, function(index, value) {
+                                document.getElementById('photoPreview2').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+                                document.getElementById('photoCropPreview2').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+                                $(".ajax-upload-dragdrop2").css("background", "url(<?php echo Yii::app()->request->baseUrl. '/'; ?>" + value.relative_path + ") no-repeat center top");
+                                $(".ajax-upload-dragdrop2").css({
+                                    "background-size": "137px 190px"
+                                });
+                            });
+                        }
+                    });
+
+                    $("#closeCropPhoto2").click();
+                    var ias = $('#photoCropPreview2').imgAreaSelect({instance: true});
+                    ias.cancelSelection();
+                }
+            });
+        });
+
+						
+						
+						/*			photo 3			*/
+						
+						
+						
+						  $('#photoCropPreview3').imgAreaSelect({
+            handles: true,
+            onSelectEnd: function(img, selection) {
+                $("#cropPhotoBtn3").show();
+                $("#x13").val(selection.x1);
+                $("#x23").val(selection.x2);
+                $("#y13").val(selection.y1);
+                $("#y23").val(selection.y2);
+                $("#width3").val(selection.width);
+                $("#height3").val(selection.height);
+            }
+        });
+/*Added by farhat aziz for upload host photo*/
+        $("#cropPhotoBtn3").click(function(e) {
+            e.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: '<?php echo Yii::app()->createUrl('visitor/AjaxCrop'); ?>',
+                data: {
+                    x1: $("#x13").val(),
+                    x2: $("#x23").val(),
+                    y1: $("#y13").val(),
+                    y2: $("#y23").val(),
+                    width: $("#width3").val(),
+                    height: $("#height3").val(),
+                    imageUrl: $('#photoCropPreview3').attr('src').substring(1, $('#photoCropPreview3').attr('src').length),
+                    photoId: $('#Host_photo3').val()
+                },
+                dataType: 'json',
+                success: function(r) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '<?php echo Yii::app()->createUrl('photo/GetPathOfCompanyLogo&id='); ?>' + $('#Host_photo3').val(),
+                        dataType: 'json',
+                        success: function(r) {
+
+                            $.each(r.data, function(index, value) {
+                                document.getElementById('photoPreview3').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+                                document.getElementById('photoCropPreview3').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+                                $(".ajax-upload-dragdrop3").css("background", "url(<?php echo Yii::app()->request->baseUrl. '/'; ?>" + value.relative_path + ") no-repeat center top");
+                                $(".ajax-upload-dragdrop3").css({
+                                    "background-size": "137px 190px"
+                                });
+                            });
+                        }
+                    });
+
+                    $("#closeCropPhoto3").click();
+                    var ias = $('#photoCropPreview3').imgAreaSelect({instance: true});
+                    ias.cancelSelection();
+                }
+            });
+        });
+
+						
+						
+/*			end of module			*/
+						
                     });
 
                     function findHostRecord() {
@@ -445,3 +622,45 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
     </div>
 
 </div>
+
+
+<!-- PHOTO CROP-->
+<div id="light2" class="white_content">
+    <div style="text-align:right;">
+        <input type="button" class="btn btn-success" id="cropPhotoBtn2" value="Crop" style="">
+        <input type="button" id="closeCropPhoto2" onclick="document.getElementById('light2').style.display = 'none';
+                document.getElementById('fade2').style.display = 'none'" value="x" class="btn btn-danger">
+    </div>
+    <br>
+    <img id="photoCropPreview2" src="">
+
+</div>
+<div id="fade2" class="black_overlay"></div>
+
+<input type="hidden" id="x12"/>
+<input type="hidden" id="x22"/>
+<input type="hidden" id="y12"/>
+<input type="hidden" id="y22"/>
+<input type="hidden" id="width2"/>
+<input type="hidden" id="height2"/>
+
+
+<!-- PHOTO CROP-->
+<div id="light3" class="white_content">
+    <div style="text-align:right;">
+        <input type="button" class="btn btn-success" id="cropPhotoBtn3" value="Crop" style="">
+        <input type="button" id="closeCropPhoto3" onclick="document.getElementById('light3').style.display = 'none';
+                document.getElementById('fade3').style.display = 'none'" value="x" class="btn btn-danger">
+    </div>
+    <br>
+    <img id="photoCropPreview3" src="">
+
+</div>
+<div id="fade3" class="black_overlay"></div>
+
+<input type="hidden" id="x13"/>
+<input type="hidden" id="x23"/>
+<input type="hidden" id="y13"/>
+<input type="hidden" id="y23"/>
+<input type="hidden" id="width3"/>
+<input type="hidden" id="height3"/>

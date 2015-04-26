@@ -12,6 +12,7 @@ switch ($controllerId) {
         break;
     case 'visitor':
     case 'visit':
+	case 'user':
         $folderKey = '/visitor/';
         break;
     default:
@@ -36,7 +37,7 @@ if (isset($_FILES["myfile"])) {
                 . '(`filename`, `unique_filename`, `relative_path`) VALUES ("' . $fileName . '","' . $uniqueFileName . '","' . $path . '" )');
         $command->query();
         //update company
-        if ($action == 'update' && $controllerId == 'visitor') {
+        if ($action == 'update' && ($controllerId == 'visitor' || $controllerId == 'user') ) {
             $ret = Yii::app()->db->lastInsertID;
         } elseif ($action == 'update') {
             $update = $connection->createCommand('update company set logo="' . Yii::app()->db->lastInsertID . '" where id="' . $_GET['companyId'] . '"');
@@ -45,6 +46,29 @@ if (isset($_FILES["myfile"])) {
         } else if ($action == 'create' || $action == 'addvisitor' || $action == 'detail' || $action == 'customisation') {
             $ret = Yii::app()->db->lastInsertID;
         }
+    }
+    echo $ret;
+    //echo json_encode($ret);
+}
+
+
+if (isset($_FILES["myfile2"])) {
+    //$ret = array();
+
+    $error = $_FILES["myfile2"]["error"];
+    if (!is_array($_FILES["myfile2"]["name"])) { //single file
+        $fileName = $_FILES["myfile2"]["name"];
+        $uniqueFileName = $usernameHash . '-' . time() . ".jpg";
+        $path = "uploads" . $folderKey . $uniqueFileName;
+        move_uploaded_file($_FILES["myfile2"]["tmp_name"], $output_dir . $uniqueFileName);
+        //save in database
+        $connection = Yii::app()->db;
+        $command = $connection->createCommand('INSERT INTO `photo` '
+                . '(`filename`, `unique_filename`, `relative_path`) VALUES ("' . $fileName . '","' . $uniqueFileName . '","' . $path . '" )');
+        $command->query();
+        
+            $ret = Yii::app()->db->lastInsertID;
+       
     }
     echo $ret;
     //echo json_encode($ret);

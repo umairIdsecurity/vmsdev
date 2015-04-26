@@ -24,8 +24,10 @@
 /assets/**
 .idea/**
 composer.phar
-/vendor/*
-/tools/vendor/*
-/build/*
+/vendor/**
+/tools/vendor/**
+/build/**
 /protected/runtime/*.log*
 company_css/**
+.DS_Store
+cache.properties

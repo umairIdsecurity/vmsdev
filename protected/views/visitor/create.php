@@ -376,12 +376,24 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
             data: hostId,
             success: function(r) {
                 $.each(r.data, function(index, value) {
-                    $("#staffmember-host-form #User_first_name").val(value.first_name);
-                    $("#staffmember-host-form #User_last_name").val(value.last_name);
-                    $("#staffmember-host-form #User_department").val(value.department);
-                    $("#staffmember-host-form #User_staff_id").val(value.staff_id);
-                    $("#staffmember-host-form #User_email").val(value.email);
-                    $("#staffmember-host-form #User_contact_number").val(value.contact_number);
+                   if(index == "photo"){
+                        $("#Host_photo3").val(value.id);
+                        $(".ajax-upload-dragdrop3").css("background", "url(<?php echo Yii::app()->request->baseUrl."/"; ?>" + value.relative_path + ") no-repeat center top");
+                        $(".ajax-upload-dragdrop3").css({"background-size": "137px 190px"});
+                        logo.src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+                        document.getElementById('photoCropPreview3').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+                        $("#cropImageBtn3").show();
+                     
+                     }
+                     else
+                     {
+                          $("#staffmember-host-form #User_first_name").val(value.first_name);
+                          $("#staffmember-host-form #User_last_name").val(value.last_name);
+                          $("#staffmember-host-form #User_department").val(value.department);
+                          $("#staffmember-host-form #User_staff_id").val(value.staff_id);
+                          $("#staffmember-host-form #User_email").val(value.email);
+                          $("#staffmember-host-form #User_contact_number").val(value.contact_number);
+                     }
                 });
             }
         });

@@ -112,7 +112,7 @@ date_default_timezone_set('Asia/Manila');
         </div>
 
     <?php } ?>
-
+<input type="hidden" id="Host_attach_photo" value="0" name="User[photo]"/>
     <div class="row buttons">
         <input type="submit" id="submitVisitForm" value="Add">
         <input type="button" value="Save and Continue" id="populateVisitFormFields" >

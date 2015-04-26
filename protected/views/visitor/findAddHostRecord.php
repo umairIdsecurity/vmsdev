@@ -396,6 +396,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                                 $("#hostId").val('<?php echo $session['id']; ?>');
                             }
                             $("#Host_attach_photo").val($("#Host_photo3").val());
+							
                             $("#search-host").val('staff');
                             $("#clicktabB2").click();
                         });

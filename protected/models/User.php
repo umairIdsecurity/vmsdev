@@ -42,6 +42,7 @@ class User extends VmsActiveRecord {
     public $birthdayMonth;
     public $birthdayYear;
     public $birthdayDay;
+	public $password_option;
     private $_companyname;
     public static $USER_ROLE_LIST = array(
         5 => 'Super Administrator',

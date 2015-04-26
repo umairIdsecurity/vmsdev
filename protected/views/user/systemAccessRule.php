@@ -19,12 +19,15 @@ $session = new CHttpSession;
 $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'user-access-grid',
     'dataProvider' => $model->search(),
+    'enableSorting' => false,
+    'hideHeader'=>true,
     'filter' => $model,
     'columns' => array(
         array(
             'name' => 'first_name',
             'header' => 'User',
             'value' => 'ucwords($data->first_name.\' \'.$data->last_name)',
+            'filter'=>CHtml::activeTextField($model, 'first_name', array('placeholder'=>'User')),
         // 'filter'=>'',
         ),
         array(
@@ -32,7 +35,11 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'value' => 'UserType::model()->getUserType($data->user_type)',
             'filter' => User::$USER_TYPE_LIST,
         ),
-        'email',
+        array(
+            'name' => 'email',
+            'filter'=>CHtml::activeTextField($model, 'email', array('placeholder'=>'Email Address')),
+        ),
+
         array(
             'header' => 'Action',
             'type' => 'raw',

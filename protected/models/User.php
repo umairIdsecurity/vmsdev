@@ -53,6 +53,7 @@ class User extends VmsActiveRecord {
         10 => 'Visitor',
     );
     public static $USER_TYPE_LIST = array(
+        ''=>'User Type',
         1 => 'Internal',
         2 => 'External',
     );

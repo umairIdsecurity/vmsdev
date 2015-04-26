@@ -13,6 +13,7 @@
 class VisitorStatus extends CActiveRecord
 {
     public static $VISITOR_STATUS_LIST = array(
+		''=>'Visitor Status',
         1 => 'Open',
         2 => 'Access Denied',
         3 => 'Save',

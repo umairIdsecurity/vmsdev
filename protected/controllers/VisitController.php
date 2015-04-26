@@ -580,7 +580,11 @@ class VisitController extends Controller {
     }
 
     public function actionGetVisitDetailsOfHost($id) {
-        $resultMessage['data'] = User::model()->findAllByPk($id);
+        $user = User::model()->findAllByPk($id);
+		$photo = Photo::model()->findAllByPk($user[0]->photo);
+		$resultMessage['data'] = $user;
+		$resultMessage['data']["photo"] = $photo[0];
+		  
         echo CJavaScript::jsonEncode($resultMessage);
         Yii::app()->end();
     }

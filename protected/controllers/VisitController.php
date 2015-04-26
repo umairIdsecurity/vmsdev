@@ -583,6 +583,7 @@ class VisitController extends Controller {
         $user = User::model()->findAllByPk($id);
 		$photo = Photo::model()->findAllByPk($user[0]->photo);
 		$resultMessage['data'] = $user;
+		if(isset($photo) && isset($photo[0]))
 		$resultMessage['data']["photo"] = $photo[0];
 		  
         echo CJavaScript::jsonEncode($resultMessage);

@@ -17,7 +17,6 @@ if (isset($_GET['id'])) {
 }
 
 $currentLoggedUserId = $session['id'];
-var_dump($session['tenant']);
 ?>
 <style type="text/css">
 #modalBody_gen {padding-top: 10px !important;height: 204px !important;}

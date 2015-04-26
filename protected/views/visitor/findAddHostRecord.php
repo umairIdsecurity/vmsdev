@@ -277,14 +277,33 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                                  'htmlOptions' => array("name" => "staffmember-host-form"),
                              ));
                              ?>
-                        <table  id="currentHostDetails">
+                              <table style="width:300px;float:left;">
+                            <tr> 
+
+                                <td style="width:300px;">
+                                   <!-- <label for="Visitor_Add_Photo" style="margin-left:27px;">Add  Photo</label><br>-->
+
+                                    <input type="hidden" id="Host_photo3" name="User[photo]" >
+                                    <div class="photoDiv3" style='display:none;'>
+                                        <img id='photoPreview3' src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png" style='display:none;'/>
+                                    </div>
+                                    <?php require_once(Yii::app()->basePath . '/draganddrop/host3.php'); ?>
+                                    <div id="photoErrorMessage" class="errorMessage" style="display:none;  margin-top: 200px;margin-left: 71px !important;position: absolute;">Please upload a photo.</div>
+                                </td>
+                                </tr>
+                               
+                                <tr><td>&nbsp;</td></tr>
+                               
+                               
+                              </table>
+                        <table  id="currentHostDetails" style="width: 300px;  float: left;">
 
                             <tr>
                                 <td>
 
-                                    <?php echo $staffmemberform->labelEx($userStaffMemberModel, 'first_name'); ?><br>
+                                    
                                     <?php
-                                    echo $staffmemberform->textField($userStaffMemberModel, 'first_name', array(
+       echo $staffmemberform->textField($userStaffMemberModel, 'first_name', array(
                                         'size' => 50, 'maxlength' => 50, 'disabled' => 'disabled'
                                     ));
                                     ?>
@@ -293,7 +312,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                                   <tr>
                                 </tr>
                                 <td>
-                                    <?php echo $staffmemberform->labelEx($userStaffMemberModel, 'last_name'); ?><br>
+                                  
                                     <?php echo $staffmemberform->textField($userStaffMemberModel, 'last_name', array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled')); ?>
                                     <?php echo "<br>" . $staffmemberform->error($userStaffMemberModel, 'last_name'); ?>
                                 </td>
@@ -301,7 +320,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                                 </tr>
                                 <td>
 
-                                    <?php echo $staffmemberform->labelEx($userStaffMemberModel, 'department'); ?><br>
+                                  
                                     <?php echo $staffmemberform->textField($userStaffMemberModel, 'department', array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled')); ?>
                                     <?php echo "<br>" . $staffmemberform->error($userStaffMemberModel, 'department'); ?>
                                 </td>
@@ -309,14 +328,14 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
 
                             <tr>
                                 <td>
-                                    <?php echo $staffmemberform->labelEx($userStaffMemberModel, 'staff_id'); ?><br>
+                                    
                                     <?php echo $staffmemberform->textField($userStaffMemberModel, 'staff_id', array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled')); ?>
                                     <?php echo "<br>" . $staffmemberform->error($userStaffMemberModel, 'staff_id'); ?>
                                 </td>
                                    <tr>
                                 </tr>
                                 <td>
-                                    <?php echo $staffmemberform->labelEx($userStaffMemberModel, 'email'); ?><br>
+                                  
                                     <?php echo $staffmemberform->textField($userStaffMemberModel, 'email', array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled')); ?>
                                     <?php echo "<br>" . $staffmemberform->error($userStaffMemberModel, 'email'); ?>
                                     <div style="" id="User_email_em_" class="errorMessage errorMessageEmail1" >A profile already exists for this email address.</div>
@@ -324,7 +343,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                                   <tr>
                                 </tr>
                                 <td>
-                                    <?php echo $staffmemberform->labelEx($userStaffMemberModel, 'contact_number'); ?><br>
+                                  
                                     <?php echo $staffmemberform->textField($userStaffMemberModel, 'contact_number', array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled')); ?>
                                     <?php echo "<br>" . $staffmemberform->error($userStaffMemberModel, 'contact_number'); ?>
                                 </td>
@@ -390,7 +409,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                             $("#addhostTab").click();
                         });
 						
-						
+												
 						
 						  $('#photoCropPreview2').imgAreaSelect({
             handles: true,
@@ -400,8 +419,8 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                 $("#x22").val(selection.x2);
                 $("#y12").val(selection.y1);
                 $("#y22").val(selection.y2);
-                $("#width").val(selection.width);
-                $("#height").val(selection.height);
+                $("#width2").val(selection.width);
+                $("#height2").val(selection.height);
             }
         });
 /*Added by farhat aziz for upload host photo*/
@@ -415,8 +434,8 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                     x2: $("#x22").val(),
                     y1: $("#y12").val(),
                     y2: $("#y22").val(),
-                    width: $("#width").val(),
-                    height: $("#height").val(),
+                    width: $("#width2").val(),
+                    height: $("#height2").val(),
                     imageUrl: $('#photoCropPreview2').attr('src').substring(1, $('#photoCropPreview2').attr('src').length),
                     photoId: $('#Host_photo').val()
                 },
@@ -446,6 +465,67 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
             });
         });
 
+						
+						
+						/*			photo 3			*/
+						
+						
+						
+						  $('#photoCropPreview3').imgAreaSelect({
+            handles: true,
+            onSelectEnd: function(img, selection) {
+                $("#cropPhotoBtn3").show();
+                $("#x13").val(selection.x1);
+                $("#x23").val(selection.x2);
+                $("#y13").val(selection.y1);
+                $("#y23").val(selection.y2);
+                $("#width3").val(selection.width);
+                $("#height3").val(selection.height);
+            }
+        });
+/*Added by farhat aziz for upload host photo*/
+        $("#cropPhotoBtn3").click(function(e) {
+            e.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: '<?php echo Yii::app()->createUrl('visitor/AjaxCrop'); ?>',
+                data: {
+                    x1: $("#x13").val(),
+                    x2: $("#x23").val(),
+                    y1: $("#y13").val(),
+                    y2: $("#y23").val(),
+                    width: $("#width3").val(),
+                    height: $("#height3").val(),
+                    imageUrl: $('#photoCropPreview3').attr('src').substring(1, $('#photoCropPreview3').attr('src').length),
+                    photoId: $('#Host_photo3').val()
+                },
+                dataType: 'json',
+                success: function(r) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '<?php echo Yii::app()->createUrl('photo/GetPathOfCompanyLogo&id='); ?>' + $('#Host_photo3').val(),
+                        dataType: 'json',
+                        success: function(r) {
+
+                            $.each(r.data, function(index, value) {
+                                document.getElementById('photoPreview3').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+                                document.getElementById('photoCropPreview3').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+                                $(".ajax-upload-dragdrop3").css("background", "url(<?php echo Yii::app()->request->baseUrl. '/'; ?>" + value.relative_path + ") no-repeat center top");
+                                $(".ajax-upload-dragdrop3").css({
+                                    "background-size": "137px 190px"
+                                });
+                            });
+                        }
+                    });
+
+                    $("#closeCropPhoto3").click();
+                    var ias = $('#photoCropPreview3').imgAreaSelect({instance: true});
+                    ias.cancelSelection();
+                }
+            });
+        });
+
+						
 						
 /*			end of module			*/
 						
@@ -543,6 +623,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
 
 </div>
 
+
 <!-- PHOTO CROP-->
 <div id="light2" class="white_content">
     <div style="text-align:right;">
@@ -560,5 +641,26 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
 <input type="hidden" id="x22"/>
 <input type="hidden" id="y12"/>
 <input type="hidden" id="y22"/>
-<input type="hidden" id="width"/>
-<input type="hidden" id="height"/>
+<input type="hidden" id="width2"/>
+<input type="hidden" id="height2"/>
+
+
+<!-- PHOTO CROP-->
+<div id="light3" class="white_content">
+    <div style="text-align:right;">
+        <input type="button" class="btn btn-success" id="cropPhotoBtn3" value="Crop" style="">
+        <input type="button" id="closeCropPhoto3" onclick="document.getElementById('light3').style.display = 'none';
+                document.getElementById('fade3').style.display = 'none'" value="x" class="btn btn-danger">
+    </div>
+    <br>
+    <img id="photoCropPreview3" src="">
+
+</div>
+<div id="fade3" class="black_overlay"></div>
+
+<input type="hidden" id="x13"/>
+<input type="hidden" id="x23"/>
+<input type="hidden" id="y13"/>
+<input type="hidden" id="y23"/>
+<input type="hidden" id="width3"/>
+<input type="hidden" id="height3"/>

@@ -350,7 +350,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                             </tr>
                         </table>
                         <?php $this->endWidget(); ?>
-                        <div class="register-a-visitor-buttons-div"  style="padding-right:67px">
+                        <div class="register-a-visitor-buttons-div"  style="padding-right:67px;float:left;">
                             <input type="button" class="neutral visitor-backBtn btnBackTab3" id="btnBackTab3" value="Back"/>
 
                             <input type="button" id="saveCurrentUserAsHost" value="Save and Continue" />
@@ -395,7 +395,8 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                                 $("#selectedHostInSearchTable").val('<?php echo $session['id']; ?>');
                                 $("#hostId").val('<?php echo $session['id']; ?>');
                             }
-
+                            $("#Host_attach_photo").val($("#Host_photo3").val());
+							
                             $("#search-host").val('staff');
                             $("#clicktabB2").click();
                         });

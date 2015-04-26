@@ -90,6 +90,11 @@ class VisitController extends Controller {
 
         if (isset($_POST['Visit'])) {
             $model->attributes = $_POST['Visit'];
+			
+			 if (isset($_POST['User']['photo']) && $model->host > 0) { 
+                 User::model()->updateByPk($model->host, array('photo' => $_POST['User']['photo']));
+			 }
+			
             if ($model->date_check_in > date('d-m-Y')) {
                 $visitStatus = VisitStatus::model()->findByAttributes(array('name' => 'Pre-registered'));
                 if ($visitStatus) {
@@ -583,7 +588,8 @@ class VisitController extends Controller {
         $user = User::model()->findAllByPk($id);
 		$photo = Photo::model()->findAllByPk($user[0]->photo);
 		$resultMessage['data'] = $user;
-		$resultMessage['data']["photo"] = $photo[0];
+		if(isset($photo) && sizeof($photo) > 0)
+		   $resultMessage['data']["photo"] = $photo[0];
 		  
         echo CJavaScript::jsonEncode($resultMessage);
         Yii::app()->end();

@@ -8,8 +8,7 @@ $cs->registerScriptFile($this->assetsBase. '/js/jquery.uploadfile.min.js');
 $cs->registerScriptFile($this->assetsBase. '/js/jquery.form.js');
 $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/jquery.imgareaselect.pack.js');
 
-$company = Company::model()->findByPk($session['company']);
-$companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
+
 
 ?>
 <style type="text/css">
@@ -79,23 +78,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
             'validateOnSubmit' => true,
             'afterValidate' => 'js:function(form,data,hasError){
                         if(!hasError){
-							
-							if($(".pass_option").is(":checked")== false){
-							
-							$("#pass_error_").show();
-							
-							$("#User_password_em_").html("select one option");	
-							}
-							else if($(".pass_option").is(":checked")== true && $(".pass_option:checked").val()==1 && ($("#User_password").val()== "" || $("#User_repeat_password").val()=="")){
-							   
-                            $("#pass_error_").show();
-							$("#pass_error_").html("type password or generate");	
-                            	
-							}
-							
-							else{
                                 checkHostEmailIfUnique();
-							}
                                 }
                         }'
         ),
@@ -238,15 +221,6 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                 </td>
                 </tr>
                 <tr>
-                <td width="35%">
-                    <?php echo $form->textField($userModel, 'email', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Email')); ?>
-                    <span class="required">*</span>
-                    <?php echo "<br>" . $form->error($userModel, 'email'); ?>
-                    <div style="" id="User_email_em_" class="errorMessage errorMessageEmail1" >A profile already exists for this email address.</div>
-                </td>
-                </tr>
-                
-                <tr>
                 <td>
 
                   
@@ -263,7 +237,14 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                     <?php echo "<br>" . $form->error($userModel, 'staff_id'); ?>
                 </td>
                </tr>
- 				
+ 				<tr>
+                <td width="35%">
+                    <?php echo $form->textField($userModel, 'email', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Email')); ?>
+                    <span class="required">*</span>
+                    <?php echo "<br>" . $form->error($userModel, 'email'); ?>
+                    <div style="" id="User_email_em_" class="errorMessage errorMessageEmail1" >A profile already exists for this email address.</div>
+                </td>
+                </tr>
                  <tr>
                 <td>
                     <?php echo $form->textField($userModel, 'contact_number', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Contact Number')); ?>
@@ -288,184 +269,43 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
         </table>
         
         <table style="float:left; width:280px">
-        
-        	<tr>
-                  <td><strong>Password Options</strong></td>
-                  
-                  </tr>  
-                   
-                  
-            <tr>
-                  <td>
-                  <table style="margin-top:18px !important; width:253px; border-left-style:none; border-top-style:none">
-                    <tr>
-                    <td id="pass_error_" style='font-size: 0.9em;color: #FF0000; display:none'>Select Atleast One option</td>
-                    </tr>
-                    
-                    
-                    
-                   <tr id="third_option" class='hiddenElement'>
-                   
-                   </tr> 
-                    
-                   <tr>
-                   <td><input type="radio" value="1" class="pass_option" name="User[password_option]" />&nbsp;Create Password</td>
-                   </tr> 
-                   <tr>
-                  
-                    <td>
-                         <input type="password" id="User_password" placeholder="Password" name="User[password]" onChange="checkPasswordMatch();">	
+       <tr>
+                <td>
+                    <input type="password" id="User_password" placeholder="Password" name="User[password]" onChange="checkPasswordMatch();">	
                     <span class="required">*</span>		
                     <?php echo "<br>" . $form->error($userModel, 'password'); ?>
-                    </td>
-                </tr>
-                   <tr >
-                    <td >
-                        <input type="password" placeholder="Repeat Password" id="User_repeatpassword" name="User[repeatpassword]" onChange="checkPasswordMatch();"/>		
+                </td>
+             </tr>
+				
+                 <tr>
+                <td>
+                    <input type="password" placeholder="Repeat Password" id="User_repeatpassword" name="User[repeatpassword]" onChange="checkPasswordMatch();"/>		
                     <span class="required">*</span>	
                     <div style='font-size:10px;color:red;font-size:0.9em;display:none;margin-bottom:-20px;' id="passwordErrorMessage">New Password does not match with <br>Repeat New Password. </div>
                     <?php echo "<br>" . $form->error($userModel, 'repeatpassword'); ?>
-                    </td>
-
-                </tr>
-                
-                <tr>
-                <td align="center">
-                    <div class="row buttons" style="text-align:center;">
-                    
-                    <a href="#generate_password" class="complete btn btn-info" data-toggle="modal" style="background:<?php echo $companyLafPreferences->neutral_bg_color; ?> !important;position: relative; width: 152px; overflow: hidden;cursor:pointer;font-size:14px;margin-right:25px;">Autogenerate Password</a>
-                    
-                        
-                    </div>
-    			
-   				 </td>
-                </tr>
-                
-                 <tr>
-                   <td><input class="pass_option" type="radio" name="User[password_option]" value="2"/>&nbsp;Send User Invitation</td>
-                   </tr>
-                   
-                 </table>
-                 </td>
-                 </tr>
-                   
-            <tr><td>
-                    
-        <div class="row buttons ">
-           <input type="button" id="clicktabC" value="Add" style="display:none;"/>
-
-        <input type="submit" style="text-align:center;margin-left:161px;" value="Save" name="yt0" id="submitFormUser" class="complete" />
-        </div>
-                   </td></tr>
-        
-  
-  
-  
-      <?php $this->endWidget(); ?>   
-        
+                </td>
+            </tr>
+            
            
-       </table>
-       
-</div>
+        </table>
+        <div style="clear:both;"></div>
+        <div style="float:right;padding-right:104px">
+        
+        <input type="button" id="clicktabC" value="Add" style="display:none;"/>
 
-<div class="modal hide fade" id="generate_password" style="width: 410px">
-<div style="border:5px solid #BEBEBE; width:405px">
-    <div class="modal-header" style=" border:none !important; height: 60px !important;padding: 0px !important;width: 405px !important;">
-    <div style="background-color:#E8E8E8; padding-top:2px; width:405px; height:56px;">
-    <a data-dismiss="modal" class="close" id="close_generate" >×</a>
-    <h1 style="color: #000;font-size: 15px;font-weight: bold;margin-left: 9px;padding-top: 0px !important;">				     Autogenerated Password
-    </h1>
-    
-    </div>
-        
-        <br>
-    </div>
-    <div id="modalBody_gen">
-     
-    <table >
-   
-    <div id="error_msg" style='font-size: 0.9em;color: #FF0000;padding-left: 11px; display:none' >Please Generate Password </div>
-    		
-    <tr><td colspan="2" style="padding-left:10px">Your randomly generated password is :</td></tr>
-    <tr><td colspan="2"></td></tr>
-    	<tr><td colspan="2"style="padding-left:55px; padding-top:24px;"><input readonly="readonly" type="text" placeholder="Random Password" value="" id="random_password" /></td></tr>
-        
-        <tr><td colspan="2"style="padding-left:10px; font:italic">Note:Please copy and save this password somewhere safe.</td></tr>
-        <tr><td  style="padding-left: 11px;padding-top: 26px !important; width:50%"> <input class="copy_password"  style="border-radius: 4px; height: 35px; " type="button" value="Use Password" data-dismiss="modal" /></td>
-        <td style="padding-right:10px;padding-top: 25px;"> <input class="cancel" data-dismiss="modal" style="border-radius: 4px; height: 35px;" type="button" value="Cancel" /></td>
-        </tr>
-        
-    </table>
-          
-    
-    </div>
-<a data-toggle="modal" data-target="#generate_password" id="gen_pass" style="display:none" class="btn btn-primary">Click me</a>
-</div>
-</div>
+        <input type="submit" value="Save" name="yt0" id="submitFormUser" class="complete" />
+           
+            </tr>
+        </div>
 
+    </div>
+ 
+    <?php $this->endWidget(); ?>
+
+</div>
 <input type="text" id="createUrlForEmailUnique" style="display:none;" value="<?php echo Yii::app()->createUrl('user/checkEmailIfUnique&id='); ?>"/>
 <script>
     $(document).ready(function() {
-		
-		$(".cancel").on('click', function() {
-		
-		$('#User_repeatpassword').val('');	
-		$('#User_password').val('');
-		$("#random_password").val('');	
-		$("#close_generate").click();
-        //$('#generate_password').modal('hide');
-    });	
-	
-	function copy_password(){
-	if($('#random_password').val()==''){
-	$('#error_msg').show();
-	}else{
-	
-	$('#User_password').val($('#random_password').val());
-	$('#User_repeatpassword').val($('#random_password').val());
-	$('#generate_password').toggle('hide');
-	
-		
-	}
-		
-	}
-	
-	
-	$(".copy_password").on('click', function() {
-		
-		if($('#random_password').val()==''){
-		$('#error_msg').show();
-		}else{
-	
-		$('#User_password').val($('#random_password').val());
-		$('#User_repeatpassword').val($('#random_password').val());
-		$("#close_generate").click();
-		
-			}
-		
-        //$('#generate_password').modal('hide');
-    });
-		
-		
-		$('[data-toggle="modal"]').click(function(e) {
-			
-		$("#random_password").val('');
-		$( "#pass_option" ).prop( "checked", true );
-		
-		var text = "";
-    	var possible = "abcdefghijklmnopqrstuvwxyz0123456789";
-
-		for( var i=0; i < 6; i++ ){
-			text += possible.charAt(Math.floor(Math.random() * possible.length));
-		}
-    	document.getElementById('random_password').value	=	text;		
-			
-		e.preventDefault();
-	
-});
-		
-		
-		
         $("#User_repeatpassword").keyup(checkPasswordMatch);
         $("#User_password").keyup(checkPasswordMatch);
 		

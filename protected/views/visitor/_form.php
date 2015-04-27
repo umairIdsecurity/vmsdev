@@ -1,8 +1,5 @@
 <?php
 
-$cs = Yii::app()->clientScript;
-$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/script-birthday.js');
-
 $session = new CHttpSession;
 
 $dataId = '';
@@ -418,13 +415,6 @@ if ($this->action->id == 'update') {
                         </tr>
                         <tr>
                             <td>
-                                <?php echo $form->textField($model, 'middle_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Middle Name')); ?>
-                                <?php echo "<br>" . $form->error($model, 'middle_name'); ?>
-
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
                                 <?php echo $form->textField($model, 'last_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Last Name')); ?><span class="required">*</span>
 
                                 <?php echo "<br>" . $form->error($model, 'last_name'); ?>
@@ -434,20 +424,6 @@ if ($this->action->id == 'update') {
                         </tr>
 
                         <tr>
-
-                        <tr>
-                            <td class="birthdayDropdown">
-
-                                <span>Date of Birth</span> <br/>
-                                <input type="hidden" id="dateofBirthBreakdownValueYear" value="<?php echo date("Y", strtotime($model->date_of_birth)); ?>">
-                                <input type="hidden" id="dateofBirthBreakdownValueMonth" value="<?php echo date("n", strtotime($model->date_of_birth)); ?>">
-                                <input type="hidden" id="dateofBirthBreakdownValueDay" value="<?php echo date("j", strtotime($model->date_of_birth)); ?>">
-
-                                <select id="fromMonth" name="Visitor[birthdayMonth]" class='monthSelect'></select>
-                                <select id="fromDay" name="Visitor[birthdayDay]" class='daySelect'></select>
-                                <select id="fromYear" name="Visitor[birthdayYear]" class='yearSelect'></select>
-                            </td>
-                        </tr>
 
                             <td width="37%">
 
@@ -579,24 +555,10 @@ if ($this->action->id == 'update') {
 
                             ?>
 
-                 <table style="float:left;width:300px;">
+                 <table style="float:left;width:300px;"> 
 
-                     <tr>
-                         <td>
-                             <?php echo $form->dropDownList($model, 'identification_type', Visitor::$IDENTIFICATION_TYPE_LIST, array('empty' => 'Identification Type')); ?>
-                             <?php echo "<br>" . $form->error($model, 'identification_type'); ?>
-                         </td>
+                           
 
-                     </tr>
-
-                     <tr>
-                         <td>
-                             <?php
-                             $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
-                             echo $form->dropDownList($model, 'identification_country_issued', $countryList, array('empty' => 'Country issued'));
-                             ?>
-                         </td>
-                     </tr>
                             <tr>
 
                                 <td>
@@ -687,10 +649,6 @@ if (isset($_GET['id'])) {
         $(".workstationRow").show();
         getWorkstation();
         if ($("#currentAction").val() == 'update') {
-
-            $("#fromYear").val($("#dateofBirthBreakdownValueYear").val());
-            $("#fromMonth").val($("#dateofBirthBreakdownValueMonth").val());
-            $("#fromDay").val($("#dateofBirthBreakdownValueDay").val());
 
             if ($("#Visitor_photo").val() != '') {
 
@@ -1256,6 +1214,7 @@ if (isset($_GET['id'])) {
 
             }
 
+            }
         });
     }
 

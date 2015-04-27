@@ -376,7 +376,7 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
             data: hostId,
             success: function(r) {
                 $.each(r.data, function(index, value) {
-                   if(index == "photo" && value!==null){
+                   if(index == "photo"){
                         $("#Host_photo3").val(value.id);
                         $(".ajax-upload-dragdrop3").css("background", "url(<?php echo Yii::app()->request->baseUrl."/"; ?>" + value.relative_path + ") no-repeat center top");
                         $(".ajax-upload-dragdrop3").css({"background-size": "137px 190px"});

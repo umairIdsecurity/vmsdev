@@ -40,10 +40,7 @@ class Visitor extends CActiveRecord {
     public $birthdayYear;
     public $birthdayDay;
     public $repeatpassword;
-    public $visitor_card_status;
-    public $middle_name;
-    public $identification_type;
-    
+
     const PROFILE_TYPE_VIC = 'VIC';
     const PROFILE_TYPE_ASIC = 'ASIC';
 
@@ -55,12 +52,6 @@ class Visitor extends CActiveRecord {
             4 => 'ASIC Issued',
             5 => 'ASIC Denied',
         ),
-    );
-
-    public static $IDENTIFICATION_TYPE_LIST = array(
-        'PASSPORT'        => 'Passport',
-        'DRIVERS_LICENSE' => 'Drivers License',
-        'ALTERNATE'       => 'Alternative',
     );
 
     /**
@@ -77,13 +68,13 @@ class Visitor extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('first_name, last_name, email, contact_number,company, visitor_card_status, identification_type', 'required'),
+            array('first_name, last_name, email, contact_number,company, visitor_card_status', 'required'),
             array('tenant','required','message' =>'Please select a {attribute}'),
             array('is_deleted', 'numerical', 'integerOnly' => true),
-            array('first_name, middle_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
+            array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
             array('contact_number, company, role, visitor_status, created_by, tenant, tenant_agent', 'length', 'max' => 20),
             array('date_of_birth, notes,birthdayYear,birthdayMonth,birthdayDay,vehicle', 'safe'),
-            array('tenant, tenant_agent,company, photo,vehicle, visitor_card_status, visitor_workstation, identification_type', 'default', 'setOnEmpty' => true, 'value' => null),
+            array('tenant, tenant_agent,company, photo,vehicle, visitor_card_status, visitor_workstation', 'default', 'setOnEmpty' => true, 'value' => null),
             array('repeatpassword,password', 'required','on'=>'insert'),
             array('password', 'compare', 'compareAttribute' => 'repeatpassword', 'on' => 'insert'),
            // array('vehicle', 'length', 'min'=>6, 'max'=>6, 'tooShort'=>'Vehicle is too short (Should be in 6 characters)'), 
@@ -125,7 +116,6 @@ class Visitor extends CActiveRecord {
         return array(
             'id' => 'ID',
             'first_name' => 'First Name',
-            'middle_name' => 'Middle Name',
             'last_name' => 'Last Name',
             'email' => 'Email Address',
             'contact_number' => 'Mobile Number',

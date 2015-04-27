@@ -17,6 +17,7 @@ if (isset($_GET['id'])) {
 }
 
 $currentLoggedUserId = $session['id'];
+var_dump($session['tenant']);
 ?>
 <style type="text/css">
 #modalBody_gen {padding-top: 10px !important;height: 204px !important;}
@@ -1283,3 +1284,4 @@ $this->widget('bootstrap.widgets.TbButton', array(
 
 
 
+>>>>>>> parent of 3cb1b09... Issue#175 DOB, Identification fields

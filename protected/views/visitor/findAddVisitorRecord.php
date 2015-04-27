@@ -366,11 +366,16 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                     ),
                 ));
                 ?>
-                <label>Add Reason</label><br>
-                <textarea id="VisitReason_reason" name="VisitReason[reason]" rows="1" maxlength="128" style="text-transform: capitalize;"></textarea> 
+                <table style="position:relative;top:555px;left:-301px">
+                <tr>
+                <td>
+               
+            <textarea id="VisitReason_reason" name="VisitReason[reason]" rows="1" maxlength="128" style="text-transform: capitalize;" placeholder="Add Reason"></textarea> 
                 <div class="errorMessage" id="visitReasonErrorMessage" style="display:none;">Please select a reason</div>
 
-
+</td>
+</tr>
+</table>
                 <?php $this->endWidget(); ?>
             </div>
         </div>

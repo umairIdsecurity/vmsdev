@@ -17,6 +17,8 @@ if (isset($_GET['id'])) {
 }
 
 $currentLoggedUserId = $session['id'];
+$company = Company::model()->findByPk($session['company']);
+$companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
 ?>
 <style type="text/css">
 #modalBody_gen {padding-top: 10px !important;height: 204px !important;}
@@ -43,7 +45,7 @@ $currentLoggedUserId = $session['id'];
             border:none;
         }
         .ajax-file-upload{
-            margin-left: -107px !important;
+            margin-left: -100px !important;
             margin-top: 128px !important;
             position:absolute !important;
             font-size: 12px !important;
@@ -70,7 +72,7 @@ $currentLoggedUserId = $session['id'];
             position: absolute;
         }
 .required { padding-left:10px; }
-#content h1 { color: #E07D22;font-size: 18px;font-weight: bold;margin-left:88px; }
+#content h1 { color: #E07D22;font-size: 18px;font-weight: bold;margin-left:75px; }
 </style>
 
 
@@ -373,7 +375,7 @@ $currentLoggedUserId = $session['id'];
                 <table>
                    <tr>
                         <td>
-						<?php echo $form->textArea($model, 'notes', array('rows' => 6, 'cols' => 70,'placeholder'=>'Notes','style'=>'width:237px;')); ?>
+						<?php echo $form->textArea($model, 'notes', array('rows' => 6, 'cols' => 70,'placeholder'=>'Notes','style'=>'width:205px;')); ?>
                             <?php echo "<br>" . $form->error($model, 'notes'); ?>
                         </td>
 
@@ -386,7 +388,7 @@ $currentLoggedUserId = $session['id'];
                   
                   <tr>
                   <td>
-                  <table style="border:2px solid #CCC; margin-top:18px !important; width:253px; border-left-style:none; border-top-style:none">
+                  <table style=" margin-top:18px !important; width:253px; border-left-style:none; border-top-style:none">
                     <tr>
                     <td id="pass_error_" style='font-size: 0.9em;color: #FF0000; display:none'>Select Atleast One option</td>
                     </tr>
@@ -398,7 +400,7 @@ $currentLoggedUserId = $session['id'];
                    </tr> 
                     
                    <tr>
-                   <td><input type="radio" value="1" class="pass_option" name="User[password_option]" />&nbsp;Create Password on behalf of user</td>
+                   <td><input type="radio" value="1" class="pass_option" name="User[password_option]" />&nbsp;Create Password</td>
                    </tr> 
                    <tr>
                   
@@ -421,8 +423,8 @@ $currentLoggedUserId = $session['id'];
                 
                 <tr>
                 <td align="center">
-                    <div class="row buttons ">
-                    <input onclick="generatepassword();" class="complete btn btn-info" style="position: relative; width:222px; overflow: hidden; cursor: default;" type="button" value="Autogenerate Password" />
+                    <div class="row buttons" style="margin-left:20px;">
+                    <input onclick="generatepassword();" class="complete btn btn-info" style="position: relative; width:174px; overflow: hidden; cursor: default;background:<?php echo $companyLafPreferences->neutral_bg_color; ?> !important;cursor:pointer;font-size:14px" type="button" value="Autogenerate Password" />
                         
                     </div>
     			
@@ -440,7 +442,7 @@ $currentLoggedUserId = $session['id'];
                    <tr><td>
                     
         <div class="row buttons ">
-            <?php echo CHtml::submitButton($model->isNewRecord ? 'Save' : 'Save', array('id' => 'submitForm', 'class' => 'complete','style'=>'width:222px;')); ?>
+            <?php echo CHtml::submitButton($model->isNewRecord ? 'Save' : 'Save', array('id' => 'submitForm', 'class' => 'complete','style'=>'text-align:center;margin-left:162px;')); ?>
         </div>
                    </td></tr>
 

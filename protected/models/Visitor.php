@@ -40,7 +40,10 @@ class Visitor extends CActiveRecord {
     public $birthdayYear;
     public $birthdayDay;
     public $repeatpassword;
-
+    public $visitor_card_status;
+    public $middle_name;
+    public $identification_type;
+    
     const PROFILE_TYPE_VIC = 'VIC';
     const PROFILE_TYPE_ASIC = 'ASIC';
 

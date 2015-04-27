@@ -17,7 +17,7 @@ if (isset($_GET['id'])) {
 }
 
 $currentLoggedUserId = $session['id'];
-var_dump($session['tenant']);
+//var_dump($session['tenant']);
 ?>
 <style type="text/css">
 #modalBody_gen {padding-top: 10px !important;height: 204px !important;}
@@ -278,14 +278,28 @@ var_dump($session['tenant']);
                     </tr>
                     <tr id="companyTr">
                         <td id='companyRow'>
-                            <select id="User_company" name="User[company]" <?php
-                            if ($session['role'] == Roles::ROLE_AGENT_ADMIN || $currentRoleinUrl == Roles::ROLE_OPERATOR || $currentLoggedUserId == $currentlyEditedUserId) {
-                                echo " disabled ";
-                            } //if currently logged in user is agent admin or if selected role=operator or owner is editing his account
-                            ?>>
-                                <option value='' selected>Please select a company</option>
+                            <div style="margin-bottom: 5px;">
                                 <?php
                                 $companyList = CHtml::listData(Company::model()->findAllCompany(), 'id', 'name');
+                                $this->widget('application.extensions.select2.Select2', array(
+                                    'model' => $model,
+                                    'attribute' => 'company',
+                                    'items' => $companyList,
+                                    'selectedItems' => array(), // Items to be selected as default
+                                    'placeHolder' => 'Please select a company'
+                                ));
+                                ?>
+                                <span class="required">*</span>
+                            </div>
+
+                            <!--<select id="User_company" name="User[company]" <?php
+/*                            if ($session['role'] == Roles::ROLE_AGENT_ADMIN || $currentRoleinUrl == Roles::ROLE_OPERATOR || $currentLoggedUserId == $currentlyEditedUserId) {
+                                echo " disabled ";
+                            } //if currently logged in user is agent admin or if selected role=operator or owner is editing his account
+                            */?>>
+                                <option value='' selected>Please select a company</option>
+                                <?php
+/*                                $companyList = CHtml::listData(Company::model()->findAllCompany(), 'id', 'name');
                                 if (isset($_GET['role'])) {
                                     $urlRole = $_GET['role'];
                                 } else {
@@ -293,9 +307,9 @@ var_dump($session['tenant']);
                                 }
                                 if ($this->action->id != 'create' || $session['role'] == Roles::ROLE_ADMIN || $urlRole == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_AGENT_ADMIN || $urlRole == Roles::ROLE_AGENT_ADMIN) {
                                     foreach ($companyList as $key => $value) {
-                                        ?>
+                                        */?>
                                         <option <?php
-                                        if ($this->action->id == 'update') {
+/*                                        if ($this->action->id == 'update') {
                                             $company = User::model()->getCompany($currentlyEditedUserId);
                                         } elseif ($session['role'] != Roles::ROLE_SUPERADMIN) {
                                             $company = User::model()->getCompany($currentLoggedUserId);
@@ -303,13 +317,15 @@ var_dump($session['tenant']);
                                         if (isset($company) && $company == $key) {
                                             echo " selected ";
                                         }
-                                        ?> value="<?php echo $key; ?>"><?php echo $value; ?></option>
+                                        */?> value="<?php /*echo $key; */?>"><?php /*echo $value; */?></option>
                                             <?php
-                                        }
+/*                                        }
                                     }
-                                    ?>
-                            </select>
+                                    */?>
+                            </select>-->
+
                            <span class="required">*</span>
+
                             <select id="User_company_base" style="display:none;">
                                 <?php
                                 $criteria = new CDbCriteria();
@@ -1281,7 +1297,3 @@ $this->widget('bootstrap.widgets.TbButton', array(
 
     }
 </script>
-
-
-
->>>>>>> parent of 3cb1b09... Issue#175 DOB, Identification fields

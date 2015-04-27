@@ -493,18 +493,25 @@ if ($this->action->id == 'update') {
 
                             <td id="visitorCompanyRow">
 
-
-
-                                <select id="Visitor_company" name="Visitor[company]" >
-
+                                <!--<select id="Visitor_company" name="Visitor[company]" >
                                     <option value=''>Select Company</option>
-
-                                </select>
+                                </select>-->
+                                <div style="margin-bottom: 5px;">
+                                    <?php
+                                    $companies = Company::model()->findAll();
+                                    $this->widget('application.extensions.select2.Select2', array(
+                                        'model' => $model,
+                                        'attribute' => 'company',
+                                        'items' => CHtml::listData($companies, 'id', 'name'),
+                                        'selectedItems' => array(), // Items to be selected as default
+                                        'placeHolder' => 'Please select a company'
+                                    ));
+                                    ?>
+                                    <span class="required">*</span>
+                                </div>
 
                                 <?php echo $form->error($model, 'company'); ?>
-
                               </td>
-
                             </tr>
 
                              
@@ -1215,7 +1222,7 @@ if (isset($_GET['id'])) {
             }
 
             }
-        });
+        );
     }
 
     function getWorkstation() { /*get workstations for operator*/

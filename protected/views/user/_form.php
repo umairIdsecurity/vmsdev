@@ -424,8 +424,8 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                 
                 <tr>
                 <td align="center">
-                    <div class="row buttons" style="margin-left:20px;">
-                    <input onclick="generatepassword();" class="complete btn btn-info" style="position: relative; width:174px; overflow: hidden; cursor: default;background:<?php echo $companyLafPreferences->neutral_bg_color; ?> !important;cursor:pointer;font-size:14px" type="button" value="Autogenerate Password" />
+                    <div class="row buttons" style="margin-left:23.5px;">
+                    <input onclick="generatepassword();" class="complete btn btn-info" style="position: relative; width:178px; overflow: hidden; cursor: default;background:<?php echo $companyLafPreferences->neutral_bg_color; ?> !important;cursor:pointer;font-size:14px" type="button" value="Autogenerate Password" />
                         
                     </div>
     			

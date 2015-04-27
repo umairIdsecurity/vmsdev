@@ -1,5 +1,7 @@
 
 <?php
+print_r($model->attributes);
+die("--DONE--");
 /* @var $this VisitController */
 /* @var $model Visit */
 /* @var $form CActiveForm */

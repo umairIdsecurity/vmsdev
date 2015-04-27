@@ -88,7 +88,7 @@ $session = new CHttpSession;
     $(document).ready(function() {
         refreshTimeIn();
         $("#Visit_date_out").datepicker("option", "minDate", $("#Visit_date_check_in").val());
-        $("#dateoutDiv #Visit_date_out").datepicker({
+        $("#dateoutDiv #Visit_date_out, #Visit_date_check_in").datepicker({
             changeMonth: true,
             changeYear: true,
             showOn: "button",

@@ -17,7 +17,8 @@ if (isset($_GET['id'])) {
 }
 
 $currentLoggedUserId = $session['id'];
-//var_dump($session['tenant']);
+$company = Company::model()->findByPk($session['company']);
+$companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
 ?>
 <style type="text/css">
 #modalBody_gen {padding-top: 10px !important;height: 204px !important;}
@@ -44,7 +45,7 @@ $currentLoggedUserId = $session['id'];
             border:none;
         }
         .ajax-file-upload{
-            margin-left: -107px !important;
+            margin-left: -100px !important;
             margin-top: 128px !important;
             position:absolute !important;
             font-size: 12px !important;
@@ -71,7 +72,7 @@ $currentLoggedUserId = $session['id'];
             position: absolute;
         }
 .required { padding-left:10px; }
-#content h1 { color: #E07D22;font-size: 18px;font-weight: bold;margin-left:88px; }
+#content h1 { color: #E07D22;font-size: 18px;font-weight: bold;margin-left:75px; }
 </style>
 
 
@@ -278,28 +279,14 @@ $currentLoggedUserId = $session['id'];
                     </tr>
                     <tr id="companyTr">
                         <td id='companyRow'>
-                            <div style="margin-bottom: 5px;">
-                                <?php
-                                $companyList = CHtml::listData(Company::model()->findAllCompany(), 'id', 'name');
-                                $this->widget('application.extensions.select2.Select2', array(
-                                    'model' => $model,
-                                    'attribute' => 'company',
-                                    'items' => $companyList,
-                                    'selectedItems' => array(), // Items to be selected as default
-                                    'placeHolder' => 'Please select a company'
-                                ));
-                                ?>
-                                <span class="required">*</span>
-                            </div>
-
-                            <!--<select id="User_company" name="User[company]" <?php
-/*                            if ($session['role'] == Roles::ROLE_AGENT_ADMIN || $currentRoleinUrl == Roles::ROLE_OPERATOR || $currentLoggedUserId == $currentlyEditedUserId) {
+                            <select id="User_company" name="User[company]" <?php
+                            if ($session['role'] == Roles::ROLE_AGENT_ADMIN || $currentRoleinUrl == Roles::ROLE_OPERATOR || $currentLoggedUserId == $currentlyEditedUserId) {
                                 echo " disabled ";
                             } //if currently logged in user is agent admin or if selected role=operator or owner is editing his account
-                            */?>>
+                            ?>>
                                 <option value='' selected>Please select a company</option>
                                 <?php
-/*                                $companyList = CHtml::listData(Company::model()->findAllCompany(), 'id', 'name');
+                                $companyList = CHtml::listData(Company::model()->findAllCompany(), 'id', 'name');
                                 if (isset($_GET['role'])) {
                                     $urlRole = $_GET['role'];
                                 } else {
@@ -307,9 +294,9 @@ $currentLoggedUserId = $session['id'];
                                 }
                                 if ($this->action->id != 'create' || $session['role'] == Roles::ROLE_ADMIN || $urlRole == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_AGENT_ADMIN || $urlRole == Roles::ROLE_AGENT_ADMIN) {
                                     foreach ($companyList as $key => $value) {
-                                        */?>
+                                        ?>
                                         <option <?php
-/*                                        if ($this->action->id == 'update') {
+                                        if ($this->action->id == 'update') {
                                             $company = User::model()->getCompany($currentlyEditedUserId);
                                         } elseif ($session['role'] != Roles::ROLE_SUPERADMIN) {
                                             $company = User::model()->getCompany($currentLoggedUserId);
@@ -317,15 +304,13 @@ $currentLoggedUserId = $session['id'];
                                         if (isset($company) && $company == $key) {
                                             echo " selected ";
                                         }
-                                        */?> value="<?php /*echo $key; */?>"><?php /*echo $value; */?></option>
+                                        ?> value="<?php echo $key; ?>"><?php echo $value; ?></option>
                                             <?php
-/*                                        }
+                                        }
                                     }
-                                    */?>
-                            </select>-->
-
+                                    ?>
+                            </select>
                            <span class="required">*</span>
-
                             <select id="User_company_base" style="display:none;">
                                 <?php
                                 $criteria = new CDbCriteria();
@@ -390,7 +375,7 @@ $currentLoggedUserId = $session['id'];
                 <table>
                    <tr>
                         <td>
-						<?php echo $form->textArea($model, 'notes', array('rows' => 6, 'cols' => 70,'placeholder'=>'Notes','style'=>'width:237px;')); ?>
+						<?php echo $form->textArea($model, 'notes', array('rows' => 6, 'cols' => 70,'placeholder'=>'Notes','style'=>'width:205px;')); ?>
                             <?php echo "<br>" . $form->error($model, 'notes'); ?>
                         </td>
 
@@ -403,7 +388,7 @@ $currentLoggedUserId = $session['id'];
                   
                   <tr>
                   <td>
-                  <table style="border:2px solid #CCC; margin-top:18px !important; width:253px; border-left-style:none; border-top-style:none">
+                  <table style=" margin-top:18px !important; width:253px; border-left-style:none; border-top-style:none">
                     <tr>
                     <td id="pass_error_" style='font-size: 0.9em;color: #FF0000; display:none'>Select Atleast One option</td>
                     </tr>
@@ -415,7 +400,7 @@ $currentLoggedUserId = $session['id'];
                    </tr> 
                     
                    <tr>
-                   <td><input type="radio" value="1" class="pass_option" name="User[password_option]" />&nbsp;Create Password on behalf of user</td>
+                   <td><input type="radio" value="1" class="pass_option" name="User[password_option]" />&nbsp;Create Password</td>
                    </tr> 
                    <tr>
                   
@@ -438,8 +423,8 @@ $currentLoggedUserId = $session['id'];
                 
                 <tr>
                 <td align="center">
-                    <div class="row buttons ">
-                    <input onclick="generatepassword();" class="complete btn btn-info" style="position: relative; width:222px; overflow: hidden; cursor: default;" type="button" value="Autogenerate Password" />
+                    <div class="row buttons" style="margin-left:23.5px;">
+                    <input onclick="generatepassword();" class="complete btn btn-info" style="position: relative; width:178px; overflow: hidden; cursor: default;background:<?php echo $companyLafPreferences->neutral_bg_color; ?> !important;cursor:pointer;font-size:14px" type="button" value="Autogenerate Password" />
                         
                     </div>
     			
@@ -457,7 +442,7 @@ $currentLoggedUserId = $session['id'];
                    <tr><td>
                     
         <div class="row buttons ">
-            <?php echo CHtml::submitButton($model->isNewRecord ? 'Save' : 'Save', array('id' => 'submitForm', 'class' => 'complete','style'=>'width:222px;')); ?>
+            <?php echo CHtml::submitButton($model->isNewRecord ? 'Save' : 'Save', array('id' => 'submitForm', 'class' => 'complete','style'=>'text-align:center;margin-left:162px;')); ?>
         </div>
                    </td></tr>
 
@@ -1297,3 +1282,6 @@ $this->widget('bootstrap.widgets.TbButton', array(
 
     }
 </script>
+
+
+

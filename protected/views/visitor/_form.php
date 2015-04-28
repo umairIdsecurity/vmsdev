@@ -9,7 +9,8 @@ if ($this->action->id == 'update') {
     $dataId = $_GET['id'];
 
 }
-
+$company = Company::model()->findByPk($session['company']);
+$companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
 ?>
 
 <style>
@@ -66,6 +67,21 @@ if ($this->action->id == 'update') {
             'afterValidate' => 'js:function(form, data, hasError){
 
                                 if (!hasError){
+									
+							if($(".pass_option").is(":checked")== false){
+							
+							$("#pass_error_").show();
+							
+							$("#Visitor_password_em_").html("select one option");
+							return false;	
+							}
+							else if($(".pass_option").is(":checked")== true && $(".pass_option:checked").val()==1 && ($("#Visitor_password").val()== "" || $("#Visitor_repeatpassword").val()=="")){
+							   
+                            $("#pass_error_").show();
+							$("#pass_error_").html("type password or generate");	
+							return false;
+                            	
+							}
 
                                 var vehicleValue = $("#Visitor_vehicle").val();
 
@@ -128,6 +144,7 @@ if ($this->action->id == 'update') {
         <table  id="addvisitor-table" data-ng-app="PwordForm">
 
         
+
         <tr><td><table style="margin-left:70px;width:120px;margin-top:10px;">
            <tr><td class="ico1" width="40">&nbsp;</td><td class="ico3" width="40">&nbsp;</td><td class="ico2" width="40">&nbsp;</td>
            </tr></table><td></tr>
@@ -144,9 +161,8 @@ if ($this->action->id == 'update') {
 
                             <td id="uploadRow" rowspan="7" style='width:300px;padding-top:10px;'>
 
+                                
 
-
-                                <table>
                                 <input type="hidden" id="Visitor_photo" name="Visitor[photo]"
 
                                        value="<?php echo $model['photo']; ?>">
@@ -320,87 +336,10 @@ if ($this->action->id == 'update') {
 								
 
 								<?php echo "<br>" . $form->error($model, 'tenant_agent'); ?>
-                                </table>
-
-                                <table style="margin-top: 70px;">
-                                    <tr>
-                                        <td>
-                                            <?php echo $form->dropDownList($model, 'visitor_card_status', Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC], array('empty' => 'Card Status')); ?>
-                                            <?php echo "<br>" . $form->error($model, 'visitor_card_status'); ?>
-                                        </td>
-
-                                    </tr>
-                                    <tr>
-                                        <td id="visitorTenantRow" <?php
-                                        if ($session['role'] != Roles::ROLE_SUPERADMIN) {
-                                            echo " class='hidden' ";
-                                        }
-                                        ?>>
-                                            <select id="Visitor_tenant" onchange="populateTenantAgentAndCompanyField()" name="Visitor[tenant]"  >
-                                                <option value='' selected>Please select a tenant</option>
-                                                <?php
-                                                $allTenantCompanyNames = User::model()->findAllCompanyTenant();
-                                                foreach ($allTenantCompanyNames as $key => $value) {
-                                                    ?>
-                                                    <option value="<?php echo $value['tenant']; ?>"
-                                                        <?php
-                                                        if (($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant'] && $this->action->id != 'update') || ($model['tenant'] == $value['tenant'])) {
-                                                            echo "selected ";
-                                                        }
-                                                        ?> ><?php echo $value['name']; ?></option>
-                                                <?php
-                                                }
-                                                ?>
-                                            </select>
-                                            <span class="required">*</span>
-                                            <?php echo "<br>" . $form->error($model, 'tenant'); ?>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td id="visitorTenantAgentRow" <?php
-                                        if ($session['role'] != Roles::ROLE_SUPERADMIN) {
-                                            echo " class='hidden' ";
-                                        }
-                                        ?> >
-                                            <select id="Visitor_tenant_agent" name="Visitor[tenant_agent]" onchange="populateCompanyWithSameTenantAndTenantAgent()" >
-                                                <?php
-                                                echo "<option value='' selected>Please select a tenant agent</option>";
-                                                if ($session['role'] != Roles::ROLE_SUPERADMIN) {
-                                                    echo "<option value='" . $session['tenant_agent'] . "' selected>TenantAgent</option>";
-                                                }
-                                                ?>
-                                            </select>
-
-                                            <?php echo "<br>" . $form->error($model, 'tenant_agent'); ?>
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td class="workstationRow">
-                                            <select id="User_workstation" name="Visitor[visitor_workstation]" disabled>
-                                            </select>
-                                            <?php echo "<br>" . $form->error($model, 'visitor_workstation'); ?>
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>
-                                            <?php
-                                            echo $form->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes());
-                                            ?>
-                                            <span class="required">*</span>
-                                            <?php echo "<br>" . $form->error($model, 'visitor_type'); ?>
-                                        </td>
-                                    </tr>
-                                </table>
 
                             </td>
 
                         </tr>
-                    </table>
-
-
-                    <table style="float:left;width:300px;">
 
 
 
@@ -408,20 +347,31 @@ if ($this->action->id == 'update') {
 
                             <td>
 
-                                <?php echo $form->textField($model, 'first_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'First Name')); ?><span class="required">*</span>
+                                
+
+                 <?php echo $form->textField($model, 'first_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'First Name')); ?><span class="required">*</span>
+
                                 <?php echo "<br>" . $form->error($model, 'first_name'); ?>
 
                             </td>
-                        </tr>
-                        <tr>
-                            <td>
+
+                          </tr>
+
+                          <tr>
+
+                            <td>                              
+
                                 <?php echo $form->textField($model, 'last_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Last Name')); ?><span class="required">*</span>
 
                                 <?php echo "<br>" . $form->error($model, 'last_name'); ?>
 
                             </td>
 
-                        </tr>
+
+
+                        </tr>                      
+
+                        
 
                         <tr>
 
@@ -493,25 +443,18 @@ if ($this->action->id == 'update') {
 
                             <td id="visitorCompanyRow">
 
-                                <!--<select id="Visitor_company" name="Visitor[company]" >
+
+
+                                <select id="Visitor_company" name="Visitor[company]" >
+
                                     <option value=''>Select Company</option>
-                                </select>-->
-                                <div style="margin-bottom: 5px;">
-                                    <?php
-                                    $companies = Company::model()->findAll();
-                                    $this->widget('application.extensions.select2.Select2', array(
-                                        'model' => $model,
-                                        'attribute' => 'company',
-                                        'items' => CHtml::listData($companies, 'id', 'name'),
-                                        'selectedItems' => array(), // Items to be selected as default
-                                        'placeHolder' => 'Please select a company'
-                                    ));
-                                    ?>
-                                    <span class="required">*</span>
-                                </div>
+
+                                </select>
 
                                 <?php echo $form->error($model, 'company'); ?>
+
                               </td>
+
                             </tr>
 
                              
@@ -565,39 +508,74 @@ if ($this->action->id == 'update') {
                  <table style="float:left;width:300px;"> 
 
                            
-
+                           
                             <tr>
+                  <td><strong>Password Options</strong></td>
+                  
+                  </tr>  
+                   
+                  
+                  			<tr>
+                  <td>
+                  <table style="margin-top:18px !important; width:253px; border-left-style:none; border-top-style:none">
+                    <tr>
+                    <td id="pass_error_" style='font-size: 0.9em;color: #FF0000; display:none'>Select Atleast One option</td>
+                    </tr>
+                    
+                    
+                    
+                   <tr id="third_option" class='hiddenElement'>
+                   
+                   </tr> 
+                    
+                   <tr>
+                   <td><input type="radio" value="1" class="pass_option" name="Visitor[password_option]" />&nbsp;Create Password</td>
+                   </tr> 
+                   
+                   <tr><td>&nbsp;</td></tr>
+                   
+                   <tr>
+                    <td>
+                        <input placeholder="Password" ng-model="user.passwords" data-ng-class="{
+                                                                       'ng-invalid':registerform['Visitor[repeatpassword]'].$error.match}" type="password" id="Visitor_password" name="Visitor[password]">
+                    <span class="required">*</span>                                                                        		
+                    </td>
+                </tr>
+                   <tr >
+                    <td >
+                        <input  placeholder="Repeat Password" ng-model="user.passwordConfirm" type="password" id="Visitor_repeatpassword" data-match="user.passwords" name="Visitor[repeatpassword]"/>
+                        <span class="required">*</span>			
+                        <div style='font-size:0.9em;color:red;position: static;' data-ng-show="registerform['Visitor[repeatpassword]'].$error.match">Password does not match with Repeat <br> Password. </div>
+                        <?php echo "<br>" . $form->error($model, 'repeatpassword'); ?>
+                    </td>
 
-                                <td>
+                </tr>
+                
+                <tr>
+                <td align="center" >
+                  <div class="row buttons" style="text-align:center;">
+                <input onclick="generatepassword();" class="complete btn btn-info" type="button" value="Autogenerate Password" style="background:<?php echo $companyLafPreferences->neutral_bg_color; ?> !important;position: relative; width: 180px; overflow: hidden;cursor:pointer;font-size:14px;margin-right:8px;" />
+                </div>
+   				 </td>
+                </tr>
+                 <tr><td>&nbsp;</td></tr>
+                
+                 <tr>
+                   <td><input class="pass_option" type="radio" name="Visitor[password_option]" value="2"/>&nbsp;Send User Invitation</td>
+                   </tr>
+                   <tr><td>&nbsp;</td></tr>
+                   
+                 </table>
+                 </td>
+                 </tr>
+                   
+                <tr>
+                <td>
+           		<input type="submit" value="Save" name="yt0" id="submitFormVisitor" class="complete" style="float:right;margin-right:80px;" />
+               </td>
+               </tr>
 
-                                    <input placeholder="Password" ng-model="user.passwords" data-ng-class="{
-
-                                                                        'ng-invalid':registerform['Visitor[repeatpassword]'].$error.match}" type="password" id="Visitor_password" name="Visitor[password]">
-
-                                                                        <span class="required">*</span>			
-
-                                           <?php echo "<br>" . $form->error($model, 'password'); ?>
-
-                                </td>
-
-                                </tr>
-
-                                <tr>
-
-                                <td>
-
-                                    <input placeholder="Repeat Password" ng-model="user.passwordConfirm" type="password" id="Visitor_repeatpassword" data-match="user.passwords" name="Visitor[repeatpassword]"/>
-
-                                    <span class="required">*</span>			
-
-                                    <div style='font-size:0.9em;color:red;position: static;' data-ng-show="registerform['Visitor[repeatpassword]'].$error.match">Password does not match with Repeat <br> Password. </div>
-
-                                    <?php echo "<br>" . $form->error($model, 'repeatpassword'); ?>
-
-                                </td>
-
-                            </tr>
-
+                           
                             </table>
 
                         <?php } ?>
@@ -621,13 +599,6 @@ if ($this->action->id == 'update') {
 
 
     </div>
-
-    <div class="register-a-visitor-buttons-div" >
-
-        <br><br><input type="submit" value="Save" name="yt0" id="submitFormVisitor" class="complete" />
-
-    </div>
-
 
 
     <?php $this->endWidget(); ?>
@@ -653,8 +624,7 @@ if (isset($_GET['id'])) {
 <script>
 
     $(document).ready(function() {
-        $(".workstationRow").show();
-        getWorkstation();
+
         if ($("#currentAction").val() == 'update') {
 
             if ($("#Visitor_photo").val() != '') {
@@ -664,7 +634,7 @@ if (isset($_GET['id'])) {
             }
 
             if ($("#currentRoleOfLoggedInUser").val() != 5) {
-                $("#User_workstation").prop("disabled", false);
+
                 $('#Visitor_company option[value!=""]').remove();
 
                 if ($("#Visitor_tenant_agent").val() == '') {
@@ -690,7 +660,7 @@ if (isset($_GET['id'])) {
 
 
             if ($("#currentRoleOfLoggedInUser").val() != 5) {
-                $("#User_workstation").prop("disabled", false);
+
                 $('#Visitor_company option[value!=""]').remove();
 
                 if ($("#Visitor_tenant_agent").val() == '') {
@@ -789,7 +759,7 @@ if (isset($_GET['id'])) {
 
 
 
-                                $(".ajax-upload-dragdrop").css("background", "url(<?php echo Yii::app()->request->baseUrl; ?>" + value.relative_path + ") no-repeat center top");
+                                $(".ajax-upload-dragdrop").css("background", "url(<?php echo Yii::app()->request->baseUrl. '/'?>" + value.relative_path + ") no-repeat center top");
 
                                 $(".ajax-upload-dragdrop").css({
 
@@ -936,9 +906,7 @@ if (isset($_GET['id'])) {
         $('#Visitor_company option[value!=""]').remove();
 
         $('#Visitor_tenant_agent option[value!=""]').remove();
-        $("#User_workstation").empty();
-        getWorkstation();
-        $("#User_workstation").prop("disabled", false);
+
         var tenant = $("#Visitor_tenant").val();
 
         var selected;
@@ -1185,17 +1153,17 @@ if (isset($_GET['id'])) {
 
                 if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
 
-                    window.location = 'index.php?r=dashboard';
+                    //window.location = 'index.php?r=dashboard';
 
                 } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
 
-                    window.location = 'index.php?r=dashboard/viewmyvisitors';
+                   // window.location = 'index.php?r=dashboard/viewmyvisitors';
 
                 }
 
                 else {
 
-                    window.location = 'index.php?r=visitor/admin';
+                    //window.location = 'index.php?r=visitor/admin';
 
                 }
 
@@ -1219,45 +1187,50 @@ if (isset($_GET['id'])) {
 
                 }
 
-            }
+            },
 
-            }
-        );
-    }
-
-    function getWorkstation() { /*get workstations for operator*/
-        var sessionRole = '<?php echo $session['role']; ?>';
-        var superadmin = 5;
-
-        if (sessionRole == superadmin)
-        {
-            var tenant = $("#Visitor_tenant").val();
-        }
-        else {
-            var tenant = '<?php echo $session['tenant'] ?>';
-        }
-        populateOperatorWorkstations(tenant);
-
-    }
-
-    function populateOperatorWorkstations(tenant, value) {
-        $.ajax({
-            type: 'POST',
-            url: '<?php echo Yii::app()->createUrl('user/getTenantWorkstation&id='); ?>' + tenant,
-            dataType: 'json',
-            data: tenant,
-            success: function(r) {
-                $('#User_workstation option[value!=""]').remove();
-
-                $('#User_workstation').append('<option value="">Workstation</option>');
-                $.each(r.data, function(index, value) {
-                    $('#User_workstation').append('<option value="' + value.id + '">' + value.name + '</option>');
-                });
-                $("#User_workstation").val(value);
-            }
         });
 
     }
+	
+	
+	function cancel(){
+	$('#Visitor_repeatpassword').val('');	
+	$('#Visitor_password').val('');
+	$("#random_password").val('');	
+	$("#close_generate").click();
+	}
+	
+	function copy_password(){
+	if($('#random_password').val()==''){
+	$('#error_msg').show();
+	}else{
+	
+	$('#Visitor_password').val($('#random_password').val());
+	$('#Visitor_repeatpassword').val($('#random_password').val());
+	$("#close_generate").click();
+		
+	}
+		
+	}
+	
+	
+	function generatepassword() {
+		
+		 $("#random_password").val('');
+		$( "#pass_option" ).prop( "checked", true );
+		
+		var text = "";
+    	var possible = "abcdefghijklmnopqrstuvwxyz0123456789";
+
+		for( var i=0; i < 6; i++ ){
+			text += possible.charAt(Math.floor(Math.random() * possible.length));
+		}
+    	document.getElementById('random_password').value	=	text;
+		
+	 
+	  $("#gen_pass").click();
+	}
 
 </script>
 
@@ -1302,6 +1275,45 @@ $this->widget('bootstrap.widgets.TbButton', array(
 
 
 </div>
+
+
+
+
+<div class="modal hide fade" id="generate_password" style="width: 410px">
+<div style="border:5px solid #BEBEBE; width:405px">
+    <div class="modal-header" style=" border:none !important; height: 60px !important;padding: 0px !important;width: 405px !important;">
+    <div style="background-color:#E8E8E8; padding-top:2px; width:405px; height:56px;">
+    <a data-dismiss="modal" class="close" id="close_generate" >×</a>
+    <h1 style="color: #000;font-size: 15px;font-weight: bold;margin-left: 9px;padding-top: 0px !important;">				     Autogenerated Password
+    </h1>
+    
+    </div>
+        
+        <br>
+    </div>
+    <div id="modalBody_gen">
+     
+    <table >
+   
+    <div id="error_msg" style='font-size: 0.9em;color: #FF0000;padding-left: 11px; display:none' >Please Generate Password </div>
+    		
+    <tr><td colspan="2" style="padding-left:10px">Your randomly generated password is :</td></tr>
+    <tr><td colspan="2"></td></tr>
+    	<tr><td colspan="2"style="padding-left:55px; padding-top:24px;"><input readonly="readonly" type="text" placeholder="Random Password" value="" id="random_password" /></td></tr>
+        
+        <tr><td colspan="2"style="padding-left:10px; font:italic">Note:Please copy and save this password somewhere safe.</td></tr>
+        <tr><td  style="padding-left: 11px;padding-top: 26px !important; width:50%"> <input onclick="copy_password();"  style="border-radius: 4px; height: 35px; " type="button" value="Use Password" /></td>
+        <td style="padding-right:10px;padding-top: 25px;"> <input  onclick="cancel();" style="border-radius: 4px; height: 35px;" type="button" value="Cancel" /></td>
+        </tr>
+        
+    </table>
+          
+    
+    </div>
+<a data-toggle="modal" data-target="#generate_password" id="gen_pass" style="display:none" class="btn btn-primary">Click me</a>
+</div>
+</div>
+
 
 <!-- PHOTO CROP-->
 

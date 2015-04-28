@@ -2,6 +2,10 @@
     .summary{
         display:none !important;
     }
+
+    #findvisitor-grid_c0 {
+        min-width: 12px !important;
+    }
 </style>
 <?php
 $session = new CHttpSession;
@@ -41,12 +45,21 @@ $this->widget('zii.widgets.grid.CGridView', array(
     }",
     'columns' => array(
         array(
+            'header' => '',
+            'type' => 'raw',
+            'htmlOptions' => array('style' => 'text-align:center;width:12px;'),
+            'value' => '($data->profile_type == Visitor::PROFILE_TYPE_VIC) ? "<img style=\"width: 25px\" src=\"" . Yii::app()->controller->assetsBase . "/images/ico1.jpg\"/>" : "<img style=\"width: 25px\" src=\"" . Yii::app()->controller->assetsBase . "/images/ico2.jpg\"/>" ',
+        ),
+        array(
             'name' => 'first_name',
             'filter' => false
         ),
         'last_name',
-        'email',
-        'contact_number',
+        array(
+            'header' => 'Company',
+            'filter' => false,
+            'value' => '$data->getCompanyName()'
+        ),
         array(
             'header' => 'Action',
             'type' => 'raw',

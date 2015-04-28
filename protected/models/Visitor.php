@@ -342,4 +342,13 @@ class Visitor extends CActiveRecord {
     {
         return __CLASS__;
     }
+
+    public function getCompanyName()
+    {
+        $company = Company::model()->findByPk($this->company);
+        if ($company) {
+            return $company->name;
+        }
+        return "";
+    }
 }

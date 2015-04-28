@@ -19,11 +19,11 @@ $session = new ChttpSession;
     <div class="sidebarTitle" style="">Main Menu</div><br><div id='cssmenu' class="dashboardMenu">
         <ul>
             <li class=''><a href='<?php echo Yii::app()->createUrl('visitor/create&action=register'); ?>' id="addvisitorSidebar" class="sidemenu-icon log-current"><span>Log Visit</span></a></li>
-            <li class=''>
-                <a href='<?php echo Yii::app()->createUrl('visitor/create&action=preregister'); ?>' class="sidemenu-icon pre-visits">
+            <!--<li class=''>
+                <a href='<?php /*echo Yii::app()->createUrl('visitor/create&action=preregister'); */?>' class="sidemenu-icon pre-visits">
                     <span >Preregister Visit</span>
                 </a>
-            </li>
+            </li>-->
             <li class=''><?php
                 echo CHtml::ajaxLink("Add Host", CController::createUrl('dashboard/addHost'), array(
                     'update' => '#content',
@@ -57,7 +57,7 @@ $this->widget('bootstrap.widgets.TbButton', array(
 
 <div class="modal hide fade" id="addCompanyModal" style="width:600px;">
     <div class="modal-header">
-        <a data-dismiss="modal" class="close" id="dismissModal" >×</a>
+        <a data-dismiss="modal" class="close" id="dismissModal" >ï¿½</a>
         <br>
     </div>
     <div id="modalBody"></div>

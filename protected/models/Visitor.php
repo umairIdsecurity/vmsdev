@@ -40,7 +40,7 @@ class Visitor extends CActiveRecord {
     public $birthdayYear;
     public $birthdayDay;
     public $repeatpassword;
-
+	public $password_option;
     const PROFILE_TYPE_VIC = 'VIC';
     const PROFILE_TYPE_ASIC = 'ASIC';
 

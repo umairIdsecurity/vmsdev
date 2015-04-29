@@ -3,10 +3,7 @@ $session = new CHttpSession;
 $company = Company::model()->findByPk($session['company']);
 $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
 ?>
-<style type="text/css">
-.required{ padding-left:10px;}
 
-</style>
 <br>
 <div role="tabpanel" style="width:882px">
 
@@ -305,7 +302,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                                 <tr>
                                 <td>
                                     <?php echo $form->textField($model, 'position', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Position')); ?>
-                                     <span class="required">*</span>
+                                     
                                     <?php echo "<br>" . $form->error($model, 'position'); ?>
                                 </td>
                             </tr>

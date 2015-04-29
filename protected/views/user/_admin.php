@@ -1,8 +1,4 @@
-<style>
-    .grid-view .summary {
-        margin-left: 755px !important;
-    }
-</style>
+
 <?php
 /* @var $this UserController */
 /* @var $model User */
@@ -10,7 +6,7 @@ $session = new ChttpSession;
 $session['lastPage'] = 'admin';
 ?>
 
-<h1>Manage Users</h1>
+<h1>Users</h1>
 
 
 <?php

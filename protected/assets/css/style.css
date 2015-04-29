@@ -9,7 +9,7 @@ and open the template in the editor.
 */
 
 
-.login-area,.selectworkstation-area{
+{
     background: none repeat scroll 0 0 #F3F3F3;
     border: 1px solid #C5C6C8;
     border-radius: 10px;
@@ -342,6 +342,7 @@ nav.navigation ul li:last-child.active
     width: 120.6%;
     overflow-x: auto;
     min-height: 400px;
+    position: relative;
 }
 
 #companyLogo{
@@ -439,10 +440,9 @@ nav.navigation ul li:last-child.active
 .grid-view .summary {
     font-size: 12px;
     font-weight: bold;
-    margin-right: 100px !important;
-    margin-top: -25px !important;
+    margin-top: -27px !important;
     position: absolute;
-    right:0
+    right: 25px;
 }
 
 #page{
@@ -559,7 +559,7 @@ dt.tabs dt{
 
 .visitor-findBtn ,.host-findBtn, #host-AddBtn{
     vertical-align: top;
-    padding:7px !important;
+    padding:6px 8px !important;
 }
 
 .search-text{
@@ -597,6 +597,12 @@ dt.tabs dt{
 #visit-reason-grid .filters input{
     width:98% !important;
 }
+
+#visitorCompanyRow .select2{
+    margin-top: 0.2em;
+}
+
+.required{ padding-left:10px;}
 /*radio buttons*/
 
 .errorMessageEmail, .errorMessageEmail1{
@@ -1618,4 +1624,15 @@ dt.tabs dt{
     color: #000000 !important;
     background: #f2f2f2 !important;
     background-image: none !important;
+}
+
+.button-column .update{
+    display: inline-block;
+    width: 48px;
+    margin-right: 3px;
+}
+
+.button-column .delete{
+    display: inline-block;
+    width: 48px;
 }

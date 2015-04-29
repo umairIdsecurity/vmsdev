@@ -78,7 +78,13 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
 
 
 <div class="form" data-ng-app="PwordForm">
-<h1>Add User </h1>
+<?php if($this->action->id == 'update') {
+echo '<h1>Edit User</h1>';	
+
+}else{
+echo '<h1>Add User </h1>';
+
+}?>
     <?php
     $form = $this->beginWidget('CActiveForm', array(
         'id' => 'userform',

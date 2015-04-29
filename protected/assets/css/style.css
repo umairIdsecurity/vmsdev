@@ -9,7 +9,7 @@ and open the template in the editor.
 */
 
 
-{
+.login-area,.selectworkstation-area{
     background: none repeat scroll 0 0 #F3F3F3;
     border: 1px solid #C5C6C8;
     border-radius: 10px;

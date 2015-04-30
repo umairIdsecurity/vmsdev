@@ -87,17 +87,24 @@ $userRole = $session['role'];
                     </div>
                     <aside class="top_nav">
                         <ul id="tabs">
-                            <li>
+                            <li class="profile">
                                 <a href="<?php echo Yii::app()->createUrl("/user/profile&id=" . $session['id']); ?>">
-                                    <p>My Profile</p>
+                                    My Profile
                                 </a>
                             </li>
-                            <li><a href="<?php echo Yii::app()->createUrl("/dashboard/contactsupport"); ?>">
-                                    <p>Contact Support</p>
+
+                            <li class="notifications">
+                                <a href="#">
+                                    Notifications
+                                </a>
+                            </li>
+
+                            <li class="support"><a href="<?php echo Yii::app()->createUrl("/dashboard/contactsupport"); ?>">
+                                    Contact Support
                                 </a>
                             </li>
                             <?php
-                            echo '<li><a href="' . Yii::app()->createUrl("/site/logout") . '"><p>Log Out</p></a></li>';
+                            echo '<li class="logout"><a href="' . Yii::app()->createUrl("/site/logout") . '">Log Out</a></li>';
                             ?>
                         </ul>
                         <div class="clear"></div>

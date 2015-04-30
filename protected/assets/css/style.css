@@ -9,7 +9,7 @@ and open the template in the editor.
 */
 
 
-{
+.login-area,.selectworkstation-area{
     background: none repeat scroll 0 0 #F3F3F3;
     border: 1px solid #C5C6C8;
     border-radius: 10px;
@@ -102,11 +102,7 @@ div.form label{
 {
     border-right:none;
 }
-.top_nav ul li p
-{
-    float:left;
-    padding:1px 0 0 5px;
-}
+
 .top_nav ul li img
 {
     float:left;
@@ -121,6 +117,43 @@ div.form label{
 {
     color:#9BD62C;
 }
+
+.top_nav .profile, .top_menu .logout{
+    padding: 0 5px;
+}
+
+.top_nav .profile a{
+    display: block;
+    height: 40px;
+    width: 40px;
+    background: url('../images/menu-icons-profile.jpg') no-repeat;
+    text-indent: -9999px;
+}
+
+.top_nav .notifications a{
+    display: block;
+    height: 40px;
+    width: 40px;
+    background: url('../images/menu-icons-notifications.jpg') no-repeat;
+    text-indent: -9999px;
+}
+
+.top_nav .support a{
+    display: block;
+    height: 40px;
+    width: 40px;
+    background: url('../images/menu-icons-support.jpg') no-repeat;
+    text-indent: -9999px;
+}
+
+.top_nav .logout a{
+    display: block;
+    height: 40px;
+    width: 40px;
+    background: url('../images/menu-icons-logout.jpg') no-repeat;
+    text-indent: -9999px;
+}
+
 .login_icon
 {
     float:right;

@@ -5,11 +5,10 @@ class m150430_022917_add_workstation_card_type extends CDbMigration
 	public function up()
 	{
 		$this->execute("CREATE TABLE `workstation_card_type` (
-  			`id` bigint(20) NOT NULL,
   			`workstation` bigint(20) NOT NULL,
   			`card_type` bigint(20) NOT NULL,
   			`user` bigint(20) NOT NULL,
-            PRIMARY KEY (`id`),
+            PRIMARY KEY (`workstation`,`card_type`),
             CONSTRAINT `workstation_card_type_workstation` FOREIGN KEY (`workstation`) REFERENCES `workstation` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
             CONSTRAINT `workstation_card_type_card_type` FOREIGN KEY (`card_type`) REFERENCES `card_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
             CONSTRAINT `workstation_card_user` FOREIGN KEY (`user`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE

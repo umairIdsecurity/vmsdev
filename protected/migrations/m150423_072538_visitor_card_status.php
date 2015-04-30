@@ -6,7 +6,7 @@ class m150423_072538_visitor_card_status extends CDbMigration
     {
         $this->execute("
 
-CREATE TABLE `visitor_card_status` (
+CREATE TABLE IF NOT EXISTS `visitor_card_status` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
   `profile_type` enum('VIC','ASIC') NOT NULL DEFAULT 'VIC',

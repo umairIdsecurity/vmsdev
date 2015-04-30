@@ -30,6 +30,10 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                             <td>Last Name:</td>
                             <td><?php echo $visitorModel->last_name; ?></td>
                         </tr>
+                        <tr>
+                            <td>Company:</td>
+                            <td><?php echo $visitorModel->getCompanyName(); ?></td>
+                        </tr>
                     </table>
                 </li>
             </ul>
@@ -68,7 +72,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                             <td>Mobile:</td>
                             <td><input type="text" value="<?php echo $visitorModel->contact_number; ?>" name="Visitor[contact_number]" id="Visitor_contact_number"></td>
                         </tr>
-                        <tr><td><input type="submit" value="Update" name="yt0" id="submitContactDetailForm" class="complete" /></td></tr>
+                        <!--<tr><td><input type="submit" value="Update" name="yt0" id="submitContactDetailForm" class="complete" /></td></tr>-->
                     </table>
                     <?php $this->endWidget(); ?>
                 </li>
@@ -162,11 +166,11 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                             </td>
 
                         </tr>
-                        <?php if ($session['role'] != Roles::ROLE_STAFFMEMBER) { ?>
+                        <?php /*if ($session['role'] != Roles::ROLE_STAFFMEMBER) { */?><!--
                             <tr>
                                 <td><input type='submit' value='Update' class='submitBtn complete'></td>
                             </tr>
-                        <?php } ?>
+                        --><?php /*} */?>
                     </table>
                     <?php $this->endWidget(); ?>
                 </li>
@@ -265,211 +269,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
         <li class='has-sub' id='hostDetailsLi'><a href="#"><span>Host Details</span></a>
             <ul>
                 <li>
-                    <?php
-                    $updateHostVisitForm = $this->beginWidget('CActiveForm', array(
-                        'id' => 'update-host-visit-form',
-                        'action' => Yii::app()->createUrl('/visit/update&id=' . $model->id),
-                        'htmlOptions' => array("name" => "update-host-visit-form"),
-                        'enableAjaxValidation' => false,
-                        'enableClientValidation' => true,
-                        'clientOptions' => array(
-                            'validateOnSubmit' => true,
-                            'afterValidate' => 'js:function(form,data,hasError){
-                        if(!hasError){
-                        
-                        if($("#selectedHostInSearchTable").val() == ""){
-                            $("#searchTextHostErrorMessage").show();
-                            $("#searchTextHostErrorMessage").html("Please assign a host");
-                        } else {
-                            sendVisitForm("update-host-visit-form");
-                            sendVisitForm("update-visit-form");
-                        }
-                                
-                                
-                                }
-                        }'
-                        ),
-                    ));
-                    ?>
-                    <div class="flash-success success-update-host-details"> Host Details Updated Successfully. </div>
-
-                    <div id="searchHostDiv" style="display:block;">
-                        <div>
-                            <label style="font-size:12px;">Search Name:</label> 
-                            <input type="text" id="search-host" name="search-host" class="search-text" style="width:96%;"/> 
-                            <button class="host-findBtn" onclick="findHostRecord()" id="host-findBtn" style="display:none;" data-target="#findHostRecordModal" data-toggle="modal">Search Visits</button>
-                            <div class="errorMessage" id="searchTextHostErrorMessage" style="display:none;font-size:12px;"></div>
-
-                            <button class="host-findBtn" id="dummy-host-findBtn" style="line-height:0px;">Find Host</button>
-                        </div>
-                        <input type="text" name="Visit[host]" id="selectedHostInSearchTable" style="display:none;"/>
-                        <input type="text" name="Visit[visitor_type]" id="visitorTypeUnderSearchForm" style="display:none;" value="<?php
-                        if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
-                            echo "2";
-                        }
-                        ?>"/>
-                               <?php echo "<br>" . $updateHostVisitForm->error($model, 'host'); ?>
-                        <div id="searchHostTableDiv">
-                            <br><div style="font-weight:bold;" class="findDivTitle"></div><br>
-
-                            <div>
-                                <input type="submit" id="updateVisitHostFromSearch"  value="Update" class="complete"/>
-                            </div>
-                        </div>
-
-                    </div>
-                    <?php $this->endWidget(); ?>
-                    <?php
-                    $form = $this->beginWidget('CActiveForm', array(
-                        'id' => 'register-newhost-form',
-                        'action' => Yii::app()->createUrl('/user/create'),
-                        'htmlOptions' => array("name" => "register-newhost-form"),
-                        'enableAjaxValidation' => false,
-                        'enableClientValidation' => true,
-                        'clientOptions' => array(
-                            'validateOnSubmit' => true,
-                            'afterValidate' => 'js:function(form,data,hasError){
-                        if(!hasError){
-                            
-                                checkNewHostEmailIfUnique("New_user_email","register-newhost-form");}
-                                
-                        }'
-                        ),
-                    ));
-                    ?>
-                    <div class="flash-success success-add-host">Host Added Successfully. </div>
-
-                    <table  id="addnewhost-table" class="detailsTable" style="display:none;">
-
-                        <tr>
-                            <td style="width:107px !important;">
-                                <?php echo $form->labelEx($newHost, 'first_name'); ?>
-                            </td>
-                            <td>
-                                <?php echo $form->textField($newHost, 'first_name', array('size' => 50, 'maxlength' => 50)); ?>
-                                <?php echo "<br>" . $form->error($newHost, 'first_name'); ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <?php echo $form->labelEx($newHost, 'last_name'); ?>
-                            </td>
-                            <td>
-                                <?php echo $form->textField($newHost, 'last_name', array('size' => 50, 'maxlength' => 50)); ?>
-                                <?php echo "<br>" . $form->error($newHost, 'last_name'); ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <?php echo $form->labelEx($newHost, 'department'); ?>
-                            </td>
-                            <td>
-                                <?php echo $form->textField($newHost, 'department', array('size' => 50, 'maxlength' => 50)); ?>
-                                <?php echo "<br>" . $form->error($newHost, 'deprtment'); ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <?php echo $form->labelEx($newHost, 'staff_id'); ?>
-                            </td>
-                            <td>
-                                <?php echo $form->textField($newHost, 'staff_id', array('size' => 50, 'maxlength' => 50)); ?>
-                                <?php echo "<br>" . $form->error($newHost, 'staff_id'); ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <?php echo $form->labelEx($newHost, 'email'); ?>
-                            </td>
-                            <td>
-                                <?php echo $form->textField($newHost, 'email', array('size' => 50, 'maxlength' => 50, 'class' => 'New_user_email')); ?>
-                                <?php echo "<br>" . $form->error($newHost, 'email'); ?>
-                                <div style="" id="New_user_email_em_" class="errorMessage errorMessageEmail2" >A profile already exists for this email address.</div>
-
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <?php echo $form->labelEx($newHost, 'contact_number'); ?>
-                            </td>
-                            <td>
-                                <?php echo $form->textField($newHost, 'contact_number', array('size' => 50, 'maxlength' => 50)); ?>
-                                <?php echo "<br>" . $form->error($newHost, 'contact_number'); ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label for="User_password">Password <span class="required">*</span></label>
-                            </td>
-                            <td>
-                                <input type="password" id="User_password" name="User[password]">			
-                                <?php echo "<br>" . $form->error($newHost, 'password'); ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label for="User_repeatpassword">Repeat Password <span class="required">*</span></label>
-                            </td>
-                            <td>
-                                <input type="password" id="User_repeatpassword" name="User[repeatpassword]" onChange="checkPasswordMatch();"/>			
-                                <div style='font-size:10px;color:red;font-size:11.5px;display:none;' id="passwordErrorMessage">New Password does not match with Repeat New Password. </div>
-                                <?php echo "<br>" . $form->error($newHost, 'repeatpassword'); ?>
-                            </td>
-                        </tr>
-                        <tr id="hostTenantRow">
-
-                            <td ><?php echo $form->labelEx($newHost, 'tenant'); ?></td>
-                            <td>
-                                <select id="User_tenant" class="New_user_tenant" onchange="populateHostTenantAgentAndCompanyField()" name="User[tenant]"  >
-                                    <option value='' selected>Please select a tenant</option>
-                                    <?php
-                                    $allTenantCompanyNames = User::model()->findAllAdmin();
-                                    foreach ($allTenantCompanyNames as $key => $value) {
-                                        ?>
-                                        <option value="<?php echo $value->tenant; ?>"><?php echo $value->first_name . " " . $value->last_name; ?></option>
-                                        <?php
-                                    }
-                                    ?>
-                                </select><?php echo "<br>" . $form->error($newHost, 'tenant'); ?>
-                            </td>
-                        </tr>
-                        <tr id="hostTenantAgentRow">
-                            <td ><?php echo $form->labelEx($newHost, 'tenant_agent'); ?></td>
-                            <td>
-                                <select id="User_tenant_agent" class="New_user_tenant_agent" name="User[tenant_agent]" onchange="populateHostCompanyWithSameTenantAndTenantAgent()" >
-                                    <?php
-                                    echo "<option value='' selected>Please select a tenant agent</option>";
-                                    ?>
-                                </select><?php echo "<br>" . $form->error($newHost, 'tenant_agent'); ?>
-                            </td>
-                        </tr>
-                        <tr id="hostCompanyRow">
-                            <td><?php echo $form->labelEx($newHost, 'company'); ?></td>
-                            <td>
-                                <select id="User_company" name="User[company]" class="New_user_company">
-                                    <option value=''>Please select a company</option>
-                                </select>
-
-                                <?php echo "<br>" . $form->error($newHost, 'company'); ?>
-                            </td>
-                            <td style="display:none;">
-                                <input name="User[role]" id="User_role" value="<?php echo Roles::ROLE_STAFFMEMBER ?>"/>
-                                <input name="User[user_type]" id="User_user_type" value="<?php echo UserType::USERTYPE_INTERNAL; ?>"/>
-                                <input name="User[password]" id="User_password" value="0"/>
-                                <input name="User[repeatpassword]" id="User_repeat_password" value="0"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <input type="submit" value="Add" name="yt0" class="complete"/>
-                            </td>
-                        </tr>
-
-                    </table>
-
-                    <?php $this->endWidget(); ?>
-
-                    <?php
+                <?php
                     $hostForm = $this->beginWidget('CActiveForm', array(
                         'id' => 'update-host-form',
                         'action' => Yii::app()->createUrl('/user/update&id=' . $model->host),
@@ -501,35 +301,6 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                             <td>
                                 <?php echo $hostForm->textField($hostModel, 'last_name', array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled')); ?>
                                 <?php echo "<br>" . $hostForm->error($hostModel, 'last_name'); ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td width="100px;"><?php echo $hostForm->labelEx($hostModel, 'department'); ?></td>
-                            <td>
-                                <?php echo $hostForm->textField($hostModel, 'department', array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled')); ?>
-                                <?php echo "<br>" . $hostForm->error($hostModel, 'department'); ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td width="100px;"><?php echo $hostForm->labelEx($hostModel, 'staff_id'); ?></td>
-                            <td>
-                                <?php echo $hostForm->textField($hostModel, 'staff_id', array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled')); ?>
-                                <?php echo "<br>" . $hostForm->error($hostModel, 'staff_id'); ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td width="100px;"><?php echo $hostForm->labelEx($hostModel, 'email'); ?></td>
-                            <td>
-                                <?php echo $hostForm->textField($hostModel, 'email', array('class' => 'update_user_email', 'disabled' => 'disabled')); ?>
-                                <?php echo "<br>" . $hostForm->error($hostModel, 'email'); ?>
-                                <div style="display:none;" id="User_email_em_1a" class="errorMessage errorMessageEmail1" >A profile already exists for this email address.</div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td width="100px;">Mobile:</td>
-                            <td>
-                                <?php echo $hostForm->textField($hostModel, 'contact_number', array('disabled' => 'disabled')); ?>
-                                <?php echo "<br>" . $hostForm->error($hostModel, 'contact_number'); ?>
                             </td>
                         </tr>
                     </table>
@@ -577,42 +348,6 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
 
                         <?php $this->endWidget(); ?>
                     </div>
-                    <?php
-                    $patientForm = $this->beginWidget('CActiveForm', array(
-                        'id' => 'update-patient-form',
-                        'action' => Yii::app()->createUrl('/patient/update&id=' . $model->patient),
-                        'htmlOptions' => array("name" => "update-patient-form"),
-                        'enableAjaxValidation' => false,
-                        'enableClientValidation' => true,
-                        'clientOptions' => array(
-                            'validateOnSubmit' => true,
-                            'afterValidate' => 'js:function(form,data,hasError){
-                        if(!hasError){
-                                sendPatientForm();
-                                }
-                        }'
-                        ),
-                    ));
-                    if ($patientModel !== null) {
-                        ?>
-                        <div class="flash-success success-update-patient">Patient Updated Successfully. </div>
-
-                        <table id="patientTable" class="detailsTable">
-                            <tr>
-                                <td width="100px;"><?php echo $patientForm->labelEx($patientModel, 'first_name');
-                        ?></td>
-                                <td>
-                                    <?php echo $patientForm->textField($patientModel, 'name', array('size' => 50, 'maxlength' => 50)); ?>
-                                    <?php echo "<br>" . $patientForm->error($patientModel, 'name'); ?>
-                                </td>
-                            </tr>
-
-                            <tr><td><input type="submit" value="Update" name="yt0" id="submit" class="complete"/></td></tr>
-                        </table>
-                        <?php
-                    }
-                    $this->endWidget();
-                    ?>
                 </li>
             </ul>
         </li>

@@ -1,28 +1,25 @@
 <?php
 
 /**
- * This is the model class for table "workstation_card_type".
+ * This is the model class for table "module".
  *
- * The followings are the available columns in table 'workstation_card_type':
- * @property string $workstation
- * @property string $card_type
- * @property string $user
+ * The followings are the available columns in table 'module':
+ * @property string $id
+ * @property string $name
+ * @property string $about
+ * @property string $created_by
  *
  * The followings are the available model relations:
- * @property Workstation $workstation0
- * @property CardType $cardType
- * @property User $user0
+ * @property CardType[] $cardTypes
  */
-class WorkstationCardType extends CActiveRecord
+class Module extends CActiveRecord
 {
-	//public $workstation;
-	//public $card_type;
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'workstation_card_type';
+		return 'module';
 	}
 
 	/**
@@ -33,11 +30,12 @@ class WorkstationCardType extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('workstation, card_type, user', 'required'),
-			array('workstation, card_type, user', 'length', 'max'=>20),
+			array('name', 'required'),
+			array('name, about', 'length', 'max'=>255),
+			array('created_by', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('workstation, card_type, user', 'safe', 'on'=>'search'),
+			array('id, name, about, created_by', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -49,9 +47,7 @@ class WorkstationCardType extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			//'workstation0' => array(self::BELONGS_TO, 'Workstation', 'workstation'),
-			//'cardType' => array(self::BELONGS_TO, 'CardType', 'card_type'),
-			//'user0' => array(self::BELONGS_TO, 'User', 'user'),
+			'cardTypes' => array(self::HAS_MANY, 'CardType', 'module'),
 		);
 	}
 
@@ -61,9 +57,10 @@ class WorkstationCardType extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'workstation' => 'Workstation',
-			'card_type' => 'Card Type',
-			'user' => 'User',
+			'id' => 'ID',
+			'name' => 'Name',
+			'about' => 'About',
+			'created_by' => 'Created By',
 		);
 	}
 
@@ -85,9 +82,10 @@ class WorkstationCardType extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('workstation',$this->workstation,true);
-		$criteria->compare('card_type',$this->card_type,true);
-		$criteria->compare('user',$this->user,true);
+		$criteria->compare('id',$this->id,true);
+		$criteria->compare('name',$this->name,true);
+		$criteria->compare('about',$this->about,true);
+		$criteria->compare('created_by',$this->created_by,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -98,7 +96,7 @@ class WorkstationCardType extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return WorkstationCardType the static model class
+	 * @return Module the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{

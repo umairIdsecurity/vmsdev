@@ -83,13 +83,38 @@ class WorkstationController extends Controller {
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
 
+        $slectedCardType = WorkstationCardType::model()->findAllByAttributes(
+            array('workstation'=>$id)
+        );
+
+        $cards = array();
+        if(!empty($slectedCardType)){
+            foreach($slectedCardType as $cardTypes){
+                $cards[] = $cardTypes->card_type;
+            }
+        }
+
+        $model->card_type = $cards;
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['Workstation'])) {
             $model->attributes = $_POST['Workstation'];
-            if ($model->save())
-                $this->redirect(array('admin'));
+            if ($model->save()){
+
+                WorkstationCardType::model()->deleteAll(
+                    "workstation='" . $model->id . "'"
+                );
+
+                foreach($model->card_type as $card){
+                    $workstation = new WorkstationCardType();
+                    $workstation->workstation = $model->id;
+                    $workstation->card_type = $card;
+                    $workstation->user = 16;
+                    $workstation->save();
+                }
+            }
+            $this->redirect(array('admin'));
         }
 
         $this->render('update', array(

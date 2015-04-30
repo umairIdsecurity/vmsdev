@@ -24,6 +24,9 @@
  */
 class Workstation extends CActiveRecord {
 
+    //public $workstation;
+    public $card_type;
+
     /**
      * @return string the associated database table name
      */
@@ -40,7 +43,7 @@ class Workstation extends CActiveRecord {
         return array(
             array('name', 'required'),
             array('tenant','required','message' =>'Please select a {attribute}'),
-            array('contact_number', 'safe'),
+            array('contact_number, card_type', 'safe'),
             array('contact_email_address', 'email'),
             array('number_of_operators, assign_kiosk', 'numerical', 'integerOnly' => true),
             array('name, contact_name,tenant,tenant_agent,created_by', 'length', 'max' => 50),
@@ -214,5 +217,6 @@ class Workstation extends CActiveRecord {
             return false;
         }
     }
+
 
 }

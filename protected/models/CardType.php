@@ -42,11 +42,11 @@ class CardType extends CActiveRecord {
         return array(
             array('max_entry_count_validity', 'numerical', 'integerOnly' => true),
             array('name, max_time_validity', 'length', 'max' => 50),
-            array('card_background_image_path, created_by', 'length', 'max' => 20),
+            array('card_background_image_path, created_by , module', 'length', 'max' => 20),
             array('card_icon_type', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, name, max_time_validity,card_icon_type, max_entry_count_validity, card_background_image_path, created_by', 'safe', 'on' => 'search'),
+            array('id, name, max_time_validity,card_icon_type, max_entry_count_validity, card_background_image_path, created_by, module', 'safe', 'on' => 'search'),
         );
     }
 
@@ -59,6 +59,7 @@ class CardType extends CActiveRecord {
         return array(
             'cardBackgroundImagePath' => array(self::BELONGS_TO, 'Photo', 'card_background_image_path'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'created_by'),
+            'cardModule' => array(self::BELONGS_TO, 'Module', 'module'),
         );
     }
 
@@ -74,6 +75,7 @@ class CardType extends CActiveRecord {
             'card_background_image_path' => 'Card Background Image Path',
             'card_icon_type' => 'Card Icon',
             'created_by' => 'Created By',
+            'module' => 'Module',
         );
     }
 
@@ -101,6 +103,7 @@ class CardType extends CActiveRecord {
         $criteria->compare('card_background_image_path', $this->card_background_image_path, true);
         $criteria->compare('card_icon_type', $this->card_icon_type, true);
         $criteria->compare('created_by', $this->created_by, true);
+        $criteria->compare('module', $this->module, true);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

@@ -7,6 +7,11 @@
  * @property string $workstation
  * @property string $card_type
  * @property string $user
+ *
+ * The followings are the available model relations:
+ * @property Workstation $workstation0
+ * @property CardType $cardType
+ * @property User $user0
  */
 class WorkstationCardType extends CActiveRecord
 {
@@ -42,6 +47,9 @@ class WorkstationCardType extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'workstation0' => array(self::BELONGS_TO, 'Workstation', 'workstation'),
+			'cardType' => array(self::BELONGS_TO, 'CardType', 'card_type'),
+			'user0' => array(self::BELONGS_TO, 'User', 'user'),
 		);
 	}
 

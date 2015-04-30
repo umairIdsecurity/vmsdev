@@ -4,25 +4,6 @@ $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/script-visitor
 $session = new CHttpSession;
 ?>
 <div id='actionsCssMenu'>
-    <ul class="visitStatusLi">
-        <li>
-            <a style="text-decoration: none; ">Status: <span style="color:#<?php
-                if ($model->visit_status == VisitStatus::CLOSED) {
-                    echo "ff0000";
-                } else if ($model->visit_status == VisitStatus::ACTIVE) {
-                    echo "9BD62C";
-                } else if ($model->visit_status == VisitStatus::PREREGISTERED) {
-                    echo "FFA500";
-                } else if ($model->visit_status == VisitStatus::SAVED) {
-                    echo "637280";
-                }
-                ?> !important; font-weight:bold"><?php echo VisitStatus::$VISIT_STATUS_LIST[$model->visit_status]; ?></span></a>
-
-        </li>
-    </ul>
-
-    <input type="text" style="display:none;" value="<?php echo $model->visit_status; ?>" id="visitStatusActions"/>
-
     <ul>
 
         <li class='has-sub' id="closevisitLi" style="<?php
@@ -64,7 +45,7 @@ $session = new CHttpSession;
                                             <td>
                                                 <input name="Visit[visit_status]" id="Visit_visit_status" type="text" value="<?php echo VisitStatus::CLOSED; ?>" style="display:none;">
                                                 <input name="Visit[time_check_out]" id="Visit_time_check_out" class="timeout" type="text" style="display:none;">
-                                                <input type="text" value="<?php echo date("d-m-Y"); ?>" id='Visit_date_check_out' name="Visit[date_check_out]" readonly>
+                                                <input type="text" value="<?php echo date("d-m-Y"); ?>" id='Visit_date_check_out1' name="Visit[date_check_out1]" readonly>
                                             </td>
                                         </tr>
                                         <tr>
@@ -106,9 +87,10 @@ $session = new CHttpSession;
             </ul>
 
         </li>
+
         <?php if (($model->visit_status == VisitStatus::PREREGISTERED || $model->visit_status == VisitStatus::SAVED || $model->visit_status == VisitStatus::CLOSED)) {
             ?>
-            <li class='has-sub' id="preregisterLi"><a href="#"><span class="pre-visits">Preregister Visit</span></a>
+            <!--<li class='has-sub' id="preregisterLi"><a href="#"><span class="pre-visits">Preregister Visit</span></a>
                 <ul>
                     <li>
 
@@ -119,12 +101,12 @@ $session = new CHttpSession;
 
                                     <div id="logVisitDiv">
                                         <?php
-                                        $this->renderPartial('preregisteravisit', array('model' => $model,
+/*                                        $this->renderPartial('preregisteravisit', array('model' => $model,
                                             'visitorModel' => $visitorModel,
                                             'hostModel' => $hostModel,
                                             'reasonModel' => $reasonModel,
                                         ));
-                                        ?>
+                                        */?>
                                     </div>
                                 </td>
                             </tr>
@@ -132,8 +114,9 @@ $session = new CHttpSession;
                     </li>
                 </ul>
             </li>
+-->
 
-            <li class='has-sub' id="activateLi"><a href="#"><span class="log-current">Log Visit</span></a>
+            <li class='has-sub' id="activateLi"><span style="padding: 2px 30px;color:#637280 !important; font-weight:bold" class="log-current">Log Visit</span>
                 <ul>
                     <li>
                         <?php
@@ -145,14 +128,14 @@ $session = new CHttpSession;
                             'clientOptions' => array(
                                 'validateOnSubmit' => true,
                                 'afterValidate' => 'js:function(form, data, hasError){
-                                if (!hasError){
-                                if($("#Visitor_photo").val() == "" && $("#Visit_card_type").val() == "2" ){
-                                    alert("Please upload a photo.");
-                                }else 
-                                {          
-                                   checkIfActiveVisitConflictsWithAnotherVisit();
-                                } 
-                                }
+                                    if (!hasError){
+                                        if($("#Visitor_photo").val() == "" && $("#Visit_card_type").val() == "2" ){
+                                            alert("Please upload a photo.");
+                                        }else
+                                        {
+                                           checkIfActiveVisitConflictsWithAnotherVisit();
+                                        }
+                                    }
                                 }'
                             ),
                         ));

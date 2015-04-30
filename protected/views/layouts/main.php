@@ -88,24 +88,28 @@ $userRole = $session['role'];
                     <aside class="top_nav">
                         <ul id="tabs">
                             <li class="profile">
-                                <a href="<?php echo Yii::app()->createUrl("/user/profile&id=" . $session['id']); ?>">
+                                <a title="profile" href="<?php echo Yii::app()->createUrl("/user/profile&id=" . $session['id']); ?>">
                                     My Profile
                                 </a>
                             </li>
 
+                            <li class="help">
+                                <a class="title" href="#">
+                                    Help
+                                </a>
+                            </li>
+
                             <li class="notifications">
-                                <a href="#">
+                                <a title="notifications" href="#">
                                     Notifications
                                 </a>
                             </li>
 
-                            <li class="support"><a href="<?php echo Yii::app()->createUrl("/dashboard/contactsupport"); ?>">
+                            <li class="support"><a title="support" href="<?php echo Yii::app()->createUrl("/dashboard/contactsupport"); ?>">
                                     Contact Support
                                 </a>
                             </li>
-                            <?php
-                            echo '<li class="logout"><a href="' . Yii::app()->createUrl("/site/logout") . '">Log Out</a></li>';
-                            ?>
+                            
                         </ul>
                         <div class="clear"></div>
                         <a href="<?php echo Yii::app()->createUrl("/site/logout"); ?>">
@@ -140,9 +144,20 @@ $userRole = $session['role'];
                                     <a href="<?php echo Yii::app()->createUrl("/user/admin"); ?>">Administration</a>
                                 </li>
                             <?php } ?>
-                            <li style=' float:right;'>
-                                <a style="width:334px !important;text-align:right;">Logged in as <?php echo User::model()->getUserRole($userRole); ?></a>
+                           
+                            
+                           
+                            <li class="loggedin-as">
+                               Logged in as <?php echo User::model()->getUserRole($userRole); ?>
+                                
                             </li> 
+
+                            <li class="logout">
+                                    <?php
+                            echo '<a href="' . Yii::app()->createUrl("/site/logout") . '">Log Out</a>';
+                            ?>
+                            </li>
+                            
 
                         </ul>
 

@@ -118,7 +118,7 @@ div.form label{
     color:#9BD62C;
 }
 
-.top_nav .profile, .top_menu .logout{
+.top_nav .profile{
     padding: 0 5px;
 }
 
@@ -126,7 +126,7 @@ div.form label{
     display: block;
     height: 40px;
     width: 40px;
-    background: url('../images/menu-icons-profile.jpg') no-repeat;
+    background: url('../images/menu-icons-profile.jpg') no-repeat center center;
     text-indent: -9999px;
 }
 
@@ -134,7 +134,7 @@ div.form label{
     display: block;
     height: 40px;
     width: 40px;
-    background: url('../images/menu-icons-notifications.jpg') no-repeat;
+    background: url('../images/menu-icons-notifications.jpg') no-repeat center center;
     text-indent: -9999px;
 }
 
@@ -142,16 +142,38 @@ div.form label{
     display: block;
     height: 40px;
     width: 40px;
-    background: url('../images/menu-icons-support.jpg') no-repeat;
+    background: url('../images/menu-icons-support.jpg') no-repeat center center;
     text-indent: -9999px;
 }
 
-.top_nav .logout a{
+
+
+.top_nav .help a{
     display: block;
     height: 40px;
     width: 40px;
-    background: url('../images/menu-icons-logout.jpg') no-repeat;
+    background: url('../images/menu-icons-help.jpg') no-repeat center center;
     text-indent: -9999px;
+}
+
+#tabs .logout{
+    float: right;
+}
+
+#tabs .logout a{
+    display: block;
+    height: 40px;
+    width: 40px;
+    background: url('../images/menu-icons-logout.png') no-repeat center center;
+    text-indent: -9999px;
+    float: right;
+    padding: 0;
+}
+
+#tabs .loggedin-as{
+    width: 440px;
+    padding: 10px 25px;
+    text-align: right;
 }
 
 .login_icon

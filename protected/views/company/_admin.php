@@ -4,7 +4,7 @@
 
 ?>
 
-<h1>Manage Companies</h1>
+<h1>Companies</h1>
 
 <?php
 $this->widget('zii.widgets.grid.CGridView', array(

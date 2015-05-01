@@ -176,6 +176,37 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
        <!-- Total Visits to All Companies: <?php // echo $visitModel['allVisitsByVisitor']; ?> -->
 </div>
 <input type="hidden" id="dummycardvalue" value="<?php echo $model->card; ?>"/>
+
+<form method="post" id="workstationForm">
+<div style="margin: 10px 0px 0px 60px; text-align: left;">
+    <select id="workstation" onchange="populateVisitWorkstation(this)">
+        <?php
+        if ($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
+            echo '';
+        } else {
+            echo '<option value="">Select workstation</option>';
+        }
+        ?>
+
+        <?php
+        $workstationList = populateWorkstation();
+        foreach ($workstationList as $key => $value) {
+            ?>
+            <option value="<?php echo $value->id; ?>" <?php
+            if (isset($model->workstation) && $value->id == $model->workstation) {
+                echo 'selected';
+            }
+            ?>><?php echo $value->name; ?></option>
+        <?php
+        }
+        ?>
+    </select>
+    <br/>
+    <input type="submit" class="complete" id="submitWorkStationForm" value="Update">
+
+</div>
+</form>
+
 <script>
     $(document).ready(function() {
 
@@ -318,3 +349,55 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
 <input type="hidden" id="height"/>
 
 <input type="hidden" id="visitorOriginalValue" value="<?php echo $visitorModel->photo; ?>"/>
+
+<?php
+
+function populateWorkstation() {
+    $session = new CHttpSession;
+
+    switch ($session['role']) {
+        case Roles::ROLE_SUPERADMIN:
+            $workstationList = Workstation::model()->findAll();
+            break;
+
+        case Roles::ROLE_OPERATOR:
+        case Roles::ROLE_AGENT_OPERATOR:
+            $Criteria = new CDbCriteria();
+            $Criteria->condition = "id ='" . $session['workstation'] . "'";
+            $workstationList = Workstation::model()->findAll($Criteria);
+            break;
+
+        case Roles::ROLE_STAFFMEMBER:
+            if ($session['tenant'] == NULL) {
+                $tenantsearchby = "IS NULL";
+            } else {
+                $tenantsearchby = "='" . $session['tenant'] . "'";
+            }
+
+            if ($session['tenant_agent'] == NULL) {
+                //$tenantagentsearchby = "and tenant_agent IS NULL";
+                $tenantagentsearchby = "";
+            } else {
+                $tenantagentsearchby = "and tenant_agent ='" . $session['tenant_agent'] . "'";
+            }
+            $Criteria = new CDbCriteria();
+            $Criteria->condition = "tenant $tenantsearchby  $tenantagentsearchby";
+            $workstationList = Workstation::model()->findAll($Criteria);
+            break;
+
+        case Roles::ROLE_ADMIN:
+            $Criteria = new CDbCriteria();
+            $Criteria->condition = "tenant ='" . $session['tenant'] . "'";
+            $workstationList = Workstation::model()->findAll($Criteria);
+            break;
+
+        case Roles::ROLE_AGENT_ADMIN:
+            $Criteria = new CDbCriteria();
+            $Criteria->condition = "tenant ='" . $session['tenant'] . "' and tenant_agent ='" . $session['tenant_agent'] . "'";
+            $workstationList = Workstation::model()->findAll($Criteria);
+            break;
+    }
+
+    return $workstationList;
+}
+?>

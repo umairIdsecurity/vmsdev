@@ -5,6 +5,19 @@
 
 $mainConfigArray = include dirname(__FILE__).DIRECTORY_SEPARATOR.'main.php';
 
+# if we've found a environment mainConfigArray file then use the values
+if(file_exists(dirname(__FILE__).'/environment.php')) {
+
+    $environment_config=require(dirname(__FILE__).'/environment.php');
+
+    $mainConfigArray['components']['db']['connectionString'] = $environment_config['db']['connectionString'];
+    $mainConfigArray['components']['db']['username'] = $environment_config['db']['username'];
+    $mainConfigArray['components']['db']['password'] = $environment_config['db']['password'];
+    $mainConfigArray['name'] = $environment_config['name'];
+
+
+}
+
 return array(
     'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . '..',
     'name' => 'Cron Application',

@@ -90,23 +90,21 @@ div.form label{
 {
     list-style:none;
     float:right;
+    margin: 0;
+    padding: 0;
 }
 .top_nav ul li
 {
     float:left;
     color:#000;
     font-size:14px;
-    padding:0 10px;
+    padding:0 3px;
 }
 .top_nav ul li:last-child
 {
     border-right:none;
 }
-.top_nav ul li p
-{
-    float:left;
-    padding:1px 0 0 5px;
-}
+
 .top_nav ul li img
 {
     float:left;
@@ -121,6 +119,65 @@ div.form label{
 {
     color:#9BD62C;
 }
+
+.top_nav .profile{
+    padding: 0 ;
+}
+
+.top_nav .profile a{
+    display: block;
+    height: 40px;
+    width: 40px;
+    background: url('../images/menu-icons-profile.jpg') no-repeat center center;
+    text-indent: -9999px;
+}
+
+.top_nav .notifications a{
+    display: block;
+    height: 40px;
+    width: 40px;
+    background: url('../images/menu-icons-notifications.jpg') no-repeat center center;
+    text-indent: -9999px;
+}
+
+.top_nav .support a{
+    display: block;
+    height: 40px;
+    width: 40px;
+    background: url('../images/menu-icons-support.jpg') no-repeat center center;
+    text-indent: -9999px;
+}
+
+
+
+.top_nav .help a{
+    display: block;
+    height: 40px;
+    width: 40px;
+    background: url('../images/menu-icons-help.jpg') no-repeat center center;
+    text-indent: -9999px;
+}
+
+#tabs .logout{
+    float: right;
+}
+
+#tabs .logout a{
+    display: block;
+    height: 40px;
+    width: 40px;
+    background: url('../images/menu-icons-logout.png') no-repeat center center;
+    text-indent: -9999px;
+    float: right;
+    padding: 0;
+}
+
+#tabs .loggedin-as{
+    width: 440px;
+    padding: 10px 25px;
+    text-align: right;
+}
+
 .login_icon
 {
     float:right;
@@ -342,6 +399,7 @@ nav.navigation ul li:last-child.active
     width: 120.6%;
     overflow-x: auto;
     min-height: 400px;
+    position: relative;
 }
 
 #companyLogo{
@@ -439,10 +497,9 @@ nav.navigation ul li:last-child.active
 .grid-view .summary {
     font-size: 12px;
     font-weight: bold;
-    margin-right: 100px !important;
-    margin-top: -25px !important;
+    margin-top: -27px !important;
     position: absolute;
-    right:0
+    right: 25px;
 }
 
 #page{
@@ -559,7 +616,7 @@ dt.tabs dt{
 
 .visitor-findBtn ,.host-findBtn, #host-AddBtn{
     vertical-align: top;
-    padding:7px !important;
+    padding:6px 8px !important;
 }
 
 .search-text{
@@ -597,6 +654,12 @@ dt.tabs dt{
 #visit-reason-grid .filters input{
     width:98% !important;
 }
+
+#visitorCompanyRow .select2{
+    margin-top: 0.2em;
+}
+
+.required{ padding-left:10px;}
 /*radio buttons*/
 
 .errorMessageEmail, .errorMessageEmail1{
@@ -1618,4 +1681,15 @@ dt.tabs dt{
     color: #000000 !important;
     background: #f2f2f2 !important;
     background-image: none !important;
+}
+
+.button-column .update{
+    display: inline-block;
+    width: 48px;
+    margin-right: 3px;
+}
+
+.button-column .delete{
+    display: inline-block;
+    width: 48px;
 }

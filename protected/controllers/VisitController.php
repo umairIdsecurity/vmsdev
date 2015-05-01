@@ -66,6 +66,24 @@ class VisitController extends Controller {
 
         if (isset($_POST['Visit'])) {
             $model->attributes = $_POST['Visit'];
+
+            // get the lastest visitor type:
+            if ($model->visitor_type == null) {
+                $lastVisit = Visit::model()->find("visitor = " . $model->visitor);
+
+                if ($lastVisit){
+                    $model->visitor_type = $lastVisit->visitor_type;
+                    $model->reason = $lastVisit->reason;
+                    $model->workstation = $lastVisit->workstation;
+                } else {
+                    // default value:
+                    // todo: check this default later
+                    $model->visitor_type = VisitorType::PATIENT_VISITOR;
+                    $model->reason = null;
+                    $model->workstation = null;
+                }
+            }
+
             if ($visitService->save($model, $session['id'])) {
                 $this->redirect(array('visit/detail', 'id' => $model->id));
             }
@@ -82,6 +100,8 @@ class VisitController extends Controller {
      */
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
+        $oldVisitorType = $model->visitor_type;
+
         $visitService = new VisitServiceImpl();
         $session = new CHttpSession;
 
@@ -90,6 +110,14 @@ class VisitController extends Controller {
 
         if (isset($_POST['Visit'])) {
             $model->attributes = $_POST['Visit'];
+
+			if ($model->visitor_type == null) {
+                $model->visitor_type = $oldVisitorType;
+            }
+             if (isset($_POST['User']['photo']) && $model->host > 0) {
+                 User::model()->updateByPk($model->host, array('photo' => $_POST['User']['photo']));
+			 }
+			
             if ($model->date_check_in > date('d-m-Y')) {
                 $visitStatus = VisitStatus::model()->findByAttributes(array('name' => 'Pre-registered'));
                 if ($visitStatus) {
@@ -585,7 +613,6 @@ class VisitController extends Controller {
         $user = User::model()->findAllByPk($id);
 		$photo = Photo::model()->findAllByPk($user[0]->photo);
 		$resultMessage['data'] = $user;
-		if(isset($photo) && isset($photo[0]))
 		$resultMessage['data']["photo"] = $photo[0];
 		  
         echo CJavaScript::jsonEncode($resultMessage);

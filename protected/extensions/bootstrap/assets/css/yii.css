@@ -21,10 +21,7 @@
   margin-bottom:0;
   width:90%;
 }
-.grid-view .button-column {
-  text-align:center;
-  width:50px;
-}
+
 .grid-view .checkbox-column { width:15px; }
 .grid-view .summary {
   margin-bottom:5px;

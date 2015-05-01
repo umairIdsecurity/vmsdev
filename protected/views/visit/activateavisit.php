@@ -1,39 +1,25 @@
 <?php 
 $session = new CHttpSession;
 ?>
+
+
 <table class="detailsTable" style="font-size:12px;margin-top:15px;" id="logvisitTable">
     <tr>
-        <td>Check In Date</td>
+        <td><a style="text-decoration: none; ">Status: <span style="color:#<?php
+                if ($model->visit_status == VisitStatus::CLOSED) {
+                    echo "ff0000";
+                } else if ($model->visit_status == VisitStatus::ACTIVE) {
+                    echo "9BD62C";
+                } else if ($model->visit_status == VisitStatus::PREREGISTERED) {
+                    echo "FFA500";
+                } else if ($model->visit_status == VisitStatus::SAVED) {
+                    echo "637280";
+                }
+                ?> !important; font-weight:bold"><?php echo VisitStatus::$VISIT_STATUS_LIST[$model->visit_status]; ?></span></a>
+        </td>
     </tr>
     <tr>
-        <td>
-            <input name="Visit[visit_status]" id="Visit_visit_status" type="text" value="1" style="display:none;">
-            <input name="Visit[time_check_in]" id="Visit_time_check_in" class="activatevisittimein" type="text" style="display:none;">
-            <?php
-            if (empty($model->date_check_in)) {
-                $model->date_check_in = date('d-m-Y');
-            }
-            $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                'model' => $model,
-                'attribute' => 'date_check_in',
-                'htmlOptions' => array(
-                    'size' => '10', // textField size
-                    'maxlength' => '10', // textField maxlength
-                    // 'readonly' => 'readonly',
-                    'placeholder' => 'dd-mm-yyyy',
-                ),
-                'options' => array(
-                    'dateFormat' => 'dd-mm-yy',
-                )
-            ));
-            ?>
-            <?php if ($model->card_type == CardType::SAME_DAY_VISITOR) { ?>
-                <input type="text" style="display:none;" value="<?php
-                echo date("d-m-Y");
-                ?>" id='Visit_date_out' 
-                       name="Visit[date_out]" >
-                   <?php } ?>
-        </td>
+        <td>&nbsp;</td>
     </tr>
 
     <tr>
@@ -59,48 +45,119 @@ $session = new CHttpSession;
             </select>
         </td>
     </tr>
-    <?php if ($model->date_out == '' && $model->card_type == CardType::MULTI_DAY_VISITOR) {
-        ?>
-        <tr id="dateoutDiv">
-            <td>Proposed Check Out Date
-                <br><?php
-                $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                    'model' => $model,
-                    'attribute' => 'date_out',
-                    'htmlOptions' => array(
-                        'size' => '10', // textField size
-                        'maxlength' => '10', // textField maxlength
-                        'disabled' => 'disabled',
-                        // 'readonly' => 'readonly',
-                        'placeholder' => 'dd-mm-yyyy',
-                    ),
-                    'options' => array(
-                        'dateFormat' => 'dd-mm-yy',
-                    )
-                ));
-                ?>
-                <span style="color:red;display:none;" id="preregisterdateoutError">Date Out cannot be blank.</span>
-            </td>
-        </tr>
-    <?php } ?>
+
+    <tr>
+        <td>Check In Date</td>
+    </tr>
+    <tr>
+        <td>
+            <input name="Visit[visit_status]" id="Visit_visit_status" type="text" value="1" style="display:none;">
+            <input name="Visit[time_check_in]" id="Visit_time_check_in" class="activatevisittimein" type="text" style="display:none;">
+            <?php
+            if (empty($model->date_check_in)) {
+                $model->date_check_in = date('d-m-Y');
+            }
+            $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                'model' => $model,
+                'attribute' => 'date_check_in',
+                'htmlOptions' => array(
+                    'size' => '10', // textField size
+                    'maxlength' => '10', // textField maxlength
+                    // 'readonly' => 'readonly',
+                    'placeholder' => 'dd-mm-yyyy',
+                ),
+                'options' => array(
+                    'dateFormat' => 'dd-mm-yy',
+                )
+            ));
+            ?>
+            <?php /*if ($model->card_type == CardType::SAME_DAY_VISITOR) { */?><!--
+                <input type="text" style="display:none;" value="<?php
+/*                echo date("d-m-Y");
+                */?>" id='Visit_date_out'
+                       name="Visit[date_out]" >
+                   --><?php /*} */?>
+        </td>
+    </tr>
+
+
+    <tr id="dateoutDiv">
+        <td>Check Out Date
+            <br><?php
+
+            if (empty($model->date_check_out)) {
+                $model->date_check_out = date('d-m-Y');
+            }
+            $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                'model' => $model,
+                'attribute' => 'date_check_out',
+                'htmlOptions' => array(
+                    'size' => '10', // textField size
+                    'maxlength' => '10', // textField maxlength
+                    //'disabled' => 'disabled',
+                    // 'readonly' => 'readonly',
+                    'placeholder' => 'dd-mm-yyyy',
+                ),
+                'options' => array(
+                   'dateFormat' => 'dd-mm-yy',
+                )
+            ));
+            ?>
+        </td>
+    </tr>
+
 </table>
 <script>
     $(document).ready(function() {
         refreshTimeIn();
-        $("#Visit_date_out").datepicker("option", "minDate", $("#Visit_date_check_in").val());
-        $("#dateoutDiv #Visit_date_out").datepicker({
+
+        $("#Visit_date_check_in").datepicker({
             changeMonth: true,
             changeYear: true,
             showOn: "button",
             buttonImage: "<?php echo Yii::app()->controller->assetsBase; ?>/images/calendar.png",
             buttonImageOnly: true,
-            minDate: "+1",
+            minDate: "0",
             dateFormat: "dd-mm-yy",
-            onClose: function(selectedDate) {
-                
-                $("#dateoutDiv #Visit_date_out").val($("#Visit_date_out").val());
+            onClose: function (dateText) {
+                var currentDate = new Date();
+                var date = dateText.substring(0, 2);
+                var month = dateText.substring(3, 5);
+                var year = dateText.substring(6, 10);
+                var selectedDate = new Date(year, month-1, date);
+
+                $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "option", "minDate", selectedDate);
+
+                if (selectedDate > currentDate) {
+                    $("#activate-a-visit-form input.complete").val("Preregister Visit");
+                    // update card date
+                    var cardDate = $.datepicker.formatDate('dd M y', selectedDate);
+                    $("#cardDetailsTable span.cardDateText").html(cardDate);
+                } else {
+                    $("#activate-a-visit-form input.complete").val("Activate Visit");
+                }
             }
         });
+
+        $("#dateoutDiv #Visit_date_check_out").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            showOn: "button",
+            buttonImage: "<?php echo Yii::app()->controller->assetsBase; ?>/images/calendar.png",
+            buttonImageOnly: true,
+            minDate: "0",
+            dateFormat: "dd-mm-yy",
+            onClose: function (date) {
+                var day = date.substring(0, 2);
+                var month = date.substring(3, 5);
+                var year = date.substring(6, 10);
+                var newDate = new Date(year, month-1, day);
+
+                var cardDate = $.datepicker.formatDate('dd M y', newDate);
+                $("#cardDetailsTable span.cardDateText").html(cardDate);
+            }
+        });
+
     });
 
     function refreshToCurrentTime() {

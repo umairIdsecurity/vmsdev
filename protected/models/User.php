@@ -70,6 +70,11 @@ class User extends VmsActiveRecord {
         return 'user';
     }
 
+    public function getModelName()
+    {
+        return __CLASS__;
+    }
+
     /**
      * @return array validation rules for model attributes.
      */

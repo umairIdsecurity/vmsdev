@@ -4,7 +4,7 @@
 /* @var $model Workstation */
 ?>
 
-<h1>Manage Workstations</h1>
+<h1>Workstations</h1>
 
 <?php
 $this->widget('zii.widgets.grid.CGridView', array(

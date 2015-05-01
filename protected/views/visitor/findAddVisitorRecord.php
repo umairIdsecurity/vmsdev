@@ -3,10 +3,7 @@ $session = new CHttpSession;
 $company = Company::model()->findByPk($session['company']);
 $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
 ?>
-<style type="text/css">
-.required{ padding-left:10px;}
 
-</style>
 <br>
 <div role="tabpanel" style="width:882px">
 
@@ -17,7 +14,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
     </div>
    
    
-                <input type="text" id="search-visitor" name="search-visitor" placeholder="Enter name, email, driver license" class="search-text" style="margin-left:30px;" /> 
+                <input type="text" id="search-visitor" name="search-visitor" placeholder="Enter name, email, driver license" class="search-text" style="margin-left:30px;" />
                 <button class="visitor-findBtn" onclick="findVisitorRecord()" id="visitor-findBtn" style="display:none;" data-target="#findVisitorRecordModal" data-toggle="modal">Find Record</button>
                 <button class="visitor-findBtn neutral" id="dummy-visitor-findBtn" style="padding:8px;background:<?php echo $companyLafPreferences->neutral_bg_color; ?> !important;">Find Visitor Profile</button>
                 <div class="errorMessage" id="searchTextErrorMessage" style="display:none;text-align:center"></div>
@@ -305,7 +302,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                                 <tr>
                                 <td>
                                     <?php echo $form->textField($model, 'position', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Position')); ?>
-                                     <span class="required">*</span>
+                                     
                                     <?php echo "<br>" . $form->error($model, 'position'); ?>
                                 </td>
                             </tr>
@@ -366,11 +363,16 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                     ),
                 ));
                 ?>
-                <label>Add Reason</label><br>
-                <textarea id="VisitReason_reason" name="VisitReason[reason]" rows="1" maxlength="128" style="text-transform: capitalize;"></textarea> 
+                <table style="position:relative;top:555px;left:-301px">
+                <tr>
+                <td>
+               
+            <textarea id="VisitReason_reason" name="VisitReason[reason]" rows="1" maxlength="128" style="text-transform: capitalize;" placeholder="Add Reason"></textarea> 
                 <div class="errorMessage" id="visitReasonErrorMessage" style="display:none;">Please select a reason</div>
 
-
+</td>
+</tr>
+</table>
                 <?php $this->endWidget(); ?>
             </div>
         </div>
@@ -421,67 +423,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
 
             <div id="searchVisitorTableDiv">
                 <h4>Search Results for : <span id='search'></span></h4>
-                <div id="visitor_fields_for_Search">
-                <div style="float:left;width:250px">
-                    <label for="Visitor_visitor_type_search">Visitor Type</label>
-                    <?php
-                    echo CHtml::dropDownList('Visitor_visitor_type_search', 'visitor_type', VisitorType::model()->returnVisitorTypes(), array(
-                        'onchange' => 'showHideHostPatientName(this)',
-                    ));
-                    ?>
-                    <?php echo "<br>" . CHtml::error($model, 'visitor_type'); ?>
 
-</div>
-<div style="float:left;width:250px">
-                    <div id="workstationRowSearch" <?php
-                    if ($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
-                        echo " class='hidden' ";
-                    }
-                    ?>><label>Workstation<span class="required" style="display:inline;">*</span></label>
-
-                        <select id="workstation_search" onchange="populateVisitWorkstation(this)">
-                            <?php
-                            if ($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
-                                echo '';
-                            } else {
-                                echo '<option value="">Please select a workstation</option>';
-                            }
-                            ?>
-
-                            <?php
-                            $workstationList = populateWorkstation();
-                            foreach ($workstationList as $key => $value) {
-                                ?>
-                                <option value="<?php echo $value->id; ?>" <?php
-                                if (($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) && $value->id == $session['workstation']) {
-                                    echo 'selected';
-                                }
-                                ?>><?php echo $value->name; ?></option>
-                                        <?php
-                                    }
-                                    ?>
-                        </select>
-                        <div style="display:none;" class="errorMessage errorMessageWorkstationSearch" >Please select a workstation</div>
-                    </div>
-                    </div>
-                    <div style="float:left;width:250px">
-                    <label for="Visit_reason_search">Reason</label>
-
-                    <select id="Visit_reason_search" name="Visitor[reason]" onchange="ifSelectedIsOtherShowAddReasonDivSearch(this)">
-                        <option value='' selected>Please select a reason</option>
-                        <?php
-                        $reason = VisitReason::model()->findAllReason();
-                        foreach ($reason as $key => $value) {
-                            ?>
-                            <option value="<?php echo $value->id; ?>"><?php echo $value->reason; ?></option>
-                            <?php
-                        }
-                        ?>
-                        <option value="Other">Other</option>
-                    </select>
-                    <div class="errorMessage visitorReason" id="search-visitor-reason-error">Please select a reason</div>
-                    </div>
-                </div>
                 <?php
                 $form = $this->beginWidget('CActiveForm', array(
                     'id' => 'register-reason-form-search',
@@ -617,7 +559,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                         }
                     });
                 } else if ($("#currentRoleOfLoggedInUser").val() != 5 && $("#search_visitor_tenant_agent").val() != '') {
-					
+
 					$("#searchTextErrorMessage").hide();
                     populateAgentAdminWorkstations('search');
                 }

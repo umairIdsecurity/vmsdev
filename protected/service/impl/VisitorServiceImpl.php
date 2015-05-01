@@ -55,7 +55,8 @@ class VisitorServiceImpl implements VisitorService {
             }
         }
         
-        if (!($visitor->save())) {
+        if (!($result = $visitor->save())) {
+            var_dump($result);
             return false;
         }
 

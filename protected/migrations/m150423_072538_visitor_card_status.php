@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS `visitor_card_status` (
         ");
 
         $this->execute("
-INSERT INTO `visitor_card_status` (`id`, `name`, `profile_type`) VALUES
+INSERT IGNORE INTO `visitor_card_status` (`id`, `name`, `profile_type`) VALUES
 (1, 'Saved', 'VIC'),
 (2, 'VIC Holder', 'VIC'),
 (3, 'ASIC Pending', 'VIC'),
@@ -24,7 +24,7 @@ INSERT INTO `visitor_card_status` (`id`, `name`, `profile_type`) VALUES
         ");
 
         $this->execute("
-ALTER TABLE `visitor`
+ALTER TABLE IGNORE `visitor`
   ADD COLUMN `profile_type` enum('VIC','ASIC') NOT NULL DEFAULT 'VIC',
   ADD COLUMN `visitor_card_status` bigint(20) DEFAULT NULL,
   ADD COLUMN `visitor_workstation` bigint(20) DEFAULT NULL,

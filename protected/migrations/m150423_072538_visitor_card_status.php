@@ -4,7 +4,7 @@ class m150423_072538_visitor_card_status extends CDbMigration
 {
     public function up()
     {
-        $this->execute("
+        /*$this->execute("
 
 CREATE TABLE IF NOT EXISTS `visitor_card_status` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -32,7 +32,7 @@ ALTER IGNORE TABLE `visitor`
   ADD KEY `visitor_workstation` (`visitor_workstation`),
   ADD CONSTRAINT `visitor_card_status_fk` FOREIGN KEY (`visitor_card_status`) REFERENCES `visitor_card_status` (`id`),
   ADD CONSTRAINT `visitor_workstation_fk` FOREIGN KEY (`visitor_workstation`) REFERENCES `workstation` (`id`);
-        ");
+        ");*/
     }
 
     public function down()

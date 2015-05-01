@@ -26,7 +26,7 @@ class WorkstationController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin','adminAjax' ,'delete','create','update', 'addCardType'),
+                'actions' => array('admin','adminAjax' ,'delete','create','update'),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
            
             ),
@@ -36,23 +36,6 @@ class WorkstationController extends Controller {
         );
     }
 
-    public function actionAddCardType(){
-
-        $cardType = new WorkstationCardType();
-
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-
-        if (isset($_POST['WorkstationCardType'])) {
-            $cardType->attributes = $_POST['WorkstationCardType'];
-            if ($cardType->save())
-                $this->redirect(array('admin'));
-        }
-
-        $this->render('card_type', array(
-            'model' => $cardType,
-        ),false,true);
-    }
     
     /**
      * Creates a new model.

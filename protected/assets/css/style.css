@@ -1226,6 +1226,13 @@ dt.tabs dt{
     margin-left:17px !important;
 }*/
 
+.card_type_corporate{
+    margin: 0 3px;
+}
+.card_type_vic{
+    margin: 0 2px;
+}
+
 .workstationRow{
     display:none;
 }

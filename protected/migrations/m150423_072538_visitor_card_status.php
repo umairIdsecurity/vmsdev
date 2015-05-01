@@ -24,7 +24,7 @@ INSERT IGNORE INTO `visitor_card_status` (`id`, `name`, `profile_type`) VALUES
         ");
 
         $this->execute("
-ALTER TABLE IGNORE `visitor`
+ALTER IGNORE TABLE `visitor`
   ADD COLUMN `profile_type` enum('VIC','ASIC') NOT NULL DEFAULT 'VIC',
   ADD COLUMN `visitor_card_status` bigint(20) DEFAULT NULL,
   ADD COLUMN `visitor_workstation` bigint(20) DEFAULT NULL,

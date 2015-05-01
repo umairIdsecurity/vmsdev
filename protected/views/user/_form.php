@@ -430,7 +430,8 @@ echo '<h1>Add User </h1>';
                 <tr>
                 <td align="center">
                     <div class="row buttons" style="margin-left:23.5px;">
-                    <input onclick="generatepassword();" class="complete btn btn-info" style="position: relative; width:178px; overflow: hidden; cursor: default;background:<?php echo $companyLafPreferences->neutral_bg_color; ?> !important;cursor:pointer;font-size:14px" type="button" value="Autogenerate Password" />
+                    <?php if(!is_null($companyLafPreferences)){$company_neutral_bg_color = $companyLafPreferences->neutral_bg_color;} ?>
+                    <input onclick="generatepassword();" class="complete btn btn-info" style="position: relative; width:178px; overflow: hidden; cursor: default;background:<?php echo $company_neutral_bg_color ?> !important;cursor:pointer;font-size:14px" type="button" value="Autogenerate Password" />
                         
                     </div>
     			

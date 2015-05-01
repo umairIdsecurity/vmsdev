@@ -105,13 +105,14 @@ class WorkstationController extends Controller {
                 WorkstationCardType::model()->deleteAll(
                     "workstation='" . $model->id . "'"
                 );
-
-                foreach($model->card_type as $card){
-                    $workstation = new WorkstationCardType();
-                    $workstation->workstation = $model->id;
-                    $workstation->card_type = $card;
-                    $workstation->user = 16;
-                    $workstation->save();
+                if(!empty($model->card_type)){
+                    foreach($model->card_type as $card){
+                        $workstation = new WorkstationCardType();
+                        $workstation->workstation = $model->id;
+                        $workstation->card_type = $card;
+                        $workstation->user = 16;
+                        $workstation->save();
+                    }
                 }
             }
             $this->redirect(array('admin'));

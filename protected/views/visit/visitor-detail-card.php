@@ -1,4 +1,3 @@
-
 <?php
 $session = new CHttpSession;
 
@@ -149,6 +148,32 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
         }
         }
     ?>
+</div>
+<div
+<?php
+if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
+    echo "style='display:none'";
+}
+?>
+    >
+        <?php
+        $cardDetail = CardGenerated::model()->findAllByAttributes(array(
+            'visitor_id' => $model->visitor
+        ));
+        if ($model->card != '') {
+            if ((CardGenerated::model()->findByPk($model->card)->print_count > 0) && $model->visit_status == VisitStatus::ACTIVE) {
+                ?><input type="button" class="complete btn btn-info printCardBtn" value="Reprint Card" id="reprintCardBtn" onclick="generateCard()"/><?php
+        } else {
+            ?>
+            <input type="button" class="complete btn btn-info printCardBtn" value="Print Card" id="printCardBtn" onclick="generateCard()"/>
+            <?php
+        }
+        }
+    ?>
+</div>
+<div>
+       Total Visits at <?php echo $visitModel['companyName']; ?>: <?php echo $visitModel['companyVisitsByVisitor']; ?></br>
+       <!-- Total Visits to All Companies: <?php // echo $visitModel['allVisitsByVisitor']; ?> -->
 </div>
 <input type="hidden" id="dummycardvalue" value="<?php echo $model->card; ?>"/>
 

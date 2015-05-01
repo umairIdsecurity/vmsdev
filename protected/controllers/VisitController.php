@@ -208,6 +208,7 @@ class VisitController extends Controller {
         $reasonModel = VisitReason::model()->findByPk($model->reason);
         $patientModel = Patient::model()->findByPk($model->patient);
         $cardTypeModel = CardType::model()->findByPk($model->card_type);
+		$visitModel = Visit::model()->getVisitCount($model->id);
 
         $newPatient = new Patient;
         $newHost = new User;
@@ -236,6 +237,7 @@ class VisitController extends Controller {
             'patientModel' => $patientModel,
             'newPatient' => $newPatient,
             'newHost' => $newHost,
+			'visitModel' => $visitModel,
             'cardTypeModel' => $cardTypeModel,
         ));
     }

@@ -27,7 +27,10 @@ if (isset($_GET['viewFrom'])) {
 
             }
 
-            } elseif ($session['role'] == Roles::ROLE_SUPERADMIN || $session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_AGENT_ADMIN) {
+            } elseif ($session['role'] == Roles::ROLE_SUPERADMIN ||
+                      $session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_AGENT_ADMIN ||
+                      $session['role'] == Roles::ROLE_ISSUING_BODY_ADMIN || $session['role'] == Roles::ROLE_AGENT_AIRPORT_ADMIN
+            ) {
             require_once(Yii::app()->basePath . '/views/user/admin_menu.php');
 
             } else {

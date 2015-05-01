@@ -42,9 +42,17 @@ class User extends VmsActiveRecord {
     public $birthdayMonth;
     public $birthdayYear;
     public $birthdayDay;
-	public $password_option;
+
+    public $asic_expiry_day;
+    public $asic_expiry_month;
+    public $asic_expiry_year;
+
+
+    public $password_option;
     private $_companyname;
+
     public static $USER_ROLE_LIST = array(
+
         5 => 'Super Administrator',
         1 => 'Administrator',
         6 => 'Agent Administrator',
@@ -52,6 +60,12 @@ class User extends VmsActiveRecord {
         8 => 'Operator',
         9 => 'Staff Member',
         10 => 'Visitor',
+
+        Roles::ROLE_ISSUING_BODY_ADMIN => 'Issuing Body Administrator',
+        Roles::ROLE_AIRPORT_OPERATOR => 'Airport Operator',
+        Roles::ROLE_AGENT_AIRPORT_ADMIN =>'Agent Airport Administrator',
+        Roles::ROLE_AGENT_AIRPORT_OPERATOR =>'Agent Airport Operator'
+
     );
     public static $USER_TYPE_LIST = array(
         ''=>'User Type',
@@ -83,7 +97,7 @@ class User extends VmsActiveRecord {
         // will receive user inputs.
         if (Yii::app()->controller->action->id == 'update' || Yii::app()->controller->action->id == 'profile') {
             return array(
-                array('first_name, last_name, email, contact_number, user_type,is_deleted', 'required'),
+                array('first_name, last_name, email, contact_number, user_type, is_deleted', 'required'),
                 array('company, role, user_type, user_status, created_by', 'numerical', 'integerOnly' => true),
                 array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
                 array('date_of_birth, notes,tenant,tenant_agent,birthdayYear,birthdayMonth,password,birthdayDay', 'safe'),
@@ -91,6 +105,10 @@ class User extends VmsActiveRecord {
                 array('email', 'email'),
                 array('role,company', 'required', 'message' => 'Please select a {attribute}'),
                 array('tenant, tenant_agent, photo', 'default', 'setOnEmpty' => true, 'value' => null),
+                array('asic_no', 'AvmsFields'),
+                array('asic_expiry_day, asic_expiry_month, asic_expiry_year ', 'AvmsFields'),
+
+
                 // The following rule is used by search().
                 // @todo Please remove those attributes that should not be searched.
                 array('id, companyname,first_name, last_name,email,photo,is_deleted ,contact_number, date_of_birth, company, department, position, staff_id, notes, role_id, user_type_id, user_status_id, created_by', 'safe', 'on' => 'search'),
@@ -103,14 +121,47 @@ class User extends VmsActiveRecord {
                 array('date_of_birth, notes,tenant,tenant_agent,birthdayYear,birthdayMonth,birthdayDay', 'safe'),
                 array('email', 'filter', 'filter' => 'trim'),
                 array('email', 'email'),
-                array('role,company', 'required', 'message' => 'Please select a {attribute}'),
+                array('role, company', 'required', 'message' => 'Please select a {attribute}'),
                 array('tenant, tenant_agent,photo','default', 'setOnEmpty' => true, 'value' => null),
+                array('asic_no', 'AvmsFields'),
+                array('asic_expiry_day, asic_expiry_month, asic_expiry_year ', 'AvmsFields'),
+
                 // The following rule is used by search().
                 // @todo Please remove those attributes that should not be searched.
                 array('id, first_name, companyname,last_name,email,photo,is_deleted,assignedWorkstations,contact_number, date_of_birth, company, department, position, staff_id, notes, role_id, user_type_id, user_status_id, created_by', 'safe', 'on' => 'search'),
             );
         }
     }
+
+
+    /**
+     * PARAMETERIZED NAMED SCOPES
+     */
+
+    public function avms_user()
+    {
+        $condition = "role.id in (".implode(",",Roles::get_avms_roles()) .")";
+
+        $this->getDbCriteria()->mergeWith(array(
+            'condition' => $condition,
+            'with' => 'role',
+            'together' => true,
+        ));
+        return $this;
+    }
+
+    public function cvms_user()
+    {
+        $condition = "role.id in (".implode(",",Roles::get_cvms_roles()) .")";
+
+        $this->getDbCriteria()->mergeWith(array(
+            'condition' => $condition,
+            'with' => 'role',
+            'together' => true,
+        ));
+        return $this;
+    }
+
 
     public function getCompanyname() {
         // return private attribute on search
@@ -194,7 +245,8 @@ class User extends VmsActiveRecord {
      * @return CActiveDataProvider the data provider that can return the models
      * based on the search/filter conditions.
      */
-    public function search() {
+    public function search()
+    {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
@@ -208,7 +260,7 @@ class User extends VmsActiveRecord {
         $criteria->compare('department', $this->department, true);
         $criteria->compare('position', $this->position, true);
         $criteria->compare('staff_id', $this->staff_id, true);
-		$criteria->compare('photo', $this->photo, true);
+        $criteria->compare('photo', $this->photo, true);
         $criteria->compare('notes', $this->notes, true);
         $criteria->compare('role', $this->role);
         $criteria->compare('user_type', $this->user_type);
@@ -236,24 +288,44 @@ class User extends VmsActiveRecord {
                 if (Yii::app()->controller->action->id == 'systemaccessrules') {
                     $rolein = '(' . Roles::ROLE_AGENT_OPERATOR . ',' . Roles::ROLE_OPERATOR . ')';
                 } else {
-                    $rolein = '(' . Roles::ROLE_ADMIN . ',' . Roles::ROLE_AGENT_ADMIN . ',' . Roles::ROLE_AGENT_OPERATOR . ',' . Roles::ROLE_OPERATOR . ',' . Roles::ROLE_VISITOR . ',' . Roles::ROLE_STAFFMEMBER . ')';
+                    $avms_roles = Roles::get_admin_allowed_roles(true);
+                    $rolein = '(' . Roles::ROLE_ADMIN . ',' .
+                                    Roles::ROLE_AGENT_ADMIN . ',' .
+                                    Roles::ROLE_AGENT_OPERATOR . ',' .
+                                    Roles::ROLE_OPERATOR . ',' .
+                                    Roles::ROLE_VISITOR . ',' .
+                                    Roles::ROLE_STAFFMEMBER . ', '.
+                                    implode(',',$avms_roles). ')';
                 }
                 $queryCondition = 't.tenant = "' . $user->tenant . '"';
                 break;
             case Roles::ROLE_AGENT_ADMIN:
+                $avms_roles = Roles::get_agent_admin_allowed_roles(true);
                 if (Yii::app()->controller->action->id == 'systemaccessrules') {
                     $rolein = '(' . Roles::ROLE_AGENT_OPERATOR . ')';
                 } else {
-                    $rolein = '(' . Roles::ROLE_AGENT_ADMIN . ',' . Roles::ROLE_AGENT_OPERATOR . ',' . Roles::ROLE_STAFFMEMBER . ',' . Roles::ROLE_VISITOR . ')';
+                    $rolein = '(' . Roles::ROLE_AGENT_ADMIN . ',' .
+                                    Roles::ROLE_AGENT_OPERATOR . ',' .
+                                    Roles::ROLE_STAFFMEMBER . ',' .
+                                    Roles::ROLE_VISITOR .','.
+                                    implode(',',$avms_roles). ')';
                 }
 
                 $queryCondition = 't.tenant_agent="' . $user->tenant_agent . '"';
                 break;
             default:
+                $avms_roles = Roles::get_avms_roles();
                 if (Yii::app()->controller->action->id == 'systemaccessrules') {
                     $rolein = '(' . Roles::ROLE_AGENT_OPERATOR . ',' . Roles::ROLE_OPERATOR . ')';
                 } else {
-                    $rolein = '(' . Roles::ROLE_SUPERADMIN . ',' . Roles::ROLE_ADMIN . ',' . Roles::ROLE_AGENT_ADMIN . ',' . Roles::ROLE_AGENT_OPERATOR . ',' . Roles::ROLE_OPERATOR . ',' . Roles::ROLE_VISITOR . ',' . Roles::ROLE_STAFFMEMBER . ')';
+                    $rolein = '(' . Roles::ROLE_SUPERADMIN . ',' .
+                                    Roles::ROLE_ADMIN . ',' .
+                                    Roles::ROLE_AGENT_ADMIN . ',' .
+                                    Roles::ROLE_AGENT_OPERATOR . ',' .
+                                    Roles::ROLE_OPERATOR . ',' .
+                                    Roles::ROLE_VISITOR . ',' .
+                                    Roles::ROLE_STAFFMEMBER .
+                                    implode(',',$avms_roles). ')';
                 }
 
                 $queryCondition = 't.is_deleted=0';
@@ -264,6 +336,28 @@ class User extends VmsActiveRecord {
         } else {
             $criteria->addCondition('role in ' . $rolein . ' and (' . $queryCondition . ')');
         }
+
+
+        $is_avms_users_requested = CHelper::is_avms_users_requested();
+        $is_cvms_users_requested = CHelper::is_cvms_users_requested();
+
+        if ($is_avms_users_requested || $is_avms_users_requested) {
+            // not to make already complex query, more complex, just using a sub query
+            //  get user id of all the users who belong to specified list..
+            // and add IN clause to main search query...
+            $users = [];
+            if ($is_avms_users_requested) {
+                $users = User::model()->avms_user()->findAll();
+            } else {
+                $users = User::model()->cvms_user()->findAll();
+            }
+        }
+
+        if ($users) {
+            $user_ids = array_values(CHtml::listData($users, 'id', 'id'));
+            $criteria->addCondition('t.id in (' . implode(', ', $user_ids) . ')');
+        }
+
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -510,6 +604,11 @@ class User extends VmsActiveRecord {
         $this->birthdayDay = date('d', strtotime($date_of_birth));
         $this->birthdayMonth = date('n', strtotime($date_of_birth));
         $this->birthdayYear = date('o', strtotime($date_of_birth));
+
+        $this->asic_expiry_day =  date('d',$this->asic_expiry);
+        $this->asic_expiry_month =  date('M',$this->asic_expiry);
+        $this->asic_expiry_year =  date('y',$this->asic_expiry);
+
         return parent::afterFind();
     }
 
@@ -587,5 +686,10 @@ class User extends VmsActiveRecord {
     {
         $this->password = $this->hashPassword($newPassword);
         $this->save(false, 'password');
+    }
+
+    public function is_avms_user()
+    {
+        return in_array($this->role,Roles::get_avms_roles());
     }
 }

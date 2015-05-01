@@ -6,7 +6,7 @@ $session = new ChttpSession;
 $session['lastPage'] = 'admin';
 ?>
 
-<h1>Users</h1>
+<h1><?php echo strtoupper(Yii::app()->request->getParam('vms')) ?> Users</h1>
 
 
 <?php
@@ -172,40 +172,84 @@ function assignedWorkstation(){
 
 
 function getAssignableRoles($user_role) {
-    //$assignableRolesArray = array();
+
+    $assignableRoles = array();
+
+    $is_avms_users_requested = CHelper::is_avms_users_requested();
+
     switch ($user_role) {
+
         case Roles::ROLE_AGENT_ADMIN: //agentadmin
-            $assignableRoles = array(
-                '' => 'Role',
-                Roles::ROLE_AGENT_ADMIN => 'Agent Administrator',
-                Roles::ROLE_AGENT_OPERATOR => 'Agent Operator',
-                Roles::ROLE_STAFFMEMBER => 'Staff Member'); //keys
+        case Roles::ROLE_AGENT_AIRPORT_ADMIN:
+
+            if ($is_avms_users_requested) {
+                $assignableRoles = array(
+                    '' => 'Role',
+                    Roles::ROLE_AGENT_AIRPORT_ADMIN => User::$USER_ROLE_LIST[ Roles::ROLE_AGENT_AIRPORT_ADMIN ],
+                    Roles::ROLE_AGENT_AIRPORT_OPERATOR => User::$USER_ROLE_LIST[Roles::ROLE_AGENT_AIRPORT_OPERATOR ]
+
+                ); //keys
+            }else{
+                $assignableRoles = array(
+                    '' => 'Role',
+                    Roles::ROLE_AGENT_ADMIN => 'Agent Administrator',
+                    Roles::ROLE_AGENT_OPERATOR => 'Agent Operator',
+                    Roles::ROLE_STAFFMEMBER => 'Staff Member',
+
+                );
+            }
+
 
             break;
 
         case Roles::ROLE_SUPERADMIN: //superadmin
-            $assignableRoles = array(
-                '' => 'Role',
-                Roles::ROLE_SUPERADMIN => 'Super Administrator',
-                Roles::ROLE_ADMIN => 'Administrator',
-                Roles::ROLE_AGENT_ADMIN => 'Agent Administrator',
-                Roles::ROLE_AGENT_OPERATOR => 'Agent Operator',
-                Roles::ROLE_OPERATOR => 'Operator',
-                Roles::ROLE_STAFFMEMBER => 'Staff Member'
-            ); //keys
+            if ($is_avms_users_requested) {
+
+                $assignableRoles = array(
+                    '' => 'Role',
+                    Roles::ROLE_ISSUING_BODY_ADMIN => User::$USER_ROLE_LIST[Roles::ROLE_ISSUING_BODY_ADMIN ],
+                    Roles::ROLE_AGENT_AIRPORT_ADMIN => User::$USER_ROLE_LIST[Roles::ROLE_AGENT_AIRPORT_ADMIN ],
+                    Roles::ROLE_AIRPORT_OPERATOR => User::$USER_ROLE_LIST[Roles::ROLE_AIRPORT_OPERATOR ],
+                    Roles::ROLE_AGENT_AIRPORT_OPERATOR => User::$USER_ROLE_LIST[Roles::ROLE_AGENT_AIRPORT_OPERATOR ]
+                );
+
+            }else{
+                $assignableRoles = array(
+                    '' => 'Role',
+                    Roles::ROLE_SUPERADMIN => 'Super Administrator',
+                    Roles::ROLE_ADMIN => 'Administrator',
+                    Roles::ROLE_AGENT_ADMIN => 'Agent Administrator',
+                    Roles::ROLE_AGENT_OPERATOR => 'Agent Operator',
+                    Roles::ROLE_OPERATOR => 'Operator',
+                    Roles::ROLE_STAFFMEMBER => 'Staff Member',
+
+                ); //keys
+            }
 
             break;
 
         case Roles::ROLE_ADMIN: //admin
+        case Roles::ROLE_ISSUING_BODY_ADMIN:
 
-            $assignableRoles = array(
-                '' => 'Role',
-                Roles::ROLE_ADMIN => 'Administrator',
-                Roles::ROLE_AGENT_ADMIN => 'Agent Administrator',
-                Roles::ROLE_AGENT_OPERATOR => 'Agent Operator',
-                Roles::ROLE_OPERATOR => 'Operator',
-                Roles::ROLE_STAFFMEMBER => 'Staff Member'
-            ); //keys
+            if ($is_avms_users_requested) {
+                $assignableRoles = array(
+                    '' => 'Role',
+                    Roles::ROLE_ISSUING_BODY_ADMIN => User::$USER_ROLE_LIST[Roles::ROLE_ISSUING_BODY_ADMIN ],
+                    Roles::ROLE_AGENT_AIRPORT_ADMIN => User::$USER_ROLE_LIST[Roles::ROLE_AGENT_AIRPORT_ADMIN ],
+                    Roles::ROLE_AIRPORT_OPERATOR => User::$USER_ROLE_LIST[Roles::ROLE_AIRPORT_OPERATOR ],
+                    Roles::ROLE_AGENT_AIRPORT_OPERATOR => User::$USER_ROLE_LIST[Roles::ROLE_AGENT_AIRPORT_OPERATOR ]
+                );
+
+            }else{
+                $assignableRoles = array(
+                    '' => 'Role',
+                    Roles::ROLE_ADMIN => 'Administrator',
+                    Roles::ROLE_AGENT_ADMIN => 'Agent Administrator',
+                    Roles::ROLE_AGENT_OPERATOR => 'Agent Operator',
+                    Roles::ROLE_OPERATOR => 'Operator',
+                    Roles::ROLE_STAFFMEMBER => 'Staff Member'
+                ); //keys
+            }
             break;
     }
     return $assignableRoles;

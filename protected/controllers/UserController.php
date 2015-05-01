@@ -18,6 +18,14 @@ class UserController extends Controller {
         );
     }
 
+    protected function beforeAction($action)
+    {
+        //echo 'testtttttttttttttttttttttttttttttttttttttttttttttttttttt';
+        //return false;
+
+        return true;
+    }
+
     /**
      * Specifies the access control rules.
      * This method is used by the 'accessControl' filter.
@@ -69,9 +77,10 @@ class UserController extends Controller {
 
         if (isset($_POST['User'])) {
             $model->attributes = $_POST['User'];
+
 			if(isset($_POST['User']['password_option']))
 			  $model->password_option = $_POST['User']['password_option'];
-			  else
+			else
 			  $model->password_option = '';
             $workstation = NULL;
             if (isset($_POST['User']['workstation'])) {
@@ -79,7 +88,7 @@ class UserController extends Controller {
             }
             if ($userService->save($model, Yii::app()->user, $workstation)) {
                 if (!isset($_GET['view'])) {
-                    $this->redirect(array('admin'));
+                    $this->redirect(array('admin', 'vms'=>CHelper::is_accessing_avms_features()? 'avms':'cvms'));
                 }
             }
         }
@@ -108,7 +117,7 @@ class UserController extends Controller {
             $model->attributes = $_POST['User'];
 
             if ($userService->save($model,Yii::app()->user, NULL)) {
-                $this->redirect(array('admin'));
+                $this->redirect(array('admin', 'vms'=>$model->is_avms_user()?'avms':'cvms'));
             }
         }
 
@@ -161,9 +170,17 @@ class UserController extends Controller {
     public function actionAdmin() {
         $model = new User('search');
         $model->unsetAttributes();  // clear any default values
+
         if (isset($_GET['User'])) {
             $model->attributes = $_GET['User'];
         }
+
+        if(CHelper::is_avms_users_requested()){
+            $model = $model->avms_user();
+        }else{
+            $model = $model->cvms_user();
+        }
+
 
         $this->render('_admin', array(
             'model' => $model,
@@ -175,6 +192,12 @@ class UserController extends Controller {
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['User'])) {
             $model->attributes = $_GET['User'];
+        }
+
+        if(Yii::app()->request->getParam('vms') == 'avms'){
+            $model = $model->avms_user();
+        }elseif(Yii::app()->request->getParam('vms') == 'cvms'){
+            $model = $model->cvms_user();
         }
 
         $this->renderPartial('_admin', array(

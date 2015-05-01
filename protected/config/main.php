@@ -3,6 +3,8 @@
 // uncomment the following to define a path alias
 // Yii::setPathOfAlias('local','path/to/local-folder');
 Yii::setPathOfAlias('bootstrap', dirname(__FILE__) . '/../extensions/bootstrap');
+Yii::setPathOfAlias('helpers','helpers');
+
 // This is the main Web application configuration. Any writable
 // CWebApplication properties can be configured here.
 return array(
@@ -26,6 +28,7 @@ return array(
         'application.extensions.bootstrap.widgets.*',
         'application.service.impl.*',
         'application.service.*',
+        'application.helpers.*',
     ),
 //    'modules' => array(
 //        // uncomment the following to enable the Gii tool
@@ -102,9 +105,9 @@ return array(
                     'categories' => 'system.*'
                 ),
             // uncomment the following to show log messages on web pages
-//              array(
-//              'class'=>'CWebLogRoute',
-//              ), 
+              /*array(
+              'class'=>'CWebLogRoute',
+              ),*/
             ),
         ),
     ),

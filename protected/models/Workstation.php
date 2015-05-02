@@ -231,15 +231,19 @@ class Workstation extends CActiveRecord {
         $cardArr = "";
         foreach($cards as $card){
             $cardType = CardType::model()->findByPk($card->id);
+            //$cardArr .= CHtml::checkBox('ab',true,array());
+
             $cardArr .= CHtml::image(
                 Yii::app()->controller->assetsBase . "/". $cardType->card_icon_type ." ","",
                 array("width"=>"25px" , "class"=>"card_type_corporate")
             );
 
         }
+        //return CHtml::checkBox('ab',true,array());
         return $cardArr;
 
     }
+    /*echo CHtml::checkBox('select_all',false, array('onclick' => "js:if($(this).is(':checked')) {$('.example').attr('checked','checked');}else{$('.example').removeAttr('checked');}"));*/
 
     public function getCorporateVic(){
 

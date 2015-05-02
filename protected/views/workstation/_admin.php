@@ -11,7 +11,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'workstation-grid',
     'dataProvider' => $model->search(),
     'enableSorting' => false,
-    'hideHeader'=>true,
+    //'hideHeader'=>true,
     'filter' => $model,
     'afterAjaxUpdate' => "
     function(id, data) {
@@ -22,18 +22,21 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' => 'name',
             'filter'=>CHtml::activeTextField($model, 'name', array('placeholder'=>'Name')),
-
+            'htmlOptions'=>array('width'=>'180px'),
         ),
-        array(
+        /*array(
             'name' => 'location',
             'filter'=>CHtml::activeTextField($model, 'location', array('placeholder'=>'Location')),
-        ),
+        ),*/
         array(
             'name' => 'moduleCorporate',
-            'type'=>'html',
+            'header' => '',
+            'type'=>'raw',
             'filter'=>CHtml::activeTextField($model, 'moduleCorporate',
                 array('placeholder'=>'Corporate' , 'disabled'=>'disabled')),
             'value' => '$data->getCorporateCardType()',
+            'htmlOptions'=>array('width'=>'300px'),
+            'headerHtmlOptions' => array('style'=>'width:200px; text-align:left;', 'class'=>'header-corporate')
         ),
 
         array(
@@ -42,8 +45,9 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'filter'=>CHtml::activeTextField($model, 'moduleVic',
                 array('placeholder'=>'VIC Issuing' , 'disabled'=>'disabled')),
             'value' => '$data->getCorporateVic()',
+            'htmlOptions'=>array('width'=>'300px'),
         ),
-        array(
+        /*array(
             'name' => 'contact_name',
             'filter'=>CHtml::activeTextField($model, 'contact_name', array('placeholder'=>'Contact Person Name')),
         ),
@@ -54,9 +58,9 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' => 'contact_email_address',
             'filter'=>CHtml::activeTextField($model, 'contact_email_address', array('placeholder'=>'Contact Email Address')),
-        ),
+        ),*/
 
-        array(
+        /*array(
             'name' => 'id',
             'type' => 'raw',
             'value' => 'CHtml::hiddenField("workstationExists1".$data->id,isWorkstationExists($data->id))',
@@ -71,7 +75,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'visible' => true,
             'cssClassExpression' => '"hidden"',
             'filter' => false,
-        ),
+        ),*/
         array(
             'header' => 'Actions',
             'class' => 'CButtonColumn',

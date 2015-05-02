@@ -24,8 +24,11 @@
  */
 class Workstation extends CActiveRecord {
 
-    //public $workstation;
     public $card_type;
+
+    public $moduleCorporate;
+
+    public $moduleVic;
 
     /**
      * @return string the associated database table name
@@ -43,7 +46,7 @@ class Workstation extends CActiveRecord {
         return array(
             array('name', 'required'),
             array('tenant','required','message' =>'Please select a {attribute}'),
-            array('contact_number, card_type', 'safe'),
+            array('contact_number, card_type,moduleCorporate, moduleVic', 'safe'),
             array('contact_email_address', 'email'),
             array('number_of_operators, assign_kiosk', 'numerical', 'integerOnly' => true),
             array('name, contact_name,tenant,tenant_agent,created_by', 'length', 'max' => 50),
@@ -105,6 +108,8 @@ class Workstation extends CActiveRecord {
         $criteria->compare('id', $this->id);
         $criteria->compare('name', $this->name, true);
         $criteria->compare('location', $this->location, true);
+        $criteria->compare('moduleCorporate', $this->moduleCorporate, true);
+        $criteria->compare('moduleVic', $this->moduleVic, true);
         $criteria->compare('contact_name', $this->contact_name, true);
         $criteria->compare('contact_number', $this->contact_number);
         $criteria->compare('contact_email_address', $this->contact_email_address, true);
@@ -216,6 +221,43 @@ class Workstation extends CActiveRecord {
         } else {
             return false;
         }
+    }
+
+    public function getCorporateCardType(){
+
+        $cards = CardType::model()->findAllByAttributes(
+            array('module'=>1)
+        );
+        $cardArr = "";
+        foreach($cards as $card){
+            $cardType = CardType::model()->findByPk($card->id);
+            $cardArr .= CHtml::image(
+                Yii::app()->controller->assetsBase . "/". $cardType->card_icon_type ." ","",
+                array("width"=>"25px" , "class"=>"card_type_corporate")
+            );
+
+        }
+        return $cardArr;
+
+    }
+
+    public function getCorporateVic(){
+
+        $cards = CardType::model()->findAllByAttributes(
+            array('module'=>2)
+        );
+        $cardArr = "";
+        foreach($cards as $card){
+            $cardType = CardType::model()->findByPk($card->id);
+            $cardArr .= CHtml::image(
+                Yii::app()->controller->assetsBase . "/". $cardType->card_icon_type ." ","",
+                array("width"=>"25px" , "class"=>"card_type_vic")
+            );
+
+        }
+        return $cardArr;
+
+
     }
 
 

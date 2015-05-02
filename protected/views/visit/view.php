@@ -1,4 +1,3 @@
-
 <?php
 /* @var $this VisitController */
 /* @var $model Visit */

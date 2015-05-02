@@ -22,10 +22,26 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' => 'name',
             'filter'=>CHtml::activeTextField($model, 'name', array('placeholder'=>'Name')),
+
         ),
         array(
             'name' => 'location',
             'filter'=>CHtml::activeTextField($model, 'location', array('placeholder'=>'Location')),
+        ),
+        array(
+            'name' => 'moduleCorporate',
+            'type'=>'html',
+            'filter'=>CHtml::activeTextField($model, 'moduleCorporate',
+                array('placeholder'=>'Corporate' , 'disabled'=>'disabled')),
+            'value' => '$data->getCorporateCardType()',
+        ),
+
+        array(
+            'name' => 'moduleVic',
+            'type'=>'html',
+            'filter'=>CHtml::activeTextField($model, 'moduleVic',
+                array('placeholder'=>'VIC Issuing' , 'disabled'=>'disabled')),
+            'value' => '$data->getCorporateVic()',
         ),
         array(
             'name' => 'contact_name',
@@ -39,6 +55,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'name' => 'contact_email_address',
             'filter'=>CHtml::activeTextField($model, 'contact_email_address', array('placeholder'=>'Contact Email Address')),
         ),
+
         array(
             'name' => 'id',
             'type' => 'raw',
@@ -100,7 +117,17 @@ $this->widget('zii.widgets.grid.CGridView', array(
         ),
     ),
 ));
+function getCorporateModule(){
 
+    $cards = CardType::model()->findAllByAttributes(
+        array('module'=>1)
+    );
+
+    foreach($cards as $card){
+        $card->name;
+    }
+    return "hello";
+}
 function isWorkstationExists($workstationId) {
     return UserWorkstations::model()->exists('workstation="' . $workstationId . '"');
 }
@@ -108,4 +135,6 @@ function isWorkstationExists($workstationId) {
 function isVisitExistsInClosedVisits($workstationId) {
     return Visit::model()->exists('workstation="' . $workstationId . '"');
 }
+
+
 ?>

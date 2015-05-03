@@ -2,7 +2,7 @@
 
 class m150430_170515_workstation_card_type extends CDbMigration
 {
-	public function up()
+	public function safeUp()
 	{
         $table = Yii::app()->db->schema->getTable('workstation_card_type');
         if(!isset($table)){
@@ -69,31 +69,32 @@ class m150430_170515_workstation_card_type extends CDbMigration
         }
 	}
 
-	public function down()
-	{
-        $this->execute("DELETE FROM `card_type` ");
-
-        $this->execute("ALTER TABLE `card_type` DROP CONSTRAINT `card_type_module`");
-
-        $this->execute("ALTER TABLE card_type DROP COLUMN module");
-
-        $this->execute("DELETE FROM `module` ");
-
-        $this->execute("DROP TABLE `module` ");
-
-        $this->execute("DROP TABLE `workstation_card_type`");
-
-    }
-
-	/*
-	// Use safeUp/safeDown to do migration with transaction
-	public function safeUp()
-	{
-
-	}
-
 	public function safeDown()
 	{
-	}
-	*/
+        $table = Yii::app()->db->schema->getTable('card_type');
+        if(isset($table->columns['module'])) {
+
+            $this->execute("DELETE FROM `card_type` ");
+
+                $this->execute("ALTER TABLE `card_type` DROP CONSTRAINT `card_type_module`");
+
+            $this->execute("ALTER TABLE card_type DROP COLUMN module");
+        }
+
+        $table = Yii::app()->db->schema->getTable('module');
+        if(isset($table)) {
+
+            $this->execute("DELETE FROM `module` ");
+
+            $this->execute("DROP TABLE `module` ");
+
+        }
+
+        $table = Yii::app()->db->schema->getTable('workstation_card_type');
+        if(isset($table)) {
+
+            $this->execute("DROP TABLE `workstation_card_type`");
+        }
+    }
+
 }

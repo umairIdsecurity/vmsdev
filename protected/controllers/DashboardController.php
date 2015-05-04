@@ -267,5 +267,10 @@ class DashboardController extends Controller {
             'userModel' => $userModel
         ));
     }
+	
+	  public function actionHelpDesk() {
+        $session = new CHttpSession;
+        $this->render('helpdesk');
+    }
 
 }

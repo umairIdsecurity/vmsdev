@@ -6,6 +6,10 @@
 /build/logs/**
 company_css/**
 .DS_Store
+**/.DS_Store
 cache.properties
 /protected/runtime/HTML
 /protected/runtime/URI
+/nbproject/private/
+composer.lock
+**/composer.lock

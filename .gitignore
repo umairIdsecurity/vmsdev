@@ -13,3 +13,4 @@ cache.properties
 /nbproject/private/
 composer.lock
 **/composer.lock
+nbproject

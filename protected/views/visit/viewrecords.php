@@ -70,20 +70,6 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'htmlOptions'=>array('width'=>'120px')
         ),
         array(
-            'name' => 'contactnumber',
-            'filter'=>CHtml::activeTextField($model, 'contactnumber', array('placeholder'=>'Contact Number')),
-            'value' => 'Visitor::model()->findByPk($data->visitor)->contact_number',
-            'header' => 'Contact Number',
-            'htmlOptions'=>array('width'=>'120px'),
-        ),
-        array(
-            'name' => 'contactemail',
-            'filter'=>CHtml::activeTextField($model, 'contactemail', array('placeholder'=>'Contact Email')),
-            'value' => 'Visitor::model()->findByPk($data->visitor)->email',
-            'header' => 'Contact Email',
-            'htmlOptions'=>array('width'=>'100px')
-        ),
-        array(
             'name' => 'date_check_in',
             'filter'=>CHtml::activeTextField($model, 'date_check_in', array('placeholder'=>'Check In Date')),
             'type' => 'html',

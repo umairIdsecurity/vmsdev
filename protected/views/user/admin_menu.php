@@ -75,6 +75,12 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                             <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create/&role=6'); ?>'><span>Add Agent Administrator</span></a></li>
                             <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create/&role=8'); ?>'><span>Add Operator</span></a></li>
                             <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create/&role=7'); ?>'><span>Add Agent Operator</span></a></li>
+                            <li class='submenu addSubMenu'><?php
+                                echo CHtml::ajaxLink("<span>Add Host</span>",
+                                    CController::createUrl('dashboard/addHost'), array('update' => '#content')
+                                );
+                                ?>
+                            </li>
 
                             <?php
                             break;
@@ -83,6 +89,12 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                             <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create/&role=1'); ?>'><span>Add Administrator</span></a></li>
                             <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create/&role=6'); ?>'><span>Add Agent Administrator</span></a></li>
                             <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create/&role=8'); ?>'><span>Add Operator</span></a></li>
+                            <li class='submenu addSubMenu'><?php
+                                echo CHtml::ajaxLink("<span>Add Host</span>",
+                                    CController::createUrl('dashboard/addHost'), array('update' => '#content')
+                                );
+                                ?>
+                            </li>
 
                             <?php
                             break;
@@ -91,6 +103,12 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                             ?>
                             <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create/&role=6'); ?>'><span>Add Agent Administrator</span></a></li>
                             <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create/&role=7'); ?>'><span>Add Agent Operator</span></a></li>
+                            <li class='submenu addSubMenu'><?php
+                                echo CHtml::ajaxLink("<span>Add Host</span>",
+                                    CController::createUrl('dashboard/addHost'), array('update' => '#content')
+                                );
+                                ?>
+                            </li>
                             <?php
                             break;
                         default:

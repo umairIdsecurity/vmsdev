@@ -24,14 +24,6 @@ $session = new ChttpSession;
                     <span >Preregister Visit</span>
                 </a>
             </li>-->
-            <li class=''><?php
-                echo CHtml::ajaxLink("Add Host", CController::createUrl('dashboard/addHost'), array(
-                    'update' => '#content',
-                        ), array(
-                    'class' => 'sidemenu-icon addhost',
-                ));
-                ?>
-            </li>
             <li><a href='<?php echo Yii::app()->createUrl('visitor/addvisitor'); ?>' class="submenu-icon addvisitorprofile"><span>Add Visitor Profile</span></a></li>
              <li><a onclick="addCompany2()" class="addcompanymenu"><span>Add Company</span></a></li>
                         

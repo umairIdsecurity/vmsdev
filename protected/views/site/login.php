@@ -23,25 +23,21 @@ $this->pageTitle=Yii::app()->name . ' - Login';
 
     <table class="login-area" style="border-collapse: none !important;">
         <tr>
-            <td><?php echo $form->labelEx($model,'Username or Email'); ?><span class="required">*</span></td>
-            <td><?php echo $form->textField($model,'username'); ?></td>
-            
+
+            <td align="center"><?php echo $form->textField($model,'username', array('style'=>'float: right;text-align: center;vertical-align: middle;', 'placeholder' => 'Username or Email')); ?></td>
+
         </tr>
         <tr>
-            <td ></td>
             <td colspan="2"><?php echo $form->error($model,'username'); ?></td>
         </tr>
         <tr>
-            <td><?php echo $form->labelEx($model,'password'); ?></td>
-            <td><?php echo $form->passwordField($model,'password'); ?></td>
+            <td><?php echo $form->passwordField($model,'password', array('style'=>'float: right;text-align: center;vertical-align: middle;','placeholder' => 'Password')); ?></td>
             
         </tr>
         <tr>
-            <td ></td>
             <td colspan="2"><?php echo $form->error($model,'password'); ?></td>
         </tr>
         <tr >
-            <td></td>
             <td colspan="2">
                 <?php echo CHtml::submitButton('Login',array('class'=>'actionForward')); ?>
                 <a class="btn btn-link" href="<?=$this->createUrl('site/forgot')?>">Forgot password?</a>

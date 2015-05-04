@@ -96,7 +96,7 @@ $userRole = $session['role'];
                             </li>
 
                             <li class="help">
-                                <a class="title" href="#">
+                                <a title="help" href="<?php echo Yii::app()->createUrl("/dashboard/helpdesk"); ?>">
                                     Help
                                 </a>
                             </li>

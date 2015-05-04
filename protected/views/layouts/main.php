@@ -87,6 +87,8 @@ $userRole = $session['role'];
                     </div>
                     <aside class="top_nav">
                         <ul id="icons">
+                            
+
                             <li class="profile">
                                 <a title="profile" href="<?php echo Yii::app()->createUrl("/user/profile&id=" . $session['id']); ?>">
                                     My Profile
@@ -94,7 +96,7 @@ $userRole = $session['role'];
                             </li>
 
                             <li class="help">
-                                <a class="title" href="#">
+                                <a title="help" href="<?php echo Yii::app()->createUrl("/dashboard/helpdesk"); ?>">
                                     Help
                                 </a>
                             </li>

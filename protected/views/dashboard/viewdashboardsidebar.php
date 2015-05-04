@@ -18,6 +18,7 @@ $session = new ChttpSession;
 <div id="sidebar2">
     <div class="sidebarTitle" style="">Main Menu</div><br><div id='cssmenu' class="dashboardMenu">
         <ul>
+        <li class=''><a href="<?php echo Yii::app()->createUrl("/dashboard"); ?>" class="submenu-icon dashboard-icon"><span>Dashboard</span></a></li>
             <li class=''><a href='<?php echo Yii::app()->createUrl('visitor/create&action=register'); ?>' id="addvisitorSidebar" class="sidemenu-icon log-current"><span>Log Visit</span></a></li>
             <!--<li class=''>
                 <a href='<?php /*echo Yii::app()->createUrl('visitor/create&action=preregister'); */?>' class="sidemenu-icon pre-visits">

@@ -124,13 +124,8 @@ div.form label{
     padding: 0 ;
 }
 
-.top_nav .dashboard a{
-    display: block;
-    height: 40px;
-    width: 40px;
-    background: url('../images/menu-icons-dashboard.png') no-repeat center center;
-    text-indent: -9999px;
-}
+
+
 
 .top_nav .profile a{
     display: block;
@@ -1033,6 +1028,15 @@ dt.tabs dt{
 .dashboardMenu .pre-visits {
     background:url('../images/preregistericonsidemenu.png') 0 0 no-repeat;
     // height: 16px;
+}
+
+.dashboard-icon {
+    background:url('../images/dashboardicon.png') 0 0 no-repeat;
+    background-position: 0px 3px;
+    padding-left: 35px !important;
+    display: block;
+    height: 16px;
+    text-decoration: none;
 }
 
 .sidemenu-icon{

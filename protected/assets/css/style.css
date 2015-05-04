@@ -124,11 +124,14 @@ div.form label{
     padding: 0 ;
 }
 
+
+
+
 .top_nav .profile a{
     display: block;
     height: 40px;
     width: 40px;
-    background: url('../images/menu-icons-profile.jpg') no-repeat center center;
+    background: url('../images/menu-icons-profile.png') no-repeat center center;
     text-indent: -9999px;
 }
 
@@ -136,7 +139,7 @@ div.form label{
     display: block;
     height: 40px;
     width: 40px;
-    background: url('../images/menu-icons-notifications.jpg') no-repeat center center;
+    background: url('../images/menu-icons-notifications.png') no-repeat center center;
     text-indent: -9999px;
 }
 
@@ -144,7 +147,7 @@ div.form label{
     display: block;
     height: 40px;
     width: 40px;
-    background: url('../images/menu-icons-support.jpg') no-repeat center center;
+    background: url('../images/menu-icons-support.png') no-repeat center center;
     text-indent: -9999px;
 }
 
@@ -154,7 +157,7 @@ div.form label{
     display: block;
     height: 40px;
     width: 40px;
-    background: url('../images/menu-icons-help.jpg') no-repeat center center;
+    background: url('../images/menu-icons-help.png') no-repeat center center;
     text-indent: -9999px;
 }
 
@@ -1025,6 +1028,16 @@ dt.tabs dt{
 .dashboardMenu .pre-visits {
     background:url('../images/preregistericonsidemenu.png') 0 0 no-repeat;
     // height: 16px;
+}
+
+.dashboard-icon {
+    background: transparent url('../images/dashboardicon.png') 0 0 no-repeat;
+    display: block;
+    height: 22px;
+    width: 22px;
+    float: left;
+    text-decoration: none;
+    margin: 0 0 5px 5px;
 }
 
 .sidemenu-icon{

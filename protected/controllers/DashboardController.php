@@ -22,7 +22,7 @@ class DashboardController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'addHost', 'content', 'ContactSupport'),
+                'actions' => array('create', 'update', 'addHost', 'content', 'ContactSupport','helpDesk'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -266,6 +266,11 @@ class DashboardController extends Controller {
             'model' => $model,
             'userModel' => $userModel
         ));
+    }
+	
+	  public function actionHelpDesk() {
+        $session = new CHttpSession;
+        $this->render('helpdesk');
     }
 
 }

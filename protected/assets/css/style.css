@@ -124,11 +124,19 @@ div.form label{
     padding: 0 ;
 }
 
+.top_nav .dashboard a{
+    display: block;
+    height: 40px;
+    width: 40px;
+    background: url('../images/menu-icons-dashboard.png') no-repeat center center;
+    text-indent: -9999px;
+}
+
 .top_nav .profile a{
     display: block;
     height: 40px;
     width: 40px;
-    background: url('../images/menu-icons-profile.jpg') no-repeat center center;
+    background: url('../images/menu-icons-profile.png') no-repeat center center;
     text-indent: -9999px;
 }
 
@@ -136,7 +144,7 @@ div.form label{
     display: block;
     height: 40px;
     width: 40px;
-    background: url('../images/menu-icons-notifications.jpg') no-repeat center center;
+    background: url('../images/menu-icons-notifications.png') no-repeat center center;
     text-indent: -9999px;
 }
 
@@ -144,7 +152,7 @@ div.form label{
     display: block;
     height: 40px;
     width: 40px;
-    background: url('../images/menu-icons-support.jpg') no-repeat center center;
+    background: url('../images/menu-icons-support.png') no-repeat center center;
     text-indent: -9999px;
 }
 
@@ -154,7 +162,7 @@ div.form label{
     display: block;
     height: 40px;
     width: 40px;
-    background: url('../images/menu-icons-help.jpg') no-repeat center center;
+    background: url('../images/menu-icons-help.png') no-repeat center center;
     text-indent: -9999px;
 }
 

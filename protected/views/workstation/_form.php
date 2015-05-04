@@ -123,6 +123,34 @@ $session = new CHttpSession;
             <td><?php echo $form->textField($model, 'contact_email_address', array('size' => 50, 'maxlength' => 50)); ?></td>
             <td><?php echo $form->error($model, 'contact_email_address',array('style'=>'text-transform:none;')); ?></td>
         </tr>
+        <?php
+        if(!empty($_GET['id']) && Yii::app()->urlManager->parseUrl(Yii::app()->request) == 'workstation/update'){
+            ?>
+            <tr>
+                <td><?php echo $form->labelEx($model, 'card_type'); ?></td>
+
+                <td>
+                    <?php
+
+                    $criteria = new CDbCriteria();
+                    $criteria->addInCondition("module", array(1,2));
+                    echo  $form->checkBoxList(
+                        $model,'card_type',
+                        CHtml::listData(
+                            CardType::model()->findAll($criteria),'id', 'name'),
+                                array('separator'=>' ',
+                                    'labelOptions'=>array('style'=>'display:inline')
+                                )
+
+                    );
+                    ?>
+                <td>
+                <td><?php echo $form->error($model, 'card_type'); ?></td>
+            </tr>
+
+        <?php
+        }
+        ?>
 
 
         <input type="hidden" id="Workstation_created_by" name="Workstation[created_by]" value="<?php echo $session['id']; ?>">

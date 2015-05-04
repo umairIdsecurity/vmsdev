@@ -26,7 +26,7 @@ class WorkstationController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin','adminAjax' ,'delete','create','update', 'addCardType'),
+                'actions' => array('admin','adminAjax' ,'delete','create','update'),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
            
             ),
@@ -36,24 +36,6 @@ class WorkstationController extends Controller {
         );
     }
 
-    public function actionAddCardType(){
-
-        $cardType = new WorkstationCardType();
-
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-
-        if (isset($_POST['WorkstationCardType'])) {
-            $cardType->attributes = $_POST['WorkstationCardType'];
-            if ($cardType->save())
-                $this->redirect(array('admin'));
-        }
-
-        $this->render('card_type', array(
-            'model' => $cardType,
-        ),false,true);
-    }
-    
     /**
      * Creates a new model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -83,13 +65,39 @@ class WorkstationController extends Controller {
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
 
+        $slectedCardType = WorkstationCardType::model()->findAllByAttributes(
+            array('workstation'=>$id)
+        );
+
+        $cards = array();
+        if(!empty($slectedCardType)){
+            foreach($slectedCardType as $cardTypes){
+                $cards[] = $cardTypes->card_type;
+            }
+        }
+
+        $model->card_type = $cards;
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['Workstation'])) {
             $model->attributes = $_POST['Workstation'];
-            if ($model->save())
-                $this->redirect(array('admin'));
+            if ($model->save()){
+
+                WorkstationCardType::model()->deleteAll(
+                    "workstation='" . $model->id . "'"
+                );
+                if(!empty($model->card_type)){
+                    foreach($model->card_type as $card){
+                        $workstation = new WorkstationCardType();
+                        $workstation->workstation = $model->id;
+                        $workstation->card_type = $card;
+                        $workstation->user = 16;
+                        $workstation->save();
+                    }
+                }
+            }
+            $this->redirect(array('admin'));
         }
 
         $this->render('update', array(

@@ -52,7 +52,6 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                 }
                 ?>>
                     <li><a href='<?php echo Yii::app()->createUrl('workstation/create'); ?>' class="addSubMenu"><span>Add Workstation</span></a></li>
-                    <li><a href='<?php echo Yii::app()->createUrl('workstation/addcardtype'); ?>' class="addSubMenu"><span>Add Card Type</span></a></li>
                 </ul>
             </li><!-- menu for Workstations -->
 

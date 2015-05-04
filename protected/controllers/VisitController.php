@@ -70,12 +70,17 @@ class VisitController extends Controller {
             // get the lastest visitor type:
             if ($model->visitor_type == null) {
                 $lastVisit = Visit::model()->find("visitor = " . $model->visitor);
-                if ($lastVisit && $lastVisit->visitor_type != null){
+
+                if ($lastVisit){
                     $model->visitor_type = $lastVisit->visitor_type;
+                    $model->reason = $lastVisit->reason;
+                    $model->workstation = $lastVisit->workstation;
                 } else {
                     // default value:
                     // todo: check this default later
                     $model->visitor_type = VisitorType::PATIENT_VISITOR;
+                    $model->reason = null;
+                    $model->workstation = null;
                 }
             }
 
@@ -203,6 +208,7 @@ class VisitController extends Controller {
         $reasonModel = VisitReason::model()->findByPk($model->reason);
         $patientModel = Patient::model()->findByPk($model->patient);
         $cardTypeModel = CardType::model()->findByPk($model->card_type);
+		$visitModel = Visit::model()->getVisitCount($model->id);
 
         $newPatient = new Patient;
         $newHost = new User;
@@ -231,6 +237,7 @@ class VisitController extends Controller {
             'patientModel' => $patientModel,
             'newPatient' => $newPatient,
             'newHost' => $newHost,
+			'visitModel' => $visitModel,
             'cardTypeModel' => $cardTypeModel,
         ));
     }

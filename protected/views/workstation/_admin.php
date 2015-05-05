@@ -21,6 +21,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
     'columns' => array(
         array(
             'name' => 'name',
+            'header' => 'Workstation',
             'filter'=>CHtml::activeTextField($model, 'name', array('placeholder'=>'Name')),
             'htmlOptions'=>array('width'=>'180px'),
         ),
@@ -35,17 +36,19 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'filter'=>CHtml::activeTextField($model, 'moduleCorporate',
                 array('placeholder'=>'Corporate' , 'disabled'=>'disabled')),
             'value' => '$data->getCorporateCardType()',
-            'htmlOptions'=>array('width'=>'300px'),
-            'headerHtmlOptions' => array('style'=>'width:200px; text-align:left;', 'class'=>'header-corporate')
+            'htmlOptions'=>array('width'=>'216px'),
+            'headerHtmlOptions' => array('class'=>'header-corporate')
         ),
 
         array(
             'name' => 'moduleVic',
             'type'=>'html',
+            'header' => '',
             'filter'=>CHtml::activeTextField($model, 'moduleVic',
                 array('placeholder'=>'VIC Issuing' , 'disabled'=>'disabled')),
             'value' => '$data->getCorporateVic()',
-            'htmlOptions'=>array('width'=>'300px'),
+            'htmlOptions'=>array('width'=>'272px'),
+            'headerHtmlOptions' => array('class'=>'header-vic')
         ),
         /*array(
             'name' => 'contact_name',

@@ -316,7 +316,7 @@ nav.navigation ul li:last-child.active
 
 .grid-view table.items th,table th,.grid-view table.items th a{
     background-color: #FBFBFB;
-    background-image:none !important;
+    /*background-image:none !important;*/
     background-repeat: repeat-x;
     //  box-shadow: 0 1px 0 #FFFFFF inset;
     list-style: none outside none;
@@ -432,7 +432,7 @@ nav.navigation ul li:last-child.active
 
 .grid-view table.items th,table th,.grid-view table.items th a{
     background-color: #FBFBFB;
-    background-image:none !important;
+    background-image:none;
     background-repeat: repeat-x;
     //  box-shadow: 0 1px 0 #FFFFFF inset;
     list-style: none outside none;
@@ -440,6 +440,9 @@ nav.navigation ul li:last-child.active
     padding: 4px;
     position: relative; 
     color:#323232 !important;
+}
+#workstation-grid_c0 , #workstation-grid_c3{
+    background-image:none !important;
 }
 
 .grid-view{
@@ -1259,6 +1262,18 @@ dt.tabs dt{
 .card_type_vic{
     margin: 0 2px;
 }
+
+.header-corporate{
+    width: 216px;
+    height: 100px;
+    background:url("../images/Card-Panels-Corp-module.png") top left no-repeat !important ;
+}
+.header-vic{
+    width: 272px;
+    height: 100px;
+    background:url("../images/Card-Panels-VIC-module.png") top left no-repeat !important ;
+}
+
 
 .workstationRow{
     display:none;

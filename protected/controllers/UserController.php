@@ -200,6 +200,12 @@ class UserController extends Controller {
 
         if (isset($_POST['User'])) {
             $model->attributes = $_POST['User'];
+//            echo '<pre>';
+//            $model->save();
+//            var_dump($model->attributes);
+//            var_dump($model->photo1->relative_path);
+//            echo '</pre>';
+//            die();
             if ($model->save())
                 Yii::app()->user->setFlash('success', "Profile Updated Successfully.");
         }

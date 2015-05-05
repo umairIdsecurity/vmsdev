@@ -1264,13 +1264,16 @@ dt.tabs dt{
 }
 
 .header-corporate{
-    width: 216px;
-    height: 100px;
+    width: 300px !important;
+    height: 110px;
     background:url("../images/Card-Panels-Corp-module.png") top left no-repeat !important ;
 }
+#workstation-grid_c3{
+    width: 50px !important;
+}
 .header-vic{
-    width: 272px;
-    height: 100px;
+    width: 400px !important;
+    height: 110px;
     background:url("../images/Card-Panels-VIC-module.png") top left no-repeat !important ;
 }
 

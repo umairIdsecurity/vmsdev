@@ -30,7 +30,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'header' => '',
             'type'=>'raw',
             'value' => '$data->getCorporateCardType()',
-            'htmlOptions'=>array('width'=>'216px'),
+            'htmlOptions'=>array('width'=>'300px' , 'height'=>'119px'),
             'headerHtmlOptions' => array('class'=>'header-corporate')
         ),
 
@@ -39,10 +39,10 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'type'=>'html',
             'header' => '',
             'value' => '$data->getCorporateVic()',
-            'htmlOptions'=>array('width'=>'272px'),
+            'htmlOptions'=>array('width'=>'400px' , 'height'=>'119px'),
             'headerHtmlOptions' => array('class'=>'header-vic')
         ),
-        
+
         array(
             'header' => 'Actions',
             'class' => 'CButtonColumn',

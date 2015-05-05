@@ -1275,6 +1275,14 @@ dt.tabs dt{
     background:url("../images/Card-Panels-VIC-module.png") top left no-repeat !important ;
 }
 
+.card_type_corporate {
+    margin: 0 22px !important;
+}
+
+.card_type_vic{
+    margin: 0 22px !important;
+}
+
 
 .workstationRow{
     display:none;

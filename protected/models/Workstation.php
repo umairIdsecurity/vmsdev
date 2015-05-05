@@ -269,10 +269,10 @@ class Workstation extends CActiveRecord {
             );
 
             if(!empty($ws_card)){
-                $cardArr .= CHtml::checkBox($card->name,true,array("value"=>$card->id , "class"=>"card_type_corporate"));
+                $cardArr .= CHtml::checkBox($card->name,true,array("value"=>$card->id , "class"=>"card_type_vic"));
             }
             else{
-                $cardArr .= CHtml::checkBox($card->name,false,array("value"=>$card->id , "class"=>"card_type_corporate"));
+                $cardArr .= CHtml::checkBox($card->name,false,array("value"=>$card->id , "class"=>"card_type_vic"));
             }
 
         }

@@ -14,3 +14,4 @@ cache.properties
 composer.lock
 **/composer.lock
 nbproject
+vendor/**

@@ -1,5 +1,12 @@
 <?php
 
+Yii::import('ext.validator.PasswordCustom');
+Yii::import('ext.validator.PasswordRepeat');
+Yii::import('ext.validator.PasswordRequirement');
+Yii::import('ext.validator.PasswordOption');
+Yii::import('ext.validator.VisitorPrimaryIdentification');
+Yii::import('ext.validator.VisitorAlternateIdentification');
+
 /**
  * This is the model class for table "visitor".
  *
@@ -41,10 +48,18 @@ class Visitor extends CActiveRecord {
     public $birthdayDay;
     public $repeatpassword;
 	public $password_option;
+    public $password_requirement;
+    public $alternative_identification;
+
+    const PROFILE_TYPE_CORPORATE = 'CORPORATE';
     const PROFILE_TYPE_VIC = 'VIC';
     const PROFILE_TYPE_ASIC = 'ASIC';
 
+    const AUSTRALIA_ID = 13;
+
     public static $VISITOR_CARD_TYPE_LIST = array(
+        self::PROFILE_TYPE_CORPORATE => array(
+        ),
         self::PROFILE_TYPE_VIC => array(
             1 => 'Saved',
             2 => 'VIC holder',
@@ -52,6 +67,93 @@ class Visitor extends CActiveRecord {
             4 => 'ASIC Issued',
             5 => 'ASIC Denied',
         ),
+        self::PROFILE_TYPE_ASIC => array(
+        ),
+    );
+
+    public static $PROFILE_TYPE_LIST = array(
+        self::PROFILE_TYPE_CORPORATE => 'Corporate',
+        self::PROFILE_TYPE_VIC => 'VIC',
+        self::PROFILE_TYPE_ASIC => 'ASIC',
+    );
+
+    public static $IDENTIFICATION_TYPE_LIST = array(
+        'PASSPORT'        => 'Passport',
+        'DRIVERS_LICENSE' => 'Drivers License',
+        'PROOF_OF_AGE'    => 'Proof of Age Card',
+    );
+
+    public static $STREET_TYPES = array(
+        'ALLY'     => 'ALLEY',
+        'APP'      => 'APPROACH',
+        'ARC'      => 'ARCADE',
+        'AVE'      => 'AVENUE',
+        'BLVD'     => 'BOULEVARD',
+        'BROW'     => 'BROW',
+        'BYPA'     => 'BYPASS',
+        'CWAY'     => 'CAUSEWAY',
+        'CCT'      => 'CIRCUIT',
+        'CIRC'     => 'CIRCUS',
+        'CL'       => 'CLOSE',
+        'CPSE'     => 'COPSE',
+        'CNR'      => 'CORNER',
+        'CT'       => 'COURT',
+        'CRES'     => 'CRESCENT',
+        'CRS'      => 'CROSS',
+        'DR'       => 'DRIVE',
+        'END'      => 'END',
+        'EESP'     => 'ESPLANAND',
+        'FLAT'     => 'FLAT',
+        'FWAY'     => 'FREEWAY',
+        'FRNT'     => 'FRONTAGE',
+        'GDNS'     => 'GARDENS',
+        'GLD'      => 'GLADE',
+        'GLEN'     => 'GLEN',
+        'GRN'      => 'GREEN',
+        'GR'       => 'GROVE',
+        'HTS'      => 'HEIGHTS',
+        'HWY'      => 'HIGHWAY',
+        'LANE'     => 'LANE',
+        'LINK'     => 'LINK',
+        'LOOP'     => 'LOOP',
+        'MALL'     => 'MALL',
+        'MEWS'     => 'MEWS',
+        'PCKT'     => 'PACKET',
+        'PDE'      => 'PARADE',
+        'PARK'     => 'PARK',
+        'PKWY'     => 'PARKWAY',
+        'PL'       => 'PLACE',
+        'PROM'     => 'PROMENADE',
+        'RES'      => 'RESERVE',
+        'RDGE'     => 'RIDGE',
+        'RISE'     => 'RISE',
+        'RD'       => 'ROAD',
+        'ROW'      => 'ROW',
+        'SQ'       => 'SQUARE',
+        'ST'       => 'STREET',
+        'STRP'     => 'STRIP',
+        'TARN'     => 'TARN',
+        'TCE'      => 'TERRACE',
+        'FARETFRE' => 'THOROUGH',
+        'TRAC'     => 'TRACK',
+        'TWAY'     => 'TRUNKWAY',
+        'VIEW'     => 'VIEW',
+        'VSTA'     => 'VISTA',
+        'WALK'     => 'WALK',
+        'WWAY'     => 'WALKWAY',
+        'WAY'      => 'WAY',
+        'YARD'     => 'YARD',
+    );
+
+    public static $AUSTRALIAN_STATES = array(
+        'ACT' => 'Australian Capital Territory',
+        'NSW' => 'New South Wales',
+        'NT'  => 'Northern Territory',
+        'Qld' => 'Queensland',
+        'SA'  => 'South Australia',
+        'Tas' => 'Tasmania',
+        'Vic' => 'Victoria',
+        'WA'  => 'Western Australia',
     );
 
     /**
@@ -67,17 +169,53 @@ class Visitor extends CActiveRecord {
     public function rules() {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
-        return array(
-            array('first_name, last_name, email, contact_number,company, visitor_card_status', 'required'),
+        $rules = array(
+            array('first_name, last_name, email, contact_number,company', 'required'),
             array('tenant','required','message' =>'Please select a {attribute}'),
             array('is_deleted', 'numerical', 'integerOnly' => true),
             array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
             array('contact_number, company, role, visitor_status, created_by, tenant, tenant_agent', 'length', 'max' => 20),
-            array('date_of_birth, notes,birthdayYear,birthdayMonth,birthdayDay,vehicle', 'safe'),
+            array(
+                'date_of_birth,
+                notes,
+                birthdayYear,
+                birthdayMonth,
+                birthdayDay,
+                vehicle,
+                profile_type,
+                middle_name,
+                identification_type,
+                identification_country_issued,
+                identification_document_no,
+                identification_document_expiry,
+                identification_alternate_document_name1,
+                identification_alternate_document_no1,
+                identification_alternate_document_expiry1,
+                identification_alternate_document_name2,
+                identification_alternate_document_no2,
+                identification_alternate_document_expiry2,
+                contact_unit,
+                contact_street_no,
+                contact_street_name,
+                contact_street_type,
+                contact_suburb,
+                contact_state,
+                contact_country,
+                visitor_card_status,
+                visitor_workstation,
+                repeatpassword,
+                password_option,
+                password_requirement,
+                alternative_identification
+                ',
+                'safe'
+            ),
             array('tenant, tenant_agent,company, photo,vehicle, visitor_card_status, visitor_workstation', 'default', 'setOnEmpty' => true, 'value' => null),
-            array('repeatpassword,password', 'required','on'=>'insert'),
-            array('password', 'compare', 'compareAttribute' => 'repeatpassword', 'on' => 'insert'),
-           // array('vehicle', 'length', 'min'=>6, 'max'=>6, 'tooShort'=>'Vehicle is too short (Should be in 6 characters)'), 
+            array('password', 'PasswordCustom'),
+            array('repeatpassword', 'PasswordRepeat'),
+            array('password_requirement', 'PasswordRequirement'),
+            array('password_option', 'PasswordOption'),
+           // array('vehicle', 'length', 'min'=>6, 'max'=>6, 'tooShort'=>'Vehicle is too short (Should be in 6 characters)'),
             array('email', 'email'),
             array('vehicle', 'match',
                 'pattern' => '/^[A-Za-z0-9_]+$/u',
@@ -88,7 +226,43 @@ class Visitor extends CActiveRecord {
             // @todo Please remove those attributes that should not be searched.
             array('id, first_name, photo,last_name, email, vehicle,contact_number, date_of_birth, company, department, position, staff_id, notes, role, visitor_status, created_by, is_deleted, tenant, tenant_agent', 'safe', 'on' => 'search'),
         );
+
+        $rules[] = array(
+            'identification_alternate_document_name1,
+                    identification_alternate_document_no1,
+                    identification_alternate_document_name2,
+                    identification_alternate_document_no2',
+            'VisitorAlternateIdentification'
+        );
+
+        $rules[] = array(
+            'identification_type,
+                    identification_country_issued,
+                    identification_document_no,
+                    identification_document_expiry',
+            'VisitorPrimaryIdentification'
+        );
+
+        if ($this->profile_type == self::PROFILE_TYPE_VIC) {
+            $rules[] = array(
+                'visitor_card_status,
+                visitor_workstation,
+                visitor_type,
+                contact_unit,
+                contact_street_no,
+                contact_street_name,
+                contact_street_type,
+                contact_suburb,
+                contact_state,
+                contact_country,
+                middle_name',
+                'required'
+            );
+        }
+
+        return $rules;
     }
+
 
     /**
      * @return array relational rules.
@@ -112,29 +286,51 @@ class Visitor extends CActiveRecord {
     /**
      * @return array customized attribute labels (name=>label)
      */
-    public function attributeLabels() {
+    public function attributeLabels()
+    {
         return array(
-            'id' => 'ID',
-            'first_name' => 'First Name',
-            'last_name' => 'Last Name',
-            'email' => 'Email Address',
-            'contact_number' => 'Mobile Number',
-            'date_of_birth' => 'Date Of Birth',
-            'company' => 'Company',
-            'department' => 'Department',
-            'position' => 'Position',
-            'staff_id' => 'Staff ID',
-            'notes' => 'Notes',
-            'password' => 'Password',
-            'role' => 'Role',
-            'visitor_status' => 'Visitor Status',
-            'created_by' => 'Created By',
-            'is_deleted' => 'Is Deleted',
-            'tenant' => 'Tenant',
-            'tenant_agent' => 'Tenant Agent',
-            'repeatpassword' => 'Repeat Password',
-            'vehicle' => 'Vehicle Registration Number',
-            'photo' => 'Photo',
+            'id'                                        => 'ID',
+            'visitor_workstation'                       => 'Workstation',
+            'first_name'                                => 'First Name',
+            'middle_name'                               => 'Middle Name',
+            'last_name'                                 => 'Last Name',
+            'email'                                     => 'Email Address',
+            'contact_number'                            => 'Mobile Number',
+            'date_of_birth'                             => 'Date Of Birth',
+            'company'                                   => 'Company',
+            'department'                                => 'Department',
+            'position'                                  => 'Position',
+            'staff_id'                                  => 'Staff ID',
+            'notes'                                     => 'Notes',
+            'password'                                  => 'Password',
+            'role'                                      => 'Role',
+            'visitor_status'                            => 'Visitor Status',
+            'created_by'                                => 'Created By',
+            'is_deleted'                                => 'Is Deleted',
+            'tenant'                                    => 'Tenant',
+            'tenant_agent'                              => 'Tenant Agent',
+            'repeatpassword'                            => 'Repeat Password',
+            'vehicle'                                   => 'Vehicle Registration Number',
+            'photo'                                     => 'Photo',
+            'identification_type'                       => 'Identification Type',
+            'identification_country_issued'             => 'Country of Issued',
+            'identification_document_no'                => 'Document No',
+            'identification_document_expiry'            => 'Expiry',
+            'identification_alternate_document_name1'   => 'Document Name',
+            'identification_alternate_document_no1'     => 'Document No',
+            'identification_alternate_document_expiry1' => 'Expiry',
+            'identification_alternate_document_name2'   => 'Document Name',
+            'identification_alternate_document_no2'     => 'Document No',
+            'identification_alternate_document_expiry2' => 'Expiry',
+            'visitor_card_status'                       => 'Card Status',
+            'visitor_type'                              => 'Visitor Type',
+            'contact_unit'                              => 'Unit',
+            'contact_street_no'                         => 'Street No',
+            'contact_street_name'                       => 'Street Name',
+            'contact_street_type'                       => 'Street Type',
+            'contact_suburb'                            => 'Suburb',
+            'contact_state'                             => 'State',
+            'contact_country'                           => 'Country',
         );
     }
 
@@ -209,6 +405,14 @@ class Visitor extends CActiveRecord {
     
     public function beforeSave() {
       $this->email = trim($this->email);
+
+        $this->contact_country = self::AUSTRALIA_ID;
+
+        if ($this->password_requirement == PasswordRequirement::PASSWORD_IS_NOT_REQUIRED) {
+            $this->password = null;
+        } else {
+            $this->password = User::model()->hashPassword($this->password);
+        }
 
       return parent::beforeSave();
    }

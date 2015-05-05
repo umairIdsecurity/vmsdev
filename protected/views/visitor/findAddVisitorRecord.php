@@ -12,14 +12,17 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
     <div style="float:left;width:270px;text-align:center">
     <div class="visitor-title" style="cursor:pointer;color:#2f96b4">Add Visitor Profile</div>
     </div>
-   
-   
-                <input type="text" id="search-visitor" name="search-visitor" placeholder="Enter name, email, driver license" class="search-text" style="margin-left:30px;" />
-                <button class="visitor-findBtn" onclick="findVisitorRecord()" id="visitor-findBtn" style="display:none;" data-target="#findVisitorRecordModal" data-toggle="modal">Find Record</button>
-                <button class="visitor-findBtn neutral" id="dummy-visitor-findBtn" style="padding:8px;background:<?php echo $companyLafPreferences->neutral_bg_color; ?> !important;">Find Visitor Profile</button>
-                <div class="errorMessage" id="searchTextErrorMessage" style="display:none;text-align:center"></div>
-            
-    
+    <input type="text" id="search-visitor" name="search-visitor" placeholder="Enter name, email, driver licence"
+           class="search-text" style="margin-left:30px;"/>
+    <button class="visitor-findBtn" onclick="findVisitorRecord()" id="visitor-findBtn" style="display:none;"
+            data-target="#findVisitorRecordModal" data-toggle="modal">Find Record
+    </button>
+    <button class="visitor-findBtn neutral" id="dummy-visitor-findBtn"
+            style="padding:8px;background:<?php echo $companyLafPreferences->neutral_bg_color; ?> !important;">Find
+        Visitor Profile
+    </button>
+    <div class="errorMessage" id="searchTextErrorMessage" style="display:none;text-align:center"></div>
+
 
     <!-- Tab panes -->
     <div class="tab-content">
@@ -83,159 +86,123 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                     <input type="hidden" id="emailIsUnique" value="0"/>
                     
                     <div >
-                    
-                    
-                    
+
                         <table style="width:300px;float:left;">
-                            <tr> 
+                            <tr>
 
                                 <td style="width:300px;">
-                                   <!-- <label for="Visitor_Add_Photo" style="margin-left:27px;">Add  Photo</label><br>-->
+                                    <!-- <label for="Visitor_Add_Photo" style="margin-left:27px;">Add  Photo</label><br>-->
 
                                     <input type="hidden" id="Visitor_photo" name="Visitor[photo]">
+
                                     <div class="photoDiv" style='display:none;'>
-                                        <img id='photoPreview' src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png" style='display:none;'/>
+                                        <img id='photoPreview'
+                                             src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png"
+                                             style='display:none;'/>
                                     </div>
                                     <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
-                                    <div id="photoErrorMessage" class="errorMessage" style="display:none;  margin-top: 200px;margin-left: 71px !important;position: absolute;">Please upload a photo.</div>
-                                </td>
-                                </tr>
-                                <tr><td>&nbsp;</td></tr>
-                                <tr><td>&nbsp;</td></tr>
-                                <tr><td>&nbsp;</td></tr>
-                                <tr>
-                                <td id="workstationRow" <?php
-                                if ($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
-                                    echo " class='hidden' ";
-                                }
-                                ?>>
-
-                                    <select id="workstation" onchange="populateVisitWorkstation(this)">
-                                        <?php
-                                        if ($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
-                                            echo '';
-                                        } else {
-                                            echo '<option value="">Please select a workstation</option>';
-                                        }
-                                        ?>
-
-                                        <?php
-                                        $workstationList = populateWorkstation();
-                                        foreach ($workstationList as $key => $value) {
-                                            ?>
-                                            <option value="<?php echo $value->id; ?>" <?php
-                                            if (($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) && $value->id == $session['workstation']) {
-                                                echo 'selected';
-                                            }
-                                            ?>><?php echo $value->name; ?></option>
-                                                    <?php
-                                                }
-                                                ?>
-                                    </select><span class="required">*</span>
-                                    <div style="display:none;" class="errorMessage errorMessageWorkstation" >Please select a workstation</div>
-
-                                </td>
-                                </tr>
-                                <tr>
-                                <td>
-                                    
-                                    <?php
-                                    echo $form->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes(), array(
-                                        'onchange' => 'showHideHostPatientName(this)',
-                                    ));
-                                    ?>
-                                    <span class="required">*</span>
-                                    <?php echo "<br>" . $form->error($model, 'visitor_type'); ?>
+                                    <div id="photoErrorMessage" class="errorMessage"
+                                         style="display:none;  margin-top: 200px;margin-left: 71px !important;position: absolute;">
+                                        Please upload a photo.
+                                    </div>
                                 </td>
                             </tr>
-                            
-                              <tr>
-                             	<td>
-                                    <select id="Visit_reason" name="Visitor[reason]" onchange="ifSelectedIsOtherShowAddReasonDiv(this)">
-                                        <option value='' selected>Please select a reason</option>
-                                        <option value="Other">Other</option>
-                                        <?php
-                                        $reason = VisitReason::model()->findAllReason();
-                                        foreach ($reason as $key => $value) {
-                                            ?>
-                                            <option value="<?php echo $value->id; ?>"><?php echo $value->reason; ?></option>
-                                            <?php
-                                        }
-                                        ?>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
 
-                                    </select>
-                                      <span class="required">*</span>
-                                    <div class="errorMessage visitorReason" >Please select a reason</div>
-                                </td>
-                               </tr>
-                              </table> 
-                              <table id="addvisitor-table" data-ng-app="PwordForm" style="width:492px;float:left;">
-                              
-                              <tr>
+                        </table>
+
+                        <table id="addvisitor-table" data-ng-app="PwordForm" style="width:262px;float:left;">
+
+                            <tr>
                                 <td>
-                                    <?php echo $form->textField($model, 'first_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'First Name')); ?>
+                                    <?php echo $form->textField($model, 'first_name',
+                                        array('size' => 50, 'maxlength' => 50, 'placeholder' => 'First Name')); ?>
                                     <span class="required">*</span>
                                     <?php echo "<br>" . $form->error($model, 'first_name'); ?>
                                 </td>
-                                </tr>
-                                <tr>
+                            </tr>
+                            <tr>
                                 <td>
-                                    <?php echo $form->textField($model, 'last_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Last Name')); ?>
+                                    <?php echo $form->textField($model, 'last_name',
+                                        array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Last Name')); ?>
                                     <span class="required">*</span>
                                     <?php echo "<br>" . $form->error($model, 'last_name'); ?>
                                 </td>
                             </tr>
-                            
+
                             <tr>
                                 <td width="37%">
-                                    <?php echo $form->textField($model, 'email', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Email Address')); ?>
+                                    <?php echo $form->textField($model, 'email',
+                                        array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Email Address')); ?>
                                     <span class="required">*</span>
-                                    <?php echo "<br>" . $form->error($model, 'email', array('style' => 'text-transform:none;')); ?>
-                                    <div style="" id="Visitor_email_em_" class="errorMessage errorMessageEmail" >A profile already exists for this email address.</div>
+                                    <?php echo "<br>" . $form->error($model, 'email',
+                                            array('style' => 'text-transform:none;')); ?>
+                                    <div style="" id="Visitor_email_em_" class="errorMessage errorMessageEmail">A
+                                        profile already exists for this email address.
+                                    </div>
                                 </td>
-                                </tr>
-                                
-                                <tr class="hidden">
-                                <td >
-                                    <input placeholder="Password" ng-model="user.passwords" data-ng-class="{
-                                                'ng-invalid':registerform['Visitor[repeatpassword]'].$error.match}" type="password" id="Visitor_password" name="Visitor[password]" value="(NULL)">		
-                                                <span class="required">*</span>	
-                                           <?php echo "<br>" . $form->error($model, 'password'); ?>
-                                </td>
-                                </tr>
-                                <tr class="hidden">
+                            </tr>
+
+                            <tr class="hidden">
                                 <td>
-                                    <input placeholder="Repeat Password" ng-model="user.passwordConfirm" type="password" id="Visitor_repeatpassword" data-match="user.passwords" name="Visitor[repeatpassword]" value="(NULL)"/>
-                                    <span class="required">*</span>			
-                                    <div style='font-size:0.9em;color:red;' data-ng-show="registerform['Visitor[repeatpassword]'].$error.match">New Password does not match with Repeat <br> New Password. </div>
+                                    <input placeholder="Password" ng-model="user.passwords" data-ng-class="{
+                                                'ng-invalid':registerform['Visitor[repeatpassword]'].$error.match}"
+                                           type="password" id="Visitor_password" name="Visitor[password]"
+                                           value="(NULL)">
+                                    <span class="required">*</span>
+                                    <?php echo "<br>" . $form->error($model, 'password'); ?>
+                                </td>
+                            </tr>
+                            <tr class="hidden">
+                                <td>
+                                    <input placeholder="Repeat Password" ng-model="user.passwordConfirm" type="password"
+                                           id="Visitor_repeatpassword" data-match="user.passwords"
+                                           name="Visitor[repeatpassword]" value="(NULL)"/>
+                                    <span class="required">*</span>
+
+                                    <div style='font-size:0.9em;color:red;'
+                                         data-ng-show="registerform['Visitor[repeatpassword]'].$error.match">New
+                                        Password does not match with Repeat <br> New Password.
+                                    </div>
                                     <?php echo "<br>" . $form->error($model, 'repeatpassword'); ?>
                                 </td>
                             </tr>
-                                
-                                <tr>
+
+                            <tr>
                                 <td>
-                               <?php echo $form->textField($model, 'contact_number', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Contact Number')); ?>
+                                    <?php echo $form->textField($model, 'contact_number',
+                                        array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Contact Number')); ?>
                                     <span class="required">*</span>
                                     <?php echo "<br>" . $form->error($model, 'contact_number'); ?>
                                 </td>
                             </tr>
-                              
-                              <tr>
+
+                            <tr>
                                 <td>
-                                    <input placeholder="Vehicle Registration Number" type="text"  id="Visitor_vehicle" name="Visitor[vehicle]" maxlength="6" size="6">  
+                                    <input placeholder="Vehicle Registration Number" type="text" id="Visitor_vehicle"
+                                           name="Visitor[vehicle]" maxlength="6" size="6">
                                     <?php echo "<br>" . $form->error($model, 'vehicle'); ?>
                                 </td>
                             </tr>
-                              
-                              <tr>
+
+                            <tr>
                                 <td id="visitorCompanyRow">
                                     <div style="margin-bottom: 5px;">
                                         <?php echo $form->error($model, 'company'); ?>
                                         <?php
-                                            $this->widget('application.extensions.select2.Select2', array(
+                                        $this->widget('application.extensions.select2.Select2', array(
                                             'model' => $model,
                                             'attribute' => 'company',
-                                            'items' => CHtml::listData(Visitor::model()->findAllCompanyByTenant($session['tenant']), 'id', 'name'),
+                                            'items' => CHtml::listData(Visitor::model()->findAllCompanyByTenant($session['tenant']),
+                                                'id', 'name'),
                                             'selectedItems' => array(), // Items to be selected as default
                                             'placeHolder' => 'Please select a company'
                                         ));
@@ -248,44 +215,46 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                                     }
                                     ?>">Add Company</a><br/>
                                 </td>
-                                </tr>
-                              
-                                <tr>
+                            </tr>
+
+                            <tr>
                                 <td id="visitorTenantRow" <?php
                                 if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                                     echo " class='hidden' ";
                                 }
                                 ?>>
 
-                                    <select id="Visitor_tenant" onchange="populateTenantAgentAndCompanyField()" name="Visitor[tenant]"  >
+                                    <select id="Visitor_tenant" onchange="populateTenantAgentAndCompanyField()"
+                                            name="Visitor[tenant]">
                                         <option value='' selected>Please select a tenant</option>
                                         <?php
                                         $allTenantCompanyNames = User::model()->findAllCompanyTenant();
                                         foreach ($allTenantCompanyNames as $key => $value) {
                                             ?>
                                             <option value="<?php echo $value['tenant']; ?>"
-                                            <?php
-                                            if ($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant']) {
-                                                echo " selected ";
-                                            }
-                                            ?>
-
-                                                    ><?php echo $value['name']; ?></option>
-                                                    <?php
+                                                <?php
+                                                if ($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant']) {
+                                                    echo " selected ";
                                                 }
                                                 ?>
+
+                                                ><?php echo $value['name']; ?></option>
+                                        <?php
+                                        }
+                                        ?>
                                     </select><span class="required">*</span>
-									<?php echo "<br>" . $form->error($model, 'tenant'); ?>
+                                    <?php echo "<br>" . $form->error($model, 'tenant'); ?>
                                 </td>
-                                </tr>
-                                <tr>
+                            </tr>
+                            <tr>
                                 <td id="visitorTenantAgentRow" <?php
                                 if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                                     echo " class='hidden' ";
                                 }
                                 ?>>
 
-                                    <select id="Visitor_tenant_agent" name="Visitor[tenant_agent]" onchange="populateCompanyWithSameTenantAndTenantAgent()" >
+                                    <select id="Visitor_tenant_agent" name="Visitor[tenant_agent]"
+                                            onchange="populateCompanyWithSameTenantAndTenantAgent()">
                                         <?php
                                         echo "<option value='' selected>Please select a tenant agent</option>";
                                         if ($session['role'] != Roles::ROLE_SUPERADMIN) {
@@ -294,34 +263,122 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                                         ?>
                                     </select>
                                     <span class="required">*</span>
-									<?php echo "<br>" . $form->error($model, 'tenant_agent'); ?>
+                                    <?php echo "<br>" . $form->error($model, 'tenant_agent'); ?>
                                 </td>
 
                             </tr>
-           
-                                <tr>
+
+                            <tr>
                                 <td>
-                                    <?php echo $form->textField($model, 'position', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Position')); ?>
-                                     
+                                    <?php echo $form->textField($model, 'position',
+                                        array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Position')); ?>
+
                                     <?php echo "<br>" . $form->error($model, 'position'); ?>
                                 </td>
                             </tr>
 
-                            
-                             <tr>
-                             <td>
-                             <div class="register-a-visitor-buttons-div" style="padding-top:50px;padding-right:0px;">
-                        <input type="button" class="neutral visitor-backBtn btnBackTab2" id="btnBackTab2" value="Back"/>
-                        <input type="button" id="clicktabB" value="Save and Continue" style="display:none;"/>
+                        </table>
 
-                        <input type="submit" value="Save and Continue" name="yt0" id="submitFormVisitor" class="actionForward"/>
-                    </div>
-                    </td>
-                             </tr>   
-                          
-                                
+                        <table style="width:280px;">
+                            <tr>
+                                <td id="workstationRow" <?php
+                                if ($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
+                                    echo " class='hidden' ";
+                                }
+                                ?>>
 
+                                    <select id="workstation" onchange="populateVisitWorkstation(this)">
+                                        <?php
+                                        if ($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
+                                            echo '';
+                                        } else {
+                                            echo '<option value="">Select Workstation</option>';
+                                        }
+                                        ?>
 
+                                        <?php
+                                        $workstationList = populateWorkstation();
+                                        foreach ($workstationList as $key => $value) {
+                                            ?>
+                                            <option value="<?php echo $value->id; ?>" <?php
+                                            if (($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) && $value->id == $session['workstation']) {
+                                                echo 'selected';
+                                            }
+                                            ?>><?php echo $value->name; ?></option>
+                                        <?php
+                                        }
+                                        ?>
+                                    </select><span class="required">*</span>
+
+                                    <div style="display:none;" class="errorMessage errorMessageWorkstation">Select Workstation</div>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+
+                                    <?php
+                                    echo $form->dropDownList($model, 'visitor_type',
+                                        VisitorType::model()->returnVisitorTypes(), array(
+                                            'onchange' => 'showHideHostPatientName(this)',
+                                            //'prompt' => 'Select Visitor Type',
+                                        ));
+                                    ?>
+                                    <span class="required">*</span>
+                                    <?php echo "<br>" . $form->error($model, 'visitor_type'); ?>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <select id="Visit_reason" name="Visitor[reason]"
+                                            onchange="ifSelectedIsOtherShowAddReasonDiv(this)">
+                                        <option value='' selected>Select Reason</option>
+                                        <option value="Other">Other</option>
+                                        <?php
+                                        $reason = VisitReason::model()->findAllReason();
+                                        foreach ($reason as $key => $value) {
+                                            ?>
+                                            <option
+                                                value="<?php echo $value->id; ?>"><?php echo $value->reason; ?></option>
+                                        <?php
+                                        }
+                                        ?>
+
+                                    </select>
+                                    <span class="required">*</span>
+
+                                    <div class="errorMessage visitorReason">Select Reason</div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <div class="register-a-visitor-buttons-div"
+                                         style="padding-top:130px;padding-right:60px;">
+                                        <input type="button" class="neutral visitor-backBtn btnBackTab2"
+                                               id="btnBackTab2" value="Back"/>
+                                        <input type="button" id="clicktabB" value="Save and Continue"
+                                               style="display:none;"/>
+
+                                        <input type="submit" value="Save and Continue" name="yt0" id="submitFormVisitor"
+                                               class="actionForward"/>
+                                    </div>
+                                </td>
+                            </tr>
 
                         </table>
 
@@ -364,18 +421,18 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                 ));
                 ?>
                 <table style="position:relative;top:555px;left:-301px">
-                <tr>
-                <td>
-               
-            <textarea id="VisitReason_reason" name="VisitReason[reason]" rows="1" maxlength="128" style="text-transform: capitalize;" placeholder="Add Reason"></textarea> 
-                <div class="errorMessage" id="visitReasonErrorMessage" style="display:none;">Please select a reason</div>
-
-</td>
-</tr>
-</table>
+                    <tr>
+                        <td>
+                            <textarea id="VisitReason_reason" name="VisitReason[reason]" rows="1" maxlength="128"
+                                      style="text-transform: capitalize;" placeholder="Add Reason"></textarea>
+                            <div class="errorMessage" id="visitReasonErrorMessage" style="display:none;">Select Reason</div>
+                        </td>
+                    </tr>
+                </table>
                 <?php $this->endWidget(); ?>
             </div>
         </div>
+
         <div role="tabpanel" class="tab-pane" id="searchvisitor">
             <div <?php
             if ($session['role'] != Roles::ROLE_SUPERADMIN) {
@@ -389,25 +446,26 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                     </tr>
                     <tr>
                         <td>
-                            <select id="search_visitor_tenant" onchange="populateTenantAgentAndCompanyField('search')" >
-                                <option value='' selected>Please select a tenant</option>
+                            <select id="search_visitor_tenant" onchange="populateTenantAgentAndCompanyField('search')">
+                                <option value='' selected>Select a tenant</option>
                                 <?php
                                 $allTenantCompanyNames = User::model()->findAllCompanyTenant();
                                 foreach ($allTenantCompanyNames as $key => $value) {
                                     ?>
                                     <option value="<?php echo $value['tenant']; ?>"
-                                    <?php
-                                    if ($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant']) {
-                                        echo " selected ";
-                                    }
-                                    ?>><?php echo $value['name']; ?></option>
-                                            <?php
+                                        <?php
+                                        if ($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant']) {
+                                            echo " selected ";
                                         }
-                                        ?>
+                                        ?>><?php echo $value['name']; ?></option>
+                                <?php
+                                }
+                                ?>
                             </select>
                         </td>
-                        <td> 
-                            <select id="search_visitor_tenant_agent" onchange="populateAgentAdminWorkstations('search')">
+                        <td>
+                            <select id="search_visitor_tenant_agent"
+                                    onchange="populateAgentAdminWorkstations('search')">
                                 <?php
                                 echo "<option value='' selected>Please select a tenant agent</option>";
                                 if ($session['role'] != Roles::ROLE_SUPERADMIN) {
@@ -418,7 +476,6 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                         </td>
                 </table>
             </div>
-            
 
 
             <div id="searchVisitorTableDiv">
@@ -440,9 +497,9 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                     ),
                 ));
                 ?>
-                <textarea id="VisitReason_reason_search" maxlength="128" name="VisitReason[reason]"></textarea> 
-                <div class="errorMessage" id="visitReasonErrorMessageSearch" style="display:none;">Please select a reason</div>
+                <textarea id="VisitReason_reason_search" maxlength="128" name="VisitReason[reason]"></textarea>
 
+                <div class="errorMessage" id="visitReasonErrorMessageSearch" style="display:none;">Select Reason</div>
 
                 <?php $this->endWidget(); ?>
 
@@ -451,9 +508,9 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
             </div>
             <div class="register-a-visitor-buttons-div" style="padding-right:23px;">
                 <input type="button" class="neutral visitor-backBtn btnBackTab2" id="btnBackTab2" value="Back"/>
-                <input type="button" id="clicktabB1"  value="Save and Continue" class="actionForward"/>
+                <input type="button" id="clicktabB1" value="Save and Continue" class="actionForward"/>
             </div>
-            <input type="text" id="selectedVisitorInSearchTable" value="0"></input>
+            <input type="text" id="selectedVisitorInSearchTable" value="0"/>
         </div>
     </div>
 

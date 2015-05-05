@@ -502,7 +502,7 @@ class Visit extends CActiveRecord {
 		
 		$res_visitor=Yii::app()->db->createCommand("SELECT visitor FROM visit WHERE visit.id= ".$visitId)->queryAll();
 		$visitor=$res_visitor[0]['visitor'];
-		
+
 		$res_company=Yii::app()->db->createCommand("SELECT company.id AS company_id, company.name AS company_name FROM visit LEFT JOIN user ON user.id = visit.host LEFT JOIN company ON user.company = company.id WHERE company.is_deleted=0 AND visit.id= ".$visitId)->queryAll();
 		$company=$res_company[0]['company_id'];
 		

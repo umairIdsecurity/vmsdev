@@ -502,7 +502,6 @@ nav.navigation ul li:last-child.active
     font-weight:bold;
     font-size:13px;
     font-family:inherit;
-    text-align:center !important;
     width:100% !important;
     background-color:#B2B2B2;
     border-top-left-radius:8px;
@@ -1052,7 +1051,7 @@ dt.tabs dt{
     width: 22px;
     float: left;
     text-decoration: none;
-    margin: 0 0 5px 5px;
+    margin: 0 46px 5px 5px;
 }
 
 .sidemenu-icon{

@@ -12,7 +12,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
     'dataProvider' => $model->search(),
     'enableSorting' => false,
     //'hideHeader'=>true,
-    'filter' => $model,
+    //'filter' => $model,
     'afterAjaxUpdate' => "
     function(id, data) {
         $('th > .asc').append('<div></div>');
@@ -22,19 +22,13 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' => 'name',
             'header' => 'Workstation',
-            'filter'=>CHtml::activeTextField($model, 'name', array('placeholder'=>'Name')),
             'htmlOptions'=>array('width'=>'180px'),
         ),
-        /*array(
-            'name' => 'location',
-            'filter'=>CHtml::activeTextField($model, 'location', array('placeholder'=>'Location')),
-        ),*/
+
         array(
             'name' => 'moduleCorporate',
             'header' => '',
             'type'=>'raw',
-            'filter'=>CHtml::activeTextField($model, 'moduleCorporate',
-                array('placeholder'=>'Corporate' , 'disabled'=>'disabled')),
             'value' => '$data->getCorporateCardType()',
             'htmlOptions'=>array('width'=>'216px'),
             'headerHtmlOptions' => array('class'=>'header-corporate')
@@ -44,41 +38,11 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'name' => 'moduleVic',
             'type'=>'html',
             'header' => '',
-            'filter'=>CHtml::activeTextField($model, 'moduleVic',
-                array('placeholder'=>'VIC Issuing' , 'disabled'=>'disabled')),
             'value' => '$data->getCorporateVic()',
             'htmlOptions'=>array('width'=>'272px'),
             'headerHtmlOptions' => array('class'=>'header-vic')
         ),
-        /*array(
-            'name' => 'contact_name',
-            'filter'=>CHtml::activeTextField($model, 'contact_name', array('placeholder'=>'Contact Person Name')),
-        ),
-        array(
-            'name' => 'contact_number',
-            'filter'=>CHtml::activeTextField($model, 'contact_number', array('placeholder'=>'Contact No.')),
-        ),
-        array(
-            'name' => 'contact_email_address',
-            'filter'=>CHtml::activeTextField($model, 'contact_email_address', array('placeholder'=>'Contact Email Address')),
-        ),*/
-
-        /*array(
-            'name' => 'id',
-            'type' => 'raw',
-            'value' => 'CHtml::hiddenField("workstationExists1".$data->id,isWorkstationExists($data->id))',
-            'visible' => true,
-            'cssClassExpression' => '"hidden"',
-            'filter' => false,
-        ),
-        array(
-            'name' => 'id',
-            'type' => 'raw',
-            'value' => 'CHtml::hiddenField("visitExists2".$data->id,isVisitExistsInClosedVisits($data->id))',
-            'visible' => true,
-            'cssClassExpression' => '"hidden"',
-            'filter' => false,
-        ),*/
+        
         array(
             'header' => 'Actions',
             'class' => 'CButtonColumn',

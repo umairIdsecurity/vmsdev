@@ -26,7 +26,7 @@ class WorkstationController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin','adminAjax' ,'delete','create','update'),
+                'actions' => array('admin','adminAjax' ,'delete','create','update' , 'myfunc'),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
            
             ),
@@ -34,6 +34,12 @@ class WorkstationController extends Controller {
                 'users' => array('*'),
             ),
         );
+    }
+
+    public function actionMyfunc(){
+        $ws_card = WorkstationCardType::model()->findByPk(array('workstation' => 23, 'card_type' => 3));
+        $selected = $ws_card==''?'false':'true';
+        print_r($selected);
     }
 
     /**

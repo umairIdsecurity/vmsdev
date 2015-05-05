@@ -29,16 +29,16 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'name' => 'moduleCorporate',
             'header' => '',
             'type'=>'raw',
-            'value' => '$data->getCorporateCardType()',
+            'value' => '$data->getCorporateCardType($data->id)',
             /*'htmlOptions'=>array('width'=>'300px' , 'height'=>'119px'),*/
             'headerHtmlOptions' => array('class'=>'header-corporate')
         ),
 
         array(
             'name' => 'moduleVic',
-            'type'=>'html',
+            'type'=>'raw',
             'header' => '',
-            'value' => '$data->getCorporateVic()',
+            'value' => '$data->getCorporateVic($data->id)',
             /*'htmlOptions'=>array('width'=>'400px' , 'height'=>'119px'),*/
             'headerHtmlOptions' => array('class'=>'header-vic')
         ),

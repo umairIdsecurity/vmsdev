@@ -223,46 +223,66 @@ class Workstation extends CActiveRecord {
         }
     }
 
-    public function getCorporateCardType(){
+    public function getCorporateCardType($worksttion_d){
 
         $cards = CardType::model()->findAllByAttributes(
             array('module'=>1)
         );
+
         $cardArr = "";
         foreach($cards as $card){
-            $cardType = CardType::model()->findByPk($card->id);
-            //$cardArr .= CHtml::checkBox('ab',true,array());
 
-            $cardArr .= CHtml::image(
-                Yii::app()->controller->assetsBase . "/". $cardType->card_icon_type ." ","",
-                array("width"=>"25px" , "class"=>"card_type_corporate")
+            $ws_card = WorkstationCardType::model()->findByPk(
+                array(
+                    'workstation' => $worksttion_d,
+                    'card_type' => $card->id
+                )
             );
 
+            if(!empty($ws_card)){
+                $cardArr .= CHtml::checkBox($card->name,true,array("value"=>$card->id , "class"=>"card_type_corporate"));
+            }
+            else{
+                $cardArr .= CHtml::checkBox($card->name,false,array("value"=>$card->id , "class"=>"card_type_corporate"));
+            }
+
         }
-        //return CHtml::checkBox('ab',true,array());
+
         return $cardArr;
 
     }
-    /*echo CHtml::checkBox('select_all',false, array('onclick' => "js:if($(this).is(':checked')) {$('.example').attr('checked','checked');}else{$('.example').removeAttr('checked');}"));*/
 
-    public function getCorporateVic(){
+    public function getCorporateVic($worksttion_d){
 
         $cards = CardType::model()->findAllByAttributes(
             array('module'=>2)
         );
+
         $cardArr = "";
         foreach($cards as $card){
-            $cardType = CardType::model()->findByPk($card->id);
-            $cardArr .= CHtml::image(
-                Yii::app()->controller->assetsBase . "/". $cardType->card_icon_type ." ","",
-                array("width"=>"25px" , "class"=>"card_type_vic")
+
+            $ws_card = WorkstationCardType::model()->findByPk(
+                array(
+                    'workstation' => $worksttion_d,
+                    'card_type' => $card->id
+                )
             );
 
+            if(!empty($ws_card)){
+                $cardArr .= CHtml::checkBox($card->name,true,array("value"=>$card->id , "class"=>"card_type_corporate"));
+            }
+            else{
+                $cardArr .= CHtml::checkBox($card->name,false,array("value"=>$card->id , "class"=>"card_type_corporate"));
+            }
+
         }
+
         return $cardArr;
 
 
     }
+
+
 
 
 }

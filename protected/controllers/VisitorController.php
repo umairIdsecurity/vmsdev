@@ -296,18 +296,12 @@ class VisitorController extends Controller {
         $visitorService = new VisitorServiceImpl();
         $session = new CHttpSession;
 
+
         if (isset($_POST['Visitor'])) {
             $model->attributes = $_POST['Visitor'];
-            var_dump(
-                $model->profile_type,
-            $model->repeatpassword             ,
-            $model->password_option            ,
-            $model->password_requirement       ,
-            $model->alternative_identification
-        );
-
+			$model->password_option = $_POST['Visitor']['password_option'];
             if ($result = $visitorService->save($model, NULL, $session['id'])) {
-//                $this->redirect(array('admin'));
+                $this->redirect(array('admin'));
             }
             var_dump($model->getErrors());
         }

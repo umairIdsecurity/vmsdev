@@ -18,7 +18,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
             data-target="#findVisitorRecordModal" data-toggle="modal">Find Record
     </button>
     <button class="visitor-findBtn neutral" id="dummy-visitor-findBtn"
-            style="padding:8px;background:<?php echo $companyLafPreferences->neutral_bg_color; ?> !important;">Find
+            style="padding:8px;background:<?php echo isset($companyLafPreferences->neutral_bg_color) ? $companyLafPreferences->neutral_bg_color : "none"; ?> !important;">Find
         Visitor Profile
     </button>
     <div class="errorMessage" id="searchTextErrorMessage" style="display:none;text-align:center"></div>

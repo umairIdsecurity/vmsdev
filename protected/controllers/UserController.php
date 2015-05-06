@@ -18,13 +18,6 @@ class UserController extends Controller {
         );
     }
 
-    protected function beforeAction($action)
-    {
-        //echo 'testtttttttttttttttttttttttttttttttttttttttttttttttttttt';
-        //return false;
-
-        return true;
-    }
 
     /**
      * Specifies the access control rules.

@@ -36,18 +36,20 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'header' => 'Status',
             'filter' => VisitStatus::$VISIT_STATUS_LIST,
             'cssClassExpression' => 'changeStatusClass($data->visit_status)',
+            'htmlOptions'=>array('width'=>'120px'),
         ),
         array(
             'name' => 'visitor_type',
             'value' => 'VisitorType::model()->returnVisitorTypes($data->visitor_type)',
             'filter' => VisitorType::model()->returnVisitorTypes(),
+            'htmlOptions'=>array('width'=>'170px'),
         ),
         array(
             'name' => 'cardnumber',
             'header' => 'Card No.',
             'filter'=>CHtml::activeTextField($model, 'cardnumber', array('placeholder'=>'Card No.')),
             'value'=>  'CardGenerated::model()->getCardCode($data->card)',
-            'htmlOptions'=>array('width'=>'150px'),
+            'htmlOptions'=>array('width'=>'120px'),
         ),
         array(
             'name' => 'firstname',

@@ -43,7 +43,8 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'filter' => assignedWorkstation(),
             'type' => 'html',
             'value' => 'UserWorkstations::model()->getAllworkstations($data->id)',
-            'htmlOptions'=>array('width'=>'150px')
+            'htmlOptions'=>array('width'=>'150px'),
+            'visible' => !CHelper::is_accessing_avms_features()
         ),
         array(
             'name' => 'user_type',

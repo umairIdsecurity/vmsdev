@@ -588,4 +588,15 @@ class User extends VmsActiveRecord {
         $this->password = $this->hashPassword($newPassword);
         $this->save(false, 'password');
     }
+
+    /**
+     * @param $attribute
+     *
+     * @return string
+     */
+    public function isRequired($attribute){
+       if($this->isAttributeRequired($attribute)){
+           return '<span class="required">*</span>';
+       }
+    }
 }

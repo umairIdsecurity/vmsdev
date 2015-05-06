@@ -149,28 +149,7 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
         }
     ?>
 </div>
-<div
-<?php
-if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
-    echo "style='display:none'";
-}
-?>
-    >
-        <?php
-        $cardDetail = CardGenerated::model()->findAllByAttributes(array(
-            'visitor_id' => $model->visitor
-        ));
-        if ($model->card != '') {
-            if ((CardGenerated::model()->findByPk($model->card)->print_count > 0) && $model->visit_status == VisitStatus::ACTIVE) {
-                ?><input type="button" class="complete btn btn-info printCardBtn" value="Reprint Card" id="reprintCardBtn" onclick="generateCard()"/><?php
-        } else {
-            ?>
-            <input type="button" class="complete btn btn-info printCardBtn" value="Print Card" id="printCardBtn" onclick="generateCard()"/>
-            <?php
-        }
-        }
-    ?>
-</div>
+
 <div>
        Total Visits at <?php echo $visitModel['companyName']; ?>: <?php echo $visitModel['companyVisitsByVisitor']; ?></br>
        <!-- Total Visits to All Companies: <?php // echo $visitModel['allVisitsByVisitor']; ?> -->
@@ -304,7 +283,7 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
     }
 
     $(document).ready(function () {
-        blink("#printCardBtn", -1, 1000);
+        //blink("#printCardBtn", -1, 1000);
     });
     function blink(elem, times, speed) {
         if (times > 0 || times < 0) {

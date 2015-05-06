@@ -50,7 +50,7 @@ $this->widget('bootstrap.widgets.TbButton', array(
 
 <div class="modal hide fade" id="addCompanyModal" style="width:600px;">
     <div class="modal-header">
-        <a data-dismiss="modal" class="close" id="dismissModal" >�</a>
+        <a data-dismiss="modal" class="close" id="dismissModal" >X</a>
         <br>
     </div>
     <div id="modalBody"></div>

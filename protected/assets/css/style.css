@@ -316,7 +316,7 @@ nav.navigation ul li:last-child.active
 
 .grid-view table.items th,table th,.grid-view table.items th a{
     background-color: #FBFBFB;
-    background-image:none !important;
+    /*background-image:none !important;*/
     background-repeat: repeat-x;
     //  box-shadow: 0 1px 0 #FFFFFF inset;
     list-style: none outside none;
@@ -432,7 +432,7 @@ nav.navigation ul li:last-child.active
 
 .grid-view table.items th,table th,.grid-view table.items th a{
     background-color: #FBFBFB;
-    background-image:none !important;
+    background-image:none;
     background-repeat: repeat-x;
     //  box-shadow: 0 1px 0 #FFFFFF inset;
     list-style: none outside none;
@@ -440,6 +440,9 @@ nav.navigation ul li:last-child.active
     padding: 4px;
     position: relative; 
     color:#323232 !important;
+}
+#workstation-grid_c0 , #workstation-grid_c3{
+    background-image:none !important;
 }
 
 .grid-view{
@@ -502,7 +505,6 @@ nav.navigation ul li:last-child.active
     font-weight:bold;
     font-size:13px;
     font-family:inherit;
-    text-align:center !important;
     width:100% !important;
     background-color:#B2B2B2;
     border-top-left-radius:8px;
@@ -1052,7 +1054,7 @@ dt.tabs dt{
     width: 22px;
     float: left;
     text-decoration: none;
-    margin: 0 0 5px 5px;
+    margin: 0 46px 5px 5px;
 }
 
 .sidemenu-icon{
@@ -1260,6 +1262,27 @@ dt.tabs dt{
 .card_type_vic{
     margin: 0 2px;
 }
+
+.header-corporate{
+    width: 238px !important;
+    height: 110px;
+    background:url("../images/Card-Panels-Corp-module.png") top left no-repeat !important ;
+}
+
+.header-vic{
+    width: 300px !important;
+    height: 110px;
+    background:url("../images/Card-Panels-VIC-module.png") top left no-repeat !important ;
+}
+
+.card_type_corporate {
+    margin: 0 22px !important;
+}
+
+.card_type_vic{
+    margin: 0 22px !important;
+}
+
 
 .workstationRow{
     display:none;

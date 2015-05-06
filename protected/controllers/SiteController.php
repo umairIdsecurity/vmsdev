@@ -101,6 +101,8 @@ class SiteController extends Controller {
                         $this->redirect('index.php?r=dashboard/viewmyvisitors');
                         break;
                     case Roles::ROLE_ADMIN:
+                        $this->redirect('index.php?r=site/selectworkstation&id=' . $session['id']);
+                        break;
                     case Roles::ROLE_AGENT_ADMIN:
                         $this->redirect('index.php?r=dashboard/admindashboard');
                         break;
@@ -190,9 +192,17 @@ class SiteController extends Controller {
     }
 
     public function actionSelectWorkstation($id) {
-        $row = Workstation::model()->findWorkstationAvailableForUser($id);
 
-        if (count($row) > 0) {
+        if (isset(Yii::app()->user->role) && Yii::app()->user->role == Roles::ROLE_ADMIN) {
+            $session = new CHttpSession;
+            $Criteria = new CDbCriteria();
+            $Criteria->condition = "tenant ='" . $session['tenant'] . "'";
+            $row = Workstation::model()->findAll($Criteria);
+        } else {
+            $row = Workstation::model()->findWorkstationAvailableForUser($id);
+        }
+
+        if ($row) {
             foreach ($row as $key => $value) {
 
                 $aArray[] = array(

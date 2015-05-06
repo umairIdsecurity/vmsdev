@@ -574,7 +574,12 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
                         $('#workstation option[value!=""]').remove();
 
                         $.each(r.data, function(index, value) {
-                            $('#workstation').append('<option value="' + value.id + '">' + value.name + '</option>');
+                            var selectedWorkstation = <?php echo $session['workstation']?>;
+                            if (value.id == selectedWorkstation) {
+                                $('#workstation').append('<option selected="selected" value="' + value.id + '">' + value.name + '</option>');
+                            } else {
+                                $('#workstation').append('<option value="' + value.id + '">' + value.name + '</option>');
+                            }
                         });
                     }
                 });

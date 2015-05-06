@@ -39,6 +39,24 @@ if (empty($workstationList)) {
 
     <?php
 }
+
+// move selected items to first
+if (isset($session['workstation'])) {
+    $workstation = Workstation::model()->findByPk($session['workstation']);
+
+    if ($workstation) {
+        foreach ($workstationList as $key => $value) {
+            if ($value->id == $workstation->id) {
+                $moveWorkstation = $workstationList[$key];
+                $workstationList[$key] = $workstationList[0];
+                $workstationList[0] = $moveWorkstation;
+            }
+        }
+
+    }
+}
+
+
 foreach ($workstationList as $workstation) {
 
     $x++;

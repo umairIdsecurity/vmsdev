@@ -24,14 +24,14 @@ $this->pageTitle=Yii::app()->name . ' - Login';
     <table class="login-area" style="border-collapse: none !important;">
         <tr>
 
-            <td align="center"><?php echo $form->textField($model,'username', array('style'=>'float: right;vertical-align: middle;', 'placeholder' => 'Username or Email')); ?></td>
+            <td align="center"><?php echo $form->textField($model,'username', array('placeholder' => 'Username or Email')); ?></td>
 
         </tr>
         <tr>
             <td colspan="2"><?php echo $form->error($model,'username'); ?></td>
         </tr>
         <tr>
-            <td><?php echo $form->passwordField($model,'password', array('style'=>'float: right;vertical-align: middle;','placeholder' => 'Password')); ?></td>
+            <td><?php echo $form->passwordField($model,'password', array('placeholder' => 'Password')); ?></td>
             
         </tr>
         <tr>

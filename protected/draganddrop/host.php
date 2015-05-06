@@ -103,6 +103,32 @@ if (isset($_GET['viewFrom'])) {
             maxFileSize: 2100000,
             showDone: false,
             showStatusAfterSuccess: false,
+			onLoad:function(obj){
+			    if ($('#actionUpload2').val() == 'update' && $('#Host_photo').val() > 0)	
+				{
+					 $.ajax({
+                        type: 'POST',
+                        url: '<?php echo Yii::app()->createUrl('photo/GetPathOfCompanyLogo&id='); ?>' + $('#Host_photo').val(),
+                        dataType: 'json',
+                        data: $('#Host_photo').val(),
+                        success: function(r) {
+
+                            $.each(r.data, function(index, value) {
+                               
+                                    $(".ajax-upload-dragdrop2").css("background", "url(<?php echo Yii::app()->request->baseUrl."/"; ?>" + value.relative_path + ") no-repeat center top");
+                                    $(".ajax-upload-dragdrop2").css({"background-size": "137px 190px" });
+                                    logo.src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+                                    document.getElementById('photoCropPreview2').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+                                
+                              
+                                    $("#cropImageBtn2").show();
+                                
+                            });
+                           
+                        }
+                    });
+				}
+			},
             onSuccess: function(files, data, xhr)
             {
                
@@ -124,13 +150,8 @@ if (isset($_GET['viewFrom'])) {
                             $.each(r.data, function(index, value) {
                                
                                     $(".ajax-upload-dragdrop2").css("background", "url(<?php echo Yii::app()->request->baseUrl."/"; ?>" + value.relative_path + ") no-repeat center top");
-                                    $(".ajax-upload-dragdrop2").css({
-                                        "background-size": "137px 190px"
-                                    });
+                                    $(".ajax-upload-dragdrop2").css({"background-size": "137px 190px" });
                                     logo.src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
-                               
-
-                               
                                     document.getElementById('photoCropPreview2').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 
                               

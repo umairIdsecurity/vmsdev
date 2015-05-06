@@ -223,7 +223,24 @@ class Workstation extends CActiveRecord {
         }
     }
 
-    public function getCorporateCardType($worksttion_d){
+
+    /**
+     * Return all corporate card types
+     *
+     * This function receives the param workstation_id and then find all
+     * card type which are under corporate modules. Each card type is checked
+     * whether is it associated with workstation or not. All the card types
+     * will be displayed as checkbox. Only associated card type with workstation
+     * will be assigned as checked in the among all the card types in corporate
+     * module.
+     *
+     *
+     * @param string $workstation_id
+     *
+     * @return string $cardArr
+     *
+     * */
+    public function getCorporateCardType($workstation_id){
 
         $cards = CardType::model()->findAllByAttributes(
             array('module'=>1)
@@ -234,7 +251,7 @@ class Workstation extends CActiveRecord {
 
             $ws_card = WorkstationCardType::model()->findByPk(
                 array(
-                    'workstation' => $worksttion_d,
+                    'workstation' => $workstation_id,
                     'card_type' => $card->id
                 )
             );
@@ -252,7 +269,7 @@ class Workstation extends CActiveRecord {
 
     }
 
-    public function getCorporateVic($worksttion_d){
+    public function getCorporateVic($workstation_id){
 
         $cards = CardType::model()->findAllByAttributes(
             array('module'=>2)
@@ -263,7 +280,7 @@ class Workstation extends CActiveRecord {
 
             $ws_card = WorkstationCardType::model()->findByPk(
                 array(
-                    'workstation' => $worksttion_d,
+                    'workstation' => $workstation_id,
                     'card_type' => $card->id
                 )
             );

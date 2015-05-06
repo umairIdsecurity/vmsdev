@@ -139,24 +139,28 @@ echo '<h1>Add User </h1>';
     <table >
         <tr>
          <td style="vertical-align: top; float:left; width:300px">
-         
-         <table>
+        
+        <table style="width:300px;float:left;min-height:320px;">
                             <tr> 
 
                                 <td style="width:300px;">
-                                  <div class="ajax-upload-dragdrop" style="vertical-align: top; width: 200px;margin-top:0px;"><div class="actionForward ajax-file-upload btn btn-info" style="position: relative; overflow: hidden; cursor: default;">Upload Photo <form method="POST" action="/vms/index.php?r=site/upload&amp;id=visitor&amp;companyId=&amp;actionId=create" enctype="multipart/form-data" style="margin: 0px; padding: 0px;"><input type="file" id="ajax-upload-id-1429303468602" name="myfile[]" accept="*" multiple="" style="position: absolute; cursor: pointer; top: 0px; width: 100%; height: 100%; left: 0px; z-index: 100; opacity: 0;"></form></div><div class="uploadnotetext"><b>Drag &amp; Drop File</b><br><span style="font-size:10px;">Max Size: 2MB ;File Ext. : jpeg/png<br><span class="imageDimensions">Dimensions: 180px(Width) x 60px(Height)</span></span></div></div>
+                                   <!-- <label for="Visitor_Add_Photo" style="margin-left:27px;">Add  Photo</label><br>-->
+
+                                    <input type="hidden" id="Host_photo" name="User[photo]" value="<?php echo $model->photo; ?>">
+                                    <div class="photoDiv" style='display:none;'>
+                                        <img id='photoPreview2' src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png" style='display:none;'/>
+                                    </div>
+                                    <?php require_once(Yii::app()->basePath . '/draganddrop/host.php'); ?>
+                                    <div id="photoErrorMessage" class="errorMessage" style="display:none;  margin-top: 200px;margin-left: 71px !important;position: absolute;">Please upload a photo.</div>
                                 </td>
                                 </tr>
-                                <td>&nbsp;
-                                
-								</td>                                
-                                <tr>
-                                </tr>
-                                <td>&nbsp;
-                                
-								</td>                                
-                                <tr>
-                                </tr>
+                               
+                                <tr><td >&nbsp;</td></tr>
+                               
+                               
+                              </table>
+                              
+                                <table>  
                                 <tr>
                         <td><select  onchange="populateDynamicFields()" <?php
                             if ($this->action->Id == 'create' && isset($_GET['role'])) { //if action create with user roles selected in url
@@ -307,7 +311,7 @@ echo '<h1>Add User </h1>';
                                         } elseif ($session['role'] != Roles::ROLE_SUPERADMIN) {
                                             $company = User::model()->getCompany($currentLoggedUserId);
                                         }
-                                        if (isset($company) && $company == $key) {
+                                        if (isset($company) && $company->id == $key) {
                                             echo " selected ";
                                         }
                                         ?> value="<?php echo $key; ?>"><?php echo $value; ?></option>
@@ -1204,6 +1208,68 @@ $this->widget('bootstrap.widgets.TbButton', array(
 ));
 ?>
 <script>
+
+$(document).ready(function() {
+
+/*Added by farhat aziz for upload host photo*/
+
+		
+		$('#photoCropPreview2').imgAreaSelect({
+            handles: true,
+            onSelectEnd: function(img, selection) {
+                $("#cropPhotoBtn2").show();
+                $("#x12").val(selection.x1);
+                $("#x22").val(selection.x2);
+                $("#y12").val(selection.y1);
+                $("#y22").val(selection.y2);
+                $("#width").val(selection.width);
+                $("#height").val(selection.height);
+            }
+        });
+        $("#cropPhotoBtn2").click(function(e) {
+            e.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: '<?php echo Yii::app()->createUrl('visitor/AjaxCrop'); ?>',
+                data: {
+                    x1: $("#x12").val(),
+                    x2: $("#x22").val(),
+                    y1: $("#y12").val(),
+                    y2: $("#y22").val(),
+                    width: $("#width").val(),
+                    height: $("#height").val(),
+                    imageUrl: $('#photoCropPreview2').attr('src').substring(1, $('#photoCropPreview2').attr('src').length),
+                    photoId: $('#Host_photo').val()
+                },
+                dataType: 'json',
+                success: function(r) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '<?php echo Yii::app()->createUrl('photo/GetPathOfCompanyLogo&id='); ?>' + $('#Host_photo').val(),
+                        dataType: 'json',
+                        success: function(r) {
+
+                            $.each(r.data, function(index, value) {
+                                document.getElementById('photoPreview2').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+                                document.getElementById('photoCropPreview2').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+                                $(".ajax-upload-dragdrop2").css("background", "url(<?php echo Yii::app()->request->baseUrl. '/'; ?>" + value.relative_path + ") no-repeat center top");
+                                $(".ajax-upload-dragdrop2").css({
+                                    "background-size": "137px 190px"
+                                });
+                            });
+                        }
+                    });
+
+                    $("#closeCropPhoto2").click();
+                    var ias = $('#photoCropPreview2').imgAreaSelect({instance: true});
+                    ias.cancelSelection();
+                }
+            });
+        });
+
+		
+});
+
 	function cancel(){
 	$('#User_repeat_password').val('');	
 	$('#User_password').val('');
@@ -1290,6 +1356,30 @@ $this->widget('bootstrap.widgets.TbButton', array(
 
     }
 </script>
+
+
+
+<!-- PHOTO CROP-->
+<div id="light2" class="white_content">
+    <div style="text-align:right;">
+        <input type="button" class="btn btn-success" id="cropPhotoBtn2" value="Crop" style="">
+        <input type="button" id="closeCropPhoto2" onclick="document.getElementById('light2').style.display = 'none';
+                document.getElementById('fade2').style.display = 'none'" value="x" class="btn btn-danger">
+    </div>
+    <br>
+    <img id="photoCropPreview2" src="">
+
+</div>
+<div id="fade2" class="black_overlay"></div>
+
+<input type="hidden" id="x12"/>
+<input type="hidden" id="x22"/>
+<input type="hidden" id="y12"/>
+<input type="hidden" id="y22"/>
+<input type="hidden" id="width"/>
+<input type="hidden" id="height"/>
+
+
 
 
 

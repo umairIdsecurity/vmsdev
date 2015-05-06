@@ -28,6 +28,8 @@ composer.phar
 /tools/vendor/**
 /build/**
 /protected/runtime/*.log*
+/protected/runtime/gii-1.1.14/*
+/protected/runtime/HTML/*
 company_css/**
 .DS_Store
 cache.properties

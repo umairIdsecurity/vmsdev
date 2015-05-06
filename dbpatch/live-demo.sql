@@ -45,6 +45,13 @@ DROP TABLE IF EXISTS `visit`;
 DROP TABLE IF EXISTS `patient`;
 DROP TABLE IF EXISTS `vehicle`;
 DROP TABLE IF EXISTS `company_laf_preferences`;
+DROP TABLE IF EXISTS `tbl_migration`;
+DROP TABLE IF EXISTS `company_laf_preferences`;
+DROP TABLE IF EXISTS `module`;
+DROP TABLE IF EXISTS `password_change_request`;
+DROP TABLE IF EXISTS `workstation_card_type`;
+DROP TABLE IF EXISTS `visitor_card_status`;
+
 SET FOREIGN_KEY_CHECKS = 1;
 --
 -- Table structure for table `card_generated`

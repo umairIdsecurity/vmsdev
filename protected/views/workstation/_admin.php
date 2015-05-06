@@ -12,7 +12,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
     'dataProvider' => $model->search(),
     'enableSorting' => false,
     //'hideHeader'=>true,
-    'filter' => $model,
+    //'filter' => $model,
     'afterAjaxUpdate' => "
     function(id, data) {
         $('th > .asc').append('<div></div>');
@@ -21,61 +21,28 @@ $this->widget('zii.widgets.grid.CGridView', array(
     'columns' => array(
         array(
             'name' => 'name',
-            'filter'=>CHtml::activeTextField($model, 'name', array('placeholder'=>'Name')),
+            'header' => 'Workstation',
             'htmlOptions'=>array('width'=>'180px'),
         ),
-        /*array(
-            'name' => 'location',
-            'filter'=>CHtml::activeTextField($model, 'location', array('placeholder'=>'Location')),
-        ),*/
+
         array(
             'name' => 'moduleCorporate',
             'header' => '',
             'type'=>'raw',
-            'filter'=>CHtml::activeTextField($model, 'moduleCorporate',
-                array('placeholder'=>'Corporate' , 'disabled'=>'disabled')),
-            'value' => '$data->getCorporateCardType()',
-            'htmlOptions'=>array('width'=>'300px'),
-            'headerHtmlOptions' => array('style'=>'width:200px; text-align:left;', 'class'=>'header-corporate')
+            'value' => '$data->getCorporateCardType($data->id)',
+            /*'htmlOptions'=>array('width'=>'300px' , 'height'=>'119px'),*/
+            'headerHtmlOptions' => array('class'=>'header-corporate')
         ),
 
         array(
             'name' => 'moduleVic',
-            'type'=>'html',
-            'filter'=>CHtml::activeTextField($model, 'moduleVic',
-                array('placeholder'=>'VIC Issuing' , 'disabled'=>'disabled')),
-            'value' => '$data->getCorporateVic()',
-            'htmlOptions'=>array('width'=>'300px'),
+            'type'=>'raw',
+            'header' => '',
+            'value' => '$data->getCorporateVic($data->id)',
+            /*'htmlOptions'=>array('width'=>'400px' , 'height'=>'119px'),*/
+            'headerHtmlOptions' => array('class'=>'header-vic')
         ),
-        /*array(
-            'name' => 'contact_name',
-            'filter'=>CHtml::activeTextField($model, 'contact_name', array('placeholder'=>'Contact Person Name')),
-        ),
-        array(
-            'name' => 'contact_number',
-            'filter'=>CHtml::activeTextField($model, 'contact_number', array('placeholder'=>'Contact No.')),
-        ),
-        array(
-            'name' => 'contact_email_address',
-            'filter'=>CHtml::activeTextField($model, 'contact_email_address', array('placeholder'=>'Contact Email Address')),
-        ),*/
 
-        /*array(
-            'name' => 'id',
-            'type' => 'raw',
-            'value' => 'CHtml::hiddenField("workstationExists1".$data->id,isWorkstationExists($data->id))',
-            'visible' => true,
-            'cssClassExpression' => '"hidden"',
-            'filter' => false,
-        ),
-        array(
-            'name' => 'id',
-            'type' => 'raw',
-            'value' => 'CHtml::hiddenField("visitExists2".$data->id,isVisitExistsInClosedVisits($data->id))',
-            'visible' => true,
-            'cssClassExpression' => '"hidden"',
-            'filter' => false,
-        ),*/
         array(
             'header' => 'Actions',
             'class' => 'CButtonColumn',
@@ -139,6 +106,37 @@ function isWorkstationExists($workstationId) {
 function isVisitExistsInClosedVisits($workstationId) {
     return Visit::model()->exists('workstation="' . $workstationId . '"');
 }
+
+$urlMyFunc = Yii::app()->createUrl('workstation/myfunc');
+Yii::app()->clientScript->registerScript('select_card_type_corporate', "
+
+    $('.card_type_corporate').click( function(){
+
+        var card_type_id = $(this).attr('value');
+
+        if ($('input#id').is(':checked')) {
+            alert('checked');
+        }
+        else{
+            alert('not checked');
+        }
+
+        var data = 'card_type_id=' + card_type_id;
+
+        $('.loaderContainer').show();
+        $.ajax({
+            type: 'POST',
+            url: '$urlMyFunc',
+            data: data,
+            success: function(msg){
+                if(msg == 'done') {
+                    alert(msg);
+                }
+            }
+        })
+
+    })
+");
 
 
 ?>

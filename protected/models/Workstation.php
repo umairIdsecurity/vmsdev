@@ -223,46 +223,83 @@ class Workstation extends CActiveRecord {
         }
     }
 
-    public function getCorporateCardType(){
+
+    /**
+     * Return all corporate card types
+     *
+     * This function receives the param workstation_id and then find all
+     * card type which are under corporate modules. Each card type is checked
+     * whether is it associated with workstation or not. All the card types
+     * will be displayed as checkbox. Only associated card type with workstation
+     * will be assigned as checked in the among all the card types in corporate
+     * module.
+     *
+     *
+     * @param string $workstation_id
+     *
+     * @return string $cardArr
+     *
+     * */
+    public function getCorporateCardType($workstation_id){
 
         $cards = CardType::model()->findAllByAttributes(
             array('module'=>1)
         );
+
         $cardArr = "";
         foreach($cards as $card){
-            $cardType = CardType::model()->findByPk($card->id);
-            //$cardArr .= CHtml::checkBox('ab',true,array());
 
-            $cardArr .= CHtml::image(
-                Yii::app()->controller->assetsBase . "/". $cardType->card_icon_type ." ","",
-                array("width"=>"25px" , "class"=>"card_type_corporate")
+            $ws_card = WorkstationCardType::model()->findByPk(
+                array(
+                    'workstation' => $workstation_id,
+                    'card_type' => $card->id
+                )
             );
 
+            if(!empty($ws_card)){
+                $cardArr .= CHtml::checkBox($card->id,true,array("value"=>$card->id , "class"=>"card_type_corporate"));
+            }
+            else{
+                $cardArr .= CHtml::checkBox($card->id,false,array("value"=>$card->id , "class"=>"card_type_corporate"));
+            }
+
         }
-        //return CHtml::checkBox('ab',true,array());
+
         return $cardArr;
 
     }
-    /*echo CHtml::checkBox('select_all',false, array('onclick' => "js:if($(this).is(':checked')) {$('.example').attr('checked','checked');}else{$('.example').removeAttr('checked');}"));*/
 
-    public function getCorporateVic(){
+    public function getCorporateVic($workstation_id){
 
         $cards = CardType::model()->findAllByAttributes(
             array('module'=>2)
         );
+
         $cardArr = "";
         foreach($cards as $card){
-            $cardType = CardType::model()->findByPk($card->id);
-            $cardArr .= CHtml::image(
-                Yii::app()->controller->assetsBase . "/". $cardType->card_icon_type ." ","",
-                array("width"=>"25px" , "class"=>"card_type_vic")
+
+            $ws_card = WorkstationCardType::model()->findByPk(
+                array(
+                    'workstation' => $workstation_id,
+                    'card_type' => $card->id
+                )
             );
 
+            if(!empty($ws_card)){
+                $cardArr .= CHtml::checkBox($card->id,true,array("value"=>$card->id , "class"=>"card_type_vic"));
+            }
+            else{
+                $cardArr .= CHtml::checkBox($card->id,false,array("value"=>$card->id , "class"=>"card_type_vic"));
+            }
+
         }
+
         return $cardArr;
 
 
     }
+
+
 
 
 }

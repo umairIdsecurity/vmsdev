@@ -25,14 +25,6 @@ $session = new ChttpSession;
                     <span >Preregister Visit</span>
                 </a>
             </li>-->
-            <li class=''><?php
-                echo CHtml::ajaxLink("Add Host", CController::createUrl('dashboard/addHost'), array(
-                    'update' => '#content',
-                        ), array(
-                    'class' => 'sidemenu-icon addhost',
-                ));
-                ?>
-            </li>
             <li><a href='<?php echo Yii::app()->createUrl('visitor/addvisitor'); ?>' class="submenu-icon addvisitorprofile"><span>Add Visitor Profile</span></a></li>
              <li><a onclick="addCompany2()" class="addcompanymenu"><span>Add Company</span></a></li>
                         
@@ -58,7 +50,7 @@ $this->widget('bootstrap.widgets.TbButton', array(
 
 <div class="modal hide fade" id="addCompanyModal" style="width:600px;">
     <div class="modal-header">
-        <a data-dismiss="modal" class="close" id="dismissModal" >�</a>
+        <a data-dismiss="modal" class="close" id="dismissModal" >X</a>
         <br>
     </div>
     <div id="modalBody"></div>

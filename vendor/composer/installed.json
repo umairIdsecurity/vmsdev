@@ -1,0 +1,35 @@
+[
+    {
+        "name": "daily/mandrill-dm",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/juliencharrel/mandrill-dm.git",
+            "reference": "ac842d33d59e8436b3a6405b6d0a5b16b98c780a"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/juliencharrel/mandrill-dm/zipball/ac842d33d59e8436b3a6405b6d0a5b16b98c780a",
+            "reference": "ac842d33d59e8436b3a6405b6d0a5b16b98c780a",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.2.0"
+        },
+        "time": "2013-06-13 00:50:49",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "Mandrill": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "description": "API client library for the Mandrill email as a service platform, tweaked to work for php open_basedir option",
+        "keywords": [
+            "api",
+            "email"
+        ]
+    }
+]

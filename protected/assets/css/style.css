@@ -9,14 +9,14 @@ and open the template in the editor.
 */
 
 
-.login-area,.selectworkstation-area{
+.login-area, .forgot-password-area, .reset-password-area, .selectworkstation-area{
     background: none repeat scroll 0 0 #F3F3F3;
     border: 1px solid #C5C6C8;
     border-radius: 10px;
     margin: 30px auto;
     padding: 10px 25px;
     text-align: center;
-    width: 450px;
+    width: 270px;
     border-collapse:inherit;
 }
 
@@ -29,7 +29,7 @@ div.form label{
 }
 
 
-.login-area input[type="submit"], .grid-view td a, #btnSubmit, input[type="submit"],#updateBtn,#submitBtn,#addCompanyLink
+.forgot-password-area input[type="submit"], .reset-password-area input[type="submit"], .grid-view td a, #btnSubmit, input[type="submit"],#updateBtn,#submitBtn,#addCompanyLink
 ,.yiiBtn, #clicktabA, #clicktabB,#clicktabB1,#clicktabB2,#submitFormVisitor,#clicktabC,
 .visitor-findBtn,.host-findBtn,.visitor-backBtn,
 #dummy-submitFormPatientName,
@@ -42,6 +42,21 @@ div.form label{
     background: -webkit-gradient(linear, center top, center bottom, from(#A1DC33), to(#82BD12));
     background: -ms-linear-gradient(top, #a1dc33, #82bd12) ;
     border: 1px solid #63B421;
+    border-radius: 5px;
+    color: #FFFFFF;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 3px 15px 5px;
+    cursor:pointer;
+}
+
+.login-area input[type="submit"],
+.blueBtn{
+    background: -webkit-gradient(linear, center top, center bottom, from(#69D2E7), to(#69D2E7));
+    background: -moz-linear-gradient(center top , #69D2E7, #69D2E7) repeat scroll 0 0 rgba(0, 0, 0, 0);
+    background: -webkit-gradient(linear, center top, center bottom, from(#69D2E7), to(#69D2E7));
+    background: -ms-linear-gradient(top, #69D2E7, #69D2E7) ;
+    border: 1px solid #69D2E7;
     border-radius: 5px;
     color: #FFFFFF;
     font-size: 12px;
@@ -301,7 +316,7 @@ nav.navigation ul li:last-child.active
 
 .grid-view table.items th,table th,.grid-view table.items th a{
     background-color: #FBFBFB;
-    background-image:none !important;
+    /*background-image:none !important;*/
     background-repeat: repeat-x;
     //  box-shadow: 0 1px 0 #FFFFFF inset;
     list-style: none outside none;
@@ -417,7 +432,7 @@ nav.navigation ul li:last-child.active
 
 .grid-view table.items th,table th,.grid-view table.items th a{
     background-color: #FBFBFB;
-    background-image:none !important;
+    background-image:none;
     background-repeat: repeat-x;
     //  box-shadow: 0 1px 0 #FFFFFF inset;
     list-style: none outside none;
@@ -425,6 +440,9 @@ nav.navigation ul li:last-child.active
     padding: 4px;
     position: relative; 
     color:#323232 !important;
+}
+#workstation-grid_c0 , #workstation-grid_c3{
+    background-image:none !important;
 }
 
 .grid-view{
@@ -487,7 +505,6 @@ nav.navigation ul li:last-child.active
     font-weight:bold;
     font-size:13px;
     font-family:inherit;
-    text-align:center !important;
     width:100% !important;
     background-color:#B2B2B2;
     border-top-left-radius:8px;
@@ -1030,14 +1047,14 @@ dt.tabs dt{
     // height: 16px;
 }
 
-.dashboard-icon {
+ .dashboard-icon {
     background: transparent url('../images/dashboardicon.png') 0 0 no-repeat;
     display: block;
     height: 22px;
     width: 22px;
     float: left;
     text-decoration: none;
-    margin: 0 0 5px 5px;
+    margin: 0 46px 5px 5px;
 }
 
 .sidemenu-icon{
@@ -1245,6 +1262,27 @@ dt.tabs dt{
 .card_type_vic{
     margin: 0 2px;
 }
+
+.header-corporate{
+    width: 238px !important;
+    height: 110px;
+    background:url("../images/Card-Panels-Corp-module.png") top left no-repeat !important ;
+}
+
+.header-vic{
+    width: 300px !important;
+    height: 110px;
+    background:url("../images/Card-Panels-VIC-module.png") top left no-repeat !important ;
+}
+
+.card_type_corporate {
+    margin: 0 22px !important;
+}
+
+.card_type_vic{
+    margin: 0 22px !important;
+}
+
 
 .workstationRow{
     display:none;

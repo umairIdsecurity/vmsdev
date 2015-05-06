@@ -12,10 +12,10 @@ $session = new CHttpSession;
         } else {
             echo "display:none;";
         }
-        ?>"><a href="#"><span class="close-visit">Close Visit</span></a>
+        ?>"><span style="padding: 2px 30px;color:#637280 !important; font-weight:bold" class="close-visit">Close Visit</span>
             <ul>
                 <li>
-                    <table id="actionsVisitDetails" style="margin-top:15px;">
+                    <table id="actionsVisitDetails">
                         <tr>
                             <td></td>
                             <td >
@@ -37,7 +37,21 @@ $session = new CHttpSession;
                                         ),
                                     ));
                                     ?>
-                                    <table class="detailsTable" style="font-size:12px;" id="logvisitTable">
+                                    <table class="detailsTable" style="font-size:12px;margin-top:15px;" id="logvisitTable">
+                                        <?php
+                                        if ($model->visit_status == VisitStatus::ACTIVE) { ?>
+                                        <tr>
+                                            <td>
+                                                <strong style="color:#0088cc;">Status</strong>: <span style="color:#9BD62C; !important; font-weight:bold"><?php echo VisitStatus::$VISIT_STATUS_LIST[$model->visit_status]; ?></span>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>&nbsp;</td>
+                                        </tr>
+
+                                        <?php } ?>
+
                                         <tr>
                                             <td>Check Out Date</td>
                                         </tr>

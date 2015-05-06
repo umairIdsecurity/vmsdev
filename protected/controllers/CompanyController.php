@@ -67,16 +67,16 @@ class CompanyController extends Controller {
         }
         if (isset($_POST['Company'])) {
             $model->attributes = $_POST['Company'];
-			
+
             if ($this->isCompanyUnique($session['tenant'], $session['role'], $_POST['Company']['name'], $_POST['Company']['tenant']) == 0) {
-				if(isset($_POST['Company']['code'])){					
+				if(isset($_POST['Company']['code'])){
 					 if ((($this->isCompanyCodeUnique($session['tenant'], $session['role'], $_POST['Company']['code'], $_POST['Company']['tenant']) == 0)) && ($session['role'] != Roles::ROLE_ADMIN)) {
 	                    if ($companyService->save($model, $session['tenant'], $session['role'], 'create')) {
 	                        $lastId = $model->id;
 	                        $cs = Yii::app()->clientScript;
 	                        $cs->registerScript('closeParentModal', 'window.parent.dismissModal(' . $lastId . ');', CClientScript::POS_READY);
 	                        $model->unsetAttributes();
-	
+
 	                        switch ($isUserViewingFromModal) {
 	                            case 1:
 	                                Yii::app()->user->setFlash('success', 'Company Successfully added!');
@@ -89,7 +89,7 @@ class CompanyController extends Controller {
 	                    Yii::app()->user->setFlash('error', 'Company code has already been taken');
 	                }
 				}
-				else{				
+				else{
 					if ($companyService->save($model, $session['tenant'], $session['role'], 'create')) {
                         $lastId = $model->id;
                         $cs = Yii::app()->clientScript;
@@ -105,7 +105,7 @@ class CompanyController extends Controller {
                         }
                     }
 				}
-               
+
             } else {
                 Yii::app()->user->setFlash('error', 'Company name has already been taken');
             }

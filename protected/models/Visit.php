@@ -491,5 +491,47 @@ class Visit extends CActiveRecord {
             return true;
         }
     }
+	
+	public function getVisitCount($visitId){
+		
+		$allVisitsByVisitor = Yii::app()->db->createCommand("SELECT COUNT(*) as cnt "
+                        . "FROM visit "
+                        . "WHERE visit.visitor= (SELECT visitor FROM visit "
+                        . "WHERE visit.id= ".$visitId.")")->queryAll();
+		//var_dump($allVisitsByVisitor); 
+		
+		$res_visitor=Yii::app()->db->createCommand("SELECT visitor FROM visit WHERE visit.id= ".$visitId)->queryAll();
+		$visitor=$res_visitor[0]['visitor'];
+
+		$res_company=Yii::app()->db->createCommand("SELECT company.id AS company_id, company.name AS company_name FROM visit LEFT JOIN user ON user.id = visit.host LEFT JOIN company ON user.company = company.id WHERE company.is_deleted=0 AND visit.id= ".$visitId)->queryAll();
+		$company=$res_company[0]['company_id'];
+		
+		$res_host=Yii::app()->db->createCommand("SELECT id FROM user WHERE user.is_deleted=0 AND user.company=".$company)->queryAll();
+		//var_dump($res_host);
+		
+		foreach($res_host as $arr_val){
+			$arr[]=$arr_val['id'];
+		}
+		
+		$hosts=implode(",",$arr);
+		
+		//echo $hosts;echo "<br> ============ <br> ";
+		//echo $company;echo "<br> ============ <br> ";		
+		//echo $visitor;echo "<br> ============ <br> ";	die();
+		
+		$sql_company_visit_by_visitor="SELECT COUNT(*) as cnt FROM visit"
+                        ." WHERE visit.is_deleted=0 AND visit.visitor= ".$visitor
+                        . " AND host IN (".$hosts.")";
+						
+		
+		$companyVisitsByVisitor = Yii::app()->db->createCommand($sql_company_visit_by_visitor)->queryAll();
+		
+			
+		
+		//var_dump($companyVisitsByVisitor); die();
+		$countData=array('allVisitsByVisitor'=>$allVisitsByVisitor[0]['cnt'],'companyVisitsByVisitor'=>$companyVisitsByVisitor[0]['cnt'],'companyName'=>$res_company[0]['company_name']);
+		
+        return $countData;
+	}
 
 }

@@ -26,7 +26,7 @@ class WorkstationController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin','adminAjax' ,'delete','create','update'),
+                'actions' => array('admin','adminAjax' ,'delete','create','update' , 'ajaxCTCorporateUpdate'),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
            
             ),
@@ -36,7 +36,11 @@ class WorkstationController extends Controller {
         );
     }
 
-    
+    public function actionAjaxCTCorporateUpdate(){
+        //print_r($_POST);
+        echo "done";
+    }
+
     /**
      * Creates a new model.
      * If creation is successful, the browser will be redirected to the 'view' page.

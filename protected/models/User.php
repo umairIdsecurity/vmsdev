@@ -162,6 +162,13 @@ class User extends VmsActiveRecord {
         return $this;
     }
 
+    public function is_avms_user()
+    {
+        return in_array($this->role,Roles::get_avms_roles());
+    }
+
+
+
 
     public function getCompanyname() {
         // return private attribute on search
@@ -682,14 +689,21 @@ class User extends VmsActiveRecord {
         }
     }
 
+
     public function changePassword($newPassword)
     {
         $this->password = $this->hashPassword($newPassword);
         $this->save(false, 'password');
     }
 
-    public function is_avms_user()
-    {
-        return in_array($this->role,Roles::get_avms_roles());
+    /**
+     * @param $attribute
+     *
+     * @return string
+     */
+    public function isRequired($attribute){
+        if($this->isAttributeRequired($attribute)){
+            return '<span class="required">*</span>';
+        }
     }
 }

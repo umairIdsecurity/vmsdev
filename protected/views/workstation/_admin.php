@@ -11,8 +11,8 @@ $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'workstation-grid',
     'dataProvider' => $model->search(),
     'enableSorting' => false,
-    'hideHeader'=>true,
-    'filter' => $model,
+    //'hideHeader'=>true,
+    //'filter' => $model,
     'afterAjaxUpdate' => "
     function(id, data) {
         $('th > .asc').append('<div></div>');
@@ -21,40 +21,28 @@ $this->widget('zii.widgets.grid.CGridView', array(
     'columns' => array(
         array(
             'name' => 'name',
-            'filter'=>CHtml::activeTextField($model, 'name', array('placeholder'=>'Name')),
+            'header' => 'Workstation',
+            'htmlOptions'=>array('width'=>'180px'),
         ),
+
         array(
-            'name' => 'location',
-            'filter'=>CHtml::activeTextField($model, 'location', array('placeholder'=>'Location')),
+            'name' => 'moduleCorporate',
+            'header' => '',
+            'type'=>'raw',
+            'value' => '$data->getCorporateCardType($data->id)',
+            /*'htmlOptions'=>array('width'=>'300px' , 'height'=>'119px'),*/
+            'headerHtmlOptions' => array('class'=>'header-corporate')
         ),
+
         array(
-            'name' => 'contact_name',
-            'filter'=>CHtml::activeTextField($model, 'contact_name', array('placeholder'=>'Contact Person Name')),
+            'name' => 'moduleVic',
+            'type'=>'raw',
+            'header' => '',
+            'value' => '$data->getCorporateVic($data->id)',
+            /*'htmlOptions'=>array('width'=>'400px' , 'height'=>'119px'),*/
+            'headerHtmlOptions' => array('class'=>'header-vic')
         ),
-        array(
-            'name' => 'contact_number',
-            'filter'=>CHtml::activeTextField($model, 'contact_number', array('placeholder'=>'Contact No.')),
-        ),
-        array(
-            'name' => 'contact_email_address',
-            'filter'=>CHtml::activeTextField($model, 'contact_email_address', array('placeholder'=>'Contact Email Address')),
-        ),
-        array(
-            'name' => 'id',
-            'type' => 'raw',
-            'value' => 'CHtml::hiddenField("workstationExists1".$data->id,isWorkstationExists($data->id))',
-            'visible' => true,
-            'cssClassExpression' => '"hidden"',
-            'filter' => false,
-        ),
-        array(
-            'name' => 'id',
-            'type' => 'raw',
-            'value' => 'CHtml::hiddenField("visitExists2".$data->id,isVisitExistsInClosedVisits($data->id))',
-            'visible' => true,
-            'cssClassExpression' => '"hidden"',
-            'filter' => false,
-        ),
+
         array(
             'header' => 'Actions',
             'class' => 'CButtonColumn',
@@ -100,7 +88,17 @@ $this->widget('zii.widgets.grid.CGridView', array(
         ),
     ),
 ));
+function getCorporateModule(){
 
+    $cards = CardType::model()->findAllByAttributes(
+        array('module'=>1)
+    );
+
+    foreach($cards as $card){
+        $card->name;
+    }
+    return "hello";
+}
 function isWorkstationExists($workstationId) {
     return UserWorkstations::model()->exists('workstation="' . $workstationId . '"');
 }
@@ -108,4 +106,37 @@ function isWorkstationExists($workstationId) {
 function isVisitExistsInClosedVisits($workstationId) {
     return Visit::model()->exists('workstation="' . $workstationId . '"');
 }
+
+$urlMyFunc = Yii::app()->createUrl('workstation/myfunc');
+Yii::app()->clientScript->registerScript('select_card_type_corporate', "
+
+    $('.card_type_corporate').click( function(){
+
+        var card_type_id = $(this).attr('value');
+
+        if ($('input#id').is(':checked')) {
+            alert('checked');
+        }
+        else{
+            alert('not checked');
+        }
+
+        var data = 'card_type_id=' + card_type_id;
+
+        $('.loaderContainer').show();
+        $.ajax({
+            type: 'POST',
+            url: '$urlMyFunc',
+            data: data,
+            success: function(msg){
+                if(msg == 'done') {
+                    alert(msg);
+                }
+            }
+        })
+
+    })
+");
+
+
 ?>

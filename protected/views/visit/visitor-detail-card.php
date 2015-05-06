@@ -1,4 +1,3 @@
-
 <?php
 $session = new CHttpSession;
 
@@ -150,6 +149,11 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
         }
     ?>
 </div>
+
+<div>
+       Total Visits at <?php echo $visitModel['companyName']; ?>: <?php echo $visitModel['companyVisitsByVisitor']; ?></br>
+       <!-- Total Visits to All Companies: <?php // echo $visitModel['allVisitsByVisitor']; ?> -->
+</div>
 <input type="hidden" id="dummycardvalue" value="<?php echo $model->card; ?>"/>
 
 <form method="post" id="workstationForm">
@@ -279,7 +283,7 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
     }
 
     $(document).ready(function () {
-        blink("#printCardBtn", -1, 1000);
+        //blink("#printCardBtn", -1, 1000);
     });
     function blink(elem, times, speed) {
         if (times > 0 || times < 0) {

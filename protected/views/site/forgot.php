@@ -18,7 +18,7 @@
         ));
         ?>
 
-        <table class="login-area" style="border-collapse: none !important;">
+        <table class="forgot-password-area" style="border-collapse: none !important; width: 450px">
             <tr>
                 <td colspan="2">
                     <p>Please enter your email to reset password</p>

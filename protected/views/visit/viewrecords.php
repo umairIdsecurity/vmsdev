@@ -36,18 +36,20 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'header' => 'Status',
             'filter' => VisitStatus::$VISIT_STATUS_LIST,
             'cssClassExpression' => 'changeStatusClass($data->visit_status)',
+            'htmlOptions'=>array('width'=>'120px'),
         ),
         array(
             'name' => 'visitor_type',
             'value' => 'VisitorType::model()->returnVisitorTypes($data->visitor_type)',
             'filter' => VisitorType::model()->returnVisitorTypes(),
+            'htmlOptions'=>array('width'=>'170px'),
         ),
         array(
             'name' => 'cardnumber',
             'header' => 'Card No.',
             'filter'=>CHtml::activeTextField($model, 'cardnumber', array('placeholder'=>'Card No.')),
             'value'=>  'CardGenerated::model()->getCardCode($data->card)',
-            'htmlOptions'=>array('width'=>'150px'),
+            'htmlOptions'=>array('width'=>'120px'),
         ),
         array(
             'name' => 'firstname',
@@ -68,20 +70,6 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'filter'=>CHtml::activeTextField($model, 'company', array('placeholder'=>'Company')),
             'value' => 'getCompany($data->visitor)',
             'htmlOptions'=>array('width'=>'120px')
-        ),
-        array(
-            'name' => 'contactnumber',
-            'filter'=>CHtml::activeTextField($model, 'contactnumber', array('placeholder'=>'Contact Number')),
-            'value' => 'Visitor::model()->findByPk($data->visitor)->contact_number',
-            'header' => 'Contact Number',
-            'htmlOptions'=>array('width'=>'120px'),
-        ),
-        array(
-            'name' => 'contactemail',
-            'filter'=>CHtml::activeTextField($model, 'contactemail', array('placeholder'=>'Contact Email')),
-            'value' => 'Visitor::model()->findByPk($data->visitor)->email',
-            'header' => 'Contact Email',
-            'htmlOptions'=>array('width'=>'100px')
         ),
         array(
             'name' => 'date_check_in',

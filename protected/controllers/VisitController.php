@@ -78,11 +78,26 @@ class VisitController extends Controller {
                 } else {
                     // default value:
                     // todo: check this default later
-                    $model->visitor_type = VisitorType::PATIENT_VISITOR;
-                    $model->reason = null;
-                    $model->workstation = null;
+                    $model->visitor_type = VisitorType::CORPORATE_VISITOR;
+
+                    $reason = VisitReason::model()->findAllReason();
+                    if (count($reason) > 0) {
+                        $model->reason = $reason[0]->id;
+                    }
+
+                    $workstations = $this->populateWorkstation();
+                    if (count($workstations)> 0 ) {
+                        $model->workstation = $workstations[0]->id;
+                    }
+
+                    // default workstation:
+                    if (isset($session['workstation'])) {
+                        $model->workstation = $session['workstation'];
+                    }
+
                 }
             }
+
 
             if ($visitService->save($model, $session['id'])) {
                 $this->redirect(array('visit/detail', 'id' => $model->id));
@@ -100,7 +115,9 @@ class VisitController extends Controller {
      */
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
+
         $oldVisitorType = $model->visitor_type;
+        $oldReason = $model->reason;
 
         $visitService = new VisitServiceImpl();
         $session = new CHttpSession;
@@ -114,6 +131,10 @@ class VisitController extends Controller {
 			if ($model->visitor_type == null) {
                 $model->visitor_type = $oldVisitorType;
             }
+            if ($model->reason == null) {
+                $model->reason = $oldReason;
+            }
+
              if (isset($_POST['User']['photo']) && $model->host > 0) {
                  User::model()->updateByPk($model->host, array('photo' => $_POST['User']['photo']));
 			 }
@@ -208,6 +229,7 @@ class VisitController extends Controller {
         $reasonModel = VisitReason::model()->findByPk($model->reason);
         $patientModel = Patient::model()->findByPk($model->patient);
         $cardTypeModel = CardType::model()->findByPk($model->card_type);
+		$visitModel = Visit::model()->getVisitCount($model->id);
 
         $newPatient = new Patient;
         $newHost = new User;
@@ -236,6 +258,7 @@ class VisitController extends Controller {
             'patientModel' => $patientModel,
             'newPatient' => $newPatient,
             'newHost' => $newHost,
+			'visitModel' => $visitModel,
             'cardTypeModel' => $cardTypeModel,
         ));
     }
@@ -633,4 +656,52 @@ class VisitController extends Controller {
         Yii::app()->end();
     }
 
+    private function populateWorkstation() {
+        $session = new CHttpSession;
+
+        switch ($session['role']) {
+            case Roles::ROLE_SUPERADMIN:
+                $workstationList = Workstation::model()->findAll();
+                break;
+
+            case Roles::ROLE_OPERATOR:
+            case Roles::ROLE_AGENT_OPERATOR:
+                $Criteria = new CDbCriteria();
+                $Criteria->condition = "id ='" . $session['workstation'] . "'";
+                $workstationList = Workstation::model()->findAll($Criteria);
+                break;
+
+            case Roles::ROLE_STAFFMEMBER:
+                if ($session['tenant'] == NULL) {
+                    $tenantsearchby = "IS NULL";
+                } else {
+                    $tenantsearchby = "='" . $session['tenant'] . "'";
+                }
+
+                if ($session['tenant_agent'] == NULL) {
+                    //$tenantagentsearchby = "and tenant_agent IS NULL";
+                    $tenantagentsearchby = "";
+                } else {
+                    $tenantagentsearchby = "and tenant_agent ='" . $session['tenant_agent'] . "'";
+                }
+                $Criteria = new CDbCriteria();
+                $Criteria->condition = "tenant $tenantsearchby  $tenantagentsearchby";
+                $workstationList = Workstation::model()->findAll($Criteria);
+                break;
+
+            case Roles::ROLE_ADMIN:
+                $Criteria = new CDbCriteria();
+                $Criteria->condition = "tenant ='" . $session['tenant'] . "'";
+                $workstationList = Workstation::model()->findAll($Criteria);
+                break;
+
+            case Roles::ROLE_AGENT_ADMIN:
+                $Criteria = new CDbCriteria();
+                $Criteria->condition = "tenant ='" . $session['tenant'] . "' and tenant_agent ='" . $session['tenant_agent'] . "'";
+                $workstationList = Workstation::model()->findAll($Criteria);
+                break;
+        }
+
+        return $workstationList;
+    }
 }

@@ -24,8 +24,11 @@
  */
 class Workstation extends CActiveRecord {
 
-    //public $workstation;
     public $card_type;
+
+    public $moduleCorporate;
+
+    public $moduleVic;
 
     /**
      * @return string the associated database table name
@@ -43,7 +46,7 @@ class Workstation extends CActiveRecord {
         return array(
             array('name', 'required'),
             array('tenant','required','message' =>'Please select a {attribute}'),
-            array('contact_number, card_type', 'safe'),
+            array('contact_number, card_type,moduleCorporate, moduleVic', 'safe'),
             array('contact_email_address', 'email'),
             array('number_of_operators, assign_kiosk', 'numerical', 'integerOnly' => true),
             array('name, contact_name,tenant,tenant_agent,created_by', 'length', 'max' => 50),
@@ -105,6 +108,8 @@ class Workstation extends CActiveRecord {
         $criteria->compare('id', $this->id);
         $criteria->compare('name', $this->name, true);
         $criteria->compare('location', $this->location, true);
+        $criteria->compare('moduleCorporate', $this->moduleCorporate, true);
+        $criteria->compare('moduleVic', $this->moduleVic, true);
         $criteria->compare('contact_name', $this->contact_name, true);
         $criteria->compare('contact_number', $this->contact_number);
         $criteria->compare('contact_email_address', $this->contact_email_address, true);
@@ -217,6 +222,84 @@ class Workstation extends CActiveRecord {
             return false;
         }
     }
+
+
+    /**
+     * Return all corporate card types
+     *
+     * This function receives the param workstation_id and then find all
+     * card type which are under corporate modules. Each card type is checked
+     * whether is it associated with workstation or not. All the card types
+     * will be displayed as checkbox. Only associated card type with workstation
+     * will be assigned as checked in the among all the card types in corporate
+     * module.
+     *
+     *
+     * @param string $workstation_id
+     *
+     * @return string $cardArr
+     *
+     * */
+    public function getCorporateCardType($workstation_id){
+
+        $cards = CardType::model()->findAllByAttributes(
+            array('module'=>1)
+        );
+
+        $cardArr = "";
+        foreach($cards as $card){
+
+            $ws_card = WorkstationCardType::model()->findByPk(
+                array(
+                    'workstation' => $workstation_id,
+                    'card_type' => $card->id
+                )
+            );
+
+            if(!empty($ws_card)){
+                $cardArr .= CHtml::checkBox($card->id,true,array("value"=>$card->id , "class"=>"card_type_corporate"));
+            }
+            else{
+                $cardArr .= CHtml::checkBox($card->id,false,array("value"=>$card->id , "class"=>"card_type_corporate"));
+            }
+
+        }
+
+        return $cardArr;
+
+    }
+
+    public function getCorporateVic($workstation_id){
+
+        $cards = CardType::model()->findAllByAttributes(
+            array('module'=>2)
+        );
+
+        $cardArr = "";
+        foreach($cards as $card){
+
+            $ws_card = WorkstationCardType::model()->findByPk(
+                array(
+                    'workstation' => $workstation_id,
+                    'card_type' => $card->id
+                )
+            );
+
+            if(!empty($ws_card)){
+                $cardArr .= CHtml::checkBox($card->id,true,array("value"=>$card->id , "class"=>"card_type_vic"));
+            }
+            else{
+                $cardArr .= CHtml::checkBox($card->id,false,array("value"=>$card->id , "class"=>"card_type_vic"));
+            }
+
+        }
+
+        return $cardArr;
+
+
+    }
+
+
 
 
 }

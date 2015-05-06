@@ -14,6 +14,7 @@ $session = new CHttpSession;
             <?php
             $this->renderPartial('visitor-detail-card', array('model' => $model,
                 'visitorModel' => $visitorModel,
+				'visitModel' => $visitModel,
                 'hostModel' => $hostModel,
                 'patientModel' => $patientModel,
                 'cardTypeModel' => $cardTypeModel,

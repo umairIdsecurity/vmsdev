@@ -35,7 +35,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'name' => 'billing_address',
             'filter'=>CHtml::activeTextField($model, 'billing_address', array('placeholder'=>'Billing Address')),
         ),
-        array(
+        /*array(
            'name'=>'isTenant',
             'type'=>'raw',
             'header' => "Is Tenant?",
@@ -43,7 +43,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'value' => '$data->isTenant?"Yes":"No"',
             'htmlOptions' => array('style' => "text-align:center;"),
             
-        ),
+        ),*/
         
       
         array(

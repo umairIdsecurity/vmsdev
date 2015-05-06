@@ -28,6 +28,11 @@ class UserGroup {
 
     public static function isUserAMemberOfThisGroup($user, $user_group) {
 
+        // ask user to log in
+        if (!isset($user->role)) {
+            Yii::app()->controller->redirect(Yii::app()->createUrl("site/login"));
+        }
+
         switch ($user_group) {
             case UserGroup::USERGROUP_ADMINISTRATION:
 

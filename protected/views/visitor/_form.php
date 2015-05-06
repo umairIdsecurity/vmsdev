@@ -75,15 +75,12 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
 							$("#Visitor_password_em_").html("select one option");
 							return false;	
 							}
-							else if($(".pass_option").is(":checked")== true && $(".pass_option:checked").val()==1) {
-							    if ($("#Visitor_password").val()== "" || $("#Visitor_repeatpassword").val()=="") {
+							else if($(".pass_option").is(":checked")== true && $(".pass_option:checked").val()==1 && ($("#Visitor_password").val()== "" || $("#Visitor_repeatpassword").val()=="")){
 							   
-                                    $("#pass_error_").show();
-                                    $("#pass_error_").html("type password or generate");
-                                    return false;
-                                } else if ($("#Visitor_password").val() != $("#Visitor_repeatpassword").val()) {
-                                    return false;
-                                }
+                            $("#pass_error_").show();
+							$("#pass_error_").html("type password or generate");	
+							return false;
+                            	
 							}
 
                                 var vehicleValue = $("#Visitor_vehicle").val();
@@ -146,13 +143,11 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
 
         <table  id="addvisitor-table" data-ng-app="PwordForm">
 
+        
 
-
-            <tr>
-                <td>
-                    <?php $this->renderPartial('profile_type', array('model'=>$model)); ?>
-                </td>
-            </tr>
+        <tr><td><table style="margin-left:70px;width:120px;margin-top:10px;">
+           <tr><td class="ico1" width="40">&nbsp;</td><td class="ico3" width="40">&nbsp;</td><td class="ico2" width="40">&nbsp;</td>
+           </tr></table><td></tr>
 
             <tr>
 
@@ -1158,17 +1153,17 @@ if (isset($_GET['id'])) {
 
                 if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
 
-                    window.location = 'index.php?r=dashboard';
+                    //window.location = 'index.php?r=dashboard';
 
                 } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
 
-                    window.location = 'index.php?r=dashboard/viewmyvisitors';
+                   // window.location = 'index.php?r=dashboard/viewmyvisitors';
 
                 }
 
                 else {
 
-                    window.location = 'index.php?r=visitor/admin';
+                    //window.location = 'index.php?r=visitor/admin';
 
                 }
 

@@ -260,6 +260,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     ?>>
 
                         <li><a href='<?php echo Yii::app()->createUrl('company/create'); ?>' class="addSubMenu ajaxLinkLi"><span>Add Company</span></a></li>
+                        <li><a href='<?php echo Yii::app()->createUrl('CompanyLafPreferences/customisation'); ?>' class="ajaxLinkLi"><span>Customise Display</span></a></li>
                     </ul>
                 </li>
             <?php
@@ -292,6 +293,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     ?>>
 
                         <li><a href='<?php echo Yii::app()->createUrl('company/create'); ?>' class="addSubMenu ajaxLinkLi"><span>Add Company</span></a></li>
+                        <li><a href='<?php echo Yii::app()->createUrl('CompanyLafPreferences/customisation'); ?>' class="ajaxLinkLi"><span>Customise Display</span></a></li>
                     </ul>
                 </li>
 

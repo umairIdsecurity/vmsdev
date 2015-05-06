@@ -18,9 +18,13 @@ class VisitorServiceImpl implements VisitorService {
         $visitor->date_of_birth = date('Y-m-d', strtotime($visitor->birthdayYear . '-' . $visitor->birthdayMonth . '-' . $visitor->birthdayDay));
 
         if (Yii::app()->controller->action->id == 'create' || Yii::app()->controller->action->id == 'addvisitor') {
-
-
-//            $visitor->repeatpassword = $visitor->password; // Why we need this assignment? Comparing validator is not make sense after it.
+            if($visitor->password == '' || $visitor->password == "(NULL)"){
+                $visitor->password = "(NULL)";
+            } else {
+                $visitor->password = User::model()->hashPassword($visitor->password);
+            }
+            
+            $visitor->repeatpassword = $visitor->password;
 
             if ($visitor->vehicle != '') {
                 $vehicle = new Vehicle;
@@ -34,6 +38,7 @@ class VisitorServiceImpl implements VisitorService {
         } else {
             /* if update and vehicle not blank, update plate number 
              */
+            $visitor->password = User::model()->hashPassword($visitor->password);
             if ($visitor->vehicle != '') {
 
                 if (Visitor::model()->findByPk($visitor->id)->vehicle != NULL) {
@@ -51,6 +56,7 @@ class VisitorServiceImpl implements VisitorService {
         }
         
         if (!($result = $visitor->save())) {
+            var_dump($result);
             return false;
         }
 

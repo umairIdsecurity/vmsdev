@@ -33,8 +33,7 @@
 		"theseer/fxsl" : ">=1.1",
 		"phpunit/php-timer" : ">=1.0.4",
 		"nikic/php-parser" : "=1.2.2",
-		"phpunit/phpunit": "~4",
-        "phpunit/phpunit-selenium": ">=1.2"
+		"phpunit/phpunit": "~4"
     },
 	    "bin": [
 	        "phploc"

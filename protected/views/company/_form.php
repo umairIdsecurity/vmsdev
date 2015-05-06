@@ -62,10 +62,10 @@ if ($this->action->id == 'update') {
     ?>
     <table>
         <tr>
-            <td style="width:160px;"><?php echo $form->labelEx($model, 'name'); ?></td>
+            <td style="width:160px;"></td>
             <td style="width:240px;">
                 <?php
-                echo $form->textField($model, 'name', array('size' => 60, 'maxlength' => 150));
+                echo $form->textField($model, 'name', array('size' => 60, 'maxlength' => 150 , 'placeholder'=>'Company Name'));
                 if (isset($_GET['viewFrom'])) {
                     echo "<br>" . $form->error($model, 'name');
                 }
@@ -78,11 +78,7 @@ if ($this->action->id == 'update') {
                 ?></td>
 
         </tr>
-        <tr>
-            <td><?php echo $form->labelEx($model, 'trading_name'); ?></td>
-            <td><?php echo $form->textField($model, 'trading_name', array('size' => 60, 'maxlength' => 150)); ?></td>
-            <td><?php echo $form->error($model, 'trading_name'); ?></td>
-        </tr>
+
 		
 		<!--WangFu Modified-->
 		<?php if ($session['role'] != Roles::ROLE_ADMIN) {?>
@@ -104,52 +100,20 @@ if ($this->action->id == 'update') {
         </tr>
 		<?php } ?>
 		
-		<!--WangFu Modified-->
-        <?php if ($model->isTenant()) {?>
         <tr>
-            <td><?php echo $form->labelEx($model, 'Upload Company Logo'); ?></td>
-            <td id="uploadRow" >
-                <input type="hidden" id="Company_logo" name="Company[logo]" 
-                <?php
-                if ($this->action->id == 'update') {
-                    echo "disabled";
-                }
-                ?> value="<?php echo $model['logo']; ?>">
-                <div class="photoDiv companyPhotoDiv" <?php
-                if ($model['logo'] == NULL) {
-                    echo "style='display:none !important;'";
-                }
-                ?>>
-                    <?php if ($dataId != '') { ?><img id='companyLogo' src="<?php echo Yii::app()->request->baseUrl . "/" . $model->getCompanyLogo($dataId); ?>"/>
-                    <?php } else { ?> 
-                        <img id='companyLogo' src="<?php
-                        if (isset($_POST['Company']['logo'])) {
-                            echo Yii::app()->request->baseUrl . "/" . $model->getPhotoRelativePath($_POST['Company']['logo']);
-                        }
-                        ?>
-
-                             " />
-                         <?php } ?>
-                </div>
-                <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
-            </td>
-        </tr>
-        <?php } ?>
-
-        <tr>
-            <td><?php echo $form->labelEx($model, 'contact'); ?></td>
-            <td><?php echo $form->textField($model, 'contact', array('size' => 60, 'maxlength' => 100)); ?></td>
+            <td></td>
+            <td><?php echo $form->textField($model, 'contact', array('size' => 60, 'maxlength' => 100 , 'placeholder'=> 'First Name')); ?></td>
             <td><?php echo $form->error($model, 'contact'); ?></td>
         </tr>
         <tr>
-            <td><?php echo $form->labelEx($model, 'billing_address'); ?></td>
-            <td><?php echo $form->textField($model, 'billing_address', array('size' => 60, 'maxlength' => 150)); ?></td>
+            <td></td>
+            <td><?php echo $form->textField($model, 'billing_address', array('size' => 60, 'maxlength' => 150 , 'placeholder'=> 'Last Name')); ?></td>
             <td><?php echo $form->error($model, 'billing_address'); ?></td>
         </tr>
         <tr>
-            <td><?php echo $form->labelEx($model, 'email_address'); ?></td>
+            <td></td>
             <td><?php
-                echo $form->textField($model, 'email_address', array('size' => 50, 'maxlength' => 50));
+                echo $form->textField($model, 'email_address', array('size' => 50, 'maxlength' => 50 , 'placeholder'=> 'Email Address'));
                 if (isset($_GET['viewFrom'])) {
                     echo "<br>" . $form->error($model, 'email_address',array('style'=>'text-transform:none;'));
                 }
@@ -162,9 +126,9 @@ if ($this->action->id == 'update') {
                 ?></td>
         </tr>
         <tr>
-            <td><?php echo $form->labelEx($model, 'office_number'); ?></td>
+            <td></td>
             <td><?php
-                echo $form->textField($model, 'office_number');
+                echo $form->textField($model, 'office_number', array('placeholder'=> 'Contact Number'));
                 if (isset($_GET['viewFrom'])) {
                     echo "<br>" . $form->error($model, 'office_number');
                 }

@@ -14,6 +14,11 @@ $this->widget('zii.widgets.grid.CGridView', array(
     'filter' => $model,
     'columns' => array(
         'name',
+		array(
+            'name' => 'order_by',
+			'filter'=>CHtml::activeTextField($model, 'order_by'),
+			'htmlOptions'=>array('width'=>'50px')
+        ),
         array(
             'header' => 'Actions',
             'class' => 'CButtonColumn',

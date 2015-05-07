@@ -26,6 +26,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         ),
         array(
             'name' => 'order_by',
+			'filter'=>CHtml::activeTextField($model, 'order_by', array('placeholder'=>'Sort Order')),
 			'htmlOptions'=>array('width'=>'50px')
         ),
         array(

@@ -59,7 +59,7 @@ $session = new CHttpSession;
                                             <td>
                                                 <input name="Visit[visit_status]" id="Visit_visit_status" type="text" value="<?php echo VisitStatus::CLOSED; ?>" style="display:none;">
                                                 <input name="Visit[time_check_out]" id="Visit_time_check_out" class="timeout" type="text" style="display:none;">
-                                                <input type="text" value="<?php echo date("d-m-Y"); ?>" id='Visit_date_check_out1' name="Visit[date_check_out1]" readonly>
+                                                <input type="text" value="<?php echo isset($model->date_check_out) ? $model->date_check_out : date("d-m-Y"); ?>" id='Visit_date_check_out1' name="Visit[date_check_out1]" readonly>
                                             </td>
                                         </tr>
                                         <tr>

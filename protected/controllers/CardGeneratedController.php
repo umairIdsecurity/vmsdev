@@ -61,6 +61,8 @@ class CardGeneratedController extends Controller {
             } else {
                 $_POST['CardGenerated']['tenant_agent'] = $_POST['CardGenerated']['tenant_agent'];
             }
+            print_r($_POST['CardGenerated']);
+            die("--DONE--");
             $model->attributes = $_POST['CardGenerated'];
 
             if ($model->save()) {

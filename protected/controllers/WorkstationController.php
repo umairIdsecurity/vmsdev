@@ -27,7 +27,7 @@ class WorkstationController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin','adminAjax' ,'delete','create','update' , 'ajaxCTCorporateUpdate'),
+                'actions' => array('admin','adminAjax' ,'delete','create','update' , 'ajaxWorkstationCardtype' ),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
            
             ),
@@ -48,7 +48,7 @@ class WorkstationController extends Controller {
      * @return void
      *
      * */
-    public function actionAjaxCTCorporateUpdate(){
+    public function actionAjaxWorkstationCardtype(){
 
         if(!empty($_POST['card_type_id']) && !empty($_POST['workstation_id'])){
 
@@ -76,6 +76,7 @@ class WorkstationController extends Controller {
 
         }
     }
+
 
     /**
      * Creates a new model.

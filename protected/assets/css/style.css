@@ -1177,12 +1177,12 @@ dt.tabs dt{
 .close-visit {
 
     background:url('../images/close_icon.gif') 0 0 no-repeat;
-    background-size:16px 15px;
+    background-size: contain;
     background-position: 3px 0px;
     padding: 0px 30px;
-    height:14px;
+    height:20px;
     display: block;
-    height: 16px;
+    height: 20px;
     text-decoration: none;
     // margin-bottom:10px;
 }

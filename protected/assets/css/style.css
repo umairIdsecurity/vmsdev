@@ -729,7 +729,7 @@ dt.tabs dt{
     display:inline-block;
     height: 117px;
     color:white;
-    width: 100px;
+    width: 90px;
     margin-top: 15px;
 }
 
@@ -748,7 +748,7 @@ dt.tabs dt{
     width:50px;
 }
 .selectCardTypeTable img{
-    height:137px;
+    height:120px;
 }
 
 .register-a-visitor-buttons-div, .buttonsAlignToRight{

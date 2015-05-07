@@ -2,29 +2,42 @@
 $session = new CHttpSession;
 $sameday = CardType::model()->findByPk(CardType::SAME_DAY_VISITOR);
 $multiday = CardType::model()->findByPk(CardType::MULTI_DAY_VISITOR);
+
+$workstation_id = $session['workstation'];
+$cardTypeWorkstationModel = WorkstationCardType::model()->findAllByAttributes(
+    array('workstation'=>$workstation_id)
+);
+
 ?>
 
 <div id="selectCardDiv">
     <table class="selectCardTypeTable">
         <tr>
+            <?php
+            foreach($cardTypeWorkstationModel as $cardType){
+                $cardTypeModel = CardType::model()->findByPk($cardType->card_type);
+            ?>
             <td>
                 <label for="sameday" id="labelforsameday">
-                    <img src="<?php echo Yii::app()->controller->assetsBase . '/' . $sameday->card_icon_type; ?>"/>
+                    <img src="<?php echo Yii::app()->controller->assetsBase . '/' . $cardTypeModel->card_background_image_path; ?>" />
                 </label>
             </td>
-            <td>
-                <label for="multiday" id="labelformultiday">
-                    <img src="<?php echo Yii::app()->controller->assetsBase . '/' . $multiday->card_icon_type; ?>"/>
-                </label>
-            </td>
+            <?php
+            }
+            ?>
+
         </tr>
         <tr>
+            <?php
+            foreach($cardTypeWorkstationModel as $cardType){
+
+            ?>
             <td style="text-align:center;">
-                <input type="radio" value="<?php echo CardType::SAME_DAY_VISITOR; ?>" name="selectCardType" id="sameday" checked />
+                <input type="radio" value="" name="selectCardType" id="<?php echo $cardType->card_type ?>" />
             </td>
-            <td style="text-align:center;">
-                <input type="radio" value="<?php echo CardType::MULTI_DAY_VISITOR; ?>" name="selectCardType" id="multiday" />    
-            </td>
+            <?php
+            }
+            ?>
         </tr>
 
     </table>

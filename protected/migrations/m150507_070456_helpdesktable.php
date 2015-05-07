@@ -8,9 +8,7 @@ class m150507_070456_helpdesktable extends CDbMigration
         $table = Yii::app()->db->schema->getTable('helpdesk_group');
         if(!isset($table)){
 
-            $this->execute("
-
-                   CREATE TABLE IF NOT EXISTS `helpdesk_group` (
+            $this->execute("CREATE TABLE IF NOT EXISTS `helpdesk_group` (
                             `id` bigint(20) NOT NULL AUTO_INCREMENT,
                             `name` varchar(255) NOT NULL,
                             `order_by` int(6) DEFAULT NULL,
@@ -25,9 +23,7 @@ class m150507_070456_helpdesktable extends CDbMigration
 		$table = Yii::app()->db->schema->getTable('helpdesk');
         if(!isset($table)){
 
-            $this->execute("
-
-                   CREATE TABLE IF NOT EXISTS `helpdesk` (
+            $this->execute("CREATE TABLE IF NOT EXISTS `helpdesk` (
                             `id` bigint(20) NOT NULL AUTO_INCREMENT,
                             `question` varchar(255) NOT NULL,
 							`answer` text NOT NULL,

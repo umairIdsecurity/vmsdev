@@ -2,6 +2,7 @@
 
 class WorkstationController extends Controller {
 
+
     /**
      * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
      * using two-column layout. See 'protected/views/layouts/column2.php'.
@@ -36,9 +37,44 @@ class WorkstationController extends Controller {
         );
     }
 
+    /**
+     * Receive ajax POST type request with two variable workstation_id and
+     * card_type_id. This two variables are used as composite primary key to
+     * query the associated table 'workstation_card_type' of workstation
+     * and card type. The function will work as if query return empty value
+     * it insert new item 'workstation_card_type' otherwise remove the
+     * existing row.
+     *
+     * @return void
+     *
+     * */
     public function actionAjaxCTCorporateUpdate(){
-        //print_r($_POST);
-        echo "done";
+
+        if(!empty($_POST['card_type_id']) && !empty($_POST['workstation_id'])){
+
+            $workstationId = $_POST['workstation_id'];
+            $cardType = $_POST['card_type_id'];
+
+            $ws_card = WorkstationCardType::model()->findByPk(
+                array(
+                    'workstation' => $workstationId,
+                    'card_type' => $cardType
+                )
+            );
+
+            if(!empty($ws_card)){
+                $ws_card->delete();
+            }
+            else{
+                $session = new CHttpSession;
+                $ws_card = new WorkstationCardType();
+                $ws_card->workstation = $workstationId;
+                $ws_card->card_type = $cardType;
+                $ws_card->user = $session['id'];
+                $ws_card->save();
+            }
+
+        }
     }
 
     /**
@@ -94,10 +130,11 @@ class WorkstationController extends Controller {
                 );
                 if(!empty($model->card_type)){
                     foreach($model->card_type as $card){
+                        $session = new CHttpSession;
                         $workstation = new WorkstationCardType();
                         $workstation->workstation = $model->id;
                         $workstation->card_type = $card;
-                        $workstation->user = 16;
+                        $workstation->user = $session['id'];
                         $workstation->save();
                     }
                 }

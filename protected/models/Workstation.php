@@ -257,10 +257,19 @@ class Workstation extends CActiveRecord {
             );
 
             if(!empty($ws_card)){
-                $cardArr .= CHtml::checkBox($card->id,true,array("value"=>$card->id , "class"=>"card_type_corporate"));
+                $cardArr .= CHtml::checkBox($card->id,true,array(
+                    "value"=>$card->id ,
+                    "data-workstation" => $workstation_id,
+                    "class"=>"card_type_corporate"
+                ));
             }
             else{
-                $cardArr .= CHtml::checkBox($card->id,false,array("value"=>$card->id , "class"=>"card_type_corporate"));
+                $cardArr .= CHtml::checkBox($card->id,false,array(
+                    "value"=>$card->id ,
+                    "data-workstation" => $workstation_id,
+                    "class"=>"card_type_corporate"
+                ));
+                //$cardArr .= CHtml::checkBox($card->id,false,array("value"=>$card->id , "class"=>"card_type_corporate"));
             }
 
         }

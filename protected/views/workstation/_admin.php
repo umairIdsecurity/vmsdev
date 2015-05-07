@@ -107,26 +107,28 @@ function isVisitExistsInClosedVisits($workstationId) {
     return Visit::model()->exists('workstation="' . $workstationId . '"');
 }
 
-$urlMyFunc = Yii::app()->createUrl('workstation/myfunc');
+$ajaxUrlCorporate = Yii::app()->createUrl('workstation/ajaxCTCorporateUpdate');
 Yii::app()->clientScript->registerScript('select_card_type_corporate', "
 
     $('.card_type_corporate').click( function(){
 
         var card_type_id = $(this).attr('value');
+        var workstation_id = $(this).attr('data-workstation');
 
-        if ($('input#id').is(':checked')) {
+        /*if ($('input#id').is(':checked')) {
             alert('checked');
         }
         else{
             alert('not checked');
-        }
+        }*/
 
-        var data = 'card_type_id=' + card_type_id;
+        var data = {card_type_id: card_type_id, workstation_id: workstation_id};
+
 
         $('.loaderContainer').show();
         $.ajax({
             type: 'POST',
-            url: '$urlMyFunc',
+            url: '$ajaxUrlCorporate',
             data: data,
             success: function(msg){
                 if(msg == 'done') {

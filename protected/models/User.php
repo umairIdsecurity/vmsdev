@@ -614,9 +614,10 @@ class User extends VmsActiveRecord {
         $this->birthdayMonth = date('n', strtotime($date_of_birth));
         $this->birthdayYear = date('o', strtotime($date_of_birth));
 
-        $this->asic_expiry_day =  date('d',$this->asic_expiry);
-        $this->asic_expiry_month =  date('M',$this->asic_expiry);
-        $this->asic_expiry_year =  date('y',$this->asic_expiry);
+        // todo: after run migration on server, please remove the comment
+        //$this->asic_expiry_day =  date('d',$this->asic_expiry);
+        //$this->asic_expiry_month =  date('M',$this->asic_expiry);
+        //$this->asic_expiry_year =  date('y',$this->asic_expiry);
 
         return parent::afterFind();
     }

@@ -353,7 +353,53 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                             </tr>
 
                             <tr>
-                                <td>&nbsp;</td>
+                                <td>
+                                    <?php
+                                    /*if (isset($_SERVER['HTTP_USER_AGENT'])) {
+                                        $agent = $_SERVER['HTTP_USER_AGENT'];
+                                    }
+                                    if (strlen(strstr($agent, 'Firefox')) > 0) {
+                                        if ($session['role'] == Roles::ROLE_SUPERADMIN) {
+                                            $class = "moveFromAlignmentA";
+                                        } else {
+                                            $class = "moveFromAlignmentB";
+                                        }
+                                    } else {
+                                        if ($session['role'] == Roles::ROLE_SUPERADMIN) {
+                                            $class = "moveFromAlignmentAB";
+                                        } else {
+                                            $class = "moveFromAlignmentBB";
+                                        }
+                                    }
+
+                                    $form = $this->beginWidget('CActiveForm', array(
+                                        'id' => 'register-reason-form',
+                                        'action' => Yii::app()->createUrl('/visitReason/create&register=1'),
+                                        'htmlOptions' => array("name" => "register-reason-form", "class" => $class),
+                                        'enableAjaxValidation' => false,
+                                        'enableClientValidation' => true,
+                                        'clientOptions' => array(
+                                            'validateOnSubmit' => true,
+                                            'afterValidate' => 'js:function(form, data, hasError){
+                                                    if (!hasError){
+                                               }
+                                            }'
+                                        ),
+                                    ));*/
+                                    ?>
+                                    <div id="register-reason-form" style="margin-top: 0px; width: 100% !important;">
+                                    <table style="/*position:relative;top:555px;left:-301px*/">
+                                        <tr>
+                                            <td>
+                                                <textarea id="VisitReason_reason" name="VisitReason[reason]" rows="1" maxlength="128"
+                                                    style="text-transform: capitalize;" placeholder="Add Reason"></textarea>
+                                                <div class="errorMessage" id="visitReasonErrorMessage" style="display:none;">Select Reason</div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    </div>
+                                    <?php //$this->endWidget(); ?>
+                                </td>
                             </tr>
                             <tr>
                                 <td>&nbsp;</td>
@@ -387,49 +433,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
 
                     <?php $this->endWidget(); ?>
                 </div>
-                <?php
-                if (isset($_SERVER['HTTP_USER_AGENT'])) {
-                    $agent = $_SERVER['HTTP_USER_AGENT'];
-                }
-                if (strlen(strstr($agent, 'Firefox')) > 0) {
-                    if ($session['role'] == Roles::ROLE_SUPERADMIN) {
-                        $class = "moveFromAlignmentA";
-                    } else {
-                        $class = "moveFromAlignmentB";
-                    }
-                } else {
-                    if ($session['role'] == Roles::ROLE_SUPERADMIN) {
-                        $class = "moveFromAlignmentAB";
-                    } else {
-                        $class = "moveFromAlignmentBB";
-                    }
-                }
 
-                $form = $this->beginWidget('CActiveForm', array(
-                    'id' => 'register-reason-form',
-                    'action' => Yii::app()->createUrl('/visitReason/create&register=1'),
-                    'htmlOptions' => array("name" => "register-reason-form", "class" => $class),
-                    'enableAjaxValidation' => false,
-                    'enableClientValidation' => true,
-                    'clientOptions' => array(
-                        'validateOnSubmit' => true,
-                        'afterValidate' => 'js:function(form, data, hasError){
-                                if (!hasError){                               
-                           }
-                        }'
-                    ),
-                ));
-                ?>
-                <table style="position:relative;top:555px;left:-301px">
-                    <tr>
-                        <td>
-                            <textarea id="VisitReason_reason" name="VisitReason[reason]" rows="1" maxlength="128"
-                                      style="text-transform: capitalize;" placeholder="Add Reason"></textarea>
-                            <div class="errorMessage" id="visitReasonErrorMessage" style="display:none;">Select Reason</div>
-                        </td>
-                    </tr>
-                </table>
-                <?php $this->endWidget(); ?>
             </div>
         </div>
 

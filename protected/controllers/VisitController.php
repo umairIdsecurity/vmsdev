@@ -90,8 +90,14 @@ class VisitController extends Controller {
                         $model->workstation = $workstations[0]->id;
                     }
 
+                    // default workstation:
+                    if (isset($session['workstation'])) {
+                        $model->workstation = $session['workstation'];
+                    }
+
                 }
             }
+
 
             if ($visitService->save($model, $session['id'])) {
                 $this->redirect(array('visit/detail', 'id' => $model->id));

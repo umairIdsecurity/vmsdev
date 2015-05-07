@@ -109,7 +109,7 @@ if (isset($_GET['id'])) {
 
         <tr><td>&nbsp;</td></tr>
     </table>
-    <table style="width: auto" >
+    <table style="width: 250px; float: left;" >
         <tr>
             <td>
             <p class="note">Fields with <span class="required">*</span> are required.</p>

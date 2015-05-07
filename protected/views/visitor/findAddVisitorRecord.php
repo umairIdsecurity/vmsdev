@@ -289,7 +289,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
 
                                     <select id="workstation" onchange="populateVisitWorkstation(this)">
                                         <?php
-                                        if ($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
+                                        if ($session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
                                             echo '';
                                         } else {
                                             echo '<option value="">Select Workstation</option>';
@@ -298,17 +298,17 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
 
                                         <?php
                                         $workstationList = populateWorkstation();
+
                                         foreach ($workstationList as $key => $value) {
                                             ?>
-                                            <option value="<?php echo $value->id; ?>" <?php
-                                            if (($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) && $value->id == $session['workstation']) {
-                                                echo 'selected';
-                                            }
-                                            ?>><?php echo $value->name; ?></option>
+                                            <option value="<?php echo $value->id; ?>" <?php echo $value->id == $session['workstation'] ? 'selected="selected"' : ''; ?>>
+                                                <?php echo $value->name; ?>
+                                            </option>
                                         <?php
                                         }
                                         ?>
-                                    </select><span class="required">*</span>
+                                    </select>
+                                    <span class="required">*</span>
 
                                     <div style="display:none;" class="errorMessage errorMessageWorkstation">Select Workstation</div>
 
@@ -883,7 +883,13 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                     if (isSearch == 'search') {
                         $('#workstation_search').append('<option value="' + value.id + '">' + value.name + '</option>');
                     } else {
-                        $('#workstation').append('<option value="' + value.id + '">' + value.name + '</option>');
+                        var selectedWorkstation = <?php echo $session['workstation']?>;
+                        if (value.id == selectedWorkstation) {
+                            $('#workstation').append('<option selected="selected" value="' + value.id + '">' + value.name + '</option>');
+                        } else {
+                            $('#workstation').append('<option value="' + value.id + '">' + value.name + '</option>');
+                        }
+
                     }
                 });
             }

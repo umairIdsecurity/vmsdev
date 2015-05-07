@@ -16,6 +16,9 @@ class UserServiceImpl implements UserService {
     public function save($user, $userLoggedIn, $workstation) {
 		//print_r($user);exit;
         $user->date_of_birth = date('Y-m-d', strtotime($user->birthdayYear.'-'.$user->birthdayMonth.'-'.$user->birthdayDay));
+
+        $user->asic_expiry = strtotime($user->asic_expiry_year.'-'.$user->asic_expiry_month.'-'.$user->asic_expiry_day);
+
 		if($user['password']==''){
 			
 		$user->password	=	(NULL);
@@ -37,7 +40,7 @@ class UserServiceImpl implements UserService {
                 }
             }
         }
-		
+
         if (!($user->save())) {
             return false;
         }else{
@@ -58,7 +61,9 @@ class UserServiceImpl implements UserService {
             switch ($userLoggedIn->role) {
 				
                 case Roles::ROLE_SUPERADMIN:
-					echo $user->role; exit;
+                    // dx-sadaf... dont know the reason for the line of code below..
+                    // commenting it out as it is causing issue while saving user....
+					//echo $user->role; exit;
                     if ($user->role == Roles::ROLE_ADMIN) {
                         $this->assignTenantOfUserAndCompanyForRoleAdmin($user, $company->tenant);
                     } else if ($user->role == Roles::ROLE_AGENT_ADMIN) {

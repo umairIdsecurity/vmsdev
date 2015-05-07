@@ -73,6 +73,8 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
         }
 .required { padding-left:10px; }
 #content h1 { color: #E07D22;font-size: 18px;font-weight: bold;margin-left:75px; }
+
+select.asic-date{width:70px;}
 </style>
 
 
@@ -88,6 +90,7 @@ echo '<h1>Add User </h1>';
     <?php
     $form = $this->beginWidget('CActiveForm', array(
         'id' => 'userform',
+        'action' => array('user/create','role'=>Yii::app()->request->getParam('role')),
         'htmlOptions' => array("name" => "userform"),
         'enableAjaxValidation' => false,
         'enableClientValidation' => true,
@@ -162,14 +165,16 @@ echo '<h1>Add User </h1>';
                               
                                 <table>  
                                 <tr>
-                        <td><select  onchange="populateDynamicFields()" <?php
-                            if ($this->action->Id == 'create' && isset($_GET['role'])) { //if action create with user roles selected in url
+                        <td>
+                            <select  onchange="populateDynamicFields()" <?php
+                            if ($this->action->Id == 'create' && isset($_GET['role']) && $_GET['role'] != 'avms' ) { //if action create with user roles selected in url
                                 echo "disabled";
                             }
                             ?> id="User_role" name="User[role]">
                                 <option disabled value='' selected>Select Role</option>
                                 <?php
-                                $assignableRowsArray = getAssignableRoles($session['role']); // roles with access rules from getaccess function
+
+                                $assignableRowsArray = getAssignableRoles($session['role'],$model); // roles with access rules from getaccess function
                                 foreach ($assignableRowsArray as $assignableRoles) {
                                     foreach ($assignableRoles as $key => $value) {
                                         ?>
@@ -241,6 +246,8 @@ echo '<h1>Add User </h1>';
                         <span class="required">*</span>
                             <?php echo "<br>" . $form->error($model, 'contact_number'); ?></td>
                     </tr>
+
+                    <?php if(!CHelper::is_accessing_avms_features()){ ?>
                       <tr id="tenantRow" class='hiddenElement'>
                         <td>
                             <select id="User_tenant" name="User[tenant]"  >
@@ -287,6 +294,8 @@ echo '<h1>Add User </h1>';
 							<?php echo "<br>" . $form->error($model, 'tenant_agent'); ?>
                         </td>
                     </tr>
+                    <?php } ?>
+
                     <tr id="companyTr">
                         <td id='companyRow'>
                             <select id="User_company" name="User[company]" <?php
@@ -302,7 +311,11 @@ echo '<h1>Add User </h1>';
                                 } else {
                                     $urlRole = '';
                                 }
-                                if ($this->action->id != 'create' || $session['role'] == Roles::ROLE_ADMIN || $urlRole == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_AGENT_ADMIN || $urlRole == Roles::ROLE_AGENT_ADMIN) {
+                                if ( $this->action->id != 'create' ||
+                                     $session['role'] == Roles::ROLE_ADMIN || $urlRole == Roles::ROLE_ADMIN ||
+                                     $session['role'] == Roles::ROLE_AGENT_ADMIN || $urlRole == Roles::ROLE_AGENT_ADMIN ||
+                                     CHelper::is_accessing_avms_features()
+                                   ) {
                                     foreach ($companyList as $key => $value) {
                                         ?>
                                         <option <?php
@@ -311,7 +324,7 @@ echo '<h1>Add User </h1>';
                                         } elseif ($session['role'] != Roles::ROLE_SUPERADMIN) {
                                             $company = User::model()->getCompany($currentLoggedUserId);
                                         }
-                                        if (isset($company) && $company == $key) {
+                                        if (isset($company) && $company->id == $key) {
                                             echo " selected ";
                                         }
                                         ?> value="<?php echo $key; ?>"><?php echo $value; ?></option>
@@ -341,7 +354,8 @@ echo '<h1>Add User </h1>';
                             <?php echo $form->error($model, 'company'); ?>
                         </td>
                         <td></td></tr>
-                      
+
+                    <?php if(!CHelper::is_accessing_avms_features()) {?>
                     <tr>
                         <td><?php echo $form->textField($model, 'department', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Department')); ?>
                             <?php echo "<br>" . $form->error($model, 'department'); ?>
@@ -356,6 +370,8 @@ echo '<h1>Add User </h1>';
                         <td><?php echo $form->textField($model, 'staff_id', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Staff ID')); ?>
                             <?php echo "<br>" . $form->error($model, 'staff_id'); ?></td>
                     </tr>
+
+                   <?php } ?>
                     <tr>
                         <td class="birthdayDropdown">
                             <input type="hidden" id="dateofBirthBreakdownValueYear" value="<?php echo date("Y", strtotime($model->date_of_birth)); ?>">
@@ -376,8 +392,47 @@ echo '<h1>Add User </h1>';
                         </td>
                         <td class="workstationRow"></td>
                     </tr>
-                   
-                    	
+
+
+
+                    <!-- AVMS User specific form fields --->
+                    <?php if ( CHelper::is_managing_avms_user() || $model->is_avms_user()){ ?>
+                        <tr>
+                            <td>
+                                <?php echo $form->textField($model, 'asic_no', array('size' => 50, 'maxlength' => 9,'placeholder'=>'ASIC No')); ?>
+                                <span class="required">*</span>
+                                <?php echo "<br>" . $form->error($model, 'asic_no'); ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="AsicExpiryDropdown">
+                                <label>ASIC Expiry</label><span class="required">*</span><br />
+
+                                <?php $mon = ['Jan', 'Feb', 'Mar','Apr','May','Jun','Jul', 'Aug','Sept','Oct','Nov', 'Dec']; ?>
+                                <?php echo $form->dropDownList($model,'asic_expiry_month',array_combine($mon, $mon),['class'=>'asic-date']); ?>
+
+
+                                <?php
+                                $days = [];
+                                for($i=1;$i<=31;$i++){$days[$i] = $i;}
+                                ?>
+                                <?php echo $form->dropDownList($model,'asic_expiry_day',$days,['class'=>'asic-date']); ?>
+
+
+                                <?php
+                                $years = [];
+                                $this_year = date('Y');
+                                for($i=$this_year;$i< $this_year+10;$i++){ $years[$i] = $i;}
+                                ?>
+                                <?php echo $form->dropDownList($model,'asic_expiry_year',$years,['class'=>'asic-date']); ?>
+
+
+                                <?php echo "<br>" . $form->error($model, 'asic_expiry'); ?>
+                                <?php echo "<br>" . $form->error($model, 'asic_expiry_day'); ?>
+                            </td>
+                        </tr>
+                    <?php } ?>
+
 
                 </table>
             </td>
@@ -415,8 +470,7 @@ echo '<h1>Add User </h1>';
                    <tr>
                   
                     <td>
-                        <input ng-model="user.passwords" data-ng-class="{
-                                                                                            'ng-invalid':userform['User[repeatpassword]'].$error.match}" placeholder="Password" type="password" id="User_password" value = '<?php echo $model->password; ?>' name="User[password]">	
+                        <input ng-model="user.passwords" data-ng-class="{'ng-invalid':userform['User[repeatpassword]'].$error.match}" placeholder="Password" type="password" id="User_password" value = '<?php echo $model->password; ?>' name="User[password]">
                     <span class="required">*</span>                                                                        		
                                <?php echo "<br>" . $form->error($model, 'password'); ?>
                     </td>
@@ -450,18 +504,22 @@ echo '<h1>Add User </h1>';
                  </table>
                  </td>
                  </tr>
-                   
-                   <tr><td>
-                    
-        <div class="row buttons ">
-            <?php echo CHtml::submitButton($model->isNewRecord ? 'Save' : 'Save', array('id' => 'submitForm', 'class' => 'complete','style'=>'text-align:center;margin-left:162px;')); ?>
-        </div>
-                   </td></tr>
+
+                    <tr>
+                        <td>
+                            <div class="row buttons ">
+                                <?php echo CHtml::submitButton($model->isNewRecord ? 'Save' : 'Save', array('id' => 'submitForm', 'class' => 'complete','style'=>'text-align:center;margin-left:162px;')); ?>
+                            </div>
+                        </td>
+                    </tr>
 
                 </table>
             </td>
             
         </tr>
+
+
+
     </table>
    
 
@@ -492,6 +550,9 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
 
     $(document).ready(function() {
 
+        if(is_accessing_avms_features()){
+            return;
+        }
 
         var sessionRole = $("#currentRole").val(); //session role of currently logged in user
         var userId = $("#userId").val(); //id in url for update action
@@ -515,6 +576,7 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
         document.getElementById('User_tenant_agent').disabled = true;
         document.getElementById('User_company').disabled = true;
         if (actionId == 'update') {
+
             $("#fromYear").val($("#dateofBirthBreakdownValueYear").val());
             $("#fromMonth").val($("#dateofBirthBreakdownValueMonth").val());
             $("#fromDay").val($("#dateofBirthBreakdownValueDay").val());
@@ -711,9 +773,8 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
             url: url,
             data: userform,
             success: function(data) {
-				
-                window.location = 'index.php?r=user/admin';
-            },
+                window.location = 'index.php?r=user/admin&vms=<?php echo ($model->is_avms_user() || CHelper::is_managing_avms_user() )?'avms':'cvms' ?>';
+            }
         });
     }
 
@@ -726,7 +787,7 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
         } else {
             var email = $("#User_email").val();
             var tenant;
-            if ($("#currentRole").val() == 5) { //check if superadmin
+            if ($("#currentRole").val() == 5 && !is_accessing_avms_features()) { //check if superadmin
                 tenant = $("#User_tenant").val();
             } else {
                 tenant = '<?php echo $session['tenant']; ?>';
@@ -790,7 +851,11 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
 
     }
     function populateDynamicFields() {
-		
+
+        if(is_accessing_avms_features()){
+            return;
+        }
+
 		$('#third_option').empty();
         /*if superadmin user company set to empty*/
         if (<?php echo $session['role'] ?> == 5)
@@ -809,6 +874,8 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
         var staffmember = 9;
         var superadmin = 5;
         var agentadmin = 6;
+
+
         //hide required * label if role is staffmember
         if (selectedRole == staffmember) {
 			$('#third_option').append('<td><input type="radio" value="3" class="pass_option" name="User[password_option]" />&nbsp;User does not require a password</td>');
@@ -817,7 +884,7 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
         } else {
             $(".tenantField").show();
         }
-        if (sessionRole == admin)
+        if (sessionRole == admin )
         {
             if (selectedRole == admin)
             {
@@ -838,10 +905,10 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                 getWorkstation();
             }
             else if (selectedRole == staffmember) {
-				
-				
-				
-				
+
+
+
+
                 $('#User_company').find('option[value=<?php echo $session['company']; ?>]').show();
                 $("#User_company").val("<?php echo $session['company']; ?>");
                 document.getElementById('User_workstation').disabled = true;
@@ -893,9 +960,9 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
 
                 }
                 else if (selectedRole == 9) {
-					
-					
-					
+
+
+
                     document.getElementById('User_tenant_agent').disabled = false;
                     $("#tenantAgentRow").show();
                     $("#tenantRow").show();
@@ -964,7 +1031,7 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
         }
 
         /*show or hide add company button*/
-        if ((sessionRole == superadmin && (selectedRole == admin || selectedRole == agentadmin)) || (sessionRole == admin && selectedRole == agentadmin)) {
+       if ((sessionRole == superadmin && (selectedRole == admin || selectedRole == agentadmin || selectedRole == issuing_body_admin )) || (sessionRole == admin && (selectedRole == agentadmin || selectedRole == issuing_body_admin))) {
             $("#addCompanyLink").show();
             document.getElementById("companyRow").style.paddingBottom = "10px";
         }
@@ -1016,6 +1083,13 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
         var agentoperator = 7;
         var superadmin = 5;
 
+        var airport_agent_admin = <?php echo Roles::ROLE_AGENT_AIRPORT_ADMIN; ?>;
+        var airport_agent_operator = <?php echo Roles::ROLE_AGENT_AIRPORT_OPERATOR; ?>;
+        var issuing_body_admin = <?php echo Roles::ROLE_ISSUING_BODY_ADMIN; ?>;
+
+
+
+
         if ($("#User_role").val() != staffmember && $("#User_role").val() != agentadmin && $("#User_role").val() != agentoperator) {
             $.ajax({
                 type: 'POST',
@@ -1033,7 +1107,7 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                 }
             });
         }
-        if ($("#User_role").val() == agentoperator || $("#User_role").val() == staffmember) {
+        if ($("#User_role").val() == agentoperator || $("#User_role").val() == staffmember || $("#User_role").val() == airport_agent_operator ) {
             if ($("#currentRole").val() == superadmin)
             {
                 var sessionRole = '<?php echo $session['role']; ?>';
@@ -1090,12 +1164,34 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
 
     }
 
+    function isValidExpiryDate()
+    {
+        var d = $("#User_asic_expiry_day").val();
+        var m = getMonthFromString( $("#User_asic_expiry_month").val() );
+        var y = $("#User_asic_expiry_year").val();
+
+
+        var dt = new Date(y, m -1, d);
+        return dt.getDate() == d &&
+                dt.getMonth() +1 == m &&
+                dt.getFullYear() == y;
+    }
+
+    function getMonthFromString(mon){
+        return new Date(Date.parse(mon +" 1, 2012")).getMonth()+1
+    }
+
+    function is_accessing_avms_features() {
+        return <?php echo CHelper::is_accessing_avms_features()? "true":"false"; ?>
+    }
+
 
 </script>
 
 <?php
 
-function getAssignableRoles($user_role) {
+function getAssignableRoles($user_role, $model) {
+
     $session = new CHttpSession;
     if (isset($_GET['id'])) { //if update
         $userIdOnUpdate = $_GET['id'];
@@ -1103,15 +1199,81 @@ function getAssignableRoles($user_role) {
         $userIdOnUpdate = '';
     }
 
+    if (CHelper::is_managing_avms_user() || $model->is_avms_user()) {
+        return get_avms_assignable_roles($user_role);
+    } else {
+
+        $assignableRolesArray = array();
+        switch ($user_role) {
+
+            case Roles::ROLE_AGENT_ADMIN: //agentadmin
+                //if session id = id editing ->add role of logged in
+                if ($session['id'] == $userIdOnUpdate) {
+                    $assignableRoles = array(Roles::ROLE_AGENT_ADMIN, Roles::ROLE_AGENT_OPERATOR, Roles::ROLE_STAFFMEMBER
+                    ); //keys
+                } else {
+                    $assignableRoles = array(Roles::ROLE_AGENT_ADMIN, Roles::ROLE_AGENT_OPERATOR, Roles::ROLE_STAFFMEMBER); //keys
+                }
+                foreach ($assignableRoles as $roles) {
+                    if (isset(User::$USER_ROLE_LIST[$roles])) {
+                        $assignableRolesArray[] = array(
+                            $roles => User::$USER_ROLE_LIST[$roles],
+                        );
+                    }
+                }
+                break;
+
+            case Roles::ROLE_SUPERADMIN: //superadmin
+
+                if ($session['id'] == $userIdOnUpdate) {
+                    $assignableRoles = array(Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN, Roles::ROLE_AGENT_ADMIN, Roles::ROLE_AGENT_OPERATOR, Roles::ROLE_OPERATOR, Roles::ROLE_STAFFMEMBER); //keys
+                } else {
+                    $assignableRoles = array(Roles::ROLE_ADMIN, Roles::ROLE_AGENT_ADMIN, Roles::ROLE_AGENT_OPERATOR, Roles::ROLE_OPERATOR, Roles::ROLE_STAFFMEMBER);
+                } //keys
+                foreach ($assignableRoles as $roles) {
+                    if (isset(User::$USER_ROLE_LIST[$roles])) {
+                        $assignableRolesArray[] = array(
+                            $roles => User::$USER_ROLE_LIST[$roles],
+                        );
+                    }
+                }
+                break;
+
+            case Roles::ROLE_ADMIN: //admin
+
+                $assignableRoles = array(Roles::ROLE_ADMIN, Roles::ROLE_AGENT_ADMIN, Roles::ROLE_OPERATOR, Roles::ROLE_STAFFMEMBER); //keys
+
+                foreach ($assignableRoles as $roles) {
+                    if (isset(User::$USER_ROLE_LIST[$roles])) {
+                        $assignableRolesArray[] = array(
+                            $roles => User::$USER_ROLE_LIST[$roles],
+                        );
+                    }
+                }
+                break;
+
+        }
+
+        //echo '<p><pre>';print_r($user_role);echo '</pre></p>';
+
+        return $assignableRolesArray;
+    }
+}
+
+function get_avms_assignable_roles($user_role)
+{
     $assignableRolesArray = array();
-    switch ($user_role) {
-        case Roles::ROLE_AGENT_ADMIN: //agentadmin
-            //if session id = id editing ->add role of logged in
-            if ($session['id'] == $userIdOnUpdate) {
-                $assignableRoles = array(Roles::ROLE_AGENT_ADMIN, Roles::ROLE_AGENT_OPERATOR, Roles::ROLE_STAFFMEMBER); //keys
-            } else {
-                $assignableRoles = array(Roles::ROLE_AGENT_ADMIN, Roles::ROLE_AGENT_OPERATOR, Roles::ROLE_STAFFMEMBER); //keys
-            }
+    switch($user_role) {
+
+        case Roles::ROLE_ISSUING_BODY_ADMIN:
+        case Roles::ROLE_ADMIN:
+
+            $assignableRoles = array(
+                Roles::ROLE_ISSUING_BODY_ADMIN,
+                Roles::ROLE_AGENT_AIRPORT_ADMIN,
+                Roles::ROLE_AIRPORT_OPERATOR,
+                //Roles::ROLE_AGENT_AIRPORT_OPERATOR
+            );
             foreach ($assignableRoles as $roles) {
                 if (isset(User::$USER_ROLE_LIST[$roles])) {
                     $assignableRolesArray[] = array(
@@ -1121,13 +1283,13 @@ function getAssignableRoles($user_role) {
             }
             break;
 
-        case Roles::ROLE_SUPERADMIN: //superadmin
-
-            if ($session['id'] == $userIdOnUpdate) {
-                $assignableRoles = array(Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN, Roles::ROLE_AGENT_ADMIN, Roles::ROLE_AGENT_OPERATOR, Roles::ROLE_OPERATOR, Roles::ROLE_STAFFMEMBER); //keys
-            } else {
-                $assignableRoles = array(Roles::ROLE_ADMIN, Roles::ROLE_AGENT_ADMIN, Roles::ROLE_AGENT_OPERATOR, Roles::ROLE_OPERATOR, Roles::ROLE_STAFFMEMBER);
-            } //keys
+        case Roles::ROLE_SUPERADMIN:
+            $assignableRoles = array(
+                Roles::ROLE_ISSUING_BODY_ADMIN,
+                Roles::ROLE_AGENT_AIRPORT_ADMIN,
+                Roles::ROLE_AIRPORT_OPERATOR,
+                Roles::ROLE_AGENT_AIRPORT_OPERATOR
+            );
             foreach ($assignableRoles as $roles) {
                 if (isset(User::$USER_ROLE_LIST[$roles])) {
                     $assignableRolesArray[] = array(
@@ -1137,8 +1299,12 @@ function getAssignableRoles($user_role) {
             }
             break;
 
-        case Roles::ROLE_ADMIN: //admin
-            $assignableRoles = array(Roles::ROLE_ADMIN, Roles::ROLE_AGENT_ADMIN, Roles::ROLE_OPERATOR, Roles::ROLE_STAFFMEMBER); //keys
+        case Roles::ROLE_AGENT_ADMIN:
+        case Roles::ROLE_AGENT_AIRPORT_ADMIN:
+            $assignableRoles = array(
+                Roles::ROLE_AGENT_AIRPORT_ADMIN,
+                Roles::ROLE_AGENT_AIRPORT_OPERATOR
+            );
 
             foreach ($assignableRoles as $roles) {
                 if (isset(User::$USER_ROLE_LIST[$roles])) {
@@ -1149,8 +1315,10 @@ function getAssignableRoles($user_role) {
             }
             break;
     }
+
     return $assignableRolesArray;
 }
+
 ?>
 <div class="modal hide fade" id="addCompanyModal" style="width:600px;">
     <div class="modal-header">
@@ -1183,7 +1351,7 @@ function getAssignableRoles($user_role) {
     <tr><td colspan="2"></td></tr>
     	<tr><td colspan="2"style="padding-left:55px; padding-top:24px;"><input readonly="readonly" type="text" placeholder="Random Password" value="" id="random_password" /></td></tr>
         
-        <tr><td colspan="2"style="padding-left:10px; font:italic">Note:Please copy and save this password somewhere safe.</td></tr>
+        <tr><td colspan="2"style="padding-left:10px; font:italic">Note: Please copy and save this password somewhere safe.</td></tr>
         <tr><td  style="padding-left: 11px;padding-top: 26px !important; width:50%"> <input onclick="copy_password();"  style="border-radius: 4px; height: 35px; " type="button" value="Use Password" /></td>
         <td style="padding-right:10px;padding-top: 25px;"> <input  onclick="cancel();" style="border-radius: 4px; height: 35px;" type="button" value="Cancel" /></td>
         </tr>

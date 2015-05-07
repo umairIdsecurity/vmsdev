@@ -21,7 +21,14 @@ class Roles extends CActiveRecord
         const ROLE_OPERATOR = 8;
         const ROLE_STAFFMEMBER = 9;
         const ROLE_VISITOR = 10;
-	/**
+
+        const ROLE_ISSUING_BODY_ADMIN = 11;     // Same As Administrator with Access to VIC Issuing Module Functionality
+        const ROLE_AIRPORT_OPERATOR = 12;       // Same Access Rights as Administrator with view of VIC Issuing Module Functionality
+        CONST ROLE_AGENT_AIRPORT_ADMIN = 13;    //Same Access as CVMS Agent with Access to VIC Issuing Module
+        CONST ROLE_AGENT_AIRPORT_OPERATOR = 14; //Same Access to CVMS Agent
+
+
+    /**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
@@ -108,4 +115,118 @@ class Roles extends CActiveRecord
 	{
 		return parent::model($className);
 	}
+
+
+    public static function get_avms_roles()
+    {
+        return array(
+            self::ROLE_ISSUING_BODY_ADMIN,
+            self::ROLE_AIRPORT_OPERATOR,
+            self::ROLE_AGENT_AIRPORT_ADMIN,
+            self::ROLE_AGENT_AIRPORT_OPERATOR
+        );
+    }
+
+    public static function get_cvms_roles()
+    {
+        return array(
+            self::ROLE_SUPERADMIN,
+            self::ROLE_ADMIN,
+            self::ROLE_AGENT_ADMIN,
+            self::ROLE_AGENT_OPERATOR,
+            self::ROLE_OPERATOR,
+            self::ROLE_STAFFMEMBER,
+            self::ROLE_VISITOR,
+        );
+    }
+
+
+    public static function get_admin_allowed_roles($should_filter)
+    {
+        if($should_filter)
+        {
+            if(CHelper::is_avms_users_requested()){
+                return array(
+                    self::ROLE_ISSUING_BODY_ADMIN,
+                    self::ROLE_AGENT_AIRPORT_ADMIN,
+                    self::ROLE_AIRPORT_OPERATOR,
+                    //self::ROLE_AGENT_AIRPORT_OPERATOR
+                );
+            }else{
+                return array(
+                    self::ROLE_ADMIN,
+                    self::ROLE_AGENT_ADMIN,
+                    self::ROLE_AGENT_OPERATOR,
+                    self::ROLE_OPERATOR,
+                    self::ROLE_STAFFMEMBER,
+                    self::ROLE_VISITOR
+                );
+            }
+        }else{
+            return array(
+                self::ROLE_ADMIN,
+                self::ROLE_AGENT_ADMIN,
+                self::ROLE_AGENT_OPERATOR,
+                self::ROLE_OPERATOR,
+                self::ROLE_STAFFMEMBER,
+                self::ROLE_VISITOR,
+
+                self::ROLE_ISSUING_BODY_ADMIN,
+                self::ROLE_AGENT_AIRPORT_ADMIN,
+                self::ROLE_AIRPORT_OPERATOR,
+                //self::ROLE_AGENT_AIRPORT_OPERATOR
+            );
+        }
+    }
+
+    public static function get_agent_admin_allowed_roles($should_filter){
+        if($should_filter)
+        {
+            if(CHelper::is_avms_users_requested()){
+                return array(
+
+                    self::ROLE_AGENT_AIRPORT_ADMIN,
+                    self::ROLE_AGENT_AIRPORT_OPERATOR,
+
+                    self::ROLE_STAFFMEMBER,
+                    self::ROLE_VISITOR
+                );
+            }else{
+                return array(
+                    self::ROLE_AGENT_ADMIN,
+                    self::ROLE_AGENT_OPERATOR
+                );
+            }
+        }else{
+            return array(
+                self::ROLE_AGENT_ADMIN,
+                self::ROLE_AGENT_OPERATOR,
+                self::ROLE_STAFFMEMBER,
+                self::ROLE_VISITOR,
+
+                self::ROLE_AGENT_AIRPORT_ADMIN,
+                self::ROLE_AGENT_AIRPORT_OPERATOR
+            );
+        }
+    }
+
+    /*public static function get_agent_operator_allowed_roles($should_filter){
+        if($should_filter){
+
+        } else {
+
+        }
+    }
+
+    public static function get_operator_allowed_roles($should_filter){
+        if($should_filter){
+
+        } else {
+
+        }
+    }*/
+
+
+
+
 }

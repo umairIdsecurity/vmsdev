@@ -55,12 +55,11 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                 </ul>
             </li><!-- menu for Workstations -->
 
-            <!-- menu for Users -->
-           <li class='has-sub'><a class='manageusers' href='<?php echo Yii::app()->createUrl('user/admin'); ?>'><span>Users</span></a>
+            <!-- menu for CVMS Users -->
+           <li class='has-sub'><a class='manageusers' href='<?php echo Yii::app()->createUrl('user/admin',array('vms'=>'cvms')); ?>'><span>Users (CVMS Users)</span></a>
 
-                
                 <ul <?php
-                if ($this->id == 'user') {
+                if ($this->id == 'user' && !CHelper::is_accessing_avms_features()) {
                     echo "style='display:block ;'";
                 }
                 ?>>
@@ -84,6 +83,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                             <?php
                             break;
                         case Roles::ROLE_ADMIN:
+                        case Roles::ROLE_ISSUING_BODY_ADMIN:
                             ?>
                             <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create/&role=1'); ?>'><span>Add Administrator</span></a></li>
                             <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create/&role=6'); ?>'><span>Add Agent Administrator</span></a></li>
@@ -99,6 +99,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                             break;
 
                         case Roles::ROLE_AGENT_ADMIN:
+                        case Roles::ROLE_AGENT_AIRPORT_ADMIN:
                             ?>
                             <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create/&role=6'); ?>'><span>Add Agent Administrator</span></a></li>
                             <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create/&role=7'); ?>'><span>Add Agent Operator</span></a></li>
@@ -121,7 +122,62 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
 
 
                 </ul>
-            </li><!-- menu for Users -->
+            </li><!-- menu for CVMS Users -->
+
+            <!-- menu for AVMS Users -->
+            <li class='has-sub'><a class='manageusers' href='<?php echo Yii::app()->createUrl('user/admin',array('vms'=>'avms')); ?>'><span>Users (AVMS Users)</span></a>
+
+
+                <ul <?php
+                if ($this->id == 'user' && CHelper::is_accessing_avms_features()) {
+                    echo "style='display:block ;'";
+                }
+                ?>>
+                    <li><a href='<?php echo Yii::app()->createUrl('user/create',array('role'=>'avms')); ?>' class="has-sub-sub"><div class="customIcon-adminmenu">+</div><span>Add User</span></a></li>
+
+                    <?php
+                    switch ($session['role']) {
+                        case Roles::ROLE_SUPERADMIN:
+                            ?>
+                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create', array('role'=> Roles::ROLE_ISSUING_BODY_ADMIN) ); ?>'><span>Add Issuing Body Admin</span></a></li>
+                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create', array('role'=> Roles::ROLE_AIRPORT_OPERATOR) ); ?>'><span>Add Airport Operator</span></a></li>
+                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create', array('role'=> Roles::ROLE_AGENT_AIRPORT_ADMIN) ); ?>'><span>Add Agent Airport Admin</span></a></li>
+                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create', array('role'=> Roles::ROLE_AGENT_AIRPORT_OPERATOR) ); ?>'><span>Add Agent Airport Operator</span></a></li>
+
+                            <?php
+                            break;
+
+                        case Roles::ROLE_ADMIN:
+                        case Roles::ROLE_ISSUING_BODY_ADMIN:
+                            ?>
+                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create', array('role'=> Roles::ROLE_ISSUING_BODY_ADMIN) ); ?>'><span>Add Issuing Body Admin</span></a></li>
+                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create', array('role'=> Roles::ROLE_AIRPORT_OPERATOR) ); ?>'><span>Add Airport Operator</span></a></li>
+                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create', array('role'=> Roles::ROLE_AGENT_AIRPORT_ADMIN)); ?>'><span>Add Agent Airport Admin</span></a></li>
+
+                            <?php
+                            break;
+
+                        case Roles::ROLE_AGENT_ADMIN:
+                        case Roles::ROLE_AGENT_AIRPORT_ADMIN:
+                            ?>
+                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create', array('role'=> Roles::ROLE_AGENT_AIRPORT_ADMIN)); ?>'><span>Add Agent Airport Admin</span></a></li>
+                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create', array('role'=> Roles::ROLE_AGENT_AIRPORT_OPERATOR)); ?>'><span>Add Agent Airport Operator</span></a></li>
+
+                            <?php
+                            break;
+                        default:
+                            echo "";
+                            break;
+                    };
+                    ?>
+                    <li >
+
+                        <a href='<?php echo Yii::app()->createUrl('user/systemaccessrules'); ?>'><span>Set Access Rules</span></a></li>
+
+
+                </ul>
+            </li><!-- menu for AVMS Users -->
+
 
             <?php if ($session['role'] == Roles::ROLE_SUPERADMIN) {
                 ?>
@@ -260,7 +316,6 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     ?>>
 
                         <li><a href='<?php echo Yii::app()->createUrl('company/create'); ?>' class="addSubMenu ajaxLinkLi"><span>Add Company</span></a></li>
-                        <li><a href='<?php echo Yii::app()->createUrl('CompanyLafPreferences/customisation'); ?>' class="ajaxLinkLi"><span>Customise Display</span></a></li>
                     </ul>
                 </li>
             <?php
@@ -293,7 +348,6 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     ?>>
 
                         <li><a href='<?php echo Yii::app()->createUrl('company/create'); ?>' class="addSubMenu ajaxLinkLi"><span>Add Company</span></a></li>
-                        <li><a href='<?php echo Yii::app()->createUrl('CompanyLafPreferences/customisation'); ?>' class="ajaxLinkLi"><span>Customise Display</span></a></li>
                     </ul>
                 </li>
 

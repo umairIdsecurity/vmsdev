@@ -46,7 +46,7 @@ if ($this->action->id == 'update') {
         echo $form->errorSummary($model);
     }
     ?>
-		<input type="hidden" id="user_role" name="user_role" value="<?php echo $session['role']  ?>">
+    <input type="hidden" id="user_role" name="user_role" value="<?php echo $session['role']  ?>">
     <?php if ($this->action->id != 'update') {
         ?>
         <input type="hidden" id="Company_tenant" name="Company[tenant]" value="<?php echo $tenant; ?>">
@@ -57,15 +57,15 @@ if ($this->action->id == 'update') {
         <input type="hidden" id="Company_tenant_" name="Company[tenant_]" value="<?php echo $model['tenant']; ?>">
         <input type="hidden" id="Company_tenant_agent_" name="Company[tenant_agent_]" value="<?php echo $model['tenant_agent']; ?>">
 
-        <?php
+    <?php
     }
     ?>
     <table>
         <tr>
-            <td style="width:160px;"></td>
+            <td style="width:160px;"><?php echo $form->labelEx($model, 'name'); ?></td>
             <td style="width:240px;">
                 <?php
-                echo $form->textField($model, 'name', array('size' => 60, 'maxlength' => 150 , 'placeholder'=>'Company Name'));
+                echo $form->textField($model, 'name', array('size' => 60, 'maxlength' => 150));
                 if (isset($_GET['viewFrom'])) {
                     echo "<br>" . $form->error($model, 'name');
                 }
@@ -78,42 +78,78 @@ if ($this->action->id == 'update') {
                 ?></td>
 
         </tr>
-
-		
-		<!--WangFu Modified-->
-		<?php if ($session['role'] != Roles::ROLE_ADMIN) {?>
         <tr>
-            <td style="width:160px;"></td>
-            <td style="width:240px;">
-                <?php
-                echo $form->textField($model, 'code', array('size' => 3, 'maxlength' => 3 , 'placeholder'=>'Company Code'));
-                if (isset($_GET['viewFrom'])) {
-                    echo "<br>" . $form->error($model, 'code');
-                }
-                ?></td>
-            <td><?php
-                if (!isset($_GET['viewFrom'])) {
-                    echo "<br>" . $form->error($model, 'code');
-                }
-                ?></td>
-
+            <td><?php echo $form->labelEx($model, 'trading_name'); ?></td>
+            <td><?php echo $form->textField($model, 'trading_name', array('size' => 60, 'maxlength' => 150)); ?></td>
+            <td><?php echo $form->error($model, 'trading_name'); ?></td>
         </tr>
-		<?php } ?>
-		
+
+        <!--WangFu Modified-->
+        <?php if ($session['role'] != Roles::ROLE_ADMIN) {?>
+            <tr>
+                <td style="width:160px;"><?php echo $form->labelEx($model, 'code'); ?></td>
+                <td style="width:240px;">
+                    <?php
+                    echo $form->textField($model, 'code', array('size' => 3, 'maxlength' => 3));
+                    if (isset($_GET['viewFrom'])) {
+                        echo "<br>" . $form->error($model, 'code');
+                    }
+                    ?></td>
+                <td><?php
+                    if (!isset($_GET['viewFrom'])) {
+                        echo "<br>" . $form->error($model, 'code');
+                    }
+                    ?></td>
+
+            </tr>
+        <?php } ?>
+
+        <!--WangFu Modified-->
+        <?php if ($model->isTenant()) {?>
+            <tr>
+                <td><?php echo $form->labelEx($model, 'Upload Company Logo'); ?></td>
+                <td id="uploadRow" >
+                    <input type="hidden" id="Company_logo" name="Company[logo]"
+                        <?php
+                        if ($this->action->id == 'update') {
+                            echo "disabled";
+                        }
+                        ?> value="<?php echo $model['logo']; ?>">
+                    <div class="photoDiv companyPhotoDiv" <?php
+                    if ($model['logo'] == NULL) {
+                        echo "style='display:none !important;'";
+                    }
+                    ?>>
+                        <?php if ($dataId != '') { ?><img id='companyLogo' src="<?php echo Yii::app()->request->baseUrl . "/" . $model->getCompanyLogo($dataId); ?>"/>
+                        <?php } else { ?>
+                            <img id='companyLogo' src="<?php
+                            if (isset($_POST['Company']['logo'])) {
+                                echo Yii::app()->request->baseUrl . "/" . $model->getPhotoRelativePath($_POST['Company']['logo']);
+                            }
+                            ?>
+
+                             " />
+                        <?php } ?>
+                    </div>
+                    <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
+                </td>
+            </tr>
+        <?php } ?>
+
         <tr>
-            <td></td>
-            <td><?php echo $form->textField($model, 'contact', array('size' => 60, 'maxlength' => 100 , 'placeholder'=> 'First Name')); ?></td>
+            <td><?php echo $form->labelEx($model, 'contact'); ?></td>
+            <td><?php echo $form->textField($model, 'contact', array('size' => 60, 'maxlength' => 100)); ?></td>
             <td><?php echo $form->error($model, 'contact'); ?></td>
         </tr>
         <tr>
-            <td></td>
-            <td><?php echo $form->textField($model, 'billing_address', array('size' => 60, 'maxlength' => 150 , 'placeholder'=> 'Last Name')); ?></td>
+            <td><?php echo $form->labelEx($model, 'billing_address'); ?></td>
+            <td><?php echo $form->textField($model, 'billing_address', array('size' => 60, 'maxlength' => 150)); ?></td>
             <td><?php echo $form->error($model, 'billing_address'); ?></td>
         </tr>
         <tr>
-            <td></td>
+            <td><?php echo $form->labelEx($model, 'email_address'); ?></td>
             <td><?php
-                echo $form->textField($model, 'email_address', array('size' => 50, 'maxlength' => 50 , 'placeholder'=> 'Email Address'));
+                echo $form->textField($model, 'email_address', array('size' => 50, 'maxlength' => 50));
                 if (isset($_GET['viewFrom'])) {
                     echo "<br>" . $form->error($model, 'email_address',array('style'=>'text-transform:none;'));
                 }
@@ -126,9 +162,9 @@ if ($this->action->id == 'update') {
                 ?></td>
         </tr>
         <tr>
-            <td></td>
+            <td><?php echo $form->labelEx($model, 'office_number'); ?></td>
             <td><?php
-                echo $form->textField($model, 'office_number', array('placeholder'=> 'Contact Number'));
+                echo $form->textField($model, 'office_number');
                 if (isset($_GET['viewFrom'])) {
                     echo "<br>" . $form->error($model, 'office_number');
                 }
@@ -140,9 +176,9 @@ if ($this->action->id == 'update') {
                 ?></td>
         </tr>
         <tr>
-            <td></td>
+            <td><?php echo $form->labelEx($model, 'mobile_number'); ?></td>
             <td><?php
-                echo $form->textField($model, 'mobile_number' , array('placeholder'=>'Mobile nUmber'));
+                echo $form->textField($model, 'mobile_number');
                 if (isset($_GET['viewFrom'])) {
                     echo "<br>" . $form->error($model, 'mobile_number');
                 }
@@ -153,20 +189,51 @@ if ($this->action->id == 'update') {
                 }
                 ?></td>
         </tr>
-
+        <tr>
+            <td><?php echo $form->labelEx($model, 'website'); ?></td>
+            <td><?php
+                echo $form->textField($model, 'website', array('size' => 50, 'maxlength' => 50));
+                if (isset($_GET['viewFrom'])) {
+                    echo $form->error($model, 'website');
+                    ?>
+                    <span class="errorMessage" id="websiteErrorMessage" style="display:none;">Website is not a valid URL.</span>
+                <?php
+                }
+                ?></td>
+            <td><?php
+                if (!isset($_GET['viewFrom'])) {
+                    echo $form->error($model, 'website');
+                    ?>
+                    <span class="errorMessage" id="websiteErrorMessage" style="display:none;">Website is not a valid URL.</span>
+                <?php
+                }
+                ?></td>
+        </tr>
 
     </table>
 
 
     <div class="row buttons " style="<?php if (isset($_GET['viewFrom'])) { ?>
-             margin-left:180px;
-             <?php
-         } else {
-             echo "text-align:right;";
-         }
-         ?>">
-             <?php echo CHtml::submitButton($model->isNewRecord ? 'Save' : 'Save', array('id' => 'createBtn', 'style' => 'height:30px', 'class' => 'complete')); ?>
-
+        margin-left:400px;
+    <?php
+    } else {
+        echo "text-align:right;";
+    }
+    ?>">
+        <?php echo CHtml::submitButton($model->isNewRecord ? 'Add' : 'Save', array('id' => 'createBtn', 'style' => 'height:30px;', 'class' => 'complete')); ?>
+        <?php if (isset($_GET['viewFrom'])) { ?>
+            <input class="neutral yiiBtn" type='button' value='Cancel' onclick='closeParent()' style="height:30px;"></input>
+        <?php
+        } else {
+        if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+            ?>
+            <button class="yiiBtn" id="modalBtn" style="padding:1.5px 6px;margin-top:-4.1px;height:30.1px;" data-target="#viewLicense" data-toggle="modal">View License Details</button>
+        <?php } else { ?>
+        <button class="yiiBtn actionForward" style="padding:2px 6px;margin-top:-4.1px;height:30.1px;" type='button' onclick="gotoLicensePage()">License Details</bitton>
+            <?php
+            }
+            }
+            ?>
     </div>
 
     <?php $this->endWidget(); ?>
@@ -179,7 +246,7 @@ if (isset($_GET['viewFrom'])) {
 } else {
     echo "0";
 }
-?>"/> 
+?>"/>
 <script>
 
     $(document).ready(function() {
@@ -255,7 +322,7 @@ if (isset($_GET['viewFrom'])) {
     <div id="modalBody" style="padding:20px;">
         <?php
         echo LicenseDetails::model()->getLicenseDetails();
-        ?> 
+        ?>
     </div>
 
 </div>

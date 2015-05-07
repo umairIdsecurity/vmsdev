@@ -31,3 +31,4 @@ composer.phar
 company_css/**
 .DS_Store
 cache.properties
+/nbproject

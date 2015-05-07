@@ -389,7 +389,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
             </li><!-- menu for Reports -->
               <!-- menu for Helpdesk -->
             <li class='has-sub'>
-                <a class='managevisitorrecords' href='<?php echo Yii::app()->createUrl('helpdesk/admin'); ?>'><span>Help Desk</span></a>
+                <a class='managevisitorrecords' href='<?php echo Yii::app()->createUrl('helpDesk/admin'); ?>'><span>Help Desk</span></a>
               <ul>
                  <li><a href='<?php echo Yii::app()->createUrl('helpDeskGroup/admin'); ?>' ><span>Help Desk Group</span></a></li>
                  <li><a href='<?php echo Yii::app()->createUrl('helpDeskGroup/create'); ?>'><span>Add Help Desk Group</span></a></li>

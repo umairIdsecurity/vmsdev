@@ -1,6 +1,6 @@
 <?php
 
-class m150507_070456_helpdesktables extends CDbMigration
+class m150507_070456_helpdesktable extends CDbMigration
 {
 	
 	public function safeUp()

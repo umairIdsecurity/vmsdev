@@ -345,14 +345,15 @@ class User extends VmsActiveRecord {
         }
 
 
+		// not to make already complex query, more complex, just using a sub query
+		//  get user id of all the users who belong to specified list..
+		// and add IN clause to main search query...
+		
         $is_avms_users_requested = CHelper::is_avms_users_requested();
         $is_cvms_users_requested = CHelper::is_cvms_users_requested();
-
+        $users = [];
+        
         if ($is_avms_users_requested || $is_avms_users_requested) {
-            // not to make already complex query, more complex, just using a sub query
-            //  get user id of all the users who belong to specified list..
-            // and add IN clause to main search query...
-            $users = [];
             if ($is_avms_users_requested) {
                 $users = User::model()->avms_user()->findAll();
             } else {
@@ -364,6 +365,7 @@ class User extends VmsActiveRecord {
             $user_ids = array_values(CHtml::listData($users, 'id', 'id'));
             $criteria->addCondition('t.id in (' . implode(', ', $user_ids) . ')');
         }
+
 
 
         return new CActiveDataProvider($this, array(

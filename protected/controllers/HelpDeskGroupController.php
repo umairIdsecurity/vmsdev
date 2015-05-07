@@ -42,13 +42,6 @@ class HelpDeskGroupController extends Controller {
      */
     public function actionCreate() {
 		
-		$table = Yii::app()->db->schema->getTable('helpdesk_group');
-        if(!isset($table)){
-
-           echo "migration not executed ";
-          exit();
-        }
-		
 		$session = new CHttpSession;
         $model = new HelpDeskGroup;
         if(isset($_POST['HelpDeskGroup']))

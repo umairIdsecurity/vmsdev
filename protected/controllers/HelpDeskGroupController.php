@@ -41,6 +41,26 @@ class HelpDeskGroupController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate() {
+		
+		$table = Yii::app()->db->schema->getTable('helpdesk_group');
+        if(!isset($table)){
+
+           echo "not set ";
+		   exit();
+           /* $this->execute("
+
+                   CREATE TABLE IF NOT EXISTS `helpdesk_group` (
+                            `id` bigint(20) NOT NULL AUTO_INCREMENT,
+                            `name` varchar(255) NOT NULL,
+                            `order_by` int(6) DEFAULT NULL,
+							`created_by` bigint(20) DEFAULT NULL,
+							`is_deleted` bigint(1) DEFAULT 0,
+                            PRIMARY KEY (`id`)                             )
+            ");
+*/
+        }
+		echo "set";
+		exit();
 		$session = new CHttpSession;
         $model = new HelpDeskGroup;
         if(isset($_POST['HelpDeskGroup']))

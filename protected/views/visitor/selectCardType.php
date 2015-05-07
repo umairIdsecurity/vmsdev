@@ -19,7 +19,9 @@ $cardTypeWorkstationModel = WorkstationCardType::model()->findAllByAttributes(
             ?>
             <td>
                 <label for="sameday" id="labelforsameday">
-                    <img src="<?php echo Yii::app()->controller->assetsBase . '/' . $cardTypeModel->card_background_image_path; ?>" />
+                    <?php
+                    echo CHtml::image( Yii::app()->controller->assetsBase . "/". $cardTypeModel->card_background_image_path );
+                    ?>
                 </label>
             </td>
             <?php

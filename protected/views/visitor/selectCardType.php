@@ -35,7 +35,7 @@ $cardTypeWorkstationModel = WorkstationCardType::model()->findAllByAttributes(
 
             ?>
             <td style="text-align:center;">
-                <input type="radio" value="" name="selectCardType" id="<?php echo $cardType->card_type ?>" />
+                <input type="radio" value="<?php echo $cardType->card_type ?>" name="selectCardType" />
             </td>
             <?php
             }
@@ -53,11 +53,26 @@ $cardTypeWorkstationModel = WorkstationCardType::model()->findAllByAttributes(
 <input type="text" style="display:none;" id="curdateLogVisit" value="<?php echo date('d-m-Y'); ?>"/>
 <script>
     $(document).ready(function() {
-        
+        var SAMEDAY_TYPE = <?php echo CardType::SAME_DAY_VISITOR ?>;
+        var MULTIDAY_TYPE = <?php echo CardType::MULTI_DAY_VISITOR ?>;
+
         $("#clicktabA").click(function(e) {
             e.preventDefault;
-            var card_type_value;
-            if (document.getElementById('sameday').checked) {
+            var card_type_value = $("#selectCardDiv input[name=selectCardType]:checked").val();
+
+            if (card_type_value == SAMEDAY_TYPE ) {
+                $("#proposedDateOut").val($("#curdateLogVisit").val());
+                $("#Visit_date_out").val($("#curdateLogVisit").val());
+                $("#dateoutDiv").hide();
+                $(".ui-datepicker-trigger").hide();
+            } else if (card_type_value == MULTIDAY_TYPE ) {
+                $("#proposedDateOut").val("");
+                $("#Visit_date_out").val("");
+                $("#dateoutDiv").show();
+                $(".ui-datepicker-trigger").show();
+            }
+
+            /*if (document.getElementById('sameday').checked) {
                 card_type_value = document.getElementById('sameday').value;
                 $("#proposedDateOut").val($("#curdateLogVisit").val());
                 $("#Visit_date_out").val($("#curdateLogVisit").val());
@@ -70,10 +85,11 @@ $cardTypeWorkstationModel = WorkstationCardType::model()->findAllByAttributes(
                  $("#Visit_date_out").val("");
                   $("#dateoutDiv").show();
                  $(".ui-datepicker-trigger").show();
-            }
+            }*/
             $("#cardtype").val(card_type_value);
             $("#Visit_card_type").val(card_type_value);
             $("#dateoutDiv").val('2014-12-11');
+
         });
 
     });

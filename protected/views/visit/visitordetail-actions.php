@@ -12,7 +12,7 @@ $session = new CHttpSession;
         } else {
             echo "display:none;";
         }
-        ?>"><span style="padding: 2px 30px;color:#637280 !important; font-weight:bold" class="close-visit">Close Visit</span>
+        ?>"><span class="close-visit">Close Visit</span>
             <ul>
                 <li>
                     <table id="actionsVisitDetails">
@@ -130,7 +130,7 @@ $session = new CHttpSession;
             </li>
 -->
 
-            <li class='has-sub' id="activateLi"><span style="padding: 2px 30px;color:#637280 !important; font-weight:bold" class="log-current">Log Visit</span>
+            <li class='has-sub' id="activateLi"><span class="log-current">Log Visit</span>
                 <ul>
                     <li>
                         <?php

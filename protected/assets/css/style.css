@@ -1026,9 +1026,10 @@ dt.tabs dt{
 
 .log-current {
     background:url('../images/key_icon.png') 0 0 no-repeat;
-    background-position: 0px -7px;
-    padding: 0px 30px;
     display: block;
+    padding: 4px 30px;
+    color:#637280 !important;
+    font-weight: bold;
     //  height: 15px;
     text-decoration: none;
     background-size:20px 24px;
@@ -1180,6 +1181,8 @@ dt.tabs dt{
     background-size: contain;
     background-position: 3px 0px;
     padding: 3px 0 2px 30px;
+    color:#637280 !important; 
+    font-weight:bold
     height:15px;
     display: block;
     text-decoration: none;

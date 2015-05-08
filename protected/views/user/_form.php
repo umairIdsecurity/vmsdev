@@ -324,7 +324,7 @@ echo '<h1>Add User </h1>';
                                         } elseif ($session['role'] != Roles::ROLE_SUPERADMIN) {
                                             $company = User::model()->getCompany($currentLoggedUserId);
                                         }
-                                        if (isset($company) && $company->id == $key) {
+                                        if (isset($company) && isset($company->id) && $company->id == $key) {
                                             echo " selected ";
                                         }
                                         ?> value="<?php echo $key; ?>"><?php echo $value; ?></option>

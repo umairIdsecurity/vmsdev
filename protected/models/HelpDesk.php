@@ -149,7 +149,7 @@ class HelpDesk extends CActiveRecord {
     public function beforeFind() {
         $criteria = new CDbCriteria;
         $criteria->condition = "t.is_deleted = 0";
-        if (Yii::app()->user->role != Roles::ROLE_SUPERADMIN) {
+        if (Yii::app()->user->role != Roles::ROLE_SUPERADMIN && isset(Yii::app()->user->helpdesk_group)) {
             $criteria->condition = "t.helpdesk_group ='" . Yii::app()->user->helpdesk_group . "' and t.is_deleted = 0";
         }
         $this->dbCriteria->mergeWith($criteria);

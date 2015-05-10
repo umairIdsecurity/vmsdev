@@ -12,6 +12,66 @@
 <target name="build"
           depends="check-code"
           description=""/>
+<<<<<<< Local Changes
+<<<<<<< Local Changes
+<<<<<<< Local Changes
+<<<<<<< Local Changes
+<<<<<<< Local Changes
+<<<<<<< Local Changes
+<<<<<<< Local Changes
+<<<<<<< Local Changes
+<<<<<<< Local Changes
+<<<<<<< Local Changes
+<<<<<<< Local Changes
+<<<<<<< Local Changes
+<<<<<<< Local Changes
+<<<<<<< Local Changes
+<<<<<<< Local Changes
+<<<<<<< Local Changes
+<<<<<<< Local Changes
+<<<<<<< Local Changes
+<<<<<<< Local Changes
+		  	
+ <target name="build-parallel"
+=======
+
+<target name="check-code"
+        depends="prepare,lint,phpcs-ci"
+        description="Run coding standards checks" />
+
+<target name="ui-tests"
+        depends="phpunit"
+        description="Run selenium tests" />
+
+<target name="build-parallel"
+>>>>>>> External Changes
+=======
+
+<target name="check-code"
+        depends="prepare,lint,phpcs-ci"
+        description="Run coding standards checks" />
+
+<target name="ui-tests"
+        depends="phpunit"
+        description="Run selenium tests" />
+
+<target name="build-parallel"
+>>>>>>> External Changes
+=======
+
+<target name="check-code"
+        depends="prepare,lint,phpcs-ci"
+        description="Run coding standards checks" />
+
+<target name="ui-tests"
+        depends="phpunit"
+        description="Run selenium tests" />
+
+
+    
+<target name="build-parallel"
+>>>>>>> External Changes
+=======
 
 <target name="check-code"
         depends="prepare,lint,phpcs-ci"
@@ -24,6 +84,217 @@
 
 
 <target name="build-parallel"
+>>>>>>> External Changes
+=======
+
+<target name="check-code"
+        depends="prepare,lint,phpcs-ci"
+        description="Run coding standards checks" />
+
+<target name="ui-tests"
+        depends="phpunit"
+        description="Run selenium tests" />
+
+
+
+<target name="build-parallel"
+>>>>>>> External Changes
+=======
+
+<target name="check-code"
+        depends="prepare,lint,phpcs-ci"
+        description="Run coding standards checks" />
+
+<target name="ui-tests"
+        depends="phpunit"
+        description="Run selenium tests" />
+
+
+
+<target name="build-parallel"
+>>>>>>> External Changes
+=======
+
+<target name="check-code"
+        depends="prepare,lint,phpcs-ci"
+        description="Run coding standards checks" />
+
+<target name="ui-tests"
+        depends="phpunit"
+        description="Run selenium tests" />
+
+
+
+<target name="build-parallel"
+>>>>>>> External Changes
+=======
+
+<target name="check-code"
+        depends="prepare,lint,phpcs-ci"
+        description="Run coding standards checks" />
+
+<target name="ui-tests"
+        depends="phpunit"
+        description="Run selenium tests" />
+
+
+
+<target name="build-parallel"
+>>>>>>> External Changes
+=======
+
+<target name="check-code"
+        depends="prepare,lint,phpcs-ci"
+        description="Run coding standards checks" />
+
+<target name="ui-tests"
+        depends="phpunit"
+        description="Run selenium tests" />
+
+
+
+<target name="build-parallel"
+>>>>>>> External Changes
+=======
+
+<target name="check-code"
+        depends="prepare,lint,phpcs-ci"
+        description="Run coding standards checks" />
+
+<target name="ui-tests"
+        depends="phpunit"
+        description="Run selenium tests" />
+
+
+
+<target name="build-parallel"
+>>>>>>> External Changes
+=======
+
+<target name="check-code"
+        depends="prepare,lint,phpcs-ci"
+        description="Run coding standards checks" />
+
+<target name="ui-tests"
+        depends="phpunit"
+        description="Run selenium tests" />
+
+
+
+<target name="build-parallel"
+>>>>>>> External Changes
+=======
+
+<target name="check-code"
+        depends="prepare,lint,phpcs-ci"
+        description="Run coding standards checks" />
+
+<target name="ui-tests"
+        depends="phpunit"
+        description="Run selenium tests" />
+
+
+
+<target name="build-parallel"
+>>>>>>> External Changes
+=======
+
+<target name="check-code"
+        depends="prepare,lint,phpcs-ci"
+        description="Run coding standards checks" />
+
+<target name="ui-tests"
+        depends="phpunit"
+        description="Run selenium tests" />
+
+
+
+<target name="build-parallel"
+>>>>>>> External Changes
+=======
+
+<target name="check-code"
+        depends="prepare,lint,phpcs-ci"
+        description="Run coding standards checks" />
+
+<target name="ui-tests"
+        depends="phpunit"
+        description="Run selenium tests" />
+
+
+
+<target name="build-parallel"
+>>>>>>> External Changes
+=======
+
+<target name="check-code"
+        depends="prepare,lint,phpcs-ci"
+        description="Run coding standards checks" />
+
+<target name="ui-tests"
+        depends="phpunit"
+        description="Run selenium tests" />
+
+
+
+<target name="build-parallel"
+>>>>>>> External Changes
+=======
+
+<target name="check-code"
+        depends="prepare,lint,phpcs-ci"
+        description="Run coding standards checks" />
+
+<target name="ui-tests"
+        depends="phpunit"
+        description="Run selenium tests" />
+
+
+
+<target name="build-parallel"
+>>>>>>> External Changes
+=======
+
+<target name="check-code"
+        depends="prepare,lint,phpcs-ci"
+        description="Run coding standards checks" />
+
+<target name="ui-tests"
+        depends="phpunit"
+        description="Run selenium tests" />
+
+
+
+<target name="build-parallel"
+>>>>>>> External Changes
+=======
+
+<target name="check-code"
+        depends="prepare,lint,phpcs-ci"
+        description="Run coding standards checks" />
+
+<target name="ui-tests"
+        depends="phpunit"
+        description="Run selenium tests" />
+
+
+
+<target name="build-parallel"
+>>>>>>> External Changes
+=======
+
+<target name="check-code"
+        depends="prepare,lint,phpcs-ci"
+        description="Run coding standards checks" />
+
+<target name="ui-tests"
+        depends="phpunit"
+        description="Run selenium tests" />
+
+
+
+<target name="build-parallel"
+>>>>>>> External Changes
          depends="prepare,lint,tools-parallel,phpunit,phpdox"
          description=""/>
 
@@ -164,7 +435,7 @@
    <arg path="${basedir}/protected" />
    <arg path="${basedir}/Selenium Test Files" />
   </exec>
-
+  <concat dest=""
   <property name="phpcs.done" value="true"/>
  </target>
 
@@ -173,19 +444,148 @@
          depends="prepare"
          description="Find coding standard violations using PHP_CodeSniffer and log result in XML format. Intended for usage within a continuous integration environment.">
   <exec executable="${toolsdir}phpcs" output="/dev/null" taskname="phpcs">
+<<<<<<< Local Changes
+<<<<<<< Local Changes
+<<<<<<< Local Changes
+<<<<<<< Local Changes
+<<<<<<< Local Changes
+<<<<<<< Local Changes
+<<<<<<< Local Changes
+<<<<<<< Local Changes
+<<<<<<< Local Changes
+<<<<<<< Local Changes
+<<<<<<< Local Changes
+<<<<<<< Local Changes
+<<<<<<< Local Changes
+<<<<<<< Local Changes
+   <arg value="--report=checkstyle" />
+<<<<<<< Local Changes
+   <arg value="--report-file=${basedir}/build/logs/checkstyle-results.xml" />
+=======
+   <arg value="--report=full" />
+   <arg value="--report-file=${basedir}/build/logs/checkstyle-results.xml" />
+>>>>>>> External Changes
+=======
    <arg value="--report=xml" />
    <arg value="--report-file=${basedir}/build/logs/checkstyle-results.xml" />
+>>>>>>> External Changes
+=======
+   <arg value="--report-file=${basedir}/build/logs/checkstyle-results.xml" />
+>>>>>>> External Changes
+=======
+   <arg value="--report=xml" />
+   <arg value="--report-file=${basedir}/build/logs/checkstyle-results.xml" />
+>>>>>>> External Changes
+=======
+   <arg value="--report=xml" />
+   <arg value="--report-file=${basedir}/build/logs/checkstyle-results.xml" />
+>>>>>>> External Changes
+=======
+   <arg value="--report=xml" />
+   <arg value="--report-file=${basedir}/build/logs/checkstyle-results.xml" />
+>>>>>>> External Changes
+=======
+   <arg value="--report=xml" />
+   <arg value="--report-file=${basedir}/build/logs/checkstyle-results.xml" />
+>>>>>>> External Changes
+=======
+   <arg value="--report=xml" />
+   <arg value="--report-file=${basedir}/build/logs/checkstyle-results.xml" />
+>>>>>>> External Changes
+=======
+   <arg value="--report=xml" />
+   <arg value="--report-file=${basedir}/build/logs/checkstyle-results.xml" />
+>>>>>>> External Changes
+=======
+   <arg value="--report=xml" />
+   <arg value="--report-file=${basedir}/build/logs/checkstyle-results.xml" />
+>>>>>>> External Changes
+=======
+   <arg value="--report=xml" />
+   <arg value="--report-file=${basedir}/build/logs/checkstyle-results.xml" />
+>>>>>>> External Changes
+=======
+   <arg value="--report=xml" />
+   <arg value="--report-file=${basedir}/build/logs/checkstyle-results.xml" />
+>>>>>>> External Changes
+=======
+   <arg value="--report=xml" />
+   <arg value="--report-file=${basedir}/build/logs/checkstyle-results.xml" />
+>>>>>>> External Changes
+=======
+   <arg value="--report=xml" />
+   <arg value="--report-file=${basedir}/build/logs/checkstyle-results.xml" />
+>>>>>>> External Changes
+=======
+   <arg value="--report=xml" />
+   <arg value="--report-file=${basedir}/build/logs/checkstyle-results.xml" />
+>>>>>>> External Changes
    <arg value="--standard=PSR2" />
    <arg value="--extensions=php" />
    <arg value="--ignore=autoload.php" />
    <arg path="${basedir}/protected" />
   </exec>
+<<<<<<< Local Changes
+<<<<<<< Local Changes
+<<<<<<< Local Changes
+<<<<<<< Local Changes
+<<<<<<< Local Changes
+<<<<<<< Local Changes
+<<<<<<< Local Changes
+<<<<<<< Local Changes
+=======
+  <concat dest="${basedir}/build/logs/checkstyle-results.xml">
+    <header>%gt;</header>
+  </concat>
+=======
+  <concat dest="${basedir}/build/logs/checkstyle-results.xml">
+    <header>%lt;checkstyle%gt;</header>
+  </concat>
+>>>>>>> External Changes
+=======
+  <concat dest="${basedir}/build/logs/checkstyle-results.xml">
+    <header>&lt;checkstyle&gt;</header>
+      <file path="""${basedir}/build/logs/checkstyle-results.xml" />
+    <footer></footer>
+  </concat>
+>>>>>>> External Changes
+=======
+  <concat dest="${basedir}/build/logs/checkstyle-results.xml" force="true" >
+    <header>&lt;checkstyle&gt;</header>
+      <file path="${basedir}/build/logs/checkstyle-results.xml" />
+    <footer>&lt;/checkstyle&gt;</footer>
+  </concat>
+>>>>>>> External Changes
+=======
+  <concat dest="${basedir}/build/logs/checkstyle-results.xml" force="true" >
+    <header>&lt;checkstyle&gt;</header>
+      <fileset files="${basedir}/build/logs/checkstyle-results.xml" />
+    <footer>&lt;/checkstyle&gt;</footer>
+  </concat>
+>>>>>>> External Changes
+=======
+  <concat dest="${basedir}/build/logs/checkstyle-results.xml" force="true" >
+    <header>&lt;checkstyle&gt;</header>
+      <filelist files="${basedir}/build/logs/checkstyle-results.xml" />
+    <footer>&lt;/checkstyle&gt;</footer>
+  </concat>
+>>>>>>> External Changes
+=======
+  <concat dest="${basedir}/build/logs/checkstyle-results.xml" force="true" >
+    <header>&lt;checkstyle&gt;</header>
+      <filelist files="${basedir}/build/logs/checkstyle.xml" />
+    <footer>&lt;/checkstyle&gt;</footer>
+  </concat>
+>>>>>>> External Changes
+=======
   <concat dest="${basedir}/build/logs/checkstyle.xml" force="true" >
     <header>&lt;checkstyle&gt;</header>
       <filelist files="${basedir}/build/logs/checkstyle-results.xml" />
     <footer>&lt;/checkstyle&gt;</footer>
   </concat>
+>>>>>>> External Changes
 
+>>>>>>> External Changes
   <property name="phpcs.done" value="true"/>
  </target>
 

@@ -297,19 +297,12 @@ class VisitorController extends Controller {
         $session = new CHttpSession;
 
         if (isset($_POST['Visitor'])) {
+            $model->profile_type = $_POST['Visitor']['profile_type'];
             $model->attributes = $_POST['Visitor'];
-            var_dump(
-                $model->profile_type,
-            $model->repeatpassword             ,
-            $model->password_option            ,
-            $model->password_requirement       ,
-            $model->alternative_identification
-        );
 
             if ($result = $visitorService->save($model, NULL, $session['id'])) {
 //                $this->redirect(array('admin'));
             }
-            var_dump($model->getErrors());
         }
 
         $this->render('addvisitor', array(

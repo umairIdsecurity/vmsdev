@@ -68,6 +68,8 @@ class Visitor extends CActiveRecord {
             5 => 'ASIC Denied',
         ),
         self::PROFILE_TYPE_ASIC => array(
+            6 => 'ASIC Issued',
+            7 => 'ASIC Applicant',
         ),
     );
 
@@ -170,7 +172,7 @@ class Visitor extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         $rules = array(
-            array('first_name, last_name, email, contact_number,company', 'required'),
+            array('first_name, last_name, email, contact_number', 'required'),
             array('tenant','required','message' =>'Please select a {attribute}'),
             array('is_deleted', 'numerical', 'integerOnly' => true),
             array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
@@ -184,10 +186,13 @@ class Visitor extends CActiveRecord {
                 vehicle,
                 profile_type,
                 middle_name,
+                company,
                 identification_type,
                 identification_country_issued,
                 identification_document_no,
                 identification_document_expiry,
+                asic_no,
+                asic_expiry,
                 identification_alternate_document_name1,
                 identification_alternate_document_no1,
                 identification_alternate_document_expiry1,
@@ -211,7 +216,7 @@ class Visitor extends CActiveRecord {
                 ',
                 'safe'
             ),
-            array('tenant, tenant_agent,company, photo,vehicle, visitor_card_status', 'default', 'setOnEmpty' => true, 'value' => null),
+            array('tenant, tenant_agent,company, visitor_type, visitor_workstation, photo,vehicle, visitor_card_status', 'default', 'setOnEmpty' => true, 'value' => null),
             array('password', 'PasswordCustom'),
             array('repeatpassword', 'PasswordRepeat'),
             array('password_requirement', 'PasswordRequirement'),
@@ -244,9 +249,15 @@ class Visitor extends CActiveRecord {
             'VisitorPrimaryIdentification'
         );
 
-        if ($this->profile_type == self::PROFILE_TYPE_VIC) {
+        if ($this->profile_type == self::PROFILE_TYPE_CORPORATE) {
             $rules[] = array(
-                'visitor_card_status,
+                'company', 'required'
+            );
+
+        } else if ($this->profile_type == self::PROFILE_TYPE_VIC) {
+            $rules[] = array(
+                'company,
+                visitor_card_status,
                 visitor_workstation,
                 visitor_type,
                 contact_unit,
@@ -257,6 +268,11 @@ class Visitor extends CActiveRecord {
                 contact_state,
                 contact_country,
                 middle_name',
+                'required'
+            );
+        } else if ($this->profile_type == self::PROFILE_TYPE_ASIC) {
+            $rules[] = array(
+                'visitor_card_status, asic_no',
                 'required'
             );
         }

@@ -72,7 +72,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
     ?>
 
     <input type="hidden" id="emailIsUnique" value="0"/>
-    <input type="hidden" name="profile_type" value="<?php echo $model->profile_type; ?>"/>
+    <input type="hidden" name="profile_type" id="Visitor_profile_type" value="<?php echo $model->profile_type; ?>"/>
 
     <div>
 
@@ -785,7 +785,9 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 
     function sendVisitorForm() {
 
+        $('#Visitor_contact_country').removeAttr('disabled');
         var form = $("#register-form").serialize();
+        $('#Visitor_contact_country').attr('disabled', 'disabled');
         var url;
 
         if ($("#currentAction").val() == 'update') {

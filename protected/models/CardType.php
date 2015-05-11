@@ -25,6 +25,7 @@ class CardType extends CActiveRecord {
 
     const SAME_DAY_VISITOR = 1;
     const MULTI_DAY_VISITOR = 2;
+    const MANUAL_VISITOR = 3;
 
     /**
      * @return string the associated database table name

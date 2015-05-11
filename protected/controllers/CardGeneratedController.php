@@ -57,13 +57,16 @@ class CardGeneratedController extends Controller {
 
         if (isset($_POST['CardGenerated'])) {
             if ($_POST['CardGenerated']['tenant_agent'] == '') {
-                $_POST['CardGenerated']['tenant_agent'] = NULL;
+                $_POST['CardGenerated']['tenant_agent'] = null;
             } else {
                 $_POST['CardGenerated']['tenant_agent'] = $_POST['CardGenerated']['tenant_agent'];
             }
-            print_r($_POST['CardGenerated']);
-            die("--DONE--");
+
             $model->attributes = $_POST['CardGenerated'];
+
+            if (isset($_POST['CardGenerated']['enter_card_number'])) {
+                $model->card_number = $_POST['CardGenerated']['enter_card_number'];
+            }
 
             if ($model->save()) {
                 Visit::model()->updateByPk($visitId, array(

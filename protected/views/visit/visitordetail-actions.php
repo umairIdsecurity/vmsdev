@@ -176,9 +176,13 @@ $session = new CHttpSession;
                         <?php if ($model->visit_status == VisitStatus::CLOSED) {
                             ?>
                             <button id='registerNewVisit' class='greenBtn'>Activate Visit</button> 
-                        <?php } else { ?>
-                            <input type = 'submit' value = 'Activate Visit' class = "complete"/>
-                        <?php } ?>
+                        <?php } else {
+                                if ($model->card_type == CardType::MANUAL_VISITOR && isset($model->date_check_in) && strtotime($model->date_check_in) < strtotime(date("d-m-Y"))) {
+                                    echo '<input type="submit" value="Back Date Visit" class="complete"/>';
+                                } else {
+                                    echo '<input type="submit" value="Activate Visit" class="complete"/>';
+                                }
+                             } ?>
                         <?php $this->endWidget();
                         ?>
 
@@ -314,7 +318,9 @@ $session = new CHttpSession;
                         duplicateVisit("activate-a-visit-form");
                     }
                     else {
-
+                        if ($('#pre_issued_card_no').val() != "") {
+                            $('#CardGenerated_enter_card_number').val($('#pre_issued_card_no').val());
+                        }
                         $("#dateoutDiv #Visit_date_out").attr("disabled", false);
                         sendActivateVisitForm("activate-a-visit-form");
                     }
@@ -380,6 +386,8 @@ $session = new CHttpSession;
     <input type="text" id="CardGenerated_tenant" name="CardGenerated[tenant]" value="<?php echo $model->tenant; ?>">
     <input type="text" id="CardGenerated_tenant_agent" name="CardGenerated[tenant_agent]" value="<?php echo $model->tenant_agent;
     ?>">
+    <input type="text" id="CardGenerated_enter_card_number" name="CardGenerated[enter_card_number]" value=""/>
+
     <input type="text" id="CardGenerated_card_number" name="CardGenerated[card_number]" value="<?php
     $tenant = User::model()->findByPk($model->tenant);
     if (Company::model()->findByPk($tenant->company)->card_count != '') {

@@ -106,9 +106,27 @@ $session = new CHttpSession;
         </td>
     </tr>
 
+    <?php if($model->card_type == CardType::MANUAL_VISITOR) : ?>
+    <tr>
+        <td>
+            <div id="card_no_manual" <?php if ($model->date_check_in == null || strtotime($model->date_check_in) >= strtotime(date("d-m-Y"))) {
+                    echo 'style="display: none;"';
+                } ?>>
+                Pre Issued Card No.
+                <br>
+                <input name="pre_issued_card_no" id="pre_issued_card_no" class="" type="text" placeholder="Enter Card No." >
+                <!--<span class="required">*</span>-->
+            </div>
+        </td>
+    </tr>
+    <?php endif; ?>
+
 </table>
 <script>
     $(document).ready(function() {
+        // for Card Type Manual
+        var minDate = '<?php echo $model->card_type == CardType::MANUAL_VISITOR ? "-3m" : "0"; ?>';
+
         refreshTimeIn();
 
         $("#Visit_date_check_in").datepicker({
@@ -117,7 +135,7 @@ $session = new CHttpSession;
             showOn: "button",
             buttonImage: "<?php echo Yii::app()->controller->assetsBase; ?>/images/calendar.png",
             buttonImageOnly: true,
-            minDate: "0",
+            minDate: minDate,
             dateFormat: "dd-mm-yy",
             onClose: function (dateText) {
                 var currentDate = new Date();
@@ -128,13 +146,24 @@ $session = new CHttpSession;
 
                 $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "option", "minDate", selectedDate);
 
-                if (selectedDate > currentDate) {
+                if (selectedDate >= currentDate) {
                     $("#activate-a-visit-form input.complete").val("Preregister Visit");
                     // update card date
                     var cardDate = $.datepicker.formatDate('dd M y', selectedDate);
                     $("#cardDetailsTable span.cardDateText").html(cardDate);
+
+                    $('#card_no_manual').hide();
                 } else {
-                    $("#activate-a-visit-form input.complete").val("Activate Visit");
+                    $("#activate-a-visit-form input.complete").val("");
+
+                    <?php if ($model->card_type == CardType::MANUAL_VISITOR) { // show Back Date Visit
+                        echo '$("#activate-a-visit-form input.complete").val("Back Date Visit");';
+                    } else {
+                        echo '$("#activate-a-visit-form input.complete").val("Activate Visit");';
+                    }
+                    ?>
+
+                    $('#card_no_manual').show();
                 }
             }
         });
@@ -145,7 +174,7 @@ $session = new CHttpSession;
             showOn: "button",
             buttonImage: "<?php echo Yii::app()->controller->assetsBase; ?>/images/calendar.png",
             buttonImageOnly: true,
-            minDate: "0",
+            minDate: minDate,
             dateFormat: "dd-mm-yy",
             onClose: function (date) {
                 var day = date.substring(0, 2);

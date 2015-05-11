@@ -120,6 +120,7 @@ class Roles extends CActiveRecord
     public static function get_avms_roles()
     {
         return array(
+            self::ROLE_SUPERADMIN,
             self::ROLE_ISSUING_BODY_ADMIN,
             self::ROLE_AIRPORT_OPERATOR,
             self::ROLE_AGENT_AIRPORT_ADMIN,

@@ -167,7 +167,8 @@ echo '<h1>Add User </h1>';
                                 <tr>
                         <td>
                             <select  onchange="populateDynamicFields()" <?php
-                            if ($this->action->Id == 'create' && isset($_GET['role']) && $_GET['role'] != 'avms' ) { //if action create with user roles selected in url
+                           // if ($this->action->Id == 'create' && isset($_GET['role']) && $_GET['role'] != 'avms' ) { //if action create with user roles selected in url
+                            if ($this->action->Id == 'create' && !CHelper::is_add_avms_user() ) { //if action create with user roles selected in url
                                 echo "disabled";
                             }
                             ?> id="User_role" name="User[role]">
@@ -199,21 +200,24 @@ echo '<h1>Add User </h1>';
                             </select><?php echo "<br>" . $form->error($model, 'role'); ?></td>
 
                     </tr>
-                    			<tr>
+                    <?php  if( ! CHelper::is_add_avms_user() ) { // Don't Show UserType for AVMS Users' ?>
+                    <tr>
                         
                         <td><?php echo $form->dropDownList($model, 'user_type', User::$USER_TYPE_LIST); ?>
                             <?php echo "<br>" . $form->error($model, 'user_type'); ?>
                         </td>
-
                     </tr>
-                    			<tr>
+                    <?php } else {
+                         echo $form->hiddenField($model, 'user_type', array("value"=>"1"));  
+                    } ?>		
+                    <tr>
                         <td><?php echo $form->dropDownList($model, 'user_status', User::$USER_STATUS_LIST); ?>
                             <?php echo "<br>" . $form->error($model, 'user_status'); ?>
                         </td>
 
                     </tr>
                                 
-                                </table>
+                </table>
          
          </td>
         
@@ -399,7 +403,7 @@ echo '<h1>Add User </h1>';
                     <?php if ( CHelper::is_managing_avms_user() || $model->is_avms_user()){ ?>
                         <tr>
                             <td>
-                                <?php echo $form->textField($model, 'asic_no', array('size' => 50, 'maxlength' => 9,'placeholder'=>'ASIC No')); ?>
+                                <?php echo $form->textField($model, 'asic_no', array('size' => 50, 'maxlength' => 9,'placeholder'=>'ASIC No', 'autocomplete'=>'off')); ?>
                                 <span class="required">*</span>
                                 <?php echo "<br>" . $form->error($model, 'asic_no'); ?>
                             </td>
@@ -773,7 +777,7 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
             url: url,
             data: userform,
             success: function(data) {
-                window.location = 'index.php?r=user/admin&vms=<?php echo ($model->is_avms_user() || CHelper::is_managing_avms_user() )?'avms':'cvms' ?>';
+               window.location = 'index.php?r=user/admin&vms=<?php echo ($model->is_avms_user() || CHelper::is_managing_avms_user() )?'avms':'cvms' ?>';
             }
         });
     }
@@ -787,12 +791,12 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
         } else {
             var email = $("#User_email").val();
             var tenant;
-            if ($("#currentRole").val() == 5 && !is_accessing_avms_features()) { //check if superadmin
+            if ($("#currentRole").val() == '5' && !is_accessing_avms_features()) { //check if superadmin
                 tenant = $("#User_tenant").val();
             } else {
                 tenant = '<?php echo $session['tenant']; ?>';
             }
-            if ($("#User_role").val() == 1) {
+            if ($("#User_role").val() == '1') {
                 var url = $("#createUrlForEmailUnique").val() + email.trim();
             } else {
                 var url = $("#createUrlForEmailUnique").val() + email.trim() + '&tenant=' + tenant;
@@ -812,8 +816,9 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                         } else {
                             $(".errorMessageEmail1").hide();
                             $("#emailunique").val("0");
-                            sendUserForm();
+                              sendUserForm();
                             //$("#submitForm").click();
+                            
                         }
                     });
 

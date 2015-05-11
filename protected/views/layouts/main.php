@@ -3,7 +3,7 @@ $session = new CHttpSession;
 Yii::app()->bootstrap->register();
 $cs = Yii::app()->clientScript;
 
-$cs->registerCoreScript('jquery');
+//$cs->registerCoreScript('jquery');
 $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/jquery.uploadfile.min.js');
 $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/jquery.form.js');
 $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/jquery.imgareaselect.pack.js');
@@ -48,11 +48,12 @@ $userRole = $session['role'];
             <?php
         }
         ?>
+         <script  src="<?php echo Yii::app()->controller->assetsBase; ?>/js/jquery.min.js" ></script>
         <script  src="<?php echo Yii::app()->controller->assetsBase; ?>/js/angular.min.js" ></script>
         <script  src="<?php echo Yii::app()->controller->assetsBase; ?>/js/match.js" ></script>
 
         <script  src="<?php echo Yii::app()->controller->assetsBase; ?>/js/script-sidebar.js" ></script>
-        <script  src="<?php echo Yii::app()->controller->assetsBase; ?>/js/jquery.min.js" ></script>
+      
         <script  src="<?php echo Yii::app()->controller->assetsBase; ?>/js/jquery.uploadfile.min.js" ></script>
         <script  src="<?php echo Yii::app()->controller->assetsBase; ?>/js/jquery.form.js" ></script>
 

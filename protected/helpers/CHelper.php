@@ -42,4 +42,20 @@ class CHelper {
     public static function is_accessing_avms_features(){
         return self::is_managing_avms_user() || self::is_avms_users_requested();
     }
+    
+    /**
+     * Check if someone Adding AVMS user
+     * 
+     * @return boolean
+     */
+    public static function is_add_avms_user () {
+        
+        // Get current Adding Role from URL
+        $role = Yii::app()->request->getParam('role', 0);
+        // Match Current Role in AVMS Users
+        if( in_array($role, Roles::get_avms_roles()) || $role == "avms") 
+            return true;
+        else
+            return false;
+    }
 }

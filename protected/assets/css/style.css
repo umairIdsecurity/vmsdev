@@ -28,6 +28,21 @@ div.form label{
     font-weight:normal;
 }
 
+.password-border{
+    border: 1px solid #C5C6C8;
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 10px 0 0 10px;
+}
+
+#submitFormVisitor{
+    margin-top: 10px;
+}
+
+input.pass_option{
+    vertical-align: baseline;
+    margin-right: 3px;
+}
 
 .forgot-password-area input[type="submit"], .reset-password-area input[type="submit"], .grid-view td a, #btnSubmit, input[type="submit"],#updateBtn,#submitBtn,#addCompanyLink
 ,.yiiBtn, #clicktabA, #clicktabB,#clicktabB1,#clicktabB2,#submitFormVisitor,#clicktabC,
@@ -1013,6 +1028,27 @@ dt.tabs dt{
     display: block;
     height: 16px;
     text-decoration: none;
+}
+
+.choose-profile{
+    margin-bottom: 20px;
+    margin-left: 50px;
+}
+
+.choose-profile h2{
+    font-weight: 400;
+    display: inline-block;
+    font-size: 16px;
+    margin-right: 15px;
+}
+
+.choose-profile label{
+    display: inline-block;
+    margin-right: 30px;
+}
+
+.choose-profile input[type="radio"]{
+    margin: 0 0 0 10px;
 }
 
 .addvisitor{

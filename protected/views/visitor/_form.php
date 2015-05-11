@@ -509,8 +509,8 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                     <?php if ((($session['role'] == Roles::ROLE_SUPERADMIN || $session['role'] == Roles::ROLE_ADMIN) && $this->action->id == 'update') || $this->action->id == 'addvisitor') {
 
                             ?>
-
-                 <table style="float:left;width:300px;"> 
+                <div class="password-border">
+                 <table style="float:left;width:280px; margin-bottom: 5px;"> 
 
                            
                            
@@ -568,7 +568,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                  <tr>
                    <td><input class="pass_option" type="radio" name="Visitor[password_option]" value="2"/>&nbsp;Send User Invitation</td>
                    </tr>
-                   <tr><td>&nbsp;</td></tr>
+                
                    
                  </table>
                  </td>
@@ -576,12 +576,15 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                    
                 <tr>
                 <td>
-           		<input type="submit" value="Save" name="yt0" id="submitFormVisitor" class="complete" style="float:right;margin-right:80px;" />
                </td>
                </tr>
 
                            
                             </table>
+            </div> <!-- password-border -->
+
+                            <input type="submit" value="Save" name="yt0" id="submitFormVisitor" class="complete" />
+
 
                         <?php } ?>
 

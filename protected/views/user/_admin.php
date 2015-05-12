@@ -79,6 +79,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
                 'update' => array(//the name {reply} must be same
                     'label' => 'Edit', // text label of the button
                     'imageUrl' => false, // image URL of the button. If not set or false, a text link is used, The image must be 16X16 pixels
+                     'url' => 'Yii::app()->controller->createUrl("user/update",array("id"=>$data->id, "role"=>$data->role))',
                 ),
                 'delete' => array(//the name {reply} must be same
                     'label' => 'Delete', // text label of the button
@@ -91,7 +92,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
                             'type' => 'POST',
                             'url' => "js:$(this).attr('href')", // ajax post will use 'url' specified above
                             'success' => 'function(data){
-                                
+                              
                                                 if(data == "true"){
                                                     $.fn.yiiGridView.update("user-grid");   
                                                     return false;

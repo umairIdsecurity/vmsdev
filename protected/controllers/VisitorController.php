@@ -54,8 +54,7 @@ class VisitorController extends Controller {
 
         if (isset($_POST['Visitor'])) {
             $model->attributes = $_POST['Visitor'];
-            print_r($model->attributes);
-            die("--DONE--");
+
             if ($visitorService->save($model, $_POST['Visitor']['reason'], $session['id'])) {
                 
             }

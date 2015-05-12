@@ -1,5 +1,7 @@
 <?php
-
+Yii::import('ext.validator.PasswordCustom');
+Yii::import('ext.validator.PasswordRequirement');
+Yii::import('ext.validator.PasswordOption');
 /**
  * This is the model class for table "user".
  *
@@ -42,7 +44,7 @@ class User extends VmsActiveRecord {
     public $birthdayMonth;
     public $birthdayYear;
     public $birthdayDay;
-
+    public $password_requirement;
     public $asic_expiry_day;
     public $asic_expiry_month;
     public $asic_expiry_year;
@@ -116,7 +118,8 @@ class User extends VmsActiveRecord {
             );
         } else {
             return array(
-                array('first_name, last_name, email, contact_number, user_type,is_deleted,password', 'required'),
+                array('first_name, last_name, email, contact_number, user_type,is_deleted', 'required'),
+				array('password', 'PasswordCustom'),
                 array('company, role, user_type, user_status, created_by', 'numerical', 'integerOnly' => true),
                 array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
                 array('date_of_birth, notes,tenant,tenant_agent,birthdayYear,birthdayMonth,birthdayDay', 'safe'),
@@ -321,6 +324,14 @@ class User extends VmsActiveRecord {
 
                 $queryCondition = 't.tenant_agent="' . $user->tenant_agent . '"';
                 break;
+             // Show in Listing   
+            case Roles::ROLE_AGENT_AIRPORT_ADMIN:
+                 $rolein = '('.     Roles::ROLE_AGENT_OPERATOR . ',' .
+                                    Roles::ROLE_STAFFMEMBER . ',' .
+                                    Roles::ROLE_VISITOR . ', '.
+                                    Roles::ROLE_AGENT_AIRPORT_OPERATOR. ')';
+                $queryCondition = 't.tenant_agent="' . $user->tenant_agent . '"';
+                break;
             default:
                 $avms_roles = Roles::get_avms_roles();
                 if (Yii::app()->controller->action->id == 'systemaccessrules') {
@@ -426,7 +437,7 @@ class User extends VmsActiveRecord {
     protected function afterValidate() {
         parent::afterValidate();
         if (!$this->hasErrors()) {
-            if (Yii::app()->controller->action->id == 'create' && $this->password != '(NULL)') {
+            if (Yii::app()->controller->action->id == 'create' && $this->password != '(NULL)' && $this->password != (NULL)) {
                 $this->password = $this->hashPassword($this->password);
             }
             //disable if action is update 
@@ -535,7 +546,7 @@ class User extends VmsActiveRecord {
         $tenantId = trim($tenantId);
         $aArray = array();
         $company = Yii::app()->db->createCommand()
-                ->selectdistinct(' c.id as id, c.name as name,c.tenant,c.tenant_agent')
+                ->selectdistinct(' c.id as id, c.name as name,c.tenant,c.tenant_agent, u.first_name, u.last_name')
                 ->from('user u')
                 ->join('company c', 'u.company=c.id')
                 ->where('u.is_deleted = 0 and u.tenant="' . $tenantId . '" and u.role =' . Roles::ROLE_AGENT_ADMIN)
@@ -544,7 +555,7 @@ class User extends VmsActiveRecord {
         foreach ($company as $index => $value) {
             $aArray[] = array(
                 'id' => $value['id'],
-                'name' => $value['name'],
+                'name' => $value['first_name'].' '.$value['last_name'],
                 'tenant' => $value['tenant'],
                 'tenant_agent' => $value['tenant_agent'],
             );
@@ -557,12 +568,11 @@ class User extends VmsActiveRecord {
         $aArray = array();
         //find all company with same tenant except users company
         $user = User::model()->findByPk($userId);
-
+            
         $Criteria = new CDbCriteria();
-
+ 
         $Criteria->condition = "tenant ='" . $userId . "' and id !=1 and id != " . $user->company;
-
-
+         
         $companyList = Company::model()->findAll($Criteria);
 
         foreach ($companyList as $index => $value) {
@@ -572,7 +582,7 @@ class User extends VmsActiveRecord {
                 'tenant' => $value['tenant'],
             );
         }
-
+          
         return $aArray;
     }
 

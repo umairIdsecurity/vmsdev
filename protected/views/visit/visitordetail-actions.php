@@ -7,7 +7,7 @@ $session = new CHttpSession;
     <ul>
 
         <li class='has-sub' id="closevisitLi" style="<?php
-        if ($model->visit_status == VisitStatus::ACTIVE && $session['role'] != Roles::ROLE_STAFFMEMBER) {
+        if (in_array($model->visit_status, array(VisitStatus::ACTIVE, VisitStatus::EXPIRED)) && $session['role'] != Roles::ROLE_STAFFMEMBER) {
             echo "display:block;";
         } else {
             echo "display:none;";
@@ -32,14 +32,17 @@ $session = new CHttpSession;
                                             'afterValidate' => 'js:function(form, data, hasError){
                                                 if (!hasError){
                                                     sendCloseVisit("close-visit-form");
+                                                } else {
+                                                    console.log(hasError);
+                                                    return false;
                                                 }
-                                                }'
+                                            }'
                                         ),
                                     ));
                                     ?>
                                     <table class="detailsTable" style="font-size:12px;margin-top:15px;" id="logvisitTable">
                                         <?php
-                                        if ($model->visit_status == VisitStatus::ACTIVE) { ?>
+                                        if ($model->visit_status == VisitStatus::ACTIVE || $model->visit_status == VisitStatus::EXPIRED) { ?>
                                         <tr>
                                             <td>
                                                 <strong style="color:#0088cc;">Status</strong>: <span style="color:#9BD62C; !important; font-weight:bold"><?php echo VisitStatus::$VISIT_STATUS_LIST[$model->visit_status]; ?></span>
@@ -50,20 +53,10 @@ $session = new CHttpSession;
                                             <td>&nbsp;</td>
                                         </tr>
 
-                                        <?php } ?>
-
+                                        <?php }
+                                        if ($model->card_type == CardType::CONTRACTOR_VISITOR && $model->visit_status == VisitStatus::EXPIRED) { ?>
                                         <tr>
-                                            <td>Check Out Date</td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input name="Visit[visit_status]" id="Visit_visit_status" type="text" value="<?php echo VisitStatus::CLOSED; ?>" style="display:none;">
-                                                <input name="Visit[time_check_out]" id="Visit_time_check_out" class="timeout" type="text" style="display:none;">
-                                                <input type="text" value="<?php echo isset($model->date_check_out) ? $model->date_check_out : date("d-m-Y"); ?>" id='Visit_date_check_out1' name="Visit[date_check_out1]" readonly>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Check Out Time</td>
+                                            <td>Finish Time</td>
                                         </tr>
                                         <tr>
                                             <td>
@@ -85,14 +78,114 @@ $session = new CHttpSession;
                                                 </select>
                                             </td>
                                         </tr>
+
+                                        <tr>
+                                            <td>Finish Date</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input name="Visit[visit_status]" id="Visit_visit_status" type="hidden" value="<?php echo VisitStatus::CLOSED; ?>">
+                                                <input name="Visit[finish_time]" id="Visit_finish_time" class="timeout" type="text" style="display:none;">
+                                                <?php
+
+                                                if (empty($model->finish_date)) {
+                                                    $model->finish_date = date('d-m-Y');
+                                                }
+                                                $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                                    'model' => $model,
+                                                    'attribute' => 'finish_date',
+                                                    'htmlOptions' => array(
+                                                        'size' => '10', // textField size
+                                                        'maxlength' => '10', // textField maxlength
+                                                        'placeholder' => 'dd-mm-yyyy',
+                                                    ),
+                                                    'options' => array(
+                                                        'dateFormat' => 'dd-mm-yy',
+                                                        'showOn' => "button",
+                                                        'buttonImage' => Yii::app()->controller->assetsBase . "/images/calendar.png",
+                                                        'buttonImageOnly' => true,
+                                                        'minDate' =>  "0",
+                                                        'dateFormat' => "dd-mm-yy",
+                                                    )
+                                                ));
+                                                ?>
+                                            </td>
+                                        </tr>
+
+                                            <tr>
+                                                <td>Card Returned Date</td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <?php
+                                                    if (empty($model->card_returned_date)) {
+                                                        $model->card_returned_date = date('d-m-Y');
+                                                    }
+                                                    $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                                        'model' => $model,
+                                                        'attribute' => 'card_returned_date',
+                                                        'htmlOptions' => array(
+                                                            'size' => '10', // textField size
+                                                            'maxlength' => '10', // textField maxlength
+                                                            'placeholder' => 'dd-mm-yyyy',
+                                                        ),
+                                                        'options' => array(
+                                                            'dateFormat' => 'dd-mm-yy',
+                                                            'showOn' => "button",
+                                                            'buttonImage' => Yii::app()->controller->assetsBase . "/images/calendar.png",
+                                                            'buttonImageOnly' => true,
+                                                            'minDate' =>  "0",
+                                                            'dateFormat' => "dd-mm-yy",
+                                                        )
+                                                    ));
+                                                    ?>
+                                                </td>
+                                            </tr>
+
+                                        <?php // normal card type
+                                        } else { ?>
+                                            <tr>
+                                                <td>Check Out Date</td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input name="Visit[visit_status]" id="Visit_visit_status" type="text" value="<?php echo VisitStatus::CLOSED; ?>" style="display:none;">
+                                                    <input name="Visit[time_check_out]" id="Visit_time_check_out" class="timeout" type="text" style="display:none;">
+                                                    <input type="text" value="<?php echo isset($model->date_check_out) ? $model->date_check_out : date("d-m-Y"); ?>" id='Visit_date_check_out1' name="Visit[date_check_out1]" readonly>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Check Out Time</td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <select class="time visit_time_in_hours" id='Visit_time_check_out_hours' disabled style="width:70px;">
+                                                        <?php for ($i = 1; $i <= 24; $i++): ?>
+                                                            <option value="<?= $i; ?>"><?= date("H", strtotime("$i:00")); ?></option>
+                                                        <?php endfor; ?>
+                                                    </select> :
+                                                    <select class='time visit_time_in_minutes'  id='Visit_time_check_out_minutes' disabled style="width:70px;">
+                                                        <?php for ($i = 1; $i <= 60; $i++): ?>
+                                                            <option value="<?= $i; ?>"><?php
+                                                                if ($i > 0 && $i < 10) {
+                                                                    echo '0' . $i;
+                                                                } else {
+                                                                    echo $i;
+                                                                };
+                                                                ?></option>
+                                                        <?php endfor; ?>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                        <?php } ?>
+
                                     </table>
-                                    <?php echo $closeVisitForm->error($model, 'date_in'); ?>
-                                   
+
                                     <input type='submit' value='Close' class="complete" id="closeVisitBtn" style="display:none;"/>
                                     <button  class="complete greenBtn" id="closeVisitBtnDummy" style="width:94px !important"/>Close Visit</button>
-                                <div style="display:inline;font-size:12px;"><b>or</b><a id="cancelActiveVisitButton" href="" class="cancelBtnVisitorDetail">Cancel</a></div>
+                                    <div style="display:inline;font-size:12px;"><b>or</b><a id="cancelActiveVisitButton" href="" class="cancelBtnVisitorDetail">Cancel</a></div>
                                    <!-- <button class="neutral greenBtn" id="cancelActiveVisitButton">Cancel</button>-->
-<?php $this->endWidget(); ?>
+                                    <?php $this->endWidget(); ?>
                                 </div>
                             </td>
                         </tr>

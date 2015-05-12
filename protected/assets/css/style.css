@@ -195,11 +195,12 @@ input.pass_option, input.password_option , input.password_requirement{
     float: right;
 }
 
-#tabs .logout a{
+#tabs .logout a,
+#tabs .logout a:hover{
     display: block;
     height: 40px;
     width: 40px;
-    background: url('../images/menu-icons-logout.png') no-repeat center center;
+    background: url('../images/menu-icons-logout.png') no-repeat center center !important;
     text-indent: -9999px;
     float: right;
     padding: 0;

@@ -225,6 +225,14 @@ class VisitController extends Controller {
 
     public function actionDetail($id) {
         $model = $this->loadModel($id);
+        //update status for Contractor Card Type
+        if ($model && $model->card_type == CardType::CONTRACTOR_VISITOR) {
+            if (isset($model->date_check_out) && strtotime($model->date_check_out) < strtotime(date("d-m-Y"))) {
+                $model->visit_status = VisitStatus::EXPIRED;
+                $model->save();
+            }
+        }
+
         $visitorModel = Visitor::model()->findByPk($model->visitor);
         $reasonModel = VisitReason::model()->findByPk($model->reason);
         $patientModel = Patient::model()->findByPk($model->patient);
@@ -244,6 +252,10 @@ class VisitController extends Controller {
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
         if (isset($_POST['Visit'])) {
+            if (empty($_POST['Visit']['finish_time'])) {
+                $model->finish_time = date('H:i:s');
+            }
+
             $model->attributes = $_POST['Visit'];
             if ($model->save()) {
                 

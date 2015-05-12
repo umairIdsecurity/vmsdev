@@ -251,7 +251,7 @@ echo '<h1>Add User </h1>';
                             <?php echo "<br>" . $form->error($model, 'contact_number'); ?></td>
                     </tr>
 
-                    <?php if(!CHelper::is_accessing_avms_features()){ ?>
+                    <?php   if(!CHelper::is_accessing_avms_features() || Yii::app()->request->getParam("role") == Roles::ROLE_AGENT_AIRPORT_ADMIN ){ ?>
                       <tr id="tenantRow" class='hiddenElement'>
                         <td>
                             <select id="User_tenant" name="User[tenant]"  >
@@ -298,7 +298,7 @@ echo '<h1>Add User </h1>';
 							<?php echo "<br>" . $form->error($model, 'tenant_agent'); ?>
                         </td>
                     </tr>
-                    <?php } ?>
+                    <?php  } ?>
 
                     <tr id="companyTr">
                         <td id='companyRow'>
@@ -359,7 +359,7 @@ echo '<h1>Add User </h1>';
                         </td>
                         <td></td></tr>
 
-                    <?php if(!CHelper::is_accessing_avms_features()) {?>
+                    <?php if(!CHelper::is_managing_avms_user()) {?>
                     <tr>
                         <td><?php echo $form->textField($model, 'department', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Department')); ?>
                             <?php echo "<br>" . $form->error($model, 'department'); ?>
@@ -554,9 +554,9 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
 
     $(document).ready(function() {
 
-        if(is_accessing_avms_features()){
-            return;
-        }
+//        if(is_accessing_avms_features()){
+//            return;
+//        }
 
         var sessionRole = $("#currentRole").val(); //session role of currently logged in user
         var userId = $("#userId").val(); //id in url for update action
@@ -570,6 +570,7 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
         var agentoperator = 7;
         var operator = 8;
         var staffmember = 9;
+        var agentairportadmin = 13;
 
         $("#addCompanyLink").hide(); //button for adding company
         $("#tenantAgentRow").hide();
@@ -589,7 +590,7 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
 
         if ((getRole != admin && getRole != '') && sessionRole == superadmin) {
             if (getRole == agentadmin) {
-
+ 
                 document.getElementById('User_tenant_agent').disabled = true;
                 document.getElementById('User_tenant').disabled = false;
                 $("#tenantRow").show();
@@ -647,6 +648,13 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                 document.getElementById('User_workstation').disabled = false;
                 $(".workstationRow").show();
                 getWorkstationAgentOperator();
+            }
+        } else if (sessionRole == agentairportadmin) {
+            if (getRole == agentairportadmin) {
+                document.getElementById('User_tenant_agent').disabled = true;
+                document.getElementById('User_tenant').disabled = false;
+                $("#tenantRow").show();
+                $("#tenantAgentRow").show();
             }
         }
 
@@ -879,6 +887,7 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
         var staffmember = 9;
         var superadmin = 5;
         var agentadmin = 6;
+        
 
 
         //hide required * label if role is staffmember
@@ -1092,9 +1101,6 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
         var airport_agent_operator = <?php echo Roles::ROLE_AGENT_AIRPORT_OPERATOR; ?>;
         var issuing_body_admin = <?php echo Roles::ROLE_ISSUING_BODY_ADMIN; ?>;
 
-
-
-
         if ($("#User_role").val() != staffmember && $("#User_role").val() != agentadmin && $("#User_role").val() != agentoperator) {
             $.ajax({
                 type: 'POST',
@@ -1102,8 +1108,8 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                 dataType: 'json',
                 data: tenantAgent,
                 success: function(r) {
-                    $('#User_company option[value!=""]').remove();
-
+                     $('#User_company option[value!=""]').remove();
+                    
                     $.each(r.data, function(index, value) {
                         $('#User_company').append('<option value="' + value.id + '">' + value.name + '</option>');
                         document.getElementById('User_company').disabled = true;
@@ -1112,7 +1118,7 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                 }
             });
         }
-        if ($("#User_role").val() == agentoperator || $("#User_role").val() == staffmember || $("#User_role").val() == airport_agent_operator ) {
+        if ($("#User_role").val() == agentoperator || $("#User_role").val() == staffmember || $("#User_role").val() == airport_agent_operator || $("#User_role").val() == airport_agent_admin) {
             if ($("#currentRole").val() == superadmin)
             {
                 var sessionRole = '<?php echo $session['role']; ?>';

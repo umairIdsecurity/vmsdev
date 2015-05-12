@@ -21,11 +21,14 @@ class CardType extends CActiveRecord {
         ''=>'Card Type',
         1 => 'Same Day Visitor',
         2 => 'Multi Day Visitor',
+        3 => 'Manual Visitor',
+        4 => 'Contractor Visitor',
     );
 
     const SAME_DAY_VISITOR = 1;
     const MULTI_DAY_VISITOR = 2;
     const MANUAL_VISITOR = 3;
+    const CONTRACTOR_VISITOR = 4;
 
     /**
      * @return string the associated database table name

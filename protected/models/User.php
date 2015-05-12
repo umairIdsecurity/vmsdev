@@ -44,7 +44,7 @@ class User extends VmsActiveRecord {
     public $birthdayMonth;
     public $birthdayYear;
     public $birthdayDay;
-
+    public $password_requirement;
     public $asic_expiry_day;
     public $asic_expiry_month;
     public $asic_expiry_year;

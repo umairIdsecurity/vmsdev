@@ -80,11 +80,16 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
             'afterValidate' => 'js:function(form,data,hasError){
                         if(!hasError){
 							
-							if($(".pass_option").is(":checked")== false){
+							if($(".password_requirement").is(":checked")== false)
+							{
+								$("#User_password_requirement_em_").html("select one option");
+								$("#User_password_requirement_em_").show();
+								
+							}
+							else if($(".pass_option").is(":checked")== false && $("#User_password_requirement_1").is(":checked")== true){
 							
-							$("#pass_error_").show();
-							
-							$("#User_password_em_").html("select one option");	
+							    $("#pass_error_").show();
+							    $("#User_password_em_").html("select one option");	
 							}
 							else if($(".pass_option").is(":checked")== true && $(".pass_option:checked").val()==1 && ($("#User_password").val()== "" || $("#User_repeat_password").val()=="")){
 							   

@@ -2,6 +2,11 @@
 date_default_timezone_set("Asia/Manila");
 $session = new CHttpSession;
 ?>
+<style>
+    #visit-grid table th {
+        padding-right: 0 !important;
+    }
+</style>
 <div id="visitHistoryVisitDetailDiv">
     <span class="visitTitle">Visit History</span>
     <div id="visitHistoryTableDiv">
@@ -31,11 +36,11 @@ $session = new CHttpSession;
         $this->widget('zii.widgets.grid.CGridView', array(
             'id' => 'visit-grid',
             'dataProvider' => $visitData,
-            'afterAjaxUpdate' => "
-    function(id, data) {
-        $('th > .asc').append('<div></div>');
-        $('th > .desc').append('<div></div>');
-    }",
+            /*'afterAjaxUpdate' => "
+                function(id, data) {
+                    $('th > .asc').append('<div></div>');
+                    $('th > .desc').append('<div></div>');
+                }",*/
             'columns' => array(
                 array(
                     'name' => 'cardnumber',

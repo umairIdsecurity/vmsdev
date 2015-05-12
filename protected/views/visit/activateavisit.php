@@ -109,13 +109,12 @@ $session = new CHttpSession;
     <?php if($model->card_type == CardType::MANUAL_VISITOR) : ?>
     <tr>
         <td>
-            <div id="card_no_manual" <?php if ($model->date_check_in == null || strtotime($model->date_check_in) >= strtotime(date("d-m-Y"))) {
-                    echo 'style="display: none;"';
-                } ?>>
+            <div id="card_no_manual">
                 Pre Issued Card No.
                 <br>
                 <input name="pre_issued_card_no" id="pre_issued_card_no" class="" type="text" placeholder="Enter Card No." >
-                <!--<span class="required">*</span>-->
+                <span class="required">*</span>
+                <div style="display: none" id="card_number_required" class="errorMessage">Please enter a Card Number</div>
             </div>
         </td>
     </tr>

@@ -68,7 +68,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                                 { 
                                     checkReasonIfUnique();
                                     $(".errorMessageWorkstation").hide();
-                                } else if($("#cardtype").val() != 1 && $("#Visitor_photo").val() == ""){
+                                } else if($("#cardtype").val() != 1 && $("#cardtype").val() != ' . CardType::MANUAL_VISITOR . ' && $("#Visitor_photo").val() == ""){
                                     $("#photoErrorMessage").show();
                                 }
                                 else {
@@ -420,7 +420,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                                         <input type="button" id="clicktabB" value="Save and Continue"
                                                style="display:none;"/>
 
-                                        <input type="submit" value="Save and Continue" name="yt0" id="submitFormVisitor"
+                                        <input type="submit" value="Save and Continue" name="yt0" id="submitFormVisitor" style="margin-top: 2px;"
                                                class="actionForward"/>
                                     </div>
                                 </td>

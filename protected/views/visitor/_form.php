@@ -510,7 +510,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
 
                             ?>
                 <div class="password-border">
-                 <table style="float:left;width:280px; margin-bottom: 5px;"> 
+                 <table style="float:left;width:300px;"> 
 
                            
                            
@@ -519,22 +519,41 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                   
                   </tr>  
                    
+                <tr>
+                    <td>
+                        <?php echo $form->radioButtonList($model, 'password_requirement',
+                            array(
+                                PasswordRequirement::PASSWORD_IS_NOT_REQUIRED => 'User does not require Password',
+                                PasswordRequirement::PASSWORD_IS_REQUIRED     => 'User requires Password to Login',
+                            ), array('class' => 'password_requirement form-label', 'style'=>'float:left;margin-right:10px;'));
+                        ?>
+                        <?php echo $form->error($model, 'password_requirement'); ?>
+                    </td>
+                </tr>
                   
-                  			<tr>
+                <tr style="display:none;" class="user_requires_password">
                   <td>
-                  <table style="margin-top:18px !important; width:253px; border-left-style:none; border-top-style:none">
+        
+                     <table style="margin-top:18px !important; width:253px; border-left-style:none; border-top-style:none;margin-left: 30px;">
+                    
                     <tr>
-                    <td id="pass_error_" style='font-size: 0.9em;color: #FF0000; display:none'>Select Atleast One option</td>
+                       <td id="pass_error_" style='font-size: 0.9em;color: #FF0000; display:none'>Select Atleast One option</td>
                     </tr>
                     
                     
-                    
-                   <tr id="third_option" class='hiddenElement'>
                    
-                   </tr> 
+                   <tr id="third_option" class='hiddenElement'></tr> 
+                   
+                    <tr>
+                   <td><input class="pass_option" type="radio" name="Visitor[password_option]" value="2"/>&nbsp;Send User Invitation</td>
+                   </tr>
+                   
+                   <tr><td>&nbsp;</td></tr>
+                   
                     
                    <tr>
-                   <td><input type="radio" value="1" class="pass_option" name="Visitor[password_option]" />&nbsp;Create Password</td>
+                       <td>
+                       <input type="radio" value="1" class="pass_option" name="Visitor[password_option]" />&nbsp;Create Password</td>
                    </tr> 
                    
                    <tr><td>&nbsp;</td></tr>
@@ -563,21 +582,16 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                 </div>
    				 </td>
                 </tr>
+                
                  <tr><td>&nbsp;</td></tr>
                 
-                 <tr>
-                   <td><input class="pass_option" type="radio" name="Visitor[password_option]" value="2"/>&nbsp;Send User Invitation</td>
-                   </tr>
                 
-                   
                  </table>
+                 
                  </td>
-                 </tr>
-                   
-                <tr>
-                <td>
-               </td>
                </tr>
+                   
+             
 
                            
                             </table>
@@ -797,6 +811,20 @@ if (isset($_GET['id'])) {
 
 
 
+   /***********************hide password section if not required************************/	
+	    $('.password_requirement').click(function() { 
+		     if($('#Visitor_password_requirement_1').is(':checked'))
+			 {
+			    $('.user_requires_password').css("display","block");
+				$('.pass_option').prop('checked', false);
+			 }
+				else
+			 {
+				$('.user_requires_password').css("display","none");
+			 }
+			   
+         });
+		 
         $('#Visitor_vehicle').keydown(function(e) {
 
             if (e.which === 32) {

@@ -11,6 +11,7 @@
  *
  * @author jeremiah
  */
+/* testing*/
 class BaseFunctionalTest extends PHPUnit_Extensions_SeleniumTestCase {
 
     protected $captureScreenshotOnFailure = TRUE;

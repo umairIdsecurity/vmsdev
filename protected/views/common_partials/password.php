@@ -4,14 +4,14 @@ $company               = Company::model()->findByPk($session['company']);
 $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
 
 ?>
-
+<div class="password-border">
 <table>
     <tr>
-        <td><br/><strong>Password Options</strong></td>
+        <td><strong>Password Options</strong></td>
     </tr>
     <tr>
         <td>
-            <table style="margin-top:18px !important; width:273px; border-left-style:none; border-top-style:none">
+            <table style="margin-top:18px !important; margin-bottom: 0; width:273px; border-left-style:none; border-top-style:none">
                 <tr>
                     <td>
                         <?php echo $form->radioButtonList($model, 'password_requirement',
@@ -24,12 +24,12 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                     </td>
                 </tr>
                 <tr>
-                    <td style="padding-left: 10px;">
+                    <td>
                         <table
-                            style="margin-top:18px !important; width:253px; border-left-style:none; border-top-style:none">
+                            style="margin-top:18px !important; margin-bottom: 0; width:253px; border-left-style:none; border-top-style:none">
                             <tr>
                                 <td id="pass_error_" style='font-size: 0.9em;color: #FF0000; display:none'>Select
-                                    Atleast One option
+                                    At least one option
                                 </td>
                             </tr>
                             <tr>
@@ -76,10 +76,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                             </tr>
                             <tr>
                                 <td>
-                                    <div class="register-a-visitor-buttons-div">
-                                        <input type="submit" value="Save" name="yt0" id="submitFormVisitor"
-                                               class="complete"/>
-                                    </div>
+                                    
                                 </td>
                             </tr>
                         </table>
@@ -89,7 +86,11 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
         </td>
     </tr>
 </table>
-
+</div> <!-- password-border -->
+<div class="register-a-visitor-buttons-div">
+                                        <input type="submit" value="Save" name="yt0" id="submitFormVisitor"
+                                               class="complete"/>
+                                    </div>
 <script>
 
     $(document).ready(function () {

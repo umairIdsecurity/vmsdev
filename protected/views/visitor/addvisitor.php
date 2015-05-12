@@ -5,7 +5,6 @@
 
 ?>
 
-<h1>Add Visitor Profile</h1>
 
 <?php
 

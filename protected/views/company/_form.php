@@ -62,10 +62,10 @@ if ($this->action->id == 'update') {
     ?>
     <table>
         <tr>
-            <td style="width:160px;"><?php echo $form->labelEx($model, 'name'); ?></td>
+            <td style="width:160px;">&nbsp;</td>
             <td style="width:240px;">
                 <?php
-                echo $form->textField($model, 'name', array('size' => 60, 'maxlength' => 150));
+                echo $form->textField($model, 'name', array('size' => 60, 'maxlength' => 150 , 'placeholder' => 'Company Name' ));
                 if (isset($_GET['viewFrom'])) {
                     echo "<br>" . $form->error($model, 'name');
                 }
@@ -77,11 +77,6 @@ if ($this->action->id == 'update') {
                 }
                 ?></td>
 
-        </tr>
-        <tr>
-            <td><?php echo $form->labelEx($model, 'trading_name'); ?></td>
-            <td><?php echo $form->textField($model, 'trading_name', array('size' => 60, 'maxlength' => 150)); ?></td>
-            <td><?php echo $form->error($model, 'trading_name'); ?></td>
         </tr>
 
         <!--WangFu Modified-->
@@ -104,110 +99,51 @@ if ($this->action->id == 'update') {
             </tr>
         <?php } ?>
 
-        <!--WangFu Modified-->
-        <?php if ($model->isTenant()) {?>
-            <tr>
-                <td><?php echo $form->labelEx($model, 'Upload Company Logo'); ?></td>
-                <td id="uploadRow" >
-                    <input type="hidden" id="Company_logo" name="Company[logo]"
-                        <?php
-                        if ($this->action->id == 'update') {
-                            echo "disabled";
-                        }
-                        ?> value="<?php echo $model['logo']; ?>">
-                    <div class="photoDiv companyPhotoDiv" <?php
-                    if ($model['logo'] == NULL) {
-                        echo "style='display:none !important;'";
-                    }
-                    ?>>
-                        <?php if ($dataId != '') { ?><img id='companyLogo' src="<?php echo Yii::app()->request->baseUrl . "/" . $model->getCompanyLogo($dataId); ?>"/>
-                        <?php } else { ?>
-                            <img id='companyLogo' src="<?php
-                            if (isset($_POST['Company']['logo'])) {
-                                echo Yii::app()->request->baseUrl . "/" . $model->getPhotoRelativePath($_POST['Company']['logo']);
-                            }
-                            ?>
-
-                             " />
-                        <?php } ?>
-                    </div>
-                    <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
-                </td>
-            </tr>
-        <?php } ?>
 
         <tr>
-            <td><?php echo $form->labelEx($model, 'contact'); ?></td>
-            <td><?php echo $form->textField($model, 'contact', array('size' => 60, 'maxlength' => 100)); ?></td>
-            <td><?php echo $form->error($model, 'contact'); ?></td>
+            <td style="width:160px;">&nbsp;</td>
+            <td> <a class="btn btn-default" href="#" role="button" id="userDetails">+</a> Add Company Contact</td>
         </tr>
-        <tr>
-            <td><?php echo $form->labelEx($model, 'billing_address'); ?></td>
-            <td><?php echo $form->textField($model, 'billing_address', array('size' => 60, 'maxlength' => 150)); ?></td>
-            <td><?php echo $form->error($model, 'billing_address'); ?></td>
-        </tr>
-        <tr>
-            <td><?php echo $form->labelEx($model, 'email_address'); ?></td>
-            <td><?php
-                echo $form->textField($model, 'email_address', array('size' => 50, 'maxlength' => 50));
-                if (isset($_GET['viewFrom'])) {
-                    echo "<br>" . $form->error($model, 'email_address',array('style'=>'text-transform:none;'));
-                }
-                ?>
+
+        <tr id="user_details_field">
+            <td style="width:160px;">&nbsp;</td>
+            <td><?php echo $form->textArea($model, 'user_details', array('size' => 50, 'placeholder'=>'User Details')); ?>
+
+                <?php echo "<br>" . $form->error($model, 'user_details'); ?>
             </td>
-            <td><?php
-                if (!isset($_GET['viewFrom'])) {
-                    echo $form->error($model, 'email_address', array('style'=>'text-transform:none;'));
-                }
-                ?></td>
         </tr>
+
+
         <tr>
-            <td><?php echo $form->labelEx($model, 'office_number'); ?></td>
-            <td><?php
-                echo $form->textField($model, 'office_number');
-                if (isset($_GET['viewFrom'])) {
-                    echo "<br>" . $form->error($model, 'office_number');
-                }
-                ?></td>
-            <td><?php
-                if (!isset($_GET['viewFrom'])) {
-                    echo $form->error($model, 'office_number');
-                }
-                ?></td>
+            <td style="width:160px;">&nbsp;</td>
+            <td><?php echo $form->textField($model, 'user_first_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'First Name')); ?>
+
+                <?php echo "<br>" . $form->error($model, 'user_first_name'); ?>
+            </td>
         </tr>
+
         <tr>
-            <td><?php echo $form->labelEx($model, 'mobile_number'); ?></td>
-            <td><?php
-                echo $form->textField($model, 'mobile_number');
-                if (isset($_GET['viewFrom'])) {
-                    echo "<br>" . $form->error($model, 'mobile_number');
-                }
-                ?></td>
-            <td><?php
-                if (!isset($_GET['viewFrom'])) {
-                    echo "<br>" . $form->error($model, 'mobile_number');
-                }
-                ?></td>
+            <td style="width:160px;">&nbsp;</td>
+            <td><?php echo $form->textField($model, 'user_last_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Last Name')); ?>
+
+                <?php echo "<br>" . $form->error($model, 'user_last_name'); ?>
+            </td>
         </tr>
+
         <tr>
-            <td><?php echo $form->labelEx($model, 'website'); ?></td>
-            <td><?php
-                echo $form->textField($model, 'website', array('size' => 50, 'maxlength' => 50));
-                if (isset($_GET['viewFrom'])) {
-                    echo $form->error($model, 'website');
-                    ?>
-                    <span class="errorMessage" id="websiteErrorMessage" style="display:none;">Website is not a valid URL.</span>
-                <?php
-                }
-                ?></td>
-            <td><?php
-                if (!isset($_GET['viewFrom'])) {
-                    echo $form->error($model, 'website');
-                    ?>
-                    <span class="errorMessage" id="websiteErrorMessage" style="display:none;">Website is not a valid URL.</span>
-                <?php
-                }
-                ?></td>
+            <td style="width:160px;">&nbsp;</td>
+            <td><?php echo $form->textField($model, 'user_email', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Email')); ?>
+
+                <?php echo "<br>" . $form->error($model, 'user_email'); ?>
+            </td>
+        </tr>
+
+        <tr>
+            <td style="width:160px;">&nbsp;</td>
+            <td><?php echo $form->textField($model, 'user_contact_number', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Contact Number')); ?>
+
+                <?php echo "<br>" . $form->error($model, 'user_contact_number'); ?>
+            </td>
         </tr>
 
     </table>
@@ -249,59 +185,6 @@ if (isset($_GET['viewFrom'])) {
 ?>"/>
 <script>
 
-    $(document).ready(function() {
-        $("#company-form").submit(function(event) {
-            event.preventDefault();
-
-            var websiteUrl = $("#Company_website").val();
-
-            if (websiteUrl != '')
-            {
-                var httpString = websiteUrl.substr(0, 6);
-                if (websiteUrl.substr(0, 3) == 'www') {
-                    //alert(websiteUrl.substr(0, 3));
-                    if (websiteUrl.match(new RegExp('\\.', 'g')).length < 2) {
-                        $("#websiteErrorMessage").show();
-                    } else {
-                        $("#websiteErrorMessage").hide();
-                        if (httpString != 'http:/') {
-                            $("#Company_website").val("http://" + websiteUrl);
-                            $(this).unbind('submit').submit();
-                        } else {
-                            $(this).unbind('submit').submit();
-                        }
-                    }
-                } else {
-                    if (httpString != 'http:/') {
-                        $("#Company_website").val("http://" + websiteUrl);
-                        $(this).unbind('submit').submit();
-                    } else {
-                        $(this).unbind('submit').submit();
-                    }
-                }
-
-            } else {
-                $(this).unbind('submit').submit()
-            }
-
-
-        });
-        $("#createBtn").click(function(e) {
-            if ($("#viewFrom").val() == '1') {
-                if ($("#Company_logo").val() != '') {
-                    //alert("has logo");
-                    window.parent.document.getElementById('companyModalIframe').style.height = "1015px";
-                } else {
-                    // alert("no logo");
-                    window.parent.document.getElementById('companyModalIframe').style.height = "850px";
-                }
-
-            }
-        });
-
-
-    });
-
     function closeParent() {
         window.parent.dismissModal();
     }
@@ -310,6 +193,16 @@ if (isset($_GET['viewFrom'])) {
         window.location = 'index.php?r=licenseDetails/update&id=1';
     }
 
+
+    $(document).ready(function() {
+
+        $( "#user_details_field" ).hide();
+        $("#userDetails").click(function(e) {
+            e.preventDefault();
+            $( "#user_details_field" ).toggle("slow");
+        });
+
+    });
 
 
 </script>

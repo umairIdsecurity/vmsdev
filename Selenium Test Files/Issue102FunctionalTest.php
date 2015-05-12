@@ -5,7 +5,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
+/*Comment to verify Git is working for me*/
 
 require_once 'BaseFunctionalTest.php';
 

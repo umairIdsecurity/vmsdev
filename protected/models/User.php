@@ -1,5 +1,7 @@
 <?php
-
+Yii::import('ext.validator.PasswordCustom');
+Yii::import('ext.validator.PasswordRequirement');
+Yii::import('ext.validator.PasswordOption');
 /**
  * This is the model class for table "user".
  *
@@ -42,7 +44,7 @@ class User extends VmsActiveRecord {
     public $birthdayMonth;
     public $birthdayYear;
     public $birthdayDay;
-
+    public $password_requirement;
     public $asic_expiry_day;
     public $asic_expiry_month;
     public $asic_expiry_year;
@@ -116,7 +118,8 @@ class User extends VmsActiveRecord {
             );
         } else {
             return array(
-                array('first_name, last_name, email, contact_number, user_type,is_deleted,password', 'required'),
+                array('first_name, last_name, email, contact_number, user_type,is_deleted', 'required'),
+				array('password', 'PasswordCustom'),
                 array('company, role, user_type, user_status, created_by', 'numerical', 'integerOnly' => true),
                 array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
                 array('date_of_birth, notes,tenant,tenant_agent,birthdayYear,birthdayMonth,birthdayDay', 'safe'),
@@ -434,7 +437,7 @@ class User extends VmsActiveRecord {
     protected function afterValidate() {
         parent::afterValidate();
         if (!$this->hasErrors()) {
-            if (Yii::app()->controller->action->id == 'create' && $this->password != '(NULL)') {
+            if (Yii::app()->controller->action->id == 'create' && $this->password != '(NULL)' && $this->password != (NULL)) {
                 $this->password = $this->hashPassword($this->password);
             }
             //disable if action is update 

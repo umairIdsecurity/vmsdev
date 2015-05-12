@@ -80,11 +80,16 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
             'afterValidate' => 'js:function(form,data,hasError){
                         if(!hasError){
 							
-							if($(".pass_option").is(":checked")== false){
+							if($(".password_requirement").is(":checked")== false)
+							{
+								$("#User_password_requirement_em_").html("select one option");
+								$("#User_password_requirement_em_").show();
+								
+							}
+							else if($(".pass_option").is(":checked")== false && $("#User_password_requirement_1").is(":checked")== true){
 							
-							$("#pass_error_").show();
-							
-							$("#User_password_em_").html("select one option");	
+							    $("#pass_error_").show();
+							    $("#User_password_em_").html("select one option");	
 							}
 							else if($(".pass_option").is(":checked")== true && $(".pass_option:checked").val()==1 && ($("#User_password").val()== "" || $("#User_repeat_password").val()=="")){
 							   
@@ -294,10 +299,20 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                   
                   </tr>  
                    
-                  
-            <tr>
+                 <tr>
+                    <td>
+                        <?php echo $form->radioButtonList($userModel, 'password_requirement',
+                            array(
+                                PasswordRequirement::PASSWORD_IS_NOT_REQUIRED => 'User does not require Password',
+                                PasswordRequirement::PASSWORD_IS_REQUIRED     => 'User requires Password to Login',
+                            ), array('class' => 'password_requirement form-label'));
+                        ?>
+                        <?php echo $form->error($userModel, 'password_requirement'); ?>
+                    </td>
+                </tr> 
+            <tr style="display:none;" class="user_requires_password">
                   <td>
-                  <table style="margin-top:18px !important; width:253px; border-left-style:none; border-top-style:none">
+                  <table style="margin-top:18px !important; width:253px; border-left-style:none; border-top-style:none;margin-left:20px;">
                     <tr>
                     <td id="pass_error_" style='font-size: 0.9em;color: #FF0000; display:none'>Select Atleast One option</td>
                     </tr>
@@ -307,7 +322,9 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                    <tr id="third_option" class='hiddenElement'>
                    
                    </tr> 
-                    
+                      <tr>
+                   <td><input class="pass_option" type="radio" name="User[password_option]" value="2"/>&nbsp;Send User Invitation</td>
+                   </tr>
                    <tr>
                    <td><input type="radio" value="1" class="pass_option" name="User[password_option]" />&nbsp;Create Password</td>
                    </tr> 
@@ -341,9 +358,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
    				 </td>
                 </tr>
                 
-                 <tr>
-                   <td><input class="pass_option" type="radio" name="User[password_option]" value="2"/>&nbsp;Send User Invitation</td>
-                   </tr>
+               
                    
                  </table>
                  </td>
@@ -415,6 +430,21 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
 		$("#close_generate").click();
         //$('#generate_password').modal('hide');
     });	
+	
+	 /***********************hide password section if not required************************/	
+	    $('.password_requirement').click(function() { 
+		
+		     if($('#User_password_requirement_1').is(':checked'))
+			 {
+			    $('.user_requires_password').css("display","block");
+				$('.pass_option').prop('checked', false);
+			 }
+				else
+			 {
+				$('.user_requires_password').css("display","none");
+			 }
+			   
+         });
 	
 	function copy_password(){
 	if($('#random_password').val()==''){

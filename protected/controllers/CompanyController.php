@@ -74,7 +74,8 @@ class CompanyController extends Controller {
 					 if ((($this->isCompanyCodeUnique($session['tenant'], $session['role'], $_POST['Company']['code'], $_POST['Company']['tenant']) == 0)) && ($session['role'] != Roles::ROLE_ADMIN)) {
 	                    if ($companyService->save($model, $session['tenant'], $session['role'], 'create')) {
 	                        $lastId = $model->id;
-	                        $cs = Yii::app()->clientScript;
+
+                            $cs = Yii::app()->clientScript;
 	                        $cs->registerScript('closeParentModal', 'window.parent.dismissModal(' . $lastId . ');', CClientScript::POS_READY);
 	                        $model->unsetAttributes();
 
@@ -92,7 +93,25 @@ class CompanyController extends Controller {
 				}
 				else{
 					if ($companyService->save($model, $session['tenant'], $session['role'], 'create')) {
+
                         $lastId = $model->id;
+
+                        $userModel = new User();
+                        $userModel->first_name = $model->user_first_name;
+                        $userModel->last_name = $model->user_last_name;
+                        $userModel->email = $model->user_email;
+                        $userModel->contact_number = $model->user_contact_number;
+                        $userModel->notes = $model->user_details;
+                        $userModel->user_type = 1;
+                        $userModel->password = 12345;
+                        $userModel->role = 5;
+                        $userModel->company = $lastId;
+                        $userModel->asic_no = 10;
+                        $userModel->asic_expiry_day = 10;
+                        $userModel->asic_expiry_month = 10;
+                        $userModel->asic_expiry_year = 15;
+                        $userModel->save();
+
                         $cs = Yii::app()->clientScript;
                         $cs->registerScript('closeParentModal', 'window.parent.dismissModal(' . $lastId . ');', CClientScript::POS_READY);
                         $model->unsetAttributes();
@@ -114,7 +133,7 @@ class CompanyController extends Controller {
 
 
         $this->render('create', array(
-            'model' => $model,
+            'model' => $model
         ));
     }
 

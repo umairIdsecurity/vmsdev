@@ -301,6 +301,15 @@ $session = new CHttpSession;
     }
 
     function checkIfActiveVisitConflictsWithAnotherVisit(visitType) {
+        <?php if ($model->card_type == CardType::MANUAL_VISITOR) : ?>
+        if ($.trim($('#pre_issued_card_no').val()) != "") {
+            $('#card_number_required').hide();
+        } else { // validate for pre issued card number
+            $('#card_number_required').show();
+            return false;
+        }
+        <?php endif; ?>
+
         visitType = (typeof visitType === "undefined") ? "defaultValue" : visitType;
         $("#Visit_date_check_in").attr("disabled", false);
         $.ajax({
@@ -318,7 +327,7 @@ $session = new CHttpSession;
                         duplicateVisit("activate-a-visit-form");
                     }
                     else {
-                        if ($('#pre_issued_card_no').val() != "") {
+                        if ($.trim($('#pre_issued_card_no').val()) != "") {
                             $('#CardGenerated_enter_card_number').val($('#pre_issued_card_no').val());
                         }
                         $("#dateoutDiv #Visit_date_out").attr("disabled", false);

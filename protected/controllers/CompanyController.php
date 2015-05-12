@@ -56,6 +56,11 @@ class CompanyController extends Controller {
     public function actionCreate() {
         //     $this->layout = '//layouts/contentIframeLayout';
         $model = new Company;
+        /*if (isset($_POST['Company'])) {
+            $model->attributes = $_POST['Company'];
+            $model->code = 'sco';
+            $model->save();
+        }*/
 		if (isset($_POST['user_role'])) {
 			$model->userRole = $_POST['user_role'] ;
 		}

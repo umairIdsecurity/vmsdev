@@ -1,25 +1,23 @@
 <div class="choose-profile">
-<h2>Select Visitor Profile Type: </h2>
+<h1>Select Visitor Profile Type</h1>
   
+            <input type="radio" value="<?php echo Visitor::PROFILE_TYPE_CORPORATE; ?>" id="<?php echo Visitor::PROFILE_TYPE_CORPORATE; ?>" name="Visitor[profile_type]" />
             <label for="<?php echo Visitor::PROFILE_TYPE_CORPORATE; ?>" >
                 <img src="<?php echo Yii::app()->controller->assetsBase . '/images/corporate-visitor-icon.png'; ?>"/>
-                Corporate
-                <input type="radio" value="<?php echo Visitor::PROFILE_TYPE_CORPORATE; ?>" id="<?php echo Visitor::PROFILE_TYPE_CORPORATE; ?>" name="Visitor[profile_type]" />
+                <p class="corp">Corporate</p>
             </label>
  
+            <input type="radio" value="<?php echo Visitor::PROFILE_TYPE_VIC; ?>" id="<?php echo Visitor::PROFILE_TYPE_VIC; ?>" name="Visitor[profile_type]" />
             <label for="<?php echo Visitor::PROFILE_TYPE_VIC; ?>" >
                 <img src="<?php echo Yii::app()->controller->assetsBase . '/images/vic-visitor-icon.png'; ?>"/>
-                VIC
-             <input type="radio" value="<?php echo Visitor::PROFILE_TYPE_VIC; ?>" id="<?php echo Visitor::PROFILE_TYPE_VIC; ?>" name="Visitor[profile_type]" />
-
+                <p class="vic">VIC</p>
             </label>
  
-
-        
+            <input type="radio" value="<?php echo Visitor::PROFILE_TYPE_ASIC; ?>" id="<?php echo Visitor::PROFILE_TYPE_ASIC; ?>" name="Visitor[profile_type]" />
             <label for="<?php echo Visitor::PROFILE_TYPE_ASIC; ?>" >
                 <img src="<?php echo Yii::app()->controller->assetsBase . '/images/asic-visitor-icon.png'; ?>"/>
-                ASIC
-             <input type="radio" value="<?php echo Visitor::PROFILE_TYPE_ASIC; ?>" id="<?php echo Visitor::PROFILE_TYPE_ASIC; ?>" name="Visitor[profile_type]" />
+                <p class="asic">ASIC</p>
+            
 
             </label>
  

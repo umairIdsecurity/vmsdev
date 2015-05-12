@@ -39,9 +39,9 @@ div.form label{
     margin-top: 10px;
 }
 
-input.pass_option{
+input.pass_option, input.password_option , input.password_requirement{
     vertical-align: baseline;
-    margin-right: 3px;
+    margin: 3px 3px 0 0 !important;
 }
 
 .forgot-password-area input[type="submit"], .reset-password-area input[type="submit"], .grid-view td a, #btnSubmit, input[type="submit"],#updateBtn,#submitBtn,#addCompanyLink
@@ -766,7 +766,7 @@ dt.tabs dt{
     height:120px;
 }
 
-.register-a-visitor-buttons-div, .buttonsAlignToRight{
+.buttonsAlignToRight{
     text-align:right;
 }
 
@@ -1031,24 +1031,48 @@ dt.tabs dt{
 }
 
 .choose-profile{
-    margin-bottom: 20px;
-    margin-left: 50px;
+    margin: 20px 0 40px 10px;
 }
 
-.choose-profile h2{
-    font-weight: 400;
+.choose-profile h1{
     display: inline-block;
-    font-size: 16px;
     margin-right: 15px;
+    vertical-align: middle;
 }
 
-.choose-profile label{
+.choose-profile input[type="radio"] + label{
     display: inline-block;
     margin-right: 30px;
+    text-align: center;
+    padding: 6px;
+    vertical-align: middle;
+    width: 76px;
+}
+
+.choose-profile input[type="radio"] + label p{
+    margin: 0;
+    clear: both;
 }
 
 .choose-profile input[type="radio"]{
-    margin: 0 0 0 10px;
+    display: none;
+}
+
+.choose-profile input[type="radio"]:checked + label{
+    border: 2px solid #cccccc;
+    border-radius: 4px;
+}
+
+p.corp{
+    color: #2781bd;
+}
+
+p.vic{
+    color: #f0c715;
+}
+
+p.asic{
+    color: #ea4d3e;
 }
 
 .addvisitor{
@@ -1218,8 +1242,8 @@ dt.tabs dt{
     background-position: 3px 0px;
     padding: 3px 0 2px 30px;
     color:#637280 !important; 
-    font-weight:bold
-    height:15px;
+    font-weight:bold;
+    height:14px;
     display: block;
     text-decoration: none;
     // margin-bottom:10px;

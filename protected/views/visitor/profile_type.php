@@ -1,5 +1,5 @@
 <div class="choose-profile">
-<h2>Select Visitor Profile Type: </h2>
+<h1>Select Visitor Profile Type</h1>
   
             <input type="radio" value="<?php echo Visitor::PROFILE_TYPE_CORPORATE; ?>" id="<?php echo Visitor::PROFILE_TYPE_CORPORATE; ?>" name="Visitor[profile_type]" />
             <label for="<?php echo Visitor::PROFILE_TYPE_CORPORATE; ?>" >

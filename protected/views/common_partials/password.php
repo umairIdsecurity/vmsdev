@@ -10,8 +10,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
         <td><strong>Password Options</strong></td>
     </tr>
     <tr>
-        <td>
-            <table style="margin-top:18px !important; margin-bottom: 0; width:273px; border-left-style:none; border-top-style:none">
+        <table style="margin-top:18px !important; width:273px; border-left-style:none; border-top-style:none">
                 <tr>
                     <td>
                         <?php echo $form->radioButtonList($model, 'password_requirement',
@@ -23,21 +22,20 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                         <?php echo $form->error($model, 'password_requirement'); ?>
                     </td>
                 </tr>
-                <tr>
-                    <td>
-                        <table
-                            style="margin-top:18px !important; margin-bottom: 0; width:253px; border-left-style:none; border-top-style:none">
+                <tr class="user_requires_password" style="display:none;">
+                    <td >
+                        <table style="margin-top:18px !important; width:253px; border-left-style:none; border-top-style:none;margin-left:30px;">
                             <tr>
                                 <td id="pass_error_" style='font-size: 0.9em;color: #FF0000; display:none'>Select
-                                    At least one option
+                                    Atleast One option
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <?php echo $form->radioButtonList($model, 'password_option',
                                         array(
-                                            PasswordOption::CREATE_PASSWORD => 'Create Password',
                                             PasswordOption::SEND_INVITATION => 'Send User Invitation',
+											PasswordOption::CREATE_PASSWORD => 'Create Password',
                                         ), array('class' => 'password_option form-label'));
                                     ?>
                                     <?php echo $form->error($model, 'password_option'); ?>
@@ -74,16 +72,12 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                                     </table>
                                 </td>
                             </tr>
-                            <tr>
-                                <td>
-                                    
-                                </td>
-                            </tr>
+                           
                         </table>
                     </td>
                 </tr>
+                
             </table>
-        </td>
     </tr>
 </table>
 </div> <!-- password-border -->
@@ -96,6 +90,21 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
     $(document).ready(function () {
 
         $("#passwordInputsTable").detach().insertAfter($(".password_option").first().next().next());
+		
+		/***********************hide password section if not required************************/	
+	    $('.password_requirement').click(function() { 
+		     if($('#Visitor_password_requirement_1').is(':checked'))
+			 {
+				$('.user_requires_password').css("display","block");
+				$('.password_option').prop('checked', false);
+			 }
+				else
+			 {
+				$('.user_requires_password').css("display","none");
+			 }
+			   
+         });		
+
 
     });
 

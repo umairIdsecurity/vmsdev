@@ -28,7 +28,7 @@ class UserController extends Controller {
         $session = new CHttpSession;
         return array(
             array('allow',
-                'actions' => array('create',
+                'actions' => array('create', 
                     'GetTenantAgentWithSameTenant',
                     'GetIdOfUser',
                     'CheckEmailIfUnique',
@@ -47,7 +47,7 @@ class UserController extends Controller {
                 'expression' => '(Yii::app()->user->id == ($_GET[\'id\']))',
             ),
             array('allow',
-                'actions' => array('admin', 'adminAjax', 'delete', 'systemaccessrules'),
+                'actions' => array('admin', 'adminAjax', 'delete', 'systemaccessrules' ),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user, UserGroup::USERGROUP_ADMINISTRATION)',
             ),
             array('deny', // deny all users
@@ -64,26 +64,31 @@ class UserController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate() {
+         
+    
         $model = new User;
         $userService = new UserServiceImpl();
         $session = new CHttpSession;
-
+  
         if (isset($_POST['User'])) {
+           
             $model->attributes = $_POST['User'];
 
-			if(isset($_POST['User']['password_option']))
-			  $model->password_option = $_POST['User']['password_option'];
-			else
-			  $model->password_option = '';
+	if(isset($_POST['User']['password_option']))
+            $model->password_option = $_POST['User']['password_option'];
+	else
+            $model->password_option = '';
             $workstation = NULL;
             if (isset($_POST['User']['workstation'])) {
                 $workstation = $_POST['User']['workstation'];
             }
             if ($userService->save($model, Yii::app()->user, $workstation)) {
+               
                 if (!isset($_GET['view'])) {
                     $this->redirect(array('admin', 'vms'=>CHelper::is_accessing_avms_features()? 'avms':'cvms'));
                 }
             }
+            
         }
 
         $this->render('create', array(
@@ -126,8 +131,11 @@ class UserController extends Controller {
      */
     public function actionDelete($id) {
         //$this->loadModel($id)->delete();
+       
         $model = $this->loadModel($id);
+       
         if ($model->delete()) {
+             
             //throw new CHttpException(400, "This is a required field and cannot be deleted"); 
         } else {
             $visitExists = Visit::model()->exists('is_deleted = 0 and host ="' . $id . '"');

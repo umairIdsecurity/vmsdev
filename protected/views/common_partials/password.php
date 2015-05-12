@@ -89,7 +89,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
 
     $(document).ready(function () {
 
-        $("#passwordInputsTable").detach().insertAfter($(".password_option").first().next().next());
+        $("#passwordInputsTable").detach().insertAfter($(".password_option:eq(1)").next());
 		
 		/***********************hide password section if not required************************/	
 	    $('.password_requirement').click(function() { 

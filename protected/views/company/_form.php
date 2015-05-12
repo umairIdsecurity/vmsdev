@@ -150,7 +150,7 @@ if ($this->action->id == 'update') {
 
 
     <div class="row buttons " style="<?php if (isset($_GET['viewFrom'])) { ?>
-        margin-left:400px;
+        margin-left:180px;
     <?php
     } else {
         echo "text-align:right;";
@@ -158,7 +158,7 @@ if ($this->action->id == 'update') {
     ?>">
         <?php echo CHtml::submitButton($model->isNewRecord ? 'Add' : 'Save', array('id' => 'createBtn', 'style' => 'height:30px;', 'class' => 'complete')); ?>
         <?php if (isset($_GET['viewFrom'])) { ?>
-            <input class="neutral yiiBtn" type='button' value='Cancel' onclick='closeParent()' style="height:30px;" />
+
         <?php
         } else {
         if ($session['role'] != Roles::ROLE_SUPERADMIN) {

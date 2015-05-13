@@ -220,8 +220,11 @@ class Visitor extends CActiveRecord {
             array('password', 'PasswordCustom'),
             array('repeatpassword', 'PasswordRepeat'),
             array('password_requirement', 'PasswordRequirement'),
-            array('password_option', 'PasswordOption'),
-           // array('vehicle', 'length', 'min'=>6, 'max'=>6, 'tooShort'=>'Vehicle is too short (Should be in 6 characters)'),
+
+            //todo: check to enable again. why do we need this validation ?
+            //array('password_option', 'PasswordOption'),
+
+           /// array('vehicle', 'length', 'min'=>6, 'max'=>6, 'tooShort'=>'Vehicle is too short (Should be in 6 characters)'),
             array('email', 'email'),
             array('vehicle', 'match',
                 'pattern' => '/^[A-Za-z0-9_]+$/u',

@@ -47,7 +47,7 @@ $cardTypeWorkstationModel = WorkstationCardType::model()->findAllByAttributes(
 </div>
 <br>
 <br>
-<div class="register-a-visitor-buttons-div">
+<div class="register-a-visitor-buttons-div" style="text-align: right;">
 <button id="clicktabA" class="actionForward">Continue</button>
 </div>
 <input type="text" style="display:none;" id="curdateLogVisit" value="<?php echo date('d-m-Y'); ?>"/>

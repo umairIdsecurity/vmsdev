@@ -414,7 +414,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                             <tr>
                                 <td>
                                     <div class="register-a-visitor-buttons-div"
-                                         style="padding-top:130px;padding-right:60px;">
+                                         style="padding-top:130px;padding-right:60px; text-align: right;">
                                         <input type="button" class="neutral visitor-backBtn btnBackTab2"
                                                id="btnBackTab2" value="Back"/>
                                         <input type="button" id="clicktabB" value="Save and Continue"
@@ -510,7 +510,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                 <div id="searchVisitorTable"></div>
 
             </div>
-            <div class="register-a-visitor-buttons-div" style="padding-right:23px;">
+            <div class="register-a-visitor-buttons-div" style="padding-right:23px;text-align: right;">
                 <input type="button" class="neutral visitor-backBtn btnBackTab2" id="btnBackTab2" value="Back"/>
                 <input type="button" id="clicktabB1" value="Save and Continue" class="actionForward"/>
             </div>

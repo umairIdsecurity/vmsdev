@@ -24,6 +24,7 @@ class CardGenerated extends CActiveRecord {
 
     public $max_card_count;
 
+
     /**
      * @return string the associated database table name
      */

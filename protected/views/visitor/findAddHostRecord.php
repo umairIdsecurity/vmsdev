@@ -35,7 +35,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                 </div>
                 <input type="text" id="selectedHostInSearchTable" value="0"/>
             </div>
-            <div class="register-a-visitor-buttons-div" id="subm" style="padding-right:20px">
+            <div class="register-a-visitor-buttons-div" id="subm" style="padding-right:20px;text-align: right;">
                 <input type="button" class="neutral visitor-backBtn btnBackTab3" id="btnBackTab3" value="Back"/>
                 <input type="button" id="clicktabB2"  value="Save and Continue" class="actionForward"/>
             </div>
@@ -79,7 +79,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                 <div style="" id="Patient_name_error" class="errorMessage Patient_name_error" >Patient Name has already been taken.</div>
 
                 <input type="text" id="patientIsUnique" value="0"/><br>
-                <div class="register-a-visitor-buttons-div">
+                <div class="register-a-visitor-buttons-div" style="text-align: right;">
                     <input type="button" class="neutral visitor-backBtn btnBackTab3" id="btnBackTab3" value="Back"/>
                     <input type="submit" value="Save and Continue" name="yt0" id="submitFormPatientName" style="display:inline-block;" class="actionForward"/>
 
@@ -409,7 +409,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
 
                             <tr>
                                 <td>
-                                    <div class="register-a-visitor-buttons-div" style="padding-right:67px">
+                                    <div class="register-a-visitor-buttons-div" style="padding-right:67px;text-align: right;">
                                         <input type="button" class="neutral visitor-backBtn btnBackTab3" id="btnBackTab3" value="Back"/>
                                         <input type="button" id="saveCurrentUserAsHost" value="Save and Continue" />
                                     </div>
@@ -675,7 +675,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
         </div>
         <div role="tabpanel" class="tab-pane" id="searchost">
             
-            <div class="register-a-visitor-buttons-div">
+            <div class="register-a-visitor-buttons-div" style="text-align: right;">
                 <input type="button" class="neutral visitor-backBtn btnBackTab3" id="btnBackTab3" value="Back"/>
                 <input type="button" id="clicktabB2"  value="Save and Continue" class="actionForward"/>
             </div>

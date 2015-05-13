@@ -55,7 +55,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
     }
 
 </style>
-
+ 
 
 <div>
     <?php
@@ -128,7 +128,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                     </td>
                                     </tr>
                                 </table>
-                                <table style="float:left;width:300px;">
+                                <table style="float:left;width:300px; margin-top: 20px;">
                                     <tr>
                                         <td id="visitorTenantRow" <?php
                                         if ($session['role'] != Roles::ROLE_SUPERADMIN) {
@@ -177,7 +177,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                 <table style="margin-top: 70px;">
                                     <tr>
                                         <td>
-                                            <?php echo $form->dropDownList($model, 'visitor_card_status', Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC], array('empty' => 'Card Status')); ?>
+                                            <?php echo $form->dropDownList($model, 'visitor_card_status', Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC], array('empty' => 'Card Status', 'options'=>array('2'=>array('selected'=>true)))); ?>
                                             <span class="required">*</span>
                                             <?php echo "<br>" . $form->error($model, 'visitor_card_status'); ?>
                                         </td>
@@ -283,8 +283,8 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                 <input type="hidden" id="dateofBirthBreakdownValueDay"
                                        value="<?php echo date("j", strtotime($model->date_of_birth)); ?>">
 
-                                <select id="fromMonth" name="Visitor[birthdayMonth]" class='monthSelect'></select>
                                 <select id="fromDay" name="Visitor[birthdayDay]" class='daySelect'></select>
+                                <select id="fromMonth" name="Visitor[birthdayMonth]" class='monthSelect'></select>
                                 <select id="fromYear" name="Visitor[birthdayYear]" class='yearSelect'></select>
                             </td>
                         </tr>
@@ -327,10 +327,15 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                         </tr>
                         <tr>
                             <td>
-                                <?php echo $form->textField($model, 'contact_suburb', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Suburb', 'style' => 'width: 110px;')); ?>
-                                <?php echo $form->dropDownList($model, 'contact_state', Visitor::$AUSTRALIAN_STATES, array('empty' => 'State', 'style' => 'width: 95px;')); ?>
+                                <?php echo $form->textField($model, 'contact_suburb', array('size' => 15, 'maxlength' => 50, 'placeholder' => 'Suburb')); ?>
+                               <span class="required">*</span> <?php echo $form->error($model, 'contact_suburb'); ?>
+                            </td>
+                        </tr>  
+                        <tr>
+                            <td>
+                                <?php echo $form->dropDownList($model, 'contact_state', Visitor::$AUSTRALIAN_STATES, array('empty' => 'State')); ?>
                                 <span class="required">*</span>
-                                <?php echo "<br>" . $form->error($model, 'contact_suburb'); ?>
+                                
                                 <?php echo $form->error($model, 'contact_state'); ?>
                             </td>
                         </tr>
@@ -346,20 +351,35 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                         </tr>
                         <tr>
                             <td id="visitorCompanyRow">
-                                <select id="Visitor_company" name="Visitor[company]">
+<!--                                <select id="Visitor_company" name="Visitor[company]">
                                     <option value=''>Select Company</option>
-                                </select><span class="required">*</span>
+                                </select><span class="required">*</span>-->
+                                
+                                 
+                                        <?php
+                                        $this->widget('application.extensions.select2.Select2', array(
+                                            'model' => $model,
+                                            'attribute' => 'company',
+                                            'items' => CHtml::listData(Visitor::model()->findAllCompanyByTenant($session['tenant']),
+                                            'id', 'Visitor_company'),
+                                            'selectedItems' => array(), // Items to be selected as default
+                                            'placeHolder' => 'Please select a company',
+                                            
+                                            
+                                        ));
+                                        ?>
                                 <?php echo $form->error($model, 'company'); ?>
+                                 
                             </td>
                         </tr>
                         <tr>
                             <td>
                                 <?php
                                 if ($_REQUEST['r'] == 'visitor/update') { ?>
-                                    <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;">
+                                    <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none; margin-top: 10px;">
                                         Add Company</a>
                                 <?php } else { ?>
-                                    <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;">
+                                    <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none; margin-top: 10px;">
                                         Add New Company</a>
                                 <?php } ?>
                             </td>
@@ -393,7 +413,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                         'model'       => $model,
                                         'attribute'   => 'identification_document_expiry',
                                         'options'     => array(
-                                            'dateFormat' => 'yy-mm-dd',
+                                         'dateFormat' => 'dd-mm-yy',
                                         ),
                                         'htmlOptions' => array(
                                             'size'        => '0',
@@ -414,7 +434,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                         identifications<br/>One must have a signature</label>
                                 </td>
                             </tr>
-                            <tr>
+                            <tr class="row_document_name_number" style="display:none">
                                 <td>
                                     <?php echo $form->textField($model, 'identification_alternate_document_name1', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Document Name'));
                                     ?><span class="required alternate-identification-require">*</span>
@@ -422,7 +442,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 
                                 </td>
                             </tr>
-                            <tr>
+                            <tr class="row_document_name_number" style="display:none">
                                 <td>
                                     <?php echo $form->textField($model, 'identification_alternate_document_no1', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Document No.', 'style' => 'width: 108px;')); ?>
 
@@ -431,7 +451,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                         'model'       => $model,
                                         'attribute'   => 'identification_alternate_document_expiry1',
                                         'options'     => array(
-                                            'dateFormat' => 'yy-mm-dd',
+                                            'dateFormat' => 'dd-mm-yy',
                                         ),
                                         'htmlOptions' => array(
                                             'size'        => '0',
@@ -445,7 +465,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                     <?php echo $form->error($model, 'identification_alternate_document_expiry1'); ?>
                                 </td>
                             </tr>
-                            <tr>
+                            <tr class="row_document_name_number" style="display:none">
                                 <td>
                                     <?php echo $form->textField($model, 'identification_alternate_document_name2', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Document Name'));
                                     ?><span class="required alternate-identification-require">*</span>
@@ -453,7 +473,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 
                                 </td>
                             </tr>
-                            <tr>
+                            <tr class="row_document_name_number" style="display:none">
                                 <td>
                                     <?php echo $form->textField($model, 'identification_alternate_document_no2', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Document No.', 'style' => 'width: 108px;')); ?>
 
@@ -462,7 +482,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                         'model'       => $model,
                                         'attribute'   => 'identification_alternate_document_expiry2',
                                         'options'     => array(
-                                            'dateFormat' => 'yy-mm-dd',
+                                            'dateFormat' => 'dd-mm-yy',
                                         ),
                                         'htmlOptions' => array(
                                             'size'        => '0',
@@ -513,9 +533,12 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
         if ($('#Visitor_alternative_identification').attr('checked')) {
             $('.primary-identification-require').hide();
             $('.alternate-identification-require').show();
+             $('.row_document_name_number').show('slow');
+             
         } else {
             $('.primary-identification-require').show();
             $('.alternate-identification-require').hide();
+            $('.row_document_name_number').hide();
         }
     }
 

@@ -26,7 +26,7 @@ class CardGeneratedController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin', 'delete', 'print', 'reprint', 'pdfprint'),
+                'actions' => array('create', 'update', 'admin', 'delete', 'print', 'reprint'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -85,7 +85,6 @@ class CardGeneratedController extends Controller {
     }
 
     public function actionPrint($id = NULL) {
-
         $session = new CHttpSession;
         $this->layout = '//layouts/column1';
 
@@ -198,53 +197,6 @@ class CardGeneratedController extends Controller {
         $this->render('admin', array(
             'model' => $model,
         ));
-    }
-    /**
-     * Generate PDFs for VIC.
-     */
-    public function actionPdfprint($id) {
-        
-        if (!isset($_GET['type'])){
-            throw new CHttpException(404,'Parameter missing');
-        } else {
-            $type=$_GET['type'];
-        }
-            
-        
-        #data of user of card
-        $model = Visit::model()->findByPk($id);
-        $visitorModel = Visitor::model()->findByPk($model->visitor);
-        
-        if ($type==1){
-            $pdf = Yii::createComponent('application.extensions.tcpdf.ETcPdf', 'P', 'cm', "A3", true, 'UTF-8');
-            $name = "standard_print";
-        } else if ($type ==2){
-            $pdf = Yii::createComponent('application.extensions.tcpdf.ETcPdf', 'P', 'cm', "CARD_PRINTER", true, 'UTF-8');
-            $name = "card_printer";
-        } else if ($type==3){
-            $pdf = Yii::createComponent('application.extensions.tcpdf.ETcPdf', 'P', 'cm', "CARD_PRINTER", true, 'UTF-8');
-            $name = "rewrittble_print";
-        } else {
-            throw new CHttpException(500,'Something went wrong.');
-        }
-        
-        $pdf->SetCreator(PDF_CREATOR);
-        $pdf->SetAuthor("everestek inc.");
-        $pdf->SetTitle($name);
-        $pdf->SetSubject($name);
-        $pdf->SetKeywords("vms,vic,airport");
-        $pdf->setPrintHeader(false);
-        $pdf->setPrintFooter(false);
-        $pdf->getAliasNbPages();
-        $pdf->SetMargins(0, 0, 0, true);
-        $pdf->SetAutoPageBreak(true, 0); 
-        $pdf->AddPage();
-        $data = array('model'=>$model,'visitorModel'=>$visitorModel,'type'=>$type);
-        $html = $this->renderPartial('printpdf', $data, true);
-
-        $pdf->writeHTML($html, true, false, true, false, '');
-        $pdf->SetFont("times", "BI", 20);
-        $pdf->Output($name.".pdf", "I");
     }
 
     /**

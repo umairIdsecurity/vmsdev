@@ -260,7 +260,6 @@ class Visitor extends CActiveRecord {
                 visitor_card_status,
                 visitor_workstation,
                 visitor_type,
-                contact_unit,
                 contact_street_no,
                 contact_street_name,
                 contact_street_type,
@@ -430,7 +429,7 @@ class Visitor extends CActiveRecord {
         } else {
             $this->password = User::model()->hashPassword($this->password);
         }
-
+       
       return parent::beforeSave();
    }
 
@@ -466,6 +465,7 @@ class Visitor extends CActiveRecord {
             $criteria->condition = 't.is_deleted = 0 and t.tenant ="' . Yii::app()->user->tenant . '"';
         }
         $this->dbCriteria->mergeWith($criteria);
+         
     }
 
     protected function afterValidate() {

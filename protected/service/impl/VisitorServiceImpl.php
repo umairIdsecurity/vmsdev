@@ -16,6 +16,15 @@ class VisitorServiceImpl implements VisitorService {
     public function save($visitor, $visitReason, $sessionId) {
         $visitor->created_by = $sessionId;
         $visitor->date_of_birth = date('Y-m-d', strtotime($visitor->birthdayYear . '-' . $visitor->birthdayMonth . '-' . $visitor->birthdayDay));
+        
+        // Change date formate from d-m-Y to Y-m-d
+        if( !empty($visitor->identification_document_expiry))
+            $visitor->identification_document_expiry = date("Y-m-d", strtotime($visitor->identification_document_expiry));
+        if( !empty($visitor->identification_alternate_document_expiry1))
+            $visitor->identification_alternate_document_expiry1 = date("Y-m-d", strtotime($visitor->identification_alternate_document_expiry1) );
+        if( !empty($visitor->identification_alternate_document_expiry2))
+            $visitor->identification_alternate_document_expiry2 = date("Y-m-d", strtotime($visitor->identification_alternate_document_expiry2) );
+
 
         if (Yii::app()->controller->action->id == 'create' || Yii::app()->controller->action->id == 'addvisitor') {
 

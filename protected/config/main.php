@@ -71,6 +71,8 @@ return array(
         'user' => array(
             // enable cookie-based authentication
             'allowAutoLogin' => true,
+			'loginUrl' => array('site/login'),
+            'authTimeout' => 1800, // 30 Minutes
         ),
         'bootstrap' => array(
             'class' => 'bootstrap.components.Bootstrap'),

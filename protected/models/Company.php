@@ -64,7 +64,8 @@ WHERE u.id=c.tenant AND c.id !=1";
 		echo $this->userRole;
 		if($this->userRole == 1){
 			return array(
-	            array('name , user_first_name , user_last_name , user_email , user_contact_number', 'required'),
+	            array('name', 'required'),
+	            array('user_first_name , user_last_name , user_email , user_contact_number', 'required' , 'on' => 'company_contact'),
 	            array('code', 'length', 'min' => 3, 'max' => 3, 'tooShort' => 'Code is too short (Should be in 3 characters)'),
 	            array('email_address', 'email'),
 	            array('website', 'url'),

@@ -102,8 +102,12 @@ if ($this->action->id == 'update') {
 
         <tr>
             <td style="width:160px;">&nbsp;</td>
-            <td> <a class="btn btn-default" href="#" role="button" id="btnUserDetails">+</a> Add Company Contact</td>
+            <td>
+                <a class="btn btn-default" href="#" role="button" id="addContact">+</a> Add Company Contact
+                <input id="is_user_field" type="hidden" value="" />
+            </td>
         </tr>
+
 
         <tr class="user_fields">
             <td style="width:160px;">&nbsp;</td>
@@ -188,10 +192,21 @@ if (isset($_GET['viewFrom'])) {
 
 
     $(document).ready(function() {
-        
-        $("#btnUserDetails").click(function(e) {
+
+        $("#addContact").click(function(e) {
             e.preventDefault();
+            //$('#is_user_field').val(1);
+            var is_user_field = $("#is_user_field").attr('value');
             //$( ".user_fields" ).toggle("slow");
+            if(is_user_field==""){
+                $('#is_user_field').val(1);
+            }
+            else{
+                $('#is_user_field').val("");
+            }
+
+            $( ".user_fields" ).toggle("slow");
+
         });
 
     });

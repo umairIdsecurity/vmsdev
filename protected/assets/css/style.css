@@ -33,11 +33,12 @@ div.form label{
     border-radius: 10px;
     overflow: hidden;
     padding: 10px 0 0 10px;
+    max-width: 260px;
 }
 
-#submitFormVisitor{
-    margin-top: 10px;
-}
+
+
+
 
 input.pass_option, input.password_option , input.password_requirement{
     vertical-align: baseline;
@@ -448,11 +449,8 @@ nav.navigation ul li:last-child.active
 
 .grid-view table.items th,table th,.grid-view table.items th a{
     background-color: #FBFBFB;
-    background-image:none;
-    background-repeat: repeat-x;
-    //  box-shadow: 0 1px 0 #FFFFFF inset;
+    
     list-style: none outside none;
-    //margin: 0 0 18px;
     padding: 4px;
     position: relative; 
     color:#323232 !important;
@@ -473,7 +471,7 @@ nav.navigation ul li:last-child.active
 }
 
 #company-form td  {
-    padding: 4px 10px 4px 5px !important;
+    padding: 4px !important;
 }
 
 .superadminSetAccessTable table.items th,.superadminSetAccessTable table th, .superadminSetAccessTable table.items th a{
@@ -683,8 +681,8 @@ dt.tabs dt{
 
 #visit-reason-grid table tr td a{
     width:50px !important;
-    margin-left: auto;
-    margin-right: auto;
+    /*margin-left: auto;
+    margin-right: auto;*/
 }
 
 #visit-reason-grid .filters input{
@@ -695,7 +693,7 @@ dt.tabs dt{
     margin-top: 0.2em;
 }
 
-.required{ padding-left:10px;}
+/*.required{ padding-left:10px;}*/
 /*radio buttons*/
 
 .errorMessageEmail, .errorMessageEmail1{

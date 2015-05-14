@@ -23,15 +23,15 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                 <li>
                     <table id="personalDetailsTable" class="detailsTable">
                         <tr>
-                            <td width="100px;">First Name:</td>
+                            <td width="100px;">First Name</td>
                             <td><?php echo $visitorModel->first_name; ?></td>
                         </tr>
                         <tr>
-                            <td>Last Name:</td>
+                            <td>Last Name</td>
                             <td><?php echo $visitorModel->last_name; ?></td>
                         </tr>
                         <tr>
-                            <td>Company:</td>
+                            <td>Company</td>
                             <td><?php echo $visitorModel->getCompanyName(); ?></td>
                         </tr>
                     </table>
@@ -62,14 +62,14 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                     <div class="flash-success success-update-contact-details"> Contact Details Updated Successfully. </div>
                     <table id="contactDetailsTable" class="detailsTable">
                         <tr>
-                            <td width="100px;">Email:</td>
+                            <td width="100px;">Email</td>
                             <td><?php echo $visitorForm->textField($visitorModel, 'email', array('size' => 50, 'maxlength' => 50)); ?>
                                 <?php echo "<br>" . $visitorForm->error($visitorModel, 'email'); ?>
                                 <div style="" id="Visitor_email_em_" class="errorMessage errorMessageEmail" >A profile already exists for this email address.</div>
                             </td>
                         </tr>
                         <tr>
-                            <td>Mobile:</td>
+                            <td>Mobile</td>
                             <td><input type="text" value="<?php echo $visitorModel->contact_number; ?>" name="Visitor[contact_number]" id="Visitor_contact_number"></td>
                         </tr>
                         <!--<tr><td><input type="submit" value="Update" name="yt0" id="submitContactDetailForm" class="complete" /></td></tr>-->

@@ -15,32 +15,38 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
 
 <style>
 
-#addCompanyLink {
-  width: 124px;
-  height: 23px;
-  padding-right: 0px;
-  margin-right: 0px;
-  padding-bottom: 0px;
-  display: block;
-}
+	#addCompanyLink {
+	  width: 124px;
+	  height: 23px;
+	  padding-right: 0px;
+	  margin-right: 0px;
+	  padding-bottom: 0px;
+	  display: block;
+	}
 
     .ajax-upload-dragdrop{
-
         margin-left:0px !important;
-
     }
 
     .uploadnotetext{
-
         margin-top:110px;
-
         margin-left: -80px;
-
     }
 
-#content h1 { color: #2f96b4;font-size: 18px;font-weight: bold;margin-left:50px; }
-
-.required { padding-left:10px; }
+	#content h1 {
+		color: #2f96b4;
+		font-size: 18px;
+		font-weight: bold;
+		margin-left:50px;
+	}
+	
+	.required {
+		padding-left:10px;
+	}
+	
+	.select2 {
+		margin: 0.2em 0 0.5em;
+	}
 
 </style>
 
@@ -447,14 +453,15 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                         <tr>
 
                             <td id="visitorCompanyRow">
-
-
-
-                                <select id="Visitor_company" name="Visitor[company]" >
-
-                                    <option value=''>Select Company</option>
-
-                                </select>
+                            	<?php
+									$this->widget('application.extensions.select2.Select2', array(
+										'model' => $model,
+										'attribute' => 'company',
+										'items' => array(),
+										'selectedItems' => array(), // Items to be selected as default
+										'placeHolder' => 'Select Company'
+									));
+								?>
 
                                 <?php echo $form->error($model, 'company'); ?>
 

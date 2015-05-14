@@ -21,60 +21,73 @@ $company = Company::model()->findByPk($session['company']);
 $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
 ?>
 <style type="text/css">
-#modalBody_gen {padding-top: 10px !important;height: 204px !important;}
-#addCompanyLink {
-    display: block;
-    height: 23px;
-    margin-right: 0;
-    padding-bottom: 0;
-    padding-right: 0;
-    width: 124px;
-}
-.uploadnotetext{margin-left: -80px;margin-top: 79px;}
-.required{ padding-left:10px;}
+	#modalBody_gen {padding-top: 10px !important;height: 204px !important;}
+	#addCompanyLink {
+	    display: block;
+	    height: 23px;
+	    margin-right: 0;
+	    padding-bottom: 0;
+	    padding-right: 0;
+	    width: 124px;
+	}
+	.uploadnotetext{margin-left: -80px;margin-top: 79px;}
+	.required{ padding-left:10px;}
 
-        .ajax-upload-dragdrop {
-            float:left !important;
-            margin-top: -30px;
-            background: url('<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png') no-repeat center top;
-            background-size:137px;
-            height: 104px;
-            width: 120px !important;
-            padding: 87px 5px 12px 72px;
-            margin-left: 20px !important;
-            border:none;
-        }
-        .ajax-file-upload{
-            margin-left: -100px !important;
-            margin-top: 128px !important;
-            position:absolute !important;
-            font-size: 12px !important;
-            padding-bottom:3px;
-            height:17px;
-        }
+	.ajax-upload-dragdrop {
+		float:left !important;
+		margin-top: -30px;
+		background: url('<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png') no-repeat center top;
+		background-size:137px;
+		height: 104px;
+		width: 120px !important;
+		padding: 87px 5px 12px 72px;
+		margin-left: 20px !important;
+		border:none;
+	}
+	.ajax-file-upload{
+		margin-left: -100px !important;
+		margin-top: 128px !important;
+		position:absolute !important;
+		font-size: 12px !important;
+		padding-bottom:3px;
+		height:17px;
+	}
 
-        .editImageBtn{
-            margin-left: -103px !important;
-            color:white;
-            font-weight:bold;
-            text-shadow: 0 0 !important;
-            font-size:12px !important;
-            height:24px;
-            width:131px !important;
-        }
-        .imageDimensions{
-            display:none !important;
-        }
-        #cropImageBtn{
-            float: left;
-            margin-left: -54px !important;
-            margin-top: 218px;
-            position: absolute;
-        }
-.required { padding-left:10px; }
-#content h1 { color: #E07D22;font-size: 18px;font-weight: bold;margin-left:75px; }
-
-select.asic-date{width:70px;}
+	.editImageBtn{
+		margin-left: -103px !important;
+		color:white;
+		font-weight:bold;
+		text-shadow: 0 0 !important;
+		font-size:12px !important;
+		height:24px;
+		width:131px !important;
+	}
+	.imageDimensions{
+		display:none !important;
+	}
+	#cropImageBtn{
+		float: left;
+		margin-left: -54px !important;
+		margin-top: 218px;
+		position: absolute;
+	}
+	.required {
+		padding-left:10px;
+	}
+	#content h1 {
+		color: #E07D22;
+		font-size: 18px;
+		font-weight: bold;
+		margin-left:75px;
+	}
+	
+	select.asic-date{
+		width:70px;
+	}
+	
+	.select2 {
+		margin: 0.2em 0 0.5em;
+	}
 </style>
 
 
@@ -302,42 +315,42 @@ echo '<h1>Add User </h1>';
 
                     <tr id="companyTr">
                         <td id='companyRow'>
-                            <select id="User_company" name="User[company]" <?php
-                            if ($session['role'] == Roles::ROLE_AGENT_ADMIN || $currentRoleinUrl == Roles::ROLE_OPERATOR || $currentLoggedUserId == $currentlyEditedUserId) {
-                                echo " disabled ";
-                            } //if currently logged in user is agent admin or if selected role=operator or owner is editing his account
-                            ?>>
-                                <option value='' selected>Please select a company</option>
-                                <?php
-                                $companyList = CHtml::listData(Company::model()->findAllCompany(), 'id', 'name');
-                                if (isset($_GET['role'])) {
-                                    $urlRole = $_GET['role'];
-                                } else {
-                                    $urlRole = '';
-                                }
-                                if ( $this->action->id != 'create' ||
-                                     $session['role'] == Roles::ROLE_ADMIN || $urlRole == Roles::ROLE_ADMIN ||
-                                     $session['role'] == Roles::ROLE_AGENT_ADMIN || $urlRole == Roles::ROLE_AGENT_ADMIN ||
-                                     CHelper::is_accessing_avms_features()
-                                   ) {
-                                    foreach ($companyList as $key => $value) {
-                                        ?>
-                                        <option <?php
-                                        if ($this->action->id == 'update') {
-                                            $company = User::model()->getCompany($currentlyEditedUserId);
-                                        } elseif ($session['role'] != Roles::ROLE_SUPERADMIN) {
-                                            $company = User::model()->getCompany($currentLoggedUserId);
-                                        }
-                                        if (isset($company) && isset($company->id) && $company->id == $key) {
-                                            echo " selected ";
-                                        }
-                                        ?> value="<?php echo $key; ?>"><?php echo $value; ?></option>
-                                            <?php
-                                        }
-                                    }
-                                    ?>
-                            </select>
-                           <span class="required">*</span>
+                        	<?php
+	                        	$companyList = array();
+	                        	$selectedItem = array();
+	                        	
+	                        	if (isset($_GET['role'])) {
+	                        		$urlRole = $_GET['role'];
+	                        	} else {
+	                        		$urlRole = '';
+	                        	}
+	                        	if ( $this->action->id != 'create' || $session['role'] == Roles::ROLE_ADMIN || $urlRole == Roles::ROLE_ADMIN ||
+	                        		$session['role'] == Roles::ROLE_AGENT_ADMIN || $urlRole == Roles::ROLE_AGENT_ADMIN || CHelper::is_accessing_avms_features())
+	                        	{
+	                        		$companyList = CHtml::listData(Company::model()->findAllCompany(), 'id', 'name');
+	                        		
+	                        		if ($this->action->id == 'update') {
+	                        			$company = User::model()->getCompany($currentlyEditedUserId);
+	                        		} elseif ($session['role'] != Roles::ROLE_SUPERADMIN) {
+	                        			$company = User::model()->getCompany($currentLoggedUserId);
+	                        		}
+	                        		if (isset($company) && isset($company->id)) {
+	                        			$selectedItem[] = $company->id;
+	                        		}
+								}
+								
+	                        	$this->widget('application.extensions.select2.Select2', array(
+	                        		'model' => $model,
+	                        		'attribute' => 'company',
+	                        		'items' => $companyList,
+	                        		'selectedItems' => $selectedItem, // Items to be selected as default
+	                        		'placeHolder' => 'Please select a company',
+	                        		'disabled' => ($session['role'] == Roles::ROLE_AGENT_ADMIN || $currentRoleinUrl == Roles::ROLE_OPERATOR || $currentLoggedUserId == $currentlyEditedUserId) ? 'true' : 'false'
+	                        	));
+                        	?>
+                        	
+                            <span class="required">*</span>
+                            
                             <select id="User_company_base" style="display:none;">
                                 <?php
                                 $criteria = new CDbCriteria();
@@ -354,7 +367,8 @@ echo '<h1>Add User </h1>';
                                 }
                                 ?>
                             </select>
-                            <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;display:none;">Add New Company</a>
+                            
+                            <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none; display:none;">Add New Company</a>
                             <?php echo $form->error($model, 'company'); ?>
                         </td>
                         <td></td></tr>
@@ -550,14 +564,7 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
 
 <script>
 
-
-
     $(document).ready(function() {
-
-//        if(is_accessing_avms_features()){
-//            return;
-//        }
-
         var sessionRole = $("#currentRole").val(); //session role of currently logged in user
         var userId = $("#userId").val(); //id in url for update action
         var selectedUserId = $("#selectedUserId").val(); //session id of currenlty logged in user
@@ -580,12 +587,11 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
         document.getElementById('User_tenant').disabled = true;
         document.getElementById('User_tenant_agent').disabled = true;
         document.getElementById('User_company').disabled = true;
+        
         if (actionId == 'update') {
-
             $("#fromYear").val($("#dateofBirthBreakdownValueYear").val());
             $("#fromMonth").val($("#dateofBirthBreakdownValueMonth").val());
             $("#fromDay").val($("#dateofBirthBreakdownValueDay").val());
-
         }
 
         if ((getRole != admin && getRole != '') && sessionRole == superadmin) {
@@ -596,15 +602,13 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                 $("#tenantRow").show();
                 $("#addCompanyLink").show();
                 document.getElementById("companyRow").style.paddingBottom = "10px";
-            }
-            else if (getRole == operator) {
+            } else if (getRole == operator) {
                 document.getElementById('User_tenant_agent').disabled = true;
                 document.getElementById('User_tenant').disabled = false;
                 document.getElementById('User_workstation').disabled = false;
                 $(".workstationRow").show();
                 $("#tenantRow").show();
-            }
-            else if (getRole == agentoperator) {
+            } else if (getRole == agentoperator) {
                 // $("#User_company").empty();
                 document.getElementById('User_tenant').disabled = false;
                 document.getElementById('User_tenant_agent').disabled = false;
@@ -680,8 +684,6 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
         $("#submitBtn").click(function(e) {
             e.preventDefault();
             checkHostEmailIfUnique();
-
-
         });
 
 
@@ -716,8 +718,7 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                 populateCompanyofTenant(tenant);
             }
             if ($("#User_role").val() == operator || $("#User_role").val() == staffmember || $("#User_role").val() == agentoperator) {
-                if (sessionRole == superadmin)
-                {
+                if (sessionRole == superadmin) {
                     var tenant = $("#User_tenant").val();
                     $.ajax({
                         type: 'POST',
@@ -727,15 +728,22 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                         success: function(r) {
                             $('#User_company option[value!=""]').remove();
 
+							var selectedId = '';
+							var selectedVal = '';
                             $.each(r.data, function(index, value) {
                                 $('#User_company').append('<option value="' + value.id + '">' + value.name + '</option>');
-
+                                if (selectedId == '') {
+                                	selectedId = value.id;
+                                	selectedVal = value.name;
+                                }
                             });
 
+                            if (selectedId != '') {
+                            	$('#select2-User_company-container').html(selectedVal);
+                            }
                         }
                     });
-                }
-                else {
+                } else {
                     var tenant = '<?php echo $session['tenant'] ?>';
                 }
 
@@ -755,8 +763,7 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                 });
             }
 
-            if ($("#User_role").val() != operator)
-            {
+            if ($("#User_role").val() != operator) {
                 populateTenantAgentField(tenant);
             }
 
@@ -1108,13 +1115,23 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                 dataType: 'json',
                 data: tenantAgent,
                 success: function(r) {
-                     $('#User_company option[value!=""]').remove();
-                    
+                    $('#User_company option[value!=""]').remove();
+
+                    var selectedId = '';
+                    var selectedVal = '';
                     $.each(r.data, function(index, value) {
                         $('#User_company').append('<option value="' + value.id + '">' + value.name + '</option>');
                         document.getElementById('User_company').disabled = true;
+                        if (selectedId == '') {
+                        	selectedId = value.id;
+                        	selectedVal = value.name;
+                        }
                     });
 
+					if (selectedId != '') {
+                    	$("#User_company").val(selectedId);
+                    	$("#select2-User_company-container").html(selectedVal);
+					}
                 }
             });
         }
@@ -1134,11 +1151,21 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                         success: function(r) {
                             $('#User_company option[value!=""]').remove();
 
+                            var selectedId = '';
+                            var selectedVal = '';
                             $.each(r.data, function(index, value) {
                                 $('#User_company').append('<option value="' + value.id + '">' + value.name + '</option>');
-
+								
+                                if (selectedId == '') {
+                                	selectedId = value.id;
+                                	selectedVal = value.name;
+                                }
                             });
 
+        					if (selectedId != '') {
+                            	$("#User_company").val(selectedId);
+                            	$("#select2-User_company-container").html(selectedVal);
+        					}
                         }
                     });
                 }

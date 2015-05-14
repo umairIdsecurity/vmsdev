@@ -7,6 +7,8 @@ class Select2 extends CWidget
     public $items;
     public $placeHolder;
     public $selectedItems;
+    public $disabled = 'false';
+    
     public function init()
     {
         $assets = Yii::app()->getAssetManager()->publish(dirname(__FILE__) . '/assets');
@@ -18,16 +20,20 @@ class Select2 extends CWidget
 
     public function run()
     {
-        /**@var EMongoDocument $model*/
-        $className = $this->model->getModelName() . '_' . $this->attribute;
+    	$className = $this->model->getModelName() . '_' . $this->attribute;
+    	$options = array(
+			'class' => $className . ' ',
+    		'options' => $this->getSelectedOptions()
+		);
+    	if ($this->disabled == 'true') {
+    		$options['disabled'] = 'true';
+    	}
+    	
         echo CHtml::activeDropDownList(
             $this->model,
             $this->attribute,
             array('' => $this->placeHolder) + $this->items,
-            array(
-                'class' => $className . ' ',
-                'options' => $this->getSelectedOptions()
-            )
+        	$options
         );
         $this->render('js', array('className' => $className, 'placeHolder' => $this->placeHolder, 'attribute' => $this->attribute));
     }

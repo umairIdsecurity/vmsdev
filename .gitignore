@@ -32,3 +32,6 @@ company_css/**
 .DS_Store
 cache.properties
 /nbproject
+/.buildpath
+/.project
+/.settings

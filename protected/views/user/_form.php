@@ -395,9 +395,9 @@ echo '<h1>Add User </h1>';
                             <input type="hidden" id="dateofBirthBreakdownValueYear" value="<?php echo date("Y", strtotime($model->date_of_birth)); ?>">
                             <input type="hidden" id="dateofBirthBreakdownValueMonth" value="<?php echo date("n", strtotime($model->date_of_birth)); ?>">
                             <input type="hidden" id="dateofBirthBreakdownValueDay" value="<?php echo date("j", strtotime($model->date_of_birth)); ?>">
-
-                            <select id="fromMonth" name="User[birthdayMonth]" class='monthSelect'></select>
+							
                             <select id="fromDay" name="User[birthdayDay]" class='daySelect'></select>
+                            <select id="fromMonth" name="User[birthdayMonth]" class='monthSelect'></select>
                             <select id="fromYear" name="User[birthdayYear]" class='yearSelect'></select>
                         </td>
                     </tr>
@@ -426,15 +426,14 @@ echo '<h1>Add User </h1>';
                             <td class="AsicExpiryDropdown">
                                 <label>ASIC Expiry</label><span class="required">*</span><br />
 
-                                <?php $mon = ['Jan', 'Feb', 'Mar','Apr','May','Jun','Jul', 'Aug','Sept','Oct','Nov', 'Dec']; ?>
-                                <?php echo $form->dropDownList($model,'asic_expiry_month',array_combine($mon, $mon),['class'=>'asic-date']); ?>
-
-
                                 <?php
                                 $days = [];
                                 for($i=1;$i<=31;$i++){$days[$i] = $i;}
                                 ?>
                                 <?php echo $form->dropDownList($model,'asic_expiry_day',$days,['class'=>'asic-date']); ?>
+
+                                <?php $mon = ['Jan', 'Feb', 'Mar','Apr','May','Jun','Jul', 'Aug','Sept','Oct','Nov', 'Dec']; ?>
+                                <?php echo $form->dropDownList($model,'asic_expiry_month',array_combine($mon, $mon),['class'=>'asic-date']); ?>
 
 
                                 <?php
@@ -737,10 +736,9 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                                 	selectedVal = value.name;
                                 }
                             });
-
-                            if (selectedId != '') {
-                            	$('#select2-User_company-container').html(selectedVal);
-                            }
+							
+                            $('#User_company').val(selectedId);
+                            $('#select2-User_company-container').html(selectedVal);
                         }
                     });
                 } else {
@@ -852,10 +850,16 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
             success: function(r) {
                 $('#User_company option[value!=""]').remove();
 
+				var selectedId = '';
+				var selectedVal = '';
                 $.each(r.data, function(index, value) {
                     $('#User_company').append('<option value="' + value.id + '">' + value.name + '</option>');
-
+                    if (selectedId == '') {
+                    	selectedId = value.id;
+                    	selectedVal = value.name;
+                    }
                 });
+                
                 if ($("#User_role").val() == 6) {
                     document.getElementById('User_company').disabled = false;
                     newcompanyId = (typeof newcompanyId === "undefined") ? "defaultValue" : newcompanyId;
@@ -863,6 +867,9 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                     if (newcompanyId != 'defaultValue') {
                         $("#User_company").val(newcompanyId);
                     }
+                } else {
+                    $('#User_company').val(selectedId);
+                    $('#select2-User_company-container').html(selectedVal);
                 }
 
             }
@@ -1127,11 +1134,9 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                         	selectedVal = value.name;
                         }
                     });
-
-					if (selectedId != '') {
-                    	$("#User_company").val(selectedId);
-                    	$("#select2-User_company-container").html(selectedVal);
-					}
+                    s
+                    $("#User_company").val(selectedId);
+                	$("#select2-User_company-container").html(selectedVal);
                 }
             });
         }
@@ -1161,11 +1166,9 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                                 	selectedVal = value.name;
                                 }
                             });
-
-        					if (selectedId != '') {
-                            	$("#User_company").val(selectedId);
-                            	$("#select2-User_company-container").html(selectedVal);
-        					}
+							
+                            $("#User_company").val(selectedId);
+                        	$("#select2-User_company-container").html(selectedVal);
                         }
                     });
                 }

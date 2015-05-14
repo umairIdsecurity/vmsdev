@@ -516,7 +516,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                     <?php if ((($session['role'] == Roles::ROLE_SUPERADMIN || $session['role'] == Roles::ROLE_ADMIN) && $this->action->id == 'update') || $this->action->id == 'addvisitor') {
 
                             ?>
-                <div class="password-border">
+                <div class="password-border" style="margin-bottom: 15px;">
                  <table style="float:left;width:300px;"> 
 
                            

@@ -413,7 +413,7 @@ echo '<h1>Add User </h1>';
 
 
 
-                    <!-- AVMS User specific form fields --->
+                    <!-- AVMS User specific form fields -->
                     <?php if ( CHelper::is_managing_avms_user() || $model->is_avms_user()){ ?>
                         <tr>
                             <td>
@@ -462,7 +462,10 @@ echo '<h1>Add User </h1>';
                         </td>
 
                     </tr>
-                  <tr>
+                  </table>
+                  <div class="password-border">
+                  <table>
+                    <tr>
                   <td><strong>Password Options</strong></td>
                   
                   </tr>  
@@ -524,13 +527,15 @@ echo '<h1>Add User </h1>';
 
                     <tr>
                         <td>
-                            <div class="row buttons ">
-                                <?php echo CHtml::submitButton($model->isNewRecord ? 'Save' : 'Save', array('id' => 'submitForm', 'class' => 'complete','style'=>'text-align:center;margin-left:162px;')); ?>
-                            </div>
+                            
                         </td>
                     </tr>
 
                 </table>
+                </div> <!-- password-border -->
+                <div class="row buttons ">
+                    <?php echo CHtml::submitButton($model->isNewRecord ? 'Save' : 'Save', array('id' => 'submitForm', 'class' => 'complete')); ?>
+                </div>
             </td>
             
         </tr>
@@ -542,7 +547,7 @@ echo '<h1>Add User </h1>';
 
     <?php $this->endWidget(); ?>
 
-</div><!-- form -->
+</div><!-- form
 
 <input type="hidden" id="currentAction" value="<?php echo $this->action->Id; ?>"/>
 <input type="hidden" id="currentRole" value="<?php echo $session['role']; ?>"/>

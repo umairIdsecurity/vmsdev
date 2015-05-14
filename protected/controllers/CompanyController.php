@@ -214,7 +214,7 @@ class CompanyController extends Controller {
                     $userModel->asic_expiry_month = 10;
                     $userModel->asic_expiry_year = 15;
                     $userModel->save();
-                    print_r($userModel->getErrors());
+                    //print_r($userModel->getErrors());
 
                     switch ($session['role']) {
                         case Roles::ROLE_SUPERADMIN:

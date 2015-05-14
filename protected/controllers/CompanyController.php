@@ -160,6 +160,19 @@ class CompanyController extends Controller {
     public function actionUpdate($id) {
         //$this->layout = '//layouts/contentIframeLayout';
         $model = $this->loadModel($id);
+
+
+        $userModel = User::model()->findByAttributes(
+            array('company' => $model->id)
+        );
+        $model->user_first_name = $userModel->first_name;
+        $model->user_last_name = $userModel->last_name;
+        $model->user_email = $userModel->email;
+        $model->user_contact_number = $userModel->contact_number;
+        $model->user_details = $userModel->notes;
+
+        /*print_r($userModel);
+        exit;*/
 		if (isset($_POST['user_role'])) {
 			$model->userRole = $_POST['user_role'] ;
 		}
@@ -186,6 +199,23 @@ class CompanyController extends Controller {
                 $model->attributes = $_POST['Company'];
 
                 if ($model->save()) {
+
+                    $userModel->first_name = $model->user_first_name;
+                    $userModel->last_name = $model->user_last_name;
+                    $userModel->email = $model->user_email;
+                    $userModel->contact_number = $model->user_contact_number;
+                    $userModel->notes = $model->user_details;
+                    //$userModel->user_type = 2;
+                    //$userModel->password = 12345;
+                    //$userModel->role = 10;
+                    //$userModel->company = $lastId;
+                    $userModel->asic_no = 10;
+                    $userModel->asic_expiry_day = 10;
+                    $userModel->asic_expiry_month = 10;
+                    $userModel->asic_expiry_year = 15;
+                    $userModel->save();
+                    print_r($userModel->getErrors());
+
                     switch ($session['role']) {
                         case Roles::ROLE_SUPERADMIN:
                             $this->redirect(array('company/admin'));

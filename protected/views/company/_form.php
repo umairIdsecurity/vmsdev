@@ -195,8 +195,13 @@ if (isset($_GET['viewFrom'])) {
 
 
     $(document).ready(function() {
-
-        $( "#user_details_field" ).hide();
+        var user_details = $("#Company_user_details").attr('value');
+        if(user_details==''){
+            $( "#user_details_field" ).hide();
+        }
+        else{
+            $( "#user_details_field" ).show();
+        }
         $("#userDetails").click(function(e) {
             e.preventDefault();
             $( "#user_details_field" ).toggle("slow");

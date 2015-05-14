@@ -42,7 +42,15 @@ return array(
     ),
     // application components
     'components' => array(
-        
+       
+       /* 'session' => array (
+        'class'=> 'CDbHttpSession',
+        'connectionID' => 'db',
+        'sessionTableName' => 'yiisession',
+        'timeout' => 10,  
+        'autoStart'=>false    
+        ),
+        */
         'ePdf' => array(
             'class' => 'ext.yii-pdf.EYiiPdf',
             'params' => array(
@@ -51,7 +59,7 @@ return array(
                     'classFile' => 'html2pdf.class.php',
                 ),
             ),
-        ),
+        ),      
         'foundation' => array("class" => "ext.foundation.components.Foundation"),
         'widgetFactory' => array(
             'widgets' => array(
@@ -116,6 +124,6 @@ return array(
     'params' => array(
         // this is used in contact page
         'photo_unique_filename' => 'test',
-        'mandrillApiKey' => '49tRGdzmJDhovnkkygttuQ',
+        'mandrillApiKey' => '49tRGdzmJDhovnkkygttuQ',     
     ),
 );

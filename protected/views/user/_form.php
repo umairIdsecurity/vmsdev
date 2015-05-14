@@ -176,61 +176,7 @@ echo '<h1>Add User </h1>';
                                
                               </table>
                               
-                                <table>  
-                                <tr>
-                        <td>
-                            <select  onchange="populateDynamicFields()" <?php
-                           // if ($this->action->Id == 'create' && isset($_GET['role']) && $_GET['role'] != 'avms' ) { //if action create with user roles selected in url
-                            if ($this->action->Id == 'create' && !CHelper::is_add_avms_user() ) { //if action create with user roles selected in url
-                                echo "disabled";
-                            }
-                            ?> id="User_role" name="User[role]">
-                                <option disabled value='' selected>Select Role</option>
-                                <?php
-
-                                $assignableRowsArray = getAssignableRoles($session['role'],$model); // roles with access rules from getaccess function
-                                foreach ($assignableRowsArray as $assignableRoles) {
-                                    foreach ($assignableRoles as $key => $value) {
-                                        ?>
-
-                                        <option id= "<?php echo $key; ?>" value="<?php echo $key; ?>" <?php
-                                        if (isset($_GET['role'])) { //if url with selected role 
-                                            if ($currentRoleinUrl == $key) {
-                                                echo "selected ";
-                                            }
-                                        } elseif ($this->action->Id == 'update') { //if update and $key == to role of user being updated
-                                            if ($key == $model->role) {
-                                                echo " selected ";
-                                            }
-                                        }
-                                        ?>>
-                                            <?php echo $value; ?></option>
-                                        <?php
-                                    }
-                                }
-                                ?>
-
-                            </select><?php echo "<br>" . $form->error($model, 'role'); ?></td>
-
-                    </tr>
-                    <?php  if( ! CHelper::is_add_avms_user() ) { // Don't Show UserType for AVMS Users' ?>
-                    <tr>
-                        
-                        <td><?php echo $form->dropDownList($model, 'user_type', User::$USER_TYPE_LIST); ?>
-                            <?php echo "<br>" . $form->error($model, 'user_type'); ?>
-                        </td>
-                    </tr>
-                    <?php } else {
-                         echo $form->hiddenField($model, 'user_type', array("value"=>"1"));  
-                    } ?>		
-                    <tr>
-                        <td><?php echo $form->dropDownList($model, 'user_status', User::$USER_STATUS_LIST); ?>
-                            <?php echo "<br>" . $form->error($model, 'user_status'); ?>
-                        </td>
-
-                    </tr>
-                                
-                </table>
+                            
          
          </td>
         
@@ -345,7 +291,7 @@ echo '<h1>Add User </h1>';
 	                        		'items' => $companyList,
 	                        		'selectedItems' => $selectedItem, // Items to be selected as default
 	                        		'placeHolder' => 'Please select a company',
-	                        		'disabled' => ($session['role'] == Roles::ROLE_AGENT_ADMIN || $currentRoleinUrl == Roles::ROLE_OPERATOR || $currentLoggedUserId == $currentlyEditedUserId) ? 'true' : 'false'
+            
 	                        	));
                         	?>
                         	
@@ -454,10 +400,67 @@ echo '<h1>Add User </h1>';
                 </table>
             </td>
             <td style="vertical-align: top; float:left; width:300px">
+                
+                    <table>  
+                                <tr>
+                        <td>
+                            <select  onchange="populateDynamicFields()" <?php
+                           // if ($this->action->Id == 'create' && isset($_GET['role']) && $_GET['role'] != 'avms' ) { //if action create with user roles selected in url
+                            if ($this->action->Id == 'create' && !CHelper::is_add_avms_user() ) { //if action create with user roles selected in url
+                                echo "disabled";
+                            }
+                            ?> id="User_role" name="User[role]">
+                                <option disabled value='' selected>Select Role</option>
+                                <?php
+
+                                $assignableRowsArray = getAssignableRoles($session['role'],$model); // roles with access rules from getaccess function
+                                foreach ($assignableRowsArray as $assignableRoles) {
+                                    foreach ($assignableRoles as $key => $value) {
+                                        ?>
+
+                                        <option id= "<?php echo $key; ?>" value="<?php echo $key; ?>" <?php
+                                        if (isset($_GET['role'])) { //if url with selected role 
+                                            if ($currentRoleinUrl == $key) {
+                                                echo "selected ";
+                                            }
+                                        } elseif ($this->action->Id == 'update') { //if update and $key == to role of user being updated
+                                            if ($key == $model->role) {
+                                                echo " selected ";
+                                            }
+                                        }
+                                        ?>>
+                                            <?php echo $value; ?></option>
+                                        <?php
+                                    }
+                                }
+                                ?>
+
+                            </select><?php echo "<br>" . $form->error($model, 'role'); ?></td>
+
+                    </tr>
+                    <?php  if( ! CHelper::is_add_avms_user() ) { // Don't Show UserType for AVMS Users' ?>
+                    <tr>
+                        
+                        <td><?php echo $form->dropDownList($model, 'user_type', User::$USER_TYPE_LIST); ?>
+                            <?php echo "<br>" . $form->error($model, 'user_type'); ?>
+                        </td>
+                    </tr>
+                    <?php } else {
+                         echo $form->hiddenField($model, 'user_type', array("value"=>"1"));  
+                    } ?>		
+                    <tr>
+                        <td><?php echo $form->dropDownList($model, 'user_status', User::$USER_STATUS_LIST); ?>
+                            <?php echo "<br>" . $form->error($model, 'user_status'); ?>
+                        </td>
+
+                    </tr>
+                                
+                </table>
+                
                 <table>
                    <tr>
                         <td>
-						<?php echo $form->textArea($model, 'notes', array('rows' => 6, 'cols' => 70,'placeholder'=>'Notes','style'=>'width:205px;')); ?>
+						<?php echo $form->textfield($model, 'notes', array('placeholder'=>'Notes','style'=>'width:205px;')); ?>
                             <?php echo "<br>" . $form->error($model, 'notes'); ?>
                         </td>
 

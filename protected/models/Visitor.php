@@ -30,6 +30,7 @@ Yii::import('ext.validator.VisitorAlternateIdentification');
  * @property integer $is_deleted
  * @property string $tenant
  * @property string $tenant_agent
+ * @property integer $verifiable_signature
  *
  * The followings are the available model relations:
  * @property CardGenerated[] $cardGenerateds
@@ -212,7 +213,8 @@ class Visitor extends CActiveRecord {
                 repeatpassword,
                 password_option,
                 password_requirement,
-                alternative_identification
+                alternative_identification,
+                verifiable_signature
                 ',
                 'safe'
             ),
@@ -350,6 +352,7 @@ class Visitor extends CActiveRecord {
             'contact_suburb'                            => 'Suburb',
             'contact_state'                             => 'State',
             'contact_country'                           => 'Country',
+            'verifiable_signature'                      => 'Verifiable Signature'
         );
     }
 

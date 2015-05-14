@@ -494,6 +494,9 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                     ?><span class="required alternate-identification-require">*</span>
                                     <?php echo "<br>" . $form->error($model, 'identification_alternate_document_no2'); ?>
                                     <?php echo $form->error($model, 'identification_alternate_document_expiry2'); ?>
+                                    
+                                     <?php echo $form->checkBox($model, 'verifiable_signature', array('style' => 'float: left;')); ?>
+                                    <label  class="form-label">One of these has a verifiable signature</label>
                                 </td>
                             </tr>
                             <tr>

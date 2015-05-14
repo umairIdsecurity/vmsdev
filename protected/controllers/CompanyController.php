@@ -102,9 +102,9 @@ class CompanyController extends Controller {
                         $userModel->email = $model->user_email;
                         $userModel->contact_number = $model->user_contact_number;
                         $userModel->notes = $model->user_details;
-                        $userModel->user_type = 1;
+                        $userModel->user_type = 2;
                         $userModel->password = 12345;
-                        $userModel->role = 5;
+                        $userModel->role = 10;
                         $userModel->company = $lastId;
                         $userModel->asic_no = 10;
                         $userModel->asic_expiry_day = 10;

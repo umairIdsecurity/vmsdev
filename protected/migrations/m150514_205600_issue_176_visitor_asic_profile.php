@@ -2,7 +2,7 @@
 
 Yii::import('ext.tools.IdempotentDbOperation');
 
-class m150510_053930_issue_176_visitor_asic_profile extends CDbMigration
+class m150514_205600_issue_176_visitor_asic_profile extends CDbMigration
 {
     public function safeUp()
     {

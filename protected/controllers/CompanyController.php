@@ -101,7 +101,7 @@ class CompanyController extends Controller {
                         $userModel->last_name = $model->user_last_name;
                         $userModel->email = $model->user_email;
                         $userModel->contact_number = $model->user_contact_number;
-                        $userModel->notes = $model->user_details;
+                        //$userModel->notes = $model->user_details;
                         $userModel->user_type = 2;
                         $userModel->password = 12345;
                         $userModel->role = 10;

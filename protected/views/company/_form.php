@@ -102,19 +102,10 @@ if ($this->action->id == 'update') {
 
         <tr>
             <td style="width:160px;">&nbsp;</td>
-            <td> <a class="btn btn-default" href="#" role="button" id="userDetails">+</a> Add Company Contact</td>
+            <td> <a class="btn btn-default" href="#" role="button" id="btnUserDetails">+</a> Add Company Contact</td>
         </tr>
 
-        <tr id="user_details_field">
-            <td style="width:160px;">&nbsp;</td>
-            <td><?php echo $form->textArea($model, 'user_details', array('size' => 50, 'placeholder'=>'User Details')); ?>
-
-                <?php echo "<br>" . $form->error($model, 'user_details'); ?>
-            </td>
-        </tr>
-
-
-        <tr>
+        <tr class="user_fields">
             <td style="width:160px;">&nbsp;</td>
             <td><?php echo $form->textField($model, 'user_first_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'First Name')); ?>
 
@@ -122,7 +113,7 @@ if ($this->action->id == 'update') {
             </td>
         </tr>
 
-        <tr>
+        <tr class="user_fields">
             <td style="width:160px;">&nbsp;</td>
             <td><?php echo $form->textField($model, 'user_last_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Last Name')); ?>
 
@@ -130,7 +121,7 @@ if ($this->action->id == 'update') {
             </td>
         </tr>
 
-        <tr>
+        <tr class="user_fields">
             <td style="width:160px;">&nbsp;</td>
             <td><?php echo $form->textField($model, 'user_email', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Email')); ?>
 
@@ -138,13 +129,15 @@ if ($this->action->id == 'update') {
             </td>
         </tr>
 
-        <tr>
+        <tr class="user_fields">
             <td style="width:160px;">&nbsp;</td>
             <td><?php echo $form->textField($model, 'user_contact_number', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Contact Number')); ?>
 
                 <?php echo "<br>" . $form->error($model, 'user_contact_number'); ?>
             </td>
         </tr>
+
+        </div>
 
     </table>
 
@@ -195,16 +188,10 @@ if (isset($_GET['viewFrom'])) {
 
 
     $(document).ready(function() {
-        var user_details = $("#Company_user_details").attr('value');
-        if(user_details==''){
-            $( "#user_details_field" ).hide();
-        }
-        else{
-            $( "#user_details_field" ).show();
-        }
-        $("#userDetails").click(function(e) {
+        
+        $("#btnUserDetails").click(function(e) {
             e.preventDefault();
-            $( "#user_details_field" ).toggle("slow");
+            //$( ".user_fields" ).toggle("slow");
         });
 
     });

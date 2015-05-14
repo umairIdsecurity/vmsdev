@@ -295,13 +295,13 @@ class VisitorController extends Controller {
         $model = new Visitor;
         $visitorService = new VisitorServiceImpl();
         $session = new CHttpSession;
-
+		
         if (isset($_POST['Visitor'])) {
             $model->profile_type = $_POST['Visitor']['profile_type'];
             $model->attributes = $_POST['Visitor'];
 
             if ($result = $visitorService->save($model, NULL, $session['id'])) {
-//                $this->redirect(array('admin'));
+            	
             }
         }
 
@@ -309,7 +309,4 @@ class VisitorController extends Controller {
             'model' => $model,
         ));
     }
-
-    
-
 }

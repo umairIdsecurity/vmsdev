@@ -57,6 +57,8 @@ class CompanyController extends Controller {
         //     $this->layout = '//layouts/contentIframeLayout';
         $model = new Company;
 
+        //$model->scenario = 'company_contact';
+
 		if (isset($_POST['user_role'])) {
 			$model->userRole = $_POST['user_role'] ;
 		}
@@ -67,6 +69,8 @@ class CompanyController extends Controller {
             $isUserViewingFromModal = 1;
         }
         if (isset($_POST['Company'])) {
+
+            $model->scenario = 'company_contact';
             $model->attributes = $_POST['Company'];
 
             if ($this->isCompanyUnique($session['tenant'], $session['role'], $_POST['Company']['name'], $_POST['Company']['tenant']) == 0) {
@@ -97,6 +101,7 @@ class CompanyController extends Controller {
                         $lastId = $model->id;
 
                         $userModel = new User();
+
                         $userModel->first_name = $model->user_first_name;
                         $userModel->last_name = $model->user_last_name;
                         $userModel->email = $model->user_email;

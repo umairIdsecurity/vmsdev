@@ -35,6 +35,7 @@ class VisitController extends Controller {
             array('allow',
                 'actions' => array('PrintEvacuationReport',
                     'visitorRegistrationHistory',
+                    'corporateTotalVisitCount',
                     'exportFileHistory',
                     'exportFileVisitorRecords',
                     'exportVisitorRecords', 'delete',
@@ -336,6 +337,18 @@ class VisitController extends Controller {
 
         $this->render('visitorRegistrationHistory', array(
             'model' => $model,
+        ));
+    }
+
+    public function actionCorporateTotalVisitCount() {
+        $model = new Visitor('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['Visitor'])) {
+            $model->attributes = $_GET['Visitor'];
+        }
+
+        $this->render('corporateTotalVisitCount', array(
+            'model' => $model,false, true
         ));
     }
 

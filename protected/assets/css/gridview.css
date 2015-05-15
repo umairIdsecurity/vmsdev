@@ -49,7 +49,7 @@
 .grid-view .button-column
 {
     text-align: center;
-    width: 125px;
+    width: 125px !important;
 }
 
 .grid-view .button-column img
@@ -90,12 +90,10 @@
 
 .grid-view table .items th,table th,.grid-view table.items th a{
     background-color: #FBFBFB !important;
-    //background-image:none !important;
-    background-repeat: repeat-x;
-    //  box-shadow: 0 1px 0 #FFFFFF inset;
+    
+    
     list-style: none outside none;
-    //margin: 0 0 18px;
-   // padding: 4px;
+    
     position: relative; 
     color:#323232 !important;
     text-decoration: none;
@@ -103,8 +101,8 @@
     text-align:center;
     color:#323232 !important;
     font-size:12px;
-    background:url('../images/icon-updown.png') right center no-repeat !important;
-    padding-right: 12px !important;      
+    background: linear-gradient(#F1F1F1 0%, #F1F1F1 100%);
+    /*padding-right: 12px !important;*/      
 }
 
 .grid-view{

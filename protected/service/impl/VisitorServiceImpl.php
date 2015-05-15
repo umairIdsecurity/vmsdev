@@ -58,7 +58,7 @@ class VisitorServiceImpl implements VisitorService {
                 $visitor->vehicle = NULL;
             }
         }
-        
+
         if (!($result = $visitor->save())) {
             return false;
         }

@@ -29,7 +29,7 @@ class Company extends CActiveRecord {
 	public $user_last_name;
 	public $user_email;
 	public $user_contact_number;
-	public $user_details;
+
 
     protected $tenantQuery = "SELECT COUNT(c.id)
 FROM `user` u
@@ -64,7 +64,8 @@ WHERE u.id=c.tenant AND c.id !=1";
 		echo $this->userRole;
 		if($this->userRole == 1){
 			return array(
-	            array('name , user_first_name , user_last_name , user_email , user_contact_number', 'required'),
+	            array('name', 'required'),
+	            array('user_first_name , user_last_name , user_email , user_contact_number', 'required' , 'on' => 'company_contact'),
 	            array('code', 'length', 'min' => 3, 'max' => 3, 'tooShort' => 'Code is too short (Should be in 3 characters)'),
 	            array('email_address', 'email'),
 	            array('website', 'url'),
@@ -73,7 +74,7 @@ WHERE u.id=c.tenant AND c.id !=1";
 	            array('email_address, website', 'length', 'max' => 50),
 	            array('contact', 'length', 'max' => 100),
 	            array('tenant', 'length', 'max' => 100),
-	            array('logo,is_deleted,company_laf_preferences , user_details', 'safe'),
+	            array('logo,is_deleted,company_laf_preferences', 'safe'),
 	            array('tenant, tenant_agent,logo,card_count', 'default', 'setOnEmpty' => true, 'value' => null),
 	            // The following rule is used by search().
 	            // @todo Please remove those attributes that should not be searched.
@@ -101,7 +102,7 @@ WHERE u.id=c.tenant AND c.id !=1";
 	            array('email_address, website', 'length', 'max' => 50),
 	            array('contact', 'length', 'max' => 100),
 	            array('tenant', 'length', 'max' => 100),
-	            array('logo,is_deleted,company_laf_preferences , user_details', 'safe'),
+	            array('logo,is_deleted,company_laf_preferences ', 'safe'),
 	            array('tenant, tenant_agent,logo,card_count', 'default', 'setOnEmpty' => true, 'value' => null),
 	            // The following rule is used by search().
 	            // @todo Please remove those attributes that should not be searched.
@@ -150,8 +151,7 @@ WHERE u.id=c.tenant AND c.id !=1";
             'user_first_name' => 'First Name',
             'user_last_name' => 'Last Name',
             'user_email' => 'Email',
-            'user_contact_number' => 'Contact Number',
-            'user_details' => 'User Details',
+            'user_contact_number' => 'Contact Number'
         );
     }
 

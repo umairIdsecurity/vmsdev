@@ -15,32 +15,38 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
 
 <style>
 
-#addCompanyLink {
-  width: 124px;
-  height: 23px;
-  padding-right: 0px;
-  margin-right: 0px;
-  padding-bottom: 0px;
-  display: block;
-}
+	#addCompanyLink {
+	  width: 124px;
+	  height: 23px;
+	  padding-right: 0px;
+	  margin-right: 0px;
+	  padding-bottom: 0px;
+	  display: block;
+	}
 
     .ajax-upload-dragdrop{
-
         margin-left:0px !important;
-
     }
 
     .uploadnotetext{
-
         margin-top:110px;
-
         margin-left: -80px;
-
     }
 
-#content h1 { color: #2f96b4;font-size: 18px;font-weight: bold;margin-left:50px; }
-
-.required { padding-left:10px; }
+	#content h1 {
+		color: #2f96b4;
+		font-size: 18px;
+		font-weight: bold;
+		margin-left:50px;
+	}
+	
+	.required {
+		padding-left:10px;
+	}
+	
+	.select2 {
+		margin: 0.2em 0 0.5em;
+	}
 
 </style>
 
@@ -51,91 +57,50 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
     <?php
 
     $form = $this->beginWidget('CActiveForm', array(
-
         'id' => 'register-form',
-
         'htmlOptions' => array("name" => "registerform"),
-
         'enableAjaxValidation' => false,
-
         'enableClientValidation' => true,
-
         'clientOptions' => array(
-
             'validateOnSubmit' => true,
-
-            'afterValidate' => 'js:function(form, data, hasError){
-
-                                if (!hasError){
-									
-							if($(".pass_option").is(":checked")== false){
-							
+            'afterValidate' => 'js:function(form, data, hasError) {
+				if (!hasError) {
+					if ($(".pass_option").is(":checked")== false) {
+						$("#pass_error_").show();
+						$("#Visitor_password_em_").html("select one option");
+						return false;
+					} else if ($(".pass_option").is(":checked")== true && $(".pass_option:checked").val()==1) {
+			
+						if ($("#Visitor_password").val()== "" || $("#Visitor_repeatpassword").val()=="") {
 							$("#pass_error_").show();
-							
-							$("#Visitor_password_em_").html("select one option");
-							return false;	
-							}
-							else if($(".pass_option").is(":checked")== true && $(".pass_option:checked").val()==1) {
-							    if ($("#Visitor_password").val()== "" || $("#Visitor_repeatpassword").val()=="") {
-							   
-                                    $("#pass_error_").show();
-                                    $("#pass_error_").html("type password or generate");
-                                    return false;
-                                } else if ($("#Visitor_password").val() != $("#Visitor_repeatpassword").val()) {
-                                    return false;
-                                }
-							}
-
-                                var vehicleValue = $("#Visitor_vehicle").val();
-
-                                if($("#Visitor_company").val() == ""){
-
-                                    $("#Visitor_company_em_").show();
-
-                                    $("#Visitor_company_em_").html("Please select a company");
-
-                                }
-
-                                else if(vehicleValue.length < 6 && vehicleValue != ""){
-
-                                    $("#Visitor_vehicle_em_").show();
-
-                                    $("#Visitor_vehicle_em_").html("Vehicle should have a min. of 6 characters");
-
-                                } else if($("#currentAction").val() == "update" && ($("#Visitor_password").val() == "" || $("#Visitor_repeatpassword").val() == ""))
-
-                                {
-
-                                    if($("#Visitor_password").val() == ""){
-
-                                        $("#Visitor_password_em_").show();
-
-                                    $("#Visitor_password_em_").html("Please enter a Password");
-
-                                    } else if ($("#Visitor_repeatpassword").val() == ""){
-
-                                        $("#Visitor_repeatpassword_em_").show();
-
-                                        $("#Visitor_repeatpassword_em_").html("Please enter a repeat password");
-
-                                    }
-
-                                    
-
-                                }
-
-                                else {
-
-                                    checkEmailIfUnique();
-
-                                    }
-
-                                }
-
-                                }'
-
+							$("#pass_error_").html("type password or generate");
+							return false;
+						} else if ($("#Visitor_password").val() != $("#Visitor_repeatpassword").val()) {
+							return false;
+						}
+					}
+			
+					var vehicleValue = $("#Visitor_vehicle").val();
+					if ($("#Visitor_company").val() == "") {
+						$("#Visitor_company_em_").show();
+						$("#Visitor_company_em_").html("Please select a company");
+					} else if (vehicleValue.length < 6 && vehicleValue != "") {
+						$("#Visitor_vehicle_em_").show();
+						$("#Visitor_vehicle_em_").html("Vehicle should have a min. of 6 characters");
+					} else if ($("#currentAction").val() == "update" && ($("#Visitor_password").val() == "" || $("#Visitor_repeatpassword").val() == "")) {
+						if ($("#Visitor_password").val() == "") {
+							$("#Visitor_password_em_").show();
+							$("#Visitor_password_em_").html("Please enter a Password");
+						} else if ($("#Visitor_repeatpassword").val() == "") {
+							$("#Visitor_repeatpassword_em_").show();
+							$("#Visitor_repeatpassword_em_").html("Please enter a repeat password");
+						}
+					} else {
+						checkEmailIfUnique();
+					}
+				}
+			}'
         ),
-
     ));
 
     ?>
@@ -447,14 +412,15 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                         <tr>
 
                             <td id="visitorCompanyRow">
-
-
-
-                                <select id="Visitor_company" name="Visitor[company]" >
-
-                                    <option value=''>Select Company</option>
-
-                                </select>
+                            	<?php
+									$this->widget('application.extensions.select2.Select2', array(
+										'model' => $model,
+										'attribute' => 'company',
+										'items' => array(),
+										'selectedItems' => array(), // Items to be selected as default
+										'placeHolder' => 'Select Company'
+									));
+								?>
 
                                 <?php echo $form->error($model, 'company'); ?>
 
@@ -509,7 +475,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                     <?php if ((($session['role'] == Roles::ROLE_SUPERADMIN || $session['role'] == Roles::ROLE_ADMIN) && $this->action->id == 'update') || $this->action->id == 'addvisitor') {
 
                             ?>
-                <div class="password-border">
+                <div class="password-border" style="margin-bottom: 15px;">
                  <table style="float:left;width:300px;"> 
 
                            
@@ -1126,146 +1092,94 @@ if (isset($_GET['id'])) {
     function trim(el) {
 
         el.value = el.value.
-
-                replace(/(^\s*)|(\s*$)/gi, "").// removes leading and trailing spaces
-
-                replace(/[ ]{2,}/gi, " ").// replaces multiple spaces with one space 
-
-                replace(/\n +/, "\n");           // Removes spaces after newlines
+			replace(/(^\s*)|(\s*$)/gi, "").// removes leading and trailing spaces
+			replace(/[ ]{2,}/gi, " ").// replaces multiple spaces with one space
+			replace(/\n +/, "\n");           // Removes spaces after newlines
 
         return;
 
     }
-
-    
-
+	
     function dismissModal(id) {
 
         $("#dismissModal").click();
-
         $('#Visitor_company option[value!=""]').remove();
 
         if ($("#Visitor_tenant_agent").val() == "") {
-
-            // populateCompanyofTenant($("#Visitor_tenant").val(), id);
-
             getCompanyWithSameTenant($("#Visitor_tenant").val(), id)
-
         } else {
-
             getCompanyWithSameTenantAndTenantAgent($("#Visitor_tenant").val(), $("#Visitor_tenant_agent").val(), id);
-
         }
-
     }
 
 
 
     function sendVisitorForm() {
-
         var form = $("#register-form").serialize();
-
         var url;
 
         if ($("#currentAction").val() == 'update') {
-
             url = "<?php echo CHtml::normalizeUrl(array("visitor/update&id=")); ?>" + $("#currentlyEditedVisitorId").val();
-
         } else {
-
             url = "<?php echo CHtml::normalizeUrl(array("visitor/addvisitor")); ?>";
-
         }
-
+		
         $.ajax({
-
             type: "POST",
-
             url: url,
-
             data: form,
-
             success: function(data) {
-
                 if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
-
                     window.location = 'index.php?r=dashboard';
-
                 } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
-
                     window.location = 'index.php?r=dashboard/viewmyvisitors';
-
-                }
-
-                else {
-
+                } else {
                     window.location = 'index.php?r=visitor/admin';
-
                 }
-
             },
-
             error: function(data) {
-
                 if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
-
                     window.location = 'index.php?r=dashboard';
-
                 } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
-
                     window.location = 'index.php?r=dashboard/viewmyvisitors';
-
-                }
-
-                else {
-
+                } else {
                     window.location = 'index.php?r=visitor/admin';
-
                 }
-
             },
-
         });
-
     }
 	
 	
-	function cancel(){
-	$('#Visitor_repeatpassword').val('');	
-	$('#Visitor_password').val('');
-	$("#random_password").val('');	
-	$("#close_generate").click();
+	function cancel() {
+		$('#Visitor_repeatpassword').val('');	
+		$('#Visitor_password').val('');
+		$("#random_password").val('');	
+		$("#close_generate").click();
 	}
 	
 	function copy_password(){
-	if($('#random_password').val()==''){
-	$('#error_msg').show();
-	}else{
-	
-	$('#Visitor_password').val($('#random_password').val());
-	$('#Visitor_repeatpassword').val($('#random_password').val());
-	$("#close_generate").click();
-		
-	}
-		
+		if ($('#random_password').val()=='') {
+			$('#error_msg').show();
+		} else {
+			$('#Visitor_password').val($('#random_password').val());
+			$('#Visitor_repeatpassword').val($('#random_password').val());
+			$("#close_generate").click();
+		}
 	}
 	
 	
 	function generatepassword() {
-		
-		 $("#random_password").val('');
+		$("#random_password").val('');
 		$( "#pass_option" ).prop( "checked", true );
 		
 		var text = "";
     	var possible = "abcdefghijklmnopqrstuvwxyz0123456789";
 
-		for( var i=0; i < 6; i++ ){
+		for( var i=0; i < 6; i++ ) {
 			text += possible.charAt(Math.floor(Math.random() * possible.length));
 		}
     	document.getElementById('random_password').value	=	text;
-		
-	 
-	  $("#gen_pass").click();
+    	$("#gen_pass").click();
 	}
 
 </script>

@@ -137,18 +137,18 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
         $cardDetail = CardGenerated::model()->findAllByAttributes(array(
             'visitor_id' => $model->visitor
         ));
-        if ($model->card != '') {
-            if ((CardGenerated::model()->findByPk($model->card)->print_count > 0) && $model->visit_status == VisitStatus::ACTIVE) {
-                ?><input type="button" class="complete btn btn-info printCardBtn" value="Reprint Card" id="reprintCardBtn" onclick="generateCard()"/><?php
-        } else {
-            ?>
-            <input type="button" class="complete btn btn-info printCardBtn" value="Print Card" id="printCardBtn" onclick="generateCard()"/>
-            <?php
-        }
-        }
     ?>
 </div>
-
+    <div class="dropdown">
+        <button class="complete btn btn-info printCardBtn dropdown-toggle" style="width:205px !important" type="button" id="menu1" data-toggle="dropdown">Print Card
+    <span class="caret pull-right"></span></button>
+        <ul class="dropdown-menu" style="left: 62px;" role="menu" aria-labelledby="menu1">
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo yii::app()->createAbsoluteUrl('cardGenerated/pdfprint',array('id'=>$model->id,'type'=>1)) ?>">Print On Standard Printer</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo yii::app()->createAbsoluteUrl('cardGenerated/pdfprint',array('id'=>$model->id,'type'=>2)) ?>">Print On Card Printer</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo yii::app()->createAbsoluteUrl('cardGenerated/pdfprint',array('id'=>$model->id,'type'=>3)) ?>">Rewritable Print Card</a></li>
+    </ul>
+  </div>
+    
 <div>
        Total Visits at <?php echo $visitModel['companyName']; ?>: <?php echo $visitModel['companyVisitsByVisitor']; ?></br>
        <!-- Total Visits to All Companies: <?php // echo $visitModel['allVisitsByVisitor']; ?> -->

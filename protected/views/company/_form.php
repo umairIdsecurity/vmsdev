@@ -102,19 +102,14 @@ if ($this->action->id == 'update') {
 
         <tr>
             <td style="width:160px;">&nbsp;</td>
-            <td> <a class="btn btn-default" href="#" role="button" id="userDetails">+</a> Add Company Contact</td>
-        </tr>
-
-        <tr id="user_details_field">
-            <td style="width:160px;">&nbsp;</td>
-            <td><?php echo $form->textArea($model, 'user_details', array('size' => 50, 'placeholder'=>'User Details')); ?>
-
-                <?php echo "<br>" . $form->error($model, 'user_details'); ?>
+            <td>
+                <a class="btn btn-default" href="#" role="button" id="addContact">+</a> Add Company Contact
+                <input id="is_user_field" type="hidden" value="" />
             </td>
         </tr>
 
 
-        <tr>
+        <tr class="user_fields">
             <td style="width:160px;">&nbsp;</td>
             <td><?php echo $form->textField($model, 'user_first_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'First Name')); ?>
 
@@ -122,7 +117,7 @@ if ($this->action->id == 'update') {
             </td>
         </tr>
 
-        <tr>
+        <tr class="user_fields">
             <td style="width:160px;">&nbsp;</td>
             <td><?php echo $form->textField($model, 'user_last_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Last Name')); ?>
 
@@ -130,7 +125,7 @@ if ($this->action->id == 'update') {
             </td>
         </tr>
 
-        <tr>
+        <tr class="user_fields">
             <td style="width:160px;">&nbsp;</td>
             <td><?php echo $form->textField($model, 'user_email', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Email')); ?>
 
@@ -138,13 +133,15 @@ if ($this->action->id == 'update') {
             </td>
         </tr>
 
-        <tr>
+        <tr class="user_fields">
             <td style="width:160px;">&nbsp;</td>
             <td><?php echo $form->textField($model, 'user_contact_number', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Contact Number')); ?>
 
                 <?php echo "<br>" . $form->error($model, 'user_contact_number'); ?>
             </td>
         </tr>
+
+        </div>
 
     </table>
 
@@ -196,10 +193,20 @@ if (isset($_GET['viewFrom'])) {
 
     $(document).ready(function() {
 
-        $( "#user_details_field" ).hide();
-        $("#userDetails").click(function(e) {
+        $("#addContact").click(function(e) {
             e.preventDefault();
-            $( "#user_details_field" ).toggle("slow");
+            //$('#is_user_field').val(1);
+            var is_user_field = $("#is_user_field").attr('value');
+            //$( ".user_fields" ).toggle("slow");
+            if(is_user_field==""){
+                $('#is_user_field').val(1);
+            }
+            else{
+                $('#is_user_field').val("");
+            }
+
+            $( ".user_fields" ).toggle("slow");
+
         });
 
     });

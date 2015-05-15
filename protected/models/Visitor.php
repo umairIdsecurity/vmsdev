@@ -30,6 +30,7 @@ Yii::import('ext.validator.VisitorAlternateIdentification');
  * @property integer $is_deleted
  * @property string $tenant
  * @property string $tenant_agent
+ * @property integer $verifiable_signature
  *
  * The followings are the available model relations:
  * @property CardGenerated[] $cardGenerateds
@@ -212,7 +213,8 @@ class Visitor extends CActiveRecord {
                 repeatpassword,
                 password_option,
                 password_requirement,
-                alternative_identification
+                alternative_identification,
+                verifiable_signature
                 ',
                 'safe'
             ),
@@ -220,8 +222,11 @@ class Visitor extends CActiveRecord {
             array('password', 'PasswordCustom'),
             array('repeatpassword', 'PasswordRepeat'),
             array('password_requirement', 'PasswordRequirement'),
-            array('password_option', 'PasswordOption'),
-           // array('vehicle', 'length', 'min'=>6, 'max'=>6, 'tooShort'=>'Vehicle is too short (Should be in 6 characters)'),
+
+            //todo: check to enable again. why do we need this validation ?
+            //array('password_option', 'PasswordOption'),
+
+           /// array('vehicle', 'length', 'min'=>6, 'max'=>6, 'tooShort'=>'Vehicle is too short (Should be in 6 characters)'),
             array('email', 'email'),
             array('vehicle', 'match',
                 'pattern' => '/^[A-Za-z0-9_]+$/u',
@@ -347,6 +352,7 @@ class Visitor extends CActiveRecord {
             'contact_suburb'                            => 'Suburb',
             'contact_state'                             => 'State',
             'contact_country'                           => 'Country',
+            'verifiable_signature'                      => 'Verifiable Signature'
         );
     }
 

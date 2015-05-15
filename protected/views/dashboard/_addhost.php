@@ -291,7 +291,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
 
 
         </table>
-        
+        <div class="password-border">
         <table style="float:left; width:280px">
         
         	<tr>
@@ -366,11 +366,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                    
             <tr><td>
                     
-        <div class="row buttons ">
-           <input type="button" id="clicktabC" value="Add" style="display:none;"/>
-
-        <input type="submit" style="text-align:center;margin-left:161px;" value="Save" name="yt0" id="submitFormUser" class="complete" />
-        </div>
+        
                    </td></tr>
         
   
@@ -380,6 +376,13 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
         
            
        </table>
+       </div> <!-- password-border -->
+
+       <div class="row buttons ">
+           <input type="button" id="clicktabC" value="Add" style="display:none;"/>
+
+        <input type="submit"  value="Save" name="yt0" id="submitFormUser" class="complete" />
+        </div>
        
 </div>
 

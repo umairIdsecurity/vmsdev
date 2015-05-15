@@ -67,6 +67,11 @@ class VisitController extends Controller {
         if (isset($_POST['Visit'])) {
             $model->attributes = $_POST['Visit'];
 
+            // default workstation:
+            if (isset($session['workstation'])) {
+                $model->workstation = $session['workstation'];
+            }
+
             // get the lastest visitor type:
             if ($model->visitor_type == null) {
                 $lastVisit = Visit::model()->find("visitor = " . $model->visitor);
@@ -74,7 +79,7 @@ class VisitController extends Controller {
                 if ($lastVisit){
                     $model->visitor_type = $lastVisit->visitor_type;
                     $model->reason = $lastVisit->reason;
-                    $model->workstation = $lastVisit->workstation;
+
                 } else {
                     // default value:
                     // todo: check this default later
@@ -85,19 +90,8 @@ class VisitController extends Controller {
                         $model->reason = $reason[0]->id;
                     }
 
-                    $workstations = $this->populateWorkstation();
-                    if (count($workstations)> 0 ) {
-                        $model->workstation = $workstations[0]->id;
-                    }
-
-                    // default workstation:
-                    if (isset($session['workstation'])) {
-                        $model->workstation = $session['workstation'];
-                    }
-
                 }
             }
-
 
             if ($visitService->save($model, $session['id'])) {
                 $this->redirect(array('visit/detail', 'id' => $model->id));

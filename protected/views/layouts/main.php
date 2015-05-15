@@ -53,12 +53,12 @@ $userRole = $session['role'];
         <script  src="<?php echo Yii::app()->controller->assetsBase; ?>/js/match.js" ></script>
 
         <script  src="<?php echo Yii::app()->controller->assetsBase; ?>/js/script-sidebar.js" ></script>
-      
+ 
         <script  src="<?php echo Yii::app()->controller->assetsBase; ?>/js/jquery.uploadfile.min.js" ></script>
         <script  src="<?php echo Yii::app()->controller->assetsBase; ?>/js/jquery.form.js" ></script>
 
         <title><?php echo CHtml::encode($this->pageTitle); ?></title>
-
+ 
     </head>
 
     <body>

@@ -16,12 +16,12 @@ $session = new ChttpSession;
     <div class="sidebarTitle" ><a href="#" class="dashboard-icon"></a>Main Menu</div><br><div id='cssmenu' class="dashboardMenu">
         <ul>
             <li class=''><a href='<?php echo Yii::app()->createUrl('visitor/create&action=register'); ?>' class="submenu-icon log-current"><span >Log Visit</span></a></li>
-            <li class=''>
+            <!--<li class=''>
 
-                <a href='<?php echo Yii::app()->createUrl('visitor/create&action=preregister'); ?>' class="submenu-icon pre-visits">
+                <a href='<?php /*echo Yii::app()->createUrl('visitor/create&action=preregister'); */?>' class="submenu-icon pre-visits">
                     <span >Preregister Visit</span>
                 </a>
-            </li>
+            </li>-->
             <li class=''><?php
                 echo CHtml::ajaxLink("Add Host", CController::createUrl('dashboard/addHost'), array(
                     'update' => '#content', 

@@ -5,11 +5,7 @@ $session = new CHttpSession;
 ?>
 <input type="text" id="getcurrentUrl" value="<?php
 if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
-    if (isset($_GET['p'])) {
-        echo $_GET['p']; //check if preregister page
-    } else {
-        echo "1";
-    }
+    echo "1";
 } else {
     echo "";
 }
@@ -19,9 +15,6 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
         if ($_GET['action'] == 'register') {
             echo "Log";
             $session['previousVisitAction'] = 'Register';
-        } else {
-            echo "Preregister";
-            $session['previousVisitAction'] = 'Preregister';
         }
     }
     ?> Visit</h1>

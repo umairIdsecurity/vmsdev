@@ -374,7 +374,7 @@ class Visitor extends CActiveRecord {
         $criteria = new CDbCriteria;
 
         $criteria->compare('id', $this->id, true);
-        // $criteria->compare('first_name', $this->first_name, true);
+        //$criteria->compare('first_name', $this->first_name, true);
         $criteria->compare('last_name', $this->last_name, true);
         $criteria->compare('email', $this->email, true);
         $criteria->compare('contact_number', $this->contact_number, true);
@@ -393,9 +393,7 @@ class Visitor extends CActiveRecord {
         $criteria->compare('tenant', $this->tenant, true);
         $criteria->compare('tenant_agent', $this->tenant_agent, true);
         $criteria->compare('vehicle', $this->vehicle, true);
-        
-        
-        
+
         if (Yii::app()->controller->id == 'visit') {
             $criteria->compare('CONCAT(first_name, \' \', last_name)', $this->first_name, true);
         } else {
@@ -406,7 +404,7 @@ class Visitor extends CActiveRecord {
         if($user->role != Roles::ROLE_SUPERADMIN){
             
         } 
-        
+
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'sort' => array(
@@ -577,5 +575,23 @@ class Visitor extends CActiveRecord {
             return $company->name;
         }
         return "";
+    }
+
+    public function getCompanyCode()
+    {
+        $company = Company::model()->findByPk($this->company);
+        if ($company) {
+            return $company->code;
+        }
+        return "";
+    }
+
+    public function getTotalVisit()
+    {
+        $visit = Visit::model()->findAllByPk($this->id);
+        if ($visit) {
+            return count($visit);
+        }
+        return '';
     }
 }

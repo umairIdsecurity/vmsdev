@@ -286,7 +286,37 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     </ul>
                 </li><!-- menu for Visitors -->
             <?php }
+                  // Show Visitor Types to All Admins only  
+                  if( Yii::app()->user->role == Roles::ROLE_ADMIN) {
+             ?>    <!-- menu for Visitors Types -->
+                <li class='has-sub'><?php
+                    echo CHtml::ajaxLink("Visitor Types", CController::createUrl('visitorType/adminAjax'), array(
+                        'update' => '#content',
+                        'complete' => "js:function(html){
+                        $('.managecompanies').next().slideUp('normal');
+                        $('.manageworkstations').next().slideUp('normal');
+                        $('.manageusers').next().slideUp('normal');
+                        $('.managevisitorrecords').next().slideUp('normal');
+                        $('.managevisitortype').next().slideDown('normal');
+                        $('.managevisitreasons').next().slideUp('normal');
+                        $('.managereports').next().slideUp('normal');
+                    }",
+                            ), array(
+                        'class' => 'managevisitortype',
+                    ));
             ?>
+                    <ul <?php
+                    if ($this->id == 'visitorType') {
+                        echo "style='display:block ;'";
+                    }
+                    ?>>
+                        <li><a href='<?php echo Yii::app()->createUrl('visitorType/create'); ?>' class="addSubMenu"><span>Add Visitor Type</span></a></li>
+                    </ul>
+                </li> <!-- menu for Visitors Types -->
+
+             <?php         
+                  }
+             ?>
 
             <!-- menu for companies -->
             <?php if ($session['role'] == Roles::ROLE_SUPERADMIN) {

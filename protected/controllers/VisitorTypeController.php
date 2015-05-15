@@ -135,8 +135,8 @@ class VisitorTypeController extends Controller {
     public function actionAdminAjax() {
         $model = new VisitorType('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['Visitor']))
-            $model->attributes = $_GET['Visitor'];
+        if (isset($_GET['VisitorType']))
+            $model->attributes = $_GET['VisitorType'];
 
         $this->renderPartial('_admin', array(
             'model' => $model,

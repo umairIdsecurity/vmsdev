@@ -9,10 +9,10 @@
 
 <?php
 $this->widget('zii.widgets.grid.CGridView', array(
-    'id' => 'visitor-type-grid',
+    'id' => 'visitor-type-grid-2',
     'dataProvider' => $model->search(),
-    'enableSorting' => false,
-    'hideHeader'=>true,
+    'enableSorting' => true,
+    'hideHeader'=>false,
     'filter' => $model,
     'afterAjaxUpdate' => "
     function(id, data) {
@@ -23,6 +23,12 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' => 'name',
             'filter'=>CHtml::activeTextField($model, 'name', array('placeholder'=>'Name')),
+        ),
+          array(
+            'name' => 'is_default_value',
+            'header'=> 'Default Value',
+            'filter'=>array('1'=>'Default','0'=>'Not Default'),
+            'value'=>'($data->is_default_value=="1")?("Default"):""',
         ),
         array(
             'header' => 'Actions',

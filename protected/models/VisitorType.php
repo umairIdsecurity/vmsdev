@@ -7,6 +7,7 @@
  * @property string $id
  * @property string $name
  * @property string $created_by
+ * @property integer $is_default_value
  *
  * The followings are the available model relations:
  * @property Visitor[] $visitors
@@ -34,11 +35,12 @@ class VisitorType extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('name', 'length', 'max' => 25),
-            array('name', 'required'),
+            array('name', 'required'),          
             array('created_by', 'length', 'max' => 20),
+            array('is_default_value', 'length', 'max'=>1),  
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, is_deleted,tenant,tenant_agent,name, created_by', 'safe', 'on' => 'search'),
+            array('id, is_deleted,tenant,tenant_agent,name , is_default_value, created_by', 'safe', 'on' => 'search'),
         );
     }
 
@@ -65,6 +67,7 @@ class VisitorType extends CActiveRecord {
             'is_deleted' => 'Is Deleted',
             'tenant' => 'Tenant',
             'tenant_agent' => 'Tenant Agent',
+            'is_default_value' => 'Set Default'
         );
     }
 
@@ -90,7 +93,11 @@ class VisitorType extends CActiveRecord {
         $criteria->compare('created_by', $this->created_by, true);
         $criteria->compare('tenant', $this->tenant, true);
         $criteria->compare('tenant_agent', $this->tenant_agent, true);
-
+        $criteria->compare('is_default_value', $this->is_default_value, true);
+        // Allow Admin to View and Manage his own created Types
+        if( Yii::app()->user->role == Roles::ROLE_ADMIN )
+            $criteria->addCondition('created_by ="' . Yii::app()->user->id . '"');
+        
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
         ));
@@ -113,6 +120,21 @@ class VisitorType extends CActiveRecord {
             $criteria->condition = "t.is_deleted = 0 && t.id !=1";
         }
         $this->dbCriteria->mergeWith($criteria);
+    }
+    
+    /**
+     * Before Save change a few things.
+     * 
+     * @return control
+     */
+    public function beforeSave() {
+        
+        // Only one value can be set default for a specific tenant ID
+        if( isset($this->is_default_value) && $this->is_default_value ) {
+            $this->updateAll(array("is_default_value"=>0), "tenant = '".$this->tenant."'" );
+        }
+       
+        return parent::beforeSave();
     }
 
     public function beforeDelete() {

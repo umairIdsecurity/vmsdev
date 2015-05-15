@@ -240,7 +240,23 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                     <tr>
                                         <td>
                                             <?php
-                                            echo $form->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes());
+                                           // Show Default selected to Admin only 
+                                           if(Yii::app()->user->role == Roles::ROLE_ADMIN) {
+                                               echo '<select name="Visitor[visitor_type]" id="Visitor_visitor_type">';
+                                               echo CHtml::tag('option',array('value' => ''),'Select Visitor Type',true);
+                                               $list = VisitorType::model()->findAll();
+                                               
+                                               foreach( $list as $val ) {
+                                                   if ( $val->tenant == Yii::app()->user->tenant && $val->is_default_value == '1' )
+                                                        echo CHtml::tag('option',array('value' => $val->id, 'selected' => 'selected'),CHtml::encode($val->name),true);
+                                                    else
+                                                        echo CHtml::tag('option',array('value' => $val->id),CHtml::encode($val->name),true);
+                                                   
+                                              } echo "</select>";
+                                           }  else {
+                                               echo $form->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes());
+                                           }
+                                          
                                             ?>
                                             <span class="required">*</span>
                                             <?php echo "<br>" . $form->error($model, 'visitor_type'); ?>

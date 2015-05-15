@@ -14,6 +14,12 @@ $this->widget('zii.widgets.grid.CGridView', array(
     'filter' => $model,
     'columns' => array(
         'name',
+          array(
+            'name' => 'is_default_value',
+            'header'=> 'Default Value',
+            'filter'=>array('1'=>'Default','0'=>'Not Default'),
+            'value'=>'($data->is_default_value=="1")?("Default"):""',
+        ),
         array(
             'header' => 'Actions',
             'class' => 'CButtonColumn',

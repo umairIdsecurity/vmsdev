@@ -28,6 +28,16 @@
                     <?php echo "<br>".$form->error($model,'name'); ?>
                 </td>
             </tr>
+            
+             <tr>
+                <td>
+                    <?php echo $form->labelEx($model,'is_default_value'); ?>
+                </td>
+                <td>
+                    <?php echo $form->checkBox($model,'is_default_value'); ?>
+                    <?php echo "<br>".$form->error($model,'is_default_value'); ?>
+                </td>
+            </tr>
         </table>
 
 	<div class="row buttons buttonsAlignToRight">

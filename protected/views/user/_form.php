@@ -550,7 +550,7 @@ echo '<h1>Add User </h1>';
 
     <?php $this->endWidget(); ?>
 
-</div><!-- form
+</div> 
 
 <input type="hidden" id="currentAction" value="<?php echo $this->action->Id; ?>"/>
 <input type="hidden" id="currentRole" value="<?php echo $session['role']; ?>"/>

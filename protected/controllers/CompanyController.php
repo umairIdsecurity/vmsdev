@@ -168,14 +168,16 @@ class CompanyController extends Controller {
 
 
         $userModel = User::model()->findByAttributes(
-            array('company' => $model->id)
+            array('company' => $model->id) //TODO: I think the logic here is a bit flawed. What if there's no user, what if there's more than one?
         );
-        $model->user_first_name = $userModel->first_name;
-        $model->user_last_name = $userModel->last_name;
-        $model->user_email = $userModel->email;
-        $model->user_contact_number = $userModel->contact_number;
-        $model->user_details = $userModel->notes;
 
+        if(isset($userModel)) {
+            $model->user_first_name = $userModel->first_name;
+            $model->user_last_name = $userModel->last_name;
+            $model->user_email = $userModel->email;
+            $model->user_contact_number = $userModel->contact_number;
+            $model->user_details = $userModel->notes;
+        }
         /*print_r($userModel);
         exit;*/
 		if (isset($_POST['user_role'])) {

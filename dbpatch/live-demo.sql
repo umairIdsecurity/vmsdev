@@ -51,6 +51,7 @@ DROP TABLE IF EXISTS `module`;
 DROP TABLE IF EXISTS `password_change_request`;
 DROP TABLE IF EXISTS `workstation_card_type`;
 DROP TABLE IF EXISTS `visitor_card_status`;
+DROP TABLE IF EXISTS `YiiSession`;
 
 SET FOREIGN_KEY_CHECKS = 1;
 --

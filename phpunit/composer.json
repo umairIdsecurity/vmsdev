@@ -1,0 +1,11 @@
+{
+    "name": "Vikash/phpunit-selenium",
+    "require": {
+        
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.*",
+        "phpunit/phpunit-selenium": ">=1.2"
+}
+
+}

@@ -26,6 +26,7 @@
 composer.phar
 /vendor/**
 /tools/vendor/**
+/tools/bin/**
 /build/**
 /protected/runtime/*.log*
 company_css/**

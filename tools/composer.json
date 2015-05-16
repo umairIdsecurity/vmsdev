@@ -33,15 +33,7 @@
 		"theseer/fxsl" : ">=1.1",
 		"phpunit/php-timer" : ">=1.0.4",
 		"nikic/php-parser" : "=1.2.2",
-		"phpunit/phpunit": "~4",
-        "behat/behat": "*@stable",
-        "behat/behat": "2.4.*@stable",
-        "behat/mink": "1.4.*@stable",
-        "behat/mink-extension": "*",
-        "behat/mink-goutte-driver": "*",
-        "behat/mink-selenium2-driver": "*",
-        "behat/yii-extension":"*",
-        "behat/mink-zombie-driver":"*"
+		"phpunit/phpunit": "~4"
     },
      "bin": [
           "phploc"

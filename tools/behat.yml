@@ -2,5 +2,11 @@
 default:
     extensions:
         Behat\MinkExtension\Extension:
+            default_session: wunit
             goutte: ~
             selenium2: ~
+
+        Behat\YiiExtension\Extension:
+              framework_script: ../../framework/yii.php
+              config_script: ../config/test.php
+              mink_driver: true

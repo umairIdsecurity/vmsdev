@@ -28,7 +28,7 @@ return array(
         'application.extensions.bootstrap.widgets.*',
         'application.service.impl.*',
         'application.service.*',
-        'application.helpers.*',
+        'application.helpers.*'
     ),
     'modules' => array(
         // uncomment the following to enable the Gii tool
@@ -51,6 +51,7 @@ return array(
         'autoStart'=>false    
         ),
         */
+
         'ePdf' => array(
             'class' => 'ext.yii-pdf.EYiiPdf',
             'params' => array(

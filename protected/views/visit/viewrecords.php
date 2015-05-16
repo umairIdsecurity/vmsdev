@@ -111,11 +111,19 @@ $this->widget('zii.widgets.grid.CGridView', array(
 ));
 
 function getCompany($id) {
-    if (Visitor::model()->findByPk($id)->company == NULL) {
-        return "Not Available";
-    } else {
-        return Company::model()->findByPk(Visitor::model()->findByPk($id)->company)->name;
+
+    $company_id = Visitor::model()->findByPk($id)->company;
+
+    if (isset($company_id)) {
+
+        $company = Company::model()->findByPk($company_id);
+        if(isset($company))
+        {
+            return $company->name;
+        }
     }
+    return "Not Available";
+
 }
 
 function formatTime($time) {

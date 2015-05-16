@@ -6,7 +6,6 @@
 
 
 $session = new CHttpSession;
-
 $tenant = '';
 $tenantAgent = '';
 if (isset($_GET['tenant'])) {
@@ -46,7 +45,7 @@ if ($this->action->id == 'update') {
         echo $form->errorSummary($model);
     }
     ?>
-    <input type="hidden" id="user_role" name="user_role" value="<?php echo $session['role']  ?>">
+    <input type="hidden" id="user_role" name="user_role" value="<?php echo $session['role'];  ?>">
     <?php if ($this->action->id != 'update') {
         ?>
         <input type="hidden" id="Company_tenant" name="Company[tenant]" value="<?php echo $tenant; ?>">
@@ -104,7 +103,7 @@ if ($this->action->id == 'update') {
             <td style="width:160px;">&nbsp;</td>
             <td>
                 <a class="btn btn-default" href="#" role="button" id="addContact">+</a> Add Company Contact
-                <input id="is_user_field" type="hidden" value="" />
+                <input type="hidden" id="is_user_field" name="is_user_field" value="<?php echo $session['is_field'];?>">
             </td>
         </tr>
 
@@ -147,7 +146,7 @@ if ($this->action->id == 'update') {
 
 
     <div class="row buttons " style="<?php if (isset($_GET['viewFrom'])) { ?>
-        margin-left:180px;
+        margin-left:173px;
     <?php
     } else {
         echo "text-align:right;";
@@ -193,19 +192,27 @@ if (isset($_GET['viewFrom'])) {
 
     $(document).ready(function() {
 
+        var default_field = $("#is_user_field").attr('value');
+
+        if(default_field==""){
+            $( ".user_fields" ).hide();
+        }
+        else{
+            $( ".user_fields" ).show();
+        }
+
         $("#addContact").click(function(e) {
             e.preventDefault();
-            //$('#is_user_field').val(1);
+
             var is_user_field = $("#is_user_field").attr('value');
-            //$( ".user_fields" ).toggle("slow");
             if(is_user_field==""){
                 $('#is_user_field').val(1);
+                $( ".user_fields" ).show();
             }
             else{
                 $('#is_user_field').val("");
+                $( ".user_fields" ).hide();
             }
-
-            $( ".user_fields" ).toggle("slow");
 
         });
 

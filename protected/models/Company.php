@@ -29,6 +29,7 @@ class Company extends CActiveRecord {
 	public $user_last_name;
 	public $user_email;
 	public $user_contact_number;
+    public $is_user_field;
 
 
     protected $tenantQuery = "SELECT COUNT(c.id)
@@ -74,7 +75,7 @@ WHERE u.id=c.tenant AND c.id !=1";
 	            array('email_address, website', 'length', 'max' => 50),
 	            array('contact', 'length', 'max' => 100),
 	            array('tenant', 'length', 'max' => 100),
-	            array('logo,is_deleted,company_laf_preferences', 'safe'),
+	            array('logo,is_deleted,company_laf_preferences ,is_user_field', 'safe'),
 	            array('tenant, tenant_agent,logo,card_count', 'default', 'setOnEmpty' => true, 'value' => null),
 	            // The following rule is used by search().
 	            // @todo Please remove those attributes that should not be searched.
@@ -83,7 +84,8 @@ WHERE u.id=c.tenant AND c.id !=1";
 		}
 		else{
 			return array(
-	            array('name,code, user_first_name , user_last_name , user_email , user_contact_number', 'required'),
+	            array('name,code', 'required'),
+                //array('user_first_name , user_last_name , user_email , user_contact_number', 'required' , 'on' => 'company_contact'),
 	//            array('code', 'unique'),
 	//            array('code', 'unique', 'criteria' => array(
 	//                    'condition' => '`tenant`=:tenant',
@@ -102,7 +104,7 @@ WHERE u.id=c.tenant AND c.id !=1";
 	            array('email_address, website', 'length', 'max' => 50),
 	            array('contact', 'length', 'max' => 100),
 	            array('tenant', 'length', 'max' => 100),
-	            array('logo,is_deleted,company_laf_preferences ', 'safe'),
+	            array('logo,is_deleted,company_laf_preferences', 'safe'),
 	            array('tenant, tenant_agent,logo,card_count', 'default', 'setOnEmpty' => true, 'value' => null),
 	            // The following rule is used by search().
 	            // @todo Please remove those attributes that should not be searched.

@@ -146,7 +146,7 @@ if ($this->action->id == 'update') {
 
 
     <div class="row buttons " style="<?php if (isset($_GET['viewFrom'])) { ?>
-        margin-left:180px;
+        margin-left:173px;
     <?php
     } else {
         echo "text-align:right;";

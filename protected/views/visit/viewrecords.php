@@ -116,7 +116,10 @@ function getCompany($id) {
 
     if (isset($company_id)) {
 
-        $company = Company::model()->findByPk($company_id);
+        $companyModel = Company::model();
+
+        $company = $companyModel->findByPk($company_id, $companyModel->modelName . ".is_deleted >= 0 " );
+
         if(isset($company))
         {
             return $company->name;

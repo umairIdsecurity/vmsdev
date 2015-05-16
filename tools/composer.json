@@ -43,11 +43,7 @@
         "behat/yii-extension":"*",
         "behat/mink-zombie-driver":"*"
     },
-    //"minimum-stability": "dev",
-    //"config": {
-    //  "bin-dir": "bin/"
-    //},
-    "bin": [
+     "bin": [
           "phploc"
       ],
     "extra": {

@@ -54,26 +54,34 @@ class CompanyController extends Controller {
     }
 
     public function actionCreate() {
+
         //     $this->layout = '//layouts/contentIframeLayout';
+        $session = new CHttpSession;
         $model = new Company;
 
-        //$model->scenario = 'company_contact';
+        if (isset($_POST['is_user_field']) && $_POST['is_user_field']==1) {
+            $session['is_field']=1;
+            $model->scenario = 'company_contact';
+        }else{
+            unset($_SESSION['is_field']);
+        }
 
 		if (isset($_POST['user_role'])) {
 			$model->userRole = $_POST['user_role'] ;
 		}
-        $session = new CHttpSession;
+
         $companyService = new CompanyServiceImpl();
         $isUserViewingFromModal = '';
         if (isset($_GET['viewFrom'])) {
             $isUserViewingFromModal = 1;
         }
+
         if (isset($_POST['Company'])) {
 
-            $model->scenario = 'company_contact';
             $model->attributes = $_POST['Company'];
 
             if ($this->isCompanyUnique($session['tenant'], $session['role'], $_POST['Company']['name'], $_POST['Company']['tenant']) == 0) {
+
 				if(isset($_POST['Company']['code'])){
 					 if ((($this->isCompanyCodeUnique($session['tenant'], $session['role'], $_POST['Company']['code'], $_POST['Company']['tenant']) == 0)) && ($session['role'] != Roles::ROLE_ADMIN)) {
 	                    if ($companyService->save($model, $session['tenant'], $session['role'], 'create')) {
@@ -96,6 +104,7 @@ class CompanyController extends Controller {
 	                }
 				}
 				else{
+
 					if ($companyService->save($model, $session['tenant'], $session['role'], 'create')) {
 
                         $lastId = $model->id;
@@ -106,7 +115,7 @@ class CompanyController extends Controller {
                         $userModel->last_name = $model->user_last_name;
                         $userModel->email = $model->user_email;
                         $userModel->contact_number = $model->user_contact_number;
-                        //$userModel->notes = $model->user_details;
+
                         $userModel->user_type = 2;
                         $userModel->password = 12345;
                         $userModel->role = 10;
@@ -116,6 +125,7 @@ class CompanyController extends Controller {
                         $userModel->asic_expiry_month = 10;
                         $userModel->asic_expiry_year = 15;
                         $userModel->save();
+                        unset($_SESSION['is_field']);
 
                         $cs = Yii::app()->clientScript;
                         $cs->registerScript('closeParentModal', 'window.parent.dismissModal(' . $lastId . ');', CClientScript::POS_READY);
@@ -164,20 +174,28 @@ class CompanyController extends Controller {
 
     public function actionUpdate($id) {
         //$this->layout = '//layouts/contentIframeLayout';
+        $session = new CHttpSession;
         $model = $this->loadModel($id);
 
+        if (isset($_POST['is_user_field']) && $_POST['is_user_field']==1) {
+            $session['is_field']=1;
+            $model->scenario = 'company_contact';
+        }else{
+            unset($_SESSION['is_field']);
+        }
 
         $userModel = User::model()->findByAttributes(
             array('company' => $model->id)
         );
-        $model->user_first_name = $userModel->first_name;
-        $model->user_last_name = $userModel->last_name;
-        $model->user_email = $userModel->email;
-        $model->user_contact_number = $userModel->contact_number;
-        $model->user_details = $userModel->notes;
 
-        /*print_r($userModel);
-        exit;*/
+        if(!empty($userModel)){
+            $session['is_field']=1;
+            $model->user_first_name = $userModel->first_name;
+            $model->user_last_name = $userModel->last_name;
+            $model->user_email = $userModel->email;
+            $model->user_contact_number = $userModel->contact_number;
+        }
+
 		if (isset($_POST['user_role'])) {
 			$model->userRole = $_POST['user_role'] ;
 		}
@@ -205,21 +223,35 @@ class CompanyController extends Controller {
 
                 if ($model->save()) {
 
-                    $userModel->first_name = $model->user_first_name;
-                    $userModel->last_name = $model->user_last_name;
-                    $userModel->email = $model->user_email;
-                    $userModel->contact_number = $model->user_contact_number;
-                    $userModel->notes = $model->user_details;
-                    //$userModel->user_type = 2;
-                    //$userModel->password = 12345;
-                    //$userModel->role = 10;
-                    //$userModel->company = $lastId;
-                    $userModel->asic_no = 10;
-                    $userModel->asic_expiry_day = 10;
-                    $userModel->asic_expiry_month = 10;
-                    $userModel->asic_expiry_year = 15;
-                    $userModel->save();
-                    //print_r($userModel->getErrors());
+                    if(!empty($userModel)){
+                        $userModel->first_name = $model->user_first_name;
+                        $userModel->last_name = $model->user_last_name;
+                        $userModel->email = $model->user_email;
+                        $userModel->contact_number = $model->user_contact_number;
+                        $userModel->asic_no = 10;
+                        $userModel->asic_expiry_day = 10;
+                        $userModel->asic_expiry_month = 10;
+                        $userModel->asic_expiry_year = 15;
+                        $userModel->save();
+                    }else{
+                        $userModel = new User();
+
+                        $userModel->first_name = $model->user_first_name;
+                        $userModel->last_name = $model->user_last_name;
+                        $userModel->email = $model->user_email;
+                        $userModel->contact_number = $model->user_contact_number;
+
+                        $userModel->user_type = 2;
+                        $userModel->password = 12345;
+                        $userModel->role = 10;
+                        $userModel->company = $model->id;
+                        $userModel->asic_no = 10;
+                        $userModel->asic_expiry_day = 10;
+                        $userModel->asic_expiry_month = 10;
+                        $userModel->asic_expiry_year = 15;
+                        $userModel->save();
+                    }
+
 
                     switch ($session['role']) {
                         case Roles::ROLE_SUPERADMIN:

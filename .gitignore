@@ -37,4 +37,4 @@ cache.properties
 /.project
 /.settings
 composer.lock
-**/composer.lock
+/tools/composer.lock

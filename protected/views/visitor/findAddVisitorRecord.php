@@ -43,7 +43,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                                 $("#selectedVisitorInSearchTable").val("");
                                 $("#register-host-form").show();
                                 $("#searchHostDiv").show();
-                                if($("#currentRoleOfLoggedInUser").val() == 9){
+                                if ($("#currentRoleOfLoggedInUser").val() == 9) {
                                     $("#currentHostDetailsDiv").show();
                                     $("#register-host-form").hide();
                                     $(".host-AddBtn").show();
@@ -53,32 +53,32 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                                     $(".host-AddBtn").hide();
                                 }
                                 if (!hasError){
-                                var vehicleValue = $("#Visitor_vehicle").val();
-                                if(vehicleValue.length < 6 && vehicleValue != ""){
-                                    $("#Visitor_vehicle_em_").show();
-                                    $("#Visitor_vehicle_em_").html("Vehicle should have a min. of 6 characters");
-                                }else if ($("#workstation").val() == ""){
-                                    $(".errorMessageWorkstation").show();
-                                    $(".visitorReason").hide();
-                                }
-                                else if ($("#Visit_reason").val() == "" || ($("#Visit_reason").val() == "Other" &&  $("#VisitReason_reason").val() == "")) {                                  
-                                    $(".visitorReason").show();
-                                    $(".errorMessageWorkstation").hide();
-                                } else if ($("#Visit_reason").val() == "Other" &&  $("#VisitReason_reason").val() != "")
-                                { 
-                                    checkReasonIfUnique();
-                                    $(".errorMessageWorkstation").hide();
-                                } else if($("#cardtype").val() != 1 && $("#cardtype").val() != ' . CardType::MANUAL_VISITOR . ' && $("#Visitor_photo").val() == ""){
-                                    $("#photoErrorMessage").show();
-                                }
-                                else {
-                                    $(".errorMessageWorkstation").hide();
-                                    $(".visitorReason").hide();
-                                    $("#photoErrorMessage").hide();
-                                    checkEmailIfUnique();
+                                	var vehicleValue = $("#Visitor_vehicle").val();
+                        			if ($("#Visitor_visitor_type").val()=="") {
+                        				$("#Visitor_visitor_type_em_").show();
+                        				$("#Visitor_visitor_type_em_").html("Please select Visitor Type");
+                        			} else if (vehicleValue.length < 6 && vehicleValue != "") {
+	                                    $("#Visitor_vehicle_em_").show();
+	                                    $("#Visitor_vehicle_em_").html("Vehicle should have a min. of 6 characters");
+	                                } else if ($("#workstation").val() == ""){
+	                                    $(".errorMessageWorkstation").show();
+	                                    $(".visitorReason").hide();
+	                                } else if ($("#Visit_reason").val() == "" || ($("#Visit_reason").val() == "Other" &&  $("#VisitReason_reason").val() == "")) {                                  
+	                                    $(".visitorReason").show();
+	                                    $(".errorMessageWorkstation").hide();
+	                                } else if ($("#Visit_reason").val() == "Other" &&  $("#VisitReason_reason").val() != "") { 
+	                                    checkReasonIfUnique();
+	                                    $(".errorMessageWorkstation").hide();
+	                                } else if ($("#cardtype").val() != 1 && $("#cardtype").val() != ' . CardType::MANUAL_VISITOR . ' && $("#Visitor_photo").val() == ""){
+	                                    $("#photoErrorMessage").show();
+	                                } else {
+	                                    $(".errorMessageWorkstation").hide();
+	                                    $(".visitorReason").hide();
+	                                    $("#photoErrorMessage").hide();
+	                                    checkEmailIfUnique();
                                     }
                                 }
-                                }'
+							}'
                         ),
                     ));
                     ?>

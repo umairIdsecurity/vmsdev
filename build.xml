@@ -31,13 +31,7 @@
         unless="behat.done"
         depends="prepare"
         description="Run tests for features found in the bdd/features directory.">
-        <exec executable="bdd/tools/bin/behat" taskname="behat">
-            <arg path="${basedir}/protected" />
-            <arg value="xml" />
-            <arg path="${basedir}/build/phpmd.xml" />
-            <arg value="--reportfile" />
-            <arg path="${basedir}/build/logs/pmd.xml" />
-        </exec>
+        <exec executable="bdd/tools/bin/behat" taskname="behat" />
 
         <property name="behat.done" value="true"/>
     </target>

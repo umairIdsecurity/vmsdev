@@ -36,7 +36,8 @@
             <tr>
                 <td></td>
                 <td colspan="2">
-                    <?php echo CHtml::submitButton('Reset'); ?>
+                    <?php echo CHtml::submitButton('Reset'); ?>   
+                    <?php echo CHtml::submitButton('Back',array("submit"=>array('site/login'))); ?>
                 </td>
             </tr>
 

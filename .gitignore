@@ -15,4 +15,3 @@ cache.properties
 /.settings
 composer.lock
 **/composer.lock
-

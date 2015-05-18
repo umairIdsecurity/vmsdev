@@ -143,7 +143,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
 
                                         .ajax-upload-dragdrop {
 
-                                            background: url('<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($dataId) ?>') no-repeat center top !important;
+                                            background: url('<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($dataId) ?>') no-repeat center top;
 
                                             background-size:137px 190px !important;
 
@@ -175,7 +175,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
 
                                         ?>
 
-                                        <img id='photoPreview' src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png" style='display:block;height:174px;width:133px;'/>
+                                        <img id='photoPreview' src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png" style='height:174px;width:133px;'/>
 
                                         <?php } else {
 

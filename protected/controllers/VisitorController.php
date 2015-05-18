@@ -66,7 +66,7 @@ class VisitorController extends Controller {
             'patientModel' => $patientModel,
             'reasonModel' => $reasonModel,
             'visitModel' => $visitModel,
-                ), false, true);
+		), false, true);
     }
 
     /**

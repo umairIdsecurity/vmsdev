@@ -2,8 +2,8 @@
 .idea/**
 composer.phar
 /vendor/**
-/tools/vendor/**
-/tools/bin/**
+**/vendor/**
+**/bin/**
 /build/**
 /protected/runtime/*.log*
 company_css/**
@@ -14,4 +14,5 @@ cache.properties
 /.project
 /.settings
 composer.lock
-/tools/composer.lock
+**/composer.lock
+

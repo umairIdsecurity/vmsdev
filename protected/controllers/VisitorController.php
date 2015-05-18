@@ -26,11 +26,11 @@ class VisitorController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('update', 'delete', 'admin', 'adminAjax'),
+                'actions' => array('update', 'delete', 'admin', 'adminAjax', 'csvSampleDownload'),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('AddVisitor', 'ajaxCrop', 'create', 'GetIdOfUser','GetHostDetails', 'GetPatientDetails', 'CheckEmailIfUnique', 'GetVisitorDetails', 'FindVisitor', 'FindHost', 'GetTenantAgentWithSameTenant', 'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent'),
+                'actions' => array('csvSampleDownload','importVisitHistory', 'AddVisitor', 'ajaxCrop', 'create', 'GetIdOfUser','GetHostDetails', 'GetPatientDetails', 'CheckEmailIfUnique', 'GetVisitorDetails', 'FindVisitor', 'FindHost', 'GetTenantAgentWithSameTenant', 'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -308,5 +308,72 @@ class VisitorController extends Controller {
         $this->render('addvisitor', array(
             'model' => $model,
         ));
+    }
+    /**
+     * Import Visit History
+     * 
+     * @return View
+     */
+    public function actionImportVisitHistory() {
+        $model = new ImportCsvForm;
+        if(isset($_POST['ImportCsvForm']))
+             {
+                $model->attributes=$_POST['ImportCsvForm'];
+                if($model->validate())
+                 {   
+                    //Delete all previous uploads of this user
+                    ImportVisitor::model()->deleteAll(
+                        "`imported_by` = :user_id",
+                        array(':user_id' => Yii::app()->user->id)
+                    );
+                    
+                    // Read and save in ImportVisitor
+                    $csvFile = CUploadedFile::getInstance($model,'file');  
+                    $tempLoc = $csvFile->getTempName();
+                    $handle = fopen($tempLoc, "r");
+                    $i = 1; $emails = array();
+                    while( $line = fgetcsv($handle, 2000) ){
+                        //Dont insert first row as it will be title
+                        if($i == 1) {
+                           $i++; continue;
+                        }
+                        // Insert Into Temp table to resolve duplicate visitor record. 
+                        $importVisits = new ImportVisitor;                   
+                        $importVisits->first_name = $line[0];
+                        $importVisits->last_name = $line[1];
+                        $importVisits->email = $line[2];
+                        $importVisits->check_in_date  = date("Y-m-d", strtotime($line[3]) );
+                        $importVisits->check_out_date = date("Y-m-d", strtotime($line[4]) );
+                        $importVisits->company = $line[5];
+                        
+                        $importVisits->imported_by = Yii::app()->user->id;
+                        $importVisits->import_date = date("Y-m-d");
+                        
+                        if( $importVisits->validate() ) {
+                            $importVisits->save();
+                            
+                            $visitor = Visitor::model()->find("email = '".$importVisits->email."'");
+                            
+                        }
+                        
+                    }
+                    $this->redirect(array("importvisitor/admin"));
+                 }
+             }
+        return $this->render("importvisitor", array("model"=>$model));
+    }
+    /**
+     * Download Sample Visitor Import File
+     * 
+     * @return type
+     * @throws CHttpException
+     */
+    public function actionCsvSampleDownload() {
+        $dir_path = Yii::getPathOfAlias('webroot') . '/uploads/';
+        $fileName = $dir_path . "/visit_history.csv";
+        if (file_exists($fileName))
+           return Yii::app()->getRequest()->sendFile('visit_history.csv', @file_get_contents($fileName));
+        else
+           throw new CHttpException(404, 'The requested page does not exist.');
     }
 }

@@ -1,0 +1,11 @@
+default:
+  
+  paths:
+    features: ../bugs/fixed
+    bootstrap: bootstrap
+
+  extensions:
+    Behat\MinkExtension\Extension:
+      base_url: http://vmsdev.identitysecurity.com.au
+      goutte: ~
+      selenium2: ~

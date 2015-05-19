@@ -44,22 +44,65 @@
 	</div>
 
 	<div class="row">
+          
 		<?php echo $form->labelEx($model,'check_in_date'); ?> <br>
-		<?php echo $form->textField($model,'check_in_date'); ?>
+		 <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(    
+                'name'=>'ImportVisitor[check_in_date]',
+                'value'=>$model->check_in_date,  
+                'model'=>$model,
+                // additional javascript options for the date picker plugin
+                'options'=>array(
+                    'showAnim'=>'fold',
+                    'dateFormat'=>'dd-mm-yy',
+                ),
+                 
+                ));
+            ?>
 		<?php echo $form->error($model,'check_in_date'); ?>
 	</div>
-
+        <div class="row">
+		<?php echo $form->labelEx($model,'check_in_time'); ?> <br>
+		<?php echo $form->textField($model,'check_in_time'); ?>
+		<?php echo $form->error($model,'check_in_time'); ?>
+	</div>
 	<div class="row">
 		<?php echo $form->labelEx($model,'check_out_date'); ?> <br>
-		<?php echo $form->textField($model,'check_out_date'); ?>
+		 <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(    
+                'name'=>'ImportVisitor[check_out_date]',
+                'value'=>$model->check_out_date,  
+                'model'=>$model,
+                // additional javascript options for the date picker plugin
+                'options'=>array(
+                    'showAnim'=>'fold',
+                    'dateFormat'=>'dd-mm-yy',
+                ),
+                 
+                ));
+            ?>
 		<?php echo $form->error($model,'check_out_date'); ?>
 	</div>
+         <div class="row">
+		<?php echo $form->labelEx($model,'check_out_time'); ?> <br>
+		<?php echo $form->textField($model,'check_out_time'); ?>
+		<?php echo $form->error($model,'check_out_time'); ?>
+	</div>
+        
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'card_code'); ?> <br>
 		<?php echo $form->textField($model,'card_code',array('size'=>60,'maxlength'=>255)); ?>
 		<?php echo $form->error($model,'card_code'); ?>
 	</div>
+        
+        <div class="row">
+		<?php echo $form->labelEx($model,'contact_number'); ?> <br>
+		<?php echo $form->textField($model,'contact_number',array('size'=>60,'maxlength'=>255)); ?>
+		<?php echo $form->error($model,'contact_number'); ?>
+	</div>
+        
+         
+        
+        
 
 	<div class="row">
 		 

@@ -21,8 +21,8 @@
 		'company',
 		'check_in_date',
 		 'check_out_date',		 
-		/* 'imported_by', */
-		'import_date',
+		/* 'imported_by', 
+		'import_date',*/
 		 
 	 array(
             'header' => 'Actions',
@@ -42,3 +42,13 @@
         ),
 	),
 )); ?>
+<?php $form = $this->beginWidget("CActiveForm", array(
+    "id"=>"importvisitor-to-visitor",
+    "action"=>Yii::app()->createUrl('importVisitor/import'),   
+        )); ?>
+
+    <div class="buttons">
+	<?php echo CHtml::submitButton("Import Visitors"); ?>
+    </div>
+<?php $this->endWidget(); ?>
+ 

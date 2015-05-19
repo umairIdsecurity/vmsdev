@@ -593,10 +593,8 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
             $("#register-reason-form").hide();
 
             var searchText = $("#search-visitor").val();
-           /* if ($("#search_visitor_tenant").val() == '') {
-                $("#searchTextErrorMessage").show();
-                $("#searchTextErrorMessage").html("Please select a tenant");
-            } else */if (searchText != '') {
+            if (searchText != '') {
+                $("#searchTextErrorMessage").html("").hide();
 				
                 
                 $("#visitor-findBtn").click();
@@ -624,14 +622,10 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
 					$("#searchTextErrorMessage").hide();
                     populateAgentAdminWorkstations('search');
                 }
-            }
-            else {
-				
-                $("#searchTextErrorMessage").show();
-                $("#searchTextErrorMessage").html("Please enter a name");
+            } else {
+                $("#searchTextErrorMessage").html("Please enter a name").show();
             }
         });
-
 
     });
 	

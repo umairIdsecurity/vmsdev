@@ -16,7 +16,7 @@
              depends="prepare,lint,phploc-ci,pdepend,phpmd-ci,phpcs-ci,phpcpd-ci,phpunit,phpdox"
              description=""/>-->
     <target name="build"
-            depends="check-code,bdd-tests"
+            depends="check-code"
             description=""/>
 
     <target name="check-code"

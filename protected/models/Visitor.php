@@ -475,8 +475,10 @@ class Visitor extends CActiveRecord {
     public function beforeFind() {
         $criteria = new CDbCriteria;
         $criteria->condition = 't.is_deleted = 0';
-        if (Yii::app()->user->role != Roles::ROLE_SUPERADMIN) {
-            $criteria->condition = 't.is_deleted = 0 and t.tenant ="' . Yii::app()->user->tenant . '"';
+        if (isset(yii::app()->user->role)) {
+            if (Yii::app()->user->role != Roles::ROLE_SUPERADMIN) {
+                $criteria->condition = 't.is_deleted = 0 and t.tenant ="' . Yii::app()->user->tenant . '"';
+            }
         }
         $this->dbCriteria->mergeWith($criteria);
 

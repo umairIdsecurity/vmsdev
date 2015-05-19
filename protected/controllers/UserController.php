@@ -7,6 +7,7 @@ class UserController extends Controller {
      * using two-column layout. See 'protected/views/layouts/column2.php'.
      */
     public $layout = '//layouts/column2';
+    
 
     /**
      * @return array action filters
@@ -47,7 +48,7 @@ class UserController extends Controller {
                 'expression' => '(Yii::app()->user->id == ($_GET[\'id\']))',
             ),
             array('allow',
-                'actions' => array('admin', 'adminAjax', 'delete', 'systemaccessrules' ),
+                'actions' => array('admin', 'adminAjax', 'delete', 'systemaccessrules', 'importHost' ),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user, UserGroup::USERGROUP_ADMINISTRATION)',
             ),
             array('deny', // deny all users
@@ -69,7 +70,7 @@ class UserController extends Controller {
         $model = new User;
         $userService = new UserServiceImpl();
         $session = new CHttpSession;
-  
+    
         if (isset($_POST['User'])) {
            
             $model->attributes = $_POST['User'];
@@ -315,5 +316,58 @@ class UserController extends Controller {
         echo CJavaScript::jsonEncode($resultMessage);
         Yii::app()->end();
     }
-
+    
+    /**
+     * Import Host CSV file to DB
+     * First Name, Last Name, Department, Staff ID, Email, Contact Number
+     * Import should detect duplicate records and give the option to delete or override previous record
+     * 
+     * @return view
+     */
+    public function actionImportHost() {
+        
+        $model = new ImportCsvForm;
+        
+        $session = new CHttpSession;
+        if(isset($_POST['ImportCsvForm']))
+             {
+                $model->attributes=$_POST['ImportCsvForm'];
+                if($model->validate())
+                 {         
+                    $csvFile = CUploadedFile::getInstance($model,'file');  
+                    $tempLoc = $csvFile->getTempName();
+                    $handle = fopen($tempLoc, "r");
+                    $i = 1;
+                    while($line = fgetcsv($handle, 2000)){
+                        //Dont insert first row as it will be title
+                        if($i == 1) {
+                           $i++; continue;
+                        }
+                        $user  = new User;
+                        $user->first_name = $line[0];
+                        $user->last_name = $line[1];
+                        $user->department = $line[2];
+                        $user->staff_id = $line[3];
+                        $user->email = $line[4];
+                        $user->contact_number = $line[5];
+                        $user->role = Roles::ROLE_STAFFMEMBER;  
+                        $user->user_type = UserType::USERTYPE_INTERNAL;
+                        $user->company = $session["company"];
+                        $user->user_status = 1;
+                        $user->created_by = $session['id'];
+                        $user->tenant = Yii::app()->user->tenant;
+                        $user->tenant_agent = $session['tenant_agent']; 
+                        if( $user->validate() ) {
+                            $user->save();
+                        }
+                    }
+                     
+                    Yii::app()->user->setFlash('success', "Records Imported Successfully");
+                 }
+             }  
+ 
+         
+        
+        return $this->render("importhost", array("model"=>$model));
+    }
 }

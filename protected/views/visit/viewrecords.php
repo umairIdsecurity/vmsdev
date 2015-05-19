@@ -100,13 +100,13 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'htmlOptions'=>array('width'=>'110px'),
         ),
         // 'card0.date_expiration',
-        array(
+        /*array(
             'name' => 'date_out',
             'type' => 'html',
             'header' => 'Date Expiration',
             'filter'=>CHtml::activeTextField($model, 'date_out', array('placeholder'=>'Date Expiration')),
             'htmlOptions'=>array('width'=>'110px'),
-        ),
+        ),*/
     ),
 ));
 
@@ -118,7 +118,7 @@ function getCompany($id) {
 
         $companyModel = Company::model();
 
-        $company = $companyModel->findByPk($company_id, $companyModel->modelName . ".is_deleted >= 0 " );
+        $company = $companyModel->findByPk($company_id, "is_deleted >= 0 " );
 
         if(isset($company))
         {

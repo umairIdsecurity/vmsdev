@@ -100,7 +100,8 @@ div.form select.error
 {
 	background: #FEE;
 	border-color: #C00;
-        
+	height: 30px;
+
 }
 
 div.form div.success input,

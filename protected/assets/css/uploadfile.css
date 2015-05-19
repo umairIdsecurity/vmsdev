@@ -133,7 +133,7 @@
 
 
 #uploadRow div:nth-child(5) {
-    background: #ff0000;
+    /*background: #ff0000;*/
     width:100px;margin-top:60px;
     margin-bottom: 5px;
 }

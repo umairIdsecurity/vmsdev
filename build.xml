@@ -2,6 +2,7 @@
 <project name="name-of-project" default="build">
     <!-- By default, we assume all tools to be on the $PATH -->
     <property name="toolsdir" value="${basedir}/tools/vendor/bin/"/>
+    <property name="featurename" value=""/>
 
     <!-- Uncomment the following when the tools are in ${basedir}/vendor/bin -->
     <!-- <property name="toolsdir" value="${basedir}/vendor/bin/"/> -->
@@ -22,12 +23,21 @@
             description="Run selenium tests" />
 
 
-
     <target name="build-parallel"
             depends="prepare,lint,tools-parallel,phpunit,phpdox"
             description=""/>
 
 
+    <target name="run-behat-tests"
+        unless="behat.done"
+        depends="prepare"
+        description="Run tests for features found in the bdd/features directory.">
+        <exec executable="bdd/tools/bin/behat" taskname="behat" >
+            <arg line="-c bdd/tools/behat.yml"/>
+        </exec>
+
+        <property name="behat.done" value="true"/>
+    </target>
 
     <target name="tools-parallel" description="Run tools in parallel">
         <parallel threadCount="2">

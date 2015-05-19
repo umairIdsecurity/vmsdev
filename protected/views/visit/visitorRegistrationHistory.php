@@ -146,7 +146,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
 ));
 
 function getCompany($id) {
-    if (Visitor::model()->findByPk($id)->company == NULL) {
+    if (Visitor::model()->findByPk($id)->companyName == NULL) {
         return "Not Available";
     } else {
         return Company::model()->findByPk(Visitor::model()->findByPk($id)->company)->name;

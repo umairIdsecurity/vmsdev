@@ -26,13 +26,12 @@ $this->widget('zii.widgets.grid.CGridView', array(
         ),
         array(
             'name' => 'totalvisit',
-            'value' => '$data->getTotalVisit()',
+            'value' => '$data->totalvisit',
             'header' => 'Total Visits',
-            'filter'=>CHtml::activeTextField($model, 'totalvisit', array('placeholder'=>'Total Visits')),
+            'filter'=>CHtml::activeTextField($model, 'totalvisit', array('placeholder'=>'Total Visits','disabled'=>'disabled')),
         ),
         array(
-            'name' => 'companycode',
-            'value' => '$data->getCompanyCode()',
+            'name' => 'company0.code',
             'header' => 'Company Code',
             'filter'=>CHtml::activeTextField($model, 'companycode', array('placeholder'=>'Company Code')),
         ),
@@ -45,8 +44,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'filter'=>CHtml::activeTextField($model, 'last_name', array('placeholder'=>'Last Name')),
         ),
         array(
-            'name' => 'company',
-            'value' => '$data->getCompanyName()',
+            'name' => 'company0.name',
             'header' => 'Company Name',
             'filter'=>CHtml::activeTextField($model, 'company', array('placeholder'=>'Company Name')),
         ),

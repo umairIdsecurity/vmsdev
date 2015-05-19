@@ -424,7 +424,7 @@ class VisitorController extends Controller {
                         $this->redirect(array("visitor/admin"));
                  }
              }
-        return $this->render("importVisitor", array("model"=>$model));
+        return $this->render("importvisitor", array("model"=>$model));
     }
     /**
      * Download Sample Visitor Import File

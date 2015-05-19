@@ -10,13 +10,12 @@ if ($this->Id == 'visitor') {
 }
 ?>
 <?php
-if ($this->action->id == 'addvisitor' || ($this->action->id == 'update' && $this->id == 'visitor')) {
+if (($this->action->id == 'update' && $this->id == 'visitor')) {
     ?>
     <style>
         .ajax-upload-dragdrop {
             float:left !important;
             margin-top: -30px;
-            background: url('<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png') no-repeat center top;
             background-size:137px;
             height: 150px;
             width: 120px !important;
@@ -73,7 +72,7 @@ if ($this->action->id == 'addvisitor' || ($this->action->id == 'update' && $this
             margin-left: -102px !important;
         }
     </style>
-<?php } elseif ($this->action->id == 'create' && $this->id == 'visitor') {
+<?php } elseif ( $this->action->id == 'addvisitor' || $this->action->id == 'create' && $this->id == 'visitor') {
     ?>
     <style>
         .ajax-upload-dragdrop {
@@ -223,6 +222,7 @@ if (isset($_GET['viewFrom'])) {
                 }
 
                 var currentAction = $("#actionUpload").val();
+
                 if (currentAction == 'update' && $("#controllerId").val() != 'visitor')
                 {
                     logo.src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + data;
@@ -249,6 +249,7 @@ if (isset($_GET['viewFrom'])) {
 
                             $.each(r.data, function(index, value) {
                                 if (($("#actionUpload").val() == 'update' || $("#actionUpload").val() == 'addvisitor' || ($("#actionUpload").val() == 'create') && $("#controllerId").val() == 'visitor')) {
+
                                     $(".ajax-upload-dragdrop").css("background", "url(<?php echo Yii::app()->request->baseUrl; ?>" + value.relative_path + ") no-repeat center top");
                                     $(".ajax-upload-dragdrop").css({
                                         "background-size": "137px 190px"

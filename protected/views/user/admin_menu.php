@@ -193,6 +193,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                         <li><a href='<?php echo Yii::app()->createUrl('visitor/create&action=register'); ?>' class="addSubMenu"><span>Log Visit</span></a></li>
                         <li><a href='<?php echo Yii::app()->createUrl('visitor/create&action=preregister'); ?>' class="addSubMenu"><span>Preregister Visit</span></a></li>
                         <li><a href='<?php echo Yii::app()->createUrl('visit/exportvisitorrecords'); ?>' ><span>Export Visit History</span></a></li>
+                         <li><a href='<?php echo Yii::app()->createUrl('visitor/importVisitHistory'); ?>' ><span>Import Visit History</span></a></li>
                     </ul>
                 </li>   <!-- menu for Visitors -->
 
@@ -283,6 +284,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                         <li><a href='<?php echo Yii::app()->createUrl('visitor/create&action=register'); ?>' class="addSubMenu"><span>Log Visit</span></a></li>
                         <li><a href='<?php echo Yii::app()->createUrl('visitor/create&action=preregister'); ?>' class="addSubMenu"><span>Preregister Visit</span></a></li>
                         <li><a href='<?php echo Yii::app()->createUrl('visit/exportvisitorrecords'); ?>' ><span>Export Visit History</span></a></li>
+                        <li><a href='<?php echo Yii::app()->createUrl('visitor/importVisitHistory'); ?>' ><span>Import Visit History</span></a></li>
                     </ul>
                 </li><!-- menu for Visitors -->
             <?php }

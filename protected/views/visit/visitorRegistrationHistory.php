@@ -146,11 +146,21 @@ $this->widget('zii.widgets.grid.CGridView', array(
 ));
 
 function getCompany($id) {
-    if (Visitor::model()->findByPk($id)->company == NULL) {
-        return "Not Available";
-    } else {
-        return Company::model()->findByPk(Visitor::model()->findByPk($id)->company)->name;
+    $company_id = Visitor::model()->findByPk($id)->company;
+
+    if (isset($company_id)) {
+
+        $companyModel = Company::model();
+
+        $company = $companyModel->findByPk($company_id, "is_deleted >= 0 " );
+
+        if(isset($company))
+        {
+            return $company->name;
+        }
     }
+    return "Not Available";
+
 }
 
 function formatTime($time) {
@@ -189,7 +199,7 @@ function formatTime($time) {
             buttonImage: "<?php echo Yii::app()->controller->assetsBase; ?>/images/calendar.png",
             buttonImageOnly: true,
             buttonText: "Select Date From",
-            dateFormat: "dd-mm-yy",
+            dateFormat: "dd-mm-yy"
         });
 
         $("#Visit_date_check_in_1").datepicker({
@@ -199,7 +209,7 @@ function formatTime($time) {
             buttonImage: "<?php echo Yii::app()->controller->assetsBase; ?>/images/calendar.png",
             buttonImageOnly: true,
             buttonText: "Select Date To",
-            dateFormat: "dd-mm-yy",
+            dateFormat: "dd-mm-yy"
         });
     });
 </script>

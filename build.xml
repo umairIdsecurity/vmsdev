@@ -2,6 +2,7 @@
 <project name="name-of-project" default="build">
     <!-- By default, we assume all tools to be on the $PATH -->
     <property name="toolsdir" value="${basedir}/tools/vendor/bin/"/>
+    <property name="featurename" value=""/>
 
     <!-- Uncomment the following when the tools are in ${basedir}/vendor/bin -->
     <!-- <property name="toolsdir" value="${basedir}/vendor/bin/"/> -->
@@ -31,12 +32,8 @@
         unless="behat.done"
         depends="prepare"
         description="Run tests for features found in the bdd/features directory.">
-        <exec executable="bdd/tools/bin/behat" taskname="behat">
-            <arg path="${basedir}/protected" />
-            <arg value="xml" />
-            <arg path="${basedir}/build/phpmd.xml" />
-            <arg value="--reportfile" />
-            <arg path="${basedir}/build/logs/pmd.xml" />
+        <exec executable="bdd/tools/bin/behat" taskname="behat" >
+            <arg line="-c bdd/tools/behat.yml"/>
         </exec>
 
         <property name="behat.done" value="true"/>

@@ -316,11 +316,15 @@ class VisitorController extends Controller {
     }
     /**
      * Import Visit History
+     * 3. It should search for duplicate visits  and prompt the administrator to delete second entry if nessecary
+     * 4. It should also match duplicate first names and last names and allow the user to verify whether they are a the same person or 
      * 
      * @return View
      */
     public function actionImportVisitHistory() {
+        
         $model = new ImportCsvForm;
+        $session = new CHttpSession;
         if(isset($_POST['ImportCsvForm']))
              {
                 $model->attributes=$_POST['ImportCsvForm'];
@@ -336,33 +340,88 @@ class VisitorController extends Controller {
                     $csvFile = CUploadedFile::getInstance($model,'file');  
                     $tempLoc = $csvFile->getTempName();
                     $handle = fopen($tempLoc, "r");
-                    $i = 1; $emails = array();
+                    $i = 1; $duplicates = false;
+                    
                     while( $line = fgetcsv($handle, 2000) ){
+                        
+                        if( !isset($line[12]))
+                           $this->redirect(array("visitor/importVisitHistory"));
                         //Dont insert first row as it will be title
                         if($i == 1) {
                            $i++; continue;
                         }
-                        // Insert Into Temp table to resolve duplicate visitor record. 
-                        $importVisits = new ImportVisitor;                   
-                        $importVisits->first_name = $line[0];
-                        $importVisits->last_name = $line[1];
-                        $importVisits->email = $line[2];
-                        $importVisits->check_in_date  = date("Y-m-d", strtotime($line[3]) );
-                        $importVisits->check_out_date = date("Y-m-d", strtotime($line[4]) );
-                        $importVisits->company = $line[5];
+                        // Find Duplicate Visitor if any
+                        $visitor = Visitor::model()->find(" ( first_name = '{$line[0]}' AND last_name = '{$line[1]}' ) OR email  = '{$line[2]}'");
                         
-                        $importVisits->imported_by = Yii::app()->user->id;
-                        $importVisits->import_date = date("Y-m-d");
-                        
-                        if( $importVisits->validate() ) {
-                            $importVisits->save();
+                        // Duplicate Visitor Found and store it now
+                        if( $visitor )  {                   
+                            $importVisits = new ImportVisitor; 
+                            $duplicates = $importVisits->saveVisitors($line);
+                    
+                        } else {
+                            // If not a duplicate Visitor then Add it to Visitor and Visits tables
+                            $visitorInfo = new Visitor;
+                            $visitorInfo->first_name = $line[0];
+                            $visitorInfo->last_name  = $line[1];
+                            $visitorInfo->email      = $line[2];
+                            $visitorInfo->contact_number = $line[12];
+                            $visitorInfo->position = $line[8];
+                            $company = Company::model()->find(" name LIKE '%{$line[7]}%' OR trading_name LIKE '%{$line[7]}%' ");
+                            if( $company )
+                               $visitorInfo->company = $company->id;
+                            else
+                               $visitorInfo->company = $session['company'];
+                            $visitorInfo->role = Roles::ROLE_VISITOR;
+                            $visitorInfo->visitor_status = '1'; // Active
+                            $visitorInfo->visitor_type= '2'; 
+                            //$visitorInfo->vehicle= $line[12]; 
+                            $visitorInfo->created_by = Yii::app()->user->id;
+                            $visitorInfo->tenant = Yii::app()->user->tenant;
                             
-                            $visitor = Visitor::model()->find("email = '".$importVisits->email."'");
-                            
+                            if( $visitorInfo->validate() ) 
+                            {
+                                $visitorInfo->save();
+                                
+                                //insert Card Code
+                                if( !empty($line[9])) {
+                                    $card = new CardGenerated;
+                                    $card->card_number = $line[9];
+                                    $card->date_printed = date("Y-m-d", strtotime($line[10]));
+                                    $card->date_expiration = date("Y-m-d", strtotime($line[11]));
+                                    $card->visitor_id = $visitorInfo->id;
+                                    $card->card_status  = 1;
+                                    $card->created_by = Yii::app()->user->id;
+                                    $card->tenant = Yii::app()->user->tenant;
+                                    $card->save();                     
+                                }
+                                
+                                // Insert Visit Now
+                                $visitInfo = new Visit;
+                                $visitInfo->visitor = $visitorInfo->id;
+                                $visitInfo->visitor_type = '2'; // Corporate
+                                $visitInfo->visitor_status = 1;
+                                $visitInfo->card = $card ? $card->id:"";
+                                $visitInfo->host = Yii::app()->user->id;
+                                $visitInfo->created_by = Yii::app()->user->id;
+                                $visitInfo->date_check_in  = date("Y-m-d", strtotime($line[3]) );
+                                $visitInfo->time_check_in = $line[4];
+                                $visitInfo->time_check_out = $line[6];
+                                $visitInfo->date_check_out = date("Y-m-d", strtotime($line[5]) );
+                                $visitInfo->visit_status = 1;
+                                $visitInfo->workstation = $session['workstation'];                               
+                                $visitInfo->tenant = Yii::app()->user->tenant;
+                                $visitInfo->reason = '1';
+                                $visitInfo->visitor_type = '2';
+                    
+                                $visitInfo->save();
+                            }                    
                         }
-                        
-                    }
-                    $this->redirect(array("importvisitor/admin"));
+                    
+                   }  
+                    if( $duplicates )
+                        $this->redirect(array("importVisitor/admin"));
+                    else
+                        $this->redirect(array("visitor/admin"));
                  }
              }
         return $this->render("importvisitor", array("model"=>$model));

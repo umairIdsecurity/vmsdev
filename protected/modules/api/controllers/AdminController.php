@@ -18,9 +18,9 @@ class AdminController extends RestfulController {
                     $result['firstName'] = $admin->first_name;
                     $result['lastName'] = $admin->last_name;
                     $result['email'] = $admin->email;
-                    $result['companyName'] = $admin->com->name;
-                    $result['companyLogoURL'] = Yii::app()->request->hostInfo . yii::app()->baseUrl . '/' . $admin->com->ph->relative_path;
-                    $result['companyTagLine'] = $admin->com->trading_name;
+                    $result['companyName'] = ($admin->com->name) ? $admin->com->name : "N/A";
+                    $result['companyLogoURL'] = ($admin->com->ph) ? Yii::app()->request->hostInfo . yii::app()->baseUrl . '/' . $admin->com->ph->relative_path : "N/A";
+                    $result['companyTagLine'] = ($admin->com->trading_name) ? $admin->com->trading_name : "N/A";
                     $result['VICPickupLoctaion'] = "N/A";
                     $result['visitorLogin'] = false;
                     $result['photoRequired'] = true;
@@ -44,7 +44,8 @@ class AdminController extends RestfulController {
                 $admin = User::model()->with('com')->findByAttributes(array('email' => $email));
                 if ($admin) {
                     $access_token = AccessTokens::model()->findByAttributes(array('USER_ID' => $admin->id));
-                    if ($access_token->delete()) {
+                    if ($access_token) {
+                        $access_token->delete();
                         $this->sendResponse(204);
                     }
                 } else {

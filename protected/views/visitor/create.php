@@ -945,15 +945,20 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
             // second table column
             $(".vic-visitor-fields").show();
             $(".vms-visitor-fields").hide();
+            $(".vic-host-fields").show();
+            $(".vms-host-fields").hide();
 
             // third table
-            $('.third-column #passwordVicForm .register-a-visitor-buttons-div').hide();
+            $('.third-column #passwordVicForm .register-a-visitor-buttons-div, .host-third-column #passwordVicForm .register-a-visitor-buttons-div').hide();
             $('.third-column .register-a-visitor-buttons-div').css('padding-top', '300px');
+            $('#hostButtonRow').css('padding-top', '130px');
 
         } else {
             // second table column
             $(".vic-visitor-fields").hide();
             $(".vms-visitor-fields").show();
+            $(".vic-host-fields").hide();
+            $(".vms-host-fields").show();
 
             // third table
             $('.visitReasonOtherRow').prependTo('.third-column');
@@ -962,6 +967,7 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
             $('.workstationDropdownRow').prependTo('.third-column');
 
             $('.third-column .register-a-visitor-buttons-div').css('padding-top', '130px');
+            $('#hostButtonRow').css('padding-top', '250px');
 
         }
     }

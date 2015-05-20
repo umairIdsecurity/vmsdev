@@ -11,28 +11,33 @@ $visitorName = $_GET['id'];
 $visitorType = $_GET['visitortype'];
 
 if (isset($_GET['tenant_agent']) && $_GET['tenant_agent'] != '') {
-    $tenant_agent = 'tenant_agent="' . $_GET['tenant_agent'] . '" and';
+    $tenant_agent = 't.tenant_agent="' . $_GET['tenant_agent'] . '" and';
 } else {
-    $tenant_agent = '(tenant_agent IS NULL or tenant_agent =0 or tenant_agent="") and';
+    $tenant_agent = '(t.tenant_agent IS NULL or t.tenant_agent =0 or t.tenant_agent="") and';
 }
 
 $model = new User;
 $criteria = new CDbCriteria;
 $tenant = '';
 if($_GET['tenant'] && $_GET['tenant']!=''){
-  $tenant = 'tenant='.$_GET['tenant'].' AND ';
+  $tenant = 't.tenant='.$_GET['tenant'].' AND ';
 }else{
     $tenant = '';
 }
 if ($session['role'] == Roles::ROLE_SUPERADMIN) {
-    $criteria->addCondition($tenant.$tenant_agent . '  (CONCAT(first_name," ",last_name) like "%' . $visitorName . '%" or first_name like "%' . $visitorName . '%" or last_name like "%' . $visitorName . '%" or email like "%' . $visitorName . '%")');
+    $criteria->addCondition($tenant.$tenant_agent . '  (CONCAT(t.first_name," ",t.last_name) like "%' . $visitorName . '%" or t.first_name like "%' . $visitorName . '%" or t.last_name like "%' . $visitorName . '%" or t.email like "%' . $visitorName . '%")');
 } else {
     if (isset($_GET['tenant_agent']) && $_GET['tenant_agent'] != '') {
-        $tenant_agent = 'tenant_agent="' . $session['tenant_agent'] . '" and';
+        $tenant_agent = 't.tenant_agent="' . $session['tenant_agent'] . '" and';
     } else {
-        $tenant_agent = '(tenant_agent IS NULL or tenant_agent =0 or tenant_agent="") and';
+        $tenant_agent = '(t.tenant_agent IS NULL or t.tenant_agent =0 or t.tenant_agent="") and';
     }
-    $criteria->addCondition($tenant.$tenant_agent.'  (CONCAT(first_name," ",last_name) like "%' . $visitorName . '%" or first_name like "%' . $visitorName . '%" or last_name like "%' . $visitorName . '%" or email like "%' . $visitorName . '%")');
+    $criteria->addCondition($tenant.$tenant_agent.'  (CONCAT(t.first_name," ",t.last_name) like "%' . $visitorName . '%" or t.first_name like "%' . $visitorName . '%" or t.last_name like "%' . $visitorName . '%" or t.email like "%' . $visitorName . '%")');
+}
+
+if (isset($_GET['cardType']) && $_GET['cardType'] > CardType::CONTRACTOR_VISITOR) {
+    $criteria->join = 'INNER JOIN visitor v ON t.`email` = v.`email`';
+    $criteria->addCondition('v.profile_type = "' . Visitor::PROFILE_TYPE_ASIC . '"');
 }
 
 $model->unsetAttributes();

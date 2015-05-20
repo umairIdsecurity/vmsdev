@@ -223,9 +223,9 @@ class Visitor extends CActiveRecord {
             array('tenant, tenant_agent,company, visitor_type, visitor_workstation, photo,vehicle, visitor_card_status', 'default', 'setOnEmpty' => true, 'value' => null),
             array('password', 'PasswordCustom'),
             array('repeatpassword', 'PasswordRepeat'),
-            array('password_requirement', 'PasswordRequirement'),
 
             //todo: check to enable again. why do we need this validation ?
+            //array('password_requirement', 'PasswordRequirement'),
             //array('password_option', 'PasswordOption'),
 
             /// array('vehicle', 'length', 'min'=>6, 'max'=>6, 'tooShort'=>'Vehicle is too short (Should be in 6 characters)'),
@@ -476,8 +476,10 @@ class Visitor extends CActiveRecord {
     public function beforeFind() {
         $criteria = new CDbCriteria;
         $criteria->condition = 't.is_deleted = 0';
-        if (Yii::app()->user->role != Roles::ROLE_SUPERADMIN) {
-            $criteria->condition = 't.is_deleted = 0 and t.tenant ="' . Yii::app()->user->tenant . '"';
+        if (isset(yii::app()->user->role)) {
+            if (Yii::app()->user->role != Roles::ROLE_SUPERADMIN) {
+                $criteria->condition = 't.is_deleted = 0 and t.tenant ="' . Yii::app()->user->tenant . '"';
+            }
         }
         $this->dbCriteria->mergeWith($criteria);
 

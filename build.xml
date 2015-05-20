@@ -2,7 +2,12 @@
 <project name="name-of-project" default="build">
     <!-- By default, we assume all tools to be on the $PATH -->
     <property name="toolsdir" value="${basedir}/tools/vendor/bin/"/>
-    <property name="featurename" value=""/>
+    <property name="feature" value=""/>
+
+    <property name="bug" value="*"/>
+
+
+
 
     <!-- Uncomment the following when the tools are in ${basedir}/vendor/bin -->
     <!-- <property name="toolsdir" value="${basedir}/vendor/bin/"/> -->
@@ -18,8 +23,8 @@
             depends="prepare,lint,phpcs-ci"
             description="Run coding standards checks" />
 
-    <target name="ui-tests"
-            depends="phpunit"
+    <target name="bdd-tests"
+            depends="feature-test,bug-test"
             description="Run selenium tests" />
 
 
@@ -28,16 +33,90 @@
             description=""/>
 
 
-    <target name="run-behat-tests"
-        unless="behat.done"
-        depends="prepare"
-        description="Run tests for features found in the bdd/features directory.">
-        <exec executable="bdd/tools/bin/behat" taskname="behat" >
-            <arg line="-c bdd/tools/behat.yml"/>
+    <target name="feature-test"
+        unless="feature-test.done"
+        description="Run tests for features found in the specs/ready/features directory.">
+
+        <condition property="featureArg" value="--name=${feature}" >
+            <not>
+                <equals arg1="" arg2="${feature}"  />
+            </not>
+        </condition>
+        <condition property="featureArg" value="" >
+            <equals arg1="" arg2="${feature}"  />
+        </condition>
+
+        <exec executable="specs/tools/bin/behat" taskname="feature-test" >
+            <arg line="--config=specs/tools/behat-features.yml --paths ${featureArg}" />
         </exec>
 
-        <property name="behat.done" value="true"/>
+        <property name="feature-test.done"  value="true"/>
     </target>
+
+    <target name="bug-test"
+            unless="bug-test.done"
+            description="Run tests for bugs found in the specs/bugs/fixed directory.">
+
+        <condition property="arg" value="--name=${bug}" >
+            <not>
+                <equals arg1="" arg2="${bug}"  />
+            </not>
+        </condition>
+        <condition property="arg" value="" >
+            <equals arg1="" arg2="${bug}"  />
+        </condition>
+
+        <exec executable="specs/tools/bin/behat" taskname="bug-test" >
+            <arg line="--config=specs/tools/behat-bugs.yml --paths ${arg}" />
+        </exec>
+
+        <property name="bug-test.done"  value="true"/>
+    </target>
+
+    <target name="new-feature-test"
+            unless="new-feature-test.done"
+            description="Run tests for features found in the specs/new/features directory.">
+
+        <condition property="featureArg" value="--name=${feature}" >
+            <not>
+                <equals arg1="" arg2="${feature}"  />
+            </not>
+        </condition>
+        <condition property="featureArg" value="" >
+            <equals arg1="" arg2="${feature}"  />
+        </condition>
+
+        <exec executable="specs/tools/bin/behat" taskname="new-feature-test" >
+            <arg line="--config=specs/tools/behat-new-features.yml --paths ${featureArg}" />
+        </exec>
+
+        <property name="new-feature-test.done"  value="true"/>
+    </target>
+
+    <target name="new-bug-test"
+            unless="new-bug-test.done"
+            description="Run tests for bugs found in the specs/bugs/new directory.">
+
+        <condition property="arg" value="--name=${bug}" >
+            <not>
+                <equals arg1="" arg2="${bug}"  />
+            </not>
+        </condition>
+        <condition property="arg" value="" >
+            <equals arg1="" arg2="${bug}"  />
+        </condition>
+
+        <exec executable="specs/tools/bin/behat" taskname="new-bug-test" >
+            <arg line="--config=specs/tools/behat-new-bugs.yml --paths ${arg}" />
+        </exec>
+
+        <property name="new-bug-test.done"  value="true"/>
+    </target>
+
+
+
+
+
 
     <target name="tools-parallel" description="Run tools in parallel">
         <parallel threadCount="2">
@@ -85,10 +164,7 @@
                 <modified />
             </fileset>
 
-            <fileset dir="${basedir}/Selenium Test Files">
-                <include name="**/*.php" />
-                <modified />
-            </fileset>
+
         </apply>
 
         <property name="lint.done" value="true"/>

@@ -27,7 +27,15 @@ if($_GET['tenant'] && $_GET['tenant']!=''){
     $tenant = '';
 }
 
-$criteria->addCondition($tenant. $tenant_agent . ' (CONCAT(first_name," ",last_name) like "%' . $visitorName . '%" or first_name like "%' . $visitorName . '%" or last_name like "%' . $visitorName . '%" or email like "%' . $visitorName . '%")');
+
+$conditionString = $tenant. $tenant_agent . ' (CONCAT(first_name," ",last_name) like "%' . $visitorName . '%" or first_name like "%' . $visitorName . '%" or last_name like "%' . $visitorName . '%" or email like "%' . $visitorName . '%")';
+
+if (isset($_GET['cardType']) && $_GET['cardType'] > CardType::CONTRACTOR_VISITOR) {
+    $conditionString .= ' AND profile_type = "VIC" ';
+}
+
+
+$criteria->addCondition($conditionString);
 
 $model->unsetAttributes();
 

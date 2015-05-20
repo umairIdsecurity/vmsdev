@@ -10,6 +10,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
         <td><strong>Password Options</strong></td>
     </tr>
     <tr>
+        <td>
         <table style="margin-top:18px !important; width:273px; border-left-style:none; border-top-style:none">
                 <tr>
                     <td>
@@ -76,11 +77,12 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                         </table>
                     </td>
                 </tr>
-                
             </table>
+        </td>
     </tr>
 </table>
 </div> <!-- password-border -->
+
 <div class="register-a-visitor-buttons-div" style="  width: 300px;  float: right;">
                                         <input type="submit" value="Save" name="yt0" id="submitFormVisitor"
                                                class="complete"/>

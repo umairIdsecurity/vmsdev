@@ -32,7 +32,15 @@ if ($this->action->id == 'update') {
     }
 
     .ajax-upload-dragdrop {
-        margin-left: 0px !important;
+        float:left !important;
+        margin-top: -30px;
+        background: url('<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png') no-repeat center top;
+        background-size:137px;
+        height: 104px;
+        width: 120px !important;
+        padding: 87px 5px 12px 72px;
+        margin-left: 20px !important;
+        border:none;
     }
 
     .uploadnotetext {
@@ -91,7 +99,7 @@ if ($this->action->id == 'update') {
                                     <?php if ($model['photo'] != NULL) { ?>
                                         <style>
                                             .ajax-upload-dragdrop {
-                                                background: url('<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($dataId) ?>') no-repeat center top !important;
+                                                background: url('<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($dataId) ?>') no-repeat center top;
                                                 background-size: 137px 190px !important;
                                             }
                                         </style>

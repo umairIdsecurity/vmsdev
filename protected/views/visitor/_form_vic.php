@@ -34,7 +34,15 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
     }
 
     .ajax-upload-dragdrop {
-        margin-left: 0px !important;
+        float:left !important;
+        margin-top: -30px;
+        background: url('<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png') no-repeat center top;
+        background-size:137px;
+        height: 104px;
+        width: 120px !important;
+        padding: 87px 5px 12px 72px;
+        margin-left: 20px !important;
+        border:none;
     }
 
     .uploadnotetext {
@@ -93,7 +101,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                     <?php if ($model['photo'] != NULL) { ?>
                                         <style>
                                             .ajax-upload-dragdrop {
-                                                background: url('<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($dataId) ?>') no-repeat center top !important;
+                                                background: url('<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($dataId) ?>') no-repeat center top;
                                                 background-size: 137px 190px !important;
                                             }
                                         </style>
@@ -106,17 +114,11 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                             <img id='photoPreview'
                                                  src="<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($dataId) ?>"
                                                  style='display:block;height:174px;width:133px;'/>
-                                        <?php } elseif ($model['photo'] == NULL) {
-                                            ?>
-
+                                        <?php } elseif ($model['photo'] == NULL) { ?>
                                             <img id='photoPreview'
                                                  src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png"
                                                  style='display:block;height:174px;width:133px;'/>
-
-                                        <?php } else {
-
-                                            ?>
-
+                                        <?php } else { ?>
                                             <img id='photoPreview' src="<?php
                                             if ($this->action->id == 'update' && $model->photo != '') {
                                                 echo Yii::app()->request->baseUrl . "/" . Company::model()->getPhotoRelativePath($model->photo);

@@ -1,8 +1,27 @@
 <?php
+$cs = Yii::app()->clientScript;
+$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/script-birthday.js');
+
 $session = new CHttpSession;
 $company = Company::model()->findByPk($session['company']);
 $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
+
+$dataId = '';
+if ($this->action->id == 'update') {
+    $dataId = $_GET['id'];
+}
+
+$countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 ?>
+
+<style>
+    #addCompanyLink {width: 124px;height: 23px;padding-right: 0px;margin-right: 0px;padding-bottom: 0px;display: block;}
+    .form-label {display: block;width: 200px;float: left;margin-left: 15px;}
+    .ajax-upload-dragdrop {margin-left: 0px !important;}
+    .uploadnotetext {margin-top: 110px;margin-left: -80px;}
+    #content h1 {color: #2f96b4;font-size: 18px;font-weight: bold;margin-left: 50px;  }
+    .required {padding-left: 10px;}
+</style>
 
 <br>
 <div role="tabpanel" style="width:882px">
@@ -12,14 +31,13 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
     <div style="float:left;width:270px;text-align:center">
     <div class="visitor-title" style="cursor:pointer;color:#2f96b4">Add Visitor Profile</div>
     </div>
-    <input type="text" id="search-visitor" name="search-visitor" placeholder="Enter name, email, driver licence"
+    <input type="text" id="search-visitor" name="search-visitor" placeholder="Enter name, email"
            class="search-text" style="margin-left:30px;"/>
     <button class="visitor-findBtn" onclick="findVisitorRecord()" id="visitor-findBtn" style="display:none;"
             data-target="#findVisitorRecordModal" data-toggle="modal">Find Record
     </button>
-    <button class="visitor-findBtn neutral" id="dummy-visitor-findBtn"
-            style="padding:8px;background:<?php echo isset($companyLafPreferences->neutral_bg_color) ? $companyLafPreferences->neutral_bg_color : "none"; ?> !important;">Find
-        Visitor Profile
+    <button class="visitor-findBtn neutral" id="dummy-visitor-findBtn" style="padding:8px;background:<?php echo isset($companyLafPreferences->neutral_bg_color) ? $companyLafPreferences->neutral_bg_color : "none"; ?> !important;">
+        Find Visitor Profile
     </button>
     <div class="errorMessage" id="searchTextErrorMessage" style="display:none;text-align:center"></div>
 
@@ -43,7 +61,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                                 $("#selectedVisitorInSearchTable").val("");
                                 $("#register-host-form").show();
                                 $("#searchHostDiv").show();
-                                if ($("#currentRoleOfLoggedInUser").val() == 9) {
+                                if($("#currentRoleOfLoggedInUser").val() == 9){
                                     $("#currentHostDetailsDiv").show();
                                     $("#register-host-form").hide();
                                     $(".host-AddBtn").show();
@@ -53,29 +71,29 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                                     $(".host-AddBtn").hide();
                                 }
                                 if (!hasError){
-                                	var vehicleValue = $("#Visitor_vehicle").val();
-                        			if ($("#Visitor_visitor_type").val()=="") {
-                        				$("#Visitor_visitor_type_em_").show();
-                        				$("#Visitor_visitor_type_em_").html("Please select Visitor Type");
-                        			} else if (vehicleValue.length < 6 && vehicleValue != "") {
-	                                    $("#Visitor_vehicle_em_").show();
-	                                    $("#Visitor_vehicle_em_").html("Vehicle should have a min. of 6 characters");
-	                                } else if ($("#workstation").val() == ""){
-	                                    $(".errorMessageWorkstation").show();
-	                                    $(".visitorReason").hide();
-	                                } else if ($("#Visit_reason").val() == "" || ($("#Visit_reason").val() == "Other" &&  $("#VisitReason_reason").val() == "")) {                                  
-	                                    $(".visitorReason").show();
-	                                    $(".errorMessageWorkstation").hide();
-	                                } else if ($("#Visit_reason").val() == "Other" &&  $("#VisitReason_reason").val() != "") { 
-	                                    checkReasonIfUnique();
-	                                    $(".errorMessageWorkstation").hide();
-	                                } else if ($("#cardtype").val() != 1 && $("#cardtype").val() != ' . CardType::MANUAL_VISITOR . ' && $("#Visitor_photo").val() == ""){
-	                                    $("#photoErrorMessage").show();
-	                                } else {
-	                                    $(".errorMessageWorkstation").hide();
-	                                    $(".visitorReason").hide();
-	                                    $("#photoErrorMessage").hide();
-	                                    checkEmailIfUnique();
+                                var vehicleValue = $("#Visitor_vehicle").val();
+                                if(vehicleValue.length < 6 && vehicleValue != ""){
+                                    $("#Visitor_vehicle_em_").show();
+                                    $("#Visitor_vehicle_em_").html("Vehicle should have a min. of 6 characters");
+                                }else if ($("#workstation").val() == ""){
+                                    $(".errorMessageWorkstation").show();
+                                    $(".visitorReason").hide();
+                                }
+                                else if ($("#Visit_reason").val() == "" || ($("#Visit_reason").val() == "Other" &&  $("#VisitReason_reason").val() == "")) {                                  
+                                    $(".visitorReason").show();
+                                    $(".errorMessageWorkstation").hide();
+                                } else if ($("#Visit_reason").val() == "Other" &&  $("#VisitReason_reason").val() != "")
+                                { 
+                                    checkReasonIfUnique();
+                                    $(".errorMessageWorkstation").hide();
+                                } else if($("#cardtype").val() != 1 && $("#cardtype").val() != ' . CardType::MANUAL_VISITOR . ' && $("#Visitor_photo").val() == ""){
+                                    $("#photoErrorMessage").show();
+                                }
+                                else {
+                                    $(".errorMessageWorkstation").hide();
+                                    $(".visitorReason").hide();
+                                    $("#photoErrorMessage").hide();
+                                    checkEmailIfUnique();
                                     }
                                 }
 							}'
@@ -84,10 +102,11 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                     ?>
                     <?php echo $form->errorSummary($model); ?>
                     <input type="hidden" id="emailIsUnique" value="0"/>
-                    
+                    <input type="hidden" name="VisitCardType" id="VisitCardType" />
+
                     <div >
 
-                        <table style="width:300px;float:left;">
+                        <table style="width:300px;float:left;" class="first-column">
                             <tr>
 
                                 <td style="width:300px;">
@@ -114,12 +133,11 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                                 <td>&nbsp;</td>
                             </tr>
                             <tr>
-                                <td>&nbsp;</td>
+                                <td id="vicWorkStation">&nbsp;</td>
                             </tr>
-
                         </table>
 
-                        <table id="addvisitor-table" data-ng-app="PwordForm" style="width:262px;float:left;">
+                        <table id="addvisitor-table" class="second-column" data-ng-app="PwordForm" style="width:262px;float:left;">
 
                             <tr>
                                 <td>
@@ -129,12 +147,35 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                                     <?php echo "<br>" . $form->error($model, 'first_name'); ?>
                                 </td>
                             </tr>
+                            <tr class="vic-visitor-fields">
+                                <td>
+                                    <?php echo $form->textField($model, 'middle_name', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Middle Name')); ?>
+                                    <span class="required">*</span>
+                                    <?php echo "<br>" . $form->error($model, 'middle_name'); ?>
+                                </td>
+                            </tr>
                             <tr>
                                 <td>
                                     <?php echo $form->textField($model, 'last_name',
                                         array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Last Name')); ?>
                                     <span class="required">*</span>
                                     <?php echo "<br>" . $form->error($model, 'last_name'); ?>
+                                </td>
+                            </tr>
+
+                            <tr class="vic-visitor-fields">
+                                <td class="birthdayDropdown">
+                                    <span>Date of Birth</span> <br/>
+                                    <input type="hidden" id="dateofBirthBreakdownValueYear"
+                                           value="<?php echo date("Y", strtotime($model->date_of_birth)); ?>">
+                                    <input type="hidden" id="dateofBirthBreakdownValueMonth"
+                                           value="<?php echo date("n", strtotime($model->date_of_birth)); ?>">
+                                    <input type="hidden" id="dateofBirthBreakdownValueDay"
+                                           value="<?php echo date("j", strtotime($model->date_of_birth)); ?>">
+
+                                    <select id="fromDay" name="Visitor[birthdayDay]" class='daySelect'></select>
+                                    <select id="fromMonth" name="Visitor[birthdayMonth]" class='monthSelect'></select>
+                                    <select id="fromYear" name="Visitor[birthdayYear]" class='yearSelect'></select>
                                 </td>
                             </tr>
 
@@ -185,13 +226,58 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                                 </td>
                             </tr>
 
-                            <tr>
+                            <tr class="vms-visitor-fields">
                                 <td>
                                     <input placeholder="Vehicle Registration Number" type="text" id="Visitor_vehicle"
                                            name="Visitor[vehicle]" maxlength="6" size="6">
                                     <?php echo "<br>" . $form->error($model, 'vehicle'); ?>
                                 </td>
                             </tr>
+
+                            <!-- start VIC info -->
+                            <tr class="vic-visitor-fields">
+                                <td>
+                                    <?php echo $form->textField($model, 'contact_unit', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Unit', 'style' => 'width: 80px;')); ?>
+                                    <?php echo $form->textField($model, 'contact_street_no', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Street No.', 'style' => 'width: 110px;')); ?>
+                                    <span class="required">*</span>
+                                    <?php echo "<br>" . $form->error($model, 'contact_unit'); ?>
+                                    <?php echo $form->error($model, 'contact_street_no'); ?>
+                                </td>
+                            </tr>
+                            <tr class="vic-visitor-fields">
+                                <td>
+                                    <?php echo $form->textField($model, 'contact_street_name', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Street Name', 'style' => 'width: 110px;')); ?>
+                                    <?php echo $form->dropDownList($model, 'contact_street_type', Visitor::$STREET_TYPES, array('empty' => 'Type', 'style' => 'width: 95px;')); ?>
+                                    <span class="required">*</span>
+                                    <?php echo "<br>" . $form->error($model, 'contact_street_name'); ?>
+                                    <?php echo $form->error($model, 'contact_street_type'); ?>
+                                </td>
+                            </tr>
+                            <tr class="vic-visitor-fields">
+                                <td>
+                                    <?php echo $form->textField($model, 'contact_suburb', array('size' => 15, 'maxlength' => 50, 'placeholder' => 'Suburb')); ?>
+                                    <span class="required">*</span> <?php echo $form->error($model, 'contact_suburb'); ?>
+                                </td>
+                            </tr>
+                            <tr class="vic-visitor-fields">
+                                <td>
+                                    <?php echo $form->dropDownList($model, 'contact_state', Visitor::$AUSTRALIAN_STATES, array('empty' => 'State')); ?>
+                                    <span class="required">*</span>
+
+                                    <?php echo $form->error($model, 'contact_state'); ?>
+                                </td>
+                            </tr>
+                            <tr class="vic-visitor-fields">
+                                <td>
+                                    <?php
+                                    echo $form->dropDownList($model, 'contact_country', $countryList,
+                                        array('prompt' => 'Country', 'disabled' => 'disabled', 'options' => array(Visitor::AUSTRALIA_ID => array('selected' => 'selected'))));
+                                    ?><span class="required">*</span>
+                                    <br/>
+                                    <?php echo $form->error($model, 'contact_country'); ?>
+                                </td>
+                            </tr>
+                            <!-- .end vic info -->
 
                             <tr>
                                 <td id="visitorCompanyRow">
@@ -268,7 +354,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
 
                             </tr>
 
-                            <tr>
+                            <tr class="vms-visitor-fields">
                                 <td>
                                     <?php echo $form->textField($model, 'position',
                                         array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Position')); ?>
@@ -279,8 +365,8 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
 
                         </table>
 
-                        <table style="width:280px;">
-                            <tr>
+                        <table class="third-column" style="width:280px;">
+                            <tr class="workstationDropdownRow">
                                 <td id="workstationRow" <?php
                                 if ($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
                                     echo " class='hidden' ";
@@ -297,7 +383,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                                         ?>
 
                                         <?php
-                                        $workstationList = populateWorkstation();
+                                        $workstationList = Utils::populateWorkstation();
 
                                         foreach ($workstationList as $key => $value) {
                                             ?>
@@ -314,7 +400,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
 
                                 </td>
                             </tr>
-                            <tr>
+                            <tr class="visitorTypeDropdownRow">
                                 <td>
 
                                     <?php
@@ -329,7 +415,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                                 </td>
                             </tr>
 
-                            <tr>
+                            <tr class="visitReasonRow">
                                 <td>
                                     <select id="Visit_reason" name="Visitor[reason]"
                                             onchange="ifSelectedIsOtherShowAddReasonDiv(this)">
@@ -352,41 +438,8 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                                 </td>
                             </tr>
 
-                            <tr>
+                            <tr class="visitReasonOtherRow">
                                 <td>
-                                    <?php
-                                    /*if (isset($_SERVER['HTTP_USER_AGENT'])) {
-                                        $agent = $_SERVER['HTTP_USER_AGENT'];
-                                    }
-                                    if (strlen(strstr($agent, 'Firefox')) > 0) {
-                                        if ($session['role'] == Roles::ROLE_SUPERADMIN) {
-                                            $class = "moveFromAlignmentA";
-                                        } else {
-                                            $class = "moveFromAlignmentB";
-                                        }
-                                    } else {
-                                        if ($session['role'] == Roles::ROLE_SUPERADMIN) {
-                                            $class = "moveFromAlignmentAB";
-                                        } else {
-                                            $class = "moveFromAlignmentBB";
-                                        }
-                                    }
-
-                                    $form = $this->beginWidget('CActiveForm', array(
-                                        'id' => 'register-reason-form',
-                                        'action' => Yii::app()->createUrl('/visitReason/create&register=1'),
-                                        'htmlOptions' => array("name" => "register-reason-form", "class" => $class),
-                                        'enableAjaxValidation' => false,
-                                        'enableClientValidation' => true,
-                                        'clientOptions' => array(
-                                            'validateOnSubmit' => true,
-                                            'afterValidate' => 'js:function(form, data, hasError){
-                                                    if (!hasError){
-                                               }
-                                            }'
-                                        ),
-                                    ));*/
-                                    ?>
                                     <div id="register-reason-form" style="margin-top: 0px; width: 100% !important;">
                                     <table style="/*position:relative;top:555px;left:-301px*/">
                                         <tr>
@@ -401,6 +454,63 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                                     <?php //$this->endWidget(); ?>
                                 </td>
                             </tr>
+
+                            <!-- start VIC info -->
+                            <tr class="vic-visitor-fields">
+                                <td>
+                                    <?php echo $form->dropDownList($model, 'identification_type', Visitor::$IDENTIFICATION_TYPE_LIST, array('prompt' => 'Identification Type'));?>
+                                    <span class="required primary-identification-require">*</span>
+                                    <?php echo "<br>" . $form->error($model, 'identification_type'); ?>
+                                </td>
+                            </tr>
+                            <tr class="vic-visitor-fields">
+                                <td>
+                                    <?php
+                                    echo $form->dropDownList($model, 'identification_country_issued', $countryList, array('empty' => 'Country of Issue'));
+                                    ?><span class="required primary-identification-require">*</span>
+                                    <?php echo "<br>" . $form->error($model, 'identification_country_issued'); ?>
+                                </td>
+                            </tr>
+                            <tr class="vic-visitor-fields">
+                                <td>
+                                    <?php echo $form->textField($model, 'identification_document_no', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Document No.', 'style' => 'width: 110px;')); ?>
+
+                                    <?php
+                                    $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                        'model'       => $model,
+                                        'attribute'   => 'identification_document_expiry',
+                                        'options'     => array(
+                                            'dateFormat' => 'dd-mm-yy',
+                                            'changeMonth' => 'true',
+                                            'changeYear' => 'true',
+                                            'minDate' => '0'
+                                        ),
+                                        'htmlOptions' => array(
+                                            'size'        => '0',
+                                            'maxlength'   => '10',
+                                            'placeholder' => 'Expiry',
+                                            'style'       => 'width: 80px;',
+                                        ),
+                                    ));
+                                    ?><span class="required primary-identification-require">*</span>
+                                    <?php echo "<br>" . $form->error($model, 'identification_document_no'); ?>
+                                    <?php echo $form->error($model, 'identification_document_expiry'); ?>
+                                </td>
+                            </tr>
+                            <tr class="vic-visitor-fields">
+                                <td>
+                                    <?php echo $form->checkBox($model, 'alternative_identification', array('style' => 'float: left;')); ?>
+                                    <label for="Visitor_alternative_identification" class="form-label">Alternative
+                                        identifications<br/>One must have a signature</label>
+                                </td>
+                            </tr>
+                            <tr class="vic-visitor-fields">
+                                <td id="passwordVicForm">
+                                    <?php //$this->renderPartial('/common_partials/password', array('model' => $model, 'form' => $form, 'session' => $session)); ?>
+                                </td>
+                            </tr>
+                            <!-- end VIC info -->
+
                             <tr>
                                 <td>&nbsp;</td>
                             </tr>
@@ -414,7 +524,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                             <tr>
                                 <td>
                                     <div class="register-a-visitor-buttons-div"
-                                         style="padding-top:130px;padding-right:60px; text-align: right;">
+                                         style="padding-top:180px;padding-right:60px; text-align: right;">
                                         <input type="button" class="neutral visitor-backBtn btnBackTab2"
                                                id="btnBackTab2" value="Back"/>
                                         <input type="button" id="clicktabB" value="Save and Continue"
@@ -593,8 +703,10 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
             $("#register-reason-form").hide();
 
             var searchText = $("#search-visitor").val();
-            if (searchText != '') {
-                $("#searchTextErrorMessage").html("").hide();
+           /* if ($("#search_visitor_tenant").val() == '') {
+                $("#searchTextErrorMessage").show();
+                $("#searchTextErrorMessage").html("Please select a tenant");
+            } else */if (searchText != '') {
 				
                 
                 $("#visitor-findBtn").click();
@@ -622,10 +734,14 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
 					$("#searchTextErrorMessage").hide();
                     populateAgentAdminWorkstations('search');
                 }
-            } else {
-                $("#searchTextErrorMessage").html("Please enter a name").show();
+            }
+            else {
+				
+                $("#searchTextErrorMessage").show();
+                $("#searchTextErrorMessage").html("Please enter a name");
             }
         });
+
 
     });
 	
@@ -645,7 +761,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
         var searchText = $("#search-visitor").val();
 		
 //change modal url to pass user searched text
-        var url = 'index.php?r=visitor/findvisitor&id=' + searchText + '&tenant=' + $("#search_visitor_tenant").val() + '&tenant_agent=' + $("#search_visitor_tenant_agent").val();
+        var url = 'index.php?r=visitor/findvisitor&id=' + searchText + '&tenant=' + $("#search_visitor_tenant").val() + '&tenant_agent=' + $("#search_visitor_tenant_agent").val() + '&cardType=' + $('#selectCardDiv input[name=selectCardType]:checked').val();
 		
         $("#searchVisitorTable").html('<iframe id="findVisitorTableIframe" onLoad="autoResize();" width="100%" height="100%" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
 		return false;
@@ -899,57 +1015,6 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
 </script>
 
 <input type="text" id="visitorId" placeholder="visitor id"/>
-<?php
-
-function populateWorkstation() {
-    $session = new CHttpSession;
-
-    switch ($session['role']) {
-        case Roles::ROLE_SUPERADMIN:
-            $workstationList = Workstation::model()->findAll();
-            break;
-
-        case Roles::ROLE_OPERATOR:
-        case Roles::ROLE_AGENT_OPERATOR:
-            $Criteria = new CDbCriteria();
-            $Criteria->condition = "id ='" . $session['workstation'] . "'";
-            $workstationList = Workstation::model()->findAll($Criteria);
-            break;
-
-        case Roles::ROLE_STAFFMEMBER:
-            if ($session['tenant'] == NULL) {
-                $tenantsearchby = "IS NULL";
-            } else {
-                $tenantsearchby = "='" . $session['tenant'] . "'";
-            }
-
-            if ($session['tenant_agent'] == NULL) {
-                //$tenantagentsearchby = "and tenant_agent IS NULL";
-                $tenantagentsearchby = "";
-            } else {
-                $tenantagentsearchby = "and tenant_agent ='" . $session['tenant_agent'] . "'";
-            }
-            $Criteria = new CDbCriteria();
-            $Criteria->condition = "tenant $tenantsearchby  $tenantagentsearchby";
-            $workstationList = Workstation::model()->findAll($Criteria);
-            break;
-
-        case Roles::ROLE_ADMIN:
-            $Criteria = new CDbCriteria();
-            $Criteria->condition = "tenant ='" . $session['tenant'] . "'";
-            $workstationList = Workstation::model()->findAll($Criteria);
-            break;
-
-        case Roles::ROLE_AGENT_ADMIN:
-            $Criteria = new CDbCriteria();
-            $Criteria->condition = "tenant ='" . $session['tenant'] . "' and tenant_agent ='" . $session['tenant_agent'] . "'";
-            $workstationList = Workstation::model()->findAll($Criteria);
-            break;
-    }
-
-    return $workstationList;
-}
-?>
 <?php
 $this->widget('bootstrap.widgets.TbButton', array(
     'label' => 'Click me',

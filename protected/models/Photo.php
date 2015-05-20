@@ -20,6 +20,7 @@ class Photo extends CActiveRecord {
     public function tableName() {
         return 'photo';
     }
+    const DEFAULT_COMPANY_LOGO = 'uploads/company_logo/1411087524.jpg';
 
     /**
      * @return array validation rules for model attributes.
@@ -118,9 +119,14 @@ class Photo extends CActiveRecord {
         $company = Company::model()->findByPK($companyId);
         if ($company->logo != '') {
             $photo = Photo::model()->findByPK($company->logo);
-
+           if(file_exists($photo->relative_path)){
             return $photo->relative_path;
+           }else{
+               return Photo::DEFAULT_COMPANY_LOGO;
         }
+            
+            
+    }
     }
     
     public function returnLogoPhotoRelative($logoId) {

@@ -27,7 +27,8 @@ class HelpDeskController extends Controller {
         return array(
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
                 'actions' => array('admin','adminAjax' ,'delete','create','update'),
-                'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
+                'users' => array('@'),
+                //'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
            
             ),
             array('deny', // deny all users

@@ -30,6 +30,12 @@ class CardType extends CActiveRecord {
     const MANUAL_VISITOR = 3;
     const CONTRACTOR_VISITOR = 4;
 
+    const VIC_CARD_SAMEDATE = 5;
+    /*const VIC_CARD_24HOURS = 6;
+    const VIC_CARD_EXTENDED = 7;
+    const VIC_CARD_MULTIDAY = 8;
+    const VIC_CARD_MANUAL = 9;*/
+
     /**
      * @return string the associated database table name
      */

@@ -2,7 +2,7 @@
 <br>
  
         <ol>
-            <li> To Import Visit History <?php echo CHtml::link("download sample template", array("visitor/csvSampleDownload"))?></li>
+            <li> Please download <?php echo CHtml::link("sample template", array("visitor/csvSampleDownload"))?> and upload from the browse button.</li>
             <li> Complete mandatory and import by sending from your browser. </li>
         </ol>
 <br>  
@@ -21,10 +21,14 @@ $form = $this->beginWidget('CActiveForm', array(
 )); ?>
  
      
-             <div class=" <?php if ($model->hasErrors('postcode')) echo "error"; ?>">                    
+             <div class=" <?php if ($model->hasErrors('postcode')) echo "error"; ?>"> 
+                 <label class="myLabel">
                     <?php echo $form->fileField($model,'file'); ?>
+                      <span>Browse File</span>
+                 </label>  
                     <?php echo $form->error($model,'file'); ?>
               </div>
+    <br>
               <div class="row">
              <?php echo CHtml::submitButton('Upload File'); ?>   
               </div>

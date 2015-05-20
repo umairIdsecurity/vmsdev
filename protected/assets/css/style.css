@@ -1812,3 +1812,45 @@ p.asic{
     display: inline-block;
     width: 48px;
 }
+
+
+/**
+    Import Visitor and Host File Button CSS
+*/
+label.myLabel input[type="file"] {
+    position: fixed;
+    top: -1000px;
+}
+
+/***** Example custom styling *****/
+.myLabel {
+    padding: 4px 15px;
+    color: #ffffff;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    background-color: #49afcd;
+    background-image: -moz-linear-gradient(top, #5bc0de, #2f96b4);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#5bc0de), to(#2f96b4));
+    background-image: -webkit-linear-gradient(top, #5bc0de, #2f96b4);
+    background-image: -o-linear-gradient(top, #5bc0de, #2f96b4);
+    background-image: linear-gradient(to bottom, #5bc0de, #2f96b4);
+    background-repeat: repeat-x;
+    border-color: #2f96b4 #2f96b4 #1f6377;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff5bc0de', endColorstr='#ff2f96b4', GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+      display: inline-block;
+    }
+.myLabel:hover {
+    background: -webkit-gradient(linear, center top, center bottom, from(#2F96B4), to(#2f96b4));
+}
+.myLabel:active {
+  background: -webkit-gradient(linear, center top, center bottom, from(#2F96B4), to(#2F96B4));
+}
+.myLabel :invalid + span {
+    color: #fff;
+}
+.myLabel :valid + span {
+    color: #fff;
+}

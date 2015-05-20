@@ -94,7 +94,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                                 );
                                 ?>
                             </li>
-
+                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/importhost'); ?>'><span>Import Staff/Host Profiles</span></a></li>      
                             <?php
                             break;
 

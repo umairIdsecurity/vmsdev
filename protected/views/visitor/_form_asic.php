@@ -91,7 +91,7 @@ if ($this->action->id == 'update') {
                                     <?php if ($model['photo'] != NULL) { ?>
                                         <style>
                                             .ajax-upload-dragdrop {
-                                                background: url('<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($dataId) ?>') no-repeat center top !important;
+                                                background: url('<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($dataId) ?>') no-repeat center top;
                                                 background-size: 137px 190px !important;
                                             }
                                         </style>

@@ -1,3 +1,9 @@
+<script type="text/javascript">
+    var SAMEDAY_TYPE = <?php echo CardType::SAME_DAY_VISITOR ?>;
+    var MULTIDAY_TYPE = <?php echo CardType::MULTI_DAY_VISITOR ?>;
+    var CONTRACTOR_TYPE = <?php echo CardType::CONTRACTOR_VISITOR ?>;
+</script>
+
 <?php
 /* @var $this VisitorController */
 /* @var $model Visitor */
@@ -32,8 +38,8 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
     <dd style="display:none;" id="findVisitor"><a href="#step2" id="findVisitorB">Add or Find Visitor Profile</a></dd>
 
     <dt id="findHostA" <?php if (isset($_GET['action'])) {
-    ?> 
-            class="borderTopLeftRadius" 
+    ?>
+            class="borderTopLeftRadius"
         <?php } ?>>Add or Find Host</dt>
 
     <dd style="display:none;" <?php
@@ -146,6 +152,10 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
         });
         $("#clicktabA").click(function(e) {
             e.preventDefault();
+
+            // display element by card type
+            selectVicCard($("#selectCardDiv input[name=selectCardType]:checked").val());
+
             showHideTabs('findVisitorB', 'findVisitorA', 'findVisitor', 'selectCardA', 'selectCard', 'findHostA', 'findHost');
         });
 
@@ -376,7 +386,7 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
                         logo.src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                         document.getElementById('photoCropPreview3').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                         $("#cropImageBtn3").show();
-                     
+
                      }
                      else
                      {
@@ -919,6 +929,41 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
         $("#Visit_time_in_hours").val(x.getHours());
         $("#Visit_time_in_minutes").val(x.getMinutes());
         tt = display_c();
+    }
+
+    /* VIC JS functions*/
+    function selectVicCard (cardType) {
+        $('#VisitCardType').val(cardType);
+
+        if ($("#selectCardDiv input[name=selectCardType]:checked").val() > CONTRACTOR_TYPE) {
+            // first table column
+            $('.workstationDropdownRow').appendTo('.first-column');
+            $('.visitorTypeDropdownRow').appendTo('.first-column');
+            $('.visitReasonRow').appendTo('.first-column');
+            $('.visitReasonOtherRow').appendTo('.first-column');
+
+            // second table column
+            $(".vic-visitor-fields").show();
+            $(".vms-visitor-fields").hide();
+
+            // third table
+            $('.third-column #passwordVicForm .register-a-visitor-buttons-div').hide();
+            $('.third-column .register-a-visitor-buttons-div').css('padding-top', '300px');
+
+        } else {
+            // second table column
+            $(".vic-visitor-fields").hide();
+            $(".vms-visitor-fields").show();
+
+            // third table
+            $('.visitReasonOtherRow').prependTo('.third-column');
+            $('.visitReasonRow').prependTo('.third-column');
+            $('.visitorTypeDropdownRow').prependTo('.third-column');
+            $('.workstationDropdownRow').prependTo('.third-column');
+
+            $('.third-column .register-a-visitor-buttons-div').css('padding-top', '130px');
+
+        }
     }
 
 </script>

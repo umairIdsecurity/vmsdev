@@ -138,7 +138,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
 
 
                         </table>
-                        <table id="addhost-table" style="width: 492px;float: left;">
+                        <table id="addhost-table" style="width: 280px;float: left;">
 
                             <tr <?php if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                                 echo "style='display:none;'";
@@ -297,6 +297,40 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                             </tr>
                         </table>
 
+                        <table class="third-column" style="width:280px;">
+
+                            <!-- start ASIC info -->
+                            <tr class="vic-host-fields">
+                                <td>
+                                    <?php echo $form->textField($userModel, 'asic_no', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'ASIC No.', 'style' => 'width: 110px;')); ?>
+
+                                    <?php
+                                    $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                        'model'       => $userModel,
+                                        'attribute'   => 'asic_expiry',
+                                        'options'     => array(
+                                            'dateFormat' => 'dd-mm-yy',
+                                            'changeMonth' => 'true',
+                                            'changeYear' => 'true',
+                                            'minDate' => '0'
+                                        ),
+                                        'htmlOptions' => array(
+                                            'size'        => '0',
+                                            'maxlength'   => '10',
+                                            'placeholder' => 'Expiry',
+                                            'style'       => 'width: 80px;',
+                                        ),
+                                    ));
+                                    ?><span class="required primary-identification-require">*</span>
+                                    <?php echo "<br>" . $form->error($userModel, 'asic_no'); ?>
+                                    <?php echo $form->error($userModel, 'asic_expiry'); ?>
+                                </td>
+                            </tr>
+
+                            <!-- end ASIC info -->
+
+                        </table>
+
                     </div>
 
                     <?php $this->endWidget(); ?>
@@ -416,6 +450,8 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                                 </td>
                             </tr>
                         </table>
+
+
                         <?php $this->endWidget(); ?>
 
                     </div>
@@ -614,7 +650,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                             tenant_agent = $("#search_visitor_tenant_agent").val();
                         }
                         //change modal url to pass user searched text
-                        var url = 'index.php?r=visitor/findhost&id=' + searchText + '&visitortype=' + $("#Visitor_visitor_type").val() + '&tenant=' + tenant + '&tenant_agent=' + tenant_agent;
+                        var url = 'index.php?r=visitor/findhost&id=' + searchText + '&visitortype=' + $("#Visitor_visitor_type").val() + '&tenant=' + tenant + '&tenant_agent=' + tenant_agent + '&cardType=' + $('#selectCardDiv input[name=selectCardType]:checked').val();
                         $("#searchHostTable").html('<iframe id="findHostTableIframe" onLoad="autoResize2();" width="100%" height="100%" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
                     }
 

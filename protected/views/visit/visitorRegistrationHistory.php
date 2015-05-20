@@ -146,7 +146,6 @@ $this->widget('zii.widgets.grid.CGridView', array(
 ));
 
 function getCompany($id) {
-
     $company_id = Visitor::model()->findByPk($id)->company;
 
     if (isset($company_id)) {
@@ -200,7 +199,7 @@ function formatTime($time) {
             buttonImage: "<?php echo Yii::app()->controller->assetsBase; ?>/images/calendar.png",
             buttonImageOnly: true,
             buttonText: "Select Date From",
-            dateFormat: "dd-mm-yy",
+            dateFormat: "dd-mm-yy"
         });
 
         $("#Visit_date_check_in_1").datepicker({
@@ -210,7 +209,7 @@ function formatTime($time) {
             buttonImage: "<?php echo Yii::app()->controller->assetsBase; ?>/images/calendar.png",
             buttonImageOnly: true,
             buttonText: "Select Date To",
-            dateFormat: "dd-mm-yy",
+            dateFormat: "dd-mm-yy"
         });
     });
 </script>

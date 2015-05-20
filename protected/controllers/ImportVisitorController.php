@@ -32,7 +32,7 @@ class ImportVisitorController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update', 'admin', 'delete'),
+				'actions'=>array('create','update', 'admin', 'delete', 'import'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -170,4 +170,79 @@ class ImportVisitorController extends Controller
 			Yii::app()->end();
 		}
 	}
+        
+        /**
+         * Import From ImportVisitor and Add them into Visitor and Visits
+         * 
+         * @return redirect
+         */
+        public function actionImport() {
+            
+            $importVisit = ImportVisitor::model()->findAll('imported_by = '.Yii::app()->user->id);
+            $session     = new CHttpSession;
+            
+            if($importVisit) {
+                foreach( $importVisit as $key=>$visit ) {
+                    
+                    // If not a duplicate Visitor then Add it to Visitor and Visits tables
+                            $visitorInfo = new Visitor;
+                            $visitorInfo->first_name = $visit->first_name;
+                            $visitorInfo->last_name  = $visit->last_name;
+                            $visitorInfo->email      = $visit->email;
+                            $visitorInfo->contact_number = $visit->contact_number;
+                            $visitorInfo->position = $visit->position;
+                            $company = Company::model()->find(" name LIKE '%{$visit->company}%' OR trading_name LIKE '%{$visit->company}%' ");
+                            if( $company )
+                               $visitorInfo->company = $company->id;
+                            else
+                               $visitorInfo->company = $session['company'];
+                            $visitorInfo->role = Roles::ROLE_VISITOR;
+                            $visitorInfo->visitor_status = '1'; // Active
+                            $visitorInfo->visitor_type= '2'; 
+                            $visitorInfo->created_by = Yii::app()->user->id;
+                            $visitorInfo->tenant = Yii::app()->user->tenant;
+                            if( $visitorInfo->validate() ) 
+                            {
+                                $visitorInfo->save();
+                                //insert Card Code
+                                if( !empty($visit->card_code)) {
+                                    $card = new CardGenerated;
+                                    $card->card_number = $visit->card_code;
+                                    $card->date_printed = date("Y-m-d", strtotime($visit->date_printed));
+                                    $card->date_expiration = date("Y-m-d", strtotime($visit->date_expiration));
+                                    $card->visitor_id = $visitorInfo->id;
+                                    $card->card_status  = 1;
+                                    $card->created_by = Yii::app()->user->id;
+                                    $card->tenant = Yii::app()->user->tenant;
+                                    $card->save();                     
+                                }
+                                // Insert Visit Now
+                                $visitInfo = new Visit;
+                                $visitInfo->visitor = $visitorInfo->id;
+                                $visitInfo->visitor_type = '2'; // Corporate
+                                $visitInfo->visitor_status = 1;
+                                $visitInfo->host = Yii::app()->user->id;
+                                $visitInfo->card = $card ? $card->id:"";
+                                $visitInfo->created_by = Yii::app()->user->id;
+                                $visitInfo->date_check_in  = date("Y-m-d", strtotime($visit->check_in_date) );
+                                $visitInfo->date_check_out = date("Y-m-d", strtotime($visit->check_out_date) );
+                                $visitInfo->time_check_in = $visit->check_in_time;
+                                $visitInfo->time_check_out = $visit->check_out_time;
+                                $visitInfo->visit_status = 1;
+                                $visitInfo->workstation = $session['workstation'];                               
+                                $visitInfo->tenant = Yii::app()->user->tenant;
+                                $visitInfo->reason = '1';
+                                                
+                                $visitInfo->save();
+                            }                 
+                }
+                //Delete all previous uploads of this user
+                    ImportVisitor::model()->deleteAll(
+                        "`imported_by` = :user_id",
+                        array(':user_id' => Yii::app()->user->id)
+                    );
+                    
+            }
+            return $this->redirect(array("visitor/admin"));
+        }
 }

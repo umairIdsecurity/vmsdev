@@ -207,6 +207,7 @@ class User extends VmsActiveRecord {
             'userType' => array(self::BELONGS_TO, 'UserType', 'user_type'),
             'userStatus' => array(self::BELONGS_TO, 'UserStatus', 'user_status'),
             'company' => array(self::BELONGS_TO, 'Company', 'company'),
+            'com' => array(self::BELONGS_TO, 'Company', 'company'),
             'userStatuses' => array(self::HAS_MANY, 'UserStatus', 'created_by'),
             'userTypes' => array(self::HAS_MANY, 'UserType', 'created_by'),
             'workstation' => array(self::HAS_MANY, 'user_workstation', 'id'),

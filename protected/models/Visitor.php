@@ -48,9 +48,10 @@ class Visitor extends CActiveRecord {
     public $birthdayYear;
     public $birthdayDay;
     public $repeatpassword;
-	public $password_option;
+    public $password_option;
     public $password_requirement;
     public $alternative_identification;
+    public $companycode;
 
     const PROFILE_TYPE_CORPORATE = 'CORPORATE';
     const PROFILE_TYPE_VIC = 'VIC';
@@ -221,12 +222,12 @@ class Visitor extends CActiveRecord {
             array('tenant, tenant_agent,company, visitor_type, visitor_workstation, photo,vehicle, visitor_card_status', 'default', 'setOnEmpty' => true, 'value' => null),
             array('password', 'PasswordCustom'),
             array('repeatpassword', 'PasswordRepeat'),
-            array('password_requirement', 'PasswordRequirement'),
 
             //todo: check to enable again. why do we need this validation ?
+            //array('password_requirement', 'PasswordRequirement'),
             //array('password_option', 'PasswordOption'),
 
-           /// array('vehicle', 'length', 'min'=>6, 'max'=>6, 'tooShort'=>'Vehicle is too short (Should be in 6 characters)'),
+            /// array('vehicle', 'length', 'min'=>6, 'max'=>6, 'tooShort'=>'Vehicle is too short (Should be in 6 characters)'),
             array('email', 'email'),
             array('vehicle', 'match',
                 'pattern' => '/^[A-Za-z0-9_]+$/u',
@@ -235,7 +236,7 @@ class Visitor extends CActiveRecord {
             array('vehicle', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, first_name, photo,last_name, email, vehicle,contact_number, date_of_birth, company, department, position, staff_id, notes, role, visitor_status, created_by, is_deleted, tenant, tenant_agent', 'safe', 'on' => 'search'),
+            array('id, first_name, photo,last_name, email,companycode, vehicle,contact_number, date_of_birth, company, department, position, staff_id, notes, role, visitor_status, created_by, is_deleted, tenant, tenant_agent', 'safe', 'on' => 'search'),
         );
 
         $rules[] = array(
@@ -319,6 +320,7 @@ class Visitor extends CActiveRecord {
             'contact_number'                            => 'Mobile Number',
             'date_of_birth'                             => 'Date Of Birth',
             'company'                                   => 'Company',
+
             'department'                                => 'Department',
             'position'                                  => 'Position',
             'staff_id'                                  => 'Staff ID',
@@ -372,6 +374,7 @@ class Visitor extends CActiveRecord {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
+        $criteria->with = array( 'company0' );
 
         $criteria->compare('id', $this->id, true);
         //$criteria->compare('first_name', $this->first_name, true);
@@ -379,7 +382,8 @@ class Visitor extends CActiveRecord {
         $criteria->compare('email', $this->email, true);
         $criteria->compare('contact_number', $this->contact_number, true);
         $criteria->compare('date_of_birth', $this->date_of_birth, true);
-        $criteria->compare('company', $this->company, true);
+        $criteria->compare('company0.name', $this->company, true);
+        $criteria->compare('company0.code', $this->companycode, true);
         $criteria->compare('department', $this->department, true);
         $criteria->compare('position', $this->position, true);
         $criteria->compare('staff_id', $this->staff_id, true);
@@ -399,16 +403,22 @@ class Visitor extends CActiveRecord {
         } else {
             $criteria->compare('first_name', $this->first_name, true);
         }
-        
+
         $user = User::model()->findByPK(Yii::app()->user->id);
         if($user->role != Roles::ROLE_SUPERADMIN){
-            
-        } 
+
+        }
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'sort' => array(
-                'defaultOrder' => 'ID DESC',
+                'attributes'=>array(
+                    'company.name'=>array(
+                        'asc'=>'company.name',
+                        'desc'=>'company.name DESC',
+                    ),
+                    '*',
+                ),
             ),
         ));
     }
@@ -422,9 +432,9 @@ class Visitor extends CActiveRecord {
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }
-    
+
     public function beforeSave() {
-      $this->email = trim($this->email);
+        $this->email = trim($this->email);
 
         $this->contact_country = self::AUSTRALIA_ID;
 
@@ -433,22 +443,22 @@ class Visitor extends CActiveRecord {
         } else {
             $this->password = User::model()->hashPassword($this->password);
         }
-       
-      return parent::beforeSave();
-   }
 
-   
+        return parent::beforeSave();
+    }
+
+
     public function beforeDelete() {
         $visitorExists = Visit::model()->exists('is_deleted = 0 and visitor =' . $this->id . ' and (visit_status=' . VisitStatus::PREREGISTERED . ' or visit_status=' . VisitStatus::ACTIVE . ')');
         $visitorExistsClosed = Visit::model()->exists('is_deleted = 0 and visitor =' . $this->id . ' and (visit_status=' . VisitStatus::CLOSED . ' or visit_status=' . VisitStatus::EXPIRED . ')');
         $visitorHasSavedVisitOnly = Visit::model()->exists('is_deleted = 0 and visitor =' . $this->id . ' and visit_status="'.VisitStatus::SAVED.'"');
-        
+
         if ($visitorExists) {
             return false;
         } elseif ($visitorExistsClosed) {
             return false;
         } elseif($visitorHasSavedVisitOnly){
-            
+
             $this->is_deleted = 1;
             $this->save();
             echo "true";
@@ -465,11 +475,13 @@ class Visitor extends CActiveRecord {
     public function beforeFind() {
         $criteria = new CDbCriteria;
         $criteria->condition = 't.is_deleted = 0';
-        if (Yii::app()->user->role != Roles::ROLE_SUPERADMIN) {
-            $criteria->condition = 't.is_deleted = 0 and t.tenant ="' . Yii::app()->user->tenant . '"';
+        if (isset(yii::app()->user->role)) {
+            if (Yii::app()->user->role != Roles::ROLE_SUPERADMIN) {
+                $criteria->condition = 't.is_deleted = 0 and t.tenant ="' . Yii::app()->user->tenant . '"';
+            }
         }
         $this->dbCriteria->mergeWith($criteria);
-         
+
     }
 
     protected function afterValidate() {
@@ -478,7 +490,7 @@ class Visitor extends CActiveRecord {
             if (Yii::app()->controller->action->id == 'create') {
                 // $this->password = User::model()->hashPassword($this->password);
             }
-            //disable if action is update 
+            //disable if action is update
         }
     }
 
@@ -586,9 +598,10 @@ class Visitor extends CActiveRecord {
         return "";
     }
 
+
     public function getTotalVisit()
     {
-        $visit = Visit::model()->findAllByPk($this->id);
+        $visit = Visit::model()->findAllByAttributes(array('visitor'=> $this->id));
         if ($visit) {
             return count($visit);
         }

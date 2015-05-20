@@ -23,16 +23,34 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                 <li>
                     <table id="personalDetailsTable" class="detailsTable">
                         <tr>
-                            <td width="100px;">First Name</td>
-                            <td><?php echo $visitorModel->first_name; ?></td>
+                            <td width="100px;" style="    padding-left: 0 !important;
+                                padding-bottom: 6px;
+                                padding-right: 6px;
+                                padding-top: 6px;">First Name</td>
+                            <td style="    padding-left: 0 !important;
+                                padding-bottom: 6px;
+                                padding-right: 6px;
+                                padding-top: 6px;"><?php echo $visitorModel->first_name; ?></td>
                         </tr>
                         <tr>
-                            <td>Last Name</td>
-                            <td><?php echo $visitorModel->last_name; ?></td>
+                            <td style="  padding-left: 0 !important;
+                                padding-bottom: 6px;
+                                padding-right: 6px;
+                                padding-top: 6px;">Last Name</td>
+                            <td style="  padding-left: 0 !important;
+                                padding-bottom: 6px;
+                                padding-right: 6px;
+                                padding-top: 6px;"><?php echo $visitorModel->last_name; ?></td>
                         </tr>
                         <tr>
-                            <td>Company</td>
-                            <td><?php echo $visitorModel->getCompanyName(); ?></td>
+                            <td style="  padding-left: 0 !important;
+                                padding-bottom: 6px;
+                                padding-right: 6px;
+                                padding-top: 6px;"s>Company</td>
+                            <td style="  padding-left: 0 !important;
+                                padding-bottom: 6px;
+                                padding-right: 6px;
+                                padding-top: 6px;"><?php echo $visitorModel->getCompanyName(); ?></td>
                         </tr>
                     </table>
                 </li>
@@ -62,14 +80,14 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                     <div class="flash-success success-update-contact-details"> Contact Details Updated Successfully. </div>
                     <table id="contactDetailsTable" class="detailsTable">
                         <tr>
-                            <td width="100px;">Email</td>
+                            <td width="100px;" style="padding-top: 7px;">Email</td>
                             <td><?php echo $visitorForm->textField($visitorModel, 'email', array('size' => 50, 'maxlength' => 50)); ?>
                                 <?php echo "<br>" . $visitorForm->error($visitorModel, 'email'); ?>
                                 <div style="" id="Visitor_email_em_" class="errorMessage errorMessageEmail" >A profile already exists for this email address.</div>
                             </td>
                         </tr>
                         <tr>
-                            <td>Mobile</td>
+                            <td style="  padding-top: 7px;">Mobile</td>
                             <td><input type="text" value="<?php echo $visitorModel->contact_number; ?>" name="Visitor[contact_number]" id="Visitor_contact_number"></td>
                         </tr>
                         <!--<tr><td><input type="submit" value="Update" name="yt0" id="submitContactDetailForm" class="complete" /></td></tr>-->
@@ -122,7 +140,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                     <table id="visitorTypeTable" class="detailsTable">
                         <tr>
 
-                            <td width="100px;"><?php echo $visitForm->labelEx($model, 'card_type'); ?></td>
+                            <td width="100px;" style="  padding-top: 4px;"><?php echo $visitForm->labelEx($model, 'card_type'); ?></td>
                             <td>
                                 <select id="Visit_card_type" name="Visit[card_type]">
                                     <?php
@@ -145,7 +163,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                         </tr>
                         <tr>
 
-                            <td width="100px;"><?php echo $visitForm->labelEx($model, 'visitor_type'); ?></td>
+                            <td width="100px;" style="padding-top:4px;"><?php echo $visitForm->labelEx($model, 'visitor_type', array('style' => 'padding-left:0;')); ?></td>
                             <td><?php
                                 if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
                                     ?>
@@ -166,11 +184,11 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                             </td>
 
                         </tr>
-                        <?php /*if ($session['role'] != Roles::ROLE_STAFFMEMBER) { */?><!--
+                        <?php /* if ($session['role'] != Roles::ROLE_STAFFMEMBER) { */ ?><!--
                             <tr>
                                 <td><input type='submit' value='Update' class='submitBtn complete'></td>
                             </tr>
-                        --><?php /*} */?>
+                        --><?php /* } */ ?>
                     </table>
                     <?php $this->endWidget(); ?>
                 </li>
@@ -208,7 +226,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
 
                     <table id="reasonTable" class="detailsTable">
                         <tr>
-                            <td width="100px;"><label for="Visit_reason">Reason</label></td>
+                            <td width="100px;" style="padding-top:4px;"><label for="Visit_reason">Reason</label></td>
                             <td>
                                 <select id="Visit_reason" name="Visit[reason]" onchange="ifSelectedIsOtherShowAddReasonDiv(this)">
                                     <option value='' selected>Please select a reason</option>
@@ -269,7 +287,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
         <li class='has-sub' id='hostDetailsLi'><a href="#"><span>Host Details</span></a>
             <ul>
                 <li>
-                <?php
+                    <?php
                     $hostForm = $this->beginWidget('CActiveForm', array(
                         'id' => 'update-host-form',
                         'action' => Yii::app()->createUrl('/user/update&id=' . $model->host),
@@ -290,14 +308,14 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
 
                     <table id="hostTable" class="detailsTable">
                         <tr>
-                            <td style="width:100px !important;"><?php echo $hostForm->labelEx($hostModel, 'first_name'); ?></td>
+                            <td style="width:100px !important; padding-top: 3px;"><?php echo $hostForm->labelEx($hostModel, 'first_name'); ?></td>
                             <td>
                                 <?php echo $hostForm->textField($hostModel, 'first_name', array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled')); ?>
                                 <?php echo "<br>" . $hostForm->error($hostModel, 'first_name'); ?>
                             </td>
                         </tr>
                         <tr>
-                            <td width="100px;"><?php echo $hostForm->labelEx($hostModel, 'last_name'); ?></td>
+                            <td width="100px;" style="  padding-top: 3px;"><?php echo $hostForm->labelEx($hostModel, 'last_name'); ?></td>
                             <td>
                                 <?php echo $hostForm->textField($hostModel, 'last_name', array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled')); ?>
                                 <?php echo "<br>" . $hostForm->error($hostModel, 'last_name'); ?>
@@ -354,7 +372,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
     </ul>
 </div>
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
 
         $("#User_repeatpassword").keyup(checkPasswordMatch);
         if ($("#currentSessionRole").val() == 9) {
@@ -367,7 +385,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
             $("#visitorInformationCssMenu input[type='submit']").hide();
         }
 
-        $("#dummy-host-findBtn").click(function(e) {
+        $("#dummy-host-findBtn").click(function (e) {
             e.preventDefault();
             var searchText = $("#search-host").val();
             if (searchText != '') {
@@ -380,7 +398,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
             }
         });
 
-        $(".host-AddBtn").click(function(e) {
+        $(".host-AddBtn").click(function (e) {
             e.preventDefault();
             $("#register-newhost-form").show();
             $("#addnewhost-table").show();
@@ -428,8 +446,8 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
             url: '<?php echo Yii::app()->createUrl('visitor/getHostDetails&id='); ?>' + id,
             dataType: 'json',
             data: id,
-            success: function(r) {
-                $.each(r.data, function(index, value) {
+            success: function (r) {
+                $.each(r.data, function (index, value) {
                     $("#searchHostTableDiv .findDivTitle").html("Selected Host Record : " + value.first_name + " " + value.last_name);
 
                 });
@@ -507,8 +525,8 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
             url: '<?php echo Yii::app()->createUrl('visitor/GetTenantAgentWithSameTenant&id='); ?>' + tenant,
             dataType: 'json',
             data: tenant,
-            success: function(r) {
-                $.each(r.data, function(index, value) {
+            success: function (r) {
+                $.each(r.data, function (index, value) {
                     $('.New_user_tenant_agent').append('<option value="' + value.id + '">' + value.name + '</option>');
                 });
             }
@@ -521,9 +539,9 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
             url: '<?php echo Yii::app()->createUrl('company/GetCompanyWithSameTenant&id='); ?>' + tenant,
             dataType: 'json',
             data: tenant,
-            success: function(r) {
+            success: function (r) {
                 $('.New_user_company option[value=""]').remove();
-                $.each(r.data, function(index, value) {
+                $.each(r.data, function (index, value) {
                     $('.New_user_company').append('<option value="' + value.id + '">' + value.name + '</option>');
                 });
             }
@@ -541,9 +559,9 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
             url: '<?php echo Yii::app()->createUrl('visitor/GetCompanyWithSameTenantAndTenantAgent&id='); ?>' + tenant + '&tenantagent=' + tenant_agent,
             dataType: 'json',
             data: tenant,
-            success: function(r) {
+            success: function (r) {
                 $('.New_user_company option[value=""]').remove();
-                $.each(r.data, function(index, value) {
+                $.each(r.data, function (index, value) {
                     $('.New_user_company').append('<option value="' + value.id + '">' + value.name + '</option>');
                 });
             }

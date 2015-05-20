@@ -53,8 +53,6 @@ $cardTypeWorkstationModel = WorkstationCardType::model()->findAllByAttributes(
 <input type="text" style="display:none;" id="curdateLogVisit" value="<?php echo date('d-m-Y'); ?>"/>
 <script>
     $(document).ready(function() {
-        var SAMEDAY_TYPE = <?php echo CardType::SAME_DAY_VISITOR ?>;
-        var MULTIDAY_TYPE = <?php echo CardType::MULTI_DAY_VISITOR ?>;
 
         $("#clicktabA").click(function(e) {
             e.preventDefault;
@@ -72,20 +70,6 @@ $cardTypeWorkstationModel = WorkstationCardType::model()->findAllByAttributes(
                 $(".ui-datepicker-trigger").show();
             }
 
-            /*if (document.getElementById('sameday').checked) {
-                card_type_value = document.getElementById('sameday').value;
-                $("#proposedDateOut").val($("#curdateLogVisit").val());
-                $("#Visit_date_out").val($("#curdateLogVisit").val());
-                $("#dateoutDiv").hide();
-                $(".ui-datepicker-trigger").hide();
-                
-            } else {
-                card_type_value = document.getElementById('multiday').value;
-                 $("#proposedDateOut").val("");
-                 $("#Visit_date_out").val("");
-                  $("#dateoutDiv").show();
-                 $(".ui-datepicker-trigger").show();
-            }*/
             $("#cardtype").val(card_type_value);
             $("#Visit_card_type").val(card_type_value);
             $("#dateoutDiv").val('2014-12-11');

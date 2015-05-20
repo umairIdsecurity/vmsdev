@@ -55,8 +55,12 @@ class VisitorController extends Controller {
         if (isset($_POST['Visitor'])) {
             $model->attributes = $_POST['Visitor'];
 
-            if ($visitorService->save($model, $_POST['Visitor']['reason'], $session['id'])) {
+            if (isset($_POST['VisitCardType']) && $_POST['VisitCardType'] > CardType::CONTRACTOR_VISITOR) {
+                $model->profile_type = Visitor::PROFILE_TYPE_VIC;
+            }
 
+            if ($visitorService->save($model, $_POST['Visitor']['reason'], $session['id'])) {
+                Yii::app()->end();
             }
         }
 
@@ -206,7 +210,7 @@ class VisitorController extends Controller {
         Yii::app()->end();
     }
 
-    public function actionFindVisitor($id,$tenant,$tenant_agent) {
+    public function actionFindVisitor($id,$tenant,$tenant_agent, $cardType=0) {
         $this->layout = '//layouts/column1';
         $model = new Visitor('search');
         $model->unsetAttributes();  // clear any default values

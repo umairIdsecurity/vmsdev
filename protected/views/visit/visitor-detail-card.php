@@ -84,10 +84,10 @@ $photoForm = $this->beginWidget('CActiveForm', array(
                         } else {
                             if ($model->date_check_out == '') {
                                 $date2 = date('d M y');
-                                echo date("d M y", strtotime($date2 . ' + 1 day'));
+                                echo date("d M y", strtotime($date2));
                             } else {
                                 // echo Yii::app()->dateFormatter->format("d/MM/y", strtotime($model->date_out));
-                                echo date("d M y", strtotime($model->date_check_out . ' + 1 day'));
+                                echo date("d M y", strtotime($model->date_check_out));
                             }
                         }
                         ?></span>

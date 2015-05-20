@@ -25,7 +25,15 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
 	}
 
     .ajax-upload-dragdrop{
-        margin-left:0px !important;
+        float:left !important;
+        margin-top: -30px;
+        background: url('<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png') no-repeat center top;
+        background-size:137px;
+        height: 104px;
+        width: 120px !important;
+        padding: 87px 5px 12px 72px;
+        margin-left: 20px !important;
+        border:none;
     }
 
     .uploadnotetext{

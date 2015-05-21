@@ -2,6 +2,10 @@
 /* @var $this VisitorController */
 /* @var $model Visitor */
 $session = new CHttpSession;
+
+// asic sponsor
+$asic = $hostModel->getAsicSponsor();
+
 ?>
 <table id="visitorDetailDiv">
     <tr class="theadVisitorDetail">
@@ -18,6 +22,7 @@ $session = new CHttpSession;
                 'hostModel' => $hostModel,
                 'patientModel' => $patientModel,
                 'cardTypeModel' => $cardTypeModel,
+                'asic' => $asic
             ));
             ?>
 
@@ -31,6 +36,7 @@ $session = new CHttpSession;
                 'patientModel' => $patientModel,
                 'newPatient' => $newPatient,
                 'newHost' => $newHost,
+                'asic' => $asic
             ));
             ?>
 
@@ -43,6 +49,7 @@ $session = new CHttpSession;
                 'hostModel' => $hostModel,
                 'reasonModel' => $reasonModel,
                 'patientModel' => $patientModel,
+                'asic' => $asic
             ));
             ?>
         </td>

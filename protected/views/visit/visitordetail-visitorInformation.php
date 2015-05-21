@@ -14,15 +14,13 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
 <?php
 }
 
-// asic sponsor
-$asic = $hostModel->getAsicSponsor();
-
 ?>
 
 <input type="text" id="currentSessionRole" value="<?php echo $session['role']; ?>" style="display:none;"/>
 <div id='visitorInformationCssMenu'>
     <ul>
-        <li class='has-sub' id="personalDetailsLi"><a href="#"><span>Personal Details</span></a>
+        <li class='has-sub' id="personalDetailsLi">
+            <a href="#"><span><?php echo !is_null($asic) ? 'Visitor Information' : "Personal Details"; ?></span></a>
             <ul>
                 <li>
                     <table id="personalDetailsTable" class="detailsTable">

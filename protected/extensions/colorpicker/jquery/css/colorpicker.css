@@ -99,6 +99,9 @@
 	background-position: top;
 	position: absolute;
 }
+.colorpicker_field input[type="text"], .colorpicker_hex input[type="text"]{
+    line-height: 14px;
+}
 .colorpicker_field span {
 	position: absolute;
 	width: 12px;

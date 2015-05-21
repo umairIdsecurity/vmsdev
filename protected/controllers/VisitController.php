@@ -38,7 +38,7 @@ class VisitController extends Controller {
                     'corporateTotalVisitCount',
                     'exportFileHistory',
                     'exportFileVisitorRecords',
-                    'exportVisitorRecords', 'delete',
+                    'exportVisitorRecords', 'delete','resetVisitCount',
                 ),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
             ),
@@ -598,6 +598,14 @@ class VisitController extends Controller {
         Visit::model()->updateCounters(array('is_deleted' => 1), 'visitor=:visitor', array(':visitor' => $id));
         Visitor::model()->updateByPk($id, array('is_deleted' => '1'));
         return true;
+    }
+
+    public function actionResetVisitCount() {
+        $id = Yii::app()->getRequest()->getQuery('id');
+        $visitor=Visitor::model()->findByPk($id);
+        $visitor->visit_count=0;
+        $visitor->save();
+        return $this->redirect('index.php?r=visit/corporateTotalVisitCount');
     }
 
     public function actionDuplicateVisit($id) {

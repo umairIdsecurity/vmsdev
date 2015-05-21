@@ -13,6 +13,7 @@ and open the template in the editor.
     background: none repeat scroll 0 0 #F3F3F3;
     border: 1px solid #C5C6C8;
     border-radius: 10px;
+    border-radius: 10px;
     margin: 30px auto;
     padding: 10px 25px;
     text-align: center;
@@ -251,7 +252,7 @@ nav.navigation ul li
     float:left;
     font-size:12px;
     color:#969696;
-    font-weight:bold;	
+    font-weight:bold;
 }
 nav.navigation ul li:last-child
 {
@@ -269,7 +270,7 @@ nav.navigation ul li a
     transition: all 0.25s ease;
     -ms-transition: all 0.25s ease;
     -webkit-transition: all 0.25s ease;
-    -moz-transition: all 0.25s ease;	     
+    -moz-transition: all 0.25s ease;
     -o-transition: all 0.25s ease;
     width: 170px;
     text-align:center;
@@ -279,7 +280,7 @@ nav.navigation ul li.active a{
     color:white;
 }
 
-nav.navigation ul li a:hover, nav.navigation ul li.active 
+nav.navigation ul li a:hover, nav.navigation ul li.active
 {
     background:#9BD62C;
 }
@@ -339,7 +340,7 @@ nav.navigation ul li:last-child.active
     list-style: none outside none;
     //margin: 0 0 18px;
     padding: 4px;
-    position: relative; 
+    position: relative;
     color:#323232 !important;
 }
 
@@ -370,29 +371,29 @@ nav.navigation ul li:last-child.active
     height:65%;
 }
 
-#modalBody iframe { 
-    width: 600px; 
-    height: 730px; 
-    border: none; } 
+#modalBody iframe {
+    width: 600px;
+    height: 730px;
+    border: none; }
 
-#workstationsModal .modal-body iframe { 
-    width: 100%; 
-    height: 500px; 
-    overflow-x: hidden;
-    overflow-y: auto;
-    border: none; } 
-
-#modalBody { 
+#workstationsModal .modal-body iframe {
+    width: 100%;
     height: 500px;
     overflow-x: hidden;
     overflow-y: auto;
-    padding: 0;} 
+    border: none; }
 
-#workstationsModal .modal-body  { 
+#modalBody {
+    height: 500px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 0;}
+
+#workstationsModal .modal-body  {
     height: 300px;
     overflow-x: hidden;
     overflow-y: auto;
-    padding: 0;} 
+    padding: 0;}
 
 #user_workstationsGrid .items {
     width:500px;
@@ -449,10 +450,10 @@ nav.navigation ul li:last-child.active
 
 .grid-view table.items th,table th,.grid-view table.items th a{
     background-color: #FBFBFB;
-    
+
     list-style: none outside none;
     padding: 4px;
-    position: relative; 
+    position: relative;
     color:#323232 !important;
 }
 #workstation-grid_c0 , #workstation-grid_c3{
@@ -545,7 +546,7 @@ nav.navigation ul li:last-child.active
 }
 
 .radioButtonTd input[type="radio"] {
-    display:none !important; 
+    display:none !important;
 }
 
 .radioButtonTd label {
@@ -563,7 +564,7 @@ nav.navigation ul li:last-child.active
     width:80px;
 }
 
-.radioButtonTd input[type="radio"]:checked + label { 
+.radioButtonTd input[type="radio"]:checked + label {
     background-color:#bbb;
     background: -webkit-gradient(linear, center top, center bottom, from(#bbb), to(#bbb));
     background: -moz-linear-gradient(center top , #bbb, #bbb) repeat scroll 0 0 rgba(0, 0, 0, 0);
@@ -616,19 +617,19 @@ dl, dt, tabs-content li{
 }
 
 dt.tabs dt{
-    /* IE10 Consumer Preview */ 
+    /* IE10 Consumer Preview */
     background-image: -ms-linear-gradient(top, #FFFFFF 0%, #4A4A4A 100%);
 
-    /* Mozilla Firefox */ 
+    /* Mozilla Firefox */
     background-image: -moz-linear-gradient(top, #FFFFFF 0%, #4A4A4A 100%);
 
-    /* Opera */ 
+    /* Opera */
     background-image: -o-linear-gradient(top, #FFFFFF 0%, #4A4A4A 100%);
 
-    /* Webkit (Safari/Chrome 10) */ 
+    /* Webkit (Safari/Chrome 10) */
     background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #FFFFFF), color-stop(1, #4A4A4A));
 
-    /* Webkit (Chrome 11+) */ 
+    /* Webkit (Chrome 11+) */
     background-image: -webkit-linear-gradient(top, #FFFFFF 0%, #4A4A4A 100%);
 
 }
@@ -641,7 +642,7 @@ dt.tabs dt{
 }
 
 #registerform label{
-    color:#637280; 
+    color:#637280;
 }
 
 #registerform table tr td{
@@ -700,11 +701,11 @@ dt.tabs dt{
     display: none;
 
 }
-#searchVisitorTableDiv, #visitor_fields_for_Search, 
-#search-visitor-reason-error, #searchHostTableDiv, 
+#searchVisitorTableDiv, #visitor_fields_for_Search,
+#search-visitor-reason-error, #searchHostTableDiv,
 #register-host-form, #register-reason-form, .visitorReason
 ,#Patient_name_error,
-#selectedVisitorInSearchTable,#visitorId,#selectedHostInSearchTable,#patientIsUnique, 
+#selectedVisitorInSearchTable,#visitorId,#selectedHostInSearchTable,#patientIsUnique,
 #hostId, #hostEmailIsUnique, #register-visit-form,
 #register-host-form #User_role, #register-host-form #User_user_type
 ,#currentRoleOfLoggedInUser,
@@ -735,7 +736,7 @@ dt.tabs dt{
 }
 
 #selectCardDiv input[type="radio"] {
-    //display:none !important; 
+    //display:none !important;
 }
 
 
@@ -869,7 +870,7 @@ dt.tabs dt{
     margin-top:17px;
 }
 
-.visitStatusLi > li 
+.visitStatusLi > li
 {
     padding-bottom:10px !important;
 }
@@ -1010,15 +1011,15 @@ dt.tabs dt{
 
 .ico1{  background:url('../images/ico1.jpg') 0 0 no-repeat;
     height:40px;
-	
+
      }
 .ico2{  background:url('../images/ico2.jpg') 0 0 no-repeat;
     height:40px;
-	
+
      }
 .ico3{  background:url('../images/ico3.jpg') 0 0 no-repeat;
     height:40px;
-	
+
      }
 .addvisitorprofile{
     background:url('../images/addvisitorprofileicon.png') 0 0 no-repeat;
@@ -1061,16 +1062,21 @@ dt.tabs dt{
     border: 2px solid #cccccc;
     border-radius: 4px;
 }
-
+.choose-profile p{
+    padding-top: 40px;
+}
 p.corp{
+    background: url("../images/corporate-visitor-icon.png") top center no-repeat;
     color: #2781bd;
 }
 
 p.vic{
+    background: url("../images/vic-visitor-icon.png") top center no-repeat;
     color: #f0c715;
 }
 
 p.asic{
+    background: url("../images/asic-visitor-icon.png") top center no-repeat;
     color: #ea4d3e;
 }
 

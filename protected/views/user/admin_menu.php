@@ -435,6 +435,18 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                  <li><a href='<?php echo Yii::app()->createUrl('helpDeskGroup/admin'); ?>' ><span>Help Desk Group</span></a></li>
               </ul>
             </li><!-- menu for helpdesk -->
+            
+            <!-- Notifications -->
+             <?php if ($session['role'] == Roles::ROLE_SUPERADMIN) { ?>
+            <li class='has-sub'>
+                   <a class='managevisitorrecords' href='<?php echo Yii::app()->createUrl('notifications/admin'); ?>'><span>Notifications</span></a>
+                   <ul <?php echo $this->id == 'notifications'?"style='display:block'":"style='display:none'";?>>
+                       <li><a href='<?php echo Yii::app()->createUrl('notifications/create'); ?>' class="addSubMenu"><span>Create Notification</span></a></li>
+                   </ul>
+            </li>
+            <?php  } ?>
+           
+            <!-- Ends Notifications -->
         </ul>
     </div>
 </div>

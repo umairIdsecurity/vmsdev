@@ -26,8 +26,10 @@ $form = $this->beginWidget('CActiveForm', array(
                  <label class="myLabel">
                     <?php echo $form->fileField($model,'file'); ?>
                       <span>Browse File</span>
-                 </label>   
+                 </label> 
+                 <div class="row">
                     <?php echo $form->error($model,'file'); ?>
+                 </div>    
               </div>
     <br>
               <div class="row">

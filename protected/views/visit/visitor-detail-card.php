@@ -156,15 +156,17 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
     </ul>
   </div>
     
-<div>
-       Total Visits at <?php echo $visitModel['companyName']; ?>: <?php echo $visitModel['companyVisitsByVisitor']; ?></br>
-       <!-- Total Visits to All Companies: <?php // echo $visitModel['allVisitsByVisitor']; ?> -->
+<div style="margin-top: 10px;">
+   Total Visits at <?php echo $visitModel['companyName']; ?>: <?php echo $visitModel['companyVisitsByVisitor']; ?></br>
+   <!-- Total Visits to All Companies: <?php // echo $visitModel['allVisitsByVisitor']; ?> -->
+    Remaining Days: <?php echo (28 - $visitModel['companyVisitsByVisitor']) ;?>
 </div>
 <input type="hidden" id="dummycardvalue" value="<?php echo $model->card; ?>"/>
 
 <form method="post" id="workstationForm">
 <div style="margin: 10px 0px 0px 60px; text-align: left;">
-    <select id="workstation" onchange="populateVisitWorkstation(this)">
+
+    <select id="workstation" onchange="populateVisitWorkstation(this)" <?php echo !is_null($asic) ? 'style="display: none;"' : ""; ?>>
         <?php
         if ($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
             echo '';
@@ -187,7 +189,19 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
         ?>
     </select>
     <br/>
+
+    <?php
+    if ($asic) {
+        echo CHtml::dropDownList('visitor_card_status', $asic->visitor_card_status, Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_ASIC], array('empty' => 'Card Status'));
+        echo "<br />";
+        echo CHtml::dropDownList('visitor_type', $visitorModel->visitor_type, VisitorType::model()->returnVisitorTypes());
+        echo "<br />";
+    }
+    ?>
+
+
     <input type="submit" class="complete" id="submitWorkStationForm" value="Update">
+
 
 </div>
 </form>

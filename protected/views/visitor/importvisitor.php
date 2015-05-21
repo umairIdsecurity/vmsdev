@@ -1,10 +1,4 @@
-<?php 
-$session = new CHttpSession;
-$company = Company::model()->findByPk($session['company']);
-$companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences); 
-$company_neutral_bg_color = "";
-if(!is_null($companyLafPreferences)){$company_neutral_bg_color = "background-color: ".$companyLafPreferences->neutral_bg_color;} 
-?>
+<?php $this->renderPartial('//importHosts/buttonstyle', null, false); ?>
 <h1> Import Visit History </h1>
 <br>
  
@@ -29,7 +23,7 @@ $form = $this->beginWidget('CActiveForm', array(
  
      
              <div class=" <?php if ($model->hasErrors('postcode')) echo "error"; ?>"> 
-                 <label class="myLabel" style=" cursor:pointer;font-size:14px;<?php echo $company_neutral_bg_color ?>;">
+                 <label class="myLabel">
                     <?php echo $form->fileField($model,'file'); ?>
                       <span>Browse File</span>
                  </label>  
@@ -37,7 +31,7 @@ $form = $this->beginWidget('CActiveForm', array(
               </div>
     <br>
               <div class="row">
-             <?php echo CHtml::submitButton('Upload File'); ?>   
+             <?php echo CHtml::submitButton('Upload File', array("class"=>"completeButton")); ?>   
               </div>
 
 <?php $this->endWidget(); ?>

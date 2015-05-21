@@ -153,6 +153,12 @@ $asicModel = new Visitor();
                             <tr>
                                 <td>&nbsp;</td>
                             </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
 
                             <tr class="vic-host-fields">
                                 <td>

@@ -196,7 +196,7 @@ class CompanyController extends Controller {
         }
 
 		if (isset($_POST['user_role'])) {
-			$model->userRole = $_POST['user_role'] ;
+            $model->userRole = $_POST['user_role'] ;
 		}
         $session = new CHttpSession;
 

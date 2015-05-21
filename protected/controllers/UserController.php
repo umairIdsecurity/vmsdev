@@ -371,49 +371,71 @@ class UserController extends Controller
      *
      * @return view
      */
-    public function actionImportHost()
-    {
+    public function actionImportHost() {
 
-        $model = new ImportCsvForm;
-
+        $model   = new ImportCsvForm;       
         $session = new CHttpSession;
-        if (isset($_POST['ImportCsvForm'])) {
-            $model->attributes = $_POST['ImportCsvForm'];
-            if ($model->validate()) {
-                $csvFile = CUploadedFile::getInstance($model, 'file');
-                $tempLoc = $csvFile->getTempName();
-                $handle = fopen($tempLoc, "r");
-                $i = 1;
-                while ($line = fgetcsv($handle, 2000)) {
+        if(isset($_POST['ImportCsvForm']))
+         {
+                $model->attributes=$_POST['ImportCsvForm'];
+                if($model->validate())
+                 {  
+                    //Delete all previous uploads of this user
+                    ImportHosts::model()->deleteAll(
+                        "`imported_by` = :user_id",
+                        array(':user_id' => Yii::app()->user->id)
+                    );
+                    //Upload the file
+                    $csvFile = CUploadedFile::getInstance($model,'file');  
+                    $tempLoc = $csvFile->getTempName();
+                    $handle = fopen($tempLoc, "r");
+                    $i = 1; $duplicate = false;
+                    while($line = fgetcsv($handle, 2000)){
+                        
+                        if( !isset($line[7]))
+                           $this->redirect(array("user/importhost"));
                     //Dont insert first row as it will be title
-                    if ($i == 1) {
-                        $i++;
-                        continue;
+                        if($i == 1) {
+                           $i++; continue;
                     }
-                    $user = new User;
-                    $user->first_name = $line[0];
-                    $user->last_name = $line[1];
-                    $user->department = $line[2];
-                    $user->staff_id = $line[3];
-                    $user->email = $line[4];
-                    $user->contact_number = $line[5];
-                    $user->role = Roles::ROLE_STAFFMEMBER;
-                    $user->user_type = UserType::USERTYPE_INTERNAL;
-                    $user->company = $session["company"];
-                    $user->user_status = 1;
-                    $user->created_by = $session['id'];
-                    $user->tenant = Yii::app()->user->tenant;
-                    $user->tenant_agent = $session['tenant_agent'];
-                    if ($user->validate()) {
-                        $user->save();
+                        
+                        //check for duplicate by Email
+                        $checkForDuplicate = User::model()->find("email = '{$line[2]}'");
+                        //Duplicate found then 
+                        if($checkForDuplicate) {
+                            $import = new ImportHosts;                       
+                            $duplicate = $import->saveImportHosts($line); 
+                        } else {
+                            $user  = new User;
+                            $user->first_name = $line[0];
+                            $user->last_name = $line[1];
+                            $user->email = $line[2];
+                            $user->department = $line[3];                    
+                            $user->staff_id = $line[4];                        
+                            $user->contact_number = $line[5];
+                            $user->date_of_birth = date("Y-m-d", strtotime($line[6]));
+                            $user->position = $line[7];
+                            
+                            $user->role = Roles::ROLE_STAFFMEMBER;
+                            $user->user_type = UserType::USERTYPE_INTERNAL;
+                            $user->company = $session["company"];
+                            $user->user_status = 1;
+                            $user->created_by = Yii::app()->user->id;
+                            $user->tenant = Yii::app()->user->tenant;
+                            $user->tenant_agent = $session['tenant_agent'];
+                            if( $user->validate() ) {
+                                $user->save();
                     }
                 }
-
-                Yii::app()->user->setFlash('success', "Records Imported Successfully");
+                    }
+                    if($duplicate) 
+                        $this->redirect(array("importHosts/admin"));
+                    else { 
+                            Yii::app()->user->setFlash('success', "Records Imported Successfully");
+                            $this->redirect(array("user/admin&vms=cvms")); 
             }
         }
-
-
-        return $this->render("importhost", array("model" => $model));
+    }
+        return $this->render("importhost", array("model"=>$model));
     }
 }

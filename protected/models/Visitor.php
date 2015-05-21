@@ -215,7 +215,8 @@ class Visitor extends CActiveRecord {
                 password_option,
                 password_requirement,
                 alternative_identification,
-                verifiable_signature
+                verifiable_signature,
+                visit_count
                 ',
                 'safe'
             ),
@@ -320,7 +321,7 @@ class Visitor extends CActiveRecord {
             'contact_number'                            => 'Mobile Number',
             'date_of_birth'                             => 'Date Of Birth',
             'company'                                   => 'Company',
-
+            'visit_count'                               => 'Total Visits',
             'department'                                => 'Department',
             'position'                                  => 'Position',
             'staff_id'                                  => 'Staff ID',

@@ -45,7 +45,7 @@ if ($this->action->id == 'update') {
         echo $form->errorSummary($model);
     }
     ?>
-    <input type="hidden" id="user_role" name="user_role" value="<?php echo $session['role'];  ?>">
+    <input type="hidden" id="user_role" name="user_role" value="<?php echo $session['role'];  ?>" />
     <?php if ($this->action->id != 'update') {
         ?>
         <input type="hidden" id="Company_tenant" name="Company[tenant]" value="<?php echo $tenant; ?>">

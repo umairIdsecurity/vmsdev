@@ -6,13 +6,17 @@ $session = new CHttpSession;
 if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
     ?>
     <style>
-        #visitorDetailDiv #visitorInformationCssMenu .complete, #visitorDetailDiv #visitorInformationCssMenu .host-findBtn{
-            width:88px !important;
-            height:24px !important;
+        #visitorDetailDiv #visitorInformationCssMenu .complete, #visitorDetailDiv #visitorInformationCssMenu .host-findBtn {
+            width: 88px !important;
+            height: 24px !important;
         }
     </style>
-    <?php
+<?php
 }
+
+// asic sponsor
+$asic = $hostModel->getAsicSponsor();
+
 ?>
 
 <input type="text" id="currentSessionRole" value="<?php echo $session['role']; ?>" style="display:none;"/>
@@ -23,34 +27,52 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                 <li>
                     <table id="personalDetailsTable" class="detailsTable">
                         <tr>
-                            <td width="100px;" style="    padding-left: 0 !important;
-                                padding-bottom: 6px;
-                                padding-right: 6px;
-                                padding-top: 6px;">First Name</td>
-                            <td style="    padding-left: 0 !important;
-                                padding-bottom: 6px;
-                                padding-right: 6px;
-                                padding-top: 6px;"><?php echo $visitorModel->first_name; ?></td>
+                            <td width="100px;" style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                                First Name
+                            </td>
+                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                                <?php echo $visitorModel->first_name; ?>
+                            </td>
                         </tr>
+
+                        <?php if ($asic) : ?>
+                            <tr>
+                                <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                                    Middle Name
+                                </td>
+                                <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                                    <?php echo $visitorModel->middle_name; ?>
+                                </td>
+                            </tr>
+                        <?php endif; ?>
+
                         <tr>
-                            <td style="  padding-left: 0 !important;
-                                padding-bottom: 6px;
-                                padding-right: 6px;
-                                padding-top: 6px;">Last Name</td>
-                            <td style="  padding-left: 0 !important;
-                                padding-bottom: 6px;
-                                padding-right: 6px;
-                                padding-top: 6px;"><?php echo $visitorModel->last_name; ?></td>
+                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                                Last Name
+                            </td>
+                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                                <?php echo $visitorModel->last_name; ?>
+                            </td>
                         </tr>
+
+                        <?php if ($asic) : ?>
                         <tr>
-                            <td style="  padding-left: 0 !important;
-                                padding-bottom: 6px;
-                                padding-right: 6px;
-                                padding-top: 6px;"s>Company</td>
-                            <td style="  padding-left: 0 !important;
-                                padding-bottom: 6px;
-                                padding-right: 6px;
-                                padding-top: 6px;"><?php echo $visitorModel->getCompanyName(); ?></td>
+                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                                Date of Birth
+                            </td>
+                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                                <?php echo $visitorModel->date_of_birth; ?>
+                            </td>
+                        </tr>
+                        <?php endif; ?>
+
+                        <tr>
+                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                                Company
+                            </td>
+                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                                <?php echo $visitorModel->getCompanyName(); ?>
+                            </td>
                         </tr>
                     </table>
                 </li>
@@ -77,18 +99,24 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                     ));
                     ?>
                     <input type="hidden" id="emailIsUnique" value="0"/>
-                    <div class="flash-success success-update-contact-details"> Contact Details Updated Successfully. </div>
+
+                    <div class="flash-success success-update-contact-details"> Contact Details Updated Successfully.
+                    </div>
                     <table id="contactDetailsTable" class="detailsTable">
                         <tr>
                             <td width="100px;" style="padding-top: 7px;">Email</td>
-                            <td><?php echo $visitorForm->textField($visitorModel, 'email', array('size' => 50, 'maxlength' => 50)); ?>
+                            <td><?php echo $visitorForm->textField($visitorModel, 'email',
+                                    array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled')); ?>
                                 <?php echo "<br>" . $visitorForm->error($visitorModel, 'email'); ?>
-                                <div style="" id="Visitor_email_em_" class="errorMessage errorMessageEmail" >A profile already exists for this email address.</div>
+                                <div style="" id="Visitor_email_em_" class="errorMessage errorMessageEmail">A profile
+                                    already exists for this email address.
+                                </div>
                             </td>
                         </tr>
                         <tr>
                             <td style="  padding-top: 7px;">Mobile</td>
-                            <td><input type="text" value="<?php echo $visitorModel->contact_number; ?>" name="Visitor[contact_number]" id="Visitor_contact_number"></td>
+                            <td><input type="text" value="<?php echo $visitorModel->contact_number; ?>" disabled="disabled"
+                                       name="Visitor[contact_number]" id="Visitor_contact_number"></td>
                         </tr>
                         <!--<tr><td><input type="submit" value="Update" name="yt0" id="submitContactDetailForm" class="complete" /></td></tr>-->
                     </table>
@@ -96,7 +124,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                 </li>
             </ul>
         </li>
-        <li class='has-sub' id="visitorTypeDetailsLi"><a href="#"><span>Visitor Type</span></a>
+        <li class='has-sub' id="visitorTypeDetailsLi" <?php echo !is_null($asic) ? 'style="display: none;"' : ""; ?>><a href="#"><span>Visitor Type</span></a>
             <ul>
                 <li>
                     <?php
@@ -135,12 +163,13 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                         ),
                     ));
                     ?>
-                    <div class="flash-success success-update-visitor-type"> Visitor Type Updated Successfully. </div>
+                    <div class="flash-success success-update-visitor-type"> Visitor Type Updated Successfully.</div>
 
                     <table id="visitorTypeTable" class="detailsTable">
                         <tr>
 
-                            <td width="100px;" style="  padding-top: 4px;"><?php echo $visitForm->labelEx($model, 'card_type'); ?></td>
+                            <td width="100px;" style="  padding-top: 4px;"><?php echo $visitForm->labelEx($model,
+                                    'card_type'); ?></td>
                             <td>
                                 <select id="Visit_card_type" name="Visit[card_type]">
                                     <?php
@@ -152,9 +181,9 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                             echo " selected ";
                                         }
                                         ?>><?php echo $value->name; ?></option>
-                                                <?php
-                                            }
-                                            ?>
+                                    <?php
+                                    }
+                                    ?>
 
                                 </select>
                                 <?php echo "<br>" . $visitForm->error($model, 'card_type'); ?>
@@ -163,24 +192,30 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                         </tr>
                         <tr>
 
-                            <td width="100px;" style="padding-top:4px;"><?php echo $visitForm->labelEx($model, 'visitor_type', array('style' => 'padding-left:0;')); ?></td>
+                            <td width="100px;" style="padding-top:4px;"><?php echo $visitForm->labelEx($model,
+                                    'visitor_type', array('style' => 'padding-left:0;')); ?></td>
                             <td><?php
                                 if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
                                     ?>
-                                    <select id = "Visit_visitor_type" name = "Visit[visitor_type]" class="visitortypedetails">
-                                        <option selected = "selected" value = "2">Corporate Visitor</option>
+                                    <select id="Visit_visitor_type" name="Visit[visitor_type]"
+                                            class="visitortypedetails">
+                                        <option selected="selected" value="2">Corporate Visitor</option>
                                     </select>
-                                    <?php
+                                <?php
                                 } else {
-                                    echo $visitForm->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes(), array(
-                                        'onchange' => 'visitorTypeOnChange()', 'class' => 'visitortypedetails',
-                                    ));
+                                    echo $visitForm->dropDownList($model, 'visitor_type',
+                                        VisitorType::model()->returnVisitorTypes(), array(
+                                            'onchange' => 'visitorTypeOnChange()',
+                                            'class' => 'visitortypedetails',
+                                        ));
                                 }
                                 ?>
                                 <?php echo "<br>" . $visitForm->error($model, 'visitor_type'); ?>
                                 <div class="errorMessage" id="visitorTypePatientHost" style="display:none;">hello</div>
-                                <input type="text" name="Visit[patient]" id="Visit_patient" style="display:none;" class="visitortypepatient" value="<?php echo $model->patient; ?>"/>
-                                <input type="text" name="Visit[host]" id="Visit_host" class="visitortypehost" style="display:none;" value="<?php echo $model->host; ?>"/>
+                                <input type="text" name="Visit[patient]" id="Visit_patient" style="display:none;"
+                                       class="visitortypepatient" value="<?php echo $model->patient; ?>"/>
+                                <input type="text" name="Visit[host]" id="Visit_host" class="visitortypehost"
+                                       style="display:none;" value="<?php echo $model->host; ?>"/>
                             </td>
 
                         </tr>
@@ -194,7 +229,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                 </li>
             </ul>
         </li>
-        <li class='has-sub' id="reasonLi"><a href="#"><span>Reason</span></a>
+        <li class='has-sub' id="reasonLi" <?php echo !is_null($asic) ? 'style="display: none;"' : ""; ?>><a href="#"><span>Reason</span></a>
             <ul>
                 <li>
                     <?php
@@ -221,14 +256,15 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                         ),
                     ));
                     ?>
-                    <div class="flash-success success-update-reason">Reason Updated Successfully. </div>
-                    <div class="flash-success success-add-reason">Reason Added Successfully. </div>
+                    <div class="flash-success success-update-reason">Reason Updated Successfully.</div>
+                    <div class="flash-success success-add-reason">Reason Added Successfully.</div>
 
                     <table id="reasonTable" class="detailsTable">
                         <tr>
                             <td width="100px;" style="padding-top:4px;"><label for="Visit_reason">Reason</label></td>
                             <td>
-                                <select id="Visit_reason" name="Visit[reason]" onchange="ifSelectedIsOtherShowAddReasonDiv(this)">
+                                <select id="Visit_reason" name="Visit[reason]"
+                                        onchange="ifSelectedIsOtherShowAddReasonDiv(this)">
                                     <option value='' selected>Please select a reason</option>
                                     <option value="Other">Other</option>
                                     <?php
@@ -240,16 +276,19 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                             echo " selected ";
                                         }
                                         ?>><?php echo $value->reason; ?></option>
-                                                <?php
-                                            }
-                                            ?>
+                                    <?php
+                                    }
+                                    ?>
 
                                 </select><br>
                                 <?php echo $reasonForm->error($model, 'reason'); ?>
                                 <div class="errorMessage visitorReason" id="visitReason">Please select a reason</div>
                             </td>
                         </tr>
-                        <tr><td><input type="submit" value="Update" name="yt0" id="submitReasonForm" class="complete" /></td></tr>
+                        <tr>
+                            <td><input type="submit" value="Update" name="yt0" id="submitReasonForm" class="complete"/>
+                            </td>
+                        </tr>
                     </table>
                     <?php $this->endWidget(); ?>
                     <?php
@@ -272,19 +311,28 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                     <table id="addreasonTable" class="detailsTable">
                         <tr>
                             <td width="100px;"><label for="VisitReason_reason">Reason</label></td>
-                            <td><textarea id="VisitReason_reason" name="VisitReason[reason]" style="width:200px !important;text-transform: capitalize;" cols="80" rows="3"><?php
+                            <td><textarea id="VisitReason_reason" name="VisitReason[reason]"
+                                          style="width:200px !important;text-transform: capitalize;" cols="80" rows="3"><?php
                                     echo $reasonModel->reason;
                                     ?></textarea> <?php echo $addReasonForm->error($reasonModel, 'reason'); ?>
-                                <div class="errorMessage visitorReason" id="visitReasonErrorMessage">Please select a reason</div>
+                                <div class="errorMessage visitorReason" id="visitReasonErrorMessage">Please select a
+                                    reason
+                                </div>
                             </td>
                         </tr>
-                        <tr><td><input type="submit" value="Add" name="yt0" id="submitAddReasonForm" class="complete"/></td></tr>
+                        <tr>
+                            <td><input type="submit" value="Add" name="yt0" id="submitAddReasonForm" class="complete"/>
+                            </td>
+                        </tr>
                     </table>
                     <?php $this->endWidget(); ?>
                 </li>
             </ul>
         </li>
-        <li class='has-sub' id='hostDetailsLi'><a href="#"><span>Host Details</span></a>
+        <li class='has-sub' id='hostDetailsLi'>
+            <a href="#">
+                <span><?php echo !is_null($asic) ? 'ASIC Sponsor' : "Host Details"; ?></span>
+            </a>
             <ul>
                 <li>
                     <?php
@@ -308,16 +356,20 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
 
                     <table id="hostTable" class="detailsTable">
                         <tr>
-                            <td style="width:100px !important; padding-top: 3px;"><?php echo $hostForm->labelEx($hostModel, 'first_name'); ?></td>
+                            <td style="width:100px !important; padding-top: 3px;"><?php echo $hostForm->labelEx($hostModel,
+                                    'first_name'); ?></td>
                             <td>
-                                <?php echo $hostForm->textField($hostModel, 'first_name', array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled')); ?>
+                                <?php echo $hostForm->textField($hostModel, 'first_name',
+                                    array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled')); ?>
                                 <?php echo "<br>" . $hostForm->error($hostModel, 'first_name'); ?>
                             </td>
                         </tr>
                         <tr>
-                            <td width="100px;" style="  padding-top: 3px;"><?php echo $hostForm->labelEx($hostModel, 'last_name'); ?></td>
+                            <td width="100px;" style="  padding-top: 3px;"><?php echo $hostForm->labelEx($hostModel,
+                                    'last_name'); ?></td>
                             <td>
-                                <?php echo $hostForm->textField($hostModel, 'last_name', array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled')); ?>
+                                <?php echo $hostForm->textField($hostModel, 'last_name',
+                                    array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled')); ?>
                                 <?php echo "<br>" . $hostForm->error($hostModel, 'last_name'); ?>
                             </td>
                         </tr>
@@ -347,19 +399,21 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                             ),
                         ));
                         ?>
-                        <div class="flash-success success-add-patient">Patient Added Successfully. </div>
+                        <div class="flash-success success-add-patient">Patient Added Successfully.</div>
 
                         <table id='newPatientTable' class='detailsTable'>
                             <tr>
                                 <td width="100px"><?php echo $newPatientForm->labelEx($newPatient, 'name'); ?></td>
                                 <td>
-                                    <?php echo $newPatientForm->textField($newPatient, 'name', array('size' => 50, 'maxlength' => 100)); ?>
+                                    <?php echo $newPatientForm->textField($newPatient, 'name',
+                                        array('size' => 50, 'maxlength' => 100)); ?>
                                     <?php echo "<br>" . $newPatientForm->error($newPatient, 'name'); ?>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="submit" value="Add" name="yt0" style="display:inline-block;" class="complete"/>
+                                    <input type="submit" value="Add" name="yt0" style="display:inline-block;"
+                                           class="complete"/>
                                 </td>
                             </tr>
                         </table>
@@ -380,7 +434,9 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
             $("#contactDetailsLi").html("<a href='#'><span>Contact Details</span></a>");
         }
 
-        if (<?php echo $model->visit_status; ?> == '3') {
+        if (<?php echo $model->visit_status; ?> == '3'
+        )
+        {
             $("#visitorInformationCssMenu :input").attr('disabled', true);
             $("#visitorInformationCssMenu input[type='submit']").hide();
         }
@@ -506,8 +562,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
         }
     }
 
-    function populateHostTenantAgentAndCompanyField()
-    {
+    function populateHostTenantAgentAndCompanyField() {
         $('.New_user_company option[value!=""]').remove();
         $('.New_user_tenant_agent option[value!=""]').remove();
         var tenant = $(".New_user_tenant").val();
@@ -579,11 +634,12 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
     }
 
 </script>
-<input type="button" id="findHostModalBtn" value="findhost" data-target="#findHostModal" data-toggle="modal" style="display:none;"/>
+<input type="button" id="findHostModalBtn" value="findhost" data-target="#findHostModal" data-toggle="modal"
+       style="display:none;"/>
 <div class="modal hide fade" id="findHostModal" style="width:69%; margin-left:-435px;">
     <div class="modal-header">
 
-        <a data-dismiss="modal" class="close" id="dismissModal" >×</a>
+        <a data-dismiss="modal" class="close" id="dismissModal">×</a>
         <br>
     </div>
     <div id="findHostModalBody" style="padding:20px;">

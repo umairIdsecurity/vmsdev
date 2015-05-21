@@ -16,7 +16,7 @@
              depends="prepare,lint,phploc-ci,pdepend,phpmd-ci,phpcs-ci,phpcpd-ci,phpunit,phpdox"
              description=""/>-->
     <target name="build"
-            depends="check-code"
+            depends="check-code,bdd-tests"
             description=""/>
 
     <target name="check-code"
@@ -47,7 +47,7 @@
         </condition>
 
         <exec executable="specs/tools/bin/behat" taskname="feature-test" >
-            <arg line="--config=specs/tools/behat-features.yml --paths ${featureArg}" />
+            <arg line="--config=specs/tools/behat.yml --profile=features --paths ${featureArg}" />
         </exec>
 
         <property name="feature-test.done"  value="true"/>
@@ -67,7 +67,7 @@
         </condition>
 
         <exec executable="specs/tools/bin/behat" taskname="bug-test" >
-            <arg line="--config=specs/tools/behat-bugs.yml --paths ${arg}" />
+            <arg line="--config=specs/tools/behat.yml --profile=bugs --paths ${arg}" />
         </exec>
 
         <property name="bug-test.done"  value="true"/>
@@ -87,7 +87,7 @@
         </condition>
 
         <exec executable="specs/tools/bin/behat" taskname="new-feature-test" >
-            <arg line="--config=specs/tools/behat-new-features.yml --paths ${featureArg}" />
+            <arg line="--config=specs/tools/behat.yml --profile=features-new --paths ${featureArg}" />
         </exec>
 
         <property name="new-feature-test.done"  value="true"/>
@@ -107,7 +107,7 @@
         </condition>
 
         <exec executable="specs/tools/bin/behat" taskname="new-bug-test" >
-            <arg line="--config=specs/tools/behat-new-bugs.yml --paths ${arg}" />
+            <arg line="--config=specs/tools/behat.yml --profile=bugs-new  --paths ${arg}" />
         </exec>
 
         <property name="new-bug-test.done"  value="true"/>

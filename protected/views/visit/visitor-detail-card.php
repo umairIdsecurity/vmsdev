@@ -97,6 +97,7 @@ $photoForm = $this->beginWidget('CActiveForm', array(
                 <td>
                     <div style="width:132px">
                         <?php
+<<<<<<< HEAD
                             if (strlen($visitorModel->first_name . ' ' . $visitorModel->last_name) > 48) {
                                 $first_name = explode(' ', $visitorModel->first_name);
                                 $last_name = explode(' ', $visitorModel->last_name);
@@ -104,6 +105,15 @@ $photoForm = $this->beginWidget('CActiveForm', array(
                             } else {
                                 echo $visitorModel->first_name . ' ' . $visitorModel->last_name;
                             } ?>
+=======
+                        if (strlen($visitorModel->first_name . ' ' . $visitorModel->last_name) > 48) {
+                            $first_name = explode(' ', $visitorModel->first_name);
+                            $last_name = explode(' ', $visitorModel->last_name);
+                            echo $first_name[0] . ' ' . $last_name[0];
+                        } else {
+                            echo $visitorModel->first_name . ' ' . $visitorModel->last_name;
+                        } ?>
+>>>>>>> 415bce7f1cff053f19b8afa3d633a08a075899f9
                     </div>
                 </td>
             </tr>

@@ -58,4 +58,14 @@ class CHelper {
         else
             return false;
     }
+    
+/**
+ * Get Users Unread Notification list
+ * 
+ */
+    public static function get_unread_notifications() {
+
+        $notifications =  Notification::model()->with('user_notification')->findAll("user_notification.has_read != 1 AND user_notification.user_id = ".Yii::app()->user->id );
+        return $notifications;
+    }
 }

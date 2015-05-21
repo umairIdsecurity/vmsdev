@@ -7,7 +7,7 @@ if ($companyLafPreferences) {
 <style>
     /***** Example custom styling *****/
 .myLabel {
-    padding: 4px 15px !important;
+    padding: 7px 15px !important;
     color:  <?php echo $companyLafPreferences->neutral_font_color;?> !important;
     border: <?php echo $companyLafPreferences->neutral_bg_color?>;
     border-radius: 4px;
@@ -28,7 +28,7 @@ if ($companyLafPreferences) {
 }
 
 .completeButton {
-    padding: 4px 15px !important;
+    padding: 7px 15px !important;
     color:  <?php echo $companyLafPreferences->complete_font_color;?> !important;
     border: <?php echo $companyLafPreferences->complete_bg_color?> !important;
     border-radius: 4px;

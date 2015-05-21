@@ -721,4 +721,9 @@ class User extends VmsActiveRecord {
             return '<span class="required">*</span>';
         }
     }
+
+    public function getAsicSponsor()
+    {
+        return Visitor::model()->find('profile_type = "' . Visitor::PROFILE_TYPE_ASIC . '" AND email = "' . $this->email . '"');
+    }
 }

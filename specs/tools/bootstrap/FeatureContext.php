@@ -33,9 +33,21 @@ class FeatureContext extends MinkContext
      */
     public function __construct(array $parameters)
     {
+
+    }
+    /** @BeforeScenario */
+    public function before($event)
+    {
+        $this->printDebug("Resetting Database");
+        $this->visit("/index.php");
+        $this->fillField("Username or Email","superadmin@test.com");
+        $this->fillField("Password","12345");
+        $this->pressButton("Login");
+        $this->visit("/index.php?r=resetDatabase/resetWithTestData");
+        $this->visit("/index.php");
+
     }
 
 
-	
 
 }

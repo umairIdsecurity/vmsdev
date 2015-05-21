@@ -1,3 +1,11 @@
+<?php 
+$session = new CHttpSession;
+$company = Company::model()->findByPk($session['company']);
+$companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences); 
+$company_neutral_bg_color = "";
+if(!is_null($companyLafPreferences)){$company_neutral_bg_color = "background-color: ".$companyLafPreferences->neutral_bg_color;} 
+?>
+
 <h1> Import Host/Staff Profiles </h1>
 <br>
  
@@ -22,7 +30,7 @@ $form = $this->beginWidget('CActiveForm', array(
  
      
              <div class=" <?php if ($model->hasErrors('file')) echo "error"; ?>">   
-                 <label class="myLabel">
+                 <label class="myLabel" style=" cursor:pointer;font-size:14px;<?php echo $company_neutral_bg_color ?>;">
                     <?php echo $form->fileField($model,'file', array("")); ?>
                       <span>Browse File</span>
                  </label>   

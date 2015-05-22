@@ -455,7 +455,7 @@ $form = $this->beginWidget('CActiveForm', array(
 <?php if ((($session['role'] == Roles::ROLE_SUPERADMIN || $session['role'] == Roles::ROLE_ADMIN) && $this->action->id == 'update') || $this->action->id == 'addvisitor') {
 
     ?>
-    <div class="password-border" style="margin-bottom: 15px;">
+    <div class="password-border">
         <table style="float:left;width:300px;">
             <tr>
                 <td><strong>Password Options</strong></td>
@@ -561,7 +561,7 @@ $form = $this->beginWidget('CActiveForm', array(
         </table>
     </div> <!-- password-border -->
 
-    <input type="submit" value="Save" name="yt0" id="submitFormVisitor" class="complete"/>
+    <input type="submit" value="Save" name="yt0" id="submitFormVisitor" class="complete" style="margin-top: 15px;"/>
 
 
 <?php } ?>

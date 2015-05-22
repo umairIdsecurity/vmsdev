@@ -85,7 +85,7 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
 
 <div class="register-a-visitor-buttons-div" style="  width: 300px;  float: right;">
                                         <input type="submit" value="Save" name="yt0" id="submitFormVisitor"
-                                               class="complete"/>
+                                               class="complete" style="margin-top: 15px;"/>
                                     </div>
 <script>
 

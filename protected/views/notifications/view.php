@@ -16,19 +16,17 @@ $this->menu=array(
 );
 ?>
 
-<h1>View Notification #<?php echo $model->id; ?></h1>
+<h1><?php echo $model->subject; ?></h1>
+<br> 
+<div class="container">
+    <p>
+    <strong> Detail </strong> <br>
+        <?php echo $model->message;?>
+    </p>
+    <p><strong> Date </strong>  <br><?php echo $model->date_created;?></p>
+    <p><strong> Type </strong> <br><?php echo $model->notification_type;?></p>
+ </div>
+     
+ <?php echo CHtml::submitButton('Back',array("submit"=>array('notifications/index'))); ?>
 
-<?php $this->widget('zii.widgets.CDetailView', array(
-	'data'=>$model,
-	'attributes'=>array(
-		'id',
-		'subject',
-		'message',
-		'created_by',
-		'date_created',
-		'user_id',
-		'role_id',
-		'has_read',
-		'notification_type',
-	),
-)); ?>
+ 

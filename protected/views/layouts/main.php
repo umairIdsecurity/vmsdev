@@ -48,15 +48,13 @@ $userRole = $session['role'];
             <?php
         }
         ?>
-         <script  src="<?php echo Yii::app()->controller->assetsBase; ?>/js/jquery.min.js" ></script>
+        <script  src="<?php echo Yii::app()->controller->assetsBase; ?>/js/jquery.min.js" ></script>
         <script  src="<?php echo Yii::app()->controller->assetsBase; ?>/js/angular.min.js" ></script>
         <script  src="<?php echo Yii::app()->controller->assetsBase; ?>/js/match.js" ></script>
-
         <script  src="<?php echo Yii::app()->controller->assetsBase; ?>/js/script-sidebar.js" ></script>
- 
         <script  src="<?php echo Yii::app()->controller->assetsBase; ?>/js/jquery.uploadfile.min.js" ></script>
         <script  src="<?php echo Yii::app()->controller->assetsBase; ?>/js/jquery.form.js" ></script>
-
+    
         <title><?php echo CHtml::encode($this->pageTitle); ?></title>
  
     </head>
@@ -102,11 +100,14 @@ $userRole = $session['role'];
                                 </a>
                             </li>
 
-                            <li class="notifications">
-                                <a title="notifications" href="#">
-                                    Notifications
-                                </a>
+                            <li class="notifications dropdown">
+                                <a title="notifications" href="#" class="dropdown-toggle" data-toggle="dropdown"> <?php $notifications = CHelper::get_unread_notifications();
+                                       if($notifications) 
+                                          echo '  <div class="notification-count"> '. count($notifications).'</div>';
+                                ?></a>
+                                <?php echo $this->renderPartial("//notifications/notification_menu", array('notifications'=>$notifications), false, false); ?>
                             </li>
+ 
 
                             <li class="support"><a title="support" href="<?php echo Yii::app()->createUrl("/dashboard/contactsupport"); ?>">
                                     Contact Support
@@ -191,6 +192,6 @@ $userRole = $session['role'];
                     </div><!-- footer -->
 
                     </div><!-- page -->
-
-                    </body>
-                    </html>
+                  
+</body>
+</html>

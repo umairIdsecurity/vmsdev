@@ -56,6 +56,12 @@ class NotificationsController extends Controller
 	 */
 	public function actionView($id)
 	{
+             // Mark All his/her notifications as READ
+            $userNotify = UserNotification::model()->find("user_id = ".Yii::app()->user->id.' AND notification_id = '.$id);
+                if($userNotify) {
+                    $userNotify->has_read = 1;
+                    $userNotify->save();          
+            }
 		$this->render('view',array(
 			'model'=>$this->loadModel($id),
 		));
@@ -145,13 +151,21 @@ class NotificationsController extends Controller
 	 */
 	public function actionIndex()
 	{
-		 $dataProvider=new CActiveDataProvider('Notification',  
-                         array('criteria'=>array(
-                              'with'=>array('user_notification' =>array('condition'=>'user_notification.user_id = '.Yii::app()->user->id)),
-                         )
-                     ));
-                $this->render('index',array(
-			'dataProvider'=>$dataProvider,
+             // Mark All his/her notifications as READ
+            $userNotify = UserNotification::model()->find("user_id = ".Yii::app()->user->id);
+                if($userNotify) {
+                    $userNotify->has_read = 1;
+                    $userNotify->save();          
+            }
+                     
+            // Fetch Only His/Her Notifications
+            $model=new Notification('search');
+		$model->unsetAttributes();  // clear any default values
+		if(isset($_GET['Notification']))
+			$model->attributes=$_GET['Notification'];
+
+		$this->render('index',array(
+			'model'=>$model,
 		));
 	}
 

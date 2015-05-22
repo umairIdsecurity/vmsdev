@@ -953,6 +953,9 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
             $('.third-column .register-a-visitor-buttons-div').css('padding-top', '300px');
             $('#hostButtonRow').css('padding-top', '130px');
 
+            // text changes:
+            $('div.visitor-title-host').text('Add ASIC Sponsor');
+
         } else {
             // second table column
             $(".vic-visitor-fields").hide();
@@ -969,6 +972,8 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
             $('.third-column .register-a-visitor-buttons-div').css('padding-top', '130px');
             $('#hostButtonRow').css('padding-top', '250px');
 
+            // text changes:
+            $('div.visitor-title-host').text('Add Host');
         }
     }
 

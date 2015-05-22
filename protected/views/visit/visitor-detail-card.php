@@ -164,10 +164,9 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
 </div>
 <input type="hidden" id="dummycardvalue" value="<?php echo $model->card; ?>"/>
 
-<form method="post" id="workstationForm">
+<form method="post" id="workstationForm" action="<?php echo Yii::app()->createUrl('visit/detail', array('id' => $model->id)); ?>">
 <div style="margin: 10px 0px 0px 60px; text-align: left;">
-
-    <select id="workstation" onchange="populateVisitWorkstation(this)" <?php echo !is_null($asic) ? 'style="display: none;"' : ""; ?>>
+    <select id="workstation" name="Visit[workstation]" onchange="populateVisitWorkstation(this)" <?php echo !is_null($asic) ? 'style="display: none;"' : ""; ?>>
         <?php
         if ($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
             echo '';
@@ -182,7 +181,7 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
             ?>
             <option value="<?php echo $value->id; ?>" <?php
             if (isset($model->workstation) && $value->id == $model->workstation) {
-                echo 'selected';
+                echo 'selected="selected"';
             }
             ?>><?php echo $value->name; ?></option>
         <?php
@@ -325,6 +324,10 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
             }, speed);
             times -= .5;
         }
+    }
+
+    function populateVisitWorkstation(value) {
+        $("#Visit_workstation").val(value.value);
     }
 
 </script>

@@ -253,7 +253,7 @@ class VisitController extends Controller {
 
             $model->attributes = $_POST['Visit'];
             if ($model->save()) {
-                
+
             }
         }
 

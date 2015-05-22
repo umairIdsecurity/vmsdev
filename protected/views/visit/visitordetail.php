@@ -44,13 +44,14 @@ $asic = $hostModel->getAsicSponsor();
         <td>
 
             <?php
-            $this->renderPartial('visitordetail-actions', array('model' => $model,
-                'visitorModel' => $visitorModel,
-                'hostModel' => $hostModel,
-                'reasonModel' => $reasonModel,
-                'patientModel' => $patientModel,
-                'asic' => $asic
-            ));
+            $this->renderPartial('visitordetail-actions', array(
+                    'model' => $model,
+                    'visitorModel' => $visitorModel,
+                    'hostModel' => $hostModel,
+                    'reasonModel' => $reasonModel,
+                    'patientModel' => $patientModel,
+                    'asic' => $asic
+                ));
             ?>
         </td>
 

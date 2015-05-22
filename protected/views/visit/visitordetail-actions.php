@@ -195,33 +195,7 @@ $session = new CHttpSession;
 
         </li>
 
-        <?php if (($model->visit_status == VisitStatus::PREREGISTERED || $model->visit_status == VisitStatus::SAVED || $model->visit_status == VisitStatus::CLOSED)) {
-            ?>
-            <!--<li class='has-sub' id="preregisterLi"><a href="#"><span class="pre-visits">Preregister Visit</span></a>
-                <ul>
-                    <li>
-
-                        <table id="actionsVisitDetails">
-                            <tr>
-                                <td></td>
-                                <td >
-
-                                    <div id="logVisitDiv">
-                                        <?php
-/*                                        $this->renderPartial('preregisteravisit', array('model' => $model,
-                                            'visitorModel' => $visitorModel,
-                                            'hostModel' => $hostModel,
-                                            'reasonModel' => $reasonModel,
-                                        ));
-                                        */?>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </li>
-                </ul>
-            </li>
--->
+        <?php if (in_array($model->visit_status, array(VisitStatus::PREREGISTERED, VisitStatus::SAVED, VisitStatus::CLOSED))) {?>
 
             <li class='has-sub' id="activateLi"><span class="log-current">Log Visit</span>
                 <ul>
@@ -254,11 +228,22 @@ $session = new CHttpSession;
 
                                     <div id="logVisitDiv">
                                         <?php
-                                        $this->renderPartial('activateavisit', array('model' => $model,
-                                            'visitorModel' => $visitorModel,
-                                            'hostModel' => $hostModel,
-                                            'reasonModel' => $reasonModel,
-                                        ));
+                                        if ($asic) {
+                                            $this->renderPartial('activateavisit-vic', array(
+                                                'model' => $model,
+                                                'visitorModel' => $visitorModel,
+                                                'hostModel' => $hostModel,
+                                                'reasonModel' => $reasonModel,
+                                                'asic' => $asic
+                                            ));
+                                        } else {
+                                            $this->renderPartial('activateavisit', array(
+                                                'model' => $model,
+                                                'visitorModel' => $visitorModel,
+                                                'hostModel' => $hostModel,
+                                                'reasonModel' => $reasonModel,
+                                            ));
+                                        }
                                         ?>
                                     </div>
                                     

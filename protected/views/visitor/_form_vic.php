@@ -12,6 +12,8 @@ if ($this->action->id == 'update') {
 }
 
 $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
+// set default country is Australia = 13
+$model->identification_country_issued = 13;
 
 ?>
 

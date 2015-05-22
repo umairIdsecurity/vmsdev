@@ -950,7 +950,7 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
 
             // third table
             $('.third-column #passwordVicForm .register-a-visitor-buttons-div, .host-third-column #passwordVicForm .register-a-visitor-buttons-div').hide();
-            $('.third-column .register-a-visitor-buttons-div').css('padding-top', '300px');
+            $('.third-column .register-a-visitor-buttons-div').css('padding-top', '0px');
             $('#hostButtonRow').css('padding-top', '130px');
 
             // text changes:

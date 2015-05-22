@@ -500,13 +500,85 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                             <tr class="vic-visitor-fields">
                                 <td>
                                     <?php echo $form->checkBox($model, 'alternative_identification', array('style' => 'float: left;')); ?>
-                                    <label for="Visitor_alternative_identification" class="form-label">Alternative
+                                    <label for="Visitor_alternative_identification" id="alternative_identification_label" class="form-label">Alternative
                                         identifications<br/>One must have a signature</label>
                                 </td>
                             </tr>
+                            <tr class="row_document_name_number" style="display:none">
+                                <td>
+                                    <?php echo $form->textField($model, 'identification_alternate_document_name1', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Document Name'));
+                                    ?><span class="required alternate-identification-require">*</span>
+                                    <?php echo "<br>" . $form->error($model, 'identification_alternate_document_name1'); ?>
+
+                                </td>
+                            </tr>
+                            <tr class="row_document_name_number" style="display:none">
+                                <td>
+                                    <?php echo $form->textField($model, 'identification_alternate_document_no1', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Document No.', 'style' => 'width: 108px;')); ?>
+
+                                    <?php
+                                    $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                        'model'       => $model,
+                                        'attribute'   => 'identification_alternate_document_expiry1',
+                                        'options'     => array(
+                                            'dateFormat' => 'dd-mm-yy',
+                                            'changeMonth' => 'true',
+                                            'changeYear' => 'true',
+                                            'minDate' => '0'
+                                        ),
+                                        'htmlOptions' => array(
+                                            'size'        => '0',
+                                            'maxlength'   => '10',
+                                            'placeholder' => 'Expiry',
+                                            'style'       => 'width: 80px;',
+                                        ),
+                                    ));
+                                    ?><span class="required alternate-identification-require">*</span>
+                                    <?php echo "<br>" . $form->error($model, 'identification_alternate_document_no1'); ?>
+                                    <?php echo $form->error($model, 'identification_alternate_document_expiry1'); ?>
+                                </td>
+                            </tr>
+                            <tr class="row_document_name_number" style="display:none">
+                                <td>
+                                    <?php echo $form->textField($model, 'identification_alternate_document_name2', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Document Name'));
+                                    ?><span class="required alternate-identification-require">*</span>
+                                    <?php echo "<br>" . $form->error($model, 'identification_alternate_document_name2'); ?>
+
+                                </td>
+                            </tr>
+                            <tr class="row_document_name_number" style="display:none">
+                                <td>
+                                    <?php echo $form->textField($model, 'identification_alternate_document_no2', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Document No.', 'style' => 'width: 108px;')); ?>
+
+                                    <?php
+                                    $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                        'model'       => $model,
+                                        'attribute'   => 'identification_alternate_document_expiry2',
+                                        'options'     => array(
+                                            'dateFormat' => 'dd-mm-yy',
+                                            'changeMonth' => 'true',
+                                            'changeYear' => 'true',
+                                            'minDate' => '0'
+                                        ),
+                                        'htmlOptions' => array(
+                                            'size'        => '0',
+                                            'maxlength'   => '10',
+                                            'placeholder' => 'Expiry',
+                                            'style'       => 'width: 80px;',
+                                        ),
+                                    ));
+                                    ?><span class="required alternate-identification-require">*</span>
+                                    <?php echo "<br>" . $form->error($model, 'identification_alternate_document_no2'); ?>
+                                    <?php echo $form->error($model, 'identification_alternate_document_expiry2'); ?>
+
+                                    <?php echo $form->checkBox($model, 'verifiable_signature', array('style' => 'float: left;')); ?>
+                                    <label  class="form-label">One of these has a verifiable signature</label>
+                                </td>
+                            </tr>
+
                             <tr class="vic-visitor-fields">
                                 <td id="passwordVicForm">
-                                    <?php //$this->renderPartial('/common_partials/password', array('model' => $model, 'form' => $form, 'session' => $session)); ?>
+                                    <?php $this->renderPartial('/common_partials/password', array('model' => $model, 'form' => $form, 'session' => $session)); ?>
                                 </td>
                             </tr>
                             <!-- end VIC info -->
@@ -632,13 +704,30 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 
 
 <script>
+    function switchIdentification() {
+        if ($('#Visitor_alternative_identification').attr('checked')) {
+            $('.primary-identification-require').hide();
+            $('.alternate-identification-require').show();
+            $('.row_document_name_number').show('slow');
+            $('#alternative_identification_label').text('Applicant does not have the above Identifications');
+
+        } else {
+            $('.primary-identification-require').show();
+            $('.alternate-identification-require').hide();
+            $('.row_document_name_number').hide();
+            $('#alternative_identification_label').html('Alternative identifications<br/>One must have a signature');
+        }
+    }
+
     $(document).ready(function() {
+        // for VIC visitor profile
+        $("#Visitor_alternative_identification").on('change', switchIdentification);
+        switchIdentification();
+
 		$( ".visitor-title" ).click(function() {
-	
-  		$('#addvisitor').show();
-		$("#searchvisitor").hide();
-});
-		
+            $('#addvisitor').show();
+            $("#searchvisitor").hide();
+        });
 		
         $("#Visitor_password").val("(NULL)");
         $("#Visitor_repeatpassword").val("(NULL)");

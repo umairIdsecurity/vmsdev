@@ -52,5 +52,22 @@ class Utils
         return $workstationList;
     }
 
+    public static function RemoveDir($path)
+    {
+        if (is_dir($path) === true) {
+            $files = array_diff(scandir($path), array('.', '..'));
+            foreach ($files as $file) {
+                self::RemoveDir(realpath($path) . '/' . $file);
+            }
+
+            return rmdir($path);
+        } else {
+            if (is_file($path) === true) {
+                return unlink($path);
+            }
+        }
+
+        return false;
+    }
 
 }

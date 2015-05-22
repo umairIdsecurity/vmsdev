@@ -233,6 +233,19 @@ class SiteController extends Controller {
               echo 'Assets folder modified successfully';
           }
     }
-    
-    
+
+    /**
+     * @desc delete folders in assets folder
+     */
+    public function actionResetAssets()
+    {
+        $path = YiiBase::getPathOfAlias('webroot') . "/assets/*";
+
+        $files = glob($path); // get all file names
+        foreach($files as $file){ // iterate files
+            Utils::RemoveDir($file);
+        }
+        echo "DONE";
+    }
+
 }

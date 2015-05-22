@@ -58,14 +58,14 @@ class CardGeneratedController extends Controller {
         if (isset($_POST['CardGenerated'])) {
             if ($_POST['CardGenerated']['tenant_agent'] == '') {
                 $_POST['CardGenerated']['tenant_agent'] = null;
-            } else {
-                $_POST['CardGenerated']['tenant_agent'] = $_POST['CardGenerated']['tenant_agent'];
             }
 
             $model->attributes = $_POST['CardGenerated'];
 
-            if (isset($_POST['CardGenerated']['enter_card_number'])) {
+            if (isset($_POST['CardGenerated']['enter_card_number']) && !empty($_POST['CardGenerated']['enter_card_number'])) {
                 $model->card_number = $_POST['CardGenerated']['enter_card_number'];
+            } else {
+                $model->card_number = $_POST['CardGenerated']['card_number'];
             }
 
             if ($model->save()) {

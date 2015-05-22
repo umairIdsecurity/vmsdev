@@ -312,8 +312,12 @@ class VisitorController extends Controller {
             $model->profile_type = $_POST['Visitor']['profile_type'];
             $model->attributes = $_POST['Visitor'];
 
+            if (empty($model->visitor_workstation)) {
+                $model->visitor_workstation = $session['workstation'];
+            }
+
             if ($result = $visitorService->save($model, NULL, $session['id'])) {
-            	
+            	Yii::app()->end();
             }
         }
 

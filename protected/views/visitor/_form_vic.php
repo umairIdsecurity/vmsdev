@@ -281,8 +281,6 @@ $model->identification_country_issued = 13;
                         <tr>
                             <td>
                                 <?php echo $form->textField($model, 'middle_name', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Middle Name')); ?>
-                                <span class="required">*</span>
-                                <?php echo "<br>" . $form->error($model, 'middle_name'); ?>
                             </td>
                         </tr>
                         <tr>

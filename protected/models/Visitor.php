@@ -273,9 +273,8 @@ class Visitor extends CActiveRecord {
                 contact_street_type,
                 contact_suburb,
                 contact_state,
-                contact_country,
-                middle_name',
-                'required'
+                contact_country',
+                'required',
             );
         } else if ($this->profile_type == self::PROFILE_TYPE_ASIC) {
             $rules[] = array(
@@ -284,7 +283,7 @@ class Visitor extends CActiveRecord {
             );
         }
 
-        
+
         return $rules;
     }
 

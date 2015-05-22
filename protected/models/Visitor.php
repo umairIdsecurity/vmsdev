@@ -250,10 +250,11 @@ class Visitor extends CActiveRecord {
 
         $rules[] = array(
             'identification_type,
-                    identification_country_issued,
-                    identification_document_no,
-                    identification_document_expiry',
-            'VisitorPrimaryIdentification'
+            identification_country_issued,
+            identification_document_no,
+            identification_document_expiry',
+            'VisitorPrimaryIdentification',
+            'on' => 'addVisitor'
         );
 
         if ($this->profile_type == self::PROFILE_TYPE_CORPORATE) {
@@ -283,6 +284,7 @@ class Visitor extends CActiveRecord {
             );
         }
 
+        
         return $rules;
     }
 

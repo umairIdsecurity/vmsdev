@@ -70,30 +70,31 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                     $("#register-host-form").show();
                                     $(".host-AddBtn").hide();
                                 }
+
                                 if (!hasError){
-                                var vehicleValue = $("#Visitor_vehicle").val();
-                                if(vehicleValue.length < 6 && vehicleValue != ""){
-                                    $("#Visitor_vehicle_em_").show();
-                                    $("#Visitor_vehicle_em_").html("Vehicle should have a min. of 6 characters");
-                                }else if ($("#workstation").val() == ""){
-                                    $(".errorMessageWorkstation").show();
-                                    $(".visitorReason").hide();
-                                }
-                                else if ($("#Visit_reason").val() == "" || ($("#Visit_reason").val() == "Other" &&  $("#VisitReason_reason").val() == "")) {                                  
-                                    $(".visitorReason").show();
-                                    $(".errorMessageWorkstation").hide();
-                                } else if ($("#Visit_reason").val() == "Other" &&  $("#VisitReason_reason").val() != "")
-                                { 
-                                    checkReasonIfUnique();
-                                    $(".errorMessageWorkstation").hide();
-                                } else if($("#cardtype").val() != 1 && $("#cardtype").val() != ' . CardType::MANUAL_VISITOR . ' && $("#Visitor_photo").val() == ""){
-                                    $("#photoErrorMessage").show();
-                                }
-                                else {
-                                    $(".errorMessageWorkstation").hide();
-                                    $(".visitorReason").hide();
-                                    $("#photoErrorMessage").hide();
-                                    checkEmailIfUnique();
+                                    var vehicleValue = $("#Visitor_vehicle").val();
+                                    if(vehicleValue.length < 6 && vehicleValue != ""){
+                                        $("#Visitor_vehicle_em_").show();
+                                        $("#Visitor_vehicle_em_").html("Vehicle should have a min. of 6 characters");
+                                    }else if ($("#workstation").val() == ""){
+                                        $(".errorMessageWorkstation").show();
+                                        $(".visitorReason").hide();
+                                    }
+                                    else if ($("#Visit_reason").val() == "" || ($("#Visit_reason").val() == "Other" &&  $("#VisitReason_reason").val() == "")) {
+                                        $(".visitorReason").show();
+                                        $(".errorMessageWorkstation").hide();
+                                    } else if ($("#Visit_reason").val() == "Other" &&  $("#VisitReason_reason").val() != "") {
+                                        checkReasonIfUnique();
+                                        $(".errorMessageWorkstation").hide();
+                                    } else if($("#cardtype").val() != 1 && $("#cardtype").val() != ' . CardType::MANUAL_VISITOR . ' && $("#Visitor_photo").val() == ""){
+                                        $("#photoErrorMessage").show();
+                                    }
+
+                                    else {
+                                        $(".errorMessageWorkstation").hide();
+                                        $(".visitorReason").hide();
+                                        $("#photoErrorMessage").hide();
+                                        checkEmailIfUnique();
                                     }
                                 }
 							}'

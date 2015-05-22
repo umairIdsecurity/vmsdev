@@ -61,6 +61,9 @@ class VisitorController extends Controller {
 
             if ($visitorService->save($model, $_POST['Visitor']['reason'], $session['id'])) {
                 Yii::app()->end();
+            } else {
+                print_r($model->errors);
+                die("--DONE--");
             }
         }
 

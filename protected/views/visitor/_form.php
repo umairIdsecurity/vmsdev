@@ -71,7 +71,9 @@ $form = $this->beginWidget('CActiveForm', array(
     'clientOptions' => array(
         'validateOnSubmit' => true,
         'afterValidate' => 'js:function(form, data, hasError) {
+
 				if (!hasError) {
+
 					if ($(".password_requirement").is(":checked")== false) {
 						$("#pass_error_").show();
 						return false;
@@ -86,10 +88,7 @@ $form = $this->beginWidget('CActiveForm', array(
 					}
 
 					var vehicleValue = $("#Visitor_vehicle").val();
-					if ($("#Visitor_company").val() == "") {
-						$("#Visitor_company_em_").show();
-						$("#Visitor_company_em_").html("Please select a company");
-					} else if (vehicleValue.length < 6 && vehicleValue != "") {
+					if (vehicleValue.length < 6 && vehicleValue != "") {
 						$("#Visitor_vehicle_em_").show();
 						$("#Visitor_vehicle_em_").html("Vehicle should have a min. of 6 characters");
 					} else if ($("#currentAction").val() == "update" && $(".password_requirement:checked").val() == 2 && ($("#Visitor_password").val() == "" || $("#Visitor_repeatpassword").val() == "")) {
@@ -402,26 +401,13 @@ $form = $this->beginWidget('CActiveForm', array(
 
 </tr>
 
-
 <tr>
-
     <td id="visitorCompanyRow">
-        <?php
-        $this->widget('application.extensions.select2.Select2', array(
-            'model' => $model,
-            'attribute' => 'company',
-            'items' => array(),
-            'selectedItems' => array(), // Items to be selected as default
-            'placeHolder' => 'Select Company'
-        ));
-        ?>
-
-        <?php echo $form->error($model, 'company'); ?>
-
+        <select id="Visitor_company" name="Visitor[company]">
+            <option value=''>Select Company</option>
+            <?php echo $form->error($model, 'company'); ?>
     </td>
-
 </tr>
-
 
 <tr>
     <td>

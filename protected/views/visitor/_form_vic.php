@@ -369,25 +369,9 @@ $model->identification_country_issued = 13;
                         </tr>
                         <tr>
                             <td id="visitorCompanyRow">
-<!--                                <select id="Visitor_company" name="Visitor[company]">
+                                <select id="Visitor_company" name="Visitor[company]">
                                     <option value=''>Select Company</option>
-                                </select><span class="required">*</span>-->
-                                
-                                 
-                                        <?php
-                                        $this->widget('application.extensions.select2.Select2', array(
-                                            'model' => $model,
-                                            'attribute' => 'company',
-                                            'items' => CHtml::listData(Visitor::model()->findAllCompanyByTenant($session['tenant']),
-                                            'id', 'Visitor_company'),
-                                            'selectedItems' => array(), // Items to be selected as default
-                                            'placeHolder' => 'Please select a company',
-                                            
-                                            
-                                        ));
-                                        ?>
-                                <?php echo $form->error($model, 'company'); ?>
-                                 
+                                    <?php echo $form->error($model, 'company'); ?>
                             </td>
                         </tr>
                         <tr>

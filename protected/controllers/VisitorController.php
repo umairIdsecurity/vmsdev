@@ -61,6 +61,9 @@ class VisitorController extends Controller {
 
             if ($visitorService->save($model, $_POST['Visitor']['reason'], $session['id'])) {
                 Yii::app()->end();
+            } else {
+                print_r($model->errors);
+                die("--DONE--");
             }
         }
 
@@ -309,8 +312,12 @@ class VisitorController extends Controller {
             $model->profile_type = $_POST['Visitor']['profile_type'];
             $model->attributes = $_POST['Visitor'];
 
+            if (empty($model->visitor_workstation)) {
+                $model->visitor_workstation = $session['workstation'];
+            }
+
             if ($result = $visitorService->save($model, NULL, $session['id'])) {
-            	
+            	Yii::app()->end();
             }
         }
 

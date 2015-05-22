@@ -215,6 +215,7 @@ class SiteController extends Controller {
                 'id' => '',
                 'name' => '-',
             );
+            $addWorkstation = 1;
         }
 
         if (isset($_POST['submit']) && $_POST['userWorkstation'] != '') {
@@ -225,7 +226,7 @@ class SiteController extends Controller {
         }
 
         // display the login form
-        $this->render('selectworkstation', array('workstations' => $aArray));
+        $this->render('selectworkstation', array('workstations' => $aArray, 'addWorkstation' => isset($addWorkstation) ? $addWorkstation : 0));
     }
 
     public function actionTouch(){

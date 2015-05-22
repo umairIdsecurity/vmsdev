@@ -12,6 +12,8 @@ if ($this->action->id == 'update') {
 }
 
 $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
+// set default country is Australia = 13
+$model->identification_country_issued = 13;
 
 ?>
 
@@ -279,8 +281,6 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                         <tr>
                             <td>
                                 <?php echo $form->textField($model, 'middle_name', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Middle Name')); ?>
-                                <span class="required">*</span>
-                                <?php echo "<br>" . $form->error($model, 'middle_name'); ?>
                             </td>
                         </tr>
                         <tr>
@@ -369,25 +369,9 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                         </tr>
                         <tr>
                             <td id="visitorCompanyRow">
-<!--                                <select id="Visitor_company" name="Visitor[company]">
+                                <select id="Visitor_company" name="Visitor[company]">
                                     <option value=''>Select Company</option>
-                                </select><span class="required">*</span>-->
-                                
-                                 
-                                        <?php
-                                        $this->widget('application.extensions.select2.Select2', array(
-                                            'model' => $model,
-                                            'attribute' => 'company',
-                                            'items' => CHtml::listData(Visitor::model()->findAllCompanyByTenant($session['tenant']),
-                                            'id', 'Visitor_company'),
-                                            'selectedItems' => array(), // Items to be selected as default
-                                            'placeHolder' => 'Please select a company',
-                                            
-                                            
-                                        ));
-                                        ?>
-                                <?php echo $form->error($model, 'company'); ?>
-                                 
+                                    <?php echo $form->error($model, 'company'); ?>
                             </td>
                         </tr>
                         <tr>

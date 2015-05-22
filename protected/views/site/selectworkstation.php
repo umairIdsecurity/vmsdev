@@ -48,6 +48,14 @@ for ($i = 0; $i < $arrayCount; $i++) {
                     <input type="submit" value="Continue" name="submit" id='submit' style='display: none;'>
                 </td>
             </tr>
+            
+            <tr>
+            	<td style="text-align: center">
+            		<?php if ($addWorkstation) { ?>
+            			<a class="addSubMenu" href="<?php echo Yii::app()->createUrl('workstation/create'); ?>" ><span>Add Workstation</span></a>
+            		<?php } ?>
+            	</td>
+            </tr>
 
         </table>
 

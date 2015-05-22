@@ -212,12 +212,12 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
 
 
         if (<?php echo $model->visit_status; ?> == '1' && $("#dummycardvalue").val() == '' && '<?php echo $model->card; ?>' != '') { //1 is active
-            document.getElementById('printCardBtn').disabled = false;
+            $('#printCardBtn').disabled = false;
 
         }
         else if ('<?php echo $model->card; ?>' != ''){
             if (<?php echo $model->visit_status; ?> != '1') {
-                document.getElementById('printCardBtn').disabled = true;
+                $('#printCardBtn').disabled = true;
                 $("#printCardBtn").addClass("disabledButton");
             }
         }

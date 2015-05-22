@@ -1,26 +1,30 @@
 <?php
-    $cardType = CardType::$CARD_TYPE_LIST[$model->card_type];
-    $visitorName = $visitorModel->first_name . ' ' . $visitorModel->last_name;
-    $tenant = User::model()->findByPk($visitorModel->tenant);
-    $companyTenant = Company::model()->findByPk($tenant->company);
-    $card = CardGenerated::model()->findByPk($model->card);
-    $visitorName = wordwrap($visitorName, 13, "\n", true);
+$cardType = CardType::$CARD_TYPE_LIST[$model->card_type];
+$visitorName = $visitorModel->first_name . ' ' . $visitorModel->last_name;
+$tenant = User::model()->findByPk($visitorModel->tenant);
+$companyTenant = Company::model()->findByPk($tenant->company);
+$card = CardGenerated::model()->findByPk($model->card);
+$visitorName = wordwrap($visitorName, 13, "\n", true);
 
-    $company = Company::model()->findByPk($tenant->company);
-    $companyName = $company->name;
-    $companyLogoId = $company->logo;
-    $companyCode = $company->code;
+$company = Company::model()->findByPk($tenant->company);
+$companyName = $company->name;
+$companyLogoId = $company->logo;
+$companyCode = $company->code;
 
-    $cardCode = $card->card_number;
+$cardCode = $card->card_number;
 
-    $companyLogo = Yii::app()->getBaseUrl(true) . "/" . Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
-    
-    $userPhoto = Yii::app()->getBaseUrl(true) . "/" . Photo::model()->returnVisitorPhotoRelativePath($model->visitor);
+$companyLogo = Yii::app()->getBaseUrl(true) . "/" . Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
 
-    $dateExpiry = date('d M y');
-    if ($model->card_type != CardType::SAME_DAY_VISITOR) {
-        $dateExpiry = date("d M y", strtotime($model->date_out));
-    }
+$userPhoto = Yii::app()->getBaseUrl(true) . "/" . Photo::model()->returnVisitorPhotoRelativePath($model->visitor);
+
+$dateExpiry = date('d M y');
+if ($model->card_type != CardType::SAME_DAY_VISITOR) {
+    $dateExpiry = date("d M y", strtotime($model->date_out));
+}
+
+if ($model->date_check_out != null) {
+    $dateExpiry = date("d M y", strtotime($model->date_check_out));
+}
 //die;
 ?>
 <?php if ($type==1){?>

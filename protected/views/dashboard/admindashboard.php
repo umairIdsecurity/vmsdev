@@ -31,7 +31,7 @@ switch ($session['role']) {
 }
 $x = 0; //initiate variable for foreach
 if (empty($workstationList)) {
-	if (Roles::ROLE_AGENT_ADMIN == $session['role']) {
+	if (Roles::ROLE_AGENT_ADMIN == $session['role'] || Roles::ROLE_ADMIN == $session['role']) {
 		echo '<div style="margin-top: 20px;" class="btn"><a class="addSubMenu" href="' . Yii::app()->createUrl('workstation/create') . '" ><span>Add Workstation</span></a></div>';
 	} else {
     ?>

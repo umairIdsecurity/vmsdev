@@ -1,5 +1,5 @@
 <?php
-$cardType = CardType::$CARD_TYPE_LIST[$model->card_type];
+$cardType = !empty($model->card_type)?CardType::$CARD_TYPE_LIST[$model->card_type]:NULL;
 $visitorName = $visitorModel->first_name . ' ' . $visitorModel->last_name;
 $tenant = User::model()->findByPk($visitorModel->tenant);
 $companyTenant = Company::model()->findByPk($tenant->company);

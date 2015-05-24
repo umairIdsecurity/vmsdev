@@ -24,6 +24,9 @@ class CardGenerated extends CActiveRecord {
 
     public $max_card_count;
 
+    const CORPORATE_CARD_COLOR = 'bgcolor="#ffffff"';
+    const VIC_CARD_COLOR = 'bgcolor="#FFFF00"';
+    const ASIC_CARD_COLOR = 'bgcolor="#ff0000"';
 
     /**
      * @return string the associated database table name
@@ -124,13 +127,13 @@ class CardGenerated extends CActiveRecord {
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }
-    
-    public function getCardCode($cardId){
-        if($cardId != ''){
+
+    public function getCardCode($cardId) {
+        if ($cardId != '') {
             return CardGenerated::model()->findByPk($cardId)->card_number;
         } else {
             return '-';
         }
-        
     }
+
 }

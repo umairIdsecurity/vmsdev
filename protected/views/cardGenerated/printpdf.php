@@ -25,148 +25,156 @@ if ($model->card_type != CardType::SAME_DAY_VISITOR) {
 if ($model->date_check_out != null) {
     $dateExpiry = date("d M y", strtotime($model->date_check_out));
 }
+
+if ($visitorModel->profile_type === 'CORPORATE') {
+  $bgcolor = CardGenerated::CORPORATE_CARD_COLOR;
+} elseif ($visitorModel->profile_type === "VIC") {
+    $bgcolor = CardGenerated::VIC_CARD_COLOR;
+} elseif ($visitorModel->profile_type === "ASIC") {
+    $bgcolor = CardGenerated::ASIC_CARD_COLOR;
+}
 //die;
 ?>
-<?php if ($type==1){?>
-<table border="0">
-    <tr>
-        <td bgcolor="#FFFF00" width="210px">
+<?php if ($type == 1) { ?>
+    <table border="0">
+        <tr>
+            <td <?php echo $bgcolor;?> width="210px">
 
-            <table cellpadding="10" style=" border-radius:10px" width="204px" height="325px">
-                <tr>
-                    <td colspan="2">
-                        <img border="1" width="129px" height="162px" src="<?php echo $userPhoto;?>" /> 
-                    </td>
-
-
-                </tr>
-                <tr>
-                    <td color="black" align="center" style="font-family: sans-serif;font-size: 73px;font-weight: bolder;" >V</td>
-                    <td bgcolor="#FFFF00" align="left" style="font-family: sans-serif;font-size: 15px;"><b><?php echo $companyCode;?><br><?php echo $dateExpiry;?><br></b><?php echo $visitorName;?><br><?php echo $cardCode;?><br></td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <img border="1" width="60px" height="40px" src="<?php echo $companyLogo;?>">
-                    </td>
-                </tr>
-            </table>
-        </td>
-        <td padding="10" align="center" style="font-family:sans-serif;font-size:18px;font-weight:300;" width="250px">
-
-            <table cellpadding="10" style=" border-radius:10px" width="204px" height="325px">
-                <tr>
-                    <td colspan="2"align="center" style="font-family:sans-serif;font-size:15px;font-weight:300;">
-                        <div>&nbsp;&nbsp;&nbsp;</div>
-                        A VIC holder is required to immediately leave a secure area if he/she is no longer supervised by an ASIC holder. [ATSR 3.09]
-                        <br>
-                        <br>
-                        A person must not knowingly apply for a VIC for a period which will exceed a total of 28 days in a 12-month period. [ATSR 6.25
-                        <br>
-                        <br>
-                        Albany Airport Services
-                    </td>
-                </tr>
-
-            </table>
-        </td>
-    </tr>
+                <table cellpadding="10" style=" border-radius:10px" width="204px" height="325px">
+                    <tr>
+                        <td colspan="2">
+                            <img border="0" width="129px" height="162px" src="<?php echo $userPhoto; ?>" /> 
+                        </td>
 
 
-</table>
-<?php } else if ($type == 2){ ?>
-<table border="0">
-    <tr>
-        <td bgcolor="#FFFF00" width="210px">
+                    </tr>
+                    <tr>
+                        <td color="black" align="center" style="font-family: sans-serif;font-size: 73px;font-weight: bolder;" ><?php echo($model->card_type == 4) ? 'C' : 'V'; ?></td>
+                        <td <?php echo $bgcolor;?> align="left" style="font-family: sans-serif;font-size: 15px;"><b><?php echo $companyCode; ?><br><?php echo $dateExpiry; ?><br></b><?php echo $visitorName; ?><br><?php echo $cardCode; ?><br></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <img border="0" width="60px" height="40px" src="<?php echo $companyLogo; ?>">
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td padding="10" align="center" style="font-family:sans-serif;font-size:18px;font-weight:300;" width="250px">
 
-            <table cellpadding="10" style=" border-radius:10px" width="204px" height="325px">
-                <tr>
-                    <td colspan="2">
-                        <img border="1" width="129px" height="162px" src="<?php echo $userPhoto;?>" /> 
-                    </td>
+                <table cellpadding="10" style=" border-radius:10px" width="204px" height="325px">
+                    <tr>
+                        <td colspan="2"align="center" style="font-family:sans-serif;font-size:15px;font-weight:300;">
+                            <div>&nbsp;&nbsp;&nbsp;</div>
+                            A VIC holder is required to immediately leave a secure area if he/she is no longer supervised by an ASIC holder. [ATSR 3.09]
+                            <br>
+                            <br>
+                            A person must not knowingly apply for a VIC for a period which will exceed a total of 28 days in a 12-month period. [ATSR 6.25
+                            <br>
+                            <br>
+                            Albany Airport Services
+                        </td>
+                    </tr>
 
-
-                </tr>
-                <tr>
-                    <td color="black" align="center" style="font-family: sans-serif;font-size: 73px;font-weight: bolder;" >V</td>
-                    <td bgcolor="#FFFF00" align="left" style="font-family: sans-serif;font-size: 15px;"><b><?php echo $companyCode;?><br><?php echo $dateExpiry;?><br></b><?php echo $visitorName;?><br><?php echo $cardCode;?><br></td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <img border="1" width="60px" height="40px" src="<?php echo $companyLogo;?>">
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <td padding="10" align="center" style="font-family:sans-serif;font-size:15px;font-weight:300;" width="250px">
-
-            <table cellpadding="10" style=" border-radius:10px" width="204px" height="325px">
-                <tr>
-                    <td colspan="2"align="center" style="font-family:sans-serif;font-size:15px;font-weight:300;">
-                        <div>&nbsp;&nbsp;&nbsp;</div>
-                        A VIC holder is required to immediately leave a secure area if he/she is no longer supervised by an ASIC holder. [ATSR 3.09]
-                        <br>
-                        <br>
-                        A person must not knowingly apply for a VIC for a period which will exceed a total of 28 days in a 12-month period. [ATSR 6.25
-                        <br>
-                        <br>
-                        Albany Airport Services
-                    </td>
-                </tr>
-
-            </table>
-        </td>
-    </tr>
+                </table>
+            </td>
+        </tr>
 
 
-</table>
-<?php }else if ($type == 3){?>
-<table border="0">
-    <tr>
-        <td width="210px">
+    </table>
+<?php } else if ($type == 2) { ?>
+    <table border="0">
+        <tr>
+            <td <?php echo $bgcolor;?> width="210px">
 
-            <table cellpadding="10" style=" border-radius:10px" width="204px" height="325px">
-                <tr>
-                    <td colspan="2">
-                        <img border="1" width="129px" height="162px" src="<?php echo $userPhoto;?>" /> 
-                    </td>
-
-
-                </tr>
-                <tr>
-                    <td color="black" align="center" style="font-family: sans-serif;font-size: 73px;font-weight: bolder;" >V</td>
-                    <td align="left" style="font-family: sans-serif;font-size: 15px;"><b><?php echo $companyCode;?><br><?php echo $dateExpiry;?><br></b><?php echo $visitorName;?><br><?php echo $cardCode;?><br></td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <img border="1" width="60px" height="40px" src="<?php echo $companyLogo;?>">
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <td padding="10" align="center" style="font-family:sans-serif;font-size:18px;font-weight:300;" width="250px">
-
-            <table cellpadding="10" style=" border-radius:10px" width="204px" height="325px">
-                <tr>
-                    <td colspan="2"align="center" style="font-family:sans-serif;font-size:15px;font-weight:300;">
-                        <div>&nbsp;&nbsp;&nbsp;</div>
-                        A VIC holder is required to immediately leave a secure area if he/she is no longer supervised by an ASIC holder. [ATSR 3.09]
-                        <br>
-                        <br>
-                        A person must not knowingly apply for a VIC for a period which will exceed a total of 28 days in a 12-month period. [ATSR 6.25
-                        <br>
-                        <br>
-                        Albany Airport Services
-                    </td>
-                </tr>
-
-            </table>
-        </td>
-    </tr>
+                <table cellpadding="10" style=" border-radius:10px" width="204px" height="325px">
+                    <tr>
+                        <td colspan="2">
+                            <img border="1" width="129px" height="162px" src="<?php echo $userPhoto; ?>" /> 
+                        </td>
 
 
-</table>
+                    </tr>
+                    <tr>
+                        <td color="black" align="center" style="font-family: sans-serif;font-size: 73px;font-weight: bolder;" ><?php echo($model->card_type == 4) ? 'C' : 'V'; ?></td>
+                        <td <?php echo $bgcolor;?> align="left" style="font-family: sans-serif;font-size: 15px;"><b><?php echo $companyCode; ?><br><?php echo $dateExpiry; ?><br></b><?php echo $visitorName; ?><br><?php echo $cardCode; ?><br></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <img border="0" width="60px" height="40px" src="<?php echo $companyLogo; ?>">
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td padding="10" align="center" style="font-family:sans-serif;font-size:15px;font-weight:300;" width="250px">
+
+                <table cellpadding="10" style=" border-radius:10px" width="204px" height="325px">
+                    <tr>
+                        <td colspan="2"align="center" style="font-family:sans-serif;font-size:15px;font-weight:300;">
+                            <div>&nbsp;&nbsp;&nbsp;</div>
+                            A VIC holder is required to immediately leave a secure area if he/she is no longer supervised by an ASIC holder. [ATSR 3.09]
+                            <br>
+                            <br>
+                            A person must not knowingly apply for a VIC for a period which will exceed a total of 28 days in a 12-month period. [ATSR 6.25
+                            <br>
+                            <br>
+                            Albany Airport Services
+                        </td>
+                    </tr>
+
+                </table>
+            </td>
+        </tr>
+
+
+    </table>
+<?php } else if ($type == 3) { ?>
+    <table border="0">
+        <tr>
+            <td width="210px">
+
+                <table cellpadding="10" style=" border-radius:10px" width="204px" height="325px">
+                    <tr>
+                        <td colspan="2">
+                            <img border="0" width="129px" height="162px" src="<?php echo $userPhoto; ?>" /> 
+                        </td>
+
+
+                    </tr>
+                    <tr>
+                        <td color="black" align="center" style="font-family: sans-serif;font-size: 73px;font-weight: bolder;" ><?php echo($model->card_type == 4) ? 'C' : 'V'; ?></td>
+                        <td align="left" style="font-family: sans-serif;font-size: 15px;"><b><?php echo $companyCode; ?><br><?php echo $dateExpiry; ?><br></b><?php echo $visitorName; ?><br><?php echo $cardCode; ?><br></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <img border="0" width="60px" height="40px" src="<?php echo $companyLogo; ?>">
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td padding="10" align="center" style="font-family:sans-serif;font-size:18px;font-weight:300;" width="250px">
+
+                <table cellpadding="10" style=" border-radius:10px" width="204px" height="325px">
+                    <tr>
+                        <td colspan="2"align="center" style="font-family:sans-serif;font-size:15px;font-weight:300;">
+                            <div>&nbsp;&nbsp;&nbsp;</div>
+                            A VIC holder is required to immediately leave a secure area if he/she is no longer supervised by an ASIC holder. [ATSR 3.09]
+                            <br>
+                            <br>
+                            A person must not knowingly apply for a VIC for a period which will exceed a total of 28 days in a 12-month period. [ATSR 6.25
+                            <br>
+                            <br>
+                            Albany Airport Services
+                        </td>
+                    </tr>
+
+                </table>
+            </td>
+        </tr>
+
+
+    </table>
 <?php } ?>

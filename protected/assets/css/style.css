@@ -1537,13 +1537,11 @@ p.asic{
 .white_content {
     background-color: #FFFFFF;
     display: none;
-    height: 100%;
     left: 16%;
     overflow: auto;
     padding: 16px;
     position: absolute;
     top: 15%;
-    width: 70%;
     z-index: 1002;
 }
 /**/

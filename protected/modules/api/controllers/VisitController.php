@@ -73,7 +73,7 @@ class VisitController extends RestfulController {
                     }
                 } else {
                     $vic_number = yii::app()->request->getParam('VICNumber');
-                    $visits = visit::model()->with('visitor0')->findAllByAttributes(array('card' => $vic_number));
+                    $visits = Visit::model()->with('visitor0')->findAllByAttributes(array('card' => $vic_number));
                     if ($visits) {
                         $result = array();
                         $i = 0;
@@ -98,7 +98,7 @@ class VisitController extends RestfulController {
             } elseif (yii::app()->request->isPutRequest) {
                 $data = file_get_contents("php://input");
                 $data = CJSON::decode($data);
-                $visit = visit::model()->findByPk($data['visitID']);
+                $visit = Visit::model()->findByPk($data['visitID']);
                 $visit->host = $data['hostID'];
                 $visit->visit_status = 1;
                 $visit->visitor_type = $data['visitorType'];
@@ -128,7 +128,7 @@ class VisitController extends RestfulController {
                     $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_DATA', 'errorDescription' => 'Requsted data are invalid')));
                 }
             } elseif (yii::app()->request->getParam('visit')) {
-                $visit = visit::model()->findByPk(yii::app()->request->getParam('visit'));
+                $visit = Visit::model()->findByPk(yii::app()->request->getParam('visit'));
                 $visit->date_check_out = date('d-m-Y');
                 $visit->time_check_out = date('H:i:s');
                 $visit->visit_status = NULL;

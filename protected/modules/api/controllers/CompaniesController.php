@@ -15,7 +15,7 @@ class CompaniesController extends RestfulController {
                 $company = Company::model()->findByPK($id);
                 if ($company) {
                     $result = array();
-                    $image = photo::model()->returnCompanyPhotoRelativePath($company->id);
+                    $image = Photo::model()->returnCompanyPhotoRelativePath($company->id);
                     if ($image != NULL) {
                         $url = Yii::app()->request->hostInfo . yii::app()->baseUrl . '/' . $image;
                     } else {

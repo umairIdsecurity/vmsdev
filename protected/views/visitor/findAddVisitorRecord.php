@@ -89,7 +89,11 @@ $model->identification_country_issued = 13;
                                     } else if ($("#Visit_reason").val() == "Other" &&  $("#VisitReason_reason").val() != "") {
                                         checkReasonIfUnique();
                                         $(".errorMessageWorkstation").hide();
-                                    } else if($("#cardtype").val() != 1 && $("#cardtype").val() != ' . CardType::MANUAL_VISITOR . ' && $("#Visitor_photo").val() == ""){
+                                    } else if(  $("#Visitor_photo").val() == "" &&
+                                                $("#cardtype").val() != 1 &&
+                                                $("#cardtype").val() != ' . CardType::MANUAL_VISITOR . ' &&
+                                                $("#cardtype").val() != ' . CardType::VIC_CARD_SAMEDATE . '
+                                            ){
                                         $("#photoErrorMessage").show();
                                     }
 
@@ -504,8 +508,9 @@ $model->identification_country_issued = 13;
                             <tr class="vic-visitor-fields">
                                 <td>
                                     <?php echo $form->checkBox($model, 'alternative_identification', array('style' => 'float: left;')); ?>
-                                    <label for="Visitor_alternative_identification" id="alternative_identification_label" class="form-label">Alternative
-                                        identifications<br/>One must have a signature</label>
+                                    <label for="Visitor_alternative_identification" id="alternative_identification_label" class="form-label">
+                                        Applicant does not have one of the above identifications
+                                    </label>
                                 </td>
                             </tr>
                             <tr class="row_document_name_number" style="display:none">
@@ -713,13 +718,11 @@ $model->identification_country_issued = 13;
             $('.primary-identification-require').hide();
             $('.alternate-identification-require').show();
             $('.row_document_name_number').show('slow');
-            $('#alternative_identification_label').text('Applicant does not have the above Identifications');
 
         } else {
             $('.primary-identification-require').show();
             $('.alternate-identification-require').hide();
             $('.row_document_name_number').hide();
-            $('#alternative_identification_label').html('Alternative identifications<br/>One must have a signature');
         }
     }
 

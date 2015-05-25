@@ -33,7 +33,7 @@ $session = new CHttpSession;
 
     <tr>
         <td class="vic-col">
-            <input type="checkbox" value="1" name="VivHolderDecalarations" class="vic-active-visit"/>
+            <input type="checkbox" value="1" name="VivHolderDecalarations" id="VivHolderDecalarations" class="vic-active-visit"/>
             <a href="#vicHolderModal" data-toggle="modal">VIC Holder Declarations</a>
         </td>
     </tr>
@@ -119,17 +119,10 @@ $session = new CHttpSession;
                 )
             ));
             ?>
-            <?php /*if ($model->card_type == CardType::SAME_DAY_VISITOR) { */?><!--
-                <input type="text" style="display:none;" value="<?php
-/*                echo date("d-m-Y");
-                */?>" id='Visit_date_out'
-                       name="Visit[date_out]" >
-                   --><?php /*} */?>
         </td>
     </tr>
 
-
-    <tr id="dateoutDiv">
+    <tr id="dateoutDiv" <?php echo $model->card_type == CardType::VIC_CARD_SAMEDATE ? 'style="display:none;"' : '' ?>>
         <td>Check Out Date
             <br><?php
 
@@ -263,19 +256,42 @@ $session = new CHttpSession;
     <div class="modal-body">
         <table>
             <tr>
-                <td width="5%"><input type="checkbox" value="1" name="refusedAsicCbx" class="vic-active-visit"/></td>
+                <td width="5%"><input type="checkbox" value="1" name="refusedAsicCbx" id="refusedAsicCbx" class="vic-active-visit" onchange="return holderDeclerationChange();"/></td>
                 <td>The applicant declares they have not been refused or held an ASIC that was suspended or cancelled due to an adverse criminal record</td>
             </tr>
             <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
             <tr>
-                <td width="5%"><input type="checkbox" value="1" name="issuedVicCbx" class="vic-active-visit"/></td>
-                <td>The applicant declares they have not been issued with a VIC for this airport for more than 28 days in the past 12 months. (from 21st November 2011)</td>
+                <td width="5%"><input type="checkbox" value="1" name="issuedVicCbx" id="issuedVicCbx" class="vic-active-visit" onchange="return holderDeclerationChange();"/></td>
+                <td>The applicant declares they have not been issued with a VIC for this airport for more than 28 days in the past 12 months.
+                    (from <?php
+                            if (isset($model->date_check_in)) {
+                                echo $model->date_check_in;
+                            } else {
+                                echo date("d F Y");
+                            }
+                    ?>)
+                </td>
             </tr>
         </table>
     </div>
-
-    <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-        <button class="btn btn-primary">Save changes</button>
-    </div>
 </div>
+<script type="text/javascript">
+    function holderDeclerationChange() {
+        if ($("#refusedAsicCbx").is(':checked') && $('#issuedVicCbx').is(':checked')) {
+            $('#VivHolderDecalarations').prop('checked', true);
+        } else {
+            $('#VivHolderDecalarations').prop('checked', false);
+        }
+        return false;
+    }
+
+    $('#VivHolderDecalarations').on('change', function(){
+        if ($("#VivHolderDecalarations").is(':checked')) {
+            $('#refusedAsicCbx').prop('checked', true);
+            $('#issuedVicCbx').prop('checked', true);
+        } else {
+            $('#refusedAsicCbx').prop('checked', false);
+            $('#issuedVicCbx').prop('checked', false);
+        }
+    });
+</script>

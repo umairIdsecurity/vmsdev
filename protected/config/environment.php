@@ -3,7 +3,7 @@
         'environment'=>'dev',
         'name' => 'Visitor Management System 1.1.1.1',
         'db' => [
-            'connectionString' => 'mysql:host=localhost;dbname=vms',
+            'connectionString' => 'mysql:host=localhost;dbname=vms_dev',
             'username' => 'user_vms',
             'password' => 'HFz7c9dHrmPqwNGr'
         ]

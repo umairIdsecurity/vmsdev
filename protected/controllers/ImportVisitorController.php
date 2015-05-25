@@ -228,7 +228,7 @@ class ImportVisitorController extends Controller
                                 $visitInfo->date_check_out = date("Y-m-d", strtotime($visit->check_out_date) );
                                 $visitInfo->time_check_in = $visit->check_in_time;
                                 $visitInfo->time_check_out = $visit->check_out_time;
-                                $visitInfo->visit_status = 1;
+                                $visitInfo->visit_status = 3; // Closed visit History
                                 $visitInfo->workstation = $session['workstation'];                               
                                 $visitInfo->tenant = Yii::app()->user->tenant;
                                 $visitInfo->reason = '1';

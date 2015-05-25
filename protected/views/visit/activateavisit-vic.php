@@ -48,9 +48,12 @@ $session = new CHttpSession;
         <td>&nbsp;</td>
     </tr>
     <tr>
+        <td><strong style="color: #637280;">Verifications</strong></td>
+    </tr>
+    <tr>
         <td class="vic-col">
             <input type="checkbox" <?php echo $model->reason > 0 ? 'checked="checked"' : '';?> value="1" name="reasonActiveVisit" class="vic-active-visit"/>
-            <a href="#">Reason</a>
+            <a href="#">Visit Reason</a>
         </td>
     </tr>
     <tr>
@@ -256,12 +259,12 @@ $session = new CHttpSession;
     <div class="modal-body">
         <table>
             <tr>
-                <td width="5%"><input type="checkbox" value="1" name="refusedAsicCbx" id="refusedAsicCbx" class="vic-active-visit" onchange="return holderDeclerationChange();"/></td>
+                <td width="5%"><input type="checkbox" value="1" name="refusedAsicCbx" id="refusedAsicCbx" class="vic-active-visit"/></td>
                 <td>The applicant declares they have not been refused or held an ASIC that was suspended or cancelled due to an adverse criminal record</td>
             </tr>
             <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
             <tr>
-                <td width="5%"><input type="checkbox" value="1" name="issuedVicCbx" id="issuedVicCbx" class="vic-active-visit" onchange="return holderDeclerationChange();"/></td>
+                <td width="5%"><input type="checkbox" value="1" name="issuedVicCbx" id="issuedVicCbx" class="vic-active-visit"/></td>
                 <td>The applicant declares they have not been issued with a VIC for this airport for more than 28 days in the past 12 months.
                     (from <?php
                             if (isset($model->date_check_in)) {
@@ -274,6 +277,9 @@ $session = new CHttpSession;
             </tr>
         </table>
     </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" onclick="return holderDeclerationChange();">Save changes</button>
+    </div>
 </div>
 <script type="text/javascript">
     function holderDeclerationChange() {
@@ -282,6 +288,8 @@ $session = new CHttpSession;
         } else {
             $('#VivHolderDecalarations').prop('checked', false);
         }
+        $('#vicHolderModal').modal('hide');
+
         return false;
     }
 

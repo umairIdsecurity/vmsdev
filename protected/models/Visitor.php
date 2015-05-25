@@ -485,7 +485,20 @@ class Visitor extends CActiveRecord {
         $this->dbCriteria->mergeWith($criteria);
 
     }
-
+    
+    /**
+     * Radio button auto Select on Edit/Update
+     * 
+     */
+    public function afterFind() {
+     
+        if( is_null($this->password) )
+            $this->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
+        else
+            $this->password_requirement = PasswordRequirement::PASSWORD_IS_REQUIRED;
+        
+        parent::afterFind();
+    }
     protected function afterValidate() {
         parent::afterValidate();
         if (!$this->hasErrors()) {

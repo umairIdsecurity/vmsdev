@@ -369,10 +369,13 @@ $model->identification_country_issued = 13;
                         </tr>
                         <tr>
                             <td id="visitorCompanyRow">
-                                <select id="Visitor_company" name="Visitor[company]">
+                                <select id="Visitor_company" name="Visitor[Visitor_company]">
                                     <option value=''>Select Company</option>
-                                    <?php echo $form->error($model, 'company'); ?>
+                                    <?php echo $form->error($model, 'Visitor_company'); ?>
                             </td>
+                        </tr>
+                        <tr>
+                            <td id="company_error_" style='font-size: 0.9em;color: #FF0000; display:none'>Please select a company</td>
                         </tr>
                         <tr>
                             <td>
@@ -520,7 +523,7 @@ $model->identification_country_issued = 13;
 </div>
 
 <input type="hidden" id="currentAction" value="<?php echo $this->action->id; ?>">
-<input type="hidden" id="currentRoleOfLoggedInUser" value="<?php echo $session['role']; ?>">
+<input type="hidden" id="currentRoleOfLogge:wdInUser" value="<?php echo $session['role']; ?>">
 <input type="hidden" id="currentlyEditedVisitorId" value="<?php if (isset($_GET['id'])) {
     echo $_GET['id'];
 } ?>">
@@ -529,7 +532,13 @@ $model->identification_country_issued = 13;
 
     function afterValidate(form, data, hasError) {
         if (!hasError) {
-            checkEmailIfUnique();
+            var companyValue = $("#Visitor_company").val();
+            if (!companyValue || companyValue == "") {
+                $("#company_error_").show();
+                return false;
+            } else {
+                checkEmailIfUnique();
+            }
         }
     }
 
@@ -538,7 +547,7 @@ $model->identification_country_issued = 13;
         if ($('#Visitor_alternative_identification').attr('checked')) {
             $('.primary-identification-require').hide();
             $('.alternate-identification-require').show();
-             $('.row_document_name_number').show('slow');
+            $('.row_document_name_number').show('slow');
              
         } else {
             $('.primary-identification-require').show();

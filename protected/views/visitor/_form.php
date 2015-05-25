@@ -71,39 +71,41 @@ $form = $this->beginWidget('CActiveForm', array(
     'clientOptions' => array(
         'validateOnSubmit' => true,
         'afterValidate' => 'js:function(form, data, hasError) {
+            if (!hasError) {
+                if ($(".password_requirement").is(":checked")== false) {
+                    $("#pass_error_").show();
+                    return false;
+                } else if ($(".pass_option").is(":checked")== true && $(".pass_option:checked").val()==1) {
+                    if ($("#Visitor_password").val()== "" || $("#Visitor_repeatpassword").val()=="") {
+                        $("#pass_error_").show();
+                        $("#pass_error_").html("type password or generate");
+                        return false;
+                    } else if ($("#Visitor_password").val() != $("#Visitor_repeatpassword").val()) {
+                        return false;
+                    }
+                }
 
-				if (!hasError) {
-
-					if ($(".password_requirement").is(":checked")== false) {
-						$("#pass_error_").show();
-						return false;
-					} else if ($(".pass_option").is(":checked")== true && $(".pass_option:checked").val()==1) {
-						if ($("#Visitor_password").val()== "" || $("#Visitor_repeatpassword").val()=="") {
-							$("#pass_error_").show();
-							$("#pass_error_").html("type password or generate");
-							return false;
-						} else if ($("#Visitor_password").val() != $("#Visitor_repeatpassword").val()) {
-							return false;
-						}
-					}
-
-					var vehicleValue = $("#Visitor_vehicle").val();
-					if (vehicleValue.length < 6 && vehicleValue != "") {
-						$("#Visitor_vehicle_em_").show();
-						$("#Visitor_vehicle_em_").html("Vehicle should have a min. of 6 characters");
-					} else if ($("#currentAction").val() == "update" && $(".password_requirement:checked").val() == 2 && ($("#Visitor_password").val() == "" || $("#Visitor_repeatpassword").val() == "")) {
-					    if ($("#Visitor_password").val() == "") {
-							$("#Visitor_password_em_").show();
-							$("#Visitor_password_em_").html("Please enter a Password");
-						} else if ($("#Visitor_repeatpassword").val() == "") {
-							$("#Visitor_repeatpassword_em_").show();
-							$("#Visitor_repeatpassword_em_").html("Please enter a repeat password");
-						}
-					} else {
-						checkEmailIfUnique();
-					}
-				}
-			}'
+                var vehicleValue = $("#Visitor_vehicle").val();
+                var companyValue = $("#Visitor_company").val();
+                if (!companyValue || companyValue == "") {
+                    $("#company_error_").show();
+                    return false;
+                } else if (vehicleValue.length < 6 && vehicleValue != "") {
+                    $("#Visitor_vehicle_em_").show();
+                    $("#Visitor_vehicle_em_").html("Vehicle should have a min. of 6 characters");
+                } else if ($("#currentAction").val() == "update" && $(".password_requirement:checked").val() == 2 && ($("#Visitor_password").val() == "" || $("#Visitor_repeatpassword").val() == "")) {
+                    if ($("#Visitor_password").val() == "") {
+                        $("#Visitor_password_em_").show();
+                        $("#Visitor_password_em_").html("Please enter a Password");
+                    } else if ($("#Visitor_repeatpassword").val() == "") {
+                        $("#Visitor_repeatpassword_em_").show();
+                        $("#Visitor_repeatpassword_em_").html("Please enter a repeat password");
+                    }
+                } else {
+                    checkEmailIfUnique();
+                }
+            }
+        }'
     ),
 ));
 
@@ -403,10 +405,14 @@ $form = $this->beginWidget('CActiveForm', array(
 
 <tr>
     <td id="visitorCompanyRow">
-        <select id="Visitor_company" name="Visitor[company]">
+        <select id="Visitor_company" name="Visitor[Visitor_company]">
             <option value=''>Select Company</option>
-            <?php echo $form->error($model, 'company'); ?>
+            <?php echo $form->error($model, 'Visitor_company'); ?>
     </td>
+</tr>
+
+<tr>
+    <td id="company_error_" style='font-size: 0.9em;color: #FF0000; display:none'>Please select a company</td>
 </tr>
 
 <tr>

@@ -22,7 +22,7 @@
             "is_deleted": "0"
         }
     ],
-    "helpDesk": [
+    "helpdesk": [
         {
             "id": "4",
             "question": "How to create user",

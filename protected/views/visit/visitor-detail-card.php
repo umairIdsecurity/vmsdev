@@ -196,6 +196,8 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
         echo "<br />";
         echo CHtml::dropDownList('visitor_type', $visitorModel->visitor_type, VisitorType::model()->returnVisitorTypes());
         echo "<br />";
+        echo CHtml::dropDownList('reason', $model->reason, CHtml::listData(VisitReason::model()->findAll(),'id', 'reason'));
+        echo "<br />";
 
     }
     ?>

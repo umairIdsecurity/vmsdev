@@ -1876,7 +1876,7 @@ label.myLabel input[type="file"] {
     float:  none !important;
     padding: 0px !important;
 }
-.notification-dropdown > li > a {
+.notification-dropdown > li > a.notification-a {
     float:  none !important;
     display: block !important;
     font-size: 13px !important;
@@ -1892,7 +1892,7 @@ label.myLabel input[type="file"] {
      box-shadow: 1px 1px 4px #ccc;
      padding: 6px 10px !important; 
 }
-.notification-dropdown > li > a:hover { 
+.notification-dropdown > li > a.notification-a:hover { 
     background:  #47a3da !important;
     color: #fff !important;
     padding-left: 17px !important;

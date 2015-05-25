@@ -405,9 +405,9 @@ $form = $this->beginWidget('CActiveForm', array(
 
 <tr>
     <td id="visitorCompanyRow">
-        <select id="Visitor_company" name="Visitor[Visitor_company]">
+        <select id="Visitor_company" name="Visitor[company]">
             <option value=''>Select Company</option>
-            <?php echo $form->error($model, 'Visitor_company'); ?>
+            <?php echo $form->error($model, 'company'); ?>
     </td>
 </tr>
 

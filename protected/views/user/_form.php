@@ -276,12 +276,14 @@ echo '<h1>Add User </h1>';
 	                        		$companyList = CHtml::listData(Company::model()->findAllCompany(), 'id', 'name');
 	                        		
 	                        		if ($this->action->id == 'update') {
-	                        			$company = User::model()->getCompany($currentlyEditedUserId);
+	                        			$companyId = User::model()->getCompany($currentlyEditedUserId);
 	                        		} elseif ($session['role'] != Roles::ROLE_SUPERADMIN) {
-	                        			$company = User::model()->getCompany($currentLoggedUserId);
+	                        			$companyId = User::model()->getCompany($currentLoggedUserId);
 	                        		}
 	                        		if (isset($company) && isset($company->id)) {
 	                        			$selectedItem[] = $company->id;
+	                        		} else {
+	                        			$selectedItem[] = $companyId;
 	                        		}
 								}
 								

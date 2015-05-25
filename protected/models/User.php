@@ -475,6 +475,7 @@ class User extends VmsActiveRecord {
         foreach ($row as $key => $val) {
             $company = $val;
         }
+        
         return $company;
     }
 

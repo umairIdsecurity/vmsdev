@@ -517,18 +517,23 @@ class VisitController extends Controller {
         $fp = fopen('php://temp', 'w');
 
         /*
-         * Write a header of csv file
+         * Write a header of csv file, Field are same as Import CSV
          */
-        $headers = array(
-            'card0.card_code',
+          $headers = array(
             'visitor0.first_name',
             'visitor0.last_name',
-            'visitor0.visitor_status',
             'visitor0.email',
+            'date_check_in',
+            'time_check_in',
+            'date_check_out',
+            'time_check_out', 
+            'company0.name',  
+            'visitor0.position',  
+            'card0.card_number',
+            'card0.date_printed',
+            'card0.date_expiration',  
             'visitor0.contact_number',
-            'visitorType.name',
-            'date_in',
-            'time_in',
+            
         );
         $row = array();
         foreach ($headers as $header) {

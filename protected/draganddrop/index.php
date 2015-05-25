@@ -31,7 +31,9 @@ if (($this->action->id == 'update' && $this->id == 'visitor')) {
             padding-bottom:3px;
             height:17px;
         }
-
+        .no-smil .ajax-file-upload{
+            margin-left: -49px !important;
+        }
         .editImageBtn{
             margin-left: -103px !important;
             color:white;
@@ -66,6 +68,9 @@ if (($this->action->id == 'update' && $this->id == 'visitor')) {
             font-size: 12px !important;
             padding-bottom:3px;
         }
+        .no-smil .ajax-file-upload{
+            margin-left: -13px !important;
+        }
 
         .editImageBtn{
             margin-bottom: -61px !important;
@@ -93,6 +98,10 @@ if (($this->action->id == 'update' && $this->id == 'visitor')) {
             font-size: 12px !important;
             padding-bottom:3px;
             height:17px;
+        }
+
+        .no-smil .ajax-file-upload{
+            margin-left: -49px !important;
         }
 
         .editImageBtn{
@@ -128,9 +137,13 @@ if (($this->action->id == 'update' && $this->id == 'visitor')) {
         .ajax-file-upload{
             margin-top:80px !important;
             position:absolute !important;
-            margin-left: -112px !important;
+            margin-left: -113px !important;
             font-size: 12px !important;
             padding-bottom:5px;
+        }
+
+        .no-smil .ajax-file-upload{
+            margin-left: -13px !important;
         }
 
         .editImageBtn{
@@ -156,6 +169,9 @@ if (($this->action->id == 'update' && $this->id == 'visitor')) {
             font-size: 12px !important;
             padding-bottom:3px;
         }
+        .no-smil .ajax-file-upload{
+            margin-left: -13px !important;
+        }
         .editImageBtn{
             margin-left: 6px;
             margin-top: -9px;
@@ -175,7 +191,7 @@ if (($this->action->id == 'update' && $this->id == 'visitor')) {
             width: 200px;
             margin-left:60px;
         }
-    </style>    
+    </style>
 <?php } ?>
 
 <div id="fileuploader" style="margin-bottom:5px;"><?php
@@ -184,20 +200,20 @@ if (($this->action->id == 'update' && $this->id == 'visitor')) {
     } else {
         echo "Upload Logo";
     }
-    ?> </div> 
+    ?> </div>
 <br><br>
 <input type="button"  style="display:none;" id="cropImageBtn" class="btn actionForward editImageBtn" value="Edit Photo" onclick = "document.getElementById('light').style.display = 'block';
         document.getElementById('fade').style.display = 'block'">
 
-<input type="hidden" id="actionUpload" value="<?php echo $this->action->id; ?>"/> 
-<input type="hidden" id="controllerId" value="<?php echo $this->id; ?>"/> 
+<input type="hidden" id="actionUpload" value="<?php echo $this->action->id; ?>"/>
+<input type="hidden" id="controllerId" value="<?php echo $this->id; ?>"/>
 <input type="hidden" id="viewFrom" value="<?php
 if (isset($_GET['viewFrom'])) {
     echo "1";
 } else {
     echo "0";
 }
-?>"/> 
+?>"/>
 <div id="status1"></div>
 <script>
     $(document).ready(function()

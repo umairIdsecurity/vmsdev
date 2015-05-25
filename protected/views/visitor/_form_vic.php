@@ -885,7 +885,10 @@ $model->identification_country_issued = 13;
                 $.each(r.data, function (index, value) {
                     $('#User_workstation').append('<option value="' + value.id + '">' + value.name + '</option>');
                 });
-                $("#User_workstation").val(value);
+                //$("#User_workstation").val(value);
+                if ($("#currentAction").val() == 'update') {
+                    $("#User_workstation").val("<?php echo $model->visitor_workstation; ?>");
+                }
             }
         });
     }

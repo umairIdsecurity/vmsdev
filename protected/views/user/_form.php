@@ -281,10 +281,8 @@ echo '<h1>Add User </h1>';
 	                        			$companyId = User::model()->getCompany($currentLoggedUserId);
 	                        		}
 	                        		if (isset($company) && isset($company->id)) {
-	                        			print_r($company);die;
 	                        			$selectedItem[] = $company->id;
 	                        		} else {
-	                        			print_r($companyId);die;
 	                        			$selectedItem[] = $companyId;
 	                        		}
 								}

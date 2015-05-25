@@ -26,7 +26,21 @@ class Roles extends CActiveRecord
         const ROLE_AIRPORT_OPERATOR = 12;       // Same Access Rights as Administrator with view of VIC Issuing Module Functionality
         CONST ROLE_AGENT_AIRPORT_ADMIN = 13;    //Same Access as CVMS Agent with Access to VIC Issuing Module
         CONST ROLE_AGENT_AIRPORT_OPERATOR = 14; //Same Access to CVMS Agent
-
+        
+        // Roles label to show on Add/Edit User page
+        public static $labels =array(
+            self::ROLE_ADMIN => 'Administrator',
+            self::ROLE_AGENT_ADMIN => 'Agent Administrator',
+            self::ROLE_OPERATOR => 'Operator',
+            self::ROLE_STAFFMEMBER => 'Host',
+            self::ROLE_ISSUING_BODY_ADMIN => 'Issuing Body Admin',
+            self::ROLE_AIRPORT_OPERATOR => 'Airport Operator',
+            self::ROLE_AGENT_AIRPORT_ADMIN => 'Agent Airport Admin',
+            self::ROLE_AGENT_OPERATOR => 'Agent Operator',
+            self::ROLE_VISITOR => 'Visitor',
+            self::ROLE_AGENT_AIRPORT_OPERATOR => 'Agent Airport Operator', 
+            
+            );
 
     /**
 	 * @return string the associated database table name

@@ -27,13 +27,13 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
 
             <li class='has-sub'>
 
-                <a href='<?php echo Yii::app()->createUrl('company/update/&id=' . $session['company']); ?>'><span>Organisation Settings</span></a>
+                <a href='<?php echo Yii::app()->createUrl('company/update/&id=' . $session['company']); ?>'><span>Organization Settings</span></a>
                 <ul <?php
                 if ($this->id == 'company' || $this->id == 'companyLafPreferences') {
                     echo "style='display:block ;'";
                 }
                 ?>>
-                    <li><a href='<?php echo Yii::app()->createUrl('CompanyLafPreferences/customisation'); ?>' class="ajaxLinkLi"><span>Customise Display</span></a></li>
+                    <li><a href='<?php echo Yii::app()->createUrl('CompanyLafPreferences/customisation'); ?>' class="ajaxLinkLi"><span>Customize Display</span></a></li>
 
                 </ul>
             </li>
@@ -69,15 +69,16 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     switch ($session['role']) {
                         case Roles::ROLE_SUPERADMIN:
                             ?>
-                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create/&role=1'); ?>'><span>Add Administrator</span></a></li>
-                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create/&role=6'); ?>'><span>Add Agent Administrator</span></a></li>
-                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create/&role=8'); ?>'><span>Add Operator</span></a></li>
-                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create/&role=7'); ?>'><span>Add Agent Operator</span></a></li>
+                    <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create/&role=1'); ?>'><span <?php CHelper::is_selected_item(1);?> >Add Administrator</span></a></li>
+                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create/&role=6'); ?>'><span <?php CHelper::is_selected_item(6);?> >Add Agent Administrator</span></a></li>
+                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create/&role=8'); ?>'><span <?php CHelper::is_selected_item(8);?> >Add Operator</span></a></li>
+                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create/&role=7'); ?>'><span <?php CHelper::is_selected_item(7);?> >Add Agent Operator</span></a></li>
                             <li class='submenu addSubMenu'><?php
-                                echo CHtml::ajaxLink("<span>Add Host</span>",
-                                    CController::createUrl('dashboard/addHost'), array('update' => '#content')
-                                );
-                                ?>
+//                                echo CHtml::ajaxLink("<span>Add Host</span>",
+//                                    CController::createUrl('dashboard/addHost/&role=9'), array('update' => '#content')
+//                                );
+                            ?>
+                               <a href='<?php echo Yii::app()->createUrl('user/create/&role=9'); ?>'><span <?php CHelper::is_selected_item(9);?> >Add Host</span></a> 
                             </li>
 
                             <?php
@@ -85,14 +86,15 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                         case Roles::ROLE_ADMIN:
                         case Roles::ROLE_ISSUING_BODY_ADMIN:
                             ?>
-                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create/&role=1'); ?>'><span>Add Administrator</span></a></li>
-                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create/&role=6'); ?>'><span>Add Agent Administrator</span></a></li>
-                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create/&role=8'); ?>'><span>Add Operator</span></a></li>
+                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create/&role=1'); ?>'><span <?php CHelper::is_selected_item(1);?> >Add Administrator</span></a></li>
+                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create/&role=6'); ?>'><span <?php CHelper::is_selected_item(6);?> >Add Agent Administrator</span></a></li>
+                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create/&role=8'); ?>'><span <?php CHelper::is_selected_item(8);?> >Add Operator</span></a></li>
                             <li class='submenu addSubMenu'><?php
-                                echo CHtml::ajaxLink("<span>Add Host</span>",
-                                    CController::createUrl('dashboard/addHost'), array('update' => '#content')
-                                );
+//                                echo CHtml::ajaxLink("<span>Add Host</span>",
+//                                    CController::createUrl('dashboard/addHost/&role=9'), array('update' => '#content')
+//                                );
                                 ?>
+                                <a href='<?php echo Yii::app()->createUrl('user/create/&role=9'); ?>'><span <?php CHelper::is_selected_item(9);?> >Add Host</span></a> 
                             </li>
                             <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/importhost'); ?>'><span>Import Staff/Host Profiles</span></a></li>      
                             <?php
@@ -101,13 +103,14 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                         case Roles::ROLE_AGENT_ADMIN:
                         case Roles::ROLE_AGENT_AIRPORT_ADMIN:
                             ?>
-                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create/&role=6'); ?>'><span>Add Agent Administrator</span></a></li>
-                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create/&role=7'); ?>'><span>Add Agent Operator</span></a></li>
+                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create/&role=6'); ?>'><span <?php CHelper::is_selected_item(6);?> >Add Agent Administrator</span></a></li>
+                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create/&role=7'); ?>'><span <?php CHelper::is_selected_item(7);?> >Add Agent Operator</span></a></li>
                             <li class='submenu addSubMenu'><?php
-                                echo CHtml::ajaxLink("<span>Add Host</span>",
-                                    CController::createUrl('dashboard/addHost'), array('update' => '#content')
-                                );
+//                                echo CHtml::ajaxLink("<span>Add Host</span>",
+//                                    CController::createUrl('dashboard/addHost/&role=9'), array('update' => '#content')
+//                                );
                                 ?>
+                                <a href='<?php echo Yii::app()->createUrl('user/create/&role=9'); ?>'><span <?php CHelper::is_selected_item(9);?> >Add Host</span></a> 
                             </li>
                             <?php
                             break;
@@ -139,10 +142,10 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     switch ($session['role']) {
                         case Roles::ROLE_SUPERADMIN:
                             ?>
-                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create', array('role'=> Roles::ROLE_ISSUING_BODY_ADMIN) ); ?>'><span>Add Issuing Body Admin</span></a></li>
-                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create', array('role'=> Roles::ROLE_AIRPORT_OPERATOR) ); ?>'><span>Add Airport Operator</span></a></li>
-                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create', array('role'=> Roles::ROLE_AGENT_AIRPORT_ADMIN) ); ?>'><span>Add Agent Airport Admin</span></a></li>
-                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create', array('role'=> Roles::ROLE_AGENT_AIRPORT_OPERATOR) ); ?>'><span>Add Agent Airport Operator</span></a></li>
+                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create', array('role'=> Roles::ROLE_ISSUING_BODY_ADMIN) ); ?>'><span <?php CHelper::is_selected_item(Roles::ROLE_ISSUING_BODY_ADMIN);?> >Add Issuing Body Admin</span></a></li>
+                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create', array('role'=> Roles::ROLE_AIRPORT_OPERATOR) ); ?>'><span <?php CHelper::is_selected_item(Roles::ROLE_AIRPORT_OPERATOR);?>>Add Airport Operator</span></a></li>
+                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create', array('role'=> Roles::ROLE_AGENT_AIRPORT_ADMIN) ); ?>'><span <?php CHelper::is_selected_item(Roles::ROLE_AGENT_AIRPORT_ADMIN);?>> Add Agent Airport Admin</span></a></li>
+                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create', array('role'=> Roles::ROLE_AGENT_AIRPORT_OPERATOR) ); ?>'><span <?php CHelper::is_selected_item(Roles::ROLE_AGENT_AIRPORT_OPERATOR);?>> Add Agent Airport Operator</span></a></li>
 
                             <?php
                             break;
@@ -150,9 +153,9 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                         case Roles::ROLE_ADMIN:
                         case Roles::ROLE_ISSUING_BODY_ADMIN:
                             ?>
-                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create', array('role'=> Roles::ROLE_ISSUING_BODY_ADMIN) ); ?>'><span>Add Issuing Body Admin</span></a></li>
-                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create', array('role'=> Roles::ROLE_AIRPORT_OPERATOR) ); ?>'><span>Add Airport Operator</span></a></li>
-                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create', array('role'=> Roles::ROLE_AGENT_AIRPORT_ADMIN)); ?>'><span>Add Agent Airport Admin</span></a></li>
+                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create', array('role'=> Roles::ROLE_ISSUING_BODY_ADMIN) ); ?>'><span <?php CHelper::is_selected_item(Roles::ROLE_ISSUING_BODY_ADMIN);?>>Add Issuing Body Admin</span></a></li>
+                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create', array('role'=> Roles::ROLE_AIRPORT_OPERATOR) ); ?>'><span <?php CHelper::is_selected_item(Roles::ROLE_AIRPORT_OPERATOR);?>>Add Airport Operator</span></a></li>
+                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create', array('role'=> Roles::ROLE_AGENT_AIRPORT_ADMIN)); ?>'><span <?php CHelper::is_selected_item(Roles::ROLE_AGENT_AIRPORT_ADMIN);?>>Add Agent Airport Admin</span></a></li>
 
                             <?php
                             break;
@@ -160,8 +163,8 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                         case Roles::ROLE_AGENT_ADMIN:
                         case Roles::ROLE_AGENT_AIRPORT_ADMIN:
                             ?>
-                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create', array('role'=> Roles::ROLE_AGENT_AIRPORT_ADMIN)); ?>'><span>Add Agent Airport Admin</span></a></li>
-                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create', array('role'=> Roles::ROLE_AGENT_AIRPORT_OPERATOR)); ?>'><span>Add Agent Airport Operator</span></a></li>
+                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create', array('role'=> Roles::ROLE_AGENT_AIRPORT_ADMIN)); ?>'><span <?php CHelper::is_selected_item(Roles::ROLE_AGENT_AIRPORT_ADMIN);?>>Add Agent Airport Admin</span></a></li>
+                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/create', array('role'=> Roles::ROLE_AGENT_AIRPORT_OPERATOR)); ?>'><span <?php CHelper::is_selected_item(Roles::ROLE_AGENT_AIRPORT_OPERATOR);?>>Add Agent Airport Operator</span></a></li>
 
                             <?php
                             break;

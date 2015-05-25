@@ -94,10 +94,10 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
 
 <div class="form" data-ng-app="PwordForm">
 <?php if($this->action->id == 'update') {
-echo '<h1>Edit User</h1>';	
+echo '<h1>Edit '.Roles::$labels[Yii::app()->request->getParam('role')].'</h1>';	
 
 }else{
-echo '<h1>Add User </h1>';
+echo '<h1>Add '.Roles::$labels[Yii::app()->request->getParam('role')].'</h1>';
 
 }?>
     <?php

@@ -68,4 +68,23 @@ class CHelper {
         $notifications =  Notification::model()->with('user_notification')->findAll("user_notification.has_read != 1 AND user_notification.user_id = ".Yii::app()->user->id );
         return $notifications;
     }
+    
+    /**
+     * Highlight Add CVMS/AVMS Link in Left navigation
+     * 
+     * @param integer Role ID of the seleted Item
+     * @return string CSS for Hightlight. 
+     */
+    public static function is_selected_item( $role_id ) {
+        // Role of the newly User
+        if( $role_id == Yii::app()->request->getParam('role') ) {
+           $session = new CHttpSession;
+           $company = Company::model()->findByPk($session['company']);
+            $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);  
+            if($companyLafPreferences)
+                echo  'style = "color: '.$companyLafPreferences->sidemenu_font_color.' !important;"';
+            else
+                echo "";
+        }  
+  }
 }

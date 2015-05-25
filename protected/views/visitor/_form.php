@@ -531,10 +531,10 @@ $form = $this->beginWidget('CActiveForm', array(
 
                         <tr>
                             <td align="center">
+                            	<?php $background = isset($companyLafPreferences) ? ('background:' . $companyLafPreferences->neutral_bg_color) : ''; ?>
                                 <div class="row buttons" style="text-align:center;">
-                                    <input onclick="generatepassword();" class="complete btn btn-info" type="button"
-                                           value="Autogenerate Password"
-                                           style="background:<?php echo $companyLafPreferences->neutral_bg_color; ?> !important;position: relative; width: 180px; overflow: hidden;cursor:pointer;font-size:14px;margin-right:8px;"/>
+                                    <input onclick="generatepassword();" class="complete btn btn-info" type="button" value="Autogenerate Password"
+									style="<?php echo $background; ?> !important;position: relative; width: 180px; overflow: hidden;cursor:pointer;font-size:14px;margin-right:8px;"/>
                                 </div>
                             </td>
                         </tr>

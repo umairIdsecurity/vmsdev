@@ -77,6 +77,11 @@ class CardGeneratedController extends Controller {
                     'card_count' => (Company::model()->findByPk($tenant->company)->card_count)+1,
                 ));
             }
+
+            if (Yii::app()->request->isAjaxRequest) {
+                Yii::app()->end();
+            }
+
         }
 
         $this->render('create', array(

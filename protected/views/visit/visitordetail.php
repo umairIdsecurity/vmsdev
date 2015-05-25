@@ -476,8 +476,8 @@ $this->renderPartial('visithistory', array('model' => $model,
             data: visitForm,
             success: function(data) {
                 sendCardForm(data);
-                
-              //  window.location = "index.php?r=visit/detail&id=" + data;
+
+                window.location = "index.php?r=visit/detail&id=" + data;
                 //  alert(data);
             },
         });

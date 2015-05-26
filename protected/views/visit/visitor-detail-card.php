@@ -29,11 +29,34 @@ $photoForm = $this->beginWidget('CActiveForm', array(
     <?php if ($visitorModel->photo != '') { ?>
         <img id="photoPreview" src="<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($model->visitor) ?>">
     <?php } else { ?>
-        <img id="photoPreview" src="" style="display:none;height:165px;"></img>
+        <img id="photoPreview" src="" style="display:none;"></img>
     <?php } ?>
 </div>
 <div id="cardDiv">
+    <div class="card-content-company-img">
+    <?php
+    if ($tenant->company != '') {
+        $companyLogoId = Company::model()->findByPk($tenant->company)->logo;
 
+        if ($companyLogoId == "") {
+            $companyLogo = Yii::app()->controller->assetsBase . "/" . 'images/companylogohere.png';
+        } else {
+            $companyLogo = Yii::app()->request->baseUrl . "/" . Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
+        }
+        ?>
+        <img class='<?php
+        if ($model->visit_status != VisitStatus::ACTIVE) {
+            echo "cardCompanyLogoPreregistered";
+        } else {
+            echo "cardCompanyLogo";
+        }
+        ?>' src="<?php
+        echo $companyLogo;
+        ?>"/>
+    <?php
+    }
+    ?>
+    </div>
     <div class="card-content">
         <div class="card-content-table">
             <table class="" id="cardDetailsTable">
@@ -100,34 +123,6 @@ $photoForm = $this->beginWidget('CActiveForm', array(
                 </tr>
             </table>
         </div>
-        <?php
-        if ($tenant->company != '') {
-            $companyLogoId = Company::model()->findByPk($tenant->company)->logo;
-
-            if ($companyLogoId == "") {
-                $companyLogo = Yii::app()->controller->assetsBase . "/" . 'images/companylogohere.png';
-            } else {
-                $companyLogo = Yii::app()->request->baseUrl . "/" . Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
-            }
-            ?>
-            <img class='<?php
-            if ($model->visit_status != VisitStatus::ACTIVE) {
-                echo "cardCompanyLogoPreregistered";
-            } else {
-                echo "cardCompanyLogo";
-            }
-            ?>' src="<?php
-            echo $companyLogo;
-            ?>" style="<?php
-            /*if (strpos($_SERVER['HTTP_USER_AGENT'], 'Trident/7.0; rv:11.0') !== false) {
-                */?><!--margin-left:42px;--><?php
-/*            }*/
-            ?>"/>
-        <?php
-        }
-        ?>
-
-
     </div>
 
 </div>

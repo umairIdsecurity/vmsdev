@@ -425,21 +425,14 @@ $this->renderPartial('visithistory', array('model' => $model,
 
     function sendCardForm(visitId) {
         var cardForm = $("#update-card-form").serialize();
-        visitId = (typeof visitId === "undefined") ? "defaultValue" : visitId;
-        if (visitId != "defaultValue") {
-            var id = visitId;
-        } else {
-            var id = '<?php echo $model->id; ?>';
-        }
+        var id = visitId ? visitId : '<?php echo $model->id; ?>';
+        
         $.ajax({
             type: "POST",
             url: "<?php echo CHtml::normalizeUrl(array("cardGenerated/create&visitId=")) ?>" + id,
             data: cardForm,
             success: function(data) {
-                return false;
-                //if (visitId != "defaultValue") {
-                    window.location = "index.php?r=visit/detail&id=" + id;
-                //}
+            	window.location = "index.php?r=visit/detail&id=" + id;
             }
         });
     }
@@ -475,10 +468,9 @@ $this->renderPartial('visithistory', array('model' => $model,
             url: "<?php echo CHtml::normalizeUrl(array("visit/duplicateVisit&id=" . $model->id)); ?>",
             data: visitForm,
             success: function(data) {
-                sendCardForm(data);
-
-                window.location = "index.php?r=visit/detail&id=" + data;
-                //  alert(data);
+                if (data) {
+	                sendCardForm(data);
+                }
             },
         });
     }

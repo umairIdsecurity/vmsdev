@@ -142,8 +142,16 @@ $model->identification_country_issued = 13;
                                 <td>&nbsp;</td>
                             </tr>
                             <tr>
-                                <td id="vicWorkStation">&nbsp;</td>
+                                <td>&nbsp;</td>
                             </tr>
+                            <tr style="display: none" id="vicHolderCardStatus">
+                                <td>
+                                    <?php echo $form->dropDownList($model, 'visitor_card_status', Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC], array('empty' => 'Card Status', 'options'=>array('2'=>array('selected'=>true)))); ?>
+                                    <span class="required">*</span>
+                                    <?php echo "<br>" . $form->error($model, 'visitor_card_status'); ?>
+                                </td>
+                            </tr>
+
                         </table>
 
                         <table id="addvisitor-table" class="second-column" data-ng-app="PwordForm" style="width:262px;float:left;">
@@ -280,7 +288,7 @@ $model->identification_country_issued = 13;
                                 <td>
                                     <?php
                                     echo $form->dropDownList($model, 'contact_country', $countryList,
-                                        array('prompt' => 'Country', 'disabled' => 'disabled', 'options' => array(Visitor::AUSTRALIA_ID => array('selected' => 'selected'))));
+                                        array('prompt' => 'Country', 'options' => array(Visitor::AUSTRALIA_ID => array('selected' => 'selected'))));
                                     ?><span class="required">*</span>
                                     <br/>
                                     <?php echo $form->error($model, 'contact_country'); ?>

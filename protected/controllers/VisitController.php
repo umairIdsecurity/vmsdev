@@ -219,7 +219,18 @@ class VisitController extends Controller {
      */
 
     public function actionDetail($id) {
-        $model = $this->loadModel($id);
+        $model = Visit::model()->findByPk($id);
+        
+        if (!$model) {
+	        if (Yii::app()->request->isAjaxRequest) {
+	        	echo '<script> window.location = "' . Yii::app()->createUrl('visit/view') . '"; </script>';
+	        	exit();
+	        } else {
+	        	$this->redirect(Yii::app()->createUrl('visit/view'));
+	        	exit();
+	        }
+        }
+        
         //update status for Contractor Card Type
         if ($model && $model->card_type == CardType::CONTRACTOR_VISITOR) {
             if (isset($model->date_check_out) && strtotime($model->date_check_out) < strtotime(date("d-m-Y"))) {
@@ -628,7 +639,6 @@ class VisitController extends Controller {
         $model->time_check_out = '';
         $model->date_check_out = '';
         $model->card = NULL;
-
         $model->isNewRecord = true;
         $model->attributes = $_POST['Visit'];
 

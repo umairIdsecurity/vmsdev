@@ -941,6 +941,9 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
 
         if ($("#selectCardDiv input[name=selectCardType]:checked").val() > CONTRACTOR_TYPE) {
             // first table column
+            $('#vicHolderCardStatus').show();
+            $("#Visitor_visitor_card_status option[value='5']").remove(); // remove Denied card status
+
             $('.workstationDropdownRow').appendTo('.first-column');
             $('.visitorTypeDropdownRow').appendTo('.first-column');
             $('.visitReasonRow').appendTo('.first-column');
@@ -961,6 +964,9 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
             $('div.visitor-title-host').text('Add ASIC Sponsor');
 
         } else {
+            // first table
+            $('#vicHolderCardStatus').hide();
+
             // second table column
             $(".vic-visitor-fields").hide();
             $(".vms-visitor-fields").show();

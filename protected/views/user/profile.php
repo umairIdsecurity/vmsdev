@@ -165,14 +165,19 @@ if (isset($_GET['id'])) {
                 <?php echo $model->isRequired('contact_number');  ?></td>
             <td><?php echo $form->error($model, 'contact_number'); ?></td>
         </tr>
+        <tr>
+            <td colspan="2">
+                <div class="buttons" style="margin-top: 20px;">
+                    <button class="btn btn-success" id="submitBtn" <?php if ($session['role'] == Roles::ROLE_STAFFMEMBER){ echo "style='display:none;'"; } ?>><?php echo ($this->action->Id == 'create' ? 'Add' : 'Save') ?></button>
+                    <a class="btn btn-primary actionForward " id="resetPasswordBtn" onclick = "goToUpdatePassword(<?php echo $session['id'];?>)" style="font-weight:bold;font-size:12px;height:23.4px;">Reset Password</a>
+                    <div class="row buttons" style='display:none;'>
+                        <?php echo CHtml::submitButton($model->isNewRecord ? 'Add' : 'Save', array('id' => 'submitForm',)); ?>
+                    </div>
+                </div>
+            </td>
+        </tr>
     </table>
-    <div class="buttons">
-    <button class="btn btn-success" id="submitBtn" <?php if ($session['role'] == Roles::ROLE_STAFFMEMBER){ echo "style='display:none;'"; } ?>><?php echo ($this->action->Id == 'create' ? 'Add' : 'Save') ?></button>
-    <a class="btn btn-primary actionForward " id="resetPasswordBtn" onclick = "goToUpdatePassword(<?php echo $session['id'];?>)" style="font-weight:bold;font-size:12px;height:23.4px;">Reset Password</a>
-    <div class="row buttons" style='display:none;'>
-        <?php echo CHtml::submitButton($model->isNewRecord ? 'Add' : 'Save', array('id' => 'submitForm',)); ?>
-    </div>
-    </div>
+
     <?php $this->endWidget(); ?>
 
 </div><!-- form -->

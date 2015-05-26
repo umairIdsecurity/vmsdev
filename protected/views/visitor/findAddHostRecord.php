@@ -28,8 +28,7 @@ $asicModel = new Visitor();
                 </button>
                 
                 <?php $background = isset($companyLafPreferences) ? ("background:" . $companyLafPreferences->neutral_bg_color . ' !important;') : ''; ?>
-                <button class="host-findBtn" id="dummy-host-findBtn"
-                        style="padding: 8px;background:<?php echo $companyLafPreferences->neutral_bg_color; ?> !important;">
+                <button class="host-findBtn" id="dummy-host-findBtn" style="<?php echo $background; ?>padding: 8px;">
                     Find Host
                 </button>
                 <!-- <button class="host-AddBtn" <?php
@@ -771,7 +770,12 @@ $asicModel = new Visitor();
         }
         //change modal url to pass user searched text
         var url = 'index.php?r=visitor/findhost&id=' + searchText + '&visitortype=' + $("#Visitor_visitor_type").val() + '&tenant=' + tenant + '&tenant_agent=' + tenant_agent + '&cardType=' + $('#selectCardDiv input[name=selectCardType]:checked').val();
-        $("#searchHostTable").html('<iframe id="findHostTableIframe" onLoad="autoResize2();" width="100%" height="100%" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
+         $.ajax(url).done(function(data){
+          $("#searchHostTable").html(data);
+        }).fail(function() {
+           window.location = '<?php echo Yii::app()->createUrl('site/login');?>';
+        }); 
+       // $("#searchHostTable").html('<iframe id="findHostTableIframe" onLoad="autoResize2();" width="100%" height="100%" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
     }
 
     function autoResize2() {

@@ -47,7 +47,7 @@ $customDataProvider = new CActiveDataProvider($model, array(
         ));
 if ($visitorType != VisitorType::PATIENT_VISITOR) {
     $this->widget('zii.widgets.grid.CGridView', array(
-        'id' => 'findHost-grid',
+        'id' => 'findHost-grid-1',
         'dataProvider' => $customDataProvider,
         'afterAjaxUpdate' => "
     function(id, data) {

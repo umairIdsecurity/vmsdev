@@ -220,7 +220,7 @@ class VisitorController extends Controller {
         if (isset($_GET['Visitor']))
             $model->attributes = $_GET['Visitor'];
 
-        $this->render('findVisitor', array(
+        $this->renderPartial('findVisitor', array(
             'model' => $model,
                 ), false, true);
     }
@@ -232,7 +232,7 @@ class VisitorController extends Controller {
         if (isset($_GET['User']))
             $model->attributes = $_GET['User'];
 
-        $this->render('findHost', array(
+        $this->renderPartial('findHost', array(
             'model' => $model,
                 ), false, true);
     }

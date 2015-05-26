@@ -492,10 +492,15 @@ class Visitor extends CActiveRecord {
      */
     public function afterFind() {
      
-        if( is_null($this->password) )
+        if( is_null($this->password) ) { 
             $this->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
-        else
+        }
+        else {
             $this->password_requirement = PasswordRequirement::PASSWORD_IS_REQUIRED;
+            $this->password_option = 1;
+            
+        }
+        
         
         parent::afterFind();
     }
@@ -594,25 +599,6 @@ class Visitor extends CActiveRecord {
     {
         return __CLASS__;
     }
-
-    public function getCompanyName()
-    {
-        $company = Company::model()->findByPk($this->company);
-        if ($company) {
-            return $company->name;
-        }
-        return "";
-    }
-
-    public function getCompanyCode()
-    {
-        $company = Company::model()->findByPk($this->company);
-        if ($company) {
-            return $company->code;
-        }
-        return "";
-    }
-
 
     public function getTotalVisit()
     {

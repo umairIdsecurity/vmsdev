@@ -19,7 +19,7 @@ class CompanyController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow all users to perform 'GetCompanyList' and 'GetCompanyWithSameTenant' actions
-                'actions' => array('GetCompanyList', 'GetCompanyWithSameTenant', 'create'),
+                'actions' => array('GetCompanyList', 'GetCompanyWithSameTenant', 'create', 'delete'),
                 'users' => array('@'),
             ),
             array('allow', // allow user if same company
@@ -31,7 +31,7 @@ class CompanyController extends Controller {
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_SUPERADMIN)',
             ),
 			array('allow', // allow superadmin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin', 'adminAjax', 'delete'),
+                'actions' => array('admin', 'adminAjax' , 'delete'),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
             ),
 			array('allow', // allow superadmin user to perform 'admin' and 'delete' actions
@@ -280,12 +280,22 @@ class CompanyController extends Controller {
      * @param integer $id the ID of the model to be deleted
      */
     public function actionDelete($id) {
-        $this->loadModel($id)->delete();
 
-        // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax'])) {
-            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+        if(Yii::app()->request->isPostRequest)
+        {
+            //$this->loadModel($id)->delete();
+            $companyModel = Company::model()->findByPk($id);
+            $companyModel->is_deleted = 1;
+            $companyModel->save();
+
+            // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+            if (!isset($_GET['ajax']))
+                $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+
         }
+        else
+            throw new CHttpException(400,'Invalid request. Please do not repeat this request');
+
     }
 
     /**

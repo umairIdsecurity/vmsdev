@@ -359,7 +359,8 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                 ?>
                 <!--WangFu Modified-->
 
-                <li class='has-sub'><?php
+                <li class='has-sub'>
+                    <?php
                     echo CHtml::ajaxLink("Companies", CController::createUrl('company/adminAjax'), array(
                         'update' => '#content',
                         'complete' => "js:function(html){

@@ -26,6 +26,8 @@ $asicModel = new Visitor();
                 <button class="host-findBtn" onclick="findHostRecord()" id="host-findBtn" style="display:none;"
                         data-target="#findHostRecordModal" data-toggle="modal">Search Visits
                 </button>
+                
+                <?php $background = isset($companyLafPreferences) ? ("background:" . $companyLafPreferences->neutral_bg_color . ' !important;') : ''; ?>
                 <button class="host-findBtn" id="dummy-host-findBtn"
                         style="padding: 8px;background:<?php echo $companyLafPreferences->neutral_bg_color; ?> !important;">
                     Find Host

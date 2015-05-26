@@ -39,7 +39,8 @@ $model->identification_country_issued = 13;
     <button class="visitor-findBtn" onclick="findVisitorRecord()" id="visitor-findBtn" style="display:none;"
             data-target="#findVisitorRecordModal" data-toggle="modal">Find Record
     </button>
-    <button class="visitor-findBtn neutral" id="dummy-visitor-findBtn" style="padding:8px;background:<?php echo isset($companyLafPreferences->neutral_bg_color) ? $companyLafPreferences->neutral_bg_color : "none"; ?> !important;">
+    <?php $background = isset($companyLafPreferences) ? ("background:" . $companyLafPreferences->neutral_bg_color . ' !important;') : ''; ?>
+    <button class="visitor-findBtn neutral" id="dummy-visitor-findBtn" style="<?php echo $background; ?>padding:8px;">
         Find Visitor Profile
     </button>
     <div class="errorMessage" id="searchTextErrorMessage" style="display:none;text-align:center"></div>

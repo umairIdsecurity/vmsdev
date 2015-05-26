@@ -350,7 +350,8 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                 <td align="center">
                     <div class="row buttons" style="text-align:center;">
                     
-                    <a href="#generate_password" class="complete btn btn-info" data-toggle="modal" style="background:<?php echo $companyLafPreferences->neutral_bg_color; ?> !important;position: relative; width: 152px; overflow: hidden;cursor:pointer;font-size:14px;margin-right:25px;">Autogenerate Password</a>
+                    <?php $background = isset($companyLafPreferences) ? ("background:" . $companyLafPreferences->neutral_bg_color . ' !important;') : ''; ?>
+                    <a href="#generate_password" class="complete btn btn-info" data-toggle="modal" style="<?php echo $background; ?>position: relative; width: 152px; overflow: hidden;cursor:pointer;font-size:14px;margin-right:25px;">Autogenerate Password</a>
                     
                         
                     </div>

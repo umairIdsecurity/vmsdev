@@ -622,4 +622,9 @@ class Visitor extends CActiveRecord {
         }
         return '';
     }
+
+    public function getCompany()
+    {
+        return Company::model()->findByPk($this->company);
+    }
 }

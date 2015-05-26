@@ -20,7 +20,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
 <div id='visitorInformationCssMenu'>
     <ul>
         <li class='has-sub' id="personalDetailsLi">
-            <a href="#"><span><?php echo !is_null($asic) ? 'Visitor Information' : "Personal Details"; ?></span></a>
+            <a href="#"><span>Personal Details</span></a>
             <ul>
                 <li>
                     <table id="personalDetailsTable" class="detailsTable">
@@ -64,14 +64,6 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                         </tr>
                         <?php endif; ?>
 
-                        <tr>
-                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
-                                Company
-                            </td>
-                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
-                                <?php echo $visitorModel->getCompanyName(); ?>
-                            </td>
-                        </tr>
                     </table>
                 </li>
             </ul>
@@ -122,6 +114,57 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                 </li>
             </ul>
         </li>
+
+        <?php
+        if ($asic) :
+            $company = $visitorModel->getCompany();
+        ?>
+        <li class='has-sub' id="companyDetailsLi"><a href="#"><span>Company Details</span></a>
+            <ul>
+                <li>
+                    <table id="companyDetailsTable" class="detailsTable">
+                        <tr>
+                            <td width="100px;" style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                                Company Name
+                            </td>
+                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                                <?php echo $company->name; ?>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                                Company Contact
+                            </td>
+                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                                <?php echo $company->contact; ?>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                                Company Contact Number
+                            </td>
+                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                                <?php echo $company->mobile_number; ?>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                                Company Contact Email
+                            </td>
+                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                                <?php echo $company->email_address; ?>
+                            </td>
+                        </tr>
+
+                    </table>
+                </li>
+            </ul>
+        </li>
+
+        <?php endif; ?>
         <li class='has-sub' id="visitorTypeDetailsLi" <?php echo !is_null($asic) ? 'style="display: none;"' : ""; ?>><a href="#"><span>Visitor Type</span></a>
             <ul>
                 <li>
@@ -327,10 +370,57 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                 </li>
             </ul>
         </li>
+
+        <?php if ($asic) : ?>
+        <li class='has-sub' id="asicDetailsLi">
+            <a href="#"><span>ASIC Sponsor</span></a>
+            <ul>
+                <li>
+                    <table id="asicSponsorDetailsTable" class="detailsTable">
+                        <tr>
+                            <td width="100px;" style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                                First Name
+                            </td>
+                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                                <?php echo $asic->first_name; ?>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                                Last Name
+                            </td>
+                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                                <?php echo $asic->last_name; ?>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                                ASIC No.
+                            </td>
+                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                                <?php echo $asic->asic_no; ?>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                                ASIC Expiry
+                            </td>
+                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                                <?php echo $asic->asic_expiry; ?>
+                            </td>
+                        </tr>
+
+                    </table>
+                </li>
+            </ul>
+        </li>
+        <?php else : ?>
         <li class='has-sub' id='hostDetailsLi'>
-            <a href="#">
-                <span><?php echo !is_null($asic) ? 'ASIC Sponsor' : "Host Details"; ?></span>
-            </a>
+            <a href="#"><span>Host Details</span></a>
+
             <ul>
                 <li>
                     <?php
@@ -343,10 +433,10 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                         'clientOptions' => array(
                             'validateOnSubmit' => true,
                             'afterValidate' => 'js:function(form,data,hasError){
-                        if(!hasError){
-                                checkHostEmailIfUnique();
-                                }
-                        }'
+                    if(!hasError){
+                            checkHostEmailIfUnique();
+                            }
+                    }'
                         ),
                     ));
                     ?>
@@ -376,6 +466,8 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                 </li>
             </ul>
         </li>
+        <?php endif; ?>
+
         <li class='has-sub' id='patientDetailsLi'><a href="#"><span>Patient Details</span></a>
             <ul>
                 <li>

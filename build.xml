@@ -259,7 +259,7 @@
             depends="prepare"
             description="Find coding standard violations using PHP_CodeSniffer and log result in XML format. Intended for usage within a continuous integration environment.">
         <exec executable="${toolsdir}phpcs" output="/dev/null" taskname="phpcs">
-            <arg value="--report=checkstyle" />
+            <arg value="--report=xml" />
             <arg value="--report-file=${basedir}/build/logs/checkstyle-results.xml" />
             <arg value="--standard=PSR2" />
             <arg value="--extensions=php" />

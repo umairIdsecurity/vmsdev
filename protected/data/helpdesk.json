@@ -290,7 +290,7 @@
         {
             "id": "28",
             "question": "I can't find the report menu.",
-            "answer": "Only an administrator or agent administrator has access to the report menu.",
+            "answer": "Only an administrator or agent administrator has access to the report menu..",
             "helpdesk_group_id": "1",
             "order_by": null,
             "created_by": "16",

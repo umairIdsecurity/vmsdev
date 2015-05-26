@@ -1,62 +1,299 @@
 {
     "helpdesk_group": [
         {
-            "id": "4",
-            "name": "General",
+            "id": "1",
+            "name": "All Modules",
             "order_by": "1",
-            "created_by": "34",
+            "created_by": "16",
+            "is_deleted": "0"
+        },
+        {
+            "id": "2",
+            "name": "AVMS 8 VIC Issuing Only",
+            "order_by": "4",
+            "created_by": "16",
+            "is_deleted": "0"
+        },
+        {
+            "id": "4",
+            "name": "Corporate Module Only",
+            "order_by": null,
+            "created_by": "16",
             "is_deleted": "0"
         },
         {
             "id": "5",
-            "name": "Knowledge Based",
-            "order_by": "2",
-            "created_by": "34",
+            "name": "AVMS 8 ASIC Issuing Only",
+            "order_by": null,
+            "created_by": "16",
             "is_deleted": "0"
         },
         {
             "id": "6",
-            "name": "Support",
-            "order_by": "3",
-            "created_by": "34",
+            "name": "VMS Administration Only",
+            "order_by": null,
+            "created_by": "16",
+            "is_deleted": "0"
+        },
+        {
+            "id": "7",
+            "name": "AVMS Administration Only",
+            "order_by": null,
+            "created_by": "16",
             "is_deleted": "0"
         }
     ],
     "helpdesk": [
         {
-            "id": "4",
-            "question": "How to create user",
-            "answer": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-            "helpdesk_group_id": "4",
+            "id": "1",
+            "question": "What is Saved Applicants?",
+            "answer": "This is a list of applications that have gotten to the first step of the Add New Visitor process and have been saved to continue in the future. Also contained in this list is the individuals that have been added to the system through the Bulk Upload process. To continue with one of these, click on the 'Continue Application' link and you will be taken to step 2 of the application process.",
+            "helpdesk_group_id": "1",
             "order_by": "1",
-            "created_by": "34",
+            "created_by": "16",
+            "is_deleted": "0"
+        },
+        {
+            "id": "2",
+            "question": "How do I Close a Visit?",
+            "answer": "Answer",
+            "helpdesk_group_id": "1",
+            "order_by": "2",
+            "created_by": "16",
+            "is_deleted": "0"
+        },
+        {
+            "id": "3",
+            "question": "How do I Preregister a Visit?",
+            "answer": "Answer",
+            "helpdesk_group_id": "1",
+            "order_by": "3",
+            "created_by": "16",
+            "is_deleted": "0"
+        },
+        {
+            "id": "4",
+            "question": "How do I Log a Visit?",
+            "answer": "answer",
+            "helpdesk_group_id": "2",
+            "order_by": "2",
+            "created_by": "16",
             "is_deleted": "0"
         },
         {
             "id": "5",
-            "question": "How to create admin user",
-            "answer": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-            "helpdesk_group_id": "4",
-            "order_by": "2",
-            "created_by": "34",
+            "question": "How do I find a visitor's details?",
+            "answer": "answer here",
+            "helpdesk_group_id": "1",
+            "order_by": "1",
+            "created_by": "16",
             "is_deleted": "0"
         },
         {
             "id": "6",
-            "question": "How to create vms admin",
-            "answer": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-            "helpdesk_group_id": "5",
-            "order_by": "3",
-            "created_by": "34",
+            "question": "How do I add a visitor profile?",
+            "answer": "answer here",
+            "helpdesk_group_id": "1",
+            "order_by": null,
+            "created_by": "16",
             "is_deleted": "0"
         },
         {
             "id": "7",
-            "question": "My email is not working",
-            "answer": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+            "question": "How do I reset my password?",
+            "answer": "answer here",
+            "helpdesk_group_id": "1",
+            "order_by": null,
+            "created_by": "16",
+            "is_deleted": "0"
+        },
+        {
+            "id": "8",
+            "question": "What is the Dashboard?",
+            "answer": "answer here",
+            "helpdesk_group_id": "1",
+            "order_by": null,
+            "created_by": "16",
+            "is_deleted": "0"
+        },
+        {
+            "id": "9",
+            "question": "How do I contact support?",
+            "answer": "answer here",
+            "helpdesk_group_id": "1",
+            "order_by": "3",
+            "created_by": "16",
+            "is_deleted": "0"
+        },
+        {
+            "id": "10",
+            "question": "Why can't I see the Administration tab?",
+            "answer": "answer here",
+            "helpdesk_group_id": "1",
+            "order_by": null,
+            "created_by": "16",
+            "is_deleted": "0"
+        },
+        {
+            "id": "11",
+            "question": "Which users can I add?",
+            "answer": "answer here",
+            "helpdesk_group_id": "1",
+            "order_by": null,
+            "created_by": "16",
+            "is_deleted": "0"
+        },
+        {
+            "id": "12",
+            "question": "What do those little coloured icons mean?",
+            "answer": "The small head-shot icons relate to visitor types: blue is for corporate visitors, yellow for VIC applicants and red for ASIC applicants.",
+            "helpdesk_group_id": "1",
+            "order_by": null,
+            "created_by": "16",
+            "is_deleted": "0"
+        },
+        {
+            "id": "13",
+            "question": "Where do I find the visitor registration history?",
+            "answer": "answer here",
+            "helpdesk_group_id": "1",
+            "order_by": null,
+            "created_by": "16",
+            "is_deleted": "0"
+        },
+        {
+            "id": "14",
+            "question": "What are the different types of users?",
+            "answer": "Administrator, agent administrator, operator, agent operator and host.",
+            "helpdesk_group_id": "4",
+            "order_by": null,
+            "created_by": "16",
+            "is_deleted": "0"
+        },
+        {
+            "id": "15",
+            "question": "What are the different types of users?",
+            "answer": "Airport operator, agent airport administrator and agent airport operator.",
+            "helpdesk_group_id": "7",
+            "order_by": null,
+            "created_by": "16",
+            "is_deleted": "0"
+        },
+        {
+            "id": "16",
+            "question": "What's the difference between the Check Out Date and the Date Expiration of a visit?",
+            "answer": "answer here",
+            "helpdesk_group_id": "1",
+            "order_by": null,
+            "created_by": "16",
+            "is_deleted": "0"
+        },
+        {
+            "id": "17",
+            "question": "What are the different VIC types?",
+            "answer": "answer here",
+            "helpdesk_group_id": "2",
+            "order_by": null,
+            "created_by": "16",
+            "is_deleted": "0"
+        },
+        {
+            "id": "18",
+            "question": "What are the different visitor types?",
+            "answer": "There are two visitor types available: Corporate and Contractor.",
+            "helpdesk_group_id": "4",
+            "order_by": null,
+            "created_by": "16",
+            "is_deleted": "0"
+        },
+        {
+            "id": "19",
+            "question": "What are the different visitor types?",
+            "answer": "answer here",
+            "helpdesk_group_id": "2",
+            "order_by": null,
+            "created_by": "16",
+            "is_deleted": "0"
+        },
+        {
+            "id": "20",
+            "question": "What's the difference between a Closed and an Expired visit status?",
+            "answer": "answer here",
+            "helpdesk_group_id": "1",
+            "order_by": null,
+            "created_by": "16",
+            "is_deleted": "0"
+        },
+        {
+            "id": "21",
+            "question": "What does each visit status mean?",
+            "answer": "answer here",
+            "helpdesk_group_id": "1",
+            "order_by": null,
+            "created_by": "16",
+            "is_deleted": "0"
+        },
+        {
+            "id": "22",
+            "question": "Why can't I see all of a visitor's information?",
+            "answer": "answer here",
+            "helpdesk_group_id": "1",
+            "order_by": null,
+            "created_by": "16",
+            "is_deleted": "0"
+        },
+        {
+            "id": "23",
+            "question": "What do the padlock icons mean?",
+            "answer": "answer here",
+            "helpdesk_group_id": "1",
+            "order_by": null,
+            "created_by": "16",
+            "is_deleted": "0"
+        },
+        {
+            "id": "24",
+            "question": "How do I change my profile details?",
+            "answer": "answer here",
+            "helpdesk_group_id": "1",
+            "order_by": null,
+            "created_by": "16",
+            "is_deleted": "0"
+        },
+        {
+            "id": "25",
+            "question": "What happens if someone doesn't return their card?",
+            "answer": "answer here",
+            "helpdesk_group_id": "1",
+            "order_by": null,
+            "created_by": "16",
+            "is_deleted": "0"
+        },
+        {
+            "id": "26",
+            "question": "How can I add or change a workstation?",
+            "answer": "Only the administrator can manage workstations.",
+            "helpdesk_group_id": "1",
+            "order_by": null,
+            "created_by": "16",
+            "is_deleted": "0"
+        },
+        {
+            "id": "27",
+            "question": "How can I add or change a workstation?",
+            "answer": "You'll find all the functions you need to manage your workstations under the Administration tab. The drop-down menu for Workstations is the top one on the menu on the left side of the screen.",
             "helpdesk_group_id": "6",
-            "order_by": "4",
-            "created_by": "34",
+            "order_by": null,
+            "created_by": "16",
+            "is_deleted": "0"
+        },
+        {
+            "id": "28",
+            "question": "I can't find the report menu.",
+            "answer": "Only an administrator or agent administrator has access to the report menu.",
+            "helpdesk_group_id": "1",
+            "order_by": null,
+            "created_by": "16",
             "is_deleted": "0"
         }
     ]

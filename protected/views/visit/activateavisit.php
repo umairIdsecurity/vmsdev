@@ -63,8 +63,9 @@ $session = new CHttpSession;
                 'htmlOptions' => array(
                     'size' => '10', // textField size
                     'maxlength' => '10', // textField maxlength
-                    // 'readonly' => 'readonly',
+                    'readonly' => 'readonly',
                     'placeholder' => 'dd-mm-yyyy',
+                    //'disabled' => 'disabled'
                 ),
                 'options' => array(
                     'dateFormat' => 'dd-mm-yy',
@@ -95,7 +96,7 @@ $session = new CHttpSession;
                     'size' => '10', // textField size
                     'maxlength' => '10', // textField maxlength
                     //'disabled' => 'disabled',
-                    // 'readonly' => 'readonly',
+                    'readonly' => 'readonly',
                     'placeholder' => 'dd-mm-yyyy',
                 ),
                 'options' => array(

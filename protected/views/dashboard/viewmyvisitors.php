@@ -10,6 +10,8 @@ $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'visit-gridDashboard',
     'dataProvider' => $model->search(),
     'filter' => $model,
+    'enableSorting' => false,
+    'hideHeader'=>true,
     'afterAjaxUpdate' => "
     function(id, data) {
         $('th > .asc').append('<div></div>');
@@ -28,22 +30,26 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' => 'cardnumber',
             'header' => 'Card No.',
+            'filter'=>CHtml::activeTextField($model, 'cardnumber', array('placeholder'=>'Card No.')),
             'value'=>  'CardGenerated::model()->getCardCode($data->card)',
         ),
         
         array(
             'name' => 'firstname',
             'value' => 'Visitor::model()->findByPk($data->visitor)->first_name',
+            'filter'=>CHtml::activeTextField($model, 'firstname', array('placeholder'=>'First Name')),
             'header' => 'First Name'
         ),
         array(
             'name' => 'lastname',
             'value' => 'Visitor::model()->findByPk($data->visitor)->last_name',
+            'filter'=>CHtml::activeTextField($model, 'lastname', array('placeholder'=>'Last Name')),
             'header' => 'Last Name'
         ),
         array(
             'name' => 'company',
             'value' => 'getCompany($data->visitor)',
+            'filter'=>CHtml::activeTextField($model, 'company', array('placeholder'=>'Company')),
             'header' => 'Company',
             'cssClassExpression' => '( getCompany($data->visitor)== "Not Available" ? "errorNotAvailable" : "" ) ',
             'type' => 'raw'
@@ -51,26 +57,31 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' => 'contactnumber',
             'value' => 'Visitor::model()->findByPk($data->visitor)->contact_number',
+            'filter'=>CHtml::activeTextField($model, 'contactnumber', array('placeholder'=>'Contact Number')),
             'header' => 'Contact Number'
         ),
         array(
             'name' => 'contactemail',
             'value' => 'Visitor::model()->findByPk($data->visitor)->email',
+            'filter'=>CHtml::activeTextField($model, 'contactemail', array('placeholder'=>'Contact Email')),
             'header' => 'Contact Email'
         ),
         array(
             'name' => 'date_in',
             'type' => 'html',
+            'filter'=>CHtml::activeTextField($model, 'date_in', array('placeholder'=>'Date In')),
           //  'value' => 'formatDate($data->date_in)',
         ),
         array(
             'name' => 'time_in',
             'type' => 'html',
+            'filter'=>CHtml::activeTextField($model, 'time_in', array('placeholder'=>'Time In')),
             'value' => 'formatTime($data->time_in)',
         ),
         array(
             'name' => 'date_out',
             'type' => 'html',
+            'filter'=>CHtml::activeTextField($model, 'date_out', array('placeholder'=>'Date Out')),
         //    'value' => 'formatDate($data->date_out)',
         ),
     ),

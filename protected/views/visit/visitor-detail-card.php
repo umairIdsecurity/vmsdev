@@ -166,7 +166,15 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
 
 <form method="post" id="workstationForm" action="<?php echo Yii::app()->createUrl('visit/detail', array('id' => $model->id)); ?>">
 <div style="margin: 10px 0px 0px 60px; text-align: left;">
-    <select id="workstation" name="Visit[workstation]" onchange="populateVisitWorkstation(this)" <?php echo !is_null($asic) ? 'style="display: none;"' : ""; ?>>
+    <?php
+    if ($asic) {
+        echo CHtml::dropDownList('visitor_card_status', $visitorModel->visitor_card_status,
+            Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC], array('empty' => 'Card Status'));
+        echo "<br />";
+    }
+    ?>
+
+    <select id="workstation" name="Visit[workstation]" onchange="populateVisitWorkstation(this)">
         <?php
         if ($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
             echo '';
@@ -192,8 +200,6 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
 
     <?php
     if ($asic) {
-        echo CHtml::dropDownList('visitor_card_status', $asic->visitor_card_status, Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_ASIC], array('empty' => 'Card Status'));
-        echo "<br />";
         echo CHtml::dropDownList('visitor_type', $visitorModel->visitor_type, VisitorType::model()->returnVisitorTypes());
         echo "<br />";
         echo CHtml::dropDownList('reason', $model->reason, CHtml::listData(VisitReason::model()->findAll(),'id', 'reason'));
@@ -211,7 +217,10 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
 
 <script>
     $(document).ready(function() {
-
+        <?php if ($asic) { ?>
+        // remove Denied card status
+        $("#visitor_card_status option[value='5']").remove();
+        <?php }?>
 
         if (<?php echo $model->visit_status; ?> == '1' && $("#dummycardvalue").val() == '' && '<?php echo $model->card; ?>' != '') { //1 is active
             $('#printCardBtn').disabled = false;

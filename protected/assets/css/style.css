@@ -679,6 +679,8 @@ dt.tabs dt{
 
 #findAddVisitorRecordDiv{
     padding:0px !important;
+    position: relative;
+    overflow: hidden;
 }
 
 #addvisitor-table tr td, #addhost-table tr td{
@@ -1071,15 +1073,21 @@ dt.tabs dt{
     border-radius: 4px;
 }
 
+.choose-profile p{
+    padding-top: 40px;
+}
 p.corp{
+    background: url("../images/corporate-visitor-icon.png") top center no-repeat;
     color: #2781bd;
 }
 
 p.vic{
+    background: url("../images/vic-visitor-icon.png") top center no-repeat;
     color: #f0c715;
 }
 
 p.asic{
+    background: url("../images/asic-visitor-icon.png") top center no-repeat;
     color: #ea4d3e;
 }
 
@@ -1294,7 +1302,8 @@ p.asic{
     background: -webkit-gradient(linear, center top, center bottom, from(#F5F5F5), to(#E5E5E5)) !important;
     background: -moz-linear-gradient(center top , #F5F5F5, #E5E5E5) repeat scroll 0 0 rgba(0, 0, 0, 0) !important;
     background: -webkit-gradient(linear, center top, center bottom, from(#F5F5F5), to(#E5E5E5)) !important;
-    //  border :1px solid #999999 !important;
+    background: -ms-linear-gradient(top, #F5F5F5, #E5E5E5) !important;
+    /*border :1px solid #999999 !important;*/
 }
 .items thead tr > th:first-child{
     border-radius:5px !important;

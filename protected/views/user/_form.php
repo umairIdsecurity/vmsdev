@@ -513,9 +513,9 @@ echo '<h1>Add '.Roles::$labels[Yii::app()->request->getParam('role')].'</h1>';
                 <tr>
                 <td align="center">
                     <div class="row buttons" style="margin-left:23.5px;">
-                    <?php $company_neutral_bg_color = "";
-                    if(!is_null($companyLafPreferences)){$company_neutral_bg_color = "background: ".$companyLafPreferences->neutral_bg_color;} ?>
-                    <input onclick="generatepassword();" class="complete btn btn-info" style="position: relative; width:178px; overflow: hidden; cursor: default;background:<?php echo $company_neutral_bg_color ?> !important;cursor:pointer;font-size:14px" type="button" value="Autogenerate Password" />
+                    
+                    <?php $background = isset($companyLafPreferences) ? ("background:" . $companyLafPreferences->neutral_bg_color . ' !important;') : ''; ?>
+                    <input onclick="generatepassword();" class="complete btn btn-info" style="<?php echo $background; ?>position: relative; width:178px; overflow: hidden; cursor: default;cursor:pointer;font-size:14px" type="button" value="Autogenerate Password" />
                         
                     </div>
     			

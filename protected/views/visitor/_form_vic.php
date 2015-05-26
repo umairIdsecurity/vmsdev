@@ -13,7 +13,6 @@ if ($this->action->id == 'update') {
 
 $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 // set default country is Australia = 13
-$model->identification_country_issued = 13;
 
 ?>
 
@@ -181,7 +180,7 @@ $model->identification_country_issued = 13;
                                 <table style="margin-top: 70px;">
                                     <tr>
                                         <td>
-                                            <?php echo $form->dropDownList($model, 'visitor_card_status', Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC], array('empty' => 'Card Status', 'options'=>array('2'=>array('selected'=>true)))); ?>
+                                            <?php echo $form->dropDownList($model, 'visitor_card_status', Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC], array('empty' => 'Card Status', 'options'=>array('2'=>array('selected'=>'selected')))); ?>
                                             <span class="required">*</span>
                                             <?php echo "<br>" . $form->error($model, 'visitor_card_status'); ?>
                                         </td>
@@ -251,12 +250,12 @@ $model->identification_country_issued = 13;
                                                $list = VisitorType::model()->findAll();
                                                
                                                foreach( $list as $val ) {
-                                                   if ( $val->tenant == Yii::app()->user->tenant && $val->is_default_value == '1' )
-                                                        echo CHtml::tag('option',array('value' => $val->id, 'selected' => 'selected'),CHtml::encode($val->name),true);
-                                                    else
-                                                        echo CHtml::tag('option',array('value' => $val->id),CHtml::encode($val->name),true);
-                                                   
-                                              } echo "</select>";
+                                                   if ( $val->tenant == Yii::app()->user->tenant && $val->is_default_value == '1' ) {
+                                                       echo CHtml::tag('option', array('value' => $val->id, 'selected' => 'selected'), CHtml::encode($val->name), true);
+                                                   } else {
+                                                       echo CHtml::tag('option', array('value' => $val->id), CHtml::encode($val->name), true);
+                                                   }
+                                               } echo "</select>";
                                            }  else {
                                                echo $form->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes());
                                            }
@@ -361,7 +360,7 @@ $model->identification_country_issued = 13;
                             <td>
                                 <?php
                                 echo $form->dropDownList($model, 'contact_country', $countryList,
-                                    array('prompt' => 'Country', 'disabled' => 'disabled', 'options' => array(Visitor::AUSTRALIA_ID => array('selected' => 'selected'))));
+                                    array('prompt' => 'Country', 'options' => array(Visitor::AUSTRALIA_ID => array('selected' => 'selected'))));
                                 ?><span class="required">*</span>
                                 <br/>
                                 <?php echo $form->error($model, 'contact_country'); ?>
@@ -404,7 +403,7 @@ $model->identification_country_issued = 13;
                             <tr>
                                 <td>
                                     <?php
-                                    echo $form->dropDownList($model, 'identification_country_issued', $countryList, array('empty' => 'Country of Issue'));
+                                    echo $form->dropDownList($model, 'identification_country_issued', $countryList, array('empty' => 'Country of Issue', 'options' => array(Visitor::AUSTRALIA_ID => array('selected' => 'selected'))));
                                     ?><span class="required primary-identification-require">*</span>
                                     <?php echo "<br>" . $form->error($model, 'identification_country_issued'); ?>
                                 </td>
@@ -570,6 +569,11 @@ $model->identification_country_issued = 13;
             $("#fromMonth").val($("#dateofBirthBreakdownValueMonth").val());
             $("#fromDay").val($("#dateofBirthBreakdownValueDay").val());
 
+            $('#Visitor_visitor_card_status').val(<?php echo $model->visitor_card_status; ?>);
+            $('#Visitor_visitor_type').val(<?php echo $model->visitor_type; ?>);
+            $('#Visitor_contact_country').val(<?php echo $model->contact_country; ?>);
+            $('#Visitor_identification_country_issued').val(<?php echo $model->identification_country_issued; ?>);
+
             if ($("#Visitor_photo").val() != '') {
                 $("#cropImageBtn").show();
             }
@@ -585,6 +589,11 @@ $model->identification_country_issued = 13;
                 }
             } else {
                 populateTenantAgentAndCompanyField();
+            }
+
+            if ($('#Visitor_identification_alternate_document_name1').val() != '') {
+                $('#Visitor_alternative_identification').prop('checked', true);
+                $('.row_document_name_number').show();
             }
 
         } else {
@@ -824,7 +833,7 @@ $model->identification_country_issued = 13;
 
         $('#Visitor_contact_country').removeAttr('disabled');
         var form = $("#register-form").serialize();
-        $('#Visitor_contact_country').attr('disabled', 'disabled');
+        //$('#Visitor_contact_country').attr('disabled', 'disabled');
         var url;
 
         if ($("#currentAction").val() == 'update') {

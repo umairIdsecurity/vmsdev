@@ -64,9 +64,9 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
                                         <tr>
                                             <td align="center">
                                                 <div class="row buttons" style="text-align:center;">
-                                                    <input onclick="generatepassword();" class="complete btn btn-info"
-                                                           type="button" value="Autogenerate Password"
-                                                           style="background:<?php echo $companyLafPreferences->neutral_bg_color; ?> !important;position: relative; width: 180px; overflow: hidden;cursor:pointer;font-size:14px;margin-right:8px;"/>
+                                                	<?php $background = isset($companyLafPreferences) ? ("background:" . $companyLafPreferences->neutral_bg_color . ' !important;') : ''; ?>
+                                                    <input onclick="generatepassword();" class="complete btn btn-info" type="button" value="Autogenerate Password"
+                                                    	style="<?php echo $background; ?>position: relative; width: 180px; overflow: hidden;cursor:pointer;font-size:14px;margin-right:8px;"/>
                                                 </div>
                                             </td>
                                         </tr>

@@ -33,14 +33,14 @@ $session = new CHttpSession;
 
     <tr>
         <td class="vic-col">
-            <input type="checkbox" value="1" name="VivHolderDecalarations" id="VivHolderDecalarations" class="vic-active-visit"/>
+            <input type="checkbox" value="1" name="VivHolderDecalarations" disabled="disabled" id="VivHolderDecalarations" class="vic-active-visit"/>
             <a href="#vicHolderModal" data-toggle="modal">VIC Holder Declarations</a>
         </td>
     </tr>
     <tr>
         <td class="vic-col">
-            <input type="checkbox" value="1" name="AsicSponsorDecalarations" class="vic-active-visit"/>
-            <a href="#">ASIC Holder Declarations</a>
+            <input type="checkbox" value="1" name="AsicSponsorDecalarations" disabled="disabled" id="AsicSponsorDecalarations" class="vic-active-visit"/>
+            <a href="#asicSponsorModal" data-toggle="modal">ASIC Sponsor Declarations</a>
         </td>
     </tr>
 
@@ -250,21 +250,21 @@ $session = new CHttpSession;
 
 </script>
 
-<!-- Modal -->
+<!-- VIC Holder Declarations Modal -->
 <div id="vicHolderModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="VicHolderDeclarations" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="myModalLabel">Declarations</h3>
+        <h3>VIC Holder Declarations</h3>
     </div>
     <div class="modal-body">
         <table>
             <tr>
-                <td width="5%"><input type="checkbox" value="1" name="refusedAsicCbx" id="refusedAsicCbx" class="vic-active-visit"/></td>
+                <td width="5%"><input type="checkbox" id="refusedAsicCbx"/></td>
                 <td>The applicant declares they have not been refused or held an ASIC that was suspended or cancelled due to an adverse criminal record</td>
             </tr>
             <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
             <tr>
-                <td width="5%"><input type="checkbox" value="1" name="issuedVicCbx" id="issuedVicCbx" class="vic-active-visit"/></td>
+                <td width="5%"><input type="checkbox" id="issuedVicCbx"/></td>
                 <td>The applicant declares they have not been issued with a VIC for this airport for more than 28 days in the past 12 months.
                     (from <?php
                             if (isset($model->date_check_in)) {
@@ -278,11 +278,46 @@ $session = new CHttpSession;
         </table>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-primary" onclick="return holderDeclerationChange();">Save changes</button>
+        <button class="btn btn-primary" onclick="return vicHolderDeclarationChange();">Confirm</button>
     </div>
 </div>
+
+<!-- ASIC SPONSOR Declarations Modal -->
+<div id="asicSponsorModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="AsicSponsorDeclarations" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3>ASIC Sponsor Declarations</h3>
+    </div>
+    <div class="modal-body">
+        <table>
+            <tr>
+                <td width="5%"><input type="checkbox" id="asicDecalarationCbx1"/></td>
+                <td>I confirm that the VIC holders details are correct. I have read, understood and agree to ensure that the applicant will abide by the conditions applicatle to the use of the Visitor Identification Card.</td>
+            </tr>
+            <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+            <tr>
+                <td width="5%"><input type="checkbox" id="asicDecalarationCbx2"/></td>
+                <td>I understand that it is an offence to escort/sponsor someone airside without a valid operational reason for them to require access.</td>
+            </tr>
+            <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+            <tr>
+                <td width="5%"><input type="checkbox" id="asicDecalarationCbx3"/></td>
+                <td>I note that they mush be under my director supervision at all times whilst they are airside.</td>
+            </tr>
+            <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+            <tr>
+                <td width="5%"><input type="checkbox" id="asicDecalarationCbx4"/></td>
+                <td>I request that a VIC b issued to the applicant for the areas and reason indicated in the section above.</td>
+            </tr>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" onclick="return asicSponsorDeclarationChange();">Confirm</button>
+    </div>
+</div>
+
 <script type="text/javascript">
-    function holderDeclerationChange() {
+    function vicHolderDeclarationChange() {
         if ($("#refusedAsicCbx").is(':checked') && $('#issuedVicCbx').is(':checked')) {
             $('#VivHolderDecalarations').prop('checked', true);
         } else {
@@ -293,6 +328,18 @@ $session = new CHttpSession;
         return false;
     }
 
+    function asicSponsorDeclarationChange() {
+        if ($("#asicDecalarationCbx4").is(':checked') && $('#asicDecalarationCbx3').is(':checked') && $('#asicDecalarationCbx2').is(':checked') && $('#asicDecalarationCbx1').is(':checked')) {
+            $('#AsicSponsorDecalarations').prop('checked', true);
+        } else {
+            $('#AsicSponsorDecalarations').prop('checked', false);
+        }
+        $('#asicSponsorModal').modal('hide');
+        return false;
+    }
+
+
+    /* todo: need to remove because disabled checkbox
     $('#VivHolderDecalarations').on('change', function(){
         if ($("#VivHolderDecalarations").is(':checked')) {
             $('#refusedAsicCbx').prop('checked', true);
@@ -301,5 +348,5 @@ $session = new CHttpSession;
             $('#refusedAsicCbx').prop('checked', false);
             $('#issuedVicCbx').prop('checked', false);
         }
-    });
+    });*/
 </script>

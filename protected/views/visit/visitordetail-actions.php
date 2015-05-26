@@ -299,6 +299,7 @@ $session = new CHttpSession;
 
         $('#registerNewVisit').on('click', function(e) {
             e.preventDefault();
+            
             checkIfActiveVisitConflictsWithAnotherVisit("new");
         });
 
@@ -454,7 +455,6 @@ $session = new CHttpSession;
     <?php
     $cardForm = $this->beginWidget('CActiveForm', array(
         'id' => 'update-card-form',
-        //'action' => Yii::app()->createUrl('/cardGenerated/create&id=' . $model->visitor . '&visitId='.$model->id.''),
         'action' => Yii::app()->createUrl('/cardGenerated/create&visitId=' . $model->id),
         'htmlOptions' => array("name" => "update-card-form"),
         'enableAjaxValidation' => false,
@@ -462,9 +462,9 @@ $session = new CHttpSession;
         'clientOptions' => array(
             'validateOnSubmit' => true,
             'afterValidate' => 'js:function(form, data, hasError){
-                                if (!hasError){
-                                }
-                                }'
+				if (!hasError){
+        		}
+			}'
         ),
     ));
     ?>
@@ -477,21 +477,16 @@ $session = new CHttpSession;
 
     <input type="text" id="CardGenerated_card_number" name="CardGenerated[card_number]" value="<?php
     $tenant = User::model()->findByPk($model->tenant);
-    if (Company::model()->findByPk($tenant->company)->card_count != '') {
-        $card_count = (Company::model()->findByPk($tenant->company)->card_count)+1;
-    } else {
-        $card_count = 1;
-    }
 
     if ($tenant->company != '') {
-        $inc = 6 - (strlen(($card_count)));
-        $int_code = '';
-        for ($x = 1; $x <= $inc; $x++) {
-
-            $int_code .= "0";
-        }
+	    $company = Company::model()->findByPk($tenant->company);
+	    $card_count = $company->card_count ? ($company->card_count + 1) : 1;
+	    
+	    while (strlen($card_count) < 6) {
+	    	$card_count = '0' . $card_count;
+	    }
+    	echo $company->code . ($card_count);
     }
-    echo Company::model()->findByPk($tenant->company)->code . $int_code . ($card_count);
     ?>">
 
     <input type="text" id="CardGenerated_print_count" name="CardGenerated[print_count]" value="">

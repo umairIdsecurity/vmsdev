@@ -44,7 +44,7 @@ $customDataProvider = new CActiveDataProvider($model, array(
         ));
 
 $this->widget('zii.widgets.grid.CGridView', array(
-    'id' => 'findvisitor-grid',
+    'id' => 'findvisitor-grid-1',
     'dataProvider' => $customDataProvider,
     'afterAjaxUpdate' => "
     function(id, data) {

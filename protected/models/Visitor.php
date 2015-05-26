@@ -438,9 +438,7 @@ class Visitor extends CActiveRecord {
     public function beforeSave() {
         $this->email = trim($this->email);
 
-        if ($this->contact_country == '') {
-            $this->contact_country = self::AUSTRALIA_ID;
-        }
+        $this->contact_country = self::AUSTRALIA_ID;
 
         if ($this->password_requirement == PasswordRequirement::PASSWORD_IS_NOT_REQUIRED) {
             $this->password = null;
@@ -494,10 +492,15 @@ class Visitor extends CActiveRecord {
      */
     public function afterFind() {
      
-        if( is_null($this->password) )
+        if( is_null($this->password) ) { 
             $this->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
-        else
+        }
+        else {
             $this->password_requirement = PasswordRequirement::PASSWORD_IS_REQUIRED;
+            $this->password_option = 1;
+            
+        }
+        
         
         parent::afterFind();
     }

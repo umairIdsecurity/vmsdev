@@ -192,7 +192,7 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
 
     <?php
     if ($asic) {
-        echo CHtml::dropDownList('visitor_card_status', $asic->visitor_card_status, Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_ASIC], array('empty' => 'Card Status'));
+        echo CHtml::dropDownList('visitor_card_status', $visitorModel->visitor_card_status, Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC], array('empty' => 'Card Status'));
         echo "<br />";
         echo CHtml::dropDownList('visitor_type', $visitorModel->visitor_type, VisitorType::model()->returnVisitorTypes());
         echo "<br />";
@@ -211,7 +211,10 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
 
 <script>
     $(document).ready(function() {
-
+        <?php if ($asic) { ?>
+        // remove Denied card status
+        $("#visitor_card_status option[value='5']").remove();
+        <?php }?>
 
         if (<?php echo $model->visit_status; ?> == '1' && $("#dummycardvalue").val() == '' && '<?php echo $model->card; ?>' != '') { //1 is active
             $('#printCardBtn').disabled = false;

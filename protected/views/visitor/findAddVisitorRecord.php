@@ -288,7 +288,7 @@ $model->identification_country_issued = 13;
                                 <td>
                                     <?php
                                     echo $form->dropDownList($model, 'contact_country', $countryList,
-                                        array('prompt' => 'Country', 'disabled' => 'disabled', 'options' => array(Visitor::AUSTRALIA_ID => array('selected' => 'selected'))));
+                                        array('prompt' => 'Country', 'options' => array(Visitor::AUSTRALIA_ID => array('selected' => 'selected'))));
                                     ?><span class="required">*</span>
                                     <br/>
                                     <?php echo $form->error($model, 'contact_country'); ?>

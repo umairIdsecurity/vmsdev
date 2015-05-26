@@ -591,7 +591,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                 populateTenantAgentAndCompanyField();
             }
 
-            if ($('#Visitor_alternative_identification').val() == 1) {
+            if ($('#Visitor_identification_alternate_document_name1').val() != '') {
                 $('#Visitor_alternative_identification').prop('checked', true);
                 $('.row_document_name_number').show();
             }

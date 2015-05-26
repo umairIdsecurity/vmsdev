@@ -679,6 +679,8 @@ dt.tabs dt{
 
 #findAddVisitorRecordDiv{
     padding:0px !important;
+    position: relative;
+    overflow: hidden;
 }
 
 #addvisitor-table tr td, #addhost-table tr td{

@@ -438,7 +438,9 @@ class Visitor extends CActiveRecord {
     public function beforeSave() {
         $this->email = trim($this->email);
 
-        $this->contact_country = self::AUSTRALIA_ID;
+        if ($this->contact_country == '') {
+            $this->contact_country = self::AUSTRALIA_ID;
+        }
 
         if ($this->password_requirement == PasswordRequirement::PASSWORD_IS_NOT_REQUIRED) {
             $this->password = null;

@@ -27,14 +27,79 @@ $photoForm = $this->beginWidget('CActiveForm', array(
 
 <div class="cardPhotoPreview" style="height:0px;">
     <?php if ($visitorModel->photo != '') { ?>
-        <img id="photoPreview" style="height:165px;" src="<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($model->visitor) ?>">
+        <img id="photoPreview" src="<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($model->visitor) ?>">
     <?php } else { ?>
         <img id="photoPreview" src="" style="display:none;height:165px;"></img>
     <?php } ?>
 </div>
-<div id="cardDiv" style="background-size:220px 310px; height:305px;">
+<div id="cardDiv">
 
-    <div style="position: relative; padding-top:180px;padding-left:30px;">
+    <div class="card-content">
+        <div class="card-content-table">
+            <table class="" id="cardDetailsTable">
+                <tr>
+                    <td>
+                        <?php
+                        if ($tenant->company != '') {
+                            echo Company::model()->findByPk($tenant->company)->code;
+                        }
+                        ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td><span class="cardDateText"><?php
+                            if ($model->card_type == CardType::SAME_DAY_VISITOR) {
+                                if ($model->date_check_out == '') {
+                                    $date1 = date('d M y');
+                                    echo date("d M y", strtotime($date1));
+                                } else {
+                                    // echo Yii::app()->dateFormatter->format("d/MM/y", strtotime($model->date_out));
+                                    echo date("d M y", strtotime($model->date_check_out));
+                                }
+                            } else {
+                                if ($model->date_check_out == '') {
+                                    $date2 = date('d M y');
+                                    echo date("d M y", strtotime($date2));
+                                } else {
+                                    // echo Yii::app()->dateFormatter->format("d/MM/y", strtotime($model->date_out));
+                                    echo date("d M y", strtotime($model->date_check_out));
+                                }
+                            }
+                            ?></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div style="width:132px">
+                            <?php
+                            if (strlen($visitorModel->first_name . ' ' . $visitorModel->last_name) > 48) {
+                                $first_name = explode(' ', $visitorModel->first_name);
+                                $last_name = explode(' ', $visitorModel->last_name);
+                                echo $first_name[0] . ' ' . $last_name[0];
+                            } else {
+                                echo $visitorModel->first_name . ' ' . $visitorModel->last_name;
+                            } ?>
+
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span style="<?php
+                        if ($model->visit_status != VisitStatus::ACTIVE) {
+                            echo 'display:none;';
+                        }
+                        ?>">
+                                  <?php
+                                  if($model->card !=''){
+                                      echo CardGenerated::model()->findByPk($model->card)->card_number;
+                                  }
+                                  ?>
+                        </span>
+                    </td>
+                </tr>
+            </table>
+        </div>
         <?php
         if ($tenant->company != '') {
             $companyLogoId = Company::model()->findByPk($tenant->company)->logo;
@@ -52,78 +117,15 @@ $photoForm = $this->beginWidget('CActiveForm', array(
                 echo "cardCompanyLogo";
             }
             ?>' src="<?php
-                 echo $companyLogo;
-                 ?>" style="<?php
-                 if (strpos($_SERVER['HTTP_USER_AGENT'], 'Trident/7.0; rv:11.0') !== false) {
-                     ?>margin-left:42px;<?php
-                 }
-                 ?>"/>
-                 <?php
-             }
-             ?>
-        <table class="" style="width:100%;margin-left:100px;" id="cardDetailsTable">
-            <tr>
-                <td>
-                    <?php
-                    if ($tenant->company != '') {
-                        echo Company::model()->findByPk($tenant->company)->code;
-                    }
-                    ?>
-                </td>
-            </tr>
-            <tr>
-                <td><span class="cardDateText"><?php
-                        if ($model->card_type == CardType::SAME_DAY_VISITOR) {
-                            if ($model->date_check_out == '') {
-                                $date1 = date('d M y');
-                                echo date("d M y", strtotime($date1));
-                            } else {
-                                // echo Yii::app()->dateFormatter->format("d/MM/y", strtotime($model->date_out));
-                                echo date("d M y", strtotime($model->date_check_out));
-                            }
-                        } else {
-                            if ($model->date_check_out == '') {
-                                $date2 = date('d M y');
-                                echo date("d M y", strtotime($date2));
-                            } else {
-                                // echo Yii::app()->dateFormatter->format("d/MM/y", strtotime($model->date_out));
-                                echo date("d M y", strtotime($model->date_check_out));
-                            }
-                        }
-                        ?></span>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div style="width:132px">
-                        <?php
-                        if (strlen($visitorModel->first_name . ' ' . $visitorModel->last_name) > 48) {
-                            $first_name = explode(' ', $visitorModel->first_name);
-                            $last_name = explode(' ', $visitorModel->last_name);
-                            echo $first_name[0] . ' ' . $last_name[0];
-                        } else {
-                            echo $visitorModel->first_name . ' ' . $visitorModel->last_name;
-                        } ?>
-
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <span style="<?php
-                    if ($model->visit_status != VisitStatus::ACTIVE) {
-                        echo 'display:none;';
-                    }
-                    ?>">
-                              <?php
-                              if($model->card !=''){
-                                  echo CardGenerated::model()->findByPk($model->card)->card_number;
-                              }
-                              ?>
-                    </span>
-                </td>
-            </tr>
-        </table>
+            echo $companyLogo;
+            ?>" style="<?php
+            if (strpos($_SERVER['HTTP_USER_AGENT'], 'Trident/7.0; rv:11.0') !== false) {
+                ?>margin-left:42px;<?php
+            }
+            ?>"/>
+        <?php
+        }
+        ?>
 
 
     </div>

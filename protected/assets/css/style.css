@@ -985,7 +985,21 @@ dt.tabs dt{
 
 #cardDiv{
     background: url('../images/cardprint-new.png') no-repeat center top;
-    height: 290px;
+    background-size:220px 310px;
+    height:305px;
+    width: 220px;
+    margin: 0px auto;
+    position: relative;
+}
+#cardDiv .card-content {
+    position: absolute;
+    width: 100%;
+    bottom: 12px;
+    left: 0px;
+}
+#cardDiv .card-content .card-content-table{
+    padding-left: 80px;
+    width: 160px;
 }
 
 #cardDetailsTable tr td{
@@ -1469,36 +1483,23 @@ p.asic{
 }
 
 .cardCompanyLogoPreregistered{
-    /*    height: 30px;
-        margin-left: -155px;
-        // margin-top: -64px;
-    
-        margin-top: -14px;
-        //-moz-margin-start: -64px;
-        position: relative;
-        width: 50px;*/
-
-    float: left;
     height: 30px;
-    margin-left: -105px;
-    margin-top: 77px;
-    position: absolute;
-    width: 50px;
 }
 
 .cardPhotoPreview{
     background-color: #FFF;
-    height: 154px;
-    margin-left: 68px;
-    margin-top: 13px;
+    height: 150px;
+    margin-left: 73px;
+    margin-top: 14px;
     position: absolute;
-    width: 120px;
+    width: 116px;
     color:white;
+    z-index: 1;
 }
 
 #photoPreview{
-    height: 154px;
-    width: 113px;
+    height: 164px;
+    width: 112px;
 
 }
 

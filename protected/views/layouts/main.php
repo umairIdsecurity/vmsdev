@@ -143,14 +143,17 @@ $userRole = $session['role'];
                             <li class="<?php echo ($this->action->id == "view" && $this->id == 'visit') ? "active" : "" ?>">
                                 <a href="<?php echo Yii::app()->createUrl("/visit/view"); ?>">Visit History</a>
                             </li>
-                            <?php if ($session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_AGENT_ADMIN || $session['role'] == Roles::ROLE_SUPERADMIN || Roles::ROLE_AGENT_AIRPORT_ADMIN) { ?>
+                            <?php if ($session['role'] == Roles::ROLE_ADMIN ||
+                                $session['role'] == Roles::ROLE_AGENT_ADMIN ||
+                                $session['role'] == Roles::ROLE_SUPERADMIN ||
+                                $session['role'] == Roles::ROLE_AGENT_AIRPORT_ADMIN) { ?>
                                 <li class="<?php echo ($session['lastPage'] != 'dashboard' && ($this->action->id == "admin" || ($this->id == 'visit' && $this->action->id != 'view') || $this->id == "user" || $this->id == "visitor" || $this->id == "company" || $this->id == "workstation" || $this->id == "visitReason" || $this->id == "companyLafPreferences")) ? "active" : "" ?>">
                                     <a href="<?php echo Yii::app()->createUrl("/user/admin"); ?>">Administration</a>
                                 </li>
                             <?php } ?>
-                           
-                            
-                           
+
+
+
                             <li class="loggedin-as">
                                Logged in as <?php echo User::model()->getUserRole($userRole); ?>
                                 

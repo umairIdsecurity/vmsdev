@@ -22,9 +22,9 @@ $form = $this->beginWidget('CActiveForm', array(
 )); ?>
  
      
-             <div class=" <?php if ($model->hasErrors('postcode')) echo "error"; ?>"> 
-                 <label class="myLabel">
-                    <?php echo $form->fileField($model,'file'); ?>
+             <div class=" <?php if ($model->hasErrors('postcode')) echo "error"; ?>">
+                 <label class="myLabel" for="ImportCsvForm_file">
+                     <?php echo $form->fileField($model,'file'); ?>
                       <span>Browse File</span>
                  </label>  
                  

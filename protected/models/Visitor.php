@@ -600,25 +600,6 @@ class Visitor extends CActiveRecord {
         return __CLASS__;
     }
 
-    public function getCompanyName()
-    {
-        $company = Company::model()->findByPk($this->company);
-        if ($company) {
-            return $company->name;
-        }
-        return "";
-    }
-
-    public function getCompanyCode()
-    {
-        $company = Company::model()->findByPk($this->company);
-        if ($company) {
-            return $company->code;
-        }
-        return "";
-    }
-
-
     public function getTotalVisit()
     {
         $visit = Visit::model()->findAllByAttributes(array('visitor'=> $this->id));

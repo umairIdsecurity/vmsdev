@@ -832,6 +832,16 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
     function sendVisitorForm() {
 
         $('#Visitor_contact_country').removeAttr('disabled');
+
+        if (!$('#Visitor_alternative_identification').attr('checked')) {
+            $('#Visitor_identification_alternate_document_name1').val('');
+            $('#Visitor_identification_alternate_document_no1').val('');
+            $('#Visitor_identification_alternate_document_expiry1').val('');
+            $('#Visitor_identification_alternate_document_name2').val('');
+            $('#Visitor_identification_alternate_document_no2').val('');
+            $('#Visitor_identification_alternate_document_expiry2').val('');
+        }
+
         var form = $("#register-form").serialize();
         //$('#Visitor_contact_country').attr('disabled', 'disabled');
         var url;

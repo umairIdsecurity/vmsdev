@@ -11,7 +11,7 @@
 }
 .grid-view a.sort-link 
 {
-   // background:url('../images/up.color.png') right center no-repeat !important;
+    background: url('../images/icon-updown.png') right center no-repeat !important;
     padding-right: 10px !important;
 }
 
@@ -89,8 +89,6 @@
 
 
 .grid-view table .items th,table th,.grid-view table.items th a{
-    background-color: #FBFBFB !important;
-    
     
     list-style: none outside none;
     

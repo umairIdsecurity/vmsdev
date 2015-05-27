@@ -1889,14 +1889,14 @@ label.myLabel input[type="file"] {
      background: #fff !important;
      height: auto !important;
      width:auto !important;
-     color: #47a3da !important;
+     color: #666 !important;
      border-bottom: 1px solid #f2f2f2 !important;
      box-shadow: 1px 1px 4px #ccc;
      padding: 6px 10px !important; 
 }
 .notification-dropdown > li > a.notification-a:hover { 
-    background:  #47a3da !important;
-    color: #fff !important;
+    background:  #f2f2f2 !important;
+    
     padding-left: 17px !important;
    
 }
@@ -1904,13 +1904,7 @@ label.myLabel input[type="file"] {
     font-size: 10px !important;
     font-weight: normal;
  }
- .notification-dropdown li > h4 {
-     padding: 6px 12px;
-     color:#fff;
-     background: #9BD62C;
-     margin: 0px !important;
-     font-size:15px;
- } 
+
  .notification-dropdown > li > a.center {
      text-align: center;
      text-decoration: underline;

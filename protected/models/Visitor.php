@@ -207,6 +207,7 @@ class Visitor extends CActiveRecord {
                 contact_street_type,
                 contact_suburb,
                 contact_state,
+                contact_postcode,
                 contact_country,
                 visitor_card_status,
                 visitor_type,
@@ -272,6 +273,7 @@ class Visitor extends CActiveRecord {
                 contact_street_type,
                 contact_suburb,
                 contact_state,
+                contact_postcode,
                 contact_country',
                 'required',
             );
@@ -611,7 +613,7 @@ class Visitor extends CActiveRecord {
         foreach($activeVisits as $visit) {
             $totalVisit += $visit->visitCounts;
         }
-        if($totalVisit >0 ) {
+        if($totalVisit > 0 ) {
             return $totalVisit;
         } else {
             return "";
@@ -625,5 +627,18 @@ class Visitor extends CActiveRecord {
             'reset_id'       => null,
             'negate_reason' => null
         ]);
+    }
+
+    public function getVisitorProfileIcon ()
+    {
+        switch ($this->profile_type) {
+            case Visitor::PROFILE_TYPE_VIC :
+                return '<img style="width: 25px" src="' . Yii::app()->controller->assetsBase . '/images/vic-visitor-icon.png"/>';
+            case Visitor::PROFILE_TYPE_ASIC :
+                return '<img style="width: 25px" src="' . Yii::app()->controller->assetsBase . '/images/asic-visitor-icon.png"/>';
+            case Visitor::PROFILE_TYPE_CORPORATE :
+                return '<img style="width: 25px" src="' . Yii::app()->controller->assetsBase . '/images/corporate-visitor-icon.png"/>';
+        }
+
     }
 }

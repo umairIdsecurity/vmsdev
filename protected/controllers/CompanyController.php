@@ -283,10 +283,10 @@ class CompanyController extends Controller {
 
         if(Yii::app()->request->isPostRequest)
         {
-            //$this->loadModel($id)->delete();
-            $companyModel = Company::model()->findByPk($id);
-            $companyModel->is_deleted = 1;
-            $companyModel->save();
+
+            $sql = "UPDATE `company` SET `is_deleted`=1 WHERE `id`=$id";
+            $connection=Yii::app()->db;
+            $connection->createCommand($sql)->execute();
 
             // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
             if (!isset($_GET['ajax']))

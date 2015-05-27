@@ -216,7 +216,6 @@ class Visitor extends CActiveRecord {
                 password_requirement,
                 alternative_identification,
                 verifiable_signature,
-                visit_count
                 ',
                 'safe'
             ),
@@ -600,17 +599,31 @@ class Visitor extends CActiveRecord {
         return __CLASS__;
     }
 
-    public function getTotalVisit()
-    {
-        $visit = Visit::model()->findAllByAttributes(array('visitor'=> $this->id));
-        if ($visit) {
-            return count($visit);
-        }
-        return '';
-    }
-
     public function getCompany()
     {
         return Company::model()->findByPk($this->company);
+    }
+
+    public function getTotalVisit()
+    {
+        $totalVisit = 0;
+        $activeVisits = $this->activeVisits;
+        foreach($activeVisits as $visit) {
+            $totalVisit += $visit->visitCounts;
+        }
+        if($totalVisit >0 ) {
+            return $totalVisit;
+        } else {
+            return "";
+        }
+    }
+
+    public function getActiveVisits()
+    {
+        return Visit::model()->findAllByAttributes([
+            'visitor' => $this->id,
+            'reset_id'       => null,
+            'negate_reason' => null
+        ]);
     }
 }

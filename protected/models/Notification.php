@@ -105,7 +105,7 @@ class Notification extends CActiveRecord
                     $criteria->params = array(':user_id' => Yii::app()->user->id);
                      
                 }
-                $criteria->order = 'date_created DESC';        
+                $criteria->order = 'id DESC';        
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));

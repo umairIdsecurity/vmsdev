@@ -298,20 +298,14 @@ $model->identification_country_issued = 13;
 
                             <tr>
                                 <td id="visitorCompanyRow">
-                                    <div style="margin-bottom: 5px;">
+
+                                    <select id="Visitor_company" name="Visitor[company]">
+                                        <option value=''>Select Company</option>
                                         <?php echo $form->error($model, 'company'); ?>
-                                        <?php
-                                        $this->widget('application.extensions.select2.Select2', array(
-                                            'model' => $model,
-                                            'attribute' => 'company',
-                                            'items' => CHtml::listData(Visitor::model()->findAllCompanyByTenant($session['tenant']),
-                                                'id', 'name'),
-                                            'selectedItems' => array(), // Items to be selected as default
-                                            'placeHolder' => 'Please select a company'
-                                        ));
-                                        ?>
-                                        <span class="required">*</span>
-                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
                                     <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;<?php
                                     if ($session['role'] != Roles::ROLE_STAFFMEMBER) {
                                         //    echo "display:none";
@@ -319,6 +313,7 @@ $model->identification_country_issued = 13;
                                     ?>">Add Company</a><br/>
                                 </td>
                             </tr>
+
 
                             <tr>
                                 <td id="visitorTenantRow" <?php

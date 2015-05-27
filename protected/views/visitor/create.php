@@ -263,9 +263,11 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
 
         $(".btnBackTab2").click(function(e) {
             e.preventDefault();
+
             showHideTabs('selectCardB', 'selectCardA', 'selectCard', 'findVisitorA', 'findVisitor', 'findHostA', 'findHost');
             hidePreviousPage('step2Tab', 'stepTab');
         });
+
         $(".btnBackTab3").click(function(e) {
             e.preventDefault();
             showHideTabs('findVisitorB', 'findVisitorA', 'findVisitor', 'selectCardA', 'selectCard', 'findHostA', 'findHost');

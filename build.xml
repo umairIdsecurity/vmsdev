@@ -266,11 +266,11 @@
             <arg value="--ignore=autoload.php" />
             <arg path="${basedir}/protected" />
         </exec>
-        <!--<concat dest="${basedir}/build/logs/checkstyle.xml" force="true" >
+        <concat dest="${basedir}/build/logs/checkstyle.xml" force="true" >
             <header>&lt;checkstyle&gt;</header>
-            <filelist files="${basedir}/build/logs/checkstyle-results.xml" />
+            <filelist dir="${basedir}/build/logs" files="checkstyle-results.xml" />
             <footer>&lt;/checkstyle&gt;</footer>
-        </concat>-->
+        </concat>
 
         <property name="phpcs.done" value="true"/>
     </target>

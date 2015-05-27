@@ -350,10 +350,11 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                         </tr>  
                         <tr>
                             <td>
-                                <?php echo $form->dropDownList($model, 'contact_state', Visitor::$AUSTRALIAN_STATES, array('empty' => 'State')); ?>
+                                <?php echo $form->dropDownList($model, 'contact_state', Visitor::$AUSTRALIAN_STATES, array('empty' => 'State', 'style' => 'width: 140px;')); ?>
+                                <?php echo $form->textField($model, 'contact_postcode', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Postcode', 'style' => 'width: 62px;')); ?>
                                 <span class="required">*</span>
-                                
                                 <?php echo $form->error($model, 'contact_state'); ?>
+                                <?php echo $form->error($model, 'contact_postcode'); ?>
                             </td>
                         </tr>
                         <tr>
@@ -434,8 +435,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                             <tr>
                                 <td>
                                     <?php echo $form->checkBox($model, 'alternative_identification', array('style' => 'float: left;')); ?>
-                                    <label for="Visitor_alternative_identification" class="form-label">Alternative
-                                        identifications<br/>One must have a signature</label>
+                                    <label for="Visitor_alternative_identification" class="form-label">Applicant does not have one of the above identifications</label>
                                 </td>
                             </tr>
                             <tr class="row_document_name_number" style="display:none">

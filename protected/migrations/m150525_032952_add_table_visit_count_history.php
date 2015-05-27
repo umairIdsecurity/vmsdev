@@ -2,8 +2,9 @@
 
 class m150525_032952_add_table_visit_count_history extends CDbMigration
 {
-	public function up()
-	{
+	// Use safeUp/safeDown to do migration with transaction
+    public function safeUp()
+    {
         $this->createTable("reset_history", array(
             'id'         =>'pk',
             'visitor_id' =>'BIGINT(20) NOT NULL',
@@ -16,25 +17,13 @@ class m150525_032952_add_table_visit_count_history extends CDbMigration
         $this->insert('visit_status',[
             'name' => 'Negate'
         ]);
-	}
+    }
 
-	public function down()
-	{
-		$this->dropTable("visit_count_reset_history");
+    public function safeDown()
+    {
+        $this->dropTable("visit_count_reset_history");
         $this->dropColumn('visit','reset_id');
         $this->dropColumn('visit','negate_reason');
         $this->addColumn('visitor','visit_count','int(10)');
-
-	}
-
-	/*
-	// Use safeUp/safeDown to do migration with transaction
-	public function safeUp()
-	{
-	}
-
-	public function safeDown()
-	{
-	}
-	*/
+    }
 }

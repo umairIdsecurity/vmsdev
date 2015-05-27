@@ -48,6 +48,7 @@
 
 <?php $form = $this->beginWidget("CActiveForm", array(
     "id"=>"importvisitor-to-visitor",
+    'htmlOptions' => array('class'=>'t-top20'),
     "action"=>Yii::app()->createUrl('importHosts/import'),   
         )); ?>
 

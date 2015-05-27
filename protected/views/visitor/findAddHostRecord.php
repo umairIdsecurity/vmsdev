@@ -5,6 +5,12 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
 
 // Visitor ASIC model
 $asicModel = new Visitor();
+
+// get first key of asic card type:
+$asicCardTypes = Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_ASIC];
+reset($asicCardTypes);
+$defaultKey = key($asicCardTypes);
+$asicModel->visitor_card_status = $defaultKey;
 ?>
 
 <div role="tabpanel">

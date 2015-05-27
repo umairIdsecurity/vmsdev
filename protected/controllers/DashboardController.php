@@ -185,6 +185,8 @@ class DashboardController extends Controller {
         $this->layout = '//layouts/column2';
         $session = new CHttpSession;
         $session['lastPage'] = 'dashboard';
+        //Archive Expired 48 Old Pre-registered Visits
+        Visit::model()->archivePregisteredOldVisits();
         $model = new Visit('search');
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['Visit'])) {

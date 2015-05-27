@@ -66,7 +66,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'header' => 'Company',
             'filter' => false,
-            'value' => '$data->getCompanyName()'
+            'value' => '$data->getCompany()->name'
         ),
         array(
             'header' => 'Action',

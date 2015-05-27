@@ -1,3 +1,19 @@
+<?php 
+$session = new CHttpSession;
+$company = Company::model()->findByPk($session['company']);
+$companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences); 
+if ($companyLafPreferences) {
+?> 
+<style>
+     .notification-dropdown li > h4 {
+     padding: 6px 12px;
+     color:#fff;
+     background: <?php echo $companyLafPreferences->nav_hover_color;?>;
+     margin: 0px !important;
+     font-size:15px;
+ } 
+</style>    
+<?php } ?>
 <ul class="dropdown-menu notification-dropdown">
     <li> <h4> Notifications </h4></li>
      <?php 

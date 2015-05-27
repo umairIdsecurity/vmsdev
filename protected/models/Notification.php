@@ -19,7 +19,7 @@ class Notification extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'notifications';
+		return 'notification';
 	}
 
 	/**
@@ -105,7 +105,7 @@ class Notification extends CActiveRecord
                     $criteria->params = array(':user_id' => Yii::app()->user->id);
                      
                 }
-                        
+                $criteria->order = 'date_created DESC';        
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
@@ -125,5 +125,11 @@ class Notification extends CActiveRecord
         public function afterFind() {
             $this->date_created = date("d-m-Y", strtotime($this->date_created) );
             parent::afterFind();
+        }
+        
+        public function beforeSave() {
+           $this->date_created = date("Y-m-d", strtotime($this->date_created));
+           return parent::beforeSave();
+            
         }
 }

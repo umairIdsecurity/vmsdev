@@ -72,7 +72,7 @@ if ($visitorModel->profile_type === 'CORPORATE') {
                             A VIC holder is required to immediately leave a secure area if he/she is no longer supervised by an ASIC holder. [ATSR 3.09]
                             <br>
                             <br>
-                            A person must not knowingly apply for a VIC for a period which will exceed a total of 28 days in a 12-month period. [ATSR 6.25
+                            A person must not knowingly apply for a VIC for a period which will exceed a total of 28 days in a 12-month period. [ATSR 6.25]
                             <br>
                             <br>
                             Albany Airport Services

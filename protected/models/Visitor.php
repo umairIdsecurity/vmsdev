@@ -613,7 +613,7 @@ class Visitor extends CActiveRecord {
         foreach($activeVisits as $visit) {
             $totalVisit += $visit->visitCounts;
         }
-        if($totalVisit >0 ) {
+        if($totalVisit > 0 ) {
             return $totalVisit;
         } else {
             return "";

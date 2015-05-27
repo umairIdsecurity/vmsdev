@@ -535,11 +535,11 @@ class Visit extends CActiveRecord {
 
     public function getVisitCounts()
     {
-        if (empty($this->date_in) || empty($this->date_out)) {
+        if (empty($this->date_check_in) || empty($this->date_check_out)) {
             return 1;
         }else{
-            $dateIn = new DateTime($this->date_in);
-            $dateOut = new DateTime($this->date_out);
+            $dateIn = new DateTime($this->date_check_in);
+            $dateOut = new DateTime($this->date_check_out);
             return $dateOut->format('z') - $dateIn->format('z') + 1 ;
         }
     }

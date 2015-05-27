@@ -154,20 +154,25 @@ class WorkstationController extends Controller {
      * @param integer $id the ID of the model to be deleted
      */
     public function actionDelete($id) {
-        $model = $this->loadModel($id);
-        if ($model->delete()) {
-            //throw new CHttpException(400, "This is a required field and cannot be deleted"); 
-        } else {
-            $userWorkstation = UserWorkstations::model()->exists('workstation ="'.$id.'" ');
-            $visit = Visit::model()->exists('workstation="'.$id.'"');
-            if (!$userWorkstation || !$visit) {
-                return false;
-            } 
-        }
 
-        // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax']))
-            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+        if(Yii::app()->request->isPostRequest)
+        {
+            $sql = "DELETE FROM `workstation_card_type` WHERE `workstation`=$id";
+            $connection=Yii::app()->db;
+            $connection->createCommand($sql)->execute();
+
+            $sql = "UPDATE `workstation` SET `is_deleted`=1 WHERE `id`=$id";
+            $connection=Yii::app()->db;
+            $connection->createCommand($sql)->execute();
+
+            // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+            if (!isset($_GET['ajax']))
+                $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+
+        }
+        else
+            throw new CHttpException(400,'Invalid request. Please do not repeat this request');
+
     }
 
 

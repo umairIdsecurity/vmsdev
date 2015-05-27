@@ -3,13 +3,9 @@ $session = new CHttpSession;
 ?>
 
 <style>
-    .vic-active-visit {
-        margin-top: 0px !important;
-        padding-top: 5px;
-    }
-    .vic-col {
-        padding-top: 5px;;
-    }
+    .vic-active-visit {margin-top: 0px !important;padding-top: 5px;}
+    .vic-col {padding-top: 5px;}
+    .vic-col a{text-decoration: underline !important;}
 </style>
 
 <table class="detailsTable" style="font-size:12px;margin-top:15px;" id="logvisitTable">

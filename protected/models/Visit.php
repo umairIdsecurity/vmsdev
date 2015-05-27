@@ -543,5 +543,16 @@ class Visit extends CActiveRecord {
             return $dateOut->format('z') - $dateIn->format('z') + 1 ;
         }
     }
+    
+    /**
+     * Change date formate to Australian after fetech
+     * 
+     */
+    public function afterFind() {
+        
+        $this->date_check_in = (string) date("d-m-Y", strtotime($this->date_check_in));
+        $this->date_check_out =  (string) date("d-m-Y", strtotime($this->date_check_out));
+        return parent::afterFind();
+    }
 
 }

@@ -14,7 +14,12 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
         <table style="margin-top:18px !important; width:273px; border-left-style:none; border-top-style:none">
                 <tr>
                     <td>
-                        <?php echo $form->radioButtonList($model, 'password_requirement',
+                        <?php
+                        if (!isset($model->password_requirement)) {
+                            $model->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
+                        }
+
+                        echo $form->radioButtonList($model, 'password_requirement',
                             array(
                                 PasswordRequirement::PASSWORD_IS_NOT_REQUIRED => 'User does not require Password',
                                 PasswordRequirement::PASSWORD_IS_REQUIRED     => 'User requires Password to Login',

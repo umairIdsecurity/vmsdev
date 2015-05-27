@@ -385,7 +385,7 @@ $model->identification_country_issued = 13;
                                 }
                                 ?>>
 
-                                    <select id="workstation" onchange="populateVisitWorkstation(this)">
+                                    <select id="workstation" name="Visitor[visitor_workstation]" onchange="populateVisitWorkstation(this)">
                                         <?php
                                         if ($session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
                                             echo '';

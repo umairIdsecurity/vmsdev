@@ -28,7 +28,14 @@ if($_GET['tenant'] && $_GET['tenant']!=''){
 }
 
 
-$conditionString = $tenant. $tenant_agent . ' (CONCAT(first_name," ",last_name) like "%' . $visitorName . '%" or first_name like "%' . $visitorName . '%" or last_name like "%' . $visitorName . '%" or email like "%' . $visitorName . '%")';
+$conditionString = $tenant. $tenant_agent . ' (CONCAT(first_name," ",last_name) like "%' . $visitorName
+                    . '%" or first_name like "%' . $visitorName
+                    . '%" or last_name like "%' . $visitorName
+                    . '%" or email like "%' . $visitorName
+                    . '%" or identification_document_no LIKE "%' . $visitorName
+                    . '%" or identification_alternate_document_no1 LIKE "%' . $visitorName
+                    . '%" or identification_alternate_document_no2 LIKE "%' . $visitorName
+                    . '%")';
 
 if (isset($_GET['cardType']) && $_GET['cardType'] > CardType::CONTRACTOR_VISITOR) {
     $conditionString .= ' AND profile_type = "VIC" ';
@@ -44,7 +51,7 @@ $customDataProvider = new CActiveDataProvider($model, array(
         ));
 
 $this->widget('zii.widgets.grid.CGridView', array(
-    'id' => 'findvisitor-grid',
+    'id' => 'findvisitor-grid-1',
     'dataProvider' => $customDataProvider,
     'afterAjaxUpdate' => "
     function(id, data) {
@@ -56,7 +63,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'header' => '',
             'type' => 'raw',
             'htmlOptions' => array('style' => 'text-align:center;width:12px;'),
-            'value' => '($data->profile_type == Visitor::PROFILE_TYPE_VIC) ? "<img style=\"width: 25px\" src=\"" . Yii::app()->controller->assetsBase . "/images/corporate-visitor-icon.png\"/>" : "<img style=\"width: 25px\" src=\"" . Yii::app()->controller->assetsBase . "/images/asic-visitor-icon.png\"/>" ',
+            'value' => '$data->getVisitorProfileIcon()',
         ),
         array(
             'name' => 'first_name',
@@ -66,7 +73,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'header' => 'Company',
             'filter' => false,
-            'value' => '$data->getCompanyName()'
+            'value' => '$data->getCompany()->name'
         ),
         array(
             'header' => 'Action',

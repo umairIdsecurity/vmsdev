@@ -23,12 +23,12 @@ class helpDeskCommand extends CConsoleCommand{
 
     public function actionBackup(){
 
-        echo "\nThis action will override the previous update of HelpDesk's content";
-        echo "\nDo you want to perform this action? yes|no: ";
+        #echo "\nThis action will override the previous update of HelpDesk's content";
+        #echo "\nDo you want to perform this action? yes|no: ";
 
-        if (fscanf (STDIN, '%s', $input) == 1) {
+        #if (fscanf (STDIN, '%s', $input) == 1) {
 
-            if($input=='yes'){
+        #    if($input=='yes'){
                 echo 'Backing up...' . PHP_EOL;
                 $helpDeskArr = array();
 
@@ -70,23 +70,23 @@ class helpDeskCommand extends CConsoleCommand{
                 fclose($file);
 
                 echo 'helpdesk.json is created successfully!' . PHP_EOL;
-            }
-            else{
-                return 0;
-            }
-
-        }
+        #    }
+        #    else{
+        #        return 0;
+        #    }
+        #
+        #}
 
     }
 
     public function actionRestore(){
 
-        echo "\nCaution:This action will update the current backup of HelpDesk content from helpdesk.json. So, previous record can be lost from the database.";
-        echo "\nAre you sure you want to perform this action? yes|no: ";
+        #echo "\nCaution:This action will update the current backup of HelpDesk content from helpdesk.json. So, previous record can be lost from the database.";
+        #echo "\nAre you sure you want to perform this action? yes|no: ";
 
-        if (fscanf (STDIN, '%s', $input) == 1) {
-
-            if($input=='yes'){
+        #if (fscanf (STDIN, '%s', $input) == 1) {
+        #
+        #    if($input=='yes'){
 
                 echo 'Restoring...' . PHP_EOL;
 
@@ -134,12 +134,12 @@ class helpDeskCommand extends CConsoleCommand{
                     echo 'There is no data in helpdesk.json' . PHP_EOL;
                 }
 
-            }
-            else{
-                return 0;
-            }
+        #    }
+        #    else{
+        #        return 0;
+        #    }
 
-        }
+        #}
 
 
     }

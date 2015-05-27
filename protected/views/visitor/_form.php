@@ -75,10 +75,10 @@ $form = $this->beginWidget('CActiveForm', array(
                 if ($(".password_requirement").is(":checked")== false) {
                     $("#pass_error_").show();
                     return false;
-                } else if ($(".pass_option").is(":checked")== true && $(".pass_option:checked").val()==1) {
+                } else if ($(".pass_option").is(":checked")== true && $(".pass_option:checked").val()==1 && $("#currentAction").val() != "update") {
                     if ($("#Visitor_password").val()== "" || $("#Visitor_repeatpassword").val()=="") {
                         $("#pass_error_").show();
-                        $("#pass_error_").html("type password or generate");
+                        $("#pass_error_").html("Type Password or Generate");
                         return false;
                     } else if ($("#Visitor_password").val() != $("#Visitor_repeatpassword").val()) {
                         return false;
@@ -90,18 +90,19 @@ $form = $this->beginWidget('CActiveForm', array(
                 if (!companyValue || companyValue == "") {
                     $("#company_error_").show();
                     return false;
-                } else if (vehicleValue.length < 6 && vehicleValue != "") {
+                } else if (vehicleValue.length < 6 && vehicleValue != "") { 
                     $("#Visitor_vehicle_em_").show();
                     $("#Visitor_vehicle_em_").html("Vehicle should have a min. of 6 characters");
-                } else if ($("#currentAction").val() == "update" && $(".password_requirement:checked").val() == 2 && ($("#Visitor_password").val() == "" || $("#Visitor_repeatpassword").val() == "")) {
-                    if ($("#Visitor_password").val() == "") {
-                        $("#Visitor_password_em_").show();
-                        $("#Visitor_password_em_").html("Please enter a Password");
+                } /* // Show password options selected and do not force to enter password on Update page.
+                else if ($("#currentAction").val() == "update" && $(".password_requirement:checked").val() == 2 && ($("#Visitor_password").val() == "" || $("#Visitor_repeatpassword").val() == "")) {
+                     if ($("#Visitor_password").val() == "") {
+                        $("#pass_error_").show();
+                        $("#pass_error_").html("Please enter a Password");
                     } else if ($("#Visitor_repeatpassword").val() == "") {
                         $("#Visitor_repeatpassword_em_").show();
                         $("#Visitor_repeatpassword_em_").html("Please enter a repeat password");
-                    }
-                } else {
+                    } 
+                }*/ else {
                     checkEmailIfUnique();
                 }
             }
@@ -496,8 +497,8 @@ $form = $this->beginWidget('CActiveForm', array(
 
                         <tr>
                             <td>
-                                <input type="radio" value="1" class="pass_option" name="Visitor[password_option]"/>&nbsp;Create
-                                Password
+                                <?php echo $form->radioButton($model, 'password_option', array("class"=>"pass_option"));?>
+                                &nbsp;Create Password
                             </td>
                         </tr>
 
@@ -552,10 +553,7 @@ $form = $this->beginWidget('CActiveForm', array(
 
         </table>
     </div> <!-- password-border -->
-
-    <input type="submit" value="Save" name="yt0" id="submitFormVisitor" class="complete" style="margin-top: 15px;"/>
-
-
+ <div style="float:right; margin-right: 35px"><input type="submit" value="Save" name="yt0" id="submitFormVisitor" class="complete" style="margin-top: 15px;"/></div>
 <?php } ?>
 
 </td>
@@ -596,7 +594,10 @@ if (isset($_GET['id'])) {
 <script>
 
 $(document).ready(function () {
-
+    
+    if( $("#Visitor_password_requirement_1").is(":checked") ) {
+         $(".user_requires_password").css("display", "block");
+    }
     if ($("#currentAction").val() == 'update') {
 
         if ($("#Visitor_photo").val() != '') {

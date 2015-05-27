@@ -278,9 +278,9 @@ $model->identification_country_issued = 13;
                             </tr>
                             <tr class="vic-visitor-fields">
                                 <td>
-                                    <?php echo $form->dropDownList($model, 'contact_state', Visitor::$AUSTRALIAN_STATES, array('empty' => 'State')); ?>
+                                    <?php echo $form->dropDownList($model, 'contact_state', Visitor::$AUSTRALIAN_STATES, array('empty' => 'State', 'style' => 'width: 140px;')); ?>
+                                    <?php echo $form->textField($model, 'contact_postcode', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Postcode', 'style' => 'width: 62px;')); ?>
                                     <span class="required">*</span>
-
                                     <?php echo $form->error($model, 'contact_state'); ?>
                                 </td>
                             </tr>
@@ -288,7 +288,7 @@ $model->identification_country_issued = 13;
                                 <td>
                                     <?php
                                     echo $form->dropDownList($model, 'contact_country', $countryList,
-                                        array('prompt' => 'Country', 'disabled' => 'disabled', 'options' => array(Visitor::AUSTRALIA_ID => array('selected' => 'selected'))));
+                                        array('prompt' => 'Country', 'options' => array(Visitor::AUSTRALIA_ID => array('selected' => 'selected'))));
                                     ?><span class="required">*</span>
                                     <br/>
                                     <?php echo $form->error($model, 'contact_country'); ?>
@@ -298,20 +298,14 @@ $model->identification_country_issued = 13;
 
                             <tr>
                                 <td id="visitorCompanyRow">
-                                    <div style="margin-bottom: 5px;">
+
+                                    <select id="Visitor_company" name="Visitor[company]">
+                                        <option value=''>Select Company</option>
                                         <?php echo $form->error($model, 'company'); ?>
-                                        <?php
-                                        $this->widget('application.extensions.select2.Select2', array(
-                                            'model' => $model,
-                                            'attribute' => 'company',
-                                            'items' => CHtml::listData(Visitor::model()->findAllCompanyByTenant($session['tenant']),
-                                                'id', 'name'),
-                                            'selectedItems' => array(), // Items to be selected as default
-                                            'placeHolder' => 'Please select a company'
-                                        ));
-                                        ?>
-                                        <span class="required">*</span>
-                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
                                     <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;<?php
                                     if ($session['role'] != Roles::ROLE_STAFFMEMBER) {
                                         //    echo "display:none";
@@ -319,6 +313,7 @@ $model->identification_country_issued = 13;
                                     ?>">Add Company</a><br/>
                                 </td>
                             </tr>
+
 
                             <tr>
                                 <td id="visitorTenantRow" <?php
@@ -711,7 +706,7 @@ $model->identification_country_issued = 13;
 
             </div>
             <div class="register-a-visitor-buttons-div" style="padding-right:23px;text-align: right;">
-                <input type="button" class="neutral visitor-backBtn btnBackTab2" id="btnBackTab2" value="Back"/>
+                <input type="button" class="neutral visitor-backBtn btnBackTab2" id="btnBackTab2" value="Back" onclick="window.location=location.href;return false;"/>
                 <input type="button" id="clicktabB1" value="Save and Continue" class="actionForward"/>
             </div>
             <input type="text" id="selectedVisitorInSearchTable" value="0"/>
@@ -819,7 +814,7 @@ $model->identification_country_issued = 13;
                 //if tenant only search tenant 
                 if ($("#currentRoleOfLoggedInUser").val() != 5 && $("#search_visitor_tenant_agent").val() == '') {
                     $('#workstation_search option[value!=""]').remove();
-
+ 
                     $.ajax({
                         type: 'POST',
                         url: '<?php echo Yii::app()->createUrl('user/getTenantWorkstation&id='); ?>' + $("#search_visitor_tenant").val(),
@@ -851,7 +846,7 @@ $model->identification_country_issued = 13;
     });
 	
 
-    function findVisitorRecord() {
+    function findVisitorRecord() { 
 		
         $("#visitor_fields_for_Search").show();
         $("#selectedVisitorInSearchTable").val("");
@@ -867,9 +862,13 @@ $model->identification_country_issued = 13;
 		
 //change modal url to pass user searched text
         var url = 'index.php?r=visitor/findvisitor&id=' + searchText + '&tenant=' + $("#search_visitor_tenant").val() + '&tenant_agent=' + $("#search_visitor_tenant_agent").val() + '&cardType=' + $('#selectCardDiv input[name=selectCardType]:checked').val();
-		
-        $("#searchVisitorTable").html('<iframe id="findVisitorTableIframe" onLoad="autoResize();" width="100%" height="100%" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
-		return false;
+        $.ajax(url).done(function(data){
+          $("#searchVisitorTable").html(data);
+        }).fail(function() {
+           window.location = '<?php echo Yii::app()->createUrl('site/login');?>';
+        }); 
+        //$("#searchVisitorTable").html('<iframe id="findVisitorTableIframe" onLoad="autoResize();" width="100%" height="100%" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
+            return false;
     }
 
     function populateVisitWorkstation(value) {
@@ -1073,6 +1072,8 @@ $model->identification_country_issued = 13;
     }
 
     function populateAgentAdminWorkstations(isSearch) {
+        
+       
         isSearch = (typeof isSearch === "undefined") ? "defaultValue" : isSearch;
         var tenant;
         var tenant_agent;

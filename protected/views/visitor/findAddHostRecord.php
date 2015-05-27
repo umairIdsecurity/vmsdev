@@ -5,6 +5,12 @@ $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->comp
 
 // Visitor ASIC model
 $asicModel = new Visitor();
+
+// get first key of asic card type:
+$asicCardTypes = Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_ASIC];
+reset($asicCardTypes);
+$defaultKey = key($asicCardTypes);
+$asicModel->visitor_card_status = $defaultKey;
 ?>
 
 <div role="tabpanel">
@@ -770,7 +776,12 @@ $asicModel = new Visitor();
         }
         //change modal url to pass user searched text
         var url = 'index.php?r=visitor/findhost&id=' + searchText + '&visitortype=' + $("#Visitor_visitor_type").val() + '&tenant=' + tenant + '&tenant_agent=' + tenant_agent + '&cardType=' + $('#selectCardDiv input[name=selectCardType]:checked').val();
-        $("#searchHostTable").html('<iframe id="findHostTableIframe" onLoad="autoResize2();" width="100%" height="100%" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
+         $.ajax(url).done(function(data){
+          $("#searchHostTable").html(data);
+        }).fail(function() {
+           window.location = '<?php echo Yii::app()->createUrl('site/login');?>';
+        }); 
+       // $("#searchHostTable").html('<iframe id="findHostTableIframe" onLoad="autoResize2();" width="100%" height="100%" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
     }
 
     function autoResize2() {

@@ -207,6 +207,7 @@ class Visitor extends CActiveRecord {
                 contact_street_type,
                 contact_suburb,
                 contact_state,
+                contact_postcode,
                 contact_country,
                 visitor_card_status,
                 visitor_type,
@@ -216,7 +217,6 @@ class Visitor extends CActiveRecord {
                 password_requirement,
                 alternative_identification,
                 verifiable_signature,
-                visit_count
                 ',
                 'safe'
             ),
@@ -273,6 +273,7 @@ class Visitor extends CActiveRecord {
                 contact_street_type,
                 contact_suburb,
                 contact_state,
+                contact_postcode,
                 contact_country',
                 'required',
             );
@@ -438,9 +439,7 @@ class Visitor extends CActiveRecord {
     public function beforeSave() {
         $this->email = trim($this->email);
 
-        if ($this->contact_country == '') {
-            $this->contact_country = self::AUSTRALIA_ID;
-        }
+        $this->contact_country = self::AUSTRALIA_ID;
 
         if ($this->password_requirement == PasswordRequirement::PASSWORD_IS_NOT_REQUIRED) {
             $this->password = null;
@@ -494,10 +493,15 @@ class Visitor extends CActiveRecord {
      */
     public function afterFind() {
      
-        if( is_null($this->password) )
+        if( is_null($this->password) ) { 
             $this->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
-        else
+        }
+        else {
             $this->password_requirement = PasswordRequirement::PASSWORD_IS_REQUIRED;
+            $this->password_option = 1;
+            
+        }
+        
         
         parent::afterFind();
     }
@@ -597,36 +601,44 @@ class Visitor extends CActiveRecord {
         return __CLASS__;
     }
 
-    public function getCompanyName()
-    {
-        $company = Company::model()->findByPk($this->company);
-        if ($company) {
-            return $company->name;
-        }
-        return "";
-    }
-
-    public function getCompanyCode()
-    {
-        $company = Company::model()->findByPk($this->company);
-        if ($company) {
-            return $company->code;
-        }
-        return "";
-    }
-
-
-    public function getTotalVisit()
-    {
-        $visit = Visit::model()->findAllByAttributes(array('visitor'=> $this->id));
-        if ($visit) {
-            return count($visit);
-        }
-        return '';
-    }
-
     public function getCompany()
     {
         return Company::model()->findByPk($this->company);
+    }
+
+    public function getTotalVisit()
+    {
+        $totalVisit = 0;
+        $activeVisits = $this->activeVisits;
+        foreach($activeVisits as $visit) {
+            $totalVisit += $visit->visitCounts;
+        }
+        if($totalVisit >0 ) {
+            return $totalVisit;
+        } else {
+            return "";
+        }
+    }
+
+    public function getActiveVisits()
+    {
+        return Visit::model()->findAllByAttributes([
+            'visitor' => $this->id,
+            'reset_id'       => null,
+            'negate_reason' => null
+        ]);
+    }
+
+    public function getVisitorProfileIcon ()
+    {
+        switch ($this->profile_type) {
+            case Visitor::PROFILE_TYPE_VIC :
+                return '<img style="width: 25px" src="' . Yii::app()->controller->assetsBase . '/images/vic-visitor-icon.png"/>';
+            case Visitor::PROFILE_TYPE_ASIC :
+                return '<img style="width: 25px" src="' . Yii::app()->controller->assetsBase . '/images/asic-visitor-icon.png"/>';
+            case Visitor::PROFILE_TYPE_CORPORATE :
+                return '<img style="width: 25px" src="' . Yii::app()->controller->assetsBase . '/images/corporate-visitor-icon.png"/>';
+        }
+
     }
 }

@@ -26,7 +26,7 @@ class VisitorController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('update', 'delete', 'admin', 'adminAjax', 'csvSampleDownload'),
+                'actions' => array('update', 'delete', 'admin', 'adminAjax', 'csvSampleDownload','getActiveVisit'),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -220,7 +220,7 @@ class VisitorController extends Controller {
         if (isset($_GET['Visitor']))
             $model->attributes = $_GET['Visitor'];
 
-        $this->render('findVisitor', array(
+        $this->renderPartial('findVisitor', array(
             'model' => $model,
                 ), false, true);
     }
@@ -232,7 +232,7 @@ class VisitorController extends Controller {
         if (isset($_GET['User']))
             $model->attributes = $_GET['User'];
 
-        $this->render('findHost', array(
+        $this->renderPartial('findHost', array(
             'model' => $model,
                 ), false, true);
     }
@@ -450,5 +450,19 @@ class VisitorController extends Controller {
            return Yii::app()->getRequest()->sendFile('visit_history.csv', @file_get_contents($fileName));
         else
            throw new CHttpException(404, 'The requested page does not exist.');
+    }
+
+    public function actionGetActiveVisit($id)
+    {
+        $model = new Visit();
+        $criteria = new CDbCriteria();
+        $criteria->compare('visitor', $id);
+        $criteria->addCondition('negate_reason IS NULL');
+        $criteria->addCondition('reset_id IS NULL');
+
+        $dataProvider=new CActiveDataProvider($model, array(
+            'criteria'=>$criteria,
+        ));
+        return $this->renderPartial('activeVisit',array('dataProvider' => $dataProvider));
     }
 }

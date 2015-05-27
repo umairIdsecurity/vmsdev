@@ -65,7 +65,7 @@ class Visit extends CActiveRecord {
             array('is_deleted', 'numerical', 'integerOnly' => true),
             array('reason,visitor_type,visitor,visitor_status,workstation', 'required'),
             array('visitor,card, visitor_type, reason, visitor_status,host, patient, created_by, tenant, tenant_agent', 'length', 'max' => 20),
-            array('date_in,date_out,time_in_hours,time_in_minutes,visit_status, time_in, time_out, date_check_in, time_check_in, date_check_out, time_check_out,card_type, finish_date, finish_time, card_returned_date', 'safe'),
+            array('date_in,date_out,time_in_hours,time_in_minutes,visit_status, time_in, time_out, date_check_in, time_check_in, date_check_out, time_check_out,card_type, finish_date, finish_time, card_returned_date, negate_reason, reset_id', 'safe'),
             array('patient, host,card,tenant,tenant_agent', 'default', 'setOnEmpty' => true, 'value' => null),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
@@ -532,5 +532,27 @@ class Visit extends CActiveRecord {
         }
         return 0;
 	}
+
+    public function getVisitCounts()
+    {
+        if (empty($this->date_in) || empty($this->date_out)) {
+            return 1;
+        }else{
+            $dateIn = new DateTime($this->date_in);
+            $dateOut = new DateTime($this->date_out);
+            return $dateOut->format('z') - $dateIn->format('z') + 1 ;
+        }
+    }
+    
+    /**
+     * Change date formate to Australian after fetech
+     * 
+     */
+    public function afterFind() {
+        
+        $this->date_check_in = (string) date("d-m-Y", strtotime($this->date_check_in));
+        $this->date_check_out =  (string) date("d-m-Y", strtotime($this->date_check_out));
+        return parent::afterFind();
+    }
 
 }

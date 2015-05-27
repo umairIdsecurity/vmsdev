@@ -263,9 +263,11 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
 
         $(".btnBackTab2").click(function(e) {
             e.preventDefault();
+
             showHideTabs('selectCardB', 'selectCardA', 'selectCard', 'findVisitorA', 'findVisitor', 'findHostA', 'findHost');
             hidePreviousPage('step2Tab', 'stepTab');
         });
+
         $(".btnBackTab3").click(function(e) {
             e.preventDefault();
             showHideTabs('findVisitorB', 'findVisitorA', 'findVisitor', 'selectCardA', 'selectCard', 'findHostA', 'findHost');
@@ -307,11 +309,11 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
                     $("#searchVisitorTableDiv h4").html("Selected Visitor Record : " + value.first_name + ' ' + value.last_name);
                     checkIfVisitorHasACurrentSavedVisit(value.id);
                 });
-                $('#findVisitorTableIframe').contents().find('.findVisitorButtonColumn a').removeClass('delete');
-                $('#findVisitorTableIframe').contents().find('.findVisitorButtonColumn a').html('Select Visitor');
-                $('#findVisitorTableIframe').contents().find('#' + id).addClass('delete');
-                $('#findVisitorTableIframe').contents().find('#' + id).html('Visitor Selected');
-                $('#findVisitorTableIframe').contents().find('.findVisitorButtonColumn .linkToVisitorDetailPage').html('Active');
+                $('.findVisitorButtonColumn a').removeClass('delete');
+                $('.findVisitorButtonColumn a').html('Select Visitor');
+                $('#' + id).addClass('delete');
+                $('#' + id).html('Visitor Selected');
+                $('.findVisitorButtonColumn .linkToVisitorDetailPage').html('Active');
 
             }
         });
@@ -419,10 +421,14 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
 
                     });
 
-                    $('#findHostTableIframe').contents().find('.findHostButtonColumn a').removeClass('delete');
-                    $('#findHostTableIframe').contents().find('.findHostButtonColumn a').html('Select Host');
-                    $('#findHostTableIframe').contents().find('#' + id).addClass('delete');
-                    $('#findHostTableIframe').contents().find('#' + id).html('Host Selected');
+//                    $('#findHostTableIframe').contents().find('.findHostButtonColumn a').removeClass('delete');
+//                    $('#findHostTableIframe').contents().find('.findHostButtonColumn a').html('Select Host');
+//                    $('#findHostTableIframe').contents().find('#' + id).addClass('delete');
+//                    $('#findHostTableIframe').contents().find('#' + id).html('Host Selected');
+                    $('.findHostButtonColumn a').removeClass('delete');
+                    $('.findHostButtonColumn a').html('Select Host');
+                    $('#' + id).addClass('delete');
+                    $('#' + id).html('Host Selected');
                 }
             });
         } else {

@@ -26,26 +26,7 @@ class VisitorController extends RestfulController {
 
                 if ($visitor->save(false)) {
                     $result = array();
-                    $company = Company::model()->findByPk($visitor->company);
-                    $result['visitorID'] = $visitor->id;
-                    $result['firstName'] = $visitor->first_name;
-                    $result['lastName'] = $visitor->last_name;
-                    $result['email'] = $visitor->email;
-                    $result['companyID'] = $visitor->company;
-                    $result['photo'] = $visitor->photo;
-                    $result['contactNumber'] = $visitor->contact_number;
-                    $result['dateOfBirth'] = $visitor->date_of_birth;
-                    $result['department'] = $visitor->department;
-                    $result['staffId'] = $visitor->staff_id;
-                    $result['notes'] = $visitor->notes;
-                    $result['visitor_type'] = $visitor->visitor_type;
-                    $result['vehicle'] = $visitor->vehicle;
-                    $result['createdBy'] = $visitor->created_by;
-                    $result['tenant'] = $visitor->tenant;
-                    $result['tenantAgent'] = $visitor->tenant_agent;
-                    $result['visitorCardStatus'] = $visitor->visitor_card_status;
-                    $result['visitorWorkstation'] = $visitor->visitor_workstation;
-                    $result['company'] = array('companyName' => ($company)?$company->name:"N/A");
+                     $result = $this->populatevisitor($visitor);
 
                     $this->sendResponse(200, CJSON::encode($result));
                 }
@@ -62,26 +43,7 @@ class VisitorController extends RestfulController {
                     $visitor->password = CPasswordHelper::hashPassword($data['password']);
                     $visitor->photo = NULL;
                     if ($visitor->save(false)) {
-                        $result = array();
-                        $result['visitorID'] = $visitor->id;
-                        $result['firstName'] = $visitor->first_name;
-                        $result['lastName'] = $visitor->last_name;
-                        $result['email'] = $visitor->email;
-                        $result['companyID'] = $visitor->company;
-                        $result['photo'] = $visitor->photo;
-                        $result['contactNumber'] = $visitor->contact_number;
-                        $result['dateOfBirth'] = $visitor->date_of_birth;
-                        $result['department'] = $visitor->department;
-                        $result['staffId'] = $visitor->staff_id;
-                        $result['notes'] = $visitor->notes;
-                        $result['visitor_type'] = $visitor->visitor_type;
-                        $result['vehicle'] = $visitor->vehicle;
-                        $result['createdBy'] = $visitor->created_by;
-                        $result['tenant'] = $visitor->tenant;
-                        $result['tenantAgent'] = $visitor->tenant_agent;
-                        $result['visitorCardStatus'] = $visitor->visitor_card_status;
-                        $result['visitorWorkstation'] = $visitor->visitor_workstation;
-                        $result['company'] = array('companyName' => Company::model()->findByPk($visitor->company)->name);
+                        $result = $this->populatevisitor($visitor);
                         $this->sendResponse(200, CJSON::encode($result));
                     }
                     die;
@@ -93,26 +55,7 @@ class VisitorController extends RestfulController {
 
                 $visitor = Visitor::model()->findByAttributes(array('email' => $email));
                 if ($visitor) {
-                    $result = array();
-                    $result['visitorID'] = $visitor->id;
-                    $result['firstName'] = $visitor->first_name;
-                    $result['lastName'] = $visitor->last_name;
-                    $result['email'] = $visitor->email;
-                    $result['companyID'] = $visitor->company;
-                    $result['photo'] = $visitor->photo;
-                    $result['contactNumber'] = $visitor->contact_number;
-                    $result['dateOfBirth'] = $visitor->date_of_birth;
-                    $result['department'] = $visitor->department;
-                    $result['staffId'] = $visitor->staff_id;
-                    $result['notes'] = $visitor->notes;
-                    $result['visitor_type'] = $visitor->visitor_type;
-                    $result['vehicle'] = $visitor->vehicle;
-                    $result['createdBy'] = $visitor->created_by;
-                    $result['tenant'] = $visitor->tenant;
-                    $result['tenantAgent'] = $visitor->tenant_agent;
-                    $result['visitorCardStatus'] = $visitor->visitor_card_status;
-                    $result['visitorWorkstation'] = $visitor->visitor_workstation;
-                    $result['company'] = array('companyName' => Company::model()->findByPk($visitor->company)->name);
+                    $result = $this->populatevisitor($visitor);
 
                     $this->sendResponse(200, CJSON::encode($result));
                 }
@@ -146,6 +89,31 @@ class VisitorController extends RestfulController {
         } elseif (!isset($data['visitorType']) || empty($data['visitorType'])) {
             $this->sendResponse(400, CJSON::encode(array('responseCode' => 400, 'errorCode' => 'VISITOR_TYPE_MISSING', 'errorDescription' => 'visitor type should not be blank')));
         }
+    }
+
+    private function populatevisitor($visitor) {
+        $result = array();
+        $result['visitorID'] = $visitor->id;
+        $result['firstName'] = $visitor->first_name;
+        $result['lastName'] = $visitor->last_name;
+        $result['email'] = $visitor->email;
+        $result['companyID'] = $visitor->company;
+        $result['photo'] = $visitor->photo;
+        $result['contactNumber'] = $visitor->contact_number;
+        $result['dateOfBirth'] = $visitor->date_of_birth;
+        $result['department'] = $visitor->department;
+        $result['staffId'] = $visitor->staff_id;
+        $result['notes'] = $visitor->notes;
+        $result['visitor_type'] = $visitor->visitor_type;
+        $result['vehicle'] = $visitor->vehicle;
+        $result['createdBy'] = $visitor->created_by;
+        $result['tenant'] = $visitor->tenant;
+        $result['tenantAgent'] = $visitor->tenant_agent;
+        $result['visitorCardStatus'] = $visitor->visitor_card_status;
+        $result['visitorWorkstation'] = $visitor->visitor_workstation;
+        $result['company'] = array('companyName' => Company::model()->findByPk($visitor->company)->name);
+        
+        return $result;
     }
 
 }

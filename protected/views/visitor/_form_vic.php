@@ -350,10 +350,11 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                         </tr>  
                         <tr>
                             <td>
-                                <?php echo $form->dropDownList($model, 'contact_state', Visitor::$AUSTRALIAN_STATES, array('empty' => 'State')); ?>
+                                <?php echo $form->dropDownList($model, 'contact_state', Visitor::$AUSTRALIAN_STATES, array('empty' => 'State', 'style' => 'width: 140px;')); ?>
+                                <?php echo $form->textField($model, 'contact_postcode', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Postcode', 'style' => 'width: 62px;')); ?>
                                 <span class="required">*</span>
-                                
                                 <?php echo $form->error($model, 'contact_state'); ?>
+                                <?php echo $form->error($model, 'contact_postcode'); ?>
                             </td>
                         </tr>
                         <tr>
@@ -832,6 +833,16 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
     function sendVisitorForm() {
 
         $('#Visitor_contact_country').removeAttr('disabled');
+
+        if (!$('#Visitor_alternative_identification').attr('checked')) {
+            $('#Visitor_identification_alternate_document_name1').val('');
+            $('#Visitor_identification_alternate_document_no1').val('');
+            $('#Visitor_identification_alternate_document_expiry1').val('');
+            $('#Visitor_identification_alternate_document_name2').val('');
+            $('#Visitor_identification_alternate_document_no2').val('');
+            $('#Visitor_identification_alternate_document_expiry2').val('');
+        }
+
         var form = $("#register-form").serialize();
         //$('#Visitor_contact_country').attr('disabled', 'disabled');
         var url;

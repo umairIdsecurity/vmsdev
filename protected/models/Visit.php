@@ -1,5 +1,5 @@
 <?php
-
+ini_set('xdebug.max_nesting_level', 200);
 /**
  * This is the model class for table "visit".
  *
@@ -332,7 +332,7 @@ class Visit extends CActiveRecord {
         } else {
             Yii::app()->user->setState('pageSize', (int) '');
         }
-
+       
         return new CActiveDataProvider($this, array(
             'pagination' => array(
                 'pageSize' => Yii::app()->user->getState('pageSize', Yii::app()->params['defaultPageSize']),
@@ -553,6 +553,24 @@ class Visit extends CActiveRecord {
         $this->date_check_in = (string) date("d-m-Y", strtotime($this->date_check_in));
         $this->date_check_out =  (string) date("d-m-Y", strtotime($this->date_check_out));
         return parent::afterFind();
+    }
+    
+    /**
+     * If visit is preregistered and date of entry passes 48 hours after proposed visit date 
+     * the record is archived from Dashboard and Visit History 
+     * 
+     */ 
+    public function archivePregisteredOldVisits () {
+        // Find and Update Status
+        $crieteria = 'visit_status = 2 AND ( date_check_in <= "'.date("Y-m-d", strtotime('-2 days')).'"  OR date_check_in <= "'.date("d-m-Y", strtotime('-2 days')).'")'; 
+        $preRegistered = $this->findAll( $crieteria );
+        
+        if( $preRegistered )  
+            foreach ( $preRegistered as $key => $visit ) {
+                $this->updateByPk($visit->id, array('is_deleted'=>'1') );
+            }
+            
+         return;
     }
 
 }

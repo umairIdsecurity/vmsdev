@@ -287,6 +287,8 @@ class VisitController extends Controller {
         $this->layout = "//layouts/column1";
         $session = new CHttpSession;
         $session['lastPage'] = 'visitorrecords';
+        //Archive Expired 48 Old Pre-registered Visits
+        Visit::model()->archivePregisteredOldVisits();
         $model = new Visit('search');
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['Visit'])) {

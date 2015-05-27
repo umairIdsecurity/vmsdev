@@ -350,10 +350,11 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                         </tr>  
                         <tr>
                             <td>
-                                <?php echo $form->dropDownList($model, 'contact_state', Visitor::$AUSTRALIAN_STATES, array('empty' => 'State')); ?>
+                                <?php echo $form->dropDownList($model, 'contact_state', Visitor::$AUSTRALIAN_STATES, array('empty' => 'State', 'style' => 'width: 140px;')); ?>
+                                <?php echo $form->textField($model, 'contact_postcode', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Postcode', 'style' => 'width: 62px;')); ?>
                                 <span class="required">*</span>
-                                
                                 <?php echo $form->error($model, 'contact_state'); ?>
+                                <?php echo $form->error($model, 'contact_postcode'); ?>
                             </td>
                         </tr>
                         <tr>

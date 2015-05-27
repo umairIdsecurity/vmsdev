@@ -120,13 +120,13 @@ and open the template in the editor.
     
 }
 .submenu span{
-    margin-left:14px;
+    margin-left:10px;
 }
 
 .addSubMenu span{
     background-image: url("../images/plus_icon_gray.png");
     background-repeat: no-repeat;
     padding-left: 20px;
-    font-size:12.5px;
+    font-size:12px;
 }
 

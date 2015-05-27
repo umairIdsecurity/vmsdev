@@ -278,9 +278,9 @@ $model->identification_country_issued = 13;
                             </tr>
                             <tr class="vic-visitor-fields">
                                 <td>
-                                    <?php echo $form->dropDownList($model, 'contact_state', Visitor::$AUSTRALIAN_STATES, array('empty' => 'State')); ?>
+                                    <?php echo $form->dropDownList($model, 'contact_state', Visitor::$AUSTRALIAN_STATES, array('empty' => 'State', 'style' => 'width: 140px;')); ?>
+                                    <?php echo $form->textField($model, 'contact_postcode', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Postcode', 'style' => 'width: 62px;')); ?>
                                     <span class="required">*</span>
-
                                     <?php echo $form->error($model, 'contact_state'); ?>
                                 </td>
                             </tr>
@@ -706,7 +706,7 @@ $model->identification_country_issued = 13;
 
             </div>
             <div class="register-a-visitor-buttons-div" style="padding-right:23px;text-align: right;">
-                <input type="button" class="neutral visitor-backBtn btnBackTab2" id="btnBackTab2" value="Back"/>
+                <input type="button" class="neutral visitor-backBtn btnBackTab2" id="btnBackTab2" value="Back" onclick="window.location=location.href;return false;"/>
                 <input type="button" id="clicktabB1" value="Save and Continue" class="actionForward"/>
             </div>
             <input type="text" id="selectedVisitorInSearchTable" value="0"/>

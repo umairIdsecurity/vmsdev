@@ -26,15 +26,15 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'filter'=>CHtml::activeTextField($model, 'id', array('placeholder'=>'Visitor ID')),
         ),
         array(
-            'name' => 'totalcount',
-            'value' => '$data->totalvisit',
-            'header' => 'Total Visits',
-            'filter'=>CHtml::activeTextField($model, 'totalvisit', array('placeholder'=>'Total Visits')),
-        ),
-        array(
             'name' => 'company0.code',
             'header' => 'Company Code',
             'filter'=>CHtml::activeTextField($model, 'companycode', array('placeholder'=>'Company Code')),
+        ),
+        array(
+            'name' => 'totalcount',
+            'value' => '$data->totalvisit ? $data->totalvisit : 0',
+            'header' => 'Total Visits',
+            'filter'=>CHtml::activeTextField($model, 'totalvisit', array('placeholder'=>'Total Visits', 'disabled' => 'disabled')),
         ),
         array(
             'name' => 'first_name',
@@ -49,23 +49,24 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'header' => 'Company Name',
             'filter'=>CHtml::activeTextField($model, 'company', array('placeholder'=>'Company Name')),
         ),
-
         array(
             'type' => 'raw',
-            'value' => '"<a data-link=\'index?r=visit/resetVisitCount&id=$data->id\' class=\'statusLink resetCount\' href=\'javascript:void(0)\' > reset</a>"',
-
+            'value' => '"<a data-link=\'" . Yii::app()->createUrl("visit/resetVisitCount&id=" . $data->id) . "\' class=\'statusLink resetCount\' href=\'#\'>Reset</a>"',
         ),
-
         array(
             'type' => 'raw',
-            'value' => '"<a data-id=\'$data->id\' data-link=\'index?r=visitor/getActiveVisit\' class=\'statusLink listNegateVisit\' href=\'javascript:void(0)\' >negate</a>"',
-        )
+            'value' => '"<a data-id=\'$data->id\' data-link=\'" . Yii::app()->createUrl("visitor/getActiveVisit") . "\' class=\'statusLink listNegateVisit\' href=\'#\'>Negate</a>"',
+        ),
+        array(
+            'type' => 'raw',
+            'value' => '"<a class=\'statusLink\' href=\'" . Yii::app()->createUrl("visitor/update&id=" . $data->id) . "\'>View</a>"',
+        ),
     ),
 ));
 
 ?>
 
-<div class="modal fade" style="width: 920px" id="activeVisitModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" style="width: 920px; margin-left: -373px" id="activeVisitModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content ">
             <div class="modal-header listActive">
@@ -76,9 +77,9 @@ $this->widget('zii.widgets.grid.CGridView', array(
                     <input type="hidden" id="visitorId"/>
                     <div class="form-group" >
 
-                        <label style="float: left" class="col-md-2">Reson : </label>
+                        <label style="float: left" class="col-md-2">Reason : </label>
                         <div class="col-md-9">
-                            <input style="width: 800px" type="text" id="resonForNegate" class="form-control input-sm" />
+                            <input style="width: 800px" type="text" id="reasonForNegate" class="form-control input-sm" />
                         </div>
 
                     </div>
@@ -86,7 +87,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
             </div>
             <div class="modal-footer" id="negate_footer">
                 <button type="button" id="btnNegate" class="btn btn-primary">Negate</button>
-                <button type="button" id="btnCancel" class="btn btn-default" data-dismiss="modal">Cancle</button>
+                <button type="button" id="btnCancel" class="btn btn-default" data-dismiss="modal">Cancel</button>
             </div>
 
         </div>
@@ -99,16 +100,16 @@ $this->widget('zii.widgets.grid.CGridView', array(
                 <form id="taskForm" class="form-horizontal">
                     <input type="hidden" id="linkReset"/>
                     <div class="form-group">
-                        <label style="float: left" class="col-md-2">Reson : </label>
+                        <label style="float: left" class="col-md-2">Reason : </label>
                         <div class="col-md-9">
-                            <input style="width: 450px" type="text" id="resonForReset" class="form-control input-sm" />
+                            <input style="width: 450px" type="text" id="reasonForReset" class="form-control input-sm" />
                         </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" id="btnReset" class="btn btn-primary">Reset</button>
-                <button type="button" id="btnCancel" class="btn btn-default" data-dismiss="modal">Cancle</button>
+                <button type="button" id="btnCancel" class="btn btn-default" data-dismiss="modal">Cancel</button>
             </div>
         </div>
     </div>
@@ -118,7 +119,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
 <script>
     $(document).ready(function() {
 
-        //show list avtive event for negate
+        //show list active event for negate
 
         $('.listNegateVisit').live('click', function(e){
 
@@ -129,14 +130,12 @@ $this->widget('zii.widgets.grid.CGridView', array(
             var id = $(this).data('id');
             $('#activeVisitModal #linkGetActiveVisit').val(linkGetActiveVisit);
             $('#activeVisitModal #visitorId').val(id);
-            //console.log(linkNegate); return;
             $.ajax({
                 type: 'get',
                 dataType: 'text',
                 url: linkGetActiveVisit,
                 data: {id: id},
                 success: function(response) {
-                    // console.log(response); return;
                     container.append(response);
                     $('#activeVisitModal').modal('show');
                 }
@@ -151,8 +150,8 @@ $this->widget('zii.widgets.grid.CGridView', array(
                     ids.push($(this).val());
                 }
             });
-            var reason = $('#resonForNegate').val();
-            var linkNegate = 'index?r=visit/negate';
+            var reason = $('#reasonForNegate').val();
+            var linkNegate = '<?php echo Yii::app()->createUrl("visit/negate"); ?>';
             var container = $('.listActive').empty();
             if(ids.length == 0|| reason.length == 0) {
                 $('#activeVisitModal').modal('hide');
@@ -165,7 +164,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
                 data: {reason: reason, ids: ids},
                 success: function(response) {
                     $.fn.yiiGridView.update('corporate-total-visit-count');
-                    $('#resonForNegate').val('');
+                    $('#reasonForNegate').val('');
                     document.getElementById('negate_reason').style.display="none";
                     $.ajax({
                         type: 'get',
@@ -173,7 +172,6 @@ $this->widget('zii.widgets.grid.CGridView', array(
                         url: $('#activeVisitModal #linkGetActiveVisit').val(),
                         data: {id: $('#activeVisitModal #visitorId').val()},
                         success: function(response) {
-                            // console.log(response); return;
                             container.append(response);
                             $('#activeVisitModal').modal('show');
                         }
@@ -189,7 +187,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
             var linkReset = $(this).data('link');
             $('#resetModal').modal('show');
             $('#resetModal #linkReset').val(linkReset);
-            $('#resonForReset').val("");
+            $('#reasonForReset').val("");
 
         });
 
@@ -197,7 +195,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         $('#btnReset').on('click', function(e){
             e.preventDefault();
             $('#resetModal').modal('hide');
-            var reason = $('#resonForReset').val();
+            var reason = $('#reasonForReset').val();
             $.ajax({
                 type:'GET',
                 url: $('#linkReset').val(),
@@ -207,10 +205,6 @@ $this->widget('zii.widgets.grid.CGridView', array(
                 }
             });
             return false;
-        });
-        $('#btnCancel').on('click', function(e){
-            e.preventDefault();
-            console.log('cancel');
         });
 
     });

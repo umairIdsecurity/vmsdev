@@ -694,14 +694,14 @@ class VisitController extends Controller {
 
     public function actionResetVisitCount() {
         $visitorModel = Visitor::model()->findByPk(Yii::app()->getRequest()->getQuery('id'));
+
         if($visitorModel->totalVisit > 0) {
             $resetHistory = new ResetHistory();
             $resetHistory->visitor_id = Yii::app()->getRequest()->getQuery('id');
-            $resetHistory->reset_time = (date("Y-m-d H:i:s",time()));
+            $resetHistory->reset_time = date("Y-m-d H:i:s");
             $resetHistory->reason = Yii::app()->getRequest()->getQuery('reason');
-            $resetHistory->save();
-            if($resetHistory->save()) {
 
+            if($resetHistory->save()) {
                 $activeVisit = $visitorModel->activeVisits;
                 foreach($activeVisit as $item) {
                     $item->reset_id = $resetHistory->id;

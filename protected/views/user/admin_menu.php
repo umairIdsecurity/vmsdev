@@ -421,7 +421,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                 ?>>
                     <li><a href='<?php echo Yii::app()->createUrl('visit/evacuationReport'); ?>' ><span>Evacuation Report</span></a></li>
                     <li><a href='<?php echo Yii::app()->createUrl('visit/visitorRegistrationHistory'); ?>'><span>Visitor Registration History</span></a></li>
-                    <!--<li><a href='<?php /*echo Yii::app()->createUrl('visit/corporateTotalVisitCount'); */?>'><span>Corporate Total Visit Count</span></a></li>-->
+                    <li><a href='<?php echo Yii::app()->createUrl('visit/corporateTotalVisitCount'); ?>'><span>Corporate Total Visit Count</span></a></li>
                 </ul>
             </li><!-- menu for Reports -->
               <!-- menu for Helpdesk -->

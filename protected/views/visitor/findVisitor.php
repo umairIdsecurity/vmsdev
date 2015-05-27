@@ -56,7 +56,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'header' => '',
             'type' => 'raw',
             'htmlOptions' => array('style' => 'text-align:center;width:12px;'),
-            'value' => '($data->profile_type == Visitor::PROFILE_TYPE_VIC) ? "<img style=\"width: 25px\" src=\"" . Yii::app()->controller->assetsBase . "/images/corporate-visitor-icon.png\"/>" : "<img style=\"width: 25px\" src=\"" . Yii::app()->controller->assetsBase . "/images/asic-visitor-icon.png\"/>" ',
+            'value' => '$data->getVisitorProfileIcon()',
         ),
         array(
             'name' => 'first_name',

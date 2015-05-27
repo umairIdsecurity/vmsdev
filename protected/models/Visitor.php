@@ -626,4 +626,17 @@ class Visitor extends CActiveRecord {
             'negate_reason' => null
         ]);
     }
+
+    public function getVisitorProfileIcon ()
+    {
+        switch ($this->profile_type) {
+            case Visitor::PROFILE_TYPE_VIC :
+                return '<img style="width: 25px" src="' . Yii::app()->controller->assetsBase . '/images/vic-visitor-icon.png"/>';
+            case Visitor::PROFILE_TYPE_ASIC :
+                return '<img style="width: 25px" src="' . Yii::app()->controller->assetsBase . '/images/asic-visitor-icon.png"/>';
+            case Visitor::PROFILE_TYPE_CORPORATE :
+                return '<img style="width: 25px" src="' . Yii::app()->controller->assetsBase . '/images/corporate-visitor-icon.png"/>';
+        }
+
+    }
 }

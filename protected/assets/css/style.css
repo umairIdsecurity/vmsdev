@@ -1785,6 +1785,10 @@ p.asic{
     width: 1280px;
 }
 
+#workstation-grid {
+    width: 1280px;
+}
+
 #view-visitor-records table th, .grid-view table th{
     min-width:150px;
 }

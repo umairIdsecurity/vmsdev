@@ -124,7 +124,7 @@ class NotificationsController extends Controller
 		{
 			$model->attributes=$_POST['Notification'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+				$this->redirect(array('notifications/admin'));
 		}
 
 		$this->render('update',array(

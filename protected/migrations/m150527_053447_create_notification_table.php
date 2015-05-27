@@ -1,11 +1,11 @@
 <?php
 
-class m150521_103247_create_notifications extends CDbMigration
+class m150527_053447_create_notification_table extends CDbMigration
 {
-// Use safeUp/safeDown to do migration with transaction
+	 // Use safeUp/safeDown to do migration with transaction
 	public function safeUp()
 	{
-            $this->createTable("notifications", array(
+            $this->createTable("notification", array(
                 'id'=>'pk',
                 'subject'=>'VARCHAR(250) NOT NULL',
                 'message'=>'TEXT NOT NULL',

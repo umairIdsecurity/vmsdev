@@ -207,6 +207,7 @@ class Visitor extends CActiveRecord {
                 contact_street_type,
                 contact_suburb,
                 contact_state,
+                contact_postcode,
                 contact_country,
                 visitor_card_status,
                 visitor_type,
@@ -272,6 +273,7 @@ class Visitor extends CActiveRecord {
                 contact_street_type,
                 contact_suburb,
                 contact_state,
+                contact_postcode,
                 contact_country',
                 'required',
             );

@@ -435,8 +435,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                             <tr>
                                 <td>
                                     <?php echo $form->checkBox($model, 'alternative_identification', array('style' => 'float: left;')); ?>
-                                    <label for="Visitor_alternative_identification" class="form-label">Alternative
-                                        identifications<br/>One must have a signature</label>
+                                    <label for="Visitor_alternative_identification" class="form-label">Applicant does not have one of the above identifications</label>
                                 </td>
                             </tr>
                             <tr class="row_document_name_number" style="display:none">

@@ -26,8 +26,8 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'filter'=>CHtml::activeTextField($model, 'id', array('placeholder'=>'Visitor ID')),
         ),
         array(
-            'name' => 'visit_count',
-            //'value' => '$data->totalvisit',
+            'name' => 'totalcount',
+            'value' => '$data->totalvisit',
             'header' => 'Total Visits',
             'filter'=>CHtml::activeTextField($model, 'totalvisit', array('placeholder'=>'Total Visits')),
         ),
@@ -51,30 +51,167 @@ $this->widget('zii.widgets.grid.CGridView', array(
         ),
 
         array(
-            'header' => 'Actions',
-            'class' => 'CButtonColumn',
-            'template' => '{reset}',
-            'buttons' => array(
-                'reset' => array(//the name {reply} must be same
-                    'label' => 'Reset', // text label of the button
-                    'imageUrl' => false, // image URL of the button. If not set or false, a text link is used, The image must be 16X16 pixels
-                    'url' => 'Yii::app()->createUrl("visit/resetVisitCount", array("id"=>$data->id))',
-                    'click'=>"function(){
-						if(!confirm('".Yii::t('warnings','Are you sure you want to do this?')."')) return false;
-							$.fn.yiiGridView.update('corporate-total-visit-count', {
-								type:'GET',
-								url:$(this).attr('href'),
-								success:function(response) {
-									$.fn.yiiGridView.update('corporate-total-visit-count');
-								}
-							});
-						return false;
-					}",
+            'type' => 'raw',
+            'value' => '"<a data-link=\'index?r=visit/resetVisitCount&id=$data->id\' class=\'statusLink resetCount\' href=\'javascript:void(0)\' > reset</a>"',
 
-                ),
-            )
+        ),
+
+        array(
+            'type' => 'raw',
+            'value' => '"<a data-id=\'$data->id\' data-link=\'index?r=visitor/getActiveVisit\' class=\'statusLink listNegateVisit\' href=\'javascript:void(0)\' >negate</a>"',
         )
     ),
 ));
 
 ?>
+
+<div class="modal fade" style="width: 920px" id="activeVisitModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content ">
+            <div class="modal-header listActive">
+            </div>
+            <div class="modal-body" id="negate_reason">
+                <form id="negateForm" class="form-horizontal">
+                    <input type="hidden" id="linkGetActiveVisit"/>
+                    <input type="hidden" id="visitorId"/>
+                    <div class="form-group" >
+
+                        <label style="float: left" class="col-md-2">Reson : </label>
+                        <div class="col-md-9">
+                            <input style="width: 800px" type="text" id="resonForNegate" class="form-control input-sm" />
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer" id="negate_footer">
+                <button type="button" id="btnNegate" class="btn btn-primary">Negate</button>
+                <button type="button" id="btnCancel" class="btn btn-default" data-dismiss="modal">Cancle</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="resetModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form id="taskForm" class="form-horizontal">
+                    <input type="hidden" id="linkReset"/>
+                    <div class="form-group">
+                        <label style="float: left" class="col-md-2">Reson : </label>
+                        <div class="col-md-9">
+                            <input style="width: 450px" type="text" id="resonForReset" class="form-control input-sm" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnReset" class="btn btn-primary">Reset</button>
+                <button type="button" id="btnCancel" class="btn btn-default" data-dismiss="modal">Cancle</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function() {
+
+        //show list avtive event for negate
+
+        $('.listNegateVisit').live('click', function(e){
+
+            e.preventDefault();
+            document.getElementById('negate_reason').style.display="none";
+            var container = $('.listActive').empty();
+            var linkGetActiveVisit = $(this).data('link');
+            var id = $(this).data('id');
+            $('#activeVisitModal #linkGetActiveVisit').val(linkGetActiveVisit);
+            $('#activeVisitModal #visitorId').val(id);
+            //console.log(linkNegate); return;
+            $.ajax({
+                type: 'get',
+                dataType: 'text',
+                url: linkGetActiveVisit,
+                data: {id: id},
+                success: function(response) {
+                    // console.log(response); return;
+                    container.append(response);
+                    $('#activeVisitModal').modal('show');
+                }
+            });
+        });
+
+        //click on Negate button in negate modal
+        $('#btnNegate').on('click', function(e) {
+            var ids = [];
+            $(".visit-selected input[type=checkbox]").each(function () {
+                if ($(this).is(':checked')){
+                    ids.push($(this).val());
+                }
+            });
+            var reason = $('#resonForNegate').val();
+            var linkNegate = 'index?r=visit/negate';
+            var container = $('.listActive').empty();
+            if(ids.length == 0|| reason.length == 0) {
+                $('#activeVisitModal').modal('hide');
+                return;
+            }
+            $.ajax({
+                type:'GET',
+                dataType: 'text',
+                url: linkNegate,
+                data: {reason: reason, ids: ids},
+                success: function(response) {
+                    $.fn.yiiGridView.update('corporate-total-visit-count');
+                    $('#resonForNegate').val('');
+                    document.getElementById('negate_reason').style.display="none";
+                    $.ajax({
+                        type: 'get',
+                        dataType: 'text',
+                        url: $('#activeVisitModal #linkGetActiveVisit').val(),
+                        data: {id: $('#activeVisitModal #visitorId').val()},
+                        success: function(response) {
+                            // console.log(response); return;
+                            container.append(response);
+                            $('#activeVisitModal').modal('show');
+                        }
+                    });
+
+                }
+            });
+        });
+
+        //click on reset link, show modal for type reason
+        $('.resetCount').live('click', function(e){
+            e.preventDefault();
+            var linkReset = $(this).data('link');
+            $('#resetModal').modal('show');
+            $('#resetModal #linkReset').val(linkReset);
+            $('#resonForReset').val("");
+
+        });
+
+        //reset total count of visitor
+        $('#btnReset').on('click', function(e){
+            e.preventDefault();
+            $('#resetModal').modal('hide');
+            var reason = $('#resonForReset').val();
+            $.ajax({
+                type:'GET',
+                url: $('#linkReset').val(),
+                data: {reason: reason},
+                success:function(response) {
+                    $.fn.yiiGridView.update('corporate-total-visit-count');
+                }
+            });
+            return false;
+        });
+        $('#btnCancel').on('click', function(e){
+            e.preventDefault();
+            console.log('cancel');
+        });
+
+    });
+</script>

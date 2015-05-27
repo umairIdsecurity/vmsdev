@@ -27,17 +27,7 @@ class VisitController extends RestfulController {
                 if ($visit->validate()) {
                     $visit->save();
                     $visit = Visit::model()->with('visitor0')->findByPk($visit->id);
-                    $result = array();
-                    $result['visitID'] = $visit->id;
-                    $result['visitorID'] = $visit->visitor;
-                    $result['hostID'] = $visit->host;
-                    $result['visitorType'] = $visit->visitor_type;
-                    $result['startTime'] = date("Y-m-d H:i:s", strtotime($visit->date_check_in . '' . $visit->time_check_in));
-                    $result['expectedEndTime'] = ($visit->date_check_out) ? date("Y-m-d H:i:s", strtotime($visit->date_check_out . '' . $visit->time_check_out)) : "N/A";
-                    $result['visitorPicture'] = $visit->visitor0->photo;
-                    $result['visitor'] = array('visitorID' => $visit->visitor0->id, 'firstName' => $visit->visitor0->first_name, 'lastName' => $visit->visitor0->last_name, 'email' => $visit->visitor0->email, 'companyName' => Company::model()->findByPk($visit->visitor0->company)->name);
-                    $host = User::model()->with('com')->findByPk($visit->host);
-                    $result['host'] = array('hostID' => $visit->host, 'firstName' => $host->first_name, 'lastName' => $host->last_name, 'email' => $host->email, 'companyName' => $host->com->name);
+                    $result = $this->populateVisits(array($visit));
                     $this->sendResponse(200, CJSON::encode($result));
                 } else {
                     $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_DATA', 'errorDescription' => 'Requsted data are invalid')));
@@ -49,21 +39,7 @@ class VisitController extends RestfulController {
                     if ($visitor) {
                         $visits = Visit::model()->with('visitor0')->findAllByAttributes(array('visitor' => $visitor->id));
                         if ($visits) {
-                            $result = array();
-                            $i = 0;
-                            foreach ($visits as $visit) {
-                                $result[$i]['visitID'] = $visit->id;
-                                $result[$i]['visitorID'] = $visit->visitor;
-                                $result[$i]['hostID'] = $visit->host;
-                                $result[$i]['visitorType'] = $visit->visitor_type;
-                                $result[$i]['startTime'] = date("Y-m-d H:i:s", strtotime($visit->date_check_in . '' . $visit->time_check_in));
-                                $result[$i]['expectedEndTime'] = ($visit->date_check_out) ? date("Y-m-d H:i:s", strtotime($visit->date_check_out . '' . $visit->time_check_out)) : "N/A";
-                                $result[$i]['visitorPicture'] = $visit->visitor0->photo;
-                                $result[$i]['visitor'] = array('visitorID' => $visit->visitor0->id, 'firstName' => $visit->visitor0->first_name, 'lastName' => $visit->visitor0->last_name, 'email' => $visit->visitor0->email, 'companyName' => Company::model()->findByPk($visit->visitor0->company)->name);
-                                $host = User::model()->with('com')->findByPk($visit->host);
-                                $result[$i]['host'] = array('hostID' => $visit->host, 'firstName' => $host->first_name, 'lastName' => $host->last_name, 'email' => $host->email, 'companyName' => $host->com->name);
-                                $i++;
-                            }
+                            $result = $this->populateVisits($visits);
                             $this->sendResponse(200, CJSON::encode($result));
                         } else {
                             $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'NO_VISIT_FOUND', 'errorDescription' => 'not visit found for this visitor')));
@@ -75,21 +51,7 @@ class VisitController extends RestfulController {
                     $vic_number = yii::app()->request->getParam('VICNumber');
                     $visits = Visit::model()->with('visitor0')->findAllByAttributes(array('card' => $vic_number));
                     if ($visits) {
-                        $result = array();
-                        $i = 0;
-                        foreach ($visits as $visit) {
-                            $result[$i]['visitID'] = $visit->id;
-                            $result[$i]['visitorID'] = $visit->visitor;
-                            $result[$i]['hostID'] = $visit->host;
-                            $result[$i]['visitorType'] = $visit->visitor_type;
-                            $result[$i]['startTime'] = date("Y-m-d H:i:s", strtotime($visit->date_check_in . '' . $visit->time_check_in));
-                            $result[$i]['expectedEndTime'] = ($visit->date_check_out) ? date("Y-m-d H:i:s", strtotime($visit->date_check_out . '' . $visit->time_check_out)) : "N/A";
-                            $result[$i]['visitorPicture'] = $visit->visitor0->photo;
-                            $result[$i]['visitor'] = array('visitorID' => $visit->visitor0->id, 'firstName' => $visit->visitor0->first_name, 'lastName' => $visit->visitor0->last_name, 'email' => $visit->visitor0->email, 'companyName' => Company::model()->findByPk($visit->visitor0->company)->name);
-                            $host = User::model()->with('com')->findByPk($visit->host);
-                            $result[$i]['host'] = array('hostID' => $visit->host, 'firstName' => $host->first_name, 'lastName' => $host->last_name, 'email' => $host->email, 'companyName' => $host->com->name);
-                            $i++;
-                        }
+                        $result = $this->populateVisits($visits);
                         $this->sendResponse(200, CJSON::encode($result));
                     } else {
                         $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'NO_VISIT_FOUND', 'errorDescription' => 'not visit found for this visitor')));
@@ -112,17 +74,7 @@ class VisitController extends RestfulController {
                 if ($visit->validate()) {
                     $visit->save();
                     $visit = Visit::model()->with('visitor0')->findByPk($visit->id);
-                    $result = array();
-                    $result['visitID'] = $visit->id;
-                    $result['visitorID'] = $visit->visitor;
-                    $result['hostID'] = $visit->host;
-                    $result['visitorType'] = $visit->visitor_type;
-                    $result['startTime'] = date("Y-m-d H:i:s", strtotime($visit->date_check_in . '' . $visit->time_check_in));
-                    $result['expectedEndTime'] = ($visit->date_check_out) ? date("Y-m-d H:i:s", strtotime($visit->date_check_out . '' . $visit->time_check_out)) : "N/A";
-                    $result['visitorPicture'] = $visit->visitor0->photo;
-                    $result['visitor'] = array('visitorID' => $visit->visitor0->id, 'firstName' => $visit->visitor0->first_name, 'lastName' => $visit->visitor0->last_name, 'email' => $visit->visitor0->email, 'companyName' => Company::model()->findByPk($visit->visitor0->company)->name);
-                    $host = User::model()->with('com')->findByPk($visit->host);
-                    $result['host'] = array('hostID' => $visit->host, 'firstName' => $host->first_name, 'lastName' => $host->last_name, 'email' => $host->email, 'companyName' => $host->com->name);
+                    $result = $this->populateVisits(array($visit));
                     $this->sendResponse(200, CJSON::encode($result));
                 } else {
                     $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_DATA', 'errorDescription' => 'Requsted data are invalid')));
@@ -144,6 +96,9 @@ class VisitController extends RestfulController {
         try {
             if (yii::app()->request->getParam('visit')) {
                 $visitorid = Visit::model()->findByPk(yii::app()->request->getParam('visit'))->visitor;
+                if (!isset($_FILES['file']['name'])) {
+                    $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_REQUEST', 'errorDescription' => 'File not available')));
+                }
                 if ($visitorid) {
                     $usernameHash = hash('adler32', "KIOSK");
                     $path_parts = pathinfo($_FILES["file"]["name"]);
@@ -179,6 +134,25 @@ class VisitController extends RestfulController {
         } catch (Exception $ex) {
             $this->sendResponse(500, CJSON::encode(array('responseCode' => 500, 'errorCode' => 'INTERNAL_SERVER_ERROR', 'errorDescription' => 'something went wrong')));
         }
+    }
+
+    private function populateVisits($visits) {
+        $result = array();
+        $i = 0;
+        foreach ($visits as $visit) {
+            $result[$i]['visitID'] = $visit->id;
+            $result[$i]['visitorID'] = $visit->visitor;
+            $result[$i]['hostID'] = $visit->host;
+            $result[$i]['visitorType'] = $visit->visitor_type;
+            $result[$i]['startTime'] = date("Y-m-d H:i:s", strtotime($visit->date_check_in . '' . $visit->time_check_in));
+            $result[$i]['expectedEndTime'] = ($visit->date_check_out) ? date("Y-m-d H:i:s", strtotime($visit->date_check_out . '' . $visit->time_check_out)) : "N/A";
+            $result[$i]['visitorPicture'] = $visit->visitor0->photo;
+            $result[$i]['visitor'] = array('visitorID' => $visit->visitor0->id, 'firstName' => $visit->visitor0->first_name, 'lastName' => $visit->visitor0->last_name, 'email' => $visit->visitor0->email, 'companyName' => Company::model()->findByPk($visit->visitor0->company)->name);
+            $host = User::model()->with('com')->findByPk($visit->host);
+            $result[$i]['host'] = array('hostID' => $visit->host, 'firstName' => $host->first_name, 'lastName' => $host->last_name, 'email' => $host->email, 'companyName' => $host->com->name);
+            $i++;
+        }
+        return $result;
     }
 
 }

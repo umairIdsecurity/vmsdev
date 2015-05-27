@@ -10,7 +10,10 @@ defined('YII_DEBUG') or define('YII_DEBUG',true);
 require_once($yii);
 
 #read in main.php
-$config=require(dirname(__FILE__).'/protected/config/main.php');
+if (isset($_GET['r']))
+    $config = require(dirname(__FILE__) . '/protected/config/main.php');
+else
+    $config = require(dirname(__FILE__) . '/protected/config/api_main.php');
 
 # if we've found a environment config file then use the values
 if(file_exists(dirname(__FILE__).'/protected/config/environment.php')) {

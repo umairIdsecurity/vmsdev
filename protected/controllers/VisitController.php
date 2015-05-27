@@ -38,7 +38,7 @@ class VisitController extends Controller {
                     'corporateTotalVisitCount',
                     'exportFileHistory',
                     'exportFileVisitorRecords',
-                    'exportVisitorRecords', 'delete','resetVisitCount',
+                    'exportVisitorRecords', 'delete','resetVisitCount', 'negate',
                 ),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
             ),
@@ -616,14 +616,6 @@ class VisitController extends Controller {
         return true;
     }
 
-    public function actionResetVisitCount() {
-        $id = Yii::app()->getRequest()->getQuery('id');
-        $visitor=Visitor::model()->findByPk($id);
-        $visitor->visit_count=0;
-        $visitor->save();
-        return $this->redirect('index.php?r=visit/corporateTotalVisitCount');
-    }
-
     public function actionDuplicateVisit($id) {
         $visitService = new VisitServiceImpl();
         $session = new CHttpSession;
@@ -698,4 +690,35 @@ class VisitController extends Controller {
         Yii::app()->end();
     }
 
+    public function actionResetVisitCount() {
+        $visitorModel = Visitor::model()->findByPk(Yii::app()->getRequest()->getQuery('id'));
+        if($visitorModel->totalVisit > 0) {
+            $resetHistory = new ResetHistory();
+            $resetHistory->visitor_id = Yii::app()->getRequest()->getQuery('id');
+            $resetHistory->reset_time = (date("Y-m-d H:i:s",time()));
+            $resetHistory->reason = Yii::app()->getRequest()->getQuery('reason');
+            $resetHistory->save();
+            if($resetHistory->save()) {
+
+                $activeVisit = $visitorModel->activeVisits;
+                foreach($activeVisit as $item) {
+                    $item->reset_id = $resetHistory->id;
+                    $item->save();
+                    if($item->save()){
+                    }
+                }
+            }
+        }
+    }
+
+    public function actionNegate() {
+
+        $visitIds = Yii::app()->getRequest()->getQuery('ids');
+        foreach ($visitIds as $id) {
+            $model = Visit::model()->findByPk($id);
+            $model->negate_reason = Yii::app()->getRequest()->getQuery('reason');;
+            $model->save();
+
+        }
+    }
 }

@@ -101,7 +101,7 @@ $session = new CHttpSession;
             <input name="Visit[visit_status]" id="Visit_visit_status" type="text" value="1" style="display:none;">
             <input name="Visit[time_check_in]" id="Visit_time_check_in" class="activatevisittimein" type="text" style="display:none;">
             <?php
-            if (empty($model->date_check_in)) {
+            if (strtotime($model->date_check_in)) {
                 $model->date_check_in = date('d-m-Y');
             }
             $this->widget('zii.widgets.jui.CJuiDatePicker', array(
@@ -125,7 +125,7 @@ $session = new CHttpSession;
         <td>Check Out Date
             <br><?php
 
-            if (empty($model->date_check_out)) {
+            if (strtotime($model->date_check_out)) {
                 $model->date_check_out = date('d-m-Y');
             }
             $this->widget('zii.widgets.jui.CJuiDatePicker', array(

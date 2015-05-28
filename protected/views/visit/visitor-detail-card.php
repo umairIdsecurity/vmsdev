@@ -72,7 +72,7 @@ $photoForm = $this->beginWidget('CActiveForm', array(
                 <tr>
                     <td><span class="cardDateText"><?php
                             if ($model->card_type == CardType::SAME_DAY_VISITOR) {
-                                if ($model->date_check_out == '') {
+                                if (strtotime($model->date_check_out)) {
                                     $date1 = date('d M y');
                                     echo date("d M y", strtotime($date1));
                                 } else {
@@ -80,7 +80,7 @@ $photoForm = $this->beginWidget('CActiveForm', array(
                                     echo date("d M y", strtotime($model->date_check_out));
                                 }
                             } else {
-                                if ($model->date_check_out == '') {
+                                if (strtotime($model->date_check_out)) {
                                     $date2 = date('d M y');
                                     echo date("d M y", strtotime($date2));
                                 } else {

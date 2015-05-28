@@ -26,7 +26,9 @@
     display:inline-block;
     margin-top:29px !important;
 }
-
+.no-smil .ajax-file-upload-progress{
+    float:left;
+}
 .ajax-file-upload-bar{
     background-color:#9ED92F;
     width:0;
@@ -59,8 +61,14 @@
     cursor:pointer;
     vertical-align:top;
     margin-right:5px;
+}
+
+.no-smil .ajax-file-upload-red{
     float:left;
-    /*clear:both*/
+}
+.no-smil #cropImageBtn{
+    position:static;
+    float:none;
 }
 
 .ajax-file-upload-green{

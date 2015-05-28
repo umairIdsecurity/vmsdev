@@ -254,7 +254,6 @@ class Visitor extends CActiveRecord {
             identification_document_no,
             identification_document_expiry',
             'VisitorPrimaryIdentification',
-            'on' => 'addVisitor'
         );
 
         if ($this->profile_type == self::PROFILE_TYPE_CORPORATE) {

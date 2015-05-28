@@ -420,7 +420,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                         'model'       => $model,
                                         'attribute'   => 'identification_document_expiry',
                                         'options'     => array(
-                                         'dateFormat' => 'dd-mm-yy',
+                                            'dateFormat' => 'dd-mm-yy',
                                         ),
                                         'htmlOptions' => array(
                                             'size'        => '0',

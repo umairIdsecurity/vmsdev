@@ -37,13 +37,14 @@
 div.form
 {
 }
-
 div.form input,
 div.form textarea,
 div.form select
 {
 	margin: 0.2em 0 0.5em 0;
 }
+
+.user_fields input,.user_fields1 input{height:32px !important;padding:0 10px !important;}
 
 div.form fieldset
 {

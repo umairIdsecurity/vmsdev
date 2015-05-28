@@ -60,7 +60,7 @@ if ($this->action->id == 'update') {
     }
     ?>
     <table>
-        <tr>
+        <tr class="user_fields1">
             <td style="width:160px;">&nbsp;</td>
             <td style="width:240px;">
                 <?php
@@ -82,7 +82,7 @@ if ($this->action->id == 'update') {
         <?php if ($session['role'] != Roles::ROLE_ADMIN) {?>
             <tr>
                 <td style="width:160px;"><?php echo $form->labelEx($model, 'code'); ?></td>
-                <td style="width:240px;">
+                <td  style="width:240px;">
                     <?php
                     echo $form->textField($model, 'code', array('size' => 3, 'maxlength' => 3));
                     if (isset($_GET['viewFrom'])) {

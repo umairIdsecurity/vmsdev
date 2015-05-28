@@ -33,6 +33,9 @@ if ($this->Id == 'visitor') {
             padding-bottom:3px;
             height:17px;
         }
+        .no-smil .ajax-file-upload {
+            margin-left: -49px !important;
+        }
 
         .editImageBtn{
             margin-left: -103px !important;

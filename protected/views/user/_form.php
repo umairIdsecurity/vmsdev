@@ -653,7 +653,6 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                 document.getElementById("companyRow").style.paddingBottom = "10px";
                 document.getElementById('User_company').disabled = false;
                 $('#User_company').find('option[value=<?php echo $session['company']; ?>]').hide();
-                $("#User_company").val("");
             }
         }
         else if (sessionRole == agentadmin) {

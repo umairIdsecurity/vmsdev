@@ -1,11 +1,12 @@
 <?php
-    return [
-        'environment'=>'dev',
+return array(
         'name' => 'Visitor Management System ',
-        'db' => [
-            'connectionString' => 'mysql:host=localhost;dbname=vms',
-            'username' => 'user_vms',
-            'password' => 'HFz7c9dHrmPqwNGr'
-        ]
-    ];
+        'components' => array(
+            'db' => array(
+                'connectionString' => 'mysql:host=localhost;dbname=vms',
+                'username' => 'user_vms',
+                'password' => 'HFz7c9dHrmPqwNGr',
+            )
+        )
+    );
 ?>

@@ -254,7 +254,6 @@ class Visitor extends CActiveRecord {
             identification_document_no,
             identification_document_expiry',
             'VisitorPrimaryIdentification',
-            'on' => 'addVisitor'
         );
 
         if ($this->profile_type == self::PROFILE_TYPE_CORPORATE) {
@@ -613,7 +612,7 @@ class Visitor extends CActiveRecord {
         foreach($activeVisits as $visit) {
             $totalVisit += $visit->visitCounts;
         }
-        if($totalVisit >0 ) {
+        if($totalVisit > 0 ) {
             return $totalVisit;
         } else {
             return "";

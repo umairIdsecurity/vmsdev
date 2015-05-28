@@ -371,7 +371,9 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                             <td id="visitorCompanyRow">
                                 <select id="Visitor_company" name="Visitor[company]">
                                     <option value=''>Select Company</option>
-                                    <?php echo $form->error($model, 'company'); ?>
+                                </select>
+                                <span class="required">*</span>
+                                <?php echo $form->error($model, 'company'); ?>
                             </td>
                         </tr>
                         <tr>
@@ -418,7 +420,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                         'model'       => $model,
                                         'attribute'   => 'identification_document_expiry',
                                         'options'     => array(
-                                         'dateFormat' => 'dd-mm-yy',
+                                            'dateFormat' => 'dd-mm-yy',
                                         ),
                                         'htmlOptions' => array(
                                             'size'        => '0',
@@ -435,8 +437,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                             <tr>
                                 <td>
                                     <?php echo $form->checkBox($model, 'alternative_identification', array('style' => 'float: left;')); ?>
-                                    <label for="Visitor_alternative_identification" class="form-label">Alternative
-                                        identifications<br/>One must have a signature</label>
+                                    <label for="Visitor_alternative_identification" class="form-label">Applicant does not have one of the above identifications</label>
                                 </td>
                             </tr>
                             <tr class="row_document_name_number" style="display:none">
@@ -531,8 +532,14 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 <script>
 
     function afterValidate(form, data, hasError) {
+        var companyValue = $("#Visitor_company").val();
+        var workstation = $("#User_workstation").val();
+        if (!workstation || workstation == "") {
+            $("#Visitor_visitor_workstation_em_").show();
+            $("#Visitor_visitor_workstation_em_").html('Please enter Workstation');
+            return false;
+        }
         if (!hasError) {
-            var companyValue = $("#Visitor_company").val();
             if (!companyValue || companyValue == "") {
                 $("#company_error_").show();
                 return false;
@@ -560,6 +567,16 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 
         $(".workstationRow").show();
         getWorkstation();
+
+        $('#User_workstation').on('change', function () {
+            var workstation = $("#User_workstation").val();
+            if (!workstation || workstation == "") {
+                $("#Visitor_visitor_workstation_em_").show();
+                $("#Visitor_visitor_workstation_em_").html('Please enter Workstation');
+            } else {
+                $("#Visitor_visitor_workstation_em_").hide();
+            }
+        });
 
         $("#Visitor_alternative_identification").on('change', switchIdentification);
         switchIdentification();
@@ -844,6 +861,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
         }
 
         var form = $("#register-form").serialize();
+        //console.log(form);return;
         //$('#Visitor_contact_country').attr('disabled', 'disabled');
         var url;
 

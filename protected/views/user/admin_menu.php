@@ -33,7 +33,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     echo "style='display:block ;'";
                 }
                 ?>>
-                    <li><a href='<?php echo Yii::app()->createUrl('CompanyLafPreferences/customisation'); ?>' class="ajaxLinkLi"><span>Customize Display</span></a></li>
+                    <li><a href='<?php echo Yii::app()->createUrl('CompanyLafPreferences/customisation'); ?>' class="ajaxLinkLi"><span>Customise Display</span></a></li>
 
                 </ul>
             </li>
@@ -63,7 +63,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     echo "style='display:block ;'";
                 }
                 ?>>
-                    <li><a href='<?php echo Yii::app()->createUrl('user/create'); ?>' class="has-sub-sub"><div class="customIcon-adminmenu">+</div><span>Add User</span></a></li>
+                    <li><a href='<?php echo Yii::app()->createUrl('user/create/&role=1'); ?>' class="has-sub-sub"><div class="customIcon-adminmenu">+</div><span>Add User</span></a></li>
 
                     <?php
                     switch ($session['role']) {
@@ -136,7 +136,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     echo "style='display:block ;'";
                 }
                 ?>>
-                    <li><a href='<?php echo Yii::app()->createUrl('user/create',array('role'=>'avms')); ?>' class="has-sub-sub"><div class="customIcon-adminmenu">+</div><span>Add User</span></a></li>
+                    <li><a href='<?php echo Yii::app()->createUrl('user/create',array('role'=> Roles::ROLE_ISSUING_BODY_ADMIN)); ?>' class="has-sub-sub"><div class="customIcon-adminmenu">+</div><span>Add User</span></a></li>
 
                     <?php
                     switch ($session['role']) {
@@ -421,7 +421,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                 ?>>
                     <li><a href='<?php echo Yii::app()->createUrl('visit/evacuationReport'); ?>' ><span>Evacuation Report</span></a></li>
                     <li><a href='<?php echo Yii::app()->createUrl('visit/visitorRegistrationHistory'); ?>'><span>Visitor Registration History</span></a></li>
-                    <!--<li><a href='<?php /*echo Yii::app()->createUrl('visit/corporateTotalVisitCount'); */?>'><span>Corporate Total Visit Count</span></a></li>-->
+                    <li><a href='<?php echo Yii::app()->createUrl('visit/corporateTotalVisitCount'); ?>'><span>Corporate Total Visit Count</span></a></li>
                 </ul>
             </li><!-- menu for Reports -->
               <!-- menu for Helpdesk -->

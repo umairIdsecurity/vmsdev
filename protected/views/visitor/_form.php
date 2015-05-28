@@ -406,9 +406,18 @@ $form = $this->beginWidget('CActiveForm', array(
 
 <tr>
     <td id="visitorCompanyRow">
-        <select id="Visitor_company" name="Visitor[company]">
-            <option value=''>Select Company</option>
-            <?php echo $form->error($model, 'company'); ?>
+        <?php
+        $companyList = CHtml::listData(Company::model()->findAllCompany(), 'id', 'name');
+        $this->widget('application.extensions.select2.Select2', array(
+            'model' => $model,
+            'attribute' => 'company',
+            'items' => $companyList,
+            //'selectedItems' => $selectedItem, // Items to be selected as default
+            'placeHolder' => 'Please select a company',
+
+        ));        ?>
+        <span class="required">*</span>
+        <?php echo $form->error($model, 'company'); ?>
     </td>
 </tr>
 

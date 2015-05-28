@@ -67,7 +67,7 @@
     float:left;
 }
 .no-smil #cropImageBtn{
-    position:static;
+    position:relative;
 }
 
 .ajax-file-upload-green{

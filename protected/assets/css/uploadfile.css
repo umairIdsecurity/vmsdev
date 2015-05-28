@@ -25,10 +25,10 @@
     border-radius:3px;
     display:inline-block;
     margin-top:29px !important;
-    float: left;
-    /*clear: both;*/
 }
-
+.no-smil .ajax-file-upload-progress{
+    float:left;
+}
 .ajax-file-upload-bar{
     background-color:#9ED92F;
     width:0;
@@ -50,7 +50,7 @@
     -moz-border-radius:4px;
     -webkit-border-radius:4px;
     border-radius:4px;
-
+    display:inline-block;
     color:#fff;
     font-family:arial;
     font-size:13px;
@@ -61,8 +61,13 @@
     cursor:pointer;
     vertical-align:top;
     margin-right:5px;
+}
+
+.no-smil .ajax-file-upload-red{
     float:left;
-    /*clear:both*/
+}
+.no-smil #cropImageBtn{
+    position:relative;
 }
 
 .ajax-file-upload-green{

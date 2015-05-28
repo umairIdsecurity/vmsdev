@@ -44,7 +44,7 @@ div.form select
 	margin: 0.2em 0 0.5em 0;
 }
 
-div.form .modal input,div.form td input{height:32px;padding:0 10px}
+.modal input,.user_fields input{height:32px;padding:0 10px}
 
 div.form fieldset
 {

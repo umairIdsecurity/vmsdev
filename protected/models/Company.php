@@ -124,6 +124,7 @@ WHERE u.id=c.tenant AND c.id !=1";
             'createdByUser' => array(self::BELONGS_TO, 'User', 'created_by_user'),
             'users' => array(self::HAS_MANY, 'User', 'company'),
             'photos' => array(self::HAS_MANY, 'Photo', 'logo'),
+            'contacts' => array(self::HAS_MANY, 'Contact', 'company_id'),
             'ph' => array(self::BELONGS_TO, 'Photo', 'logo'),
         );
     }

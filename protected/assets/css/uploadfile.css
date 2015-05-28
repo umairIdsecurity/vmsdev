@@ -24,9 +24,9 @@
     padding:1px;
     border-radius:3px;
     display:inline-block;
-    margin-top:39px !important;
+    margin-top:29px !important;
     float: left;
-    clear: both;
+    /*clear: both;*/
 }
 
 .ajax-file-upload-bar{
@@ -62,7 +62,8 @@
     vertical-align:top;
     margin-right:5px;
     float:left;
-    clear:both}
+    /*clear:both*/
+}
 
 .ajax-file-upload-green{
     background-color:#77b55a;

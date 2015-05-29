@@ -58,6 +58,9 @@ class Visitor extends CActiveRecord {
     const PROFILE_TYPE_ASIC = 'ASIC';
 
     const AUSTRALIA_ID = 13;
+    
+    const DELTED = 1;
+    const NOT_DELETED = 0;
 
     public static $VISITOR_CARD_TYPE_LIST = array(
         self::PROFILE_TYPE_CORPORATE => array(
@@ -396,7 +399,7 @@ class Visitor extends CActiveRecord {
         $criteria->compare('role', $this->role, true);
         $criteria->compare('visitor_status', $this->visitor_status, true);
         $criteria->compare('created_by', $this->created_by, true);
-        $criteria->compare('is_deleted', $this->is_deleted);
+        $criteria->compare('t.is_deleted', self::NOT_DELETED);
         $criteria->compare('tenant', $this->tenant, true);
         $criteria->compare('tenant_agent', $this->tenant_agent, true);
         $criteria->compare('vehicle', $this->vehicle, true);

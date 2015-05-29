@@ -115,4 +115,9 @@ class Contact extends CActiveRecord
 	{
 		return parent::model($className);
 	}
+
+    public function getFullName ()
+    {
+        return trim($this->first_name . " " . $this->last_name);
+    }
 }

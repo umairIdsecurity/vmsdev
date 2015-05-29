@@ -189,6 +189,7 @@ class Visitor extends CActiveRecord {
                 profile_type,
                 middle_name,
                 company,
+                staff_id
                 identification_type,
                 identification_country_issued,
                 identification_document_no,

@@ -372,7 +372,7 @@ class Visitor extends CActiveRecord {
      * @return CActiveDataProvider the data provider that can return the models
      * based on the search/filter conditions.
      */
-    public function search() {
+    public function search($merge = null) {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
@@ -409,6 +409,10 @@ class Visitor extends CActiveRecord {
         $user = User::model()->findByPK(Yii::app()->user->id);
         if($user->role != Roles::ROLE_SUPERADMIN){
 
+        }
+
+        if ($merge !== null) {
+            $criteria->mergeWith($merge);
         }
 
         return new CActiveDataProvider($this, array(

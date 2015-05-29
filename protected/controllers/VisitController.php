@@ -29,13 +29,14 @@ class VisitController extends Controller {
                 'actions' => array('create',
                     'DuplicateVisit', 'isDateConflictingWithAnotherVisit',
                     'GetVisitDetailsOfVisitor', 'getVisitDetailsOfHost', 'IsVisitorHasCurrentSavedVisit',
-                    'update', 'detail', 'admin', 'view', 'exportFile', 'evacuationReport', 'evacuationReportAjax', 'DeleteAllVisitWithSameVisitorId'),
+                    'update', 'detail', 'admin', 'view', 'exportFile', 'evacuationReport', 'evacuationReportAjax', 'vicTotalVisitCountAjax', 'DeleteAllVisitWithSameVisitorId'),
                 'users' => array('@'),
             ),
             array('allow',
                 'actions' => array('PrintEvacuationReport',
                     'visitorRegistrationHistory',
                     'corporateTotalVisitCount',
+                    'vicTotalVisitCount',
                     'exportFileHistory',
                     'exportFileVisitorRecords',
                     'exportVisitorRecords', 'delete','resetVisitCount', 'negate',
@@ -354,6 +355,9 @@ class VisitController extends Controller {
     }
 
     public function actionCorporateTotalVisitCount() {
+        $merge = new CDbCriteria;
+        $merge->addCondition('profile_type = "'. Visitor::PROFILE_TYPE_CORPORATE .'"');
+
         $model = new Visitor('search');
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['Visitor'])) {
@@ -361,7 +365,37 @@ class VisitController extends Controller {
         }
 
         $this->render('corporateTotalVisitCount', array(
-            'model' => $model,false, true
+            'model' => $model, 'merge' => $merge, false, true
+        ));
+    }
+
+    public function actionVicTotalVisitCount() {
+        $merge = new CDbCriteria;
+        $merge->addCondition('profile_type = "'. Visitor::PROFILE_TYPE_VIC .'"');
+
+        $model = new Visitor('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['Visitor'])) {
+            $model->attributes = $_GET['Visitor'];
+        }
+
+        $this->render('corporateTotalVisitCount', array(
+            'model' => $model, 'merge' => $merge, false, true
+        ));
+    }
+
+    public function actionVicTotalVisitCountAjax() {
+        $merge = new CDbCriteria;
+        $merge->addCondition('profile_type = "'. Visitor::PROFILE_TYPE_VIC .'"');
+
+        $model = new Visitor('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['Visitor'])) {
+            $model->attributes = $_GET['Visitor'];
+        }
+
+        $this->renderPartial('corporateTotalVisitCount', array(
+            'model' => $model, 'merge' => $merge, false, true
         ));
     }
 

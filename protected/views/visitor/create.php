@@ -583,7 +583,13 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
                         $('#workstation option[value!=""]').remove();
 
                         $.each(r.data, function(index, value) {
-                            var selectedWorkstation = <?php echo $session['workstation']?>;
+                            var selected = <?php echo isset($session['workstation']) ? $session['workstation'] : '0' ?>;
+                            var workstation = $('#userWorkstation').val();
+                            if (selected != 0) {
+                                var selectedWorkstation = selected;
+                            } else {
+                                var selectedWorkstation = workstation;
+                            }
                             if (value.id == selectedWorkstation) {
                                 $('#workstation').append('<option selected="selected" value="' + value.id + '">' + value.name + '</option>');
                             } else {

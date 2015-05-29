@@ -4,7 +4,9 @@ $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/script-birthda
 
 $session = new CHttpSession;
 $company = Company::model()->findByPk($session['company']);
-$companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
+if (isset($company) && !empty($company)) {
+    $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
+}
 
 $dataId = '';
 if ($this->action->id == 'update') {

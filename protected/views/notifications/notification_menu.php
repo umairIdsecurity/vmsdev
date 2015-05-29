@@ -1,8 +1,10 @@
 <?php 
 $session = new CHttpSession;
 $company = Company::model()->findByPk($session['company']);
-$companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences); 
-if ($companyLafPreferences) {
+if (isset($company) && !empty($company)) {
+    $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
+}
+if (isset($companyLafPreferences) && !empty($companyLafPreferences)) {
 ?> 
 <style>
      .notification-dropdown li > h4 {

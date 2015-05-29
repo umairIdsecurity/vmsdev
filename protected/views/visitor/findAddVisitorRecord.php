@@ -318,7 +318,14 @@ $model->identification_country_issued = 13;
                             </tr>
                             <tr>
                                 <td>
-                                    <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;">Add Company</a>
+                                    <div style="margin-bottom: 5px;" id="visitorStaffRow">
+
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a href="#addCompanyContactModal" role="button" data-toggle="modal" id="addCompanyLink">Add Company</a>
                                 </td>
                             </tr>
 
@@ -1055,15 +1062,16 @@ $model->identification_country_issued = 13;
             $("#Visitor_company_em_").html("Please select a tenant");
             $("#Visitor_company_em_").show();
         } else {
-            if ($("#currentRoleOfLoggedInUser").val() == '<?php echo Roles::ROLE_SUPERADMIN; ?>') {
-                /* if role is superadmin tenant is required. Pass selected tenant and tenant agent of user to company. */
+            /*if ($("#currentRoleOfLoggedInUser").val() == '<?php echo Roles::ROLE_SUPERADMIN; ?>') {
+                *//* if role is superadmin tenant is required. Pass selected tenant and tenant agent of user to company. *//*
                 url = '<?php echo Yii::app()->createUrl('company/create&viewFrom=1&tenant='); ?>' + $("#Visitor_tenant").val() + '&tenant_agent=' + $("#Visitor_tenant_agent").val();
             } else {
                 url = '<?php echo Yii::app()->createUrl('company/create&viewFrom=1'); ?>';
             }
 
             $("#modalBody").html('<iframe id="companyModalIframe" width="100%" height="80%" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
-            $("#modalBtn").click();
+            $("#modalBtn").click();*/
+            //$('#addCompanyModal').show();
         }
     }
 
@@ -1126,30 +1134,33 @@ $model->identification_country_issued = 13;
 
         
     }
+
+    // company change
+    $('#Visitor_company').on('change', function() {
+        var companyId = $(this).val();
+        $.ajax({
+            type: "POST",
+            url: "<?php echo $this->createUrl('company/getContacts') ?>",
+            dataType: "json",
+            data: {id:companyId},
+            success: function(data) {
+                if (data == 0) {
+                    $('#CompanySelectedId').val(companyId);
+                    var companyName = $('.select2-selection__rendered').text();
+                    $('#AddCompanyContactForm_companyName').val(companyName).prop('disabled', 'disabled');
+
+                    $("#addCompanyContactModal").modal("show");
+                } else {
+                    $('#visitorStaffRow').html(data);
+                }
+                return false;
+            }
+        });
+    });
+
 </script>
 
 <input type="text" id="visitorId" placeholder="visitor id"/>
-<?php
-$this->widget('bootstrap.widgets.TbButton', array(
-    'label' => 'Click me',
-    'type' => 'primary',
-    'htmlOptions' => array(
-        'data-toggle' => 'modal',
-        'data-target' => '#addCompanyModal',
-        'id' => 'modalBtn',
-        'style' => 'display:none',
-    ),
-));
-?>
-<div class="modal hide fade" id="addCompanyModal" style="width:600px;">
-    <div class="modal-header">
-        <a data-dismiss="modal" class="close" id="dismissModal" >×</a>
-        <br>
-    </div>
-    <div id="modalBody"></div>
-
-</div>
-
 
 <!-- PHOTO CROP-->
 <div id="light" class="white_content">
@@ -1170,3 +1181,5 @@ $this->widget('bootstrap.widgets.TbButton', array(
 <input type="hidden" id="y2"/>
 <input type="hidden" id="width"/>
 <input type="hidden" id="height"/>
+
+<?php $this->renderPartial('_add_company_contact', array('tenant' => $session['tenant'],'model' => new AddCompanyContactForm())); ?>

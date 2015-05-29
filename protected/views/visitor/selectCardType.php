@@ -4,10 +4,35 @@ $sameday = CardType::model()->findByPk(CardType::SAME_DAY_VISITOR);
 $multiday = CardType::model()->findByPk(CardType::MULTI_DAY_VISITOR);
 
 $workstation_id = $session['workstation'];
+
+if (!isset($workstation_id)) {
+    $user = User::model()->findByPK(Yii::app()->user->id);
+    $workstations = Workstation::model()->findAllByAttributes(array('tenant' => $user->tenant, 'tenant_agent' => $user->tenant_agent));
+    if (isset($workstations[0])) { ?>
+        <div class="form">
+            <table class="selectworkstation-area" style="padding:12px;">
+                <tr>
+                    <td style="font-size:12px;font-weight: bold;text-align: center">Please select your workstation</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center">
+                        <select style='font-size:12px;' name='userWorkstation' id='userWorkstation'>
+                            <?php foreach ($workstations as $workstation) { ?>
+                                <option value='<?php echo $workstation->id; ?>'><?php echo $workstation->name; ?></option>
+                            <?php } ?>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </div><!-- form -->
+    <?php
+        $workstation_id = $workstations[0]->id;
+    }
+}
+
 $cardTypeWorkstationModel = WorkstationCardType::model()->findAllByAttributes(
     array('workstation'=>$workstation_id)
 );
-
 ?>
 
 <div id="selectCardDiv">
@@ -73,8 +98,28 @@ $cardTypeWorkstationModel = WorkstationCardType::model()->findAllByAttributes(
             $("#cardtype").val(card_type_value);
             $("#Visit_card_type").val(card_type_value);
             $("#dateoutDiv").val('2014-12-11');
+        });
 
+        $(document).on("change", "#userWorkstation", function(e) {
+            e.preventDefault;
+            var selected = $(this).val();
+
+            $.ajax({
+                url: '<?php echo Yii::app()->createUrl('cardType/selectWorkstation'); ?>',
+                type: "POST",
+                data: { workstation: selected },
+                dataType: "json",
+                beforeSend: function() {
+                    $("#selectCardDiv").html("Loading card types...");
+                },
+                success: function(res) {
+                    if (res.html) {
+                        $("#selectCardDiv").html(res.html);
+                    }
+                }
+            });
         });
 
     });
+
 </script>

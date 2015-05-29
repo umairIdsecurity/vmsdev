@@ -28,7 +28,7 @@ class CardTypeController extends Controller
 	{
 		return array(
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update','admin','delete','index','view'),
+				'actions'=>array('create','update','admin','delete','index','view', 'selectWorkstation'),
 				'users'=>array('@'),
 			),
 			array('deny',  // deny all users
@@ -162,4 +162,17 @@ class CardTypeController extends Controller
 			Yii::app()->end();
 		}
 	}
+
+    public function actionSelectWorkstation()
+    {
+        if (isset($_POST['workstation'])) {
+            //$resultMessage['data'] = array('workstation' => $_POST['workstation']);
+            $cardTypeWorkstationModel = WorkstationCardType::model()->findAllByAttributes(
+                array('workstation'=>$_POST['workstation'])
+            );
+        }
+
+        $html = $this->renderPartial('_card_types', array('cardTypeWorkstationModel' => $cardTypeWorkstationModel), true);
+        echo json_encode(array('html' => $html));
+    }
 }

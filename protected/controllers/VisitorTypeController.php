@@ -26,7 +26,7 @@ class VisitorTypeController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin', 'delete','adminAjax'),
+                'actions' => array('create', 'update', 'admin', 'delete','adminAjax', 'visitorsByTypeReport'),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
            
             ),
@@ -142,5 +142,24 @@ class VisitorTypeController extends Controller {
             'model' => $model,
                 ), false, true);
     }
+    
+   /* 
+    * Report: Corporate Reporting: Total Visits by Visitor Type
+    * Total Visitors by Visitor Type
+    * 
+    * @return view
+    */
+    public function actionVisitorsByTypeReport() {
+        
+        $criteria = new CDbCriteria(); 
+        // Post Date
+        if( !empty(Yii::app()->request->getParam("date_from_filter")) && !empty(Yii::app()->request->getParam("date_to_filter")) ) {
+            $criteria->condition =  'visits.date_check_in BETWEEN "'.Yii::app()->request->getParam("date_from_filter").'" '
+                                . ' AND "'.Yii::app()->request->getParam("date_to_filter").'"';           
+            $criteria->together = true;       
+        }  
+        $visitsCount = VisitorType::model()->with('visits')->findAll($criteria);
+        $this->render("visitortypecount", array("visit_count"=>$visitsCount));
+    } 
 
 }

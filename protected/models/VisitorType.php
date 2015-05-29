@@ -53,6 +53,8 @@ class VisitorType extends CActiveRecord {
         return array(
             'visitors' => array(self::HAS_MANY, 'Visitor', 'visitor_type'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'created_by'),
+            'visits'=>array(self::HAS_MANY, 'Visit', 'visitor_type'),
+            'visitsCount' => array(self::STAT, 'Visit', 'visitor_type'),
         );
     }
 

@@ -197,6 +197,7 @@ class Visit extends CActiveRecord {
                 self::BELONGS_TO, 'Company', array('company' => 'id'), 'through' => 'visitor0'
             ),
             'visitStatus' => array(self::BELONGS_TO, 'VisitStatus', 'visit_status'),
+           
         );
     }
 

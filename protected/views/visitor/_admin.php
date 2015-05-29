@@ -35,6 +35,10 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'name' => 'contact_number',
             'filter'=>CHtml::activeTextField($model, 'contact_number', array('placeholder'=>'Mobile Number')),
         ),
+        array(
+            'name' => 'profile_type',
+            'filter' => CHtml::activeTextField($model, 'profile_type', array('placeholder' => 'Visitor Profile Type')),
+        ),
 
         array(
             'name' => 'id',

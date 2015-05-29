@@ -1119,7 +1119,13 @@ $model->identification_country_issued = 13;
                     if (isSearch == 'search') {
                         $('#workstation_search').append('<option value="' + value.id + '">' + value.name + '</option>');
                     } else {
-                        var selectedWorkstation = <?php echo $session['workstation']?>;
+                        var selected = <?php echo isset($session['workstation']) ? $session['workstation'] : '0' ?>;
+                        var workstation = $('#userWorkstation').val();
+                        if (selected != 0) {
+                            var selectedWorkstation = selected;
+                        } else {
+                            var selectedWorkstation = workstation;
+                        }
                         if (value.id == selectedWorkstation) {
                             $('#workstation').append('<option selected="selected" value="' + value.id + '">' + value.name + '</option>');
                         } else {

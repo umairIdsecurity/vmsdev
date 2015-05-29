@@ -36,6 +36,7 @@ class FeatureContext extends MinkContext
     {
         $this->useContext('notification', new SubContext\NotificationContext($parameters));
         $this->useContext('vicprofile', new SubContext\VicprofileContext($parameters));
+        $this->useContext('workstation', new SubContext\WorkstationContext($parameters));
     }
 
     /** @BeforeScenario */

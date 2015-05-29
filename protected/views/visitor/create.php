@@ -47,7 +47,7 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
         echo "class='borderTopRightRadius'";
     }
     ?>" id="findHost">
-   <a href="#step3" id="findHostB" <?php if (isset($_GET['action'])) { ?> class="borderTopRightRadius" <?php } ?>>Add or Find Hos</a>
+   <a href="#step3" id="findHostB" <?php if (isset($_GET['action'])) { ?> class="borderTopRightRadius" <?php } ?>>Add or Find Host</a>
     </dd>
     <?php if (!isset($_GET['action'])) { ?>
         <dt id = "logVisitA" class="borderTopRightRadius">Log Visit</dt>

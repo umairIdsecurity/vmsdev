@@ -1,5 +1,7 @@
 default:
-
   extensions:
       Behat\MinkExtension\Extension:
-        base_url: http://localhost:8888
+        base_url: "http://localhost/vms"
+        goutte: ~
+        javascript_session: "selenium2"
+        selenium2: ~

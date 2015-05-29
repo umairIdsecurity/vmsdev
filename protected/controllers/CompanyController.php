@@ -19,7 +19,7 @@ class CompanyController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow all users to perform 'GetCompanyList' and 'GetCompanyWithSameTenant' actions
-                'actions' => array('GetCompanyList', 'GetCompanyWithSameTenant', 'create', 'delete'),
+                'actions' => array('GetCompanyList', 'GetCompanyWithSameTenant', 'create', 'delete', 'addCompanyContact', 'getContacts'),
                 'users' => array('@'),
             ),
             array('allow', // allow user if same company
@@ -361,6 +361,73 @@ class CompanyController extends Controller {
         $resultMessage['data'] = Company::model()->findAllCompanyWithSameTenant($id);
         echo CJavaScript::jsonEncode($resultMessage);
         Yii::app()->end();
+    }
+
+    /**
+     * Add company contact from Visitor
+     */
+    public function actionAddCompanyContact ()
+    {
+        if (Yii::app()->request->isAjaxRequest) {
+            $session = new CHttpSession;
+            $formInfo = $_POST['AddCompanyContactForm'];
+
+            if (isset($_POST['CompanySelectedId']) && $_POST['CompanySelectedId'] > 0) {
+                $company = Company::model()->findByPk($_POST['CompanySelectedId']);
+            } else {
+                $company = new Company();
+
+                $company->name = $formInfo['companyName'];
+                $company->contact = $formInfo['firstName'] . ' ' . $formInfo['lastName'];
+                $company->email_address = $formInfo['email'];
+                $company->mobile_number = $formInfo['mobile'];
+                //todo: update Company Code later
+                $company->code = strtoupper(substr($company->name, 0, 3));
+                $companyService = new CompanyServiceImpl();
+                $companyService->save($company, $session['tenant'], $session['role'], 'addCompany');
+            }
+
+            // save contact into company
+            if (isset($company->id) && $company->id > 0) {
+                $contact = new Contact();
+                $contact->company_id = $company->id;
+                $contact->first_name = $formInfo['firstName'];
+                $contact->last_name = $formInfo['lastName'];
+                $contact->email = $formInfo['email'];
+                $contact->mobile = $formInfo['mobile'];
+                $contact->created_by = Yii::app()->user->id;
+                $contact->created_date = time();
+
+                if ($contact->save()) {
+                    $contactDropDown =  CHtml::dropDownList('Visitor[staff_id]', $contact->id, array(array($contact->id, $contact->getFullName())));
+                    $ret = array("id" => $company->id, "name" => $company->name, "contactDropDown" => $contactDropDown);
+                    echo json_encode($ret);
+                    Yii::app()->end();
+                }
+            }
+            echo "0";
+        }
+        Yii::app()->end();
+
+    }
+
+    public function actionGetContacts() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $contacts = Contact::model()->findAll("company_id = " . $_POST['id']);
+
+            if ($contacts) {
+                $staffIds = CHtml::dropDownList('Visitor[staff_id]', '', CHtml::listData($contacts, 'id',
+                    function ($contact) {
+                        return CHtml::encode($contact->getFullName());
+                    })
+                );
+                echo json_encode($staffIds);
+
+            } else { // company has no any contact
+                echo "0";
+            }
+            Yii::app()->end();
+        }
     }
 
 }

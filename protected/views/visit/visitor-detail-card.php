@@ -95,7 +95,7 @@ $photoForm = $this->beginWidget('CActiveForm', array(
                     <td>
                         <div style="width:132px">
                             <?php
-                            if (strlen($visitorModel->first_name . ' ' . $visitorModel->last_name) > 48) {
+                            if (strlen($visitorModel->first_name . ' ' . $visitorModel->last_name) > 32) {
                                 $first_name = explode(' ', $visitorModel->first_name);
                                 $last_name = explode(' ', $visitorModel->last_name);
                                 echo $first_name[0] . ' ' . $last_name[0];
@@ -155,9 +155,11 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
   </div>
     
 <div style="margin-top: 10px;">
-   Total Visits at <?php echo $visitModel['companyName']; ?>: <?php echo $visitModel['companyVisitsByVisitor']; ?></br>
-   <!-- Total Visits to All Companies: <?php // echo $visitModel['allVisitsByVisitor']; ?> -->
-    Remaining Days: <?php echo (28 - $visitModel['companyVisitsByVisitor']) ;?>
+    Total Visits at <?php echo $visitModel['companyName']; ?>: <?php echo $visitModel['companyVisitsByVisitor']; ?></br>
+    <!-- Total Visits to All Companies: <?php // echo $visitModel['allVisitsByVisitor']; ?> -->
+    <?php if ($visitorModel->profile_type == Visitor::PROFILE_TYPE_VIC) { ?>
+        Remaining Days: <?php echo (28 - $visitModel['companyVisitsByVisitor']) ;?>
+    <?php } ?>
 </div>
 <input type="hidden" id="dummycardvalue" value="<?php echo $model->card; ?>"/>
 

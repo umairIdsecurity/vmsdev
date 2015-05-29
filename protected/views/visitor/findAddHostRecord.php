@@ -1,7 +1,9 @@
 <?php
 $session = new CHttpSession;
 $company = Company::model()->findByPk($session['company']);
-$companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
+if (isset($company) && !empty($company)) {
+    $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
+}
 
 // Visitor ASIC model
 $asicModel = new Visitor();
@@ -338,7 +340,7 @@ $asicModel->visitor_card_status = $defaultKey;
                                         'model' => $userModel,
                                         'attribute' => 'asic_expiry',
                                         'options' => array(
-                                            'dateFormat' => 'dd-mm-yy',
+                                            'dateFormat' => 'yy-mm-dd',
                                             'changeMonth' => 'true',
                                             'changeYear' => 'true',
                                             'minDate' => '0'

@@ -18,12 +18,5 @@ Feature: Logon
 		And I press "Login"
 		Then I should see "Incorrect username or password"
 		
-	Scenario: Clicked Forgot Password Link
-		Given I am on "/index.php"
-		When I follow "Forgot password?"
-		And I fill in "Email" with "superadmin@test.com"
-		And I press "Reset"
-		Then I should be on "/index.php?r=site/login"
-		And I should see "Please check your email for reset password instructions"
-		
+
 		

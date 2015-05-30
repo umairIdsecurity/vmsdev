@@ -153,7 +153,10 @@ class VisitorTypeController extends Controller {
         
         $criteria = new CDbCriteria(); 
         // Post Date
-        if( !empty(Yii::app()->request->getParam("date_from_filter")) && !empty(Yii::app()->request->getParam("date_to_filter")) ) {
+        $dateFromFilter = Yii::app()->request->getParam("date_from_filter");
+        $dateToFilter = Yii::app()->request->getParam("date_to_filter");
+
+        if( !empty($dateFromFilter) && !empty($dateToFilter) ) {
             $criteria->condition =  'visits.date_check_in BETWEEN "'.Yii::app()->request->getParam("date_from_filter").'" '
                                 . ' AND "'.Yii::app()->request->getParam("date_to_filter").'"';           
             $criteria->together = true;       

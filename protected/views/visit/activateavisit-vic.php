@@ -128,6 +128,12 @@ $session = new CHttpSession;
             if (strtotime($model->date_check_out)) {
                 $model->date_check_out = date('d-m-Y');
             }
+
+            // Extended Card Type (EVIC)
+            if ($model->card_type == CardType::VIC_CARD_EXTENDED) {
+                $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in. ' + 28 days'));
+            }
+
             $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                 'model' => $model,
                 'attribute' => 'date_check_out',
@@ -204,6 +210,13 @@ $session = new CHttpSession;
 
                     $('#card_no_manual').show();
                 }
+
+                <?php if ($model->card_type == CardType::VIC_CARD_EXTENDED) {
+                    echo '  var checkoutDate = new Date(selectedDate);
+                            checkoutDate.setDate(selectedDate.getDate() + 28);
+                            $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "setDate", checkoutDate);
+                        ';
+                } ?>
             }
         });
 
@@ -215,6 +228,7 @@ $session = new CHttpSession;
             buttonImageOnly: true,
             minDate: minDate,
             dateFormat: "dd-mm-yy",
+            disabled: <?php echo ($model->card_type == CardType::VIC_CARD_EXTENDED) ? "true" : "false"; ?>,
             onClose: function (date) {
                 var day = date.substring(0, 2);
                 var month = date.substring(3, 5);
@@ -225,6 +239,7 @@ $session = new CHttpSession;
                 $("#cardDetailsTable span.cardDateText").html(cardDate);
             }
         });
+
 
     });
 

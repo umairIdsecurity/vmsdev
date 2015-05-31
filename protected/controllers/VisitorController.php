@@ -59,6 +59,11 @@ class VisitorController extends Controller {
                 $model->profile_type = Visitor::PROFILE_TYPE_VIC;
             }
 
+            //check validate for LOG VISIT PROCESS
+            if (isset($_REQUEST['view']) && $_REQUEST['view'] == 1) {
+                $model->scenario = 'vic_log_process';
+            }
+
             if ($visitorService->save($model, $_POST['Visitor']['reason'], $session['id'])) {
                 Yii::app()->end();
             } else { //todo: for debugging

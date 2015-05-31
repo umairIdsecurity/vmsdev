@@ -79,6 +79,12 @@ $photoForm = $this->beginWidget('CActiveForm', array(
                                     // echo Yii::app()->dateFormatter->format("d/MM/y", strtotime($model->date_out));
                                     echo date("d M y", strtotime($model->date_check_out));
                                 }
+                            } elseif ($model->card_type == CardType::VIC_CARD_EXTENDED) { // Extended Card Type (EVIC)
+                                if (strtotime($model->date_check_out) <= 0) {
+                                    $today = date('d-m-Y');
+                                    $model->date_check_out = date('d-m-Y', strtotime($today . ' + 28 days'));
+                                }
+                                echo date("d M y", strtotime($model->date_check_out));
                             } else {
                                 if (strtotime($model->date_check_out)) {
                                     $date2 = date('d M y');

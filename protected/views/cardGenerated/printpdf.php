@@ -30,6 +30,10 @@ if ($model->date_check_out != null) {
     $dateExpiry = date("d M y", strtotime($model->date_check_out));
 }
 
+if ($model->time_check_out && $model->card_type == CardType::VIC_CARD_24HOURS && $model->visit_status == VisitStatus::ACTIVE) {
+    $dateExpiry.="<br>".substr($model->time_check_out, 0, -3);
+}
+
 if ($visitorModel->profile_type === 'CORPORATE') {
   $bgcolor = CardGenerated::CORPORATE_CARD_COLOR;
 } elseif ($visitorModel->profile_type === "VIC") {

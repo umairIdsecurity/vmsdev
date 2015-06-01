@@ -238,6 +238,10 @@ class VisitController extends Controller {
                 $model->visit_status = VisitStatus::EXPIRED;
                 $model->save();
             }
+        } else if ($model && $model->card_type == CardType::VIC_CARD_24HOURS) {
+            $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in. ' + 1 day'));
+            $model->time_check_out = $model->time_check_in;
+            $model->save();
         }
 
         $visitorModel = Visitor::model()->findByPk($model->visitor);

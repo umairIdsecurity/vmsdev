@@ -492,12 +492,12 @@ echo '<h1>Add '.Roles::$labels[Yii::app()->request->getParam('role')].'</h1>';
                     
                    <tr>
                    <td><input type="radio" value="1" class="pass_option" name="User[password_option]" />&nbsp;Create Password</td>
-                   </tr> 
+                   </tr>
                    <tr>
-                  
+
                     <td>
                         <input ng-model="user.passwords" data-ng-class="{'ng-invalid':userform['User[repeatpassword]'].$error.match}" placeholder="Password" type="password" id="User_password" value = '<?php echo $model->password; ?>' name="User[password]">
-                    <span class="required">*</span>                                                                        		
+                    <span class="required">*</span>
                                <?php echo "<br>" . $form->error($model, 'password'); ?>
                     </td>
                 </tr>
@@ -602,6 +602,15 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
             $("#fromYear").val($("#dateofBirthBreakdownValueYear").val());
             $("#fromMonth").val($("#dateofBirthBreakdownValueMonth").val());
             $("#fromDay").val($("#dateofBirthBreakdownValueDay").val());
+
+            var password = '<?php echo User::model()->findByPk($currentlyEditedUserId)->password; ?>';
+            if (password) {
+                $('.pass_option[value=1]').prop('checked', true);
+                $('#User_password').val('......');
+                $('#User_repeat_password').val('......');
+            } else {
+                $('.pass_option[value=2]').prop('checked', true);
+            }
         }
 
         if ((getRole != admin && getRole != '') && sessionRole == superadmin) {

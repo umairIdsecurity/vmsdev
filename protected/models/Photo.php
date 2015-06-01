@@ -136,6 +136,15 @@ class Photo extends CActiveRecord {
             return $photo->relative_path;
         
     }
+
+    public function behaviors()
+    {
+        return array(
+
+            'AuditTrailBehaviors'=>
+                'application.components.behaviors.AuditTrailBehaviors',
+        );
+    }
    
 
 }

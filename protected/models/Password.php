@@ -115,4 +115,13 @@ class Password extends CActiveRecord {
         return true;
     }
 
+    public function behaviors()
+    {
+        return array(
+
+            'AuditTrailBehaviors'=>
+                'application.components.behaviors.AuditTrailBehaviors',
+        );
+    }
+
 }

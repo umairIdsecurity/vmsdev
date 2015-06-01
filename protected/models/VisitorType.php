@@ -170,4 +170,13 @@ class VisitorType extends CActiveRecord {
         }
     }
 
+    public function behaviors()
+    {
+        return array(
+
+            'AuditTrailBehaviors'=>
+                'application.components.behaviors.AuditTrailBehaviors',
+        );
+    }
+
 }

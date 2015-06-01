@@ -147,6 +147,15 @@ class HelpDeskGroup extends CActiveRecord {
 
 		return $helpDeskGroup->name;
     }
+
+    public function behaviors()
+    {
+        return array(
+
+            'AuditTrailBehaviors'=>
+                'application.components.behaviors.AuditTrailBehaviors',
+        );
+    }
 	
 
 }

@@ -315,7 +315,14 @@ class Workstation extends CActiveRecord {
 
     }
 
-
+    public function behaviors()
+    {
+        return array(
+            // Classname => path to Class
+            'AuditTrailBehaviors'=>
+                'application.components.behaviors.AuditTrailBehaviors',
+        );
+    }
 
 
 }

@@ -160,6 +160,14 @@ class VisitReason extends CActiveRecord {
         return false;
     }
 
+    public function behaviors()
+    {
+        return array(
+
+            'AuditTrailBehaviors'=>
+                'application.components.behaviors.AuditTrailBehaviors',
+        );
+    }
     
 
 }

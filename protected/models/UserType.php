@@ -110,11 +110,21 @@ class UserType extends CActiveRecord
 		return parent::model($className);
 	}
         
-        public function getUserType($user_type){
-            
-            $search_array = User::$USER_TYPE_LIST;
-            if(isset(User::$USER_TYPE_LIST[$user_type])){
-                return User::$USER_TYPE_LIST[$user_type];
-            }
-       }
+	public function getUserType($user_type){
+
+		$search_array = User::$USER_TYPE_LIST;
+		if(isset(User::$USER_TYPE_LIST[$user_type])){
+			return User::$USER_TYPE_LIST[$user_type];
+		}
+   }
+
+	public function behaviors()
+	{
+		return array(
+
+			'AuditTrailBehaviors'=>
+				'application.components.behaviors.AuditTrailBehaviors',
+		);
+	}
+
 }

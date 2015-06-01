@@ -29,6 +29,15 @@ class VmsActiveRecord extends CActiveRecord {
 
         return parent::beforeSave();
     }
-    
-   
+
+    public function behaviors()
+    {
+        return array(
+            // Classname => path to Class
+            'AuditTrailBehaviors'=>
+                'application.components.behaviors.AuditTrailBehaviors',
+        );
+    }
+
+
 }

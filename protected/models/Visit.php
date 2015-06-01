@@ -391,6 +391,8 @@ class Visit extends CActiveRecord {
             'dateRangeSearch' => array(
                 'class' => 'application.components.behaviors.EDateRangeSearchBehavior',
             ),
+            'AuditTrailBehaviors'=>
+                'application.components.behaviors.AuditTrailBehaviors',
         );
     }
 

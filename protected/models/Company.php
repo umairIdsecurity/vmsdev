@@ -263,6 +263,9 @@ WHERE u.id=c.tenant AND c.id !=1";
             'softDelete' => array(
                 'class' => 'ext.soft_delete.SoftDeleteBehavior'
             ),
+
+            'AuditTrailBehaviors'=>
+                'application.components.behaviors.AuditTrailBehaviors',
         );
     }
 
@@ -359,5 +362,6 @@ WHERE u.id=c.tenant AND c.id !=1";
 
         return $aArray;
     }
+
 
 }

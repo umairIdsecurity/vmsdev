@@ -99,4 +99,14 @@ class VisitorVisitReason extends CActiveRecord
 	{
 		return parent::model($className);
 	}
+
+	public function behaviors()
+	{
+		return array(
+
+			'AuditTrailBehaviors'=>
+				'application.components.behaviors.AuditTrailBehaviors',
+		);
+	}
+
 }

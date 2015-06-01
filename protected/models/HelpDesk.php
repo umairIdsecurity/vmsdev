@@ -169,6 +169,13 @@ class HelpDesk extends CActiveRecord {
       return $selectedHelpDesk;
     }
 
+    public function behaviors()
+    {
+        return array(
 
+            'AuditTrailBehaviors'=>
+                'application.components.behaviors.AuditTrailBehaviors',
+        );
+    }
 
 }

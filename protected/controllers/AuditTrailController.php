@@ -73,7 +73,7 @@ class AuditTrailController extends Controller
 		if(isset($_GET['AuditTrail']))
 			$model->attributes=$_GET['AuditTrail'];
 
-		$this->render('admin',array(
+		$this->render('_admin',array(
 			'model'=>$model,
 		));
 	}

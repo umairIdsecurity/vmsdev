@@ -1,0 +1,48 @@
+#menu{
+  background-color: @gray-lighter;
+  margin-top: -3px;
+  position: relative;
+  z-index: 1;
+  .no-touch &{
+    background-color: #ffffff;
+  }
+  .container{
+    .touch &{
+      padding: 0px;
+    }
+    .no-touch &{
+      padding: 0 80px;
+    }
+  }
+  .items{
+    margin: 0;
+    .no-touch &{
+      background-color: @gray-lighter;
+      margin: 0px auto;
+      padding: 0px;
+    }
+    [class^="col-"]{
+      padding: 0;
+      +[class^="col-"]{
+        border-left: 2px solid white;
+      }
+    }
+    a{
+      display: block;
+      padding: 10px 0;
+      overflow: hidden;
+      color: @gray-dark;
+      .glyphicon{
+        &:before{
+          font-size: 18px;
+          vertical-align: sub;
+        }
+      }
+    }
+  }
+  .title{
+    border-top: 2px solid white;
+    background-color: @gray-lighter;
+    padding: 10px 0;
+  }
+}

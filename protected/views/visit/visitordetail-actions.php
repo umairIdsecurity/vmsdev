@@ -266,7 +266,19 @@ $session = new CHttpSession;
             }
         });
 
-        display_ct();
+
+        <?php
+        if ($model->time_check_out && $model->card_type == CardType::VIC_CARD_24HOURS && $model->visit_status == VisitStatus::ACTIVE) {
+                $ctout = explode(':', $model->time_check_out); ?>
+            $(".visit_time_in_hours").val(<?=$ctout[0]?>);
+            $(".visit_time_in_minutes").val(<?=$ctout[1]?>);
+        <?php
+        }
+        else { ?>
+            display_ct();
+        <?php } ?>
+
+
         if ('<?php echo $model->card_type; ?>' == 1) {
             $('.ui-datepicker-trigger[title="Select Proposed Check Out Date"]').hide();
         }
@@ -280,21 +292,10 @@ $session = new CHttpSession;
     }
 
     function display_ct() {
-
         var x = new Date();
         var currenttime = x.getHours() + ":" + x.getMinutes() + ":" + x.getSeconds();
-
-        <?php
-        if ($model->time_check_out && $model->card_type = CardType::VIC_CARD_24HOURS && $model->visit_status == VisitStatus::ACTIVE) {
-            $ctout = explode(':', $model->time_check_out); ?>
-                $(".visit_time_in_hours").val(<?=$ctout[0]?>);
-                $(".visit_time_in_minutes").val(<?=$ctout[1]?>);
-            <?php
-        }
-        else { ?>
-            $(".visit_time_in_hours").val(x.getHours());
-            $(".visit_time_in_minutes").val(x.getMinutes());
-        <?php } ?>
+        $(".visit_time_in_hours").val(x.getHours());
+        $(".visit_time_in_minutes").val(x.getMinutes());
         $("#Visit_time_out").val(currenttime);
         $("#Visit_time_check_out").val(currenttime);
         tt = display_c();

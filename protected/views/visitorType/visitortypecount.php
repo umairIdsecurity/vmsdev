@@ -46,21 +46,44 @@
         </tr>
     </thead>
     <tbody>
-        <?php if($visit_count) { 
-                foreach($visit_count as $key => $vc ) {
+        <?php 
+        
+        $datasets = array(
+            array('VisitorType', 'Visits per Visitor')
+        );
+        
+        $total=0;
+        
+        if($visit_count) { 
+                
+                $count=1;
+                
+                foreach($visit_count as $vc ) {
+                    $datasets[$count] =  array($vc['name'],intval($vc['visits']));
+                    $count++;
+                    $total += intval($vc['visits']);
 ?>
         <tr>
-            <td><?php echo $vc->name?></td>
-            <td><?php echo count($vc['visits']);?></td>
+            <td><?php echo $vc['name']; ?></td>
+            <td><?php echo $vc['visits'];?></td>
         </tr>
                 <?php }
         } ?>
     </tbody>
+    <tfoot>
+        <tr>
+            <th>Total Visits</th>
+            <th><?= $total ?></th>
+        </tr>
+    </tfoot>
 </table>
 </div>
 
-<div class="float:left; width:55%; margin:20px 10px 0px 5px;">
-    <tab>
-        sadf
-    </tab>
-</div>
+<div class="span6" style="width:55%; float: left; margin:10px 0px 0px 0px;">  
+        <?php
+//very useful google chart
+        $this->widget('ext.Hzl.google.HzlVisualizationChart', array('visualization' => 'PieChart',
+            'data' => $datasets,
+            'options' => array('title' => 'Total Visitors by Visitor Type')));
+        ?>
+    </div>

@@ -155,13 +155,31 @@ class VisitorTypeController extends Controller {
         // Post Date
         $dateFromFilter = Yii::app()->request->getParam("date_from_filter");
         $dateToFilter = Yii::app()->request->getParam("date_to_filter");
-
+        
+        
         if( !empty($dateFromFilter) && !empty($dateToFilter) ) {
-            $criteria->condition =  'visits.date_check_in BETWEEN "'.Yii::app()->request->getParam("date_from_filter").'" '
-                                . ' AND "'.Yii::app()->request->getParam("date_to_filter").'"';           
-            $criteria->together = true;       
-        }  
-        $visitsCount = VisitorType::model()->with('visits')->findAll($criteria);
+//            $criteria->condition =  'visits.is_deleted=0 And visits.date_check_in BETWEEN "'.Yii::app()->request->getParam("date_from_filter").'" '
+//                                . ' AND "'.Yii::app()->request->getParam("date_to_filter").'"';   
+//            $criteria->together = true;
+            $visitsCount = Yii::app()->db->createCommand()
+                    ->select('t.id, t.name,count(visits.id) as visits')
+                    ->from('visitor_type t')
+                    ->leftJoin('visit visits' ,'t.id = visits.visitor_type  AND (t.is_deleted = 0) and (visits.is_deleted = 0)'.' And visits.date_check_in BETWEEN "'.Yii::app()->request->getParam("date_from_filter").'" '
+                                . ' AND "'.Yii::app()->request->getParam("date_to_filter").'"')
+                    ->where('t.is_deleted = 0')
+                    ->group('t.id')
+                    ->queryAll(); // this will be returned as an array of arrays
+        }else{
+            $visitsCount = Yii::app()->db->createCommand()
+                    ->select('t.id, t.name,count(visits.id) as visits')
+                    ->from('visitor_type t')
+                    ->leftJoin('visit visits' , '(t.id = visits.visitor_type)  AND (t.is_deleted = 0) and (visits.is_deleted = 0)')
+                    ->where('t.is_deleted = 0')
+                    ->group('t.id')
+                    ->queryAll(); // this will be returned as an array of arrays
+        }
+        
+
         $this->render("visitortypecount", array("visit_count"=>$visitsCount));
     } 
 

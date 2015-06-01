@@ -158,7 +158,7 @@ $session = new CHttpSession;
         </td>
     </tr>
 
-    <?php if($model->card_type == CardType::MANUAL_VISITOR) : ?>
+    <?php if($model->card_type == CardType::VIC_CARD_MANUAL) : ?>
     <tr>
         <td>
             <div id="card_no_manual">
@@ -176,7 +176,7 @@ $session = new CHttpSession;
 <script>
     $(document).ready(function() {
         // for Card Type Manual
-        var minDate = '<?php echo $model->card_type == CardType::MANUAL_VISITOR ? "-3m" : "0"; ?>';
+        var minDate = '<?php echo $model->card_type == CardType::VIC_CARD_MANUAL ? "-3m" : "0"; ?>';
 
         refreshTimeIn();
 
@@ -198,16 +198,22 @@ $session = new CHttpSession;
                 $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "option", "minDate", selectedDate);
 
                 if (selectedDate >= currentDate) {
-                    $("#activate-a-visit-form input.complete").val("Preregister Visit");
+                    <?php if ($model->card_type == CardType::VIC_CARD_MANUAL) { // show Back Date Visit
+                        echo '$("#activate-a-visit-form input.complete").val("Activate Visit");';
+                    } else {
+                        echo '$("#activate-a-visit-form input.complete").val("Preregister Visit");
+                              $("#card_no_manual").hide();';
+                    }
+                    ?>
+
                     // update card date
                     var cardDate = $.datepicker.formatDate('dd M y', selectedDate);
                     $("#cardDetailsTable span.cardDateText").html(cardDate);
 
-                    $('#card_no_manual').hide();
                 } else {
                     $("#activate-a-visit-form input.complete").val("");
 
-                    <?php if ($model->card_type == CardType::MANUAL_VISITOR) { // show Back Date Visit
+                    <?php if ($model->card_type == CardType::VIC_CARD_MANUAL) { // show Back Date Visit
                         echo '$("#activate-a-visit-form input.complete").val("Back Date Visit");';
                     } else {
                         echo '$("#activate-a-visit-form input.complete").val("Activate Visit");';
@@ -363,16 +369,4 @@ $session = new CHttpSession;
         $('#asicSponsorModal').modal('hide');
         return false;
     }
-
-
-    /* todo: need to remove because disabled checkbox
-    $('#VivHolderDecalarations').on('change', function(){
-        if ($("#VivHolderDecalarations").is(':checked')) {
-            $('#refusedAsicCbx').prop('checked', true);
-            $('#issuedVicCbx').prop('checked', true);
-        } else {
-            $('#refusedAsicCbx').prop('checked', false);
-            $('#issuedVicCbx').prop('checked', false);
-        }
-    });*/
 </script>

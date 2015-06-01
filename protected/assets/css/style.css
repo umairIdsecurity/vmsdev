@@ -1001,6 +1001,24 @@ dt.tabs dt{
     padding-left: 80px;
     width: 160px;
 }
+#cardDivC{
+    background: url('../images/cardprint-new-c.png') no-repeat center top;
+    background-size:220px 330px;
+    height:330px;
+    width: 220px;
+    margin: 0px auto;
+    position: relative;
+}
+#cardDivC .card-content {
+    position: absolute;
+    width: 100%;
+    top: 198px;
+    left: 0px;
+}
+#cardDivC .card-content .card-content-table{
+    padding-left: 80px;
+    width: 160px;
+}
 
 #cardDetailsTable tr td{
     font-size:12px;
@@ -1475,6 +1493,16 @@ p.asic{
 }
 
 #cardDiv .card-content-company-img img{
+    height: 30px;
+}
+#cardDivC .card-content-company-img{
+    text-align: center;
+    position: absolute;
+    width: 100%;
+    bottom: 20px;
+}
+
+#cardDivC .card-content-company-img img{
     height: 30px;
 }
 

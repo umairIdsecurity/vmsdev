@@ -20,7 +20,7 @@ class AdminController extends RestfulController {
                     $result['email'] = $admin->email;
                     $result['companyName'] = ($admin->com->name) ? $admin->com->name : "N/A";
                     $result['companyTagLine'] = ($admin->com->trading_name) ? $admin->com->trading_name : "N/A";
-                    $result['VICPickupLoctaion'] = "N/A";
+                    $result['VICPickupLoctation'] = "N/A";
                     $result['visitorLogin'] = false;
                     $result['photoRequired'] = true;
                     $result['complianceTerms'] = ['text1', 'text2', 'text2'];

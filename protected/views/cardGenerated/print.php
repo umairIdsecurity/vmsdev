@@ -22,7 +22,7 @@ $visitorName = wordwrap($visitorName, 13, "\n", true);
     $companyLogoId = $company->logo;
     $companyCode = $company->code;
 
-    $cardCode = $card->card_number;
+    $cardCode = isset($card->card_number)?$card->card_number:"";
 
 
 if ($companyLogoId == "") {

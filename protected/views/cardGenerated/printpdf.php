@@ -3,23 +3,27 @@ if(array_key_exists($model->card_type, CardType::$CARD_TYPE_LIST)){
     $cardType = !empty($model->card_type)?CardType::$CARD_TYPE_LIST[$model->card_type]:NULL;
 }
 
-
-$visitorName = $visitorModel->first_name . ' ' . $visitorModel->last_name;
+$visitorName = ($visitorModel->first_name) ? $visitorModel->first_name : "" . ' ' . ($visitorModel->last_name) ? $visitorModel->last_name : "";
 $tenant = User::model()->findByPk($visitorModel->tenant);
-$companyTenant = Company::model()->findByPk($tenant->company);
-$card = CardGenerated::model()->findByPk($model->card);
-$visitorName = wordwrap($visitorName, 13, "\n", true);
-
-$company = Company::model()->findByPk($tenant->company);
-$companyName = $company->name;
-$companyLogoId = $company->logo;
-$companyCode = $company->code;
-
-$cardCode = $card->card_number;
-
-$companyLogo = Yii::app()->getBaseUrl(true) . "/" . Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
+if ($tenant) {
+    $company = Company::model()->findByPk($tenant->company);
+    $companyName = $company->name;
+    $companyLogoId = $company->logo;
+    $companyCode = $company->code;
+    $companyLogo = Yii::app()->getBaseUrl(true) . "/" . Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
 
 $userPhoto = Yii::app()->getBaseUrl(true) . "/" . Photo::model()->returnVisitorPhotoRelativePath($model->visitor);
+} else {
+    throw new CHttpException(404, 'Company not found for this User.');
+}
+$card = CardGenerated::model()->findByPk($model->card);
+if ($card) {
+    $cardCode = $card->card_number;
+} else {
+    $cardCode = '';
+   //throw new CHttpException(404, 'Card Number not found for this User.');
+}
+$visitorName = wordwrap($visitorName, 13, "\n", true);
 
 $dateExpiry = date('d M y');
 if ($model->card_type != CardType::SAME_DAY_VISITOR) {

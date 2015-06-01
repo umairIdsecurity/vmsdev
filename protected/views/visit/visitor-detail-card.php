@@ -32,7 +32,12 @@ $photoForm = $this->beginWidget('CActiveForm', array(
         <img id="photoPreview" src="" style="display:none;"></img>
     <?php } ?>
 </div>
-<div id="cardDiv">
+<?php if($model->card_type == 4){
+    $cardclass = "cardDivC";
+}else{
+    $cardclass = "cardDiv";
+}?>
+<div id="<?= $cardclass; ?>">
     <div class="card-content-company-img">
     <?php
     if ($tenant->company != '') {

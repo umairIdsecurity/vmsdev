@@ -1,0 +1,42 @@
+{
+  "path": {
+    "dev":                "../ceres/html-css-for-preregistration-vms/frontend/",
+    "dict":               "../ceres/html-css-for-preregistration-vms/dev/",
+    "cssfile":            "../ceres/html-css-for-preregistration-vms/dev/css/style.css",
+    "cssfileMin":         "../ceres/html-css-for-preregistration-vms/dev/css/clientlibs.css",
+    "jsLibs":             "../ceres/html-css-for-preregistration-vms/dev/js/libs.js",
+    "jsPlugins":          "../ceres/html-css-for-preregistration-vms/dev/js/plugins.js",
+    "jsPluginsDownload":  "../ceres/html-css-for-preregistration-vms/dev/js/plugins.download.js",
+    "jsApp":              "../ceres/html-css-for-preregistration-vms/dev/js/script.js",
+    "jsClientlibs":       "../ceres/html-css-for-preregistration-vms/dev/js/clientlibs.js"
+  },
+
+  "less":{
+    "watch":        "../ceres/html-css-for-preregistration-vms/frontend/less/**/*.less",
+    "file":         "../ceres/html-css-for-preregistration-vms/frontend/less/style.less",
+    "rule":         "../ceres/html-css-for-preregistration-vms/frontend/less/.csslintrc"
+  },
+
+  "js": {
+    "watch":[       "../ceres/html-css-for-preregistration-vms/frontend/js/plugins/*.js",
+                    "../ceres/html-css-for-preregistration-vms/frontend/js/app/*.js",
+                    "../ceres/html-css-for-preregistration-vms/frontend/js/global.js"
+    ],
+    "libs": [
+                    "../ceres/html-css-for-preregistration-vms/frontend/js/libs/jquery-1.11.1.js"
+    ],
+    "pluginsDownload": [
+                    "../ceres/html-css-for-preregistration-vms/frontend/js/plugins/download/*.js"
+      ],
+    "plugins": [
+                    "../ceres/html-css-for-preregistration-vms/frontend/js/plugins/*.js"
+      ],
+    "app": [
+                    "../ceres/html-css-for-preregistration-vms/frontend/js/global.js",
+                    "../ceres/html-css-for-preregistration-vms/frontend/js/app/**/*.js"
+      ],
+    "rule":         "../ceres/html-css-for-preregistration-vms/frontend/js/.jshintrc"
+  },
+
+  "author": "Phap Ho"
+}

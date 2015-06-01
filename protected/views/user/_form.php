@@ -14,6 +14,10 @@ if (isset($_GET['role'])) {
 $currentlyEditedUserId = '';
 if (isset($_GET['id'])) {
     $currentlyEditedUserId = $_GET['id'];
+    if (isset(User::model()->findByPk($currentlyEditedUserId)->password)) {
+        $password = User::model()->findByPk($currentlyEditedUserId)->password;
+    }
+
 }
 
 $currentLoggedUserId = $session['id'];
@@ -603,11 +607,10 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
             $("#fromMonth").val($("#dateofBirthBreakdownValueMonth").val());
             $("#fromDay").val($("#dateofBirthBreakdownValueDay").val());
 
-            var password = '<?php echo User::model()->findByPk($currentlyEditedUserId)->password; ?>';
+            var password = '<?php echo isset($password) ? $password : ""; ?>';
             if (password) {
                 $('.pass_option[value=1]').prop('checked', true);
                 $('#User_password').val('......');
-                $('#User_repeat_password').val('......');
             } else {
                 $('.pass_option[value=2]').prop('checked', true);
             }

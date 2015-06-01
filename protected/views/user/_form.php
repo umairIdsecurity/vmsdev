@@ -444,6 +444,7 @@ echo '<h1>Add '.Roles::$labels[Yii::app()->request->getParam('role')].'</h1>';
                     <tr>
                         
                         <td><?php echo $form->dropDownList($model, 'user_type', User::$USER_TYPE_LIST); ?>
+                            <span class="required">*</span>
                             <?php echo "<br>" . $form->error($model, 'user_type'); ?>
                         </td>
                     </tr>

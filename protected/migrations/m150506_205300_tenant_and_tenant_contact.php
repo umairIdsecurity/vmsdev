@@ -20,9 +20,9 @@ class m150506_205300_tenant_and_tenant_contact extends CDbMigration
                         ");
         }
 
-        $table = Yii::app()->db->schema->getTable('tenant_contact');
-        if(!isset($table)) {
-            $this->execute("CREATE TABLE `vms`.`tenant_contact` (
+        $table2 = Yii::app()->db->schema->getTable('tenant_contact');
+        if(!isset($table2)) {
+            $this->execute("CREATE TABLE `tenant_contact` (
                               `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
                               `tenant` BIGINT(20) NOT NULL,
                               `user` BIGINT(20) NOT NULL,
@@ -45,8 +45,8 @@ class m150506_205300_tenant_and_tenant_contact extends CDbMigration
             $this->execute("DROP TABLE tenant");
         }
 
-        $table = Yii::app()->db->schema->getTable('tenant_contact');
-        if(isset($table)) {
+        $table2 = Yii::app()->db->schema->getTable('tenant_contact');
+        if(isset($table2)) {
             $this->execute("DROP TABLE tenant_contact");
         }
 	}

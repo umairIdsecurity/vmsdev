@@ -129,8 +129,8 @@ $session = new CHttpSession;
                 $model->date_check_out = date('d-m-Y');
             }
 
-            // Extended Card Type (EVIC)
-            if ($model->card_type == CardType::VIC_CARD_EXTENDED) {
+            // Extended Card Type (EVIC) or Multiday
+            if (in_array($model->card_type, array(CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY))) {
                 $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in. ' + 28 days'));
             }
 
@@ -218,7 +218,7 @@ $session = new CHttpSession;
                 }
 
                 <?php
-                if ($model->card_type == CardType::VIC_CARD_EXTENDED) {
+                if (in_array($model->card_type, array(CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY))) {
                     echo '  var checkoutDate = new Date(selectedDate);
                             checkoutDate.setDate(selectedDate.getDate() + 28);
                             $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "setDate", checkoutDate);
@@ -243,7 +243,7 @@ $session = new CHttpSession;
             buttonImageOnly: true,
             minDate: minDate,
             dateFormat: "dd-mm-yy",
-            disabled: <?php echo ($model->card_type == CardType::VIC_CARD_EXTENDED  || $model->card_type == CardType::VIC_CARD_24HOURS) ? "true" : "false"; ?>,
+            disabled: <?php echo (in_array($model->card_type, array(CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS, CardType::VIC_CARD_MULTIDAY))) ? "true" : "false"; ?>,
             onClose: function (date) {
                 var day = date.substring(0, 2);
                 var month = date.substring(3, 5);

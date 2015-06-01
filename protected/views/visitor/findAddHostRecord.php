@@ -12,7 +12,8 @@ $asicModel = new Visitor();
 $asicCardTypes = Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_ASIC];
 reset($asicCardTypes);
 $defaultKey = key($asicCardTypes);
-$asicModel->visitor_card_status = $defaultKey;
+
+//$asicModel->visitor_card_status = $defaultKey;
 ?>
 
 <div role="tabpanel">
@@ -120,7 +121,13 @@ $asicModel->visitor_card_status = $defaultKey;
                         'clientOptions' => array(
                             'validateOnSubmit' => true,
                             'afterValidate' => 'js:function(form,data,hasError){
-                                    if(!hasError){
+                                var card_status = $(".vic-host-fields #Visitor_visitor_card_status").val();
+                                if (!card_status || card_status == "") {
+                                    $(".vic-host-fields #Visitor_visitor_card_status_em_").show();
+                                    $(".vic-host-fields #Visitor_visitor_card_status_em_").html("Please enter a visitor card status");
+                                    return false;
+                                }
+                                if(!hasError){
                                     document.getElementById("User_company").disabled = false;
                                     document.getElementById("User_tenant").disabled = false;
                                     document.getElementById("User_tenant_agent").disabled = false;
@@ -171,7 +178,7 @@ $asicModel->visitor_card_status = $defaultKey;
 
                             <tr class="vic-host-fields">
                                 <td>
-                                    <?php echo $form->dropDownList($asicModel, 'visitor_card_status', Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_ASIC], array('empty' => 'Card Status')); ?>
+                                    <?php echo $form->dropDownList($asicModel, 'visitor_card_status', Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_ASIC], array('empty' => 'Card Status', 'options' => array( $defaultKey => array('selected' => 'selected')))); ?>
                                     <span class="required">*</span>
                                     <?php echo "<br>" . $form->error($asicModel, 'visitor_card_status'); ?>
                                 </td>
@@ -749,7 +756,6 @@ $asicModel->visitor_card_status = $defaultKey;
                 }
             });
         });
-
 
         /*			end of module			*/
 

@@ -406,32 +406,30 @@ $form = $this->beginWidget('CActiveForm', array(
 
 <tr>
     <td id="visitorCompanyRow">
-        <?php
-        $companyList = CHtml::listData(Company::model()->findAllCompany(), 'id', 'name');
-        $this->widget('application.extensions.select2.Select2', array(
-            'model' => $model,
-            'attribute' => 'company',
-            'items' => $companyList,
-            //'selectedItems' => $selectedItem, // Items to be selected as default
-            'placeHolder' => 'Please select a company',
-
-        ));        ?>
-        <span class="required">*</span>
-        <?php echo $form->error($model, 'company'); ?>
+        <div style="margin-bottom: 5px;">
+            <?php
+            $this->widget('application.extensions.select2.Select2', array(
+                'model' => $model,
+                'attribute' => 'company',
+                'items' => CHtml::listData(Visitor::model()->findAllCompanyByTenant($session['tenant']),
+                    'id', 'name'),
+                'selectedItems' => array(), // Items to be selected as default
+                'placeHolder' => 'Please select a company'
+            ));
+            ?>
+            <?php echo $form->error($model, 'company'); ?>
+            <span class="required">*</span>
+        </div>
     </td>
 </tr>
-
-<tr>
-    <td id="company_error_" style='font-size: 0.9em;color: #FF0000; display:none'>Please select a company</td>
-</tr>
-
 <tr>
     <td>
-
+        <div style="margin-bottom: 5px;" id="visitorStaffRow"></div>
+    </td>
+</tr>
+<tr>
+    <td>
         <?php
-
-
-
         if ($_REQUEST['r'] == 'visitor/update') {
             ?>
 
@@ -443,13 +441,10 @@ $form = $this->beginWidget('CActiveForm', array(
         } else {
 
             ?>
-
-            <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;">
-
-                Add New Company</a>
+            <!-- <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;"> -->
+            <a href="#addCompanyContactModal"  role="button" data-toggle="modal" id="addCompanyLink" style="text-decoration: none;">Add New Company</a>
 
         <?php } ?>
-
     </td>
 </tr>
 </table>
@@ -859,22 +854,22 @@ function addCompany() {
 
     } else {
 
-        if ($("#currentRoleOfLoggedInUser").val() == '<?php echo Roles::ROLE_SUPERADMIN; ?>') {
+        //if ($("#currentRoleOfLoggedInUser").val() == '<?php echo Roles::ROLE_SUPERADMIN; ?>') {
 
             /* if role is superadmin tenant is required. Pass selected tenant and tenant agent of user to company. */
 
-            url = '<?php echo Yii::app()->createUrl('company/create&viewFrom=1&tenant='); ?>' + $("#Visitor_tenant").val() + '&tenant_agent=' + $("#Visitor_tenant_agent").val();
+            //url = '<?php echo Yii::app()->createUrl('company/create&viewFrom=1&tenant='); ?>' + $("#Visitor_tenant").val() + '&tenant_agent=' + $("#Visitor_tenant_agent").val();
 
-        } else {
+        //} else {
 
-            url = '<?php echo Yii::app()->createUrl('company/create&viewFrom=1'); ?>';
+            //url = '<?php echo Yii::app()->createUrl('company/create&viewFrom=1'); ?>';
 
-        }
+        //}
 
 
-        $("#modalBody").html('<iframe id="companyModalIframe" width="100%" height="80%" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
+        //$("#modalBody").html('<iframe id="companyModalIframe" width="100%" height="80%" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
 
-        $("#modalBtn").click();
+        //$("#modalBtn").click();
 
     }
 
@@ -1138,6 +1133,29 @@ function generatepassword() {
     document.getElementById('random_password').value = text;
     $("#gen_pass").click();
 }
+
+// company change
+$('#Visitor_company').on('change', function() {
+    var companyId = $(this).val();
+    $.ajax({
+        type: "POST",
+        url: "<?php echo $this->createUrl('company/getContacts') ?>",
+        dataType: "json",
+        data: {id:companyId},
+        success: function(data) {
+            if (data == 0) {
+                $('#CompanySelectedId').val(companyId);
+                var companyName = $('.select2-selection__rendered').text();
+                $('#AddCompanyContactForm_companyName').val(companyName).prop('disabled', 'disabled');
+
+                $("#addCompanyContactModal").modal("show");
+            } else {
+                $('#visitorStaffRow').html(data);
+            }
+            return false;
+        }
+    });
+});
 
 </script>
 

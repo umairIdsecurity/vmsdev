@@ -326,9 +326,25 @@ if ($this->action->id == 'update') {
                         </tr>
                         <tr>
                             <td id="visitorCompanyRow">
-                                <select id="Visitor_company" name="Visitor[company]">
-                                    <option value=''>Select Company</option>
-                                <?php echo $form->error($model, 'company'); ?>
+                                <div style="margin-bottom: 5px;">
+                                    <?php
+                                    $this->widget('application.extensions.select2.Select2', array(
+                                        'model' => $model,
+                                        'attribute' => 'company',
+                                        'items' => CHtml::listData(Visitor::model()->findAllCompanyByTenant($session['tenant']),
+                                            'id', 'name'),
+                                        'selectedItems' => array(), // Items to be selected as default
+                                        'placeHolder' => 'Please select a company'
+                                    ));
+                                    ?>
+                                    <?php echo $form->error($model, 'company'); ?>
+                                    <span class="required">*</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="margin-bottom: 5px;" id="visitorStaffRow"></div>
                             </td>
                         </tr>
                         <tr>
@@ -338,8 +354,8 @@ if ($this->action->id == 'update') {
                                     <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;">
                                         Add Company</a>
                                 <?php } else { ?>
-                                    <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;">
-                                        Add New Company</a>
+                                    <!-- <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;">Add New Company</a> -->
+                                    <a href="#addCompanyContactModal" role="button" data-toggle="modal" id="addCompanyLink"><span>Add New Company</span></a>
                                 <?php } ?>
                             </td>
                         </tr>
@@ -762,6 +778,29 @@ if ($this->action->id == 'update') {
             }
         });
     }
+
+    // company change
+    $('#Visitor_company').on('change', function() {
+        var companyId = $(this).val();
+        $.ajax({
+            type: "POST",
+            url: "<?php echo $this->createUrl('company/getContacts') ?>",
+            dataType: "json",
+            data: {id:companyId},
+            success: function(data) {
+                if (data == 0) {
+                    $('#CompanySelectedId').val(companyId);
+                    var companyName = $('.select2-selection__rendered').text();
+                    $('#AddCompanyContactForm_companyName').val(companyName).prop('disabled', 'disabled');
+
+                    $("#addCompanyContactModal").modal("show");
+                } else {
+                    $('#visitorStaffRow').html(data);
+                }
+                return false;
+            }
+        });
+    });
 </script>
 
 
@@ -815,9 +854,3 @@ $this->widget('bootstrap.widgets.TbButton', array(
 <input type="hidden" id="y2"/>
 <input type="hidden" id="width"/>
 <input type="hidden" id="height"/>
-
-
-
-
-
-

@@ -708,8 +708,10 @@ class VisitController extends Controller {
         $user = User::model()->findAllByPk($id);
 		$photo = Photo::model()->findAllByPk($user[0]->photo);
 		$resultMessage['data'] = $user;
-		$resultMessage['data']["photo"] = $photo[0];
-		  
+        if (isset($photo[0])) {
+            $resultMessage['data']["photo"] = $photo[0];
+        }
+
         echo CJavaScript::jsonEncode($resultMessage);
         Yii::app()->end();
     }

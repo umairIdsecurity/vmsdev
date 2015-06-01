@@ -134,6 +134,12 @@ $session = new CHttpSession;
                 $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in. ' + 28 days'));
             }
 
+            // VIC_CARD_24HOURS
+            if ($model->card_type == CardType::VIC_CARD_24HOURS) {
+                $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in. ' + 1 day'));
+                $model->time_check_out = $model->time_check_in;
+            }
+
             $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                 'model' => $model,
                 'attribute' => 'date_check_out',
@@ -211,12 +217,21 @@ $session = new CHttpSession;
                     $('#card_no_manual').show();
                 }
 
-                <?php if ($model->card_type == CardType::VIC_CARD_EXTENDED) {
+                <?php
+                if ($model->card_type == CardType::VIC_CARD_EXTENDED) {
                     echo '  var checkoutDate = new Date(selectedDate);
                             checkoutDate.setDate(selectedDate.getDate() + 28);
                             $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "setDate", checkoutDate);
                         ';
-                } ?>
+                }
+
+                if ($model->card_type == CardType::VIC_CARD_24HOURS) {
+                    echo '  var checkoutDate = new Date(selectedDate);
+                    checkoutDate.setDate(selectedDate.getDate() + 1);
+                    $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "setDate", checkoutDate);
+                ';
+                }
+                ?>
             }
         });
 
@@ -228,7 +243,7 @@ $session = new CHttpSession;
             buttonImageOnly: true,
             minDate: minDate,
             dateFormat: "dd-mm-yy",
-            disabled: <?php echo ($model->card_type == CardType::VIC_CARD_EXTENDED) ? "true" : "false"; ?>,
+            disabled: <?php echo ($model->card_type == CardType::VIC_CARD_EXTENDED  || $model->card_type == CardType::VIC_CARD_24HOURS) ? "true" : "false"; ?>,
             onClose: function (date) {
                 var day = date.substring(0, 2);
                 var month = date.substring(3, 5);

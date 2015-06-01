@@ -19,7 +19,7 @@ class CompanyController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow all users to perform 'GetCompanyList' and 'GetCompanyWithSameTenant' actions
-                'actions' => array('GetCompanyList', 'GetCompanyWithSameTenant', 'create', 'delete', 'addCompanyContact', 'getContacts'),
+                'actions' => array('GetCompanyList', 'GetCompanyWithSameTenant', 'create', 'delete', 'addCompanyContact', 'getContacts', 'addContact'),
                 'users' => array('@'),
             ),
             array('allow', // allow user if same company
@@ -366,7 +366,7 @@ class CompanyController extends Controller {
     /**
      * Add company contact from Visitor
      */
-    public function actionAddCompanyContact ()
+    public function actionAddCompanyContact()
     {
         if (Yii::app()->request->isAjaxRequest) {
             $session = new CHttpSession;
@@ -404,8 +404,14 @@ class CompanyController extends Controller {
                 $contact->role = 9;
 
                 if ($contact->save()) {
-                    $contactDropDown =  CHtml::dropDownList('Visitor[staff_id]', $contact->id, array(array($contact->id, $contact->getFullName())));
-                    $ret = array("id" => $company->id, "name" => $company->name, "contactDropDown" => $contactDropDown);
+                    $options = [$contact->id, $contact->getFullName()];
+                    $contactDropDown =  '<option value="'.$contact->id.'" >'.$contact->getFullName().'</option>';
+                    if (isset($_POST['typePostForm']) && $_POST['typePostForm'] == 'company') {
+                        $id = $company->id;
+                    } else {
+                        $id = $contact->id;
+                    }
+                    $ret = array("id" => $id, "name" => $company->name, "contactDropDown" => $contactDropDown, 'type' => $_POST['typePostForm']);
                     echo json_encode($ret);
                     Yii::app()->end();
                 } else {

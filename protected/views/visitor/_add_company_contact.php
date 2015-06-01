@@ -15,13 +15,14 @@
                         data: $("#add-company-contact-form").serialize(),
                         success: function(data) {
                             $("#addCompanyContactModal").modal("hide");
-
-                            //update company dropdown:
-                            $("#Visitor_company").append($("<option>", {value:data.id, text: data.name}));
-                            $("#Visitor_company").select2("val", data.id);
-
-                            $("#visitorStaffRow").html(data.contactDropDown);
-
+                            if (data.type == "contact") {
+                                //$("#visitorStaffRow").html(data.contactDropDown);
+                                $("#Visitor_staff_id").append(data.contactDropDown).val(data.id);
+                            } else {
+                                //update company dropdown:
+                                $("#Visitor_company").prepend($("<option>", {value:data.id, text: data.name}));
+                                $("#Visitor_company").select2("val", data.id);
+                            }
                             return false;
                         }
                     });
@@ -41,6 +42,7 @@
         <p class="note">Fields with <span class="required">*</span> are required.</p>
         <input type="hidden" value="<?php echo $tenant;?>" name="CompanyTenant"/>
         <input type="hidden" name="CompanySelectedId" value="" id="CompanySelectedId"/>
+        <input type="hidden" name="typePostForm" value="company" id="typePostForm"/>
 
         <table>
             <tr>
@@ -89,14 +91,3 @@
     </div>
 <?php $this->endWidget(); ?>
 </div>
-
-<script type="text/javascript">
-    $('#addCompanyContactModal').on('hidden', function () {
-        $("#add-company-contact-form").find("input[type=text]").val("");
-    })
-    $('#addCompanyContactModal').on('show', function () {
-        if ($('#CompanySelectedId').val() == "") {
-            $('#AddCompanyContactForm_companyName').removeProp('disabled');
-        }
-    })
-</script>

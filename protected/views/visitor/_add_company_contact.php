@@ -89,3 +89,14 @@
     </div>
 <?php $this->endWidget(); ?>
 </div>
+
+<script type="text/javascript">
+    $('#addCompanyContactModal').on('hidden', function () {
+        $("#add-company-contact-form").find("input[type=text]").val("");
+    })
+    $('#addCompanyContactModal').on('show', function () {
+        if ($('#CompanySelectedId').val() == "") {
+            $('#AddCompanyContactForm_companyName').removeProp('disabled');
+        }
+    })
+</script>

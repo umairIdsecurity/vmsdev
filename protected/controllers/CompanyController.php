@@ -389,20 +389,28 @@ class CompanyController extends Controller {
 
             // save contact into company
             if (isset($company->id) && $company->id > 0) {
-                $contact = new Contact();
-                $contact->company_id = $company->id;
+                $contact = new User('add_company_contact');
+                $contact->company = $company->id;
                 $contact->first_name = $formInfo['firstName'];
                 $contact->last_name = $formInfo['lastName'];
                 $contact->email = $formInfo['email'];
-                $contact->mobile = $formInfo['mobile'];
+                $contact->contact_number = $formInfo['mobile'];
                 $contact->created_by = Yii::app()->user->id;
-                $contact->created_date = time();
+
+                // foreign keys // todo: need to check and change for HARD-CODE
+                $contact->tenant = $session['tenant'];
+                $contact->user_type = 1;
+                $contact->user_status = 1;
+                $contact->role = 9;
 
                 if ($contact->save()) {
                     $contactDropDown =  CHtml::dropDownList('Visitor[staff_id]', $contact->id, array(array($contact->id, $contact->getFullName())));
                     $ret = array("id" => $company->id, "name" => $company->name, "contactDropDown" => $contactDropDown);
                     echo json_encode($ret);
                     Yii::app()->end();
+                } else {
+                    print_r($contact->errors);
+                    die("--DONE--");
                 }
             }
             echo "0";
@@ -413,7 +421,7 @@ class CompanyController extends Controller {
 
     public function actionGetContacts() {
         if (Yii::app()->request->isAjaxRequest) {
-            $contacts = Contact::model()->findAll("company_id = " . $_POST['id']);
+            $contacts = User::model()->findAll("company = " . $_POST['id']);
 
             if ($contacts) {
                 $staffIds = CHtml::dropDownList('Visitor[staff_id]', '', CHtml::listData($contacts, 'id',

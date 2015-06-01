@@ -139,8 +139,9 @@ class WorkstationController extends Controller {
                         $workstation->save();
                     }
                 }
+                
+                $this->redirect(array('admin'));
             }
-            $this->redirect(array('admin'));
         }
 
         $this->render('update', array(

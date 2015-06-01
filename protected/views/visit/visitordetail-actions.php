@@ -156,8 +156,9 @@ $session = new CHttpSession;
                                     if (!hasError){
                                         if($("#Visitor_photo").val() == "" && $("#Visit_card_type").val() == "2" ){
                                             alert("Please upload a photo.");
-                                        }else
-                                        {
+                                        }else if ($("#Visit_card_type").val() == "9" && $("#pre_issued_card_no").val() == "" ) {
+                                            $("#card_number_required").show();
+                                        } else {
                                            checkIfActiveVisitConflictsWithAnotherVisit();
                                         }
                                     }

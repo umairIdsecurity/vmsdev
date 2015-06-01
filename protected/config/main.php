@@ -52,7 +52,7 @@ $result =  CMap::mergeArray(
             'autoStart'=>false
             ),
             */
-
+            
             'ePdf' => array(
                 'class' => 'ext.yii-pdf.EYiiPdf',
                 'params' => array(

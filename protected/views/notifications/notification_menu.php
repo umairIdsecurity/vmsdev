@@ -21,7 +21,7 @@ if (isset($companyLafPreferences) && !empty($companyLafPreferences)) {
      <?php 
            if($notifications) 
             foreach($notifications as $key => $notify ) {
-     ?>   <li><a class="notification-a" href="<?php echo Yii::app()->createUrl("/notifications/view/id/{$notify->id}"); ?>" style="font-weight:bold !important;"> <?php echo substr($notify->subject,0, 50) ?>.. 
+     ?>   <li><a class="notification-a" href="<?php echo Yii::app()->createUrl("/notifications/view/id/{$notify->id}"); ?>" style="font-weight:bold !important;"> <?php echo substr($notify->subject,0, 35) ?>... 
                 <span> <br> <?php echo $notify->notification_type?> <br> <?php echo $notify->date_created?> </span>  
                </a>
           </li>

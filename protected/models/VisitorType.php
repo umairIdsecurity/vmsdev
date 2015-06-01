@@ -121,9 +121,15 @@ class VisitorType extends CActiveRecord {
         if(Yii::app()->controller->action->id != 'exportvisitorrecords' && Yii::app()->controller->action->id != 'evacuationReport' && Yii::app()->controller->action->id != 'visitorRegistrationHistory'){
             $criteria->condition = "t.is_deleted = 0 && t.id !=1";
         }
+        
+        if(Yii::app()->controller->action->id == 'visitorsByTypeReport'){
+            $criteria->condition = "";
+            $criteria->condition = "t.is_deleted=0";
+        }
+        
         $this->dbCriteria->mergeWith($criteria);
     }
-    
+
     /**
      * Before Save change a few things.
      * 

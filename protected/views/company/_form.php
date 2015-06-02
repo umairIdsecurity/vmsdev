@@ -1,4 +1,3 @@
-
 <?php
 /* @var $this CompanyController */
 /* @var $model Company */
@@ -162,13 +161,36 @@ if ($this->action->id == 'update') {
             <button class="yiiBtn" id="modalBtn" style="padding:1.5px 6px;margin-top:-4.1px;height:30.1px;" data-target="#viewLicense" data-toggle="modal">View License Details</button>
         <?php } else { ?>
         <button class="yiiBtn actionForward" style="padding:2px 6px;margin-top:-4.1px;height:30.1px;" type='button' onclick="gotoLicensePage()">License Details</button>
-            <?php
+        <?php
             }
-            }
-            ?>
+        }
+        ?>
     </div>
 
     <?php $this->endWidget(); ?>
+    <div class="page-header">
+      <h1>Organisation contacts</h1>
+    </div>
+    <?php if (isset($contacts) && !empty($contacts)): ?>
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Email</th>
+                    <th>Number</th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php foreach($contacts as $contact): ?>
+                <tr>
+                    <td><?php echo $contact->getFullName(); ?></td>
+                    <td><?php echo $contact->email; ?></td>
+                    <td><?php echo $contact->contact_number; ?></td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php endif; ?>
 
 </div><!-- form -->
 
@@ -194,7 +216,7 @@ if (isset($_GET['viewFrom'])) {
 
         var default_field = $("#is_user_field").attr('value');
 
-        if(default_field==""){
+        if(default_field == "") {
             $( ".user_fields" ).hide();
         }
         else{

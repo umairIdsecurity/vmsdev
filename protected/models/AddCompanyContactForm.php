@@ -21,6 +21,7 @@ class AddCompanyContactForm extends CFormModel {
             // username and password are required
             array('companyName, firstName, lastName, email, mobile', 'required'),
             array('email', 'email'),
+            array('email', 'emailUnique', 'add_company_contact'),
         );
     }
 
@@ -37,6 +38,16 @@ class AddCompanyContactForm extends CFormModel {
         );
     }
 
+    public function emailUnique($attribute, $params) {
+        $company = Company::model()->find("name=':name'", ['name' => $this->companyName]);
+        $contact = User::model()->find("email=:email and company=:cid", [
+                'email' => $this->email, 
+                'cid' => $company->id
+            ]);
 
+        if ($contact) {
+            $this->addError($attribute, 'Contact existed !');
+        }
+    }
 
 }

@@ -113,7 +113,7 @@ if (isset($company) && !empty($company)) {
     }
 </style>
 
-
+<input type="hidden" id="passwordUser" value="<?php echo isset($password) ? $password : ''; ?>">
 <div class="form" data-ng-app="PwordForm">
 <?php if ($this->action->id == 'update') {
     echo '<h1>Edit ' . Roles::$labels[Yii::app()->request->getParam('role')] . '</h1>';
@@ -138,7 +138,7 @@ $form = $this->beginWidget('CActiveForm', array(
                     $("#User_password_em_").html("select one option");
                 }
                 else if($(".pass_option").is(":checked")== true && $(".pass_option:checked").val()==1 && ($("#User_password").val()== "" || $("#User_repeat_password").val()=="")){
-                    if ($("#currentAction").val() == "update") {
+                    if ($("#currentAction").val() == "update" && $("#passwordUser").val() !== "") {
                         $("#User_password_em_").hide();
                         checkHostEmailIfUnique();
                     } else {
@@ -650,7 +650,7 @@ $(document).ready(function () {
         $("#fromMonth").val($("#dateofBirthBreakdownValueMonth").val());
         $("#fromDay").val($("#dateofBirthBreakdownValueDay").val());
 
-        var password = '<?php echo isset($password) ? $password : ""; ?>';
+        var password = $('#passwordUser').val();
         if (password) {
             $('.pass_option[value=1]').prop('checked', true);
         } else {

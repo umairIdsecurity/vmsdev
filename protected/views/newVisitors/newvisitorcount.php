@@ -1,4 +1,4 @@
-<h1> Total Visitors by Visitor Type </h1>
+<h1> Total Visitors by Profiles </h1>
 <!-- Filter Form -->
 <div class="form">
 <?php $form=$this->beginWidget('CActiveForm', array(
@@ -11,7 +11,7 @@
                         'value'=>Yii::app()->request->getParam("date_from_filter"),
                         // additional javascript options for the date picker plugin
                         'options'=>array(
-                             'changeYear' => true,
+                            'changeYear' => true,
                             'dateFormat'=>'dd-mm-yy',
                             'changeMonth'=> true,
                         ),
@@ -36,43 +36,33 @@
         <?php $this->endWidget()?>    
     </div>
 
+
 <!-- Listing and Pie Chart Div -->
 <div class="content" style="width:40%; float: left; margin:20px 10px 0px 5px;">
 <table class="table" cellpadding="4" width="100%">
     <thead>
         <tr>
-            <th> Visitor Type </th>
-            <th> Visits Count </th>
+            <th> Duration </th>
+            <th> Visitor Count </th>
         </tr>
     </thead>
     <tbody>
         <?php 
         
-        $datasets = array(
-            array('VisitorType', 'Visits per Visitor')
-        );
-        
-        $total=0;
-        
-        if($visit_count) { 
-                
-                $count=1;
-                
-                foreach($visit_count as $vc ) {
-                    $datasets[$count] =  array($vc['name'],intval($vc['visits']));
-                    $count++;
-                    $total += intval($vc['visits']);
+        if($results) { 
+                for($k=1;$k<sizeof($results);$k++) {
+                    
 ?>
         <tr>
-            <td><?php echo $vc['name']; ?></td>
-            <td><?php echo $vc['visits'];?></td>
+            <td><?php echo $results[$k][0]; ?></td>
+            <td><?php echo $results[$k][1];?></td>
         </tr>
                 <?php }
         } ?>
     </tbody>
     <tfoot>
         <tr>
-            <th>Total Visits</th>
+            <th>Total Visitors</th>
             <th><?= $total ?></th>
         </tr>
     </tfoot>
@@ -83,7 +73,8 @@
         <?php
 //very useful google chart
         $this->widget('ext.Hzl.google.HzlVisualizationChart', array('visualization' => 'PieChart',
-            'data' => $datasets,
+            'data' => $results,
             'options' => array('title' => 'Total Visitors by Visitor Type')));
         ?>
     </div>
+

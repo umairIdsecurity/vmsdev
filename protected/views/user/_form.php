@@ -613,8 +613,7 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
             var password = '<?php echo isset($password) ? $password : ""; ?>';
             if (password) {
                 $('.pass_option[value=1]').prop('checked', true);
-                $('#User_password').html('......');
-                $('#User_repeat_password').html('......');
+                $('#User_password').val ('......');
             } else {
                 $('.pass_option[value=2]').prop('checked', true);
             }

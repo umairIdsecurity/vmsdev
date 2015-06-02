@@ -32,35 +32,39 @@ $photoForm = $this->beginWidget('CActiveForm', array(
         <img id="photoPreview" src="" style="display:none;"></img>
     <?php } ?>
 </div>
-<?php if($model->card_type == 4){
+<?php
+if ($model->card_type == 4) {
     $cardclass = "cardDivC";
-}else{
+} else {
     $cardclass = "cardDiv";
-}?>
+}
+?>
 <div id="<?= $cardclass; ?>">
     <div class="card-content-company-img">
-    <?php
-    if ($tenant->company != '') {
-        $companyLogoId = Company::model()->findByPk($tenant->company)->logo;
+        <?php
+        if ($etenant) {
+            if ($tenant->company != '') {
+                $companyLogoId = Company::model()->findByPk($tenant->company)->logo;
 
-        if ($companyLogoId == "") {
-            $companyLogo = Yii::app()->controller->assetsBase . "/" . 'images/companylogohere.png';
-        } else {
-            $companyLogo = Yii::app()->request->baseUrl . "/" . Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
-        }
-        ?>
-        <img class='<?php
-        if ($model->visit_status != VisitStatus::ACTIVE) {
-            echo "cardCompanyLogoPreregistered";
-        } else {
-            echo "cardCompanyLogo";
-        }
-        ?>' src="<?php
-        echo $companyLogo;
-        ?>"/>
-    <?php
-    }
-    ?>
+                if ($companyLogoId == "") {
+                    $companyLogo = Yii::app()->controller->assetsBase . "/" . 'images/companylogohere.png';
+                } else {
+                    $companyLogo = Yii::app()->request->baseUrl . "/" . Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
+                }
+                ?>
+                <img class='<?php
+                if ($model->visit_status != VisitStatus::ACTIVE) {
+                    echo "cardCompanyLogoPreregistered";
+                } else {
+                    echo "cardCompanyLogo";
+                }
+                ?>' src="<?php
+                     echo $companyLogo;
+                     ?>"/>
+                     <?php
+                 }
+             }
+             ?>
     </div>
     <div class="card-content">
         <div class="card-content-table">
@@ -112,7 +116,8 @@ $photoForm = $this->beginWidget('CActiveForm', array(
                                 echo $first_name[0] . ' ' . $last_name[0];
                             } else {
                                 echo $visitorModel->first_name . ' ' . $visitorModel->last_name;
-                            } ?>
+                            }
+                            ?>
 
                         </div>
                     </td>
@@ -125,7 +130,7 @@ $photoForm = $this->beginWidget('CActiveForm', array(
                         }
                         ?>">
                                   <?php
-                                  if($model->card !=''){
+                                  if ($model->card != '') {
                                       echo CardGenerated::model()->findByPk($model->card)->card_number;
                                   }
                                   ?>
@@ -137,11 +142,11 @@ $photoForm = $this->beginWidget('CActiveForm', array(
     </div>
 
 </div>
-<?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
-<?php if ($visitorModel->photo != '') { ?>
+       <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
+       <?php if ($visitorModel->photo != '') { ?>
     <input type="button" class="btn editImageBtn actionForward" id="editImageBtn" value="Edit Photo" onclick = "document.getElementById('light').style.display = 'block';
             document.getElementById('fade').style.display = 'block'"/>
-       <?php } ?>
+<?php } ?>
 <div
 <?php
 if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
@@ -153,90 +158,88 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
         $cardDetail = CardGenerated::model()->findAllByAttributes(array(
             'visitor_id' => $model->visitor
         ));
-    ?>
+        ?>
 </div>
-    <div class="dropdown">
-        <button class="complete btn btn-info printCardBtn dropdown-toggle" style="width:205px !important" type="button" id="menu1" data-toggle="dropdown">Print Card
-    <span class="caret pull-right"></span></button>
-        <ul class="dropdown-menu" style="left: 62px;" role="menu" aria-labelledby="menu1">
-      <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo yii::app()->createAbsoluteUrl('cardGenerated/pdfprint',array('id'=>$model->id,'type'=>1)) ?>">Print On Standard Printer</a></li>
-      <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo yii::app()->createAbsoluteUrl('cardGenerated/pdfprint',array('id'=>$model->id,'type'=>2)) ?>">Print On Card Printer</a></li>
-      <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo yii::app()->createAbsoluteUrl('cardGenerated/pdfprint',array('id'=>$model->id,'type'=>3)) ?>">Rewritable Print Card</a></li>
+<div class="dropdown">
+    <button class="complete btn btn-info printCardBtn dropdown-toggle" style="width:205px !important" type="button" id="menu1" data-toggle="dropdown">Print Card
+        <span class="caret pull-right"></span></button>
+    <ul class="dropdown-menu" style="left: 62px;" role="menu" aria-labelledby="menu1">
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo yii::app()->createAbsoluteUrl('cardGenerated/pdfprint', array('id' => $model->id, 'type' => 1)) ?>">Print On Standard Printer</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo yii::app()->createAbsoluteUrl('cardGenerated/pdfprint', array('id' => $model->id, 'type' => 2)) ?>">Print On Card Printer</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo yii::app()->createAbsoluteUrl('cardGenerated/pdfprint', array('id' => $model->id, 'type' => 3)) ?>">Rewritable Print Card</a></li>
     </ul>
-  </div>
-    
+</div>
+
 <div style="margin-top: 10px;">
     Total Visits at <?php echo $visitModel['companyName']; ?>: <?php echo $visitModel['companyVisitsByVisitor']; ?></br>
-    <!-- Total Visits to All Companies: <?php // echo $visitModel['allVisitsByVisitor']; ?> -->
+    <!-- Total Visits to All Companies: <?php // echo $visitModel['allVisitsByVisitor'];  ?> -->
     <?php if ($visitorModel->profile_type == Visitor::PROFILE_TYPE_VIC) { ?>
-        Remaining Days: <?php echo (28 - $visitModel['companyVisitsByVisitor']) ;?>
-    <?php } ?>
+        Remaining Days: <?php echo (28 - $visitModel['companyVisitsByVisitor']); ?>
+<?php } ?>
 </div>
 <input type="hidden" id="dummycardvalue" value="<?php echo $model->card; ?>"/>
 
 <form method="post" id="workstationForm" action="<?php echo Yii::app()->createUrl('visit/detail', array('id' => $model->id)); ?>">
-<div style="margin: 10px 0px 0px 60px; text-align: left;">
-    <?php
-    if ($asic) {
-        echo CHtml::dropDownList('visitor_card_status', $visitorModel->visitor_card_status,
-            Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC], array('empty' => 'Card Status'));
-        echo "<br />";
-    }
-    ?>
-
-    <select id="workstation" name="Visit[workstation]" onchange="populateVisitWorkstation(this)">
+    <div style="margin: 10px 0px 0px 60px; text-align: left;">
         <?php
-        if ($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
-            echo '';
-        } else {
-            echo '<option value="">Select workstation</option>';
+        if ($asic) {
+            echo CHtml::dropDownList('visitor_card_status', $visitorModel->visitor_card_status, Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC], array('empty' => 'Card Status'));
+            echo "<br />";
         }
         ?>
 
-        <?php
-        $workstationList = Utils::populateWorkstation();
-        foreach ($workstationList as $key => $value) {
-            ?>
-            <option value="<?php echo $value->id; ?>" <?php
-            if (isset($model->workstation) && $value->id == $model->workstation) {
-                echo 'selected="selected"';
+        <select id="workstation" name="Visit[workstation]" onchange="populateVisitWorkstation(this)">
+            <?php
+            if ($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
+                echo '';
+            } else {
+                echo '<option value="">Select workstation</option>';
             }
-            ?>><?php echo $value->name; ?></option>
+            ?>
+
+            <?php
+            $workstationList = Utils::populateWorkstation();
+            foreach ($workstationList as $key => $value) {
+                ?>
+                <option value="<?php echo $value->id; ?>" <?php
+                if (isset($model->workstation) && $value->id == $model->workstation) {
+                    echo 'selected="selected"';
+                }
+                ?>><?php echo $value->name; ?></option>
+                        <?php
+                    }
+                    ?>
+        </select>
+        <br/>
+
         <?php
+        if ($asic) {
+            echo CHtml::dropDownList('visitor_type', $visitorModel->visitor_type, VisitorType::model()->returnVisitorTypes());
+            echo "<br />";
+            echo CHtml::dropDownList('reason', $model->reason, CHtml::listData(VisitReason::model()->findAll(), 'id', 'reason'));
+            echo "<br />";
         }
         ?>
-    </select>
-    <br/>
-
-    <?php
-    if ($asic) {
-        echo CHtml::dropDownList('visitor_type', $visitorModel->visitor_type, VisitorType::model()->returnVisitorTypes());
-        echo "<br />";
-        echo CHtml::dropDownList('reason', $model->reason, CHtml::listData(VisitReason::model()->findAll(),'id', 'reason'));
-        echo "<br />";
-
-    }
-    ?>
 
 
-    <input type="submit" class="complete" id="submitWorkStationForm" value="Update">
+        <input type="submit" class="complete" id="submitWorkStationForm" value="Update">
 
 
-</div>
+    </div>
 </form>
 
 <script>
-    $(document).ready(function() {
-        <?php if ($asic) { ?>
-        // remove Denied card status
-        $("#visitor_card_status option[value='5']").remove();
-        <?php }?>
+    $(document).ready(function () {
+<?php if ($asic) { ?>
+            // remove Denied card status
+            $("#visitor_card_status option[value='5']").remove();
+<?php } ?>
 
         if (<?php echo $model->visit_status; ?> == '1' && $("#dummycardvalue").val() == '' && '<?php echo $model->card; ?>' != '') { //1 is active
             $('#printCardBtn').disabled = false;
 
         }
-        else if ('<?php echo $model->card; ?>' != ''){
+        else if ('<?php echo $model->card; ?>' != '') {
             if (<?php echo $model->visit_status; ?> != '1') {
                 $('#printCardBtn').disabled = true;
                 $("#printCardBtn").addClass("disabledButton");
@@ -245,7 +248,7 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
 
         $('#photoCropPreview').imgAreaSelect({
             handles: true,
-            onSelectEnd: function(img, selection) {
+            onSelectEnd: function (img, selection) {
                 $("#cropPhotoBtn").show();
                 $("#x1").val(selection.x1);
                 $("#x2").val(selection.x2);
@@ -255,7 +258,7 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
                 $("#height").val(selection.height);
             }
         });
-        $("#cropPhotoBtn").click(function(e) {
+        $("#cropPhotoBtn").click(function (e) {
             e.preventDefault();
             $.ajax({
                 type: 'POST',
@@ -271,14 +274,14 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
                     photoId: $('#Visitor_photo').val()
                 },
                 dataType: 'json',
-                success: function(r) {
+                success: function (r) {
                     $.ajax({
                         type: 'POST',
                         url: '<?php echo Yii::app()->createUrl('photo/GetPathOfCompanyLogo&id='); ?>' + $('#Visitor_photo').val(),
                         dataType: 'json',
-                        success: function(r) {
+                        success: function (r) {
 
-                            $.each(r.data, function(index, value) {
+                            $.each(r.data, function (index, value) {
                                 document.getElementById('photoPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                             });
@@ -317,7 +320,7 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
             type: "POST",
             url: "<?php echo CHtml::normalizeUrl(array("/visitor/update&id=" . $visitorModel->id . "&view=1")); ?>",
             data: form,
-            success: function(data) {
+            success: function (data) {
                 $("#photoPreview").show();
             },
         });

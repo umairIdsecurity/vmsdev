@@ -1,16 +1,16 @@
 <?php
 
 $session = new CHttpSession;
-
 $dataId = '';
 
 if ($this->action->id == 'update') {
-
     $dataId = $_GET['id'];
-
 }
+
 $company = Company::model()->findByPk($session['company']);
-$companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
+if (isset($company) && !empty($company)) {
+    $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
+}
 ?>
 
 <style>

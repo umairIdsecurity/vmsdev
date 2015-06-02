@@ -22,7 +22,10 @@ if (isset($_GET['id'])) {
 
 $currentLoggedUserId = $session['id'];
 $company = Company::model()->findByPk($session['company']);
-$companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
+
+if (isset($company) && !empty($company)) {
+    $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
+}
 ?>
 <style type="text/css">
 	#modalBody_gen {padding-top: 10px !important;height: 204px !important;}
@@ -278,7 +281,7 @@ echo '<h1>Add '.Roles::$labels[Yii::app()->request->getParam('role')].'</h1>';
 	                        		$session['role'] == Roles::ROLE_AGENT_ADMIN || $urlRole == Roles::ROLE_AGENT_ADMIN || CHelper::is_accessing_avms_features())
 	                        	{
 	                        		$companyList = CHtml::listData(Company::model()->findAllCompany(), 'id', 'name');
-	                        		
+
 	                        		if ($this->action->id == 'update') {
 	                        			$companyId = User::model()->getCompany($currentlyEditedUserId);
 	                        		} elseif ($session['role'] != Roles::ROLE_SUPERADMIN) {
@@ -610,7 +613,8 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
             var password = '<?php echo isset($password) ? $password : ""; ?>';
             if (password) {
                 $('.pass_option[value=1]').prop('checked', true);
-                $('#User_password').val('......');
+                $('#User_password').html('......');
+                $('#User_repeat_password').html('......');
             } else {
                 $('.pass_option[value=2]').prop('checked', true);
             }

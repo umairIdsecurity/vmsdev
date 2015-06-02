@@ -43,16 +43,17 @@ if ($model->card_type == 4) {
         <?php
         if ($tenant) {
             if ($tenant->company != '') {
-                $companyLogoId = Company::model()->findByPk($tenant->company);
-                if ($companyLogoId) {
+                $company = Company::model()->findByPk($tenant->company);
+                if (!empty($company)) {
+                    $companyLogoId = $company->logo;
                     if ($companyLogoId == "") {
                         $companyLogo = Yii::app()->controller->assetsBase . "/" . 'images/companylogohere.png';
                     } else {
                         $companyLogo = Yii::app()->request->baseUrl . "/" . Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
                     }
-                } else {
-                    $companyLogo = Yii::app()->controller->assetsBase . "/" . 'images/companylogohere.png';
                 }
+
+                if (!empty($companyLogo)):
                 ?>
                 <img class='<?php
                 if ($model->visit_status != VisitStatus::ACTIVE) {
@@ -63,7 +64,7 @@ if ($model->card_type == 4) {
                 ?>' src="<?php
                      echo $companyLogo;
                      ?>"/>
-                     <?php
+                     <?php endif;
                  }
              }
              ?>
@@ -75,10 +76,9 @@ if ($model->card_type == 4) {
                     <td>
                         <?php
                         if ($tenant->company != '') {
-                           $company = Company::model()->findByPk($tenant->company);
-                           if($company){
-                               echo $company->code;
-                           }
+                            if (!empty($company)) {
+                                echo $company->code;
+                            }
                         }
                         ?>
                     </td>

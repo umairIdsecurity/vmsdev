@@ -25,7 +25,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                 <li>
                     <table id="personalDetailsTable" class="detailsTable">
                         <tr>
-                            <td width="100px;" style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                            <td width="110px;" style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
                                 First Name
                             </td>
                             <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
@@ -94,7 +94,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                     </div>
                     <table id="contactDetailsTable" class="detailsTable">
                         <tr>
-                            <td width="100px;" style="padding-top: 7px;">Email</td>
+                            <td width="110px;" style="padding-top: 7px;">Email</td>
                             <td><?php echo $visitorForm->textField($visitorModel, 'email',
                                     array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled')); ?>
                                 <?php echo "<br>" . $visitorForm->error($visitorModel, 'email'); ?>
@@ -118,13 +118,14 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
         <?php
         if ($asic) :
             $company = $visitorModel->getCompany();
+            if (!empty($company)) :
         ?>
         <li class='has-sub' id="companyDetailsLi"><a href="#"><span>Company Details</span></a>
             <ul>
                 <li>
                     <table id="companyDetailsTable" class="detailsTable">
                         <tr>
-                            <td width="100px;" style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                            <td width="110px;" style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
                                 Company Name
                             </td>
                             <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
@@ -164,7 +165,10 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
             </ul>
         </li>
 
-        <?php endif; ?>
+        <?php 
+            endif;
+        endif;
+        ?>
         <li class='has-sub' id="visitorTypeDetailsLi" <?php echo !is_null($asic) ? 'style="display: none;"' : ""; ?>><a href="#"><span>Visitor Type</span></a>
             <ul>
                 <li>
@@ -209,7 +213,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                     <table id="visitorTypeTable" class="detailsTable">
                         <tr>
 
-                            <td width="100px;" style="  padding-top: 4px;"><?php echo $visitForm->labelEx($model,
+                            <td width="110px;" style="  padding-top: 4px;"><?php echo $visitForm->labelEx($model,
                                     'card_type'); ?></td>
                             <td>
                                 <select id="Visit_card_type" name="Visit[card_type]">
@@ -233,7 +237,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                         </tr>
                         <tr>
 
-                            <td width="100px;" style="padding-top:4px;"><?php echo $visitForm->labelEx($model,
+                            <td width="110px;" style="padding-top:4px;"><?php echo $visitForm->labelEx($model,
                                     'visitor_type', array('style' => 'padding-left:0;')); ?></td>
                             <td><?php
                                 if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
@@ -302,7 +306,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
 
                     <table id="reasonTable" class="detailsTable">
                         <tr>
-                            <td width="100px;" style="padding-top:4px;"><label for="Visit_reason">Reason</label></td>
+                            <td width="110px;" style="padding-top:4px;"><label for="Visit_reason">Reason</label></td>
                             <td>
                                 <select id="Visit_reason" name="Visit[reason]"
                                         onchange="ifSelectedIsOtherShowAddReasonDiv(this)">
@@ -351,7 +355,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                     ?>
                     <table id="addreasonTable" class="detailsTable">
                         <tr>
-                            <td width="100px;"><label for="VisitReason_reason">Reason</label></td>
+                            <td width="110px;"><label for="VisitReason_reason">Reason</label></td>
                             <td><textarea id="VisitReason_reason" name="VisitReason[reason]"
                                           style="width:200px !important;text-transform: capitalize;" cols="80" rows="3"><?php
                                     echo $reasonModel->reason;
@@ -370,6 +374,39 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                 </li>
             </ul>
         </li>
+        <li class='has-sub' id="asicDetailsLi">
+            <a href="#"><span>Identification</span></a>
+            <ul>
+                <li>
+                <table id="asicSponsorDetailsTable" class="detailsTable">
+                    <tr>
+                        <td width="110px;" style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                            Type
+                        </td>
+                        <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                            <?php echo $visitorModel->identification_type; ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="110px;" style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                            Document Number
+                        </td>
+                        <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                            <?php echo $visitorModel->identification_document_no; ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="110px;" style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                            Document Expiry
+                        </td>
+                        <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                            <?php echo $visitorModel->identification_document_expiry; ?>
+                        </td>
+                    </tr>
+                </table>
+                </li>
+            </ul>
+        </li>
 
         <?php if ($asic) : ?>
         <li class='has-sub' id="asicDetailsLi">
@@ -378,7 +415,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                 <li>
                     <table id="asicSponsorDetailsTable" class="detailsTable">
                         <tr>
-                            <td width="100px;" style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                            <td width="110px;" style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
                                 First Name
                             </td>
                             <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
@@ -444,7 +481,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
 
                     <table id="hostTable" class="detailsTable">
                         <tr>
-                            <td style="width:100px !important; padding-top: 3px;"><?php echo $hostForm->labelEx($hostModel,
+                            <td style="width:110px !important; padding-top: 3px;"><?php echo $hostForm->labelEx($hostModel,
                                     'first_name'); ?></td>
                             <td>
                                 <?php echo $hostForm->textField($hostModel, 'first_name',
@@ -453,7 +490,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                             </td>
                         </tr>
                         <tr>
-                            <td width="100px;" style="  padding-top: 3px;"><?php echo $hostForm->labelEx($hostModel,
+                            <td width="110px;" style="  padding-top: 3px;"><?php echo $hostForm->labelEx($hostModel,
                                     'last_name'); ?></td>
                             <td>
                                 <?php echo $hostForm->textField($hostModel, 'last_name',
@@ -493,7 +530,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
 
                         <table id='newPatientTable' class='detailsTable'>
                             <tr>
-                                <td width="100px"><?php echo $newPatientForm->labelEx($newPatient, 'name'); ?></td>
+                                <td width="110px"><?php echo $newPatientForm->labelEx($newPatient, 'name'); ?></td>
                                 <td>
                                     <?php echo $newPatientForm->textField($newPatient, 'name',
                                         array('size' => 50, 'maxlength' => 100)); ?>
@@ -524,8 +561,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
             $("#contactDetailsLi").html("<a href='#'><span>Contact Details</span></a>");
         }
 
-        if (<?php echo $model->visit_status; ?> == '3'
-        )
+        if ("<?php echo $model->visit_status; ?>" == '3')
         {
             $("#visitorInformationCssMenu :input").attr('disabled', true);
             $("#visitorInformationCssMenu input[type='submit']").hide();
@@ -589,7 +625,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
         $("#dismissModal").click();
         $.ajax({
             type: 'POST',
-            url: '<?php echo Yii::app()->createUrl('visitor/getHostDetails&id='); ?>' + id,
+            url: '<?php echo Yii::app()->createUrl("visitor/getHostDetails&id="); ?>' + id,
             dataType: 'json',
             data: id,
             success: function (r) {

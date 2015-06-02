@@ -161,7 +161,7 @@ Yii::app()->clientScript->registerScript('select_card_type_vic', "
     function getEditText(cardid) {
        
         $.ajax({
-            url: '<?php echo CController::createAbsoluteUrl('cardtype/backtext')?>',
+            url: '<?php echo CController::createAbsoluteUrl('cardType/backtext')?>',
             data: "cardid="+cardid,
             success: function (data) {
                 $('#back-card').val(data);

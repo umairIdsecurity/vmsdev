@@ -1,5 +1,3 @@
-
-
 <?php
 if ($this->Id == 'visitor') {
     $dataId = '';
@@ -138,7 +136,7 @@ if (isset($_GET['viewFrom'])) {
 
                             $(".ajax-upload-dragdrop2").css("background", "url(<?php echo Yii::app()->request->baseUrl."/"; ?>" + value.relative_path + ") no-repeat center top");
                             $(".ajax-upload-dragdrop2").css({
-                                "background-size": "137px"
+                                "background-size": "126px 146px"
                             });
                             document.getElementById('photoCropPreview2').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                         });

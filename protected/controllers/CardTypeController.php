@@ -26,7 +26,7 @@ class CardTypeController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'edit', 'admin', 'delete', 'index', 'view', 'selectWorkstation', 'gettext'),
+                'actions' => array('create', 'update', 'edit', 'admin', 'delete', 'index', 'view', 'selectWorkstation', 'backtext'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -101,7 +101,7 @@ class CardTypeController extends Controller {
         }
     }
 
-    public function actionGettext() {
+    public function actionBacktext() {
         if (yii::app()->request->isAjaxRequest) {
             $cardType = CardType::model()->findByPk($_POST['cardid']);
             echo $cardType->back_text;

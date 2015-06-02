@@ -1150,7 +1150,7 @@ $('#Visitor_company').on('change', function() {
         url: "<?php echo $this->createUrl('company/getContacts') ?>",
         dataType: "json",
         data: {id:companyId},
-        success: function(data) {//console.log(data);return;
+        success: function(data) {
             var companyName = $('.select2-selection__rendered').text();
             $('#AddCompanyContactForm_companyName').val(companyName).prop('disabled', 'disabled');
             if (data == 0) {

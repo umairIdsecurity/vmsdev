@@ -77,13 +77,13 @@ $session = new CHttpSession;
                                                 <select class='time visit_time_in_minutes'  id='Visit_time_check_out_minutes' disabled style="width:70px;">
                                                     <?php for ($i = 1; $i <= 60; $i++): ?>
                                                         <option value="<?= $i; ?>"><?php
-                                                    if ($i > 0 && $i < 10) {
-                                                        echo '0' . $i;
-                                                    } else {
-                                                        echo $i;
-                                                    };
-                                                        ?></option>
-                                                        <?php endfor; ?>
+                                                            if ($i > 0 && $i < 10) {
+                                                                echo '0' . $i;
+                                                            } else {
+                                                                echo $i;
+                                                            };
+                                                            ?></option>
+                                                    <?php endfor; ?>
                                                 </select>
                                             </td>
                                         </tr>
@@ -198,7 +198,7 @@ $session = new CHttpSession;
                         <?php if ($model->visit_status == VisitStatus::CLOSED) {
                             ?>
                             <button id='registerNewVisit' class='greenBtn'>Activate Visit</button> 
-                        <?php
+                            <?php
                         } else {
                             if ($model->card_type == CardType::MANUAL_VISITOR && isset($model->date_check_in) && strtotime($model->date_check_in) < strtotime(date("d-m-Y"))) {
                                 echo '<input type="submit" value="Back Date Visit" class="complete"/>';
@@ -214,7 +214,7 @@ $session = new CHttpSession;
                 </ul>
             </li>
 
-<?php } ?>
+        <?php } ?>
     </ul>
 </div>
 <input type="hidden" value="<?php echo $session['previousVisitAction']; ?>" id="previousVisitAction"/>
@@ -437,18 +437,20 @@ if ($model->time_check_out && $model->card_type == CardType::VIC_CARD_24HOURS &&
     if ($tenant) {
         if ($tenant->company != '') {
             $company = Company::model()->findByPk($tenant->company);
-            $card_count = $company->card_count ? ($company->card_count + 1) : 1;
+            if ($company) {
+                $card_count = $company->card_count ? ($company->card_count + 1) : 1;
 
-            while (strlen($card_count) < 6) {
-                $card_count = '0' . $card_count;
+                while (strlen($card_count) < 6) {
+                    $card_count = '0' . $card_count;
+                }
+                echo $company->code . ($card_count);
             }
-            echo $company->code . ($card_count);
         }
     }
     ?>">
 
     <input type="text" id="CardGenerated_print_count" name="CardGenerated[print_count]" value="">
     <input type="submit" value="Create" name="yt0" id="submitCardForm">
-<?php $this->endWidget(); ?>
+    <?php $this->endWidget(); ?>
 
 </div>

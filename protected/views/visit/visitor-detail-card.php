@@ -4,7 +4,6 @@ $session = new CHttpSession;
 $session['count'] = 1;
 date_default_timezone_set('Asia/Manila');
 $tenant = User::model()->findByPk($visitorModel->tenant);
-
 $photoForm = $this->beginWidget('CActiveForm', array(
     'id' => 'update-photo-form',
     'action' => Yii::app()->createUrl('/visitor/update&id=' . $model->visitor . '&view=1'),
@@ -44,12 +43,15 @@ if ($model->card_type == 4) {
         <?php
         if ($tenant) {
             if ($tenant->company != '') {
-                $companyLogoId = Company::model()->findByPk($tenant->company)->logo;
-
-                if ($companyLogoId == "") {
-                    $companyLogo = Yii::app()->controller->assetsBase . "/" . 'images/companylogohere.png';
+                $companyLogoId = Company::model()->findByPk($tenant->company);
+                if ($companyLogoId) {
+                    if ($companyLogoId == "") {
+                        $companyLogo = Yii::app()->controller->assetsBase . "/" . 'images/companylogohere.png';
+                    } else {
+                        $companyLogo = Yii::app()->request->baseUrl . "/" . Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
+                    }
                 } else {
-                    $companyLogo = Yii::app()->request->baseUrl . "/" . Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
+                    $companyLogo = Yii::app()->controller->assetsBase . "/" . 'images/companylogohere.png';
                 }
                 ?>
                 <img class='<?php
@@ -73,7 +75,10 @@ if ($model->card_type == 4) {
                     <td>
                         <?php
                         if ($tenant->company != '') {
-                            echo Company::model()->findByPk($tenant->company)->code;
+                           $company = Company::model()->findByPk($tenant->company);
+                           if($company){
+                               echo $company->code;
+                           }
                         }
                         ?>
                     </td>
@@ -142,11 +147,11 @@ if ($model->card_type == 4) {
     </div>
 
 </div>
-       <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
-       <?php if ($visitorModel->photo != '') { ?>
+<?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
+<?php if ($visitorModel->photo != '') { ?>
     <input type="button" class="btn editImageBtn actionForward" id="editImageBtn" value="Edit Photo" onclick = "document.getElementById('light').style.display = 'block';
             document.getElementById('fade').style.display = 'block'"/>
-<?php } ?>
+       <?php } ?>
 <div
 <?php
 if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
@@ -172,10 +177,10 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
 
 <div style="margin-top: 10px;">
     Total Visits at <?php echo $visitModel['companyName']; ?>: <?php echo $visitModel['companyVisitsByVisitor']; ?></br>
-    <!-- Total Visits to All Companies: <?php // echo $visitModel['allVisitsByVisitor'];  ?> -->
+    <!-- Total Visits to All Companies: <?php // echo $visitModel['allVisitsByVisitor'];    ?> -->
     <?php if ($visitorModel->profile_type == Visitor::PROFILE_TYPE_VIC) { ?>
         Remaining Days: <?php echo (28 - $visitModel['companyVisitsByVisitor']); ?>
-<?php } ?>
+    <?php } ?>
 </div>
 <input type="hidden" id="dummycardvalue" value="<?php echo $model->card; ?>"/>
 

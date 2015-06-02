@@ -127,7 +127,6 @@ class Workstation extends CActiveRecord {
             $criteria->compare('tenant', $user->tenant);
             $criteria->compare('tenant_agent', $user->tenant_agent);
         }
-
         $criteria->compare('is_deleted', 0);
 
         return new CActiveDataProvider($this, array(

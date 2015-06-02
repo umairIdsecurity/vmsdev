@@ -42,7 +42,7 @@ if ($model->card_type == 4) {
 <div id="<?= $cardclass; ?>">
     <div class="card-content-company-img">
         <?php
-        if ($etenant) {
+        if ($tenant) {
             if ($tenant->company != '') {
                 $companyLogoId = Company::model()->findByPk($tenant->company)->logo;
 

@@ -236,7 +236,7 @@ $session = new CHttpSession;
             if ($("#visitStatusActions").val() != 2) {
                 $("#preregisterLi a").click();
             }
-            $("#activateLi a").click();
+            //$("#activateLi a").click();
         }
 
         $('#activate-a-visit-form').bind('submit', function () {
@@ -245,8 +245,36 @@ $session = new CHttpSession;
 
         $('#registerNewVisit').on('click', function (e) {
             e.preventDefault();
+            var checked = false;
+            var $btnVic = $('#btnVicConfirm'),
+                $btnASIC = $('#btnAsicConfirm');
+            $('a[href="#vicHolderModal"]').click();
+            $btnVic.on('click', function(e) {
+                var checknum = $('#vicHolderModal').find('input[type="checkbox"]').filter(':checked');
+                if (checknum.length == 2) {
+                    vicHolderDeclarationChange();
+                    $('a[href="#asicSponsorModal"]').click();
+                } else {
+                    alert('Please confirm VIC declaration.');
+                    return false;
+                }
+                
+            });
 
-            checkIfActiveVisitConflictsWithAnotherVisit("new");
+            $btnASIC.on('click', function(e) {
+                var checknum = $('#asicSponsorModal').find('input[type="checkbox"]').filter(':checked');
+                if (checknum.length == 4) {
+                    asicSponsorDeclarationChange();
+                    //checkIfActiveVisitConflictsWithAnotherVisit("new");
+                    $('#btnActivate').click();
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 500);
+                } else {
+                    alert('Please confirm ASIC declaration.');
+                    return false;
+                }
+            });
         });
 
         $('#closeVisitBtnDummy').on('click', function (e) {
@@ -345,7 +373,6 @@ if ($model->time_check_out && $model->card_type == CardType::VIC_CARD_24HOURS &&
                 return false;
             }
 <?php endif; ?>
-
         visitType = (typeof visitType === "undefined") ? "defaultValue" : visitType;
         $("#Visit_date_check_in").attr("disabled", false);
         $.ajax({
@@ -359,7 +386,6 @@ if ($model->time_check_out && $model->card_type == CardType::VIC_CARD_24HOURS &&
                         $("#Visit_date_check_in").attr("disabled", true);
                     } else if (visitType == 'new') {
                         $("#dateoutDiv #Visit_date_out").attr("disabled", false);
-
                         duplicateVisit("activate-a-visit-form");
                     }
                     else {
@@ -372,7 +398,6 @@ if ($model->time_check_out && $model->card_type == CardType::VIC_CARD_24HOURS &&
                 });
             }
         });
-
     }
 </script>
 

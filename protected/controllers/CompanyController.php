@@ -381,6 +381,7 @@ class CompanyController extends Controller {
                 $company->contact = $formInfo['firstName'] . ' ' . $formInfo['lastName'];
                 $company->email_address = $formInfo['email'];
                 $company->mobile_number = $formInfo['mobile'];
+                $company->tenant = $session['tenant'];
                 //todo: update Company Code later
                 $company->code = strtoupper(substr($company->name, 0, 3));
                 $companyService = new CompanyServiceImpl();

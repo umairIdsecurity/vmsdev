@@ -124,7 +124,7 @@ Yii::app()->clientScript->registerScript('select_card_type_vic', "
 
                 <div class="form-group">
                     <?php echo CHtml::label("Back-Card", 'text'); ?>
-                    <?php echo CHtml::textArea('back-card'); ?>
+                    <?php echo CHtml::textArea('back-card','',array( 'rows'=>"9", 'cols'=>"500",'style'=>"width:500px;")); ?>
                     <?php echo CHtml::hiddenField('card_id'); ?>   
                 </div>
 
@@ -147,7 +147,7 @@ Yii::app()->clientScript->registerScript('select_card_type_vic', "
             var button_id = ($(this).attr('id'));
             var modal_name = $('#' + button_id).attr('name');
             var card_id = button_id.split('_');
-            getEditText(card_id[0]);
+            getEditText(card_id[1]);
             $("#myModalLabel").html(modal_name);
             $("#card_id").val(card_id[1]);
             $('#form_modal_edit').modal('show');
@@ -159,8 +159,9 @@ Yii::app()->clientScript->registerScript('select_card_type_vic', "
         $(".items tr:first").after(row);
     }
     function getEditText(cardid) {
+       
         $.ajax({
-            url: '<?php echo CController::createAbsoluteUrl('cardtype/gettext')?>',
+            url: '<?php echo CController::createAbsoluteUrl('cardType/backtext')?>',
             data: "cardid="+cardid,
             success: function (data) {
                 $('#back-card').val(data);

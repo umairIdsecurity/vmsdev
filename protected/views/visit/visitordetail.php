@@ -95,7 +95,7 @@ $this->renderPartial('visithistory', array('model' => $model,
 
             $.ajax({
                 type: 'POST',
-                url: '<?php echo Yii::app()->createUrl('visitor/checkEmailIfUnique&id='); ?>' + email.trim(),
+                url: '<?php echo Yii::app()->createUrl("visitor/checkEmailIfUnique&id="); ?>' + email.trim(),
                 dataType: 'json',
                 data: email,
                 success: function(r) {

@@ -118,4 +118,20 @@ class FeatureContext extends MinkContext
             $backtrace[1]['file'] . ", line " . $backtrace[1]['line']
         );
     }
+
+    /**
+    * @Then /^I edit "([^"]*)"$/
+    */
+    public function iEditItem($subject)
+    {
+        $page = $this->getMainContext()->getSession()->getPage();
+        $element = $page->find('xpath', '//td[text()="'.$subject.'"]');
+        if (null === $element) {
+            throw new Exception("Couldn't found workstation ".$subject." edit page!", 1);
+        } else {
+            $tr = $element->getParent();
+            $update = $tr->find('css', '.update');
+            $update->click();
+        }
+    }
 }

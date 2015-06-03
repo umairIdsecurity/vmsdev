@@ -384,7 +384,7 @@ function preloadHostDetails(hostId) {
                 if (index == "photo") {
                     $("#Host_photo3").val(value.id);
                     $(".ajax-upload-dragdrop3").css("background", "url(<?php echo Yii::app()->request->baseUrl."/"; ?>" + value.relative_path + ") no-repeat center top");
-                    $(".ajax-upload-dragdrop3").css({"background-size": "137px 190px"});
+                    $(".ajax-upload-dragdrop3").css({"background-size": "132px 152px"});
                     logo.src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                     document.getElementById('photoCropPreview3').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                     $("#cropImageBtn3").show();

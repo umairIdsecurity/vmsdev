@@ -355,7 +355,8 @@ if ($this->action->id == 'update') {
                                         Add Company</a>
                                 <?php } else { ?>
                                     <!-- <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;">Add New Company</a> -->
-                                    <a href="#addCompanyContactModal" role="button" data-toggle="modal" id="addCompanyLink"><span>Add New Company</span></a>
+                                    <a style="float: left; margin-right: 5px; width: 95px; height: 21px;" href="#addCompanyContactModal" role="button" data-toggle="modal" id="addCompanyLink">Add Company</a>
+                                    <a href="#addCompanyContactModal" style="font-size: 12px; font-weight: bold; display: none;" id="addContactLink" class="btn btn-xs btn-info" role="button" data-toggle="modal">Add Contact</a>
                                 <?php } ?>
                             </td>
                         </tr>
@@ -531,7 +532,7 @@ if ($this->action->id == 'update') {
                                 document.getElementById('photoPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 $(".ajax-upload-dragdrop").css("background", "url(<?php echo Yii::app()->request->baseUrl; ?>" + value.relative_path + ") no-repeat center top");
-                                $(".ajax-upload-dragdrop").css({"background-size": "137px 190px"});
+                                $(".ajax-upload-dragdrop").css({"background-size": "132px 152px"});
                             });
                             $("#closeCropPhoto").click();
                             var ias = $('#photoCropPreview').imgAreaSelect({instance: true});
@@ -779,28 +780,42 @@ if ($this->action->id == 'update') {
         });
     }
 
-    // company change
-    $('#Visitor_company').on('change', function() {
-        var companyId = $(this).val();
-        $.ajax({
-            type: "POST",
-            url: "<?php echo $this->createUrl('company/getContacts') ?>",
-            dataType: "json",
-            data: {id:companyId},
-            success: function(data) {
-                if (data == 0) {
-                    $('#CompanySelectedId').val(companyId);
-                    var companyName = $('.select2-selection__rendered').text();
-                    $('#AddCompanyContactForm_companyName').val(companyName).prop('disabled', 'disabled');
-
-                    $("#addCompanyContactModal").modal("show");
-                } else {
-                    $('#visitorStaffRow').html(data);
-                }
-                return false;
+// company change
+$('#Visitor_company').on('change', function() {
+    var companyId = $(this).val();
+    $('#CompanySelectedId').val(companyId);
+    $modal = $('#addCompanyContactModal');
+    $.ajax({
+        type: "POST",
+        url: "<?php echo $this->createUrl('company/getContacts') ?>",
+        dataType: "json",
+        data: {id:companyId},
+        success: function(data) {
+            var companyName = $('.select2-selection__rendered').text();
+            $('#AddCompanyContactForm_companyName').val(companyName).prop('disabled', 'disabled');
+            if (data == 0) {
+                $('#addContactLink').hide();
+                $('#visitorStaffRow').empty();
+                $modal.find('#myModalLabel').html('Add Company');
+                $("#addCompanyContactModal").modal("show");
+            } else {
+                $modal.find('#myModalLabel').html('Add Contact To Company');
+                $('#visitorStaffRow').html(data);
+                $('#addContactLink').show();
             }
-        });
+            return false;
+        }
     });
+});
+
+$('#addContactLink').on('click', function(e) {
+    $('#typePostForm').val('contact');
+});
+
+$('#addCompanyLink').on('click', function(e) {
+    $('#typePostForm').val('company');
+});
+
 </script>
 
 

@@ -14,18 +14,14 @@ if (isset($_GET['role'])) {
 $currentlyEditedUserId = '';
 if (isset($_GET['id'])) {
     $currentlyEditedUserId = $_GET['id'];
-    if (isset(User::model()->findByPk($currentlyEditedUserId)->password)) {
-        $password = User::model()->findByPk($currentlyEditedUserId)->password;
-    }
-
 }
 
 $currentLoggedUserId = $session['id'];
 $company = Company::model()->findByPk($session['company']);
-
 if (isset($company) && !empty($company)) {
     $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
 }
+
 ?>
 <style type="text/css">
 	#modalBody_gen {padding-top: 10px !important;height: 204px !important;}
@@ -161,31 +157,34 @@ echo '<h1>Add '.Roles::$labels[Yii::app()->request->getParam('role')].'</h1>';
     <?php echo $form->errorSummary($model); ?>
     <table >
         <tr>
-         <td style="vertical-align: top; float:left; width:300px">
-        
-        <table style="width:300px;float:left;min-height:320px;">
-                            <tr> 
+            <td style="vertical-align: top; float:left; width:300px">
 
-                                <td style="width:300px;">
-                                   <!-- <label for="Visitor_Add_Photo" style="margin-left:27px;">Add  Photo</label><br>-->
+                <table style="width:300px;float:left;min-height:320px;">
+                    <tr>
 
-                                    <input type="hidden" id="Host_photo" name="User[photo]" value="<?php echo $model->photo; ?>">
-                                    <div class="photoDiv" style='display:none;'>
-                                        <img id='photoPreview2' src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png" style='display:none;'/>
-                                    </div>
-                                    <?php require_once(Yii::app()->basePath . '/draganddrop/host.php'); ?>
-                                    <div id="photoErrorMessage" class="errorMessage" style="display:none;  margin-top: 200px;margin-left: 71px !important;position: absolute;">Please upload a photo.</div>
-                                </td>
-                                </tr>
-                               
-                                <tr><td >&nbsp;</td></tr>
-                               
-                               
-                              </table>
-                              
-                            
-         
-         </td>
+                        <td style="width:300px;">
+                            <!-- <label for="Visitor_Add_Photo" style="margin-left:27px;">Add  Photo</label><br>-->
+
+                            <input type="hidden" id="Host_photo" name="User[photo]" value="<?php echo $model->photo; ?>">
+
+                            <div class="photoDiv" style='display:none;'>
+                                <img id='photoPreview2'
+                                     src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png"
+                                     style='display:none;'/>
+                            </div>
+                            <?php require_once(Yii::app()->basePath . '/draganddrop/host.php'); ?>
+                            <div id="photoErrorMessage" class="errorMessage"
+                                 style="display:none;  margin-top: 200px;margin-left: 71px !important;position: absolute;">
+                                Please upload a photo.
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>&nbsp;</td>
+                    </tr>
+                </table>
+            </td>
         
             <td style="vertical-align: top; float:left; width:300px;">
                 <table>
@@ -281,7 +280,7 @@ echo '<h1>Add '.Roles::$labels[Yii::app()->request->getParam('role')].'</h1>';
 	                        		$session['role'] == Roles::ROLE_AGENT_ADMIN || $urlRole == Roles::ROLE_AGENT_ADMIN || CHelper::is_accessing_avms_features())
 	                        	{
 	                        		$companyList = CHtml::listData(Company::model()->findAllCompany(), 'id', 'name');
-
+	                        		
 	                        		if ($this->action->id == 'update') {
 	                        			$companyId = User::model()->getCompany($currentlyEditedUserId);
 	                        		} elseif ($session['role'] != Roles::ROLE_SUPERADMIN) {
@@ -410,7 +409,7 @@ echo '<h1>Add '.Roles::$labels[Yii::app()->request->getParam('role')].'</h1>';
             </td>
             <td style="vertical-align: top; float:left; width:300px">
                 
-                    <table>  
+                    <table class="no-margin-bottom">
                                 <tr>
                         <td>
                             <select  onchange="populateDynamicFields()" <?php
@@ -451,7 +450,6 @@ echo '<h1>Add '.Roles::$labels[Yii::app()->request->getParam('role')].'</h1>';
                     <tr>
                         
                         <td><?php echo $form->dropDownList($model, 'user_type', User::$USER_TYPE_LIST); ?>
-                            <span class="required">*</span>
                             <?php echo "<br>" . $form->error($model, 'user_type'); ?>
                         </td>
                     </tr>
@@ -477,7 +475,7 @@ echo '<h1>Add '.Roles::$labels[Yii::app()->request->getParam('role')].'</h1>';
                     </tr>
                   </table>
                   <div class="password-border">
-                  <table>
+                  <table class="no-margin-bottom">
                     <tr>
                   <td><strong>Password Options</strong></td>
                   
@@ -499,12 +497,12 @@ echo '<h1>Add '.Roles::$labels[Yii::app()->request->getParam('role')].'</h1>';
                     
                    <tr>
                    <td><input type="radio" value="1" class="pass_option" name="User[password_option]" />&nbsp;Create Password</td>
-                   </tr>
+                   </tr> 
                    <tr>
-
+                  
                     <td>
                         <input ng-model="user.passwords" data-ng-class="{'ng-invalid':userform['User[repeatpassword]'].$error.match}" placeholder="Password" type="password" id="User_password" value = '<?php echo $model->password; ?>' name="User[password]">
-                    <span class="required">*</span>
+                    <span class="required">*</span>                                                                        		
                                <?php echo "<br>" . $form->error($model, 'password'); ?>
                     </td>
                 </tr>
@@ -609,14 +607,6 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
             $("#fromYear").val($("#dateofBirthBreakdownValueYear").val());
             $("#fromMonth").val($("#dateofBirthBreakdownValueMonth").val());
             $("#fromDay").val($("#dateofBirthBreakdownValueDay").val());
-
-            var password = '<?php echo isset($password) ? $password : ""; ?>';
-            if (password) {
-                $('.pass_option[value=1]').prop('checked', true);
-                $('#User_password').val ('......');
-            } else {
-                $('.pass_option[value=2]').prop('checked', true);
-            }
         }
 
         if ((getRole != admin && getRole != '') && sessionRole == superadmin) {
@@ -1488,7 +1478,7 @@ $(document).ready(function() {
                                 document.getElementById('photoCropPreview2').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 $(".ajax-upload-dragdrop2").css("background", "url(<?php echo Yii::app()->request->baseUrl. '/'; ?>" + value.relative_path + ") no-repeat center top");
                                 $(".ajax-upload-dragdrop2").css({
-                                    "background-size": "137px 190px"
+                                    "background-size": "132px 152px"
                                 });
                             });
                         }

@@ -122,13 +122,13 @@ class Workstation extends CActiveRecord {
         $criteria->compare('is_deleted', $this->is_deleted);
         $user = User::model()->findByPK(Yii::app()->user->id);
         if ($user->role == Roles::ROLE_ADMIN) {
-
             $criteria->compare('tenant', $user->tenant);
         } else if ($user->role == Roles::ROLE_AGENT_ADMIN) {
-
             $criteria->compare('tenant', $user->tenant);
             $criteria->compare('tenant_agent', $user->tenant_agent);
         }
+        $criteria->compare('is_deleted', 0);
+
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'sort' => array(

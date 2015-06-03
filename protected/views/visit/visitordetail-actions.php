@@ -77,13 +77,13 @@ $session = new CHttpSession;
                                                 <select class='time visit_time_in_minutes'  id='Visit_time_check_out_minutes' disabled style="width:70px;">
                                                     <?php for ($i = 1; $i <= 60; $i++): ?>
                                                         <option value="<?= $i; ?>"><?php
-                                                    if ($i > 0 && $i < 10) {
-                                                        echo '0' . $i;
-                                                    } else {
-                                                        echo $i;
-                                                    };
-                                                        ?></option>
-                                                        <?php endfor; ?>
+                                                            if ($i > 0 && $i < 10) {
+                                                                echo '0' . $i;
+                                                            } else {
+                                                                echo $i;
+                                                            };
+                                                            ?></option>
+                                                    <?php endfor; ?>
                                                 </select>
                                             </td>
                                         </tr>
@@ -198,7 +198,7 @@ $session = new CHttpSession;
                         <?php if ($model->visit_status == VisitStatus::CLOSED) {
                             ?>
                             <button id='registerNewVisit' class='greenBtn'>Activate Visit</button> 
-                        <?php
+                            <?php
                         } else {
                             if ($model->card_type == CardType::MANUAL_VISITOR && isset($model->date_check_in) && strtotime($model->date_check_in) < strtotime(date("d-m-Y"))) {
                                 echo '<input type="submit" value="Back Date Visit" class="complete"/>';
@@ -214,7 +214,7 @@ $session = new CHttpSession;
                 </ul>
             </li>
 
-<?php } ?>
+        <?php } ?>
     </ul>
 </div>
 <input type="hidden" value="<?php echo $session['previousVisitAction']; ?>" id="previousVisitAction"/>
@@ -236,7 +236,7 @@ $session = new CHttpSession;
             if ($("#visitStatusActions").val() != 2) {
                 $("#preregisterLi a").click();
             }
-            $("#activateLi a").click();
+            //$("#activateLi a").click();
         }
 
         $('#activate-a-visit-form').bind('submit', function () {
@@ -245,8 +245,36 @@ $session = new CHttpSession;
 
         $('#registerNewVisit').on('click', function (e) {
             e.preventDefault();
+            var checked = false;
+            var $btnVic = $('#btnVicConfirm'),
+                $btnASIC = $('#btnAsicConfirm');
+            $('a[href="#vicHolderModal"]').click();
+            $btnVic.on('click', function(e) {
+                var checknum = $('#vicHolderModal').find('input[type="checkbox"]').filter(':checked');
+                if (checknum.length == 2) {
+                    vicHolderDeclarationChange();
+                    $('a[href="#asicSponsorModal"]').click();
+                } else {
+                    alert('Please confirm VIC declaration.');
+                    return false;
+                }
+                
+            });
 
-            checkIfActiveVisitConflictsWithAnotherVisit("new");
+            $btnASIC.on('click', function(e) {
+                var checknum = $('#asicSponsorModal').find('input[type="checkbox"]').filter(':checked');
+                if (checknum.length == 4) {
+                    asicSponsorDeclarationChange();
+                    //checkIfActiveVisitConflictsWithAnotherVisit("new");
+                    $('#btnActivate').click();
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 500);
+                } else {
+                    alert('Please confirm ASIC declaration.');
+                    return false;
+                }
+            });
         });
 
         $('#closeVisitBtnDummy').on('click', function (e) {
@@ -345,7 +373,6 @@ if ($model->time_check_out && $model->card_type == CardType::VIC_CARD_24HOURS &&
                 return false;
             }
 <?php endif; ?>
-
         visitType = (typeof visitType === "undefined") ? "defaultValue" : visitType;
         $("#Visit_date_check_in").attr("disabled", false);
         $.ajax({
@@ -359,7 +386,6 @@ if ($model->time_check_out && $model->card_type == CardType::VIC_CARD_24HOURS &&
                         $("#Visit_date_check_in").attr("disabled", true);
                     } else if (visitType == 'new') {
                         $("#dateoutDiv #Visit_date_out").attr("disabled", false);
-
                         duplicateVisit("activate-a-visit-form");
                     }
                     else {
@@ -372,7 +398,6 @@ if ($model->time_check_out && $model->card_type == CardType::VIC_CARD_24HOURS &&
                 });
             }
         });
-
     }
 </script>
 
@@ -437,18 +462,20 @@ if ($model->time_check_out && $model->card_type == CardType::VIC_CARD_24HOURS &&
     if ($tenant) {
         if ($tenant->company != '') {
             $company = Company::model()->findByPk($tenant->company);
-            $card_count = $company->card_count ? ($company->card_count + 1) : 1;
+            if ($company) {
+                $card_count = $company->card_count ? ($company->card_count + 1) : 1;
 
-            while (strlen($card_count) < 6) {
-                $card_count = '0' . $card_count;
+                while (strlen($card_count) < 6) {
+                    $card_count = '0' . $card_count;
+                }
+                echo $company->code . ($card_count);
             }
-            echo $company->code . ($card_count);
         }
     }
     ?>">
 
     <input type="text" id="CardGenerated_print_count" name="CardGenerated[print_count]" value="">
     <input type="submit" value="Create" name="yt0" id="submitCardForm">
-<?php $this->endWidget(); ?>
+    <?php $this->endWidget(); ?>
 
 </div>

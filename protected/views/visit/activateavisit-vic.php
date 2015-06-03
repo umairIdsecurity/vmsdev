@@ -310,7 +310,7 @@ $session = new CHttpSession;
         </table>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-primary" onclick="return vicHolderDeclarationChange();">Confirm</button>
+        <a type="button" class="btn btn-primary" id="btnVicConfirm">Confirm</a>
     </div>
 </div>
 
@@ -344,10 +344,10 @@ $session = new CHttpSession;
         </table>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-primary" onclick="return asicSponsorDeclarationChange();">Confirm</button>
+        <button type="button" class="btn btn-primary" id="btnAsicConfirm">Confirm</button>
     </div>
 </div>
-
+<button id="btnActivate" style="display: none;"></button>
 <script type="text/javascript">
     function vicHolderDeclarationChange() {
         if ($("#refusedAsicCbx").is(':checked') && $('#issuedVicCbx').is(':checked')) {

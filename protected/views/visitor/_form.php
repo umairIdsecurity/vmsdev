@@ -442,8 +442,8 @@ $form = $this->beginWidget('CActiveForm', array(
 
             ?>
             <!-- <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;"> -->
-            <a href="#addCompanyContactModal"  role="button" data-toggle="modal" id="addCompanyLink" style="text-decoration: none;">Add New Company</a>
-
+            <a style="float: left; margin-right: 5px; width: 95px; height: 21px;" href="#addCompanyContactModal" role="button" data-toggle="modal" id="addCompanyLink">Add Company</a>
+            <a href="#addCompanyContactModal" style="font-size: 12px; font-weight: bold; display: none;" id="addContactLink" class="btn btn-xs btn-info" role="button" data-toggle="modal">Add Contact</a>
         <?php } ?>
     </td>
 </tr>
@@ -735,7 +735,7 @@ $(document).ready(function () {
 
                             $(".ajax-upload-dragdrop").css({
 
-                                "background-size": "137px 190px"
+                                "background-size": "132px 152px"
 
                             });
 
@@ -1137,24 +1137,37 @@ function generatepassword() {
 // company change
 $('#Visitor_company').on('change', function() {
     var companyId = $(this).val();
+    $('#CompanySelectedId').val(companyId);
+    $modal = $('#addCompanyContactModal');
     $.ajax({
         type: "POST",
         url: "<?php echo $this->createUrl('company/getContacts') ?>",
         dataType: "json",
         data: {id:companyId},
         success: function(data) {
+            var companyName = $('.select2-selection__rendered').text();
+            $('#AddCompanyContactForm_companyName').val(companyName).prop('disabled', 'disabled');
             if (data == 0) {
-                $('#CompanySelectedId').val(companyId);
-                var companyName = $('.select2-selection__rendered').text();
-                $('#AddCompanyContactForm_companyName').val(companyName).prop('disabled', 'disabled');
-
+                $('#addContactLink').hide();
+                $('#visitorStaffRow').empty();
+                $modal.find('#myModalLabel').html('Add Company');
                 $("#addCompanyContactModal").modal("show");
             } else {
+                $modal.find('#myModalLabel').html('Add Contact To Company');
                 $('#visitorStaffRow').html(data);
+                $('#addContactLink').show();
             }
             return false;
         }
     });
+});
+
+$('#addContactLink').on('click', function(e) {
+    $('#typePostForm').val('contact');
+});
+
+$('#addCompanyLink').on('click', function(e) {
+    $('#typePostForm').val('company');
 });
 
 </script>
@@ -1231,9 +1244,7 @@ $this->widget('bootstrap.widgets.TbButton', array(
                     <td colspan="2"></td>
                 </tr>
                 <tr>
-                    <td colspan="2" style="padding-left:55px; padding-top:24px;"><input readonly="readonly" type="text"
-                                                                                        placeholder="Random Password"
-                                                                                        value="" id="random_password"/>
+                    <td colspan="2" style="padding-left:55px; padding-top:24px;"><input readonly="readonly" type="text" placeholder="Random Password" value="" id="random_password"/>
                     </td>
                 </tr>
 
@@ -1243,12 +1254,8 @@ $this->widget('bootstrap.widgets.TbButton', array(
                     </td>
                 </tr>
                 <tr>
-                    <td style="padding-left: 11px;padding-top: 26px !important; width:50%"><input
-                            onclick="copy_password();" style="border-radius: 4px; height: 35px; " type="button"
-                            value="Use Password"/></td>
-                    <td style="padding-right:10px;padding-top: 25px;"><input onclick="cancel();"
-                                                                             style="border-radius: 4px; height: 35px;"
-                                                                             type="button" value="Cancel"/></td>
+                    <td style="padding-left: 11px;padding-top: 26px !important; width:50%"><input onclick="copy_password();" style="border-radius: 4px; height: 35px; " type="button" value="Use Password"/></td>
+                    <td style="padding-right:10px;padding-top: 25px;"><input onclick="cancel();" style="border-radius: 4px; height: 35px;" type="button" value="Cancel"/></td>
                 </tr>
 
             </table>

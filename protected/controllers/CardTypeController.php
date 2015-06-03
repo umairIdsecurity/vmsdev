@@ -26,7 +26,7 @@ class CardTypeController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'edit', 'admin', 'delete', 'index', 'view', 'selectWorkstation','gettext'),
+                'actions' => array('create', 'update', 'edit', 'admin', 'delete', 'index', 'view', 'selectWorkstation', 'backtext'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -89,17 +89,26 @@ class CardTypeController extends Controller {
     }
 
     public function actionEdit() {
-        if(isset($_POST['card_id'])){
-            $card = CardType::model()->findByPk($_POST['card_id']);
-            $card->back_text = $_POST['back-card'];
-            $card->save(false);
-            $this->redirect(array('workstation/admin'));
+        if (yii::app()->request->isPostRequest) {
+            if (isset($_POST['card_id'])) {
+                $card = CardType::model()->findByPk($_POST['card_id']);
+                $card->back_text = $_POST['back-card'];
+                $card->save(false);
+                $this->redirect(array('workstation/admin'));
+            }
+        } else {
+            throw new CHttpException('400', "Bad Request");
         }
     }
-    public function actionGettext(){
-        $cardType = CardType::model()->findByPk($_POST['cardid']);
-        echo $cardType->back_text;
-        die;
+
+    public function actionBacktext() {
+        if (yii::app()->request->isAjaxRequest) {
+            $cardType = CardType::model()->findByPk($_POST['cardid']);
+            echo $cardType->back_text;
+            die;
+        } else {
+             throw new CHttpException('400', "Bad Request");
+        }
     }
 
     /**

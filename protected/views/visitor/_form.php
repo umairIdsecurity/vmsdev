@@ -735,7 +735,7 @@ $(document).ready(function () {
 
                             $(".ajax-upload-dragdrop").css({
 
-                                "background-size": "137px 190px"
+                                "background-size": "132px 152px"
 
                             });
 

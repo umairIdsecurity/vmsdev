@@ -77,11 +77,11 @@ $userRole = $session['role'];
                 <article class="header_midbox">
                     <div id="logo" >
                         <?php
-                        if (isset($company->logo) && $company->logo != '') {
-                            echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl . '/' . Photo::model()->returnLogoPhotoRelative($company->logo)));
-                        } else {
-                            echo CHtml::link(CHtml::image(Yii::app()->controller->assetsBase . '/images/companylogohere.png'));
-                        }
+//                        if (isset($company->logo) && $company->logo != '') {
+//                            echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl . '/' . Photo::model()->returnLogoPhotoRelative($company->logo)));
+//                        } else {
+                            echo CHtml::link(CHtml::image(Yii::app()->controller->assetsBase . '/images/companylogohere.png', '', array('style'=>'width: 200px;')));
+                        //}
                         ?>
                     </div>
                     <aside class="top_nav">

@@ -310,7 +310,7 @@ $session = new CHttpSession;
         </table>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="btnVicConfirm">Confirm</a>
+        <a type="button" class="btn btn-primary" id="btnVicConfirm">Confirm</a>
     </div>
 </div>
 

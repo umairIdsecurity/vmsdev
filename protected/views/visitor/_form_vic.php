@@ -246,14 +246,14 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                            // Show Default selected to Admin only 
                                            if(Yii::app()->user->role == Roles::ROLE_ADMIN) {
                                                echo '<select name="Visitor[visitor_type]" id="Visitor_visitor_type">';
-                                               echo CHtml::tag('option',array('value' => ''),'Select Visitor Type',true);
+                                               echo CHtml::tag('option',array('value' => ''),'Visitor Type',true);
                                                $list = VisitorType::model()->findAll();
                                                
                                                foreach( $list as $val ) {
                                                    if ( $val->tenant == Yii::app()->user->tenant && $val->is_default_value == '1' ) {
-                                                       echo CHtml::tag('option', array('value' => $val->id, 'selected' => 'selected'), CHtml::encode($val->name), true);
+                                                       echo CHtml::tag('option', array('value' => $val->id, 'selected' => 'selected'), CHtml::encode('Visitor Type: '.$val->name), true);
                                                    } else {
-                                                       echo CHtml::tag('option', array('value' => $val->id), CHtml::encode($val->name), true);
+                                                       echo CHtml::tag('option', array('value' => $val->id), CHtml::encode('Visitor Type: '.$val->name), true);
                                                    }
                                                } echo "</select>";
                                            }  else {
@@ -933,7 +933,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 
                 $('#User_workstation').append('<option value="">Workstation</option>');
                 $.each(r.data, function (index, value) {
-                    $('#User_workstation').append('<option value="' + value.id + '">' + value.name + '</option>');
+                    $('#User_workstation').append('<option value="' + value.id + '">' + 'Workstation: ' + value.name + '</option>');
                 });
                 //$("#User_workstation").val(value);
                 if ($("#currentAction").val() == 'update') {

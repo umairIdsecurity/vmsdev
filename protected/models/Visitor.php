@@ -66,15 +66,15 @@ class Visitor extends CActiveRecord {
         self::PROFILE_TYPE_CORPORATE => array(
         ),
         self::PROFILE_TYPE_VIC => array(
-            1 => 'Saved',
-            2 => 'VIC holder',
-            3 => 'ASIC Pending',
-            4 => 'ASIC Issued',
-            5 => 'ASIC Denied',
+            1 => 'Card Status: Saved',
+            2 => 'Card Status: VIC holder',
+            3 => 'Card Status: ASIC Pending',
+            4 => 'Card Status: ASIC Issued',
+            5 => 'Card Status: ASIC Denied',
         ),
         self::PROFILE_TYPE_ASIC => array(
-            6 => 'ASIC Issued',
-            7 => 'ASIC Applicant',
+            6 => 'Card Status: ASIC Issued',
+            7 => 'Card Status: ASIC Applicant',
         ),
     );
 

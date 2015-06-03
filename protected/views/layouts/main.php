@@ -80,7 +80,7 @@ $userRole = $session['role'];
                         if (isset($company->logo) && $company->logo != '') {
                             echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl . '/' . Photo::model()->returnLogoPhotoRelative($company->logo)));
                         } else {
-                            echo CHtml::link(CHtml::image(Yii::app()->controller->assetsBase . '/images/companylogohere.png'));
+                            echo CHtml::link(CHtml::image(Yii::app()->controller->assetsBase . '/images/companylogohere.png', array('style'=>'width: 200px;')));
                         }
                         ?>
                     </div>

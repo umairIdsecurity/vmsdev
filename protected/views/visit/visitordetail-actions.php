@@ -195,15 +195,13 @@ $session = new CHttpSession;
                             </tr>
                         </table>
                         <?php echo $logform->error($model, 'date_in'); ?>
-                        <?php if ($model->visit_status == VisitStatus::CLOSED) {
-                            ?>
-                            <button id='registerNewVisit' class='greenBtn'>Activate Visit</button> 
-                            <?php
-                        } else {
+                        <?php if ($model->visit_status == VisitStatus::CLOSED) { ?>
+                            <button type="button" id='registerNewVisit' class='greenBtn'>Activate Visit</button> 
+                        <?php } else {
                             if ($model->card_type == CardType::MANUAL_VISITOR && isset($model->date_check_in) && strtotime($model->date_check_in) < strtotime(date("d-m-Y"))) {
                                 echo '<input type="submit" value="Back Date Visit" class="complete"/>';
                             } else {
-                                echo '<input type="submit" value="Activate Visit" class="complete"/>';
+                                echo '<button type="button" id="registerNewVisit" class="greenBtn">Activate Visit</button>';
                             }
                         }
                         ?>

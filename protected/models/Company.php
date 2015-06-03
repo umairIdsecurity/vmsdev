@@ -176,7 +176,6 @@ WHERE u.id=c.tenant AND c.id !=1";
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
-        $post_table = User::model()->tableName();
         $post_count_sql = "( " . $this->tenantQuery . " AND c.id=t.id)";
 
         // select

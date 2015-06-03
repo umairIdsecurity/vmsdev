@@ -28,18 +28,18 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                             <td width="110px;" style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
                                 First Name
                             </td>
-                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
-                                <?php echo $visitorModel->first_name; ?>
+                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
+                                <input type="text" value="Sam" id="Visitor_firstname" name="Visitor[firstname]" disabled="disabled" maxlength="50" size="50">
                             </td>
                         </tr>
 
                         <?php if ($asic) : ?>
                             <tr>
-                                <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                                <td>
                                     Middle Name
                                 </td>
-                                <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
-                                    <?php echo $visitorModel->middle_name; ?>
+                                <td style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
+                                    <input type="text" value="Nam" id="Visitor_middlename" name="Visitor[middlename]" disabled="disabled" maxlength="50" size="50">
                                 </td>
                             </tr>
                         <?php endif; ?>
@@ -48,8 +48,8 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                             <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
                                 Last Name
                             </td>
-                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
-                                <?php echo $visitorModel->last_name; ?>
+                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
+                                <input type="text" value="An" id="Visitor_lastname" name="Visitor[lastname]" disabled="disabled" maxlength="50" size="50">
                             </td>
                         </tr>
 

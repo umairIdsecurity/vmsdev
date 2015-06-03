@@ -98,6 +98,11 @@ class User extends VmsActiveRecord {
     public function rules() {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
+
+        if($this->scenario == 'add_company_contact') {
+            return array(array('first_name, last_name, email, contact_number', 'required'));
+        }
+
         if (Yii::app()->controller->action->id == 'update' || Yii::app()->controller->action->id == 'profile') {
             return array(
                 array('first_name, last_name, email, contact_number, user_type, is_deleted', 'required'),
@@ -475,14 +480,11 @@ class User extends VmsActiveRecord {
         foreach ($row as $key => $val) {
             $company = $val;
         }
-        
         return $company;
     }
 
-    public function getFullName($id) {
-        $user = User::model()->findByPK($id);
-        $name = $user->first_name . ' ' . $user->last_name;
-        return $name;
+    public function getFullName() {
+        return trim($this->first_name . ' ' . $this->last_name);
     }
 
     public function findAllCompanyTenant() {

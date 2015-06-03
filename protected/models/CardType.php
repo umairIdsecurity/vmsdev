@@ -31,10 +31,10 @@ class CardType extends CActiveRecord {
     const CONTRACTOR_VISITOR = 4;
 
     const VIC_CARD_SAMEDATE = 5;
-    /*const VIC_CARD_24HOURS = 6;
-    const VIC_CARD_EXTENDED = 7;
+    const VIC_CARD_24HOURS = 6;
+    const VIC_CARD_EXTENDED = 7; // EVIC card type
     const VIC_CARD_MULTIDAY = 8;
-    const VIC_CARD_MANUAL = 9;*/
+    const VIC_CARD_MANUAL = 9;
 
     /**
      * @return string the associated database table name
@@ -128,6 +128,15 @@ class CardType extends CActiveRecord {
      */
     public static function model($className = __CLASS__) {
         return parent::model($className);
+    }
+
+    public function behaviors()
+    {
+        return array(
+
+            'AuditTrailBehaviors'=>
+                'application.components.behaviors.AuditTrailBehaviors',
+        );
     }
 
 }

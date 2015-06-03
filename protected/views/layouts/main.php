@@ -40,7 +40,7 @@ $userRole = $session['role'];
         $tenantCompany = User::model()->findByPk($session['tenant'])->company;
         $company = Company::model()->findByPk($tenantCompany);
 
-        if ($company->company_laf_preferences != '') {
+        if (isset($company->company_laf_preferences) && $company->company_laf_preferences != '') {
             $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
             ?>
             <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl . $companyLafPreferences->css_file_path; ?>" />
@@ -77,10 +77,10 @@ $userRole = $session['role'];
                 <article class="header_midbox">
                     <div id="logo" >
                         <?php
-                        if ($company->logo != '') {
+                        if (isset($company->logo) && $company->logo != '') {
                             echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl . '/' . Photo::model()->returnLogoPhotoRelative($company->logo)));
                         } else {
-                            echo CHtml::link(CHtml::image(Yii::app()->controller->assetsBase . '/images/companylogohere.png'));
+                            echo CHtml::link(CHtml::image(Yii::app()->controller->assetsBase . '/images/companylogohere.png', array('style'=>'width: 200px;')));
                         }
                         ?>
                     </div>

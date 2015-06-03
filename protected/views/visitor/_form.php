@@ -1,16 +1,16 @@
 <?php
 
 $session = new CHttpSession;
-
 $dataId = '';
 
 if ($this->action->id == 'update') {
-
     $dataId = $_GET['id'];
-
 }
+
 $company = Company::model()->findByPk($session['company']);
-$companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
+if (isset($company) && !empty($company)) {
+    $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
+}
 ?>
 
 <style>
@@ -406,32 +406,30 @@ $form = $this->beginWidget('CActiveForm', array(
 
 <tr>
     <td id="visitorCompanyRow">
-        <?php
-        $companyList = CHtml::listData(Company::model()->findAllCompany(), 'id', 'name');
-        $this->widget('application.extensions.select2.Select2', array(
-            'model' => $model,
-            'attribute' => 'company',
-            'items' => $companyList,
-            //'selectedItems' => $selectedItem, // Items to be selected as default
-            'placeHolder' => 'Please select a company',
-
-        ));        ?>
-        <span class="required">*</span>
-        <?php echo $form->error($model, 'company'); ?>
+        <div style="margin-bottom: 5px;">
+            <?php
+            $this->widget('application.extensions.select2.Select2', array(
+                'model' => $model,
+                'attribute' => 'company',
+                'items' => CHtml::listData(Visitor::model()->findAllCompanyByTenant($session['tenant']),
+                    'id', 'name'),
+                'selectedItems' => array(), // Items to be selected as default
+                'placeHolder' => 'Please select a company'
+            ));
+            ?>
+            <?php echo $form->error($model, 'company'); ?>
+            <span class="required">*</span>
+        </div>
     </td>
 </tr>
-
-<tr>
-    <td id="company_error_" style='font-size: 0.9em;color: #FF0000; display:none'>Please select a company</td>
-</tr>
-
 <tr>
     <td>
-
+        <div style="margin-bottom: 5px;" id="visitorStaffRow"></div>
+    </td>
+</tr>
+<tr>
+    <td>
         <?php
-
-
-
         if ($_REQUEST['r'] == 'visitor/update') {
             ?>
 
@@ -443,13 +441,10 @@ $form = $this->beginWidget('CActiveForm', array(
         } else {
 
             ?>
-
-            <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;">
-
-                Add New Company</a>
-
+            <!-- <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;"> -->
+            <a style="float: left; margin-right: 5px; width: 95px; height: 21px;" href="#addCompanyContactModal" role="button" data-toggle="modal" id="addCompanyLink">Add Company</a>
+            <a href="#addCompanyContactModal" id="addContactLink" class="btn btn-xs btn-info" style="display: none;" role="button" data-toggle="modal">Add Contact</a>
         <?php } ?>
-
     </td>
 </tr>
 </table>
@@ -859,22 +854,22 @@ function addCompany() {
 
     } else {
 
-        if ($("#currentRoleOfLoggedInUser").val() == '<?php echo Roles::ROLE_SUPERADMIN; ?>') {
+        //if ($("#currentRoleOfLoggedInUser").val() == '<?php echo Roles::ROLE_SUPERADMIN; ?>') {
 
             /* if role is superadmin tenant is required. Pass selected tenant and tenant agent of user to company. */
 
-            url = '<?php echo Yii::app()->createUrl('company/create&viewFrom=1&tenant='); ?>' + $("#Visitor_tenant").val() + '&tenant_agent=' + $("#Visitor_tenant_agent").val();
+            //url = '<?php echo Yii::app()->createUrl('company/create&viewFrom=1&tenant='); ?>' + $("#Visitor_tenant").val() + '&tenant_agent=' + $("#Visitor_tenant_agent").val();
 
-        } else {
+        //} else {
 
-            url = '<?php echo Yii::app()->createUrl('company/create&viewFrom=1'); ?>';
+            //url = '<?php echo Yii::app()->createUrl('company/create&viewFrom=1'); ?>';
 
-        }
+        //}
 
 
-        $("#modalBody").html('<iframe id="companyModalIframe" width="100%" height="80%" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
+        //$("#modalBody").html('<iframe id="companyModalIframe" width="100%" height="80%" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
 
-        $("#modalBtn").click();
+        //$("#modalBtn").click();
 
     }
 
@@ -1139,6 +1134,42 @@ function generatepassword() {
     $("#gen_pass").click();
 }
 
+// company change
+$('#Visitor_company').on('change', function() {
+    var companyId = $(this).val();
+    $('#CompanySelectedId').val(companyId);
+    $modal = $('#addCompanyContactModal');
+    $.ajax({
+        type: "POST",
+        url: "<?php echo $this->createUrl('company/getContacts') ?>",
+        dataType: "json",
+        data: {id:companyId},
+        success: function(data) {
+            var companyName = $('.select2-selection__rendered').text();
+            $('#AddCompanyContactForm_companyName').val(companyName).prop('disabled', 'disabled');
+            if (data == 0) {
+                $('#addContactLink').hide();
+                $('#visitorStaffRow').empty();
+                $modal.find('#myModalLabel').html('Add Company');
+                $("#addCompanyContactModal").modal("show");
+            } else {
+                $modal.find('#myModalLabel').html('Add Contact To Company');
+                $('#visitorStaffRow').html(data);
+                $('#addContactLink').show();
+            }
+            return false;
+        }
+    });
+});
+
+$('#addContactLink').on('click', function(e) {
+    $('#typePostForm').val('contact');
+});
+
+$('#addCompanyLink').on('click', function(e) {
+    $('#typePostForm').val('company');
+});
+
 </script>
 
 
@@ -1213,9 +1244,7 @@ $this->widget('bootstrap.widgets.TbButton', array(
                     <td colspan="2"></td>
                 </tr>
                 <tr>
-                    <td colspan="2" style="padding-left:55px; padding-top:24px;"><input readonly="readonly" type="text"
-                                                                                        placeholder="Random Password"
-                                                                                        value="" id="random_password"/>
+                    <td colspan="2" style="padding-left:55px; padding-top:24px;"><input readonly="readonly" type="text" placeholder="Random Password" value="" id="random_password"/>
                     </td>
                 </tr>
 
@@ -1225,12 +1254,8 @@ $this->widget('bootstrap.widgets.TbButton', array(
                     </td>
                 </tr>
                 <tr>
-                    <td style="padding-left: 11px;padding-top: 26px !important; width:50%"><input
-                            onclick="copy_password();" style="border-radius: 4px; height: 35px; " type="button"
-                            value="Use Password"/></td>
-                    <td style="padding-right:10px;padding-top: 25px;"><input onclick="cancel();"
-                                                                             style="border-radius: 4px; height: 35px;"
-                                                                             type="button" value="Cancel"/></td>
+                    <td style="padding-left: 11px;padding-top: 26px !important; width:50%"><input onclick="copy_password();" style="border-radius: 4px; height: 35px; " type="button" value="Use Password"/></td>
+                    <td style="padding-right:10px;padding-top: 25px;"><input onclick="cancel();" style="border-radius: 4px; height: 35px;" type="button" value="Cancel"/></td>
                 </tr>
 
             </table>

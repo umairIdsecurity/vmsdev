@@ -1,9 +1,6 @@
-
 <?php
 /* @var $this CompanyController */
 /* @var $model Company */
-
-
 ?>
 
 <h1>Edit Organisation Fields</h1>
@@ -13,4 +10,4 @@
     }
     
 ?>
-<?php $this->renderPartial('_form', array('model'=>$model)); ?>
+<?php $this->renderPartial('_form', array('model' => $model, 'contacts' => $contacts)); ?>

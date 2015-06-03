@@ -4,10 +4,25 @@ $sameday = CardType::model()->findByPk(CardType::SAME_DAY_VISITOR);
 $multiday = CardType::model()->findByPk(CardType::MULTI_DAY_VISITOR);
 
 $workstation_id = $session['workstation'];
+
+if (!isset($workstation_id)) {
+    $user = User::model()->findByPK(Yii::app()->user->id);
+    $workstations = Workstation::model()->findAllByAttributes(array('tenant' => $user->tenant, 'tenant_agent' => $user->tenant_agent));
+    if (!$workstations) {
+        $this->redirect(Yii::app()->createUrl('workstation/create'));
+    } else {
+        $session['workstation'] = $workstations[0]->id;
+        $workstation_id = $workstations[0]->id;
+    }
+}
+
 $cardTypeWorkstationModel = WorkstationCardType::model()->findAllByAttributes(
     array('workstation'=>$workstation_id)
 );
 
+if (!$cardTypeWorkstationModel) {
+    $this->redirect(Yii::app()->createUrl('workstation/admin'));
+}
 ?>
 
 <div id="selectCardDiv">
@@ -73,8 +88,7 @@ $cardTypeWorkstationModel = WorkstationCardType::model()->findAllByAttributes(
             $("#cardtype").val(card_type_value);
             $("#Visit_card_type").val(card_type_value);
             $("#dateoutDiv").val('2014-12-11');
-
         });
-
     });
+
 </script>

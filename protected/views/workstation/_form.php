@@ -43,6 +43,7 @@ $session = new CHttpSession;
             <tr>
                 <td><?php echo $form->labelEx($model, 'tenant_agent'); ?></td>
                 <td><select id="Workstation_tenant_agent" name="Workstation[tenant_agent]">
+                        <option disabled value='' selected>Please select a tenant agent</option>
                         <?php
                         if ($this->action->Id != 'create') {
 
@@ -50,7 +51,7 @@ $session = new CHttpSession;
                             foreach ($companyList as $key => $value) {
                                 ?>
 
-                                <option disabled value='' selected>Please select a tenant agent</option>
+
                                 <option <?php
                     if ($model['tenant_agent'] == $value['tenant_agent']) {
                         echo " selected ";
@@ -124,28 +125,29 @@ $session = new CHttpSession;
             <td><?php echo $form->error($model, 'contact_email_address',array('style'=>'text-transform:none;')); ?></td>
         </tr>
         <?php
-        if(!empty($_GET['id']) && Yii::app()->urlManager->parseUrl(Yii::app()->request) == 'workstation/update'){
+        if (!empty($_GET['id']) && Yii::app()->urlManager->parseUrl(Yii::app()->request) == 'workstation/update'){
             ?>
             <tr>
                 <td><?php echo $form->labelEx($model, 'card_type'); ?></td>
 
-                <td>
+                <td colspan="2">
                     <?php
-
-                    $criteria = new CDbCriteria();
-                    $criteria->addInCondition("module", array(1,2));
-                    echo  $form->checkBoxList(
-                        $model,'card_type',
-                        CHtml::listData(
-                            CardType::model()->findAll($criteria),'id', 'name'),
-                                array('separator'=>' ',
-                                    'labelOptions'=>array('style'=>'display:inline')
-                                )
-
-                    );
+	                    $criteria = new CDbCriteria();
+	                    $criteria->addInCondition("module", array(1,2));
+	                    echo  $form->checkBoxList(
+	                        $model,'card_type',
+	                        CHtml::listData(
+	                            CardType::model()->findAll($criteria),'id', 'name'),
+	                                array('separator'=>' ',
+	                                    'labelOptions'=>array('style'=>'display:inline')
+	                                )
+	
+	                    );
                     ?>
+                    
+                    <br/><br/>
+                    <?php echo $form->error($model, 'card_type'); ?>
                 <td>
-                <td><?php echo $form->error($model, 'card_type'); ?></td>
             </tr>
 
         <?php

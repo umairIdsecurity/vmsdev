@@ -78,10 +78,12 @@ class CHelper {
     public static function is_selected_item( $role_id ) {
         // Role of the newly User
         if( $role_id == Yii::app()->request->getParam('role') ) {
-           $session = new CHttpSession;
-           $company = Company::model()->findByPk($session['company']);
-            $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);  
-            if($companyLafPreferences)
+            $session = new CHttpSession;
+            $company = Company::model()->findByPk($session['company']);
+            if (isset($company) && !empty($company)) {
+                $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
+            }
+            if(isset($companyLafPreferences))
                 echo  'style = "color: '.$companyLafPreferences->sidemenu_font_color.' !important;"';
             else
                 echo "";

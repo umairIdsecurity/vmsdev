@@ -35,6 +35,8 @@ class FeatureContext extends MinkContext
     public function __construct(array $parameters)
     {
         $this->useContext('notification', new SubContext\NotificationContext($parameters));
+        $this->useContext('vicprofile', new SubContext\VicprofileContext($parameters));
+        $this->useContext('workstation', new SubContext\WorkstationContext($parameters));
     }
 
     /** @BeforeScenario */
@@ -70,5 +72,66 @@ class FeatureContext extends MinkContext
         return array(
             new Step\Given('I am on "/index.php?r=user/create"'),
         );
+    }
+
+
+     /**
+    * @When /^I wait for "([^"]*)" to appear$/
+    * @Then /^I should see "([^"]*)" appear$/
+    * @param $text
+    * @throws \Exception
+    */
+    public function iWaitForTextToAppear($text)
+    {
+        $this->spin(function(FeatureContext $context) use ($text) {
+            try {
+                $context->assertPageContainsText($text);
+                return true;
+            }
+            catch(ResponseTextException $e) {
+                // NOOP
+            }
+            return false;
+        });
+    }
+
+
+    public function spin ($lambda, $wait = 60)
+    {
+        for ($i = 0; $i < $wait; $i++)
+        {
+            try {
+                if ($lambda($this)) {
+                    return true;
+                }
+            } catch (Exception $e) {
+                // do nothing
+            }
+
+            sleep(1);
+        }
+
+        $backtrace = debug_backtrace();
+
+        throw new Exception(
+            "Timeout thrown by " . $backtrace[1]['class'] . "::" . $backtrace[1]['function'] . "()\n" .
+            $backtrace[1]['file'] . ", line " . $backtrace[1]['line']
+        );
+    }
+
+    /**
+    * @Then /^I edit "([^"]*)"$/
+    */
+    public function iEditItem($subject)
+    {
+        $page = $this->getMainContext()->getSession()->getPage();
+        $element = $page->find('xpath', '//td[text()="'.$subject.'"]');
+        if (null === $element) {
+            throw new Exception("Couldn't found workstation ".$subject." edit page!", 1);
+        } else {
+            $tr = $element->getParent();
+            $update = $tr->find('css', '.update');
+            $update->click();
+        }
     }
 }

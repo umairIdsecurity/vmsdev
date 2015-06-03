@@ -212,13 +212,14 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
             $('.managevisitortype').next().slideDown('normal');
             $('.managevisitreasons').next().slideUp('normal');
             $('.managereports').next().slideUp('normal');
+            $('.manageavmsreports').next().slideUp('normal');
         }",
                             ), array(
                         'class' => 'managevisitortype',
                     ));
                     ?>
                     <ul <?php
-                    if ($this->id == 'visitorType') {
+                    if ($this->id == 'visitorType' && $this->action->id != 'visitorsByTypeReport') {
                         echo "style='display:block ;'";
                     }
                     ?>>
@@ -238,6 +239,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
             $('.managevisitreasons').next().slideDown('normal');
             $('.managereports').next().slideUp('normal');
             $('.managevisitortype').next().slideUp('normal');
+            $('.manageavmsreports').next().slideUp('normal');
         }",
                             ), array(
                         'class' => 'managevisitreasons',
@@ -264,6 +266,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
             $('.managevisitreasons').next().slideUp('normal');
             $('.managereports').next().slideUp('normal');
             $('.managevisitortype').next().slideUp('normal');
+            $('.manageavmsreports').next().slideUp('normal');
         }",
                             ), array(
                         'class' => 'managevisits',
@@ -305,6 +308,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                         $('.managevisitortype').next().slideDown('normal');
                         $('.managevisitreasons').next().slideUp('normal');
                         $('.managereports').next().slideUp('normal');
+                        $('.manageavmsreports').next().slideUp('normal');
                     }",
                             ), array(
                         'class' => 'managevisitortype',
@@ -339,6 +343,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
             $('.managevisitreasons').next().slideUp('normal');
             $('.managereports').next().slideUp('normal');
             $('.managevisitortype').next().slideUp('normal');
+            $('.manageavmsreports').next().slideUp('normal');
         }",
                     ), array(
                         'class' => 'managecompanies',
@@ -372,6 +377,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
 				            $('.managevisitreasons').next().slideUp('normal');
 				            $('.managereports').next().slideUp('normal');
 				            $('.managevisitortype').next().slideUp('normal');
+				            $('.manageavmsreports').next().slideUp('normal');
 				        }",
                     ), array(
                         'class' => 'managecompanies',
@@ -409,22 +415,54 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
             $('.managevisitreasons').next().slideUp('normal');
             $('.managereports').next().slideDown('normal');
             $('.managevisitortype').next().slideUp('normal');
+            $('.manageavmsreports').next().slideUp('normal');
         }",
                         ), array(
                     'class' => 'managereports',
                 ));
                 ?>
                 <ul <?php
-                if ($this->action->id == 'evacuationReport' || $this->action->id == 'visitorRegistrationHistory' || $this->action->id == 'corporateTotalVisitCount') {
+                if ($this->action->id == 'evacuationReport' || $this->action->id == 'visitorsByTypeReport' || $this->action->id == 'visitorRegistrationHistory' || $this->action->id == 'corporateTotalVisitCount' || Yii::app()->controller->id == 'auditTrail') {
                     echo "style='display:block ;'";
                 }
                 ?>>
                     <li><a href='<?php echo Yii::app()->createUrl('visit/evacuationReport'); ?>' ><span>Evacuation Report</span></a></li>
                     <li><a href='<?php echo Yii::app()->createUrl('visit/visitorRegistrationHistory'); ?>'><span>Visitor Registration History</span></a></li>
                     <li><a href='<?php echo Yii::app()->createUrl('visit/corporateTotalVisitCount'); ?>'><span>Corporate Total Visit Count</span></a></li>
+                    <li><a href='<?php echo Yii::app()->createUrl('visitorType/visitorsByTypeReport'); ?>'><span>Total Visitors by Visitor Type</span></a></li>
+                    <li><a href='<?php echo Yii::app()->createUrl('auditTrail/admin'); ?>'><span>Audit Trail</span></a></li>
                 </ul>
             </li><!-- menu for Reports -->
-              <!-- menu for Helpdesk -->
+
+            <!-- menu for AVMS Reports -->
+            <li class='has-sub'>
+                <?php
+                echo CHtml::ajaxLink("AVMS Reports", CController::createUrl('visit/vicTotalVisitCountAjax'), array(
+                    'update' => '#content',
+                    'complete' => "js:function(html){
+                        $('.manageworkstations').next().slideUp('normal');
+                        $('.managecompanies').next().slideUp('normal');
+                        $('.manageusers').next().slideUp('normal');
+                        $('.managevisitorrecords').next().slideUp('normal');
+                        $('.managevisitreasons').next().slideUp('normal');
+                        $('.managereports').next().slideUp('normal');
+                        $('.managevisitortype').next().slideUp('normal');
+                        $('.manageavmsreports').next().slideDown('normal');
+                    }",
+                ), array(
+                    'class' => 'manageavmsreports',
+                ));
+                ?>
+                <ul <?php
+                if ($this->action->id == 'vicTotalVisitCount') {
+                    echo "style='display:block ;'";
+                }
+                ?>>
+                    <li><a href='<?php echo Yii::app()->createUrl('visit/vicTotalVisitCount'); ?>'><span>Total Visits VICs</span></a></li>
+                </ul>
+            </li><!-- menu for AVMS Reports -->
+
+            <!-- menu for Helpdesk -->
             <li class='has-sub'>
                 <a class='managevisitorrecords' href='<?php echo Yii::app()->createUrl('helpDesk/admin'); ?>'><span>Help Desk</span></a>
               <ul <?php

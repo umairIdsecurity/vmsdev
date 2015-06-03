@@ -176,4 +176,12 @@ class ImportHosts extends CActiveRecord
         $this->date_of_birth = date("Y-m-d", strtotime ($this->date_of_birth) );
          return parent::beforeSave();
    }
+	public function behaviors()
+	{
+		return array(
+
+			'AuditTrailBehaviors'=>
+				'application.components.behaviors.AuditTrailBehaviors',
+		);
+	}
 }

@@ -122,14 +122,24 @@ class Notification extends CActiveRecord
 		return parent::model($className);
 	}
         
-        public function afterFind() {
-            $this->date_created = date("d-m-Y", strtotime($this->date_created) );
-            parent::afterFind();
-        }
-        
-        public function beforeSave() {
-           $this->date_created = date("Y-m-d", strtotime($this->date_created));
-           return parent::beforeSave();
-            
-        }
+	public function afterFind() {
+		$this->date_created = date("d-m-Y", strtotime($this->date_created) );
+		parent::afterFind();
+	}
+
+	public function beforeSave() {
+	   $this->date_created = date("Y-m-d", strtotime($this->date_created));
+	   return parent::beforeSave();
+
+	}
+
+	public function behaviors()
+	{
+		return array(
+
+			'AuditTrailBehaviors'=>
+				'application.components.behaviors.AuditTrailBehaviors',
+		);
+	}
+
 }

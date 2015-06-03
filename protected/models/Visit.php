@@ -390,6 +390,8 @@ class Visit extends CActiveRecord {
             'dateRangeSearch' => array(
                 'class' => 'application.components.behaviors.EDateRangeSearchBehavior',
             ),
+            'AuditTrailBehaviors'=>
+                'application.components.behaviors.AuditTrailBehaviors',
         );
     }
 
@@ -504,73 +506,81 @@ class Visit extends CActiveRecord {
             $visitor = $res_visitor[0]['visitor'];
             
             $res_company = Yii::app()->db->createCommand("SELECT company.id AS company_id, company.name AS company_name FROM visit LEFT JOIN user ON user.id = visit.host LEFT JOIN company ON user.company = company.id WHERE company.is_deleted=0 AND visit.id= " . $visitId)->queryAll();
-            $company = $res_company[0]['company_id'];
-
-            $res_host = Yii::app()->db->createCommand("SELECT id FROM user WHERE user.is_deleted=0 AND user.company=" . $company)->queryAll();
-            //var_dump($res_host);
-
-            foreach ($res_host as $arr_val) {
-                $arr[] = $arr_val['id'];
+            if ($res_company) {
+                $company = $res_company[0]['company_id'];
+            } else {
+                $company = 0;
             }
 
-            $hosts = implode(",", $arr);
+
+            $res_host = Yii::app()->db->createCommand("SELECT id FROM user WHERE user.is_deleted=0 AND user.company=" . $company)->queryAll();
+
+            //var_dump($res_host);
+            if ($res_host) {
+                foreach ($res_host as $arr_val) {
+                    $arr[] = $arr_val['id'];
+                }
+
+                $hosts = implode(",", $arr);
+                $sql_company_visit_by_visitor = "SELECT COUNT(*) as cnt FROM visit"
+                        . " WHERE visit.is_deleted=0 AND visit.visitor= " . $visitor
+                        . " AND host IN (" . $hosts . ")";
+
+
+                $companyVisitsByVisitor = Yii::app()->db->createCommand($sql_company_visit_by_visitor)->queryAll();
+
+                $countData = array('allVisitsByVisitor' => $allVisitsByVisitor[0]['cnt'], 'companyVisitsByVisitor' => $companyVisitsByVisitor[0]['cnt'], 'companyName' => $res_company[0]['company_name']);
+
+                return $countData;
+            } else {
+                return 0;
+            }
+
 
             //echo $hosts;echo "<br> ============ <br> ";
             //echo $company;echo "<br> ============ <br> ";
             //echo $visitor;echo "<br> ============ <br> ";	die();
-
-            $sql_company_visit_by_visitor = "SELECT COUNT(*) as cnt FROM visit"
-                . " WHERE visit.is_deleted=0 AND visit.visitor= " . $visitor
-                . " AND host IN (" . $hosts . ")";
-
-
-            $companyVisitsByVisitor = Yii::app()->db->createCommand($sql_company_visit_by_visitor)->queryAll();
-
-            $countData = array('allVisitsByVisitor' => $allVisitsByVisitor[0]['cnt'], 'companyVisitsByVisitor' => $companyVisitsByVisitor[0]['cnt'], 'companyName' => $res_company[0]['company_name']);
-
-            return $countData;
         }
         return 0;
-	}
+    }
 
-    public function getVisitCounts()
-    {
+    public function getVisitCounts() {
         if (empty($this->date_check_in) || empty($this->date_check_out)) {
             return 1;
-        }else{
+        } else {
             $dateIn = new DateTime($this->date_check_in);
             $dateOut = new DateTime($this->date_check_out);
-            return $dateOut->format('z') - $dateIn->format('z') + 1 ;
+            return $dateOut->format('z') - $dateIn->format('z') + 1;
         }
     }
-    
+
     /**
      * Change date formate to Australian after fetech
      * 
      */
     public function afterFind() {
-        
+
         $this->date_check_in = (string) date("d-m-Y", strtotime($this->date_check_in));
-        $this->date_check_out =  (string) date("d-m-Y", strtotime($this->date_check_out));
+        $this->date_check_out = (string) date("d-m-Y", strtotime($this->date_check_out));
         return parent::afterFind();
     }
-    
+
     /**
      * If visit is preregistered and date of entry passes 48 hours after proposed visit date 
      * the record is archived from Dashboard and Visit History 
      * 
-     */ 
-    public function archivePregisteredOldVisits () {
+     */
+    public function archivePregisteredOldVisits() {
         // Find and Update Status
-        $crieteria = 'visit_status = 2 AND ( date_check_in <= "'.date("Y-m-d", strtotime('-2 days')).'"  OR date_check_in <= "'.date("d-m-Y", strtotime('-2 days')).'")'; 
-        $preRegistered = $this->findAll( $crieteria );
-        
-        if( $preRegistered )  
-            foreach ( $preRegistered as $key => $visit ) {
-                $this->updateByPk($visit->id, array('is_deleted'=>'1') );
+        $crieteria = 'visit_status = 2 AND ( date_check_in <= "' . date("Y-m-d", strtotime('-2 days')) . '"  OR date_check_in <= "' . date("d-m-Y", strtotime('-2 days')) . '")';
+        $preRegistered = $this->findAll($crieteria);
+
+        if ($preRegistered)
+            foreach ($preRegistered as $key => $visit) {
+                $this->updateByPk($visit->id, array('is_deleted' => '1'));
             }
-            
-         return;
+
+        return;
     }
 
 }

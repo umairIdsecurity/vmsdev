@@ -46,7 +46,7 @@
             <equals arg1="" arg2="${feature}"  />
         </condition>
 
-        <exec executable="specs/tools/bin/behat" taskname="feature-test" >
+        <exec executable="specs/tools/bin/behat" taskname="feature-test" failonerror="true">
             <arg line="--config=specs/tools/behat.yml --profile=features --paths ${featureArg}" />
         </exec>
 
@@ -66,7 +66,7 @@
             <equals arg1="" arg2="${bug}"  />
         </condition>
 
-        <exec executable="specs/tools/bin/behat" taskname="bug-test" >
+        <exec executable="specs/tools/bin/behat" taskname="bug-test" failonerror="true" >
             <arg line="--config=specs/tools/behat.yml --profile=bugs --paths ${arg}" />
         </exec>
 
@@ -86,7 +86,7 @@
             <equals arg1="" arg2="${feature}"  />
         </condition>
 
-        <exec executable="specs/tools/bin/behat" taskname="new-feature-test" >
+        <exec executable="specs/tools/bin/behat" taskname="new-feature-test" failonerror="true">
             <arg line="--config=specs/tools/behat.yml --profile=features-new --paths ${featureArg}" />
         </exec>
 
@@ -106,7 +106,7 @@
             <equals arg1="" arg2="${bug}"  />
         </condition>
 
-        <exec executable="specs/tools/bin/behat" taskname="new-bug-test" >
+        <exec executable="specs/tools/bin/behat" taskname="new-bug-test" failonerror="true" >
             <arg line="--config=specs/tools/behat.yml --profile=bugs-new  --paths ${arg}" />
         </exec>
 

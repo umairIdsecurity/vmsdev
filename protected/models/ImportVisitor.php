@@ -207,4 +207,14 @@ class ImportVisitor extends CActiveRecord
                             } else 
                                 return false;
     }
+
+    public function behaviors()
+    {
+        return array(
+
+            'AuditTrailBehaviors'=>
+                'application.components.behaviors.AuditTrailBehaviors',
+        );
+    }
+
 }

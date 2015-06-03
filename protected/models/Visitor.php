@@ -58,6 +58,9 @@ class Visitor extends CActiveRecord {
     const PROFILE_TYPE_ASIC = 'ASIC';
 
     const AUSTRALIA_ID = 13;
+    
+    const DELTED = 1;
+    const NOT_DELETED = 0;
 
     public static $VISITOR_CARD_TYPE_LIST = array(
         self::PROFILE_TYPE_CORPORATE => array(
@@ -189,6 +192,7 @@ class Visitor extends CActiveRecord {
                 profile_type,
                 middle_name,
                 company,
+                staff_id
                 identification_type,
                 identification_country_issued,
                 identification_document_no,
@@ -237,7 +241,7 @@ class Visitor extends CActiveRecord {
             array('vehicle', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, first_name, photo,last_name, email,companycode, vehicle,contact_number, date_of_birth, company, department, position, staff_id, notes, role, visitor_status, created_by, is_deleted, tenant, tenant_agent', 'safe', 'on' => 'search'),
+            array('id, first_name, photo,last_name, email,companycode, vehicle,contact_number, date_of_birth, company, department, position, staff_id, notes, role, visitor_status, created_by, is_deleted, tenant, tenant_agent, profile_type', 'safe', 'on' => 'search'),
         );
 
         $rules[] = array(
@@ -372,7 +376,7 @@ class Visitor extends CActiveRecord {
      * @return CActiveDataProvider the data provider that can return the models
      * based on the search/filter conditions.
      */
-    public function search() {
+    public function search($merge = null) {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
@@ -395,10 +399,11 @@ class Visitor extends CActiveRecord {
         $criteria->compare('role', $this->role, true);
         $criteria->compare('visitor_status', $this->visitor_status, true);
         $criteria->compare('created_by', $this->created_by, true);
-        $criteria->compare('is_deleted', $this->is_deleted);
+        $criteria->compare('t.is_deleted', self::NOT_DELETED);
         $criteria->compare('tenant', $this->tenant, true);
         $criteria->compare('tenant_agent', $this->tenant_agent, true);
         $criteria->compare('vehicle', $this->vehicle, true);
+        $criteria->compare('profile_type', $this->profile_type, true);
 
         if (Yii::app()->controller->id == 'visit') {
             $criteria->compare('CONCAT(first_name, \' \', last_name)', $this->first_name, true);
@@ -409,6 +414,10 @@ class Visitor extends CActiveRecord {
         $user = User::model()->findByPK(Yii::app()->user->id);
         if($user->role != Roles::ROLE_SUPERADMIN){
 
+        }
+
+        if ($merge !== null) {
+            $criteria->mergeWith($merge);
         }
 
         return new CActiveDataProvider($this, array(
@@ -640,4 +649,14 @@ class Visitor extends CActiveRecord {
         }
 
     }
+
+    public function behaviors()
+    {
+        return array(
+
+            'AuditTrailBehaviors'=>
+                'application.components.behaviors.AuditTrailBehaviors',
+        );
+    }
+
 }

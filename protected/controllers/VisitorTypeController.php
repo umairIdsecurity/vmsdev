@@ -26,7 +26,7 @@ class VisitorTypeController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin', 'delete','adminAjax'),
+                'actions' => array('create', 'update', 'admin', 'delete','adminAjax', 'visitorsByTypeReport'),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
            
             ),
@@ -142,5 +142,39 @@ class VisitorTypeController extends Controller {
             'model' => $model,
                 ), false, true);
     }
+    
+   /* 
+    * Report: Corporate Reporting: Total Visits by Visitor Type
+    * Total Visitors by Visitor Type
+    * 
+    * @return view
+    */
+    public function actionVisitorsByTypeReport() {
+        // Post Date
+        $dateFromFilter = Yii::app()->request->getParam("date_from_filter");
+        $dateToFilter = Yii::app()->request->getParam("date_to_filter");
+        
+        $dateCondition='';
+        
+        if( !empty($dateFromFilter) && !empty($dateToFilter) ) {
+
+            $from = new DateTime($dateFromFilter);
+            $to = new DateTime($dateToFilter);
+            
+            $dateCondition = ' AND ((visits.date_check_in BETWEEN "'.$from->format('d-m-Y').'"'
+                                . ' AND "'.$to->format('d-m-Y').'") OR (visits.date_check_in BETWEEN "'.$from->format('Y-m-d').'"'
+                                . ' AND "'.$to->format('Y-m-d').'"))';
+        }
+        
+        $visitsCount = Yii::app()->db->createCommand()
+                    ->select('t.id, t.name,count(visits.id) as visits')
+                    ->from('visitor_type t')
+                    ->leftJoin('visit visits' , '(t.id = visits.visitor_type) AND (visits.is_deleted = 0)' . $dateCondition)
+                    ->where('t.is_deleted = 0')
+                    ->group('t.id')
+                    ->queryAll(); // this will be returned as an array of arrays
+
+        $this->render("visitortypecount", array("visit_count"=>$visitsCount));
+    } 
 
 }

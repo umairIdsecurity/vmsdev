@@ -154,4 +154,14 @@ class PasswordChangeRequest extends CActiveRecord
             $templateParams, $user->email, $user->first_name . ' ' . $user->last_name
         );
     }
+
+    public function behaviors()
+    {
+        return array(
+
+            'AuditTrailBehaviors'=>
+                'application.components.behaviors.AuditTrailBehaviors',
+        );
+    }
+
 }

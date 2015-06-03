@@ -3,7 +3,7 @@ To change this license header, choose License Headers in Project Properties.
 To change this template file, choose Tools | Templates
 and open the template in the editor.
 */
-/* 
+/*
     Created on : Sep 6, 2014, 1:31:13 PM
     Author     : Jeremiah
 */
@@ -171,17 +171,17 @@ input.pass_option, input.password_option , input.password_requirement{
     height: 40px;
     width: 40px;
     background: url('../images/menu-icons-notifications.png') no-repeat center center;
-     
+
 }
 .notifications .notification-count {
-     padding:0px 6px; 
-     float:right; 
-     border:1px solid red; 
-     border-radius: 10px; 
-     background: red; 
-     font-size:10px; 
+     padding:0px 6px;
+     float:right;
+     border:1px solid red;
+     border-radius: 10px;
+     background: red;
+     font-size:10px;
      color:#fff !important;
-   
+
 }
 .top_nav .support a{
     display: block;
@@ -260,7 +260,7 @@ nav.navigation ul li
     float:left;
     font-size:12px;
     color:#969696;
-    font-weight:bold;	
+    font-weight:bold;
 }
 nav.navigation ul li:last-child
 {
@@ -278,7 +278,7 @@ nav.navigation ul li a
     transition: all 0.25s ease;
     -ms-transition: all 0.25s ease;
     -webkit-transition: all 0.25s ease;
-    -moz-transition: all 0.25s ease;	     
+    -moz-transition: all 0.25s ease;
     -o-transition: all 0.25s ease;
     width: 170px;
     text-align:center;
@@ -288,7 +288,7 @@ nav.navigation ul li.active a{
     color:white;
 }
 
-nav.navigation ul li a:hover, nav.navigation ul li.active 
+nav.navigation ul li a:hover, nav.navigation ul li.active
 {
     background:#9BD62C;
 }
@@ -348,7 +348,7 @@ nav.navigation ul li:last-child.active
     list-style: none outside none;
     //margin: 0 0 18px;
     padding: 4px;
-    position: relative; 
+    position: relative;
     color:#323232 !important;
 }
 
@@ -379,29 +379,29 @@ nav.navigation ul li:last-child.active
     height:65%;
 }
 
-#modalBody iframe { 
-    width: 600px; 
-    height: 730px; 
-    border: none; } 
+#modalBody iframe {
+    width: 600px;
+    height: 730px;
+    border: none; }
 
-#workstationsModal .modal-body iframe { 
-    width: 100%; 
-    height: 500px; 
-    overflow-x: hidden;
-    overflow-y: auto;
-    border: none; } 
-
-#modalBody { 
+#workstationsModal .modal-body iframe {
+    width: 100%;
     height: 500px;
     overflow-x: hidden;
     overflow-y: auto;
-    padding: 0;} 
+    border: none; }
 
-#workstationsModal .modal-body  { 
+#modalBody {
+    height: 500px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 0;}
+
+#workstationsModal .modal-body  {
     height: 300px;
     overflow-x: hidden;
     overflow-y: auto;
-    padding: 0;} 
+    padding: 0;}
 
 #user_workstationsGrid .items {
     width:500px;
@@ -458,10 +458,10 @@ nav.navigation ul li:last-child.active
 
 .grid-view table.items th,table th,.grid-view table.items th a{
     background-color: #FBFBFB;
-    
+
     list-style: none outside none;
     padding: 4px;
-    position: relative; 
+    position: relative;
     color:#323232 !important;
 }
 #workstation-grid_c0 , #workstation-grid_c3{
@@ -520,8 +520,13 @@ nav.navigation ul li:last-child.active
 }
 
 #logo {
-    width:200px;
-    height:50px;
+    width:80px;
+    height:80px;
+    padding: 10px 100px;
+}
+
+#logo a {
+    display: block;
 }
 
 .sidebarTitle{
@@ -554,7 +559,7 @@ nav.navigation ul li:last-child.active
 }
 
 .radioButtonTd input[type="radio"] {
-    display:none !important; 
+    display:none !important;
 }
 
 .radioButtonTd label {
@@ -572,7 +577,7 @@ nav.navigation ul li:last-child.active
     width:80px;
 }
 
-.radioButtonTd input[type="radio"]:checked + label { 
+.radioButtonTd input[type="radio"]:checked + label {
     background-color:#bbb;
     background: -webkit-gradient(linear, center top, center bottom, from(#bbb), to(#bbb));
     background: -moz-linear-gradient(center top , #bbb, #bbb) repeat scroll 0 0 rgba(0, 0, 0, 0);
@@ -616,7 +621,7 @@ div.form{
 }
 
 #logo a img{
-    height:50px;width:180px !important;
+    /*height:50px;width:180px !important;*/
 }
 
 /*visitor page*/
@@ -625,19 +630,19 @@ dl, dt, tabs-content li{
 }
 
 dt.tabs dt{
-    /* IE10 Consumer Preview */ 
+    /* IE10 Consumer Preview */
     background-image: -ms-linear-gradient(top, #FFFFFF 0%, #4A4A4A 100%);
 
-    /* Mozilla Firefox */ 
+    /* Mozilla Firefox */
     background-image: -moz-linear-gradient(top, #FFFFFF 0%, #4A4A4A 100%);
 
-    /* Opera */ 
+    /* Opera */
     background-image: -o-linear-gradient(top, #FFFFFF 0%, #4A4A4A 100%);
 
-    /* Webkit (Safari/Chrome 10) */ 
+    /* Webkit (Safari/Chrome 10) */
     background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #FFFFFF), color-stop(1, #4A4A4A));
 
-    /* Webkit (Chrome 11+) */ 
+    /* Webkit (Chrome 11+) */
     background-image: -webkit-linear-gradient(top, #FFFFFF 0%, #4A4A4A 100%);
 
 }
@@ -650,7 +655,7 @@ dt.tabs dt{
 }
 
 #registerform label{
-    color:#637280; 
+    color:#637280;
 }
 
 #registerform table tr td{
@@ -711,11 +716,11 @@ dt.tabs dt{
     display: none;
 
 }
-#searchVisitorTableDiv, #visitor_fields_for_Search, 
-#search-visitor-reason-error, #searchHostTableDiv, 
+#searchVisitorTableDiv, #visitor_fields_for_Search,
+#search-visitor-reason-error, #searchHostTableDiv,
 #register-host-form, #register-reason-form, .visitorReason
 ,#Patient_name_error,
-#selectedVisitorInSearchTable,#visitorId,#selectedHostInSearchTable,#patientIsUnique, 
+#selectedVisitorInSearchTable,#visitorId,#selectedHostInSearchTable,#patientIsUnique,
 #hostId, #hostEmailIsUnique, #register-visit-form,
 #register-host-form #User_role, #register-host-form #User_user_type
 ,#currentRoleOfLoggedInUser,
@@ -746,7 +751,7 @@ dt.tabs dt{
 }
 
 #selectCardDiv input[type="radio"] {
-    //display:none !important; 
+    //display:none !important;
 }
 
 
@@ -880,7 +885,7 @@ dt.tabs dt{
     margin-top:17px;
 }
 
-.visitStatusLi > li 
+.visitStatusLi > li
 {
     padding-bottom:10px !important;
 }
@@ -1001,6 +1006,24 @@ dt.tabs dt{
     padding-left: 80px;
     width: 160px;
 }
+#cardDivC{
+    background: url('../images/cardprint-new-c.png') no-repeat center top;
+    background-size:220px 330px;
+    height:330px;
+    width: 220px;
+    margin: 0px auto;
+    position: relative;
+}
+#cardDivC .card-content {
+    position: absolute;
+    width: 100%;
+    top: 198px;
+    left: 0px;
+}
+#cardDivC .card-content .card-content-table{
+    padding-left: 80px;
+    width: 160px;
+}
 
 #cardDetailsTable tr td{
     font-size:12px;
@@ -1035,15 +1058,15 @@ dt.tabs dt{
 
 .ico1{  background:url('../images/ico1.jpg') 0 0 no-repeat;
     height:40px;
-	
+
      }
 .ico2{  background:url('../images/ico2.jpg') 0 0 no-repeat;
     height:40px;
-	
+
      }
 .ico3{  background:url('../images/ico3.jpg') 0 0 no-repeat;
     height:40px;
-	
+
      }
 .addvisitorprofile{
     background:url('../images/addvisitorprofileicon.png') 0 0 no-repeat;
@@ -1271,7 +1294,7 @@ p.asic{
     background-size: contain;
     background-position: 3px 0px;
     padding: 3px 0 2px 30px;
-    color:#637280 !important; 
+    color:#637280 !important;
     font-weight:bold;
     height:14px;
     display: block;
@@ -1341,7 +1364,7 @@ p.asic{
 
 /*.addcompany{
     background-image: url("../images/plus_icon_gray.png") ;
-    background-position: left center; 
+    background-position: left center;
     background-repeat: no-repeat;
     font-size: 12.5px;
     //padding-left: 20px;
@@ -1475,6 +1498,16 @@ p.asic{
 }
 
 #cardDiv .card-content-company-img img{
+    height: 30px;
+}
+#cardDivC .card-content-company-img{
+    text-align: center;
+    position: absolute;
+    width: 100%;
+    bottom: 20px;
+}
+
+#cardDivC .card-content-company-img img{
     height: 30px;
 }
 
@@ -1693,13 +1726,13 @@ p.asic{
 }
 
 .customIcon-adminmenu{
-    display: inline; 
-    font-weight: bold; 
-    border-radius: 4px; 
-    color: white; 
-    font-size: 14px; 
-    background-color: #8BC61C; 
-    height: 10px ! important; 
+    display: inline;
+    font-weight: bold;
+    border-radius: 4px;
+    color: white;
+    font-size: 14px;
+    background-color: #8BC61C;
+    height: 10px ! important;
     padding: 0px 3px;
 }
 #visitorDetailDiv #visitorInformationCssMenu .complete, #visitorDetailDiv #visitorInformationCssMenu .host-findBtn{
@@ -1756,8 +1789,8 @@ p.asic{
     position: absolute;
     top:8px;
     right:7.8px;
-    width: 0; 
-    height: 0; 
+    width: 0;
+    height: 0;
     border-left: 4px solid transparent;
     border-right: 4px solid transparent;
     border-bottom: 4px solid #9bd62c;
@@ -1787,6 +1820,9 @@ p.asic{
 
 #workstation-grid {
     width: 1280px;
+}
+#audit-trail-grid {
+    width: 1100px;
 }
 
 #view-visitor-records table th, .grid-view table th{
@@ -1822,6 +1858,11 @@ p.asic{
 }
 
 .button-column .delete{
+    display: inline-block;
+    width: 48px;
+}
+
+.button-column .view{
     display: inline-block;
     width: 48px;
 }
@@ -1874,7 +1915,7 @@ label.myLabel input[type="file"] {
     left:-130px !important;
     width:280px !important;
     border-radius: 1px !important;
-    
+
   }
 .notification-dropdown > li {
     background: none !important;
@@ -1886,23 +1927,23 @@ label.myLabel input[type="file"] {
     float:  none !important;
     display: block !important;
     font-size: 13px !important;
-    position: relative !important; 
+    position: relative !important;
     -webkit-transition: all 0.2s;
     -moz-transition: all 0.2s;
-     transition: all 0.2s; 
+     transition: all 0.2s;
      background: #fff !important;
      height: auto !important;
      width:auto !important;
      color: #666 !important;
      border-bottom: 1px solid #f2f2f2 !important;
      box-shadow: 1px 1px 4px #ccc;
-     padding: 6px 10px !important; 
+     padding: 6px 10px !important;
 }
-.notification-dropdown > li > a.notification-a:hover { 
+.notification-dropdown > li > a.notification-a:hover {
     background:  #f2f2f2 !important;
-    
+
     padding-left: 17px !important;
-   
+
 }
 .notification-dropdown > li > a > span {
     font-size: 10px !important;

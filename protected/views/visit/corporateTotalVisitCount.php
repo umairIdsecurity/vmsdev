@@ -10,7 +10,7 @@
 
 $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'corporate-total-visit-count',
-    'dataProvider' => $model->search(),
+    'dataProvider' => $model->search($merge),
     'enableSorting' => false,
     //'ajaxUpdate'=>true,
     'hideHeader'=>true,

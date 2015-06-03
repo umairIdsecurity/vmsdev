@@ -369,15 +369,26 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                         </tr>
                         <tr>
                             <td id="visitorCompanyRow">
-                                <select id="Visitor_company" name="Visitor[company]">
-                                    <option value=''>Select Company</option>
-                                </select>
-                                <span class="required">*</span>
-                                <?php echo $form->error($model, 'company'); ?>
+                                <div style="margin-bottom: 5px;">
+                                    <?php
+                                    $this->widget('application.extensions.select2.Select2', array(
+                                        'model' => $model,
+                                        'attribute' => 'company',
+                                        'items' => CHtml::listData(Visitor::model()->findAllCompanyByTenant($session['tenant']),
+                                            'id', 'name'),
+                                        'selectedItems' => array(), // Items to be selected as default
+                                        'placeHolder' => 'Please select a company'
+                                    ));
+                                    ?>
+                                    <?php echo $form->error($model, 'company'); ?>
+                                    <span class="required">*</span>
+                                </div>
                             </td>
                         </tr>
                         <tr>
-                            <td id="company_error_" style='font-size: 0.9em;color: #FF0000; display:none'>Please select a company</td>
+                            <td>
+                                <div style="margin-bottom: 5px;" id="visitorStaffRow"></div>
+                            </td>
                         </tr>
                         <tr>
                             <td>
@@ -386,8 +397,9 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                     <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none; margin-top: 10px;">
                                         Add Company</a>
                                 <?php } else { ?>
-                                    <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none; margin-top: 10px;">
-                                        Add New Company</a>
+                                    <!-- <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none; margin-top: 10px;">Add New Company</a> -->
+                                    <a style="float: left; margin-right: 5px; width: 95px; height: 21px;" href="#addCompanyContactModal" role="button" data-toggle="modal" id="addCompanyLink">Add Company</a>
+                                    <a href="#addCompanyContactModal" id="addContactLink" class="btn btn-xs btn-info" style="display: none;" role="button" data-toggle="modal">Add Contact</a>
                                 <?php } ?>
                             </td>
                         </tr>
@@ -930,6 +942,44 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
             }
         });
     }
+
+
+// company change
+$('#Visitor_company').on('change', function() {
+    var companyId = $(this).val();
+    $('#CompanySelectedId').val(companyId);
+    $modal = $('#addCompanyContactModal');
+    $.ajax({
+        type: "POST",
+        url: "<?php echo $this->createUrl('company/getContacts') ?>",
+        dataType: "json",
+        data: {id:companyId},
+        success: function(data) {
+            var companyName = $('.select2-selection__rendered').text();
+            $('#AddCompanyContactForm_companyName').val(companyName).prop('disabled', 'disabled');
+            if (data == 0) {
+                $('#addContactLink').hide();
+                $('#visitorStaffRow').empty();
+                $modal.find('#myModalLabel').html('Add Company');
+                $("#addCompanyContactModal").modal("show");
+            } else {
+                $modal.find('#myModalLabel').html('Add Contact To Company');
+                $('#visitorStaffRow').html(data);
+                $('#addContactLink').show();
+            }
+            return false;
+        }
+    });
+});
+
+$('#addContactLink').on('click', function(e) {
+    $('#typePostForm').val('contact');
+});
+
+$('#addCompanyLink').on('click', function(e) {
+    $('#typePostForm').val('company');
+});
+
 </script>
 
 
@@ -983,10 +1033,3 @@ $this->widget('bootstrap.widgets.TbButton', array(
 <input type="hidden" id="y2"/>
 <input type="hidden" id="width"/>
 <input type="hidden" id="height"/>
-
-
-
-
-
-
-

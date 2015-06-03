@@ -403,7 +403,7 @@ echo '<h1>Add '.Roles::$labels[Yii::app()->request->getParam('role')].'</h1>';
             </td>
             <td style="vertical-align: top; float:left; width:300px">
                 
-                    <table class="no-margin-bottom">
+                    <table>  
                                 <tr>
                         <td>
                             <select  onchange="populateDynamicFields()" <?php
@@ -469,7 +469,7 @@ echo '<h1>Add '.Roles::$labels[Yii::app()->request->getParam('role')].'</h1>';
                     </tr>
                   </table>
                   <div class="password-border">
-                  <table class="no-margin-bottom">
+                  <table>
                     <tr>
                   <td><strong>Password Options</strong></td>
                   

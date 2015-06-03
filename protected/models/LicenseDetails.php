@@ -94,4 +94,13 @@ class LicenseDetails extends CActiveRecord {
         return $description;
     }
 
+    public function behaviors()
+    {
+        return array(
+
+            'AuditTrailBehaviors'=>
+                'application.components.behaviors.AuditTrailBehaviors',
+        );
+    }
+
 }

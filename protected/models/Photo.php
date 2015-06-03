@@ -106,7 +106,7 @@ class Photo extends CActiveRecord {
         
         return $aArray;
     }
-    
+
     public function returnVisitorPhotoRelativePath($visitorId) {
         $visitor = Visitor::model()->findByPK($visitorId);
         if ($visitor->photo != '') {
@@ -115,18 +115,23 @@ class Photo extends CActiveRecord {
             return $photo->relative_path;
         }
     }
+
     public function returnCompanyPhotoRelativePath($companyId) {
         $company = Company::model()->findByPK($companyId);
-        if ($company->logo != '') {
-            $photo = Photo::model()->findByPK($company->logo);
-           if(file_exists($photo->relative_path)){
-            return $photo->relative_path;
-           }else{
-               return Photo::DEFAULT_COMPANY_LOGO;
+        if ($company) {
+            if ($company->logo != '') {
+                $photo = Photo::model()->findByPK($company->logo);
+                if (file_exists($photo->relative_path)) {
+                    return $photo->relative_path;
+                } else {
+                    return Photo::DEFAULT_COMPANY_LOGO;
+                }
+            } else {
+                return Photo::DEFAULT_COMPANY_LOGO;
+            }
+        } else {
+            return Photo::DEFAULT_COMPANY_LOGO;
         }
-            
-            
-    }
     }
     
     public function returnLogoPhotoRelative($logoId) {
@@ -135,6 +140,15 @@ class Photo extends CActiveRecord {
 
             return $photo->relative_path;
         
+    }
+
+    public function behaviors()
+    {
+        return array(
+
+            'AuditTrailBehaviors'=>
+                'application.components.behaviors.AuditTrailBehaviors',
+        );
     }
    
 

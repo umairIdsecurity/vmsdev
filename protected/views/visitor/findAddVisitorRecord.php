@@ -4,7 +4,9 @@ $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/script-birthda
 
 $session = new CHttpSession;
 $company = Company::model()->findByPk($session['company']);
-$companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
+if (isset($company) && !empty($company)) {
+    $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
+}
 
 $dataId = '';
 if ($this->action->id == 'update') {
@@ -316,7 +318,13 @@ $model->identification_country_issued = 13;
                             </tr>
                             <tr>
                                 <td>
-                                    <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;">Add Company</a>
+                                    <div style="margin-bottom: 5px;" id="visitorStaffRow"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a style="float: left; margin-right: 5px; width: 95px; height: 21px;" href="#addCompanyContactModal" role="button" data-toggle="modal" id="addCompanyLink">Add Company</a>
+                                    <a href="#addCompanyContactModal" id="addContactLink" class="btn btn-xs btn-info" style="display: none;" role="button" data-toggle="modal">Add Contact</a>
                                 </td>
                             </tr>
 
@@ -1053,15 +1061,16 @@ $model->identification_country_issued = 13;
             $("#Visitor_company_em_").html("Please select a tenant");
             $("#Visitor_company_em_").show();
         } else {
-            if ($("#currentRoleOfLoggedInUser").val() == '<?php echo Roles::ROLE_SUPERADMIN; ?>') {
-                /* if role is superadmin tenant is required. Pass selected tenant and tenant agent of user to company. */
+            /*if ($("#currentRoleOfLoggedInUser").val() == '<?php echo Roles::ROLE_SUPERADMIN; ?>') {
+                *//* if role is superadmin tenant is required. Pass selected tenant and tenant agent of user to company. *//*
                 url = '<?php echo Yii::app()->createUrl('company/create&viewFrom=1&tenant='); ?>' + $("#Visitor_tenant").val() + '&tenant_agent=' + $("#Visitor_tenant_agent").val();
             } else {
                 url = '<?php echo Yii::app()->createUrl('company/create&viewFrom=1'); ?>';
             }
 
             $("#modalBody").html('<iframe id="companyModalIframe" width="100%" height="80%" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
-            $("#modalBtn").click();
+            $("#modalBtn").click();*/
+            //$('#addCompanyModal').show();
         }
     }
 
@@ -1109,7 +1118,13 @@ $model->identification_country_issued = 13;
                     if (isSearch == 'search') {
                         $('#workstation_search').append('<option value="' + value.id + '">' + value.name + '</option>');
                     } else {
-                        var selectedWorkstation = <?php echo $session['workstation']?>;
+                        var selected = <?php echo isset($session['workstation']) ? $session['workstation'] : '0' ?>;
+                        var workstation = $('#userWorkstation').val();
+                        if (selected != 0) {
+                            var selectedWorkstation = selected;
+                        } else {
+                            var selectedWorkstation = workstation;
+                        }
                         if (value.id == selectedWorkstation) {
                             $('#workstation').append('<option selected="selected" value="' + value.id + '">' + value.name + '</option>');
                         } else {
@@ -1124,30 +1139,45 @@ $model->identification_country_issued = 13;
 
         
     }
+
+// company change
+$('#Visitor_company').on('change', function() {
+    var companyId = $(this).val();
+    $('#CompanySelectedId').val(companyId);
+    $modal = $('#addCompanyContactModal');
+    $.ajax({
+        type: "POST",
+        url: "<?php echo $this->createUrl('company/getContacts') ?>",
+        dataType: "json",
+        data: {id:companyId},
+        success: function(data) {
+            var companyName = $('.select2-selection__rendered').text();
+            $('#AddCompanyContactForm_companyName').val(companyName).prop('disabled', 'disabled');
+            if (data == 0) {
+                $('#addContactLink').hide();
+                $modal.find('#myModalLabel').html('Add Company');
+                $("#addCompanyContactModal").modal("show");
+            } else {
+                $modal.find('#myModalLabel').html('Add Contact To Company');
+                $('#visitorStaffRow').html(data);
+                $('#addContactLink').show();
+            }
+            return false;
+        }
+    });
+});
+
+$('#addContactLink').on('click', function(e) {
+    $('#typePostForm').val('contact');
+});
+
+$('#addCompanyLink').on('click', function(e) {
+    $('#typePostForm').val('company');
+});
+
 </script>
 
 <input type="text" id="visitorId" placeholder="visitor id"/>
-<?php
-$this->widget('bootstrap.widgets.TbButton', array(
-    'label' => 'Click me',
-    'type' => 'primary',
-    'htmlOptions' => array(
-        'data-toggle' => 'modal',
-        'data-target' => '#addCompanyModal',
-        'id' => 'modalBtn',
-        'style' => 'display:none',
-    ),
-));
-?>
-<div class="modal hide fade" id="addCompanyModal" style="width:600px;">
-    <div class="modal-header">
-        <a data-dismiss="modal" class="close" id="dismissModal" >×</a>
-        <br>
-    </div>
-    <div id="modalBody"></div>
-
-</div>
-
 
 <!-- PHOTO CROP-->
 <div id="light" class="white_content">

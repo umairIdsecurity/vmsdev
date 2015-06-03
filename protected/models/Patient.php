@@ -101,4 +101,13 @@ class Patient extends CActiveRecord {
         return $aArray;
     }
 
+    public function behaviors()
+    {
+        return array(
+
+            'AuditTrailBehaviors'=>
+                'application.components.behaviors.AuditTrailBehaviors',
+        );
+    }
+
 }

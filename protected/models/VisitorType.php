@@ -53,6 +53,8 @@ class VisitorType extends CActiveRecord {
         return array(
             'visitors' => array(self::HAS_MANY, 'Visitor', 'visitor_type'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'created_by'),
+            'visits'=>array(self::HAS_MANY, 'Visit', 'visitor_type'),
+            'visitsCount' => array(self::STAT, 'Visit', 'visitor_type'),
         );
     }
 
@@ -119,9 +121,15 @@ class VisitorType extends CActiveRecord {
         if(Yii::app()->controller->action->id != 'exportvisitorrecords' && Yii::app()->controller->action->id != 'evacuationReport' && Yii::app()->controller->action->id != 'visitorRegistrationHistory'){
             $criteria->condition = "t.is_deleted = 0 && t.id !=1";
         }
+        
+        if(Yii::app()->controller->action->id == 'visitorsByTypeReport'){
+            $criteria->condition = "";
+            $criteria->condition = "t.is_deleted=0";
+        }
+        
         $this->dbCriteria->mergeWith($criteria);
     }
-    
+
     /**
      * Before Save change a few things.
      * 
@@ -160,6 +168,15 @@ class VisitorType extends CActiveRecord {
                 return $VISITOR_TYPE_LIST[$visitorTypeId];
             }
         }
+    }
+
+    public function behaviors()
+    {
+        return array(
+
+            'AuditTrailBehaviors'=>
+                'application.components.behaviors.AuditTrailBehaviors',
+        );
     }
 
 }

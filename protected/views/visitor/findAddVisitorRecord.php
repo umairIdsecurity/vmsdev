@@ -324,7 +324,7 @@ $model->identification_country_issued = 13;
                             <tr>
                                 <td>
                                     <a style="float: left; margin-right: 5px; width: 95px; height: 21px;" href="#addCompanyContactModal" role="button" data-toggle="modal" id="addCompanyLink">Add Company</a>
-                                    <a href="#addCompanyContactModal" id="addContactLink" class="btn btn-xs btn-info" style="display: none;" role="button" data-toggle="modal">Add Contact</a>
+                                    <a href="#addCompanyContactModal" id="addContactLink" class="btn btn-xs btn-info" style="font-size: 12px; font-weight: bold; display: none;" role="button" data-toggle="modal">Add Contact</a>
                                 </td>
                             </tr>
 
@@ -797,7 +797,7 @@ $model->identification_country_issued = 13;
                                 document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 $(".ajax-upload-dragdrop").css("background", "url(<?php echo Yii::app()->request->baseUrl; ?>" + value.relative_path + ") no-repeat center top");
                                 $(".ajax-upload-dragdrop").css({
-                                    "background-size": "137px 190px"
+                                    "background-size": "132px 152px"
                                 });
                             });
                         }

@@ -13,11 +13,10 @@
         $datasets = array(
             array('Visitors', 'Visitors')
         );
+        $total = 0;
         
         if($results) { 
             
-                $total = 0;
-                
                 $time = new DateTime('now');
                 
                 $from = $time->modify('-1 year');

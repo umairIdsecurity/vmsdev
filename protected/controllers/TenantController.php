@@ -113,8 +113,9 @@ class TenantController extends Controller {
                     $comapanylastId = $companyModel->id;
                     //echo "companyModel inserted:". $comapanylastId;
                 } else {
-                    print_r($companyModel->getErrors());
-                    exit;
+                    throw new CHttpException(500, 'Something went wrong');
+                    /*print_r($companyModel->getErrors());
+                    exit;*/
                 }
 
                 $userModel->first_name = $_POST['TenantForm']['first_name'];
@@ -146,8 +147,9 @@ class TenantController extends Controller {
                     $userLastID = $userModel->id;
                     //echo ":userModel:".$userLastID;
                 } else {
-                    print_r($userModel->getErrors());
-                    exit;
+                    throw new CHttpException(500, 'Something went wrong');
+                    /*print_r($userModel->getErrors());
+                    exit;*/
                 }
 
                 $tenantModel->id = $comapanylastId;
@@ -157,8 +159,9 @@ class TenantController extends Controller {
                     $tenantLastID = $tenantModel->id;
                     //echo ":tenantModel:".$tenantLastID;
                 } else {
-                    print_r($tenantModel->getErrors());
-                    exit;
+                    throw new CHttpException(500, 'Something went wrong');
+                    /*print_r($tenantModel->getErrors());
+                    exit;*/
                 }
 
                 $tenantContact->tenant = $tenantLastID;
@@ -168,17 +171,18 @@ class TenantController extends Controller {
                     $transaction->commit();
                     //echo ":tenantModel:";
                 } else {
-                    print_r($tenantContact->getErrors());
-                    exit;
+                    throw new CHttpException(500, 'Something went wrong');
+                    /*print_r($tenantContact->getErrors());
+                    exit;*/
                 }
-
+                Yii::app()->user->setFlash('success', "Tenant inserted Successfully");
                 echo json_encode(array('success'=>TRUE));
             }catch (CDbException $e)
             {
                 $transaction->rollback();
                 echo json_encode(array('success'=>FALSE));
             }
-            //Yii::app()->user->setFlash('success', "Tenant inserted Successfully");
+            //
             //echo json_encode(array('redirect'=>$this->createUrl('user/admin')));
             exit;
         }

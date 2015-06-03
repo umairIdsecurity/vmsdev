@@ -70,9 +70,9 @@ class VisitController extends Controller {
             $model->attributes = $_POST['Visit'];
 
             // default workstation:
-            /*if (isset($session['workstation'])) {
+            if ((!isset($_POST['Visit']['workstation']) || empty($_POST['Visit']['workstation'])) && isset($session['workstation'])) {
                 $model->workstation = $session['workstation'];
-            }*/
+            }
 
             // get the lastest visitor type:
             if ($model->visitor_type == null) {

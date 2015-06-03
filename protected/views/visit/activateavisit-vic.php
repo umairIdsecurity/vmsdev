@@ -49,19 +49,19 @@ $session = new CHttpSession;
     <tr>
         <td class="vic-col">
             <input type="checkbox" <?php echo $model->reason > 0 ? 'checked="checked"' : '';?> value="1" name="reasonActiveVisit" class="vic-active-visit"/>
-            <a href="#">Visit Reason</a>
+            <a href="#" style="text-decoration: none !important;">Visit Reason</a>
         </td>
     </tr>
     <tr>
         <td class="vic-col">
             <input type="checkbox"  value="1" name="identificationActiveVisit" class="vic-active-visit"/>
-            <a href="#">Identification</a>
+            <a href="#" style="text-decoration: none !important;">Identification</a>
         </td>
     </tr>
     <tr>
         <td class="vic-col">
             <input type="checkbox" value="1" name="asicSponsorActiveVisit" class="vic-active-visit"/>
-            <a href="#">ASIC Sponsor</a>
+            <a href="#" style="text-decoration: none !important;">ASIC Sponsor</a>
         </td>
     </tr>
 
@@ -310,7 +310,7 @@ $session = new CHttpSession;
         </table>
     </div>
     <div class="modal-footer">
-        <a type="button" class="btn btn-primary" id="btnVicConfirm">Confirm</a>
+        <button type="button" class="btn btn-primary" id="btnVicConfirm">Confirm</button>
     </div>
 </div>
 

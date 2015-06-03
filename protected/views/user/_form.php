@@ -18,7 +18,10 @@ if (isset($_GET['id'])) {
 
 $currentLoggedUserId = $session['id'];
 $company = Company::model()->findByPk($session['company']);
-$companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
+if (isset($company) && !empty($company)) {
+    $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
+}
+
 ?>
 <style type="text/css">
 	#modalBody_gen {padding-top: 10px !important;height: 204px !important;}
@@ -154,31 +157,34 @@ echo '<h1>Add '.Roles::$labels[Yii::app()->request->getParam('role')].'</h1>';
     <?php echo $form->errorSummary($model); ?>
     <table >
         <tr>
-         <td style="vertical-align: top; float:left; width:300px">
-        
-        <table style="width:300px;float:left;min-height:320px;">
-                            <tr> 
+            <td style="vertical-align: top; float:left; width:300px">
 
-                                <td style="width:300px;">
-                                   <!-- <label for="Visitor_Add_Photo" style="margin-left:27px;">Add  Photo</label><br>-->
+                <table style="width:300px;float:left;min-height:320px;">
+                    <tr>
 
-                                    <input type="hidden" id="Host_photo" name="User[photo]" value="<?php echo $model->photo; ?>">
-                                    <div class="photoDiv" style='display:none;'>
-                                        <img id='photoPreview2' src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png" style='display:none;'/>
-                                    </div>
-                                    <?php require_once(Yii::app()->basePath . '/draganddrop/host.php'); ?>
-                                    <div id="photoErrorMessage" class="errorMessage" style="display:none;  margin-top: 200px;margin-left: 71px !important;position: absolute;">Please upload a photo.</div>
-                                </td>
-                                </tr>
-                               
-                                <tr><td >&nbsp;</td></tr>
-                               
-                               
-                              </table>
-                              
-                            
-         
-         </td>
+                        <td style="width:300px;">
+                            <!-- <label for="Visitor_Add_Photo" style="margin-left:27px;">Add  Photo</label><br>-->
+
+                            <input type="hidden" id="Host_photo" name="User[photo]" value="<?php echo $model->photo; ?>">
+
+                            <div class="photoDiv" style='display:none;'>
+                                <img id='photoPreview2'
+                                     src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png"
+                                     style='display:none;'/>
+                            </div>
+                            <?php require_once(Yii::app()->basePath . '/draganddrop/host.php'); ?>
+                            <div id="photoErrorMessage" class="errorMessage"
+                                 style="display:none;  margin-top: 200px;margin-left: 71px !important;position: absolute;">
+                                Please upload a photo.
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>&nbsp;</td>
+                    </tr>
+                </table>
+            </td>
         
             <td style="vertical-align: top; float:left; width:300px;">
                 <table>

@@ -22,14 +22,14 @@ $this->pageTitle=Yii::app()->name . ' - Login';
 )); ?>
     <table class="login-area" style="border-collapse: none !important;">
         <tr>
-            <td align="center" class="form-group"><span class="add-on"><img src="/images/menu-icons-profile.png" alt=""/></span><?php echo $form->textField($model,'username', array('placeholder' => 'Username or Email')); ?></td>
+            <td align="center" class="form-group"><span class="add-on"><img src="<?php echo Yii::app()->controller->assetsBase; ?>/images/menu-icons-profile.png" alt=""/></span><?php echo $form->textField($model,'username', array('placeholder' => 'Username or Email')); ?></td>
 
         </tr>
         <tr>
             <td colspan="2"><?php echo $form->error($model,'username'); ?></td>
         </tr>
         <tr>
-            <td colspan="3" class="form-group"><span class="add-on"><img src="images/glyphs-asterisk.png" alt=""/></span><?php echo $form->passwordField($model,'password', array('placeholder' => 'Password')); ?></td>
+            <td colspan="3" class="form-group"><span class="add-on"><img src="<?php echo Yii::app()->controller->assetsBase; ?>/images/glyphs-asterisk.png" alt=""/></span><?php echo $form->passwordField($model,'password', array('placeholder' => 'Password')); ?></td>
             
         </tr>
         <tr>

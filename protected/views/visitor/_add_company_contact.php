@@ -53,13 +53,19 @@
                 </td>
             </tr>
             <tr>
+                <td style="width:200px; padding-left: 9px;">
+                    <a class="btn btn-default" href="javascript:void(0)" role="button" id="showCompanyContactFields">+</a> Add Company Contact
+                </td>
+                <td colspan="" rowspan="" headers="">&nbsp;</td>
+            </tr>
+            <tr class="company_contact_field hidden">
                 <td style="width:160px;"><?php echo $form->labelEx($model,'firstName'); ?></td>
                 <td>
                     <?php echo $form->textField($model, 'firstName', array('size' => 50, 'maxlength' => 50,'placeholder'=>'First Name')); ?>
                     <?php echo "<br>" . $form->error($model, 'firstName'); ?>
                 </td>
             </tr>
-            <tr>
+            <tr class="company_contact_field hidden">
                 <td style="width:160px;"><?php echo $form->labelEx($model,'lastName'); ?></td>
                 <td>
                     <?php echo $form->textField($model, 'lastName', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Last Name')); ?>
@@ -67,7 +73,7 @@
                 </td>
             </tr>
 
-            <tr>
+            <tr class="company_contact_field hidden">
                 <td style="width:160px;"><?php echo $form->labelEx($model,'email'); ?></td>
                 <td>
                     <?php echo $form->textField($model, 'email', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Email')); ?>
@@ -75,7 +81,7 @@
                 </td>
             </tr>
 
-            <tr>
+            <tr class="company_contact_field hidden">
                 <td style="width:160px;"><?php echo $form->labelEx($model,'mobile'); ?></td>
                 <td>
                     <?php echo $form->textField($model, 'mobile', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Mobile Number')); ?>
@@ -91,3 +97,10 @@
     </div>
 <?php $this->endWidget(); ?>
 </div>
+<script>
+    $(function() {
+        $(document).on('click', '#showCompanyContactFields', function(e) {
+            $("tr.company_contact_field").toggleClass("hidden");
+        });
+    });
+</script>

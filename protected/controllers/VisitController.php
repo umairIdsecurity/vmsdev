@@ -70,7 +70,7 @@ class VisitController extends Controller {
             $model->attributes = $_POST['Visit'];
 
             // default workstation:
-            if (!isset($_POST['Visit']) && isset($session['workstation'])) {
+            if ((!isset($_POST['Visit']['workstation']) || empty($_POST['Visit']['workstation'])) && isset($session['workstation'])) {
                 $model->workstation = $session['workstation'];
             }
 

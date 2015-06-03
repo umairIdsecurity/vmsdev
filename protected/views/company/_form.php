@@ -44,7 +44,7 @@ if ($this->action->id == 'update') {
         echo $form->errorSummary($model);
     }
     ?>
-    <input type="hidden" id="user_role" name="user_role" value="<?php echo $session['role'];  ?>" />
+    <!--<input type="hidden" id="user_role" name="user_role" value="<?php /*echo $session['role'];  */?>" />-->
     <?php if ($this->action->id != 'update') {
         ?>
         <input type="hidden" id="Company_tenant" name="Company[tenant]" value="<?php echo $tenant; ?>">
@@ -63,7 +63,7 @@ if ($this->action->id == 'update') {
             <td style="width:160px;">&nbsp;</td>
             <td style="width:240px;">
                 <?php
-                echo $form->textField($model, 'name', array('size' => 60, 'maxlength' => 150 , 'placeholder' => 'Company Name' ));
+                echo $form->textField($model, 'name', array('size' => 60, 'maxlength' => 150, 'placeholder' => 'Company Name'));
                 if (isset($_GET['viewFrom'])) {
                     echo "<br>" . $form->error($model, 'name');
                 }
@@ -74,16 +74,15 @@ if ($this->action->id == 'update') {
                     echo $form->error($model, 'name');
                 }
                 ?></td>
-
         </tr>
 
         <!--WangFu Modified-->
-        <?php if ($session['role'] != Roles::ROLE_ADMIN) {?>
-            <tr>
-                <td style="width:160px;"><?php echo $form->labelEx($model, 'code'); ?></td>
-                <td  style="width:240px;">
+        <?php if ($session['role'] != Roles::ROLE_ADMIN) { ?>
+            <tr class="user_fields1">
+                <td style="width:160px;">&nbsp;</td>
+                <td style="width:240px;">
                     <?php
-                    echo $form->textField($model, 'code', array('size' => 3, 'maxlength' => 3));
+                    echo $form->textField($model, 'code', array('size' => 3, 'maxlength' => 3, 'placeholder' => 'Company Code'));
                     if (isset($_GET['viewFrom'])) {
                         echo "<br>" . $form->error($model, 'code');
                     }
@@ -96,7 +95,6 @@ if ($this->action->id == 'update') {
 
             </tr>
         <?php } ?>
-
 
         <tr>
             <td style="width:160px;">&nbsp;</td>

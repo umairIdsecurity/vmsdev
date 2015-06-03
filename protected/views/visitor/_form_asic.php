@@ -356,7 +356,7 @@ if ($this->action->id == 'update') {
                                 <?php } else { ?>
                                     <!-- <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;">Add New Company</a> -->
                                     <a style="float: left; margin-right: 5px; width: 95px; height: 21px;" href="#addCompanyContactModal" role="button" data-toggle="modal" id="addCompanyLink">Add Company</a>
-                                    <a href="#addCompanyContactModal" id="addContactLink" class="btn btn-xs btn-info" style="display: none;" role="button" data-toggle="modal">Add Contact</a>
+                                    <a href="#addCompanyContactModal" style="font-size: 12px; font-weight: bold; display: none;" id="addContactLink" class="btn btn-xs btn-info" role="button" data-toggle="modal">Add Contact</a>
                                 <?php } ?>
                             </td>
                         </tr>

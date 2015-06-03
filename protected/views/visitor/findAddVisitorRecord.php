@@ -646,7 +646,7 @@ $model->identification_country_issued = 13;
             </div>
         </div>
 
-        <div role="tabpanel" class="tab-pane" id="searchvisitor">
+        <div role="tabpanel" class="tab-pane" id="searchvisitor" style="width: 99.99%">
             <div <?php
             if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                 echo "style='display:none;'";

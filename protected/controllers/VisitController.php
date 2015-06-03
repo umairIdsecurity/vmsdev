@@ -141,6 +141,10 @@ class VisitController extends Controller {
                     $model->visit_status = $visitStatus->id;
                 }
             }
+            if ($model->visit_status == VisitStatus::CLOSED) {
+                $model->finish_time = date('H:i:s');
+            }
+
             if ($visitService->save($model, $session['id'])) {
                 $this->redirect(array('visit/detail', 'id' => $id));
             }

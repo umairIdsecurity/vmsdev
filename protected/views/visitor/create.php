@@ -589,9 +589,9 @@ function populateTenantAgentAndCompanyField(isSearch) {
                             var selectedWorkstation = workstation;
                         }
                         if (value.id == selectedWorkstation) {
-                            $('#workstation').append('<option selected="selected" value="' + value.id + '">' + value.name + '</option>');
+                            $('#workstation').append('<option selected="selected" value="' + value.id + '">' + 'Workstation: ' + value.name + '</option>');
                         } else {
-                            $('#workstation').append('<option value="' + value.id + '">' + value.name + '</option>');
+                            $('#workstation').append('<option value="' + value.id + '">' + 'Workstation: ' + value.name + '</option>');
                         }
                     });
                 }

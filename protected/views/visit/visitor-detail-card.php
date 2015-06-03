@@ -210,7 +210,7 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
                 if (isset($model->workstation) && $value->id == $model->workstation) {
                     echo 'selected="selected"';
                 }
-                ?>><?php echo $value->name; ?></option>
+                ?>><?php echo 'Workstation: ' . $value->name; ?></option>
                         <?php
                     }
                     ?>
@@ -221,7 +221,11 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
         if ($asic) {
             echo CHtml::dropDownList('visitor_type', $visitorModel->visitor_type, VisitorType::model()->returnVisitorTypes());
             echo "<br />";
-            echo CHtml::dropDownList('reason', $model->reason, CHtml::listData(VisitReason::model()->findAll(), 'id', 'reason'));
+            $data = CHtml::listData(VisitReason::model()->findAll(), 'id', 'reason');
+            foreach ($data as $key => $item) {
+                $results[$key] = 'Reason: ' . $item;
+            }
+            echo CHtml::dropDownList('reason', $model->reason, $results);
             echo "<br />";
         }
         ?>

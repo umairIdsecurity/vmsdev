@@ -11,7 +11,7 @@
                         'value'=>Yii::app()->request->getParam("date_from_filter"),
                         // additional javascript options for the date picker plugin
                         'options'=>array(
-                             
+                             'changeYear' => true,
                             'dateFormat'=>'dd-mm-yy',
                             'changeMonth'=> true,
                         ),
@@ -24,6 +24,7 @@
                         'value'=>Yii::app()->request->getParam("date_to_filter"),
                         // additional javascript options for the date picker plugin
                         'options'=>array(
+                            'changeYear' => true,
                             'dateFormat'=>'dd-mm-yy',
                             'changeMonth'=> true,
                         ),

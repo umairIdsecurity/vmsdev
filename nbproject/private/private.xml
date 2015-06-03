@@ -2,6 +2,14 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/E:/installed/xampp/htdocs/vms/protected/views/visit/visitorRegistrationHistory.php</file>
+            <file>file:/E:/installed/xampp/htdocs/vms/protected/config/main.php</file>
+            <file>file:/E:/installed/xampp/htdocs/vms/protected/models/VisitorType.php</file>
+            <file>file:/E:/installed/xampp/htdocs/vms/protected/models/VisitStatus.php</file>
+            <file>file:/E:/installed/xampp/htdocs/vms/protected/models/Visit.php</file>
+            <file>file:/E:/installed/xampp/htdocs/vms/protected/views/user/admin_menu.php</file>
+            <file>file:/E:/installed/xampp/htdocs/vms/protected/controllers/VisitController.php</file>
+        </group>
     </open-files>
 </project-private>

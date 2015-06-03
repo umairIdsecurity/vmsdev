@@ -187,7 +187,6 @@ if ($this->action->id == 'update') {
                                             <span class="required">*</span>
                                             <?php echo "<br>" . $form->error($model, 'visitor_card_status'); ?>
                                         </td>
-
                                     </tr>
                                     <tr>
                                         <td id="visitorTenantRow" <?php
@@ -253,9 +252,9 @@ if ($this->action->id == 'update') {
                                                
                                                foreach( $list as $val ) {
                                                    if ( $val->tenant == Yii::app()->user->tenant && $val->is_default_value == '1' )
-                                                        echo CHtml::tag('option',array('value' => $val->id, 'selected' => 'selected'),CHtml::encode($val->name),true);
+                                                        echo CHtml::tag('option',array('value' => $val->id, 'selected' => 'selected'),CHtml::encode('Visitor Type: '.$val->name),true);
                                                     else
-                                                        echo CHtml::tag('option',array('value' => $val->id),CHtml::encode($val->name),true);
+                                                        echo CHtml::tag('option',array('value' => $val->id),CHtml::encode('Visitor Type: '.$val->name),true);
                                                    
                                               } echo "</select>";
                                            } else
@@ -771,9 +770,9 @@ if ($this->action->id == 'update') {
             success: function (r) {
                 $('#User_workstation option[value!=""]').remove();
 
-                $('#User_workstation').append('<option value="">Workstation</option>');
+                $('#User_workstation').append('<option value="">Workstation:</option>');
                 $.each(r.data, function (index, value) {
-                    $('#User_workstation').append('<option value="' + value.id + '">' + value.name + '</option>');
+                    $('#User_workstation').append('<option value="' + value.id + '">' + 'Workstation: ' + value.name + '</option>');
                 });
                 $("#User_workstation").val(value);
             }

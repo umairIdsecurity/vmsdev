@@ -679,7 +679,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                 document.getElementById('photoPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 $(".ajax-upload-dragdrop").css("background", "url(<?php echo Yii::app()->request->baseUrl; ?>" + value.relative_path + ") no-repeat center top");
-                                $(".ajax-upload-dragdrop").css({"background-size": "137px 190px"});
+                                $(".ajax-upload-dragdrop").css({"background-size": "132px 152px"});
                             });
                             $("#closeCropPhoto").click();
                             var ias = $('#photoCropPreview').imgAreaSelect({instance: true});

@@ -548,7 +548,7 @@ if (isset($company) && !empty($company)) {
                                 document.getElementById('photoCropPreview2').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 $(".ajax-upload-dragdrop2").css("background", "url(<?php echo Yii::app()->request->baseUrl. '/'; ?>" + value.relative_path + ") no-repeat center top");
                                 $(".ajax-upload-dragdrop2").css({
-                                    "background-size": "137px 190px"
+                                    "background-size": "132px 152px"
                                 });
                             });
                         }

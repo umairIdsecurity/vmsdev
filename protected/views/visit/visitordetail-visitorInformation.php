@@ -384,7 +384,13 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                             Type
                         </td>
                         <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
-                            <?php echo Visitor::$IDENTIFICATION_TYPE_LIST[$visitorModel->identification_type]; ?>
+                            <?php 
+                            if (!empty($visitorModel->identification_type)) {
+                                if (isset(Visitor::$IDENTIFICATION_TYPE_LIST[$visitorModel->identification_type])) {
+                                    echo Visitor::$IDENTIFICATION_TYPE_LIST[$visitorModel->identification_type]; 
+                                }
+                            }
+                            ?>
                         </td>
                     </tr>
                     <tr>

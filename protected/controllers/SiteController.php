@@ -105,7 +105,6 @@ class SiteController extends Controller {
      */
     public function actionLogin() {
         $model = new LoginForm;
-
         // if it is ajax validation request
         if (isset($_POST['ajax']) && $_POST['ajax'] === 'login-form') {
             echo CActiveForm::validate($model);
@@ -121,7 +120,7 @@ class SiteController extends Controller {
             }
         }
         // display the login form
-        $this->render('login', array('model' => $model));
+        Yii::app()->user->isGuest ? $this->render('login', array('model' => $model)) : $this->actionRedirect();
     }
 
     /**

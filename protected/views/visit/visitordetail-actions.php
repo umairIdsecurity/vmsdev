@@ -20,24 +20,12 @@ $session = new CHttpSession;
                             <td></td>
                             <td >
 
-                                <div id="closeVisitDiv">
+                                <div id="closeVisitDiv" class="form">
                                     <?php
                                     $closeVisitForm = $this->beginWidget('CActiveForm', array(
                                         'id' => 'close-visit-form',
-                                        'htmlOptions' => array("name" => "close-visit-form"),
+                                        'htmlOptions' => array("name" => "close-visit-form", 'enctype' => 'multipart/form-data'),
                                         'enableAjaxValidation' => false,
-                                        'enableClientValidation' => true,
-                                        'clientOptions' => array(
-                                            'validateOnSubmit' => true,
-                                            'afterValidate' => 'js:function(form, data, hasError){
-                                                if (!hasError){
-                                                    sendCloseVisit("close-visit-form");
-                                                } else {
-                                                    console.log(hasError);
-                                                    return false;
-                                                }
-                                            }'
-                                        ),
                                     ));
                                     ?>
 
@@ -48,6 +36,7 @@ $session = new CHttpSession;
                                             'visitorModel' => $visitorModel,
                                             'hostModel' => $hostModel,
                                             'reasonModel' => $reasonModel,
+                                            'closeVisitForm' => $closeVisitForm,
                                             'asic' => $asic
                                         ));
                                     } else {
@@ -61,8 +50,8 @@ $session = new CHttpSession;
                                     }
                                     ?>
 
-                                    <input type='submit' value='Close' class="complete" id="closeVisitBtn" style="display:none;"/>
-                                    <button  class="complete greenBtn" id="closeVisitBtnDummy" style="width:94px !important"/>Close Visit</button>
+                                    <input type='submit' value='Close Visit' class="complete" id="closeVisitBtn" style=""/>
+
                                     <div style="display:inline;font-size:12px;"><b>or</b><a id="cancelActiveVisitButton" href="" class="cancelBtnVisitorDetail">Cancel</a></div>
                                     <!-- <button class="neutral greenBtn" id="cancelActiveVisitButton">Cancel</button>-->
                                     <?php $this->endWidget(); ?>
@@ -229,11 +218,6 @@ $session = new CHttpSession;
                 });
             }
             
-        });
-
-        $('#closeVisitBtnDummy').on('click', function (e) {
-            e.preventDefault();
-            $("#closeVisitBtn").click();
         });
 
         $('#cancelActiveVisitButton').on('click', function (e) {

@@ -141,11 +141,18 @@ class VisitController extends Controller {
                     $model->visit_status = $visitStatus->id;
                 }
             }
-            if ($model->visit_status == VisitStatus::CLOSED) {
+
+            if (isset($_POST['closeVisitForm']) && $model->visit_status == VisitStatus::CLOSED) {
+                $model->card_lost_declaration_file = CUploadedFile::getInstance($model, 'card_lost_declaration_file');
                 $model->finish_time = date('H:i:s');
             }
 
+
             if ($visitService->save($model, $session['id'])) {
+                if ($model->card_lost_declaration_file != null) {
+                    $model->card_lost_declaration_file->saveAs(YiiBase::getPathOfAlias('webroot') . '/uploads/card_lost_declaration/'.$model->card_lost_declaration_file->name);
+                }
+
                 $this->redirect(array('visit/detail', 'id' => $id));
             }
         }
@@ -225,7 +232,8 @@ class VisitController extends Controller {
 
     public function actionDetail($id) {
         $model = Visit::model()->findByPk($id);
-        
+        $oldStatus = $model->visit_status;
+
         if (!$model) {
 	        if (Yii::app()->request->isAjaxRequest) {
 	        	echo '<script> window.location = "' . Yii::app()->createUrl('visit/view') . '"; </script>';
@@ -264,16 +272,28 @@ class VisitController extends Controller {
         }
         $hostModel = User::model()->findByPk($host);
 
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
+
         if (isset($_POST['Visit'])) {
             if (empty($_POST['Visit']['finish_time'])) {
                 $model->finish_time = date('H:i:s');
             }
 
             $model->attributes = $_POST['Visit'];
-            if ($model->save()) {
 
+            // close visit process
+            if (isset($_POST['closeVisitForm']) && $model->visit_status == VisitStatus::CLOSED) {
+                $fileUpload = CUploadedFile::getInstance($model, 'card_lost_declaration_file');
+                if ($fileUpload != null) {
+                    $model->card_lost_declaration_file = '/uploads/card_lost_declaration/'.$fileUpload->name;
+                }
+            }
+
+            if ($model->save()) {
+                if ($fileUpload != null) {
+                    $fileUpload->saveAs(YiiBase::getPathOfAlias('webroot') . $model->card_lost_declaration_file);
+                }
+            } else {
+                $model->visit_status = $oldStatus;
             }
         }
 

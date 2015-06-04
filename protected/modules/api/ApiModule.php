@@ -18,8 +18,10 @@ class ApiModule extends CWebModule
 	{
 		if(parent::beforeControllerAction($controller, $action))
 		{
-			// this method is called before any module controller action is performed
-			// you may place customized code here
+			header("Access-Control-Allow-Origin: *");
+		        header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
+		        header("Access-Control-Allow-Headers: Authorization");
+		        header('Content-type: application/json');
 			return true;
 		}
 		else

@@ -38,7 +38,9 @@
 
 
 <?php
-    if( !empty(Yii::app()->request->getParam("date_from_filter")) && !empty(Yii::app()->request->getParam("date_to_filter")) ) {
+    $fromDateFilter = Yii::app()->request->getParam("date_from_filter");
+    $toDateFilter = Yii::app()->request->getParam("date_to_filter");
+    if( !empty($fromDateFilter) && !empty($toDateFilter) ) {
         $this->renderPartial('_newVisitorsWithFilters', array('results' =>$results));
     }else{
         $this->renderPartial('_newVisitorsNoFilters', array('results' =>$results));

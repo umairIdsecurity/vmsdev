@@ -178,35 +178,57 @@ $session = new CHttpSession;
             $(this).find('#Visit_date_check_in').removeAttr('disabled');
         });
 
-        $('#registerNewVisit').on('click', function (e) {
+        $(document).on('click', '#registerNewVisit', function (e) {
             e.preventDefault();
-            var checked = false;
-            var $btnVic = $('#btnVicConfirm'),
-                $btnASIC = $('#btnAsicConfirm');
-            $('a[href="#vicHolderModal"]').click();
-            $btnVic.on('click', function(e) {
-                var checknum = $('#vicHolderModal').find('input[type="checkbox"]').filter(':checked');
-                if (checknum.length == 2) {
-                    vicHolderDeclarationChange();
-                    $('a[href="#asicSponsorModal"]').click();
-                } else {
-                    alert('Please confirm VIC declaration.');
-                    return false;
+            var flag = true;
+            var vic_active_visit_checkboxs = $('.vic-active-verification');
+            $.each(vic_active_visit_checkboxs, function(i, checkbox) {
+                $(checkbox).next('a').removeClass('label label-warning');
+                if (!checkbox.checked) {
+                    flag = false;
                 }
-                
             });
+            if (flag == true) {
+                var $btnVic = $('#btnVicConfirm'),
+                    $btnASIC = $('#btnAsicConfirm');
+                $('a[href="#vicHolderModal"]').click();
+                $btnVic.on('click', function(e) {
+                    var checknum = $('#vicHolderModal').find('input[type="checkbox"]').filter(':checked');
+                    if (checknum.length == 2) {
+                        vicHolderDeclarationChange();
+                        if ($('#VivHolderDecalarations').is(':checked')) {
+                            $('a[href="#asicSponsorModal"]').click();
+                        }
+                    } else {
+                        alert('Please confirm VIC declaration.');
+                        return false;
+                    }
+                    
+                });
 
-            $btnASIC.on('click', function(e) {
-                var checknum = $('#asicSponsorModal').find('input[type="checkbox"]').filter(':checked');
-                if (checknum.length == 4) {
-                    asicSponsorDeclarationChange();
-                    //checkIfActiveVisitConflictsWithAnotherVisit("new");
-                    $('#btnActivate').click();
-                } else {
-                    alert('Please confirm ASIC declaration.');
-                    return false;
-                }
-            });
+                $btnASIC.on('click', function(e) {
+                    var checknum = $('#asicSponsorModal').find('input[type="checkbox"]').filter(':checked');
+                    if (checknum.length == 4) {
+                        asicSponsorDeclarationChange();
+                        if ($('#AsicSponsorDecalarations').is(':checked')) {
+                            checkIfActiveVisitConflictsWithAnotherVisit("new");
+                        }
+                    } else {
+                        alert('Please confirm ASIC declaration.');
+                        return false;
+                    }
+                });
+            } else {
+                alert('Please agree VIC verification before active visit.');
+                $.each(vic_active_visit_checkboxs, function(i, checkbox) {
+                    if (!checkbox.checked) {
+                        checkbox.focus();
+                        $(checkbox).next('a').addClass('label label-warning');
+                        return false;
+                    }
+                });
+            }
+            
         });
 
         $('#closeVisitBtnDummy').on('click', function (e) {

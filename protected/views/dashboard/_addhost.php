@@ -306,7 +306,7 @@ if (isset($company) && !empty($company)) {
                             array(
                                 PasswordRequirement::PASSWORD_IS_NOT_REQUIRED => 'User does not require Password',
                                 PasswordRequirement::PASSWORD_IS_REQUIRED     => 'User requires Password to Login',
-                            ), array('class' => 'password_requirement form-label'));
+                            ), array('class' => 'password_requirement form-label', 'separator' => ''));
                         ?>
                         <?php echo $form->error($userModel, 'password_requirement'); ?>
                     </td>
@@ -330,7 +330,7 @@ if (isset($company) && !empty($company)) {
                    <td><input type="radio" value="1" class="pass_option" name="User[password_option]" />&nbsp;Create Password</td>
                    </tr> 
                    <tr>
-                  
+
                     <td>
                          <input type="password" id="User_password" placeholder="Password" name="User[password]" onChange="checkPasswordMatch();">	
                     <span class="required">*</span>		

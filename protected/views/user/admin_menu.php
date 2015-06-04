@@ -531,11 +531,12 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                 ));
                 ?>
                 <ul <?php
-                if ($this->action->id == 'vicTotalVisitCount') {
+                if ($this->action->id == 'vicTotalVisitCount' || $this->action->id == 'vicRegister') {
                     echo "style='display:block ;'";
                 }
                 ?>>
                     <li><a href='<?php echo Yii::app()->createUrl('visit/vicTotalVisitCount'); ?>'><span>Total Visits VICs</span></a></li>
+                    <li><a href='<?php echo Yii::app()->createUrl('visit/vicRegister'); ?>'><span>VIC Register</span></a></li>
                 </ul>
             </li><!-- menu for AVMS Reports -->
 
@@ -576,3 +577,4 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
     })
 </script>
 
+<?php $this->renderPartial('/visitor/_add_company_contact', array('tenant' => $session['tenant'],'model' => new AddCompanyContactForm())); ?>

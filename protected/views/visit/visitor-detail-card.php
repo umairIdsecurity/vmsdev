@@ -188,7 +188,7 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
     <div style="margin: 10px 0px 0px 60px; text-align: left;">
         <?php
         if ($asic) {
-            echo CHtml::dropDownList('visitor_card_status', $visitorModel->visitor_card_status, Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC], array('empty' => 'Card Status'));
+            echo CHtml::dropDownList('visitor_card_status', $visitorModel->visitor_card_status, Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC], array('empty' => 'Select Card Status'));
             echo "<br />";
         }
         ?>

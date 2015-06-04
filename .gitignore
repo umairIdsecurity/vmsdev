@@ -17,3 +17,4 @@ composer.lock
 **/composer.lock
 /.idea
 my-behat-config.yml
+uploads/card_lost_declaration

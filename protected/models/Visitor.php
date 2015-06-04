@@ -404,6 +404,16 @@ class Visitor extends CActiveRecord {
         $criteria->compare('tenant_agent', $this->tenant_agent, true);
         $criteria->compare('vehicle', $this->vehicle, true);
         $criteria->compare('profile_type', $this->profile_type, true);
+        $criteria->compare('contact_street_no', $this->contact_street_no, true);
+        $criteria->compare('contact_street_name', $this->contact_street_name, true);
+        $criteria->compare('contact_street_type', $this->contact_street_type, true);
+        $criteria->compare('contact_suburb', $this->contact_suburb, true);
+        $criteria->compare('contact_postcode', $this->contact_postcode, true);
+        $criteria->compare('identification_type', $this->identification_type, true);
+        $criteria->compare('identification_document_no', $this->identification_document_no, true);
+        $criteria->compare('identification_document_expiry', $this->identification_document_expiry, true);
+        $criteria->compare('asic_no', $this->asic_no, true);
+        $criteria->compare('asic_expiry', $this->asic_expiry, true);
 
         if (Yii::app()->controller->id == 'visit') {
             $criteria->compare('CONCAT(first_name, \' \', last_name)', $this->first_name, true);

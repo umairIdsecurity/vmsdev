@@ -63,7 +63,8 @@ class Visit extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('is_deleted', 'numerical', 'integerOnly' => true),
-            array('reason,visitor_type,visitor,visitor_status,workstation', 'required'),
+            array('visitor', 'required', 'on' => 'api'),
+            array('reason,visitor_type,visitor,visitor_status,workstation', 'required','on' => 'webapp'),
             array('visitor,card, visitor_type, reason, visitor_status,host, patient, created_by, tenant, tenant_agent', 'length', 'max' => 20),
             array('date_in,date_out,time_in_hours,time_in_minutes,visit_status, time_in, time_out, date_check_in, time_check_in, date_check_out, time_check_out,card_type, finish_date, finish_time, card_returned_date, negate_reason, reset_id, card_option, police_report_number, card_lost_declaration_file', 'safe'),
             array('patient, host,card,tenant,tenant_agent', 'default', 'setOnEmpty' => true, 'value' => null),

@@ -72,5 +72,18 @@ class AuthorizationController extends RestfulController {
         }
         return $randomString;
     }
-
+    
+    public function actionPreflight() {
+        $content_type = 'application/json';
+        $status = 204;
+ 
+        // set the status
+        $status_header = 'HTTP/1.1 ' . $status . ' ' . $this->getStatusCodeMessage($status);
+        header($status_header);
+ 
+        header("Access-Control-Allow-Origin: *");
+        header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
+        header("Access-Control-Allow-Headers: Authorization");
+        header('Content-type: ' . $content_type);
+    }
 }

@@ -26,7 +26,7 @@ class VisitorController extends RestfulController {
 
                 if ($visitor->save(false)) {
                     $result = array();
-                     $result = $this->populatevisitor($visitor);
+                    $result = $this->populatevisitor($visitor);
 
                     $this->sendResponse(200, CJSON::encode($result));
                 }
@@ -58,10 +58,9 @@ class VisitorController extends RestfulController {
                     $result = $this->populatevisitor($visitor);
 
                     $this->sendResponse(200, CJSON::encode($result));
+                } else {
+                    $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'VISITOR_NOT_FOUND', 'errorDescription' => 'visitor is not found ')));
                 }
-
-
-                die;
             }
         } catch (Exception $ex) {
             $this->sendResponse(500, CJSON::encode(array('responseCode' => 500, 'errorCode' => 'INTERNAL_SERVER_ERROR', 'errorDescription' => 'something went wrong')));
@@ -112,7 +111,7 @@ class VisitorController extends RestfulController {
         $result['visitorCardStatus'] = $visitor->visitor_card_status;
         $result['visitorWorkstation'] = $visitor->visitor_workstation;
         $result['company'] = array('companyName' => Company::model()->findByPk($visitor->company)->name);
-        
+
         return $result;
     }
 

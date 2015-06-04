@@ -17,11 +17,7 @@ class ApiModule extends CWebModule
 	public function beforeControllerAction($controller, $action)
 	{
 		if(parent::beforeControllerAction($controller, $action))
-		{
-			header("Access-Control-Allow-Origin: *");
-		        header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
-		        header("Access-Control-Allow-Headers: Authorization");
-		        header('Content-type: application/json');
+		{	
 			return true;
 		}
 		else

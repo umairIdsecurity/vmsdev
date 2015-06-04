@@ -140,7 +140,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
 
                         <tr>
                             <td style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
-                                Company Contact
+                                Contact Person
                             </td>
                             <td style="padding-left: 0 !important;">
                                 <input type="text" value="<?php echo $company->contact; ?>" disabled="disabled"
@@ -150,7 +150,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
 
                         <tr>
                             <td style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
-                                Company Contact Number
+                                Contact No.
                             </td>
                             <td style="padding-left: 0 !important;">
                                 <input type="text" value="<?php echo $company->mobile_number; ?>" disabled="disabled"
@@ -161,7 +161,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
 
                         <tr>
                             <td style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
-                                Company Contact Email
+                                Contact Email
                             </td>
                             <td style="padding-left: 0 !important;">
                                 <input type="text" value="<?php echo $company->email_address; ?>" disabled="disabled"
@@ -407,7 +407,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                     </tr>
                     <tr>
                         <td width="110px;" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
-                            Document Number
+                            Document No.
                         </td>
                         <td style="padding-left: 0 !important;">
                             <input type="text" value="<?php echo $visitorModel->identification_document_no; ?>" disabled="disabled"

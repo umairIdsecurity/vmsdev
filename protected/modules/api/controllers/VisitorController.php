@@ -35,12 +35,13 @@ class VisitorController extends RestfulController {
                 $data = file_get_contents("php://input");
                 $data = CJSON::decode($data);
                 $visitor = Visitor::model()->findByAttributes(array('email' => $data['email']));
+                $companyID = $this->getCompany($data['company']);
                 $this->validateData($data);
                 if ($visitor) {
                     $visitor->first_name = $data['firstName'];
                     $visitor->last_name = $data['lastName'];
                     $visitor->visitor_type = $data['visitorType'];
-                    $visitor->company = $data['company'];
+                    $visitor->company = $companyID;
                     $visitor->password = CPasswordHelper::hashPassword($data['password']);
                     $visitor->photo = NULL;
                     if ($visitor->save(false)) {
@@ -111,22 +112,25 @@ class VisitorController extends RestfulController {
         $result['tenantAgent'] = $visitor->tenant_agent;
         $result['visitorCardStatus'] = $visitor->visitor_card_status;
         $result['visitorWorkstation'] = $visitor->visitor_workstation;
-        if($visitor->company != NULL){
-            $result['company'] = array('companyName' => Company::model()->findByPk($visitor->company)->name);
+        if ($visitor->company != NULL && is_numeric($visitor->company)) {
+            $company = Company::model()->findByPk($visitor->company);
+            if ($company) {
+                $result['company'] = array('companyName' => $company->name);
+            }
         }
-        
+
 
         return $result;
     }
-    
-    private function getCompany($name){
-        
+
+    private function getCompany($name) {
+
         $criteria = new CDbCriteria();
-        $criteria->compare('LOWER(name)',strtolower($name),true);
-        $company  = Company::model()->find($criteria);
-        if($company){
-            return $company->id; 
-        }else{
+        $criteria->compare('LOWER(name)', strtolower($name), true);
+        $company = Company::model()->find($criteria);
+        if ($company) {
+            return $company->id;
+        } else {
             return NULL;
         }
     }

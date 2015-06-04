@@ -20,24 +20,12 @@ $session = new CHttpSession;
                             <td></td>
                             <td >
 
-                                <div id="closeVisitDiv">
+                                <div id="closeVisitDiv" class="form">
                                     <?php
                                     $closeVisitForm = $this->beginWidget('CActiveForm', array(
                                         'id' => 'close-visit-form',
-                                        'htmlOptions' => array("name" => "close-visit-form"),
+                                        'htmlOptions' => array("name" => "close-visit-form", 'enctype' => 'multipart/form-data'),
                                         'enableAjaxValidation' => false,
-                                        'enableClientValidation' => true,
-                                        'clientOptions' => array(
-                                            'validateOnSubmit' => true,
-                                            'afterValidate' => 'js:function(form, data, hasError){
-                                                if (!hasError){
-                                                    sendCloseVisit("close-visit-form");
-                                                } else {
-                                                    console.log(hasError);
-                                                    return false;
-                                                }
-                                            }'
-                                        ),
                                     ));
                                     ?>
 
@@ -48,6 +36,7 @@ $session = new CHttpSession;
                                             'visitorModel' => $visitorModel,
                                             'hostModel' => $hostModel,
                                             'reasonModel' => $reasonModel,
+                                            'closeVisitForm' => $closeVisitForm,
                                             'asic' => $asic
                                         ));
                                     } else {
@@ -61,8 +50,8 @@ $session = new CHttpSession;
                                     }
                                     ?>
 
-                                    <input type='submit' value='Close' class="complete" id="closeVisitBtn" style="display:none;"/>
-                                    <button  class="complete greenBtn" id="closeVisitBtnDummy" style="width:94px !important"/>Close Visit</button>
+                                    <input type='submit' value='Close Visit' class="complete" id="closeVisitBtn" style=""/>
+
                                     <div style="display:inline;font-size:12px;"><b>or</b><a id="cancelActiveVisitButton" href="" class="cancelBtnVisitorDetail">Cancel</a></div>
                                     <!-- <button class="neutral greenBtn" id="cancelActiveVisitButton">Cancel</button>-->
                                     <?php $this->endWidget(); ?>
@@ -178,40 +167,57 @@ $session = new CHttpSession;
             $(this).find('#Visit_date_check_in').removeAttr('disabled');
         });
 
-        $('#registerNewVisit').on('click', function (e) {
+        $(document).on('click', '#registerNewVisit', function (e) {
             e.preventDefault();
-            var checked = false;
-            var $btnVic = $('#btnVicConfirm'),
-                $btnASIC = $('#btnAsicConfirm');
-            $('a[href="#vicHolderModal"]').click();
-            $btnVic.on('click', function(e) {
-                var checknum = $('#vicHolderModal').find('input[type="checkbox"]').filter(':checked');
-                if (checknum.length == 2) {
-                    vicHolderDeclarationChange();
-                    $('a[href="#asicSponsorModal"]').click();
-                } else {
-                    alert('Please confirm VIC declaration.');
-                    return false;
-                }
-                
-            });
-
-            $btnASIC.on('click', function(e) {
-                var checknum = $('#asicSponsorModal').find('input[type="checkbox"]').filter(':checked');
-                if (checknum.length == 4) {
-                    asicSponsorDeclarationChange();
-                    //checkIfActiveVisitConflictsWithAnotherVisit("new");
-                    $('#btnActivate').click();
-                } else {
-                    alert('Please confirm ASIC declaration.');
-                    return false;
+            var flag = true;
+            var vic_active_visit_checkboxs = $('.vic-active-verification');
+            $.each(vic_active_visit_checkboxs, function(i, checkbox) {
+                $(checkbox).next('a').removeClass('label label-warning');
+                if (!checkbox.checked) {
+                    flag = false;
                 }
             });
-        });
+            if (flag == true) {
+                var $btnVic = $('#btnVicConfirm'),
+                    $btnASIC = $('#btnAsicConfirm');
+                $('a[href="#vicHolderModal"]').click();
+                $btnVic.on('click', function(e) {
+                    var checknum = $('#vicHolderModal').find('input[type="checkbox"]').filter(':checked');
+                    if (checknum.length == 2) {
+                        vicHolderDeclarationChange();
+                        if ($('#VivHolderDecalarations').is(':checked')) {
+                            $('a[href="#asicSponsorModal"]').click();
+                        }
+                    } else {
+                        alert('Please confirm VIC declaration.');
+                        return false;
+                    }
+                    
+                });
 
-        $('#closeVisitBtnDummy').on('click', function (e) {
-            e.preventDefault();
-            $("#closeVisitBtn").click();
+                $btnASIC.on('click', function(e) {
+                    var checknum = $('#asicSponsorModal').find('input[type="checkbox"]').filter(':checked');
+                    if (checknum.length == 4) {
+                        asicSponsorDeclarationChange();
+                        if ($('#AsicSponsorDecalarations').is(':checked')) {
+                            checkIfActiveVisitConflictsWithAnotherVisit("new");
+                        }
+                    } else {
+                        alert('Please confirm ASIC declaration.');
+                        return false;
+                    }
+                });
+            } else {
+                alert('Please agree VIC verification before active visit.');
+                $.each(vic_active_visit_checkboxs, function(i, checkbox) {
+                    if (!checkbox.checked) {
+                        checkbox.focus();
+                        $(checkbox).next('a').addClass('label label-warning');
+                        return false;
+                    }
+                });
+            }
+            
         });
 
         $('#cancelActiveVisitButton').on('click', function (e) {

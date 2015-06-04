@@ -48,19 +48,19 @@ $session = new CHttpSession;
     </tr>
     <tr>
         <td class="vic-col">
-            <input type="checkbox" <?php echo $model->reason > 0 ? 'checked="checked"' : '';?> value="1" name="reasonActiveVisit" class="vic-active-visit"/>
+            <input type="checkbox" <?php echo $model->reason > 0 ? 'checked="checked"' : '';?> value="1" name="reasonActiveVisit" class="vic-active-visit vic-active-verification"/>
             <a href="#" style="text-decoration: none !important;">Visit Reason</a>
         </td>
     </tr>
     <tr>
         <td class="vic-col">
-            <input type="checkbox"  value="1" name="identificationActiveVisit" class="vic-active-visit"/>
+            <input type="checkbox"  value="1" name="identificationActiveVisit" class="vic-active-visit vic-active-verification"/>
             <a href="#" style="text-decoration: none !important;">Identification</a>
         </td>
     </tr>
     <tr>
         <td class="vic-col">
-            <input type="checkbox" value="1" name="asicSponsorActiveVisit" class="vic-active-visit"/>
+            <input type="checkbox" value="1" name="asicSponsorActiveVisit" class="vic-active-visit vic-active-verification"/>
             <a href="#" style="text-decoration: none !important;">ASIC Sponsor</a>
         </td>
     </tr>

@@ -202,9 +202,6 @@ $session = new CHttpSession;
                     asicSponsorDeclarationChange();
                     //checkIfActiveVisitConflictsWithAnotherVisit("new");
                     $('#btnActivate').click();
-                    setTimeout(function() {
-                        window.location.reload();
-                    }, 500);
                 } else {
                     alert('Please confirm ASIC declaration.');
                     return false;

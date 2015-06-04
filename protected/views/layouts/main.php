@@ -22,6 +22,8 @@ $userRole = $session['role'];
         <meta Http-Equiv="Expires" Content="0"/>
         <meta Http-Equiv="Pragma-directive: no-cache"/>
         <meta Http-Equiv="Cache-directive: no-cache"/>
+        <link rel="shortcut icon" href="<?php echo Yii::app()->controller->assetsBase; ?>/images/menu-icons-dashboard.png" type="image/x-icon"/>
+
         <!-- blueprint CSS framework -->
         <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->controller->assetsBase; ?>/css/screen.css" media="screen, projection" />
         <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->controller->assetsBase; ?>/css/print.css" media="print" />

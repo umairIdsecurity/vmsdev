@@ -76,7 +76,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'filter'=>CHtml::activeTextField($model, 'date_check_in', array('placeholder'=>'Check In Date')),
             'type' => 'html',
             'htmlOptions'=>array('width'=>'100px'),
-        //   'value' => 'formatDate($data->date_in)',
+            'value' => 'formatDate($data->date_check_in, $data->visit_status)',
         ),
         array(
             'name' => 'time_check_in',
@@ -90,7 +90,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'type' => 'html',
             'filter'=>CHtml::activeTextField($model, 'date_check_out', array('placeholder'=>'Check Out Date')),
             'htmlOptions'=>array('width'=>'110px'),
-        //  'value' => 'formatDate($data->date_out)',
+            'value' => 'formatDate($data->date_check_out, $data->visit_status)',
         ),
         array(
             'name' => 'time_check_out',
@@ -137,8 +137,8 @@ function formatTime($time) {
     }
 }
 
-function formatDate($date) {
-    if ($date == '' ) {
+function formatDate($date, $visitStatus) {
+    if ($date == '' || $visitStatus != 1) {
         return "-";
     } else {
         return Yii::app()->dateFormatter->format("d/MM/y", strtotime($date));

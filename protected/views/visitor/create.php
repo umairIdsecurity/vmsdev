@@ -578,7 +578,7 @@ function populateTenantAgentAndCompanyField(isSearch) {
                 dataType: 'json',
                 data: tenant,
                 success: function (r) {
-                    $('#workstation option[value!=""]').remove();
+                    $('#workstation').append('<option value="">Select Workstation</option>');
 
                     $.each(r.data, function (index, value) {
                         var selected = <?php echo isset($session['workstation']) ? $session['workstation'] : '0' ?>;

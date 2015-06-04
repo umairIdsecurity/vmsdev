@@ -148,7 +148,7 @@ $model->identification_country_issued = 13;
                             </tr>
                             <tr style="display: none" id="vicHolderCardStatus">
                                 <td>
-                                    <?php echo $form->dropDownList($model, 'visitor_card_status', Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC], array('empty' => 'Card Status', 'options'=>array('2'=>array('selected'=>true)))); ?>
+                                    <?php echo $form->dropDownList($model, 'visitor_card_status', Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC], array('empty' => 'Select Card Status'/*, 'options'=>array('2'=>array('selected'=>true))*/)); ?>
                                     <span class="required">*</span>
                                     <?php echo "<br>" . $form->error($model, 'visitor_card_status'); ?>
                                 </td>

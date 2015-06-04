@@ -180,7 +180,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                 <table style="margin-top: 70px;">
                                     <tr>
                                         <td>
-                                            <?php echo $form->dropDownList($model, 'visitor_card_status', Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC], array('empty' => 'Card Status', 'options'=>array('2'=>array('selected'=>'selected')))); ?>
+                                            <?php echo $form->dropDownList($model, 'visitor_card_status', Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC], array('empty' => 'Select Card Status')); ?>
                                             <span class="required">*</span>
                                             <?php echo "<br>" . $form->error($model, 'visitor_card_status'); ?>
                                         </td>
@@ -246,7 +246,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                            // Show Default selected to Admin only 
                                            if(Yii::app()->user->role == Roles::ROLE_ADMIN) {
                                                echo '<select name="Visitor[visitor_type]" id="Visitor_visitor_type">';
-                                               echo CHtml::tag('option',array('value' => ''),'Visitor Type',true);
+                                               echo CHtml::tag('option',array('value' => ''),'Select Visitor Type',true);
                                                $list = VisitorType::model()->findAll();
                                                
                                                foreach( $list as $val ) {

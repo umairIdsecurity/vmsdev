@@ -183,7 +183,7 @@ if ($this->action->id == 'update') {
                                 <table style="margin-top: 70px;">
                                     <tr>
                                         <td>
-                                            <?php echo $form->dropDownList($model, 'visitor_card_status', Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_ASIC], array('empty' => 'Card Status')); ?>
+                                            <?php echo $form->dropDownList($model, 'visitor_card_status', Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_ASIC], array('empty' => 'Select Card Status')); ?>
                                             <span class="required">*</span>
                                             <?php echo "<br>" . $form->error($model, 'visitor_card_status'); ?>
                                         </td>
@@ -770,7 +770,7 @@ if ($this->action->id == 'update') {
             success: function (r) {
                 $('#User_workstation option[value!=""]').remove();
 
-                $('#User_workstation').append('<option value="">Workstation:</option>');
+                $('#User_workstation').append('<option value="">Select Workstation</option>');
                 $.each(r.data, function (index, value) {
                     $('#User_workstation').append('<option value="' + value.id + '">' + 'Workstation: ' + value.name + '</option>');
                 });

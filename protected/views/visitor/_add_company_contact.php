@@ -93,7 +93,8 @@
     </div>
     <div class="modal-footer">
         <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-        <button class="btn btn-primary">Save</button>
+        <button type="button" id="btnAddCompanyContact" class="btn btn-primary">Save</button>
+        <button type="submit" id="btnAddCompanyContactConfirm" class="hidden"></button>
     </div>
 <?php $this->endWidget(); ?>
 </div>
@@ -101,6 +102,26 @@
     $(function() {
         $(document).on('click', '#showCompanyContactFields', function(e) {
             $("tr.company_contact_field").toggleClass("hidden");
+        });
+
+        $(document).on('click', '#btnAddCompanyContact', function(e) {
+            e.preventDefault();
+            $("tr.company_contact_field").removeClass('hidden');
+            var inputs = $('#add-company-contact-form')
+                .not('input[type="hidden"]')
+                .find('input[type="text"]');
+            var flag = true;
+
+            $.each(inputs, function(i, input) {
+                if (input == '') {
+                    flag = false;
+                    return;
+                }
+            });
+            
+            if (flag == true) {
+                $('#btnAddCompanyContactConfirm').click();
+            }
         });
     });
 </script>

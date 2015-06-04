@@ -388,23 +388,24 @@ if ($model->time_check_out && $model->card_type == CardType::VIC_CARD_24HOURS &&
     <input type="text" id="CardGenerated_tenant_agent" name="CardGenerated[tenant_agent]" value="<?php echo $model->tenant_agent;
     ?>">
     <input type="text" id="CardGenerated_enter_card_number" name="CardGenerated[enter_card_number]" value=""/>
+    <?php
+        $tenant = User::model()->findByPk($model->tenant);
+        $code = '';
+        if ($tenant) {
+            if ($tenant->company != '') {
+                $company = Company::model()->findByPk($tenant->company);
+                if ($company) {
+                    $card_count = $company->card_count ? ($company->card_count + 1) : 1;
 
-    <input type="text" id="CardGenerated_card_number" name="CardGenerated[card_number]" value="<?php
-    $tenant = User::model()->findByPk($model->tenant);
-    if ($tenant) {
-        if ($tenant->company != '') {
-            $company = Company::model()->findByPk($tenant->company);
-            if ($company) {
-                $card_count = $company->card_count ? ($company->card_count + 1) : 1;
-
-                while (strlen($card_count) < 6) {
-                    $card_count = '0' . $card_count;
+                    while (strlen($card_count) < 6) {
+                        $card_count = '0' . $card_count;
+                    }
+                    $code = $company->code . ($card_count);
                 }
-                echo $company->code . ($card_count);
             }
         }
-    }
-    ?>">
+    ?>
+    <input type="text" id="CardGenerated_card_number" name="CardGenerated[card_number]" value="<?php echo $code; ?>">
 
     <input type="text" id="CardGenerated_print_count" name="CardGenerated[print_count]" value="">
     <input type="submit" value="Create" name="yt0" id="submitCardForm">

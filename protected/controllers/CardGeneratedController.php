@@ -73,10 +73,24 @@ class CardGeneratedController extends Controller {
                 Visit::model()->updateByPk($visitId, array('card' => $model->id));
                 
                 $tenant = User::model()->findByPk($model->tenant);
+
+                $company = Company::model()->findByPk($tenant->company);
+
+                if (!is_null($company)) {
+                    $cardCount = $company->card_count;
+
+                    if (!is_null($cardCount) || !empty($cardCount)) {
+                        $company->card_count = $cardCount + 1;
+                    } else {
+                        $company->card_count = 1;
+                    }
+
+                    $company->save();
+                }
                 
-                Company::model()->updateByPk($tenant->company, array(
+                /*Company::model()->updateByPk($tenant->company, array(
                     'card_count' => (Company::model()->findByPk($tenant->company)->card_count)+1,
-                ));
+                ));*/
             }
 
             if (Yii::app()->request->isAjaxRequest) {

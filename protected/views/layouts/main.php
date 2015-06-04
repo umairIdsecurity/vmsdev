@@ -79,11 +79,18 @@ $userRole = $session['role'];
                 <article class="header_midbox">
                     <div id="logo" >
                         <?php
-//                        if (isset($company->logo) && $company->logo != '') {
-//                            echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl . '/' . Photo::model()->returnLogoPhotoRelative($company->logo)));
-//                        } else {
-                            echo CHtml::link(CHtml::image(Yii::app()->controller->assetsBase . '/images/companylogohere1.png', '', array('style'=>'width: 130px;')));
-                        //}
+                        $logo = (isset($company->logo) && $company->logo != '')
+                            ? Yii::app()->request->baseUrl . '/' . Photo::model()->returnLogoPhotoRelative($company->logo)
+                            : Yii::app()->controller->assetsBase . '/images/companylogohere1.png';
+
+                        echo CHtml::link(CHtml::image($logo, '', array('style' => 'height: 65px;')), $this->createUrl('dashboard/adminDashboard'));
+                        /*if (isset($company->logo) && $company->logo != '') {
+                            echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl . '/' . Photo::model()->returnLogoPhotoRelative($company->logo), '',
+                                array('style' => 'height: 65px;')));
+                        } else {
+                            echo CHtml::link(CHtml::image(Yii::app()->controller->assetsBase . '/images/companylogohere1.png', '',
+                                array('style' => 'width: 130px;')));
+                        }*/
                         ?>
                     </div>
                     <aside class="top_nav">

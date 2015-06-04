@@ -29,7 +29,17 @@ class SiteController extends Controller {
     public function actionIndex() {
         // renders the view file 'protected/views/site/index.php'
         // using the default layout 'protected/views/layouts/main.php'
-        $this->redirect('index.php?r=site/login');
+        if(isset($_SERVER["HTTP_APPLICATION_ENV"]) && $_SERVER["HTTP_APPLICATION_ENV"]=='prereg'){
+
+            $this->redirect('index.php/preregistration');
+
+        }
+        else{
+
+            $this->redirect('index.php?r=site/login');
+
+        }
+
     }
 
     /**

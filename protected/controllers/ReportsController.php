@@ -38,11 +38,13 @@ class ReportsController extends Controller
 	}
 
     public function actionVisitorsByProfiles() {
+        
         $dateCondition='';
         
         $time = new DateTime('now');
         $from = $time->modify('-1 year');
         $to = new DateTime();
+        
         
         // Post Date
         $dateFromFilter = Yii::app()->request->getParam("date_from_filter");
@@ -68,16 +70,69 @@ class ReportsController extends Controller
         $countArray=array();
        
         foreach($visitors as $visitor){
-            $date = DateTime::createFromFormat("Y-m-d", $visitor['date_check_in']);
-            $m = intval($date->format("m"));
-            $y = intval($date->format("Y"));
-            
+            $date_check_in = $visitor['date_check_in'];
+            $time=strtotime($date_check_in);
+            $month=date("m",$time);
+            $year=date("Y",$time);
+            $m = intval($month);
+            $y = intval($year);
             $countArray[$y][$m][]=1;
         }
-        
-          
-        $this->render("newvisitorcount", array("results"=>$countArray));
-        
+        $reversed = $this->get1YearInterval();
+        $this->render("newvisitorcount", array("results"=>$countArray,"reversed"=>$reversed));
        
     } 
+    
+    public function getTodayAnd1WeekBack(){
+        $returnArray = array();
+        $time = new DateTime('now');
+        $from = $time->modify('-14 week');
+        $to = new DateTime('now');
+        
+        $returnArray[0]=$from;
+        $returnArray[1]=$to;
+        return $returnArray;
+    }
+    
+    public function getTodayAnd1YearBack(){
+        $returnArray = array();
+        $time = new DateTime('now');
+        $from = $time->modify('-1 year');
+        $to = new DateTime('now');
+        
+        $returnArray[0]=$from;
+        $returnArray[1]=$to;
+        return $returnArray;
+    }
+    
+    public function get1YearInterval(){
+        $today = time();
+        $oneMonthLater = strtotime("+1 months", $today);
+        $now = date('Y-m-d', $oneMonthLater);
+
+        $time = new DateTime($now);
+
+
+        $from = $time->modify('-1 year');
+
+        $to = new DateTime($now);
+
+        $start = new DateTime($from->format('Y-m-d'));
+        $interval = new DateInterval('P1M');
+        $end = new DateTime($to->format('Y-m-d'));
+        $period = new DatePeriod($start, $interval, $end);
+
+        $periods=[];
+        foreach ($period as $dt) {
+             $periods[]=array($dt->format('F Y'),$dt->format('n-Y'));
+        }
+        $reversed = array_reverse($periods);
+        return $reversed;
+    }
+    
+    public function get4WeeksInterval(){
+        
+    }
+    
+    
 }

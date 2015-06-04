@@ -16,58 +16,29 @@
         $total = 0;
         
         if($results) { 
-            
-                $time = new DateTime('now');
-                
-                $from = $time->modify('-1 year');
-                $to = new DateTime('now');
-                
-                $start = new DateTime($from->format('Y-m-d'));
-                $interval = new DateInterval('P1M');
-                $end = new DateTime($to->format('Y-m-d'));
-                $period = new DatePeriod($start, $interval, $end);
-                
-                $periods=[];
-                foreach ($period as $dt) {
-                     $periods[]=array($dt->format('F Y'),$dt->format('n-Y'));
-                }
-                $reversed = array_reverse($periods);
 
-                
                 foreach ($reversed as $key=>$dt) {
-                   
                     echo '<tr>'
                     . '<td>'
                     .$dt[0]
                     . '<td>';
-                    
                     foreach($results as $key=>$val) {
+                        $flag=false;
                         foreach($val as $k=>$v) {
                             $myKey=$k."-".$key;
                             if($myKey == $dt[1]){
                                 $total +=count($v);
-                                
+                                $flag=true;
                                 $datasets[] = array($dt[0], count($v));
-                                
-                                echo    
-                                        count($v)
-                                        . '</tr>';
-                                
-                            }else{
-                                 $datasets[] = array($dt[0],0);
-                                echo    
-                                        '0'
-                                        
-                                        . '</tr>';
-                                
+                                echo count($v);
+                               break;
                             }
-                    
                         }
-                    
+                        if(!$flag){
+                                echo '0';
+                        }
                     }
-                    
                 }
-
         } 
         
         ?>

@@ -43,7 +43,7 @@
     if( !empty($fromDateFilter) && !empty($toDateFilter) ) {
         $this->renderPartial('_newVisitorsWithFilters', array('results' =>$results));
     }else{
-        $this->renderPartial('_newVisitorsNoFilters', array('results' =>$results));
+        $this->renderPartial('_newVisitorsNoFilters', array('results' =>$results,"reversed"=>$reversed));
     }
 ?>
 

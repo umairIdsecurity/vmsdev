@@ -13,6 +13,7 @@ class VisitorController extends RestfulController {
             if (Yii::app()->request->isPostRequest) {
                 $data = file_get_contents("php://input");
                 $data = CJSON::decode($data);
+                $companyID = $this->getCompany($data['company']);
                 $this->validateData($data);
                 $visitor = new Visitor();
                 $visitorService = new VisitorServiceImpl();
@@ -20,7 +21,7 @@ class VisitorController extends RestfulController {
                 $visitor->last_name = $data['lastName'];
                 $visitor->email = $this->validateEmail($data['email']);
                 $visitor->visitor_type = $data['visitorType'];
-                $visitor->company = $data['company'];
+                $visitor->company = $companyID;
                 $visitor->password = CPasswordHelper::hashPassword($data['password']);
                 $visitor->photo = NULL;
 
@@ -110,9 +111,24 @@ class VisitorController extends RestfulController {
         $result['tenantAgent'] = $visitor->tenant_agent;
         $result['visitorCardStatus'] = $visitor->visitor_card_status;
         $result['visitorWorkstation'] = $visitor->visitor_workstation;
-        $result['company'] = array('companyName' => Company::model()->findByPk($visitor->company)->name);
+        if($visitor->company != NULL){
+            $result['company'] = array('companyName' => Company::model()->findByPk($visitor->company)->name);
+        }
+        
 
         return $result;
+    }
+    
+    private function getCompany($name){
+        
+        $criteria = new CDbCriteria();
+        $criteria->compare('LOWER(name)',strtolower($name),true);
+        $company  = Company::model()->find($criteria);
+        if($company){
+            return $company->id; 
+        }else{
+            return NULL;
+        }
     }
 
 }

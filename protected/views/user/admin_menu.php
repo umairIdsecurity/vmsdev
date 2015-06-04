@@ -576,3 +576,4 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
     })
 </script>
 
+<?php $this->renderPartial('/visitor/_add_company_contact', array('tenant' => $session['tenant'],'model' => new AddCompanyContactForm())); ?>

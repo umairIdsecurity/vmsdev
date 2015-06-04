@@ -611,19 +611,9 @@ $model->identification_country_issued = 13;
                             <!-- end VIC info -->
 
                             <tr>
-                                <td>&nbsp;</td>
-                            </tr>
-                            <tr>
-                                <td>&nbsp;</td>
-                            </tr>
-                            <tr>
-                                <td>&nbsp;</td>
-                            </tr>
-
-                            <tr>
                                 <td>
                                     <div class="register-a-visitor-buttons-div"
-                                         style="padding-top:180px;padding-right:60px; text-align: right;">
+                                         style="padding-top:10px;padding-right:60px; text-align: right;">
                                         <input type="button" class="neutral visitor-backBtn btnBackTab2"
                                                id="btnBackTab2" value="Back"/>
                                         <input type="button" id="clicktabB" value="Save and Continue"

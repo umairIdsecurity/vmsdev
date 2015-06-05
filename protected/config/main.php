@@ -112,7 +112,7 @@ $result =  CMap::mergeArray(
                     ),
                     array(
                         'class' => 'CFileLogRoute',
-                        'levels' => 'trace',
+                        'levels' => 'error, warning',
                         'logFile' => 'trace.log',
                         'categories' => 'system.*'
                     ),

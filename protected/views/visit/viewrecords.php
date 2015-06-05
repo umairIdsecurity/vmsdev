@@ -40,7 +40,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         ),
         array(
             'name' => 'visitor_type',
-            'value' => 'VisitorType::model()->returnVisitorTypes($data->visitor_type)',
+            'value' => '$data->visitorType->name',
             'filter' => VisitorType::model()->returnVisitorTypes(),
             'htmlOptions'=>array('width'=>'170px'),
         ),
@@ -54,21 +54,21 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' => 'firstname',
             'filter'=>CHtml::activeTextField($model, 'firstname', array('placeholder'=>'First Name')),
-            'value' => 'Visitor::model()->findByPk($data->visitor)->first_name',
+            'value' => '$data->visitor0->first_name',
             'header' => 'First Name',
             'htmlOptions'=>array('width'=>'120px'),
         ),
         array(
             'name' => 'lastname',
             'filter'=>CHtml::activeTextField($model, 'lastname', array('placeholder'=>'Last Name')),
-            'value' => 'Visitor::model()->findByPk($data->visitor)->last_name',
+            'value' => '$data->visitor0->last_name',
             'header' => 'Last Name',
             'htmlOptions'=>array('width'=>'120px')
         ),
         array(
             'name' => 'company',
             'filter'=>CHtml::activeTextField($model, 'company', array('placeholder'=>'Company')),
-            'value' => 'getCompany($data->visitor)',
+            'value' => '$data->company0->name',
             'htmlOptions'=>array('width'=>'120px')
         ),
         array(

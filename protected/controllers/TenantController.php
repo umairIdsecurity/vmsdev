@@ -180,7 +180,7 @@ class TenantController extends Controller {
             }catch (CDbException $e)
             {
                 $transaction->rollback();
-                Yii::app()->user->setFlash('error', "There was an error processing request");
+                Yii::app()->user->setFlash('error', "There was an error processing request: ".$e);
                 echo json_encode(array('success'=>FALSE));
             }
             //

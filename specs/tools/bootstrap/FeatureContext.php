@@ -44,10 +44,7 @@ class FeatureContext extends MinkContext
     {
 
         $this->printDebug("Resetting Database");
-        $this->visit("/index.php");
-        $this->fillField("Username or Email","superadmin@test.com");
-        $this->fillField("Password","12345");
-        $this->pressButton("Login");
+        $this->iLoginWithUsernameAndPassword("superadmin@test.com","123456");
         $this->visit("/index.php?r=resetDatabase/resetWithTestData");
         $this->visit("/index.php");
     }

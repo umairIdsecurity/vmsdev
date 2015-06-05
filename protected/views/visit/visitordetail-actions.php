@@ -20,112 +20,38 @@ $session = new CHttpSession;
                             <td></td>
                             <td >
 
-                                <div id="closeVisitDiv">
+                                <div id="closeVisitDiv" class="form">
                                     <?php
                                     $closeVisitForm = $this->beginWidget('CActiveForm', array(
                                         'id' => 'close-visit-form',
-                                        'htmlOptions' => array("name" => "close-visit-form"),
+                                        'htmlOptions' => array("name" => "close-visit-form", 'enctype' => 'multipart/form-data'),
                                         'enableAjaxValidation' => false,
-                                        'enableClientValidation' => true,
-                                        'clientOptions' => array(
-                                            'validateOnSubmit' => true,
-                                            'afterValidate' => 'js:function(form, data, hasError){
-                                                if (!hasError){
-                                                    sendCloseVisit("close-visit-form");
-                                                } else {
-                                                    console.log(hasError);
-                                                    return false;
-                                                }
-                                            }'
-                                        ),
                                     ));
                                     ?>
-                                    <table class="detailsTable" style="font-size:12px;margin-top:15px;" id="logvisitTable">
-                                        <?php if ($model->visit_status == VisitStatus::ACTIVE || $model->visit_status == VisitStatus::EXPIRED) { ?>
-                                            <tr>
-                                                <td>
-                                                    <strong style="color:#0088cc;">Status</strong>: <span style="color:#9BD62C!important; font-weight:bold"><?php echo VisitStatus::$VISIT_STATUS_LIST[$model->visit_status]; ?></span>
-                                                </td>
-                                            </tr>
 
-                                            <tr>
-                                                <td>&nbsp;</td>
-                                            </tr>
+                                    <?php
+                                    if (in_array($model->card_type, array(CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_MULTIDAY, CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MANUAL))) {
+                                        $this->renderPartial('closevisit-vic', array(
+                                            'model' => $model,
+                                            'visitorModel' => $visitorModel,
+                                            'hostModel' => $hostModel,
+                                            'reasonModel' => $reasonModel,
+                                            'closeVisitForm' => $closeVisitForm,
+                                            'asic' => $asic
+                                        ));
+                                    } else {
+                                        $this->renderPartial('closevisit', array(
+                                            'model' => $model,
+                                            'visitorModel' => $visitorModel,
+                                            'hostModel' => $hostModel,
+                                            'reasonModel' => $reasonModel,
+                                            'asic' => $asic
+                                        ));
+                                    }
+                                    ?>
 
-                                        <?php } ?>
+                                    <input type='submit' value='Close Visit' class="complete" id="closeVisitBtn" style=""/>
 
-                                        <tr>
-                                            <td>Check Out Date</td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input name="Visit[visit_status]" id="Visit_visit_status" type="text" value="<?php echo VisitStatus::CLOSED; ?>" style="display:none;">
-                                                <input name="Visit[time_check_out]" id="Visit_time_check_out" class="timeout" type="text" style="display:none;">
-                                                <input type="text" value="<?php echo isset($model->date_check_out) ? $model->date_check_out : date("d-m-Y"); ?>" id='Visit_date_check_out1' name="Visit[date_check_out1]" readonly>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Check Out Time</td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <select class="time visit_time_in_hours" id='Visit_time_check_out_hours' disabled style="width:70px;">
-                                                    <?php for ($i = 1; $i <= 24; $i++): ?>
-                                                        <option value="<?= $i; ?>"><?= date("H", strtotime("$i:00")); ?></option>
-                                                    <?php endfor; ?>
-                                                </select> :
-                                                <select class='time visit_time_in_minutes'  id='Visit_time_check_out_minutes' disabled style="width:70px;">
-                                                    <?php for ($i = 1; $i <= 60; $i++): ?>
-                                                        <option value="<?= $i; ?>"><?php
-                                                            if ($i > 0 && $i < 10) {
-                                                                echo '0' . $i;
-                                                            } else {
-                                                                echo $i;
-                                                            };
-                                                            ?></option>
-                                                    <?php endfor; ?>
-                                                </select>
-                                            </td>
-                                        </tr>
-
-                                        <?php if ($model->card_type == CardType::CONTRACTOR_VISITOR) { ?>
-
-                                            <tr>
-                                                <td>Card Returned Date</td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <?php
-                                                    if (empty($model->card_returned_date)) {
-                                                        $model->card_returned_date = date('d-m-Y');
-                                                    }
-                                                    $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                                        'model' => $model,
-                                                        'attribute' => 'card_returned_date',
-                                                        'htmlOptions' => array(
-                                                            'size' => '10', // textField size
-                                                            'maxlength' => '10', // textField maxlength
-                                                            'placeholder' => 'dd-mm-yyyy',
-                                                            'readOnly' => 'readOnly'
-                                                        ),
-                                                        'options' => array(
-                                                            'dateFormat' => 'dd-mm-yy',
-                                                            'showOn' => "button",
-                                                            'buttonImage' => Yii::app()->controller->assetsBase . "/images/calendar.png",
-                                                            'buttonImageOnly' => true,
-                                                            'minDate' => "0",
-                                                            'dateFormat' => "dd-mm-yy",
-                                                        )
-                                                    ));
-                                                    ?>
-                                                </td>
-                                            </tr>
-                                        <?php } // end if - contractor card type  ?>
-
-                                    </table>
-
-                                    <input type='submit' value='Close' class="complete" id="closeVisitBtn" style="display:none;"/>
-                                    <button  class="complete greenBtn" id="closeVisitBtnDummy" style="width:94px !important"/>Close Visit</button>
                                     <div style="display:inline;font-size:12px;"><b>or</b><a id="cancelActiveVisitButton" href="" class="cancelBtnVisitorDetail">Cancel</a></div>
                                     <!-- <button class="neutral greenBtn" id="cancelActiveVisitButton">Cancel</button>-->
                                     <?php $this->endWidget(); ?>
@@ -195,15 +121,13 @@ $session = new CHttpSession;
                             </tr>
                         </table>
                         <?php echo $logform->error($model, 'date_in'); ?>
-                        <?php if ($model->visit_status == VisitStatus::CLOSED) {
-                            ?>
-                            <button id='registerNewVisit' class='greenBtn'>Activate Visit</button> 
-                            <?php
-                        } else {
+                        <?php if ($model->visit_status == VisitStatus::CLOSED) { ?>
+                            <button type="button" id='registerNewVisit' class='greenBtn'>Activate Visit</button> 
+                        <?php } else {
                             if ($model->card_type == CardType::MANUAL_VISITOR && isset($model->date_check_in) && strtotime($model->date_check_in) < strtotime(date("d-m-Y"))) {
                                 echo '<input type="submit" value="Back Date Visit" class="complete"/>';
                             } else {
-                                echo '<input type="submit" value="Activate Visit" class="complete"/>';
+                                echo '<button type="button" id="registerNewVisit" class="greenBtn">Activate Visit</button>';
                             }
                         }
                         ?>
@@ -243,43 +167,57 @@ $session = new CHttpSession;
             $(this).find('#Visit_date_check_in').removeAttr('disabled');
         });
 
-        $('#registerNewVisit').on('click', function (e) {
+        $(document).on('click', '#registerNewVisit', function (e) {
             e.preventDefault();
-            var checked = false;
-            var $btnVic = $('#btnVicConfirm'),
-                $btnASIC = $('#btnAsicConfirm');
-            $('a[href="#vicHolderModal"]').click();
-            $btnVic.on('click', function(e) {
-                var checknum = $('#vicHolderModal').find('input[type="checkbox"]').filter(':checked');
-                if (checknum.length == 2) {
-                    vicHolderDeclarationChange();
-                    $('a[href="#asicSponsorModal"]').click();
-                } else {
-                    alert('Please confirm VIC declaration.');
-                    return false;
-                }
-                
-            });
-
-            $btnASIC.on('click', function(e) {
-                var checknum = $('#asicSponsorModal').find('input[type="checkbox"]').filter(':checked');
-                if (checknum.length == 4) {
-                    asicSponsorDeclarationChange();
-                    //checkIfActiveVisitConflictsWithAnotherVisit("new");
-                    $('#btnActivate').click();
-                    setTimeout(function() {
-                        window.location.reload();
-                    }, 500);
-                } else {
-                    alert('Please confirm ASIC declaration.');
-                    return false;
+            var flag = true;
+            var vic_active_visit_checkboxs = $('.vic-active-verification');
+            $.each(vic_active_visit_checkboxs, function(i, checkbox) {
+                $(checkbox).next('a').removeClass('label label-warning');
+                if (!checkbox.checked) {
+                    flag = false;
                 }
             });
-        });
+            if (flag == true) {
+                var $btnVic = $('#btnVicConfirm'),
+                    $btnASIC = $('#btnAsicConfirm');
+                $('a[href="#vicHolderModal"]').click();
+                $btnVic.on('click', function(e) {
+                    var checknum = $('#vicHolderModal').find('input[type="checkbox"]').filter(':checked');
+                    if (checknum.length == 2) {
+                        vicHolderDeclarationChange();
+                        if ($('#VivHolderDecalarations').is(':checked')) {
+                            $('a[href="#asicSponsorModal"]').click();
+                        }
+                    } else {
+                        alert('Please confirm VIC declaration.');
+                        return false;
+                    }
+                    
+                });
 
-        $('#closeVisitBtnDummy').on('click', function (e) {
-            e.preventDefault();
-            $("#closeVisitBtn").click();
+                $btnASIC.on('click', function(e) {
+                    var checknum = $('#asicSponsorModal').find('input[type="checkbox"]').filter(':checked');
+                    if (checknum.length == 4) {
+                        asicSponsorDeclarationChange();
+                        if ($('#AsicSponsorDecalarations').is(':checked')) {
+                            checkIfActiveVisitConflictsWithAnotherVisit("new");
+                        }
+                    } else {
+                        alert('Please confirm ASIC declaration.');
+                        return false;
+                    }
+                });
+            } else {
+                alert('Please agree VIC verification before active visit.');
+                $.each(vic_active_visit_checkboxs, function(i, checkbox) {
+                    if (!checkbox.checked) {
+                        checkbox.focus();
+                        $(checkbox).next('a').addClass('label label-warning');
+                        return false;
+                    }
+                });
+            }
+            
         });
 
         $('#cancelActiveVisitButton').on('click', function (e) {
@@ -456,23 +394,24 @@ if ($model->time_check_out && $model->card_type == CardType::VIC_CARD_24HOURS &&
     <input type="text" id="CardGenerated_tenant_agent" name="CardGenerated[tenant_agent]" value="<?php echo $model->tenant_agent;
     ?>">
     <input type="text" id="CardGenerated_enter_card_number" name="CardGenerated[enter_card_number]" value=""/>
+    <?php
+        $tenant = User::model()->findByPk($model->tenant);
+        $code = '';
+        if ($tenant) {
+            if ($tenant->company != '') {
+                $company = Company::model()->findByPk($tenant->company);
+                if ($company) {
+                    $card_count = $company->card_count ? ($company->card_count + 1) : 1;
 
-    <input type="text" id="CardGenerated_card_number" name="CardGenerated[card_number]" value="<?php
-    $tenant = User::model()->findByPk($model->tenant);
-    if ($tenant) {
-        if ($tenant->company != '') {
-            $company = Company::model()->findByPk($tenant->company);
-            if ($company) {
-                $card_count = $company->card_count ? ($company->card_count + 1) : 1;
-
-                while (strlen($card_count) < 6) {
-                    $card_count = '0' . $card_count;
+                    while (strlen($card_count) < 6) {
+                        $card_count = '0' . $card_count;
+                    }
+                    $code = $company->code . ($card_count);
                 }
-                echo $company->code . ($card_count);
             }
         }
-    }
-    ?>">
+    ?>
+    <input type="text" id="CardGenerated_card_number" name="CardGenerated[card_number]" value="<?php echo $code; ?>">
 
     <input type="text" id="CardGenerated_print_count" name="CardGenerated[print_count]" value="">
     <input type="submit" value="Create" name="yt0" id="submitCardForm">

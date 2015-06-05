@@ -86,14 +86,14 @@ return CMap::mergeArray(
                     'companies/<id:\d+>'        => 'api/companies/index',
                     'admin/<email>'             => 'api/admin/index',
                     'admin/logout/<email>'      => 'api/admin/logout',
+                    'host/search'               => "api/host/search",
                     'host/<email>'              => 'api/host/index',
-                    'host/search/<query>'       => 'api/host/search',
                     'visit'                     => 'api/visit/index',
                     'visit/<visitID:\+d>'       => 'api/visit/index',
                     'visitor'                   => 'api/visitor/index',
                     'visitor/<email>'           => 'api/visitor/index',
                     'visit/<visit>/file/'        => 'api/visit/file',
-
+                    array('api/authorization/preflight', 'pattern'=>'/authorization/preflight', 'verb'=>'OPTIONS'),
                 ),
             ),
             'db' => array(

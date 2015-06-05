@@ -26,10 +26,53 @@ class SiteController extends Controller {
      * This is the default 'index' action that is invoked
      * when an action is not explicitly requested by users.
      */
+    public function actionRedirect()
+    {
+        $session = new CHttpSession;
+
+        if (!$session) {
+            return;
+        }
+
+        switch ($session['role']) {
+            case Roles::ROLE_AGENT_OPERATOR:
+            case Roles::ROLE_OPERATOR:
+                if (!($model->findWorkstations($session['id']))) {
+                    Yii::app()->user->setFlash('error', "No workstations currenlty assigned to you. Please ask your administrator. ");
+                } else {
+                    $this->redirect('index.php?r=site/selectworkstation&id=' . $session['id']);
+                }
+                break;
+            case Roles::ROLE_STAFFMEMBER:
+                $this->redirect('index.php?r=dashboard/viewmyvisitors');
+                break;
+            case Roles::ROLE_ADMIN:
+                $this->redirect('index.php?r=site/selectworkstation&id=' . $session['id']);
+                break;
+            case Roles::ROLE_AGENT_ADMIN:
+                $this->redirect('index.php?r=dashboard/admindashboard');
+                break;
+            default:
+                $this->redirect('index.php?r=dashboard');
+        }
+    }
+
     public function actionIndex() {
         // renders the view file 'protected/views/site/index.php'
         // using the default layout 'protected/views/layouts/main.php'
-        $this->redirect('index.php?r=site/login');
+
+        if(isset($_SERVER["HTTP_APPLICATION_ENV"]) && $_SERVER["HTTP_APPLICATION_ENV"]=='prereg'){
+
+            $this->redirect('index.php/preregistration');
+
+        }
+        else{
+
+            Yii::app()->user->isGuest ? $this->redirect('index.php?r=site/login') : $this->actionRedirect();
+
+        }
+
+
     }
 
     /**
@@ -74,7 +117,6 @@ class SiteController extends Controller {
      */
     public function actionLogin() {
         $model = new LoginForm;
-
         // if it is ajax validation request
         if (isset($_POST['ajax']) && $_POST['ajax'] === 'login-form') {
             echo CActiveForm::validate($model);
@@ -86,33 +128,11 @@ class SiteController extends Controller {
             $model->attributes = $_POST['LoginForm'];
             // validate user input and redirect to the previous page if valid
             if ($model->validate() && $model->login()) {
-
-                $session = new CHttpSession;
-                switch ($session['role']) {
-                    case Roles::ROLE_AGENT_OPERATOR:
-                    case Roles::ROLE_OPERATOR:
-                        if (!($model->findWorkstations($session['id']))) {
-                            Yii::app()->user->setFlash('error', "No workstations currenlty assigned to you. Please ask your administrator. ");
-                        } else {
-                            $this->redirect('index.php?r=site/selectworkstation&id=' . $session['id']);
-                        }
-                        break;
-                    case Roles::ROLE_STAFFMEMBER:
-                        $this->redirect('index.php?r=dashboard/viewmyvisitors');
-                        break;
-                    case Roles::ROLE_ADMIN:
-                        $this->redirect('index.php?r=site/selectworkstation&id=' . $session['id']);
-                        break;
-                    case Roles::ROLE_AGENT_ADMIN:
-                        $this->redirect('index.php?r=dashboard/admindashboard');
-                        break;
-                    default:
-                        $this->redirect('index.php?r=dashboard');
-                }
+                $this->actionRedirect();
             }
         }
         // display the login form
-        $this->render('login', array('model' => $model));
+        Yii::app()->user->isGuest ? $this->render('login', array('model' => $model)) : $this->actionRedirect();
     }
 
     /**

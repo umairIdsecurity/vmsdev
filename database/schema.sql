@@ -56,7 +56,11 @@ DROP TABLE IF EXISTS `visitor_card_status`;
 DROP TABLE IF EXISTS `YiiSession`;
 DROP TABLE IF EXISTS `notifications`;
 DROP TABLE IF EXISTS `notification`;
-
+DROP TABLE IF EXISTS `import_visitor`;
+DROP TABLE IF EXISTS `access_tokens`;
+DROP TABLE IF EXISTS `import_hosts`;
+DROP TABLE IF EXISTS `user_notification`;
+DROP TABLE IF EXISTS `reset_history`;
 
 --
 -- Table structure for table `card_generated`

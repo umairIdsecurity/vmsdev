@@ -443,7 +443,7 @@ $form = $this->beginWidget('CActiveForm', array(
             ?>
             <!-- <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none;"> -->
             <a style="float: left; margin-right: 5px; width: 95px; height: 21px;" href="#addCompanyContactModal" role="button" data-toggle="modal" id="addCompanyLink">Add Company</a>
-            <a href="#addCompanyContactModal" id="addContactLink" class="btn btn-xs btn-info" style="display: none;" role="button" data-toggle="modal">Add Contact</a>
+            <a href="#addCompanyContactModal" style="font-size: 12px; font-weight: bold; display: none;" id="addContactLink" class="btn btn-xs btn-info" role="button" data-toggle="modal">Add Contact</a>
         <?php } ?>
     </td>
 </tr>
@@ -467,7 +467,7 @@ $form = $this->beginWidget('CActiveForm', array(
                         array(
                             PasswordRequirement::PASSWORD_IS_NOT_REQUIRED => 'User does not require Password',
                             PasswordRequirement::PASSWORD_IS_REQUIRED => 'User requires Password to Login',
-                        ), array('class' => 'password_requirement form-label', 'style' => 'float:left;margin-right:10px;'));
+                        ), array('class' => 'password_requirement form-label', 'style' => 'float:left;margin-right:10px;', 'separator' => ''));
                     ?>
                     <?php echo $form->error($model, 'password_requirement'); ?>
                 </td>
@@ -495,19 +495,10 @@ $form = $this->beginWidget('CActiveForm', array(
                         </tr>
 
                         <tr>
-                            <td>&nbsp;</td>
-                        </tr>
-
-
-                        <tr>
-                            <td>
+                            <td style="padding-bottom:10px">
                                 <?php echo $form->radioButton($model, 'password_option', array("class"=>"pass_option"));?>
                                 &nbsp;Create Password
                             </td>
-                        </tr>
-
-                        <tr>
-                            <td>&nbsp;</td>
                         </tr>
 
                         <tr>
@@ -735,7 +726,7 @@ $(document).ready(function () {
 
                             $(".ajax-upload-dragdrop").css({
 
-                                "background-size": "137px 190px"
+                                "background-size": "132px 152px"
 
                             });
 

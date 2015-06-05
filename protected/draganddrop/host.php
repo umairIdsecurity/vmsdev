@@ -119,7 +119,7 @@ if (isset($_GET['viewFrom'])) {
                             $.each(r.data, function(index, value) {
                                
                                     $(".ajax-upload-dragdrop2").css("background", "url(<?php echo Yii::app()->request->baseUrl."/"; ?>" + value.relative_path + ") no-repeat center top");
-                                    $(".ajax-upload-dragdrop2").css({"background-size": "137px 190px" });
+                                    $(".ajax-upload-dragdrop2").css({"background-size": "132px 152px" });
                                     logo.src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                     document.getElementById('photoCropPreview2').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 
@@ -153,7 +153,7 @@ if (isset($_GET['viewFrom'])) {
                             $.each(r.data, function(index, value) {
                                
                                     $(".ajax-upload-dragdrop2").css("background", "url(<?php echo Yii::app()->request->baseUrl."/"; ?>" + value.relative_path + ") no-repeat center top");
-                                    $(".ajax-upload-dragdrop2").css({"background-size": "137px 190px" });
+                                    $(".ajax-upload-dragdrop2").css({"background-size": "132px 152px" });
                                     logo.src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                     document.getElementById('photoCropPreview2').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 

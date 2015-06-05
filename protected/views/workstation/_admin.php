@@ -111,7 +111,7 @@ Yii::app()->clientScript->registerScript('select_card_type_vic', "
     })
 ");
 ?>
-<div class="modal fade" id="form_modal_edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="form_modal_edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none">
     <div class="modal-dialog">
         <div class="modal-content">	
             <div class="modal-header">
@@ -123,9 +123,8 @@ Yii::app()->clientScript->registerScript('select_card_type_vic', "
 
 
                 <div class="form-group">
-                    <?php echo CHtml::label("Back-Card", 'text'); ?>
                     <?php echo CHtml::textArea('back-card','',array( 'rows'=>"9", 'cols'=>"500",'style'=>"width:500px;")); ?>
-                    <?php echo CHtml::hiddenField('card_id'); ?>   
+                    <?php echo CHtml::hiddenField('card_id'); ?>
                 </div>
 
             </div>
@@ -147,6 +146,7 @@ Yii::app()->clientScript->registerScript('select_card_type_vic', "
             var button_id = ($(this).attr('id'));
             var modal_name = $('#' + button_id).attr('name');
             var card_id = button_id.split('_');
+            modal_name = card_id[1]+". "+modal_name+" - Back of Card";
             getEditText(card_id[1]);
             $("#myModalLabel").html(modal_name);
             $("#card_id").val(card_id[1]);

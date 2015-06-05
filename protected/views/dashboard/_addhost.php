@@ -306,7 +306,7 @@ if (isset($company) && !empty($company)) {
                             array(
                                 PasswordRequirement::PASSWORD_IS_NOT_REQUIRED => 'User does not require Password',
                                 PasswordRequirement::PASSWORD_IS_REQUIRED     => 'User requires Password to Login',
-                            ), array('class' => 'password_requirement form-label'));
+                            ), array('class' => 'password_requirement form-label', 'separator' => ''));
                         ?>
                         <?php echo $form->error($userModel, 'password_requirement'); ?>
                     </td>
@@ -330,7 +330,7 @@ if (isset($company) && !empty($company)) {
                    <td><input type="radio" value="1" class="pass_option" name="User[password_option]" />&nbsp;Create Password</td>
                    </tr> 
                    <tr>
-                  
+
                     <td>
                          <input type="password" id="User_password" placeholder="Password" name="User[password]" onChange="checkPasswordMatch();">	
                     <span class="required">*</span>		
@@ -548,7 +548,7 @@ if (isset($company) && !empty($company)) {
                                 document.getElementById('photoCropPreview2').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 $(".ajax-upload-dragdrop2").css("background", "url(<?php echo Yii::app()->request->baseUrl. '/'; ?>" + value.relative_path + ") no-repeat center top");
                                 $(".ajax-upload-dragdrop2").css({
-                                    "background-size": "137px 190px"
+                                    "background-size": "132px 152px"
                                 });
                             });
                         }

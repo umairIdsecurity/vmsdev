@@ -26,6 +26,7 @@ and open the template in the editor.
 
 div.form label{
     font-weight:normal;
+    display:block;
 }
 
 .password-border{
@@ -94,7 +95,7 @@ input.pass_option, input.password_option , input.password_requirement{
 }
 
 #header {
-    padding-top:6px;
+/*    padding-top:6px;*/
     margin: 0 auto;
 }
 
@@ -114,7 +115,7 @@ input.pass_option, input.password_option , input.password_requirement{
 .top_nav
 {
     float:right;
-    margin-top: 30px !important;
+    margin-top: 40px !important;
     margin-right: -27px !important;
 }
 .top_nav ul
@@ -520,9 +521,8 @@ nav.navigation ul li:last-child.active
 }
 
 #logo {
-    width:80px;
-    height:80px;
-    padding: 10px 100px;
+    height:auto;
+    padding: 5px 20px 10px;
 }
 
 #logo a {
@@ -989,7 +989,7 @@ dt.tabs dt{
 }
 
 #cardDiv{
-    background: url('../images/cardprint-new.png') no-repeat center top;
+    background: url('../images/cardprint-new1.png') no-repeat center top;
     background-size:220px 330px;
     height:330px;
     width: 220px;
@@ -1954,3 +1954,4 @@ label.myLabel input[type="file"] {
      text-align: center;
      text-decoration: underline;
  }
+.no-margin-bottom{margin-bottom:0}

@@ -148,7 +148,7 @@ $model->identification_country_issued = 13;
                             </tr>
                             <tr style="display: none" id="vicHolderCardStatus">
                                 <td>
-                                    <?php echo $form->dropDownList($model, 'visitor_card_status', Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC], array('empty' => 'Card Status', 'options'=>array('2'=>array('selected'=>true)))); ?>
+                                    <?php echo $form->dropDownList($model, 'visitor_card_status', Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC], array('empty' => 'Select Card Status'/*, 'options'=>array('2'=>array('selected'=>true))*/)); ?>
                                     <span class="required">*</span>
                                     <?php echo "<br>" . $form->error($model, 'visitor_card_status'); ?>
                                 </td>
@@ -324,7 +324,7 @@ $model->identification_country_issued = 13;
                             <tr>
                                 <td>
                                     <a style="float: left; margin-right: 5px; width: 95px; height: 21px;" href="#addCompanyContactModal" role="button" data-toggle="modal" id="addCompanyLink">Add Company</a>
-                                    <a href="#addCompanyContactModal" id="addContactLink" class="btn btn-xs btn-info" style="display: none;" role="button" data-toggle="modal">Add Contact</a>
+                                    <a href="#addCompanyContactModal" id="addContactLink" class="btn btn-xs btn-info" style="font-size: 12px; font-weight: bold; display: none;" role="button" data-toggle="modal">Add Contact</a>
                                 </td>
                             </tr>
 
@@ -414,7 +414,7 @@ $model->identification_country_issued = 13;
                                         foreach ($workstationList as $key => $value) {
                                             ?>
                                             <option value="<?php echo $value->id; ?>" <?php echo $value->id == $session['workstation'] ? 'selected="selected"' : ''; ?>>
-                                                <?php echo $value->name; ?>
+                                                <?php echo 'Workstation: ' . $value->name; ?>
                                             </option>
                                         <?php
                                         }
@@ -446,13 +446,13 @@ $model->identification_country_issued = 13;
                                     <select id="Visit_reason" name="Visitor[reason]"
                                             onchange="ifSelectedIsOtherShowAddReasonDiv(this)">
                                         <option value='' selected>Select Reason</option>
-                                        <option value="Other">Other</option>
+                                        <option value="Other">Reason: Other</option>
                                         <?php
                                         $reason = VisitReason::model()->findAllReason();
                                         foreach ($reason as $key => $value) {
                                             ?>
                                             <option
-                                                value="<?php echo $value->id; ?>"><?php echo $value->reason; ?></option>
+                                                value="<?php echo $value->id; ?>"><?php echo 'Reason: ' . $value->reason; ?></option>
                                         <?php
                                         }
                                         ?>
@@ -611,19 +611,9 @@ $model->identification_country_issued = 13;
                             <!-- end VIC info -->
 
                             <tr>
-                                <td>&nbsp;</td>
-                            </tr>
-                            <tr>
-                                <td>&nbsp;</td>
-                            </tr>
-                            <tr>
-                                <td>&nbsp;</td>
-                            </tr>
-
-                            <tr>
                                 <td>
                                     <div class="register-a-visitor-buttons-div"
-                                         style="padding-top:180px;padding-right:60px; text-align: right;">
+                                         style="padding-top:10px;padding-right:60px; text-align: right;">
                                         <input type="button" class="neutral visitor-backBtn btnBackTab2"
                                                id="btnBackTab2" value="Back"/>
                                         <input type="button" id="clicktabB" value="Save and Continue"
@@ -646,7 +636,7 @@ $model->identification_country_issued = 13;
             </div>
         </div>
 
-        <div role="tabpanel" class="tab-pane" id="searchvisitor">
+        <div role="tabpanel" class="tab-pane" id="searchvisitor" style="width: 99.99%">
             <div <?php
             if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                 echo "style='display:none;'";
@@ -797,7 +787,7 @@ $model->identification_country_issued = 13;
                                 document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 $(".ajax-upload-dragdrop").css("background", "url(<?php echo Yii::app()->request->baseUrl; ?>" + value.relative_path + ") no-repeat center top");
                                 $(".ajax-upload-dragdrop").css({
-                                    "background-size": "137px 190px"
+                                    "background-size": "132px 152px"
                                 });
                             });
                         }

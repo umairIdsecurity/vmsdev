@@ -14,16 +14,17 @@ class VisitController extends RestfulController {
                 $data = file_get_contents("php://input");
                 $data = CJSON::decode($data);
                 $visit = new Visit();
+                $visit->scenario = 'api';
                 $visit->host = $data['hostID'];
-                $visit->visitor_type = $data['visitorType'];
+                $visit->visitor_type = isset($data['visitorType'])?$data['visitorType']:NULL;
                 $visit->visitor = $data['visitorID'];
                 $visit->visit_status = 1;
-                $visit->date_check_in = date('d-m-Y', strtotime($data['startTime']));
-                $visit->time_check_in = date('H:i:s', strtotime($data['startTime']));
-                $visit->date_check_out = date('d-m-Y', strtotime($data['expectedEndTime']));
-                $visit->time_check_out = date('H:i:s', strtotime($data['expectedEndTime']));
-                $visit->reason = $data['visitReason'];
-                $visit->workstation = $data['workstation'];
+                $visit->date_check_in = isset($data['startTime'])?date('d-m-Y', strtotime($data['startTime'])):NULL;
+                $visit->time_check_in = isset($data['startTime'])?date('H:i:s', strtotime($data['startTime'])):NULL;
+                $visit->date_check_out = isset($data['expectedEndTime'])?date('d-m-Y', strtotime($data['expectedEndTime'])):NULL;
+                $visit->time_check_out = isset($data['expectedEndTime'])?date('H:i:s', strtotime($data['expectedEndTime'])):NULL;
+                $visit->reason = isset($data['visitReason'])?$data['visitReason']:NULL;
+                $visit->workstation = isset($data['workstation'])?$data['workstation']:NULL;
                 if ($visit->validate()) {
                     $visit->save();
                     $visit = Visit::model()->with('visitor0')->findByPk($visit->id);
@@ -144,12 +145,22 @@ class VisitController extends RestfulController {
             $result[$i]['visitorID'] = $visit->visitor;
             $result[$i]['hostID'] = $visit->host;
             $result[$i]['visitorType'] = $visit->visitor_type;
-            $result[$i]['startTime'] = date("Y-m-d H:i:s", strtotime($visit->date_check_in . '' . $visit->time_check_in));
-            $result[$i]['expectedEndTime'] = ($visit->date_check_out) ? date("Y-m-d H:i:s", strtotime($visit->date_check_out . '' . $visit->time_check_out)) : "N/A";
-            $result[$i]['visitorPicture'] = $visit->visitor0->photo;
-            $result[$i]['visitor'] = array('visitorID' => $visit->visitor0->id, 'firstName' => $visit->visitor0->first_name, 'lastName' => $visit->visitor0->last_name, 'email' => $visit->visitor0->email, 'companyName' => Company::model()->findByPk($visit->visitor0->company)->name);
+            $result[$i]['startTime'] = ($visit->date_check_in==NULL)?date("Y-m-d H:i:s", strtotime($visit->date_check_in . '' . $visit->time_check_in)):"N/A";
+            $result[$i]['expectedEndTime'] = ($visit->date_check_out==NULL) ? date("Y-m-d H:i:s", strtotime($visit->date_check_out . '' . $visit->time_check_out)) : "N/A";
+            $result[$i]['visitorPicture'] = !empty($visit->visitor0->photo)?$visit->visitor0->photo:"N/A";
+            if($visit->visitor0){
+                $result[$i]['visitor'] = array('visitorID' => $visit->visitor0->id, 'firstName' => $visit->visitor0->first_name, 'lastName' => $visit->visitor0->last_name, 'email' => $visit->visitor0->email, 'companyName' => Company::model()->findByPk($visit->visitor0->company)->name);
+            }else{
+                $result[$i]['visitor'] = array();
+            }
+            
             $host = User::model()->with('com')->findByPk($visit->host);
-            $result[$i]['host'] = array('hostID' => $visit->host, 'firstName' => $host->first_name, 'lastName' => $host->last_name, 'email' => $host->email, 'companyName' => $host->com->name);
+            if($host){
+                $result[$i]['host'] = array('hostID' => $visit->host, 'firstName' => $host->first_name, 'lastName' => $host->last_name, 'email' => $host->email, 'companyName' => ($host->com->name != null)?$host->com->name:"N/A");
+            }else{
+                $result[$i]['host'] = array();
+            }
+            
             $i++;
         }
         return $result;

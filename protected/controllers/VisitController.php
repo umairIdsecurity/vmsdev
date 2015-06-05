@@ -37,8 +37,10 @@ class VisitController extends Controller {
                     'visitorRegistrationHistory',
                     'corporateTotalVisitCount',
                     'vicTotalVisitCount',
+                    'vicRegister',
                     'exportFileHistory',
                     'exportFileVisitorRecords',
+                    'ExportFileVicRegister',
                     'exportVisitorRecords', 'delete','resetVisitCount', 'negate',
                 ),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
@@ -70,7 +72,7 @@ class VisitController extends Controller {
             $model->attributes = $_POST['Visit'];
 
             // default workstation:
-            if (isset($session['workstation'])) {
+            if ((!isset($_POST['Visit']['workstation']) || empty($_POST['Visit']['workstation'])) && isset($session['workstation'])) {
                 $model->workstation = $session['workstation'];
             }
 
@@ -141,7 +143,18 @@ class VisitController extends Controller {
                     $model->visit_status = $visitStatus->id;
                 }
             }
+
+            if (isset($_POST['closeVisitForm']) && $model->visit_status == VisitStatus::CLOSED) {
+                $model->card_lost_declaration_file = CUploadedFile::getInstance($model, 'card_lost_declaration_file');
+                $model->finish_time = date('H:i:s');
+            }
+
+
             if ($visitService->save($model, $session['id'])) {
+                if ($model->card_lost_declaration_file != null) {
+                    $model->card_lost_declaration_file->saveAs(YiiBase::getPathOfAlias('webroot') . '/uploads/card_lost_declaration/'.$model->card_lost_declaration_file->name);
+                }
+
                 $this->redirect(array('visit/detail', 'id' => $id));
             }
         }
@@ -221,7 +234,8 @@ class VisitController extends Controller {
 
     public function actionDetail($id) {
         $model = Visit::model()->findByPk($id);
-        
+        $oldStatus = $model->visit_status;
+
         if (!$model) {
 	        if (Yii::app()->request->isAjaxRequest) {
 	        	echo '<script> window.location = "' . Yii::app()->createUrl('visit/view') . '"; </script>';
@@ -260,16 +274,32 @@ class VisitController extends Controller {
         }
         $hostModel = User::model()->findByPk($host);
 
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
+
         if (isset($_POST['Visit'])) {
             if (empty($_POST['Visit']['finish_time'])) {
                 $model->finish_time = date('H:i:s');
             }
 
             $model->attributes = $_POST['Visit'];
-            if ($model->save()) {
 
+            // close visit process
+            if (isset($_POST['closeVisitForm']) && $model->visit_status == VisitStatus::CLOSED) {
+                $fileUpload = CUploadedFile::getInstance($model, 'card_lost_declaration_file');
+                if ($fileUpload != null) {
+                    $path = YiiBase::getPathOfAlias('webroot') . '/uploads/card_lost_declaration';
+                    if (!file_exists($path)) {
+                        mkdir($path, 0777, true);
+                    }
+                    $model->card_lost_declaration_file = '/uploads/card_lost_declaration/'.$fileUpload->name;
+                }
+            }
+
+            if ($model->save()) {
+                if ($fileUpload != null) {
+                    $fileUpload->saveAs(YiiBase::getPathOfAlias('webroot') . $model->card_lost_declaration_file);
+                }
+            } else {
+                $model->visit_status = $oldStatus;
             }
         }
 
@@ -384,6 +414,26 @@ class VisitController extends Controller {
         }
 
         $this->render('corporateTotalVisitCount', array(
+            'model' => $model, 'merge' => $merge, false, true
+        ));
+    }
+
+    public function actionVicRegister() {
+        $merge = new CDbCriteria;
+        $merge->addCondition('profile_type = "'. Visitor::PROFILE_TYPE_VIC .'"');
+
+        $model = new Visitor('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['Visitor'])) {
+            $model->attributes = $_GET['Visitor'];
+        }
+
+        if (Yii::app()->request->getParam('export')) {
+            $this->actionExportVicRegister();
+            Yii::app()->end();
+        }
+
+        $this->render('vicRegister', array(
             'model' => $model, 'merge' => $merge, false, true
         ));
     }
@@ -754,7 +804,6 @@ class VisitController extends Controller {
     }
 
     public function actionNegate() {
-
         $visitIds = Yii::app()->getRequest()->getQuery('ids');
         foreach ($visitIds as $id) {
             $model = Visit::model()->findByPk($id);
@@ -763,4 +812,84 @@ class VisitController extends Controller {
 
         }
     }
+
+    public function actionExportFileVicRegister()
+    {
+        Yii::app()->request->sendFile('VicRegister_' . date('dmYHis') . '.csv', Yii::app()->user->getState('export'));
+        Yii::app()->user->clearState('export');
+    }
+
+    public function actionExportVicRegister() {
+        $fp = fopen('php://temp', 'w');
+
+        /*
+         * Write a header of csv file
+         */
+        $headers = array(
+            'id',
+            'company0.code',
+            'first_name',
+            'last_name',
+            'date_of_birth',
+            'contact_number',
+            'contact_street_no',
+            'contact_street_name',
+            'contact_street_type',
+            'contact_suburb',
+            'contact_postcode',
+            'company0.name',
+            'email',
+            'identification_type',
+            'identification_document_no',
+            'identification_document_expiry',
+            'asic_no',
+            'asic_expiry',
+        );
+        $row = array();
+        foreach ($headers as $header) {
+            $row[] = Visit::model()->getAttributeLabel($header);
+        }
+        fputcsv($fp, $row);
+
+        /*
+         * Init dataProvider for first page
+         */
+        $merge = new CDbCriteria;
+        $merge->addCondition('profile_type = "'. Visitor::PROFILE_TYPE_VIC .'"');
+
+        $model = new Visitor('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['Visitor'])) {
+            $model->attributes = $_GET['Visitor'];
+        }
+
+        $dp = $model->search($merge);
+
+        /*
+         * Get models, write to a file, then change page and re-init DataProvider
+         * with next page and repeat writing again
+         */
+        $dp->setPagination(false);
+
+        /*
+         * Get models, write to a file
+         */
+
+        $models = $dp->getData();
+        foreach ($models as $model) {
+            $row = array();
+            foreach ($headers as $head) {
+                $row[] = CHtml::value($model, $head);
+            }
+            fputcsv($fp, $row);
+        }
+
+        /*
+         * save csv content to a Session
+         */
+        rewind($fp);
+        Yii::app()->user->setState('export', stream_get_contents($fp));
+        fclose($fp);
+    }
+
 }

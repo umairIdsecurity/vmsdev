@@ -32,10 +32,14 @@ class HostController extends RestfulController {
         try {
             $token_user = $this->checkAuth();
             if (Yii::app()->request->getParam('query')) {
+                $query = explode(" ", Yii::app()->request->getParam('query'));
+
                 $criteria = new CDbCriteria();
-                $criteria->addSearchCondition('email', yii::app()->request->getParam('query'), "", "OR", "LIKE");
-                $criteria->addSearchCondition('first_name', yii::app()->request->getParam('query'), "", "OR", "LIKE");
-                $criteria->addSearchCondition('last_name', yii::app()->request->getParam('query'), "", "OR", "LIKE");
+                foreach ($query as $q):
+                    $criteria->addSearchCondition('email', $q, TRUE, "OR", "LIKE");
+                    $criteria->addSearchCondition('first_name', $q, TRUE, "OR", "LIKE");
+                    $criteria->addSearchCondition('last_name', $q, TRUE, "OR", "LIKE");
+                endforeach; 
                 $hosts = User::model()->with('com')->findAll($criteria);
                 if ($hosts) {
                     $result = $this->populateHost($hosts);

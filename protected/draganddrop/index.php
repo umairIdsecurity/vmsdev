@@ -268,7 +268,7 @@ if (isset($_GET['viewFrom'])) {
 
                                     $(".ajax-upload-dragdrop").css("background", "url(<?php echo Yii::app()->request->baseUrl; ?>" + value.relative_path + ") no-repeat center top");
                                     $(".ajax-upload-dragdrop").css({
-                                        "background-size": "137px 190px"
+                                        "background-size": "132px 152px"
                                     });
                                     logo.src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 } else {

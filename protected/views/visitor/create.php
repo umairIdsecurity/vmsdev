@@ -384,7 +384,7 @@ function preloadHostDetails(hostId) {
                 if (index == "photo") {
                     $("#Host_photo3").val(value.id);
                     $(".ajax-upload-dragdrop3").css("background", "url(<?php echo Yii::app()->request->baseUrl."/"; ?>" + value.relative_path + ") no-repeat center top");
-                    $(".ajax-upload-dragdrop3").css({"background-size": "137px 190px"});
+                    $(".ajax-upload-dragdrop3").css({"background-size": "132px 152px"});
                     logo.src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                     document.getElementById('photoCropPreview3').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                     $("#cropImageBtn3").show();
@@ -578,7 +578,7 @@ function populateTenantAgentAndCompanyField(isSearch) {
                 dataType: 'json',
                 data: tenant,
                 success: function (r) {
-                    $('#workstation option[value!=""]').remove();
+                    $('#workstation').append('<option value="">Select Workstation</option>');
 
                     $.each(r.data, function (index, value) {
                         var selected = <?php echo isset($session['workstation']) ? $session['workstation'] : '0' ?>;
@@ -589,9 +589,9 @@ function populateTenantAgentAndCompanyField(isSearch) {
                             var selectedWorkstation = workstation;
                         }
                         if (value.id == selectedWorkstation) {
-                            $('#workstation').append('<option selected="selected" value="' + value.id + '">' + value.name + '</option>');
+                            $('#workstation').append('<option selected="selected" value="' + value.id + '">' + 'Workstation: ' + value.name + '</option>');
                         } else {
-                            $('#workstation').append('<option value="' + value.id + '">' + value.name + '</option>');
+                            $('#workstation').append('<option value="' + value.id + '">' + 'Workstation: ' + value.name + '</option>');
                         }
                     });
                 }
@@ -960,7 +960,7 @@ function selectVicCard(cardType) {
 
         // third table
         $('.third-column #passwordVicForm .register-a-visitor-buttons-div, .host-third-column #passwordVicForm .register-a-visitor-buttons-div').hide();
-        $('.third-column .register-a-visitor-buttons-div').css('padding-top', '0px');
+        $('.third-column .register-a-visitor-buttons-div').css('padding-top', '10px');
         $('#hostButtonRow').css('padding-top', '130px');
 
         // text changes:
@@ -982,7 +982,7 @@ function selectVicCard(cardType) {
         $('.visitorTypeDropdownRow').prependTo('.third-column');
         $('.workstationDropdownRow').prependTo('.third-column');
 
-        $('.third-column .register-a-visitor-buttons-div').css('padding-top', '130px');
+        $('.third-column .register-a-visitor-buttons-div').css('padding-top', '10px');
         $('#hostButtonRow').css('padding-top', '250px');
 
         // text changes:

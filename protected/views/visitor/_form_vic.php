@@ -180,7 +180,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                 <table style="margin-top: 70px;">
                                     <tr>
                                         <td>
-                                            <?php echo $form->dropDownList($model, 'visitor_card_status', Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC], array('empty' => 'Card Status', 'options'=>array('2'=>array('selected'=>'selected')))); ?>
+                                            <?php echo $form->dropDownList($model, 'visitor_card_status', Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC], array('empty' => 'Select Card Status')); ?>
                                             <span class="required">*</span>
                                             <?php echo "<br>" . $form->error($model, 'visitor_card_status'); ?>
                                         </td>
@@ -251,9 +251,9 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                                
                                                foreach( $list as $val ) {
                                                    if ( $val->tenant == Yii::app()->user->tenant && $val->is_default_value == '1' ) {
-                                                       echo CHtml::tag('option', array('value' => $val->id, 'selected' => 'selected'), CHtml::encode($val->name), true);
+                                                       echo CHtml::tag('option', array('value' => $val->id, 'selected' => 'selected'), CHtml::encode('Visitor Type: '.$val->name), true);
                                                    } else {
-                                                       echo CHtml::tag('option', array('value' => $val->id), CHtml::encode($val->name), true);
+                                                       echo CHtml::tag('option', array('value' => $val->id), CHtml::encode('Visitor Type: '.$val->name), true);
                                                    }
                                                } echo "</select>";
                                            }  else {
@@ -399,7 +399,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                 <?php } else { ?>
                                     <!-- <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none; margin-top: 10px;">Add New Company</a> -->
                                     <a style="float: left; margin-right: 5px; width: 95px; height: 21px;" href="#addCompanyContactModal" role="button" data-toggle="modal" id="addCompanyLink">Add Company</a>
-                                    <a href="#addCompanyContactModal" id="addContactLink" class="btn btn-xs btn-info" style="display: none;" role="button" data-toggle="modal">Add Contact</a>
+                                    <a href="#addCompanyContactModal" style="font-size: 12px; font-weight: bold; display: none;" id="addContactLink" class="btn btn-xs btn-info" role="button" data-toggle="modal">Add Contact</a>
                                 <?php } ?>
                             </td>
                         </tr>
@@ -679,7 +679,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                 document.getElementById('photoPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 $(".ajax-upload-dragdrop").css("background", "url(<?php echo Yii::app()->request->baseUrl; ?>" + value.relative_path + ") no-repeat center top");
-                                $(".ajax-upload-dragdrop").css({"background-size": "137px 190px"});
+                                $(".ajax-upload-dragdrop").css({"background-size": "132px 152px"});
                             });
                             $("#closeCropPhoto").click();
                             var ias = $('#photoCropPreview').imgAreaSelect({instance: true});
@@ -933,7 +933,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 
                 $('#User_workstation').append('<option value="">Workstation</option>');
                 $.each(r.data, function (index, value) {
-                    $('#User_workstation').append('<option value="' + value.id + '">' + value.name + '</option>');
+                    $('#User_workstation').append('<option value="' + value.id + '">' + 'Workstation: ' + value.name + '</option>');
                 });
                 //$("#User_workstation").val(value);
                 if ($("#currentAction").val() == 'update') {

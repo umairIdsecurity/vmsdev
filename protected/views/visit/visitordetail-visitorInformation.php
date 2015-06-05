@@ -25,41 +25,45 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                 <li>
                     <table id="personalDetailsTable" class="detailsTable">
                         <tr>
-                            <td width="110px;" style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                            <td width="110px;" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                                 First Name
                             </td>
-                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
-                                <?php echo $visitorModel->first_name; ?>
+                            <td style="padding-left: 0 !important;">
+                                <input type="text" value="<?php echo $visitorModel->first_name; ?>" disabled="disabled"
+                                       name="Visitor[first_name]" id="Visitor_first_name">
                             </td>
                         </tr>
 
                         <?php if ($asic) : ?>
                             <tr>
-                                <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                                <td style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                                     Middle Name
                                 </td>
-                                <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
-                                    <?php echo $visitorModel->middle_name; ?>
+                                <td style="padding-left: 0 !important;">
+                                    <input type="text" value="<?php echo $visitorModel->middle_name; ?>" disabled="disabled"
+                                           name="Visitor[middle_name]" id="Visitor_middle_name">
                                 </td>
                             </tr>
                         <?php endif; ?>
 
                         <tr>
-                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                                 Last Name
                             </td>
-                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
-                                <?php echo $visitorModel->last_name; ?>
+                            <td style="padding-left: 0 !important;">
+                                <input type="text" value="<?php echo $visitorModel->last_name; ?>" disabled="disabled"
+                                       name="Visitor[last_name]" id="Visitor_last_name">
                             </td>
                         </tr>
 
                         <?php if ($asic) : ?>
                         <tr>
-                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                                 Date of Birth
                             </td>
-                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
-                                <?php echo $visitorModel->date_of_birth; ?>
+                            <td style="padding-left: 0 !important;">
+                                <input type="text" value="<?php echo $visitorModel->date_of_birth; ?>" disabled="disabled"
+                                       name="Visitor[date_of_birth]" id="Visitor_date_of_birth">
                             </td>
                         </tr>
                         <?php endif; ?>
@@ -125,38 +129,44 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                 <li>
                     <table id="companyDetailsTable" class="detailsTable">
                         <tr>
-                            <td width="110px;" style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                            <td width="110px;" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                                 Company Name
                             </td>
-                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
-                                <?php echo $company->name; ?>
+                            <td style="padding-left: 0 !important;">
+                                <input type="text" value="<?php echo $company->name; ?>" disabled="disabled"
+                                       name="Visitor[company_name]" id="Visitor_company_name">
                             </td>
                         </tr>
 
                         <tr>
-                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
-                                Company Contact
+                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
+                                Contact Person
                             </td>
-                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
-                                <?php echo $company->contact; ?>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
-                                Company Contact Number
-                            </td>
-                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
-                                <?php echo $company->mobile_number; ?>
+                            <td style="padding-left: 0 !important;">
+                                <input type="text" value="<?php echo $company->contact; ?>" disabled="disabled"
+                                       name="Visitor[company_contact]" id="Visitor_company_contact">
                             </td>
                         </tr>
 
                         <tr>
-                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
-                                Company Contact Email
+                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
+                                Contact No.
                             </td>
-                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
-                                <?php echo $company->email_address; ?>
+                            <td style="padding-left: 0 !important;">
+                                <input type="text" value="<?php echo $company->mobile_number; ?>" disabled="disabled"
+                                       name="Visitor[mobile_number]" id="Visitor_mobile_number">
+
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
+                                Contact Email
+                            </td>
+                            <td style="padding-left: 0 !important;">
+                                <input type="text" value="<?php echo $company->email_address; ?>" disabled="disabled"
+                                       name="Visitor[email_address]" id="Visitor_email_address">
+
                             </td>
                         </tr>
 
@@ -380,27 +390,37 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                 <li>
                 <table id="asicSponsorDetailsTable" class="detailsTable">
                     <tr>
-                        <td width="110px;" style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                        <td width="110px;" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                             Type
                         </td>
-                        <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
-                            <?php echo $visitorModel->identification_type; ?>
+                        <td style="padding-left: 0 !important;">
+                            <input type="text" value="<?php
+                            if (!empty($visitorModel->identification_type)) {
+                                if (isset(Visitor::$IDENTIFICATION_TYPE_LIST[$visitorModel->identification_type])) {
+                                    echo Visitor::$IDENTIFICATION_TYPE_LIST[$visitorModel->identification_type];
+                                }
+                            }
+                            ?>" disabled="disabled"
+                                   name="Visitor[identification_type]" id="identification_type">
+
                         </td>
                     </tr>
                     <tr>
-                        <td width="110px;" style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
-                            Document Number
+                        <td width="110px;" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
+                            Document No.
                         </td>
-                        <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
-                            <?php echo $visitorModel->identification_document_no; ?>
+                        <td style="padding-left: 0 !important;">
+                            <input type="text" value="<?php echo $visitorModel->identification_document_no; ?>" disabled="disabled"
+                                   name="Visitor[identification_document_no]" id="identification_document_no">
                         </td>
                     </tr>
                     <tr>
-                        <td width="110px;" style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                        <td width="110px;" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                             Document Expiry
                         </td>
-                        <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
-                            <?php echo $visitorModel->identification_document_expiry; ?>
+                        <td style="padding-left: 0 !important;">
+                            <input type="text" value="<?php echo $visitorModel->identification_document_expiry; ?>" disabled="disabled"
+                                   name="Visitor[identification_document_expiry]" id="identification_document_expiry">
                         </td>
                     </tr>
                 </table>
@@ -415,38 +435,46 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                 <li>
                     <table id="asicSponsorDetailsTable" class="detailsTable">
                         <tr>
-                            <td width="110px;" style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                            <td width="110px;" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                                 First Name
                             </td>
-                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
-                                <?php echo $asic->first_name; ?>
+                            <td style="padding-left: 0 !important;">
+                                <input type="text" value="<?php echo $asic->first_name; ?>" disabled="disabled"
+                                       name="Visitor[asic_first_name]" id="Visitor_asic_first_name">
+
                             </td>
                         </tr>
 
                         <tr>
-                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                                 Last Name
                             </td>
-                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
-                                <?php echo $asic->last_name; ?>
+                            <td style="padding-left: 0 !important;">
+                                <input type="text" value="<?php echo $asic->last_name; ?>" disabled="disabled"
+                                       name="Visitor[asic_last_name]" id="Visitor_asic_last_name">
+
                             </td>
                         </tr>
 
                         <tr>
-                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                                 ASIC No.
                             </td>
-                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
-                                <?php echo $asic->asic_no; ?>
+                            <td style="padding-left: 0 !important;">
+                                <input type="text" value="<?php echo $asic->asic_no; ?>" disabled="disabled"
+                                       name="Visitor[asic_no]" id="Visitor_asic_no">
+
                             </td>
                         </tr>
 
                         <tr>
-                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
+                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                                 ASIC Expiry
                             </td>
-                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-right: 6px; padding-top: 6px;">
-                                <?php echo $asic->asic_expiry; ?>
+                            <td style="padding-left: 0 !important;">
+                                <input type="text" value="<?php echo $asic->asic_expiry; ?>" disabled="disabled"
+                                       name="Visitor[asic_expiry]" id="Visitor_asic_expiry">
+
                             </td>
                         </tr>
 

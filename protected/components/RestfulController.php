@@ -39,6 +39,10 @@ class RestfulController extends CController {
         header($statusHeader);
         // Set the content type
         header('Content-type: ' . $contentType);
+        // Allows from any origin
+        // Allows a header called Authorization
+        header("Access-Control-Allow-Origin: *");
+        header("Access-Control-Allow-Headers: Authorization");
 
         echo $body;
         Yii::app()->end();

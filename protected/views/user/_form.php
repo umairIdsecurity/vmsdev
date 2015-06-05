@@ -185,8 +185,8 @@ $form = $this->beginWidget('CActiveForm', array(
                 </div>
                 <?php require_once(Yii::app()->basePath . '/draganddrop/host.php'); ?>
                 <div id="photoErrorMessage" class="errorMessage"
-                     style="display:none;  margin-top: 200px;margin-left: 71px !important;position: absolute;">Please
-                    upload a photo.
+                     style="display:none;  margin-top: 200px;margin-left: 71px !important;position: absolute;">
+                    Please upload a photo.
                 </div>
             </td>
         </tr>
@@ -194,12 +194,9 @@ $form = $this->beginWidget('CActiveForm', array(
         <tr>
             <td>&nbsp;</td>
         </tr>
-
-
     </table>
-
-
 </td>
+
 
 <td style="vertical-align: top; float:left; width:300px;">
 <table>
@@ -431,7 +428,7 @@ $form = $this->beginWidget('CActiveForm', array(
 </td>
 <td style="vertical-align: top; float:left; width:300px">
 
-    <table>
+    <table class="no-margin-bottom">
         <tr>
             <td>
                 <select onchange="populateDynamicFields()" <?php
@@ -499,7 +496,7 @@ $form = $this->beginWidget('CActiveForm', array(
         </tr>
     </table>
     <div class="password-border">
-        <table>
+        <table class="no-margin-bottom">
             <tr>
                 <td><strong>Password Options</strong></td>
 
@@ -1541,7 +1538,7 @@ $this->widget('bootstrap.widgets.TbButton', array(
                                 document.getElementById('photoCropPreview2').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 $(".ajax-upload-dragdrop2").css("background", "url(<?php echo Yii::app()->request->baseUrl. '/'; ?>" + value.relative_path + ") no-repeat center top");
                                 $(".ajax-upload-dragdrop2").css({
-                                    "background-size": "137px 190px"
+                                    "background-size": "132px 152px"
                                 });
                             });
                         }

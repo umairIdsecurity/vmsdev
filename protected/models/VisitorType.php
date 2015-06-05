@@ -157,7 +157,7 @@ class VisitorType extends CActiveRecord {
         $visitorType = VisitorType::model()->findAll();
         $VISITOR_TYPE_LIST = array();
         foreach ($visitorType as $key => $value) {
-            $VISITOR_TYPE_LIST[$value['id']] = $value['name'];
+            $VISITOR_TYPE_LIST[$value['id']] = 'Visitor Type: ' . $value['name'];
         }
 
         if ($visitorTypeId == NULL) {

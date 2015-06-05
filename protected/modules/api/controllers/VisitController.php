@@ -169,7 +169,7 @@ class VisitController extends RestfulController {
                 } else {
                     $email = "N/A";
                 }
-                
+                $companyname = "";
                 if (isset($visit->visitor0->company) && ($visit->visitor0->company != null)) {
                     $company = Company::model()->findByPk($visit->visitor0->company);
                     if ($company) {

@@ -6,6 +6,16 @@ $session = new CHttpSession;
 $company = Company::model()->findByPk($session['company']);
 ?>
 <style>
+    <?php
+    if($company->logo != ''){
+    ?>
+    #logoDiv #cropImageBtn{
+        display: block;
+    }
+    <?php
+    }
+    ?>
+
 
     #photoPreview {
         height: 114px;
@@ -549,3 +559,83 @@ $company = Company::model()->findByPk($session['company']);
 <?php $this->endWidget(); ?>
 
 </div><!-- form -->
+<input type="hidden" id="Host_photo">
+
+<script>
+    $(document).ready(function () {
+
+        /*Added by farhat aziz for upload host photo*/
+
+
+        $('#photoCropPreview').imgAreaSelect({
+            handles: true,
+            onSelectEnd: function (img, selection) {
+                $("#cropPhotoBtn").show();
+                $("#x12").val(selection.x1);
+                $("#x22").val(selection.x2);
+                $("#y12").val(selection.y1);
+                $("#y22").val(selection.y2);
+                $("#width").val(selection.width);
+                $("#height").val(selection.height);
+            }
+        });
+        $("#cropPhotoBtn").click(function (e) {
+            e.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: '<?php echo Yii::app()->createUrl('CompanyLafPreferences/AjaxCrop'); ?>',
+                data: {
+                    x1: $("#x12").val(),
+                    x2: $("#x22").val(),
+                    y1: $("#y12").val(),
+                    y2: $("#y22").val(),
+                    width: $("#width").val(),
+                    height: $("#height").val(),
+                    imageUrl: $('#photoCropPreview').attr('src').substring(1, $('#photoCropPreview').attr('src').length),
+                    photoId: $('#Host_photo').val()
+                },
+                dataType: 'json',
+                success: function (r) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '<?php echo Yii::app()->createUrl('photo/GetPathOfCompanyLogo&id='); ?>' + $('#Host_photo').val(),
+                        dataType: 'json',
+                        success: function (r) {
+                            $.each(r.data, function (index, value) {
+                                document.getElementById('photoPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+                            });
+                        }
+                    });
+                    $("#closeCropPhoto").click();
+                    var ias = $('#photoCropPreview').imgAreaSelect({instance: true});
+                    ias.cancelSelection();
+                }
+            });
+        });
+        $('#closeCropPhoto').on('click', function(){
+            document.getElementById('light').style.display = 'none';
+            document.getElementById('fade').style.display = 'none';
+            var ias = $('#photoCropPreview').imgAreaSelect({instance: true});
+            ias.cancelSelection();
+        });
+    });
+</script>
+
+<!-- PHOTO CROP-->
+<div id="light" class="white_content">
+    <div style="text-align:right;">
+        <input type="button" class="btn btn-success" id="cropPhotoBtn" value="Crop" style="">
+        <input type="button" id="closeCropPhoto" value="x" class="btn btn-danger">
+    </div>
+    <br>
+    <img id="photoCropPreview" src="<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnLogoPhotoRelative($company->logo); ?>">
+
+</div>
+<div id="fade" class="black_overlay"></div>
+
+<input type="hidden" id="x12"/>
+<input type="hidden" id="x22"/>
+<input type="hidden" id="y12"/>
+<input type="hidden" id="y22"/>
+<input type="hidden" id="width"/>
+<input type="hidden" id="height"/>

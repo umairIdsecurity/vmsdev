@@ -35,7 +35,7 @@ $userRole = $session['role'];
 <div class="container" id="page">
 
 	<div id="header">
-		<div id="logo"><?php echo CHtml::link(CHtml::image(Yii::app()->controller->assetsBase.'/images/ids-circle-logo.png')); ?></div>
+		<div id="logo"><?php echo CHtml::link(CHtml::image(Yii::app()->controller->assetsBase.'/images/ids-circle-logo.png'), array('site/login')); ?></div>
 	
 	</div><!-- header -->
 

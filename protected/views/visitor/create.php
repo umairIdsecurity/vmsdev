@@ -578,7 +578,7 @@ function populateTenantAgentAndCompanyField(isSearch) {
                 dataType: 'json',
                 data: tenant,
                 success: function (r) {
-                    $('#workstation option[value!=""]').remove();
+                    $('#workstation').append('<option value="">Select Workstation</option>');
 
                     $.each(r.data, function (index, value) {
                         var selected = <?php echo isset($session['workstation']) ? $session['workstation'] : '0' ?>;
@@ -960,7 +960,7 @@ function selectVicCard(cardType) {
 
         // third table
         $('.third-column #passwordVicForm .register-a-visitor-buttons-div, .host-third-column #passwordVicForm .register-a-visitor-buttons-div').hide();
-        $('.third-column .register-a-visitor-buttons-div').css('padding-top', '0px');
+        $('.third-column .register-a-visitor-buttons-div').css('padding-top', '10px');
         $('#hostButtonRow').css('padding-top', '130px');
 
         // text changes:
@@ -982,7 +982,7 @@ function selectVicCard(cardType) {
         $('.visitorTypeDropdownRow').prependTo('.third-column');
         $('.workstationDropdownRow').prependTo('.third-column');
 
-        $('.third-column .register-a-visitor-buttons-div').css('padding-top', '130px');
+        $('.third-column .register-a-visitor-buttons-div').css('padding-top', '10px');
         $('#hostButtonRow').css('padding-top', '250px');
 
         // text changes:

@@ -11,7 +11,7 @@
   'use strict';
   var modalQueued = false;
   
-  $('a[data-reveal-id]').live('click', function (event) {
+  $('a[data-reveal-id]').on('click', function (event) {
     event.preventDefault();
     var modalLocation = $(this).attr('data-reveal-id');
     $('#' + modalLocation).reveal($(this).data());

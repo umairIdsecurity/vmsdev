@@ -435,48 +435,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     </ul>
                 </li>
             <?php
-            } else {
-            if ($session['role'] == Roles::ROLE_ADMIN) {
-                ?>
-                <!--WangFu Modified-->
-
-                <li class='has-sub'>
-                    <?php
-                    echo CHtml::ajaxLink("Tenant", CController::createUrl('tenant/adminAjax'), array(
-                        'update' => '#content',
-                        'complete' => "js:function(html){
-				            $('.manageworkstations').next().slideUp('normal');
-				            $('.managecompanies').next().slideUp('normal');
-							$('.managetenant').next().slideDown('normal');
-				            $('.manageusers').next().slideUp('normal');
-				            //$('.manageusers').next().hide();
-				            $('.managevisitorrecords').next().slideUp('normal');
-				            $('.managevisitreasons').next().slideUp('normal');
-				            $('.managereports').next().slideUp('normal');
-				            $('.managevisitortype').next().slideUp('normal');
-				        }",
-                    ), array(
-                        'class' => 'managetenant',
-                    ));
-                    ?>
-                    <ul <?php
-                    if ($this->id == 'company' || $this->id == 'companyLafPreferences') {
-                        echo "style='display:block ;'";
-                    }
-                    ?>>
-
-                        <li><a href='<?php echo Yii::app()->createUrl('tenant/create'); ?>' class="addSubMenu ajaxLinkLi"><span>Add Tenant</span></a></li>
-                    </ul>
-                </li>
-
-
-                <!--WangFu Modified-->
-
-
-            <?php
-            }
-            ?>
-            <?php }
+            } 
             ?><!-- menu for tenant -->
 			
             <!-- menu for Reports -->
@@ -531,11 +490,12 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                 ));
                 ?>
                 <ul <?php
-                if ($this->action->id == 'vicTotalVisitCount') {
+                if ($this->action->id == 'vicTotalVisitCount' || $this->action->id == 'vicRegister') {
                     echo "style='display:block ;'";
                 }
                 ?>>
                     <li><a href='<?php echo Yii::app()->createUrl('visit/vicTotalVisitCount'); ?>'><span>Total Visits VICs</span></a></li>
+                    <li><a href='<?php echo Yii::app()->createUrl('visit/vicRegister'); ?>'><span>VIC Register</span></a></li>
                 </ul>
             </li><!-- menu for AVMS Reports -->
 
@@ -576,3 +536,4 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
     })
 </script>
 
+<?php $this->renderPartial('/visitor/_add_company_contact', array('tenant' => $session['tenant'],'model' => new AddCompanyContactForm())); ?>

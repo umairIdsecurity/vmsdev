@@ -113,7 +113,7 @@ class TenantController extends Controller {
                     $comapanylastId = $companyModel->id;
                     //echo "companyModel inserted:". $comapanylastId;
                 } else {
-                    throw new CHttpException(500, 'Something went wrong');
+                    //throw new CHttpException(500, 'Something went wrong');
                     /*print_r($companyModel->getErrors());
                     exit;*/
                 }
@@ -124,7 +124,7 @@ class TenantController extends Controller {
                 $userModel->contact_number = $_POST['TenantForm']['contact_number'];
                 $userModel->company = $comapanylastId;
 
-                $passwordval = 0;
+                $passwordval = NULL;
                 if(isset($_POST['TenantForm']['password']) && $_POST['TenantForm']['password']!=""){
                     $passwordval = $_POST['TenantForm']['password'];
                 }
@@ -147,7 +147,7 @@ class TenantController extends Controller {
                     $userLastID = $userModel->id;
                     //echo ":userModel:".$userLastID;
                 } else {
-                    throw new CHttpException(500, 'Something went wrong');
+                    //throw new CHttpException(500, 'Something went wrong');
                     /*print_r($userModel->getErrors());
                     exit;*/
                 }
@@ -159,7 +159,7 @@ class TenantController extends Controller {
                     $tenantLastID = $tenantModel->id;
                     //echo ":tenantModel:".$tenantLastID;
                 } else {
-                    throw new CHttpException(500, 'Something went wrong');
+                    //throw new CHttpException(500, 'Something went wrong');
                     /*print_r($tenantModel->getErrors());
                     exit;*/
                 }
@@ -171,7 +171,7 @@ class TenantController extends Controller {
                     $transaction->commit();
                     //echo ":tenantModel:";
                 } else {
-                    throw new CHttpException(500, 'Something went wrong');
+                    //throw new CHttpException(500, 'Something went wrong');
                     /*print_r($tenantContact->getErrors());
                     exit;*/
                 }
@@ -180,6 +180,7 @@ class TenantController extends Controller {
             }catch (CDbException $e)
             {
                 $transaction->rollback();
+                Yii::app()->user->setFlash('error', "There was an error processing request");
                 echo json_encode(array('success'=>FALSE));
             }
             //
@@ -351,7 +352,7 @@ class TenantController extends Controller {
      */
     public function actionAdmin() {
         //  $this->layout = '//layouts/contentIframeLayout';
-        $model = new Company('search');
+        $model = new Tenant('search');
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['Company']))
             $model->attributes = $_GET['Company'];
@@ -363,10 +364,14 @@ class TenantController extends Controller {
 
     public function actionAdminAjax() {
         //  $this->layout = '//layouts/contentIframeLayout';
-        $model = new Company('search');
+        $model = new Tenant('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['Company']))
-            $model->attributes = $_GET['Company'];
+
+        if (isset($_GET['Tenant'])){
+            //print_r($_GET['Tenant']);exit;
+            $model->attributes = $_GET['Tenant'];
+        }
+
 
         $this->renderPartial('_admin', array(
             'model' => $model,

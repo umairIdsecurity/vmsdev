@@ -1,3 +1,5 @@
+<input name="closeVisitForm" type="hidden" value="1"/>
+
 <table class="detailsTable" style="font-size:12px;margin-top:15px;" id="logvisitTable">
     <?php if ($model->visit_status == VisitStatus::ACTIVE || $model->visit_status == VisitStatus::EXPIRED) { ?>
         <tr>
@@ -74,7 +76,7 @@
     </tr>
     <tr>
         <td>
-            <?php echo CHtml::dropDownList('card_option', $model->card_option, array('Returned' => 'Returned', 'Lost/Stolen' => 'Lost/Stolen'))?>
+            <?php echo $closeVisitForm->dropDownList($model, 'card_option', array('Returned' => 'Returned', 'Lost/Stolen' => 'Lost/Stolen'))?>
         </td>
     </tr>
 
@@ -109,4 +111,42 @@
         </td>
     </tr>
 
+    <tr class="lost_stolen_fields">
+        <td>Please complete sign and upload a declaration or police report or provide the police report number</td>
+    </tr>
+    <tr class="lost_stolen_fields">
+        <td>
+            <?php echo $closeVisitForm->fileField($model, 'card_lost_declaration_file')?>
+            <br />
+            <?php echo $closeVisitForm->error($model, 'card_lost_declaration_file'); ?>
+        </td>
+    </tr>
+
+    <tr class="lost_stolen_fields">
+        <td>&nbsp;</td>
+    </tr>
+
+    <tr class="lost_stolen_fields">
+        <td>Police Report Number</td>
+    </tr>
+    <tr class="lost_stolen_fields">
+        <td><?php echo $closeVisitForm->textField($model, 'police_report_number')?></td>
+    </tr>
+
 </table>
+
+<script type="text/javascript">
+    if ($('#Visit_card_option').val() == 'Returned') {
+        $('.lost_stolen_fields').hide();
+    } else {
+        $('.lost_stolen_fields').show();
+    }
+
+    $('#Visit_card_option').on('change', function() {
+        if ($(this).val() == 'Lost/Stolen') {
+            $('.lost_stolen_fields').show();
+        } else {
+            $('.lost_stolen_fields').hide();
+        }
+    });
+</script>

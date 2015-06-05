@@ -72,5 +72,5 @@ class AuthorizationController extends RestfulController {
         }
         return $randomString;
     }
-
+    
 }

@@ -93,7 +93,7 @@ return CMap::mergeArray(
                     'visitor'                   => 'api/visitor/index',
                     'visitor/<email>'           => 'api/visitor/index',
                     'visit/<visit>/file/'        => 'api/visit/file',
-
+                    array('api/authorization/preflight', 'pattern'=>'/authorization/preflight', 'verb'=>'OPTIONS'),
                 ),
             ),
             'db' => array(

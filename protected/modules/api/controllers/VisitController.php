@@ -151,23 +151,31 @@ class VisitController extends RestfulController {
             if ($visit->visitor0) {
                 if (isset($visit->visitor0->id) && ($visit->visitor0->id != null)) {
                     $visitorid = $visit->visitor0->id;
+                } else {
+                    $visitorid = "N/A";
                 }
                 if (isset($visit->visitor0->first_name) && ($visit->visitor0->first_name != null)) {
                     $firstname = $visit->visitor0->first_name;
+                } else {
+                    $firstname = "N/A";
                 }
                 if (isset($visit->visitor0->last_name) && ($visit->visitor0->last_name != null)) {
                     $lastname = $visit->visitor0->last_name;
+                } else {
+                    $lastname = "N/A";
                 }
                 if (isset($visit->visitor0->email) && ($visit->visitor0->email != null)) {
                     $email = $visit->visitor0->email;
+                } else {
+                    $email = "N/A";
                 }
-                if (isset($visit->visitor0->email) && ($visit->visitor0->email != null)) {
-                    $email = $visit->visitor0->email;
-                }
+                
                 if (isset($visit->visitor0->company) && ($visit->visitor0->company != null)) {
                     $company = Company::model()->findByPk($visit->visitor0->company);
                     if ($company) {
                         $companyname = $company->name;
+                    } else {
+                        $companyname = "N/A";
                     }
                 }
                 $result[$i]['visitor'] = array(

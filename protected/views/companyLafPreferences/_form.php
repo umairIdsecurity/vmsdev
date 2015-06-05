@@ -17,17 +17,14 @@ $company = Company::model()->findByPk($session['company']);
     ?>
 
     #photoPreview {
-        height: 114px;
-        max-height: 100%;
-        max-width: 100%;
-        width: 184px;
+        height: 100% !important;
+        width: 100% !important;
         
     }
     
     .photoDiv{
-        width:184px;
-        height:114px;
-        border: 1px solid #EEEEEE !important;
+        width:184px !important;
+        height:114px !important;;
         margin-bottom:10px;
     }
 </style>

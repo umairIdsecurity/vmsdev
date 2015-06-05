@@ -16,7 +16,6 @@ $company = Company::model()->findByPk($session['company']);
     }
     ?>
 
-
     #photoPreview {
         height: 114px;
         max-height: 100%;

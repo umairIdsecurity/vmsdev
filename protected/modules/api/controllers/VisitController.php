@@ -29,7 +29,7 @@ class VisitController extends RestfulController {
                     $visit->save();
                     $visit = Visit::model()->with('visitor0')->findByPk($visit->id);
                     $result = $this->populateVisits(array($visit));
-                    
+
                     $this->sendResponse(200, CJSON::encode($result));
                 } else {
                     $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_DATA', 'errorDescription' => 'Requsted data are invalid')));
@@ -62,6 +62,7 @@ class VisitController extends RestfulController {
             } elseif (yii::app()->request->isPutRequest) {
                 $data = file_get_contents("php://input");
                 $data = CJSON::decode($data);
+               
                 $visit = Visit::model()->findByPk($data['visitID']);
                 $visit->host = $data['hostID'];
                 $visit->visit_status = 1;
@@ -71,6 +72,10 @@ class VisitController extends RestfulController {
                 $visit->time_check_in = date('H:i:s', strtotime($data['startTime']));
                 $visit->date_check_out = date('d-m-Y', strtotime($data['expectedEndTime']));
                 $visit->time_check_out = date('H:i:s', strtotime($data['expectedEndTime']));
+                if (isset($data['checkOutTime'])) {
+                    $visit->date_check_out = date('d-m-Y', strtotime($data['checkOutTime']));
+                    $visit->time_check_out = date('H:i:s', strtotime($data['checkOutTime']));
+                }
                 $visit->reason = $data['visitReason'];
                 $visit->workstation = $data['workstation'];
                 if ($visit->validate()) {
@@ -146,8 +151,8 @@ class VisitController extends RestfulController {
             $result[$i]['visitorID'] = $visit->visitor;
             $result[$i]['hostID'] = $visit->host;
             $result[$i]['visitorType'] = $visit->visitor_type;
-            $result[$i]['startTime'] = ($visit->date_check_in == NULL) ? date("Y-m-d H:i:s", strtotime($visit->date_check_in . '' . $visit->time_check_in)) : "N/A";
-            $result[$i]['expectedEndTime'] = ($visit->date_check_out == NULL) ? date("Y-m-d H:i:s", strtotime($visit->date_check_out . '' . $visit->time_check_out)) : "N/A";
+            $result[$i]['startTime'] = ($visit->date_check_in != NULL) ? date("Y-m-d H:i:s", strtotime($visit->date_check_in . '' . $visit->time_check_in)) : "N/A";
+            $result[$i]['expectedEndTime'] = ($visit->date_check_out != NULL) ? date("Y-m-d H:i:s", strtotime($visit->date_check_out . '' . $visit->time_check_out)) : "N/A";
             $result[$i]['visitorPicture'] = !empty($visit->visitor0->photo) ? $visit->visitor0->photo : "N/A";
             if ($visit->visitor0) {
                 if (isset($visit->visitor0->id) && ($visit->visitor0->id != null)) {
@@ -170,7 +175,7 @@ class VisitController extends RestfulController {
                 } else {
                     $email = "N/A";
                 }
-               
+
                 if (isset($visit->visitor0->company) && ($visit->visitor0->company != null)) {
                     $company = Company::model()->findByPk($visit->visitor0->company);
                     if ($company) {
@@ -178,8 +183,8 @@ class VisitController extends RestfulController {
                     } else {
                         $companyname = "N/A";
                     }
-                }else{
-                     $companyname = "N/A";
+                } else {
+                    $companyname = "N/A";
                 }
                 $result[$i]['visitor'] = array(
                     'visitorID' => $visitorid,

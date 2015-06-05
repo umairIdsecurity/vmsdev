@@ -52,6 +52,8 @@ class Visitor extends CActiveRecord {
     public $password_requirement;
     public $alternative_identification;
     public $companycode;
+    public $filterProperties;
+
 
     const PROFILE_TYPE_CORPORATE = 'CORPORATE';
     const PROFILE_TYPE_VIC = 'VIC';
@@ -182,6 +184,7 @@ class Visitor extends CActiveRecord {
             array('is_deleted', 'numerical', 'integerOnly' => true),
             array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
             array('contact_number, company, role, visitor_status, created_by, tenant, tenant_agent', 'length', 'max' => 20),
+            array('filterProperties','length', 'max'=>70),
             array(
                 'date_of_birth,
                 notes,
@@ -382,7 +385,7 @@ class Visitor extends CActiveRecord {
         $criteria = new CDbCriteria;
         $criteria->with = array( 'company0' );
 
-        $criteria->compare('id', $this->id, true);
+        $criteria->compare('t.id', $this->id, true);
         //$criteria->compare('first_name', $this->first_name, true);
         $criteria->compare('last_name', $this->last_name, true);
         $criteria->compare('email', $this->email, true);
@@ -399,7 +402,6 @@ class Visitor extends CActiveRecord {
         $criteria->compare('role', $this->role, true);
         $criteria->compare('visitor_status', $this->visitor_status, true);
         $criteria->compare('created_by', $this->created_by, true);
-        $criteria->compare('t.is_deleted', self::NOT_DELETED);
         $criteria->compare('tenant', $this->tenant, true);
         $criteria->compare('tenant_agent', $this->tenant_agent, true);
         $criteria->compare('vehicle', $this->vehicle, true);
@@ -428,6 +430,30 @@ class Visitor extends CActiveRecord {
 
         if ($merge !== null) {
             $criteria->mergeWith($merge);
+        }
+
+        if($this->filterProperties){
+            $criteria->addCondition("t.id LIKE CONCAT('%', :filterProperties , '%')
+                OR first_name LIKE CONCAT('%', :filterProperties , '%')
+                OR last_name LIKE CONCAT('%', :filterProperties , '%')
+                OR company0.code LIKE CONCAT('%', :filterProperties , '%')
+                OR company0.name LIKE CONCAT('%', :filterProperties , '%')
+                OR date_of_birth LIKE CONCAT('%', :filterProperties , '%')
+                OR contact_number LIKE CONCAT('%', :filterProperties , '%')
+                OR contact_street_no LIKE CONCAT('%', :filterProperties , '%')
+                OR contact_street_name LIKE CONCAT('%', :filterProperties , '%')
+                OR contact_street_type LIKE CONCAT('%', :filterProperties , '%')
+                OR contact_suburb LIKE CONCAT('%', :filterProperties , '%')
+                OR contact_postcode LIKE CONCAT('%', :filterProperties , '%')
+                OR email LIKE CONCAT('%', :filterProperties , '%')
+                OR identification_type LIKE CONCAT('%', :filterProperties , '%')
+                OR identification_document_no LIKE CONCAT('%', :filterProperties , '%')
+                OR identification_document_expiry LIKE CONCAT('%', :filterProperties , '%')
+                OR asic_no LIKE CONCAT('%', :filterProperties , '%')
+                OR asic_expiry LIKE CONCAT('%', :filterProperties , '%')");
+            $criteria->params = array(':filterProperties' => $this->filterProperties);
+        } else {
+            $criteria->compare('t.is_deleted', self::NOT_DELETED);
         }
 
         return new CActiveDataProvider($this, array(

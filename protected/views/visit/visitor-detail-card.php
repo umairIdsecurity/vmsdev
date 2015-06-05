@@ -221,12 +221,26 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
         if ($asic) {
             echo CHtml::dropDownList('visitor_type', $visitorModel->visitor_type, VisitorType::model()->returnVisitorTypes());
             echo "<br />";
-            $data = CHtml::listData(VisitReason::model()->findAll(), 'id', 'reason');
-            foreach ($data as $key => $item) {
+            $reasons = CHtml::listData(VisitReason::model()->findAll(), 'id', 'reason');
+            foreach ($reasons as $key => $item) {
                 $results[$key] = 'Reason: ' . $item;
             }
             echo CHtml::dropDownList('reason', $model->reason, $results);
             echo "<br />";
+            $cardTypes = CHtml::listData(CardType::model()->findAll(), 'id', 'name');
+            foreach ($cardTypes as $key => $item) {
+                $cardTypeResults[$key] = 'Card Type: '.$item;
+            }
+            echo CHtml::dropDownList('card_type', $model->card_type, $cardTypeResults);
+            echo "<br />";
+            /*foreach ($cardTypes as $key => $item) {
+                if ($key == $model->card_type) {
+                    $cardType = $item;
+                }
+            }
+            echo CHtml::textField('card_type', 'Card Type: '.$cardType, [
+                    'disabled' => 'disabled'
+                ]);*/
         }
         ?>
 

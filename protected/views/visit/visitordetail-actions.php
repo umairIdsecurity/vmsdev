@@ -171,6 +171,11 @@ $session = new CHttpSession;
             e.preventDefault();
             var flag = true;
             var vic_active_visit_checkboxs = $('.vic-active-verification');
+            if (vic_active_visit_checkboxs.length == 0) {
+                checkIfActiveVisitConflictsWithAnotherVisit("new");
+                return false;
+            }
+            
             $.each(vic_active_visit_checkboxs, function(i, checkbox) {
                 $(checkbox).next('a').removeClass('label label-warning');
                 if (!checkbox.checked) {

@@ -187,67 +187,37 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
 <form method="post" id="workstationForm" action="<?php echo Yii::app()->createUrl('visit/detail', array('id' => $model->id)); ?>">
     <div style="margin: 10px 0px 0px 60px; text-align: left;">
         <?php
-        if ($asic) {
-            echo CHtml::dropDownList('visitor_card_status', $visitorModel->visitor_card_status, Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC], array('empty' => 'Select Card Status'));
-            echo "<br />";
-        }
-        ?>
-
-        <select id="workstation" name="Visit[workstation]" onchange="populateVisitWorkstation(this)">
-            <?php
-            if ($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
-                echo '';
-            } else {
-                echo '<option value="">Select workstation</option>';
+            if ($asic) {
+                echo CHtml::dropDownList('Visitor[visitor_card_status]', $visitorModel->visitor_card_status, Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC], ['empty' => 'Select Card Status']);
+                echo "<br />";
             }
-            ?>
 
-            <?php
-            $workstationList = Utils::populateWorkstation();
-            foreach ($workstationList as $key => $value) {
-                ?>
-                <option value="<?php echo $value->id; ?>" <?php
-                if (isset($model->workstation) && $value->id == $model->workstation) {
-                    echo 'selected="selected"';
+            $workstationList = CHtml::listData(Utils::populateWorkstation(), 'id', 'name');
+            foreach ($workstationList as $key => $item) {
+                $workstationResults[$key] = 'Workstation: '.$item;
+            }
+
+            echo CHtml::dropDownList('Visit[workstation]', $model->workstation, $workstationResults, ['empty' => 'Select Workstation']);
+            echo "<br />";
+
+            if ($asic) {
+                echo CHtml::dropDownList('Visit[visitor_type]', $model->visitor_type, VisitorType::model()->returnVisitorTypes());
+                echo "<br />";
+                $reasons = CHtml::listData(VisitReason::model()->findAll(), 'id', 'reason');
+                foreach ($reasons as $key => $item) {
+                    $results[$key] = 'Reason: ' . $item;
                 }
-                ?>><?php echo 'Workstation: ' . $value->name; ?></option>
-                        <?php
-                    }
-                    ?>
-        </select>
-        <br/>
-
-        <?php
-        if ($asic) {
-            echo CHtml::dropDownList('visitor_type', $visitorModel->visitor_type, VisitorType::model()->returnVisitorTypes());
-            echo "<br />";
-            $reasons = CHtml::listData(VisitReason::model()->findAll(), 'id', 'reason');
-            foreach ($reasons as $key => $item) {
-                $results[$key] = 'Reason: ' . $item;
-            }
-            echo CHtml::dropDownList('reason', $model->reason, $results);
-            echo "<br />";
-            $cardTypes = CHtml::listData(CardType::model()->findAll(), 'id', 'name');
-            foreach ($cardTypes as $key => $item) {
-                $cardTypeResults[$key] = 'Card Type: '.$item;
-            }
-            echo CHtml::dropDownList('card_type', $model->card_type, $cardTypeResults);
-            echo "<br />";
-            /*foreach ($cardTypes as $key => $item) {
-                if ($key == $model->card_type) {
-                    $cardType = $item;
+                echo CHtml::dropDownList('Visit[reason]', $model->reason, $results);
+                echo "<br />";
+                $cardTypes = CHtml::listData(CardType::model()->findAll(), 'id', 'name');
+                foreach ($cardTypes as $key => $item) {
+                    $cardTypeResults[$key] = 'Card Type: '.$item;
                 }
+                echo CHtml::dropDownList('Visit[card_type]', $model->card_type, $cardTypeResults);
+                echo "<br />";
             }
-            echo CHtml::textField('card_type', 'Card Type: '.$cardType, [
-                    'disabled' => 'disabled'
-                ]);*/
-        }
         ?>
-
-
         <input type="submit" class="complete" id="submitWorkStationForm" value="Update">
-
-
     </div>
 </form>
 

@@ -281,9 +281,8 @@ class VisitController extends Controller {
             }
 
             $model->attributes = $_POST['Visit'];
-
             // close visit process
-            if (isset($_POST['closeVisitForm']) && $model->visit_status == VisitStatus::CLOSED) {
+            if (isset($_POST['closeVisitForm']) && $model->visit_status == VisitStatus::CLOSED) {die('1');
                 $fileUpload = CUploadedFile::getInstance($model, 'card_lost_declaration_file');
                 if ($fileUpload != null) {
                     $path = YiiBase::getPathOfAlias('webroot') . '/uploads/card_lost_declaration';
@@ -293,9 +292,8 @@ class VisitController extends Controller {
                     $model->card_lost_declaration_file = '/uploads/card_lost_declaration/'.$fileUpload->name;
                 }
             }
-
             if ($model->save()) {
-                if ($fileUpload != null) {
+                if (!empty($fileUpload)) {
                     $fileUpload->saveAs(YiiBase::getPathOfAlias('webroot') . $model->card_lost_declaration_file);
                 }
             } else {

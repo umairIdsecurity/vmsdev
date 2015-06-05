@@ -170,9 +170,11 @@ $session = new CHttpSession;
         $(document).on('click', '#registerNewVisit', function (e) {
             e.preventDefault();
             var flag = true;
+            var $btnVic = $('#btnVicConfirm'),
+                    $btnASIC = $('#btnAsicConfirm');
             var vic_active_visit_checkboxs = $('.vic-active-verification');
             if (vic_active_visit_checkboxs.length == 0) {
-                checkIfActiveVisitConflictsWithAnotherVisit("new");
+                $('#btnActivate').click();
                 return false;
             }
             
@@ -183,35 +185,48 @@ $session = new CHttpSession;
                 }
             });
             if (flag == true) {
-                var $btnVic = $('#btnVicConfirm'),
-                    $btnASIC = $('#btnAsicConfirm');
-                $('a[href="#vicHolderModal"]').click();
-                $btnVic.on('click', function(e) {
-                    var checknum = $('#vicHolderModal').find('input[type="checkbox"]').filter(':checked');
-                    if (checknum.length == 2) {
-                        vicHolderDeclarationChange();
-                        if ($('#VivHolderDecalarations').is(':checked')) {
-                            $('a[href="#asicSponsorModal"]').click();
-                        }
-                    } else {
-                        alert('Please confirm VIC declaration.');
-                        return false;
-                    }
-                    
-                });
+                if ($('#VivHolderDecalarations').is(':checked')) {
+                    $('#asicSponsorModal').modal('show');
+                } else {
+                    $('#vicHolderModal').modal('show');
+                    $btnVic.on('click', function(e) {
+                        var checknum = $('#vicHolderModal').find('input[type="checkbox"]').filter(':checked');
+                        if (checknum.length == 2) {
+                            vicHolderDeclarationChange();
+                            if ($('#VivHolderDecalarations').is(':checked')) {
+                                $('#asicSponsorModal').modal('show');
+                                $btnASIC.on('click', function(e) {
+                                    var checknum = $('#asicSponsorModal')
+                                        .find('input[type="checkbox"]')
+                                        .filter(':checked');
+                                    if (checknum.length == 4) {
+                                        asicSponsorDeclarationChange();
+                                        if ($('#AsicSponsorDecalarations').is(':checked')) {
+                                            var confirm = true;
+                                            var vic_declarations_checkboxs = $('.vic-active-declarations');
+                                            $.each(vic_declarations_checkboxs, function(i, checkbox) {
+                                                if (!checkbox.checked) {
+                                                    confirm = false;
+                                                }
+                                            });
 
-                $btnASIC.on('click', function(e) {
-                    var checknum = $('#asicSponsorModal').find('input[type="checkbox"]').filter(':checked');
-                    if (checknum.length == 4) {
-                        asicSponsorDeclarationChange();
-                        if ($('#AsicSponsorDecalarations').is(':checked')) {
-                            checkIfActiveVisitConflictsWithAnotherVisit("new");
+                                            if (confirm == true) {
+                                                checkIfActiveVisitConflictsWithAnotherVisit("new");
+                                            }
+                                        }
+                                    } else {
+                                        alert('Please confirm ASIC declaration.');
+                                        return false;
+                                    }
+                                });
+                            }
+                        } else {
+                            alert('Please confirm VIC declaration.');
+                            return false;
                         }
-                    } else {
-                        alert('Please confirm ASIC declaration.');
-                        return false;
-                    }
-                });
+                        
+                    });
+                }
             } else {
                 alert('Please agree VIC verification before active visit.');
                 $.each(vic_active_visit_checkboxs, function(i, checkbox) {

@@ -31,7 +31,8 @@ date_default_timezone_set('Asia/Manila');
 
     <div class="row">
         <?php echo $form->labelEx($visitModel, 'visitor_type'); ?>
-        <input name="Visit[visitor_type]" id="Visit_visitor_type" type="text" value="2">
+        <!-- <input name="Visit[visitor_type]" id="Visit_visitor_type" type="text" value="2"> -->
+        <?php echo $form->textField($visitModel, 'visitor_type', array('size' => 20, 'maxlength' => 20)); ?>
         <?php echo $form->error($visitModel, 'visitor_type'); ?>
     </div>
 

@@ -123,6 +123,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
         if ($asic) :
             $company = $visitorModel->getCompany();
             if (!empty($company)) :
+                $contact = $newHost->findByPk($visitorModel->staff_id);
         ?>
         <li class='has-sub' id="companyDetailsLi"><a href="#"><span>Company Details</span></a>
             <ul>
@@ -143,7 +144,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                 Contact Person
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" value="<?php echo $company->contact; ?>" disabled="disabled"
+                                <input type="text" value="<?php echo $contact->getFullName(); ?>" disabled="disabled"
                                        name="Visitor[company_contact]" id="Visitor_company_contact">
                             </td>
                         </tr>

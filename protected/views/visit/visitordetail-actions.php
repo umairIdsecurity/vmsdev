@@ -174,7 +174,7 @@ $session = new CHttpSession;
                     $btnASIC = $('#btnAsicConfirm');
             var vic_active_visit_checkboxs = $('.vic-active-verification');
             if (vic_active_visit_checkboxs.length == 0) {
-                $('#btnActivate').click();
+                checkIfActiveVisitConflictsWithAnotherVisit("new");
                 return false;
             }
             
@@ -182,6 +182,7 @@ $session = new CHttpSession;
                 $(checkbox).next('a').removeClass('label label-warning');
                 if (!checkbox.checked) {
                     flag = false;
+                    return;
                 }
             });
             if (flag == true) {
@@ -207,6 +208,7 @@ $session = new CHttpSession;
                                             $.each(vic_declarations_checkboxs, function(i, checkbox) {
                                                 if (!checkbox.checked) {
                                                     confirm = false;
+                                                    return;
                                                 }
                                             });
 

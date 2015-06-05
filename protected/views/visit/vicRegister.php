@@ -11,13 +11,25 @@
 ?>
 
 <h1>VIC Register</h1>
-<input type="text" id="search-visitor" name="search-visitor" placeholder="" class="search-text" style="margin-left:224px;"/>
-<button class="visitor-findBtn" onclick="findVisitorRecord()" id="visitor-findBtn">Search</button>
 
 <?php echo CHtml::button('Export to CSV', array('id' => 'export-button', 'class' => 'greenBtn complete')); ?>
-<br>
 
 <?php
+$form=$this->beginWidget('CActiveForm', array(
+    'id' => 'filterProperties',
+    'action' => Yii::app()->createUrl($this->route),
+    'enableAjaxValidation' => true,
+    'method' => 'get',
+    'htmlOptions' => array('style' => 'margin: 0px')
+)); ?>
+
+<div class="row" style="margin-left: 224px">
+    <?php echo 'Search: '; ?>
+    <?php echo $form->textField($model,'filterProperties',array('size'=>40,'maxlength'=>70)); ?>
+    <?php echo CHtml::submitButton('Search', array('style' => 'margin-bottom: 10px')); ?>
+    <?php echo '&nbsp|&nbsp&nbsp'; echo CHtml::link('Reset Filter', Yii::app()->createUrl($this->route)); ?>
+</div>
+<?php $this->endWidget();
 
 $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'vic-register',
@@ -135,17 +147,4 @@ $this->widget('zii.widgets.grid.CGridView', array(
         }
 
     });
-
-    /*function findVisitorRecord() {
-        var searchText = $("#search-visitor").val();
-
-        var url = 'index.php?r=Visitor&id=' + searchText + '&companycode=' + searchText + '&first_name=' + searchText + '&last_name=' + searchText + '&Visitor_page=1&ajax=vic-register&r=visit%2FvicRegister';
-        $.ajax(url).done(function(data){
-            window.location = url;
-        }).fail(function() {
-
-        });
-        return false;
-    }*/
-
 </script>

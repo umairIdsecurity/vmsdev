@@ -29,13 +29,13 @@ $session = new CHttpSession;
 
     <tr>
         <td class="vic-col">
-            <input type="checkbox" value="1" name="VivHolderDecalarations" disabled="disabled" id="VivHolderDecalarations" class="vic-active-visit"/>
+            <input type="checkbox" value="1" name="VivHolderDecalarations" disabled="disabled" id="VivHolderDecalarations" class="vic-active-visit vic-active-declarations"/>
             <a href="#vicHolderModal" data-toggle="modal">VIC Holder Declarations</a>
         </td>
     </tr>
     <tr>
         <td class="vic-col">
-            <input type="checkbox" value="1" name="AsicSponsorDecalarations" disabled="disabled" id="AsicSponsorDecalarations" class="vic-active-visit"/>
+            <input type="checkbox" value="1" name="AsicSponsorDecalarations" disabled="disabled" id="AsicSponsorDecalarations" class="vic-active-visit vic-active-declarations"/>
             <a href="#asicSponsorModal" data-toggle="modal">ASIC Sponsor Declarations</a>
         </td>
     </tr>
@@ -356,8 +356,6 @@ $session = new CHttpSession;
             $('#VivHolderDecalarations').prop('checked', false);
         }
         $('#vicHolderModal').modal('hide');
-
-        return false;
     }
 
     function asicSponsorDeclarationChange() {
@@ -367,6 +365,5 @@ $session = new CHttpSession;
             $('#AsicSponsorDecalarations').prop('checked', false);
         }
         $('#asicSponsorModal').modal('hide');
-        return false;
     }
 </script>

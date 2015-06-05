@@ -20,10 +20,10 @@ class AdminController extends RestfulController {
                     $result['email'] = $admin->email;
                     $result['companyName'] = ($admin->com->name) ? $admin->com->name : "N/A";
                     $result['companyTagLine'] = ($admin->com->trading_name) ? $admin->com->trading_name : "N/A";
-                    $result['VICPickupLocation'] = "N/A";
+                    $result['VICPickupLocation'] = "Reception";
                     $result['visitorLogin'] = false;
                     $result['photoRequired'] = true;
-                    $result['complianceTerms'] = ['text1', 'text2', 'text2'];
+                    $result['complianceTerms'] = $this->getComplianceTerms();
                     if (isset($admin->com->companyPreference)) {
                         $pref = $admin->com->companyPreference;
                         $result['brandInfo']['companyLogoURL'] = ($admin->com->ph) ? Yii::app()->request->hostInfo . yii::app()->baseUrl . '/' . $admin->com->ph->relative_path : "N/A";
@@ -98,5 +98,10 @@ class AdminController extends RestfulController {
             $this->sendResponse(500, CJSON::encode(array('responseCode' => 500, 'errorCode' => 'INTERNAL_SERVER_ERROR', 'errorDescription' => 'something went wrong')));
         }
     }
+    private function getComplianceTerms(){
+        $terms = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip';
+            return array($terms,$terms,$terms);
+    }
+        
 
 }

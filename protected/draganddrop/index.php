@@ -9,6 +9,22 @@ if ($this->Id == 'visitor') {
     $dataId = '';
 }
 ?>
+<style>
+    #cropImageBtn{
+        display: none;
+    }
+    #logoDiv  #cropImageBtn{
+        font-size: 12px;
+        text-shadow: none;
+        margin-left: -1px !important;
+        width: 132px !important;
+        padding: 0px !important;
+    }
+    #logoDiv .ajax-upload-dragdrop{
+        margin-right:0px !important;
+        margin-bottom: 35px !important;
+    }
+</style>
 <?php
 if (($this->action->id == 'update' && $this->id == 'visitor')) {
     ?>
@@ -53,7 +69,7 @@ if (($this->action->id == 'update' && $this->id == 'visitor')) {
             position: absolute;
         }
     </style>
-    <?php
+<?php
 } elseif ($this->action->id == 'customisation') {
     ?>
     <style>
@@ -127,7 +143,7 @@ if (($this->action->id == 'update' && $this->id == 'visitor')) {
             margin-left: -83px;
         }
     </style>
-    <?php
+<?php
 } elseif ($this->action->id == 'create') {
     ?>
     <style>
@@ -202,7 +218,7 @@ if (($this->action->id == 'update' && $this->id == 'visitor')) {
     }
     ?> </div>
 <br><br>
-<input type="button"  style="display:none;" id="cropImageBtn" class="btn actionForward editImageBtn" value="Edit Photo" onclick = "document.getElementById('light').style.display = 'block';
+<input type="button" id="cropImageBtn" class="btn actionForward editImageBtn" value="Edit Photo" onclick = "document.getElementById('light').style.display = 'block';
         document.getElementById('fade').style.display = 'block'">
 
 <input type="hidden" id="actionUpload" value="<?php echo $this->action->id; ?>"/>
@@ -287,6 +303,11 @@ if (isset($_GET['viewFrom'])) {
 
                                 } else if ($("#controllerId").val() == 'visitor') {
                                     $("#cropImageBtn").show();
+                                }
+                                if ($("#actionUpload").val() == 'customisation') {
+                                    $("#Host_photo").val(data);
+                                    $("#cropImageBtn").show();
+                                    document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 }
                             });
                             if ($("#viewFrom").val() == '1') {

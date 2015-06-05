@@ -281,7 +281,6 @@ class VisitController extends Controller {
             }
 
             $model->attributes = $_POST['Visit'];
-
             // close visit process
             if (isset($_POST['closeVisitForm']) && $model->visit_status == VisitStatus::CLOSED) {
                 $fileUpload = CUploadedFile::getInstance($model, 'card_lost_declaration_file');
@@ -293,9 +292,8 @@ class VisitController extends Controller {
                     $model->card_lost_declaration_file = '/uploads/card_lost_declaration/'.$fileUpload->name;
                 }
             }
-
             if ($model->save()) {
-                if ($fileUpload != null) {
+                if (!empty($fileUpload)) {
                     $fileUpload->saveAs(YiiBase::getPathOfAlias('webroot') . $model->card_lost_declaration_file);
                 }
             } else {
@@ -420,12 +418,12 @@ class VisitController extends Controller {
 
     public function actionVicRegister() {
         $merge = new CDbCriteria;
-        $merge->addCondition('profile_type = "'. Visitor::PROFILE_TYPE_VIC .'"');
+        $merge->addCondition('visitor0.profile_type = "'. Visitor::PROFILE_TYPE_VIC .'"');
 
-        $model = new Visitor('search');
+        $model = new Visit('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['Visitor'])) {
-            $model->attributes = $_GET['Visitor'];
+        if (isset($_GET['Visit'])) {
+            $model->attributes = $_GET['Visit'];
         }
 
         if (Yii::app()->request->getParam('export')) {

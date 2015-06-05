@@ -27,11 +27,11 @@ class CompanyController extends Controller {
                 'expression' => 'Yii::app()->controller->isUserAllowedToUpdate(Yii::app()->user)',
             ),
             array('allow', // allow superadmin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin', 'adminAjax', 'delete'),
+                'actions' => array('admin', 'adminAjax', 'delete', 'index'),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_SUPERADMIN)',
             ),
 			array('allow', // allow superadmin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin', 'adminAjax' , 'delete'),
+                'actions' => array('admin', 'adminAjax' , 'delete', 'index'),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
             ),
 			array('allow', // allow superadmin user to perform 'admin' and 'delete' actions
@@ -341,6 +341,17 @@ class CompanyController extends Controller {
         $this->renderPartial('_admin', array(
             'model' => $model,
                 ), false, true);
+    }
+
+    public function actionIndex()
+    {
+        $model = new Company('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['Company'])) {
+            $model->attributes = $_GET['Company'];
+        }
+
+        $this->render('_admin', array('model' => $model,));
     }
 
     /**

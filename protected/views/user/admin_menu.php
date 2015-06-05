@@ -201,23 +201,8 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                 </li>   <!-- menu for Visitors -->
 
                 <!-- menu for Visitors Types -->
-                <li class='has-sub'><?php
-                    echo CHtml::ajaxLink("Visitor Types", CController::createUrl('visitorType/adminAjax'), array(
-                        'update' => '#content',
-                        'complete' => "js:function(html){
-            $('.managecompanies').next().slideUp('normal');
-            $('.manageworkstations').next().slideUp('normal');
-            $('.manageusers').next().slideUp('normal');
-            $('.managevisitorrecords').next().slideUp('normal');
-            $('.managevisitortype').next().slideDown('normal');
-            $('.managevisitreasons').next().slideUp('normal');
-            $('.managereports').next().slideUp('normal');
-            $('.manageavmsreports').next().slideUp('normal');
-        }",
-                            ), array(
-                        'class' => 'managevisitortype',
-                    ));
-                    ?>
+                <li class='has-sub'>
+                    <?php echo CHtml::link('Visitor Types', array('visitorType/index'), array('class' => 'managevisitortype')) ?>
                     <ul <?php
                     if ($this->id == 'visitorType' && $this->action->id != 'visitorsByTypeReport' && $this->action->id != 'visitorsByProfiles') {
                         echo "style='display:block ;'";
@@ -297,23 +282,8 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                   // Show Visitor Types to All Admins only  
                   if( Yii::app()->user->role == Roles::ROLE_ADMIN) {
              ?>    <!-- menu for Visitors Types -->
-                <li class='has-sub'><?php
-                    echo CHtml::ajaxLink("Visitor Types", CController::createUrl('visitorType/adminAjax'), array(
-                        'update' => '#content',
-                        'complete' => "js:function(html){
-                        $('.managecompanies').next().slideUp('normal');
-                        $('.manageworkstations').next().slideUp('normal');
-                        $('.manageusers').next().slideUp('normal');
-                        $('.managevisitorrecords').next().slideUp('normal');
-                        $('.managevisitortype').next().slideDown('normal');
-                        $('.managevisitreasons').next().slideUp('normal');
-                        $('.managereports').next().slideUp('normal');
-                        $('.manageavmsreports').next().slideUp('normal');
-                    }",
-                            ), array(
-                        'class' => 'managevisitortype',
-                    ));
-            ?>
+                <li class='has-sub'>
+                    <?php echo CHtml::link('Visitor Types', array('visitorType/index'), array('class' => 'managevisitortype')) ?>
                     <ul <?php
                     if ($this->id == 'visitorType') {
                         echo "style='display:block ;'";
@@ -331,24 +301,8 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
             <?php if ($session['role'] == Roles::ROLE_SUPERADMIN) {
                 ?>
 
-                <li class='has-sub'><?php
-                    echo CHtml::ajaxLink("Companies", CController::createUrl('company/adminAjax'), array(
-                        'update' => '#content',
-                        'complete' => "js:function(html){
-            $('.manageworkstations').next().slideUp('normal');
-            $('.managecompanies').next().slideDown('normal');
-            $('.manageusers').next().slideUp('normal');
-            //$('.manageusers').next().hide();
-            $('.managevisitorrecords').next().slideUp('normal');
-            $('.managevisitreasons').next().slideUp('normal');
-            $('.managereports').next().slideUp('normal');
-            $('.managevisitortype').next().slideUp('normal');
-            $('.manageavmsreports').next().slideUp('normal');
-        }",
-                    ), array(
-                        'class' => 'managecompanies',
-                    ));
-                    ?>
+                <li class='has-sub'>
+                    <?php echo CHtml::link('Companies', array('company/index'), array('class' => 'managecompanies')) ?>
                     <ul <?php
                     if ($this->id == 'company' || $this->id == 'companyLafPreferences') {
                         echo "style='display:block ;'";
@@ -365,24 +319,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                 <!--WangFu Modified-->
 
                 <li class='has-sub'>
-                    <?php
-                    echo CHtml::ajaxLink("Companies", CController::createUrl('company/adminAjax'), array(
-                        'update' => '#content',
-                        'complete' => "js:function(html){
-				            $('.manageworkstations').next().slideUp('normal');
-				            $('.managecompanies').next().slideDown('normal');
-				            $('.manageusers').next().slideUp('normal');
-				            //$('.manageusers').next().hide();
-				            $('.managevisitorrecords').next().slideUp('normal');
-				            $('.managevisitreasons').next().slideUp('normal');
-				            $('.managereports').next().slideUp('normal');
-				            $('.managevisitortype').next().slideUp('normal');
-				            $('.manageavmsreports').next().slideUp('normal');
-				        }",
-                    ), array(
-                        'class' => 'managecompanies',
-                    ));
-                    ?>
+                    <?php echo CHtml::link('Companies', array('company/index'), array('class' => 'managecompanies')) ?>
                     <ul <?php
                     if ($this->id == 'company' || $this->id == 'companyLafPreferences') {
                         echo "style='display:block ;'";
@@ -435,68 +372,12 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     </ul>
                 </li>
             <?php
-            } else {
-            if ($session['role'] == Roles::ROLE_ADMIN) {
-                ?>
-                <!--WangFu Modified-->
-
-                <li class='has-sub'>
-                    <?php
-                    echo CHtml::ajaxLink("Tenant", CController::createUrl('tenant/adminAjax'), array(
-                        'update' => '#content',
-                        'complete' => "js:function(html){
-				            $('.manageworkstations').next().slideUp('normal');
-				            $('.managecompanies').next().slideUp('normal');
-							$('.managetenant').next().slideDown('normal');
-				            $('.manageusers').next().slideUp('normal');
-				            //$('.manageusers').next().hide();
-				            $('.managevisitorrecords').next().slideUp('normal');
-				            $('.managevisitreasons').next().slideUp('normal');
-				            $('.managereports').next().slideUp('normal');
-				            $('.managevisitortype').next().slideUp('normal');
-				        }",
-                    ), array(
-                        'class' => 'managetenant',
-                    ));
-                    ?>
-                    <ul <?php
-                    if ($this->id == 'company' || $this->id == 'companyLafPreferences') {
-                        echo "style='display:block ;'";
-                    }
-                    ?>>
-
-                        <li><a href='<?php echo Yii::app()->createUrl('tenant/create'); ?>' class="addSubMenu ajaxLinkLi"><span>Add Tenant</span></a></li>
-                    </ul>
-                </li>
-
-
-                <!--WangFu Modified-->
-
-
-            <?php
-            }
-            ?>
-            <?php }
+            } 
             ?><!-- menu for tenant -->
 			
             <!-- menu for Reports -->
-            <li class='has-sub'><?php
-                echo CHtml::ajaxLink("Reports", CController::createUrl('visit/evacuationReportAjax'), array(
-                    'update' => '#content',
-                    'complete' => "js:function(html){
-            $('.manageworkstations').next().slideUp('normal');
-            $('.managecompanies').next().slideUp('normal');
-            $('.manageusers').next().slideUp('normal');
-            $('.managevisitorrecords').next().slideUp('normal');
-            $('.managevisitreasons').next().slideUp('normal');
-            $('.managereports').next().slideDown('normal');
-            $('.managevisitortype').next().slideUp('normal');
-            $('.manageavmsreports').next().slideUp('normal');
-        }",
-                        ), array(
-                    'class' => 'managereports',
-                ));
-                ?>
+            <li class='has-sub'>
+                <?php echo CHtml::link('Reports', array('visit/evacuationReport'), array('class' => 'managereports')) ?>
                 <ul <?php
                 if ($this->action->id == 'evacuationReport' || $this->action->id == 'visitorsByProfiles' || $this->action->id == 'visitorsByTypeReport' || $this->action->id == 'visitorRegistrationHistory' || $this->action->id == 'corporateTotalVisitCount' || Yii::app()->controller->id == 'auditTrail') {
                     echo "style='display:block ;'";

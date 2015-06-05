@@ -52,8 +52,6 @@ class Visitor extends CActiveRecord {
     public $password_requirement;
     public $alternative_identification;
     public $companycode;
-    public $filterProperties;
-
 
     const PROFILE_TYPE_CORPORATE = 'CORPORATE';
     const PROFILE_TYPE_VIC = 'VIC';
@@ -416,6 +414,7 @@ class Visitor extends CActiveRecord {
         $criteria->compare('identification_document_expiry', $this->identification_document_expiry, true);
         $criteria->compare('asic_no', $this->asic_no, true);
         $criteria->compare('asic_expiry', $this->asic_expiry, true);
+        $criteria->compare('t.is_deleted', self::NOT_DELETED);
 
         if (Yii::app()->controller->id == 'visit') {
             $criteria->compare('CONCAT(first_name, \' \', last_name)', $this->first_name, true);
@@ -430,30 +429,6 @@ class Visitor extends CActiveRecord {
 
         if ($merge !== null) {
             $criteria->mergeWith($merge);
-        }
-
-        if($this->filterProperties){
-            $criteria->addCondition("t.id LIKE CONCAT('%', :filterProperties , '%')
-                OR first_name LIKE CONCAT('%', :filterProperties , '%')
-                OR last_name LIKE CONCAT('%', :filterProperties , '%')
-                OR company0.code LIKE CONCAT('%', :filterProperties , '%')
-                OR company0.name LIKE CONCAT('%', :filterProperties , '%')
-                OR date_of_birth LIKE CONCAT('%', :filterProperties , '%')
-                OR contact_number LIKE CONCAT('%', :filterProperties , '%')
-                OR contact_street_no LIKE CONCAT('%', :filterProperties , '%')
-                OR contact_street_name LIKE CONCAT('%', :filterProperties , '%')
-                OR contact_street_type LIKE CONCAT('%', :filterProperties , '%')
-                OR contact_suburb LIKE CONCAT('%', :filterProperties , '%')
-                OR contact_postcode LIKE CONCAT('%', :filterProperties , '%')
-                OR email LIKE CONCAT('%', :filterProperties , '%')
-                OR identification_type LIKE CONCAT('%', :filterProperties , '%')
-                OR identification_document_no LIKE CONCAT('%', :filterProperties , '%')
-                OR identification_document_expiry LIKE CONCAT('%', :filterProperties , '%')
-                OR asic_no LIKE CONCAT('%', :filterProperties , '%')
-                OR asic_expiry LIKE CONCAT('%', :filterProperties , '%')");
-            $criteria->params = array(':filterProperties' => $this->filterProperties);
-        } else {
-            $criteria->compare('t.is_deleted', self::NOT_DELETED);
         }
 
         return new CActiveDataProvider($this, array(

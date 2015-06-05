@@ -26,7 +26,7 @@ class VisitorTypeController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin', 'delete','adminAjax', 'visitorsByTypeReport'),
+                'actions' => array('create', 'update', 'admin', 'delete','adminAjax', 'visitorsByTypeReport', 'index'),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
            
             ),
@@ -141,6 +141,17 @@ class VisitorTypeController extends Controller {
         $this->renderPartial('_admin', array(
             'model' => $model,
                 ), false, true);
+    }
+
+    public function actionIndex()
+    {
+        $model = new VisitorType('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['VisitorType'])) {
+            $model->attributes = $_GET['VisitorType'];
+        }
+
+        $this->render('_admin', array('model' => $model));
     }
     
    /* 

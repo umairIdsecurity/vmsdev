@@ -10,12 +10,17 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
             width: 88px !important;
             height: 24px !important;
         }
+
     </style>
 <?php
 }
 
 ?>
-
+<style type="text/css" media="screen">
+    .visitor-detail-info-field {
+        color: #000000 !important;
+    }
+</style>
 <input type="text" id="currentSessionRole" value="<?php echo $session['role']; ?>" style="display:none;"/>
 <div id='visitorInformationCssMenu'>
     <ul>
@@ -25,44 +30,44 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                 <li>
                     <table id="personalDetailsTable" class="detailsTable">
                         <tr>
-                            <td width="110px;" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
+                            <td width="110px;" class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                                 First Name
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" value="<?php echo $visitorModel->first_name; ?>" disabled="disabled"
+                                <input type="text" class="visitor-detail-info-field" value="<?php echo $visitorModel->first_name; ?>" disabled="disabled"
                                        name="Visitor[first_name]" id="Visitor_first_name">
                             </td>
                         </tr>
 
                         <?php if ($asic) : ?>
                             <tr>
-                                <td style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
+                                <td class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                                     Middle Name
                                 </td>
                                 <td style="padding-left: 0 !important;">
-                                    <input type="text" value="<?php echo $visitorModel->middle_name; ?>" disabled="disabled"
+                                    <input type="text" class="visitor-detail-info-field" value="<?php echo $visitorModel->middle_name; ?>" disabled="disabled"
                                            name="Visitor[middle_name]" id="Visitor_middle_name">
                                 </td>
                             </tr>
                         <?php endif; ?>
 
                         <tr>
-                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
+                            <td class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                                 Last Name
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" value="<?php echo $visitorModel->last_name; ?>" disabled="disabled"
+                                <input type="text" class="visitor-detail-info-field" value="<?php echo $visitorModel->last_name; ?>" disabled="disabled"
                                        name="Visitor[last_name]" id="Visitor_last_name">
                             </td>
                         </tr>
 
                         <?php if ($asic) : ?>
                         <tr>
-                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
+                            <td class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                                 Date of Birth
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" value="<?php echo $visitorModel->date_of_birth; ?>" disabled="disabled"
+                                <input type="text" class="visitor-detail-info-field" value="<?php echo $visitorModel->date_of_birth; ?>" disabled="disabled"
                                        name="Visitor[date_of_birth]" id="Visitor_date_of_birth">
                             </td>
                         </tr>
@@ -100,7 +105,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                         <tr>
                             <td width="110px;" style="padding-top: 7px;">Email</td>
                             <td><?php echo $visitorForm->textField($visitorModel, 'email',
-                                    array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled')); ?>
+                                    array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled', 'class' =>  "visitor-detail-info-field")); ?>
                                 <?php echo "<br>" . $visitorForm->error($visitorModel, 'email'); ?>
                                 <div style="" id="Visitor_email_em_" class="errorMessage errorMessageEmail">A profile
                                     already exists for this email address.
@@ -109,7 +114,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                         </tr>
                         <tr>
                             <td style="  padding-top: 7px;">Mobile</td>
-                            <td><input type="text" value="<?php echo $visitorModel->contact_number; ?>" disabled="disabled"
+                            <td><input class="visitor-detail-info-field" type="text" value="<?php echo $visitorModel->contact_number; ?>" disabled="disabled"
                                        name="Visitor[contact_number]" id="Visitor_contact_number"></td>
                         </tr>
                         <!--<tr><td><input type="submit" value="Update" name="yt0" id="submitContactDetailForm" class="complete" /></td></tr>-->
@@ -130,42 +135,42 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                 <li>
                     <table id="companyDetailsTable" class="detailsTable">
                         <tr>
-                            <td width="110px;" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
+                            <td width="110px;" class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                                 Company Name
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" value="<?php echo $company->name; ?>" disabled="disabled"
+                                <input type="text" class="visitor-detail-info-field" value="<?php echo $company->name; ?>" disabled="disabled"
                                        name="Visitor[company_name]" id="Visitor_company_name">
                             </td>
                         </tr>
 
                         <tr>
-                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
+                            <td class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                                 Contact Person
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" value="<?php echo $contact->getFullName(); ?>" disabled="disabled"
+                                <input type="text" class="visitor-detail-info-field" value="<?php echo (!empty($contact)) ? $contact->getFullName() : ''; ?>" disabled="disabled"
                                        name="Visitor[company_contact]" id="Visitor_company_contact">
                             </td>
                         </tr>
 
                         <tr>
-                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
+                            <td class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                                 Contact No.
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" value="<?php echo $company->mobile_number; ?>" disabled="disabled"
+                                <input type="text" class="visitor-detail-info-field" value="<?php echo $company->mobile_number; ?>" disabled="disabled"
                                        name="Visitor[mobile_number]" id="Visitor_mobile_number">
 
                             </td>
                         </tr>
 
                         <tr>
-                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
+                            <td class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                                 Contact Email
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" value="<?php echo $company->email_address; ?>" disabled="disabled"
+                                <input type="text" class="visitor-detail-info-field" value="<?php echo $company->email_address; ?>" disabled="disabled"
                                        name="Visitor[email_address]" id="Visitor_email_address">
 
                             </td>
@@ -224,7 +229,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                     <table id="visitorTypeTable" class="detailsTable">
                         <tr>
 
-                            <td width="110px;" style="  padding-top: 4px;"><?php echo $visitForm->labelEx($model,
+                            <td width="110px;" style="padding-top: 4px;"><?php echo $visitForm->labelEx($model,
                                     'card_type'); ?></td>
                             <td>
                                 <select id="Visit_card_type" name="Visit[card_type]">
@@ -391,11 +396,11 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                 <li>
                 <table id="asicSponsorDetailsTable" class="detailsTable">
                     <tr>
-                        <td width="110px;" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
+                        <td width="110px;" class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                             Type
                         </td>
                         <td style="padding-left: 0 !important;">
-                            <input type="text" value="<?php
+                            <input type="text" class="visitor-detail-info-field" value="<?php
                             if (!empty($visitorModel->identification_type)) {
                                 if (isset(Visitor::$IDENTIFICATION_TYPE_LIST[$visitorModel->identification_type])) {
                                     echo Visitor::$IDENTIFICATION_TYPE_LIST[$visitorModel->identification_type];
@@ -407,20 +412,20 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                         </td>
                     </tr>
                     <tr>
-                        <td width="110px;" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
+                        <td width="110px;" class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                             Document No.
                         </td>
                         <td style="padding-left: 0 !important;">
-                            <input type="text" value="<?php echo $visitorModel->identification_document_no; ?>" disabled="disabled"
+                            <input type="text" class="visitor-detail-info-field" value="<?php echo $visitorModel->identification_document_no; ?>" disabled="disabled"
                                    name="Visitor[identification_document_no]" id="identification_document_no">
                         </td>
                     </tr>
                     <tr>
-                        <td width="110px;" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
+                        <td width="110px;" class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                             Document Expiry
                         </td>
                         <td style="padding-left: 0 !important;">
-                            <input type="text" value="<?php echo $visitorModel->identification_document_expiry; ?>" disabled="disabled"
+                            <input type="text" class="visitor-detail-info-field" value="<?php echo $visitorModel->identification_document_expiry; ?>" disabled="disabled"
                                    name="Visitor[identification_document_expiry]" id="identification_document_expiry">
                         </td>
                     </tr>
@@ -436,44 +441,44 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                 <li>
                     <table id="asicSponsorDetailsTable" class="detailsTable">
                         <tr>
-                            <td width="110px;" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
+                            <td width="110px;" class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                                 First Name
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" value="<?php echo $asic->first_name; ?>" disabled="disabled"
+                                <input class="visitor-detail-info-field" type="text" value="<?php echo $asic->first_name; ?>" disabled="disabled"
                                        name="Visitor[asic_first_name]" id="Visitor_asic_first_name">
 
                             </td>
                         </tr>
 
                         <tr>
-                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
+                            <td class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                                 Last Name
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" value="<?php echo $asic->last_name; ?>" disabled="disabled"
+                                <input class="visitor-detail-info-field" type="text" value="<?php echo $asic->last_name; ?>" disabled="disabled"
                                        name="Visitor[asic_last_name]" id="Visitor_asic_last_name">
 
                             </td>
                         </tr>
 
                         <tr>
-                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
+                            <td class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                                 ASIC No.
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" value="<?php echo $asic->asic_no; ?>" disabled="disabled"
+                                <input type="text" class="visitor-detail-info-field" value="<?php echo $asic->asic_no; ?>" disabled="disabled"
                                        name="Visitor[asic_no]" id="Visitor_asic_no">
 
                             </td>
                         </tr>
 
                         <tr>
-                            <td style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
+                            <td class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                                 ASIC Expiry
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" value="<?php echo $asic->asic_expiry; ?>" disabled="disabled"
+                                <input type="text" class="visitor-detail-info-field" value="<?php echo $asic->asic_expiry; ?>" disabled="disabled"
                                        name="Visitor[asic_expiry]" id="Visitor_asic_expiry">
 
                             </td>
@@ -514,7 +519,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                     'first_name'); ?></td>
                             <td>
                                 <?php echo $hostForm->textField($hostModel, 'first_name',
-                                    array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled')); ?>
+                                    array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled', 'class' => "visitor-detail-info-field")); ?>
                                 <?php echo "<br>" . $hostForm->error($hostModel, 'first_name'); ?>
                             </td>
                         </tr>
@@ -523,7 +528,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                     'last_name'); ?></td>
                             <td>
                                 <?php echo $hostForm->textField($hostModel, 'last_name',
-                                    array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled')); ?>
+                                    array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled', 'class' =>  "visitor-detail-info-field")); ?>
                                 <?php echo "<br>" . $hostForm->error($hostModel, 'last_name'); ?>
                             </td>
                         </tr>
@@ -562,7 +567,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                 <td width="110px"><?php echo $newPatientForm->labelEx($newPatient, 'name'); ?></td>
                                 <td>
                                     <?php echo $newPatientForm->textField($newPatient, 'name',
-                                        array('size' => 50, 'maxlength' => 100)); ?>
+                                        array('size' => 50, 'maxlength' => 100, 'class' => "visitor-detail-info-field")); ?>
                                     <?php echo "<br>" . $newPatientForm->error($newPatient, 'name'); ?>
                                 </td>
                             </tr>

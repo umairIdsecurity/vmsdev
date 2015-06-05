@@ -418,12 +418,12 @@ class VisitController extends Controller {
 
     public function actionVicRegister() {
         $merge = new CDbCriteria;
-        $merge->addCondition('profile_type = "'. Visitor::PROFILE_TYPE_VIC .'"');
+        $merge->addCondition('visitor0.profile_type = "'. Visitor::PROFILE_TYPE_VIC .'"');
 
-        $model = new Visitor('search');
+        $model = new Visit('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['Visitor'])) {
-            $model->attributes = $_GET['Visitor'];
+        if (isset($_GET['Visit'])) {
+            $model->attributes = $_GET['Visit'];
         }
 
         if (Yii::app()->request->getParam('export')) {

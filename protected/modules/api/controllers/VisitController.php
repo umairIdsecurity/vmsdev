@@ -172,7 +172,7 @@ class VisitController extends RestfulController {
                 }
                 $result[$i]['visitor'] = array(
                     'visitorID' => $visitorid,
-                    'firstName' => $$firstname,
+                    'firstName' => $firstname,
                     'lastName' => $lastname,
                     'email' => $email,
                     'companyName' => $companyname,

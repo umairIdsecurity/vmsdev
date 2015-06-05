@@ -16,15 +16,15 @@ class VisitController extends RestfulController {
                 $visit = new Visit();
                 $visit->scenario = 'api';
                 $visit->host = $data['hostID'];
-                $visit->visitor_type = isset($data['visitorType'])?$data['visitorType']:NULL;
+                $visit->visitor_type = isset($data['visitorType']) ? $data['visitorType'] : NULL;
                 $visit->visitor = $data['visitorID'];
                 $visit->visit_status = 1;
-                $visit->date_check_in = isset($data['startTime'])?date('d-m-Y', strtotime($data['startTime'])):NULL;
-                $visit->time_check_in = isset($data['startTime'])?date('H:i:s', strtotime($data['startTime'])):NULL;
-                $visit->date_check_out = isset($data['expectedEndTime'])?date('d-m-Y', strtotime($data['expectedEndTime'])):NULL;
-                $visit->time_check_out = isset($data['expectedEndTime'])?date('H:i:s', strtotime($data['expectedEndTime'])):NULL;
-                $visit->reason = isset($data['visitReason'])?$data['visitReason']:NULL;
-                $visit->workstation = isset($data['workstation'])?$data['workstation']:NULL;
+                $visit->date_check_in = isset($data['startTime']) ? date('d-m-Y', strtotime($data['startTime'])) : NULL;
+                $visit->time_check_in = isset($data['startTime']) ? date('H:i:s', strtotime($data['startTime'])) : NULL;
+                $visit->date_check_out = isset($data['expectedEndTime']) ? date('d-m-Y', strtotime($data['expectedEndTime'])) : NULL;
+                $visit->time_check_out = isset($data['expectedEndTime']) ? date('H:i:s', strtotime($data['expectedEndTime'])) : NULL;
+                $visit->reason = isset($data['visitReason']) ? $data['visitReason'] : NULL;
+                $visit->workstation = isset($data['workstation']) ? $data['workstation'] : NULL;
                 if ($visit->validate()) {
                     $visit->save();
                     $visit = Visit::model()->with('visitor0')->findByPk($visit->id);
@@ -145,22 +145,49 @@ class VisitController extends RestfulController {
             $result[$i]['visitorID'] = $visit->visitor;
             $result[$i]['hostID'] = $visit->host;
             $result[$i]['visitorType'] = $visit->visitor_type;
-            $result[$i]['startTime'] = ($visit->date_check_in==NULL)?date("Y-m-d H:i:s", strtotime($visit->date_check_in . '' . $visit->time_check_in)):"N/A";
-            $result[$i]['expectedEndTime'] = ($visit->date_check_out==NULL) ? date("Y-m-d H:i:s", strtotime($visit->date_check_out . '' . $visit->time_check_out)) : "N/A";
-            $result[$i]['visitorPicture'] = !empty($visit->visitor0->photo)?$visit->visitor0->photo:"N/A";
-            if($visit->visitor0){
-                $result[$i]['visitor'] = array('visitorID' => $visit->visitor0->id, 'firstName' => $visit->visitor0->first_name, 'lastName' => $visit->visitor0->last_name, 'email' => $visit->visitor0->email, 'companyName' => Company::model()->findByPk($visit->visitor0->company)->name);
-            }else{
+            $result[$i]['startTime'] = ($visit->date_check_in == NULL) ? date("Y-m-d H:i:s", strtotime($visit->date_check_in . '' . $visit->time_check_in)) : "N/A";
+            $result[$i]['expectedEndTime'] = ($visit->date_check_out == NULL) ? date("Y-m-d H:i:s", strtotime($visit->date_check_out . '' . $visit->time_check_out)) : "N/A";
+            $result[$i]['visitorPicture'] = !empty($visit->visitor0->photo) ? $visit->visitor0->photo : "N/A";
+            if ($visit->visitor0) {
+                if (isset($visit->visitor0->id) && ($visit->visitor0->id != null)) {
+                    $visitorid = $visit->visitor0->id;
+                }
+                if (isset($visit->visitor0->first_name) && ($visit->visitor0->first_name != null)) {
+                    $firstname = $visit->visitor0->first_name;
+                }
+                if (isset($visit->visitor0->last_name) && ($visit->visitor0->last_name != null)) {
+                    $lastname = $visit->visitor0->last_name;
+                }
+                if (isset($visit->visitor0->email) && ($visit->visitor0->email != null)) {
+                    $email = $visit->visitor0->email;
+                }
+                if (isset($visit->visitor0->email) && ($visit->visitor0->email != null)) {
+                    $email = $visit->visitor0->email;
+                }
+                if (isset($visit->visitor0->company) && ($visit->visitor0->company != null)) {
+                    $company = Company::model()->findByPk($visit->visitor0->company);
+                    if ($company) {
+                        $companyname = $company->name;
+                    }
+                }
+                $result[$i]['visitor'] = array(
+                    'visitorID' => $visitorid,
+                    'firstName' => $$firstname,
+                    'lastName' => $lastname,
+                    'email' => $email,
+                    'companyName' => $companyname,
+                );
+            } else {
                 $result[$i]['visitor'] = array();
             }
-            
+
             $host = User::model()->with('com')->findByPk($visit->host);
-            if($host){
-                $result[$i]['host'] = array('hostID' => $visit->host, 'firstName' => $host->first_name, 'lastName' => $host->last_name, 'email' => $host->email, 'companyName' => ($host->com->name != null)?$host->com->name:"N/A");
-            }else{
+            if ($host) {
+                $result[$i]['host'] = array('hostID' => $visit->host, 'firstName' => $host->first_name, 'lastName' => $host->last_name, 'email' => $host->email, 'companyName' => ($host->com->name != null) ? $host->com->name : "N/A");
+            } else {
                 $result[$i]['host'] = array();
             }
-            
+
             $i++;
         }
         return $result;

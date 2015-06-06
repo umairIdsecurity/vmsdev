@@ -111,76 +111,89 @@ class TenantController extends Controller {
                 if ($companyModel->validate()) {
                     $companyModel->save();
                     $comapanylastId = $companyModel->id;
+
+                    $userModel->first_name = $_POST['TenantForm']['first_name'];
+                    $userModel->last_name = $_POST['TenantForm']['last_name'];
+                    $userModel->email = $_POST['TenantForm']['email'];
+                    $userModel->contact_number = $_POST['TenantForm']['contact_number'];
+                    $userModel->company = $comapanylastId;
+
+                    $passwordval = NULL;
+                    if(isset($_POST['TenantForm']['password']) && $_POST['TenantForm']['password']!=""){
+                        $passwordval = $_POST['TenantForm']['password'];
+                    }
+                    $userModel->password = $passwordval;
+                    $userModel->role = $_POST['TenantForm']['role'];
+                    $userModel->user_type = $_POST['TenantForm']['user_type'];
+                    $userModel->user_status = $_POST['TenantForm']['user_status'];
+                    $userModel->created_by = Yii::app()->user->id;
+                    $userModel->is_deleted = 0;
+                    $userModel->notes = $_POST['TenantForm']['notes'];
+                    $userModel->photo = $photolastId;//$_POST['TenantForm']['photo'];
+
+                    $userModel->asic_no = 10;
+                    $userModel->asic_expiry_day = 10;
+                    $userModel->asic_expiry_month = 10;
+                    $userModel->asic_expiry_year = 15;
+                    $userLastID = 0;
+                    if ($userModel->validate()) {
+                        $userModel->save();
+                        $userLastID = $userModel->id;
+                        //echo ":userModel:".$userLastID;
+
+                        $tenantModel->id = $comapanylastId;
+                        $tenantModel->created_by = Yii::app()->user->id;
+                        if ($tenantModel->validate()) {
+                            $tenantModel->save();
+                            $tenantLastID = $tenantModel->id;
+                            //echo ":tenantModel:".$tenantLastID;
+
+                            $tenantContact->tenant = $tenantLastID;
+                            $tenantContact->user = $userLastID;
+                            if ($tenantContact->validate()) {
+                                $tenantContact->save();
+                                $transaction->commit();
+                                //echo ":tenantModel:";
+                            } else {
+                                $transaction->rollback();
+                                //throw new CHttpException(500, 'Something went wrong');
+                                /*print_r($tenantContact->getErrors());
+                                exit;*/
+                            }
+
+                        } else {
+                            $transaction->rollback();
+                            //throw new CHttpException(500, 'Something went wrong');
+                            /*print_r($tenantModel->getErrors());
+                            exit;*/
+                        }
+
+
+
+
+                    } else {
+                        $transaction->rollback();
+                        //throw new CHttpException(500, 'Something went wrong');
+                        /*print_r($userModel->getErrors());
+                        exit;*/
+                    }
+
+
                     //echo "companyModel inserted:". $comapanylastId;
                 } else {
+                    $transaction->rollback();
                     //throw new CHttpException(500, 'Something went wrong');
-                    /*print_r($companyModel->getErrors());*/
-                    exit;
+                    /*print_r($companyModel->getErrors());
+                    exit;*/
                 }
 
-                $userModel->first_name = $_POST['TenantForm']['first_name'];
-                $userModel->last_name = $_POST['TenantForm']['last_name'];
-                $userModel->email = $_POST['TenantForm']['email'];
-                $userModel->contact_number = $_POST['TenantForm']['contact_number'];
-                $userModel->company = $comapanylastId;
 
-                $passwordval = NULL;
-                if(isset($_POST['TenantForm']['password']) && $_POST['TenantForm']['password']!=""){
-                    $passwordval = $_POST['TenantForm']['password'];
-                }
-                $userModel->password = $passwordval;
-                $userModel->role = $_POST['TenantForm']['role'];
-                $userModel->user_type = $_POST['TenantForm']['user_type'];
-                $userModel->user_status = $_POST['TenantForm']['user_status'];
-                $userModel->created_by = Yii::app()->user->id;
-                $userModel->is_deleted = 0;
-                $userModel->notes = $_POST['TenantForm']['notes'];
-                $userModel->photo = $photolastId;//$_POST['TenantForm']['photo'];
-
-                $userModel->asic_no = 10;
-                $userModel->asic_expiry_day = 10;
-                $userModel->asic_expiry_month = 10;
-                $userModel->asic_expiry_year = 15;
-                $userLastID = 0;
-                if ($userModel->validate()) {
-                    $userModel->save();
-                    $userLastID = $userModel->id;
-                    //echo ":userModel:".$userLastID;
-                } else {
-                    //throw new CHttpException(500, 'Something went wrong');
-                    /*print_r($userModel->getErrors());*/
-                    exit;
-                }
-
-                $tenantModel->id = $comapanylastId;
-                $tenantModel->created_by = Yii::app()->user->id;
-                if ($tenantModel->validate()) {
-                    $tenantModel->save();
-                    $tenantLastID = $tenantModel->id;
-                    //echo ":tenantModel:".$tenantLastID;
-                } else {
-                    //throw new CHttpException(500, 'Something went wrong');
-                    /*print_r($tenantModel->getErrors());*/
-                    exit;
-                }
-
-                $tenantContact->tenant = $tenantLastID;
-                $tenantContact->user = $userLastID;
-                if ($tenantContact->validate()) {
-                    $tenantContact->save();
-                    $transaction->commit();
-                    //echo ":tenantModel:";
-                } else {
-                    //throw new CHttpException(500, 'Something went wrong');
-                    /*print_r($tenantContact->getErrors());*/
-                    exit;
-                }
                 Yii::app()->user->setFlash('success', "Tenant inserted Successfully");
                 echo json_encode(array('success'=>TRUE));
             }catch (CDbException $e)
             {
                 $transaction->rollback();
-                Yii::app()->user->setFlash('error', "There was an error processing request: ".$e);
+                Yii::app()->user->setFlash('error', "There was an error processing request");
                 echo json_encode(array('success'=>FALSE));
             }
             //
@@ -225,101 +238,30 @@ class TenantController extends Controller {
         //$this->layout = '//layouts/contentIframeLayout';
         $session = new CHttpSession;
         $model = $this->loadModel($id);
+        $model->scenario = "updatetenant";
 
-        if (isset($_POST['is_user_field']) && $_POST['is_user_field']==1) {
-            $session['is_field']=1;
-            $model->scenario = 'company_contact';
-        }else{
-            unset($_SESSION['is_field']);
-        }
+        if(isset($_POST['Company'])){
+            print_r($_POST['Company']);
+            $model->attributes = $_POST['Company'];
+            $model->office_number = $_POST['Company']['mobile_number'];
+            $model->contact = $_POST['Company']['mobile_number'];
+            if($model->validate()){
+                $model->save();
+                Yii::app()->user->setFlash('success', "Tenant updated Successfully");
+                $this->redirect(array("tenant/update&id=".$id));
 
-        $userModel = User::model()->findByAttributes(
-            array('company' => $model->id)
-        );
-        if(!empty($userModel)){
-            $session['is_field']=1;
-            $model->user_first_name = $userModel->first_name;
-            $model->user_last_name = $userModel->last_name;
-            $model->user_email = $userModel->email;
-            $model->user_contact_number = $userModel->contact_number;
-        }
-
-        if (isset($_POST['user_role'])) {
-            $model->userRole = $_POST['user_role'] ;
-        }
-        $session = new CHttpSession;
-
-        if (isset($_POST['Company'])) {
-
-            if ($model->name != $_POST['Company']['name']) {
-
-                if (0 != $this->isCompanyUnique($session['tenant'], $session['role'], $_POST['Company']['name'], $_POST['Company']['tenant_'])) {
-                    Yii::app()->user->setFlash('error', 'Company name has already been taken');
-                }
-            }
-
-            if (isset($_POST['Company']['code']) && $model->code != $_POST['Company']['code']) {
-
-                if (0 != $this->isCompanyCodeUnique($session['tenant'], $session['role'], $_POST['Company']['code'], $_POST['Company']['tenant_'])) {
-                    Yii::app()->user->setFlash('error', 'Company code has already been taken');
-                }
-            }
-
-            if (is_null($errorFlashMessage = Yii::app()->user->getFlash('error'))) {
-
-                $model->attributes = $_POST['Company'];
-
-                if ($model->save()) {
-
-                    if(!empty($userModel)){
-                        $userModel->first_name = $model->user_first_name;
-                        $userModel->last_name = $model->user_last_name;
-                        $userModel->email = $model->user_email;
-                        $userModel->contact_number = $model->user_contact_number;
-                        $userModel->asic_no = 10;
-                        $userModel->asic_expiry_day = 10;
-                        $userModel->asic_expiry_month = 10;
-                        $userModel->asic_expiry_year = 15;
-                        $userModel->save();
-                    }else{
-                        $userModel = new User();
-
-                        $userModel->first_name = $model->user_first_name;
-                        $userModel->last_name = $model->user_last_name;
-                        $userModel->email = $model->user_email;
-                        $userModel->contact_number = $model->user_contact_number;
-
-                        $userModel->user_type = 2;
-                        $userModel->password = 12345;
-                        $userModel->role = 10;
-                        $userModel->company = $model->id;
-                        $userModel->asic_no = 10;
-                        $userModel->asic_expiry_day = 10;
-                        $userModel->asic_expiry_month = 10;
-                        $userModel->asic_expiry_year = 15;
-                        $userModel->save();
-                    }
-
-
-                    switch ($session['role']) {
-                        case Roles::ROLE_SUPERADMIN:
-                            $this->redirect(array('company/admin'));
-                            break;
-
-                        default:
-                            Yii::app()->user->setFlash('success', 'Organisation Settings Updated');
-                    }
-                }
-
-            } else {
-                // Because of flash is a stack return back encountered error in order it can be displayed in the view
-                Yii::app()->user->setFlash('error', $errorFlashMessage);
+            }else{
+                //print_r($model->getErrors());
+                Yii::app()->user->setFlash('error', "There was an error processing request");
+                $this->redirect(array("tenant/update&id=".$id));
             }
 
         }
 
-        $this->render('update', array(
+        $contacts = User::model()->findAll('company=:c', ['c' => $model->id]);
+        $this->render('_updateform', array(
             'model' => $model,
+            'contacts' => $contacts,
         ));
     }
 
@@ -328,12 +270,12 @@ class TenantController extends Controller {
      * If deletion is successful, the browser will be redirected to the 'admin' page.
      * @param integer $id the ID of the model to be deleted
      */
-    public function actionDelete($id) {
+     public function actionDelete($id) {
 
         if(Yii::app()->request->isPostRequest)
         {
 
-            $sql = "UPDATE `company` SET `is_deleted`=1 WHERE `id`=$id";
+            $sql = "UPDATE `tenant` SET `is_deleted`=1 WHERE `id`=$id";
             $connection=Yii::app()->db;
             $connection->createCommand($sql)->execute();
 
@@ -347,15 +289,16 @@ class TenantController extends Controller {
 
     }
 
+
     /**
      * Manages all models.
      */
-    public function actionAdmin() {
+     public function actionAdmin() {
         //  $this->layout = '//layouts/contentIframeLayout';
         $model = new Tenant('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['Company']))
-            $model->attributes = $_GET['Company'];
+        if (isset($_GET['Tenant']))
+            $model->attributes = $_GET['Tenant'];
 
         $this->render('_admin', array(
             'model' => $model,
@@ -385,11 +328,19 @@ class TenantController extends Controller {
      * @return Company the loaded model
      * @throws CHttpException
      */
-    public function loadModel($id) {
-        $model = Company::model()->findByPk($id);
-        if ($model === null)
-            throw new CHttpException(404, 'The requested page does not exist.');
-        return $model;
+    public function loadModel($id)
+    {
+        $tenant = Tenant::model()->findAllByPk($id);
+        if ($tenant) {
+            $model = Company::model()->findByPk($id);
+            if ($model === null) {
+                throw new CHttpException(404, 'The requested page does not exist.');
+            }
+            return $model;
+        }else{
+            throw new CHttpException(404, 'The requested company is not a tenant.');
+        }
+
     }
 
     /**

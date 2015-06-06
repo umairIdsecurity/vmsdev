@@ -520,9 +520,12 @@ nav.navigation ul li:last-child.active
     border :1px solid #999999 !important;
 }
 
+.header_midbox #logo{
+    padding: 5px 20px 10px;
+}
 #logo {
     height:auto;
-    padding: 5px 20px 10px;
+    padding: 5px 100px 10px;
 }
 
 #logo a {

@@ -114,8 +114,8 @@ class TenantController extends Controller {
                     //echo "companyModel inserted:". $comapanylastId;
                 } else {
                     //throw new CHttpException(500, 'Something went wrong');
-                    /*print_r($companyModel->getErrors());
-                    exit;*/
+                    /*print_r($companyModel->getErrors());*/
+                    exit;
                 }
 
                 $userModel->first_name = $_POST['TenantForm']['first_name'];
@@ -148,8 +148,8 @@ class TenantController extends Controller {
                     //echo ":userModel:".$userLastID;
                 } else {
                     //throw new CHttpException(500, 'Something went wrong');
-                    /*print_r($userModel->getErrors());
-                    exit;*/
+                    /*print_r($userModel->getErrors());*/
+                    exit;
                 }
 
                 $tenantModel->id = $comapanylastId;
@@ -160,8 +160,8 @@ class TenantController extends Controller {
                     //echo ":tenantModel:".$tenantLastID;
                 } else {
                     //throw new CHttpException(500, 'Something went wrong');
-                    /*print_r($tenantModel->getErrors());
-                    exit;*/
+                    /*print_r($tenantModel->getErrors());*/
+                    exit;
                 }
 
                 $tenantContact->tenant = $tenantLastID;
@@ -172,15 +172,15 @@ class TenantController extends Controller {
                     //echo ":tenantModel:";
                 } else {
                     //throw new CHttpException(500, 'Something went wrong');
-                    /*print_r($tenantContact->getErrors());
-                    exit;*/
+                    /*print_r($tenantContact->getErrors());*/
+                    exit;
                 }
                 Yii::app()->user->setFlash('success', "Tenant inserted Successfully");
                 echo json_encode(array('success'=>TRUE));
             }catch (CDbException $e)
             {
                 $transaction->rollback();
-                Yii::app()->user->setFlash('error', "There was an error processing request");
+                Yii::app()->user->setFlash('error', "There was an error processing request: ".$e);
                 echo json_encode(array('success'=>FALSE));
             }
             //

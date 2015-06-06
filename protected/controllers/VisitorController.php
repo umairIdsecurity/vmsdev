@@ -470,17 +470,4 @@ class VisitorController extends Controller {
         ));
         return $this->renderPartial('activeVisit',array('dataProvider' => $dataProvider));
     }
-
-    public function actionFindVicRegister() {
-        $this->layout = '//layouts/column1';
-        $model = new Visitor('search');
-        $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['Visitor']))
-            $model->attributes = $_GET['Visitor'];
-
-        $this->renderPartial('findVisitor', array(
-            'model' => $model,
-        ), false, true);
-    }
-
 }

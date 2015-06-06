@@ -22,11 +22,8 @@ class SiteController extends Controller {
         );
     }
 
-    /**
-     * This is the default 'index' action that is invoked
-     * when an action is not explicitly requested by users.
-     */
-    public function actionRedirect()
+
+    /*public function actionRedirect()
     {
         $session = new CHttpSession;
 
@@ -37,7 +34,7 @@ class SiteController extends Controller {
         switch ($session['role']) {
             case Roles::ROLE_AGENT_OPERATOR:
             case Roles::ROLE_OPERATOR:
-                if (!($model->findWorkstations($session['id']))) {
+                if (!LoginForm::findWorkstations($session['id'])) {
                     Yii::app()->user->setFlash('error', "No workstations currenlty assigned to you. Please ask your administrator. ");
                 } else {
                     $this->redirect('index.php?r=site/selectworkstation&id=' . $session['id']);
@@ -55,7 +52,7 @@ class SiteController extends Controller {
             default:
                 $this->redirect('index.php?r=dashboard');
         }
-    }
+    }*/
 
     public function actionIndex() {
         // renders the view file 'protected/views/site/index.php'
@@ -68,7 +65,7 @@ class SiteController extends Controller {
         }
         else{
 
-            Yii::app()->user->isGuest ? $this->redirect('index.php?r=site/login') : $this->actionRedirect();
+            $this->redirect('index.php?r=site/login');
 
         }
 
@@ -128,11 +125,32 @@ class SiteController extends Controller {
             $model->attributes = $_POST['LoginForm'];
             // validate user input and redirect to the previous page if valid
             if ($model->validate() && $model->login()) {
-                $this->actionRedirect();
+                $session = new CHttpSession;
+                switch ($session['role']) {
+                    case Roles::ROLE_AGENT_OPERATOR:
+                    case Roles::ROLE_OPERATOR:
+                        if (!($model->findWorkstations($session['id']))) {
+                            Yii::app()->user->setFlash('error', "No workstations currenlty assigned to you. Please ask your administrator. ");
+                        } else {
+                            $this->redirect('index.php?r=site/selectworkstation&id=' . $session['id']);
+                        }
+                        break;
+                    case Roles::ROLE_STAFFMEMBER:
+                        $this->redirect('index.php?r=dashboard/viewmyvisitors');
+                        break;
+                    case Roles::ROLE_ADMIN:
+                        $this->redirect('index.php?r=site/selectworkstation&id=' . $session['id']);
+                        break;
+                    case Roles::ROLE_AGENT_ADMIN:
+                        $this->redirect('index.php?r=dashboard/admindashboard');
+                        break;
+                    default:
+                        $this->redirect('index.php?r=dashboard');
+                }
             }
         }
         // display the login form
-        Yii::app()->user->isGuest ? $this->render('login', array('model' => $model)) : $this->actionRedirect();
+        $this->render('login', array('model' => $model)) ;
     }
 
     /**

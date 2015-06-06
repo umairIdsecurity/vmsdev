@@ -5,7 +5,7 @@ Feature: Logon
 	I need to authenticate with my credentials
 	
 	Scenario: Logging on with the correct credentials
-		Given I am on "/index.php"
+        Given I am on "/index.php"
 		When I fill in "Username or Email" with "superadmin@test.com"
 		And I fill in "Password" with "12345"
 		And I press "Login"

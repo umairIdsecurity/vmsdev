@@ -29,7 +29,7 @@ $result =  CMap::mergeArray(
             'application.extensions.bootstrap.widgets.*',
             'application.service.impl.*',
             'application.service.*',
-            'application.helpers.*'
+            'application.helpers.*',
         ),
         'modules' => array(
             // uncomment the following to enable the Gii tool

@@ -38,6 +38,7 @@ class VisitController extends Controller {
                     'corporateTotalVisitCount',
                     'vicTotalVisitCount',
                     'vicRegister',
+                    'totalVicsByWorkstation',
                     'exportFileHistory',
                     'exportFileVisitorRecords',
                     'ExportFileVicRegister',
@@ -929,6 +930,12 @@ class VisitController extends Controller {
         rewind($fp);
         Yii::app()->user->setState('export', stream_get_contents($fp));
         fclose($fp);
+    }
+
+    public function actionTotalVicsByWorkstation()
+    {
+        $visitsCount = 1;
+        $this->render('totalVicsByWorkstation', array("visit_count" => $visitsCount));
     }
 
 }

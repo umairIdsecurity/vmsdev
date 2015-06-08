@@ -65,7 +65,12 @@ class CHelper {
  */
     public static function get_unread_notifications() {
 
-        $notifications =  Notification::model()->with('user_notification')->findAll("user_notification.has_read != 1 AND user_notification.user_id = ".Yii::app()->user->id );
+        $notifications =  Notification::model()->with('user_notification')->findAll(
+                array(
+                    "condition" => "user_notification.has_read != 1 AND user_notification.user_id = '".Yii::app()->user->id."'",
+                    "order" => "user_notification.notification_id DESC"
+                ));
+        
         return $notifications;
     }
     

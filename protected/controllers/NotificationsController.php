@@ -153,14 +153,18 @@ class NotificationsController extends Controller
 	public function actionIndex()
 	{
              // Mark All his/her notifications as READ
-            $userNotify = UserNotification::model()->find("user_id = ".Yii::app()->user->id);
-                if($userNotify) {
-                    $userNotify->has_read = 1;
-                    $userNotify->save();          
+            $userNotify = UserNotification::model()->findAll("user_id = ".Yii::app()->user->id);
+            
+            foreach ($userNotify as $notification){
+                if($notification) {
+                    $notification->has_read = 1;
+                    $notification->save();          
+                }
             }
                      
             // Fetch Only His/Her Notifications
             $model=new Notification('search');
+            
 		$model->unsetAttributes();  // clear any default values
 		if(isset($_GET['Notification']))
 			$model->attributes=$_GET['Notification'];

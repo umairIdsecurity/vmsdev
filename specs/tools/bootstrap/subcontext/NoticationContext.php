@@ -47,11 +47,11 @@ class NotificationContext extends BehatContext
         $page = $this->getMainContext()->getSession()->getPage();
         $element = $page->find('css', '.notification-count');
         if (null === $element) {
-            throw new Exception("Couldn't found notifications!", 1);
+            throw new \Exception("Couldn't found notifications!", 1);
         } else {
             $notifi_count = intval($element->getText());
             if ($notifi_count <= 0) {
-                throw new Exception("There are no new notifications!", 1);
+                throw new \Exception("There are no new notifications!", 1);
             }
         }
     }
@@ -74,7 +74,7 @@ class NotificationContext extends BehatContext
     }
 
     /**
-    * @Then /^I edit notification "([^"]*)" with subject "([^"]*)" as and message as "([^"]*)"$/
+    * @Then /^I edit notification "([^"]*)" with subject as "([^"]*)" and message as "([^"]*)"$/
     */
     public function iEditNotificationWithSubject($subject, $newsubject, $newmessage)
     {
@@ -86,9 +86,9 @@ class NotificationContext extends BehatContext
             $tr = $element->getParent();
             $update = $tr->find('css', '.update');
             $update->click();
-            $this->getMainContext()->fillField("Subject", $newsubject);
-            $this->getMainContext()->fillField("Message", $newmessage);
-            $this->getMainContext()->pressButton("Save");
+            $this->getMainContext()->fillField("Notification_subject", $newsubject);
+            $this->getMainContext()->fillField("Notification_message", $newmessage);
+            $this->getMainContext()->pressButton("yt0");
         }
     }
 

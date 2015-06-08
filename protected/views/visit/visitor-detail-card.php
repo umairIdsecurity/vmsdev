@@ -32,12 +32,22 @@ $photoForm = $this->beginWidget('CActiveForm', array(
     <?php } ?>
 </div>
 <?php
-if ($model->card_type == 4) {
-    $cardclass = "cardDivC";
-} else {
+$vstr = Visitor::model()->findByPk($model->visitor);
+if ($vstr->profile_type == "CORPORATE" && $model->card_type == 4) {
     $cardclass = "cardDiv";
+} elseif ($vstr->profile_type == "CORPORATE" && $model->card_type != 4) {
+    $cardclass = "cardDivCD";
+} elseif ($vstr->profile_type == "ASIC" && $model->card_type == 4) {
+    $cardclass = "cardDivCR";
+} elseif ($vstr->profile_type == "ASIC" && $model->card_type != 4) {
+    $cardclass = "cardDivVR";
+} elseif ($vstr->profile_type == "VIC" && $model->card_type != 4) {
+    $cardclass = "cardDivCY";
+} elseif ($vstr->profile_type == "VIC" && $model->card_type == 4) {
+    $cardclass = "cardDivVY";
 }
 ?>
+
 <div id="<?= $cardclass; ?>">
     <div class="card-content-company-img">
         <?php
@@ -54,17 +64,18 @@ if ($model->card_type == 4) {
                 }
 
                 if (!empty($companyLogo)):
-                ?>
-                <img class='<?php
-                if ($model->visit_status != VisitStatus::ACTIVE) {
-                    echo "cardCompanyLogoPreregistered";
-                } else {
-                    echo "cardCompanyLogo";
-                }
-                ?>' src="<?php
-                     echo $companyLogo;
-                     ?>"/>
-                     <?php endif;
+                    ?>
+                    <img class='<?php
+                    if ($model->visit_status != VisitStatus::ACTIVE) {
+                        echo "cardCompanyLogoPreregistered";
+                    } else {
+                        echo "cardCompanyLogo";
+                    }
+                    ?>' src="<?php
+                         echo $companyLogo;
+                         ?>"/>
+                         <?php
+                     endif;
                  }
              }
              ?>
@@ -150,7 +161,7 @@ if ($model->card_type == 4) {
 <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
 <?php if ($visitorModel->photo != '') { ?>
     <input type="button" class="btn editImageBtn actionForward" id="editImageBtn" value="Edit Photo" onclick = "document.getElementById('light').style.display = 'block';
-            document.getElementById('fade').style.display = 'block'"/>
+                document.getElementById('fade').style.display = 'block'"/>
        <?php } ?>
 <div
 <?php
@@ -177,7 +188,7 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
 
 <div style="margin-top: 10px;">
     Total Visits at <?php echo $visitModel['companyName']; ?>: <?php echo $visitModel['companyVisitsByVisitor']; ?></br>
-    <!-- Total Visits to All Companies: <?php // echo $visitModel['allVisitsByVisitor'];    ?> -->
+    <!-- Total Visits to All Companies: <?php // echo $visitModel['allVisitsByVisitor'];           ?> -->
     <?php if ($visitorModel->profile_type == Visitor::PROFILE_TYPE_VIC) { ?>
         Remaining Days: <?php echo (28 - $visitModel['companyVisitsByVisitor']); ?>
     <?php } ?>
@@ -187,36 +198,36 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
 <form method="post" id="workstationForm" action="<?php echo Yii::app()->createUrl('visit/detail', array('id' => $model->id)); ?>">
     <div style="margin: 10px 0px 0px 60px; text-align: left;">
         <?php
-            if ($asic) {
-                array_pop(Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC]);
-                echo CHtml::dropDownList('Visitor[visitor_card_status]', $visitorModel->visitor_card_status, Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC], ['empty' => 'Select Card Status']);
-                echo "<br />";
-            }
-
-            $workstationList = CHtml::listData(Utils::populateWorkstation(), 'id', 'name');
-            foreach ($workstationList as $key => $item) {
-                $workstationResults[$key] = 'Workstation: '.$item;
-            }
-
-            echo CHtml::dropDownList('Visit[workstation]', $model->workstation, $workstationResults, ['empty' => 'Select Workstation']);
+        if ($asic) {
+            array_pop(Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC]);
+            echo CHtml::dropDownList('Visitor[visitor_card_status]', $visitorModel->visitor_card_status, Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC], ['empty' => 'Select Card Status']);
             echo "<br />";
+        }
 
-            if ($asic) {
-                echo CHtml::dropDownList('Visit[visitor_type]', $model->visitor_type, VisitorType::model()->returnVisitorTypes());
-                echo "<br />";
-                $reasons = CHtml::listData(VisitReason::model()->findAll(), 'id', 'reason');
-                foreach ($reasons as $key => $item) {
-                    $results[$key] = 'Reason: ' . $item;
-                }
-                echo CHtml::dropDownList('Visit[reason]', $model->reason, $results);
-                echo "<br />";
-                $cardTypes = CHtml::listData(CardType::model()->findAll(), 'id', 'name');
-                foreach ($cardTypes as $key => $item) {
-                    $cardTypeResults[$key] = 'Card Type: '.$item;
-                }
-                echo CHtml::dropDownList('Visit[card_type]', $model->card_type, $cardTypeResults);
-                echo "<br />";
+        $workstationList = CHtml::listData(Utils::populateWorkstation(), 'id', 'name');
+        foreach ($workstationList as $key => $item) {
+            $workstationResults[$key] = 'Workstation: ' . $item;
+        }
+
+        echo CHtml::dropDownList('Visit[workstation]', $model->workstation, $workstationResults, ['empty' => 'Select Workstation']);
+        echo "<br />";
+
+        if ($asic) {
+            echo CHtml::dropDownList('Visit[visitor_type]', $model->visitor_type, VisitorType::model()->returnVisitorTypes());
+            echo "<br />";
+            $reasons = CHtml::listData(VisitReason::model()->findAll(), 'id', 'reason');
+            foreach ($reasons as $key => $item) {
+                $results[$key] = 'Reason: ' . $item;
             }
+            echo CHtml::dropDownList('Visit[reason]', $model->reason, $results);
+            echo "<br />";
+            $cardTypes = CHtml::listData(CardType::model()->findAll(), 'id', 'name');
+            foreach ($cardTypes as $key => $item) {
+                $cardTypeResults[$key] = 'Card Type: ' . $item;
+            }
+            echo CHtml::dropDownList('Visit[card_type]', $model->card_type, $cardTypeResults);
+            echo "<br />";
+        }
         ?>
         <input type="submit" class="complete" id="submitWorkStationForm" value="Update">
     </div>

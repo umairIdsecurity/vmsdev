@@ -992,7 +992,7 @@ dt.tabs dt{
 }
 
 #cardDiv{
-    background: url('../images/cardprint-new1.png') no-repeat center top;
+    background: url('../images/cardprint-new.png') no-repeat center top;
     background-size:220px 330px;
     height:330px;
     width: 220px;
@@ -1009,7 +1009,101 @@ dt.tabs dt{
     padding-left: 80px;
     width: 160px;
 }
-#cardDivC{
+#cardDiv{
+    background: url('../images/cardprint-new.png') no-repeat center top;
+    background-size:220px 330px;
+    height:330px;
+    width: 220px;
+    margin: 0px auto;
+    position: relative;
+}
+#cardDiv .card-content {
+    position: absolute;
+    width: 100%;
+    top: 198px;
+    left: 0px;
+}
+#cardDiv .card-content .card-content-table{
+    padding-left: 80px;
+    width: 160px;
+}
+#cardDivCR{
+    background: url('../images/cardprint-new-red-c.png') no-repeat center top;
+    background-size:220px 330px;
+    height:330px;
+    width: 220px;
+    margin: 0px auto;
+    position: relative;
+}
+#cardDivCR .card-content {
+    position: absolute;
+    width: 100%;
+    top: 198px;
+    left: 0px;
+}
+#cardDivCR .card-content .card-content-table{
+    padding-left: 80px;
+    width: 160px;
+}
+
+#cardDivVR{
+    background: url('../images/cardprint-new-red-v.png') no-repeat center top;
+    background-size:220px 330px;
+    height:330px;
+    width: 220px;
+    margin: 0px auto;
+    position: relative;
+}
+#cardDivVR .card-content {
+    position: absolute;
+    width: 100%;
+    top: 198px;
+    left: 0px;
+}
+#cardDivVR .card-content .card-content-table{
+    padding-left: 80px;
+    width: 160px;
+}
+
+#cardDivVY{
+    background: url('../images/cardprint-new-yellow-v.png') no-repeat center top;
+    background-size:220px 330px;
+    height:330px;
+    width: 220px;
+    margin: 0px auto;
+    position: relative;
+}
+#cardDivVY .card-content {
+    position: absolute;
+    width: 100%;
+    top: 198px;
+    left: 0px;
+}
+#cardDivVY .card-content .card-content-table{
+    padding-left: 80px;
+    width: 160px;
+}
+
+#cardDivCY{
+    background: url('../images/cardprint-new-yellow-c.png') no-repeat center top;
+    background-size:220px 330px;
+    height:330px;
+    width: 220px;
+    margin: 0px auto;
+    position: relative;
+}
+#cardDivCY .card-content {
+    position: absolute;
+    width: 100%;
+    top: 198px;
+    left: 0px;
+}
+#cardDivCY .card-content .card-content-table{
+    padding-left: 80px;
+    width: 160px;
+}
+
+#cardDivCD{
     background: url('../images/cardprint-new-c.png') no-repeat center top;
     background-size:220px 330px;
     height:330px;
@@ -1017,17 +1111,16 @@ dt.tabs dt{
     margin: 0px auto;
     position: relative;
 }
-#cardDivC .card-content {
+#cardDivCD .card-content {
     position: absolute;
     width: 100%;
     top: 198px;
     left: 0px;
 }
-#cardDivC .card-content .card-content-table{
+#cardDivCD .card-content .card-content-table{
     padding-left: 80px;
     width: 160px;
 }
-
 #cardDetailsTable tr td{
     font-size:12px;
     font-weight:800;
@@ -1503,17 +1596,56 @@ p.asic{
 #cardDiv .card-content-company-img img{
     height: 30px;
 }
-#cardDivC .card-content-company-img{
+#cardDivCR .card-content-company-img{
     text-align: center;
     position: absolute;
     width: 100%;
     bottom: 20px;
 }
 
-#cardDivC .card-content-company-img img{
+#cardDivCR .card-content-company-img img{
     height: 30px;
 }
+#cardDivVR .card-content-company-img{
+    text-align: center;
+    position: absolute;
+    width: 100%;
+    bottom: 20px;
+}
 
+#cardDivVR .card-content-company-img img{
+    height: 30px;
+}
+#cardDivCY .card-content-company-img{
+    text-align: center;
+    position: absolute;
+    width: 100%;
+    bottom: 20px;
+}
+
+#cardDivCY .card-content-company-img img{
+    height: 30px;
+}
+#cardDivCD .card-content-company-img{
+    text-align: center;
+    position: absolute;
+    width: 100%;
+    bottom: 20px;
+}
+
+#cardDivCD .card-content-company-img img{
+    height: 30px;
+}
+#cardDivCD .card-content-company-img{
+    text-align: center;
+    position: absolute;
+    width: 100%;
+    bottom: 20px;
+}
+
+#cardDivCD .card-content-company-img img{
+    height: 30px;
+}
 .cardPhotoPreview{
     background-color: #FFF;
     height: 150px;

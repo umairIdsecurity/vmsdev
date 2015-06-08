@@ -84,6 +84,7 @@ class Visit extends CActiveRecord {
             array('visitor,card, visitor_type, reason, visitor_status,host, patient, created_by, tenant, tenant_agent', 'length', 'max' => 20),
             array('date_in,date_out,time_in_hours,time_in_minutes,visit_status, time_in, time_out, date_check_in, time_check_in, date_check_out, time_check_out,card_type, finish_date, finish_time, card_returned_date, negate_reason, reset_id, card_option, police_report_number, card_lost_declaration_file, workstation', 'safe'),
             array('patient, host,card,tenant,tenant_agent', 'default', 'setOnEmpty' => true, 'value' => null),
+            array('filterProperties','length', 'max'=>70),
 
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
@@ -331,23 +332,23 @@ class Visit extends CActiveRecord {
 
         if($this->filterProperties){
             $criteria->addCondition("t.id LIKE CONCAT('%', :filterProperties , '%')
-                OR first_name LIKE CONCAT('%', :filterProperties , '%')
-                OR last_name LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.first_name LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.last_name LIKE CONCAT('%', :filterProperties , '%')
                 OR company0.code LIKE CONCAT('%', :filterProperties , '%')
                 OR company0.name LIKE CONCAT('%', :filterProperties , '%')
-                OR date_of_birth LIKE CONCAT('%', :filterProperties , '%')
-                OR contact_number LIKE CONCAT('%', :filterProperties , '%')
-                OR contact_street_no LIKE CONCAT('%', :filterProperties , '%')
-                OR contact_street_name LIKE CONCAT('%', :filterProperties , '%')
-                OR contact_street_type LIKE CONCAT('%', :filterProperties , '%')
-                OR contact_suburb LIKE CONCAT('%', :filterProperties , '%')
-                OR contact_postcode LIKE CONCAT('%', :filterProperties , '%')
-                OR email LIKE CONCAT('%', :filterProperties , '%')
-                OR identification_type LIKE CONCAT('%', :filterProperties , '%')
-                OR identification_document_no LIKE CONCAT('%', :filterProperties , '%')
-                OR identification_document_expiry LIKE CONCAT('%', :filterProperties , '%')
-                OR asic_no LIKE CONCAT('%', :filterProperties , '%')
-                OR asic_expiry LIKE CONCAT('%', :filterProperties , '%')");
+                OR visitor0.date_of_birth LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.contact_number LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.contact_street_no LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.contact_street_name LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.contact_street_type LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.contact_suburb LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.contact_postcode LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.email LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.identification_type LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.identification_document_no LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.identification_document_expiry LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.asic_no LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.asic_expiry LIKE CONCAT('%', :filterProperties , '%')");
             $criteria->params = array(':filterProperties' => $this->filterProperties);
         }
 

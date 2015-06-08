@@ -67,7 +67,7 @@ $defaultKey = key($asicCardTypes);
     <div class="tab-content">
         <div role="tabpanel" class="tab-pane active" id="addhost">
 
-            <div id="findAddHostRecordDiv" class="findAddHostRecordDiv form">
+            <div id="findAddHostRecordDiv" class="findAddHostRecordDiv">
 
                 <?php
                 $form = $this->beginWidget('CActiveForm', array(
@@ -137,7 +137,7 @@ $defaultKey = key($asicCardTypes);
                         ),
                     ));
                     ?>
-                    <?php echo $form->errorSummary($userModel); ?>
+                    <?php /*echo $form->errorSummary($userModel); */?>
                     <input type="text" id="hostEmailIsUnique" value="0"/>
 
                     <div>

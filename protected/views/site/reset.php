@@ -18,7 +18,7 @@
         ));
         ?>
 
-        <table class="reset-password-area" style="border-collapse: none !important;">
+        <table class="reset-password-area" style="border-collapse: none !important; width: 420px">
             <tr>
                 <td><?php echo $form->labelEx($model, 'password'); ?></td>
                 <td><?php echo $form->textField($model, 'password'); ?></td>

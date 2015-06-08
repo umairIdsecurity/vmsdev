@@ -245,6 +245,13 @@ class VisitController extends Controller {
 	        	exit();
 	        }
         }
+
+        $workstationModel = Workstation::model()->findByPk($model->workstation);
+
+        if (empty($workstationModel) && in_array($model->visit_status, VisitStatus::$VISIT_STATUS_DENIED)) {
+            Yii::app()->user->setFlash('error', 'Workstation of this visit has been deleted.');
+            return $this->redirect(Yii::app()->createUrl('visit/view'));
+        }
         
         //update status for Contractor Card Type
         if ($model && $model->card_type == CardType::CONTRACTOR_VISITOR) {

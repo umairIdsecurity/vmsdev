@@ -54,14 +54,18 @@ class AuditTrailBehaviors extends CActiveRecordBehavior{
             }
         } else {
             $log=new AuditTrail();
+            // $this->Owner->getPrimaryKey() is Array
+            $modelId = isset($this->Owner->getPrimaryKey()["workstation"])? $this->Owner->getPrimaryKey()["workstation"]:null;
             $log->description = 'User ' . Yii::app()->user->Name
                 . ' created ' . get_class($this->Owner)
-                . '[' . $this->Owner->getPrimaryKey() .'].';
+                . '[' . $modelId .'].';
+                //. '[' . $this->Owner->getPrimaryKey() .'].';
             $log->old_value = '';
             $log->new_value = '';
             $log->action=		'CREATE';
             $log->model=		get_class($this->Owner);
-            $log->model_id=		 $this->Owner->getPrimaryKey();
+            $log->model_id=		 $modelId;
+            // $log->model_id=		 $this->Owner->getPrimaryKey();
             $log->field=		'N/A';
             $log->creation_date= date('Y-m-d H:i:s');
             $log->user_id=		 $userid;
@@ -73,12 +77,14 @@ class AuditTrailBehaviors extends CActiveRecordBehavior{
                 $log=new AuditTrail();
                 $log->description = 'User ' . Yii::app()->user->Name
                     . ' set field '.$name . ' at ' . get_class($this->Owner)
-                    . '[' . $this->Owner->getPrimaryKey() .'].';
+                    . '[' . $modelId .'].';
+                    // . '[' . $this->Owner->getPrimaryKey() .'].';
                 $log->old_value = '';
                 $log->new_value = $value;
                 $log->action=		'SET';
                 $log->model=		get_class($this->Owner);
-                $log->model_id=		 $this->Owner->getPrimaryKey();
+                $log->model_id=		 $modelId;
+                //$log->model_id=		 $this->Owner->getPrimaryKey();
                 $log->field=		$name;
                 $log->creation_date= date('Y-m-d H:i:s');
                 $log->user_id=		 $userid;

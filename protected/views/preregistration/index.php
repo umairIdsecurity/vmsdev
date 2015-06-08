@@ -11,27 +11,67 @@
 <div class="page-content">
     <h1 class="text-primary title">PREREGISTRATION FOR VISITOR IDENTIFICATION CARD (VIC)</h1>
 
-    <form class="form-select-gate">
+        <?php
+        $form=$this->beginWidget('CActiveForm', array(
+            'id'=>'entry-point-form',
+            'enableClientValidation'=>true,
+            'clientOptions'=>array(
+                'validateOnSubmit'=>true,
+            ),
+        ));
+        ?>
+
         <h3 class="form-title text-center">Where will you be collecting your VIC?</h3>
 
+
+    <div class="form-fields-area">
+        <?php echo $form->errorSummary($model); ?>
         <div class="form-group">
-            <select name="entry-point" class="form-control input-lg">
-                <option>Select gate or entry point</option>
-                <option value="1">Entry Point 1</option>
-                <option value="2">Entry Point 2</option>
-                <option value="3">Entry Point 3</option>
-                <option value="4">Entry Point 4</option>
-                <option value="5">Entry Point 5</option>
-            </select>
+
+            <?php
+
+            $ws=Workstation::model()->findAll();
+
+            $list=CHtml::listData($ws,'id','name');
+
+            echo $form->dropDownList($model,'entrypoint',
+                $list,
+                array(
+                    'class'=>'form-control input-lg' ,
+                    'empty' => 'Select a workstation')
+            );
+
+            ?>
+
         </div>
+
         <div class="text-center icon-info">
             <a href="#" data-toggle-class data-show-hide=".sms-info" ><span class="glyphicon glyphicon-info-sign"></span>(VIC) What is this?</a>
         </div>
-    </form>
+    </div>
 
     <div class="hidden sms-info">
         <span class="btn-close" data-closet-toggle-class="hidden" data-object=".sms-info">close</span>
         <h3>What is a Visitor Identification Card (VIC)?</h3>
         <p>A VIC is an identification card visitors must wear when they are in a secure zone of a security controlled airport. VICs permit temporary access to non-frequent visitors to an airport. If a person is a frequent visitor to an airport they should consider applying for an Aviation Security Identification Card (ASIC).</p>
     </div>
+
+    <div class="row next-prev-btns">
+        <div class="col-md-1">
+            <!--<a href="" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>-->
+        </div>
+
+        <div class="col-md-offset-10 col-md-1">
+            <?php
+            echo CHtml::tag('button', array(
+                'type'=>'submit',
+                'class' => 'btn btn-primary btn-next'
+            ), 'NEXT <span class="glyphicon glyphicon-chevron-right"></span> ');
+            ?>
+
+        </div>
+    </div>
+    <?php $this->endWidget(); ?>
+
 </div>
+

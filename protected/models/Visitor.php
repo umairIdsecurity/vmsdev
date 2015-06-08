@@ -182,7 +182,6 @@ class Visitor extends CActiveRecord {
             array('is_deleted', 'numerical', 'integerOnly' => true),
             array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),
             array('contact_number, company, role, visitor_status, created_by, tenant, tenant_agent', 'length', 'max' => 20),
-            array('filterProperties','length', 'max'=>70),
             array(
                 'date_of_birth,
                 notes,

@@ -97,7 +97,7 @@ class Notification extends CActiveRecord
 		$criteria->compare('role_id',$this->role_id);
 		$criteria->compare('notification_type',$this->notification_type,true);
                 
-                if( Roles::ROLE_SUPERADMIN != Yii::app()->user->role )
+                if( Roles::ROLE_SUPERADMIN != Yii::app()->user->role && Roles::ROLE_ADMIN != Yii::app()->user->role )
                 {
                     $criteria->with = array('user_notification' );
                     $criteria->together = true;

@@ -39,11 +39,15 @@ class NotificationsController extends Controller
 //				'actions'=>array('admin','delete'),
 //				'users'=>array('admin'),
 //			),
-                       array(
-                        'allow',
-                        'actions' => array('admin', 'create', 'delete', 'update'),
-                        'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user, UserGroup::USERGROUP_SUPERADMIN)',
-                    ),
+                        array(
+                            'allow',
+                            'actions' => array('admin', 'create', 'delete', 'update'),
+                            'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user, UserGroup::USERGROUP_SUPERADMIN)',
+                        ),
+                        array('allow',
+                            'actions' => array('admin', 'create', 'delete', 'update'),
+                            'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
+                        ),
 			array('deny',  // deny all users
 				'users'=>array('*'),
 			),

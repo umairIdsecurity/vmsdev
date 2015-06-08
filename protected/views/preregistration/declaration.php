@@ -47,10 +47,7 @@
                 <?php echo $form->checkBox($model,'declaration4'); ?>
                 <span class="checkbox-style"></span>I consent to Perth Airport using and disclosing my personal information in accordance with Perth Airport’s privacy notice.
             </label>
-            <!--<label class="checkbox"><input name="condition_1" type="checkbox" value="YES" ><span class="checkbox-style"></span>I have read, understood and agree to abide by the information and conditions applicable to the holder of the Visitor Identification Card (VIC).</label>-->
-            <!--<label class="checkbox"><input name="condition_2" type="checkbox" value="YES" ><span class="checkbox-style"></span>I have not previously been refused an ASIC or had one suspended or cancelled because of an adverse criminal record, or been issued with a VIC pass at Perth Airport for more than a total of 28 days in the previous 12 months (not including a VIC issued by Customs & Border Protection, or VICs issued prior to 21st November 2011).</label>
-            <label class="checkbox"><input name="condition_4" type="checkbox" value="YES" ><span class="checkbox-style"></span>I have read and understood <a href="<?/*=Yii::app()->createUrl("preregistration/privacypolicy")*/?>">Perth Airport’s privacy notice</a> on the collection and release of personal information.</label>
-            <label class="checkbox"><input name="condition_5" type="checkbox" value="YES" ><span class="checkbox-style"></span>I consent to Perth Airport using and disclosing my personal information in accordance with Perth Airport’s privacy notice.</label>-->
+
         </div>
 
     <div class="row next-prev-btns">
@@ -65,7 +62,7 @@
                 'class' => 'btn btn-primary btn-next'
             ), 'NEXT <span class="glyphicon glyphicon-chevron-right"></span> ');
             ?>
-            <!--<a href="<?/*=Yii::app()->createUrl("preregistration/declaration")*/?>" class="btn btn-primary btn-next">NEXT <span class="glyphicon glyphicon-chevron-right"></span></a>-->
+
         </div>
     </div>
 

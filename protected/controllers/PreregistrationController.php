@@ -20,12 +20,16 @@ class PreregistrationController extends Controller
 	public function accessRules() {
 		return array(
 			array('allow',
-				'actions' => array('index','privacyPolicy' , 'declaration' , 'Login'),
+				'actions' => array('index','privacyPolicy' , 'declaration' , 'Login' ),
 				'users' => array('*'),
 			),
 			array('allow',
-				'actions' => array(),
+				'actions'=>array('details','logout'),
 				'users' => array('@'),
+				//'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
+			),
+			array('deny',
+				'users'=>array('*'),
 			),
 		);
 	}
@@ -78,8 +82,34 @@ class PreregistrationController extends Controller
 	public function actionLogin(){
 
 		//echo "hello";
-		$this->render('prereg-login');
+		$model = new PreregLogin();
+		// if it is ajax validation request
+		if (isset($_POST['ajax']) && $_POST['ajax'] === 'login-form') {
+			echo CActiveForm::validate($model);
+			Yii::app()->end();
+		}
 
+		// collect user input data
+		if (isset($_POST['PreregLogin'])) {
+			$model->attributes = $_POST['PreregLogin'];
+			// validate user input and redirect to the previous page if valid
+			if ($model->validate() && $model->login()) {
+				//$session = new CHttpSession;
+				//echo "login";
+				$this->redirect(array('preregistration/details'));
+			}
+		}
+		$this->render('prereg-login', array('model' => $model));
+
+	}
+
+	public function actionDetails(){
+		echo "welcome";
+	}
+
+	public function actionLogout() {
+		Yii::app()->user->logout();
+		//$this->redirect('index.php?r=site/login');
 	}
 
 }

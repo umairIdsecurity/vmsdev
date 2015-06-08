@@ -10,7 +10,17 @@
 <div class="page-content">
     <h1 class="text-primary title">CREATE LOGIN</h1>
     <div class="bg-gray-lighter form-info">Please select your account type.</div>
-    <form class="form-create-login">
+    <?php $form=$this->beginWidget('CActiveForm', array(
+        'id'=>'login-form',
+        'enableClientValidation'=>true,
+        'clientOptions'=>array(
+            'validateOnSubmit'=>true,
+        ),
+        'htmlOptions'=>array(
+            'class'=>"form-create-login"
+        )
+    )); ?>
+
         <div class="form-group">
             <div class="radio">
                 <label>
@@ -36,35 +46,27 @@
         </div>
         <div class="form-group">
             <span class="glyphicon glyphicon-user"></span>
-            <input type="email"
-                   name="identity"
-                   class="form-control input-lg"
-                   data-validate-input
-                   placeholder="Username or email address" >
+
+            <?php echo $form->textField($model,'username',
+                array(
+                    'placeholder' => 'Username or Email',
+                    'class'=>'form-control input-lg',
+                    'data-validate-input'
+                )); ?>
+            <?php echo $form->error($model,'username'); ?>
         </div>
-        <div class="form-group">
-            <span class="glyphicon glyphicon-user"></span>
-            <input type="email"
-                   name="identity-c"
-                   class="form-control input-lg"
-                   data-validate-input
-                   placeholder="Repeat username or email address" >
-        </div>
+
         <div class="form-group">
             <span class="glyphicon glyphicon-asterisk"></span>
-            <input type="password"
-                   name="password"
-                   class="form-control input-lg"
-                   data-validate-input
-                   placeholder="Password" >
+
+            <?php echo $form->passwordField($model,'password',
+                array(
+                    'placeholder' => 'Password',
+                    'class'=>'form-control input-lg',
+                    'data-validate-input'
+                )); ?>
         </div>
-        <div class="form-group">
-            <span class="glyphicon glyphicon-asterisk"></span>
-            <input type="password"
-                   name="password-c"
-                   class="form-control input-lg"
-                   data-validate-input
-                   placeholder="Repeat password" >
-        </div>
-    </form>
+    
+    <?php echo CHtml::submitButton('Login',array('class'=>'btn btn-primary btn-next')); ?>
+    <?php $this->endWidget(); ?>
 </div>

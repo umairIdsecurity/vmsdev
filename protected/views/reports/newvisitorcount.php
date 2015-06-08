@@ -27,7 +27,7 @@ $form=$this->beginWidget('CActiveForm', array(
              <label> Weekly </label> 
             
             &nbsp;&nbsp;
-            <input type="radio" value="daily" name="rangeRadio" <?php if(!empty($rangeRadio) && $rangeRadio == "daily") {echo "checked";}?> />
+            <input onclick="this.form.submit();" type="radio" value="daily" name="rangeRadio" <?php if(!empty($rangeRadio) && $rangeRadio == "daily") {echo "checked";}?> />
              <label> Daily </label> 
         </div>
     </fieldset>

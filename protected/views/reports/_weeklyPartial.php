@@ -1,4 +1,5 @@
 <!-- Listing and Pie Chart Div -->
+<h1> Total New Visitor Profiles by Weeks</h1>
 <div class="content" style="width:40%; float: left; margin:20px 10px 0px 5px;">
 <table class="table" cellpadding="4" width="100%">
     <thead>
@@ -9,74 +10,32 @@
     </thead>
     <tbody>
         <?php 
-            
+        
+        $total = 0;
         $datasets = array(
             array('Visitors', 'Visitors')
         );
-        $total = 0;
-        
-        if($results) { 
-            
-//            echo '<pre>';
-//            print_r($results);
-        
-        //die;
-            
-            $start=0;
-            while($start < sizeof($reversed)) {
-                $arr=array();
-                $first=$start;
-                $last=$first+7;
-                
-                if (array_key_exists($first, $reversed) && array_key_exists($last, $reversed)) {
-                    $firstWeekDay=$reversed[$first];
-                    $lastWeekDay=$reversed[$last];
+        //if($data) { 
+                for($i = 1; $i <= $weeks; $i++) {
+                    $toWeek     = date("d-M-Y", strtotime("- ".($i-1)." week"));
+                    $fromWeek   =  date("d-M-Y", strtotime("- ".($i)." week"));
                     
-                    $interval = $lastWeekDay[0]."  To  ".$firstWeekDay[0];
-                    
-                    //print week interval in table
-                    echo '<tr>'
-                    . '<td>'
-                    .$interval
-                    . '<td>';
-                    
-                    $dayInWeekCount=0;
-                    
-                    //looping through the each day of a week interval to check specific day count
-                    for($i=$first;$i<=$last;$i++) {
-                       
-            
-                        $days=$reversed[$i];
-                        
-                        foreach($results as $key=>$val) {
-                            
-                            foreach($val as $k=>$v) {
-                                foreach($v as $daykey=>$dayV) {
-                                    $myKey=$daykey."-".$k."-".$key;
-                                    if($myKey == $days[0]){
-                                        
-                                        $total +=count($dayV);
-                                        $dayInWeekCount = count($dayV);
-                                        $arr[] = $dayInWeekCount;
-                                    }
-                                    
-                                }
-                                
-                            }
+                    echo '<tr><td>' . $toWeek . ' <b>-</b> ' . $fromWeek . ''
+                    . '</td>';
+
+                    echo '<td>';
+                        if (isset($data[$i])) {
+                            echo count($data[$i]);
+                            $total += count($data[$i]);
+                            $datasets[] = array($toWeek . ' - ' . $fromWeek, count($data[$i]));
+                        } else {
+                            echo '0';
                             
                         }
-                        
-                        
-                    }
-                    //$finalCount += $dayInWeekCount;
-                    //$datasets[] = array($interval, count($dayV));
-                    //echo $finalCount;
-                    $datasets[] = array($interval, array_sum($arr));
-                    echo array_sum($arr);
+                    echo '</td></tr>';
                 }
-                $start += 7;
-            }
-        } 
+        //} 
+        
         ?>
     </tbody>
     <tfoot>
@@ -96,4 +55,3 @@
             'options' => array('title' => 'Total New Visitors')));
         ?>
     </div>
-

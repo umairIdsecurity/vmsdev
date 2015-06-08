@@ -1958,3 +1958,7 @@ label.myLabel input[type="file"] {
      text-decoration: underline;
  }
 .no-margin-bottom{margin-bottom:0}
+
+.white_content img {
+    width: 100%;
+}

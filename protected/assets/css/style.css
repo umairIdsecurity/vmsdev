@@ -16,7 +16,7 @@ and open the template in the editor.
     margin: 30px auto;
     padding: 10px 25px;
     text-align: center;
-    width: 367px;
+    width: 270px;
     border-collapse:inherit;
 }
 
@@ -1958,3 +1958,7 @@ label.myLabel input[type="file"] {
      text-decoration: underline;
  }
 .no-margin-bottom{margin-bottom:0}
+
+.white_content img {
+    width: 100%;
+}

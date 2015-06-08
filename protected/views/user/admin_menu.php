@@ -418,6 +418,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                 ?>>
                     <li><a href='<?php echo Yii::app()->createUrl('visit/vicTotalVisitCount'); ?>'><span>Total Visits VICs</span></a></li>
                     <li><a href='<?php echo Yii::app()->createUrl('visit/vicRegister'); ?>'><span>VIC Register</span></a></li>
+                    <!--<li><a href='<?php /*echo Yii::app()->createUrl('visit/totalVicsByWorkstation'); */?>'><span>Total VICs by Workstation</span></a></li>-->
                 </ul>
             </li><!-- menu for AVMS Reports -->
 

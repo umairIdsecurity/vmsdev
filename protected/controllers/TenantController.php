@@ -74,6 +74,8 @@ class TenantController extends Controller {
             //$companyModel->attribute = $_POST['TenantForm']['contact_number'];
             //$companyModel->mobile_number = $_POST['TenantForm']['contact_number'];
             $transaction = Yii::app()->db->beginTransaction();
+            $message = "";
+            $flag= "";
 
             try {
                 $tenantContact = new TenantContact();
@@ -156,6 +158,15 @@ class TenantController extends Controller {
                                 //echo ":tenantModel:";
                             } else {
                                 $transaction->rollback();
+                                $flag = "Tenant contact";
+                                $model_error[] = $tenantContact->getErrors();
+                                foreach ($model_error as $error) {
+                                    foreach ($error as $err) {
+                                        foreach ($err as $e) {
+                                            $message .= $e;
+                                        }
+                                    }
+                                }
                                 //throw new CHttpException(500, 'Something went wrong');
                                 /*print_r($tenantContact->getErrors());
                                 exit;*/
@@ -163,6 +174,15 @@ class TenantController extends Controller {
 
                         } else {
                             $transaction->rollback();
+                            $flag = "Tenant";
+                            $model_error[] = $tenantModel->getErrors();
+                            foreach ($model_error as $error) {
+                                foreach ($error as $err) {
+                                    foreach ($err as $e) {
+                                        $message .= $e;
+                                    }
+                                }
+                            }
                             //throw new CHttpException(500, 'Something went wrong');
                             /*print_r($tenantModel->getErrors());
                             exit;*/
@@ -173,6 +193,15 @@ class TenantController extends Controller {
 
                     } else {
                         $transaction->rollback();
+                        $flag = "User";
+                        $model_error[] = $userModel->getErrors();
+                        foreach ($model_error as $error) {
+                            foreach ($error as $err) {
+                                foreach ($err as $e) {
+                                    $message .= $e;
+                                }
+                            }
+                        }
                         //throw new CHttpException(500, 'Something went wrong');
                         /*print_r($userModel->getErrors());
                         exit;*/
@@ -182,6 +211,15 @@ class TenantController extends Controller {
                     //echo "companyModel inserted:". $comapanylastId;
                 } else {
                     $transaction->rollback();
+                    $flag = "Company";
+                    $model_error[] = $companyModel->getErrors();
+                    foreach ($model_error as $error) {
+                        foreach ($error as $err) {
+                            foreach ($err as $e) {
+                                $message .= $e;
+                            }
+                        }
+                    }
                     //throw new CHttpException(500, 'Something went wrong');
                     /*print_r($companyModel->getErrors());
                     exit;*/
@@ -190,9 +228,14 @@ class TenantController extends Controller {
 
                 Yii::app()->user->setFlash('success', "Tenant inserted Successfully");
                 echo json_encode(array('success'=>TRUE));
+                exit;
+
             }catch (CDbException $e)
             {
                 $transaction->rollback();
+                echo "Flag::".$flag."</br></br></br></br>";;
+                echo $e->getMessage()."</br></br></br></br>";
+                echo $message;exit;
                 Yii::app()->user->setFlash('error', "There was an error processing request");
                 echo json_encode(array('success'=>FALSE));
             }

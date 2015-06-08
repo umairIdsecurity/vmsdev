@@ -4,8 +4,8 @@ return array(
         'components' => array(
             'db' => array(
                 'connectionString' => 'mysql:host=localhost;dbname=vms',
-                'username' => 'root',
-                'password' => '',
+                'username' => 'user_vms',
+                'password' => 'HFz7c9dHrmPqwNGr',
             )
         )
     );

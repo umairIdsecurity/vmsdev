@@ -234,7 +234,8 @@ class SiteController extends Controller {
         if (isset(Yii::app()->user->role) && Yii::app()->user->role == Roles::ROLE_ADMIN) {
             $session = new CHttpSession;
             $Criteria = new CDbCriteria();
-            $Criteria->condition = "tenant ='" . $session['tenant'] . "'";
+            $Criteria->condition = "tenant = ".$session['tenant']." AND is_deleted = 0";
+
             $row = Workstation::model()->findAll($Criteria);
         } else {
             $row = Workstation::model()->findWorkstationAvailableForUser($id);

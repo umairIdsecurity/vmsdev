@@ -42,12 +42,12 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'cssClassExpression' => 'changeStatusClass($data->visit_status)',
             'htmlOptions'=>array('width'=>'120px'),
         ),
-        array(
+        /*array(
             'name' => 'visitor_type',
             'value' => '$data->visitorType->name',
             'filter' => VisitorType::model()->returnVisitorTypes(),
             'htmlOptions'=>array('width'=>'170px'),
-        ),
+        ),*/
         array(
             'name' => 'cardnumber',
             'header' => 'Card No.',

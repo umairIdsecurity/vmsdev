@@ -167,8 +167,10 @@ $this->widget('zii.widgets.grid.CGridView', array(
 ));
 
 function assignedWorkstation(){
-    $data = CHtml::listData(Workstation::model()->findAll(array('order' => 'name ASC')), 'id', 'name');
-    $data=array(""=>'Assigned Workstations')+$data;
+    $Criteria = new CDbCriteria();
+    $Criteria->condition = "is_deleted = 0";
+    $workstations = Workstation::model()->findAll($Criteria);
+    $data=["" => 'Assigned Workstations'] + CHtml::listData($workstations, 'id', 'name');
     return $data;
 }
 

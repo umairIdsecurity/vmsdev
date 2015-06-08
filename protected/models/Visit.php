@@ -496,6 +496,32 @@ class Visit extends CActiveRecord {
         }
     }
 
+    public function updateEvicVisitsToClose() {
+        /* EVIC card type is issued Strictly for 28 days
+         * update visit status to close and card status to return if
+         * current date is greater than date check out and if visit status is still active
+         * and card status is still active
+         */
+        try {
+            $commandUpdateCard = "";
+
+            $command = Yii::app()->db->createCommand("UPDATE visit
+                    SET visit_status = '" . VisitStatus::CLOSED . "',card_option ='" . CardStatus::RETURNED . "'
+                    WHERE 'd-m-Y' > date_check_out AND date_check_out != 'd-m-Y' AND visit_status = '" . VisitStatus::ACTIVE . "' AND card_type= '" . CardType::VIC_CARD_EXTENDED . "'")->execute();
+            echo "Affected Rows : " . $command . "<br>";
+            if ($command > 0) {
+                echo "Update visit to close status successful.";
+            } else {
+                echo "No record to update.";
+            }
+
+            return true;
+        } catch (Exception $ex) {
+            echo 'Query failed', $ex->getMessage();
+            return false;
+        }
+    }
+
     public function updateVisitsToExpired() {
         /* update visit status to expired and card status to not returned if
          * current date is greater than date expiration and visit status is still active

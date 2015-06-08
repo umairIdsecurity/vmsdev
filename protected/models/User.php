@@ -594,9 +594,19 @@ class User extends VmsActiveRecord {
     public function findWorkstationsWithSameTenant($tenantId) {
         $aArray = array();
 
-        $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = '$tenantId' and (tenant_agent IS NULL or tenant_agent = 0 or tenant_agent = '') ";
-        $workstation = Workstation::model()->findAll($Criteria);
+        $criteria = new CDbCriteria();
+        //$criteria->condition = "tenant = '$tenantId' and (tenant_agent IS NULL or tenant_agent = 0 or tenant_agent = '') ";
+
+        $user = User::model()->findByPK(Yii::app()->user->id);
+        if ($user->role == Roles::ROLE_ADMIN) {
+            $criteria->condition = "tenant = " . $tenantId . " AND is_deleted = 0";
+        } else if ($user->role == Roles::ROLE_AGENT_ADMIN) {
+            $criteria->condition = "tenant = " . $tenantId . " AND tenant_agent = " . $user->tenant_agent . " AND is_deleted = 0";
+        } else {
+            $criteria->condition = "tenant = '$tenantId' and (tenant_agent IS NULL or tenant_agent = 0 or tenant_agent = '') AND is_deleted = 0";
+        }
+
+        $workstation = Workstation::model()->findAll($criteria);
 
         foreach ($workstation as $index => $value) {
             $aArray[] = array(
@@ -612,7 +622,7 @@ class User extends VmsActiveRecord {
         $aArray = array();
 
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = '" . $tenantId . "' and tenant_agent='" . $tenantAgentId . "'";
+        $Criteria->condition = "tenant = '" . $tenantId . "' and tenant_agent='" . $tenantAgentId . "' AND is_deleted = 0";
         $workstation = Workstation::model()->findAll($Criteria);
         foreach ($workstation as $index => $value) {
             $aArray[] = array(

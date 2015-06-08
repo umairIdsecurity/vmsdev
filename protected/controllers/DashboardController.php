@@ -188,6 +188,7 @@ class DashboardController extends Controller {
         //Archive Expired 48 Old Pre-registered Visits
         Visit::model()->archivePregisteredOldVisits();
         $model = new Visit('search');
+        
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['Visit'])) {
             $model->attributes = $_GET['Visit'];

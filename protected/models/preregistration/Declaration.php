@@ -8,7 +8,10 @@
 
 class Declaration extends CFormModel{
 
-    public $condition_1;
+    public $declaration1;
+    public $declaration2;
+    public $declaration3;
+    public $declaration4;
 
     /**
      * Declares the validation rules.
@@ -17,7 +20,8 @@ class Declaration extends CFormModel{
     {
         return array(
 
-            array('condition_1', 'required' ),
+            array('declaration1,declaration2,declaration3,declaration4', 'compare', 'compareValue' => true,
+              'message' => 'You must agree to the terms and conditions'),
 
         );
     }
@@ -30,7 +34,7 @@ class Declaration extends CFormModel{
     public function attributeLabels()
     {
         return array(
-            'condition_1'=>'Entry Point',
+            'condition_1'=>'',
         );
     }
 

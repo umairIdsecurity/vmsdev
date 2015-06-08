@@ -2,6 +2,9 @@
 $cs = Yii::app()->clientScript;
 $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/script-visitordetail-actions-cssmenu.js');
 $session = new CHttpSession;
+$workstationModel = Workstation::model()->findByPk($model->workstation);
+
+$isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
 ?>
 <div id='actionsCssMenu'>
     <ul>
@@ -171,7 +174,14 @@ $session = new CHttpSession;
             e.preventDefault();
             var flag = true;
             var $btnVic = $('#btnVicConfirm'),
-                    $btnASIC = $('#btnAsicConfirm');
+                $btnASIC = $('#btnAsicConfirm');
+
+            var isWorkstationDelete = "<?php echo $isWorkstationDelete; ?>";
+            if (isWorkstationDelete == 'true') {
+                alert('Workstation of this visit has been deleted, you can\'t activate it.');
+                return false;
+            }
+
             var vic_active_visit_checkboxs = $('.vic-active-verification');
             if (vic_active_visit_checkboxs.length == 0) {
                 checkIfActiveVisitConflictsWithAnotherVisit("new");

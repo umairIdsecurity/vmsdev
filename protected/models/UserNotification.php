@@ -85,7 +85,8 @@ class UserNotification extends CActiveRecord
 		$criteria->compare('notification_id',$this->notification_id);
 		$criteria->compare('has_read',$this->has_read);
 		$criteria->compare('date_read',$this->date_read,true);
-
+                
+                
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));

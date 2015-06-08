@@ -38,6 +38,7 @@ class VisitController extends Controller {
                     'corporateTotalVisitCount',
                     'vicTotalVisitCount',
                     'vicRegister',
+                    'totalVicsByWorkstation',
                     'exportFileHistory',
                     'exportFileVisitorRecords',
                     'ExportFileVicRegister',
@@ -69,7 +70,25 @@ class VisitController extends Controller {
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['Visit'])) {
+
+            if (!isset($_POST['Visit']['date_check_in'])) {
+                $_POST['Visit']['date_check_in'] = date('d-m-Y');
+                $_POST['Visit']['time_check_in'] = date('h:i:s');
+            }
+
             $model->attributes = $_POST['Visit'];
+
+            switch ($model->card_type) {
+                case CardType::VIC_CARD_24HOURS: // VIC 24 hour
+                    $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 1 day'));
+                    break;
+                case CardType::VIC_CARD_EXTENDED: // VIC Extended
+                case CardType::VIC_CARD_MULTIDAY: // VIC Multiday
+                    $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 28 day'));
+                    break;
+            }
+
+            $model->time_check_out = $model->time_check_in;
 
             // default workstation:
             if ((!isset($_POST['Visit']['workstation']) || empty($_POST['Visit']['workstation'])) && isset($session['workstation'])) {
@@ -234,6 +253,10 @@ class VisitController extends Controller {
 
     public function actionDetail($id) {
         $model = Visit::model()->findByPk($id);
+        // Check if model is empty then redirect to visit history
+        if (empty($model)) {
+            return $this->redirect(Yii::app()->createUrl('visit/view'));
+        }
         $oldStatus = $model->visit_status;
 
         if (!$model) {
@@ -288,6 +311,18 @@ class VisitController extends Controller {
             }
 
             $model->attributes = $_POST['Visit'];
+
+            switch ($model->card_type) {
+                case CardType::VIC_CARD_24HOURS: // VIC 24 hour
+                    $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 1 day'));
+                    break;
+                case CardType::VIC_CARD_EXTENDED: // VIC Extended
+                case CardType::VIC_CARD_MULTIDAY: // VIC Multiday
+                    $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 28 day'));
+                    break;
+            }
+            $model->time_check_out = $model->time_check_in;
+
             // close visit process
             if (isset($_POST['closeVisitForm']) && $model->visit_status == VisitStatus::CLOSED) {
                 $fileUpload = CUploadedFile::getInstance($model, 'card_lost_declaration_file');
@@ -895,6 +930,12 @@ class VisitController extends Controller {
         rewind($fp);
         Yii::app()->user->setState('export', stream_get_contents($fp));
         fclose($fp);
+    }
+
+    public function actionTotalVicsByWorkstation()
+    {
+        $visitsCount = 1;
+        $this->render('totalVicsByWorkstation', array("visit_count" => $visitsCount));
     }
 
 }

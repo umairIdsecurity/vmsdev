@@ -27,7 +27,7 @@ $form=$this->beginWidget('CActiveForm', array(
              <label> Weekly </label> 
             
             &nbsp;&nbsp;
-            <input type="radio" value="daily" name="rangeRadio" <?php if(!empty($rangeRadio) && $rangeRadio == "daily") {echo "checked";}?> />
+            <input onclick="this.form.submit();" type="radio" value="daily" name="rangeRadio" <?php if(!empty($rangeRadio) && $rangeRadio == "daily") {echo "checked";}?> />
              <label> Daily </label> 
         </div>
     </fieldset>
@@ -111,15 +111,25 @@ $form=$this->beginWidget('CActiveForm', array(
 <?php
 
      if(empty($rangeRadio) || $rangeRadio == "daily" || $rangeRadio == "monthly" ) {
-         $fromDateFilter = Yii::app()->request->getParam("date_from_filter");
+         
+        $fromDateFilter = Yii::app()->request->getParam("date_from_filter");
         $toDateFilter = Yii::app()->request->getParam("date_to_filter");
-        if( !empty($fromDateFilter) && !empty($toDateFilter) ) {
-            $this->renderPartial('_newVisitorsWithFilters', array('results' =>$results));
+        
+        if(empty($rangeRadio) || $rangeRadio == "monthly" ) {
+            if( !empty($fromDateFilter) && !empty($toDateFilter) ) {
+                $this->renderPartial('_newVisitorsWithFilters', array('results' =>$results));
+            }else{
+                $this->renderPartial('_newVisitorsNoFilters', array('results' =>$results,"reversed"=>$reversed));
+            }
         }else{
-            $this->renderPartial('_newVisitorsNoFilters', array('results' =>$results,"reversed"=>$reversed));
+            if( !empty($fromDateFilter) && !empty($toDateFilter) ) {
+                $this->renderPartial('_newVisitorsWithFiltersDaily', array('results' =>$results));
+            }else{
+                $this->renderPartial('_newVisitorsNoFiltersDaily', array('results' =>$results,"reversed"=>$reversed));
+            }
         }
      }else{
-          $this->renderPartial('_weeklyPartial', array('results' =>$results,"reversed"=>$weeksReversed));
+        $this->renderPartial('_weeklyPartial',array('data' => $data, 'weeks' => $weeks));
      }
 
     

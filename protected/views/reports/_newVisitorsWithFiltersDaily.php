@@ -1,35 +1,43 @@
 <!-- Listing and Pie Chart Div -->
-<h1> Total New Visitor Profiles by Months</h1>
+<h1> Total New Visitor Profiles by Days</h1>
 <div class="content" style="width:40%; float: left; margin:20px 10px 0px 5px;">
 <table class="table" cellpadding="4" width="100%">
     <thead>
         <tr>
-            <th> Months </th>
+            <th> Days </th>
             <th> New Visitor Count </th>
         </tr>
     </thead>
     <tbody>
+        
         <?php 
+            
         $datasets = array(
             array('Visitors', 'Visitors')
         );
-        
         $total = 0;
-                
-        if($results) { 
-                foreach($results as $key=>$val) {
-                    foreach($val as $k=>$v) {
-                        $total +=count($v);
-                        $myDate = date('F', mktime(0, 0, 0, intval($k), 10)) . " ".$key;
-                        $datasets[] = array($myDate, count($v));
-?>
+        
+        if($results) {
+            
+            foreach($results as $key=>$val) {
+                foreach($val as $k=>$v) {
+                    foreach($v as $daykey=>$dayV) {
+                        $myDate=$daykey."-".$k."-".$key;
+                        $time=strtotime($myDate);
+                        $show = date('d-F-Y',$time);
+                        $total +=count($dayV);
+                        $datasets[] = array($show, count($dayV));
+        ?>
+        
         <tr>
-            <td><?php echo $myDate; ?></td>
-            <td><?php echo count($v);?></td>
+            <td><?php echo $show; ?></td>
+            <td><?php echo count($dayV);?></td>
         </tr>
-                <?php
-                    }
+        
+        <?php
                 }
+                }
+            }
         } 
         
         ?>

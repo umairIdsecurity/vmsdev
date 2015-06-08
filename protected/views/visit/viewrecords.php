@@ -8,10 +8,14 @@
         margin-left: 998px !important;
     }
 </style>
+<?php if(Yii::app()->user->hasFlash('error')):?>
+    <div class="alert alert-danger" style="margin-top: 10px;">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>Warning!</strong> <?php echo Yii::app()->user->getFlash('error'); ?>
+    </div>
+<?php endif; ?>
 <h1>Visit History</h1>
-
 <?php
-
 $session = new CHttpSession;
 
 $this->widget('zii.widgets.grid.CGridView', array(

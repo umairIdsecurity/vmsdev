@@ -22,7 +22,8 @@ class VisitStatus extends CActiveRecord
         4 => 'Expired',
         5 => 'Saved',
     );
-    
+
+    public static $VISIT_STATUS_DENIED = [1, 2];
     
     public static $VISIT_STATUS_DASHBOARD_FILTER = array(
 		''=> 'Status',

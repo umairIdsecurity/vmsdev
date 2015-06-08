@@ -252,6 +252,10 @@ class VisitController extends Controller {
 
     public function actionDetail($id) {
         $model = Visit::model()->findByPk($id);
+        // Check if model is empty then redirect to visit history
+        if (empty($model)) {
+            return $this->redirect(Yii::app()->createUrl('visit/view'));
+        }
         $oldStatus = $model->visit_status;
 
         if (!$model) {

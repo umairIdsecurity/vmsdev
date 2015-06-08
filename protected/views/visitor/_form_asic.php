@@ -336,8 +336,8 @@ if ($this->action->id == 'update') {
                                         'placeHolder' => 'Please select a company'
                                     ));
                                     ?>
-                                    <?php echo $form->error($model, 'company'); ?>
                                     <span class="required">*</span>
+                                    <?php echo $form->error($model, 'company'); ?>
                                 </div>
                             </td>
                         </tr>

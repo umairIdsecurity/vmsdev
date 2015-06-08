@@ -52,7 +52,7 @@ $model->identification_country_issued = 13;
     <div class="tab-content">
 
         <div role="tabpanel" class="tab-pane active" id="addvisitor">
-            <div id="findAddVisitorRecordDiv" class="findAddVisitorRecordDiv form">
+            <div id="findAddVisitorRecordDiv" class="findAddVisitorRecordDiv">
 
                 <div data-ng-app="PwordForm">
                     <?php
@@ -111,7 +111,7 @@ $model->identification_country_issued = 13;
                         ),
                     ));
                     ?>
-                    <?php echo $form->errorSummary($model); ?>
+                    <?php /*echo $form->errorSummary($model); */?>
                     <input type="hidden" id="emailIsUnique" value="0"/>
                     <input type="hidden" name="VisitCardType" id="VisitCardType" />
 
@@ -313,8 +313,8 @@ $model->identification_country_issued = 13;
                                             'placeHolder' => 'Please select a company'
                                         ));
                                         ?>
-                                        <?php echo $form->error($model, 'company'); ?>
                                         <span class="required">*</span>
+                                        <?php echo $form->error($model, 'company'); ?>
                                     </div>
                                 </td>
                             </tr>

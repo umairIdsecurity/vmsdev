@@ -204,17 +204,20 @@ class Workstation extends CActiveRecord {
     public function findWorkstationAvailableForUser($userId) {
 
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "user = '$userId'";
+        $Criteria->condition = "user = $userId";
         $userworkstations = UserWorkstations::model()->findAll($Criteria);
 
         $aArray = array();
         if (count($userworkstations) != 0) {
             foreach ($userworkstations as $index => $value) {
 
-                $workstations = Workstation::model()->findByPk($value['workstation']);
+                $workstation = Workstation::model()->find([
+                        'id' => $value['workstation'],
+                        'is_deleted' => '0'
+                    ]);
                 $aArray[] = array(
-                    'id' => $workstations['id'],
-                    'name' => $workstations['name'],
+                    'id' => $workstation['id'],
+                    'name' => $workstation['name'],
                 );
             }
             return $aArray;

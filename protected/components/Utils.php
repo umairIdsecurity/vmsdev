@@ -8,13 +8,15 @@ class Utils
 
         switch ($session['role']) {
             case Roles::ROLE_SUPERADMIN:
-                $workstationList = Workstation::model()->findAll();
+                $Criteria = new CDbCriteria();
+                $Criteria->condition = "is_deleted = 0";
+                $workstationList = Workstation::model()->findAll($Criteria);
                 break;
 
             case Roles::ROLE_OPERATOR:
             case Roles::ROLE_AGENT_OPERATOR:
                 $Criteria = new CDbCriteria();
-                $Criteria->condition = "id ='" . $session['workstation'] . "'";
+                $Criteria->condition = "id ='" . $session['workstation'] . "' AND is_deleted = 0";
                 $workstationList = Workstation::model()->findAll($Criteria);
                 break;
 
@@ -32,19 +34,19 @@ class Utils
                     $tenantagentsearchby = "and tenant_agent ='" . $session['tenant_agent'] . "'";
                 }
                 $Criteria = new CDbCriteria();
-                $Criteria->condition = "tenant $tenantsearchby  $tenantagentsearchby";
+                $Criteria->condition = "tenant $tenantsearchby  $tenantagentsearchby AND is_deleted = 0";
                 $workstationList = Workstation::model()->findAll($Criteria);
                 break;
 
             case Roles::ROLE_ADMIN:
                 $Criteria = new CDbCriteria();
-                $Criteria->condition = "tenant ='" . $session['tenant'] . "'";
+                $Criteria->condition = "tenant = ".$session['tenant']." AND is_deleted = 0";
                 $workstationList = Workstation::model()->findAll($Criteria);
                 break;
 
             case Roles::ROLE_AGENT_ADMIN:
                 $Criteria = new CDbCriteria();
-                $Criteria->condition = "tenant ='" . $session['tenant'] . "' and tenant_agent ='" . $session['tenant_agent'] . "'";
+                $Criteria->condition = "tenant ='" . $session['tenant'] . "' and tenant_agent ='" . $session['tenant_agent'] . "' AND is_deleted = 0";
                 $workstationList = Workstation::model()->findAll($Criteria);
                 break;
         }

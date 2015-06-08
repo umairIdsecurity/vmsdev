@@ -66,7 +66,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
 
 ?>
 
-<div class="modal fade" style="width: 920px; margin-left: -373px" id="activeVisitModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade fix-modal-ie" style="width: 920px; margin-left: -373px" id="activeVisitModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content ">
             <div class="modal-header listActive">
@@ -93,7 +93,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         </div>
     </div>
 </div>
-<div class="modal fade" id="resetModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade fix-modal-ie-reset" id="resetModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-body">

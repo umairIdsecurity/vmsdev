@@ -32,7 +32,7 @@ class NotificationsController extends Controller
 //				'users'=>array('*'),
 //			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('view', 'index'),
+				'actions'=>array('view','index','delete'),
 				'users'=>array('@'),
 			),
 //			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -143,12 +143,33 @@ class NotificationsController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		$this->loadModel($id)->delete();
-                UserNotification::model()->find('notification_id = '.$id)->deleteAll();
+//            echo 'called';
+            $superAdminRole = Roles::ROLE_SUPERADMIN;
+            $adminRole = Roles::ROLE_ADMIN;
+            $userRole=Yii::app()->user->role;
+            $userId=Yii::app()->user->id;
+            
+            if(($superAdminRole == $userRole) || ($adminRole === $userRole)){
+                
+               $this->loadModel($id)->delete();
+                UserNotification::model()->deleteAll('notification_id = '.$id);
                 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-		if(!isset($_GET['ajax']))
+                if(!isset($_GET['ajax'])){
                     $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+                }
+                         
+            }
+            else{
+                //$this->loadModel($id)->delete();
+                UserNotification::model()->deleteAll('user_id = '.$userId);
+                
+		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+                if(!isset($_GET['ajax'])){
+                    $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+                }
+            }
+		
 	}
 
 	/**

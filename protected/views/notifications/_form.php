@@ -35,7 +35,14 @@
 	 
 	<div class="row">
 		<?php echo $form->labelEx($model,'role_id'); ?><br>
-		<?php echo $form->dropDownList($model, 'role_id', CHtml::listData(Roles::model()->findAll(), 'id', 'name'), array('empty'=>'Send To All Users'));?>
+		<?php echo $form->dropDownList(
+                                $model,
+                                'role_id',
+                                CHtml::listData(Roles::model()->findAll(),
+                                        'id',
+                                        'nameFuncForNotifiLabels'),
+                                        array('empty'=>'Send To All Users')
+                        );?>
 		<?php echo $form->error($model,'role_id'); ?>          
 	</div>
 

@@ -118,6 +118,21 @@ class Roles extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+        
+        /*
+         * this function is used to get label "Identity Security" for Super Adminitrator 
+         * in notifications creation dropdownlist
+         */
+        public function getNameFuncForNotifiLabels()
+        {
+            $identity = "Identity Security"; 
+            if( $this->id == 5){
+                return $identity; 
+            }else{
+                $identity = $this->name; 
+                return $identity;
+            }
+        }
 
 	/**
 	 * Returns the static model of the specified AR class.

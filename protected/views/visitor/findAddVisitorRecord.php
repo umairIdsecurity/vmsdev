@@ -809,10 +809,8 @@ $model->identification_country_issued = 13;
             $("#register-reason-form").hide();
 
             var searchText = $("#search-visitor").val();
-           /* if ($("#search_visitor_tenant").val() == '') {
-                $("#searchTextErrorMessage").show();
-                $("#searchTextErrorMessage").html("Please select a tenant");
-            } else */if (searchText != '') {
+
+            if (searchText != '') {
 				
                 
                 $("#visitor-findBtn").click();

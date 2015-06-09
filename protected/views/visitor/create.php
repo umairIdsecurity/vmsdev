@@ -181,11 +181,8 @@ $(document).ready(function () {
             e.preventDefault();
             $("#register-reason-form").hide();
             var visit_reason = $("#Visit_reason_search").val();
-            if ($("#search-visitor").val() == "") {
-                $("#searchTextErrorMessage").html("Please enter a name");
-                $("#searchTextErrorMessage").show();
-            }
-            else if (($("#selectedVisitorInSearchTable").val() == '' && $("#search-visitor").val() != '') || $("#selectedVisitorInSearchTable").val() == '') {
+
+            if (($("#selectedVisitorInSearchTable").val() == '' && $("#search-visitor").val() != '') || $("#selectedVisitorInSearchTable").val() == '') {
                 $("#searchTextErrorMessage").html("Please select a visitor");
                 $("#searchTextErrorMessage").show();
             }

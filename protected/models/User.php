@@ -151,7 +151,6 @@ class User extends VmsActiveRecord {
     public function avms_user()
     {
         $condition = "role.id in (".implode(",",Roles::get_avms_roles()) .")";
-
         $this->getDbCriteria()->mergeWith(array(
             'condition' => $condition,
             'with' => 'role',
@@ -163,7 +162,6 @@ class User extends VmsActiveRecord {
     public function cvms_user()
     {
         $condition = "role.id in (".implode(",",Roles::get_cvms_roles()) .")";
-
         $this->getDbCriteria()->mergeWith(array(
             'condition' => $condition,
             'with' => 'role',
@@ -428,6 +426,12 @@ class User extends VmsActiveRecord {
             return false;
         } else {
             $this->is_deleted = 1;
+            if ($this->asic_expiry || $this->asic_expiry == 0) {
+                $this->asic_expiry_day = date('d', $this->asic_expiry);
+                $this->asic_expiry_month = date('m', $this->asic_expiry);
+                $this->asic_expiry_year = date('Y', $this->asic_expiry);
+            }
+
             $this->save();
             echo "true";
             return false;

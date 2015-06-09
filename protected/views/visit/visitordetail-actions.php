@@ -170,6 +170,32 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             $(this).find('#Visit_date_check_in').removeAttr('disabled');
         });
 
+        $(document).on('click', '#btnVicConfirm', function(e) {
+            var checknum = $('#vicHolderModal')
+                            .find('input[type="checkbox"]')
+                            .filter(':checked');
+            if (checknum.length == 2) {
+                vicHolderDeclarationChange();
+                is_asic_holder_checked = $('#AsicSponsorDecalarations').is(':checked');
+                if (is_asic_holder_checked == false) {
+                    $('#asicSponsorModal').modal('show');
+                }
+            }
+        });
+
+        $(document).on('click', '#btnAsicConfirm', function(e) {
+            var checknum = $('#asicSponsorModal')
+                            .find('input[type="checkbox"]')
+                            .filter(':checked');
+            if (checknum.length == 4) {
+                asicSponsorDeclarationChange();
+                var is_vic_holder_checked = $('#VivHolderDecalarations').is(':checked');
+                if (is_vic_holder_checked == false) {
+                    $('#vicHolderModal').modal('show');
+                }
+            }
+        });
+
         $(document).on('click', '#registerNewVisit', function (e) {
             e.preventDefault();
             var flag = true;
@@ -187,70 +213,75 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                 checkIfActiveVisitConflictsWithAnotherVisit("new");
                 return false;
             }
-            
-            $.each(vic_active_visit_checkboxs, function(i, checkbox) {
-                $(checkbox).next('a').removeClass('label label-warning');
-                if (!checkbox.checked) {
-                    flag = false;
-                    return;
-                }
-            });
-            if (flag == true) {
-                if ($('#VivHolderDecalarations').is(':checked')) {
-                    $('#asicSponsorModal').modal('show');
-                } else {
-                    $('#vicHolderModal').modal('show');
-                    $btnVic.on('click', function(e) {
-                        var checknum = $('#vicHolderModal').find('input[type="checkbox"]').filter(':checked');
-                        if (checknum.length == 2) {
-                            vicHolderDeclarationChange();
-                            if ($('#VivHolderDecalarations').is(':checked')) {
-                                $('#asicSponsorModal').modal('show');
-                                $btnASIC.on('click', function(e) {
-                                    var checknum = $('#asicSponsorModal')
-                                        .find('input[type="checkbox"]')
-                                        .filter(':checked');
-                                    if (checknum.length == 4) {
-                                        asicSponsorDeclarationChange();
-                                        if ($('#AsicSponsorDecalarations').is(':checked')) {
-                                            var confirm = true;
-                                            var vic_declarations_checkboxs = $('.vic-active-declarations');
-                                            $.each(vic_declarations_checkboxs, function(i, checkbox) {
-                                                if (!checkbox.checked) {
-                                                    confirm = false;
-                                                    return;
-                                                }
-                                            });
 
-                                            if (confirm == true) {
-                                                checkIfActiveVisitConflictsWithAnotherVisit("new");
-                                            }
-                                        }
-                                    } else {
-                                        alert('Please confirm ASIC declaration.');
-                                        return false;
-                                    }
-                                });
-                            }
-                        } else {
-                            alert('Please confirm VIC declaration.');
-                            return false;
-                        }
-                        
-                    });
+            flag = isChecked(vic_active_visit_checkboxs);
+
+            if (flag == true) {
+                var is_vic_holder_checked = $('#VivHolderDecalarations').is(':checked'),
+                    is_asic_holder_checked = $('#AsicSponsorDecalarations').is(':checked');
+                /*if (is_vic_holder_checked == false) {
+                    $('#vicHolderModal').modal('show');
+                    return false;
                 }
+
+                if (is_asic_holder_checked == false) {
+                    $('#asicSponsorModal').modal('show');
+                    return false;
+                }*/
+                var declarations_checkboxs = $('.vic-active-declarations');
+
+                if (is_vic_holder_checked == false || is_asic_holder_checked == false) {
+                    alert('Please agree VIC & ASIC Declarations before active visit.');
+                    addWarningLabel(declarations_checkboxs);
+                }
+
+                if (is_vic_holder_checked == true && is_asic_holder_checked == true) {
+                    activateVisit();
+                }
+
             } else {
                 alert('Please agree VIC verification before active visit.');
-                $.each(vic_active_visit_checkboxs, function(i, checkbox) {
-                    if (!checkbox.checked) {
-                        checkbox.focus();
-                        $(checkbox).next('a').addClass('label label-warning');
-                        return false;
-                    }
-                });
+                addWarningLabel(vic_active_visit_checkboxs);
             }
             
         });
+
+        function isChecked(checkboxs) {
+            var flag = true;
+            $.each(checkboxs, function(i, checkbox) {
+                $(checkbox).next('a').removeClass('label label-warning');
+                if (!checkbox.checked) {
+                    flag = false;
+                    return false;;
+                }
+            });
+            return flag;
+        }
+
+        function addWarningLabel(checkboxs) {
+            $.each(checkboxs, function(i, checkbox) {
+                if (!checkbox.checked) {
+                    checkbox.focus();
+                    $(checkbox).next('a').addClass('label label-warning');
+                    return false;
+                }
+            });
+        }
+
+        function activateVisit() {
+            var confirm = true;
+            var vic_declarations_checkboxs = $('.vic-active-declarations');
+            $.each(vic_declarations_checkboxs, function(i, checkbox) {
+                if (!checkbox.checked) {
+                    confirm = false;
+                    return;
+                }
+            });
+
+            if (confirm == true) {
+                checkIfActiveVisitConflictsWithAnotherVisit("new");
+            }
+        }
 
         $('#cancelActiveVisitButton').on('click', function (e) {
             e.preventDefault();

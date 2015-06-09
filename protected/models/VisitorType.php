@@ -153,8 +153,8 @@ class VisitorType extends CActiveRecord {
         return false;
     }
 
-    public function returnVisitorTypes($visitorTypeId = NULL) {
-        $visitorType = VisitorType::model()->findAll();
+    public function returnVisitorTypes($visitorTypeId = NULL,$condition= "1>0") {
+        $visitorType = VisitorType::model()->findAll($condition);
         $VISITOR_TYPE_LIST = array();
         foreach ($visitorType as $key => $value) {
             $VISITOR_TYPE_LIST[$value['id']] = 'Visitor Type: ' . $value['name'];

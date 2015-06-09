@@ -210,12 +210,13 @@ class Workstation extends CActiveRecord {
         $aArray = array();
         if (count($userworkstations) != 0) {
             foreach ($userworkstations as $index => $value) {
-
                 $workstation = Workstation::model()->find('id = ' . $value['workstation'] . ' AND is_deleted = 0');
-                $aArray[] = array(
-                    'id' => $workstation['id'],
-                    'name' => $workstation['name'],
-                );
+                if ($workstation) {
+                    $aArray[] = array(
+                        'id' => $workstation->id,
+                        'name' => $workstation->name,
+                    );
+                }
             }
             return $aArray;
         } else {

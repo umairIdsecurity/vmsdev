@@ -139,6 +139,7 @@ class SiteController extends Controller {
                         $this->redirect('index.php?r=dashboard/viewmyvisitors');
                         break;
                     case Roles::ROLE_ADMIN:
+                    case Roles::ROLE_ISSUING_BODY_ADMIN: // issuing_body_admin is admin with VIC
                         $this->redirect('index.php?r=site/selectworkstation&id=' . $session['id']);
                         break;
                     case Roles::ROLE_AGENT_ADMIN:

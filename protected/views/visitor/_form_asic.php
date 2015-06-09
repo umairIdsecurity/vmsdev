@@ -63,7 +63,7 @@ if ($this->action->id == 'update') {
 </style>
 
 
-<div>
+<div class="addvisitor-form-ASIC">
     <?php
     $form = $this->beginWidget('CActiveForm', array(
         'id'                     => 'register-form',

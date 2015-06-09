@@ -478,7 +478,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     echo "style='display:block ;'";
                 }
                 ?>>
-<<<<<<< HEAD
+
                     <li><a href='<?php echo Yii::app()->createUrl('visit/evacuationReport'); ?>' ><span>Evacuation Report</span></a></li>
                     <li><a href='<?php echo Yii::app()->createUrl('visit/visitorRegistrationHistory'); ?>'><span>Visitor Registration History</span></a></li>
                     <li><a href='<?php echo Yii::app()->createUrl('visit/corporateTotalVisitCount'); ?>'><span>Corporate Total Visit Count</span></a></li>
@@ -486,21 +486,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     <li><a href='<?php echo Yii::app()->createUrl('visitorType/visitorsByWorkstationReport'); ?>'><span>Total Visitors by Workstation</span></a></li>
                     <li><a href='<?php echo Yii::app()->createUrl('reports/visitorsByProfiles'); ?>'><span>New Visitors Profiles</span></a></li>
                     <li><a href='<?php echo Yii::app()->createUrl('auditTrail/admin'); ?>'><span>Audit Trail</span></a></li>
-=======
-                    <li>
-                        <a href='<?php echo Yii::app()->createUrl('visit/evacuationReport'); ?>'><span>Evacuation Report</span></a>
-                    </li>
-                    <li><a href='<?php echo Yii::app()->createUrl('visit/visitorRegistrationHistory'); ?>'><span>Visitor Registration History</span></a>
-                    </li>
-                    <li><a href='<?php echo Yii::app()->createUrl('visit/corporateTotalVisitCount'); ?>'><span>Corporate Total Visit Count</span></a>
-                    </li>
-                    <li><a href='<?php echo Yii::app()->createUrl('visitorType/visitorsByTypeReport'); ?>'><span>Total Visitors by Visitor Type</span></a>
-                    </li>
-                    <li><a href='<?php echo Yii::app()->createUrl('reports/visitorsByProfiles'); ?>'><span>New Visitors Profiles</span></a>
-                    </li>
-                    <li><a href='<?php echo Yii::app()->createUrl('auditTrail/admin'); ?>'><span>Audit Trail</span></a>
-                    </li>
->>>>>>> a8d06f408e5b8c12d417ffa7456ce3a62f1fe65e
+
                 </ul>
             </li>
             <!-- menu for Reports -->

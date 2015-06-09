@@ -56,7 +56,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
             </li><!-- menu for Workstations -->
 
             <!-- menu for CVMS Users -->
-           <li class='has-sub'><a class='manageusers' href='<?php echo Yii::app()->createUrl('user/admin',array('vms'=>'cvms')); ?>'><span>Users (CVMS Users)</span></a>
+           <li class='has-sub'><a class='manageusers' href='<?php echo Yii::app()->createUrl('user/admin',array('vms'=>'cvms')); ?>'><span>CVMS Users</span></a>
 
                 <ul <?php
                 if ($this->id == 'user' && !CHelper::is_accessing_avms_features()) {
@@ -123,7 +123,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
             </li><!-- menu for CVMS Users -->
 
             <!-- menu for AVMS Users -->
-            <li class='has-sub'><a class='manageusers' href='<?php echo Yii::app()->createUrl('user/admin',array('vms'=>'avms')); ?>'><span>Users (AVMS Users)</span></a>
+            <li class='has-sub'><a class='manageusers' href='<?php echo Yii::app()->createUrl('user/admin',array('vms'=>'avms')); ?>'><span>AVMS Users</span></a>
 
 
                 <ul <?php

@@ -66,7 +66,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
 
             <!-- menu for CVMS Users -->
             <li class='has-sub'><a class='manageusers' href='<?php echo Yii::app()->createUrl('user/admin',
-                    array('vms' => 'cvms')); ?>'><span>Users (CVMS Users)</span></a>
+                    array('vms' => 'cvms')); ?>'><span>CVMS Users</span></a>
 
                 <ul <?php
                 if ($this->id == 'user' && !CHelper::is_accessing_avms_features()) {
@@ -171,7 +171,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
 
             <!-- menu for AVMS Users -->
             <li class='has-sub'><a class='manageusers' href='<?php echo Yii::app()->createUrl('user/admin',
-                    array('vms' => 'avms')); ?>'><span>Users (AVMS Users)</span></a>
+                    array('vms' => 'avms')); ?>'><span>AVMS Users</span></a>
 
 
                 <ul <?php
@@ -472,7 +472,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
 
             <!-- menu for Reports -->
             <li class='has-sub'>
-                <?php echo CHtml::link('Reports', array('visit/evacuationReport'), array('class' => 'managereports')) ?>
+                <?php echo CHtml::link('CVMS Reports', array('visit/evacuationReport'), array('class' => 'managereports')) ?>
                 <ul <?php
                 if ($this->action->id == 'evacuationReport' || $this->action->id == 'visitorsByProfiles' || $this->action->id == 'visitorsByTypeReport' || $this->action->id == 'visitorRegistrationHistory' || $this->action->id == 'corporateTotalVisitCount' || Yii::app()->controller->id == 'auditTrail') {
                     echo "style='display:block ;'";

@@ -60,7 +60,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
 ?>
 
 
-<?php $this->beginWidget('bootstrap.widgets.TbModal', array('id' => 'workstationsModal')); ?>
+<?php $this->beginWidget('bootstrap.widgets.TbModal', array('id' => 'workstationsModal','htmlOptions'=>array('style' => 'height:75%'))); ?>
 
 <div class="modal-header">
     <a class="close" data-dismiss="modal">&times;</a>
@@ -72,6 +72,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
 </div>
 
 <?php $this->endWidget(); ?>
+
 <?php
 $this->widget('bootstrap.widgets.TbButton', array(
     'label' => 'Click me',
@@ -80,13 +81,13 @@ $this->widget('bootstrap.widgets.TbButton', array(
         'data-toggle' => 'modal',
         'data-target' => '#workstationsModal',
         'id' => 'modalBtn',
-        'style' => 'display:none',
+        'style' => 'display:none;'
     ),
 ));
 ?>
 <script>
     $(document).ready(function() {
-
+        
     });
 
     function updateWorkstations(id, username) {
@@ -101,9 +102,14 @@ $this->widget('bootstrap.widgets.TbButton', array(
 
         //change modal url to pass user id
         var url = 'index.php?r=userWorkstations/index&id=' + id;
-        $(".modal-body").html('<iframe width="100%" height="50%" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
+        $(".modal-body").html('<iframe onload="javascript:resizeIframe(this);"  id="iframe" width="100%" height="100%" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
         $("#modalBtn").click();
     }
-
+    
+    function resizeIframe(obj) {
+            obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+        }
+    
+    
 </script>
 

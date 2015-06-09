@@ -136,11 +136,14 @@ if (($this->action->id == 'update' && $this->id == 'visitor')) {
             float: left;
             margin-left: -54px !important;
             margin-top: 257px;
-            position: absolute;
+            /*position: absolute;*/
         }
         .uploadnotetext{
             margin-top:102px;
             margin-left: -83px;
+        }
+        .addvisitor-form-ASIC .ajax-upload-dragdrop{
+            height: 170px;
         }
     </style>
 <?php

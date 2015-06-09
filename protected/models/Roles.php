@@ -39,7 +39,7 @@ class Roles extends CActiveRecord
             self::ROLE_AGENT_OPERATOR => 'Agent Operator',
             self::ROLE_VISITOR => 'Visitor',
             self::ROLE_AGENT_AIRPORT_OPERATOR => 'Agent Airport Operator', 
-            
+            self::ROLE_SUPERADMIN => 'Super Administrator',
             );
 
     /**

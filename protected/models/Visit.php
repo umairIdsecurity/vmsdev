@@ -385,7 +385,18 @@ class Visit extends CActiveRecord {
                 $criteria->addCondition('t.workstation '.$workstations.'');
                 break;
         }
+        
         $criteria->addCondition('t.is_deleted = 0');
+        
+        /*
+         * this condition is a hack to show only CORPORATE VISITOR in the listing report
+         * 
+         */
+        if (Yii::app()->controller->action->id == 'visitorRegistrationHistory')
+        {
+            $criteria->addCondition('profile_type ="' . Visitor::PROFILE_TYPE_CORPORATE . '"');
+        }
+        
         if (Yii::app()->controller->action->id == 'admindashboard') {
             Yii::app()->user->setState('pageSize', (int) '5');
         } else {
@@ -465,7 +476,7 @@ class Visit extends CActiveRecord {
                         . "LEFT JOIN visit_status ON visit.visit_status = visit_status.id "
                         . "LEFT JOIN visitor_type ON visit.visitor_type = visitor_type.id "
                         . "LEFT JOIN visitor_status ON visitor.visitor_status = visitor_status.id "
-                        . "WHERE visit.is_deleted= 0 ")->queryAll();
+                        . "WHERE visit.is_deleted= 0")->queryAll();
         return $rawData;
     }
 

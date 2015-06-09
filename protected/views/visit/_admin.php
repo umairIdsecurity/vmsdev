@@ -27,17 +27,17 @@ $this->widget('zii.widgets.grid.CGridView', array(
         ),
         array(
             'name' => 'card_type',
-            'value' => 'CardType::$CARD_TYPE_LIST[$data->card_type]',
+            'value' => 'getCartTypeByType($data->card_type)',
             'filter' => CardType::$CARD_TYPE_LIST,
-        ),  
+        ),
         array(
             'name' => 'visitor_type',
-            'value' => 'VisitorType::model()->returnVisitorTypes($data->visitor_type)',
+            'value' => 'getVisitorTypeById($data->visitor_type)',
             'filter' => VisitorType::model()->returnVisitorTypes(),
         ),
         array(
             'name' => 'reason',
-            'value' => 'VisitReason::model()->findByPk($data->reason)->reason',
+            'value' => 'getVisitReasonById($data->reason)',
             'filter' => getVisitReason(),
         ),
         array(
@@ -72,15 +72,41 @@ $this->widget('zii.widgets.grid.CGridView', array(
     ),
 ));
 
-function getVisitorFullName($id){
-    $visitor =Visitor::model()->findByPk($id);
-    return $visitor->first_name.' '.$visitor->last_name;
+function getCartTypeByType($type = 0){
+    if(isset($type) && $type && array_key_exists($type,CardType::$CARD_TYPE_LIST)){
+        return CardType::$CARD_TYPE_LIST[$type];
+
+    }
+    return 'Card Type';
 }
 
+function getVisitorFullName($id){
+    $visitor =Visitor::model()->findByPk($id);
+    if($visitor)
+    return $visitor->first_name.' '.$visitor->last_name;
+    return '';
+}
+function getVisitReasonById($id)
+{
+    $reason1 = VisitReason::model()->findByPk($id);
+    if ($reason1) {
+        return $reason1->reason;
+    }
+    return '';
+}
+function getVisitorTypeById($id)
+{
+    $vstype = VisitorType::model()->findByPk($id);
+    if ($vstype) {
+        return 'Visitor Type: '.$vstype->name;
+    }
+    return '';
+}
 function getVisitReason(){
     $data = CHtml::listData(VisitReason::model()->findAll(array('order' => 'reason ASC')), 'id', 'reason');
-    $data=array(""=>'Reason')+$data;
-    return $data;
+    if($data)
+        return array(""=>'Reason')+$data;
+    return array(""=>'Reason');
 }
 
 

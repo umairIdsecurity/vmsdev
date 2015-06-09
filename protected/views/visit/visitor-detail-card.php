@@ -86,9 +86,11 @@ if ($vstr->profile_type == "CORPORATE" && $model->card_type == 4) {
                 <tr>
                     <td>
                         <?php
-                        if ($tenant->company != '') {
-                            if (!empty($company)) {
-                                echo $company->code;
+                        if ($tenant) {
+                            if ($tenant->company != '') {
+                                if (!empty($company)) {
+                                    echo $company->code;
+                                }
                             }
                         }
                         ?>

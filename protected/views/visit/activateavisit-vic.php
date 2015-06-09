@@ -310,7 +310,7 @@ $session = new CHttpSession;
         </table>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="btnVicConfirm">Confirm</button>
+        <button type="button" onClick="vicHolderDeclarationChange()" class="btn btn-primary" id="btnVicConfirm">Confirm</button>
     </div>
 </div>
 
@@ -344,7 +344,7 @@ $session = new CHttpSession;
         </table>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="btnAsicConfirm">Confirm</button>
+        <button type="button" onclick="asicSponsorDeclarationChange()" class="btn btn-primary" id="btnAsicConfirm">Confirm</button>
     </div>
 </div>
 <button id="btnActivate" style="display: none;"></button>

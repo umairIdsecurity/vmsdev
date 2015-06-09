@@ -415,6 +415,8 @@ class VisitController extends Controller {
     public function actionVisitorRegistrationHistory() {
         $model = new Visit('search');
         $model->unsetAttributes();  // clear any default values
+        
+        
         if (isset($_GET['Visit'])) {
             $model->attributes = $_GET['Visit'];
         }

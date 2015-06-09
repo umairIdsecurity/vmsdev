@@ -122,7 +122,7 @@ class VisitorType extends CActiveRecord {
             $criteria->condition = "t.is_deleted = 0 && t.id !=1";
         }
         
-        if(Yii::app()->controller->action->id == 'visitorsByTypeReport'){
+        if(Yii::app()->controller->action->id == 'visitorsByTypeReport' || Yii::app()->controller->action->id == 'visitorsByWorkstationReport'){
             $criteria->condition = "";
             $criteria->condition = "t.is_deleted=0";
         }

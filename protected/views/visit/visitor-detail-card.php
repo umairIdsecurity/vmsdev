@@ -225,7 +225,9 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
             echo "<br />";
             $cardTypes = CHtml::listData(CardType::model()->findAll(), 'id', 'name');
             foreach ($cardTypes as $key => $item) {
-                $cardTypeResults[$key] = 'Card Type: ' . $item;
+                if (in_array($key, CardType::$VIC_CARD_TYPE_LIST)) {
+                    $cardTypeResults[$key] = 'Card Type: ' . $item;
+                }
             }
             echo CHtml::dropDownList('Visit[card_type]', $model->card_type, $cardTypeResults);
             echo "<br />";

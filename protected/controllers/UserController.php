@@ -163,23 +163,20 @@ class UserController extends Controller
     public function actionDelete($id)
     {
         //$this->loadModel($id)->delete();
-
         $model = $this->loadModel($id);
 
-        if ($model->delete()) {
-
-            //throw new CHttpException(400, "This is a required field and cannot be deleted"); 
-        } else {
+        if (!$model->delete()) {
             $visitExists = Visit::model()->exists('is_deleted = 0 and host ="' . $id . '"');
             $isTenant = Company::model()->exists('is_deleted = 0 and tenant ="' . $id . '"');
             $userWorkstation = UserWorkstations::model()->exists('user = "' . $id . '"');
             $visitorExists = Visitor::model()->exists('tenant = "' . $this->id . '" and is_deleted=0');
             $isTenantAgent = Company::model()->exists('tenant_agent = "' . $this->id . '" and is_deleted=0');
-            if (!$visitExists && !$isTenant && !$userWorkstation && !$visitorExists && !$isTenantAgent) {
 
+            if (!$visitExists && !$isTenant && !$userWorkstation && !$visitorExists && !$isTenantAgent) {
                 return false;
             }
         }
+
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
         if (!isset($_GET['ajax'])) {
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));

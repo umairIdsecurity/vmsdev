@@ -472,7 +472,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
 
             <!-- menu for Reports -->
             <li class='has-sub'>
-                <?php echo CHtml::link('Reports', array('visit/evacuationReport'), array('class' => 'managereports')) ?>
+                <?php echo CHtml::link('CVMS Reports', array('visit/evacuationReport'), array('class' => 'managereports')) ?>
                 <ul <?php
                 if ($this->action->id == 'evacuationReport' || $this->action->id == 'visitorsByProfiles' || $this->action->id == 'visitorsByTypeReport' || $this->action->id == 'visitorRegistrationHistory' || $this->action->id == 'corporateTotalVisitCount' || Yii::app()->controller->id == 'auditTrail') {
                     echo "style='display:block ;'";

@@ -9,7 +9,7 @@ $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/script-sidebar
 /* @var $this UserController */
 /* @var $model User */
 $session = new ChttpSession;
-?> 
+?>
 <input type="hidden" value="<?php echo $session['role'] ?>" id="sessionRoleForSideBar">
 
 <div id="sidebar2" style="<?php
@@ -45,7 +45,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
             <!-- menu for Workstations -->
             <li class='has-sub'><a class='manageworkstations' href='<?php echo Yii::app()->createUrl('workstation/admin'); ?>'><span>Workstations</span></a>
 
-            
+
                 <ul <?php
                 if ($this->id == 'workstation') {
                     echo "style='display:block ;'";
@@ -78,7 +78,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
 //                                    CController::createUrl('dashboard/addHost/&role=9'), array('update' => '#content')
 //                                );
                             ?>
-                               <a href='<?php echo Yii::app()->createUrl('user/create/&role=9'); ?>'><span <?php CHelper::is_selected_item(9);?> >Add Host</span></a> 
+                               <a href='<?php echo Yii::app()->createUrl('user/create/&role=9'); ?>'><span <?php CHelper::is_selected_item(9);?> >Add Host</span></a>
                             </li>
 
                             <?php
@@ -94,9 +94,9 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
 //                                    CController::createUrl('dashboard/addHost/&role=9'), array('update' => '#content')
 //                                );
                                 ?>
-                                <a href='<?php echo Yii::app()->createUrl('user/create/&role=9'); ?>'><span <?php CHelper::is_selected_item(9);?> >Add Host</span></a> 
+                                <a href='<?php echo Yii::app()->createUrl('user/create/&role=9'); ?>'><span <?php CHelper::is_selected_item(9);?> >Add Host</span></a>
                             </li>
-                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/importhost'); ?>'><span>Import Staff/Host Profiles</span></a></li>      
+                            <li class="submenu addSubMenu"><a href='<?php echo Yii::app()->createUrl('user/importhost'); ?>'><span>Import Staff/Host Profiles</span></a></li>
                             <?php
                             break;
 
@@ -110,7 +110,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
 //                                    CController::createUrl('dashboard/addHost/&role=9'), array('update' => '#content')
 //                                );
                                 ?>
-                                <a href='<?php echo Yii::app()->createUrl('user/create/&role=9'); ?>'><span <?php CHelper::is_selected_item(9);?> >Add Host</span></a> 
+                                <a href='<?php echo Yii::app()->createUrl('user/create/&role=9'); ?>'><span <?php CHelper::is_selected_item(9);?> >Add Host</span></a>
                             </li>
                             <?php
                             break;
@@ -119,11 +119,6 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                             break;
                     };
                     ?>
-                    <li >
-
-                        <a href='<?php echo Yii::app()->createUrl('user/systemaccessrules'); ?>'><span>Set Access Rules</span></a></li>
-
-
                 </ul>
             </li><!-- menu for CVMS Users -->
 
@@ -132,7 +127,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
 
 
                 <ul <?php
-                if ($this->id == 'user' && CHelper::is_accessing_avms_features()) {
+                if ($this->id == 'user' && CHelper::is_accessing_avms_features() && $this->action->id != 'systemaccessrules') {
                     echo "style='display:block ;'";
                 }
                 ?>>
@@ -173,9 +168,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                             break;
                     };
                     ?>
-                    <li >
 
-                        <a href='<?php echo Yii::app()->createUrl('user/systemaccessrules'); ?>'><span>Set Access Rules</span></a></li>
 
 
                 </ul>
@@ -279,7 +272,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     </ul>
                 </li><!-- menu for Visitors -->
             <?php }
-                  // Show Visitor Types to All Admins only  
+                  // Show Visitor Types to All Admins only
                   if( Yii::app()->user->role == Roles::ROLE_ADMIN) {
              ?>    <!-- menu for Visitors Types -->
                 <li class='has-sub'>
@@ -293,7 +286,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     </ul>
                 </li> <!-- menu for Visitors Types -->
 
-             <?php         
+             <?php
                   }
              ?>
 
@@ -372,9 +365,9 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     </ul>
                 </li>
             <?php
-            } 
+            }
             ?><!-- menu for tenant -->
-			
+
             <!-- menu for Reports -->
             <li class='has-sub'>
                 <?php echo CHtml::link('Reports', array('visit/evacuationReport'), array('class' => 'managereports')) ?>
@@ -430,14 +423,14 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                         echo "style='display:block ;'";
                     }
                     ?> >
-                
+
                  <li><a href='<?php echo Yii::app()->createUrl('helpDeskGroup/create'); ?>' class="addSubMenu"><span>Add Help Desk Group</span></a></li>
                   <li><a href='<?php echo Yii::app()->createUrl('helpDesk/create'); ?>' class="addSubMenu"><span>Add Help Desk</span></a></li>
                  <li><a href='<?php echo Yii::app()->createUrl('helpDesk/admin'); ?>' ><span>Help Desk</span></a></li>
                  <li><a href='<?php echo Yii::app()->createUrl('helpDeskGroup/admin'); ?>' ><span>Help Desk Group</span></a></li>
               </ul>
             </li><!-- menu for helpdesk -->
-            
+
             <!-- Notifications -->
              <?php if ($session['role'] == Roles::ROLE_SUPERADMIN || $session['role'] == Roles::ROLE_ADMIN) { ?>
             <li class='has-sub'>
@@ -447,8 +440,36 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                    </ul>
             </li>
             <?php  } ?>
-           
             <!-- Ends Notifications -->
+
+            <!-- CVMS Access Control -->
+            <?php if ($session['role'] == Roles::ROLE_SUPERADMIN || $session['role'] == Roles::ROLE_ADMIN) { ?>
+                <li class='has-sub'>
+                    <a class='managevisitorrecords' href='<?php echo Yii::app()->createUrl('user/systemaccessrules'); ?>'>
+                        <span>CVMS Access Control</span>
+                    </a>
+                    <ul <?php echo ($this->id == 'user' && $this->action->id == 'systemaccessrules')?"style='display:block'":"style='display:none'";?>>
+                        <li>
+                            <a href='<?php echo Yii::app()->createUrl('user/systemaccessrules'); ?>'><span>Workstation Access Control</span></a>
+                        </li>
+                    </ul>
+                </li>
+            <?php  } ?>
+            <!-- Ends CVMS Access Control -->
+
+            <?php if ($session['role'] == Roles::ROLE_SUPERADMIN || $session['role'] == Roles::ROLE_ADMIN) { ?>
+                <li class='has-sub'>
+                    <a class='managevisitorrecords' href='<?php echo Yii::app()->createUrl('user/systemaccessrules'); ?>'>
+                        <span>AVMS Access Control</span>
+                    </a>
+                    <ul <?php echo ($this->id == 'user' && $this->action->id == 'systemaccessrules')?"style='display:block'":"style='display:none'";?>>
+                        <li>
+                            <a href='<?php echo Yii::app()->createUrl('user/systemaccessrules'); ?>'><span>Workstation Access Control</span></a>
+                        </li>
+                    </ul>
+                </li>
+            <?php  } ?>
+
         </ul>
     </div>
 </div>

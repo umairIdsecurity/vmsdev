@@ -766,7 +766,7 @@ $defaultKey = key($asicCardTypes);
         $("#selectedHostInSearchTable").val("");
         $("#searchHostTableDiv h4").html("Search Results for : " + $("#search-host").val());
         $("#searchHostTableDiv").show();
-        $(".tab-content").hide();
+        $("#step3Tab").find(".tab-content").hide();
         $("#subm").show();
         $(".data-ifr").show();
         // $("#register-host-form").hide();

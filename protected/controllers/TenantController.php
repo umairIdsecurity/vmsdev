@@ -75,6 +75,7 @@ class TenantController extends Controller {
             //$companyModel->mobile_number = $_POST['TenantForm']['contact_number'];
             $transaction = Yii::app()->db->beginTransaction();
             $message = "";
+			$suceemessage = "";
             $flag= "";
 
             try {
@@ -91,6 +92,7 @@ class TenantController extends Controller {
 
                 }
 
+				$suceemessage ="companny";
                 $companyModel->code = $_POST['TenantForm']['tenant_code'];
                 $companyModel->name = $_POST['TenantForm']['tenant_name'];
                 $companyModel->trading_name = $_POST['TenantForm']['tenant_name'];
@@ -114,6 +116,7 @@ class TenantController extends Controller {
                     $companyModel->save();
                     $comapanylastId = $companyModel->id;
 
+					$suceemessage .="::company::";
                     $userModel->first_name = $_POST['TenantForm']['first_name'];
                     $userModel->last_name = $_POST['TenantForm']['last_name'];
                     $userModel->email = $_POST['TenantForm']['email'];
@@ -142,18 +145,21 @@ class TenantController extends Controller {
                         $userModel->save();
                         $userLastID = $userModel->id;
                         //echo ":userModel:".$userLastID;
-
+						$suceemessage .="::tenant::";
                         $tenantModel->id = $comapanylastId;
+						$tenantModel->is_deleted = 0;
                         $tenantModel->created_by = Yii::app()->user->id;
                         if ($tenantModel->validate()) {
                             $tenantModel->save();
                             $tenantLastID = $tenantModel->id;
                             //echo ":tenantModel:".$tenantLastID;
 
+							$suceemessage .="::tenant contact::";
                             $tenantContact->tenant = $tenantLastID;
                             $tenantContact->user = $userLastID;
                             if ($tenantContact->validate()) {
                                 $tenantContact->save();
+								$suceemessage .="::commit::";
                                 $transaction->commit();
                                 //echo ":tenantModel:";
                             } else {
@@ -233,9 +239,11 @@ class TenantController extends Controller {
             }catch (CDbException $e)
             {
                 $transaction->rollback();
-                echo "Flag::".$flag."</br></br></br></br>";;
+                echo "Flag::".$flag."</br></br></br></br>";
+				echo "suceemessage::".$suceemessage."</br></br></br></br>";
                 echo $e->getMessage()."</br></br></br></br>";
-                echo $message;exit;
+                echo $message;
+				print_r(e);exit;
                 Yii::app()->user->setFlash('error', "There was an error processing request");
                 echo json_encode(array('success'=>FALSE));
             }

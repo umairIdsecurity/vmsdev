@@ -20,7 +20,7 @@ class PreregistrationController extends Controller
 	public function accessRules() {
 		return array(
 			array('allow',
-				'actions' => array('index','privacyPolicy' , 'declaration'),
+				'actions' => array('index','privacyPolicy' , 'declaration' , 'Login'),
 				'users' => array('*'),
 			),
 			array('allow',
@@ -68,10 +68,17 @@ class PreregistrationController extends Controller
 			$model->attributes=$_POST['Declaration'];
 			if($model->validate())
 			{
-				echo "hello";
+				$this->redirect(array('preregistration/login'));
 			}
 		}
 		$this->render('declaration' , array('model'=>$model) );
+
+	}
+
+	public function actionLogin(){
+
+		//echo "hello";
+		$this->render('prereg-login');
 
 	}
 

@@ -197,11 +197,21 @@ $session = new CHttpSession;
 
                 $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "option", "minDate", selectedDate);
 
+                function updateTextVisitButton(text) {
+                    var visitButton = $("#activate-a-visit-form input.complete");
+                    if (visitButton.length) {
+                        visitButton.val(text);
+                    } else {
+                        visitButton = $("#registerNewVisit");
+                        visitButton.text(text);
+                    }
+                }
+
                 if (selectedDate >= currentDate) {
                     <?php if ($model->card_type == CardType::VIC_CARD_MANUAL) { // show Back Date Visit
-                        echo '$("#activate-a-visit-form input.complete").val("Activate Visit");';
+                        echo 'updateTextVisitButton("Activate Visit");';
                     } else {
-                        echo '$("#activate-a-visit-form input.complete").val("Preregister Visit");
+                        echo 'updateTextVisitButton("Preregister Visit");
                               $("#card_no_manual").hide();';
                     }
                     ?>
@@ -211,12 +221,12 @@ $session = new CHttpSession;
                     $("#cardDetailsTable span.cardDateText").html(cardDate);
 
                 } else {
-                    $("#activate-a-visit-form input.complete").val("");
+                    updateTextVisitButton("");
 
                     <?php if ($model->card_type == CardType::VIC_CARD_MANUAL) { // show Back Date Visit
-                        echo '$("#activate-a-visit-form input.complete").val("Back Date Visit");';
+                        echo 'updateTextVisitButton("Back Date Visit");';
                     } else {
-                        echo '$("#activate-a-visit-form input.complete").val("Activate Visit");';
+                        echo 'updateTextVisitButton("Activate Visit");';
                     }
                     ?>
 
@@ -291,12 +301,12 @@ $session = new CHttpSession;
     <div class="modal-body">
         <table>
             <tr>
-                <td width="5%"><input type="checkbox" checked="checked" id="refusedAsicCbx"/></td>
+                <td width="5%"><input type="checkbox" id="refusedAsicCbx"/></td>
                 <td>The applicant declares they have not been refused or held an ASIC that was suspended or cancelled due to an adverse criminal record</td>
             </tr>
             <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
             <tr>
-                <td width="5%"><input type="checkbox" checked="checked" id="issuedVicCbx"/></td>
+                <td width="5%"><input type="checkbox" id="issuedVicCbx"/></td>
                 <td>The applicant declares they have not been issued with a VIC for this airport for more than 28 days in the past 12 months.
                     (from <?php
                             if (isset($model->date_check_in)) {
@@ -310,7 +320,7 @@ $session = new CHttpSession;
         </table>
     </div>
     <div class="modal-footer">
-        <button type="button" onClick="vicHolderDeclarationChange()" class="btn btn-primary" id="btnVicConfirm">Confirm</button>
+        <button type="button" onClick="vicCheck()" class="btn btn-primary" id="btnVicConfirm">Confirm</button>
     </div>
 </div>
 
@@ -323,28 +333,28 @@ $session = new CHttpSession;
     <div class="modal-body">
         <table>
             <tr>
-                <td width="5%"><input type="checkbox" checked="checked" id="asicDecalarationCbx1"/></td>
+                <td width="5%"><input type="checkbox" id="asicDecalarationCbx1"/></td>
                 <td>I confirm that the VIC holders details are correct. I have read, understood and agree to ensure that the applicant will abide by the conditions applicable to the use of the Visitor Identification Card.</td>
             </tr>
             <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
             <tr>
-                <td width="5%"><input type="checkbox" checked="checked" id="asicDecalarationCbx2"/></td>
+                <td width="5%"><input type="checkbox" id="asicDecalarationCbx2"/></td>
                 <td>I understand that it is an offence to escort/sponsor someone airside without a valid operational reason for them to require access.</td>
             </tr>
             <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
             <tr>
-                <td width="5%"><input type="checkbox" checked="checked" id="asicDecalarationCbx3"/></td>
+                <td width="5%"><input type="checkbox" id="asicDecalarationCbx3"/></td>
                 <td>I note that they must be under my direct supervision at all times whilst they are airside.</td>
             </tr>
             <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
             <tr>
-                <td width="5%"><input type="checkbox" checked="checked" id="asicDecalarationCbx4"/></td>
+                <td width="5%"><input type="checkbox" id="asicDecalarationCbx4"/></td>
                 <td>I request that a VIC be issued to the applicant for the areas and reason indicated.</td>
             </tr>
         </table>
     </div>
     <div class="modal-footer">
-        <button type="button" onclick="asicSponsorDeclarationChange()" class="btn btn-primary" id="btnAsicConfirm">Confirm</button>
+        <button type="button" onclick="asicCheck()" class="btn btn-primary" id="btnAsicConfirm">Confirm</button>
     </div>
 </div>
 <button id="btnActivate" style="display: none;"></button>
@@ -365,5 +375,28 @@ $session = new CHttpSession;
             $('#AsicSponsorDecalarations').prop('checked', false);
         }
         $('#asicSponsorModal').modal('hide');
+    }
+    function vicCheck() {
+        var checknum = $('#vicHolderModal')
+                        .find('input[type="checkbox"]')
+                        .filter(':checked');
+        if (checknum.length == 2) {
+            vicHolderDeclarationChange();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function asicCheck() {
+        var checknum = $('#asicSponsorModal')
+                        .find('input[type="checkbox"]')
+                        .filter(':checked');
+        if (checknum.length == 4) {
+            asicSponsorDeclarationChange();
+            return true;
+        } else {
+            return false;
+        }
     }
 </script>

@@ -186,14 +186,19 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
 </div>
 
 <div style="margin-top: 10px;">
-    Total Visits at <?php echo $visitModel['companyName']; ?>: <?php echo $visitModel['companyVisitsByVisitor']; ?></br>
-    <!-- Total Visits to All Companies: <?php // echo $visitModel['allVisitsByVisitor'];           ?> -->
+<?php
+$companyName = isset($visitCount['companyName']) ? $visitCount['companyName'] : '';
+$totalCompanyVisit = isset($visitCount['companyVisitsByVisitor']) ? $visitCount['companyVisitsByVisitor'] : 0;
+$remainingDays = (isset($visitCount['remainingDays'])) ? ($visitCount['remainingDays']) : 0;
+?>
+    Total Visits at <?php echo $companyName; ?>: <?php echo $totalCompanyVisit; ?></br>
+    <!-- Total Visits to All Companies: <?php // echo $visitCount['allVisitsByVisitor'];           ?> -->
     <?php if ($visitorModel->profile_type == Visitor::PROFILE_TYPE_VIC) { ?>
-        Remaining Days: <?php echo (28 - $visitModel['companyVisitsByVisitor']); ?>
+        Remaining Days: <?php echo $remainingDays; ?>
     <?php } ?>
 </div>
 <input type="hidden" id="dummycardvalue" value="<?php echo $model->card; ?>"/>
-
+<input type="hidden" id="remaining_day" value="<?php echo $remainingDays; ?>">
 <form method="post" id="workstationForm" action="<?php echo Yii::app()->createUrl('visit/detail', array('id' => $model->id)); ?>">
     <div style="margin: 10px 0px 0px 60px; text-align: left;">
         <?php
@@ -228,9 +233,14 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
             }
             echo CHtml::dropDownList('Visit[card_type]', $model->card_type, $cardTypeResults);
             echo "<br />";
+
+            if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN, Roles::ROLE_SUPERADMIN])) {
+                echo '<input type="submit" class="hidden" id="submitWorkStationForm">';
+                echo '<input type="submit" class="complete" id="btnWorkStationForm" value="Update">';
+            }
         }
         ?>
-        <input type="submit" class="complete" id="submitWorkStationForm" value="Update">
+        
     </div>
 </form>
 
@@ -360,6 +370,17 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
         $("#Visit_workstation").val(value.value);
     }
 
+    $(document).on('change', '#Visitor_visitor_card_status', function(e) {
+        var selected = $(this).val();
+        var remainingDays = $('#remaining_day').val();
+        if (selected == "<?php echo Visitor::ASIC_PENDING; ?>" && remainingDays < 28) {
+            $('#checkout_date_warning').html('An EVIC can’t be issued to this VIC holder <br /> as they don’t have 28 days remaining.<br />Please update their Card Status to ASIC <br />Pending or Select another card type.').show();
+            $('#btnWorkStationForm').attr('disabled', true);
+        } else {
+            $('#checkout_date_warning').html('').hide();
+            $('#btnWorkStationForm').attr('disabled', false);
+        }
+    });
 </script>
 <!--POP UP FOR CROP PHOTO -->
 

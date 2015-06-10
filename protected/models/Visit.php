@@ -629,7 +629,7 @@ class Visit extends CActiveRecord {
 
                 return $countData;
             } else {
-                return 0;
+                return [];
             }
 
 
@@ -637,7 +637,7 @@ class Visit extends CActiveRecord {
             //echo $company;echo "<br> ============ <br> ";
             //echo $visitor;echo "<br> ============ <br> ";	die();
         }
-        return 0;
+        return [];
     }
 
     public function getVisitCounts() {
@@ -646,7 +646,7 @@ class Visit extends CActiveRecord {
         } else {
             $dateIn = new DateTime($this->date_check_in);
             $dateOut = new DateTime($this->date_check_out);
-            return $dateOut->format('z') - $dateIn->format('z') + 1;
+            return $dateOut->format('z') - ($dateIn->format('z') + 1);
         }
     }
 

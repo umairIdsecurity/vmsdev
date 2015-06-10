@@ -276,6 +276,14 @@ class VisitController extends Controller {
             Yii::app()->user->setFlash('error', 'Workstation of this visit has been deleted.');
             return $this->redirect(Yii::app()->createUrl('visit/view'));
         }
+
+        //set status to pre-registered
+        if ($model->date_check_in > date('d-m-Y')) {
+            $preVisitStatus = VisitStatus::model()->findByAttributes(array('name' => 'Pre-registered'));
+            if ($preVisitStatus) {
+                $model->visit_status = $preVisitStatus->id;
+            }
+        }
         
         //update status for Contractor Card Type
         if ($model && $model->card_type == CardType::CONTRACTOR_VISITOR) {
@@ -293,7 +301,8 @@ class VisitController extends Controller {
         $reasonModel = VisitReason::model()->findByPk($model->reason);
         $patientModel = Patient::model()->findByPk($model->patient);
         $cardTypeModel = CardType::model()->findByPk($model->card_type);
-		$visitModel = Visit::model()->getVisitCount($model->id);
+		$visitCount = Visit::model()->getVisitCount($model->id);
+        $visitCount['remainingDays'] = $model->getVisitCounts();
 
         $newPatient = new Patient;
         $newHost = new User;
@@ -313,16 +322,35 @@ class VisitController extends Controller {
 
             $model->attributes = $_POST['Visit'];
 
-            switch ($model->card_type) {
-                case CardType::VIC_CARD_24HOURS: // VIC 24 hour
+            switch ($_POST['Visit']['card_type']) {
+                case CardType::VIC_CARD_SAMEDATE:
+                case CardType::VIC_CARD_24HOURS:
+                case CardType::VIC_CARD_MANUAL:
+                    $model->date_check_in = date('d-m-Y');
                     $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 1 day'));
+                    $visitCount['remainingDays'] = $model->visitCounts;
                     break;
-                case CardType::VIC_CARD_EXTENDED: // VIC Extended
-                case CardType::VIC_CARD_MULTIDAY: // VIC Multiday
+                default://die('4');
+                    $model->date_check_in = date('d-m-Y');
                     $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 28 day'));
+                    $visitCount['remainingDays'] = $model->visitCounts;
                     break;
             }
-            $model->time_check_out = $model->time_check_in;
+
+            if (isset($_POST['Visitor']['visitor_card_status']) && $_POST['Visitor']['visitor_card_status'] != $visitorModel->visitor_card_status) {die('ok');
+                $visitorModel->visitor_card_status = $_POST['Visitor']['visitor_card_status'];
+                if ($visitorModel->save()) {
+                    if (in_array($visitorModel->visitor_card_status, [Visitor::ASIC_PENDING])) {
+                        $model->date_check_in = date('d-m-Y');
+                        $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 28 day'));
+                        if ($model->save()) {
+                            $visitCount['remainingDays'] = $model->visitCounts;
+                        }
+                    }
+                }
+            }
+
+            //if (isset($_POST['Visit']['']))
 
             // close visit process
             if (isset($_POST['closeVisitForm']) && $model->visit_status == VisitStatus::CLOSED) {
@@ -352,7 +380,7 @@ class VisitController extends Controller {
             'patientModel' => $patientModel,
             'newPatient' => $newPatient,
             'newHost' => $newHost,
-			'visitModel' => $visitModel,
+			'visitCount' => $visitCount,
             'cardTypeModel' => $cardTypeModel,
         ));
     }

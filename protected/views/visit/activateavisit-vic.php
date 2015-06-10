@@ -155,6 +155,8 @@ $session = new CHttpSession;
                 )
             ));
             ?>
+            <br>
+            <span id="checkout_date_warning" style="display: none;" class="label label-warning"></span>
         </td>
     </tr>
 
@@ -302,12 +304,12 @@ $session = new CHttpSession;
         <table>
             <tr>
                 <td width="5%"><input type="checkbox" id="refusedAsicCbx"/></td>
-                <td>The applicant declares they have not been refused or held an ASIC that was suspended or cancelled due to an adverse criminal record</td>
+                <td><label for="refusedAsicCbx">The applicant declares they have not been refused or held an ASIC that was suspended or cancelled due to an adverse criminal record</label></td>
             </tr>
             <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
             <tr>
                 <td width="5%"><input type="checkbox" id="issuedVicCbx"/></td>
-                <td>The applicant declares they have not been issued with a VIC for this airport for more than 28 days in the past 12 months.
+                <td><label for="issuedVicCbx">The applicant declares they have not been issued with a VIC for this airport for more than 28 days in the past 12 months.
                     (from <?php
                             if (isset($model->date_check_in)) {
                                 echo $model->date_check_in;
@@ -315,7 +317,7 @@ $session = new CHttpSession;
                                 echo date("d F Y");
                             }
                     ?>)
-                </td>
+                </label></td>
             </tr>
         </table>
     </div>
@@ -334,22 +336,22 @@ $session = new CHttpSession;
         <table>
             <tr>
                 <td width="5%"><input type="checkbox" id="asicDecalarationCbx1"/></td>
-                <td>I confirm that the VIC holders details are correct. I have read, understood and agree to ensure that the applicant will abide by the conditions applicable to the use of the Visitor Identification Card.</td>
+                <td><label for="asicDecalarationCbx1">I confirm that the VIC holders details are correct. I have read, understood and agree to ensure that the applicant will abide by the conditions applicable to the use of the Visitor Identification Card.</label></td>
             </tr>
             <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
             <tr>
                 <td width="5%"><input type="checkbox" id="asicDecalarationCbx2"/></td>
-                <td>I understand that it is an offence to escort/sponsor someone airside without a valid operational reason for them to require access.</td>
+                <td><label for="asicDecalarationCbx2">I understand that it is an offence to escort/sponsor someone airside without a valid operational reason for them to require access.</label></td>
             </tr>
             <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
             <tr>
                 <td width="5%"><input type="checkbox" id="asicDecalarationCbx3"/></td>
-                <td>I note that they must be under my direct supervision at all times whilst they are airside.</td>
+                <td><label for="asicDecalarationCbx3">I note that they must be under my direct supervision at all times whilst they are airside.</label></td>
             </tr>
             <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
             <tr>
                 <td width="5%"><input type="checkbox" id="asicDecalarationCbx4"/></td>
-                <td>I request that a VIC be issued to the applicant for the areas and reason indicated.</td>
+                <td><label for="asicDecalarationCbx4">I request that a VIC be issued to the applicant for the areas and reason indicated.</label></td>
             </tr>
         </table>
     </div>

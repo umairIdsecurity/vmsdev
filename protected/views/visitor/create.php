@@ -108,10 +108,10 @@ $(document).ready(function () {
 
         if ($("#currentRoleOfLoggedInUser").val() != 5) { //not superadmin
 
-            $("#Visitor_tenant").val('<?php echo $session['tenant']; ?>');
-            $("#User_tenant").val('<?php echo $session['tenant']; ?>');
-            $("#Visitor_tenant_agent").val('<?php echo $session['tenant_agent']; ?>');
-            $("#User_tenant_agent").val('<?php echo $session['tenant_agent']; ?>');
+            $("#Visitor_tenant").val("<?php echo $session['tenant']; ?>");
+            $("#User_tenant").val("<?php echo $session['tenant']; ?>");
+            $("#Visitor_tenant_agent").val("<?php echo $session['tenant_agent']; ?>");
+            $("#User_tenant_agent").val("<?php echo $session['tenant_agent']; ?>");
 
             /*check if current logged in role is staff member
              * if staff member check if tenant agent admin is null
@@ -181,11 +181,8 @@ $(document).ready(function () {
             e.preventDefault();
             $("#register-reason-form").hide();
             var visit_reason = $("#Visit_reason_search").val();
-            if ($("#search-visitor").val() == "") {
-                $("#searchTextErrorMessage").html("Please enter a name");
-                $("#searchTextErrorMessage").show();
-            }
-            else if (($("#selectedVisitorInSearchTable").val() == '' && $("#search-visitor").val() != '') || $("#selectedVisitorInSearchTable").val() == '') {
+
+            if (($("#selectedVisitorInSearchTable").val() == '' && $("#search-visitor").val() != '') || $("#selectedVisitorInSearchTable").val() == '') {
                 $("#searchTextErrorMessage").html("Please select a visitor");
                 $("#searchTextErrorMessage").show();
             }
@@ -578,7 +575,7 @@ function populateTenantAgentAndCompanyField(isSearch) {
                 dataType: 'json',
                 data: tenant,
                 success: function (r) {
-                    $('#workstation option[value!=""]').remove();
+                    $('#workstation').append('<option value="">Select Workstation</option>');
 
                     $.each(r.data, function (index, value) {
                         var selected = <?php echo isset($session['workstation']) ? $session['workstation'] : '0' ?>;
@@ -960,7 +957,7 @@ function selectVicCard(cardType) {
 
         // third table
         $('.third-column #passwordVicForm .register-a-visitor-buttons-div, .host-third-column #passwordVicForm .register-a-visitor-buttons-div').hide();
-        $('.third-column .register-a-visitor-buttons-div').css('padding-top', '0px');
+        $('.third-column .register-a-visitor-buttons-div').css('padding-top', '10px');
         $('#hostButtonRow').css('padding-top', '130px');
 
         // text changes:
@@ -982,7 +979,7 @@ function selectVicCard(cardType) {
         $('.visitorTypeDropdownRow').prependTo('.third-column');
         $('.workstationDropdownRow').prependTo('.third-column');
 
-        $('.third-column .register-a-visitor-buttons-div').css('padding-top', '130px');
+        $('.third-column .register-a-visitor-buttons-div').css('padding-top', '10px');
         $('#hostButtonRow').css('padding-top', '250px');
 
         // text changes:

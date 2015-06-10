@@ -47,6 +47,22 @@ class Visit extends CActiveRecord {
     private $_contactemail;
     private $_datecheckin1;
     private $_cardnumber;
+    public $filterProperties;
+    public $companycode;
+    public $date_of_birth;
+    public $contact_number;
+    public $contact_street_no;
+    public $contact_street_name;
+    public $contact_street_type;
+    public $contact_suburb;
+    public $contact_postcode;
+    public $email;
+    public $identification_type;
+    public $identification_document_no;
+    public $identification_document_expiry;
+    public $asic_no;
+    public $asic_expiry;
+    public $contact_state;
 
     /**
      * @return string the associated database table name
@@ -63,13 +79,18 @@ class Visit extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('is_deleted', 'numerical', 'integerOnly' => true),
-            array('reason,visitor_type,visitor,visitor_status,workstation', 'required'),
+            array('visitor', 'required', 'on' => 'api'),
+            array('reason,visitor_type,visitor,visitor_status,workstation', 'required','on' => 'webapp'),
             array('visitor,card, visitor_type, reason, visitor_status,host, patient, created_by, tenant, tenant_agent', 'length', 'max' => 20),
-            array('date_in,date_out,time_in_hours,time_in_minutes,visit_status, time_in, time_out, date_check_in, time_check_in, date_check_out, time_check_out,card_type, finish_date, finish_time, card_returned_date, negate_reason, reset_id, card_option', 'safe'),
+            array('date_in,date_out,time_in_hours,time_in_minutes,visit_status, time_in, time_out, date_check_in, time_check_in, date_check_out, time_check_out,card_type, finish_date, finish_time, card_returned_date, negate_reason, reset_id, card_option, police_report_number, card_lost_declaration_file, workstation', 'safe'),
             array('patient, host,card,tenant,tenant_agent', 'default', 'setOnEmpty' => true, 'value' => null),
+            array('filterProperties','length', 'max'=>70),
+
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id,datecheckin1,cardnumber,company,firstname,lastname,contactnumber,contactemail,visit_status,visitor ,card,workstation, visitor_type, reason, visitor_status, host, patient, created_by, date_in, time_in, date_out, time_out, date_check_in, time_check_in, date_check_out, time_check_out, tenant, tenant_agent, is_deleted', 'safe', 'on' => 'search'),
+            array('id,datecheckin1,cardnumber,company,firstname,lastname,contactnumber,contactemail,visit_status,visitor ,card,workstation, visitor_type, reason, visitor_status, host, patient, created_by, date_in, time_in, date_out, time_out, date_check_in, time_check_in, date_check_out, time_check_out, tenant, tenant_agent, is_deleted, companycode, contact_street_no, contact_street_name, contact_street_type, contact_suburb, contact_postcode, identification_type, identification_document_no, identification_document_expiry, asic_no, asic_expiry, workstation, date_of_birth, finish_date, card_returned_date', 'safe', 'on' => 'search'),
+
+            array('card_lost_declaration_file', 'file', 'types'=>'pdf,doc,docx,jpg,gif,png', 'allowEmpty'=>true, 'maxSize'=>1024 * 1024 * 10),
         );
     }
 
@@ -260,7 +281,7 @@ class Visit extends CActiveRecord {
         $criteria->compare('company0.name', $this->company, true);
         $criteria->compare('card0.card_number', $this->cardnumber, true);
 
-        $criteria->compare('id', $this->id, true);
+        $criteria->compare('t.id', $this->id, true);
         //  $criteria->compare('visitor', $this->visitor, true);
         $criteria->compare('card', $this->card, true);
         $criteria->compare('card_type', $this->card_type, true);
@@ -289,14 +310,52 @@ class Visit extends CActiveRecord {
         $criteria->compare('t.is_deleted', $this->is_deleted, "0");
         $criteria->compare('visit_status', $this->visit_status);
         $criteria->compare('workstation', $this->workstation);
+
+        $criteria->compare('company0.code', $this->companycode, true);
+        $criteria->compare('visitor0.date_of_birth', $this->date_of_birth, true);
+        $criteria->compare('visitor0.contact_street_no', $this->contact_street_no, true);
+        $criteria->compare('visitor0.contact_street_name', $this->contact_street_name, true);
+        $criteria->compare('visitor0.contact_street_type', $this->contact_street_type, true);
+        $criteria->compare('visitor0.contact_suburb', $this->contact_suburb, true);
+        $criteria->compare('visitor0.contact_postcode', $this->contact_postcode, true);
+        $criteria->compare('visitor0.identification_type', $this->identification_type, true);
+        $criteria->compare('visitor0.identification_document_no', $this->identification_document_no, true);
+        $criteria->compare('visitor0.identification_document_expiry', $this->identification_document_expiry, true);
+        $criteria->compare('visitor0.asic_no', $this->asic_no, true);
+        $criteria->compare('visitor0.asic_expiry', $this->asic_expiry, true);
+        $criteria->compare('finish_date', $this->finish_date, true);
+        $criteria->compare('card_returned_date', $this->card_returned_date, true);
+
         if ($merge !== null) {
             $criteria->mergeWith($merge);
+        }
+
+        if($this->filterProperties){
+            $criteria->addCondition("t.id LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.first_name LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.last_name LIKE CONCAT('%', :filterProperties , '%')
+                OR company0.code LIKE CONCAT('%', :filterProperties , '%')
+                OR company0.name LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.date_of_birth LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.contact_number LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.contact_street_no LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.contact_street_name LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.contact_street_type LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.contact_suburb LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.contact_postcode LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.email LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.identification_type LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.identification_document_no LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.identification_document_expiry LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.asic_no LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.asic_expiry LIKE CONCAT('%', :filterProperties , '%')");
+            $criteria->params = array(':filterProperties' => $this->filterProperties);
         }
 
         if (Yii::app()->user->role == Roles::ROLE_STAFFMEMBER && Yii::app()->controller->action->id != 'view' && Yii::app()->controller->action->id != 'evacuationReport') {
             $criteria->addCondition('host = ' . Yii::app()->user->id . ' and visit_status = ' . VisitStatus::PREREGISTERED);
         }
-        $session = new CHttpSession;
+
         switch (Yii::app()->user->role) {
             case Roles::ROLE_STAFFMEMBER:
                 $criteria->addCondition('host = ' . Yii::app()->user->id);
@@ -326,7 +385,18 @@ class Visit extends CActiveRecord {
                 $criteria->addCondition('t.workstation '.$workstations.'');
                 break;
         }
+        
         $criteria->addCondition('t.is_deleted = 0');
+        
+        /*
+         * this condition is a hack to show only CORPORATE VISITOR in the listing report
+         * 
+         */
+        if (Yii::app()->controller->action->id == 'visitorRegistrationHistory')
+        {
+            $criteria->addCondition('profile_type ="' . Visitor::PROFILE_TYPE_CORPORATE . '"');
+        }
+        
         if (Yii::app()->controller->action->id == 'admindashboard') {
             Yii::app()->user->setState('pageSize', (int) '5');
         } else {
@@ -406,7 +476,7 @@ class Visit extends CActiveRecord {
                         . "LEFT JOIN visit_status ON visit.visit_status = visit_status.id "
                         . "LEFT JOIN visitor_type ON visit.visitor_type = visitor_type.id "
                         . "LEFT JOIN visitor_status ON visitor.visitor_status = visitor_status.id "
-                        . "WHERE visit.is_deleted= 0 ")->queryAll();
+                        . "WHERE visit.is_deleted= 0")->queryAll();
         return $rawData;
     }
 
@@ -423,6 +493,32 @@ class Visit extends CActiveRecord {
                     SET visit_status = '" . VisitStatus::CLOSED . "',card_status ='" . CardStatus::NOT_RETURNED . "'
                     WHERE 'd-m-Y' > date_out AND date_out != 'd-m-Y' AND visit_status = '" . VisitStatus::ACTIVE . "'
                     AND card_status ='" . CardStatus::ACTIVE . "' and card_type= '" . CardType::SAME_DAY_VISITOR . "'")->execute();
+            echo "Affected Rows : " . $command . "<br>";
+            if ($command > 0) {
+                echo "Update visit to close status successful.";
+            } else {
+                echo "No record to update.";
+            }
+
+            return true;
+        } catch (Exception $ex) {
+            echo 'Query failed', $ex->getMessage();
+            return false;
+        }
+    }
+
+    public function updateEvicVisitsToClose() {
+        /* EVIC card type is issued Strictly for 28 days
+         * update visit status to close and card status to return if
+         * current date is greater than date check out and if visit status is still active
+         * and card status is still active
+         */
+        try {
+            $commandUpdateCard = "";
+
+            $command = Yii::app()->db->createCommand("UPDATE visit
+                    SET visit_status = '" . VisitStatus::CLOSED . "',card_option ='" . CardStatus::RETURNED . "'
+                    WHERE 'd-m-Y' > date_check_out AND date_check_out != 'd-m-Y' AND visit_status = '" . VisitStatus::ACTIVE . "' AND card_type= '" . CardType::VIC_CARD_EXTENDED . "'")->execute();
             echo "Affected Rows : " . $command . "<br>";
             if ($command > 0) {
                 echo "Update visit to close status successful.";

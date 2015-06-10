@@ -29,13 +29,13 @@ $session = new CHttpSession;
 
     <tr>
         <td class="vic-col">
-            <input type="checkbox" value="1" name="VivHolderDecalarations" disabled="disabled" id="VivHolderDecalarations" class="vic-active-visit"/>
+            <input type="checkbox" value="1" name="VivHolderDecalarations" disabled="disabled" id="VivHolderDecalarations" class="vic-active-visit vic-active-declarations"/>
             <a href="#vicHolderModal" data-toggle="modal">VIC Holder Declarations</a>
         </td>
     </tr>
     <tr>
         <td class="vic-col">
-            <input type="checkbox" value="1" name="AsicSponsorDecalarations" disabled="disabled" id="AsicSponsorDecalarations" class="vic-active-visit"/>
+            <input type="checkbox" value="1" name="AsicSponsorDecalarations" disabled="disabled" id="AsicSponsorDecalarations" class="vic-active-visit vic-active-declarations"/>
             <a href="#asicSponsorModal" data-toggle="modal">ASIC Sponsor Declarations</a>
         </td>
     </tr>
@@ -48,19 +48,19 @@ $session = new CHttpSession;
     </tr>
     <tr>
         <td class="vic-col">
-            <input type="checkbox" <?php echo $model->reason > 0 ? 'checked="checked"' : '';?> value="1" name="reasonActiveVisit" class="vic-active-visit"/>
+            <input type="checkbox" <?php echo $model->reason > 0 ? 'checked="checked"' : '';?> value="1" name="reasonActiveVisit" class="vic-active-visit vic-active-verification"/>
             <a href="#" style="text-decoration: none !important;">Visit Reason</a>
         </td>
     </tr>
     <tr>
         <td class="vic-col">
-            <input type="checkbox"  value="1" name="identificationActiveVisit" class="vic-active-visit"/>
+            <input type="checkbox"  value="1" name="identificationActiveVisit" class="vic-active-visit vic-active-verification"/>
             <a href="#" style="text-decoration: none !important;">Identification</a>
         </td>
     </tr>
     <tr>
         <td class="vic-col">
-            <input type="checkbox" value="1" name="asicSponsorActiveVisit" class="vic-active-visit"/>
+            <input type="checkbox" value="1" name="asicSponsorActiveVisit" class="vic-active-visit vic-active-verification"/>
             <a href="#" style="text-decoration: none !important;">ASIC Sponsor</a>
         </td>
     </tr>
@@ -310,7 +310,7 @@ $session = new CHttpSession;
         </table>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="btnVicConfirm">Confirm</button>
+        <button type="button" onClick="vicHolderDeclarationChange()" class="btn btn-primary" id="btnVicConfirm">Confirm</button>
     </div>
 </div>
 
@@ -324,7 +324,7 @@ $session = new CHttpSession;
         <table>
             <tr>
                 <td width="5%"><input type="checkbox" checked="checked" id="asicDecalarationCbx1"/></td>
-                <td>I confirm that the VIC holders details are correct. I have read, understood and agree to ensure that the applicant will abide by the conditions applicatle to the use of the Visitor Identification Card.</td>
+                <td>I confirm that the VIC holders details are correct. I have read, understood and agree to ensure that the applicant will abide by the conditions applicable to the use of the Visitor Identification Card.</td>
             </tr>
             <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
             <tr>
@@ -334,17 +334,17 @@ $session = new CHttpSession;
             <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
             <tr>
                 <td width="5%"><input type="checkbox" checked="checked" id="asicDecalarationCbx3"/></td>
-                <td>I note that they mush be under my director supervision at all times whilst they are airside.</td>
+                <td>I note that they must be under my direct supervision at all times whilst they are airside.</td>
             </tr>
             <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
             <tr>
                 <td width="5%"><input type="checkbox" checked="checked" id="asicDecalarationCbx4"/></td>
-                <td>I request that a VIC b issued to the applicant for the areas and reason indicated in the section above.</td>
+                <td>I request that a VIC be issued to the applicant for the areas and reason indicated.</td>
             </tr>
         </table>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="btnAsicConfirm">Confirm</button>
+        <button type="button" onclick="asicSponsorDeclarationChange()" class="btn btn-primary" id="btnAsicConfirm">Confirm</button>
     </div>
 </div>
 <button id="btnActivate" style="display: none;"></button>
@@ -356,8 +356,6 @@ $session = new CHttpSession;
             $('#VivHolderDecalarations').prop('checked', false);
         }
         $('#vicHolderModal').modal('hide');
-
-        return false;
     }
 
     function asicSponsorDeclarationChange() {
@@ -367,6 +365,5 @@ $session = new CHttpSession;
             $('#AsicSponsorDecalarations').prop('checked', false);
         }
         $('#asicSponsorModal').modal('hide');
-        return false;
     }
 </script>

@@ -177,14 +177,14 @@ class Workstation extends CActiveRecord {
         }
     }
 
-    public function beforeFind() {
+    /*public function beforeFind() {
         $criteria = new CDbCriteria;
         $criteria->condition = "t.is_deleted = 0";
         if (Yii::app()->user->role != Roles::ROLE_SUPERADMIN) {
             $criteria->condition = "t.tenant ='" . Yii::app()->user->tenant . "' and t.is_deleted = 0";
         }
         $this->dbCriteria->mergeWith($criteria);
-    }
+    }*/
 
     protected function afterValidate() {
         parent::afterValidate();
@@ -204,18 +204,19 @@ class Workstation extends CActiveRecord {
     public function findWorkstationAvailableForUser($userId) {
 
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "user = '$userId'";
+        $Criteria->condition = "user = $userId";
         $userworkstations = UserWorkstations::model()->findAll($Criteria);
 
         $aArray = array();
         if (count($userworkstations) != 0) {
             foreach ($userworkstations as $index => $value) {
-
-                $workstations = Workstation::model()->findByPk($value['workstation']);
-                $aArray[] = array(
-                    'id' => $workstations['id'],
-                    'name' => $workstations['name'],
-                );
+                $workstation = Workstation::model()->find('id = ' . $value['workstation'] . ' AND is_deleted = 0');
+                if ($workstation) {
+                    $aArray[] = array(
+                        'id' => $workstation->id,
+                        'name' => $workstation->name,
+                    );
+                }
             }
             return $aArray;
         } else {

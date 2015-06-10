@@ -63,7 +63,7 @@ if ($this->action->id == 'update') {
 </style>
 
 
-<div>
+<div class="addvisitor-form-ASIC">
     <?php
     $form = $this->beginWidget('CActiveForm', array(
         'id'                     => 'register-form',
@@ -183,7 +183,7 @@ if ($this->action->id == 'update') {
                                 <table style="margin-top: 70px;">
                                     <tr>
                                         <td>
-                                            <?php echo $form->dropDownList($model, 'visitor_card_status', Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_ASIC], array('empty' => 'Card Status')); ?>
+                                            <?php echo $form->dropDownList($model, 'visitor_card_status', Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_ASIC], array('empty' => 'Select Card Status')); ?>
                                             <span class="required">*</span>
                                             <?php echo "<br>" . $form->error($model, 'visitor_card_status'); ?>
                                         </td>
@@ -248,7 +248,7 @@ if ($this->action->id == 'update') {
                                            if(Yii::app()->user->role == Roles::ROLE_ADMIN) {
                                                echo '<select name="Visitor[visitor_type]" id="Visitor_visitor_type">';
                                                echo CHtml::tag('option',array('value' => ''),'Select Visitor Type',true);
-                                               $list = VisitorType::model()->findAll();
+                                               $list = VisitorType::model()->findAll("`name` like '{$model->profile_type}%'");
                                                
                                                foreach( $list as $val ) {
                                                    if ( $val->tenant == Yii::app()->user->tenant && $val->is_default_value == '1' )
@@ -258,7 +258,7 @@ if ($this->action->id == 'update') {
                                                    
                                               } echo "</select>";
                                            } else
-                                                echo $form->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes());
+                                                echo $form->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes(NULL,"`name` like '{$model->profile_type}%'"));
                                             ?>
                                             <?php echo "<br>" . $form->error($model, 'visitor_type'); ?>
                                         </td>
@@ -336,8 +336,8 @@ if ($this->action->id == 'update') {
                                         'placeHolder' => 'Please select a company'
                                     ));
                                     ?>
-                                    <?php echo $form->error($model, 'company'); ?>
                                     <span class="required">*</span>
+                                    <?php echo $form->error($model, 'company'); ?>
                                 </div>
                             </td>
                         </tr>
@@ -770,7 +770,7 @@ if ($this->action->id == 'update') {
             success: function (r) {
                 $('#User_workstation option[value!=""]').remove();
 
-                $('#User_workstation').append('<option value="">Workstation:</option>');
+                $('#User_workstation').append('<option value="">Select Workstation</option>');
                 $.each(r.data, function (index, value) {
                     $('#User_workstation').append('<option value="' + value.id + '">' + 'Workstation: ' + value.name + '</option>');
                 });

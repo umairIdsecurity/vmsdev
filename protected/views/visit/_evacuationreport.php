@@ -63,13 +63,13 @@ $this->widget('zii.widgets.grid.CGridView', array(
         
         array(
             'name' => 'firstname',
-            'value' => 'Visitor::model()->findByPk($data->visitor)->first_name',
+            'value' => '$data->visitor0->first_name',
             'header' => 'First Name',
             'filter' => CHtml::textField('Visit[firstname]', '', array('class' => 'filterFirstName','placeholder'=>'First Name')),
         ),
         array(
             'name' => 'lastname',
-            'value' => 'Visitor::model()->findByPk($data->visitor)->last_name',
+            'value' => '$data->visitor0->last_name',
             'header' => 'Last Name',
             'filter' => CHtml::textField('Visit[lastname]', '', array('class' => 'filterLastName' , 'placeholder'=>'Last Name')),
         ),
@@ -83,13 +83,13 @@ $this->widget('zii.widgets.grid.CGridView', array(
         ),
         array(
             'name' => 'contactnumber',
-            'value' => 'Visitor::model()->findByPk($data->visitor)->contact_number',
+            'value' => '$data->visitor0->contact_number',
             'header' => 'Contact Number',
             'filter'=>CHtml::activeTextField($model, 'contactnumber', array('placeholder'=>'Contact Number')),
         ),
         array(
             'name' => 'contactemail',
-            'value' => 'Visitor::model()->findByPk($data->visitor)->email',
+            'value' => '$data->visitor0->email',
             'header' => 'Contact Email',
             'filter'=>CHtml::activeTextField($model, 'contactemail', array('placeholder'=>'Contact Email'))
         ),
@@ -128,8 +128,11 @@ $this->widget('zii.widgets.grid.CGridView', array(
 ));
 
 function getCompany($id) {
+    $visitor = Visitor::model()->findByPk($id);
 
-    $company_id = Visitor::model()->findByPk($id)->company;
+    if (isset($visitor)) {
+        $company_id = Visitor::model()->findByPk($id)->company;
+    }
 
     if (isset($company_id)) {
 

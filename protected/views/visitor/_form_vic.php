@@ -131,56 +131,12 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                     </td>
                                     </tr>
                                 </table>
-                                <table style="float:left;width:300px; margin-top: 20px;">
-                                    <tr>
-                                        <td id="visitorTenantRow" <?php
-                                        if ($session['role'] != Roles::ROLE_SUPERADMIN) {
-                                            echo " class='hidden' ";
-                                        }
-                                        ?>>
-                                            <select id="Visitor_tenant" onchange="populateTenantAgentAndCompanyField()"
-                                                    name="Visitor[tenant]">
-                                                <option value='' selected>Please select a tenant</option>
-                                                <?php
-                                                $allTenantCompanyNames = User::model()->findAllCompanyTenant();
-                                                foreach ($allTenantCompanyNames as $key => $value) {
-                                                    ?>
-                                                    <option value="<?php echo $value['tenant']; ?>"
-                                                        <?php
-                                                        if (($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant'] && $this->action->id != 'update') || ($model['tenant'] == $value['tenant'])) {
-                                                            echo "selected ";
-                                                        }
-                                                        ?> ><?php echo $value['name']; ?></option>
-                                                <?php
-                                                }
-                                                ?>
-                                            </select>
-                                            <span class="required">*</span>
-                                            <?php echo "<br>" . $form->error($model, 'tenant'); ?>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td id="visitorTenantAgentRow" <?php
-                                        if ($session['role'] != Roles::ROLE_SUPERADMIN) {
-                                            echo " class='hidden' ";
-                                        }
-                                        ?> >
-                                            <select id="Visitor_tenant_agent" name="Visitor[tenant_agent]"
-                                                    onchange="populateCompanyWithSameTenantAndTenantAgent()">
-                                                <?php
-                                                echo "<option value='' selected>Please select a tenant agent</option>";
-                                                if ($session['role'] != Roles::ROLE_SUPERADMIN) {
-                                                    echo "<option value='" . $session['tenant_agent'] . "' selected>TenantAgent</option>";
-                                                }
-                                                ?>
-                                            </select>
-
-                                            <?php echo "<br>" . $form->error($model, 'tenant_agent'); ?>
-                                </table>
                                 <table style="margin-top: 70px;">
                                     <tr>
                                         <td>
-                                            <?php echo $form->dropDownList($model, 'visitor_card_status', Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC], array('empty' => 'Card Status', 'options'=>array('2'=>array('selected'=>'selected')))); ?>
+                                            <?php 
+                                            array_pop(Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC]);
+                                            echo $form->dropDownList($model, 'visitor_card_status', Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC], ['empty' => 'Select Card Status', 'options'=>['2' => ['selected'=>true]]]); ?>
                                             <span class="required">*</span>
                                             <?php echo "<br>" . $form->error($model, 'visitor_card_status'); ?>
                                         </td>
@@ -246,8 +202,8 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                            // Show Default selected to Admin only 
                                            if(Yii::app()->user->role == Roles::ROLE_ADMIN) {
                                                echo '<select name="Visitor[visitor_type]" id="Visitor_visitor_type">';
-                                               echo CHtml::tag('option',array('value' => ''),'Visitor Type',true);
-                                               $list = VisitorType::model()->findAll();
+                                               echo CHtml::tag('option',array('value' => ''),'Select Visitor Type',true);
+                                               $list = VisitorType::model()->findAll("`name` like 'VIC%'");
                                                
                                                foreach( $list as $val ) {
                                                    if ( $val->tenant == Yii::app()->user->tenant && $val->is_default_value == '1' ) {
@@ -257,7 +213,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                                    }
                                                } echo "</select>";
                                            }  else {
-                                               echo $form->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes());
+                                               echo $form->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes(NULL,"`name` like '{$model->profile_type}%'"));
                                            }
                                           
                                             ?>
@@ -380,8 +336,8 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                         'placeHolder' => 'Please select a company'
                                     ));
                                     ?>
-                                    <?php echo $form->error($model, 'company'); ?>
                                     <span class="required">*</span>
+                                    <?php echo $form->error($model, 'company'); ?>
                                 </div>
                             </td>
                         </tr>

@@ -67,7 +67,7 @@ $defaultKey = key($asicCardTypes);
     <div class="tab-content">
         <div role="tabpanel" class="tab-pane active" id="addhost">
 
-            <div id="findAddHostRecordDiv" class="findAddHostRecordDiv form">
+            <div id="findAddHostRecordDiv" class="findAddHostRecordDiv">
 
                 <?php
                 $form = $this->beginWidget('CActiveForm', array(
@@ -137,7 +137,7 @@ $defaultKey = key($asicCardTypes);
                         ),
                     ));
                     ?>
-                    <?php echo $form->errorSummary($userModel); ?>
+                    <?php /*echo $form->errorSummary($userModel); */?>
                     <input type="text" id="hostEmailIsUnique" value="0"/>
 
                     <div>
@@ -347,7 +347,7 @@ $defaultKey = key($asicCardTypes);
                                         'model' => $userModel,
                                         'attribute' => 'asic_expiry',
                                         'options' => array(
-                                            'dateFormat' => 'yy-mm-dd',
+                                            'dateFormat' => 'dd-mm-yy',
                                             'changeMonth' => 'true',
                                             'changeYear' => 'true',
                                             'minDate' => '0'
@@ -766,7 +766,7 @@ $defaultKey = key($asicCardTypes);
         $("#selectedHostInSearchTable").val("");
         $("#searchHostTableDiv h4").html("Search Results for : " + $("#search-host").val());
         $("#searchHostTableDiv").show();
-        $(".tab-content").hide();
+        $("#step3Tab").find(".tab-content").hide();
         $("#subm").show();
         $(".data-ifr").show();
         // $("#register-host-form").hide();

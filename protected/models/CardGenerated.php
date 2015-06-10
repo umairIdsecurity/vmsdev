@@ -130,7 +130,12 @@ class CardGenerated extends CActiveRecord {
 
     public function getCardCode($cardId) {
         if ($cardId != '') {
-            return CardGenerated::model()->findByPk($cardId)->card_number;
+            $model = $this->findByPk($cardId);
+            if (!empty($model) && !empty($model->card_number)) {
+                return $model->card_number;
+            } else {
+                return '-';
+            }
         } else {
             return '-';
         }

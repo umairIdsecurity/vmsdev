@@ -61,7 +61,6 @@ class TenantForm extends CFormModel
             array('tenant_code', 'length', 'max' => 3),
             array('tenant_code', 'length', 'min' => 3),
             array('role, user_type, user_status,password_opt', 'numerical', 'integerOnly' => true),
-            array('contact_number', 'numerical', 'integerOnly' => true),
             array('user_type', 'required', 'message' => 'Please select a {attribute}'),
             array('email', 'filter', 'filter' => 'trim'),
             array('email', 'email'),

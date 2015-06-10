@@ -26,10 +26,14 @@
              array(
                 'header' => 'Actions',
                 'class' => 'CButtonColumn',
-                'template' => '{view}',
+                'template' => '{view} {delete}',
                 'buttons' => array(                  
                     'view' => array(//the name {reply} must be same
                         'label' => 'view', // text label of the button
+                        'imageUrl' => false, // image URL of the button. If not set or false, a text link is used, The image must be 16X16 pixels
+                    ),
+                    'delete' => array(//the name {reply} must be same
+                        'label' => 'delete', // text label of the button
                         'imageUrl' => false, // image URL of the button. If not set or false, a text link is used, The image must be 16X16 pixels
                     ),
                      

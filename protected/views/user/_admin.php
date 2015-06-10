@@ -91,33 +91,32 @@ $this->widget('zii.widgets.grid.CGridView', array(
                         'ajax' => array(
                             'type' => 'POST',
                             'url' => "js:$(this).attr('href')", // ajax post will use 'url' specified above
-                            'success' => 'function(data){
-                              
-                                                if(data == "true"){
-                                                    $.fn.yiiGridView.update("user-grid");   
-                                                    return false;
-                                                }else{
-                                                    var urlAddress = this.url;
-                                                    var urlAddressId = urlAddress.split("=");
-                                                    var x;
-                                                    if($("#visitExists"+  urlAddressId["2"]).val() == 1){
-                                                        alert("This profile cannot be deleted. This profile is currently assigned to a visit.");
-                                                        return false;
-                                                    } else if($("#isTenant"+  urlAddressId["2"]).val() == 1){
-                                                        alert("This profile cannot be deleted. Profile is tenant of a company");
-                                                        return false;
-                                                    } else if($("#isUserWorkstation"+  urlAddressId["2"]).val() == 1){
-                                                        alert("A workstation is linked to this profile. Please unlink workstation first before deleting this user.");
-                                                        return false;
-                                                    } else if($("#isUserTenantOfVisitor"+  urlAddressId["2"]).val() == 1){
-                                                        alert("This profile cannot be deleted. This profile is currently the tenant of a visitor. ");
-                                                        return false;
-                                                    } else if($("#isUserTenantAgent"+  urlAddressId["2"]).val() == 1){
-                                                        alert("This profile cannot be deleted. This profile is currently the tenant agent of a company.");
-                                                        return false;
-                                                    }   
-                                                }
-                                            }',
+                            'success' => 'function(data) {
+                                if (data == "true") {
+                                    $.fn.yiiGridView.update("user-grid");
+                                    return false;
+                                } else {
+                                    var urlAddress = this.url;
+                                    var urlAddressId = urlAddress.split("=");
+                                    var x;
+                                    if($("#visitExists"+  urlAddressId["2"]).val() == 1){
+                                        alert("This profile cannot be deleted. This profile is currently assigned to a visit.");
+                                        return false;
+                                    } else if($("#isTenant"+  urlAddressId["2"]).val() == 1){
+                                        alert("This profile cannot be deleted. Profile is tenant of a company");
+                                        return false;
+                                    } else if($("#isUserWorkstation"+  urlAddressId["2"]).val() == 1){
+                                        alert("A workstation is linked to this profile. Please unlink workstation first before deleting this user.");
+                                        return false;
+                                    } else if($("#isUserTenantOfVisitor"+  urlAddressId["2"]).val() == 1){
+                                        alert("This profile cannot be deleted. This profile is currently the tenant of a visitor. ");
+                                        return false;
+                                    } else if($("#isUserTenantAgent"+  urlAddressId["2"]).val() == 1){
+                                        alert("This profile cannot be deleted. This profile is currently the tenant agent of a company.");
+                                        return false;
+                                    }
+                                }
+                            }',
                         ),
                     ),
                 ),
@@ -167,8 +166,10 @@ $this->widget('zii.widgets.grid.CGridView', array(
 ));
 
 function assignedWorkstation(){
-    $data = CHtml::listData(Workstation::model()->findAll(array('order' => 'name ASC')), 'id', 'name');
-    $data=array(""=>'Assigned Workstations')+$data;
+    $Criteria = new CDbCriteria();
+    $Criteria->condition = "is_deleted = 0";
+    $workstations = Workstation::model()->findAll($Criteria);
+    $data=["" => 'Assigned Workstations'] + CHtml::listData($workstations, 'id', 'name');
     return $data;
 }
 

@@ -5,6 +5,7 @@ $cs = Yii::app()->clientScript;
 
 //$cs->registerCoreScript('jquery');
 $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/jquery.uploadfile.min.js');
+$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/jquery.maskedinput.min.js');
 $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/jquery.form.js');
 $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/jquery.imgareaselect.pack.js');
 
@@ -138,7 +139,7 @@ $userRole = $session['role'];
                                     ?>
                                     <a href="<?php echo Yii::app()->createUrl("/dashboard/viewmyvisitors"); ?>">Dashboard</a>
                                     <?php
-                                } elseif ($session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_AGENT_ADMIN || $session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
+                                } elseif (in_array($session['role'], array(Roles::ROLE_ADMIN, Roles::ROLE_AGENT_ADMIN, Roles::ROLE_OPERATOR, Roles::ROLE_AGENT_OPERATOR, Roles::ROLE_ISSUING_BODY_ADMIN))) {
                                     ?>
                                     <a href="<?php echo Yii::app()->createUrl("/dashboard/admindashboard"); ?>">Dashboard</a>
                                     <?php
@@ -152,10 +153,8 @@ $userRole = $session['role'];
                             <li class="<?php echo ($this->action->id == "view" && $this->id == 'visit') ? "active" : "" ?>">
                                 <a href="<?php echo Yii::app()->createUrl("/visit/view"); ?>">Visit History</a>
                             </li>
-                            <?php if ($session['role'] == Roles::ROLE_ADMIN ||
-                                $session['role'] == Roles::ROLE_AGENT_ADMIN ||
-                                $session['role'] == Roles::ROLE_SUPERADMIN ||
-                                $session['role'] == Roles::ROLE_AGENT_AIRPORT_ADMIN) { ?>
+                            <?php if (in_array($session['role'], array(Roles::ROLE_ADMIN,Roles::ROLE_AGENT_ADMIN,Roles::ROLE_SUPERADMIN,Roles::ROLE_AGENT_AIRPORT_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN))) {
+                                ?>
                                 <li class="<?php echo ($session['lastPage'] != 'dashboard' && ($this->action->id == "admin" || ($this->id == 'visit' && $this->action->id != 'view') || $this->id == "user" || $this->id == "visitor" || $this->id == "company" || $this->id == "workstation" || $this->id == "visitReason" || $this->id == "companyLafPreferences")) ? "active" : "" ?>">
                                     <a href="<?php echo Yii::app()->createUrl("/user/admin"); ?>">Administration</a>
                                 </li>

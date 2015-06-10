@@ -67,6 +67,11 @@ WHERE u.id=c.tenant AND c.id !=1";
 			return array(
 	            array('name', 'required'),
 	            array('user_first_name , user_last_name , user_email , user_contact_number', 'required' , 'on' => 'company_contact'),
+				array('name , code , email_address , mobile_number', 'required' , 'on' => 'updatetenant'),
+                array('mobile_number', 'numerical', 'integerOnly' => true, 'on' => 'updatetenant'),
+                array('code', 'match',
+                    'pattern' => '/^[a-zA-Z\s]+$/',
+                    'message' => 'Code can only contain letters' ,'on' => 'updatetenant'),
 	            array('code', 'length', 'min' => 3, 'max' => 3, 'tooShort' => 'Code is too short (Should be in 3 characters)'),
 	            array('email_address', 'email'),
 	            array('website', 'url'),
@@ -93,6 +98,10 @@ WHERE u.id=c.tenant AND c.id !=1";
 	//                        ':tenant' => Yii::app()->user->tenant
 	//                    )
 	//                )),
+	
+				array(' email_address , mobile_number', 'required' , 'on' => 'updatetenant'),
+                array('mobile_number', 'numerical', 'integerOnly' => true, 'on' => 'updatetenant'),
+				
 	            array('code', 'length', 'min' => 3, 'max' => 3, 'tooShort' => 'Code is too short (Should be in 3 characters)'),
 	            array('code', 'match',
 	                'pattern' => '/^[a-zA-Z\s]+$/',

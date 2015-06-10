@@ -36,7 +36,7 @@ $model->identification_country_issued = 13;
     <div style="float:left;width:270px;text-align:center">
     <div class="visitor-title" style="cursor:pointer;color:#2f96b4">Add Visitor Profile</div>
     </div>
-    <input type="text" id="search-visitor" name="search-visitor" placeholder="Enter name, email"
+    <input type="text" id="search-visitor" name="search-visitor" placeholder="Enter name, email, drivers licence "
            class="search-text" style="margin-left:30px;"/>
     <button class="visitor-findBtn" onclick="findVisitorRecord()" id="visitor-findBtn" style="display:none;"
             data-target="#findVisitorRecordModal" data-toggle="modal">Find Record
@@ -52,7 +52,7 @@ $model->identification_country_issued = 13;
     <div class="tab-content">
 
         <div role="tabpanel" class="tab-pane active" id="addvisitor">
-            <div id="findAddVisitorRecordDiv" class="findAddVisitorRecordDiv form">
+            <div id="findAddVisitorRecordDiv" class="findAddVisitorRecordDiv">
 
                 <div data-ng-app="PwordForm">
                     <?php
@@ -111,7 +111,7 @@ $model->identification_country_issued = 13;
                         ),
                     ));
                     ?>
-                    <?php echo $form->errorSummary($model); ?>
+                    <?php /*echo $form->errorSummary($model); */?>
                     <input type="hidden" id="emailIsUnique" value="0"/>
                     <input type="hidden" name="VisitCardType" id="VisitCardType" />
 
@@ -148,7 +148,9 @@ $model->identification_country_issued = 13;
                             </tr>
                             <tr style="display: none" id="vicHolderCardStatus">
                                 <td>
-                                    <?php echo $form->dropDownList($model, 'visitor_card_status', Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC], array('empty' => 'Card Status', 'options'=>array('2'=>array('selected'=>true)))); ?>
+                                    <?php
+                                    array_pop(Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC]);
+                                    echo $form->dropDownList($model, 'visitor_card_status', Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC], ['empty' => 'Select Card Status', 'options'=>['2' => ['selected'=>true]]]); ?>
                                     <span class="required">*</span>
                                     <?php echo "<br>" . $form->error($model, 'visitor_card_status'); ?>
                                 </td>
@@ -311,8 +313,8 @@ $model->identification_country_issued = 13;
                                             'placeHolder' => 'Please select a company'
                                         ));
                                         ?>
-                                        <?php echo $form->error($model, 'company'); ?>
                                         <span class="required">*</span>
+                                        <?php echo $form->error($model, 'company'); ?>
                                     </div>
                                 </td>
                             </tr>
@@ -611,19 +613,9 @@ $model->identification_country_issued = 13;
                             <!-- end VIC info -->
 
                             <tr>
-                                <td>&nbsp;</td>
-                            </tr>
-                            <tr>
-                                <td>&nbsp;</td>
-                            </tr>
-                            <tr>
-                                <td>&nbsp;</td>
-                            </tr>
-
-                            <tr>
                                 <td>
                                     <div class="register-a-visitor-buttons-div"
-                                         style="padding-top:180px;padding-right:60px; text-align: right;">
+                                         style="padding-top:10px;padding-right:60px; text-align: right;">
                                         <input type="button" class="neutral visitor-backBtn btnBackTab2"
                                                id="btnBackTab2" value="Back"/>
                                         <input type="button" id="clicktabB" value="Save and Continue"
@@ -817,10 +809,8 @@ $model->identification_country_issued = 13;
             $("#register-reason-form").hide();
 
             var searchText = $("#search-visitor").val();
-           /* if ($("#search_visitor_tenant").val() == '') {
-                $("#searchTextErrorMessage").show();
-                $("#searchTextErrorMessage").html("Please select a tenant");
-            } else */if (searchText != '') {
+
+            if (searchText != '') {
 				
                 
                 $("#visitor-findBtn").click();

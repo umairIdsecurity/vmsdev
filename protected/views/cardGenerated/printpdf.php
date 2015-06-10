@@ -4,6 +4,14 @@ if (array_key_exists($model->card_type, CardType::$CARD_TYPE_LIST)) {
 }
 
 $visitorName = ($visitorModel->first_name) ? $visitorModel->first_name : "" . ' ' . ($visitorModel->last_name) ? $visitorModel->last_name : "";
+if (strlen($visitorModel->first_name . ' ' . $visitorModel->last_name) > 32) {
+    $first_name = explode(' ', $visitorModel->first_name);
+    $last_name = explode(' ', $visitorModel->last_name);
+    $visitorName = $first_name[0] . ' ' . $last_name[0];
+} else {
+    $visitorName = $visitorModel->first_name . ' ' . $visitorModel->last_name;
+}
+
 $tenant = User::model()->findByPk($visitorModel->tenant);
 if ($tenant) {
     $company = Company::model()->findByPk($tenant->company);
@@ -14,7 +22,7 @@ if ($tenant) {
     } else {
         $companyName = "N/A";
         $companyLogoId = "N/A";
-        $companyCode = "N/A";
+        $companyCode = "";
     }
 
     $companyLogo = Yii::app()->getBaseUrl(true) . "/" . Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
@@ -64,9 +72,9 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
 //die;
 ?>
 <?php if ($type == 1) { ?>
-    <table border="0">
+    <table border="1">
         <tr>
-            <td <?php echo $bgcolor; ?> width="210px">
+            <td <?php echo $bgcolor; ?> width="215px">
 
                 <table cellpadding="10" style=" border-radius:10px" width="204px" height="325px">
                     <tr>
@@ -77,8 +85,8 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
 
                     </tr>
                     <tr>
-                        <td color="black" align="center" style="font-family: sans-serif;font-size: 73px;font-weight: bolder;" ><?php echo($model->card_type == 4) ? 'C' : 'V'; ?></td>
-                        <td <?php echo $bgcolor; ?> align="left" style="font-family: sans-serif;font-size: 15px;"><b><?php echo $companyCode; ?><br><?php echo $dateExpiry; ?><br></b><?php echo $visitorName; ?><br><?php echo $cardCode; ?><br></td>
+                        <td color="black" align="center" style="font-family: sans-serif;font-size: 73px;font-weight: bolder;" ><?php echo($model->card_type == CardType::CONTRACTOR_VISITOR) ? 'C' : 'V'; ?></td>
+                        <td <?php echo $bgcolor; ?> align="center" style="font-family: sans-serif;font-size: 15px;"><b><?php echo $companyCode; ?><br><?php echo $dateExpiry; ?><br></b><?php echo $visitorName; ?><br><?php echo $cardCode; ?><br></td>
                     </tr>
                     <tr>
                         <td colspan="2">
@@ -88,7 +96,7 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
                 </table>
             </td>
             <?php if (($model->card_type != CardType::VIC_CARD_MANUAL) || ($backText != NULL)): ?>
-                <td padding="10" align="center" style="font-family:sans-serif;font-size:18px;font-weight:300;" width="250px">
+                <td padding="10" align="center" style="font-family:sans-serif;font-size:18px;font-weight:300;" width="215px">
 
                     <table cellpadding="10" style=" border-radius:10px" width="204px" height="325px">
                         <tr>
@@ -150,7 +158,7 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
     </table>
 <?php } else if ($type == 3) { ?>
     <table border="0">
-         <tr>
+        <tr>
             <td width="210px">
 
                 <table cellpadding="10" style=" border-radius:10px" width="204px" height="325px">

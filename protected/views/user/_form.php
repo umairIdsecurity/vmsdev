@@ -115,12 +115,12 @@ if (isset($company) && !empty($company)) {
 
 <input type="hidden" id="passwordUser" value="<?php echo isset($password) ? $password : ''; ?>">
 <div class="form" data-ng-app="PwordForm">
-<?php if ($this->action->id == 'update') {
-    echo '<h1>Edit ' . Roles::$labels[Yii::app()->request->getParam('role')] . '</h1>';
-
+<?php 
+$roleLabel = isset(Roles::$labels[Yii::app()->request->getParam('role')]) ? Roles::$labels[Yii::app()->request->getParam('role')] : '';
+if ($this->action->id == 'update') {
+    echo '<h1>Edit ' . $roleLabel . '</h1>';
 } else {
-    echo '<h1>Add ' . Roles::$labels[Yii::app()->request->getParam('role')] . '</h1>';
-
+    echo '<h1>Add ' . $roleLabel . '</h1>';
 }?>
 <?php
 $form = $this->beginWidget('CActiveForm', array(

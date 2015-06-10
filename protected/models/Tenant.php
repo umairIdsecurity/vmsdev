@@ -6,6 +6,7 @@
  * The followings are the available columns in table 'tenant':
  * @property string $id
  * @property string $created_by
+ * @property int $is_deleted
  *
  * The followings are the available model relations:
  * @property Company $id0
@@ -16,6 +17,11 @@ class Tenant extends CActiveRecord
 	/**
 	 * @return string the associated database table name
 	 */
+    public $name;
+    public $code;
+    public $contact;
+    public $email_address;
+
 	public function tableName()
 	{
 		return 'tenant';
@@ -33,7 +39,8 @@ class Tenant extends CActiveRecord
 			array('id, created_by', 'length', 'max'=>20),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, created_by', 'safe', 'on'=>'search'),
+			array('id, created_by,name,code,contact,email_address,is_deleted', 'safe', 'on'=>'search'),
+            array('id, created_by,name,code,contact,email_address,is_deleted', 'safe', 'on'=>'tenant_contact'),
 		);
 	}
 
@@ -58,6 +65,7 @@ class Tenant extends CActiveRecord
 		return array(
 			'id' => 'ID',
 			'created_by' => 'Created By',
+            'is_deleted' => 'Is deleted',
 		);
 	}
 
@@ -79,11 +87,20 @@ class Tenant extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id,true);
-		$criteria->compare('created_by',$this->created_by,true);
+        $criteria->with = array('id0');
 
+		$criteria->compare('t.id',$this->id,true);
+		$criteria->compare('t.created_by',$this->created_by,true);
+        $criteria->compare('t.is_deleted',0);
+        $criteria->compare('id0.name',$this->name,true);
+        $criteria->compare('id0.code',$this->code,true);
+        $criteria->compare('id0.contact',$this->contact,true);
+        $criteria->compare('id0.email_address',$this->email_address,true);
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
+            'sort' => array(
+                'defaultOrder' => 't.id DESC',
+            ),
 		));
 	}
 

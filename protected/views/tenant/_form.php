@@ -43,9 +43,9 @@ $currentLoggedUserId = $session['id'];
                                                 obj = JSON.parse(data);
 
                                                 if(obj["success"]){
-                                                    window.location.href = "'.$this->createUrl("tenant/create/&role=1").'";
+                                                    //window.location.href = "'.$this->createUrl("tenant/create/&role=1").'";
                                                 }else{
-                                                    alert("error");
+                                                    //window.location.href = "'.$this->createUrl("tenant/create/&role=1").'";
                                                 }
                                             },
 
@@ -100,49 +100,66 @@ $currentLoggedUserId = $session['id'];
             <td style="vertical-align: top; float:left; width:300px;">
 
                 <?php echo $form->hiddenField($model, 'role',array('value'=> $session['role'])); ?>
-                <table>
+                <div class="password-border">
+                    <table>
+                        <tbody>
+                        <tr>
+                            <td><strong>Tenant</strong></td>
+                        </tr>
+                        <tr><td>&nbsp;</td></tr>
+                        <tr>
+                            <td><?php echo $form->textField($model, 'tenant_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Tenant Name')); ?>
+                                <span class="required">*</span>
 
-                    <tr>
-                        <td><?php echo $form->textField($model, 'tenant_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Tenant Name')); ?>
-                            <span class="required">*</span>
+                                <?php echo "<br>" . $form->error($model, 'tenant_name'); ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><?php echo $form->textField($model, 'tenant_code', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Tenant code')); ?>
+                                <span class="required">*</span>
 
-                            <?php echo "<br>" . $form->error($model, 'tenant_name'); ?>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><?php echo $form->textField($model, 'tenant_code', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Tenant code')); ?>
-                            <span class="required">*</span>
+                                <?php echo "<br>" . $form->error($model, 'tenant_code'); ?>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="password-border" style="margin-top:20px;">
+                    <table >
+                        <tbody>
+                        <tr>
+                            <td><strong>Tenant Admin</strong></td>
+                        </tr>
+                        <tr><td>&nbsp;</td></tr>
+                        <tr>
+                            <td><?php echo $form->textField($model, 'first_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'First Name')); ?>
+                                <span class="required">*</span>
 
-                            <?php echo "<br>" . $form->error($model, 'tenant_code'); ?>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><?php echo $form->textField($model, 'first_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'First Name')); ?>
-                            <span class="required">*</span>
-
-                            <?php echo "<br>" . $form->error($model, 'first_name'); ?>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><?php echo $form->textField($model, 'last_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Last Name')); ?>
-                            <span class="required">*</span>
-                            <?php echo "<br>" . $form->error($model, 'last_name'); ?>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <?php echo $form->textField($model, 'email', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Email Address')); ?>
-                            <span class="required">*</span>
-                            <?php echo "<br>" . $form->error($model, 'email'); ?>
-                            <span class="errorMessageEmail1" style="display:none;color:red;font-size:0.9em;">A profile already exists for this email address</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><?php echo $form->textField($model, 'contact_number', array('size' => 50, 'placeholder'=>'Contact Number')); ?>
-                            <span class="required">*</span>
-                            <?php echo "<br>" . $form->error($model, 'contact_number'); ?></td>
-                    </tr>
-                </table>
+                                <?php echo "<br>" . $form->error($model, 'first_name'); ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><?php echo $form->textField($model, 'last_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Last Name')); ?>
+                                <span class="required">*</span>
+                                <?php echo "<br>" . $form->error($model, 'last_name'); ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <?php echo $form->textField($model, 'email', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Email Address')); ?>
+                                <span class="required">*</span>
+                                <?php echo "<br>" . $form->error($model, 'email'); ?>
+                                <span class="errorMessageEmail1" style="display:none;color:red;font-size:0.9em;">A profile already exists for this email address</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><?php echo $form->textField($model, 'contact_number', array('size' => 50, 'placeholder'=>'Contact Number')); ?>
+                                <span class="required">*</span>
+                                <?php echo "<br>" . $form->error($model, 'contact_number'); ?></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
         </td>
 
             <td style="vertical-align: top; float:left; width:300px">
@@ -311,11 +328,11 @@ $currentLoggedUserId = $session['id'];
         echo "text-align:right;";
     }
     ?>">
-        <?php echo CHtml::SubmitButton('Add', array('id' => 'createBtn', 'style' => 'height:30px;', 'class' => 'complete')); ?>
+        <?php echo CHtml::SubmitButton('Save', array('id' => 'createBtn', 'style' => 'height:30px;margin-right:30px;', 'class' => 'complete')); ?>
         <?php if (isset($_GET['viewFrom'])) { ?>
 
         <?php
-        } else {
+        } else {/*
         if ($session['role'] != Roles::ROLE_SUPERADMIN) {
             ?>
             <button class="yiiBtn" id="modalBtn" style="padding:1.5px 6px;margin-top:-4.1px;height:30.1px;" data-target="#viewLicense" data-toggle="modal">View License Details</button>
@@ -323,6 +340,7 @@ $currentLoggedUserId = $session['id'];
         <button class="yiiBtn actionForward" style="padding:2px 6px;margin-top:-4.1px;height:30.1px;" type='button' onclick="gotoLicensePage()">License Details</button>
             <?php
             }
+            */
             }
             ?>
     </div>
@@ -864,8 +882,5 @@ function get_avms_assignable_roles($user_role)
     /*<![CDATA[*/
     //jQuery(function($) { $('#tenant-form').yiiactiveform({'attributes':[{'inputID':'TenantForm_password','errorID':'TenantForm_password_em_'},{'inputID':'TenantForm_cnf_password','errorID':'TenantForm_cnf_password_em_'}]}); });
     /*]]>*/
+    $("#TenantForm_contact_number").mask("99 9999 9999",{placeholder:" "});
 </script>
-
-
-
-

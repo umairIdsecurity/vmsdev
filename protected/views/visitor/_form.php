@@ -417,8 +417,8 @@ $form = $this->beginWidget('CActiveForm', array(
                 'placeHolder' => 'Please select a company'
             ));
             ?>
-            <?php echo $form->error($model, 'company'); ?>
             <span class="required">*</span>
+            <?php echo $form->error($model, 'company'); ?>
         </div>
     </td>
 </tr>
@@ -467,7 +467,7 @@ $form = $this->beginWidget('CActiveForm', array(
                         array(
                             PasswordRequirement::PASSWORD_IS_NOT_REQUIRED => 'User does not require Password',
                             PasswordRequirement::PASSWORD_IS_REQUIRED => 'User requires Password to Login',
-                        ), array('class' => 'password_requirement form-label', 'style' => 'float:left;margin-right:10px;'));
+                        ), array('class' => 'password_requirement form-label', 'style' => 'float:left;margin-right:10px;', 'separator' => ''));
                     ?>
                     <?php echo $form->error($model, 'password_requirement'); ?>
                 </td>
@@ -495,19 +495,10 @@ $form = $this->beginWidget('CActiveForm', array(
                         </tr>
 
                         <tr>
-                            <td>&nbsp;</td>
-                        </tr>
-
-
-                        <tr>
-                            <td>
+                            <td style="padding-bottom:10px">
                                 <?php echo $form->radioButton($model, 'password_option', array("class"=>"pass_option"));?>
                                 &nbsp;Create Password
                             </td>
-                        </tr>
-
-                        <tr>
-                            <td>&nbsp;</td>
                         </tr>
 
                         <tr>

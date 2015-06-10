@@ -118,11 +118,11 @@ class VisitorType extends CActiveRecord {
     public function beforeFind() {
         $session = new CHttpSession;
         $criteria = new CDbCriteria;
-        if(Yii::app()->controller->action->id != 'exportvisitorrecords' && Yii::app()->controller->action->id != 'evacuationReport' && Yii::app()->controller->action->id != 'visitorRegistrationHistory'){
+        if(Yii::app()->controller->action->id != 'exportvisitorrecords' && Yii::app()->controller->action->id != 'evacuationReport' && Yii::app()->controller->action->id != 'visitorRegistrationHistory' && Yii::app()->controller->action->id != 'view'){
             $criteria->condition = "t.is_deleted = 0 && t.id !=1";
         }
         
-        if(Yii::app()->controller->action->id == 'visitorsByTypeReport'){
+        if(Yii::app()->controller->action->id == 'visitorsByTypeReport' || Yii::app()->controller->action->id == 'visitorsByWorkstationReport'){
             $criteria->condition = "";
             $criteria->condition = "t.is_deleted=0";
         }
@@ -153,8 +153,8 @@ class VisitorType extends CActiveRecord {
         return false;
     }
 
-    public function returnVisitorTypes($visitorTypeId = NULL) {
-        $visitorType = VisitorType::model()->findAll();
+    public function returnVisitorTypes($visitorTypeId = NULL,$condition= "1>0") {
+        $visitorType = VisitorType::model()->findAll($condition);
         $VISITOR_TYPE_LIST = array();
         foreach ($visitorType as $key => $value) {
             $VISITOR_TYPE_LIST[$value['id']] = 'Visitor Type: ' . $value['name'];

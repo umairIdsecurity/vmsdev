@@ -6,13 +6,13 @@ if (isset($company) && !empty($company)) {
 }
 ?>
 <div class="password-border">
-<table>
+<table class="no-margin-bottom">
     <tr>
         <td><strong>Password Options</strong></td>
     </tr>
     <tr>
         <td>
-        <table style="margin-top:18px !important; width:273px; border-left-style:none; border-top-style:none">
+        <table style="margin-top:10px !important; width:273px; border-left-style:none; border-top-style:none">
                 <tr>
                     <td>
                         <?php
@@ -24,7 +24,7 @@ if (isset($company) && !empty($company)) {
                             array(
                                 PasswordRequirement::PASSWORD_IS_NOT_REQUIRED => 'User does not require Password',
                                 PasswordRequirement::PASSWORD_IS_REQUIRED     => 'User requires Password to Login',
-                            ), array('class' => 'password_requirement form-label'));
+                            ), array('class' => 'password_requirement form-label', 'separator' => ''));
                         ?>
                         <?php echo $form->error($model, 'password_requirement'); ?>
                     </td>
@@ -43,14 +43,14 @@ if (isset($company) && !empty($company)) {
                                         array(
                                             PasswordOption::SEND_INVITATION => 'Send User Invitation',
 											PasswordOption::CREATE_PASSWORD => 'Create Password',
-                                        ), array('class' => 'password_option form-label'));
+                                        ), array('class' => 'password_option form-label', 'separator' => ''));
                                     ?>
                                     <?php echo $form->error($model, 'password_option'); ?>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <table id="passwordInputsTable">
+                                    <table id="passwordInputsTable" style="margin-top:10px">
                                         <tr>
                                             <td>
                                                 <input placeholder="Password" type="password" class="original-password"

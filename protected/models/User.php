@@ -111,6 +111,7 @@ class User extends VmsActiveRecord {
                 array('date_of_birth, notes,tenant,tenant_agent,birthdayYear,birthdayMonth,password,birthdayDay', 'safe'),
                 array('email', 'filter', 'filter' => 'trim'),
                 array('email', 'email'),
+                array('email','unique'),
                 array('role,company', 'required', 'message' => 'Please select a {attribute}'),
                 array('tenant, tenant_agent, photo', 'default', 'setOnEmpty' => true, 'value' => null),
                 array('asic_no', 'AvmsFields'),
@@ -150,7 +151,6 @@ class User extends VmsActiveRecord {
     public function avms_user()
     {
         $condition = "role.id in (".implode(",",Roles::get_avms_roles()) .")";
-
         $this->getDbCriteria()->mergeWith(array(
             'condition' => $condition,
             'with' => 'role',
@@ -162,7 +162,6 @@ class User extends VmsActiveRecord {
     public function cvms_user()
     {
         $condition = "role.id in (".implode(",",Roles::get_cvms_roles()) .")";
-
         $this->getDbCriteria()->mergeWith(array(
             'condition' => $condition,
             'with' => 'role',
@@ -427,6 +426,12 @@ class User extends VmsActiveRecord {
             return false;
         } else {
             $this->is_deleted = 1;
+            if ($this->asic_expiry || $this->asic_expiry == 0) {
+                $this->asic_expiry_day = date('d', $this->asic_expiry);
+                $this->asic_expiry_month = date('m', $this->asic_expiry);
+                $this->asic_expiry_year = date('Y', $this->asic_expiry);
+            }
+
             $this->save();
             echo "true";
             return false;
@@ -593,9 +598,19 @@ class User extends VmsActiveRecord {
     public function findWorkstationsWithSameTenant($tenantId) {
         $aArray = array();
 
-        $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = '$tenantId' and (tenant_agent IS NULL or tenant_agent = 0 or tenant_agent = '') ";
-        $workstation = Workstation::model()->findAll($Criteria);
+        $criteria = new CDbCriteria();
+        //$criteria->condition = "tenant = '$tenantId' and (tenant_agent IS NULL or tenant_agent = 0 or tenant_agent = '') ";
+
+        $user = User::model()->findByPK(Yii::app()->user->id);
+        if ($user->role == Roles::ROLE_ADMIN) {
+            $criteria->condition = "tenant = " . $tenantId . " AND is_deleted = 0";
+        } else if ($user->role == Roles::ROLE_AGENT_ADMIN) {
+            $criteria->condition = "tenant = " . $tenantId . " AND tenant_agent = " . $user->tenant_agent . " AND is_deleted = 0";
+        } else {
+            $criteria->condition = "tenant = '$tenantId' and (tenant_agent IS NULL or tenant_agent = 0 or tenant_agent = '') AND is_deleted = 0";
+        }
+
+        $workstation = Workstation::model()->findAll($criteria);
 
         foreach ($workstation as $index => $value) {
             $aArray[] = array(
@@ -611,7 +626,7 @@ class User extends VmsActiveRecord {
         $aArray = array();
 
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = '" . $tenantId . "' and tenant_agent='" . $tenantAgentId . "'";
+        $Criteria->condition = "tenant = '" . $tenantId . "' and tenant_agent='" . $tenantAgentId . "' AND is_deleted = 0";
         $workstation = Workstation::model()->findAll($Criteria);
         foreach ($workstation as $index => $value) {
             $aArray[] = array(

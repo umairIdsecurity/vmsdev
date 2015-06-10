@@ -32,18 +32,22 @@ class NotificationsController extends Controller
 //				'users'=>array('*'),
 //			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('view', 'index'),
+				'actions'=>array('view','index','delete'),
 				'users'=>array('@'),
 			),
 //			array('allow', // allow admin user to perform 'admin' and 'delete' actions
 //				'actions'=>array('admin','delete'),
 //				'users'=>array('admin'),
 //			),
-                       array(
-                        'allow',
-                        'actions' => array('admin', 'create', 'delete', 'update'),
-                        'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user, UserGroup::USERGROUP_SUPERADMIN)',
-                    ),
+                        array(
+                            'allow',
+                            'actions' => array('admin', 'create', 'delete', 'update'),
+                            'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user, UserGroup::USERGROUP_SUPERADMIN)',
+                        ),
+                        array('allow',
+                            'actions' => array('admin', 'create', 'delete', 'update'),
+                            'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
+                        ),
 			array('deny',  // deny all users
 				'users'=>array('*'),
 			),
@@ -139,12 +143,33 @@ class NotificationsController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		$this->loadModel($id)->delete();
-                UserNotification::model()->find('notification_id = '.$id)->deleteAll();
+//            echo 'called';
+            $superAdminRole = Roles::ROLE_SUPERADMIN;
+            $adminRole = Roles::ROLE_ADMIN;
+            $userRole=Yii::app()->user->role;
+            $userId=Yii::app()->user->id;
+            
+            if(($superAdminRole == $userRole) || ($adminRole === $userRole)){
+                
+               $this->loadModel($id)->delete();
+                UserNotification::model()->deleteAll('notification_id = '.$id);
                 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-		if(!isset($_GET['ajax']))
+                if(!isset($_GET['ajax'])){
                     $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+                }
+                         
+            }
+            else{
+                //$this->loadModel($id)->delete();
+                UserNotification::model()->deleteAll('user_id = '.$userId);
+                
+		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+                if(!isset($_GET['ajax'])){
+                    $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+                }
+            }
+		
 	}
 
 	/**
@@ -153,14 +178,18 @@ class NotificationsController extends Controller
 	public function actionIndex()
 	{
              // Mark All his/her notifications as READ
-            $userNotify = UserNotification::model()->find("user_id = ".Yii::app()->user->id);
-                if($userNotify) {
-                    $userNotify->has_read = 1;
-                    $userNotify->save();          
+            $userNotify = UserNotification::model()->findAll("user_id = ".Yii::app()->user->id);
+            
+            foreach ($userNotify as $notification){
+                if($notification) {
+                    $notification->has_read = 1;
+                    $notification->save();          
+                }
             }
                      
             // Fetch Only His/Her Notifications
             $model=new Notification('search');
+            
 		$model->unsetAttributes();  // clear any default values
 		if(isset($_GET['Notification']))
 			$model->attributes=$_GET['Notification'];

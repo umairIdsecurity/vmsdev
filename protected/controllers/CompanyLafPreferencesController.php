@@ -26,7 +26,7 @@ class CompanyLafPreferencesController extends Controller {
     public function accessRules() {
         return array(
             array('allow',
-                'actions' => array('customisation', 'create', 'update'),
+                'actions' => array('customisation', 'create', 'update', 'ajaxCrop'),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user, UserGroup::USERGROUP_ADMINISTRATION)',
             ),
             array('deny', // deny all users
@@ -125,6 +125,32 @@ class CompanyLafPreferencesController extends Controller {
         $this->render('admin', array(
             'model' => $model,
         ));
+    }
+
+    public function actionAjaxCrop() {
+        $jpeg_quality = 90;
+
+        $src = $_REQUEST['imageUrl'];
+        $img_r = imagecreatefromjpeg($src);
+        $dst_r = imagecreatetruecolor(184, 114);
+        $usernameHash = hash('adler32', "visitor");
+        $uniqueFileName = 'visitor' . $usernameHash . '-' . time() . ".png";
+        imagecopyresampled($dst_r, $img_r, 0, 0, $_REQUEST['x1'], $_REQUEST['y1'], 184, 114, $_REQUEST['width'], $_REQUEST['height']);
+        if (file_exists($src)) {
+            unlink($src);
+        }
+        header('Content-type: image/jpeg');
+        imagejpeg($dst_r, "uploads/company_logo/" . $uniqueFileName, $jpeg_quality);
+
+
+        Photo::model()->updateByPk($_REQUEST['photoId'], array(
+            'unique_filename' => $uniqueFileName,
+            'relative_path' => "uploads/company_logo/" . $uniqueFileName,
+        ));
+
+
+        exit;
+        return true;
     }
 
     /**

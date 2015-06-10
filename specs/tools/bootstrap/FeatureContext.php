@@ -44,10 +44,7 @@ class FeatureContext extends MinkContext
     {
 
         $this->printDebug("Resetting Database");
-        $this->visit("/index.php");
-        $this->fillField("Username or Email","superadmin@test.com");
-        $this->fillField("Password","12345");
-        $this->pressButton("Login");
+        $this->iLoginWithUsernameAndPassword("superadmin@test.com","123456");
         $this->visit("/index.php?r=resetDatabase/resetWithTestData");
         $this->visit("/index.php");
     }
@@ -120,6 +117,51 @@ class FeatureContext extends MinkContext
     }
 
     /**
+     * @When /^I check the "([^"]*)" radio button$/
+     */
+    public function iCheckTheRadioButton($labelText) {
+        $page = $this->getSession()->getPage();
+        foreach ($page->findAll('css', 'label') as $label) {
+            if ( $labelText === $label->getText() ) {
+                $radioButton = $page->find('css', '#'.$label->getAttribute('for'));
+                $radioButton->click();
+                return;
+            }
+        }
+        throw new \Exception("Radio button with label {$labelText} not found");
+    }
+
+    /**
+     * @When /^I check the "([^"]*)" radio button in "([^"]*)" button group$/
+     */
+    public function iCheckButtonInGroup($labelText, $groupSelector){
+        $page = $this->getSession()->getPage();
+        $group = $page->find('css',$groupSelector);
+        foreach ($group->findAll('css', 'label') as $label) {
+            if ( $labelText === $label->getText() ) {
+                $radioButton = $page->find('css', '#'.$label->getAttribute('for'));
+                $radioButton->click();
+                return;
+            }
+        }
+        throw new \Exception("Radio button with label {$labelText} not found in group {$groupSelector}");
+    }
+
+    /**
+     * @When /^I select "([^"]*)" for radio button "([^"]*)"$/
+     */
+    public function iCheckValueInRadioButton($value, $radioButton){
+        $page = $this->getSession()->getPage();
+        $radioButtons = $page->find('css', 'input[name="'.$radioButton.'"]');
+        $radioButton = $radioButtons->find('css', 'input[value="'.$value.'"]');
+        if (null === $radioButton) {
+            throw new \Exception("Radio button ".$radioButton." with value ".$value." is not found.");
+        } else {
+            $radioButton->check();
+        }
+    }
+
+    /**
     * @Then /^I edit "([^"]*)"$/
     */
     public function iEditItem($subject)
@@ -127,7 +169,7 @@ class FeatureContext extends MinkContext
         $page = $this->getMainContext()->getSession()->getPage();
         $element = $page->find('xpath', '//td[text()="'.$subject.'"]');
         if (null === $element) {
-            throw new Exception("Couldn't found workstation ".$subject." edit page!", 1);
+            throw new \Exception("Couldn't found workstation ".$subject." edit page!", 1);
         } else {
             $tr = $element->getParent();
             $update = $tr->find('css', '.update');

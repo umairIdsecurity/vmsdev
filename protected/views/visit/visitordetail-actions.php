@@ -2,6 +2,9 @@
 $cs = Yii::app()->clientScript;
 $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/script-visitordetail-actions-cssmenu.js');
 $session = new CHttpSession;
+$workstationModel = Workstation::model()->findByPk($model->workstation);
+
+$isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
 ?>
 <div id='actionsCssMenu'>
     <ul>
@@ -20,24 +23,12 @@ $session = new CHttpSession;
                             <td></td>
                             <td >
 
-                                <div id="closeVisitDiv">
+                                <div id="closeVisitDiv" class="form">
                                     <?php
                                     $closeVisitForm = $this->beginWidget('CActiveForm', array(
                                         'id' => 'close-visit-form',
-                                        'htmlOptions' => array("name" => "close-visit-form"),
+                                        'htmlOptions' => array("name" => "close-visit-form", 'enctype' => 'multipart/form-data'),
                                         'enableAjaxValidation' => false,
-                                        'enableClientValidation' => true,
-                                        'clientOptions' => array(
-                                            'validateOnSubmit' => true,
-                                            'afterValidate' => 'js:function(form, data, hasError){
-                                                if (!hasError){
-                                                    sendCloseVisit("close-visit-form");
-                                                } else {
-                                                    console.log(hasError);
-                                                    return false;
-                                                }
-                                            }'
-                                        ),
                                     ));
                                     ?>
 
@@ -48,6 +39,7 @@ $session = new CHttpSession;
                                             'visitorModel' => $visitorModel,
                                             'hostModel' => $hostModel,
                                             'reasonModel' => $reasonModel,
+                                            'closeVisitForm' => $closeVisitForm,
                                             'asic' => $asic
                                         ));
                                     } else {
@@ -61,8 +53,8 @@ $session = new CHttpSession;
                                     }
                                     ?>
 
-                                    <input type='submit' value='Close' class="complete" id="closeVisitBtn" style="display:none;"/>
-                                    <button  class="complete greenBtn" id="closeVisitBtnDummy" style="width:94px !important"/>Close Visit</button>
+                                    <input type='submit' value='Close Visit' class="complete" id="closeVisitBtn" style=""/>
+
                                     <div style="display:inline;font-size:12px;"><b>or</b><a id="cancelActiveVisitButton" href="" class="cancelBtnVisitorDetail">Cancel</a></div>
                                     <!-- <button class="neutral greenBtn" id="cancelActiveVisitButton">Cancel</button>-->
                                     <?php $this->endWidget(); ?>
@@ -178,41 +170,122 @@ $session = new CHttpSession;
             $(this).find('#Visit_date_check_in').removeAttr('disabled');
         });
 
-        $('#registerNewVisit').on('click', function (e) {
-            e.preventDefault();
-            var checked = false;
-            var $btnVic = $('#btnVicConfirm'),
-                $btnASIC = $('#btnAsicConfirm');
-            $('a[href="#vicHolderModal"]').click();
-            $btnVic.on('click', function(e) {
-                var checknum = $('#vicHolderModal').find('input[type="checkbox"]').filter(':checked');
+        function vicCheck() {
+            $(document).on('click', '#btnVicConfirm', function(e) {
+                var checknum = $('#vicHolderModal')
+                                .find('input[type="checkbox"]')
+                                .filter(':checked');
                 if (checknum.length == 2) {
                     vicHolderDeclarationChange();
-                    $('a[href="#asicSponsorModal"]').click();
-                } else {
-                    alert('Please confirm VIC declaration.');
-                    return false;
                 }
-                
             });
+            return true;
+        }
 
-            $btnASIC.on('click', function(e) {
-                var checknum = $('#asicSponsorModal').find('input[type="checkbox"]').filter(':checked');
+        function asicCheck() {
+            $(document).on('click', '#btnAsicConfirm', function(e) {
+                var checknum = $('#asicSponsorModal')
+                                .find('input[type="checkbox"]')
+                                .filter(':checked');
                 if (checknum.length == 4) {
                     asicSponsorDeclarationChange();
-                    //checkIfActiveVisitConflictsWithAnotherVisit("new");
-                    $('#btnActivate').click();
+                }
+            });
+            return true;
+        }
+
+        $(document).on('click', '#registerNewVisit', function (e) {
+            e.preventDefault();
+            $this = $(this);
+            var flag = true;
+            var $btnVic = $('#btnVicConfirm'),
+                $btnASIC = $('#btnAsicConfirm');
+
+            var isWorkstationDelete = "<?php echo $isWorkstationDelete; ?>";
+            if (isWorkstationDelete == 'true') {
+                alert('Workstation of this visit has been deleted, you can\'t activate it.');
+                return false;
+            }
+
+            var vic_active_visit_checkboxs = $('.vic-active-verification');
+            if (vic_active_visit_checkboxs.length == 0) {
+                checkIfActiveVisitConflictsWithAnotherVisit("new");
+                return false;
+            }
+
+            flag = isChecked(vic_active_visit_checkboxs);
+
+            if (flag == true) {
+                var is_vic_holder_checked = $('#VivHolderDecalarations').is(':checked'),
+                    is_asic_holder_checked = $('#AsicSponsorDecalarations').is(':checked');
+
+                var declarations_checkboxs = $('.vic-active-declarations');
+                var confirmed = isChecked(declarations_checkboxs);
+
+                if (!confirmed) {
+                    if (!$('#VivHolderDecalarations').is(':checked') && $('#AsicSponsorDecalarations').is(':checked')) {
+                        $('#vicHolderModal').modal('show');
+                        $btnVic.on('click', function(e) {
+                            var vicChecked = vicCheck();
+                            if (vicChecked) {
+                                checkIfActiveVisitConflictsWithAnotherVisit("new");
+                            }
+                        });
+                    } else if (!$('#AsicSponsorDecalarations').is(':checked') && $('#VivHolderDecalarations').is(':checked')){
+                        $('#asicSponsorModal').modal('show');
+                        $btnASIC.on('click', function(e) {
+                            var asicChecked = asicCheck();
+                            if (asicChecked) {
+                                checkIfActiveVisitConflictsWithAnotherVisit("new");
+                            }
+                        });
+                    } else {
+                        $('#vicHolderModal').modal('show');
+                        $btnVic.on('click', function(e) {
+                            var vicChecked = vicCheck();
+                            if (vicChecked) {
+                                $('#asicSponsorModal').modal('show');
+                                $btnASIC.on('click', function(e) {
+                                    var asicChecked = asicCheck();
+                                    if (asicChecked) {
+                                        checkIfActiveVisitConflictsWithAnotherVisit("new");
+                                    }
+                                });
+                            }
+                        });
+                    }
                 } else {
-                    alert('Please confirm ASIC declaration.');
+                    checkIfActiveVisitConflictsWithAnotherVisit("new");
+                }
+
+            } else {
+                alert('Please agree VIC verification before active visit.');
+                addWarningLabel(vic_active_visit_checkboxs);
+            }
+            
+        });
+
+        function isChecked(checkboxs) {
+            var flag = true;
+            $.each(checkboxs, function(i, checkbox) {
+                $(checkbox).next('a').removeClass('label label-warning');
+                if (!checkbox.checked) {
+                    flag = false;
+                    return;
+                }
+            });
+            return flag;
+        }
+
+        function addWarningLabel(checkboxs) {
+            $.each(checkboxs, function(i, checkbox) {
+                if (!checkbox.checked) {
+                    checkbox.focus();
+                    $(checkbox).next('a').addClass('label label-warning');
                     return false;
                 }
             });
-        });
-
-        $('#closeVisitBtnDummy').on('click', function (e) {
-            e.preventDefault();
-            $("#closeVisitBtn").click();
-        });
+        }
 
         $('#cancelActiveVisitButton').on('click', function (e) {
             e.preventDefault();
@@ -388,23 +461,24 @@ if ($model->time_check_out && $model->card_type == CardType::VIC_CARD_24HOURS &&
     <input type="text" id="CardGenerated_tenant_agent" name="CardGenerated[tenant_agent]" value="<?php echo $model->tenant_agent;
     ?>">
     <input type="text" id="CardGenerated_enter_card_number" name="CardGenerated[enter_card_number]" value=""/>
+    <?php
+        $tenant = User::model()->findByPk($model->tenant);
+        $code = '';
+        if ($tenant) {
+            if ($tenant->company != '') {
+                $company = Company::model()->findByPk($tenant->company);
+                if ($company) {
+                    $card_count = $company->card_count ? ($company->card_count + 1) : 1;
 
-    <input type="text" id="CardGenerated_card_number" name="CardGenerated[card_number]" value="<?php
-    $tenant = User::model()->findByPk($model->tenant);
-    if ($tenant) {
-        if ($tenant->company != '') {
-            $company = Company::model()->findByPk($tenant->company);
-            if ($company) {
-                $card_count = $company->card_count ? ($company->card_count + 1) : 1;
-
-                while (strlen($card_count) < 6) {
-                    $card_count = '0' . $card_count;
+                    while (strlen($card_count) < 6) {
+                        $card_count = '0' . $card_count;
+                    }
+                    $code = $company->code . ($card_count);
                 }
-                echo $company->code . ($card_count);
             }
         }
-    }
-    ?>">
+    ?>
+    <input type="text" id="CardGenerated_card_number" name="CardGenerated[card_number]" value="<?php echo $code; ?>">
 
     <input type="text" id="CardGenerated_print_count" name="CardGenerated[print_count]" value="">
     <input type="submit" value="Create" name="yt0" id="submitCardForm">

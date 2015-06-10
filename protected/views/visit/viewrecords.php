@@ -8,10 +8,14 @@
         margin-left: 998px !important;
     }
 </style>
+<?php if(Yii::app()->user->hasFlash('error')):?>
+    <div class="alert alert-danger" style="margin-top: 10px;">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>Warning!</strong> <?php echo Yii::app()->user->getFlash('error'); ?>
+    </div>
+<?php endif; ?>
 <h1>Visit History</h1>
-
 <?php
-
 $session = new CHttpSession;
 
 $this->widget('zii.widgets.grid.CGridView', array(
@@ -38,12 +42,12 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'cssClassExpression' => 'changeStatusClass($data->visit_status)',
             'htmlOptions'=>array('width'=>'120px'),
         ),
-        array(
+        /*array(
             'name' => 'visitor_type',
-            'value' => 'VisitorType::model()->returnVisitorTypes($data->visitor_type)',
+            'value' => '$data->visitorType->name',
             'filter' => VisitorType::model()->returnVisitorTypes(),
             'htmlOptions'=>array('width'=>'170px'),
-        ),
+        ),*/
         array(
             'name' => 'cardnumber',
             'header' => 'Card No.',
@@ -54,21 +58,21 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' => 'firstname',
             'filter'=>CHtml::activeTextField($model, 'firstname', array('placeholder'=>'First Name')),
-            'value' => 'Visitor::model()->findByPk($data->visitor)->first_name',
+            'value' => '$data->visitor0->first_name',
             'header' => 'First Name',
             'htmlOptions'=>array('width'=>'120px'),
         ),
         array(
             'name' => 'lastname',
             'filter'=>CHtml::activeTextField($model, 'lastname', array('placeholder'=>'Last Name')),
-            'value' => 'Visitor::model()->findByPk($data->visitor)->last_name',
+            'value' => '$data->visitor0->last_name',
             'header' => 'Last Name',
             'htmlOptions'=>array('width'=>'120px')
         ),
         array(
             'name' => 'company',
             'filter'=>CHtml::activeTextField($model, 'company', array('placeholder'=>'Company')),
-            'value' => 'getCompany($data->visitor)',
+            'value' => '$data->company0->name',
             'htmlOptions'=>array('width'=>'120px')
         ),
         array(

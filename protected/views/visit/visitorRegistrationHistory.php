@@ -41,6 +41,8 @@
 $session = new CHttpSession;
 $merge = new CDbCriteria;
 $merge->addCondition('visit_status ="' . VisitStatus::CLOSED . '"');
+
+
 ?>
 <input type="text" id="totalRecordsCount" value="<?php echo $model->search($merge)->getTotalItemCount(); ?>"/>
 <?php
@@ -65,10 +67,15 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'header' => 'Status',
             'cssClassExpression' => 'changeStatusClass($data->visit_status)',
         ),
+//        array(
+//            'name' => 'visitor_type',
+//            'value' => 'VisitorType::model()->returnVisitorTypes($data->visitor_type)',
+//            'filter' => VisitorType::model()->returnVisitorTypes(),
+//        ),
         array(
             'name' => 'visitor_type',
             'value' => 'VisitorType::model()->returnVisitorTypes($data->visitor_type)',
-            'filter' => VisitorType::model()->returnVisitorTypes(),
+            'filter'=>CHtml::activeTextField(Visitor::model(), 'profile_type', array('placeholder'=>'Corporate Profile Type','disabled'=>'disabled')),
         ),
         array(
             'name' => 'cardnumber',

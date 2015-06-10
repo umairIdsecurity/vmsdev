@@ -170,30 +170,6 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             $(this).find('#Visit_date_check_in').removeAttr('disabled');
         });
 
-        function vicCheck() {
-            $(document).on('click', '#btnVicConfirm', function(e) {
-                var checknum = $('#vicHolderModal')
-                                .find('input[type="checkbox"]')
-                                .filter(':checked');
-                if (checknum.length == 2) {
-                    vicHolderDeclarationChange();
-                }
-            });
-            return true;
-        }
-
-        function asicCheck() {
-            $(document).on('click', '#btnAsicConfirm', function(e) {
-                var checknum = $('#asicSponsorModal')
-                                .find('input[type="checkbox"]')
-                                .filter(':checked');
-                if (checknum.length == 4) {
-                    asicSponsorDeclarationChange();
-                }
-            });
-            return true;
-        }
-
         $(document).on('click', '#registerNewVisit', function (e) {
             e.preventDefault();
             $this = $(this);
@@ -213,14 +189,14 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                 return false;
             }
 
-            flag = isChecked(vic_active_visit_checkboxs);
+            flag = isCheckboxsChecked(vic_active_visit_checkboxs);
 
             if (flag == true) {
                 var is_vic_holder_checked = $('#VivHolderDecalarations').is(':checked'),
                     is_asic_holder_checked = $('#AsicSponsorDecalarations').is(':checked');
 
                 var declarations_checkboxs = $('.vic-active-declarations');
-                var confirmed = isChecked(declarations_checkboxs);
+                var confirmed = isCheckboxsChecked(declarations_checkboxs);
 
                 if (!confirmed) {
                     if (!$('#VivHolderDecalarations').is(':checked') && $('#AsicSponsorDecalarations').is(':checked')) {
@@ -265,7 +241,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             
         });
 
-        function isChecked(checkboxs) {
+        function isCheckboxsChecked(checkboxs) {
             var flag = true;
             $.each(checkboxs, function(i, checkbox) {
                 $(checkbox).next('a').removeClass('label label-warning');

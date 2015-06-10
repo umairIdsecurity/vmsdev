@@ -18,7 +18,7 @@ $asic = $hostModel->getAsicSponsor();
             <?php
             $this->renderPartial('visitor-detail-card', array('model' => $model,
                 'visitorModel' => $visitorModel,
-				'visitModel' => $visitModel,
+				'visitCount' => $visitCount,
                 'hostModel' => $hostModel,
                 'patientModel' => $patientModel,
                 'cardTypeModel' => $cardTypeModel,

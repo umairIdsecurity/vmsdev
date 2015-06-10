@@ -62,6 +62,9 @@ class Visitor extends CActiveRecord {
     const DELTED = 1;
     const NOT_DELETED = 0;
 
+    const ASIC_PENDING = 3;
+    const ASIC_ISSUED = 4;
+
     public static $VISITOR_CARD_TYPE_LIST = array(
         self::PROFILE_TYPE_CORPORATE => array(
         ),

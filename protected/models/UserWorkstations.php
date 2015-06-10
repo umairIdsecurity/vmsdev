@@ -103,19 +103,14 @@ class UserWorkstations extends CActiveRecord {
         return parent::model($className);
     }
 
-    public function getAllworkstations($userid) {
-        $Criteria = new CDbCriteria();
-        $Criteria->condition = "user = '$userid'";
-        $userworkstations = UserWorkstations::model()->findAll($Criteria);
+    public static function getAllworkstations($userid) {
+        $criteria = new CDbCriteria();
+        $criteria->addCondition('id IN (select workstation from user_workstation where user = '. $userid . ')');
 
-        if (count($userworkstations) != 0) {
-            foreach ($userworkstations as $index => $value) {
-                $Criteria = new CDbCriteria();
-                $Criteria->condition = "id = '" . $value['workstation'] . "' and is_deleted=0";
-                $workstation = Workstation::model()->findAll($Criteria);
-                foreach ($workstation as $index => $value) {
-                    echo $value['name'] . "<br>";
-                }
+        $workstations = Workstation::model()->findAll($criteria);
+        if ($workstations) {
+            foreach ($workstations as $value) {
+                echo CHtml::encode($value['name']) . "<br>";
             }
         } else {
             return $result = '-';

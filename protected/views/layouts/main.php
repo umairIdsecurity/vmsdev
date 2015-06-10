@@ -84,7 +84,7 @@ $userRole = $session['role'];
                             ? Yii::app()->request->baseUrl . '/' . Photo::model()->returnLogoPhotoRelative($company->logo)
                             : Yii::app()->controller->assetsBase . '/images/companylogohere1.png';
 
-                        echo CHtml::link(CHtml::image($logo, '', array('style' => 'height: 65px;')), $this->createUrl('dashboard'));
+                        echo CHtml::link(CHtml::image($logo, '', array('style' => 'height: 65px;')), $this->createUrl('/dashboard'));
                         /*if (isset($company->logo) && $company->logo != '') {
                             echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl . '/' . Photo::model()->returnLogoPhotoRelative($company->logo), '',
                                 array('style' => 'height: 65px;')));

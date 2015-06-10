@@ -32,7 +32,7 @@ class NotificationsController extends Controller
 //				'users'=>array('*'),
 //			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('view','index','delete'),
+				'actions'=>array('view','index','delete','indexDelete'),
 				'users'=>array('@'),
 			),
 //			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -41,11 +41,11 @@ class NotificationsController extends Controller
 //			),
                         array(
                             'allow',
-                            'actions' => array('admin', 'create', 'delete', 'update'),
+                            'actions' => array('admin', 'create', 'delete', 'update','indexDelete'),
                             'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user, UserGroup::USERGROUP_SUPERADMIN)',
                         ),
                         array('allow',
-                            'actions' => array('admin', 'create', 'delete', 'update'),
+                            'actions' => array('admin', 'create', 'delete', 'update','indexDelete'),
                             'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
                         ),
 			array('deny',  // deny all users
@@ -90,7 +90,7 @@ class NotificationsController extends Controller
                         
 			if($model->save()) {
                             //If Role ID is empty then send it to All CVMS and AVMS Users
-                            if( empty($model->role) || is_null($model->role) )  
+                            if( empty($model->role_id) || is_null($model->role_id) )  
                                 $users = User::model()->findAll('is_deleted = 0 AND id != '.Yii::app()->user->id);
                             else
                                 $users = User::model()->findAll('role ='.$model->role_id.' AND is_deleted = 0 AND id != '.Yii::app()->user->id);
@@ -143,33 +143,35 @@ class NotificationsController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-//            echo 'called';
-            $superAdminRole = Roles::ROLE_SUPERADMIN;
-            $adminRole = Roles::ROLE_ADMIN;
-            $userRole=Yii::app()->user->role;
-            $userId=Yii::app()->user->id;
-            
-            if(($superAdminRole == $userRole) || ($adminRole === $userRole)){
-                
-               $this->loadModel($id)->delete();
+                $this->loadModel($id)->delete();
                 UserNotification::model()->deleteAll('notification_id = '.$id);
-                
-		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+
+                // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
                 if(!isset($_GET['ajax'])){
                     $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
-                }
-                         
-            }
-            else{
-                //$this->loadModel($id)->delete();
-                UserNotification::model()->deleteAll('user_id = '.$userId);
-                
-		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-                if(!isset($_GET['ajax'])){
-                    $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
-                }
-            }
+               }
 		
+	}
+        
+        
+        /**
+	 * Deletes a particular model.
+	 * If deletion is successful, the browser will be redirected to the 'admin' page.
+	 * @param integer $id the ID of the model to be deleted
+	 */
+	public function actionIndexDelete()
+	{
+           $id = Yii::app()->request->getParam('id');
+           
+            $userId = Yii::app()->user->id;
+            
+            UserNotification::model()->deleteAll('user_id = '.$userId.' AND notification_id = '.$id);
+
+            // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+            if(!isset($_GET['ajax'])){
+                $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('index'));
+            }
+            	 
 	}
 
 	/**
@@ -188,15 +190,15 @@ class NotificationsController extends Controller
             }
                      
             // Fetch Only His/Her Notifications
-            $model=new Notification('search');
+            $model=new Notification('indexSearch');
             
-		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['Notification']))
-			$model->attributes=$_GET['Notification'];
+            $model->unsetAttributes();  // clear any default values
+            if(isset($_GET['Notification']))
+                    $model->attributes=$_GET['Notification'];
 
-		$this->render('index',array(
-			'model'=>$model,
-		));
+            $this->render('index',array(
+                    'model'=>$model,
+            ));
 	}
 
 	/**

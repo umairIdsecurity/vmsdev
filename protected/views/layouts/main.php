@@ -204,6 +204,6 @@ $userRole = $session['role'];
                     </div><!-- footer -->
 
                     </div><!-- page -->
-                  
+
 </body>
 </html>

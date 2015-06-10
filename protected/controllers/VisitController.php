@@ -276,6 +276,14 @@ class VisitController extends Controller {
             Yii::app()->user->setFlash('error', 'Workstation of this visit has been deleted.');
             return $this->redirect(Yii::app()->createUrl('visit/view'));
         }
+
+        //set status to pre-registered
+        if ($model->date_check_in > date('d-m-Y')) {
+            $preVisitStatus = VisitStatus::model()->findByAttributes(array('name' => 'Pre-registered'));
+            if ($preVisitStatus) {
+                $model->visit_status = $preVisitStatus->id;
+            }
+        }
         
         //update status for Contractor Card Type
         if ($model && $model->card_type == CardType::CONTRACTOR_VISITOR) {

@@ -41,7 +41,8 @@ class VisitController extends Controller {
                     'totalVicsByWorkstation',
                     'exportFileHistory',
                     'exportFileVisitorRecords',
-                    'ExportFileVicRegister',
+                    'exportFileVicRegister',
+                    'importVisitData',
                     'exportVisitorRecords', 'delete','resetVisitCount', 'negate',
                 ),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
@@ -938,6 +939,58 @@ class VisitController extends Controller {
     {
         $visitsCount = 1;
         $this->render('totalVicsByWorkstation', array("visit_count" => $visitsCount));
+    }
+
+    public function actionImportVisitData()
+    {
+        $model = Visit::model();
+
+        if (isset($_POST['Visit'])) {
+            $model->attributes = $_POST['Visit'];
+
+            /*//Yii::import('application.extensions.phpexcel.JPhpExcel');
+
+            $xlsFile = CUploadedFile::getInstance($model, 'file');
+            $objPHPExcel = PHPExcel_IOFactory::load($xlsFile->name);
+
+            foreach ($objPHPExcel->getWorksheetIterator() as $worksheet) {
+                print_r($worksheet);die;
+            }
+
+            // include PHPExcel classes:
+            // Create new PHPExcel object
+            $objPHPExcel = new PHPExcel();
+            print_r($objPHPExcel);die;*/
+
+            $xlsFile = CUploadedFile::getInstance($model, 'file');
+            $objReader = PHPExcel_IOFactory::createReaderForFile($xlsFile);
+
+            $phpExcelPath = Yii::getPathOfAlias('ext');
+            spl_autoload_unregister(array('YiiBase','autoload'));
+            include($phpExcelPath . DIRECTORY_SEPARATOR . 'PHPExcel.php');
+
+            $objPHPExcel = new PHPExcel();
+
+            foreach ($objPHPExcel->getWorksheetIterator() as $worksheet) {
+                foreach ($worksheet->getRowIterator() as $row) {
+                    $rowIndex=$row->getRowIndex();
+
+                    $cellIterator = $row->getCellIterator();
+                    $cellIterator->setIterateOnlyExistingCells(false); // Loop all cells, even if it is not set
+                    foreach ($cellIterator as $cellIndex=>$cell) {
+                        if (!is_null($cell)) { print_r($cell);die;
+                            if($rowIndex >1){
+                                $cellVal=$cell->getCalculatedValue();
+                                echo $cellVal;
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+
+        $this->render('importVisitData', array('model' => $model));
     }
 
 }

@@ -37,13 +37,9 @@ if ($vstr->profile_type == "CORPORATE" && $model->card_type == 4) {
     $cardclass = "cardDiv";
 } elseif ($vstr->profile_type == "CORPORATE" && $model->card_type != 4) {
     $cardclass = "cardDivCD";
-} elseif ($vstr->profile_type == "ASIC" && $model->card_type == 4) {
-    $cardclass = "cardDivCR";
-} elseif ($vstr->profile_type == "ASIC" && $model->card_type != 4) {
+} elseif ($vstr->profile_type == "ASIC") {
     $cardclass = "cardDivVR";
-} elseif ($vstr->profile_type == "VIC" && $model->card_type != 4) {
-    $cardclass = "cardDivCY";
-} elseif ($vstr->profile_type == "VIC" && $model->card_type == 4) {
+} elseif ($vstr->profile_type == "VIC") {
     $cardclass = "cardDivVY";
 }
 ?>
@@ -56,6 +52,7 @@ if ($vstr->profile_type == "CORPORATE" && $model->card_type == 4) {
                 $company = Company::model()->findByPk($tenant->company);
                 if (!empty($company)) {
                     $companyLogoId = $company->logo;
+                    $companyLogoId;
                     if ($companyLogoId == "") {
                         $companyLogo = Yii::app()->controller->assetsBase . "/" . 'images/companylogohere.png';
                     } else {
@@ -65,7 +62,7 @@ if ($vstr->profile_type == "CORPORATE" && $model->card_type == 4) {
 
                 if (!empty($companyLogo)):
                     ?>
-                    <img class='<?php
+        <img style="  margin-right: 60px; " class='<?php
                     if ($model->visit_status != VisitStatus::ACTIVE) {
                         echo "cardCompanyLogoPreregistered";
                     } else {

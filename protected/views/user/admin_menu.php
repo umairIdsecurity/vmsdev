@@ -286,7 +286,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     <?php echo CHtml::link('Visitor Types', array('visitorType/index'),
                         array('class' => 'managevisitortype')) ?>
                     <ul <?php
-                    if ($this->id == 'visitorType' && $this->action->id != 'visitorsByTypeReport' && $this->action->id != 'visitorsByProfiles') {
+                    if ($this->id == 'visitorType' && $this->action->id != 'visitorsByWorkstationReport' && $this->action->id != 'visitorsByTypeReport' && $this->action->id != 'visitorsByProfiles') {
                         echo "style='display:block ;'";
                     }
                     ?>>
@@ -474,23 +474,19 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
             <li class='has-sub'>
                 <?php echo CHtml::link('CVMS Reports', array('visit/evacuationReport'), array('class' => 'managereports')) ?>
                 <ul <?php
-                if ($this->action->id == 'evacuationReport' || $this->action->id == 'visitorsByProfiles' || $this->action->id == 'visitorsByTypeReport' || $this->action->id == 'visitorRegistrationHistory' || $this->action->id == 'corporateTotalVisitCount' || Yii::app()->controller->id == 'auditTrail') {
+                if ($this->action->id == 'evacuationReport' || $this->action->id == 'visitorsByProfiles' || $this->action->id == 'visitorsByWorkstationReport' || $this->action->id == 'visitorsByTypeReport' || $this->action->id == 'visitorRegistrationHistory' || $this->action->id == 'corporateTotalVisitCount' || Yii::app()->controller->id == 'auditTrail') {
                     echo "style='display:block ;'";
                 }
                 ?>>
-                    <li>
-                        <a href='<?php echo Yii::app()->createUrl('visit/evacuationReport'); ?>'><span>Evacuation Report</span></a>
-                    </li>
-                    <li><a href='<?php echo Yii::app()->createUrl('visit/visitorRegistrationHistory'); ?>'><span>Visitor Registration History</span></a>
-                    </li>
-                    <li><a href='<?php echo Yii::app()->createUrl('visit/corporateTotalVisitCount'); ?>'><span>Corporate Total Visit Count</span></a>
-                    </li>
-                    <li><a href='<?php echo Yii::app()->createUrl('visitorType/visitorsByTypeReport'); ?>'><span>Total Visitors by Visitor Type</span></a>
-                    </li>
-                    <li><a href='<?php echo Yii::app()->createUrl('reports/visitorsByProfiles'); ?>'><span>New Visitors Profiles</span></a>
-                    </li>
-                    <li><a href='<?php echo Yii::app()->createUrl('auditTrail/admin'); ?>'><span>Audit Trail</span></a>
-                    </li>
+
+                    <li><a href='<?php echo Yii::app()->createUrl('visit/evacuationReport'); ?>' ><span>Evacuation Report</span></a></li>
+                    <li><a href='<?php echo Yii::app()->createUrl('visit/visitorRegistrationHistory'); ?>'><span>Visitor Registration History</span></a></li>
+                    <li><a href='<?php echo Yii::app()->createUrl('visit/corporateTotalVisitCount'); ?>'><span>Corporate Total Visit Count</span></a></li>
+                    <li><a href='<?php echo Yii::app()->createUrl('visitorType/visitorsByTypeReport'); ?>'><span>Total Visitors by Visitor Type</span></a></li>
+                    <li><a href='<?php echo Yii::app()->createUrl('visitorType/visitorsByWorkstationReport'); ?>'><span>Total Visitors by Workstation</span></a></li>
+                    <li><a href='<?php echo Yii::app()->createUrl('reports/visitorsByProfiles'); ?>'><span>New Visitors Profiles</span></a></li>
+                    <li><a href='<?php echo Yii::app()->createUrl('auditTrail/admin'); ?>'><span>Audit Trail</span></a></li>
+
                 </ul>
             </li>
             <!-- menu for Reports -->

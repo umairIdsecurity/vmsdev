@@ -199,11 +199,21 @@ $session = new CHttpSession;
 
                 $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "option", "minDate", selectedDate);
 
+                function updateTextVisitButton(text) {
+                    var visitButton = $("#activate-a-visit-form input.complete");
+                    if (visitButton.length) {
+                        visitButton.val(text);
+                    } else {
+                        visitButton = $("#registerNewVisit");
+                        visitButton.text(text);
+                    }
+                }
+
                 if (selectedDate >= currentDate) {
                     <?php if ($model->card_type == CardType::VIC_CARD_MANUAL) { // show Back Date Visit
-                        echo '$("#activate-a-visit-form input.complete").val("Activate Visit");';
+                        echo 'updateTextVisitButton("Activate Visit");';
                     } else {
-                        echo '$("#activate-a-visit-form input.complete").val("Preregister Visit");
+                        echo 'updateTextVisitButton("Preregister Visit");
                               $("#card_no_manual").hide();';
                     }
                     ?>
@@ -213,12 +223,12 @@ $session = new CHttpSession;
                     $("#cardDetailsTable span.cardDateText").html(cardDate);
 
                 } else {
-                    $("#activate-a-visit-form input.complete").val("");
+                    updateTextVisitButton("");
 
                     <?php if ($model->card_type == CardType::VIC_CARD_MANUAL) { // show Back Date Visit
-                        echo '$("#activate-a-visit-form input.complete").val("Back Date Visit");';
+                        echo 'updateTextVisitButton("Back Date Visit");';
                     } else {
-                        echo '$("#activate-a-visit-form input.complete").val("Activate Visit");';
+                        echo 'updateTextVisitButton("Activate Visit");';
                     }
                     ?>
 

@@ -286,8 +286,8 @@ class User extends VmsActiveRecord {
         $criteria->compare('t.tenant', $this->tenant);
         $criteria->compare('t.tenant_agent', $this->tenant_agent);
 
-        $criteria->compare('workstation', $this->assignedWorkstations);
-        $criteria->with = array('userWorkstation1', 'company');
+        #$criteria->compare('workstation', $this->assignedWorkstations);
+        #$criteria->with = array('userWorkstation1', 'company');
         $criteria->together = true;
 
         $user = User::model()->findByPK(Yii::app()->user->id);

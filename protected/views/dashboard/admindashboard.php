@@ -12,13 +12,13 @@ $session = new CHttpSession();
 switch ($session['role']) {
     case Roles::ROLE_ADMIN:
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant ='" . $session['tenant'] . "'";
+        $Criteria->condition = "tenant ='" . $session['tenant'] . "' AND is_deleted = 0";
         $workstationList = Workstation::model()->findAll($Criteria);
         break;
 
     case Roles::ROLE_AGENT_ADMIN:
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant ='" . $session['tenant'] . "' and tenant_agent ='" . $session['tenant_agent'] . "'";
+        $Criteria->condition = "tenant ='" . $session['tenant'] . "' and tenant_agent ='" . $session['tenant_agent'] . "' AND is_deleted = 0";
         $workstationList = Workstation::model()->findAll($Criteria);
         break;
     

@@ -80,23 +80,32 @@ $userRole = $session['role'];
                 <article class="header_midbox">
                     <div id="logo" >
                         <?php
-                        $logo = (isset($company->logo) && $company->logo != '')
-                            ? Yii::app()->request->baseUrl . '/' . Photo::model()->returnLogoPhotoRelative($company->logo)
-                            : Yii::app()->controller->assetsBase . '/images/companylogohere1.png';
+                        if ($company->logo) {
+                            $path = Photo::model()->returnLogoPhotoRelative($company->logo);
+                            if ($path) {
+                                if (file_exists($path)) {
+                                    $logo = Yii::app()->request->baseUrl . '/' . $path;
+                                } else {
+                               $logo = Yii::app()->controller->assetsBase . '/images/companylogohere1.png';
+                                }
+                            } else {
+                                $logo = Yii::app()->controller->assetsBase . '/images/companylogohere1.png';
+                            }
+                        }   
 
-                        echo CHtml::link(CHtml::image($logo, '', array('style' => 'height: 65px;')), $this->createUrl('/dashboard'));
-                        /*if (isset($company->logo) && $company->logo != '') {
-                            echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl . '/' . Photo::model()->returnLogoPhotoRelative($company->logo), '',
-                                array('style' => 'height: 65px;')));
-                        } else {
-                            echo CHtml::link(CHtml::image(Yii::app()->controller->assetsBase . '/images/companylogohere1.png', '',
-                                array('style' => 'width: 130px;')));
-                        }*/
+                        echo CHtml::link(CHtml::image($logo, '', array('style' => 'height: 65px;')), $this->createUrl('dashboard/adminDashboard'));
+                        /* if (isset($company->logo) && $company->logo != '') {
+                          echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl . '/' . Photo::model()->returnLogoPhotoRelative($company->logo), '',
+                          array('style' => 'height: 65px;')));
+                          } else {
+                          echo CHtml::link(CHtml::image(Yii::app()->controller->assetsBase . '/images/companylogohere1.png', '',
+                          array('style' => 'width: 130px;')));
+                          } */
                         ?>
                     </div>
                     <aside class="top_nav">
                         <ul id="icons">
-                            
+
 
                             <li class="profile">
                                 <a title="profile" href="<?php echo Yii::app()->createUrl("/user/profile&id=" . $session['id']); ?>">

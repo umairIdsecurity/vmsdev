@@ -25,8 +25,8 @@ if ($tenant) {
         $companyCode = "";
     }
 
-    $companyLogo = Yii::app()->getBaseUrl(true) . "/" . Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
-    $userPhoto = Yii::app()->getBaseUrl(true) . "/" . Photo::model()->returnVisitorPhotoRelativePath($model->visitor);
+    $companyLogo =  Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
+    $userPhoto =  Photo::model()->returnVisitorPhotoRelativePath($model->visitor);
 } else {
     throw new CHttpException(404, 'Company not found for this User.');
 }

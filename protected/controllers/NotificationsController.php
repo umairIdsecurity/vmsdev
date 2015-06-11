@@ -93,7 +93,7 @@ class NotificationsController extends Controller
                             if( empty($model->role_id) || is_null($model->role_id) )  
                                 $users = User::model()->findAll('is_deleted = 0 AND id != '.Yii::app()->user->id);
                             else
-                                $users = User::model()->findAll('role ='.$model->role_id.' AND is_deleted = 0 AND id != '.Yii::app()->user->id);
+                                $users = User::model()->findAll('role ='.$model->role_id.' AND is_deleted = 0 ');
                                 
                             foreach( $users as $key => $u ) {
                                     $notify = new UserNotification;
@@ -120,15 +120,20 @@ class NotificationsController extends Controller
 	public function actionUpdate($id)
 	{
 		$model=$this->loadModel($id);
-
+                $UserNotifyModel = new UserNotification;
+                
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
 		if(isset($_POST['Notification']))
 		{
 			$model->attributes=$_POST['Notification'];
-			if($model->save())
-				$this->redirect(array('notifications/admin'));
+                        
+			if($model->save())  {
+                            // Notify Users that Message has been changed.
+                            $UserNotifyModel->updateAll(array('has_read'=>'0'), 'notification_id = '.$id);
+                            $this->redirect(array('notifications/admin'));
+                        }
 		}
 
 		$this->render('update',array(

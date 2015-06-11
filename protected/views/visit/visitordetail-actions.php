@@ -125,7 +125,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                         </table>
                         <?php echo $logform->error($model, 'date_in'); ?>
                         <?php if ($model->visit_status == VisitStatus::CLOSED) { ?>
-                            <button type="button" id='registerNewVisit' class='greenBtn'>Activate Visit</button> 
+                            <button type="button" id='registerNewVisit' class='greenBtn'>Activate Visit</button>
                         <?php } else {
                             if ($model->card_type == CardType::MANUAL_VISITOR && isset($model->date_check_in) && strtotime($model->date_check_in) < strtotime(date("d-m-Y"))) {
                                 echo '<input type="submit" value="Back Date Visit" class="complete"/>';
@@ -268,7 +268,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             sendCancelVisit();
         });
 
-        $('#preregisterNewVisit').on('click', function (e) {
+        $(document).on('click', '#preregisterNewVisit', function (e) {
             e.preventDefault();
             if ($("#Visit_date_in").val() == '') {
                 $("#preregisterdateinError").show();

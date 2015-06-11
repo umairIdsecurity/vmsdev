@@ -188,8 +188,8 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
 <div style="margin-top: 10px;">
 <?php
 $companyName = isset($visitCount['companyName']) ? $visitCount['companyName'] : '';
-$totalCompanyVisit = isset($visitCount['companyVisitsByVisitor']) ? $visitCount['companyVisitsByVisitor'] : 0;
-$remainingDays = (isset($visitCount['remainingDays'])) ? ($visitCount['remainingDays']) : 0;
+$totalCompanyVisit = (isset($visitCount['totalVisit']) && !empty($visitCount['totalVisit'])) ? ($visitCount['totalVisit'] < 0) ? 0 : $visitCount['totalVisit'] : '0';
+$remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingDays'] <= 28) ? ($visitCount['remainingDays'] < 0) ? '0' : $visitCount['remainingDays'] : '28';
 ?>
     Total Visits at <?php echo $companyName; ?>: <?php echo $totalCompanyVisit; ?></br>
     <!-- Total Visits to All Companies: <?php // echo $visitCount['allVisitsByVisitor'];           ?> -->
@@ -373,7 +373,7 @@ $remainingDays = (isset($visitCount['remainingDays'])) ? ($visitCount['remaining
     $(document).on('change', '#Visitor_visitor_card_status', function(e) {
         var selected = $(this).val();
         var remainingDays = $('#remaining_day').val();
-        if (selected == "<?php echo Visitor::ASIC_PENDING; ?>" && remainingDays < 28) {
+        if (selected == "<?php echo Visitor::ASIC_PENDING; ?>" && remainingDays < 27) {
             $('#checkout_date_warning').html('An EVIC can’t be issued to this VIC holder <br /> as they don’t have 28 days remaining.<br />Please update their Card Status to ASIC <br />Pending or Select another card type.').show();
             $('#btnWorkStationForm').attr('disabled', true);
         } else {

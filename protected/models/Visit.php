@@ -650,6 +650,16 @@ class Visit extends CActiveRecord {
         }
     }
 
+    public function getRemainingDays() {
+        if (empty($this->date_check_out)) {
+            return 1;
+        } else {
+            $dateOut = new DateTime($this->date_check_out);
+            $dateNow = new DateTime(date('d-m-Y'));
+            return $dateOut->format('z') - ($dateNow->format('z') + 1);
+        }
+    }
+
     /**
      * Change date formate to Australian after fetech
      * 

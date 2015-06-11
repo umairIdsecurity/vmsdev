@@ -243,7 +243,7 @@ $session = new CHttpSession;
                         ';
                 }
 
-                if ($model->card_type == CardType::VIC_CARD_24HOURS) {
+                if (in_array($model->card_type, [CardType::VIC_CARD_24HOURS, CardType::VIC_CARD_MANUAL])) {
                     echo '  var checkoutDate = new Date(selectedDate);
                     checkoutDate.setDate(selectedDate.getDate() + 1);
                     $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "setDate", checkoutDate);

@@ -339,6 +339,7 @@ class Visitor extends CActiveRecord {
             'visitor_status'                            => 'Visitor Status',
             'created_by'                                => 'Created By',
             'is_deleted'                                => 'Is Deleted',
+            'asic_expiry'                                => 'Asic Expiry',
             'tenant'                                    => 'Tenant',
             'tenant_agent'                              => 'Tenant Agent',
             'repeatpassword'                            => 'Repeat Password',

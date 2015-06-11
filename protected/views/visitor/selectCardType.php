@@ -72,24 +72,34 @@ if (!$cardTypeWorkstationModel) {
     $(document).ready(function() {
 
         $("#clicktabA").click(function(e) {
-            e.preventDefault;
-            var card_type_value = $("#selectCardDiv input[name=selectCardType]:checked").val();
+            e.preventDefault();
+            var card_type_value = $("#selectCardDiv").find("input[name=selectCardType]:checked").val();
 
+            if (!card_type_value) {
+                alert('Please choose Card Type before going to next step');
+                e.stopImmediatePropagation();
+                return false;
+            }
+
+            console.log('card_type_value', card_type_value);
+
+            var dateoutDiv = $("#dateoutDiv");
             if (card_type_value == SAMEDAY_TYPE ) {
-                $("#proposedDateOut").val($("#curdateLogVisit").val());
-                $("#Visit_date_out").val($("#curdateLogVisit").val());
-                $("#dateoutDiv").hide();
+                var curdateLogVisit = $("#curdateLogVisit");
+                $("#proposedDateOut").val(curdateLogVisit.val());
+                $("#Visit_date_out").val(curdateLogVisit.val());
+                dateoutDiv.hide();
                 $(".ui-datepicker-trigger").hide();
             } else if (card_type_value == MULTIDAY_TYPE ) {
                 $("#proposedDateOut").val("");
                 $("#Visit_date_out").val("");
-                $("#dateoutDiv").show();
+                dateoutDiv.show();
                 $(".ui-datepicker-trigger").show();
             }
 
             $("#cardtype").val(card_type_value);
             $("#Visit_card_type").val(card_type_value);
-            $("#dateoutDiv").val('2014-12-11');
+            dateoutDiv.val('2014-12-11');
         });
     });
 

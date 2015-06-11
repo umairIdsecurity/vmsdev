@@ -99,12 +99,13 @@ class UserController extends Controller
             }
 
             // asic sponsor is saved into visitor table
-            if (isset($_GET['asic'])) {
+            if (isset($_GET['asic']) || isset($_GET['view'])) {
                 $asicSponsor = new Visitor();
                 $asicSponsor->attributes = $_POST['User'];
                 $asicSponsor->attributes = $_POST['Visitor'];
                 $asicSponsor->profile_type = Visitor::PROFILE_TYPE_ASIC;
-
+                if (isset($_POST['User']['asic_expiry']) && $_POST['User']['asic_expiry'])
+                    $asicSponsor->asic_expiry = date('Y-m-d',strtotime($_POST['User']['asic_expiry']));
                 //$asicSponsor->save(false);
                 $visitorService = new VisitorServiceImpl();
                 $visitorService->save($asicSponsor, "", $session['id']);

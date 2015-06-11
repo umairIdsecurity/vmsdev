@@ -186,7 +186,7 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
     </ul>
 </div>
 <?php endif; ?>
-<?php if ($model->visit_status != VisitStatus::SAVED && $visitCount['totalVisits'] > 0): ?>
+<?php if ($model->visit_status != VisitStatus::SAVED): ?>
 <div style="margin-top: 10px;">
 <?php
 $companyName = isset($visitCount['companyName']) ? $visitCount['companyName'] : '';

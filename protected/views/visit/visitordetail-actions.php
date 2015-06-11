@@ -224,14 +224,14 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                 $btnASIC.on('click', function(e) {
                                     var asicChecked = asicCheck();
                                     if (asicChecked) {
-                                        checkIfActiveVisitConflictsWithAnotherVisit("new");
+                                        activeVisit();
                                     }
                                 });
                             }
                         });
                     }
                 } else {
-                    checkIfActiveVisitConflictsWithAnotherVisit("new");
+                    activeVisit();
                 }
 
             } else {
@@ -261,6 +261,15 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                     return false;
                 }
             });
+        }
+
+        function activeVisit() {
+            var status = "<?php echo $model->visit_status; ?>";
+            if (status == "<?php echo VisitStatus::SAVED; ?>") {
+                checkIfActiveVisitConflictsWithAnotherVisit();
+            } else {
+                checkIfActiveVisitConflictsWithAnotherVisit('new');
+            }
         }
 
         $('#cancelActiveVisitButton').on('click', function (e) {

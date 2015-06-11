@@ -649,6 +649,7 @@ class Visit extends CActiveRecord {
             $dateOut = new DateTime($this->date_check_out);
             return $dateOut->format('z') - ($dateIn->format('z'));
         }*/
+        //$session = new CHttpSession;
         $visitCount = $this->countByAttributes(['visit_status' => VisitStatus::CLOSED, 'visitor' => $this->visitor]);
         switch ($this->card_type) {
             case CardType::VIC_CARD_MANUAL:
@@ -660,6 +661,8 @@ class Visit extends CActiveRecord {
                 $dateNow = new DateTime(date('d-m-Y'));
                 return ($dateNow->format('z') - $dateIn->format('z')) + 1;
                 break;
+            case CardType::VIC_CARD_24HOURS:
+                return $visitCount + 1;
                 break;
         }
     }
@@ -674,6 +677,12 @@ class Visit extends CActiveRecord {
                 $dateNow = new DateTime(date('d-m-Y'));
                 $dateOut = new DateTime($this->date_check_out);
                 return $dateOut->format('z') - $dateNow->format('z');
+                break;
+            case CardType::VIC_CARD_SAMEDATE:
+                return 28 - (int)$this->visitCounts;
+                break;
+            case CardType::VIC_CARD_24HOURS:
+                return 28 - (int)$this->visitCounts;
                 break;
         }
         

@@ -89,12 +89,25 @@ class NotificationsController extends Controller
                         $model->date_created = date("Y-m-d");
                         
 			if($model->save()) {
+                            
+                            $criteria = new CDbCriteria;
                             //If Role ID is empty then send it to All CVMS and AVMS Users
-                            if( empty($model->role_id) || is_null($model->role_id) )  
-                                $users = User::model()->findAll('is_deleted = 0 AND id != '.Yii::app()->user->id);
-                            else
-                                $users = User::model()->findAll('role ='.$model->role_id.' AND is_deleted = 0 ');
+                            if( empty($model->role_id) || is_null($model->role_id) )  {
+                                $criteria->condition = 'is_deleted = 0 AND id != '.Yii::app()->user->id;
+                            } else {                                
+                                 
+                                  // Expected CAVMS-427: When user selects 'Identity Security' option then system should send notifications to below users: 
+                                  // Issuing Body admin, Airport Operators, Agent airport Administrators and Agent airport Operators.                              
+                                if($model->role_id == Roles::ROLE_SUPERADMIN) {  // Super Admin is renamed as Identity security under Dropdown                               
+                                    $roles = Roles::ROLE_ISSUING_BODY_ADMIN.','.Roles::ROLE_AIRPORT_OPERATOR.','.Roles::ROLE_AGENT_AIRPORT_OPERATOR.','.Roles::ROLE_AGENT_AIRPORT_ADMIN;
+                                    $criteria->condition = 'role IN ('.$roles.') AND is_deleted = 0 ';
+                                }
+                                else {
+                                    $criteria->condition = 'role ='.$model->role_id.' AND is_deleted = 0 ';
+                                }
                                 
+                            } 
+                            $users = User::model()->findAll($criteria);                               
                             foreach( $users as $key => $u ) {
                                     $notify = new UserNotification;
                                     $notify->user_id = $u->id;

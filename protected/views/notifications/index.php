@@ -1,5 +1,5 @@
 
-<h1>Manage his Notifications</h1>
+<h1>Manage Notifications</h1>
  
 <?php //echo CHtml::link('Advanced Search','#',array('class'=>'search-button')); ?>
 <div class="search-form" style="display:none">

@@ -26,7 +26,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
         <ul>
 
             <?php
-            if ($session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_ISSUING_BODY_ADMIN) {
+            if ($session['role'] == Roles::ROLE_ADMIN) {
                 ?>
                 <!-- menu for Organisation Settings -->
 
@@ -154,7 +154,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                 </ul>
             </li>
 
-            <?php if ($session['role'] == Roles::ROLE_SUPERADMIN || $session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_ISSUING_BODY_ADMIN) { ?>
+            <?php if ($session['role'] == Roles::ROLE_SUPERADMIN || $session['role'] == Roles::ROLE_ADMIN) { ?>
                 <li class='has-sub'>
                     <a class='managevisitorrecords'
                        href='<?php echo Yii::app()->createUrl('user/systemaccessrules'); ?>'>
@@ -241,7 +241,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                 </ul>
             </li>
 
-            <?php if ($session['role'] == Roles::ROLE_SUPERADMIN || $session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_ISSUING_BODY_ADMIN) { ?>
+            <?php if ($session['role'] == Roles::ROLE_SUPERADMIN || $session['role'] == Roles::ROLE_ADMIN) { ?>
                 <li class='has-sub'>
                     <a class='managevisitorrecords'
                        href='<?php echo Yii::app()->createUrl('user/systemaccessrules'); ?>'>
@@ -370,7 +370,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                 </li><!-- menu for Visitors -->
             <?php }
             // Show Visitor Types to All Admins only
-            if (Yii::app()->user->role == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_ISSUING_BODY_ADMIN) {
+            if (Yii::app()->user->role == Roles::ROLE_ADMIN) {
                 ?>    <!-- menu for Visitors Types -->
                 <li class='has-sub'>
                     <?php echo CHtml::link('Visitor Types', array('visitorType/index'),
@@ -407,7 +407,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                 </li>
             <?php
             } else {
-            if ($session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_ISSUING_BODY_ADMIN) {
+            if ($session['role'] == Roles::ROLE_ADMIN) {
                 ?>
                 <!--WangFu Modified-->
 
@@ -547,7 +547,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
             <!-- menu for helpdesk -->
 
             <!-- Notifications -->
-            <?php if ($session['role'] == Roles::ROLE_SUPERADMIN || $session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_ISSUING_BODY_ADMIN) { ?>
+            <?php if ($session['role'] == Roles::ROLE_SUPERADMIN || $session['role'] == Roles::ROLE_ADMIN) { ?>
                 <li class='has-sub'>
                     <a class='managevisitorrecords'
                        href='<?php echo Yii::app()->createUrl('notifications/admin'); ?>'><span>Notifications</span></a>

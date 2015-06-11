@@ -57,7 +57,7 @@ class UserServiceImpl implements UserService {
          * * */
         $company = Company::model()->findByPK($user->company);
         if (Yii::app()->controller->action->id == 'create') {
-
+			
             switch ($userLoggedIn->role) {
 				
                 case Roles::ROLE_SUPERADMIN:
@@ -65,8 +65,6 @@ class UserServiceImpl implements UserService {
                     // commenting it out as it is causing issue while saving user....
 					//echo $user->role; exit;
                     if ($user->role == Roles::ROLE_ADMIN) {
-                        $this->assignTenantOfUserAndCompanyForRoleAdmin($user, $company->tenant);
-                    }else if ($user->role == Roles::ROLE_ISSUING_BODY_ADMIN) {
                         $this->assignTenantOfUserAndCompanyForRoleAdmin($user, $company->tenant);
                     } else if ($user->role == Roles::ROLE_AGENT_ADMIN) {
                         $this->assignTenantAndTenantAgentOfUserAndCompanyForRoleAgentAdmin($user, $company->tenant, $company->tenant_agent);
@@ -79,10 +77,7 @@ class UserServiceImpl implements UserService {
                 default:
                     if ($user->role == Roles::ROLE_ADMIN) {
                         $this->assignTenantOfUserAndCompanyForRoleAdmin($user, $company->tenant);
-                    }else if ($user->role == Roles::ROLE_ISSUING_BODY_ADMIN) {
-                        $this->assignTenantOfUserAndCompanyForRoleAdmin($user, $company->tenant);
-                    }
-                    else if ($user->role == Roles::ROLE_AGENT_ADMIN) {
+                    } else if ($user->role == Roles::ROLE_AGENT_ADMIN) {
                         $this->assignSessionTenantAndTenantAgentOfUserAndCompanyForRoleAgentAdmin($user, $company->tenant, $company->tenant_agent, $userLoggedIn);
                     } else if ($user->role == Roles::ROLE_AGENT_OPERATOR) {
                         /* if user role is agent operator, set tenant agent = tenant agent of current logged user */

@@ -16,7 +16,7 @@ class UserGroup {
     //put your code here
     public static $USERGROUP_ARRAY_ADMINISTRATION = array(Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN, Roles::ROLE_AGENT_ADMIN, Roles::ROLE_AGENT_AIRPORT_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN);
     public static $USERGROUP_ARRAY_SUPERADMIN_DASHBOARD = array(Roles::ROLE_SUPERADMIN, Roles::ROLE_OPERATOR, Roles::ROLE_AGENT_OPERATOR, Roles::ROLE_AGENT_AIRPORT_ADMIN);
-    public static $USERGROUP_ARRAY_ADMINISTRATION_DASHBOARD = array(Roles::ROLE_ADMIN, Roles::ROLE_AGENT_ADMIN, Roles::ROLE_OPERATOR, Roles::ROLE_AGENT_OPERATOR, Roles::ROLE_AGENT_AIRPORT_ADMIN,Roles::ROLE_ISSUING_BODY_ADMIN);
+    public static $USERGROUP_ARRAY_ADMINISTRATION_DASHBOARD = array(Roles::ROLE_ADMIN, Roles::ROLE_AGENT_ADMIN, Roles::ROLE_OPERATOR, Roles::ROLE_AGENT_OPERATOR, Roles::ROLE_AGENT_AIRPORT_ADMIN);
     public static $USERGROUP_ARRAY_SUPERADMIN = array(Roles::ROLE_SUPERADMIN);
     public static $USERGROUP_ARRAY_STAFFMEMBER = array(Roles::ROLE_STAFFMEMBER);
 
@@ -32,6 +32,7 @@ class UserGroup {
         if (!isset($user->role)) {
             Yii::app()->controller->redirect(Yii::app()->createUrl("site/login"));
         }
+
         switch ($user_group) {
             case UserGroup::USERGROUP_ADMINISTRATION:
 

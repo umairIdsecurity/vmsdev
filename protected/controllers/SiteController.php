@@ -232,14 +232,12 @@ class SiteController extends Controller {
 
     public function actionSelectWorkstation($id) {
 
-        if (isset(Yii::app()->user->role) && (Yii::app()->user->role == Roles::ROLE_ADMIN || Yii::app()->user->role == Roles::ROLE_ISSUING_BODY_ADMIN)) {
+        if (isset(Yii::app()->user->role) && Yii::app()->user->role == Roles::ROLE_ADMIN) {
             $session = new CHttpSession;
             $Criteria = new CDbCriteria();
-            if (isset($session['tenant']) && $session['tenant'] != NULL){
-                $Criteria->condition = "tenant = " . $session['tenant'] . " AND is_deleted = 0";
-            }
-            $row = Workstation::model()->findAll($Criteria);
+            $Criteria->condition = "tenant = ".$session['tenant']." AND is_deleted = 0";
 
+            $row = Workstation::model()->findAll($Criteria);
         } else {
             $row = Workstation::model()->findWorkstationAvailableForUser($id);
         }
@@ -251,7 +249,6 @@ class SiteController extends Controller {
                     'id' => $value['id'],
                     'name' => $value['name'],
                 );
-
             }
         } else {
             $aArray[] = array(

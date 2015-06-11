@@ -782,7 +782,20 @@ class VisitController extends Controller {
         $model->date_check_out = '';
         $model->card = NULL;
         $model->isNewRecord = true;
+
+        ///update data from $_POST
         $model->attributes = $_POST['Visit'];
+
+        //set status to pre-registered
+        if ($model->date_check_in > date('d-m-Y')) {
+            $model->visit_status = VisitStatus::PREREGISTERED;
+        }
+
+        //update date checkout in case card 24h
+        if ($model && $model->card_type == CardType::VIC_CARD_24HOURS) {
+            $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 1 day'));
+            $model->time_check_out = $model->time_check_in;
+        }
 
         if ($visitService->save($model, $session['id'])) {
             echo $model->id;

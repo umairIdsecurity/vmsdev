@@ -67,6 +67,15 @@
             "order_by": null,
             "created_by": "47",
             "is_deleted": "0"
+        },
+        {
+            "id": "6",
+            "question": "Where are the AVMS reports?",
+            "answer": "Click on the Administration tab and then select the AVMS Reports option from the Administration menu. It's a pull-down menu from which you chose the report that you need.",
+            "helpdesk_group_id": "3",
+            "order_by": null,
+            "created_by": "47",
+            "is_deleted": "0"
         }
     ]
 }

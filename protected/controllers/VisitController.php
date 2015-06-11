@@ -302,7 +302,8 @@ class VisitController extends Controller {
         $patientModel = Patient::model()->findByPk($model->patient);
         $cardTypeModel = CardType::model()->findByPk($model->card_type);
 		$visitCount = Visit::model()->getVisitCount($model->id);
-        $visitCount['remainingDays'] = $model->getVisitCounts();
+        $visitCount['totalVisit'] = $model->visitCounts;
+        $visitCount['remainingDays'] = $model->remainingDays;
 
         $newPatient = new Patient;
         $newHost = new User;
@@ -328,29 +329,30 @@ class VisitController extends Controller {
                 case CardType::VIC_CARD_MANUAL:
                     $model->date_check_in = date('d-m-Y');
                     $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 1 day'));
-                    $visitCount['remainingDays'] = $model->visitCounts;
+                    $visitCount['totalVisit'] = $model->visitCounts;
+                    $visitCount['remainingDays'] = $model->remainingDays;
                     break;
-                default://die('4');
+                case CardType::VIC_CARD_MULTIDAY:
+                case CardType::VIC_CARD_EXTENDED:
                     $model->date_check_in = date('d-m-Y');
                     $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 28 day'));
-                    $visitCount['remainingDays'] = $model->visitCounts;
+                    $visitCount['totalVisit'] = $model->visitCounts;
+                    $visitCount['remainingDays'] = $model->remainingDays;
                     break;
             }
 
-            if (isset($_POST['Visitor']['visitor_card_status']) && $_POST['Visitor']['visitor_card_status'] != $visitorModel->visitor_card_status) {die('ok');
+            if (isset($_POST['Visitor']['visitor_card_status']) && $_POST['Visitor']['visitor_card_status'] != $visitorModel->visitor_card_status) {
                 $visitorModel->visitor_card_status = $_POST['Visitor']['visitor_card_status'];
                 if ($visitorModel->save()) {
                     if (in_array($visitorModel->visitor_card_status, [Visitor::ASIC_PENDING])) {
-                        $model->date_check_in = date('d-m-Y');
-                        $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 28 day'));
+                        $model->date_check_in = $model->date_check_out;
                         if ($model->save()) {
-                            $visitCount['remainingDays'] = $model->visitCounts;
+                            $visitCount['totalVisit'] = $model->visitCounts;
+                            $visitCount['remainingDays'] = $model->remainingDays;
                         }
                     }
                 }
             }
-
-            //if (isset($_POST['Visit']['']))
 
             // close visit process
             if (isset($_POST['closeVisitForm']) && $model->visit_status == VisitStatus::CLOSED) {

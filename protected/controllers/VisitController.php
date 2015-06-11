@@ -792,10 +792,22 @@ class VisitController extends Controller {
         }
 
         //update date checkout in case card 24h
-        if ($model && $model->card_type == CardType::VIC_CARD_24HOURS) {
-            $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 1 day'));
-            $model->time_check_out = $model->time_check_in;
+        if (!empty($model)) {
+            switch ($model->card_type) {
+                case CardType::VIC_CARD_24HOURS:
+                case CardType::VIC_CARD_SAMEDATE:
+                    $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 1 day'));
+                    $model->time_check_out = $model->time_check_in;
+                    break;
+                case CardType::VIC_CARD_EXTENDED:
+                case CardType::VIC_CARD_MULTIDAY:
+                    $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 28 day'));
+                    $model->time_check_out = $model->time_check_in;
+                    break;
+            }
         }
+
+        
 
         if ($visitService->save($model, $session['id'])) {
             echo $model->id;

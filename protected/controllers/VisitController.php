@@ -322,7 +322,7 @@ class VisitController extends Controller {
             $model->attributes = $_POST['Visit'];
             $cartType = isset($_POST['Visit']['card_type']) ? $_POST['Visit']['card_type'] : '';
             if (isset($cartType)) {
-                switch ($_POST['Visit']['card_type']) {
+                switch ($cartType) {
                     case CardType::VIC_CARD_SAMEDATE:
                     case CardType::VIC_CARD_24HOURS:
                     case CardType::VIC_CARD_MANUAL:

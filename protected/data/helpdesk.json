@@ -6,6 +6,31 @@
             "order_by": null,
             "created_by": "47",
             "is_deleted": "0"
+        },
+        {
+            "id": "2",
+            "name": "All Modules",
+            "order_by": null,
+            "created_by": "47",
+            "is_deleted": "0"
+        },
+        {
+            "id": "3",
+            "name": "AVMS Administration",
+            "order_by": null,
+            "created_by": "47",
+            "is_deleted": "0"
+        }
+    ],
+    "helpdesk": [
+        {
+            "id": "1",
+            "question": "How do I update my profile?",
+            "answer": "Select the person silhouette in the icon group at the top right of the screen. You can change all your details except those in greyed-out fields.",
+            "helpdesk_group_id": "2",
+            "order_by": null,
+            "created_by": "47",
+            "is_deleted": "0"
         }
     ]
 }

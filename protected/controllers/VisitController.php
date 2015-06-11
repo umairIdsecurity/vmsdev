@@ -109,10 +109,19 @@ class VisitController extends Controller {
                     // todo: check this default later
                     $model->visitor_type = VisitorType::CORPORATE_VISITOR;
 
-                    $reason = VisitReason::model()->findAllReason();
+                    /*$reason = VisitReason::model()->findAllReason();
                     if (count($reason) > 0) {
                         $model->reason = $reason[0]->id;
+                    }*/
+                    //check $reasonId has exist until add new.
+                    if ($model->reason == 'Other' || !$model->reason){
+                        $newReason = new VisitReason();
+                        $newReason->setAttribute('reason',$_POST['Visit']['reason_note']);
+                        if($newReason->save()){
+                            $model->reason = $newReason->id;
+                        }
                     }
+                    $model->reason = $model->reason?$model->reason : 1;
 
                 }
             }

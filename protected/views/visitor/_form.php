@@ -496,7 +496,7 @@ $form = $this->beginWidget('CActiveForm', array(
 
                         <tr>
                             <td style="padding-bottom:10px">
-                                <?php echo $form->radioButton($model, 'password_option', array("class"=>"pass_option"));?>
+                                <input class="pass_option" type="radio" name="Visitor[password_option]" value="1"/>
                                 &nbsp;Create Password
                             </td>
                         </tr>

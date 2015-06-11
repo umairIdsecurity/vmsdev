@@ -96,7 +96,7 @@ if ($vstr->profile_type == "CORPORATE" && $model->card_type == 4) {
                 <tr>
                     <td><span class="cardDateText"><?php
                             if ($model->card_type == CardType::SAME_DAY_VISITOR) {
-                                if (strtotime($model->date_check_out)) {
+                                if (!strtotime($model->date_check_out)) {
                                     $date1 = date('d M y');
                                     echo date("d M y", strtotime($date1));
                                 } else {

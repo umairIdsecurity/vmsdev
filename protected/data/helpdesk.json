@@ -31,6 +31,42 @@
             "order_by": null,
             "created_by": "47",
             "is_deleted": "0"
+        },
+        {
+            "id": "2",
+            "question": "How do I add a visitor profile?",
+            "answer": "You can add a Visitor Profile through::\r\n -- the Add Visitor Profile option in the Main Menu in the Dashboard\r\n -- the second step of Logging a Visit if the Visitor is not already in the system.\r\n\r\n\r\n",
+            "helpdesk_group_id": "2",
+            "order_by": null,
+            "created_by": "47",
+            "is_deleted": "0"
+        },
+        {
+            "id": "3",
+            "question": "Why can't I see all of a visitor's information?",
+            "answer": "There are several reasons that a visitor\u2019s information remains hidden:\r\n -- a visit has not yet been activated \r\n -- your user role doesn\u2019t have access to that information.\r\n",
+            "helpdesk_group_id": "2",
+            "order_by": null,
+            "created_by": "47",
+            "is_deleted": "0"
+        },
+        {
+            "id": "4",
+            "question": "What's a Same Day VIC?",
+            "answer": "The same day VIC limits a visit to today\u2019s date until 12 a.m. (midnight). It counts as one visit.",
+            "helpdesk_group_id": "1",
+            "order_by": null,
+            "created_by": "47",
+            "is_deleted": "0"
+        },
+        {
+            "id": "5",
+            "question": "What's a MultiDay Vic?",
+            "answer": "A MultiDay VIC, also known as an EVIC, lasts for more than one day up to a maximum of 28 days. A photo is required for this type of VIC.",
+            "helpdesk_group_id": "1",
+            "order_by": null,
+            "created_by": "47",
+            "is_deleted": "0"
         }
     ]
 }

@@ -74,9 +74,6 @@ class TenantController extends Controller {
             //$companyModel->attribute = $_POST['TenantForm']['contact_number'];
             //$companyModel->mobile_number = $_POST['TenantForm']['contact_number'];
             $transaction = Yii::app()->db->beginTransaction();
-            $message = "";
-			$suceemessage = "";
-            $flag= "";
 
             try {
                 $tenantContact = new TenantContact();
@@ -92,7 +89,6 @@ class TenantController extends Controller {
 
                 }
 
-				$suceemessage ="companny";
                 $companyModel->code = $_POST['TenantForm']['tenant_code'];
                 $companyModel->name = $_POST['TenantForm']['tenant_name'];
                 $companyModel->trading_name = $_POST['TenantForm']['tenant_name'];
@@ -116,7 +112,6 @@ class TenantController extends Controller {
                     $companyModel->save();
                     $comapanylastId = $companyModel->id;
 
-					$suceemessage .="::company::";
                     $userModel->first_name = $_POST['TenantForm']['first_name'];
                     $userModel->last_name = $_POST['TenantForm']['last_name'];
                     $userModel->email = $_POST['TenantForm']['email'];
@@ -145,7 +140,7 @@ class TenantController extends Controller {
                         $userModel->save();
                         $userLastID = $userModel->id;
                         //echo ":userModel:".$userLastID;
-						$suceemessage .="::tenant::";
+
                         $tenantModel->id = $comapanylastId;
 						$tenantModel->is_deleted = 0;
                         $tenantModel->created_by = Yii::app()->user->id;
@@ -154,25 +149,14 @@ class TenantController extends Controller {
                             $tenantLastID = $tenantModel->id;
                             //echo ":tenantModel:".$tenantLastID;
 
-							$suceemessage .="::tenant contact::";
                             $tenantContact->tenant = $tenantLastID;
                             $tenantContact->user = $userLastID;
                             if ($tenantContact->validate()) {
                                 $tenantContact->save();
-								$suceemessage .="::commit::";
                                 $transaction->commit();
                                 //echo ":tenantModel:";
                             } else {
                                 $transaction->rollback();
-                                $flag = "Tenant contact";
-                                $model_error[] = $tenantContact->getErrors();
-                                foreach ($model_error as $error) {
-                                    foreach ($error as $err) {
-                                        foreach ($err as $e) {
-                                            $message .= $e;
-                                        }
-                                    }
-                                }
                                 //throw new CHttpException(500, 'Something went wrong');
                                 /*print_r($tenantContact->getErrors());
                                 exit;*/
@@ -180,15 +164,6 @@ class TenantController extends Controller {
 
                         } else {
                             $transaction->rollback();
-                            $flag = "Tenant";
-                            $model_error[] = $tenantModel->getErrors();
-                            foreach ($model_error as $error) {
-                                foreach ($error as $err) {
-                                    foreach ($err as $e) {
-                                        $message .= $e;
-                                    }
-                                }
-                            }
                             //throw new CHttpException(500, 'Something went wrong');
                             /*print_r($tenantModel->getErrors());
                             exit;*/
@@ -199,15 +174,6 @@ class TenantController extends Controller {
 
                     } else {
                         $transaction->rollback();
-                        $flag = "User";
-                        $model_error[] = $userModel->getErrors();
-                        foreach ($model_error as $error) {
-                            foreach ($error as $err) {
-                                foreach ($err as $e) {
-                                    $message .= $e;
-                                }
-                            }
-                        }
                         //throw new CHttpException(500, 'Something went wrong');
                         /*print_r($userModel->getErrors());
                         exit;*/
@@ -217,15 +183,6 @@ class TenantController extends Controller {
                     //echo "companyModel inserted:". $comapanylastId;
                 } else {
                     $transaction->rollback();
-                    $flag = "Company";
-                    $model_error[] = $companyModel->getErrors();
-                    foreach ($model_error as $error) {
-                        foreach ($error as $err) {
-                            foreach ($err as $e) {
-                                $message .= $e;
-                            }
-                        }
-                    }
                     //throw new CHttpException(500, 'Something went wrong');
                     /*print_r($companyModel->getErrors());
                     exit;*/
@@ -234,16 +191,10 @@ class TenantController extends Controller {
 
                 Yii::app()->user->setFlash('success', "Tenant inserted Successfully");
                 echo json_encode(array('success'=>TRUE));
-                exit;
-
             }catch (CDbException $e)
             {
                 $transaction->rollback();
-                echo "Flag::".$flag."</br></br></br></br>";
-				echo "suceemessage::".$suceemessage."</br></br></br></br>";
-                echo $e->getMessage()."</br></br></br></br>";
-                echo $message;
-				print_r(e);exit;
+				echo $e->getMessage();
                 Yii::app()->user->setFlash('error', "There was an error processing request");
                 echo json_encode(array('success'=>FALSE));
             }

@@ -7,6 +7,7 @@ ini_set('xdebug.max_nesting_level', 200);
  * @property string $id
  * @property string $card
  * @property string $visitor_type
+ * @property int $visit_status
  * @property string $reason
  * @property string $visitor_status
  * @property string $host

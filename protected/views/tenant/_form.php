@@ -43,7 +43,7 @@ $currentLoggedUserId = $session['id'];
                                                 obj = JSON.parse(data);
 
                                                 if(obj["success"]){
-                                                    //window.location.href = "'.$this->createUrl("tenant/create/&role=1").'";
+                                                    window.location.href = "'.$this->createUrl("tenant/create/&role=1").'";
                                                 }else{
                                                     //window.location.href = "'.$this->createUrl("tenant/create/&role=1").'";
                                                 }

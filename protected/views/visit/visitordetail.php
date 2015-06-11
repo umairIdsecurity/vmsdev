@@ -192,7 +192,7 @@ $this->renderPartial('visithistory', array('model' => $model,
             data: form,
             success: function(data) {
                 $(".success-update-contact-details").show();
-            },
+            }
         });
 
     }
@@ -207,7 +207,7 @@ $this->renderPartial('visithistory', array('model' => $model,
             success: function(data) {
                 addReasonInDropdown();
 
-            },
+            }
         });
 
     }
@@ -251,7 +251,7 @@ $this->renderPartial('visithistory', array('model' => $model,
             url: "<?php echo CHtml::normalizeUrl(array("user/update&id=" . $hostModel->id)); ?>",
             data: hostform,
             success: function(data) {
-            },
+            }
         });
     }
 
@@ -265,7 +265,7 @@ $this->renderPartial('visithistory', array('model' => $model,
             success: function(data) {
                 $(".success-update-reason").show();
                 $(".success-add-reason").hide();
-            },
+            }
         });
     }
 
@@ -294,7 +294,7 @@ $this->renderPartial('visithistory', array('model' => $model,
                     $(".success-update-visitor-type").show();
                     window.location = 'index.php?r=visit/detail&id=<?php echo $_GET['id']; ?>';
                 }
-            },
+            }
         });
     }
 
@@ -306,7 +306,7 @@ $this->renderPartial('visithistory', array('model' => $model,
             data: patientForm,
             success: function(data) {
                 $(".success-update-patient").show();
-            },
+            }
         });
     }
 
@@ -318,7 +318,7 @@ $this->renderPartial('visithistory', array('model' => $model,
             data: patientForm,
             success: function(data) {
                 getLastPatientId();
-            },
+            }
         });
     }
 
@@ -378,7 +378,7 @@ $this->renderPartial('visithistory', array('model' => $model,
             data: hostform,
             success: function(data) {
                 getLastHostId();
-            },
+            }
         });
     }
 
@@ -419,14 +419,14 @@ $this->renderPartial('visithistory', array('model' => $model,
                 
                 //alert("Visit is now activated. You can now print the visitor badge.");
                 //window.location = "<?php //echo CHtml::normalizeUrl(array("visit/detail&id=" . $model->id)); ?>";
-            },
+            }
         });
     }
 
     function sendCardForm(visitId) {
         var cardForm = $("#update-card-form").serialize();
         var id = visitId ? visitId : '<?php echo $model->id; ?>';
-        
+
         $.ajax({
             type: "POST",
             url: "<?php echo CHtml::normalizeUrl(array("cardGenerated/create&visitId=")) ?>" + id,
@@ -445,7 +445,7 @@ $this->renderPartial('visithistory', array('model' => $model,
             data: visitForm,
             success: function(data) {
                 window.location = "index.php?r=visit/detail&id=<?php echo $_GET['id']; ?>";
-            },
+            }
         });
     }
 
@@ -457,7 +457,7 @@ $this->renderPartial('visithistory', array('model' => $model,
             data: visitForm,
             success: function(data) {
                 window.location = "index.php?r=visit/detail&id=<?php echo $_GET['id']; ?>";
-            },
+            }
         });
     }
 
@@ -468,10 +468,10 @@ $this->renderPartial('visithistory', array('model' => $model,
             url: "<?php echo CHtml::normalizeUrl(array("visit/duplicateVisit&id=" . $model->id)); ?>",
             data: visitForm,
             success: function(data) {
-                if (data) {
+                if (data && !isNaN(data)) {
 	                sendCardForm(data);
                 }
-            },
+            }
         });
     }
 

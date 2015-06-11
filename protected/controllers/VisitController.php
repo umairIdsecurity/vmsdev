@@ -262,6 +262,7 @@ class VisitController extends Controller {
      */
 
     public function actionDetail($id) {
+        /** @var Visit $model */
         $model = Visit::model()->findByPk($id);
         // Check if model is empty then redirect to visit history
         if (empty($model)) {
@@ -283,15 +284,7 @@ class VisitController extends Controller {
 
         if (empty($workstationModel) && in_array($model->visit_status, VisitStatus::$VISIT_STATUS_DENIED)) {
             Yii::app()->user->setFlash('error', 'Workstation of this visit has been deleted.');
-            return $this->redirect(Yii::app()->createUrl('visit/view'));
-        }
-
-        //set status to pre-registered
-        if ($model->date_check_in > date('d-m-Y')) {
-            $preVisitStatus = VisitStatus::model()->findByAttributes(array('name' => 'Pre-registered'));
-            if ($preVisitStatus) {
-                $model->visit_status = $preVisitStatus->id;
-            }
+            $this->redirect(Yii::app()->createUrl('visit/view'));
         }
         
         //update status for Contractor Card Type
@@ -300,10 +293,6 @@ class VisitController extends Controller {
                 $model->visit_status = VisitStatus::EXPIRED;
                 $model->save();
             }
-        } else if ($model && $model->card_type == CardType::VIC_CARD_24HOURS) {
-            $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in. ' + 1 day'));
-            $model->time_check_out = $model->time_check_in;
-            $model->save();
         }
 
         $visitorModel = Visitor::model()->findByPk($model->visitor);
@@ -331,8 +320,8 @@ class VisitController extends Controller {
             }
 
             $model->attributes = $_POST['Visit'];
-
-            if (isset($_POST['Visit']['card_type'])) {
+            $cartType = isset($_POST['Visit']['card_type']) ? $_POST['Visit']['card_type'] : '';
+            if (isset($cartType)) {
                 switch ($_POST['Visit']['card_type']) {
                     case CardType::VIC_CARD_SAMEDATE:
                     case CardType::VIC_CARD_24HOURS:

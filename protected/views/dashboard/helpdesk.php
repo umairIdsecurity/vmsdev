@@ -17,7 +17,7 @@ $session = new ChttpSession;
   margin-left: 50px; width: 500px;"  />
 		<input type="submit" name="searchFaq" id="searchFaq" value="Search" class="actionForward"  />
         <input type="submit" name="showAllFaq" id="showAllFaq"  value="Show All"   />
-        <input type="submit" name="askAQuestion" value="Ask a Quesion" onclick="window.location.href='<?php echo Yii::app()->createUrl("/dashboard/contactsupport"); ?>'"  />
+        <input type="submit" name="askAQuestion" value="Ask a Question" onclick="window.location.href='<?php echo Yii::app()->createUrl("/dashboard/contactsupport"); ?>'"  />
 	</div>
 
 

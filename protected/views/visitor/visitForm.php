@@ -132,6 +132,10 @@ date_default_timezone_set('Asia/Manila');
 <input type='hidden' id='preloadVisitId'/>
 <script>
     $(document).ready(function() {
+        $('#VisitReason_reason').change(function(){
+            var $input = $("<textarea  name='Visit[reason_note]'>"+$(this).val()+"</textarea>");
+            $("#register-visit-form").append($input);
+        });
 
     });
     function populateVisitFormFields() {
@@ -170,6 +174,8 @@ date_default_timezone_set('Asia/Manila');
     }
 
     function sendVisitForm() {
+
+
         if ($("#isPreloaded").val() == 1) {
             var visitForm = $("#register-visit-form").serialize();
             $.ajax({

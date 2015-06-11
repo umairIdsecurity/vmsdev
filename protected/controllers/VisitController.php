@@ -80,6 +80,7 @@ class VisitController extends Controller {
             $model->attributes = $_POST['Visit'];
 
             switch ($model->card_type) {
+                case CardType::VIC_CARD_MANUAL:
                 case CardType::VIC_CARD_24HOURS: // VIC 24 hour
                     $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 1 day'));
                     break;
@@ -109,13 +110,23 @@ class VisitController extends Controller {
                     // todo: check this default later
                     $model->visitor_type = VisitorType::CORPORATE_VISITOR;
 
-                    $reason = VisitReason::model()->findAllReason();
+                    /*$reason = VisitReason::model()->findAllReason();
                     if (count($reason) > 0) {
                         $model->reason = $reason[0]->id;
-                    }
+                    }*/
 
                 }
             }
+
+            //check $reasonId has exist until add new.
+            if ($model->reason == 'Other' || !$model->reason){
+                $newReason = new VisitReason();
+                $newReason->setAttribute('reason',$_POST['Visit']['reason_note']);
+                if($newReason->save()){
+                    $model->reason = $newReason->id;
+                }
+            }
+
 
             if ($visitService->save($model, $session['id'])) {
                 $this->redirect(array('visit/detail', 'id' => $model->id));
@@ -253,6 +264,7 @@ class VisitController extends Controller {
      */
 
     public function actionDetail($id) {
+        /** @var Visit $model */
         $model = Visit::model()->findByPk($id);
         // Check if model is empty then redirect to visit history
         if (empty($model)) {
@@ -274,7 +286,7 @@ class VisitController extends Controller {
 
         if (empty($workstationModel) && in_array($model->visit_status, VisitStatus::$VISIT_STATUS_DENIED)) {
             Yii::app()->user->setFlash('error', 'Workstation of this visit has been deleted.');
-            return $this->redirect(Yii::app()->createUrl('visit/view'));
+            $this->redirect(Yii::app()->createUrl('visit/view'));
         }
         
         //update status for Contractor Card Type
@@ -283,17 +295,15 @@ class VisitController extends Controller {
                 $model->visit_status = VisitStatus::EXPIRED;
                 $model->save();
             }
-        } else if ($model && $model->card_type == CardType::VIC_CARD_24HOURS) {
-            $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in. ' + 1 day'));
-            $model->time_check_out = $model->time_check_in;
-            $model->save();
         }
 
         $visitorModel = Visitor::model()->findByPk($model->visitor);
         $reasonModel = VisitReason::model()->findByPk($model->reason);
         $patientModel = Patient::model()->findByPk($model->patient);
         $cardTypeModel = CardType::model()->findByPk($model->card_type);
-		$visitModel = Visit::model()->getVisitCount($model->id);
+		$visitCount = Visit::model()->getVisitCount($model->id);
+        $visitCount['totalVisits'] = $model->visitCounts;
+        $visitCount['remainingDays'] = $model->remainingDays;
 
         $newPatient = new Patient;
         $newHost = new User;
@@ -313,16 +323,18 @@ class VisitController extends Controller {
 
             $model->attributes = $_POST['Visit'];
 
-            switch ($model->card_type) {
-                case CardType::VIC_CARD_24HOURS: // VIC 24 hour
-                    $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 1 day'));
-                    break;
-                case CardType::VIC_CARD_EXTENDED: // VIC Extended
-                case CardType::VIC_CARD_MULTIDAY: // VIC Multiday
-                    $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 28 day'));
-                    break;
+            if (isset($_POST['Visitor']['visitor_card_status']) && $_POST['Visitor']['visitor_card_status'] != $visitorModel->visitor_card_status) {
+                $visitorModel->visitor_card_status = $_POST['Visitor']['visitor_card_status'];
+                if ($visitorModel->save()) {
+                    if (in_array($visitorModel->visitor_card_status, [Visitor::ASIC_PENDING])) {
+                        $model->date_check_in = $model->date_check_out;
+                        if ($model->save()) {
+                            $visitCount['totalVisits'] = $model->visitCounts;
+                            $visitCount['remainingDays'] = $model->remainingDays;
+                        }
+                    }
+                }
             }
-            $model->time_check_out = $model->time_check_in;
 
             // close visit process
             if (isset($_POST['closeVisitForm']) && $model->visit_status == VisitStatus::CLOSED) {
@@ -335,7 +347,13 @@ class VisitController extends Controller {
                     $model->card_lost_declaration_file = '/uploads/card_lost_declaration/'.$fileUpload->name;
                 }
             }
+
             if ($model->save()) {
+                if (isset($_POST['closeVisitForm'])) {
+                    $visitCount['totalVisits'] = $model->visitCounts;
+                    $visitCount['remainingDays'] = $model->remainingDays;
+                }
+                
                 if (!empty($fileUpload)) {
                     $fileUpload->saveAs(YiiBase::getPathOfAlias('webroot') . $model->card_lost_declaration_file);
                 }
@@ -352,7 +370,7 @@ class VisitController extends Controller {
             'patientModel' => $patientModel,
             'newPatient' => $newPatient,
             'newHost' => $newHost,
-			'visitModel' => $visitModel,
+			'visitCount' => $visitCount,
             'cardTypeModel' => $cardTypeModel,
         ));
     }
@@ -765,7 +783,32 @@ class VisitController extends Controller {
         $model->date_check_out = '';
         $model->card = NULL;
         $model->isNewRecord = true;
+
+        ///update data from $_POST
         $model->attributes = $_POST['Visit'];
+
+        //set status to pre-registered
+        if ($model->date_check_in > date('d-m-Y')) {
+            $model->visit_status = VisitStatus::PREREGISTERED;
+        }
+
+        //update date checkout in case card 24h
+        if (!empty($model)) {
+            switch ($model->card_type) {
+                case CardType::VIC_CARD_24HOURS:
+                case CardType::VIC_CARD_SAMEDATE:
+                    $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 1 day'));
+                    $model->time_check_out = $model->time_check_in;
+                    break;
+                case CardType::VIC_CARD_EXTENDED:
+                case CardType::VIC_CARD_MULTIDAY:
+                    $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 28 day'));
+                    $model->time_check_out = $model->time_check_in;
+                    break;
+            }
+        }
+
+        
 
         if ($visitService->save($model, $session['id'])) {
             echo $model->id;

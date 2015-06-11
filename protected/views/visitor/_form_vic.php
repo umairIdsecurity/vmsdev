@@ -136,7 +136,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                         <td>
                                             <?php 
                                             array_pop(Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC]);
-                                            echo $form->dropDownList($model, 'visitor_card_status', Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC], ['empty' => 'Select Card Status', 'options'=>['2' => ['selected'=>true]]]); ?>
+                                            echo $form->dropDownList($model, 'visitor_card_status', Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC], ['empty' => 'Select Card Status', 'options'=>['1' => ['selected'=>true]]]); ?>
                                             <span class="required">*</span>
                                             <?php echo "<br>" . $form->error($model, 'visitor_card_status'); ?>
                                         </td>
@@ -203,8 +203,8 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                            if(Yii::app()->user->role == Roles::ROLE_ADMIN) {
                                                echo '<select name="Visitor[visitor_type]" id="Visitor_visitor_type">';
                                                echo CHtml::tag('option',array('value' => ''),'Select Visitor Type',true);
-                                               $list = VisitorType::model()->findAll("`name` like 'VIC%'");
-                                               
+                                               $list = VisitorType::model()->findAll();
+
                                                foreach( $list as $val ) {
                                                    if ( $val->tenant == Yii::app()->user->tenant && $val->is_default_value == '1' ) {
                                                        echo CHtml::tag('option', array('value' => $val->id, 'selected' => 'selected'), CHtml::encode('Visitor Type: '.$val->name), true);
@@ -259,6 +259,8 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                 <select id="fromDay" name="Visitor[birthdayDay]" class='daySelect'></select>
                                 <select id="fromMonth" name="Visitor[birthdayMonth]" class='monthSelect'></select>
                                 <select id="fromYear" name="Visitor[birthdayYear]" class='yearSelect'></select>
+
+                                <?php echo "<br>" . $form->error($model, 'date_of_birth'); ?>
                             </td>
                         </tr>
                         <tr>
@@ -500,6 +502,21 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 <script>
 
     function afterValidate(form, data, hasError) {
+        var dt = new Date();
+        if(dt.getFullYear()< $("#fromYear").val()) {
+            $("#Visitor_date_of_birth_em_").show();
+            $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+            return false;
+        }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
+            $("#Visitor_date_of_birth_em_").show();
+            $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+            return false;
+        }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
+            $("#Visitor_date_of_birth_em_").show();
+            $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+            return false;
+        }
+
         var companyValue = $("#Visitor_company").val();
         var workstation = $("#User_workstation").val();
         if (!workstation || workstation == "") {
@@ -535,6 +552,65 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 
         $(".workstationRow").show();
         getWorkstation();
+
+        $('#fromDay').on('change', function () {
+            var dt = new Date();
+
+            if(dt.getFullYear()< $("#fromYear").val()) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                return false;
+            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                return false;
+            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                return false;
+            }else{
+                $("#Visitor_date_of_birth_em_").hide();
+            }
+        });
+        $('#fromMonth').on('change', function () {
+            var dt = new Date();
+
+            if(dt.getFullYear()< $("#fromYear").val()) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                return false;
+            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                return false;
+            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                return false;
+            }else{
+                $("#Visitor_date_of_birth_em_").hide();
+            }
+        });
+        $('#fromYear').on('change', function () {
+            var dt = new Date();
+
+            if(dt.getFullYear()< $("#fromYear").val()) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                return false;
+            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                return false;
+            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                return false;
+            }else{
+                $("#Visitor_date_of_birth_em_").hide();
+            }
+        });
+
 
         $('#User_workstation').on('change', function () {
             var workstation = $("#User_workstation").val();
@@ -889,7 +965,10 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 
                 $('#User_workstation').append('<option value="">Workstation</option>');
                 $.each(r.data, function (index, value) {
-                    $('#User_workstation').append('<option value="' + value.id + '">' + 'Workstation: ' + value.name + '</option>');
+                    var str = '<option ';
+                    if (index == 0) str += 'selected';
+                    str += ' value="' + value.id + '">' + 'Workstation: ' + value.name + '</option>';
+                    $('#User_workstation').append(str);
                 });
                 //$("#User_workstation").val(value);
                 if ($("#currentAction").val() == 'update') {

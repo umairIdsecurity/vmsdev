@@ -159,7 +159,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                 Contact No.
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" class="visitor-detail-info-field" value="<?php echo $company->mobile_number; ?>" disabled="disabled"
+                                <input type="text" class="visitor-detail-info-field" value="<?php echo $contact->contact_number; ?>" disabled="disabled"
                                        name="Visitor[mobile_number]" id="Visitor_mobile_number">
 
                             </td>
@@ -170,7 +170,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                 Contact Email
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" class="visitor-detail-info-field" value="<?php echo $company->email_address; ?>" disabled="disabled"
+                                <input type="text" class="visitor-detail-info-field" value="<?php echo $contact->email; ?>" disabled="disabled"
                                        name="Visitor[email_address]" id="Visitor_email_address">
 
                             </td>
@@ -477,8 +477,10 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                             <td class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                                 ASIC Expiry
                             </td>
+                            <?php
+                            ?>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" class="visitor-detail-info-field" value="<?php echo date("d-m-Y" , strtotime($asic->asic_expiry)); ?>" disabled="disabled"
+                                <input type="text" class="visitor-detail-info-field" value="<?php echo ($asic->asic_expiry != '0000-00-00' && $asic->asic_expiry != '')?date("d-m-Y" , strtotime($asic->asic_expiry)):''; ?>" disabled="disabled"
                                        name="Visitor[asic_expiry]" id="Visitor_asic_expiry">
 
                             </td>

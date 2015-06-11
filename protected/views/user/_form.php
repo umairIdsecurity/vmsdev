@@ -116,7 +116,7 @@ if (isset($company) && !empty($company)) {
 <input type="hidden" id="passwordUser" value="<?php echo isset($password) ? $password : ''; ?>">
 <div class="form" data-ng-app="PwordForm">
 <?php 
-$roleLabel = isset(Roles::$labels[Yii::app()->request->getParam('role')]) ? Roles::$labels[Yii::app()->request->getParam('role')] : '';
+$roleLabel = array_key_exists(Yii::app()->request->getParam('role'),Roles::$labels) ? Roles::$labels[Yii::app()->request->getParam('role')] : '';
 if ($this->action->id == 'update') {
     echo '<h1>Edit ' . $roleLabel . '</h1>';
 } else {
@@ -378,7 +378,6 @@ $form = $this->beginWidget('CActiveForm', array(
     <td class="workstationRow">
         <select id="User_workstation" name="User[workstation]" disabled></select>
     </td>
-    <td class="workstationRow"></td>
 </tr>
 
 
@@ -1132,7 +1131,7 @@ function populateAgentOperatorWorkstations(tenant, tenantAgent, value) {
         data: tenantAgent,
         success: function (r) {
             $('#User_workstation option[value!=""]').remove();
-
+            $('#User_workstation').append('<option value="">Workstation</option>');
             $.each(r.data, function (index, value) {
                 $('#User_workstation').append('<option value="' + value.id + '">' + value.name + '</option>');
             });

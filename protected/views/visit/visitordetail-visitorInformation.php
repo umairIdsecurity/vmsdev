@@ -477,8 +477,10 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                             <td class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                                 ASIC Expiry
                             </td>
+                            <?php
+                            ?>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" class="visitor-detail-info-field" value="<?php echo date("d-m-Y" , strtotime($asic->asic_expiry)); ?>" disabled="disabled"
+                                <input type="text" class="visitor-detail-info-field" value="<?php echo ($asic->asic_expiry != '0000-00-00' && $asic->asic_expiry != '')?date("d-m-Y" , strtotime($asic->asic_expiry)):''; ?>" disabled="disabled"
                                        name="Visitor[asic_expiry]" id="Visitor_asic_expiry">
 
                             </td>

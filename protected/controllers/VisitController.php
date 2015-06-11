@@ -114,18 +114,19 @@ class VisitController extends Controller {
                     if (count($reason) > 0) {
                         $model->reason = $reason[0]->id;
                     }*/
-                    //check $reasonId has exist until add new.
-                    if ($model->reason == 'Other' || !$model->reason){
-                        $newReason = new VisitReason();
-                        $newReason->setAttribute('reason',$_POST['Visit']['reason_note']);
-                        if($newReason->save()){
-                            $model->reason = $newReason->id;
-                        }
-                    }
-                    $model->reason = $model->reason?$model->reason : 1;
 
                 }
             }
+
+            //check $reasonId has exist until add new.
+            if ($model->reason == 'Other' || !$model->reason){
+                $newReason = new VisitReason();
+                $newReason->setAttribute('reason',$_POST['Visit']['reason_note']);
+                if($newReason->save()){
+                    $model->reason = $newReason->id;
+                }
+            }
+
 
             if ($visitService->save($model, $session['id'])) {
                 $this->redirect(array('visit/detail', 'id' => $model->id));
@@ -782,7 +783,32 @@ class VisitController extends Controller {
         $model->date_check_out = '';
         $model->card = NULL;
         $model->isNewRecord = true;
+
+        ///update data from $_POST
         $model->attributes = $_POST['Visit'];
+
+        //set status to pre-registered
+        if ($model->date_check_in > date('d-m-Y')) {
+            $model->visit_status = VisitStatus::PREREGISTERED;
+        }
+
+        //update date checkout in case card 24h
+        if (!empty($model)) {
+            switch ($model->card_type) {
+                case CardType::VIC_CARD_24HOURS:
+                case CardType::VIC_CARD_SAMEDATE:
+                    $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 1 day'));
+                    $model->time_check_out = $model->time_check_in;
+                    break;
+                case CardType::VIC_CARD_EXTENDED:
+                case CardType::VIC_CARD_MULTIDAY:
+                    $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 28 day'));
+                    $model->time_check_out = $model->time_check_in;
+                    break;
+            }
+        }
+
+        
 
         if ($visitService->save($model, $session['id'])) {
             echo $model->id;

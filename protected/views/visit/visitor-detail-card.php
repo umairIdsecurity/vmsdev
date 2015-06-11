@@ -96,7 +96,7 @@ if ($vstr->profile_type == "CORPORATE" && $model->card_type == 4) {
                 <tr>
                     <td><span class="cardDateText"><?php
                             if ($model->card_type == CardType::SAME_DAY_VISITOR) {
-                                if (strtotime($model->date_check_out)) {
+                                if (!strtotime($model->date_check_out)) {
                                     $date1 = date('d M y');
                                     echo date("d M y", strtotime($date1));
                                 } else {
@@ -186,7 +186,7 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
     </ul>
 </div>
 <?php endif; ?>
-
+<?php if ($model->visit_status != VisitStatus::SAVED): ?>
 <div style="margin-top: 10px;">
 <?php
 $companyName = isset($visitCount['companyName']) ? $visitCount['companyName'] : '';
@@ -201,7 +201,7 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
 </div>
 <input type="hidden" id="dummycardvalue" value="<?php echo $model->card; ?>"/>
 <input type="hidden" id="remaining_day" value="<?php echo $remainingDays; ?>">
-
+<?php endif; ?>
 <form method="post" id="workstationForm" action="<?php echo Yii::app()->createUrl('visit/detail', array('id' => $model->id)); ?>">
     <div style="margin: 10px 0px 0px 60px; text-align: left;">
         <?php

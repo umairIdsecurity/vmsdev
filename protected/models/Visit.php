@@ -656,15 +656,27 @@ class Visit extends CActiveRecord {
                 break;
             case CardType::VIC_CARD_EXTENDED:
             case CardType::VIC_CARD_MULTIDAY:
+                $dateIn = new DateTime($this->date_check_in);
+                $dateNow = new DateTime(date('d-m-Y'));
+                return ($dateNow->format('z') - $dateIn->format('z')) + 1;
                 break;
-            case CardType::VIC_CARD_SAMEDATE:
-            case CardType::VIC_CARD_24HOURS:
                 break;
         }
     }
 
     public function getRemainingDays() {
-        return 28 - (int)$this->visitCounts;
+        switch ($this->card_type) {
+            case CardType::VIC_CARD_MANUAL:
+                return 28 - (int)$this->visitCounts;
+                break;
+            case CardType::VIC_CARD_EXTENDED:
+            case CardType::VIC_CARD_MULTIDAY:
+                $dateNow = new DateTime(date('d-m-Y'));
+                $dateOut = new DateTime($this->date_check_out);
+                return $dateOut->format('z') - $dateNow->format('z');
+                break;
+        }
+        
     }
 
     /**

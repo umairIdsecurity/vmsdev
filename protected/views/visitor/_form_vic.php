@@ -965,7 +965,10 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 
                 $('#User_workstation').append('<option value="">Workstation</option>');
                 $.each(r.data, function (index, value) {
-                    $('#User_workstation').append('<option value="' + value.id + '">' + 'Workstation: ' + value.name + '</option>');
+                    var str = '<option ';
+                    if (index == 0) str += 'selected';
+                    str += ' value="' + value.id + '">' + 'Workstation: ' + value.name + '</option>';
+                    $('#User_workstation').append(str);
                 });
                 //$("#User_workstation").val(value);
                 if ($("#currentAction").val() == 'update') {

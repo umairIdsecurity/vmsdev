@@ -332,22 +332,24 @@ class VisitController extends Controller {
 
             $model->attributes = $_POST['Visit'];
 
-            switch ($_POST['Visit']['card_type']) {
-                case CardType::VIC_CARD_SAMEDATE:
-                case CardType::VIC_CARD_24HOURS:
-                case CardType::VIC_CARD_MANUAL:
-                    $model->date_check_in = date('d-m-Y');
-                    $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 1 day'));
-                    $visitCount['totalVisit'] = $model->visitCounts;
-                    $visitCount['remainingDays'] = $model->remainingDays;
-                    break;
-                case CardType::VIC_CARD_MULTIDAY:
-                case CardType::VIC_CARD_EXTENDED:
-                    $model->date_check_in = date('d-m-Y');
-                    $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 28 day'));
-                    $visitCount['totalVisit'] = $model->visitCounts;
-                    $visitCount['remainingDays'] = $model->remainingDays;
-                    break;
+            if (isset($_POST['Visit']['card_type'])) {
+                switch ($_POST['Visit']['card_type']) {
+                    case CardType::VIC_CARD_SAMEDATE:
+                    case CardType::VIC_CARD_24HOURS:
+                    case CardType::VIC_CARD_MANUAL:
+                        $model->date_check_in = date('d-m-Y');
+                        $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 1 day'));
+                        $visitCount['totalVisit'] = $model->visitCounts;
+                        $visitCount['remainingDays'] = $model->remainingDays;
+                        break;
+                    case CardType::VIC_CARD_MULTIDAY:
+                    case CardType::VIC_CARD_EXTENDED:
+                        $model->date_check_in = date('d-m-Y');
+                        $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 28 day'));
+                        $visitCount['totalVisit'] = $model->visitCounts;
+                        $visitCount['remainingDays'] = $model->remainingDays;
+                        break;
+                }
             }
 
             if (isset($_POST['Visitor']['visitor_card_status']) && $_POST['Visitor']['visitor_card_status'] != $visitorModel->visitor_card_status) {
@@ -381,6 +383,8 @@ class VisitController extends Controller {
             } else {
                 $model->visit_status = $oldStatus;
             }
+        } else {
+
         }
 
         $this->render('visitordetail', array(

@@ -175,6 +175,7 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
         ));
         ?>
 </div>
+<?php if (!in_array($model->card_type, [CardType::VIC_CARD_MANUAL])): ?>
 <div class="dropdown">
     <button class="complete btn btn-info printCardBtn dropdown-toggle" style="width:205px !important" type="button" id="menu1" data-toggle="dropdown">Print Card
         <span class="caret pull-right"></span></button>
@@ -184,11 +185,12 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo yii::app()->createAbsoluteUrl('cardGenerated/pdfprint', array('id' => $model->id, 'type' => 3)) ?>">Rewritable Print Card</a></li>
     </ul>
 </div>
+<?php endif; ?>
 
 <div style="margin-top: 10px;">
 <?php
 $companyName = isset($visitCount['companyName']) ? $visitCount['companyName'] : '';
-$totalCompanyVisit = (isset($visitCount['totalVisit']) && !empty($visitCount['totalVisit'])) ? ($visitCount['totalVisit'] < 0) ? 0 : $visitCount['totalVisit'] : '0';
+$totalCompanyVisit = (isset($visitCount['totalVisits']) && !empty($visitCount['totalVisits'])) ? ($visitCount['totalVisits'] < 0) ? 0 : $visitCount['totalVisits'] : '0';
 $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingDays'] <= 28) ? ($visitCount['remainingDays'] < 0) ? '0' : $visitCount['remainingDays'] : '28';
 ?>
     Total Visits at <?php echo $companyName; ?>: <?php echo $totalCompanyVisit; ?></br>
@@ -199,6 +201,7 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
 </div>
 <input type="hidden" id="dummycardvalue" value="<?php echo $model->card; ?>"/>
 <input type="hidden" id="remaining_day" value="<?php echo $remainingDays; ?>">
+
 <form method="post" id="workstationForm" action="<?php echo Yii::app()->createUrl('visit/detail', array('id' => $model->id)); ?>">
     <div style="margin: 10px 0px 0px 60px; text-align: left;">
         <?php

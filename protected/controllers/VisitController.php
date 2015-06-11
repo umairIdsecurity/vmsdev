@@ -80,6 +80,7 @@ class VisitController extends Controller {
             $model->attributes = $_POST['Visit'];
 
             switch ($model->card_type) {
+                case CardType::VIC_CARD_MANUAL:
                 case CardType::VIC_CARD_24HOURS: // VIC 24 hour
                     $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 1 day'));
                     break;
@@ -311,7 +312,7 @@ class VisitController extends Controller {
         $patientModel = Patient::model()->findByPk($model->patient);
         $cardTypeModel = CardType::model()->findByPk($model->card_type);
 		$visitCount = Visit::model()->getVisitCount($model->id);
-        $visitCount['totalVisit'] = $model->visitCounts;
+        $visitCount['totalVisits'] = $model->visitCounts;
         $visitCount['remainingDays'] = $model->remainingDays;
 
         $newPatient = new Patient;
@@ -332,33 +333,13 @@ class VisitController extends Controller {
 
             $model->attributes = $_POST['Visit'];
 
-            if (isset($_POST['Visit']['card_type'])) {
-                switch ($_POST['Visit']['card_type']) {
-                    case CardType::VIC_CARD_SAMEDATE:
-                    case CardType::VIC_CARD_24HOURS:
-                    case CardType::VIC_CARD_MANUAL:
-                        $model->date_check_in = date('d-m-Y');
-                        $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 1 day'));
-                        $visitCount['totalVisit'] = $model->visitCounts;
-                        $visitCount['remainingDays'] = $model->remainingDays;
-                        break;
-                    case CardType::VIC_CARD_MULTIDAY:
-                    case CardType::VIC_CARD_EXTENDED:
-                        $model->date_check_in = date('d-m-Y');
-                        $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 28 day'));
-                        $visitCount['totalVisit'] = $model->visitCounts;
-                        $visitCount['remainingDays'] = $model->remainingDays;
-                        break;
-                }
-            }
-
             if (isset($_POST['Visitor']['visitor_card_status']) && $_POST['Visitor']['visitor_card_status'] != $visitorModel->visitor_card_status) {
                 $visitorModel->visitor_card_status = $_POST['Visitor']['visitor_card_status'];
                 if ($visitorModel->save()) {
                     if (in_array($visitorModel->visitor_card_status, [Visitor::ASIC_PENDING])) {
                         $model->date_check_in = $model->date_check_out;
                         if ($model->save()) {
-                            $visitCount['totalVisit'] = $model->visitCounts;
+                            $visitCount['totalVisits'] = $model->visitCounts;
                             $visitCount['remainingDays'] = $model->remainingDays;
                         }
                     }
@@ -376,15 +357,19 @@ class VisitController extends Controller {
                     $model->card_lost_declaration_file = '/uploads/card_lost_declaration/'.$fileUpload->name;
                 }
             }
+
             if ($model->save()) {
+                if (isset($_POST['closeVisitForm'])) {
+                    $visitCount['totalVisits'] = $model->visitCounts;
+                    $visitCount['remainingDays'] = $model->remainingDays;
+                }
+                
                 if (!empty($fileUpload)) {
                     $fileUpload->saveAs(YiiBase::getPathOfAlias('webroot') . $model->card_lost_declaration_file);
                 }
             } else {
                 $model->visit_status = $oldStatus;
             }
-        } else {
-
         }
 
         $this->render('visitordetail', array(

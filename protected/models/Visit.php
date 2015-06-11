@@ -656,6 +656,7 @@ class Visit extends CActiveRecord {
                 break;
             case CardType::VIC_CARD_EXTENDED:
             case CardType::VIC_CARD_MULTIDAY:
+                return $visitCount + 1;
                 break;
             case CardType::VIC_CARD_SAMEDATE:
             case CardType::VIC_CARD_24HOURS:

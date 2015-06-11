@@ -35,7 +35,7 @@
         {
             "id": "2",
             "question": "How do I add a visitor profile?",
-            "answer": "You can add a Visitor Profile through::\r\n -- the Add Visitor Profile option in the Main Menu in the Dashboard\r\n -- the second step of Logging a Visit if the Visitor is not already in the system.\r\n\r\n\r\n",
+            "answer": "You can add a Visitor Profile through the Add Visitor Profile option in the Main Menu in the Dashboard or in the second step of Logging a Visit if the Visitor is not already in the system.\r\n\r\n\r\n",
             "helpdesk_group_id": "2",
             "order_by": null,
             "created_by": "47",
@@ -44,7 +44,7 @@
         {
             "id": "3",
             "question": "Why can't I see all of a visitor's information?",
-            "answer": "There are several reasons that a visitor\u2019s information remains hidden:\r\n -- a visit has not yet been activated \r\n -- your user role doesn\u2019t have access to that information.\r\n",
+            "answer": "There are several reasons that a visitor\u2019s information remains hidden: a visit has not yet been activated or your user role doesn\u2019t have access to that information.\r\n",
             "helpdesk_group_id": "2",
             "order_by": null,
             "created_by": "47",
@@ -72,6 +72,15 @@
             "id": "6",
             "question": "Where are the AVMS reports?",
             "answer": "Click on the Administration tab and then select the AVMS Reports option from the Administration menu. It's a pull-down menu from which you chose the report that you need.",
+            "helpdesk_group_id": "3",
+            "order_by": null,
+            "created_by": "47",
+            "is_deleted": "0"
+        },
+        {
+            "id": "7",
+            "question": "What user types are there?",
+            "answer": "The user types in the AVMS system are: Issuing Body Administrator; Airport Operator; and Agent Operator. The ones you can add depend on the user role that you have.",
             "helpdesk_group_id": "3",
             "order_by": null,
             "created_by": "47",

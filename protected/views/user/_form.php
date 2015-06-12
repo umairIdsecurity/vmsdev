@@ -432,9 +432,12 @@ $form = $this->beginWidget('CActiveForm', array(
             <td>
                 <select onchange="populateDynamicFields()" <?php
                 // if ($this->action->Id == 'create' && isset($_GET['role']) && $_GET['role'] != 'avms' ) { //if action create with user roles selected in url
-                if ($this->action->Id == 'create' && !CHelper::is_add_avms_user()) { //if action create with user roles selected in url
+                /*if ($this->action->Id == 'create' && !CHelper::is_add_avms_user()) { //if action create with user roles selected in url
                     echo "disabled";
                 }
+                ---> chang for https://ids-jira.atlassian.net/browse/CAVMS-437
+                */
+
                 ?> id="User_role" name="User[role]">
                     <option disabled value='' selected>Select Role</option>
                     <?php

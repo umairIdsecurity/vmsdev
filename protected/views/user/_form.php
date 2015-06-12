@@ -392,7 +392,7 @@ $form = $this->beginWidget('CActiveForm', array(
     </tr>
     <tr>
         <td class="AsicExpiryDropdown">
-            <label>ASIC Expiry</label><span class="required">*</span><br/>
+            ASIC Expiry<span class="required">*</span><br/>
 
             <?php
             $days = [];

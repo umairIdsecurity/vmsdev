@@ -127,7 +127,7 @@ class VisitController extends Controller {
             //check $reasonId has exist until add new.
             if ($model->reason == 'Other' || !$model->reason){
                 $newReason = new VisitReason();
-                $newReason->setAttribute('reason',$_POST['Visit']['reason_note']);
+                $newReason->setAttribute('reason',isset($_POST['Visit']['reason_note'])?$_POST['Visit']['reason_note']:'');
                 if($newReason->save()){
                     $model->reason = $newReason->id;
                 }
@@ -480,7 +480,7 @@ class VisitController extends Controller {
             $model->attributes = $_GET['Visitor'];
         }
 
-        $this->render('corporateTotalVisitCount', array(
+        $this->render('vicTotalVisitCount', array(
             'model' => $model, 'merge' => $merge, false, true
         ));
     }
@@ -996,51 +996,118 @@ class VisitController extends Controller {
 
     public function actionImportVisitData()
     {
-        $model = Visit::model();
+        set_time_limit(0);
+        ini_set("memory_limit", "-1");
 
-        if (isset($_POST['Visit'])) {
-            $model->attributes = $_POST['Visit'];
+        $model = new ImportCsvForm;
+        $session = new CHttpSession;
 
-            /*//Yii::import('application.extensions.phpexcel.JPhpExcel');
+        if (isset($_POST['ImportCsvForm'])) {
+            $model->attributes = $_POST['ImportCsvForm'];
 
-            $xlsFile = CUploadedFile::getInstance($model, 'file');
-            $objPHPExcel = PHPExcel_IOFactory::load($xlsFile->name);
+            $file = CUploadedFile::getInstance($model, 'file_xls');
 
-            foreach ($objPHPExcel->getWorksheetIterator() as $worksheet) {
-                print_r($worksheet);die;
-            }
+            if ($file) {
+                $file->saveAs(dirname(Yii::app()->request->scriptFile) . '/uploads/' . $file->name);
+                $file_path = realpath(Yii::app()->basePath . '/../uploads/' . $file->name);
 
-            // include PHPExcel classes:
-            // Create new PHPExcel object
-            $objPHPExcel = new PHPExcel();
-            print_r($objPHPExcel);die;*/
+                $objPHPExcel = new PHPExcel();
+                $objPHPExcel = PHPExcel_IOFactory::load($file_path);
 
-            $xlsFile = CUploadedFile::getInstance($model, 'file');
-            $objReader = PHPExcel_IOFactory::createReaderForFile($xlsFile);
+                $sheetData = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
 
-            $phpExcelPath = Yii::getPathOfAlias('ext');
-            spl_autoload_unregister(array('YiiBase','autoload'));
-            include($phpExcelPath . DIRECTORY_SEPARATOR . 'PHPExcel.php');
+                if (!empty($sheetData)) {
+                    array_shift($sheetData);
+                    foreach ($sheetData as $row) {
+                        $email = preg_replace('/\s+/', '', $row['B'] . $row['C'] . '@gmail.com');
 
-            $objPHPExcel = new PHPExcel();
+                        $visitor = Visitor::model()->findByAttributes(array('email' => $email));
+                        if (!$visitor['email']) {
+                            $reason = VisitReason::model()->findByAttributes(array('reason' => $row['E']));
 
-            foreach ($objPHPExcel->getWorksheetIterator() as $worksheet) {
-                foreach ($worksheet->getRowIterator() as $row) {
-                    $rowIndex=$row->getRowIndex();
-
-                    $cellIterator = $row->getCellIterator();
-                    $cellIterator->setIterateOnlyExistingCells(false); // Loop all cells, even if it is not set
-                    foreach ($cellIterator as $cellIndex=>$cell) {
-                        if (!is_null($cell)) { print_r($cell);die;
-                            if($rowIndex >1){
-                                $cellVal=$cell->getCalculatedValue();
-                                echo $cellVal;
+                            // Add workstation
+                            $worstation = Workstation::model()->findByAttributes(array('name' => $row['P']));
+                            if (empty($worstation)) {
+                                $worstationModel = new Workstation();
+                                $worstationModel->name = $row['P'];
+                                $worstationModel->created_by = Yii::app()->user->id;
+                                $worstationModel->tenant = Yii::app()->user->tenant;
+                                $worstationModel->save();
+                                $worstationId = $worstationModel->id;
+                            } else {
+                                $worstationId = $worstation['id'];
                             }
+
+                            // Add visitor
+                            $visitorModel = new Visitor();
+                            $visitorModel->first_name = $row['B'];
+                            $visitorModel->last_name = $row['C'];
+                            $visitorModel->date_of_birth = $row['D'];
+                            $visitorModel->profile_type = 'VIC';
+                            $visitorModel->visitor_workstation = $worstationId;
+                            $visitorModel->tenant = $session['tenant'];
+                            $visitorModel->role = Roles::ROLE_VISITOR;
+                            if ($row['J'] == 'TRUE') {
+                                $visitorModel->visitor_card_status = 3;
+                            } else {
+                                $visitorModel->visitor_card_status = 2;
+                            }
+                            $visitorModel->email = preg_replace('/\s+/', '', $row['B'] . $row['C'] . '@gmail.com');
+                            $visitorModel->contact_number = '123456';
+                            $visitorModel->identification_type = 'PASSPORT';
+                            $visitorModel->identification_country_issued = 13;
+                            $visitorModel->identification_document_no = 123;
+                            $visitorModel->identification_document_expiry = '2016-06-22';
+                            $visitorModel->company = 15;
+                            $visitorModel->visitor_type = 2;
+                            $visitorModel->contact_street_no = 123;
+                            $visitorModel->contact_street_name = 'abc';
+                            $visitorModel->contact_street_type = 'ALLY';
+                            $visitorModel->contact_suburb = 11;
+                            $visitorModel->contact_state = 'ACT';
+                            $visitorModel->contact_postcode = 121;
+                            $visitorModel->contact_country = 13;
+
+                            $visitorModel->save();
+                            if ($visitorModel->save()) {
+                                $visitorId = $visitorModel->id;
+                            }
+
+                            // Add card generate
+                            $cardGenerated = CardGenerated::model()->findByAttributes(array('card_number' => $row['A']));
+                            if (empty($cardGenerated)) {
+                                $cardModel = new CardGenerated();
+                                $cardModel->card_number = $row['A'];
+                                $cardModel->visitor_id = isset($visitorId) ? $visitorId : $visitor['id'];
+                                $cardModel->card_status = 1;
+                                $cardModel->created_by = Yii::app()->user->id;
+                                $cardModel->tenant = Yii::app()->user->tenant;
+                                if ($cardModel->save()) {
+                                    $cardId = $cardModel->id;
+                                }
+                            } else {
+                                $cardId = $cardGenerated->id;
+                            }
+
+                            // Add visit
+                            $visitModel = new Visit();
+                            $visitModel->card = $cardId;
+                            $visitModel->visitor = isset($visitorId) ? $visitorId : $visitor['id'];
+                            $visitModel->reason = isset($reason) ? $reason['id'] : 1;
+                            $visitModel->date_check_in = $row['F'];
+                            $visitModel->date_check_out = $row['H'];
+                            $visitModel->host = Yii::app()->user->id;
+                            $visitModel->created_by = Yii::app()->user->id;
+                            $visitModel->workstation = $session['workstation'];
+                            $visitModel->tenant = Yii::app()->user->tenant;
+                            $visitModel->save();
                         }
                     }
                 }
+                Yii::app()->user->setFlash('success', 'Import Success');
+            } else {
+                Yii::app()->user->setFlash('error', 'Please select a xls/xlsx file');
             }
-
         }
 
         $this->render('importVisitData', array('model' => $model));

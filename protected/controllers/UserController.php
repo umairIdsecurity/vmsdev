@@ -113,6 +113,10 @@ class UserController extends Controller
 
             if ($userService->save($model, Yii::app()->user, $workstation)) {
                 Yii::app()->user->setFlash('success', "Record Added Successfully");
+				if (Yii::app()->request->isAjaxRequest)
+                {
+                    Yii::app()->end();
+                }
                 if (!isset($_GET['view'])) {
                     $this->redirect(array('admin', 'vms' => CHelper::is_accessing_avms_features() ? 'avms' : 'cvms'));
                 } else {

@@ -82,17 +82,14 @@ class VisitController extends Controller {
             switch ($model->card_type) {
                 case CardType::VIC_CARD_SAMEDATE: // VIC Sameday
                     $model->date_check_out = date('d-m-Y');
-                    $model->time_check_out = $model->time_check_in;
                     break;
                 case CardType::VIC_CARD_MANUAL: // VIC Manual
                 case CardType::VIC_CARD_24HOURS: // VIC 24 hour
                     $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 1 day'));
-                    $model->time_check_out = $model->time_check_in;
                     break;
                 case CardType::VIC_CARD_EXTENDED: // VIC Extended
                 case CardType::VIC_CARD_MULTIDAY: // VIC Multiday
                     $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 28 day'));
-                    $model->time_check_out = $model->time_check_in;
                     break;
             }
 
@@ -331,6 +328,10 @@ class VisitController extends Controller {
 
             if (isset($_POST['Visitor']['visitor_card_status']) && $_POST['Visitor']['visitor_card_status'] != $visitorModel->visitor_card_status) {
                 $visitorModel->visitor_card_status = $_POST['Visitor']['visitor_card_status'];
+                if ($visitorModel->visitor_card_status == Visitor::ASIC_ISSUED) {
+                    $visitorModel->profile_type = Visitor::PROFILE_TYPE_ASIC;
+                }
+
                 if ($visitorModel->save()) {
                     if (in_array($visitorModel->visitor_card_status, [Visitor::ASIC_PENDING])) {
                         $model->date_check_in = $model->date_check_out;

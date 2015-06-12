@@ -436,6 +436,7 @@ class Visitor extends CActiveRecord {
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'sort' => array(
+                'defaultOrder'=>'t.id DESC', #set default order by visitor.id desc
                 'attributes'=>array(
                     'company.name'=>array(
                         'asc'=>'company.name',

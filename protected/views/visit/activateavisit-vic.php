@@ -30,7 +30,7 @@ $session = new CHttpSession;
     <tr>
         <td class="vic-col">
             <input type="checkbox" value="1" name="VivHolderDecalarations" disabled="disabled" id="VivHolderDecalarations" class="vic-active-visit vic-active-declarations"/>
-            <a href="#vicHolderModal" data-toggle="modal">VIC Holder Declarations</a>
+            <a href="#vicHolderModal" data-toggle="modal">VIC Holder's Declarations</a>
         </td>
     </tr>
     <tr>
@@ -101,7 +101,7 @@ $session = new CHttpSession;
             <input name="Visit[visit_status]" id="Visit_visit_status" type="text" value="1" style="display:none;">
             <input name="Visit[time_check_in]" id="Visit_time_check_in" class="activatevisittimein" type="text" style="display:none;">
             <?php
-            if (strtotime($model->date_check_in)) {
+            if (!strtotime($model->date_check_in)) {
                 $model->date_check_in = date('d-m-Y');
             }
             $this->widget('zii.widgets.jui.CJuiDatePicker', array(
@@ -125,7 +125,7 @@ $session = new CHttpSession;
         <td>Check Out Date
             <br><?php
 
-            if (strtotime($model->date_check_out)) {
+            if (!strtotime($model->date_check_out)) {
                 $model->date_check_out = date('d-m-Y');
             }
 
@@ -243,7 +243,7 @@ $session = new CHttpSession;
                         ';
                 }
 
-                if ($model->card_type == CardType::VIC_CARD_24HOURS) {
+                if (in_array($model->card_type, [CardType::VIC_CARD_24HOURS, CardType::VIC_CARD_MANUAL])) {
                     echo '  var checkoutDate = new Date(selectedDate);
                     checkoutDate.setDate(selectedDate.getDate() + 1);
                     $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "setDate", checkoutDate);

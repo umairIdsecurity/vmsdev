@@ -7,6 +7,7 @@ ini_set('xdebug.max_nesting_level', 200);
  * @property string $id
  * @property string $card
  * @property string $visitor_type
+ * @property int $visit_status
  * @property string $reason
  * @property string $visitor_status
  * @property string $host
@@ -815,13 +816,50 @@ class Visit extends CActiveRecord {
     }
 
     public function getVisitCounts() {
-        if (empty($this->date_check_in) || empty($this->date_check_out)) {
+        /*if (empty($this->date_check_in) || empty($this->date_check_out)) {
             return 1;
         } else {
             $dateIn = new DateTime($this->date_check_in);
             $dateOut = new DateTime($this->date_check_out);
-            return $dateOut->format('z') - ($dateIn->format('z') + 1);
+            return $dateOut->format('z') - ($dateIn->format('z'));
+        }*/
+        //$session = new CHttpSession;
+        $visitCount = $this->countByAttributes(['visit_status' => VisitStatus::CLOSED, 'visitor' => $this->visitor]);
+        switch ($this->card_type) {
+            case CardType::VIC_CARD_MANUAL:
+                return $visitCount + 1;
+                break;
+            case CardType::VIC_CARD_EXTENDED:
+            case CardType::VIC_CARD_MULTIDAY:
+                $dateIn = new DateTime($this->date_check_in);
+                $dateNow = new DateTime(date('d-m-Y'));
+                return ($dateNow->format('z') - $dateIn->format('z')) + 1;
+                break;
+            case CardType::VIC_CARD_24HOURS:
+                return $visitCount + 1;
+                break;
         }
+    }
+
+    public function getRemainingDays() {
+        switch ($this->card_type) {
+            case CardType::VIC_CARD_MANUAL:
+                return 28 - (int)$this->visitCounts;
+                break;
+            case CardType::VIC_CARD_EXTENDED:
+            case CardType::VIC_CARD_MULTIDAY:
+                $dateNow = new DateTime(date('d-m-Y'));
+                $dateOut = new DateTime($this->date_check_out);
+                return $dateOut->format('z') - $dateNow->format('z');
+                break;
+            case CardType::VIC_CARD_SAMEDATE:
+                return 28 - (int)$this->visitCounts;
+                break;
+            case CardType::VIC_CARD_24HOURS:
+                return 28 - (int)$this->visitCounts;
+                break;
+        }
+        
     }
 
     /**

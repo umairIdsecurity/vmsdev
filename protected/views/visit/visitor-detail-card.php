@@ -96,7 +96,7 @@ if ($vstr->profile_type == "CORPORATE" && $model->card_type == 4) {
                 <tr>
                     <td><span class="cardDateText"><?php
                             if ($model->card_type == CardType::SAME_DAY_VISITOR) {
-                                if (strtotime($model->date_check_out)) {
+                                if (!strtotime($model->date_check_out)) {
                                     $date1 = date('d M y');
                                     echo date("d M y", strtotime($date1));
                                 } else {
@@ -175,6 +175,7 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
         ));
         ?>
 </div>
+<?php if (!in_array($model->card_type, [CardType::VIC_CARD_MANUAL])): ?>
 <div class="dropdown">
     <button class="complete btn btn-info printCardBtn dropdown-toggle" style="width:205px !important" type="button" id="menu1" data-toggle="dropdown">Print Card
         <span class="caret pull-right"></span></button>
@@ -184,12 +185,13 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo yii::app()->createAbsoluteUrl('cardGenerated/pdfprint', array('id' => $model->id, 'type' => 3)) ?>">Rewritable Print Card</a></li>
     </ul>
 </div>
-
+<?php endif; ?>
+<?php if ($model->visit_status != VisitStatus::SAVED): ?>
 <div style="margin-top: 10px;">
 <?php
 $companyName = isset($visitCount['companyName']) ? $visitCount['companyName'] : '';
-$totalCompanyVisit = isset($visitCount['companyVisitsByVisitor']) ? $visitCount['companyVisitsByVisitor'] : 0;
-$remainingDays = (isset($visitCount['remainingDays'])) ? ($visitCount['remainingDays']) : 0;
+$totalCompanyVisit = (isset($visitCount['totalVisits']) && !empty($visitCount['totalVisits'])) ? ($visitCount['totalVisits'] < 0) ? 0 : $visitCount['totalVisits'] : '0';
+$remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingDays'] <= 28) ? ($visitCount['remainingDays'] < 0) ? '0' : $visitCount['remainingDays'] : '28';
 ?>
     Total Visits at <?php echo $companyName; ?>: <?php echo $totalCompanyVisit; ?></br>
     <!-- Total Visits to All Companies: <?php // echo $visitCount['allVisitsByVisitor'];           ?> -->
@@ -199,6 +201,7 @@ $remainingDays = (isset($visitCount['remainingDays'])) ? ($visitCount['remaining
 </div>
 <input type="hidden" id="dummycardvalue" value="<?php echo $model->card; ?>"/>
 <input type="hidden" id="remaining_day" value="<?php echo $remainingDays; ?>">
+<?php endif; ?>
 <form method="post" id="workstationForm" action="<?php echo Yii::app()->createUrl('visit/detail', array('id' => $model->id)); ?>">
     <div style="margin: 10px 0px 0px 60px; text-align: left;">
         <?php
@@ -373,7 +376,7 @@ $remainingDays = (isset($visitCount['remainingDays'])) ? ($visitCount['remaining
     $(document).on('change', '#Visitor_visitor_card_status', function(e) {
         var selected = $(this).val();
         var remainingDays = $('#remaining_day').val();
-        if (selected == "<?php echo Visitor::ASIC_PENDING; ?>" && remainingDays < 28) {
+        if (selected == "<?php echo Visitor::ASIC_PENDING; ?>" && remainingDays < 27) {
             $('#checkout_date_warning').html('An EVIC can’t be issued to this VIC holder <br /> as they don’t have 28 days remaining.<br />Please update their Card Status to ASIC <br />Pending or Select another card type.').show();
             $('#btnWorkStationForm').attr('disabled', true);
         } else {

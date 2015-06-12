@@ -18,7 +18,6 @@
         $total = 0;
         
         if($results) {
-           
             foreach($results as $key=>$val) {
                 foreach($val as $k=>$v) {
                     foreach($v as $daykey=>$dayV) {

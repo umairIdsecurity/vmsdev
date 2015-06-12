@@ -1,3 +1,4 @@
+
 <h1> Total New Visitor Profiles </h1>
 <!-- Filter Form -->
 <div class="form-inline">
@@ -17,19 +18,14 @@ $form=$this->beginWidget('CActiveForm', array(
             Select Interval
         </legend>
         
-        <div class="some-class">
+        <div class="navbar-form pull-left">
             
-            <input onclick="this.form.submit();" type="radio" value="monthly" name="rangeRadio" checked="checked" /> 
-            <label> Monthly </label> 
+            <label class="radio"><input onclick="this.form.submit();" type="radio" value="monthly" name="rangeRadio" checked="checked" /> Monthly</label> &nbsp;&nbsp;
+            <label class="radio"><input onclick="this.form.submit();" type="radio" value="weekly" name="rangeRadio" <?php if(!empty($rangeRadio) && $rangeRadio == "weekly") {echo "checked";}?> /> Weekly</label> &nbsp;&nbsp;
+            <label class="radio"><input onclick="this.form.submit();" type="radio" value="daily" name="rangeRadio" <?php if(!empty($rangeRadio) && $rangeRadio == "daily") {echo "checked";}?> /> Daily</label>
             
-            &nbsp;&nbsp;
-            <input onclick="this.form.submit();" type="radio" value="weekly" name="rangeRadio" <?php if(!empty($rangeRadio) && $rangeRadio == "weekly") {echo "checked";}?> />
-             <label> Weekly </label> 
-            
-            &nbsp;&nbsp;
-            <input onclick="this.form.submit();" type="radio" value="daily" name="rangeRadio" <?php if(!empty($rangeRadio) && $rangeRadio == "daily") {echo "checked";}?> />
-             <label> Daily </label> 
         </div>
+        
     </fieldset>
     <br>
     

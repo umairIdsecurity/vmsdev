@@ -81,17 +81,16 @@ class Visit extends CActiveRecord {
         return array(
             array('is_deleted', 'numerical', 'integerOnly' => true),
             array('visitor', 'required', 'on' => 'api'),
-            array('reason,visitor_type,visitor,visitor_status,workstation', 'required','on' => 'webapp'),
+            array('reason,visitor_type,visitor,visitor_status,workstation', 'required', 'on' => 'webapp'),
             array('visitor,card, visitor_type, reason, visitor_status,host, patient, created_by, tenant, tenant_agent', 'length', 'max' => 20),
             array('date_in,date_out,time_in_hours,time_in_minutes,visit_status, time_in, time_out, date_check_in, time_check_in, date_check_out, time_check_out,card_type, finish_date, finish_time, card_returned_date, negate_reason, reset_id, card_option, police_report_number, card_lost_declaration_file, workstation', 'safe'),
             array('patient, host,card,tenant,tenant_agent', 'default', 'setOnEmpty' => true, 'value' => null),
-            array('filterProperties','length', 'max'=>70),
-
+            array('filterProperties', 'length', 'max' => 70),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id,datecheckin1,cardnumber,company,firstname,lastname,contactnumber,contactemail,visit_status,visitor ,card,workstation, visitor_type, reason, visitor_status, host, patient, created_by, date_in, time_in, date_out, time_out, date_check_in, time_check_in, date_check_out, time_check_out, tenant, tenant_agent, is_deleted, companycode, contact_street_no, contact_street_name, contact_street_type, contact_suburb, contact_postcode, identification_type, identification_document_no, identification_document_expiry, asic_no, asic_expiry, workstation, date_of_birth, finish_date, card_returned_date', 'safe', 'on' => 'search'),
-
-            array('card_lost_declaration_file', 'file', 'types'=>'pdf,doc,docx,jpg,gif,png', 'allowEmpty'=>true, 'maxSize'=>1024 * 1024 * 10),
+            array('id,datecheckin1,cardnumber,company,firstname,lastname,contactnumber,contactemail,visit_status,visitor ,card,workstation, visitor_type, reason, visitor_status, host, patient, created_by, date_in, time_in, date_out, time_out, date_check_in, time_check_in, date_check_out, time_check_out, tenant, tenant_agent, is_deleted, companycode, contact_street_no, contact_street_name, contact_street_type, contact_suburb, contact_postcode, identification_type, identification_document_no, identification_document_expiry, asic_no, asic_expiry, workstation, date_of_birth, finish_date, card_returned_date', 'safe', 'on' => 'search_history'),
+            array('card_lost_declaration_file', 'file', 'types' => 'pdf,doc,docx,jpg,gif,png', 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * 10),
         );
     }
 
@@ -304,7 +303,7 @@ class Visit extends CActiveRecord {
         $criteria->mergeWith($this->dateRangeSearchCriteria('date_check_in', $this->date_check_in));
 
         $criteria->compare('time_check_in', $this->time_check_in, true);
-        $criteria->compare('date_check_out', $this->date_check_out, true);
+        // $criteria->compare('date_check_out', $this->date_check_out, true);
         $criteria->compare('time_check_out', $this->time_check_out, true);
         $criteria->compare('tenant', $this->tenant, true);
         $criteria->compare('tenant_agent', $this->tenant_agent, true);
@@ -330,8 +329,8 @@ class Visit extends CActiveRecord {
         if ($merge !== null) {
             $criteria->mergeWith($merge);
         }
-
-        if($this->filterProperties){
+        // $criteria->addCondition("t.date_check_out > DATE_ADD(now(),interval -2 day)");
+        if ($this->filterProperties) {
             $criteria->addCondition("t.id LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.first_name LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.last_name LIKE CONCAT('%', :filterProperties , '%')
@@ -393,8 +392,183 @@ class Visit extends CActiveRecord {
          * this condition is a hack to show only CORPORATE VISITOR in the listing report
          * 
          */
-        if (Yii::app()->controller->action->id == 'visitorRegistrationHistory')
-        {
+        if (Yii::app()->controller->action->id == 'visitorRegistrationHistory') {
+            $criteria->addCondition('profile_type ="' . Visitor::PROFILE_TYPE_CORPORATE . '"');
+        }
+
+        if (Yii::app()->controller->action->id == 'admindashboard') {
+            Yii::app()->user->setState('pageSize', (int) '5');
+        } else {
+            Yii::app()->user->setState('pageSize', (int) '');
+        }
+
+        return new CActiveDataProvider($this, array(
+            'pagination' => array(
+                'pageSize' => Yii::app()->user->getState('pageSize', Yii::app()->params['defaultPageSize']),
+            ),
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 't.ID DESC',
+                'attributes' => array(
+                    'firstname' => array(
+                        'asc' => 'visitor0.first_name',
+                        'desc' => 'visitor0.first_name DESC',
+                    ),
+                    'lastname' => array(
+                        'asc' => 'visitor0.last_name',
+                        'desc' => 'visitor0.last_name DESC',
+                    ),
+                    'contactnumber' => array(
+                        'asc' => 'visitor0.contact_number',
+                        'desc' => 'visitor0.contact_number DESC',
+                    ),
+                    'contactemail' => array(
+                        'asc' => 'visitor0.email',
+                        'desc' => 'visitor0.email DESC',
+                    ),
+                    'cardnumber' => array(
+                        'asc' => 'card0.card_number',
+                        'desc' => 'card0.card_number DESC',
+                    ),
+                    'company' => array(
+                        'asc' => 'company0.name',
+                        'desc' => 'company0.name DESC',
+                    ),
+                    '*',
+                ),
+            ),
+                //'pagination'=>false,
+        ));
+    }
+
+    public function search_history($merge = null) {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->with = array('card0', 'visitor0', 'company0');
+        //$criteria->with .= 'visitor0';
+        $criteria->compare('CONCAT(visitor0.first_name, \' \', visitor0.last_name)', $this->visitor, true);
+        $criteria->compare('visitor0.first_name', $this->firstname, true);
+        $criteria->compare('visitor0.last_name', $this->lastname, true);
+        $criteria->compare('visitor0.contact_number', $this->contactnumber, true);
+        $criteria->compare('visitor0.email', $this->contactemail, true);
+        $criteria->compare('date_check_in', $this->datecheckin1, true);
+        $criteria->compare('company0.name', $this->company, true);
+        $criteria->compare('card0.card_number', $this->cardnumber, true);
+
+        $criteria->compare('t.id', $this->id, true);
+        //  $criteria->compare('visitor', $this->visitor, true);
+        $criteria->compare('card', $this->card, true);
+        $criteria->compare('card_type', $this->card_type, true);
+        $criteria->compare('t.visitor_type', $this->visitor_type, true);
+        $criteria->compare('reason', $this->reason, true);
+        $criteria->compare('t.visitor_status', $this->visitor_status, true);
+        $criteria->compare('host', $this->host, true);
+        $criteria->compare('patient', $this->patient, true);
+        $criteria->compare('created_by', $this->created_by, true);
+
+        $criteria->compare('date_in', $this->date_in, true);
+        //$criteria->compare("DATE_FORMAT(date_in,'%Y-%m-%d')",$this->date_in);
+
+        $criteria->compare('time_in', $this->time_in, true);
+        $criteria->compare('date_out', $this->date_out, true);
+        $criteria->compare('time_out', $this->time_out, true);
+
+        // $criteria->compare('date_check_in', $this->date_check_in, true);
+        $criteria->mergeWith($this->dateRangeSearchCriteria('date_check_in', $this->date_check_in));
+
+        $criteria->compare('time_check_in', $this->time_check_in, true);
+        // $criteria->compare('date_check_out', $this->date_check_out, true);
+        $criteria->compare('time_check_out', $this->time_check_out, true);
+        $criteria->compare('tenant', $this->tenant, true);
+        $criteria->compare('tenant_agent', $this->tenant_agent, true);
+        $criteria->compare('t.is_deleted', $this->is_deleted, "0");
+        $criteria->compare('visit_status', $this->visit_status);
+        $criteria->compare('workstation', $this->workstation);
+
+        $criteria->compare('company0.code', $this->companycode, true);
+        $criteria->compare('visitor0.date_of_birth', $this->date_of_birth, true);
+        $criteria->compare('visitor0.contact_street_no', $this->contact_street_no, true);
+        $criteria->compare('visitor0.contact_street_name', $this->contact_street_name, true);
+        $criteria->compare('visitor0.contact_street_type', $this->contact_street_type, true);
+        $criteria->compare('visitor0.contact_suburb', $this->contact_suburb, true);
+        $criteria->compare('visitor0.contact_postcode', $this->contact_postcode, true);
+        $criteria->compare('visitor0.identification_type', $this->identification_type, true);
+        $criteria->compare('visitor0.identification_document_no', $this->identification_document_no, true);
+        $criteria->compare('visitor0.identification_document_expiry', $this->identification_document_expiry, true);
+        $criteria->compare('visitor0.asic_no', $this->asic_no, true);
+        $criteria->compare('visitor0.asic_expiry', $this->asic_expiry, true);
+        $criteria->compare('finish_date', $this->finish_date, true);
+        $criteria->compare('card_returned_date', $this->card_returned_date, true);
+
+        if ($merge !== null) {
+            $criteria->mergeWith($merge);
+        }
+            $criteria->addCondition("str_to_date(t.date_check_out,'%d-%m-%Y') > DATE_ADD(now(),interval -2 day)");
+        if ($this->filterProperties) {
+            $criteria->addCondition("t.id LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.first_name LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.last_name LIKE CONCAT('%', :filterProperties , '%')
+                OR company0.code LIKE CONCAT('%', :filterProperties , '%')
+                OR company0.name LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.date_of_birth LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.contact_number LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.contact_street_no LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.contact_street_name LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.contact_street_type LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.contact_suburb LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.contact_postcode LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.email LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.identification_type LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.identification_document_no LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.identification_document_expiry LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.asic_no LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.asic_expiry LIKE CONCAT('%', :filterProperties , '%')");
+            $criteria->params = array(':filterProperties' => $this->filterProperties);
+        }
+
+        if (Yii::app()->user->role == Roles::ROLE_STAFFMEMBER && Yii::app()->controller->action->id != 'view' && Yii::app()->controller->action->id != 'evacuationReport') {
+            $criteria->addCondition('host = ' . Yii::app()->user->id . ' and visit_status = ' . VisitStatus::PREREGISTERED);
+        }
+
+        switch (Yii::app()->user->role) {
+            case Roles::ROLE_STAFFMEMBER:
+                $criteria->addCondition('host = ' . Yii::app()->user->id);
+                break;
+
+            case Roles::ROLE_SUPERADMIN:
+                $criteria->addCondition('t.id != ""');
+                break;
+
+            case Roles::ROLE_ADMIN:
+                $criteria->addCondition('t.tenant = ' . Yii::app()->user->tenant);
+                break;
+
+            case Roles::ROLE_AGENT_ADMIN:
+                $criteria->addCondition('t.tenant = ' . Yii::app()->user->tenant . ' and t.tenant_agent = ' . Yii::app()->user->tenant_agent);
+                break;
+
+            case Roles::ROLE_OPERATOR:
+            case Roles::ROLE_AGENT_OPERATOR:
+                $workstations = Workstation::model()->findWorkstationAvailableForUser(Yii::app()->user->id);
+                $text = "";
+                foreach ($workstations as $key => $value) {
+                    $text .="'" . $value['id'] . "',";
+                }
+                $workstations = "IN (" . rtrim($text, ',') . ")";
+
+                $criteria->addCondition('t.workstation ' . $workstations . '');
+                break;
+        }
+
+        $criteria->addCondition('t.is_deleted = 0');
+
+        /*
+         * this condition is a hack to show only CORPORATE VISITOR in the listing report
+         * 
+         */
+        if (Yii::app()->controller->action->id == 'visitorRegistrationHistory') {
             $criteria->addCondition('profile_type ="' . Visitor::PROFILE_TYPE_CORPORATE . '"');
         }
         
@@ -590,18 +764,18 @@ class Visit extends CActiveRecord {
             return true;
         }
     }
-	
-	public function getVisitCount($visitId){
-		
-		$allVisitsByVisitor = Yii::app()->db->createCommand("SELECT COUNT(*) as cnt "
+
+    public function getVisitCount($visitId) {
+
+        $allVisitsByVisitor = Yii::app()->db->createCommand("SELECT COUNT(*) as cnt "
                         . "FROM visit "
                         . "WHERE visit.visitor= (SELECT visitor FROM visit "
-                        . "WHERE visit.id= ".$visitId.")")->queryAll();
-                
-		 $res_visitor=Yii::app()->db->createCommand("SELECT visitor FROM visit WHERE visit.id= ".$visitId)->queryAll();
-		if ($res_visitor) {
+                        . "WHERE visit.id= " . $visitId . ")")->queryAll();
+
+        $res_visitor = Yii::app()->db->createCommand("SELECT visitor FROM visit WHERE visit.id= " . $visitId)->queryAll();
+        if ($res_visitor) {
             $visitor = $res_visitor[0]['visitor'];
-            
+
             $res_company = Yii::app()->db->createCommand("SELECT company.id AS company_id, company.name AS company_name FROM visit LEFT JOIN user ON user.id = visit.host LEFT JOIN company ON user.company = company.id WHERE company.is_deleted=0 AND visit.id= " . $visitId)->queryAll();
             if ($res_company) {
                 $company = $res_company[0]['company_id'];
@@ -649,6 +823,7 @@ class Visit extends CActiveRecord {
             $dateOut = new DateTime($this->date_check_out);
             return $dateOut->format('z') - ($dateIn->format('z'));
         }*/
+        //$session = new CHttpSession;
         $visitCount = $this->countByAttributes(['visit_status' => VisitStatus::CLOSED, 'visitor' => $this->visitor]);
         switch ($this->card_type) {
             case CardType::VIC_CARD_MANUAL:
@@ -660,6 +835,8 @@ class Visit extends CActiveRecord {
                 $dateNow = new DateTime(date('d-m-Y'));
                 return ($dateNow->format('z') - $dateIn->format('z')) + 1;
                 break;
+            case CardType::VIC_CARD_24HOURS:
+                return $visitCount + 1;
                 break;
         }
     }
@@ -674,6 +851,12 @@ class Visit extends CActiveRecord {
                 $dateNow = new DateTime(date('d-m-Y'));
                 $dateOut = new DateTime($this->date_check_out);
                 return $dateOut->format('z') - $dateNow->format('z');
+                break;
+            case CardType::VIC_CARD_SAMEDATE:
+                return 28 - (int)$this->visitCounts;
+                break;
+            case CardType::VIC_CARD_24HOURS:
+                return 28 - (int)$this->visitCounts;
                 break;
         }
         

@@ -170,6 +170,30 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             $(this).find('#Visit_date_check_in').removeAttr('disabled');
         });
 
+        function vicCheck() {
+            $(document).on('click', '#btnVicConfirm', function(e) {
+                var checknum = $('#vicHolderModal')
+                                .find('input[type="checkbox"]')
+                                .filter(':checked');
+                if (checknum.length == 2) {
+                    vicHolderDeclarationChange();
+                }
+            });
+            return true;
+        }
+
+        function asicCheck() {
+            $(document).on('click', '#btnAsicConfirm', function(e) {
+                var checknum = $('#asicSponsorModal')
+                                .find('input[type="checkbox"]')
+                                .filter(':checked');
+                if (checknum.length == 4) {
+                    asicSponsorDeclarationChange();
+                }
+            });
+            return true;
+        }
+
         $(document).on('click', '#registerNewVisit', function (e) {
             e.preventDefault();
             $this = $(this);
@@ -224,14 +248,14 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                 $btnASIC.on('click', function(e) {
                                     var asicChecked = asicCheck();
                                     if (asicChecked) {
-                                        checkIfActiveVisitConflictsWithAnotherVisit("new");
+                                        activeVisit();
                                     }
                                 });
                             }
                         });
                     }
                 } else {
-                    checkIfActiveVisitConflictsWithAnotherVisit("new");
+                    activeVisit();
                 }
 
             } else {
@@ -261,6 +285,15 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                     return false;
                 }
             });
+        }
+
+        function activeVisit() {
+            var status = "<?php echo $model->visit_status; ?>";
+            if (status == "<?php echo VisitStatus::SAVED; ?>") {
+                checkIfActiveVisitConflictsWithAnotherVisit();
+            } else {
+                checkIfActiveVisitConflictsWithAnotherVisit('new');
+            }
         }
 
         $('#cancelActiveVisitButton').on('click', function (e) {

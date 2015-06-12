@@ -160,7 +160,7 @@ class WorkstationController extends Controller {
         {
             $visits = Visit::model()->findAll('workstation = :workstation AND visit_status IN (1, 2) AND is_deleted = 0', [':workstation' => $id]);
             if (!empty($visits) && count($visits) > 0) {
-                Yii::app()->user->setFlash('error', 'This workstation has one or more visit has active or preregister, please close it before delete.');
+                Yii::app()->user->setFlash('error', 'Please assign user in Set Access Rules before deleting workstation.');
                 return $this->redirect(Yii::app()->createUrl('workstation/admin'));
             }
             $sql = "DELETE FROM `workstation_card_type` WHERE `workstation`=$id";

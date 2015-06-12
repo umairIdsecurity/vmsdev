@@ -13,7 +13,11 @@ if ($this->action->id == 'update') {
     $dataId = $_GET['id'];
 }
 
-$countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
+$countryList = CHtml::listData(Country::model()->findAll(array(
+        "order" => "name asc",
+        "group" => "name"
+    )
+), 'id', 'name');
 
 // set default country is Australia = 13
 $model->identification_country_issued = 13;
@@ -171,7 +175,6 @@ $model->identification_country_issued = 13;
                             <tr class="vic-visitor-fields">
                                 <td>
                                     <?php echo $form->textField($model, 'middle_name', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Middle Name')); ?>
-                                    <span class="required">*</span>
                                     <?php echo "<br>" . $form->error($model, 'middle_name'); ?>
                                 </td>
                             </tr>

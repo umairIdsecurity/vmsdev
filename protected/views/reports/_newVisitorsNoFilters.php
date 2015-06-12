@@ -40,7 +40,17 @@
                         }
                     }
                 }
-        } 
+        } else{
+            
+            foreach ($reversed as $key=>$dt) {
+                    echo '<tr>'
+                    . '<td>'
+                    .$dt[0]
+                    . '<td>'
+                    .'0';
+                    
+            }
+        }
         
         ?>
     </tbody>

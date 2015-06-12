@@ -390,6 +390,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                 </li>
             </ul>
         </li>
+        <?php if(($visitorModel->profile_type == "ASIC")||($visitorModel->profile_type == "VIC")):?>
         <li class='has-sub' id="asicDetailsLi">
             <a href="#"><span>Identification</span></a>
             <ul>
@@ -433,7 +434,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                 </li>
             </ul>
         </li>
-
+           <?php endif;?>
         <?php if ($asic) : ?>
         <li class='has-sub' id="asicDetailsLi">
             <a href="#"><span>ASIC Sponsor</span></a>

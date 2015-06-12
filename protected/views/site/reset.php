@@ -21,7 +21,7 @@
         <table class="reset-password-area" style="border-collapse: none !important; width: 420px">
             <tr>
                 <td><?php echo $form->labelEx($model, 'password'); ?></td>
-                <td><?php echo $form->textField($model, 'password'); ?></td>
+                <td><?php echo $form->passwordField($model, 'password'); ?></td>
 
             </tr>
             <tr>
@@ -30,7 +30,7 @@
             </tr>
             <tr>
                 <td><?php echo $form->labelEx($model, 'passwordConfirmation'); ?></td>
-                <td><?php echo $form->textField($model, 'passwordConfirmation'); ?></td>
+                <td><?php echo $form->passwordField($model, 'passwordConfirmation'); ?></td>
 
             </tr>
             <tr>

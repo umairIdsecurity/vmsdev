@@ -159,7 +159,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                 Contact No.
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" class="visitor-detail-info-field" value="<?php echo $contact->contact_number; ?>" disabled="disabled"
+                                <input type="text" class="visitor-detail-info-field" value="<?php echo isset($contact->contact_number) ? $contact->contact_number : ''; ?>" disabled="disabled"
                                        name="Visitor[mobile_number]" id="Visitor_mobile_number">
 
                             </td>
@@ -170,7 +170,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                 Contact Email
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" class="visitor-detail-info-field" value="<?php echo $contact->email; ?>" disabled="disabled"
+                                <input type="text" class="visitor-detail-info-field" value="<?php echo isset($contact->email) ? $contact->email : ''; ?>" disabled="disabled"
                                        name="Visitor[email_address]" id="Visitor_email_address">
 
                             </td>

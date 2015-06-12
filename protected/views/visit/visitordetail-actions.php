@@ -170,30 +170,6 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             $(this).find('#Visit_date_check_in').removeAttr('disabled');
         });
 
-        function vicCheck() {
-            $(document).on('click', '#btnVicConfirm', function(e) {
-                var checknum = $('#vicHolderModal')
-                                .find('input[type="checkbox"]')
-                                .filter(':checked');
-                if (checknum.length == 2) {
-                    vicHolderDeclarationChange();
-                }
-            });
-            return true;
-        }
-
-        function asicCheck() {
-            $(document).on('click', '#btnAsicConfirm', function(e) {
-                var checknum = $('#asicSponsorModal')
-                                .find('input[type="checkbox"]')
-                                .filter(':checked');
-                if (checknum.length == 4) {
-                    asicSponsorDeclarationChange();
-                }
-            });
-            return true;
-        }
-
         $(document).on('click', '#registerNewVisit', function (e) {
             e.preventDefault();
             $this = $(this);
@@ -222,7 +198,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                 var declarations_checkboxs = $('.vic-active-declarations');
                 var confirmed = isCheckboxsChecked(declarations_checkboxs);
 
-                if (!confirmed) {
+                if (!confirmed && $('#registerNewVisit').html() !== 'Preregister Visit') {
                     if (!$('#VivHolderDecalarations').is(':checked') && $('#AsicSponsorDecalarations').is(':checked')) {
                         $('#vicHolderModal').modal('show');
                         $btnVic.on('click', function(e) {

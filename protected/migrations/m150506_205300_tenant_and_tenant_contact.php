@@ -14,7 +14,7 @@ class m150506_205300_tenant_and_tenant_contact extends CDbMigration
                           PRIMARY KEY (`id`),
                           CONSTRAINT `fk_tenant_company1`
                             FOREIGN KEY (`id`)
-                            REFERENCES `vms`.`company` (`id`)
+                            REFERENCES `company` (`id`)
                             ON DELETE NO ACTION
                             ON UPDATE NO ACTION)
                         ");
@@ -30,7 +30,7 @@ class m150506_205300_tenant_and_tenant_contact extends CDbMigration
                               INDEX `fk_tenant_contact_tenant1_idx` (`tenant` ASC),
                               CONSTRAINT `fk_tenant_contact_tenant1`
                                 FOREIGN KEY (`tenant`)
-                                REFERENCES `vms`.`tenant` (`id`)
+                                REFERENCES `tenant` (`id`)
                                 ON DELETE NO ACTION
                                 ON UPDATE NO ACTION)
                               ");

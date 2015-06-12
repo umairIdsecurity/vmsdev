@@ -682,28 +682,67 @@ class Visit extends CActiveRecord {
         }
     }
 
-    public function updateEvicVisitsToClose() {
-        /* EVIC card type is issued Strictly for 28 days
-         * update visit status to close and card status to return if
-         * current date is greater than date check out and if visit status is still active
-         * and card status is still active
-         */
+    /* EVIC card type is issued Strictly for 28 days
+     * update visit status to close and card status to return if
+     * current date is greater than date check out and if visit status is still active
+     * and card status is still active
+     */
+    public function updateMultiDayVisitsToClose() {
         try {
             $commandUpdateCard = "";
 
             $command = Yii::app()->db->createCommand("UPDATE visit
-                    SET visit_status = '" . VisitStatus::CLOSED . "',card_option ='" . CardStatus::RETURNED . "'
-                    WHERE 'd-m-Y' > date_check_out AND date_check_out != 'd-m-Y' AND visit_status = '" . VisitStatus::ACTIVE . "' AND card_type= '" . CardType::VIC_CARD_EXTENDED . "'")->execute();
-            echo "Affected Rows : " . $command . "<br>";
+                    SET visit_status = '" . VisitStatus::CLOSED . "', card_option ='" . CardStatus::RETURNED . "', finish_date = CURDATE(), finish_time = CURTIME() WHERE 'd-m-Y' > date_check_out AND DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 28 DAY), '%d-%m-%Y %h:%i:%s') >= CONCAT(date_check_in, ' ', time_check_in) AND visit_status = '" . VisitStatus::ACTIVE . "' AND (card_type = '" . CardType::VIC_CARD_EXTENDED . "' OR card_type = '". CardType::VIC_CARD_MULTIDAY ."')")->execute();
+            echo "Affected Rows : " . $command . "\n";
             if ($command > 0) {
-                echo "Update visit to close status successful.";
+                echo "Success: Update VIC Extended and Multiday visits to close status successful. \n";
             } else {
-                echo "No record to update.";
+                echo "Success: No record to update. \n";
             }
 
             return true;
         } catch (Exception $ex) {
-            echo 'Query failed', $ex->getMessage();
+            echo 'Error: Query failed', $ex->getMessage() . '\n';
+            return false;
+        }
+    }
+
+    /* update visit status to expired and card status to not returned if
+     * current date is greater than date expiration and visit status is still active
+     * and card status is still active and if card type is same day visitor
+     */
+    public function updateOneDayVisitsToClose() {
+        try {
+            $command = Yii::app()->db->createCommand(
+                "UPDATE visit SET visit_status = '" . VisitStatus::CLOSED . "', card_option ='" . CardStatus::RETURNED . "', finish_date = CURDATE(), finish_time = CURTIME() WHERE 'd-m-Y' > date_check_out AND DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 24 HOUR), '%d-%m-%Y %h:%i:%s') >= CONCAT(date_check_in, ' ', time_check_in) AND visit_status = '" . VisitStatus::ACTIVE . "' AND card_type = '" . CardType::VIC_CARD_24HOURS . "'")->execute();
+            echo "Affected Rows : " . $command . "\n";
+            if ($command > 0) {
+                echo "Success: Update VIC 24 and Manual visits to close status successful. \n";
+            } else {
+                echo "Success: No record to update. \n";
+            }
+
+            return true;
+        } catch (Exception $ex) {
+            echo 'Error: Query failed', $ex->getMessage() . '\n';
+            return false;
+        }
+    }
+
+    public function updateSameDayVisitsToExpired() {
+        try {
+            $command = Yii::app()->db->createCommand(
+                "UPDATE visit SET visit_status = '" . VisitStatus::EXPIRED . "', card_option ='" . CardStatus::RETURNED . "', finish_date = CURDATE(), finish_time = CURTIME() WHERE 'd-m-Y' > date_check_out AND visit_status = '" . VisitStatus::ACTIVE . "' AND card_type = '" . CardType::VIC_CARD_SAMEDATE . "'")->execute();
+            echo "Affected Rows : " . $command . "\n";
+            if ($command > 0) {
+                echo "Success: Update VIC Sameday visits to expired status successful. \n";
+            } else {
+                echo "Success: No record to update. \n";
+            }
+
+            return true;
+        } catch (Exception $ex) {
+            echo 'Error: Query failed', $ex->getMessage() . '\n';
             return false;
         }
     }
@@ -816,27 +855,23 @@ class Visit extends CActiveRecord {
     }
 
     public function getVisitCounts() {
-        /*if (empty($this->date_check_in) || empty($this->date_check_out)) {
-            return 1;
-        } else {
-            $dateIn = new DateTime($this->date_check_in);
-            $dateOut = new DateTime($this->date_check_out);
-            return $dateOut->format('z') - ($dateIn->format('z'));
-        }*/
-        //$session = new CHttpSession;
-        $visitCount = $this->countByAttributes(['visit_status' => VisitStatus::CLOSED, 'visitor' => $this->visitor]);
         switch ($this->card_type) {
             case CardType::VIC_CARD_MANUAL:
-                return $visitCount + 1;
+                return (int)$this->countByAttributes(['visit_status' => VisitStatus::CLOSED, 'visitor' => $this->visitor]) + 1;
                 break;
             case CardType::VIC_CARD_EXTENDED:
             case CardType::VIC_CARD_MULTIDAY:
                 $dateIn = new DateTime($this->date_check_in);
                 $dateNow = new DateTime(date('d-m-Y'));
-                return ($dateNow->format('z') - $dateIn->format('z')) + 1;
+                return (int)($dateNow->format('z') - $dateIn->format('z')) + 1;
+                break;
+            case CardType::VIC_CARD_SAMEDATE:
+                $dateOut = new DateTime($this->date_check_out);
+                $dateIn = new DateTime($this->date_check_in);
+                return (int)($dateOut->format('z') - $dateIn->format('z')) + 1;
                 break;
             case CardType::VIC_CARD_24HOURS:
-                return $visitCount + 1;
+                return (int)$this->countByAttributes(['visit_status' => VisitStatus::CLOSED, 'visitor' => $this->visitor]) + 1;
                 break;
         }
     }
@@ -850,10 +885,13 @@ class Visit extends CActiveRecord {
             case CardType::VIC_CARD_MULTIDAY:
                 $dateNow = new DateTime(date('d-m-Y'));
                 $dateOut = new DateTime($this->date_check_out);
-                return $dateOut->format('z') - $dateNow->format('z');
+                return (int)($dateOut->format('z') - $dateNow->format('z'));
                 break;
             case CardType::VIC_CARD_SAMEDATE:
-                return 28 - (int)$this->visitCounts;
+                if (date('d-m-Y') == $this->date_check_in) {
+                    return 28 - (int)$this->countByAttributes(['visit_status' => VisitStatus::CLOSED, 'visitor' => $this->visitor]);
+                }
+                return 28;
                 break;
             case CardType::VIC_CARD_24HOURS:
                 return 28 - (int)$this->visitCounts;

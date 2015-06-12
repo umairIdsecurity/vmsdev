@@ -80,13 +80,19 @@ class VisitController extends Controller {
             $model->attributes = $_POST['Visit'];
 
             switch ($model->card_type) {
-                case CardType::VIC_CARD_MANUAL:
+                case CardType::VIC_CARD_SAMEDATE: // VIC Sameday
+                    $model->date_check_out = date('d-m-Y');
+                    $model->time_check_out = $model->time_check_in;
+                    break;
+                case CardType::VIC_CARD_MANUAL: // VIC Manual
                 case CardType::VIC_CARD_24HOURS: // VIC 24 hour
                     $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 1 day'));
+                    $model->time_check_out = $model->time_check_in;
                     break;
                 case CardType::VIC_CARD_EXTENDED: // VIC Extended
                 case CardType::VIC_CARD_MULTIDAY: // VIC Multiday
                     $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 28 day'));
+                    $model->time_check_out = $model->time_check_in;
                     break;
             }
 
@@ -795,8 +801,12 @@ class VisitController extends Controller {
         //update date checkout in case card 24h
         if (!empty($model)) {
             switch ($model->card_type) {
-                case CardType::VIC_CARD_24HOURS:
                 case CardType::VIC_CARD_SAMEDATE:
+                    $model->date_check_out = date('d-m-Y');
+                    $model->time_check_out = $model->time_check_in;
+                    break;
+                case CardType::VIC_CARD_24HOURS:
+                case CardType::VIC_CARD_MANUAL:
                     $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 1 day'));
                     $model->time_check_out = $model->time_check_in;
                     break;
@@ -1012,8 +1022,7 @@ class VisitController extends Controller {
                         $email = preg_replace('/\s+/', '', $row['B'] . $row['C'] . '@gmail.com');
 
                         $visitor = Visitor::model()->findByAttributes(array('email' => $email));
-
-                        if (isset($visitor) && !$visitor['id']) {
+                        if (!$visitor['email']) {
                             $reason = VisitReason::model()->findByAttributes(array('reason' => $row['E']));
 
                             // Add workstation
@@ -1069,7 +1078,7 @@ class VisitController extends Controller {
                             if (empty($cardGenerated)) {
                                 $cardModel = new CardGenerated();
                                 $cardModel->card_number = $row['A'];
-                                $cardModel->visitor_id = $visitorId;
+                                $cardModel->visitor_id = isset($visitorId) ? $visitorId : $visitor['id'];
                                 $cardModel->card_status = 1;
                                 $cardModel->created_by = Yii::app()->user->id;
                                 $cardModel->tenant = Yii::app()->user->tenant;
@@ -1083,7 +1092,7 @@ class VisitController extends Controller {
                             // Add visit
                             $visitModel = new Visit();
                             $visitModel->card = $cardId;
-                            $visitModel->visitor = $visitorId;
+                            $visitModel->visitor = isset($visitorId) ? $visitorId : $visitor['id'];
                             $visitModel->reason = isset($reason) ? $reason['id'] : 1;
                             $visitModel->date_check_in = $row['F'];
                             $visitModel->date_check_out = $row['H'];

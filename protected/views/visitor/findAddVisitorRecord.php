@@ -89,8 +89,10 @@ $model->identification_country_issued = 13;
                                     }else if ($("#workstation").val() == ""){
                                         $(".errorMessageWorkstation").show();
                                         $(".visitorReason").hide();
-                                    }
-                                    else if ($("#Visit_reason").val() == "" || ($("#Visit_reason").val() == "Other" &&  $("#VisitReason_reason").val() == "")) {
+                                    } else if ($("#Visitor_visitor_type").val() == "") {
+                                        $(".visitorType").show();
+                                        $(".errorMessageWorkstation").hide();
+                                    } else if ($("#Visit_reason").val() == "" || ($("#Visit_reason").val() == "Other" &&  $("#VisitReason_reason").val() == "")) {
                                         $(".visitorReason").show();
                                         $(".errorMessageWorkstation").hide();
                                     } else if ($("#Visit_reason").val() == "Other" &&  $("#VisitReason_reason").val() != "") {
@@ -108,6 +110,7 @@ $model->identification_country_issued = 13;
                                         $(".errorMessageWorkstation").hide();
                                         $(".visitorReason").hide();
                                         $("#photoErrorMessage").hide();
+                                        $(".visitorType").hide();
                                         checkEmailIfUnique();
                                     }
                                 }
@@ -442,7 +445,8 @@ $model->identification_country_issued = 13;
                                         ));
                                     ?>
                                     <span class="required">*</span>
-                                    <?php echo "<br>" . $form->error($model, 'visitor_type'); ?>
+
+                                    <div class="errorMessage visitorType">Select Visitor Type</div>
                                 </td>
                             </tr>
 

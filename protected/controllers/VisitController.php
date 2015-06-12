@@ -474,7 +474,7 @@ class VisitController extends Controller {
             $model->attributes = $_GET['Visitor'];
         }
 
-        $this->render('corporateTotalVisitCount', array(
+        $this->render('vicTotalVisitCount', array(
             'model' => $model, 'merge' => $merge, false, true
         ));
     }

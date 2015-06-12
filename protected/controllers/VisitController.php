@@ -80,13 +80,19 @@ class VisitController extends Controller {
             $model->attributes = $_POST['Visit'];
 
             switch ($model->card_type) {
-                case CardType::VIC_CARD_MANUAL:
+                case CardType::VIC_CARD_SAMEDATE: // VIC Sameday
+                    $model->date_check_out = date('d-m-Y');
+                    $model->time_check_out = $model->time_check_in;
+                    break;
+                case CardType::VIC_CARD_MANUAL: // VIC Manual
                 case CardType::VIC_CARD_24HOURS: // VIC 24 hour
                     $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 1 day'));
+                    $model->time_check_out = $model->time_check_in;
                     break;
                 case CardType::VIC_CARD_EXTENDED: // VIC Extended
                 case CardType::VIC_CARD_MULTIDAY: // VIC Multiday
                     $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 28 day'));
+                    $model->time_check_out = $model->time_check_in;
                     break;
             }
 
@@ -795,8 +801,12 @@ class VisitController extends Controller {
         //update date checkout in case card 24h
         if (!empty($model)) {
             switch ($model->card_type) {
-                case CardType::VIC_CARD_24HOURS:
                 case CardType::VIC_CARD_SAMEDATE:
+                    $model->date_check_out = date('d-m-Y');
+                    $model->time_check_out = $model->time_check_in;
+                    break;
+                case CardType::VIC_CARD_24HOURS:
+                case CardType::VIC_CARD_MANUAL:
                     $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 1 day'));
                     $model->time_check_out = $model->time_check_in;
                     break;

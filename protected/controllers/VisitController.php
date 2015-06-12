@@ -121,7 +121,7 @@ class VisitController extends Controller {
             //check $reasonId has exist until add new.
             if ($model->reason == 'Other' || !$model->reason){
                 $newReason = new VisitReason();
-                $newReason->setAttribute('reason',$_POST['Visit']['reason_note']);
+                $newReason->setAttribute('reason',isset($_POST['Visit']['reason_note'])?$_POST['Visit']['reason_note']:'');
                 if($newReason->save()){
                     $model->reason = $newReason->id;
                 }

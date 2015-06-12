@@ -990,7 +990,34 @@ class VisitController extends Controller {
 
     public function actionTotalVicsByWorkstation()
     {
-        $visitsCount = 1;
+        $dateFromFilter = Yii::app()->request->getParam("date_from_filter");
+        $dateToFilter = Yii::app()->request->getParam("date_to_filter");
+
+        $dateCondition='';
+
+        if( !empty($dateFromFilter) && !empty($dateToFilter) ) {
+
+            $from = new DateTime($dateFromFilter);
+            $to = new DateTime($dateToFilter);
+
+            $dateCondition = '(visits.date_check_in BETWEEN "'.$from->format('d-m-Y').'"'
+                . ' AND "'.$to->format('d-m-Y').'") OR (visits.date_check_in BETWEEN "'.$from->format('Y-m-d').'"'
+                . ' AND "'.$to->format('Y-m-d').'") AND';
+
+        }
+
+        $dateCondition .= '(t.is_deleted = 0) AND (visits.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visits.card_type >= 5) AND (visits.tenant = '.Yii::app()->user->id.')';
+
+
+        $visitsCount = Yii::app()->db->createCommand()
+            ->select('min(visits.id) as visitId,visits.date_check_in as date_check_in,t.id,t.name,count(visits.id) as visits')
+            ->from('workstation t')
+            ->leftJoin('visitor visitors' , '(t.id = visitors.visitor_workstation)')
+            ->leftJoin('visit visits' , '(visits.visitor = visitors.id)')
+            ->where($dateCondition)
+            ->group('t.id')
+            ->queryAll();
+
         $this->render('totalVicsByWorkstation', array("visit_count" => $visitsCount));
     }
 

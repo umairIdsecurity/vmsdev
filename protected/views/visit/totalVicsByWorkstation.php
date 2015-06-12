@@ -42,7 +42,7 @@
     <thead>
         <tr>
             <th> Workstations </th>
-            <th> Visits Count </th>
+            <th> VIC Visits Count </th>
         </tr>
     </thead>
     <tbody>
@@ -53,12 +53,25 @@
         );
         
         $total=0;
-        
-         ?>
+        if($visit_count) {
+
+            $count=1;
+
+            foreach($visit_count as $vc ) {
+                $datasets[$count] =  array($vc['name'],intval($vc['visits']));
+                $count++;
+                $total += intval($vc['visits']);
+                ?>
+                <tr>
+                    <td><?php echo $vc['name']; ?></td>
+                    <td><?php echo $vc['visits'];?></td>
+                </tr>
+            <?php }
+        } ?>
     </tbody>
     <tfoot>
         <tr>
-            <th>Total Visits</th>
+            <th>Total VIC Visits</th>
             <th><?= $total ?></th>
         </tr>
     </tfoot>

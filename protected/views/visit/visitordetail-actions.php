@@ -265,7 +265,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
 
         function activeVisit() {
             var status = "<?php echo $model->visit_status; ?>";
-            if (status == "<?php echo VisitStatus::SAVED; ?>") {
+            if (status == "<?php echo VisitStatus::SAVED; ?>" || status == "<?php echo VisitStatus::PREREGISTERED; ?>") {
                 checkIfActiveVisitConflictsWithAnotherVisit();
             } else {
                 checkIfActiveVisitConflictsWithAnotherVisit('new');
@@ -279,11 +279,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
 
         $(document).on('click', '#preregisterNewVisit', function (e) {
             e.preventDefault();
-            if ($("#Visit_date_in").val() == '') {
-                $("#preregisterdateinError").show();
-            } else {
-                checkIfPreregisteredVisitConflictsWithAnotherVisit("new");
-            }
+            checkIfActiveVisitConflictsWithAnotherVisit();
         });
 
 

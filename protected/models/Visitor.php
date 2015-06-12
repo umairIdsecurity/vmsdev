@@ -426,13 +426,12 @@ class Visitor extends CActiveRecord {
 
         $user = User::model()->findByPK(Yii::app()->user->id);
         if($user->role != Roles::ROLE_SUPERADMIN){
-
+             $criteria->condition = 't.is_deleted = 0 and t.tenant ="' . Yii::app()->user->tenant . '"';
         }
 
         if ($merge !== null) {
             $criteria->mergeWith($merge);
         }
-
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'sort' => array(

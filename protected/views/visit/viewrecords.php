@@ -20,7 +20,7 @@ $session = new CHttpSession;
 
 $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'view-visitor-records',
-    'dataProvider' => $model->search(),
+    'dataProvider' => $model->search_history(),
     'enableSorting' => false,
     'hideHeader'=>true,
     'filter' => $model,

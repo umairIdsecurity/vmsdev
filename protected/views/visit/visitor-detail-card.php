@@ -26,7 +26,7 @@ $photoForm = $this->beginWidget('CActiveForm', array(
 
 <div class="cardPhotoPreview" style="height:0px;">
     <?php if ($visitorModel->photo != '') { ?>
-        <img id="photoPreview" src="<?php echo Photo::model()->returnVisitorPhotoRelativePath($model->visitor) ?>">
+        <img id="photoPreview" src="<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($model->visitor) ?>">
     <?php } else { ?>
         <img id="photoPreview" src="" style="display:none;"></img>
     <?php } ?>
@@ -56,7 +56,7 @@ if ($vstr->profile_type == "CORPORATE" && $model->card_type == 4) {
                     if ($companyLogoId == "") {
                         $companyLogo = Yii::app()->controller->assetsBase . "/" . 'images/companylogohere.png';
                     } else {
-                        $companyLogo =  Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
+                        $companyLogo = Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
                     }
                 }
 

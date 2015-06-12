@@ -72,7 +72,7 @@ class VisitController extends RestfulController {
                 $visit->time_check_in = date('H:i:s', strtotime($data['startTime']));
                 $visit->date_check_out = date('d-m-Y', strtotime($data['expectedEndTime']));
                 $visit->time_check_out = date('H:i:s', strtotime($data['expectedEndTime']));
-                if (isset($data['checkOutTime'])) {
+                if (!empty($data['checkOutTime'])) {
                     $visit->date_check_out = date('d-m-Y', strtotime($data['checkOutTime']));
                     $visit->time_check_out = date('H:i:s', strtotime($data['checkOutTime']));
                 }

@@ -199,21 +199,21 @@ $session = new CHttpSession;
 
                 $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "option", "minDate", selectedDate);
 
-                function updateTextVisitButton(text) {
+                function updateTextVisitButton(text, id) {
                     var visitButton = $("#activate-a-visit-form input.complete");
                     if (visitButton.length) {
-                        visitButton.val(text);
+                        visitButton.attr('id', id).val(text);
                     } else {
                         visitButton = $("#registerNewVisit");
-                        visitButton.text(text);
+                        visitButton.attr('id', id).text(text);
                     }
                 }
 
                 if (selectedDate >= currentDate) {
                     <?php if ($model->card_type == CardType::VIC_CARD_MANUAL) { // show Back Date Visit
-                        echo 'updateTextVisitButton("Activate Visit");';
+                        echo 'updateTextVisitButton("Activate Visit", "registerNewVisit");';
                     } else {
-                        echo 'updateTextVisitButton("Preregister Visit");
+                        echo 'updateTextVisitButton("Preregister Visit", "preregisterNewVisit");
                               $("#card_no_manual").hide();';
                     }
                     ?>
@@ -226,9 +226,9 @@ $session = new CHttpSession;
                     updateTextVisitButton("");
 
                     <?php if ($model->card_type == CardType::VIC_CARD_MANUAL) { // show Back Date Visit
-                        echo 'updateTextVisitButton("Back Date Visit");';
+                        echo 'updateTextVisitButton("Back Date Visit", "");';
                     } else {
-                        echo 'updateTextVisitButton("Activate Visit");';
+                        echo 'updateTextVisitButton("Activate Visit", "registerNewVisit");';
                     }
                     ?>
 
@@ -379,9 +379,7 @@ $session = new CHttpSession;
         $('#asicSponsorModal').modal('hide');
     }
     function vicCheck() {
-        var checknum = $('#vicHolderModal')
-                        .find('input[type="checkbox"]')
-                        .filter(':checked');
+        var checknum = $('#vicHolderModal').find('input[type="checkbox"]').filter(':checked');
         if (checknum.length == 2) {
             vicHolderDeclarationChange();
             return true;

@@ -147,18 +147,18 @@ $session = new CHttpSession;
                 $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "option", "minDate", selectedDate);
 
                 //update text of visit button
-                function updateTextVisitButton(text) {
+                function updateTextVisitButton(text, id) {
                     var visitButton = $("#activate-a-visit-form input.complete");
                     if (visitButton.length) {
-                        visitButton.val(text);
+                        visitButton.attr('id', id).val(text);
                     } else {
                         visitButton = $("#registerNewVisit");
-                        visitButton.text(text);
+                        visitButton.attr('id', id).text(text);
                     }
                 }
 
                 if (selectedDate >= currentDate) {
-                    updateTextVisitButton("Preregister Visit");
+                    updateTextVisitButton("Preregister Visit", "preregisterNewVisit");
                     // update card date
                     var cardDate = $.datepicker.formatDate('dd M y', selectedDate);
                     $("#cardDetailsTable span.cardDateText").html(cardDate);
@@ -168,9 +168,9 @@ $session = new CHttpSession;
                     updateTextVisitButton("");
 
                     <?php if ($model->card_type == CardType::MANUAL_VISITOR) { // show Back Date Visit
-                        echo 'updateTextVisitButton("Back Date Visit");';
+                        echo 'updateTextVisitButton("Back Date Visit", "");';
                     } else {
-                        echo 'updateTextVisitButton("Activate Visit");';
+                        echo 'updateTextVisitButton("Activate Visit", "registerNewVisit");';
                     }
                     ?>
 

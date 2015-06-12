@@ -228,7 +228,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                         $btnVic.on('click', function(e) {
                             var vicChecked = vicCheck();
                             if (vicChecked) {
-                                checkIfActiveVisitConflictsWithAnotherVisit("new");
+                                activeVisit();
                             }
                         });
                     } else if (!$('#AsicSponsorDecalarations').is(':checked') && $('#VivHolderDecalarations').is(':checked')){
@@ -236,7 +236,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                         $btnASIC.on('click', function(e) {
                             var asicChecked = asicCheck();
                             if (asicChecked) {
-                                checkIfActiveVisitConflictsWithAnotherVisit("new");
+                                activeVisit();
                             }
                         });
                     } else {

@@ -67,11 +67,11 @@ class VisitorServiceImpl implements VisitorService {
             $password = implode(array_slice($chars, 0, $length));
             $headers = "From: admin@identitysecurity.com.au\r\nReply-To: admin@identitysecurity.com.au";
             $subject = "Account Information from Visitor Management System";
-            $body = sprintf("Hi %s,<br/>
-                                 We send for your account at VMS website<br/><br/>
-                                 Your account: %s <br/>
-                                 Password: %s<br/><br/>
-                                 Regards", $visitor->first_name, $visitor->email, $password);
+            $body = sprintf("Hi %s,
+                             We send for your account at VMS website
+                             Your account: %s
+                             Password: %s
+                             Regards", $visitor->first_name, $visitor->email, $password);
             if (mail($visitor->email, $subject, $body, $headers)){
                 $visitor->password = $password;
             }

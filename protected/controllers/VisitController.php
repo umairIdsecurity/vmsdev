@@ -80,6 +80,10 @@ class VisitController extends Controller {
             $model->attributes = $_POST['Visit'];
 
             switch ($model->card_type) {
+                case CardType::VIC_CARD_SAMEDATE: // VIC Sameday
+                    $model->date_check_out = date('d-m-Y');
+                    break;
+                case CardType::VIC_CARD_MANUAL: // VIC Manual
                 case CardType::VIC_CARD_24HOURS: // VIC 24 hour
                     $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 1 day'));
                     break;
@@ -109,13 +113,23 @@ class VisitController extends Controller {
                     // todo: check this default later
                     $model->visitor_type = VisitorType::CORPORATE_VISITOR;
 
-                    $reason = VisitReason::model()->findAllReason();
+                    /*$reason = VisitReason::model()->findAllReason();
                     if (count($reason) > 0) {
                         $model->reason = $reason[0]->id;
-                    }
+                    }*/
 
                 }
             }
+
+            //check $reasonId has exist until add new.
+            if ($model->reason == 'Other' || !$model->reason){
+                $newReason = new VisitReason();
+                $newReason->setAttribute('reason',isset($_POST['Visit']['reason_note'])?$_POST['Visit']['reason_note']:'');
+                if($newReason->save()){
+                    $model->reason = $newReason->id;
+                }
+            }
+
 
             if ($visitService->save($model, $session['id'])) {
                 $this->redirect(array('visit/detail', 'id' => $model->id));
@@ -253,6 +267,7 @@ class VisitController extends Controller {
      */
 
     public function actionDetail($id) {
+        /** @var Visit $model */
         $model = Visit::model()->findByPk($id);
         // Check if model is empty then redirect to visit history
         if (empty($model)) {
@@ -274,7 +289,7 @@ class VisitController extends Controller {
 
         if (empty($workstationModel) && in_array($model->visit_status, VisitStatus::$VISIT_STATUS_DENIED)) {
             Yii::app()->user->setFlash('error', 'Workstation of this visit has been deleted.');
-            return $this->redirect(Yii::app()->createUrl('visit/view'));
+            $this->redirect(Yii::app()->createUrl('visit/view'));
         }
         
         //update status for Contractor Card Type
@@ -283,17 +298,15 @@ class VisitController extends Controller {
                 $model->visit_status = VisitStatus::EXPIRED;
                 $model->save();
             }
-        } else if ($model && $model->card_type == CardType::VIC_CARD_24HOURS) {
-            $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in. ' + 1 day'));
-            $model->time_check_out = $model->time_check_in;
-            $model->save();
         }
 
         $visitorModel = Visitor::model()->findByPk($model->visitor);
         $reasonModel = VisitReason::model()->findByPk($model->reason);
         $patientModel = Patient::model()->findByPk($model->patient);
         $cardTypeModel = CardType::model()->findByPk($model->card_type);
-		$visitModel = Visit::model()->getVisitCount($model->id);
+		$visitCount = Visit::model()->getVisitCount($model->id);
+        $visitCount['totalVisits'] = $model->visitCounts;
+        $visitCount['remainingDays'] = $model->remainingDays;
 
         $newPatient = new Patient;
         $newHost = new User;
@@ -313,16 +326,22 @@ class VisitController extends Controller {
 
             $model->attributes = $_POST['Visit'];
 
-            switch ($model->card_type) {
-                case CardType::VIC_CARD_24HOURS: // VIC 24 hour
-                    $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 1 day'));
-                    break;
-                case CardType::VIC_CARD_EXTENDED: // VIC Extended
-                case CardType::VIC_CARD_MULTIDAY: // VIC Multiday
-                    $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 28 day'));
-                    break;
+            if (isset($_POST['Visitor']['visitor_card_status']) && $_POST['Visitor']['visitor_card_status'] != $visitorModel->visitor_card_status) {
+                $visitorModel->visitor_card_status = $_POST['Visitor']['visitor_card_status'];
+                if ($visitorModel->visitor_card_status == Visitor::ASIC_ISSUED) {
+                    $visitorModel->profile_type = Visitor::PROFILE_TYPE_ASIC;
+                }
+
+                if ($visitorModel->save()) {
+                    if (in_array($visitorModel->visitor_card_status, [Visitor::ASIC_PENDING])) {
+                        $model->date_check_in = $model->date_check_out;
+                        if ($model->save()) {
+                            $visitCount['totalVisits'] = $model->visitCounts;
+                            $visitCount['remainingDays'] = $model->remainingDays;
+                        }
+                    }
+                }
             }
-            $model->time_check_out = $model->time_check_in;
 
             // close visit process
             if (isset($_POST['closeVisitForm']) && $model->visit_status == VisitStatus::CLOSED) {
@@ -335,7 +354,13 @@ class VisitController extends Controller {
                     $model->card_lost_declaration_file = '/uploads/card_lost_declaration/'.$fileUpload->name;
                 }
             }
+
             if ($model->save()) {
+                if (isset($_POST['closeVisitForm'])) {
+                    $visitCount['totalVisits'] = $model->visitCounts;
+                    $visitCount['remainingDays'] = $model->remainingDays;
+                }
+                
                 if (!empty($fileUpload)) {
                     $fileUpload->saveAs(YiiBase::getPathOfAlias('webroot') . $model->card_lost_declaration_file);
                 }
@@ -352,7 +377,7 @@ class VisitController extends Controller {
             'patientModel' => $patientModel,
             'newPatient' => $newPatient,
             'newHost' => $newHost,
-			'visitModel' => $visitModel,
+			'visitCount' => $visitCount,
             'cardTypeModel' => $cardTypeModel,
         ));
     }
@@ -456,7 +481,7 @@ class VisitController extends Controller {
             $model->attributes = $_GET['Visitor'];
         }
 
-        $this->render('corporateTotalVisitCount', array(
+        $this->render('vicTotalVisitCount', array(
             'model' => $model, 'merge' => $merge, false, true
         ));
     }
@@ -765,7 +790,36 @@ class VisitController extends Controller {
         $model->date_check_out = '';
         $model->card = NULL;
         $model->isNewRecord = true;
+
+        ///update data from $_POST
         $model->attributes = $_POST['Visit'];
+
+        //set status to pre-registered
+        if ($model->date_check_in > date('d-m-Y')) {
+            $model->visit_status = VisitStatus::PREREGISTERED;
+        }
+
+        //update date checkout in case card 24h
+        if (!empty($model)) {
+            switch ($model->card_type) {
+                case CardType::VIC_CARD_SAMEDATE:
+                    $model->date_check_out = date('d-m-Y');
+                    $model->time_check_out = $model->time_check_in;
+                    break;
+                case CardType::VIC_CARD_24HOURS:
+                case CardType::VIC_CARD_MANUAL:
+                    $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 1 day'));
+                    $model->time_check_out = $model->time_check_in;
+                    break;
+                case CardType::VIC_CARD_EXTENDED:
+                case CardType::VIC_CARD_MULTIDAY:
+                    $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 28 day'));
+                    $model->time_check_out = $model->time_check_in;
+                    break;
+            }
+        }
+
+        
 
         if ($visitService->save($model, $session['id'])) {
             echo $model->id;
@@ -937,57 +991,151 @@ class VisitController extends Controller {
 
     public function actionTotalVicsByWorkstation()
     {
-        $visitsCount = 1;
+        $dateFromFilter = Yii::app()->request->getParam("date_from_filter");
+        $dateToFilter = Yii::app()->request->getParam("date_to_filter");
+
+        $dateCondition='';
+
+        if( !empty($dateFromFilter) && !empty($dateToFilter) ) {
+
+            $from = new DateTime($dateFromFilter);
+            $to = new DateTime($dateToFilter);
+
+            $dateCondition = '(visits.date_check_in BETWEEN "'.$from->format('d-m-Y').'"'
+                . ' AND "'.$to->format('d-m-Y').'") OR (visits.date_check_in BETWEEN "'.$from->format('Y-m-d').'"'
+                . ' AND "'.$to->format('Y-m-d').'") AND';
+
+        }
+
+        $dateCondition .= '(t.is_deleted = 0) AND (visits.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visits.card_type >= 5) AND (visits.tenant = '.Yii::app()->user->id.')';
+
+
+        $visitsCount = Yii::app()->db->createCommand()
+            ->select('min(visits.id) as visitId,visits.date_check_in as date_check_in,t.id,t.name,count(visits.id) as visits')
+            ->from('workstation t')
+            ->leftJoin('visitor visitors' , '(t.id = visitors.visitor_workstation)')
+            ->leftJoin('visit visits' , '(visits.visitor = visitors.id)')
+            ->where($dateCondition)
+            ->group('t.id')
+            ->queryAll();
+
         $this->render('totalVicsByWorkstation', array("visit_count" => $visitsCount));
     }
 
     public function actionImportVisitData()
     {
-        $model = Visit::model();
+        set_time_limit(0);
+        ini_set("memory_limit", "-1");
 
-        if (isset($_POST['Visit'])) {
-            $model->attributes = $_POST['Visit'];
+        $model = new ImportCsvForm;
+        $session = new CHttpSession;
 
-            /*//Yii::import('application.extensions.phpexcel.JPhpExcel');
+        if (isset($_POST['ImportCsvForm'])) {
+            $model->attributes = $_POST['ImportCsvForm'];
 
-            $xlsFile = CUploadedFile::getInstance($model, 'file');
-            $objPHPExcel = PHPExcel_IOFactory::load($xlsFile->name);
+            $file = CUploadedFile::getInstance($model, 'file_xls');
 
-            foreach ($objPHPExcel->getWorksheetIterator() as $worksheet) {
-                print_r($worksheet);die;
-            }
+            if ($file) {
+                $file->saveAs(dirname(Yii::app()->request->scriptFile) . '/uploads/' . $file->name);
+                $file_path = realpath(Yii::app()->basePath . '/../uploads/' . $file->name);
 
-            // include PHPExcel classes:
-            // Create new PHPExcel object
-            $objPHPExcel = new PHPExcel();
-            print_r($objPHPExcel);die;*/
+                $objPHPExcel = new PHPExcel();
+                $objPHPExcel = PHPExcel_IOFactory::load($file_path);
 
-            $xlsFile = CUploadedFile::getInstance($model, 'file');
-            $objReader = PHPExcel_IOFactory::createReaderForFile($xlsFile);
+                $sheetData = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
 
-            $phpExcelPath = Yii::getPathOfAlias('ext');
-            spl_autoload_unregister(array('YiiBase','autoload'));
-            include($phpExcelPath . DIRECTORY_SEPARATOR . 'PHPExcel.php');
+                if (!empty($sheetData)) {
+                    array_shift($sheetData);
+                    foreach ($sheetData as $row) {
+                        $email = preg_replace('/\s+/', '', $row['B'] . $row['C'] . '@gmail.com');
 
-            $objPHPExcel = new PHPExcel();
+                        $visitor = Visitor::model()->findByAttributes(array('email' => $email));
+                        if (!$visitor['email']) {
+                            $reason = VisitReason::model()->findByAttributes(array('reason' => $row['E']));
 
-            foreach ($objPHPExcel->getWorksheetIterator() as $worksheet) {
-                foreach ($worksheet->getRowIterator() as $row) {
-                    $rowIndex=$row->getRowIndex();
-
-                    $cellIterator = $row->getCellIterator();
-                    $cellIterator->setIterateOnlyExistingCells(false); // Loop all cells, even if it is not set
-                    foreach ($cellIterator as $cellIndex=>$cell) {
-                        if (!is_null($cell)) { print_r($cell);die;
-                            if($rowIndex >1){
-                                $cellVal=$cell->getCalculatedValue();
-                                echo $cellVal;
+                            // Add workstation
+                            $worstation = Workstation::model()->findByAttributes(array('name' => $row['P']));
+                            if (empty($worstation)) {
+                                $worstationModel = new Workstation();
+                                $worstationModel->name = $row['P'];
+                                $worstationModel->created_by = Yii::app()->user->id;
+                                $worstationModel->tenant = Yii::app()->user->tenant;
+                                $worstationModel->save();
+                                $worstationId = $worstationModel->id;
+                            } else {
+                                $worstationId = $worstation['id'];
                             }
+
+                            // Add visitor
+                            $visitorModel = new Visitor();
+                            $visitorModel->first_name = $row['B'];
+                            $visitorModel->last_name = $row['C'];
+                            $visitorModel->date_of_birth = $row['D'];
+                            $visitorModel->profile_type = 'VIC';
+                            $visitorModel->visitor_workstation = $worstationId;
+                            $visitorModel->tenant = $session['tenant'];
+                            $visitorModel->role = Roles::ROLE_VISITOR;
+                            if ($row['J'] == 'TRUE') {
+                                $visitorModel->visitor_card_status = 3;
+                            } else {
+                                $visitorModel->visitor_card_status = 2;
+                            }
+                            $visitorModel->email = preg_replace('/\s+/', '', $row['B'] . $row['C'] . '@gmail.com');
+                            $visitorModel->contact_number = '123456';
+                            $visitorModel->identification_type = 'PASSPORT';
+                            $visitorModel->identification_country_issued = 13;
+                            $visitorModel->identification_document_no = 123;
+                            $visitorModel->identification_document_expiry = '2016-06-22';
+                            $visitorModel->company = 15;
+                            $visitorModel->visitor_type = 2;
+                            $visitorModel->contact_street_no = 123;
+                            $visitorModel->contact_street_name = 'abc';
+                            $visitorModel->contact_street_type = 'ALLY';
+                            $visitorModel->contact_suburb = 11;
+                            $visitorModel->contact_state = 'ACT';
+                            $visitorModel->contact_postcode = 121;
+                            $visitorModel->contact_country = 13;
+
+                            $visitorModel->save();
+                            if ($visitorModel->save()) {
+                                $visitorId = $visitorModel->id;
+                            }
+
+                            // Add card generate
+                            $cardGenerated = CardGenerated::model()->findByAttributes(array('card_number' => $row['A']));
+                            if (empty($cardGenerated)) {
+                                $cardModel = new CardGenerated();
+                                $cardModel->card_number = $row['A'];
+                                $cardModel->visitor_id = isset($visitorId) ? $visitorId : $visitor['id'];
+                                $cardModel->card_status = 1;
+                                $cardModel->created_by = Yii::app()->user->id;
+                                $cardModel->tenant = Yii::app()->user->tenant;
+                                if ($cardModel->save()) {
+                                    $cardId = $cardModel->id;
+                                }
+                            } else {
+                                $cardId = $cardGenerated->id;
+                            }
+
+                            // Add visit
+                            $visitModel = new Visit();
+                            $visitModel->card = $cardId;
+                            $visitModel->visitor = isset($visitorId) ? $visitorId : $visitor['id'];
+                            $visitModel->reason = isset($reason) ? $reason['id'] : 1;
+                            $visitModel->date_check_in = $row['F'];
+                            $visitModel->date_check_out = $row['H'];
+                            $visitModel->host = Yii::app()->user->id;
+                            $visitModel->created_by = Yii::app()->user->id;
+                            $visitModel->workstation = $session['workstation'];
+                            $visitModel->tenant = Yii::app()->user->tenant;
+                            $visitModel->save();
                         }
                     }
                 }
+                Yii::app()->user->setFlash('success', 'Import Success');
+            } else {
+                Yii::app()->user->setFlash('error', 'Please select a xls/xlsx file');
             }
-
         }
 
         $this->render('importVisitData', array('model' => $model));

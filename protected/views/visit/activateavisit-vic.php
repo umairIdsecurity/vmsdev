@@ -30,7 +30,7 @@ $session = new CHttpSession;
     <tr>
         <td class="vic-col">
             <input type="checkbox" value="1" name="VivHolderDecalarations" disabled="disabled" id="VivHolderDecalarations" class="vic-active-visit vic-active-declarations"/>
-            <a href="#vicHolderModal" data-toggle="modal">VIC Holder Declarations</a>
+            <a href="#vicHolderModal" data-toggle="modal">VIC Holder's Declarations</a>
         </td>
     </tr>
     <tr>
@@ -101,7 +101,7 @@ $session = new CHttpSession;
             <input name="Visit[visit_status]" id="Visit_visit_status" type="text" value="1" style="display:none;">
             <input name="Visit[time_check_in]" id="Visit_time_check_in" class="activatevisittimein" type="text" style="display:none;">
             <?php
-            if (strtotime($model->date_check_in)) {
+            if (!strtotime($model->date_check_in)) {
                 $model->date_check_in = date('d-m-Y');
             }
             $this->widget('zii.widgets.jui.CJuiDatePicker', array(
@@ -125,7 +125,7 @@ $session = new CHttpSession;
         <td>Check Out Date
             <br><?php
 
-            if (strtotime($model->date_check_out)) {
+            if (!strtotime($model->date_check_out)) {
                 $model->date_check_out = date('d-m-Y');
             }
 
@@ -155,6 +155,8 @@ $session = new CHttpSession;
                 )
             ));
             ?>
+            <br>
+            <span id="checkout_date_warning" style="display: none;" class="label label-warning"></span>
         </td>
     </tr>
 
@@ -197,11 +199,21 @@ $session = new CHttpSession;
 
                 $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "option", "minDate", selectedDate);
 
+                function updateTextVisitButton(text, id) {
+                    var visitButton = $("#activate-a-visit-form input.complete");
+                    if (visitButton.length) {
+                        visitButton.attr('id', id).val(text);
+                    } else {
+                        visitButton = $("#registerNewVisit");
+                        visitButton.attr('id', id).text(text);
+                    }
+                }
+
                 if (selectedDate >= currentDate) {
                     <?php if ($model->card_type == CardType::VIC_CARD_MANUAL) { // show Back Date Visit
-                        echo '$("#activate-a-visit-form input.complete").val("Activate Visit");';
+                        echo 'updateTextVisitButton("Activate Visit", "registerNewVisit");';
                     } else {
-                        echo '$("#activate-a-visit-form input.complete").val("Preregister Visit");
+                        echo 'updateTextVisitButton("Preregister Visit", "preregisterNewVisit");
                               $("#card_no_manual").hide();';
                     }
                     ?>
@@ -211,12 +223,12 @@ $session = new CHttpSession;
                     $("#cardDetailsTable span.cardDateText").html(cardDate);
 
                 } else {
-                    $("#activate-a-visit-form input.complete").val("");
+                    updateTextVisitButton("");
 
                     <?php if ($model->card_type == CardType::VIC_CARD_MANUAL) { // show Back Date Visit
-                        echo '$("#activate-a-visit-form input.complete").val("Back Date Visit");';
+                        echo 'updateTextVisitButton("Back Date Visit", "");';
                     } else {
-                        echo '$("#activate-a-visit-form input.complete").val("Activate Visit");';
+                        echo 'updateTextVisitButton("Activate Visit", "registerNewVisit");';
                     }
                     ?>
 
@@ -231,7 +243,7 @@ $session = new CHttpSession;
                         ';
                 }
 
-                if ($model->card_type == CardType::VIC_CARD_24HOURS) {
+                if (in_array($model->card_type, [CardType::VIC_CARD_24HOURS, CardType::VIC_CARD_MANUAL])) {
                     echo '  var checkoutDate = new Date(selectedDate);
                     checkoutDate.setDate(selectedDate.getDate() + 1);
                     $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "setDate", checkoutDate);
@@ -291,13 +303,13 @@ $session = new CHttpSession;
     <div class="modal-body">
         <table>
             <tr>
-                <td width="5%"><input type="checkbox" checked="checked" id="refusedAsicCbx"/></td>
-                <td>The applicant declares they have not been refused or held an ASIC that was suspended or cancelled due to an adverse criminal record</td>
+                <td width="5%"><input type="checkbox" id="refusedAsicCbx"/></td>
+                <td><label for="refusedAsicCbx">The applicant declares they have not been refused or held an ASIC that was suspended or cancelled due to an adverse criminal record</label></td>
             </tr>
             <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
             <tr>
-                <td width="5%"><input type="checkbox" checked="checked" id="issuedVicCbx"/></td>
-                <td>The applicant declares they have not been issued with a VIC for this airport for more than 28 days in the past 12 months.
+                <td width="5%"><input type="checkbox" id="issuedVicCbx"/></td>
+                <td><label for="issuedVicCbx">The applicant declares they have not been issued with a VIC for this airport for more than 28 days in the past 12 months.
                     (from <?php
                             if (isset($model->date_check_in)) {
                                 echo $model->date_check_in;
@@ -305,12 +317,12 @@ $session = new CHttpSession;
                                 echo date("d F Y");
                             }
                     ?>)
-                </td>
+                </label></td>
             </tr>
         </table>
     </div>
     <div class="modal-footer">
-        <button type="button" onClick="vicHolderDeclarationChange()" class="btn btn-primary" id="btnVicConfirm">Confirm</button>
+        <button type="button" onClick="vicCheck()" class="btn btn-primary" id="btnVicConfirm">Confirm</button>
     </div>
 </div>
 
@@ -323,28 +335,28 @@ $session = new CHttpSession;
     <div class="modal-body">
         <table>
             <tr>
-                <td width="5%"><input type="checkbox" checked="checked" id="asicDecalarationCbx1"/></td>
-                <td>I confirm that the VIC holders details are correct. I have read, understood and agree to ensure that the applicant will abide by the conditions applicable to the use of the Visitor Identification Card.</td>
+                <td width="5%"><input type="checkbox" id="asicDecalarationCbx1"/></td>
+                <td><label for="asicDecalarationCbx1">I confirm that the VIC holders details are correct. I have read, understood and agree to ensure that the applicant will abide by the conditions applicable to the use of the Visitor Identification Card.</label></td>
             </tr>
             <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
             <tr>
-                <td width="5%"><input type="checkbox" checked="checked" id="asicDecalarationCbx2"/></td>
-                <td>I understand that it is an offence to escort/sponsor someone airside without a valid operational reason for them to require access.</td>
+                <td width="5%"><input type="checkbox" id="asicDecalarationCbx2"/></td>
+                <td><label for="asicDecalarationCbx2">I understand that it is an offence to escort/sponsor someone airside without a valid operational reason for them to require access.</label></td>
             </tr>
             <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
             <tr>
-                <td width="5%"><input type="checkbox" checked="checked" id="asicDecalarationCbx3"/></td>
-                <td>I note that they must be under my direct supervision at all times whilst they are airside.</td>
+                <td width="5%"><input type="checkbox" id="asicDecalarationCbx3"/></td>
+                <td><label for="asicDecalarationCbx3">I note that they must be under my direct supervision at all times whilst they are airside.</label></td>
             </tr>
             <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
             <tr>
-                <td width="5%"><input type="checkbox" checked="checked" id="asicDecalarationCbx4"/></td>
-                <td>I request that a VIC be issued to the applicant for the areas and reason indicated.</td>
+                <td width="5%"><input type="checkbox" id="asicDecalarationCbx4"/></td>
+                <td><label for="asicDecalarationCbx4">I request that a VIC be issued to the applicant for the areas and reason indicated.</label></td>
             </tr>
         </table>
     </div>
     <div class="modal-footer">
-        <button type="button" onclick="asicSponsorDeclarationChange()" class="btn btn-primary" id="btnAsicConfirm">Confirm</button>
+        <button type="button" onclick="asicCheck()" class="btn btn-primary" id="btnAsicConfirm">Confirm</button>
     </div>
 </div>
 <button id="btnActivate" style="display: none;"></button>
@@ -365,5 +377,26 @@ $session = new CHttpSession;
             $('#AsicSponsorDecalarations').prop('checked', false);
         }
         $('#asicSponsorModal').modal('hide');
+    }
+    function vicCheck() {
+        var checknum = $('#vicHolderModal').find('input[type="checkbox"]').filter(':checked');
+        if (checknum.length == 2) {
+            vicHolderDeclarationChange();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function asicCheck() {
+        var checknum = $('#asicSponsorModal')
+                        .find('input[type="checkbox"]')
+                        .filter(':checked');
+        if (checknum.length == 4) {
+            asicSponsorDeclarationChange();
+            return true;
+        } else {
+            return false;
+        }
     }
 </script>

@@ -54,7 +54,7 @@ $session = new CHttpSession;
             <input name="Visit[visit_status]" id="Visit_visit_status" type="text" value="1" style="display:none;">
             <input name="Visit[time_check_in]" id="Visit_time_check_in" class="activatevisittimein" type="text" style="display:none;">
             <?php
-            if (strtotime($model->date_check_in)) {
+            if (!strtotime($model->date_check_in)) {
                 $model->date_check_in = date('d-m-Y');
             }
             $this->widget('zii.widgets.jui.CJuiDatePicker', array(
@@ -86,7 +86,7 @@ $session = new CHttpSession;
         <td>Check Out Date
             <br><?php
 
-            if (strtotime($model->date_check_out)) {
+            if (!strtotime($model->date_check_out)) {
                 $model->date_check_out = date('d-m-Y');
             }
             $this->widget('zii.widgets.jui.CJuiDatePicker', array(
@@ -146,20 +146,31 @@ $session = new CHttpSession;
 
                 $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "option", "minDate", selectedDate);
 
+                //update text of visit button
+                function updateTextVisitButton(text, id) {
+                    var visitButton = $("#activate-a-visit-form input.complete");
+                    if (visitButton.length) {
+                        visitButton.attr('id', id).val(text);
+                    } else {
+                        visitButton = $("#registerNewVisit");
+                        visitButton.attr('id', id).text(text);
+                    }
+                }
+
                 if (selectedDate >= currentDate) {
-                    $("#activate-a-visit-form input.complete").val("Preregister Visit");
+                    updateTextVisitButton("Preregister Visit", "preregisterNewVisit");
                     // update card date
                     var cardDate = $.datepicker.formatDate('dd M y', selectedDate);
                     $("#cardDetailsTable span.cardDateText").html(cardDate);
 
                     $('#card_no_manual').hide();
                 } else {
-                    $("#activate-a-visit-form input.complete").val("");
+                    updateTextVisitButton("");
 
                     <?php if ($model->card_type == CardType::MANUAL_VISITOR) { // show Back Date Visit
-                        echo '$("#activate-a-visit-form input.complete").val("Back Date Visit");';
+                        echo 'updateTextVisitButton("Back Date Visit", "");';
                     } else {
-                        echo '$("#activate-a-visit-form input.complete").val("Activate Visit");';
+                        echo 'updateTextVisitButton("Activate Visit", "registerNewVisit");';
                     }
                     ?>
 

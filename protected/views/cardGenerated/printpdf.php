@@ -25,8 +25,8 @@ if ($tenant) {
         $companyCode = "";
     }
 
-    $companyLogo = Yii::app()->getBaseUrl(true) . "/" . Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
-    $userPhoto = Yii::app()->getBaseUrl(true) . "/" . Photo::model()->returnVisitorPhotoRelativePath($model->visitor);
+    $companyLogo =  Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
+    $userPhoto =  Photo::model()->returnVisitorPhotoRelativePath($model->visitor);
 } else {
     throw new CHttpException(404, 'Company not found for this User.');
 }
@@ -62,9 +62,13 @@ if ($visitorModel->profile_type === 'CORPORATE') {
 $backText = NULL;
 if ($model->card_type != CardType::VIC_CARD_MANUAL) {
     $cardtext = CardType::model()->findByPk($model->card_type);
-    if ($cardtext->back_text != NULL) {
-        $backText = $cardtext->back_text;
-    } else {
+    if ($cardtext) {
+        if ($cardtext->back_text != NULL) {
+            $backText = $cardtext->back_text;
+        } else {
+            $backText = NULL;
+        }
+    }else{
         $backText = NULL;
     }
 }
@@ -110,8 +114,6 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
                 </td>
             <?php endif; ?>
         </tr>
-
-
     </table>
 <?php } else if ($type == 2) { ?>
     <table border="0">

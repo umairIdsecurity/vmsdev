@@ -26,7 +26,7 @@ $photoForm = $this->beginWidget('CActiveForm', array(
 
 <div class="cardPhotoPreview" style="height:0px;">
     <?php if ($visitorModel->photo != '') { ?>
-        <img id="photoPreview" src="<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($model->visitor) ?>">
+        <img id="photoPreview" src="<?php echo Photo::model()->returnVisitorPhotoRelativePath($model->visitor) ?>">
     <?php } else { ?>
         <img id="photoPreview" src="" style="display:none;"></img>
     <?php } ?>
@@ -56,7 +56,7 @@ if ($vstr->profile_type == "CORPORATE" && $model->card_type == 4) {
                     if ($companyLogoId == "") {
                         $companyLogo = Yii::app()->controller->assetsBase . "/" . 'images/companylogohere.png';
                     } else {
-                        $companyLogo = Yii::app()->request->baseUrl . "/" . Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
+                        $companyLogo = Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
                     }
                 }
 
@@ -96,7 +96,7 @@ if ($vstr->profile_type == "CORPORATE" && $model->card_type == 4) {
                 <tr>
                     <td><span class="cardDateText"><?php
                             if ($model->card_type == CardType::SAME_DAY_VISITOR) {
-                                if (strtotime($model->date_check_out)) {
+                                if (!strtotime($model->date_check_out)) {
                                     $date1 = date('d M y');
                                     echo date("d M y", strtotime($date1));
                                 } else {
@@ -175,6 +175,7 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
         ));
         ?>
 </div>
+<?php if (!in_array($model->card_type, [CardType::VIC_CARD_MANUAL])): ?>
 <div class="dropdown">
     <button class="complete btn btn-info printCardBtn dropdown-toggle" style="width:205px !important" type="button" id="menu1" data-toggle="dropdown">Print Card
         <span class="caret pull-right"></span></button>
@@ -184,16 +185,23 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo yii::app()->createAbsoluteUrl('cardGenerated/pdfprint', array('id' => $model->id, 'type' => 3)) ?>">Rewritable Print Card</a></li>
     </ul>
 </div>
-
+<?php endif; ?>
+<?php if ($model->visit_status != VisitStatus::SAVED): ?>
 <div style="margin-top: 10px;">
-    Total Visits at <?php echo $visitModel['companyName']; ?>: <?php echo $visitModel['companyVisitsByVisitor']; ?></br>
-    <!-- Total Visits to All Companies: <?php // echo $visitModel['allVisitsByVisitor'];           ?> -->
+<?php
+$companyName = isset($visitCount['companyName']) ? $visitCount['companyName'] : '';
+$totalCompanyVisit = (isset($visitCount['totalVisits']) && !empty($visitCount['totalVisits'])) ? ($visitCount['totalVisits'] < 0) ? 0 : $visitCount['totalVisits'] : '0';
+$remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingDays'] <= 28) ? ($visitCount['remainingDays'] < 0) ? '0' : $visitCount['remainingDays'] : '28';
+?>
+    Total Visits at <?php echo $companyName; ?>: <?php echo $totalCompanyVisit; ?></br>
+    <!-- Total Visits to All Companies: <?php // echo $visitCount['allVisitsByVisitor'];           ?> -->
     <?php if ($visitorModel->profile_type == Visitor::PROFILE_TYPE_VIC) { ?>
-        Remaining Days: <?php echo (28 - $visitModel['companyVisitsByVisitor']); ?>
+        Remaining Days: <?php echo $remainingDays; ?>
     <?php } ?>
 </div>
 <input type="hidden" id="dummycardvalue" value="<?php echo $model->card; ?>"/>
-
+<input type="hidden" id="remaining_day" value="<?php echo $remainingDays; ?>">
+<?php endif; ?>
 <form method="post" id="workstationForm" action="<?php echo Yii::app()->createUrl('visit/detail', array('id' => $model->id)); ?>">
     <div style="margin: 10px 0px 0px 60px; text-align: left;">
         <?php
@@ -228,9 +236,14 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
             }
             echo CHtml::dropDownList('Visit[card_type]', $model->card_type, $cardTypeResults);
             echo "<br />";
+
+            if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN, Roles::ROLE_SUPERADMIN])) {
+                echo '<input type="submit" class="hidden" id="submitWorkStationForm">';
+                echo '<input type="submit" class="complete" id="btnWorkStationForm" value="Update">';
+            }
         }
         ?>
-        <input type="submit" class="complete" id="submitWorkStationForm" value="Update">
+        
     </div>
 </form>
 
@@ -360,6 +373,17 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
         $("#Visit_workstation").val(value.value);
     }
 
+    $(document).on('change', '#Visitor_visitor_card_status', function(e) {
+        var selected = $(this).val();
+        var remainingDays = $('#remaining_day').val();
+        if (selected == "<?php echo Visitor::ASIC_PENDING; ?>" && remainingDays < 27) {
+            $('#checkout_date_warning').html('An EVIC can’t be issued to this VIC holder <br /> as they don’t have 28 days remaining.<br />Please update their Card Status to ASIC <br />Pending or Select another card type.').show();
+            $('#btnWorkStationForm').attr('disabled', true);
+        } else {
+            $('#checkout_date_warning').html('').hide();
+            $('#btnWorkStationForm').attr('disabled', false);
+        }
+    });
 </script>
 <!--POP UP FOR CROP PHOTO -->
 

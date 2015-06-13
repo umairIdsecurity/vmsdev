@@ -13,7 +13,11 @@ if ($this->action->id == 'update') {
     $dataId = $_GET['id'];
 }
 
-$countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
+$countryList = CHtml::listData(Country::model()->findAll(array(
+        "order" => "name asc",
+        "group" => "name"
+    )
+), 'id', 'name');
 
 // set default country is Australia = 13
 $model->identification_country_issued = 13;
@@ -85,8 +89,10 @@ $model->identification_country_issued = 13;
                                     }else if ($("#workstation").val() == ""){
                                         $(".errorMessageWorkstation").show();
                                         $(".visitorReason").hide();
-                                    }
-                                    else if ($("#Visit_reason").val() == "" || ($("#Visit_reason").val() == "Other" &&  $("#VisitReason_reason").val() == "")) {
+                                    } else if ($("#Visitor_visitor_type").val() == "") {
+                                        $(".visitorType").show();
+                                        $(".errorMessageWorkstation").hide();
+                                    } else if ($("#Visit_reason").val() == "" || ($("#Visit_reason").val() == "Other" &&  $("#VisitReason_reason").val() == "")) {
                                         $(".visitorReason").show();
                                         $(".errorMessageWorkstation").hide();
                                     } else if ($("#Visit_reason").val() == "Other" &&  $("#VisitReason_reason").val() != "") {
@@ -104,6 +110,7 @@ $model->identification_country_issued = 13;
                                         $(".errorMessageWorkstation").hide();
                                         $(".visitorReason").hide();
                                         $("#photoErrorMessage").hide();
+                                        $(".visitorType").hide();
                                         checkEmailIfUnique();
                                     }
                                 }
@@ -171,7 +178,6 @@ $model->identification_country_issued = 13;
                             <tr class="vic-visitor-fields">
                                 <td>
                                     <?php echo $form->textField($model, 'middle_name', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Middle Name')); ?>
-                                    <span class="required">*</span>
                                     <?php echo "<br>" . $form->error($model, 'middle_name'); ?>
                                 </td>
                             </tr>
@@ -439,7 +445,7 @@ $model->identification_country_issued = 13;
                                         ));
                                     ?>
                                     <span class="required">*</span>
-                                    <?php echo "<br>" . $form->error($model, 'visitor_type'); ?>
+                                    <?php echo $form->error($model, 'visitor_type'); ?>
                                 </td>
                             </tr>
 

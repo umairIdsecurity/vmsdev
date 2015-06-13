@@ -38,7 +38,9 @@ $conditionString = $tenant. $tenant_agent . ' (CONCAT(first_name," ",last_name) 
                     . '%")';
 
 if (isset($_GET['cardType']) && $_GET['cardType'] > CardType::CONTRACTOR_VISITOR) {
-    $conditionString .= ' AND profile_type = "VIC" ';
+    $conditionString .= ' AND profile_type = "VIC" OR profile_type = "ASIC" ';
+} else {
+    $conditionString .= ' AND profile_type = "CORPORATE" ';
 }
 
 
@@ -98,8 +100,11 @@ function displaySelectVisitorButton($visitorData) {
 }
 
 function returnVisitorDetailLink($visitorId) {
-    $visit_id = Visit::model()->find("visitor='" . $visitorId . "' and visit_status=1")->id;
-    $url = '/index.php?r=visit/detail&id=' . $visit_id;
+    $visit =  Visit::model()->findByAttributes(array('visitor'=>$visitorId,'visit_status'=>1));
+    if($visit){
+        $url = Yii::app()->baseUrl.'/index.php?r=visit/detail&id=' . $visit->id;
+    }
+   
     return '<span style="font-size:12px;">Status: <a class="linkToVisitorDetailPage" href="' . $url . '" style="display:inline;text-decoration:underline !important;">Active</a></span>';
 }
 ?>

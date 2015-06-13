@@ -245,22 +245,23 @@ if ($this->action->id == 'update') {
                                         <td>
                                             <?php
                                              // Show Default selected to Admin only 
-                                           if(Yii::app()->user->role == Roles::ROLE_ADMIN) {
-                                               echo '<select name="Visitor[visitor_type]" id="Visitor_visitor_type">';
-                                               echo CHtml::tag('option',array('value' => ''),'Select Visitor Type',true);
-                                               $list = VisitorType::model()->findAll("`name` like '{$model->profile_type}%'");
+                                           //if(Yii::app()->user->role == Roles::ROLE_ADMIN) {
+                                               //echo '<select name="Visitor[visitor_type]" id="Visitor_visitor_type">';
+                                               //echo CHtml::tag('option',array('value' => ''),'Select Visitor Type',true);
+                                               //$list = VisitorType::model()->findAll("`name` like '{$model->profile_type}%'");
                                                
-                                               foreach( $list as $val ) {
+                                               /*foreach( $list as $val ) {
                                                    if ( $val->tenant == Yii::app()->user->tenant && $val->is_default_value == '1' )
                                                         echo CHtml::tag('option',array('value' => $val->id, 'selected' => 'selected'),CHtml::encode('Visitor Type: '.$val->name),true);
                                                     else
                                                         echo CHtml::tag('option',array('value' => $val->id),CHtml::encode('Visitor Type: '.$val->name),true);
                                                    
-                                              } echo "</select>";
-                                           } else
-                                                echo $form->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes(NULL,"`name` like '{$model->profile_type}%'"));
+                                              } 
+                                              echo "</select>";*/
+                                           //} else
+                                                //echo $form->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes(NULL,"`name` like '{$model->profile_type}%'"));
                                             ?>
-                                            <?php echo "<br>" . $form->error($model, 'visitor_type'); ?>
+                                            <?php //echo "<br>" . $form->error($model, 'visitor_type'); ?>
                                         </td>
                                     </tr>
                                 </table>

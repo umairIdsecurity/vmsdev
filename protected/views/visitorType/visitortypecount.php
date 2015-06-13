@@ -42,14 +42,14 @@
     <thead>
         <tr>
             <th> Visitor Type </th>
-            <th> Visits Count </th>
+            <th> Visitor Count </th>
         </tr>
     </thead>
     <tbody>
         <?php 
         
         $datasets = array(
-            array('VisitorType', 'Visits per Visitor')
+            array('VisitorType', 'Visitors per Visitor')
         );
         
         $total=0;
@@ -59,20 +59,20 @@
                 $count=1;
                 
                 foreach($visit_count as $vc ) {
-                    $datasets[$count] =  array($vc['name'],intval($vc['visits']));
+                    $datasets[$count] =  array($vc['name'],intval($vc['visitors']));
                     $count++;
-                    $total += intval($vc['visits']);
+                    $total += intval($vc['visitors']);
 ?>
         <tr>
             <td><?php echo $vc['name']; ?></td>
-            <td><?php echo $vc['visits'];?></td>
+            <td><?php echo $vc['visitors'];?></td>
         </tr>
                 <?php }
         } ?>
     </tbody>
     <tfoot>
         <tr>
-            <th>Total Visits</th>
+            <th>Total Visitors</th>
             <th><?= $total ?></th>
         </tr>
     </tfoot>

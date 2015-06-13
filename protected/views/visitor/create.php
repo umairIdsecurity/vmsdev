@@ -163,9 +163,33 @@ $(document).ready(function () {
             showHideTabs('findVisitorB', 'findVisitorA', 'findVisitor', 'selectCardA', 'selectCard', 'findHostA', 'findHost');
         });
 
-        $("#clicktabB").click(function (e) {
+        $(document).on("click", "#clicktabB", function (e) {
             e.preventDefault();
-            $(".visitorReason").hide();
+            if ($('.password_requirement').filter(':checked').val() == "<?php echo PasswordRequirement::PASSWORD_IS_REQUIRED; ?>") {
+                if ($('.password_option').filter(':checked').val() == "<?php echo PasswordOption::CREATE_PASSWORD; ?>") {
+                    $('.visitor_password').empty().hide();
+                    $('.visitor_password_repeat').empty().hide();
+                    var password_temp = $('#Visitor_password_input').val();
+                    var password_repeat_temp = $('#Visitor_repeatpassword_input').val();
+                    if (password_temp == '') {
+                        $('.visitor_password').html('Password should be specified').show();
+                        return false;
+                    } else if (password_repeat_temp == '') {
+                        $('.visitor_password_repeat').html('Please confirm a password').show();
+                        return false;
+                    } else if (password_temp != password_repeat_temp) {
+                        $('.visitor_password_repeat').html('Passwords are not matched').show();
+                        return false;
+                    }
+                    $('input[name="Visitor[password]"]').val(password_temp);
+                    $('input[name="Visitor[repeatpassword]"]').val(password_repeat_temp);
+                }
+            } else {
+                $('.visitor_password').empty().hide();
+                $('.visitor_password_repeat').empty().hide();
+            }
+            
+            $(".visitorType").hide();
             if ($("#Visitor_visitor_type").val() == 1 || $("#Visitor_visitor_type_search").val() == 1) {
                 $("#findHostA").html("Add Patient Details");
                 $("#findHostB").html("Add Patient Details");
@@ -175,6 +199,8 @@ $(document).ready(function () {
             }
             showHideTabs('findHostB', 'findHostA', 'findHost', 'findVisitorA', 'findVisitor', 'selectCardA', 'selectCard');
 
+            hidePreviousPage('step2Tab', 'step3Tab');
+            $('#findHost').addClass('active');
         });
 
         $("#clicktabB1").click(function (e) {

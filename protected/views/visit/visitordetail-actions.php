@@ -125,7 +125,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                         </table>
                         <?php echo $logform->error($model, 'date_in'); ?>
                         <?php if ($model->visit_status == VisitStatus::CLOSED) { ?>
-                            <button type="button" id='registerNewVisit' class='greenBtn'>Activate Visit</button> 
+                            <button type="button" id='registerNewVisit' class='greenBtn'>Activate Visit</button>
                         <?php } else {
                             if ($model->card_type == CardType::MANUAL_VISITOR && isset($model->date_check_in) && strtotime($model->date_check_in) < strtotime(date("d-m-Y"))) {
                                 echo '<input type="submit" value="Back Date Visit" class="complete"/>';
@@ -170,30 +170,6 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             $(this).find('#Visit_date_check_in').removeAttr('disabled');
         });
 
-        function vicCheck() {
-            $(document).on('click', '#btnVicConfirm', function(e) {
-                var checknum = $('#vicHolderModal')
-                                .find('input[type="checkbox"]')
-                                .filter(':checked');
-                if (checknum.length == 2) {
-                    vicHolderDeclarationChange();
-                }
-            });
-            return true;
-        }
-
-        function asicCheck() {
-            $(document).on('click', '#btnAsicConfirm', function(e) {
-                var checknum = $('#asicSponsorModal')
-                                .find('input[type="checkbox"]')
-                                .filter(':checked');
-                if (checknum.length == 4) {
-                    asicSponsorDeclarationChange();
-                }
-            });
-            return true;
-        }
-
         $(document).on('click', '#registerNewVisit', function (e) {
             e.preventDefault();
             $this = $(this);
@@ -213,59 +189,75 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                 return false;
             }
 
-            flag = isChecked(vic_active_visit_checkboxs);
+            
+            var is_vic_holder_checked = $('#VivHolderDecalarations').is(':checked'),
+                is_asic_holder_checked = $('#AsicSponsorDecalarations').is(':checked');
 
-            if (flag == true) {
-                var is_vic_holder_checked = $('#VivHolderDecalarations').is(':checked'),
-                    is_asic_holder_checked = $('#AsicSponsorDecalarations').is(':checked');
+            var declarations_checkboxs = $('.vic-active-declarations');
+            var confirmed = isCheckboxsChecked(declarations_checkboxs);
 
-                var declarations_checkboxs = $('.vic-active-declarations');
-                var confirmed = isChecked(declarations_checkboxs);
-
-                if (!confirmed) {
-                    if (!$('#VivHolderDecalarations').is(':checked') && $('#AsicSponsorDecalarations').is(':checked')) {
-                        $('#vicHolderModal').modal('show');
-                        $btnVic.on('click', function(e) {
-                            var vicChecked = vicCheck();
-                            if (vicChecked) {
-                                checkIfActiveVisitConflictsWithAnotherVisit("new");
-                            }
-                        });
-                    } else if (!$('#AsicSponsorDecalarations').is(':checked') && $('#VivHolderDecalarations').is(':checked')){
-                        $('#asicSponsorModal').modal('show');
-                        $btnASIC.on('click', function(e) {
-                            var asicChecked = asicCheck();
-                            if (asicChecked) {
-                                checkIfActiveVisitConflictsWithAnotherVisit("new");
-                            }
-                        });
-                    } else {
-                        $('#vicHolderModal').modal('show');
-                        $btnVic.on('click', function(e) {
-                            var vicChecked = vicCheck();
-                            if (vicChecked) {
-                                $('#asicSponsorModal').modal('show');
-                                $btnASIC.on('click', function(e) {
-                                    var asicChecked = asicCheck();
-                                    if (asicChecked) {
-                                        checkIfActiveVisitConflictsWithAnotherVisit("new");
-                                    }
-                                });
-                            }
-                        });
-                    }
+            if (!confirmed && $('#registerNewVisit').html() !== 'Preregister Visit') {
+                if (!$('#VivHolderDecalarations').is(':checked') && $('#AsicSponsorDecalarations').is(':checked')) {
+                    $('#vicHolderModal').modal('show');
+                    $btnVic.on('click', function(e) {
+                        var vicChecked = vicCheck();
+                        if (vicChecked) {
+                            activeVisit();
+                        } else {
+                            alert('Please select all the declarations.');
+                            return false;
+                        }
+                    });
+                } else if (!$('#AsicSponsorDecalarations').is(':checked') && $('#VivHolderDecalarations').is(':checked')){
+                    $('#asicSponsorModal').modal('show');
+                    $btnASIC.on('click', function(e) {
+                        var asicChecked = asicCheck();
+                        if (asicChecked) {
+                            confirmed = true;
+                        } else {
+                            alert('Please select all the declarations.');
+                            return false;
+                        }
+                    });
                 } else {
-                    checkIfActiveVisitConflictsWithAnotherVisit("new");
+                    $('#vicHolderModal').modal('show');
+                    $btnVic.on('click', function(e) {
+                        var vicChecked = vicCheck();
+                        if (vicChecked) {
+                            $('#asicSponsorModal').modal('show');
+                            $btnASIC.on('click', function(e) {
+                                var asicChecked = asicCheck();
+                                if (asicChecked) {
+                                    confirmed = true;
+                                } else {
+                                    alert('Please select all the declarations.');
+                                    return false;
+                                }
+                            });
+                        } else {
+                            alert('Please select all the declarations.');
+                            return false;
+                        }
+                    });
                 }
-
             } else {
-                alert('Please agree VIC verification before active visit.');
-                addWarningLabel(vic_active_visit_checkboxs);
+                confirmed = true;
+            }
+
+            flag = isCheckboxsChecked(vic_active_visit_checkboxs);
+
+            if (confirmed == true) {
+                if (flag == true) {
+                    activeVisit();
+                } else {
+                    alert('Please agree VIC verification before active visit.');
+                    addWarningLabel(vic_active_visit_checkboxs);
+                }
             }
             
         });
 
-        function isChecked(checkboxs) {
+        function isCheckboxsChecked(checkboxs) {
             var flag = true;
             $.each(checkboxs, function(i, checkbox) {
                 $(checkbox).next('a').removeClass('label label-warning');
@@ -287,18 +279,23 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             });
         }
 
+        function activeVisit() {
+            var status = "<?php echo $model->visit_status; ?>";
+            if (status == "<?php echo VisitStatus::SAVED; ?>" || status == "<?php echo VisitStatus::PREREGISTERED; ?>") {
+                checkIfActiveVisitConflictsWithAnotherVisit();
+            } else {
+                checkIfActiveVisitConflictsWithAnotherVisit('new');
+            }
+        }
+
         $('#cancelActiveVisitButton').on('click', function (e) {
             e.preventDefault();
             sendCancelVisit();
         });
 
-        $('#preregisterNewVisit').on('click', function (e) {
+        $(document).on('click', '#preregisterNewVisit', function (e) {
             e.preventDefault();
-            if ($("#Visit_date_in").val() == '') {
-                $("#preregisterdateinError").show();
-            } else {
-                checkIfPreregisteredVisitConflictsWithAnotherVisit("new");
-            }
+            checkIfActiveVisitConflictsWithAnotherVisit();
         });
 
 

@@ -483,8 +483,8 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                                     <?php $this->renderPartial('/common_partials/password', array('model' => $model, 'form' => $form, 'session' => $session)); ?>
                                 </td>
                             </tr>
-
                         </table>
+                        <div style="float:right; margin-right: 35px"><input type="submit" value="Save" name="yt0" id="submitFormVisitor" class="complete" style="margin-top: 15px;"/></div>
                     <?php } ?>
 
                 </td>

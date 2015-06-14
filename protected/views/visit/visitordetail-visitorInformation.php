@@ -67,7 +67,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                 Date of Birth
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" class="visitor-detail-info-field" value="<?php echo $visitorModel->date_of_birth; ?>" disabled="disabled"
+                                <input type="text" class="visitor-detail-info-field" value="<?php echo date('d-m-Y', strtotime($visitorModel->date_of_birth)); ?>" disabled="disabled"
                                        name="Visitor[date_of_birth]" id="Visitor_date_of_birth">
                             </td>
                         </tr>
@@ -139,7 +139,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                 Company Name
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" class="visitor-detail-info-field" value="<?php echo $company->name; ?>" disabled="disabled"
+                                <input type="text" class="visitor-detail-info-field" value="<?php echo isset($company->name) ? $company->name : '' ; ?>" disabled="disabled"
                                        name="Visitor[company_name]" id="Visitor_company_name">
                             </td>
                         </tr>
@@ -667,14 +667,14 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
             data: id,
             success: function (r) {
                 $.each(r.data, function (index, value) {
-                    $("#searchHostTableDiv .findDivTitle").html("Selected Host Record : " + value.first_name + " " + value.last_name);
+                    $("#searchHostTableDiv .findDivTitle").html("Selected ASIC Sponsor Record : " + value.first_name + " " + value.last_name);
 
                 });
 
                 $('#findHostTableIframe').contents().find('.findHostButtonColumn a').removeClass('delete');
-                $('#findHostTableIframe').contents().find('.findHostButtonColumn a').html('Select Host');
+                $('#findHostTableIframe').contents().find('.findHostButtonColumn a').html('Select ASIC Sponsor');
                 $('#findHostTableIframe').contents().find('#' + id).addClass('delete');
-                $('#findHostTableIframe').contents().find('#' + id).html('Selected Host');
+                $('#findHostTableIframe').contents().find('#' + id).html('Selected ASIC Sponsor');
                 alert(id);
 
                 $("#selectedHostInSearchTable").val(id);

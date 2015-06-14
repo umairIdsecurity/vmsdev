@@ -64,7 +64,28 @@ class SiteController extends Controller {
 
         }
         else{
-
+            $id = Yii::app()->session['id'];
+            $role = Yii::app()->session['role'];
+            if ($id && $role):
+                switch ($role) {
+                    case Roles::ROLE_AGENT_OPERATOR:
+                    case Roles::ROLE_OPERATOR:
+                            $this->redirect('index.php?r=site/selectworkstation&id=' . $id);
+                        break;
+                    case Roles::ROLE_STAFFMEMBER:
+                        $this->redirect('index.php?r=dashboard/viewmyvisitors');
+                        break;
+                    case Roles::ROLE_ADMIN:
+                    case Roles::ROLE_ISSUING_BODY_ADMIN: // issuing_body_admin is admin with VIC
+                        $this->redirect('index.php?r=site/selectworkstation&id=' . $id);
+                        break;
+                    case Roles::ROLE_AGENT_ADMIN:
+                        $this->redirect('index.php?r=dashboard/admindashboard');
+                        break;
+                    default:
+                        $this->redirect('index.php?r=dashboard');
+                }
+            endif;
             $this->redirect('index.php?r=site/login');
 
         }
@@ -113,6 +134,7 @@ class SiteController extends Controller {
      * Displays the login page
      */
     public function actionLogin() {
+        Yii::app()->session->destroy();
         $model = new LoginForm;
         // if it is ajax validation request
         if (isset($_POST['ajax']) && $_POST['ajax'] === 'login-form') {

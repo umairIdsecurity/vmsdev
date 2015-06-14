@@ -120,7 +120,7 @@ $roleLabel = array_key_exists(Yii::app()->request->getParam('role'),Roles::$labe
 if ($this->action->id == 'update') {
     echo '<h1>Edit ' . $roleLabel . '</h1>';
 } else {
-    echo '<h1>Add ' . $roleLabel . '</h1>';
+    echo '<h1>Add ' . ($roleLabel?$roleLabel:'User') . '</h1>';
 }?>
 <?php
 $form = $this->beginWidget('CActiveForm', array(

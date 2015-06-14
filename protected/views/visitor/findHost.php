@@ -67,7 +67,7 @@ if ($visitorType != VisitorType::PATIENT_VISITOR) {
                 'type' => 'raw',
                 'htmlOptions' => array('style' => 'text-align:center', 'class' => 'findHostButtonColumn'),
                 'value' => function($data) {
-            return CHtml::link('Select Host', '#', array(
+            return CHtml::link('Select ASIC Sponsor', '#', array(
                         'id' => $data['id'],
                         'onclick' => "parent.populateFieldHost({$data['id']})",
                             )

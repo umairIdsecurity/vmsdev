@@ -283,10 +283,41 @@ class VisitorController extends Controller {
     }
 
     public function actionAjaxCrop() {
+        function imageCreateFromAny($filepath) {
+            $type = exif_imagetype($filepath); // [] if you don't have exif you could use getImageSize()
+            $allowedTypes = array(
+                1,  // [] gif
+                2,  // [] jpeg
+                3,  // [] png
+                4,  // [] jpg
+                6   // [] bmp
+            );
+            if (!in_array($type, $allowedTypes)) {
+                return false;
+            }
+            switch ($type) {
+                case 1 :
+                    $im = imageCreateFromGif($filepath);
+                    break;
+                case 2 :
+                    $im = imageCreateFromJpeg($filepath);
+                    break;
+                case 3 :
+                    $im = imageCreateFromPng($filepath);
+                    break;
+                case 4 :
+                    $im = imageCreateFromJpg($filepath);
+                    break;
+                case 6 :
+                    $im = imageCreateFromBmp($filepath);
+                    break;
+            }
+            return $im;
+        }
         $jpeg_quality = 90;
 
         $src = $_REQUEST['imageUrl'];
-        $img_r = imagecreatefromjpeg($src);
+        $img_r = imageCreateFromAny($src);
         $dst_r = imagecreatetruecolor(200, 200);
         $usernameHash = hash('adler32', "visitor");
         $uniqueFileName = 'visitor' . $usernameHash . '-' . time() . ".png";
@@ -309,6 +340,7 @@ class VisitorController extends Controller {
     }
 
     public function actionAddVisitor() {
+        
         $model = new Visitor;
         $visitorService = new VisitorServiceImpl();
         $session = new CHttpSession;
@@ -316,12 +348,46 @@ class VisitorController extends Controller {
         if (isset($_POST['Visitor'])) {
             $model->profile_type = $_POST['Visitor']['profile_type'];
             $model->attributes = $_POST['Visitor'];
-
+            
             if (empty($model->visitor_workstation)) {
                 $model->visitor_workstation = $session['workstation'];
             }
+            
 
             if ($result = $visitorService->save($model, NULL, $session['id'])) {
+                
+                if(!empty($model->password_requirement)){
+                    
+                    $passwordRequire= intval($model->password_requirement);
+                    
+                    if($passwordRequire == 2){
+                        
+                        $loggedUserEmail = Yii::app()->user->email;
+
+                        $headers = "MIME-Version: 1.0" . "\r\n";
+                        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+                        $headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
+
+                        $to=$model->email;
+
+                        $subject="Preregistration email notification";
+
+                        $body = "<html><body>Hi,<br><br>".
+                                "This is preregistration email.<br><br>".
+                                "Please click on the below URL:<br>".
+                                "http://vmsprdev.identitysecurity.info/index.php/preregistration<br>";
+                        
+                        if(!empty($model->password_option)){
+                            $passwordCreate= intval($model->password_option);
+                            if($passwordCreate == 1){
+                                $body .= "Password: ".$_POST['Visitor']['password']."<br>";
+                            }
+                        }
+                        $body .="<br>"."Thanks,"."<br>Admin</body></html>";
+                        mail($to, $subject, $body, $headers);
+                    }
+                }
+                
             	Yii::app()->end();
             }
         }

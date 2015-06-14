@@ -21,7 +21,7 @@ $defaultKey = key($asicCardTypes);
     <!-- Nav tabs -->
     <div style="float:left;width:280px">
         <div class="visitor-title-host" style="cursor:pointer;color:#2f96b4;font-size: 18px;font-weight: bold;margin: 5px 0;padding-left: 85px;">
-            Add Host
+            Add ASIC Sponsor
         </div>
     </div>
 
@@ -38,7 +38,7 @@ $defaultKey = key($asicCardTypes);
                 
                 <?php $background = isset($companyLafPreferences) ? ("background:" . $companyLafPreferences->neutral_bg_color . ' !important;') : ''; ?>
                 <button class="host-findBtn" id="dummy-host-findBtn" style="<?php echo $background; ?>padding: 8px;">
-                    Find Host
+                    Find ASIC Sponsor
                 </button>
                 <!-- <button class="host-AddBtn" <?php
                 if ($session['role'] != Roles::ROLE_STAFFMEMBER) {

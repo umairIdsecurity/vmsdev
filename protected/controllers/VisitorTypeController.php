@@ -176,7 +176,7 @@ class VisitorTypeController extends Controller {
         $dateCondition .= '(t.is_deleted = 0) AND (visitors.is_deleted = 0)';
         
         $visitsCount = Yii::app()->db->createCommand()
-                ->select("t.id, t.name,count(visitors.id) as visitors") 
+                ->select("t.id,t.name,count(visitors.id) as visitors") 
                 ->from('visitor_type t')
                 ->join("visitor visitors",'t.id = visitors.visitor_type')
                 ->where($dateCondition)

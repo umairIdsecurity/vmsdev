@@ -144,6 +144,7 @@ class UserWorkstations extends CActiveRecord {
 
         $Criteria = new CDbCriteria();
         $Criteria->condition = $queryCondition;
+        $Criteria->addCondition("is_deleted=0");
         $workstations = Workstation::model()->findAll($Criteria);
 
         return $workstations;

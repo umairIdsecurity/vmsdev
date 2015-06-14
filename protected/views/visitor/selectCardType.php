@@ -58,6 +58,7 @@ if (!$cardTypeWorkstationModel) {
             <?php
             }
             ?>
+            <div id="card_type" class="errorMessage" style="text-transform: none;display:none">Please Select Card Type</div>
         </tr>
 
     </table>
@@ -77,7 +78,7 @@ if (!$cardTypeWorkstationModel) {
             var card_type_value = $("#selectCardDiv").find("input[name=selectCardType]:checked").val();
 
             if (!card_type_value) {
-                alert('Please choose Card Type before going to next step');
+                $('#card_type').css('display',"block");
                 e.stopImmediatePropagation();
                 return false;
             }

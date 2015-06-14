@@ -43,12 +43,13 @@
     </div>
 
     <div class="row next-prev-btns">
-        <div class="col-md-1 col-sm-1">
+        <div class="col-md-1 col-sm-1 col-xs-1">
             <a href="<?=Yii::app()->createUrl("preregistration")?>" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>
         </div>
 
-        <div class="col-md-offset-10 col-sm-offset-10 col-xs-offset-10 col-md-1">
+        <div class="col-md-offset-10 col-sm-offset-10 col-xs-offset-7 col-md-1 col-sm-1 col-xs-1">
             <a href="<?=Yii::app()->createUrl("preregistration/declaration")?>" class="btn btn-primary btn-next">NEXT <span class="glyphicon glyphicon-chevron-right"></span></a>
         </div>
     </div>
+
 </div>

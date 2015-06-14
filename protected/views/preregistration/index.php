@@ -18,6 +18,9 @@
             'clientOptions'=>array(
                 'validateOnSubmit'=>true,
             ),
+            'htmlOptions'=>array(
+                'class'=>'form-select-gate'
+            )
         ));
         ?>
 
@@ -61,7 +64,7 @@
             <!--<a href="" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>-->
         </div>
 
-        <div class="col-md-offset-10 col-md-1">
+        <div class="col-md-offset-10 col-sm-offset-10 col-xs-offset-8 col-md-1 col-sm-1 col-xs-1">
             <?php
             echo CHtml::tag('button', array(
                 'type'=>'submit',

@@ -3,7 +3,7 @@
 class PreregistrationController extends Controller
 {
 
-	//public $layout = '//layouts/template-prereg';
+	public $layout = '';
 
 	public function filters() {
 		return array(

@@ -175,7 +175,7 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
         ));
         ?>
 </div>
-<?php if (!in_array($model->card_type, [CardType::VIC_CARD_MANUAL])): ?>
+<?php if (!in_array($model->card_type, [CardType::SAME_DAY_VISITOR, CardType::MULTI_DAY_VISITOR, CardType::CONTRACTOR_VISITOR, CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_24HOURS, CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY]) || !in_array($model->visit_status, [VisitStatus::SAVED, VisitStatus::CLOSED, VisitStatus::EXPIRED])): ?>
 <div class="dropdown">
     <button class="complete btn btn-info printCardBtn dropdown-toggle" style="width:205px !important" type="button" id="menu1" data-toggle="dropdown">Print Card
         <span class="caret pull-right"></span></button>

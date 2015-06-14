@@ -8,8 +8,10 @@ $workstation_id = $session['workstation'];
 if (!isset($workstation_id)) {
     $user = User::model()->findByPK(Yii::app()->user->id);
     if ($user->role == Roles::ROLE_AGENT_ADMIN) {
+
         $workstations = Workstation::model()->findAllByAttributes(array('tenant' => $user->tenant, 'tenant_agent' => $user->tenant_agent));
     } else {
+
         $workstations = Workstation::model()->findAll();
     }
 
@@ -21,7 +23,6 @@ if (!isset($workstation_id)) {
 }
 
 $cardTypeWorkstationModel = WorkstationCardType::model()->findAllByAttributes(array('workstation'=>$workstation_id));
-
 if (!$cardTypeWorkstationModel) {
     $this->redirect(Yii::app()->createUrl('workstation/admin'));
 }

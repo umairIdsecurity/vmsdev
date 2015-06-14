@@ -39,7 +39,7 @@ class Roles extends CActiveRecord
             self::ROLE_AGENT_OPERATOR => 'Agent Operator',
             self::ROLE_VISITOR => 'Visitor',
             self::ROLE_AGENT_AIRPORT_OPERATOR => 'Agent Airport Operator', 
-            
+            self::ROLE_SUPERADMIN => 'Super Administrator',
             );
 
     /**
@@ -118,6 +118,21 @@ class Roles extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+        
+        /*
+         * this function is used to get label "Identity Security" for Super Adminitrator 
+         * in notifications creation dropdownlist
+         */
+        public function getNameFuncForNotifiLabels()
+        {
+            $identity = "Identity Security"; 
+            if( $this->id == 5){
+                return $identity; 
+            }else{
+                $identity = $this->name; 
+                return $identity;
+            }
+        }
 
 	/**
 	 * Returns the static model of the specified AR class.

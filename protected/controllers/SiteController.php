@@ -139,6 +139,7 @@ class SiteController extends Controller {
                         $this->redirect('index.php?r=dashboard/viewmyvisitors');
                         break;
                     case Roles::ROLE_ADMIN:
+                    case Roles::ROLE_ISSUING_BODY_ADMIN: // issuing_body_admin is admin with VIC
                         $this->redirect('index.php?r=site/selectworkstation&id=' . $session['id']);
                         break;
                     case Roles::ROLE_AGENT_ADMIN:
@@ -231,11 +232,14 @@ class SiteController extends Controller {
 
     public function actionSelectWorkstation($id) {
 
-        if (isset(Yii::app()->user->role) && Yii::app()->user->role == Roles::ROLE_ADMIN) {
+        if (isset(Yii::app()->user->role) && (Yii::app()->user->role == Roles::ROLE_ADMIN || Yii::app()->user->role == Roles::ROLE_ISSUING_BODY_ADMIN)) {
             $session = new CHttpSession;
             $Criteria = new CDbCriteria();
-            $Criteria->condition = "tenant ='" . $session['tenant'] . "'";
+            if (isset($session['tenant']) && $session['tenant'] != NULL){
+                $Criteria->condition = "tenant = " . $session['tenant'] . " AND is_deleted = 0";
+            }
             $row = Workstation::model()->findAll($Criteria);
+
         } else {
             $row = Workstation::model()->findWorkstationAvailableForUser($id);
         }
@@ -247,12 +251,17 @@ class SiteController extends Controller {
                     'id' => $value['id'],
                     'name' => $value['name'],
                 );
+
             }
         } else {
             $aArray[] = array(
                 'id' => '',
                 'name' => '-',
             );
+            /* if workstation is not available then redirect to dashboard for issuinng admin user*/
+            if(Yii::app()->user->role == Roles::ROLE_ISSUING_BODY_ADMIN) {
+                $this->redirect('index.php?r=dashboard/adminDashboard');
+            }
             $addWorkstation = 1;
         }
 

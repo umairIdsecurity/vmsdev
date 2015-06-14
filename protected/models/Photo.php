@@ -20,7 +20,7 @@ class Photo extends CActiveRecord {
     public function tableName() {
         return 'photo';
     }
-    const DEFAULT_COMPANY_LOGO = 'uploads/company_logo/1411087524.jpg';
+    
 
     /**
      * @return array validation rules for model attributes.
@@ -111,8 +111,12 @@ class Photo extends CActiveRecord {
         $visitor = Visitor::model()->findByPK($visitorId);
         if ($visitor->photo != '') {
             $photo = Photo::model()->findByPK($visitor->photo);
-
-            return $photo->relative_path;
+            if(file_exists($photo->relative_path)){
+                return Yii::app()->getBaseUrl(true)."/".$photo->relative_path;
+            }else{
+                return $this->defaultImage();
+            }
+            
         }
     }
 
@@ -122,24 +126,28 @@ class Photo extends CActiveRecord {
             if ($company->logo != '') {
                 $photo = Photo::model()->findByPK($company->logo);
                 if (file_exists($photo->relative_path)) {
-                    return $photo->relative_path;
+                    return Yii::app()->getBaseUrl(true)."/".$photo->relative_path;
                 } else {
-                    return Photo::DEFAULT_COMPANY_LOGO;
+                  return $this->defaultImage();
                 }
             } else {
-                return Photo::DEFAULT_COMPANY_LOGO;
+                return $this->defaultImage();
             }
         } else {
-            return Photo::DEFAULT_COMPANY_LOGO;
+            return $this->defaultImage();
         }
     }
     
     public function returnLogoPhotoRelative($logoId) {
         
-            $photo = Photo::model()->findByPK($logoId);
-
+        $photo = Photo::model()->findByPK($logoId);
+        if ($photo) {
             return $photo->relative_path;
-        
+        }
+    }
+    
+    public function defaultImage(){
+        return Yii::app()->controller->assetsBase . '/images/companylogohere1.png';
     }
 
     public function behaviors()
@@ -150,6 +158,7 @@ class Photo extends CActiveRecord {
                 'application.components.behaviors.AuditTrailBehaviors',
         );
     }
+    
    
 
 }

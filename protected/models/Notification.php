@@ -38,6 +38,7 @@ class Notification extends CActiveRecord
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('id, subject, message, created_by, date_created, role_id, notification_type', 'safe', 'on'=>'search'),
+                        array('id, subject, message, created_by, date_created, role_id, notification_type', 'safe', 'on'=>'indexSearch'),
 		);
 	}
 
@@ -97,7 +98,7 @@ class Notification extends CActiveRecord
 		$criteria->compare('role_id',$this->role_id);
 		$criteria->compare('notification_type',$this->notification_type,true);
                 
-                if( Roles::ROLE_SUPERADMIN != Yii::app()->user->role )
+                if( Roles::ROLE_SUPERADMIN != Yii::app()->user->role && Roles::ROLE_ADMIN != Yii::app()->user->role )
                 {
                     $criteria->with = array('user_notification' );
                     $criteria->together = true;
@@ -105,11 +106,41 @@ class Notification extends CActiveRecord
                     $criteria->params = array(':user_id' => Yii::app()->user->id);
                      
                 }
+                
                 $criteria->order = 't.id DESC';        
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
 	}
+        
+        
+        /**
+	 * this function together with usernotification fetch his only results(notifications)
+	 */
+	public function indexSearch()
+	{
+		// @todo Please modify the following code to remove attributes that should not be searched.
+
+		$criteria=new CDbCriteria;
+
+		$criteria->compare('id',$this->id);
+		$criteria->compare('subject',$this->subject,true);
+		$criteria->compare('message',$this->message,true);
+		$criteria->compare('created_by',$this->created_by);
+		$criteria->compare('date_created',$this->date_created,true);	
+		$criteria->compare('role_id',$this->role_id);
+		$criteria->compare('notification_type',$this->notification_type,true);
+                $criteria->with = array('user_notification' );
+                $criteria->together = true;
+                $criteria->condition = "user_notification.user_id=:user_id";
+                $criteria->params = array(':user_id' => Yii::app()->user->id);
+                $criteria->order = 't.id DESC';        
+                
+		return new CActiveDataProvider($this, array(
+			'criteria'=>$criteria,
+		));
+	}
+        
 
 	/**
 	 * Returns the static model of the specified AR class.

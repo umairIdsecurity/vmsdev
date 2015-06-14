@@ -45,7 +45,7 @@ $currentLoggedUserId = $session['id'];
                                                 if(obj["success"]){
                                                     window.location.href = "'.$this->createUrl("tenant/create/&role=1").'";
                                                 }else{
-                                                    window.location.href = "'.$this->createUrl("tenant/create/&role=1").'";
+                                                    //window.location.href = "'.$this->createUrl("tenant/create/&role=1").'";
                                                 }
                                             },
 
@@ -882,8 +882,5 @@ function get_avms_assignable_roles($user_role)
     /*<![CDATA[*/
     //jQuery(function($) { $('#tenant-form').yiiactiveform({'attributes':[{'inputID':'TenantForm_password','errorID':'TenantForm_password_em_'},{'inputID':'TenantForm_cnf_password','errorID':'TenantForm_cnf_password_em_'}]}); });
     /*]]>*/
+    $("#TenantForm_contact_number").mask("99 9999 9999",{placeholder:" "});
 </script>
-
-
-
-

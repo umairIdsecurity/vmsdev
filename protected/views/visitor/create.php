@@ -163,9 +163,10 @@ $(document).ready(function () {
             showHideTabs('findVisitorB', 'findVisitorA', 'findVisitor', 'selectCardA', 'selectCard', 'findHostA', 'findHost');
         });
 
-        $("#clicktabB").click(function (e) {
+        $(document).on("click", "#clicktabB", function (e) {
             e.preventDefault();
             $(".visitorReason").hide();
+            $(".visitorType").hide();
             if ($("#Visitor_visitor_type").val() == 1 || $("#Visitor_visitor_type_search").val() == 1) {
                 $("#findHostA").html("Add Patient Details");
                 $("#findHostB").html("Add Patient Details");
@@ -175,17 +176,16 @@ $(document).ready(function () {
             }
             showHideTabs('findHostB', 'findHostA', 'findHost', 'findVisitorA', 'findVisitor', 'selectCardA', 'selectCard');
 
+            hidePreviousPage('step2Tab', 'step3Tab');
+            $('#findHost').addClass('active');
         });
 
         $("#clicktabB1").click(function (e) {
             e.preventDefault();
             $("#register-reason-form").hide();
             var visit_reason = $("#Visit_reason_search").val();
-            if ($("#search-visitor").val() == "") {
-                $("#searchTextErrorMessage").html("Please enter a name");
-                $("#searchTextErrorMessage").show();
-            }
-            else if (($("#selectedVisitorInSearchTable").val() == '' && $("#search-visitor").val() != '') || $("#selectedVisitorInSearchTable").val() == '') {
+
+            if (($("#selectedVisitorInSearchTable").val() == '' && $("#search-visitor").val() != '') || $("#selectedVisitorInSearchTable").val() == '') {
                 $("#searchTextErrorMessage").html("Please select a visitor");
                 $("#searchTextErrorMessage").show();
             }

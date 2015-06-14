@@ -12,13 +12,17 @@ $session = new CHttpSession();
 switch ($session['role']) {
     case Roles::ROLE_ADMIN:
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant ='" . $session['tenant'] . "'";
+        $Criteria->condition = "tenant ='" . $session['tenant'] . "' AND is_deleted = 0";
         $workstationList = Workstation::model()->findAll($Criteria);
         break;
-
+    case Roles::ROLE_ISSUING_BODY_ADMIN:
+        $Criteria = new CDbCriteria();
+        $Criteria->condition = "tenant ='" . $session['tenant'] . "' AND is_deleted = 0";
+        $workstationList = Workstation::model()->findAll($Criteria);
+        break;
     case Roles::ROLE_AGENT_ADMIN:
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant ='" . $session['tenant'] . "' and tenant_agent ='" . $session['tenant_agent'] . "'";
+        $Criteria->condition = "tenant ='" . $session['tenant'] . "' and tenant_agent ='" . $session['tenant_agent'] . "' AND is_deleted = 0";
         $workstationList = Workstation::model()->findAll($Criteria);
         break;
     
@@ -33,7 +37,12 @@ $x = 0; //initiate variable for foreach
 if (empty($workstationList)) {
 	if (Roles::ROLE_AGENT_ADMIN == $session['role'] || Roles::ROLE_ADMIN == $session['role']) {
 		echo '<div style="margin-top: 20px;" class="btn"><a class="addSubMenu" href="' . Yii::app()->createUrl('workstation/create') . '" ><span>Add Workstation</span></a></div>';
-	} else {
+	}else if(Roles::ROLE_ISSUING_BODY_ADMIN == $session['role']){
+    ?>
+        <div class="adminErrorSummary" >
+        <p><br> No workstation found</p>
+    </div>
+    <?php } else {
     ?>
 
     <div class="adminErrorSummary" >

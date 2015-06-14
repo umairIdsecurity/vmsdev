@@ -17,14 +17,6 @@
  */
 class CardType extends CActiveRecord {
 
-    public static $CARD_TYPE_LIST = array(
-        ''=>'Card Type',
-        1 => 'Same Day Visitor',
-        2 => 'Multi Day Visitor',
-        3 => 'Manual Visitor',
-        4 => 'Contractor Visitor',
-    );
-
     const SAME_DAY_VISITOR = 1;
     const MULTI_DAY_VISITOR = 2;
     const MANUAL_VISITOR = 3;
@@ -35,6 +27,22 @@ class CardType extends CActiveRecord {
     const VIC_CARD_EXTENDED = 7; // EVIC card type
     const VIC_CARD_MULTIDAY = 8;
     const VIC_CARD_MANUAL = 9;
+    
+    public static $CARD_TYPE_LIST = array(
+        ''=>'Card Type',
+        1 => 'Same Day Visitor',
+        2 => 'Multi Day Visitor',
+        3 => 'Manual Visitor',
+        4 => 'Contractor Visitor',
+    );
+
+    public static $VIC_CARD_TYPE_LIST = [
+        self::VIC_CARD_SAMEDATE,
+        self::VIC_CARD_24HOURS,
+        self::VIC_CARD_EXTENDED,
+        self::VIC_CARD_MULTIDAY,
+        self::VIC_CARD_MANUAL
+    ];
 
     /**
      * @return string the associated database table name

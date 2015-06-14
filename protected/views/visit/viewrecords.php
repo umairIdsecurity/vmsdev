@@ -8,15 +8,19 @@
         margin-left: 998px !important;
     }
 </style>
+<?php if(Yii::app()->user->hasFlash('error')):?>
+    <div class="alert alert-danger" style="margin-top: 10px;">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>Warning!</strong> <?php echo Yii::app()->user->getFlash('error'); ?>
+    </div>
+<?php endif; ?>
 <h1>Visit History</h1>
-
 <?php
-
 $session = new CHttpSession;
 
 $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'view-visitor-records',
-    'dataProvider' => $model->search(),
+    'dataProvider' => $model->search_history(),
     'enableSorting' => false,
     'hideHeader'=>true,
     'filter' => $model,
@@ -38,12 +42,12 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'cssClassExpression' => 'changeStatusClass($data->visit_status)',
             'htmlOptions'=>array('width'=>'120px'),
         ),
-        array(
+        /*array(
             'name' => 'visitor_type',
             'value' => '$data->visitorType->name',
             'filter' => VisitorType::model()->returnVisitorTypes(),
             'htmlOptions'=>array('width'=>'170px'),
-        ),
+        ),*/
         array(
             'name' => 'cardnumber',
             'header' => 'Card No.',

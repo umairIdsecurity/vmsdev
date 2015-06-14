@@ -115,12 +115,12 @@ if (isset($company) && !empty($company)) {
 
 <input type="hidden" id="passwordUser" value="<?php echo isset($password) ? $password : ''; ?>">
 <div class="form" data-ng-app="PwordForm">
-<?php if ($this->action->id == 'update') {
-    echo '<h1>Edit ' . Roles::$labels[Yii::app()->request->getParam('role')] . '</h1>';
-
+<?php 
+$roleLabel = array_key_exists(Yii::app()->request->getParam('role'),Roles::$labels) ? Roles::$labels[Yii::app()->request->getParam('role')] : '';
+if ($this->action->id == 'update') {
+    echo '<h1>Edit ' . $roleLabel . '</h1>';
 } else {
-    echo '<h1>Add ' . Roles::$labels[Yii::app()->request->getParam('role')] . '</h1>';
-
+    echo '<h1>Add ' . $roleLabel . '</h1>';
 }?>
 <?php
 $form = $this->beginWidget('CActiveForm', array(
@@ -378,7 +378,6 @@ $form = $this->beginWidget('CActiveForm', array(
     <td class="workstationRow">
         <select id="User_workstation" name="User[workstation]" disabled></select>
     </td>
-    <td class="workstationRow"></td>
 </tr>
 
 
@@ -393,7 +392,7 @@ $form = $this->beginWidget('CActiveForm', array(
     </tr>
     <tr>
         <td class="AsicExpiryDropdown">
-            <label>ASIC Expiry</label><span class="required">*</span><br/>
+            ASIC Expiry<span class="required">*</span><br/>
 
             <?php
             $days = [];
@@ -433,9 +432,12 @@ $form = $this->beginWidget('CActiveForm', array(
             <td>
                 <select onchange="populateDynamicFields()" <?php
                 // if ($this->action->Id == 'create' && isset($_GET['role']) && $_GET['role'] != 'avms' ) { //if action create with user roles selected in url
-                if ($this->action->Id == 'create' && !CHelper::is_add_avms_user()) { //if action create with user roles selected in url
+                /*if ($this->action->Id == 'create' && !CHelper::is_add_avms_user()) { //if action create with user roles selected in url
                     echo "disabled";
                 }
+                ---> chang for https://ids-jira.atlassian.net/browse/CAVMS-437
+                */
+
                 ?> id="User_role" name="User[role]">
                     <option disabled value='' selected>Select Role</option>
                     <?php
@@ -1132,7 +1134,7 @@ function populateAgentOperatorWorkstations(tenant, tenantAgent, value) {
         data: tenantAgent,
         success: function (r) {
             $('#User_workstation option[value!=""]').remove();
-
+            $('#User_workstation').append('<option value="">Workstation</option>');
             $.each(r.data, function (index, value) {
                 $('#User_workstation').append('<option value="' + value.id + '">' + value.name + '</option>');
             });

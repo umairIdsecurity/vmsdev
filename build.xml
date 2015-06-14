@@ -263,7 +263,7 @@
             <arg value="--report-file=${basedir}/build/logs/checkstyle-results.xml" />
             <arg value="--standard=PSR2" />
             <arg value="--extensions=php" />
-            <arg value="--ignore=autoload.php" />
+            <arg value="--ignore=*vendor*" />
             <arg path="${basedir}/protected" />
         </exec>
         <concat dest="${basedir}/build/logs/checkstyle.xml" force="true" >

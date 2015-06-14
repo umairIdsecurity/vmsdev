@@ -59,9 +59,29 @@ class VisitorServiceImpl implements VisitorService {
             }
         }
 
+        #Send mail
+        if (isset($_POST['Visitor']['password_option']) && $_POST['Visitor']['password_option'] == 2) {
+            $length = 10;
+            $chars = array_merge(range(0, 9), range('a', 'z'), range('A', 'Z'));
+            shuffle($chars);
+            $password = implode(array_slice($chars, 0, $length));
+            $headers = "From: admin@identitysecurity.com.au\r\nReply-To: admin@identitysecurity.com.au";
+            $subject = "Account Information from Visitor Management System";
+            $body = sprintf("Hi %s,
+                             We send for your account at VMS website
+                             Your account: %s
+                             Password: %s
+                             Regards", $visitor->first_name, $visitor->email, $password);
+            if (mail($visitor->email, $subject, $body, $headers)){
+                $visitor->password = $password;
+            }
+        }
+
+
         if (!($result = $visitor->save())) {
             return false;
         }
+
 
         // Visitor::model()->saveReason($visitor->id, $visit_reason);
         return true;

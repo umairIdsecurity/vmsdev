@@ -2,6 +2,9 @@
 $cs = Yii::app()->clientScript;
 $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/script-visitordetail-actions-cssmenu.js');
 $session = new CHttpSession;
+$workstationModel = Workstation::model()->findByPk($model->workstation);
+
+$isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
 ?>
 <div id='actionsCssMenu'>
     <ul>
@@ -122,7 +125,7 @@ $session = new CHttpSession;
                         </table>
                         <?php echo $logform->error($model, 'date_in'); ?>
                         <?php if ($model->visit_status == VisitStatus::CLOSED) { ?>
-                            <button type="button" id='registerNewVisit' class='greenBtn'>Activate Visit</button> 
+                            <button type="button" id='registerNewVisit' class='greenBtn'>Activate Visit</button>
                         <?php } else {
                             if ($model->card_type == CardType::MANUAL_VISITOR && isset($model->date_check_in) && strtotime($model->date_check_in) < strtotime(date("d-m-Y"))) {
                                 echo '<input type="submit" value="Back Date Visit" class="complete"/>';
@@ -169,91 +172,114 @@ $session = new CHttpSession;
 
         $(document).on('click', '#registerNewVisit', function (e) {
             e.preventDefault();
+            $this = $(this);
             var flag = true;
             var $btnVic = $('#btnVicConfirm'),
-                    $btnASIC = $('#btnAsicConfirm');
+                $btnASIC = $('#btnAsicConfirm');
+
+            var isWorkstationDelete = "<?php echo $isWorkstationDelete; ?>";
+            if (isWorkstationDelete == 'true') {
+                alert('Workstation of this visit has been deleted, you can\'t activate it.');
+                return false;
+            }
+
             var vic_active_visit_checkboxs = $('.vic-active-verification');
             if (vic_active_visit_checkboxs.length == 0) {
                 checkIfActiveVisitConflictsWithAnotherVisit("new");
                 return false;
             }
+
+            flag = isCheckboxsChecked(vic_active_visit_checkboxs);
+
+            if (flag == true) {
+                var is_vic_holder_checked = $('#VivHolderDecalarations').is(':checked'),
+                    is_asic_holder_checked = $('#AsicSponsorDecalarations').is(':checked');
+
+                var declarations_checkboxs = $('.vic-active-declarations');
+                var confirmed = isCheckboxsChecked(declarations_checkboxs);
+
+                if (!confirmed && $('#registerNewVisit').html() !== 'Preregister Visit') {
+                    if (!$('#VivHolderDecalarations').is(':checked') && $('#AsicSponsorDecalarations').is(':checked')) {
+                        $('#vicHolderModal').modal('show');
+                        $btnVic.on('click', function(e) {
+                            var vicChecked = vicCheck();
+                            if (vicChecked) {
+                                activeVisit();
+                            }
+                        });
+                    } else if (!$('#AsicSponsorDecalarations').is(':checked') && $('#VivHolderDecalarations').is(':checked')){
+                        $('#asicSponsorModal').modal('show');
+                        $btnASIC.on('click', function(e) {
+                            var asicChecked = asicCheck();
+                            if (asicChecked) {
+                                activeVisit();
+                            }
+                        });
+                    } else {
+                        $('#vicHolderModal').modal('show');
+                        $btnVic.on('click', function(e) {
+                            var vicChecked = vicCheck();
+                            if (vicChecked) {
+                                $('#asicSponsorModal').modal('show');
+                                $btnASIC.on('click', function(e) {
+                                    var asicChecked = asicCheck();
+                                    if (asicChecked) {
+                                        activeVisit();
+                                    }
+                                });
+                            }
+                        });
+                    }
+                } else {
+                    activeVisit();
+                }
+
+            } else {
+                alert('Please agree VIC verification before active visit.');
+                addWarningLabel(vic_active_visit_checkboxs);
+            }
             
-            $.each(vic_active_visit_checkboxs, function(i, checkbox) {
+        });
+
+        function isCheckboxsChecked(checkboxs) {
+            var flag = true;
+            $.each(checkboxs, function(i, checkbox) {
                 $(checkbox).next('a').removeClass('label label-warning');
                 if (!checkbox.checked) {
                     flag = false;
                     return;
                 }
             });
-            if (flag == true) {
-                if ($('#VivHolderDecalarations').is(':checked')) {
-                    $('#asicSponsorModal').modal('show');
-                } else {
-                    $('#vicHolderModal').modal('show');
-                    $btnVic.on('click', function(e) {
-                        var checknum = $('#vicHolderModal').find('input[type="checkbox"]').filter(':checked');
-                        if (checknum.length == 2) {
-                            vicHolderDeclarationChange();
-                            if ($('#VivHolderDecalarations').is(':checked')) {
-                                $('#asicSponsorModal').modal('show');
-                                $btnASIC.on('click', function(e) {
-                                    var checknum = $('#asicSponsorModal')
-                                        .find('input[type="checkbox"]')
-                                        .filter(':checked');
-                                    if (checknum.length == 4) {
-                                        asicSponsorDeclarationChange();
-                                        if ($('#AsicSponsorDecalarations').is(':checked')) {
-                                            var confirm = true;
-                                            var vic_declarations_checkboxs = $('.vic-active-declarations');
-                                            $.each(vic_declarations_checkboxs, function(i, checkbox) {
-                                                if (!checkbox.checked) {
-                                                    confirm = false;
-                                                    return;
-                                                }
-                                            });
+            return flag;
+        }
 
-                                            if (confirm == true) {
-                                                checkIfActiveVisitConflictsWithAnotherVisit("new");
-                                            }
-                                        }
-                                    } else {
-                                        alert('Please confirm ASIC declaration.');
-                                        return false;
-                                    }
-                                });
-                            }
-                        } else {
-                            alert('Please confirm VIC declaration.');
-                            return false;
-                        }
-                        
-                    });
+        function addWarningLabel(checkboxs) {
+            $.each(checkboxs, function(i, checkbox) {
+                if (!checkbox.checked) {
+                    checkbox.focus();
+                    $(checkbox).next('a').addClass('label label-warning');
+                    return false;
                 }
+            });
+        }
+
+        function activeVisit() {
+            var status = "<?php echo $model->visit_status; ?>";
+            if (status == "<?php echo VisitStatus::SAVED; ?>" || status == "<?php echo VisitStatus::PREREGISTERED; ?>") {
+                checkIfActiveVisitConflictsWithAnotherVisit();
             } else {
-                alert('Please agree VIC verification before active visit.');
-                $.each(vic_active_visit_checkboxs, function(i, checkbox) {
-                    if (!checkbox.checked) {
-                        checkbox.focus();
-                        $(checkbox).next('a').addClass('label label-warning');
-                        return false;
-                    }
-                });
+                checkIfActiveVisitConflictsWithAnotherVisit('new');
             }
-            
-        });
+        }
 
         $('#cancelActiveVisitButton').on('click', function (e) {
             e.preventDefault();
             sendCancelVisit();
         });
 
-        $('#preregisterNewVisit').on('click', function (e) {
+        $(document).on('click', '#preregisterNewVisit', function (e) {
             e.preventDefault();
-            if ($("#Visit_date_in").val() == '') {
-                $("#preregisterdateinError").show();
-            } else {
-                checkIfPreregisteredVisitConflictsWithAnotherVisit("new");
-            }
+            checkIfActiveVisitConflictsWithAnotherVisit();
         });
 
 

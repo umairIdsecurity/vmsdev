@@ -5,6 +5,7 @@ $cs = Yii::app()->clientScript;
 
 //$cs->registerCoreScript('jquery');
 $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/jquery.uploadfile.min.js');
+$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/jquery.maskedinput.min.js');
 $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/jquery.form.js');
 $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/jquery.imgareaselect.pack.js');
 
@@ -79,23 +80,37 @@ $userRole = $session['role'];
                 <article class="header_midbox">
                     <div id="logo" >
                         <?php
-                        $logo = (isset($company->logo) && $company->logo != '')
-                            ? Yii::app()->request->baseUrl . '/' . Photo::model()->returnLogoPhotoRelative($company->logo)
-                            : Yii::app()->controller->assetsBase . '/images/companylogohere1.png';
+                        if ($company) {
+                            if ($company->logo) {
+                                $path = Photo::model()->returnLogoPhotoRelative($company->logo);
+                                if ($path) {
+                                    if (file_exists($path)) {
+                                        $logo = Yii::app()->request->baseUrl . '/' . $path;
+                                    } else {
+                                        $logo = Yii::app()->controller->assetsBase . '/images/companylogohere1.png';
+                                    }
+                                } else {
+                                    $logo = Yii::app()->controller->assetsBase . '/images/companylogohere1.png';
+                                }
+                            }
+                        } else {
+                            $logo = Yii::app()->controller->assetsBase . '/images/companylogohere1.png';
+                        }
+
 
                         echo CHtml::link(CHtml::image($logo, '', array('style' => 'height: 65px;')), $this->createUrl('dashboard/adminDashboard'));
-                        /*if (isset($company->logo) && $company->logo != '') {
-                            echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl . '/' . Photo::model()->returnLogoPhotoRelative($company->logo), '',
-                                array('style' => 'height: 65px;')));
-                        } else {
-                            echo CHtml::link(CHtml::image(Yii::app()->controller->assetsBase . '/images/companylogohere1.png', '',
-                                array('style' => 'width: 130px;')));
-                        }*/
+                        /* if (isset($company->logo) && $company->logo != '') {
+                          echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl . '/' . Photo::model()->returnLogoPhotoRelative($company->logo), '',
+                          array('style' => 'height: 65px;')));
+                          } else {
+                          echo CHtml::link(CHtml::image(Yii::app()->controller->assetsBase . '/images/companylogohere1.png', '',
+                          array('style' => 'width: 130px;')));
+                          } */
                         ?>
                     </div>
                     <aside class="top_nav">
                         <ul id="icons">
-                            
+
 
                             <li class="profile">
                                 <a title="profile" href="<?php echo Yii::app()->createUrl("/user/profile&id=" . $session['id']); ?>">
@@ -138,7 +153,7 @@ $userRole = $session['role'];
                                     ?>
                                     <a href="<?php echo Yii::app()->createUrl("/dashboard/viewmyvisitors"); ?>">Dashboard</a>
                                     <?php
-                                } elseif ($session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_AGENT_ADMIN || $session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR) {
+                                } elseif (in_array($session['role'], array(Roles::ROLE_ADMIN, Roles::ROLE_AGENT_ADMIN, Roles::ROLE_OPERATOR, Roles::ROLE_AGENT_OPERATOR, Roles::ROLE_ISSUING_BODY_ADMIN))) {
                                     ?>
                                     <a href="<?php echo Yii::app()->createUrl("/dashboard/admindashboard"); ?>">Dashboard</a>
                                     <?php
@@ -152,14 +167,16 @@ $userRole = $session['role'];
                             <li class="<?php echo ($this->action->id == "view" && $this->id == 'visit') ? "active" : "" ?>">
                                 <a href="<?php echo Yii::app()->createUrl("/visit/view"); ?>">Visit History</a>
                             </li>
-                            <?php if ($session['role'] == Roles::ROLE_ADMIN ||
-                                $session['role'] == Roles::ROLE_AGENT_ADMIN ||
-                                $session['role'] == Roles::ROLE_SUPERADMIN ||
-                                $session['role'] == Roles::ROLE_AGENT_AIRPORT_ADMIN) { ?>
-                                <li class="<?php echo ($session['lastPage'] != 'dashboard' && ($this->action->id == "admin" || ($this->id == 'visit' && $this->action->id != 'view') || $this->id == "user" || $this->id == "visitor" || $this->id == "company" || $this->id == "workstation" || $this->id == "visitReason" || $this->id == "companyLafPreferences")) ? "active" : "" ?>">
+
+                            <li class="<?php echo ($session['lastPage'] != 'dashboard' && ($this->action->id == "admin" || ($this->id == 'visit' && $this->action->id != 'view') || $this->id == "user" || $this->id == "visitor" || $this->id == "company" || $this->id == "workstation" || $this->id == "visitReason" || $this->id == "companyLafPreferences")) ? "active" : "" ?>">
+                                <?php if (in_array($session['role'], array(Roles::ROLE_ADMIN,Roles::ROLE_AGENT_ADMIN,Roles::ROLE_SUPERADMIN,Roles::ROLE_AGENT_AIRPORT_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN))) {
+                                ?>
                                     <a href="<?php echo Yii::app()->createUrl("/user/admin"); ?>">Administration</a>
-                                </li>
-                            <?php } ?>
+                                <?php }else{ ?>
+                                    <p style="width:230px;"></p>
+                                <?php } ?>
+                            </li>
+
 
 
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ETcPdf class file.
  *
@@ -30,13 +31,12 @@
  * @see http://partners.adobe.com/public/developer/support/topic_legal_notices.html
  *
  */
-
 /**
  * Include the the TCPDF class. IMPORTANT: Don't forget to customize its configuration
  * if needed.
  */
 //echo dirname(__FILE__).'/tcpdf/tcpdf.php';die;
-require_once(dirname(__FILE__).'/tcpdf/tcpdf.php');
+require_once(dirname(__FILE__) . '/tcpdf/tcpdf.php');
 
 /**
  * ETcPdf is a simple wrapper for the TCPDF library.
@@ -46,86 +46,122 @@ require_once(dirname(__FILE__).'/tcpdf/tcpdf.php');
  * @package application.extensions.tcpdf
  * @since 1.1
  */
-class ETcPdf
-{
-   /**
-    * The internal TCPDF object.
-    *
-    * @var object TCPDF
-    */
-   private $myTCPDF = null;
+class ETcPdf {
 
-  	/**
-	 * @param $orientacion: 0:Portlain, 1:Landscape
-	 * @param $unit: /cm/mm/
-	 * @param $format: /A3/A4/A5/Letter/Legal/array(w,h)
-	 */
-   public function __construct($orientation, $unit, $format, $unicode, $encoding)
-   {
-      if ($orientation != 'P' && $orientation != 'L')
-         throw new CException(Yii::t('ETcPdf', 'The orientation must be "P" or "L"'));
+    /**
+     * The internal TCPDF object.
+     *
+     * @var object TCPDF
+     */
+    private $myTCPDF = null;
 
-      if (!in_array($unit, array('pt', 'mm', 'cm', 'in')))
-         throw new CException(Yii::t('ETcPdf', 'The unit must be "pt", "in", "cm" or "mm"'));
+    /**
+     * @param $orientacion: 0:Portlain, 1:Landscape
+     * @param $unit: /cm/mm/
+     * @param $format: /A3/A4/A5/Letter/Legal/array(w,h)
+     */
+    public function __construct($orientation, $unit, $format, $unicode, $encoding) {
+        if ($orientation != 'P' && $orientation != 'L')
+            throw new CException(Yii::t('ETcPdf', 'The orientation must be "P" or "L"'));
 
-      if (!is_string($format) && !is_array($format))
-         throw new CException(Yii::t('ETcPdf', 'The format must be string or array.'));
-      if (is_string($format)) {
-         if (!in_array($format, array('A3', 'A4', 'A5','CARD_PRINTER', 'Letter', 'Legal')))
-            throw new CException(Yii::t('ETcPdf', 'The format must be one of A3, A4, A5, Letter or Legal'));
-      }
-      else {
-         if (!is_numeric($format[0]) && !is_numeric($format[1]))
-            throw new CException(Yii::t('ETcPdf', 'The format must be array(w, h)'));
-      }
+        if (!in_array($unit, array('pt', 'mm', 'cm', 'in')))
+            throw new CException(Yii::t('ETcPdf', 'The unit must be "pt", "in", "cm" or "mm"'));
 
-      if (!is_bool($unicode))
-         throw new CException(Yii::t('ETcPdf', '"unicode" must be a boolean value'));
+        if (!is_string($format) && !is_array($format))
+            throw new CException(Yii::t('ETcPdf', 'The format must be string or array.'));
+        if (is_string($format)) {
+            if (!in_array($format, array('A3', 'A4', 'A5', 'CARD_PRINTER', 'Letter', 'Legal')))
+                throw new CException(Yii::t('ETcPdf', 'The format must be one of A3, A4, A5, Letter or Legal'));
+        }
+        else {
+            if (!is_numeric($format[0]) && !is_numeric($format[1]))
+                throw new CException(Yii::t('ETcPdf', 'The format must be array(w, h)'));
+        }
 
-		$this->myTCPDF = new TCPDF($orientation, $unit, $format, $unicode, $encoding);
-		if (!defined("K_PATH_CACHE")) 
-		{
-    		define ("K_PATH_CACHE", Yii::app()->getRuntimePath());	
-		}
-   		
-   }
+        if (!is_bool($unicode))
+            throw new CException(Yii::t('ETcPdf', '"unicode" must be a boolean value'));
 
-   /**
-    * PHP defined magic method
-    *
-    */
-	public function __call($method, $params)
-	{
-		if (is_object($this->myTCPDF) && get_class($this->myTCPDF)==='TCPDF') return call_user_func_array(array($this->myTCPDF, $method), $params);
-		else throw new CException(Yii::t('ETcPdf', 'Can not call a method of a non existent object'));
-	}
+        $this->myTCPDF = new TCPDF($orientation, $unit, $format, $unicode, $encoding);
+        if (!defined("K_PATH_CACHE")) {
+            define("K_PATH_CACHE", Yii::app()->getRuntimePath());
+        }
+    }
 
-	public function __set($name, $value)
-	{
-	   if (is_object($this->myTCPDF) && get_class($this->myTCPDF)==='TCPDF') $this->myTCPDF->$name = $value;
-	   else throw new CException(Yii::t('ETcPdf', 'Can not set a property of a non existent object'));
-	}
+    /**
+     * PHP defined magic method
+     *
+     */
+    public function __call($method, $params) {
+        if (is_object($this->myTCPDF) && get_class($this->myTCPDF) === 'TCPDF')
+            return call_user_func_array(array($this->myTCPDF, $method), $params);
+        else
+            throw new CException(Yii::t('ETcPdf', 'Can not call a method of a non existent object'));
+    }
 
-	public function __get($name)
-	{
-	   if (is_object($this->myTCPDF) && get_class($this->myTCPDF)==='TCPDF') return $this->myTCPDF->$name;
-	   else throw new CException(Yii::t('ETcPdf', 'Can not access a property of a non existent object'));
-	}
+    public function __set($name, $value) {
+        if (is_object($this->myTCPDF) && get_class($this->myTCPDF) === 'TCPDF')
+            $this->myTCPDF->$name = $value;
+        else
+            throw new CException(Yii::t('ETcPdf', 'Can not set a property of a non existent object'));
+    }
 
-	/**
-	 * Cleanup work before serializing.
-	 * This is a PHP defined magic method.
-	 * @return array the names of instance-variables to serialize.
-	 */
-	public function __sleep()
-	{
-	}
+    public function __get($name) {
+        if (is_object($this->myTCPDF) && get_class($this->myTCPDF) === 'TCPDF')
+            return $this->myTCPDF->$name;
+        else
+            throw new CException(Yii::t('ETcPdf', 'Can not access a property of a non existent object'));
+    }
 
-	/**
-	 * This method will be automatically called when unserialization happens.
-	 * This is a PHP defined magic method.
-	 */
-	public function __wakeup()
-	{
-	}
+    /**
+     * Cleanup work before serializing.
+     * This is a PHP defined magic method.
+     * @return array the names of instance-variables to serialize.
+     */
+    public function __sleep() {
+        
+    }
+
+    /**
+     * This method will be automatically called when unserialization happens.
+     * This is a PHP defined magic method.
+     */
+    public function __wakeup() {
+        
+    }
+
+    public function MultiRow($left, $right) {
+        // MultiCell($w, $h, $txt, $border=0, $align='J', $fill=0, $ln=1, $x='', $y='', $reseth=true, $stretch=0)
+
+        $page_start = $this->getPage();
+        $y_start = $this->GetY();
+
+        // write the left cell
+        $this->MultiCell(40, 0, $left, 1, 'R', 1, 2, '', '', true, 0);
+
+        $page_end_1 = $this->getPage();
+        $y_end_1 = $this->GetY();
+
+        $this->setPage($page_start);
+
+        // write the right cell
+        $this->MultiCell(0, 0, $right, 1, 'J', 0, 1, $this->GetX(), $y_start, true, 0);
+
+        $page_end_2 = $this->getPage();
+        $y_end_2 = $this->GetY();
+
+        // set the new row position by case
+        if (max($page_end_1, $page_end_2) == $page_start) {
+            $ynew = max($y_end_1, $y_end_2);
+        } elseif ($page_end_1 == $page_end_2) {
+            $ynew = max($y_end_1, $y_end_2);
+        } elseif ($page_end_1 > $page_end_2) {
+            $ynew = $y_end_1;
+        } else {
+            $ynew = $y_end_2;
+        }
+
+        $this->setPage(max($page_end_1, $page_end_2));
+        $this->SetXY($this->GetX(), $ynew);
+    }
+
 }

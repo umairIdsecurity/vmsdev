@@ -4,11 +4,21 @@
 /* @var $model Workstation */
 ?>
 <style>
-    .edit_card_back {
-        margin: 0 8px !important;
+    .corporate {
+        margin: 0 2px !important;
+        text-transform: capitalize;    
+    }
+    .vc {
+        margin: 0 2px !important;
         text-transform: capitalize;    
     }
 </style>
+<?php if(Yii::app()->user->hasFlash('error')):?>
+    <div class="alert alert-danger" style="margin-top: 10px;">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>Warning!</strong> <?php echo Yii::app()->user->getFlash('error'); ?>
+    </div>
+<?php endif; ?>
 <h1>Workstations</h1>
 
 <?php
@@ -116,7 +126,7 @@ Yii::app()->clientScript->registerScript('select_card_type_vic', "
         <div class="modal-content">	
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                <h4 class="modal-title" id="mdlttl">Modal title</h4>
             </div>
             <?php echo CHtml::beginForm((CController::createAbsoluteUrl("cardType/edit")), 'post'); ?>
             <div class="modal-body">
@@ -146,9 +156,10 @@ Yii::app()->clientScript->registerScript('select_card_type_vic', "
             var button_id = ($(this).attr('id'));
             var modal_name = $('#' + button_id).attr('name');
             var card_id = button_id.split('_');
-            modal_name = card_id[1]+". "+modal_name+" - Back of Card";
             getEditText(card_id[1]);
-            $("#myModalLabel").html(modal_name);
+            modal_name = modal_name+"-Back of Card";
+            console.log(modal_name);
+            $("#mdlttl").html(modal_name);
             $("#card_id").val(card_id[1]);
             $('#form_modal_edit').modal('show');
         });

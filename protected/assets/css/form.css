@@ -171,7 +171,7 @@ div.wide.form .buttons, div.wide.form .hint, div.wide.form .errorMessage
 
 .form-in .wrapper-center td{text-align: center}
 .form-in .login-area{background:none;border:none}
-.form-in .login-area .login-form input{font-size: 15px;padding: 4px 10px;font-weight:500;width:80px}
+.form-in .login-area .login-form input{font-size: 12px;font-weight:500;width:83px;height:25px;line-height:17px;}
 .form-in .login-area input{padding:10px 10px;font-size:15px;width:200px;height:25px}
 .form-in .login-area .form-group{position:relative}
 .form-in .login-area .form-group span.add-on{position:absolute;background-color: #f3f3f2;top: 4px;

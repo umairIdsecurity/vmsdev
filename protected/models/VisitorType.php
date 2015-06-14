@@ -122,7 +122,7 @@ class VisitorType extends CActiveRecord {
             $criteria->condition = "t.is_deleted = 0 && t.id !=1";
         }
         
-        if(Yii::app()->controller->action->id == 'visitorsByTypeReport'){
+        if(Yii::app()->controller->action->id == 'visitorsByTypeReport' || Yii::app()->controller->action->id == 'visitorsByWorkstationReport'){
             $criteria->condition = "";
             $criteria->condition = "t.is_deleted=0";
         }
@@ -153,8 +153,8 @@ class VisitorType extends CActiveRecord {
         return false;
     }
 
-    public function returnVisitorTypes($visitorTypeId = NULL) {
-        $visitorType = VisitorType::model()->findAll();
+    public function returnVisitorTypes($visitorTypeId = NULL,$condition= "1>0") {
+        $visitorType = VisitorType::model()->findAll($condition);
         $VISITOR_TYPE_LIST = array();
         foreach ($visitorType as $key => $value) {
             $VISITOR_TYPE_LIST[$value['id']] = 'Visitor Type: ' . $value['name'];

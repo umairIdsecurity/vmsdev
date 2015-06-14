@@ -113,9 +113,10 @@ class UserType extends CActiveRecord
 	public function getUserType($user_type){
 
 		$search_array = User::$USER_TYPE_LIST;
-		if(isset(User::$USER_TYPE_LIST[$user_type])){
+		if(array_key_exists($user_type,$search_array)){
 			return User::$USER_TYPE_LIST[$user_type];
 		}
+		return '';
    }
 
 	public function behaviors()

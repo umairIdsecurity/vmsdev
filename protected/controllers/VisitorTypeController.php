@@ -26,7 +26,7 @@ class VisitorTypeController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin', 'delete','adminAjax', 'visitorsByTypeReport', 'index'),
+                'actions' => array('create', 'update', 'admin', 'delete','adminAjax','visitorsByWorkstationReport','visitorsByTypeReport', 'index'),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
            
             ),
@@ -168,24 +168,54 @@ class VisitorTypeController extends Controller {
         $dateCondition='';
         
         if( !empty($dateFromFilter) && !empty($dateToFilter) ) {
-
             $from = new DateTime($dateFromFilter);
             $to = new DateTime($dateToFilter);
-            
-            $dateCondition = ' AND ((visits.date_check_in BETWEEN "'.$from->format('d-m-Y').'"'
-                                . ' AND "'.$to->format('d-m-Y').'") OR (visits.date_check_in BETWEEN "'.$from->format('Y-m-d').'"'
-                                . ' AND "'.$to->format('Y-m-d').'"))';
+            $dateCondition = "( DATE(visitors.date_created) BETWEEN  '".$from->format("Y-m-d")."' AND  '".$to->format("Y-m-d")."' ) AND ";
         }
         
+        $dateCondition .= '(t.is_deleted = 0) AND (visitors.is_deleted = 0)';
+        
         $visitsCount = Yii::app()->db->createCommand()
-                    ->select('t.id, t.name,count(visits.id) as visits')
-                    ->from('visitor_type t')
-                    ->leftJoin('visit visits' , '(t.id = visits.visitor_type) AND (visits.is_deleted = 0)' . $dateCondition)
-                    ->where('t.is_deleted = 0')
-                    ->group('t.id')
-                    ->queryAll(); // this will be returned as an array of arrays
-
+                ->select("t.id, t.name,count(visitors.id) as visitors") 
+                ->from('visitor_type t')
+                ->join("visitor visitors",'t.id = visitors.visitor_type')
+                ->where($dateCondition)
+                ->group('t.id')
+                ->queryAll();
+        
         $this->render("visitortypecount", array("visit_count"=>$visitsCount));
     } 
+    
+    /* 
+    * Report: Corporate Reporting: Total Visitors by Workstations
+    * Total Visitors by Workstations
+    * 
+    * @return view
+    */
+    public function actionVisitorsByWorkstationReport() {
+        // Post Date
+        $dateFromFilter = Yii::app()->request->getParam("date_from_filter");
+        $dateToFilter = Yii::app()->request->getParam("date_to_filter");
+        
+        $dateCondition='';
+        
+        if( !empty($dateFromFilter) && !empty($dateToFilter) ) {
+            $from = new DateTime($dateFromFilter);
+            $to = new DateTime($dateToFilter);
+            $dateCondition = "( DATE(visitors.date_created) BETWEEN  '".$from->format("Y-m-d")."' AND  '".$to->format("Y-m-d")."' ) AND ";
+        }
+        
+        $dateCondition .= '(t.is_deleted = 0) AND (visitors.is_deleted = 0)';
+        
+        $visitors = Yii::app()->db->createCommand()
+                ->select("count(visitors.id) as visitors,DATE(visitors.date_created) AS date_check_in,t.id,t.name") 
+                ->from('workstation t')
+                ->join("visitor visitors",'t.id = visitors.visitor_workstation')
+                ->where($dateCondition)
+                ->group('t.id')
+                ->queryAll();
+        
+        $this->render("visitorbyworkstationcount", array("visitor_count"=>$visitors));
+    }
 
 }

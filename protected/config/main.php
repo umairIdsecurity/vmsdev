@@ -29,7 +29,8 @@ $result =  CMap::mergeArray(
             'application.extensions.bootstrap.widgets.*',
             'application.service.impl.*',
             'application.service.*',
-            'application.helpers.*'
+            'application.helpers.*',
+            'application.extensions.*'
         ),
         'modules' => array(
             // uncomment the following to enable the Gii tool
@@ -101,6 +102,9 @@ $result =  CMap::mergeArray(
                 // use 'site/error' action to display errors
                 'errorAction' => 'site/error',
             ),
+            'excel'=>array(
+                'class'=>'application.extensions.PHPExcel',
+            ),
             'log' => array(
                 'class' => 'CLogRouter',
                 'routes' => array(
@@ -117,11 +121,12 @@ $result =  CMap::mergeArray(
                         'categories' => 'system.*'
                     ),
                 // uncomment the following to show log messages on web pages
-                  /*array(
+                 /*array(
                   'class'=>'CWebLogRoute',
                   ),*/
                 ),
             ),
+
         ),
         // application-level parameters that can be accessed
         // using Yii::app()->params['paramName']

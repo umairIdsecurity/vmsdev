@@ -1,12 +1,3 @@
-<?php
-$pageId = isset($_REQUEST["p"])?$_REQUEST["p"]:1;
-$getFile = dirname( __FILE__ ) . "/page/page{$pageId}.html";
-
-if(!is_file($getFile)){
-    $pageId=1;
-    $getFile = "page/page1.html";
-}
-?>
 <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -20,9 +11,10 @@ if(!is_file($getFile)){
         <meta name="keywords" content="keywords"/>
         <title>Preregistration</title>
         <link href="<?php echo Yii::app()->theme->baseUrl; ?>/css/style.css" rel="stylesheet">
+        <link href="<?php echo Yii::app()->theme->baseUrl; ?>/css/main.css" rel="stylesheet">
         <script src="<?php echo Yii::app()->theme->baseUrl; ?>/js/modernizr.js"></script>
     </head>
-    <body class="<?=$pageId==1?"first-page":""?> <?=$pageId>3?"logout-page":"login-page"?>">
+    <body class="first-page logout-page login-page">
         <div id="header" class="relative">
             <div class="container">
                 <div class="logo">
@@ -46,12 +38,13 @@ if(!is_file($getFile)){
                 </div>
             </div>
         </div>
+
         <div id="footer">
             <div class="container">
-                <a href="?p=<?=$pageId-1?>" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>
-                <a href="?p=<?=$pageId+1?>" class="btn btn-primary btn-next">NEXT <span class="glyphicon glyphicon-chevron-right"></span></a>
+
             </div>
         </div>
+
         <!-- for developer -->
         <script src="<?php echo Yii::app()->theme->baseUrl; ?>/js/libs.js"></script>
         <script src="<?php echo Yii::app()->theme->baseUrl; ?>/js/plugins.download.js"></script>

@@ -13,7 +13,11 @@ if ($this->action->id == 'update') {
     $dataId = $_GET['id'];
 }
 
-$countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
+$countryList = CHtml::listData(Country::model()->findAll(array(
+        "order" => "name asc",
+        "group" => "name"
+    )
+), 'id', 'name');
 
 // set default country is Australia = 13
 $model->identification_country_issued = 13;
@@ -36,7 +40,7 @@ $model->identification_country_issued = 13;
     <div style="float:left;width:270px;text-align:center">
     <div class="visitor-title" style="cursor:pointer;color:#2f96b4">Add Visitor Profile</div>
     </div>
-    <input type="text" id="search-visitor" name="search-visitor" placeholder="Enter name, email"
+    <input type="text" id="search-visitor" name="search-visitor" placeholder="Enter name, email, drivers license "
            class="search-text" style="margin-left:30px;"/>
     <button class="visitor-findBtn" onclick="findVisitorRecord()" id="visitor-findBtn" style="display:none;"
             data-target="#findVisitorRecordModal" data-toggle="modal">Find Record
@@ -52,7 +56,7 @@ $model->identification_country_issued = 13;
     <div class="tab-content">
 
         <div role="tabpanel" class="tab-pane active" id="addvisitor">
-            <div id="findAddVisitorRecordDiv" class="findAddVisitorRecordDiv form">
+            <div id="findAddVisitorRecordDiv" class="findAddVisitorRecordDiv">
 
                 <div data-ng-app="PwordForm">
                     <?php
@@ -85,8 +89,10 @@ $model->identification_country_issued = 13;
                                     }else if ($("#workstation").val() == ""){
                                         $(".errorMessageWorkstation").show();
                                         $(".visitorReason").hide();
-                                    }
-                                    else if ($("#Visit_reason").val() == "" || ($("#Visit_reason").val() == "Other" &&  $("#VisitReason_reason").val() == "")) {
+                                    } else if ($("#Visitor_visitor_type").val() == "") {
+                                        $(".visitorType").show();
+                                        $(".errorMessageWorkstation").hide();
+                                    } else if ($("#Visit_reason").val() == "" || ($("#Visit_reason").val() == "Other" &&  $("#VisitReason_reason").val() == "")) {
                                         $(".visitorReason").show();
                                         $(".errorMessageWorkstation").hide();
                                     } else if ($("#Visit_reason").val() == "Other" &&  $("#VisitReason_reason").val() != "") {
@@ -104,6 +110,7 @@ $model->identification_country_issued = 13;
                                         $(".errorMessageWorkstation").hide();
                                         $(".visitorReason").hide();
                                         $("#photoErrorMessage").hide();
+                                        $(".visitorType").hide();
                                         checkEmailIfUnique();
                                     }
                                 }
@@ -111,7 +118,7 @@ $model->identification_country_issued = 13;
                         ),
                     ));
                     ?>
-                    <?php echo $form->errorSummary($model); ?>
+                    <?php /*echo $form->errorSummary($model); */?>
                     <input type="hidden" id="emailIsUnique" value="0"/>
                     <input type="hidden" name="VisitCardType" id="VisitCardType" />
 
@@ -171,7 +178,6 @@ $model->identification_country_issued = 13;
                             <tr class="vic-visitor-fields">
                                 <td>
                                     <?php echo $form->textField($model, 'middle_name', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Middle Name')); ?>
-                                    <span class="required">*</span>
                                     <?php echo "<br>" . $form->error($model, 'middle_name'); ?>
                                 </td>
                             </tr>
@@ -313,8 +319,8 @@ $model->identification_country_issued = 13;
                                             'placeHolder' => 'Please select a company'
                                         ));
                                         ?>
-                                        <?php echo $form->error($model, 'company'); ?>
                                         <span class="required">*</span>
+                                        <?php echo $form->error($model, 'company'); ?>
                                     </div>
                                 </td>
                             </tr>
@@ -439,7 +445,8 @@ $model->identification_country_issued = 13;
                                         ));
                                     ?>
                                     <span class="required">*</span>
-                                    <?php echo "<br>" . $form->error($model, 'visitor_type'); ?>
+
+                                    <div class="errorMessage visitorType">Select Visitor Type</div>
                                 </td>
                             </tr>
 
@@ -809,10 +816,8 @@ $model->identification_country_issued = 13;
             $("#register-reason-form").hide();
 
             var searchText = $("#search-visitor").val();
-           /* if ($("#search_visitor_tenant").val() == '') {
-                $("#searchTextErrorMessage").show();
-                $("#searchTextErrorMessage").html("Please select a tenant");
-            } else */if (searchText != '') {
+
+            if (searchText != '') {
 				
                 
                 $("#visitor-findBtn").click();

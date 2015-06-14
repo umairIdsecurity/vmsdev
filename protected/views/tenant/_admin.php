@@ -47,15 +47,13 @@ $this->widget('zii.widgets.grid.CGridView', array(
                 'update' => array(//the name {reply} must be same
                     'label' => 'Edit', // text label of the button
                     'imageUrl' => false, // image URL of the button. If not set or false, a text link is used, The image must be 16X16 pixels
-                    'url'=>'"#"',
-
                 ),
 
                 'delete' => array
                 (
                     'label'=>'Delete',
                     'imageUrl' => false,
-                    'visible' => 'false',
+                    'visible' => '(($data->id)!= 1)',
 
                 ),
 

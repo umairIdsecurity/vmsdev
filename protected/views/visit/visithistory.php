@@ -25,7 +25,7 @@ $session = new CHttpSession;
         $visitor = $model->visitor;
         $model = new Visit;
         $criteria = new CDbCriteria;
-        $criteria->order = 'date_check_out,time_check_out DESC';
+        $criteria->order = 'id DESC';
         $criteria->addCondition('visit_status="' . VisitStatus::CLOSED . '" and visitor="' . $visitor . '"');
 
 

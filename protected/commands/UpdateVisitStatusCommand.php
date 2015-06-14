@@ -3,9 +3,32 @@
 class UpdateVisitStatusCommand extends CConsoleCommand {
 
     public function run($args) {
-        $this->closeVisit();
-        $this->ExpiredVisit();
-     
+        //$this->closeVisit();
+        //$this->ExpiredVisit();
+        $this->closeOneDayVisits();
+        $this->closeMultiDayVisits();
+    }
+
+    public function closeOneDayVisits() {
+        /**
+         * 24 Hour card type is issued for 24h
+         * update visit status to close and card status to return if
+         * between current time and checkout time is greater than 24 hour and if visit status is
+         * still active and card status is still active
+         */
+        $visit = new Visit;
+        $visit->updateOneDayVisitsToClose();
+        $visit->updateSameDayVisitsToExpired();
+    }
+
+    public function closeMultiDayVisits() {
+        /* EVIC card type is issued Strictly for 28 days
+         * update visit status to close and card status to return if
+         * current date is greater than date check out and if visit status is still active
+         * and card status is still active
+         */
+        $visit = new Visit;
+        $visit->updateMultiDayVisitsToClose();
     }
 
     public function closeVisit() {

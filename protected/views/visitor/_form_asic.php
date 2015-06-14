@@ -423,24 +423,21 @@ if ($this->action->id == 'update') {
                                     <?php $this->renderPartial('/common_partials/password', array('model' => $model, 'form' => $form, 'session' => $session)); ?>
                                 </td>
                             </tr>
-
                         </table>
+                        <div style="float:right; margin-right: 35px"><input type="submit" value="Save" name="yt0" id="submitFormVisitor" class="complete" style="margin-top: 15px;"/></div>
                     <?php } ?>
 
                 </td>
             </tr>
         </table>
-        <input type="hidden" name="Visitor[visitor_status]" value="<?php echo VisitorStatus::VISITOR_STATUS_SAVE; ?>"
-               style='display:none;' />
+        <input type="hidden" name="Visitor[visitor_status]" value="<?php echo VisitorStatus::VISITOR_STATUS_SAVE; ?>"/>
     </div>
     <?php $this->endWidget(); ?>
 </div>
 
 <input type="hidden" id="currentAction" value="<?php echo $this->action->id; ?>">
 <input type="hidden" id="currentRoleOfLogge:wdInUser" value="<?php echo $session['role']; ?>">
-<input type="hidden" id="currentlyEditedVisitorId" value="<?php if (isset($_GET['id'])) {
-    echo $_GET['id'];
-} ?>">
+<input type="hidden" id="currentlyEditedVisitorId" value="<?php if (isset($_GET['id'])) {echo $_GET['id'];} ?>">
 
 <script>
 

@@ -189,55 +189,71 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                 return false;
             }
 
-            //flag = isCheckboxsChecked(vic_active_visit_checkboxs);
+            
+            var is_vic_holder_checked = $('#VivHolderDecalarations').is(':checked'),
+                is_asic_holder_checked = $('#AsicSponsorDecalarations').is(':checked');
 
-            //if (flag == true) {
-                var is_vic_holder_checked = $('#VivHolderDecalarations').is(':checked'),
-                    is_asic_holder_checked = $('#AsicSponsorDecalarations').is(':checked');
+            var declarations_checkboxs = $('.vic-active-declarations');
+            var confirmed = isCheckboxsChecked(declarations_checkboxs);
 
-                var declarations_checkboxs = $('.vic-active-declarations');
-                var confirmed = isCheckboxsChecked(declarations_checkboxs);
-
-                if (!confirmed && $('#registerNewVisit').html() !== 'Preregister Visit') {
-                    if (!$('#VivHolderDecalarations').is(':checked') && $('#AsicSponsorDecalarations').is(':checked')) {
-                        $('#vicHolderModal').modal('show');
-                        $btnVic.on('click', function(e) {
-                            var vicChecked = vicCheck();
-                            if (vicChecked) {
-                                activeVisit();
-                            }
-                        });
-                    } else if (!$('#AsicSponsorDecalarations').is(':checked') && $('#VivHolderDecalarations').is(':checked')){
-                        $('#asicSponsorModal').modal('show');
-                        $btnASIC.on('click', function(e) {
-                            var asicChecked = asicCheck();
-                            if (asicChecked) {
-                                activeVisit();
-                            }
-                        });
-                    } else {
-                        $('#vicHolderModal').modal('show');
-                        $btnVic.on('click', function(e) {
-                            var vicChecked = vicCheck();
-                            if (vicChecked) {
-                                $('#asicSponsorModal').modal('show');
-                                $btnASIC.on('click', function(e) {
-                                    var asicChecked = asicCheck();
-                                    if (asicChecked) {
-                                        activeVisit();
-                                    }
-                                });
-                            }
-                        });
-                    }
+            if (!confirmed && $('#registerNewVisit').html() !== 'Preregister Visit') {
+                if (!$('#VivHolderDecalarations').is(':checked') && $('#AsicSponsorDecalarations').is(':checked')) {
+                    $('#vicHolderModal').modal('show');
+                    $btnVic.on('click', function(e) {
+                        var vicChecked = vicCheck();
+                        if (vicChecked) {
+                            activeVisit();
+                        } else {
+                            alert('Please select all the declarations.');
+                            return false;
+                        }
+                    });
+                } else if (!$('#AsicSponsorDecalarations').is(':checked') && $('#VivHolderDecalarations').is(':checked')){
+                    $('#asicSponsorModal').modal('show');
+                    $btnASIC.on('click', function(e) {
+                        var asicChecked = asicCheck();
+                        if (asicChecked) {
+                            confirmed = true;
+                        } else {
+                            alert('Please select all the declarations.');
+                            return false;
+                        }
+                    });
                 } else {
-                    activeVisit();
+                    $('#vicHolderModal').modal('show');
+                    $btnVic.on('click', function(e) {
+                        var vicChecked = vicCheck();
+                        if (vicChecked) {
+                            $('#asicSponsorModal').modal('show');
+                            $btnASIC.on('click', function(e) {
+                                var asicChecked = asicCheck();
+                                if (asicChecked) {
+                                    confirmed = true;
+                                } else {
+                                    alert('Please select all the declarations.');
+                                    return false;
+                                }
+                            });
+                        } else {
+                            alert('Please select all the declarations.');
+                            return false;
+                        }
+                    });
                 }
+            } else {
+                confirmed = true;
+            }
 
-            /*} else {
-                alert('Please agree VIC verification before active visit.');
-                addWarningLabel(vic_active_visit_checkboxs);
-            }*/
+            flag = isCheckboxsChecked(vic_active_visit_checkboxs);
+
+            if (confirmed == true) {
+                if (flag == true) {
+                    activeVisit();
+                } else {
+                    alert('Please agree VIC verification before active visit.');
+                    addWarningLabel(vic_active_visit_checkboxs);
+                }
+            }
             
         });
 

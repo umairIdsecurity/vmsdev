@@ -445,8 +445,7 @@ $model->identification_country_issued = 13;
                                         ));
                                     ?>
                                     <span class="required">*</span>
-
-                                    <div style="display:none" class="errorMessage visitorType">Select Visitor Type</div>
+                                    <?php echo $form->error($model, 'visitor_type'); ?>
                                 </td>
                             </tr>
 

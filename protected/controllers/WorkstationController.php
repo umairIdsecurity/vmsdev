@@ -163,10 +163,9 @@ class WorkstationController extends Controller {
                 Yii::app()->user->setFlash('error', 'Please assign user in Set Access Rules before deleting workstation.');
                 return $this->redirect(Yii::app()->createUrl('workstation/admin'));
             }
-            $wct = WorkstationCardType::model()->findByAttributes(array('workstation' => $id));
-            if($wct){
-                $wct->delete();
-            }
+            $sql = "DELETE FROM `workstation_card_type` WHERE `workstation`=$id";
+            $connection=Yii::app()->db;
+            $connection->createCommand($sql)->execute();
                 
 
             $workstation = Workstation::model()->findByPk($id);

@@ -55,6 +55,7 @@ if (empty($workstationList)) {
 
 // move selected items to first
 if (isset($session['workstation'])) {
+    
     $workstation = Workstation::model()->findByPk($session['workstation']);
 
     if ($workstation) {
@@ -71,7 +72,6 @@ if (isset($session['workstation'])) {
 
 
 foreach ($workstationList as $workstation) {
-
     $x++;
     if($session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR){
         $workstationName = Workstation::model()->findByPk($workstation->workstation)->name;

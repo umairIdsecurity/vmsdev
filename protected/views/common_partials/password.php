@@ -53,18 +53,19 @@ if (isset($company) && !empty($company)) {
                                     <table id="passwordInputsTable" style="margin-top:10px">
                                         <tr>
                                             <td>
-                                                <input placeholder="Password" type="password" class="original-password"
-                                                       id="Visitor_password" name="Visitor[password]">
+                                                <input placeholder="Password" type="password" class="original-password" id="Visitor_password_input">
                                                 <span class="required">*</span>
                                                 <?php echo "<br>" . $form->error($model, 'password'); ?>
+                                                <div class="errorMessage visitor_password" style="display:none"></div>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
                                                 <input placeholder="Repeat Password" type="password"
-                                                       id="Visitor_repeatpassword" name="Visitor[repeatpassword]"/>
+                                                       id="Visitor_repeatpassword_input" />
                                                 <span class="required">*</span>
                                                 <?php echo "<br>" . $form->error($model, 'repeatpassword'); ?>
+                                                <div class="errorMessage visitor_password_repeat" style="display:none"></div>
                                             </td>
                                         </tr>
                                         <tr>
@@ -88,11 +89,6 @@ if (isset($company) && !empty($company)) {
     </tr>
 </table>
 </div> <!-- password-border -->
-
-<div class="register-a-visitor-buttons-div" style="  width: 300px;  float: right;">
-                                        <input type="submit" value="Save" name="yt0" id="submitFormVisitor"
-                                               class="complete" style="margin-top: 15px;"/>
-                                    </div>
 <script>
 
     $(document).ready(function () {
@@ -111,9 +107,7 @@ if (isset($company) && !empty($company)) {
 				$('.user_requires_password').css("display","none");
 			 }
 			   
-         });		
-
-
+         });
     });
 
     function cancel() {
@@ -127,9 +121,9 @@ if (isset($company) && !empty($company)) {
         if ($('#random_password').val() == '') {
             $('#error_msg').show();
         } else {
-
-            $('#Visitor_password').val($('#random_password').val());
-            $('#Visitor_repeatpassword').val($('#random_password').val());
+            var random_password = $('#random_password').val();
+            $('input[name="Visitor[password]"]').val(random_password);
+            $('input[name="Visitor[repeatpassword]"]').val(random_password);
             $("#close_generate").click();
         }
     }

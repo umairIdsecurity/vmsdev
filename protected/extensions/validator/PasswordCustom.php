@@ -30,7 +30,7 @@ class PasswordCustom extends CValidator
 
     public function clientValidateAttribute($object,$attribute)
     {
-        return "
+        /*return "
 if (value == '') {
     if($('.password_requirement:checked').val() == " . PasswordRequirement::PASSWORD_IS_REQUIRED . ") {
         if($('.password_option:checked').val() == " . PasswordOption::CREATE_PASSWORD . ") {
@@ -38,6 +38,6 @@ if (value == '') {
         }
     }
 }
-";
+";*/
     }
 }

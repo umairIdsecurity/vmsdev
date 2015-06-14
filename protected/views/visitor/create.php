@@ -40,7 +40,7 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
     <dt id="findHostA" <?php if (isset($_GET['action'])) {
         ?>
         class="borderTopLeftRadius"
-    <?php } ?>>Add or Find Host
+    <?php } ?>>Add or Find ASIC Sponsor
     </dt>
 
     <dd style="display:none;" <?php
@@ -49,7 +49,7 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
     }
     ?>" id="findHost">
     <a href="#step3" id="findHostB" <?php if (isset($_GET['action'])) { ?> class="borderTopRightRadius" <?php } ?>>Add
-        or Find Host</a>
+        or Find ASIC Sponsor</a>
     </dd>
     <?php if (!isset($_GET['action'])) { ?>
         <dt id="logVisitA" class="borderTopRightRadius">Log Visit</dt>
@@ -439,18 +439,18 @@ function populateFieldHost(id) {
             data: id,
             success: function (r) {
                 $.each(r.data, function (index, value) {
-                    $("#searchHostTableDiv h4").html("Selected Host Record : " + value.first_name + " " + value.last_name);
+                    $("#searchHostTableDiv h4").html("Selected ASIC Sponsor Record : " + value.first_name + " " + value.last_name);
 
                 });
 
 //                    $('#findHostTableIframe').contents().find('.findHostButtonColumn a').removeClass('delete');
 //                    $('#findHostTableIframe').contents().find('.findHostButtonColumn a').html('Select Host');
 //                    $('#findHostTableIframe').contents().find('#' + id).addClass('delete');
-//                    $('#findHostTableIframe').contents().find('#' + id).html('Host Selected');
+//                    $('#findHostTableIframe').contents().find('#' + id).html('ASIC Sponsor Selected');
                 $('.findHostButtonColumn a').removeClass('delete');
-                $('.findHostButtonColumn a').html('Select Host');
+                $('.findHostButtonColumn a').html('Select ASIC Sponsor');
                 $('#' + id).addClass('delete');
-                $('#' + id).html('Host Selected');
+                $('#' + id).html('ASIC Sponsor Selected');
             }
         });
     } else {
@@ -903,8 +903,8 @@ function checkReasonIfUnique() {
                             $("#findHostA").html("Add Patient Details");
                             $("#findHostB").html("Add Patient Details");
                         } else {
-                            $("#findHostA").html("Add or Find Host");
-                            $("#findHostB").html("Add or Find Host");
+                            $("#findHostA").html("Add or Find ASIC Sponsor");
+                            $("#findHostB").html("Add or Find ASIC Sponsor");
                         }
                         //tenant and tenant agent of visitor and host should be the same
                         var options = $("#search_visitor_tenant > option").clone();

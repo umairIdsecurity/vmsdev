@@ -667,14 +667,14 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
             data: id,
             success: function (r) {
                 $.each(r.data, function (index, value) {
-                    $("#searchHostTableDiv .findDivTitle").html("Selected Host Record : " + value.first_name + " " + value.last_name);
+                    $("#searchHostTableDiv .findDivTitle").html("Selected ASIC Sponsor Record : " + value.first_name + " " + value.last_name);
 
                 });
 
                 $('#findHostTableIframe').contents().find('.findHostButtonColumn a').removeClass('delete');
-                $('#findHostTableIframe').contents().find('.findHostButtonColumn a').html('Select Host');
+                $('#findHostTableIframe').contents().find('.findHostButtonColumn a').html('Select ASIC Sponsor');
                 $('#findHostTableIframe').contents().find('#' + id).addClass('delete');
-                $('#findHostTableIframe').contents().find('#' + id).html('Selected Host');
+                $('#findHostTableIframe').contents().find('#' + id).html('Selected ASIC Sponsor');
                 alert(id);
 
                 $("#selectedHostInSearchTable").val(id);

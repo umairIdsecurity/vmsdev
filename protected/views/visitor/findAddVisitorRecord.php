@@ -40,7 +40,7 @@ $model->identification_country_issued = 13;
     <div style="float:left;width:270px;text-align:center">
     <div class="visitor-title" style="cursor:pointer;color:#2f96b4">Add Visitor Profile</div>
     </div>
-    <input type="text" id="search-visitor" name="search-visitor" placeholder="Enter name, email, drivers license "
+    <input type="text" id="search-visitor" name="search-visitor" placeholder="Enter name, email, drivers licence "
            class="search-text" style="margin-left:30px;"/>
     <button class="visitor-findBtn" onclick="findVisitorRecord()" id="visitor-findBtn" style="display:none;"
             data-target="#findVisitorRecordModal" data-toggle="modal">Find Record
@@ -446,7 +446,7 @@ $model->identification_country_issued = 13;
                                     ?>
                                     <span class="required">*</span>
 
-                                    <div class="errorMessage visitorType">Select Visitor Type</div>
+                                    <div style="display:none" class="errorMessage visitorType">Select Visitor Type</div>
                                 </td>
                             </tr>
 

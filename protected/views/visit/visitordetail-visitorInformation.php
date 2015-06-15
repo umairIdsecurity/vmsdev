@@ -67,12 +67,13 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                 Date of Birth
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" class="visitor-detail-info-field" value="<?php echo $visitorModel->date_of_birth; ?>" disabled="disabled"
+                                <input type="text" class="visitor-detail-info-field" value="<?php echo date('d-m-Y', strtotime($visitorModel->date_of_birth)); ?>" disabled="disabled"
                                        name="Visitor[date_of_birth]" id="Visitor_date_of_birth">
                             </td>
                         </tr>
                         <?php endif; ?>
 
+                    </table>
                     </table>
                 </li>
             </ul>

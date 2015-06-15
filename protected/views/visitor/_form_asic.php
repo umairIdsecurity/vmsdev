@@ -382,7 +382,7 @@ if ($this->action->id == 'update') {
                                         'model'       => $model,
                                         'attribute'   => 'identification_document_expiry',
                                         'options'     => array(
-                                            'dateFormat' => 'yy-mm-dd',
+                                            'dateFormat' => 'dd-mm-yy',
                                         ),
                                         'htmlOptions' => array(
                                             'size'        => '0',
@@ -405,7 +405,7 @@ if ($this->action->id == 'update') {
                                         'model'       => $model,
                                         'attribute'   => 'asic_expiry',
                                         'options'     => array(
-                                            'dateFormat' => 'yy-mm-dd',
+                                            'dateFormat' => 'dd-mm-yy',
                                         ),
                                         'htmlOptions' => array(
                                             'size'        => '0',

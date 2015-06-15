@@ -74,7 +74,6 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                         <?php endif; ?>
 
                     </table>
-                    </table>
                 </li>
             </ul>
         </li>

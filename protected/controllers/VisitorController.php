@@ -340,6 +340,7 @@ class VisitorController extends Controller {
     }
 
     public function actionAddVisitor() {
+        
         $model = new Visitor;
         $visitorService = new VisitorServiceImpl();
         $session = new CHttpSession;
@@ -347,12 +348,50 @@ class VisitorController extends Controller {
         if (isset($_POST['Visitor'])) {
             $model->profile_type = $_POST['Visitor']['profile_type'];
             $model->attributes = $_POST['Visitor'];
+            
+            echo '<pre>';
+            print_r($model->attributes);
+            die;
 
             if (empty($model->visitor_workstation)) {
                 $model->visitor_workstation = $session['workstation'];
             }
 
             if ($result = $visitorService->save($model, NULL, $session['id'])) {
+                
+                if($model->password_requirement == 2){
+                    
+                    $loggedUserEmail = Yii::app()->user->email;
+                    
+                    $headers = "MIME-Version: 1.0" . "\r\n";
+                    $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+                    $headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
+
+                    $to=$model->email;
+
+                    $subject="Preregistration email notification";
+
+                    $body = "<html><body>Hi,<br><br>".
+                            "This is preregistration email.<br><br>".
+                            "Please click on the below URL:<br>".
+                            "http://vmsprdev.identitysecurity.info/index.php/preregistration<br>";
+
+                    if($model->password_option == 1){
+                        $body .= "Password: ".$setPassword."<br>";
+                    }
+
+                    $body .="<br>"."Thanks,"."<br>Admin</body></html>";
+
+                    $mailer = new DX_Mailer();
+
+                    $mailer->IsHTML(true);
+                    $mailer->From = $loggedUserEmail;
+                    $mailer->FromName = "auto-response email from system";
+                    $mailer->Subject = $subject;
+                    $mailer->Body = nl2br($body);
+                    $mailer->AddAddress($to);
+                    $mailer->Send();
+                }
             	Yii::app()->end();
             }
         }

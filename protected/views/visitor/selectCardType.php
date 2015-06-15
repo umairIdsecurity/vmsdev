@@ -77,7 +77,7 @@ if (!$cardTypeWorkstationModel) {
             var card_type_value = $("#selectCardDiv").find("input[name=selectCardType]:checked").val();
 
             if (!card_type_value) {
-                alert('Please choose Card Type before going to next step');
+                alert('Please Select Card Type');
                 e.stopImmediatePropagation();
                 return false;
             }

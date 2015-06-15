@@ -2,7 +2,6 @@
 
 class WorkstationController extends Controller {
 
-
     /**
      * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
      * using two-column layout. See 'protected/views/layouts/column2.php'.
@@ -27,7 +26,7 @@ class WorkstationController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin','adminAjax' ,'delete','create','update' , 'ajaxWorkstationCardtype' ),
+                'actions' => array('admin', 'adminAjax', 'delete', 'create', 'update', 'ajaxWorkstationCardtype'),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
            
             ),
@@ -48,24 +47,23 @@ class WorkstationController extends Controller {
      * @return void
      *
      * */
-    public function actionAjaxWorkstationCardtype(){
+    public function actionAjaxWorkstationCardtype() {
 
-        if(!empty($_POST['card_type_id']) && !empty($_POST['workstation_id'])){
+        if (!empty($_POST['card_type_id']) && !empty($_POST['workstation_id'])) {
 
             $workstationId = $_POST['workstation_id'];
             $cardType = $_POST['card_type_id'];
 
             $ws_card = WorkstationCardType::model()->findByPk(
-                array(
-                    'workstation' => $workstationId,
-                    'card_type' => $cardType
-                )
+                    array(
+                        'workstation' => $workstationId,
+                        'card_type' => $cardType
+                    )
             );
 
-            if(!empty($ws_card)){
+            if (!empty($ws_card)) {
                 $ws_card->delete();
-            }
-            else{
+            } else {
                 $session = new CHttpSession;
                 $ws_card = new WorkstationCardType();
                 $ws_card->workstation = $workstationId;
@@ -73,10 +71,8 @@ class WorkstationController extends Controller {
                 $ws_card->user = $session['id'];
                 $ws_card->save();
             }
-
         }
     }
-
 
     /**
      * Creates a new model.
@@ -96,7 +92,7 @@ class WorkstationController extends Controller {
 
         $this->render('create', array(
             'model' => $model,
-        ),false,true);
+                ), false, true);
     }
 
     /**
@@ -108,12 +104,12 @@ class WorkstationController extends Controller {
         $model = $this->loadModel($id);
 
         $slectedCardType = WorkstationCardType::model()->findAllByAttributes(
-            array('workstation'=>$id)
+                array('workstation' => $id)
         );
 
         $cards = array();
-        if(!empty($slectedCardType)){
-            foreach($slectedCardType as $cardTypes){
+        if (!empty($slectedCardType)) {
+            foreach ($slectedCardType as $cardTypes) {
                 $cards[] = $cardTypes->card_type;
             }
         }
@@ -124,13 +120,13 @@ class WorkstationController extends Controller {
 
         if (isset($_POST['Workstation'])) {
             $model->attributes = $_POST['Workstation'];
-            if ($model->save()){
+            if ($model->save()) {
 
                 WorkstationCardType::model()->deleteAll(
-                    "workstation='" . $model->id . "'"
+                        "workstation='" . $model->id . "'"
                 );
-                if(!empty($model->card_type)){
-                    foreach($model->card_type as $card){
+                if (!empty($model->card_type)) {
+                    foreach ($model->card_type as $card) {
                         $session = new CHttpSession;
                         $workstation = new WorkstationCardType();
                         $workstation->workstation = $model->id;
@@ -139,7 +135,7 @@ class WorkstationController extends Controller {
                         $workstation->save();
                     }
                 }
-                
+
                 $this->redirect(array('admin'));
             }
         }
@@ -156,9 +152,13 @@ class WorkstationController extends Controller {
      */
     public function actionDelete($id) {
 
-        if(Yii::app()->request->isPostRequest)
-        {
-            $visits = Visit::model()->findAll('workstation = :workstation AND visit_status IN (1, 2) AND is_deleted = 0', [':workstation' => $id]);
+        if (Yii::app()->request->isPostRequest) {
+            $criteria = new CDbCriteria();
+            $criteria->addCondition("workstation=" . $id);
+            $criteria->addInCondition("visit_status", array(1, 2));
+            $criteria->addCondition("str_to_date(t.date_check_in,'%d-%m-%Y') > DATE_ADD(now(),interval 0 day)");
+            $visits = Visit::model()->findAll($criteria);
+           
             if (!empty($visits) && count($visits) > 0) {
                 Yii::app()->user->setFlash('error', 'Please assign user in Set Access Rules before deleting workstation.');
                 return $this->redirect(Yii::app()->createUrl('workstation/admin'));
@@ -166,21 +166,19 @@ class WorkstationController extends Controller {
             $sql = "DELETE FROM `workstation_card_type` WHERE `workstation`=$id";
             $connection=Yii::app()->db;
             $connection->createCommand($sql)->execute();
+                
 
-            $sql = "UPDATE `workstation` SET `is_deleted`=1 WHERE `id`=$id";
-            $connection=Yii::app()->db;
-            $connection->createCommand($sql)->execute();
+            $workstation = Workstation::model()->findByPk($id);
+            $workstation->is_deleted = 1;
+            $workstation->save();
 
             // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
             if (!isset($_GET['ajax']))
                 $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
-
+        }else {
+            throw new CHttpException(400, 'Invalid request. Please do not repeat this request');
         }
-        else
-            throw new CHttpException(400,'Invalid request. Please do not repeat this request');
-
     }
-
 
     /**
      * Manages all models.
@@ -194,9 +192,9 @@ class WorkstationController extends Controller {
 
         $this->render('_admin', array(
             'model' => $model,
-        ),false,true);
+                ), false, true);
     }
-    
+
     /**
      * Manages all models ajax.
      */
@@ -209,7 +207,7 @@ class WorkstationController extends Controller {
 
         $this->renderPartial('_admin', array(
             'model' => $model,
-        ),false,true);
+                ), false, true);
     }
 
     /**

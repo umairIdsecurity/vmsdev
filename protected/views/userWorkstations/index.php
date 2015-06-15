@@ -14,7 +14,6 @@ foreach (Yii::app()->user->getFlashes() as $key => $message) {
     echo '<div class="flash-' . $key . '" style="width:450px !important;">' . $message . "</div>\n";
 }
 ?>
-
 <form method="post" action="/index.php?r=userWorkstations/index&amp;id=<?php echo $_GET['id'] ?>"><input type="hidden" name="userId" value="<?php echo $_GET['id'] ?>">
 
     <div class="grid-view superadminSetAccessTable" id="user_workstationsGrid">

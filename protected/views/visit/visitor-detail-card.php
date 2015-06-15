@@ -394,7 +394,7 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
                 document.getElementById('fade').style.display = 'none'" value="x" class="btn btn-danger">
     </div>
     <br>
-    <img id="photoCropPreview" width="500px" height="500px" src="<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($model->visitor) ?>">
+    <img id="photoCropPreview" width="500px" height="500px" src="<?php echo Photo::model()->returnVisitorPhotoRelativePath($model->visitor) ?>">
 
 </div>
 <div id="fade" class="black_overlay"></div>

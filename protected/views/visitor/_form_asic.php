@@ -245,22 +245,23 @@ if ($this->action->id == 'update') {
                                         <td>
                                             <?php
                                              // Show Default selected to Admin only 
-                                           if(Yii::app()->user->role == Roles::ROLE_ADMIN) {
-                                               echo '<select name="Visitor[visitor_type]" id="Visitor_visitor_type">';
-                                               echo CHtml::tag('option',array('value' => ''),'Select Visitor Type',true);
-                                               $list = VisitorType::model()->findAll("`name` like '{$model->profile_type}%'");
+                                           //if(Yii::app()->user->role == Roles::ROLE_ADMIN) {
+                                               //echo '<select name="Visitor[visitor_type]" id="Visitor_visitor_type">';
+                                               //echo CHtml::tag('option',array('value' => ''),'Select Visitor Type',true);
+                                               //$list = VisitorType::model()->findAll("`name` like '{$model->profile_type}%'");
                                                
-                                               foreach( $list as $val ) {
+                                               /*foreach( $list as $val ) {
                                                    if ( $val->tenant == Yii::app()->user->tenant && $val->is_default_value == '1' )
                                                         echo CHtml::tag('option',array('value' => $val->id, 'selected' => 'selected'),CHtml::encode('Visitor Type: '.$val->name),true);
                                                     else
                                                         echo CHtml::tag('option',array('value' => $val->id),CHtml::encode('Visitor Type: '.$val->name),true);
                                                    
-                                              } echo "</select>";
-                                           } else
-                                                echo $form->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes(NULL,"`name` like '{$model->profile_type}%'"));
+                                              } 
+                                              echo "</select>";*/
+                                           //} else
+                                                //echo $form->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes(NULL,"`name` like '{$model->profile_type}%'"));
                                             ?>
-                                            <?php echo "<br>" . $form->error($model, 'visitor_type'); ?>
+                                            <?php //echo "<br>" . $form->error($model, 'visitor_type'); ?>
                                         </td>
                                     </tr>
                                 </table>
@@ -303,6 +304,7 @@ if ($this->action->id == 'update') {
                                 <select id="fromDay" name="Visitor[birthdayDay]" class='daySelect'></select>
                                 <select id="fromYear" name="Visitor[birthdayYear]" class='yearSelect'></select>
                                 <span class="required">*</span>
+                                <?php echo "<br>" . $form->error($model, 'date_of_birth'); ?>
                             </td>
                         </tr>
                         <tr>
@@ -380,7 +382,7 @@ if ($this->action->id == 'update') {
                                         'model'       => $model,
                                         'attribute'   => 'identification_document_expiry',
                                         'options'     => array(
-                                            'dateFormat' => 'yy-mm-dd',
+                                            'dateFormat' => 'dd-mm-yy',
                                         ),
                                         'htmlOptions' => array(
                                             'size'        => '0',
@@ -403,7 +405,7 @@ if ($this->action->id == 'update') {
                                         'model'       => $model,
                                         'attribute'   => 'asic_expiry',
                                         'options'     => array(
-                                            'dateFormat' => 'yy-mm-dd',
+                                            'dateFormat' => 'dd-mm-yy',
                                         ),
                                         'htmlOptions' => array(
                                             'size'        => '0',
@@ -422,30 +424,54 @@ if ($this->action->id == 'update') {
                                     <?php $this->renderPartial('/common_partials/password', array('model' => $model, 'form' => $form, 'session' => $session)); ?>
                                 </td>
                             </tr>
-
                         </table>
+                        <div style="float:right; margin-right: 35px"><input type="submit" value="Save" name="yt0" id="submitFormVisitor" class="complete" style="margin-top: 15px;"/></div>
                     <?php } ?>
 
                 </td>
             </tr>
         </table>
-        <input type="hidden" name="Visitor[visitor_status]" value="<?php echo VisitorStatus::VISITOR_STATUS_SAVE; ?>"
-               style='display:none;' />
+        <input type="hidden" name="Visitor[visitor_status]" value="<?php echo VisitorStatus::VISITOR_STATUS_SAVE; ?>"/>
     </div>
     <?php $this->endWidget(); ?>
 </div>
 
 <input type="hidden" id="currentAction" value="<?php echo $this->action->id; ?>">
 <input type="hidden" id="currentRoleOfLogge:wdInUser" value="<?php echo $session['role']; ?>">
-<input type="hidden" id="currentlyEditedVisitorId" value="<?php if (isset($_GET['id'])) {
-    echo $_GET['id'];
-} ?>">
+<input type="hidden" id="currentlyEditedVisitorId" value="<?php if (isset($_GET['id'])) {echo $_GET['id'];} ?>">
 
 <script>
 
     function afterValidate(form, data, hasError) {
+        var dt = new Date();
+        if(dt.getFullYear()< $("#fromYear").val()) {
+            $("#Visitor_date_of_birth_em_").show();
+            $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+            return false;
+        }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
+            $("#Visitor_date_of_birth_em_").show();
+            $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+            return false;
+        }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
+            $("#Visitor_date_of_birth_em_").show();
+            $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+            return false;
+        }
+
+        var companyValue = $("#Visitor_company").val();
+        var workstation = $("#User_workstation").val();
+        if (!workstation || workstation == "") {
+            $("#Visitor_visitor_workstation_em_").show();
+            $("#Visitor_visitor_workstation_em_").html('Please enter Workstation');
+            return false;
+        }
         if (!hasError) {
-            checkEmailIfUnique();
+            if (!companyValue || companyValue == "") {
+                $("#company_error_").show();
+                return false;
+            } else {
+                checkEmailIfUnique();
+            }
         }
     }
 
@@ -454,6 +480,63 @@ if ($this->action->id == 'update') {
         $(".workstationRow").show();
         getWorkstation();
 
+        $('#fromDay').on('change', function () {
+            var dt = new Date();
+
+            if(dt.getFullYear()< $("#fromYear").val()) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                return false;
+            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                return false;
+            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                return false;
+            }else{
+                $("#Visitor_date_of_birth_em_").hide();
+            }
+        });
+        $('#fromMonth').on('change', function () {
+            var dt = new Date();
+
+            if(dt.getFullYear()< $("#fromYear").val()) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                return false;
+            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                return false;
+            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                return false;
+            }else{
+                $("#Visitor_date_of_birth_em_").hide();
+            }
+        });
+        $('#fromYear').on('change', function () {
+            var dt = new Date();
+
+            if(dt.getFullYear()< $("#fromYear").val()) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                return false;
+            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                return false;
+            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                return false;
+            }else{
+                $("#Visitor_date_of_birth_em_").hide();
+            }
+        });
 
         if ($("#currentAction").val() == 'update') {
 

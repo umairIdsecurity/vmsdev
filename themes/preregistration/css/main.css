@@ -1,3 +1,6 @@
+h1, .h1 {
+    font-size: 27px;
+}
 .form-fields-area {
     margin: 20px 0;
 }
@@ -48,4 +51,6 @@
     background: #fee none repeat scroll 0 0;
     border-color: #c00;
 }
+
+
 

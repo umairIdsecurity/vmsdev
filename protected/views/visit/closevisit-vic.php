@@ -43,12 +43,13 @@
     </tr>
     <tr>
         <td>
-            <input name="Visit[visit_status]" id="Visit_visit_status" type="hidden" value="<?php echo VisitStatus::CLOSED; ?>">
+            <input name="Visit[visit_status]" id="Visit_visit_status" type="hidden"
+                   value="<?php echo VisitStatus::CLOSED; ?>">
 
 
             <?php
             if (empty($model->finish_date)) {
-                $model->finish_date = strtotime($model->date_check_out) > 0 ? $model->date_check_out : date('d-m-Y');
+                $model->finish_date = strtotime($model->date_check_out) > 0 ? date('d-m-Y', strtotime($model->date_check_out)) : date('d-m-Y');
             }
             $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                 'model' => $model,

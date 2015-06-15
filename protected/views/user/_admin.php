@@ -255,7 +255,7 @@ function getAssignableRoles($user_role) {
                     Roles::ROLE_AGENT_ADMIN => 'Agent Administrator',
                     Roles::ROLE_AGENT_OPERATOR => 'Agent Operator',
                     Roles::ROLE_OPERATOR => 'Operator',
-                    Roles::ROLE_STAFFMEMBER => 'Staff Member'
+                    //Roles::ROLE_STAFFMEMBER => 'Staff Member'
                 ); //keys
             }
             break;

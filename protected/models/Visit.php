@@ -270,7 +270,7 @@ class Visit extends CActiveRecord {
 
         $criteria = new CDbCriteria;
 
-        $criteria->with = array('card0', 'visitor0', 'company0');
+        $criteria->with = array('card0', 'visitor0', 'company0', 'reason0', 'workstation0');
         //$criteria->with .= 'visitor0';
         $criteria->compare('CONCAT(visitor0.first_name, \' \', visitor0.last_name)', $this->visitor, true);
         $criteria->compare('visitor0.first_name', $this->firstname, true);
@@ -286,7 +286,7 @@ class Visit extends CActiveRecord {
         $criteria->compare('card', $this->card, true);
         $criteria->compare('card_type', $this->card_type, true);
         $criteria->compare('t.visitor_type', $this->visitor_type, true);
-        $criteria->compare('reason', $this->reason, true);
+        $criteria->compare('reason0.reason', $this->reason, true);
         $criteria->compare('t.visitor_status', $this->visitor_status, true);
         $criteria->compare('host', $this->host, true);
         $criteria->compare('patient', $this->patient, true);
@@ -309,10 +309,10 @@ class Visit extends CActiveRecord {
         $criteria->compare('tenant_agent', $this->tenant_agent, true);
         $criteria->compare('t.is_deleted', $this->is_deleted, "0");
         $criteria->compare('visit_status', $this->visit_status);
-        $criteria->compare('workstation', $this->workstation);
+        $criteria->compare('workstation0.name', $this->workstation);
 
         $criteria->compare('company0.code', $this->companycode, true);
-        $criteria->compare('visitor0.date_of_birth', $this->date_of_birth, true);
+        $criteria->compare('DATE_FORMAT(visitor0.date_of_birth, "%d-%m-%Y")', $this->date_of_birth, true);
         $criteria->compare('visitor0.contact_street_no', $this->contact_street_no, true);
         $criteria->compare('visitor0.contact_street_name', $this->contact_street_name, true);
         $criteria->compare('visitor0.contact_street_type', $this->contact_street_type, true);
@@ -320,9 +320,9 @@ class Visit extends CActiveRecord {
         $criteria->compare('visitor0.contact_postcode', $this->contact_postcode, true);
         $criteria->compare('visitor0.identification_type', $this->identification_type, true);
         $criteria->compare('visitor0.identification_document_no', $this->identification_document_no, true);
-        $criteria->compare('visitor0.identification_document_expiry', $this->identification_document_expiry, true);
+        $criteria->compare('DATE_FORMAT(visitor0.identification_document_expiry, "%d-%m-%Y")', $this->identification_document_expiry, true);
         $criteria->compare('visitor0.asic_no', $this->asic_no, true);
-        $criteria->compare('visitor0.asic_expiry', $this->asic_expiry, true);
+        $criteria->compare('DATE_FORMAT(visitor0.asic_expiry, "%d-%m-%Y")', $this->asic_expiry, true);
         $criteria->compare('finish_date', $this->finish_date, true);
         $criteria->compare('card_returned_date', $this->card_returned_date, true);
 
@@ -332,23 +332,29 @@ class Visit extends CActiveRecord {
         // $criteria->addCondition("t.date_check_out > DATE_ADD(now(),interval -2 day)");
         if ($this->filterProperties) {
             $criteria->addCondition("t.id LIKE CONCAT('%', :filterProperties , '%')
+                OR card0.card_number LIKE CONCAT('%', :filterProperties , '%')
+                OR company0.code LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.first_name LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.last_name LIKE CONCAT('%', :filterProperties , '%')
-                OR company0.code LIKE CONCAT('%', :filterProperties , '%')
-                OR company0.name LIKE CONCAT('%', :filterProperties , '%')
-                OR visitor0.date_of_birth LIKE CONCAT('%', :filterProperties , '%')
+                OR DATE_FORMAT(visitor0.date_of_birth, '%d-%m-%Y') LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.contact_number LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.contact_street_no LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.contact_street_name LIKE CONCAT('%', :filterProperties , '%')
-                OR visitor0.contact_street_type LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.contact_suburb LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.contact_state LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.contact_postcode LIKE CONCAT('%', :filterProperties , '%')
+                OR reason0.reason LIKE CONCAT('%', :filterProperties , '%')
+                OR workstation0.name LIKE CONCAT('%', :filterProperties , '%')
+                OR company0.name LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.email LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.contact_street_type LIKE CONCAT('%', :filterProperties , '%')
+                OR finish_date LIKE CONCAT('%', :filterProperties , '%')
+                OR card_returned_date LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.identification_type LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.identification_document_no LIKE CONCAT('%', :filterProperties , '%')
-                OR visitor0.identification_document_expiry LIKE CONCAT('%', :filterProperties , '%')
+                OR DATE_FORMAT(visitor0.identification_document_expiry, '%d-%m-%Y') LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.asic_no LIKE CONCAT('%', :filterProperties , '%')
-                OR visitor0.asic_expiry LIKE CONCAT('%', :filterProperties , '%')");
+                OR DATE_FORMAT(visitor0.asic_expiry, '%d-%m-%Y') LIKE CONCAT('%', :filterProperties , '%')");
             $criteria->params = array(':filterProperties' => $this->filterProperties);
         }
 
@@ -732,7 +738,7 @@ class Visit extends CActiveRecord {
     public function updateSameDayVisitsToExpired() {
         try {
             $command = Yii::app()->db->createCommand(
-                "UPDATE visit SET visit_status = '" . VisitStatus::EXPIRED . "', card_option ='" . CardStatus::RETURNED . "', finish_date = CURDATE(), finish_time = CURTIME() WHERE 'd-m-Y' > date_check_out AND visit_status = '" . VisitStatus::ACTIVE . "' AND card_type = '" . CardType::VIC_CARD_SAMEDATE . "'")->execute();
+                "UPDATE visit SET visit_status = '" . VisitStatus::EXPIRED . "', card_option ='" . CardStatus::RETURNED . "', finish_date = CURDATE(), finish_time = CURTIME() WHERE DATE_FORMAT(NOW(), '%d-%m-%Y') > date_check_out AND CURTIME() >= time_check_out AND visit_status = '" . VisitStatus::ACTIVE . "' AND card_type = '" . CardType::VIC_CARD_SAMEDATE . "'")->execute();
             echo "Affected Rows : " . $command . "\n";
             if ($command > 0) {
                 echo "Success: Update VIC Sameday visits to expired status successful. \n";

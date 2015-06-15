@@ -8,8 +8,10 @@ $workstation_id = $session['workstation'];
 if (!isset($workstation_id)) {
     $user = User::model()->findByPK(Yii::app()->user->id);
     if ($user->role == Roles::ROLE_AGENT_ADMIN) {
+
         $workstations = Workstation::model()->findAllByAttributes(array('tenant' => $user->tenant, 'tenant_agent' => $user->tenant_agent));
     } else {
+
         $workstations = Workstation::model()->findAll();
     }
 
@@ -21,7 +23,6 @@ if (!isset($workstation_id)) {
 }
 
 $cardTypeWorkstationModel = WorkstationCardType::model()->findAllByAttributes(array('workstation'=>$workstation_id));
-
 if (!$cardTypeWorkstationModel) {
     $this->redirect(Yii::app()->createUrl('workstation/admin'));
 }
@@ -57,6 +58,7 @@ if (!$cardTypeWorkstationModel) {
             <?php
             }
             ?>
+            <div id="card_type" class="errorMessage" style="text-transform: none;display:none">Please Select Card Type</div>
         </tr>
 
     </table>
@@ -76,7 +78,7 @@ if (!$cardTypeWorkstationModel) {
             var card_type_value = $("#selectCardDiv").find("input[name=selectCardType]:checked").val();
 
             if (!card_type_value) {
-                alert('Please choose Card Type before going to next step');
+                $('#card_type').css('display',"block");
                 e.stopImmediatePropagation();
                 return false;
             }

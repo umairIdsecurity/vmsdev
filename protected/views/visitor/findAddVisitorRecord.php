@@ -81,6 +81,21 @@ $model->identification_country_issued = 13;
                                     $(".host-AddBtn").hide();
                                 }
 
+                                var dt = new Date();
+                                if(dt.getFullYear()< $("#fromYear").val()) {
+                                    $("#Visitor_date_of_birth_em_").show();
+                                    $("#Visitor_date_of_birth_em_").html("Birthday is incorrect");
+                                    return false;
+                                }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
+                                    $("#Visitor_date_of_birth_em_").show();
+                                    $("#Visitor_date_of_birth_em_").html("Birthday is incorrect");
+                                    return false;
+                                }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
+                                    $("#Visitor_date_of_birth_em_").show();
+                                    $("#Visitor_date_of_birth_em_").html("Birthday is incorrect");
+                                    return false;
+                                }
+
                                 if (!hasError){
                                     var vehicleValue = $("#Visitor_vehicle").val();
                                     if(vehicleValue.length < 6 && vehicleValue != ""){
@@ -193,6 +208,11 @@ $model->identification_country_issued = 13;
                             <tr class="vic-visitor-fields">
                                 <td class="birthdayDropdown">
                                     <span>Date of Birth</span> <br/>
+                                    <?php
+                                    if (!strtotime($model->date_of_birth)) {
+                                        $model->date_of_birth = date('Y-m-d');
+                                    }
+                                    ?>
                                     <input type="hidden" id="dateofBirthBreakdownValueYear"
                                            value="<?php echo date("Y", strtotime($model->date_of_birth)); ?>">
                                     <input type="hidden" id="dateofBirthBreakdownValueMonth"
@@ -203,6 +223,10 @@ $model->identification_country_issued = 13;
                                     <select id="fromDay" name="Visitor[birthdayDay]" class='daySelect'></select>
                                     <select id="fromMonth" name="Visitor[birthdayMonth]" class='monthSelect'></select>
                                     <select id="fromYear" name="Visitor[birthdayYear]" class='yearSelect'></select>
+                                    <br />
+                                    <?php
+                                    echo $form->error($model, 'date_of_birth');
+                                    ?>
                                 </td>
                             </tr>
 
@@ -751,6 +775,66 @@ $model->identification_country_issued = 13;
             $('#addvisitor').show();
             $("#searchvisitor").hide();
         });
+
+        $('#fromDay').on('change', function () {console.log('ok');
+            var dt = new Date();
+
+            if(dt.getFullYear()< $("#fromYear").val()) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                return false;
+            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                return false;
+            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                return false;
+            }else{
+                $("#Visitor_date_of_birth_em_").hide();
+            }
+        });
+
+        $('#fromMonth').on('change', function () {
+            var dt = new Date();
+
+            if(dt.getFullYear()< $("#fromYear").val()) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                return false;
+            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                return false;
+            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                return false;
+            }else{
+                $("#Visitor_date_of_birth_em_").hide();
+            }
+        });
+        $('#fromYear').on('change', function () {
+            var dt = new Date();
+
+            if(dt.getFullYear()< $("#fromYear").val()) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                return false;
+            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                return false;
+            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                return false;
+            }else{
+                $("#Visitor_date_of_birth_em_").hide();
+            }
+        });
+
 		
         $("#Visitor_password").val("(NULL)");
         $("#Visitor_repeatpassword").val("(NULL)");

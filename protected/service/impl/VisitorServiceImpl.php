@@ -76,8 +76,7 @@ class VisitorServiceImpl implements VisitorService {
                 $visitor->password = $password;
             }
         }
-
-
+        
         if (!($result = $visitor->save())) {
             return false;
         }

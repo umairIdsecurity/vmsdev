@@ -283,10 +283,41 @@ class VisitorController extends Controller {
     }
 
     public function actionAjaxCrop() {
+        function imageCreateFromAny($filepath) {
+            $type = exif_imagetype($filepath); // [] if you don't have exif you could use getImageSize()
+            $allowedTypes = array(
+                1,  // [] gif
+                2,  // [] jpeg
+                3,  // [] png
+                4,  // [] jpg
+                6   // [] bmp
+            );
+            if (!in_array($type, $allowedTypes)) {
+                return false;
+            }
+            switch ($type) {
+                case 1 :
+                    $im = imageCreateFromGif($filepath);
+                    break;
+                case 2 :
+                    $im = imageCreateFromJpeg($filepath);
+                    break;
+                case 3 :
+                    $im = imageCreateFromPng($filepath);
+                    break;
+                case 4 :
+                    $im = imageCreateFromJpg($filepath);
+                    break;
+                case 6 :
+                    $im = imageCreateFromBmp($filepath);
+                    break;
+            }
+            return $im;
+        }
         $jpeg_quality = 90;
 
         $src = $_REQUEST['imageUrl'];
-        $img_r = imagecreatefromjpeg($src);
+        $img_r = imageCreateFromAny($src);
         $dst_r = imagecreatetruecolor(200, 200);
         $usernameHash = hash('adler32', "visitor");
         $uniqueFileName = 'visitor' . $usernameHash . '-' . time() . ".png";

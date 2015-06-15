@@ -378,15 +378,7 @@ class VisitorController extends Controller {
 
                     $body .="<br>"."Thanks,"."<br>Admin</body></html>";
 
-                    $mailer = new DX_Mailer();
-
-                    $mailer->IsHTML(true);
-                    $mailer->From = $loggedUserEmail;
-                    $mailer->FromName = "auto-response email from system";
-                    $mailer->Subject = $subject;
-                    $mailer->Body = nl2br($body);
-                    $mailer->AddAddress($to);
-                    $mailer->Send();
+                    mail($to, $subject, $body, $headers);
                 //}
                 
             	Yii::app()->end();

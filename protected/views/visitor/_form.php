@@ -135,80 +135,47 @@ $form = $this->beginWidget('CActiveForm', array(
     <tr>
 
         <td id="uploadRow" rowspan="7" style='width:300px;padding-top:10px;'>
+            <table>
+                <input type="hidden" id="Visitor_photo" name="Visitor[photo]"
+                       value="<?php echo $model['photo']; ?>">
+                <?php if ($model['photo'] != NULL) { ?>
+                    <style>
+                        .ajax-upload-dragdrop {
+                            background: url('<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($dataId) ?>') no-repeat center top;
+                            background-size: 137px 190px !important;
+                        }
+                    </style>
+                <?php }
+                ?>
+                <br>
+                <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
+                <div class="photoDiv" style="display:none;">
+                    <?php if ($dataId != '' && $model['photo'] != NULL) { ?>
+                        <img id='photoPreview'
+                             src="<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($dataId) ?>"
+                             style='display:block;height:174px;width:133px;'/>
+                    <?php } elseif ($model['photo'] == NULL) {
+                        ?>
 
+                        <img id='photoPreview'
+                             src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png"
+                             style='display:block;height:174px;width:133px;'/>
 
-            <input type="hidden" id="Visitor_photo" name="Visitor[photo]"
+                    <?php } else {
 
-                   value="<?php echo $model['photo']; ?>">
+                        ?>
 
-            <?php if ($model['photo'] != NULL) { ?>
-
-                <style>
-
-                    .ajax-upload-dragdrop {
-
-                        background: url('<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($dataId) ?>') no-repeat center top;
-
-                        background-size: 137px 190px !important;
-
-                    }
-
-                </style>
-
-            <?php
-            }
-
-            ?>
-
-
-
-            <br>
-
-            <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
-
-
-
-
-
-            <div class="photoDiv" style="display:none;">
-
-                <?php if ($dataId != '' && $model['photo'] != NULL) { ?>
-
-                    <img id='photoPreview'
-                         src="<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($dataId) ?>"
-                         style='display:block;height:174px;width:133px;'/>
-
-                <?php
-                } elseif ($model['photo'] == NULL) {
-
-                    ?>
-
-                    <img id='photoPreview'
-                         src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png"
-                         style='display:block;height:174px;width:133px;'/>
-
-                <?php
-                } else {
-
-                    ?>
-
-                    <img id='photoPreview' src="<?php
-
-                    if ($this->action->id == 'update' && $model->photo != '') {
-
-                        echo Yii::app()->request->baseUrl . "/" . Company::model()->getPhotoRelativePath($model->photo);
-
-                    }
-
-                    ?>
-
-
-
+                        <img id='photoPreview' src="<?php
+                        if ($this->action->id == 'update' && $model->photo != '') {
+                            echo Yii::app()->request->baseUrl . "/" . Company::model()->getPhotoRelativePath($model->photo);
+                        }
+                        ?>
                                              " style='display:none;'/>
-
-                <?php } ?>
-
-            </div>
+                    <?php } ?>
+                </div>
+                </td>
+                </tr>
+            </table>
 
 
         </td>

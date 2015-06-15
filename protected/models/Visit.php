@@ -362,7 +362,7 @@ class Visit extends CActiveRecord {
                 break;
 
             case Roles::ROLE_SUPERADMIN:
-                $criteria->addCondition('t.id != ""');
+                $criteria->addCondition("t.id != ''");
                 break;
 
             case Roles::ROLE_ADMIN:

@@ -77,42 +77,6 @@ class VisitorServiceImpl implements VisitorService {
             }
         }
         
-        #Send mail
-        if (isset($_POST['Visitor']['password_requirement']) && $_POST['Visitor']['password_requirement'] == 2) {
-            
-            $loggedUserEmail = Yii::app()->user->email;
-                    
-            $headers = "MIME-Version: 1.0" . "\r\n";
-            $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-            $headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
-
-            $to=$visitor->email;
-
-            $subject="Preregistration email notification";
-
-            $body = "<html><body>Hi,<br><br>".
-                    "This is preregistration email.<br><br>".
-                    "Please click on the below URL:<br>".
-                    "http://vmsprdev.identitysecurity.info/index.php/preregistration<br>";
-
-            if(isset($_POST['Visitor']['password_option']) && $_POST['Visitor']['password_option'] == 1){
-                $body .= "Password: ".$setPassword."<br>";
-            }
-
-            $body .="<br>"."Thanks,"."<br>Admin</body></html>";
-
-            $mailer = new DX_Mailer();
-
-            $mailer->IsHTML(true);
-            $mailer->From = $loggedUserEmail;
-            $mailer->FromName = "auto-response email from system";
-            $mailer->Subject = $subject;
-            $mailer->Body = nl2br($body);
-            $mailer->AddAddress($to);
-            $mailer->Send();
-        }
-
-
         if (!($result = $visitor->save())) {
             return false;
         }

@@ -353,52 +353,33 @@ class VisitorController extends Controller {
                 $model->visitor_workstation = $session['workstation'];
             }
             
-            /**********************************************/
-            $loggedUserEmail = Yii::app()->user->email;
-            $headers = "MIME-Version: 1.0" . "\r\n";
-            $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-            $headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
-            $to=$model->email;
-            $subject="Preregistration email notification";
-            $body = "<html><body>Hi,<br><br>".
-                    "This is preregistration email.<br><br>".
-                    "Please click on the below URL:<br>".
-                    "http://vmsprdev.identitysecurity.info/index.php/preregistration<br>";
-
-            //if($model->password_option == 1){
-                $body .= "Password: ".$model->password."<br>";
-            //}
-
-            $body .="<br>"."Thanks,"."<br>Admin</body></html>";
-            mail($to, $subject, $body, $headers);
-            /**********************************************/
 
             if ($result = $visitorService->save($model, NULL, $session['id'])) {
                 
                 //if($model->password_requirement == 2){
                     
-//                    $loggedUserEmail = Yii::app()->user->email;
-//
-//                    $headers = "MIME-Version: 1.0" . "\r\n";
-//                    $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-//                    $headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
-//
-//                    $to=$model->email;
-//
-//                    $subject="Preregistration email notification";
-//
-//                    $body = "<html><body>Hi,<br><br>".
-//                            "This is preregistration email.<br><br>".
-//                            "Please click on the below URL:<br>".
-//                            "http://vmsprdev.identitysecurity.info/index.php/preregistration<br>";
-//
-//                    //if($model->password_option == 1){
-//                        $body .= "Password: ".$model->password."<br>";
-//                    //}
-//
-//                    $body .="<br>"."Thanks,"."<br>Admin</body></html>";
-//
-//                    mail($to, $subject, $body, $headers);
+                    $loggedUserEmail = Yii::app()->user->email;
+
+                    $headers = "MIME-Version: 1.0" . "\r\n";
+                    $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+                    $headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
+
+                    $to=$model->email;
+
+                    $subject="Preregistration email notification";
+
+                    $body = "<html><body>Hi,<br><br>".
+                            "This is preregistration email.<br><br>".
+                            "Please click on the below URL:<br>".
+                            "http://vmsprdev.identitysecurity.info/index.php/preregistration<br>";
+
+                    //if($model->password_option == 1){
+                        $body .= "Password: ".$model->password."<br>";
+                    //}
+
+                    $body .="<br>"."Thanks,"."<br>Admin</body></html>";
+
+                    mail($to, $subject, $body, $headers);
                 //}
                 
             	Yii::app()->end();

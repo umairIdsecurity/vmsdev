@@ -139,7 +139,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                 Company Name
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" class="visitor-detail-info-field" value="<?php echo $company->name; ?>" disabled="disabled"
+                                <input type="text" class="visitor-detail-info-field" value="<?php echo isset($company->name) ? $company->name : '' ; ?>" disabled="disabled"
                                        name="Visitor[company_name]" id="Visitor_company_name">
                             </td>
                         </tr>

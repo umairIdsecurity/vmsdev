@@ -738,7 +738,7 @@ class Visit extends CActiveRecord {
     public function updateSameDayVisitsToExpired() {
         try {
             $command = Yii::app()->db->createCommand(
-                "UPDATE visit SET visit_status = '" . VisitStatus::EXPIRED . "', card_option ='" . CardStatus::RETURNED . "', finish_date = CURDATE(), finish_time = CURTIME() WHERE 'd-m-Y' > date_check_out AND visit_status = '" . VisitStatus::ACTIVE . "' AND card_type = '" . CardType::VIC_CARD_SAMEDATE . "'")->execute();
+                "UPDATE visit SET visit_status = '" . VisitStatus::EXPIRED . "', card_option ='" . CardStatus::RETURNED . "', finish_date = CURDATE(), finish_time = CURTIME() WHERE DATE_FORMAT(NOW(), '%d-%m-%Y') > date_check_out AND CURTIME() >= time_check_out AND visit_status = '" . VisitStatus::ACTIVE . "' AND card_type = '" . CardType::VIC_CARD_SAMEDATE . "'")->execute();
             echo "Affected Rows : " . $command . "\n";
             if ($command > 0) {
                 echo "Success: Update VIC Sameday visits to expired status successful. \n";

@@ -312,7 +312,7 @@ class Visit extends CActiveRecord {
         $criteria->compare('workstation0.name', $this->workstation);
 
         $criteria->compare('company0.code', $this->companycode, true);
-        $criteria->compare('visitor0.date_of_birth', $this->date_of_birth, true);
+        $criteria->compare('DATE_FORMAT(visitor0.date_of_birth, "%d-%m-%Y")', $this->date_of_birth, true);
         $criteria->compare('visitor0.contact_street_no', $this->contact_street_no, true);
         $criteria->compare('visitor0.contact_street_name', $this->contact_street_name, true);
         $criteria->compare('visitor0.contact_street_type', $this->contact_street_type, true);
@@ -320,9 +320,9 @@ class Visit extends CActiveRecord {
         $criteria->compare('visitor0.contact_postcode', $this->contact_postcode, true);
         $criteria->compare('visitor0.identification_type', $this->identification_type, true);
         $criteria->compare('visitor0.identification_document_no', $this->identification_document_no, true);
-        $criteria->compare('visitor0.identification_document_expiry', $this->identification_document_expiry, true);
+        $criteria->compare('DATE_FORMAT(visitor0.identification_document_expiry, "%d-%m-%Y")', $this->identification_document_expiry, true);
         $criteria->compare('visitor0.asic_no', $this->asic_no, true);
-        $criteria->compare('visitor0.asic_expiry', $this->asic_expiry, true);
+        $criteria->compare('DATE_FORMAT(visitor0.asic_expiry, "%d-%m-%Y")', $this->asic_expiry, true);
         $criteria->compare('finish_date', $this->finish_date, true);
         $criteria->compare('card_returned_date', $this->card_returned_date, true);
 
@@ -336,7 +336,7 @@ class Visit extends CActiveRecord {
                 OR company0.code LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.first_name LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.last_name LIKE CONCAT('%', :filterProperties , '%')
-                OR visitor0.date_of_birth LIKE CONCAT('%', :filterProperties , '%')
+                OR DATE_FORMAT(visitor0.date_of_birth, '%d-%m-%Y') LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.contact_number LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.contact_street_no LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.contact_street_name LIKE CONCAT('%', :filterProperties , '%')
@@ -352,9 +352,9 @@ class Visit extends CActiveRecord {
                 OR card_returned_date LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.identification_type LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.identification_document_no LIKE CONCAT('%', :filterProperties , '%')
-                OR visitor0.identification_document_expiry LIKE CONCAT('%', :filterProperties , '%')
+                OR DATE_FORMAT(visitor0.identification_document_expiry, '%d-%m-%Y') LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.asic_no LIKE CONCAT('%', :filterProperties , '%')
-                OR visitor0.asic_expiry LIKE CONCAT('%', :filterProperties , '%')");
+                OR DATE_FORMAT(visitor0.asic_expiry, '%d-%m-%Y') LIKE CONCAT('%', :filterProperties , '%')");
             $criteria->params = array(':filterProperties' => $this->filterProperties);
         }
 

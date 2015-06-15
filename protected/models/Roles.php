@@ -165,7 +165,7 @@ class Roles extends CActiveRecord
             self::ROLE_AGENT_ADMIN,
             self::ROLE_AGENT_OPERATOR,
             self::ROLE_OPERATOR,
-            self::ROLE_STAFFMEMBER,
+            //self::ROLE_STAFFMEMBER,
             self::ROLE_VISITOR,
         );
     }

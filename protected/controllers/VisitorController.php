@@ -349,10 +349,6 @@ class VisitorController extends Controller {
             $model->profile_type = $_POST['Visitor']['profile_type'];
             $model->attributes = $_POST['Visitor'];
             
-            echo '<pre>';
-            print_r($model->attributes);
-            die;
-
             if (empty($model->visitor_workstation)) {
                 $model->visitor_workstation = $session['workstation'];
             }

@@ -923,38 +923,43 @@ class VisitController extends Controller {
          * Write a header of csv file
          */
         $headers = array(
-            'id',
-            'company0.code',
-            'first_name',
-            'last_name',
-            'date_of_birth',
-            'contact_number',
-            'contact_street_no',
-            'contact_street_name',
-            'contact_street_type',
-            'contact_suburb',
-            'contact_postcode',
-            'company0.name',
-            'email',
-            'identification_type',
-            'identification_document_no',
-            'identification_document_expiry',
-            'asic_no',
-            'asic_expiry',
+            'id' => 'ID',
+            'card0.card_number' => 'Card Number',
+            'company0.code' => 'Airport Code',
+            'visitor0.first_name' => 'First Name',
+            'visitor0.last_name' => 'Last Name',
+            'visitor0.date_of_birth' => 'Date of Birthday',
+            'visitor0.contact_number' => 'Mobile',
+            'visitor0.contact_street_no' => 'Street No',
+            'visitor0.contact_street_name' => 'Street',
+            'visitor0.contact_street_type' => 'Street Type',
+            'visitor0.contact_suburb' => 'Suburbe',
+            'visitor0.contact_state' => 'State',
+            'visitor0.contact_postcode' => 'Postcode',
+            'reason0.reason' => 'Reason',
+            'company0.name' => 'Company Name',
+            'visitor0.email' => 'Contact Email',
+            'finish_date' => 'Date of Issue',
+            'card_returned_date' => 'Date of Return',
+            'identification_type' => 'Document Type',
+            'identification_document_no' => 'Number',
+            'identification_document_expiry' => 'Expiry',
+            'visitor0.asic_no' => 'ASIC ID Number',
+            'visitor0.asic_expiry' => 'ASIC Expiry',
+            'workstation0.name' => 'Workstation'
         );
         $row = array();
         foreach ($headers as $header) {
             $row[] = Visit::model()->getAttributeLabel($header);
         }
         fputcsv($fp, $row);
-
         /*
          * Init dataProvider for first page
          */
         $merge = new CDbCriteria;
-        $merge->addCondition('profile_type = "'. Visitor::PROFILE_TYPE_VIC .'"');
+        $merge->addCondition('visitor0.profile_type = "'. Visitor::PROFILE_TYPE_VIC .'"');
 
-        $model = new Visitor('search');
+        $model = new Visit('search');
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['Visitor'])) {
             $model->attributes = $_GET['Visitor'];
@@ -975,7 +980,7 @@ class VisitController extends Controller {
         $models = $dp->getData();
         foreach ($models as $model) {
             $row = array();
-            foreach ($headers as $head) {
+            foreach ($headers as $head => $title) {
                 $row[] = CHtml::value($model, $head);
             }
             fputcsv($fp, $row);

@@ -180,7 +180,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                 }
                 ?>>
                     <li><a href='<?php echo Yii::app()->createUrl('user/create',
-                            array('role' => Roles::ROLE_AIRPORT_OPERATOR)); ?>' class="has-sub-sub">
+                            array('role' => Roles::ROLE_AGENT_AIRPORT_ADMIN)); ?>' class="has-sub-sub">
                             <div class="customIcon-adminmenu">+</div>
                             <span>Add User</span></a></li>
 

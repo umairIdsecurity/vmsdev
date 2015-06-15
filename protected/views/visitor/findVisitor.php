@@ -38,9 +38,9 @@ $conditionString = $tenant. $tenant_agent . ' (CONCAT(first_name," ",last_name) 
                     . '%")';
 
 if (isset($_GET['cardType']) && $_GET['cardType'] > CardType::CONTRACTOR_VISITOR) {
-    $conditionString .= ' AND profile_type = "VIC" OR profile_type = "ASIC" ';
+    $conditionString .= ' AND profile_type = "' . Visitor::PROFILE_TYPE_VIC . '" ';
 } else {
-    $conditionString .= ' AND profile_type = "CORPORATE" ';
+    $conditionString .= ' AND profile_type = "' . Visitor::PROFILE_TYPE_CORPORATE . '" ';
 }
 
 

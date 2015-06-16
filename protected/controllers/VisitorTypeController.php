@@ -216,7 +216,7 @@ class VisitorTypeController extends Controller {
                 ->queryAll();
 
         $allWorkstations = Workstation::model()->findAll();
-        $workstations = array();
+        $otherWorkstations = array();
         foreach ($allWorkstations as $workstation) {
             $hasVisitor = false;
             foreach($visitors as $visitor) {
@@ -225,11 +225,11 @@ class VisitorTypeController extends Controller {
                 }
             }
             if ($hasVisitor == false) {
-                array_push($workstations, $workstation);
+                array_push($otherWorkstations, $workstation);
             }
         }
 
-        $this->render("visitorbyworkstationcount", array("visitor_count"=>$visitors, "workstations" => $workstations));
+        $this->render("visitorbyworkstationcount", array("visitor_count"=>$visitors, "otherWorkstations" => $otherWorkstations));
     }
 
 }

@@ -1025,7 +1025,7 @@ class VisitController extends Controller {
             ->queryAll();
 
         $allWorkstations = Workstation::model()->findAll();
-        $workstations = array();
+        $otherWorkstations = array();
         foreach ($allWorkstations as $workstation) {
             $hasVisitor = false;
             foreach($visitsCount as $visit) {
@@ -1034,11 +1034,11 @@ class VisitController extends Controller {
                 }
             }
             if ($hasVisitor == false) {
-                array_push($workstations, $workstation);
+                array_push($otherWorkstations, $workstation);
             }
         }
 
-        $this->render('totalVicsByWorkstation', array("visit_count" => $visitsCount, "workstations" => $workstations));
+        $this->render('totalVicsByWorkstation', array("visit_count" => $visitsCount, "otherWorkstations" => $otherWorkstations));
     }
 
     public function actionImportVisitData()

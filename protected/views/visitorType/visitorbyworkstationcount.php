@@ -68,7 +68,7 @@
         <?php }
     }
 
-    foreach ($workstations as $workstation) {
+    foreach ($otherWorkstations as $workstation) {
         ?>
         <tr>
             <td><?php echo $workstation->name; ?></td>

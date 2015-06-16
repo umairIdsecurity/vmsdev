@@ -1011,10 +1011,7 @@ class VisitController extends Controller {
                 . ' AND "'.$to->format('Y-m-d').'") AND';
 
         }
-
-        $dateCondition .= '(t.is_deleted = 0) AND (visits.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visits.card_type >= 5)';
-
-
+        $dateCondition .= '(t.is_deleted = 0) AND (visits.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visits.card_type >= 5) AND (t.tenant = '.Yii::app()->user->id.')';
         $visitsCount = Yii::app()->db->createCommand()
             ->select('min(visits.id) as visitId,visits.date_check_in as date_check_in,t.id,t.name,count(visits.id) as visits, t.id as workstationId')
             ->from('workstation t')
@@ -1024,12 +1021,17 @@ class VisitController extends Controller {
             ->group('t.id')
             ->queryAll();
 
-        $allWorkstations = Workstation::model()->findAll();
+
+        $allWorkstations = Yii::app()->db->createCommand()
+            ->select( 't.id,t.tenant,t.name')
+            ->from('workstation t')
+            ->where('t.tenant = '. Yii::app()->user->id)
+            ->queryAll();
         $otherWorkstations = array();
         foreach ($allWorkstations as $workstation) {
             $hasVisitor = false;
             foreach($visitsCount as $visit) {
-                if($visit['workstationId'] ==  $workstation->id) {
+                if($visit['workstationId'] ==  $workstation['id']) {
                     $hasVisitor =  true;
                 }
             }

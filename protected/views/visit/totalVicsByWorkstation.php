@@ -71,7 +71,7 @@
         foreach ($otherWorkstations as $workstation) {
             ?>
             <tr>
-                <td><?php echo $workstation->name; ?></td>
+                <td><?php echo $workstation['name']; ?></td>
                 <td>0</td>
             </tr>
         <?php

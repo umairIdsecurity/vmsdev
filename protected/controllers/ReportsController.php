@@ -29,7 +29,7 @@ class ReportsController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('visitorsByProfiles'),
+				'actions'=>array('visitorsByProfiles','profilesAvmsVisitors'),
 				'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
 			),
 			array('deny',  // deny all users
@@ -50,30 +50,28 @@ class ReportsController extends Controller
         $dateFromFilter = Yii::app()->request->getParam("date_from_filter", date("Y-m-d", strtotime("-1 year") ));
         $dateToFilter = Yii::app()->request->getParam("date_to_filter", date("Y-m-d", time()));
         
-        $profileType = Yii::app()->request->getParam("profileType","ALL");
-        
         if(!empty($rangeRadio)) {
             if($rangeRadio == "weekly"){
                 $weeks = Yii::app()->request->getParam("weeklyInterval");
                 if(empty($weeks)){
                     $weeks="1";
-                    $this->visitorsByProfilesWeekly($weeks,$profileType);
+                    $this->visitorsByProfilesWeekly($weeks);
                 }else{
-                    $this->visitorsByProfilesWeekly($weeks,$profileType);
+                    $this->visitorsByProfilesWeekly($weeks);
                 }
             }
             elseif($rangeRadio == "daily"){
                $date30DaysBack = $this->getTodayAnd30DaysBack();
-               $this->newVisitorsDaily($dateFromFilter,$dateToFilter,$date30DaysBack[0],$date30DaysBack[1],$profileType);
+               $this->newVisitorsDaily($dateFromFilter,$dateToFilter,$date30DaysBack[0],$date30DaysBack[1]);
             }
             else{
                 $date1YearBack = $this->getTodayAnd1YearBack();
-                $this->newVisitors($dateFromFilter,$dateToFilter,$date1YearBack[0],$date1YearBack[1],$profileType);
+                $this->newVisitors($dateFromFilter,$dateToFilter,$date1YearBack[0],$date1YearBack[1]);
             }
         } 
         else{
             $date1YearBack = $this->getTodayAnd1YearBack();
-            $this->newVisitors($dateFromFilter,$dateToFilter,$date1YearBack[0],$date1YearBack[1],$profileType);
+            $this->newVisitors($dateFromFilter,$dateToFilter,$date1YearBack[0],$date1YearBack[1]);
         }
        
     } 
@@ -105,14 +103,14 @@ class ReportsController extends Controller
      * based on default 30 days daily new visitor profiles
      * OR in a specified date range based on from and to filters
      */
-    function newVisitorsDaily($dateFromFilter,$dateToFilter,$from,$to,$profileType){
+    function newVisitorsDaily($dateFromFilter,$dateToFilter,$from,$to){
         
         if( !empty($dateFromFilter) && !empty($dateToFilter) ) {
             $from = new DateTime($dateFromFilter);
             $to = new DateTime($dateToFilter);
         }
         
-        $visitors = $this->getNewVisitorsData ($from,$to,$profileType );
+        $visitors = $this->getNewVisitorsData ($from,$to );
 
         $countArray=array();
        
@@ -137,12 +135,11 @@ class ReportsController extends Controller
      * @param $dateFromFilter: user input to date
      * @param $from: default from date(came from getTodayAnd1YearBack()) if user not selected any filter input
      * @param $to: user input to date(came from getTodayAnd1YearBack()) if user not selected any filter input
-     * @param $profileType having values of ALL, CORPORATE, VIC, ASIC
      * this function renders monthly new visitor profiles
      * based on default 1 year monthly new visitor profiles
      * OR in a specified date range based on from and to filters
      */
-    public function newVisitors($dateFromFilter,$dateToFilter,$from,$to,$profileType){
+    public function newVisitors($dateFromFilter,$dateToFilter,$from,$to){
         
         if( !empty($dateFromFilter) && !empty($dateToFilter) ) {
             $from = new DateTime($dateFromFilter);
@@ -151,7 +148,7 @@ class ReportsController extends Controller
        
         $countArray=array();
         
-        $visitors = $this->getNewVisitorsData ($from, $to,$profileType);
+        $visitors = $this->getNewVisitorsData ($from, $to);
         
         foreach($visitors as $visitor){
             $date_check_in = $visitor['date_check_in'];
@@ -170,11 +167,11 @@ class ReportsController extends Controller
     
     /*
      * @param $weeks(last 1,2,3,4 weeks). $weeks variable is integer
-     * @param $profileType(ALL,CORPORATE,VIC,ASIC)
+     
      * this function renders weekly new visitor profiles
      * 
      */
-    function visitorsByProfilesWeekly($weeks,$profileType){
+    function visitorsByProfilesWeekly($weeks){
       
         if( $weeks == 1 ){
             $lastWeeks = "-1 week";
@@ -188,7 +185,7 @@ class ReportsController extends Controller
         $to = new DateTime();
         
         // Get New visitors between From and To date
-        $data = $this->getNewVisitorsData($from,$to,$profileType);
+        $data = $this->getNewVisitorsData($from,$to);
         
         $return = array();  
                 
@@ -223,20 +220,11 @@ class ReportsController extends Controller
      * 
      * @param date $from From date
      * @param date $to to date 
-     * @param $profileType
      * @return array Data array
      */
-    function getNewVisitorsData( $from, $to,$profileType ) {
-        
-        if($profileType == "ALL"){
-            $dateCondition = "( DATE(t.date_created) BETWEEN  '".$from->format("Y-m-d")."' AND  '".$to->format("Y-m-d")."' )"
-                            ." AND (t.is_deleted =0 )";
-        
-        }else{
-            $dateCondition = "( DATE(t.date_created) BETWEEN  '".$from->format("Y-m-d")."' AND  '".$to->format("Y-m-d")."' )"
-                            ." AND (t.is_deleted =0 )"
-                            ." AND (t.profile_type = '".$profileType."')";
-        }
+    function getNewVisitorsData( $from, $to ) {
+        $dateCondition = "( DATE(t.date_created) BETWEEN  '".$from->format("Y-m-d")."' AND  '".$to->format("Y-m-d")."' )"
+                         ." AND (t.is_deleted =0 ) AND (t.profile_type='CORPORATE')";
         
         $data = Yii::app()->db->createCommand()
                 ->select("DATE(t.date_created) AS date_check_in, t.first_name, t.id") 
@@ -327,6 +315,134 @@ class ReportsController extends Controller
         return $reversed;
     }
     
+    
+    
+    //***************************************************************************
+    
+    /*
+     * This is MAIN function renders monthly new visitor profiles
+     */    
+    public function actionProfilesAvmsVisitors() {
+        // Post Date
+        $dateFromFilter = Yii::app()->request->getParam("date_from_filter");
+        $dateToFilter = Yii::app()->request->getParam("date_to_filter");
+       
+        $date1YearBack = $this->getTodayAnd1YearBack();
+        $this->avmsNewVisitors($dateFromFilter,$dateToFilter,$date1YearBack[0],$date1YearBack[1]);
+        
+    }
+    
+        /*
+     * @param $dateFromFilter: user input from date
+     * @param $dateFromFilter: user input to date
+     * @param $from: default from date(came from getTodayAnd1YearBack()) if user not selected any filter input
+     * @param $to: user input to date(came from getTodayAnd1YearBack()) if user not selected any filter input
+     * this function renders monthly new visitor profiles
+     * based on default 1 year monthly new visitor profiles
+     * OR in a specified date range based on from and to filters
+     */
+    public function avmsNewVisitors($dateFromFilter,$dateToFilter,$from,$to){
+        
+        if( !empty($dateFromFilter) && !empty($dateToFilter) ) {
+            $from = new DateTime($dateFromFilter);
+            $to = new DateTime($dateToFilter);
+            
+           $reversed = $this->getGivenPeriodInterval($from,$to);
+        }
+        else{
+            $reversed = $this->get1YearInterval();
+        }
+        
+
+        
+        $countArrayVIC=array();$countArrayASIC=array();
+        
+        $visitorsVIC = $this->getNewVICVisitorsData ($from,$to);
+        $visitorsASIC = $this->getNewASICVisitorsData ($from,$to);
+        
+        foreach($visitorsVIC as $visitorVIC){
+            $date_check_in = $visitorVIC['date_check_in'];
+            $time=strtotime($date_check_in);
+            $month=date("m",$time);
+            $year=date("Y",$time);
+            $m = intval($month);
+            $y = intval($year);
+            $countArrayVIC[$y][$m][]=1;
+        }
+        
+        foreach($visitorsASIC as $visitorASIC){
+            $date_check_in = $visitorASIC['date_check_in'];
+            $time=strtotime($date_check_in);
+            $month=date("m",$time);
+            $year=date("Y",$time);
+            $m = intval($month);
+            $y = intval($year);
+            $countArrayASIC[$y][$m][]=1;
+        }
+        
+        
+        $this->render("avmsnewvisitorcount", array("resultsVIC"=>$countArrayVIC,"resultsASIC"=>$countArrayASIC,"reversed"=>$reversed));
+    }
+    
+    
+    /*
+     * this function returns an interval month from given dates (FROM to TO date )
+     * e.g. if FROM date given is 11-june-2015 and TO date given is 11-june-2014
+     * it will give us in array of array having two index each of data 6-2015(June-2015),5-2015(May-2015)
+     * and so on after 1 year from today
+    */
+    public function getGivenPeriodInterval($from,$to){
+        
+        $interval = new DateInterval('P1M');
+        $period = new DatePeriod($from, $interval, $to);
+
+        $periods=[];
+        foreach ($period as $dt) {
+             $periods[]=array($dt->format('F Y'),$dt->format('n-Y'));
+        }
+        $reversed = array_reverse($periods);
+        return $reversed;
+    }
+    
+    
+        /**
+     * Get New Visitors by Dates
+     * 
+     * @param date $from From date
+     * @param date $to to date 
+     * @return array Data array
+     */
+    function getNewVICVisitorsData( $from, $to ) {
+        $dateCondition = "( DATE(t.date_created) BETWEEN  '".$from->format("Y-m-d")."' AND  '".$to->format("Y-m-d")."' )"
+                         ." AND (t.is_deleted =0 ) AND (t.profile_type='VIC')";
+        
+        $data = Yii::app()->db->createCommand()
+                ->select("DATE(t.date_created) AS date_check_in, t.first_name, t.id") 
+                ->from("visitor t")
+                ->where($dateCondition)
+                ->queryAll();
+        return $data;
+    }
+    
+       /**
+     * Get New Visitors by Dates
+     * 
+     * @param date $from From date
+     * @param date $to to date 
+     * @return array Data array
+     */
+    function getNewASICVisitorsData( $from, $to ) {
+        
+        $dateCondition = "( DATE(t.date_created) BETWEEN  '".$from->format("Y-m-d")."' AND  '".$to->format("Y-m-d")."' )"
+                         ." AND (t.is_deleted =0 ) AND (t.profile_type='ASIC')";
+        
+        $data = Yii::app()->db->createCommand()
+                ->select("DATE(t.date_created) AS date_check_in, t.first_name, t.id") 
+                ->from("visitor t")
+                ->where($dateCondition)
+                ->queryAll();
+        return $data;
+    }
 
     
 }

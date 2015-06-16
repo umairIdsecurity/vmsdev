@@ -231,6 +231,7 @@ $model->identification_country_issued = 13;
                                     <select id="fromDay" name="Visitor[birthdayDay]" class='daySelect'></select>
                                     <select id="fromMonth" name="Visitor[birthdayMonth]" class='monthSelect'></select>
                                     <select id="fromYear" name="Visitor[birthdayYear]" class='yearSelect'></select>
+                                    <span class="required">*</span>
                                     <br />
                                     <?php
                                     echo $form->error($model, 'date_of_birth');

@@ -619,15 +619,15 @@ $company = Company::model()->findByPk($session['company']);
 
 <!-- PHOTO CROP-->
 <div id="light" class="white_content">
+    <img id="photoCropPreview" src="<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnLogoPhotoRelative($company->logo); ?>">
+
+</div>
+<div id="fade" class="black_overlay">
     <div style="text-align:right;">
         <input type="button" class="btn btn-success" id="cropPhotoBtn" value="Crop" style="">
         <input type="button" id="closeCropPhoto" value="x" class="btn btn-danger">
     </div>
-    <br>
-    <img id="photoCropPreview" src="<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnLogoPhotoRelative($company->logo); ?>">
-
 </div>
-<div id="fade" class="black_overlay"></div>
 
 <input type="hidden" id="x12"/>
 <input type="hidden" id="x22"/>

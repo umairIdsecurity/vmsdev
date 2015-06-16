@@ -1247,18 +1247,6 @@ $this->widget('bootstrap.widgets.TbButton', array(
 
 <div id="light" class="white_content">
 
-    <div style="text-align:right;">
-
-        <input type="button" class="btn btn-success" id="cropPhotoBtn" value="Crop" style="">
-
-        <input type="button" id="closeCropPhoto" onclick="document.getElementById('light').style.display = 'none';
-
-                document.getElementById('fade').style.display = 'none'" value="x" class="btn btn-danger">
-
-    </div>
-
-    <br>
-
     <?php if ($this->action->id == 'addvisitor') { ?>
 
         <img id="photoCropPreview" src="">
@@ -1274,7 +1262,18 @@ $this->widget('bootstrap.widgets.TbButton', array(
 
 </div>
 
-<div id="fade" class="black_overlay"></div>
+<div id="fade" class="black_overlay">
+
+    <div style="text-align:right;">
+
+        <input type="button" class="btn btn-success" id="cropPhotoBtn" value="Crop" style="">
+
+        <input type="button" id="closeCropPhoto" onclick="document.getElementById('light').style.display = 'none';
+
+                document.getElementById('fade').style.display = 'none'" value="x" class="btn btn-danger">
+
+    </div>
+</div>
 
 
 <input type="hidden" id="x1"/>

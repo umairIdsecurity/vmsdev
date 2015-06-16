@@ -413,14 +413,14 @@ function preloadHostDetails(hostId) {
                     $("#cropImageBtn3").show();
 
                 }
-                else {
+                /*else {
                     $("#staffmember-host-form #User_first_name").val(value.first_name);
                     $("#staffmember-host-form #User_last_name").val(value.last_name);
                     $("#staffmember-host-form #User_department").val(value.department);
                     $("#staffmember-host-form #User_staff_id").val(value.staff_id);
                     $("#staffmember-host-form #User_email").val(value.email);
                     $("#staffmember-host-form #User_contact_number").val(value.contact_number);
-                }
+                }*/
             });
         }
     });

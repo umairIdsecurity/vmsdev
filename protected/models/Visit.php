@@ -698,7 +698,7 @@ class Visit extends CActiveRecord {
             $commandUpdateCard = "";
 
             $command = Yii::app()->db->createCommand("UPDATE visit
-                    SET visit_status = '" . VisitStatus::CLOSED . "', card_option ='" . CardStatus::RETURNED . "', finish_date = CURDATE(), finish_time = CURTIME() WHERE 'd-m-Y' > date_check_out AND DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 28 DAY), '%d-%m-%Y %h:%i:%s') >= CONCAT(date_check_in, ' ', time_check_in) AND visit_status = '" . VisitStatus::ACTIVE . "' AND (card_type = '" . CardType::VIC_CARD_EXTENDED . "' OR card_type = '". CardType::VIC_CARD_MULTIDAY ."')")->execute();
+                    SET visit_status = '" . VisitStatus::CLOSED . "', card_option ='" . CardStatus::RETURNED . "', finish_date = DATE_FORMAT(CURDATE(), '%d-%m-%Y'), finish_time = CURTIME() WHERE 'd-m-Y' > date_check_out AND DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 28 DAY), '%d-%m-%Y %h:%i:%s') >= CONCAT(date_check_in, ' ', time_check_in) AND visit_status = '" . VisitStatus::ACTIVE . "' AND (card_type = '" . CardType::VIC_CARD_EXTENDED . "' OR card_type = '". CardType::VIC_CARD_MULTIDAY ."')")->execute();
             echo "Affected Rows : " . $command . "\n";
             if ($command > 0) {
                 echo "Success: Update VIC Extended and Multiday visits to close status successful. \n";
@@ -720,7 +720,7 @@ class Visit extends CActiveRecord {
     public function updateOneDayVisitsToClose() {
         try {
             $command = Yii::app()->db->createCommand(
-                "UPDATE visit SET visit_status = '" . VisitStatus::CLOSED . "', card_option ='" . CardStatus::RETURNED . "', finish_date = CURDATE(), finish_time = CURTIME() WHERE 'd-m-Y' > date_check_out AND DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 24 HOUR), '%d-%m-%Y %h:%i:%s') >= CONCAT(date_check_in, ' ', time_check_in) AND visit_status = '" . VisitStatus::ACTIVE . "' AND card_type = '" . CardType::VIC_CARD_24HOURS . "'")->execute();
+                "UPDATE visit SET visit_status = '" . VisitStatus::CLOSED . "', card_option ='" . CardStatus::RETURNED . "', finish_date = DATE_FORMAT(CURDATE(), '%d-%m-%Y'), finish_time = CURTIME() WHERE 'd-m-Y' > date_check_out AND DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 24 HOUR), '%d-%m-%Y %h:%i:%s') >= CONCAT(date_check_in, ' ', time_check_in) AND visit_status = '" . VisitStatus::ACTIVE . "' AND card_type = '" . CardType::VIC_CARD_24HOURS . "'")->execute();
             echo "Affected Rows : " . $command . "\n";
             if ($command > 0) {
                 echo "Success: Update VIC 24 and Manual visits to close status successful. \n";
@@ -738,7 +738,7 @@ class Visit extends CActiveRecord {
     public function updateSameDayVisitsToExpired() {
         try {
             $command = Yii::app()->db->createCommand(
-                "UPDATE visit SET visit_status = '" . VisitStatus::EXPIRED . "', card_option ='" . CardStatus::RETURNED . "', finish_date = CURDATE(), finish_time = CURTIME() WHERE DATE_FORMAT(NOW(), '%d-%m-%Y') > date_check_out AND CURTIME() >= time_check_out AND visit_status = '" . VisitStatus::ACTIVE . "' AND card_type = '" . CardType::VIC_CARD_SAMEDATE . "'")->execute();
+                "UPDATE visit SET visit_status = '" . VisitStatus::EXPIRED . "', card_option ='" . CardStatus::RETURNED . "', finish_date = DATE_FORMAT(CURDATE(), '%d-%m-%Y'), finish_time = CURTIME() WHERE DATE_FORMAT(NOW(), '%d-%m-%Y') > date_check_out AND CURTIME() >= time_check_out AND visit_status = '" . VisitStatus::ACTIVE . "' AND card_type = '" . CardType::VIC_CARD_SAMEDATE . "'")->execute();
             echo "Affected Rows : " . $command . "\n";
             if ($command > 0) {
                 echo "Success: Update VIC Sameday visits to expired status successful. \n";

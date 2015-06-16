@@ -82,7 +82,7 @@ $model->identification_country_issued = 13;
                                 }
 
                                 var dt = new Date();
-                                if(dt.getFullYear()< $("#fromYear").val()) {
+                                if(dt.getFullYear() < $("#fromYear").val()) {
                                     $("#Visitor_date_of_birth_em_").show();
                                     $("#Visitor_date_of_birth_em_").html("Birthday is incorrect");
                                     return false;
@@ -94,6 +94,14 @@ $model->identification_country_issued = 13;
                                     $("#Visitor_date_of_birth_em_").show();
                                     $("#Visitor_date_of_birth_em_").html("Birthday is incorrect");
                                     return false;
+                                }
+
+                                var visitor_type = $("#Visitor_visitor_type").val();
+                                if (visitor_type == "") {
+                                    $("#Visitor_visitor_type_em_").html("Please select visitor type").show();
+                                    return false;
+                                } else {
+                                    $("#Visitor_visitor_type_em_").empty().hide();
                                 }
 
                                 if (!hasError){

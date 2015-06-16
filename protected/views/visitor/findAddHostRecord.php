@@ -558,16 +558,17 @@ $defaultKey = key($asicCardTypes);
 
 <!-- PHOTO CROP-->
 <div id="light2" class="white_content">
-    <div style="text-align:right;">
+    <img id="photoCropPreview2" src="">
+
+</div>
+<div id="fade2" class="black_overlay">
+
+    <div>
         <input type="button" class="btn btn-success" id="cropPhotoBtn2" value="Crop" style="">
         <input type="button" id="closeCropPhoto2" onclick="document.getElementById('light2').style.display = 'none';
                 document.getElementById('fade2').style.display = 'none'" value="x" class="btn btn-danger">
     </div>
-    <br>
-    <img id="photoCropPreview2" src="">
-
 </div>
-<div id="fade2" class="black_overlay"></div>
 
 <input type="hidden" id="x12"/>
 <input type="hidden" id="x22"/>

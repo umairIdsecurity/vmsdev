@@ -388,16 +388,16 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
 <!--POP UP FOR CROP PHOTO -->
 
 <div id="light" class="white_content">
+    <img id="photoCropPreview" width="500px" height="500px" src="<?php echo Photo::model()->returnVisitorPhotoRelativePath($model->visitor) ?>">
+
+</div>
+<div id="fade" class="black_overlay">
     <div style="text-align:right;">
         <input type="button" class="btn btn-success" id="cropPhotoBtn" value="Crop" style="">
         <input type="button" id="closeCropPhoto" onclick="document.getElementById('light').style.display = 'none';
                 document.getElementById('fade').style.display = 'none'" value="x" class="btn btn-danger">
     </div>
-    <br>
-    <img id="photoCropPreview" width="500px" height="500px" src="<?php echo Photo::model()->returnVisitorPhotoRelativePath($model->visitor) ?>">
-
 </div>
-<div id="fade" class="black_overlay"></div>
 
 <input type="hidden" id="x1"/>
 <input type="hidden" id="x2"/>

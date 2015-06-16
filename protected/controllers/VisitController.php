@@ -77,6 +77,10 @@ class VisitController extends Controller {
                 $_POST['Visit']['time_check_in'] = date('h:i:s');
             }
 
+            if (!isset($_POST['Visit']['reason']) || empty($_POST['Visit']['reason'])) {
+                $_POST['Visit']['reason'] = 1;
+            }
+
             $model->attributes = $_POST['Visit'];
 
             switch ($model->card_type) {

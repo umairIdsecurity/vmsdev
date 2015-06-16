@@ -304,6 +304,7 @@ if ($this->action->id == 'update') {
                                 <select id="fromDay" name="Visitor[birthdayDay]" class='daySelect'></select>
                                 <select id="fromYear" name="Visitor[birthdayYear]" class='yearSelect'></select>
                                 <span class="required">*</span>
+                                <?php echo "<br>" . $form->error($model, 'date_of_birth'); ?>
                             </td>
                         </tr>
                         <tr>
@@ -381,7 +382,7 @@ if ($this->action->id == 'update') {
                                         'model'       => $model,
                                         'attribute'   => 'identification_document_expiry',
                                         'options'     => array(
-                                            'dateFormat' => 'yy-mm-dd',
+                                            'dateFormat' => 'dd-mm-yy',
                                         ),
                                         'htmlOptions' => array(
                                             'size'        => '0',
@@ -404,7 +405,7 @@ if ($this->action->id == 'update') {
                                         'model'       => $model,
                                         'attribute'   => 'asic_expiry',
                                         'options'     => array(
-                                            'dateFormat' => 'yy-mm-dd',
+                                            'dateFormat' => 'dd-mm-yy',
                                         ),
                                         'htmlOptions' => array(
                                             'size'        => '0',
@@ -442,8 +443,35 @@ if ($this->action->id == 'update') {
 <script>
 
     function afterValidate(form, data, hasError) {
+        var dt = new Date();
+        if(dt.getFullYear()< $("#fromYear").val()) {
+            $("#Visitor_date_of_birth_em_").show();
+            $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+            return false;
+        }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
+            $("#Visitor_date_of_birth_em_").show();
+            $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+            return false;
+        }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
+            $("#Visitor_date_of_birth_em_").show();
+            $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+            return false;
+        }
+
+        var companyValue = $("#Visitor_company").val();
+        var workstation = $("#User_workstation").val();
+        if (!workstation || workstation == "") {
+            $("#Visitor_visitor_workstation_em_").show();
+            $("#Visitor_visitor_workstation_em_").html('Please enter Workstation');
+            return false;
+        }
         if (!hasError) {
-            checkEmailIfUnique();
+            if (!companyValue || companyValue == "") {
+                $("#company_error_").show();
+                return false;
+            } else {
+                checkEmailIfUnique();
+            }
         }
     }
 
@@ -452,6 +480,63 @@ if ($this->action->id == 'update') {
         $(".workstationRow").show();
         getWorkstation();
 
+        $('#fromDay').on('change', function () {
+            var dt = new Date();
+
+            if(dt.getFullYear()< $("#fromYear").val()) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                return false;
+            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                return false;
+            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                return false;
+            }else{
+                $("#Visitor_date_of_birth_em_").hide();
+            }
+        });
+        $('#fromMonth').on('change', function () {
+            var dt = new Date();
+
+            if(dt.getFullYear()< $("#fromYear").val()) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                return false;
+            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                return false;
+            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                return false;
+            }else{
+                $("#Visitor_date_of_birth_em_").hide();
+            }
+        });
+        $('#fromYear').on('change', function () {
+            var dt = new Date();
+
+            if(dt.getFullYear()< $("#fromYear").val()) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                return false;
+            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                return false;
+            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                return false;
+            }else{
+                $("#Visitor_date_of_birth_em_").hide();
+            }
+        });
 
         if ($("#currentAction").val() == 'update') {
 

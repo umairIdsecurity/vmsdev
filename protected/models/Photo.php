@@ -112,7 +112,7 @@ class Photo extends CActiveRecord {
         if ($visitor->photo != '') {
             $photo = Photo::model()->findByPK($visitor->photo);
             if(file_exists($photo->relative_path)){
-                return Yii::app()->getBaseUrl(true)."/".$photo->relative_path;
+                return /*Yii::app()->getBaseUrl(true)."/".*/$photo->relative_path;
             }else{
                 return $this->defaultImage();
             }

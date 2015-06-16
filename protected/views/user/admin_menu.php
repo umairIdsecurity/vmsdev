@@ -180,7 +180,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                 }
                 ?>>
                     <li><a href='<?php echo Yii::app()->createUrl('user/create',
-                            array('role' => Roles::ROLE_AIRPORT_OPERATOR)); ?>' class="has-sub-sub">
+                            array('role' => Roles::ROLE_AGENT_AIRPORT_ADMIN)); ?>' class="has-sub-sub">
                             <div class="customIcon-adminmenu">+</div>
                             <span>Add User</span></a></li>
 
@@ -511,7 +511,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                 ));
                 ?>
                 <ul <?php
-                if ($this->action->id == 'vicTotalVisitCount' || $this->action->id == 'vicRegister') {
+                if ($this->action->id == 'vicTotalVisitCount' || $this->action->id == 'vicRegister' || $this->action->id == 'totalVicsByWorkstation' || $this->action->id == 'profilesAvmsVisitors' || $this->action->id == 'visitorsVicByType' || $this->action->id == 'visitorsVicByCardType') {
                     echo "style='display:block ;'";
                 }
                 ?>>
@@ -521,6 +521,12 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                         <a href='<?php echo Yii::app()->createUrl('visit/vicRegister'); ?>'><span>VIC Register</span></a>
                     </li>
                     <li><a href='<?php echo Yii::app()->createUrl('visit/totalVicsByWorkstation'); ?>'><span>Total VICs by Workstation</span></a></li>
+                    
+                    <li><a href='<?php echo Yii::app()->createUrl('reports/profilesAvmsVisitors'); ?>'><span>New Visitor Types ASIC & VIC</span></a></li>
+                    
+                    <li><a href='<?php echo Yii::app()->createUrl('reports/visitorsVicByType'); ?>'><span>Total VICs by Visitor Type</span></a></li>
+                
+                    <li><a href='<?php echo Yii::app()->createUrl('reports/visitorsVicByCardType'); ?>'><span>Total VICs by Card Type</span></a></li>
                 </ul>
             </li>
             <!-- menu for AVMS Reports -->
@@ -558,6 +564,20 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                 </li>
             <?php } ?>
             <!-- Ends Notifications -->
+            
+            <!-- REASONS -->
+            <?php if ($session['role'] == Roles::ROLE_SUPERADMIN || $session['role'] == Roles::ROLE_ADMIN) { ?>
+                <li class='has-sub'>
+                    <a class='managevisitorrecords'
+                       href='<?php echo Yii::app()->createUrl('reasons/admin'); ?>'><span>Contact Reasons</span></a>
+                    <ul <?php echo $this->id == 'reasons' ? "style='display:block'" : "style='display:none'"; ?>>
+                        <li><a href='<?php echo Yii::app()->createUrl('reasons/create'); ?>'
+                               class="addSubMenu"><span>Create Reason</span></a></li>
+                    </ul>
+                </li>
+            <?php } ?>
+            <!-- Ends REASONS -->
+            
         </ul>
     </div>
 </div>

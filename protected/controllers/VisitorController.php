@@ -56,7 +56,11 @@ class VisitorController extends Controller {
             $model->attributes = $_POST['Visitor'];
 
             if (isset($_POST['VisitCardType']) && $_POST['VisitCardType'] > CardType::CONTRACTOR_VISITOR) {
-                $model->profile_type = Visitor::PROFILE_TYPE_VIC;
+                if (isset($_POST['Visitor']['visitor_card_status']) && $_POST['Visitor']['visitor_card_status'] != Visitor::ASIC_ISSUED) {
+                    $model->profile_type = Visitor::PROFILE_TYPE_VIC;
+                } else {
+                    $model->profile_type = Visitor::PROFILE_TYPE_ASIC;
+                }
             }
 
             //check validate for LOG VISIT PROCESS
@@ -90,6 +94,7 @@ class VisitorController extends Controller {
         $model = $this->loadModel($id);
         $visitorService = new VisitorServiceImpl();
         $session = new CHttpSession;
+        $updateErrorMessage = '';
         // if view value is 1 do not redirect page else redirect to admin
         $isViewedFromModal = 0;
         if (isset($_GET['view'])) {
@@ -99,21 +104,58 @@ class VisitorController extends Controller {
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['Visitor'])) {
-            $model->attributes = $_POST['Visitor'];
-            if ($visitorService->save($model, NULL, $session['id'])) {
+            $currentCardStatus = $model->visitor_card_status;
+            if ($currentCardStatus == 2 && $_POST['Visitor']['visitor_card_status'] == 3) {
+                $activeVisit = $model->activeVisits;
+                foreach($activeVisit as $item) {
+                    if ($item->visit_status == VisitStatus::ACTIVE) {
+                        $updateErrorMessage = 'Please close the active visits before changing the status to ASIC Pending.';
+                    }
+                }
+                if($updateErrorMessage == '' ) {
+                    $model->attributes = $_POST['Visitor'];
+                    if ($visitorService->save($model, NULL, $session['id'])) {
+                        if ($model->totalVisit > 0) {
+                            $resetHistory = new ResetHistory();
+                            $resetHistory->visitor_id = $model->id;
+                            $resetHistory->reset_time = date("Y-m-d H:i:s");
+                            $resetHistory->reason = 'Update Visitor Card Type form VIC Holder to ASIC Pending';
+                            if ($resetHistory->save()) {
+                                foreach ($activeVisit as $item) {
+                                    $item->reset_id = $resetHistory->id;
+                                    $item->save();
+                                    if ($item->save()) {
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
                 switch ($isViewedFromModal) {
                     case "1":
                         break;
 
                     default:
-                        $this->redirect(array('admin'));
+                        echo $updateErrorMessage;;
+                }
+            } else {
+                $model->attributes = $_POST['Visitor'];
+                if ($visitorService->save($model, NULL, $session['id'])) {
+                    switch ($isViewedFromModal) {
+                        case "1":
+                            break;
+
+                        default:
+                            echo $updateErrorMessage;;
+                    }
                 }
             }
-        }
 
-        $this->render('update', array(
-            'model' => $model,
-        ));
+        } else{
+            $this->render('update', array(
+                'model' => $model,
+            ));
+        }
     }
 
     /* Visitor detail page */
@@ -230,7 +272,7 @@ class VisitorController extends Controller {
                 ), false, true);
     }
 
-    public function actionFindHost($id,$tenant,$tenant_agent) {
+    public function actionFindHost($id,$tenant,$tenant_agent, $cardType = null) {
         $this->layout = '//layouts/column1';
         $model = new User('search');
         $model->unsetAttributes();  // clear any default values
@@ -238,7 +280,7 @@ class VisitorController extends Controller {
             $model->attributes = $_GET['User'];
 
         $this->renderPartial('findHost', array(
-            'model' => $model,
+            'model' => $model, 'cardType' => $cardType
                 ), false, true);
     }
 
@@ -249,7 +291,7 @@ class VisitorController extends Controller {
     }
 
     public function actionGetHostDetails($id) {
-        $resultMessage['data'] = User::model()->findAllByPk($id);
+        $resultMessage['data'] = Visitor::model()->findAllByPk($id);
         echo CJavaScript::jsonEncode($resultMessage);
         Yii::app()->end();
     }
@@ -340,6 +382,7 @@ class VisitorController extends Controller {
     }
 
     public function actionAddVisitor() {
+        
         $model = new Visitor;
         $visitorService = new VisitorServiceImpl();
         $session = new CHttpSession;
@@ -347,12 +390,46 @@ class VisitorController extends Controller {
         if (isset($_POST['Visitor'])) {
             $model->profile_type = $_POST['Visitor']['profile_type'];
             $model->attributes = $_POST['Visitor'];
-
+            
             if (empty($model->visitor_workstation)) {
                 $model->visitor_workstation = $session['workstation'];
             }
+            
 
             if ($result = $visitorService->save($model, NULL, $session['id'])) {
+                
+                if(!empty($model->password_requirement)){
+                    
+                    $passwordRequire= intval($model->password_requirement);
+                    
+                    if($passwordRequire == 2){
+                        
+                        $loggedUserEmail = Yii::app()->user->email;
+
+                        $headers = "MIME-Version: 1.0" . "\r\n";
+                        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+                        $headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
+
+                        $to=$model->email;
+
+                        $subject="Preregistration email notification";
+
+                        $body = "<html><body>Hi,<br><br>".
+                                "This is preregistration email.<br><br>".
+                                "Please click on the below URL:<br>".
+                                "http://vmsprdev.identitysecurity.info/index.php/preregistration<br>";
+                        
+                        if(!empty($model->password_option)){
+                            $passwordCreate= intval($model->password_option);
+                            if($passwordCreate == 1){
+                                $body .= "Password: ".$_POST['Visitor']['password']."<br>";
+                            }
+                        }
+                        $body .="<br>"."Thanks,"."<br>Admin</body></html>";
+                        mail($to, $subject, $body, $headers);
+                    }
+                }
+                
             	Yii::app()->end();
             }
         }

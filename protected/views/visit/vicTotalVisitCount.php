@@ -100,7 +100,24 @@ $this->widget('zii.widgets.grid.CGridView', array(
                 <form id="taskForm" class="form-horizontal">
                     <input type="hidden" id="linkReset"/>
                     <div class="form-group">
-                        <label style="float: left" class="col-md-2">Reason : </label>
+                        <label style="float: left" class="col-md-2">ASIC Application Lodgement Date : </label>
+                        <?php
+                        $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                            'name' => 'datePicker',
+                            'id' => 'lodgementDatePicker',
+                            'options' => array(
+                                'dateFormat' => 'yy-mm-dd',
+                            ),
+                            'htmlOptions' => array(
+                                'size' => '0',
+                                'maxlength' => '20',
+                                'style' => 'width: 80px;',
+                            ),
+                        ));
+                        ?>
+                        <br>
+                        <br>
+                        <label style="float: left" class="col-md-2">Notes : </label>
                         <div class="col-md-9">
                             <input style="width: 450px" type="text" id="reasonForReset" class="form-control input-sm" />
                         </div>
@@ -196,10 +213,11 @@ $this->widget('zii.widgets.grid.CGridView', array(
             e.preventDefault();
             $('#resetModal').modal('hide');
             var reason = $('#reasonForReset').val();
+            var lodgementDate = $('#lodgementDatePicker').val();
             $.ajax({
                 type:'GET',
                 url: $('#linkReset').val(),
-                data: {reason: reason},
+                data: {reason: reason, lodgementDate: lodgementDate },
                 success:function(response) {
                     $.fn.yiiGridView.update('corporate-total-visit-count');
                 }

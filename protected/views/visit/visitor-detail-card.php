@@ -109,7 +109,9 @@ if ($vstr->profile_type == "CORPORATE" && $model->card_type == 4) {
                                     $model->date_check_out = date('d-m-Y', strtotime($today . ' + 28 days'));
                                 }
                                 echo date("d M y", strtotime($model->date_check_out));
-                            } else {
+                            }elseif ($model->card_type == CardType::VIC_CARD_24HOURS){
+                                echo date("d M y", strtotime($model->date_check_out));
+                            }else {
                                 if (strtotime($model->date_check_out)) {
                                     $date2 = date('d M y');
                                     echo date("d M y", strtotime($date2));
@@ -175,7 +177,7 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
         ));
         ?>
 </div>
-<?php if (!in_array($model->card_type, [CardType::SAME_DAY_VISITOR, CardType::MULTI_DAY_VISITOR, CardType::CONTRACTOR_VISITOR, CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_24HOURS, CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY]) || !in_array($model->visit_status, [VisitStatus::SAVED, VisitStatus::CLOSED, VisitStatus::EXPIRED])): ?>
+<?php if (in_array($model->card_type, [CardType::SAME_DAY_VISITOR, CardType::MULTI_DAY_VISITOR, CardType::CONTRACTOR_VISITOR, CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_24HOURS, CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY]) && $model->visit_status ==VisitStatus::ACTIVE): ?>
 <div class="dropdown">
     <button class="complete btn btn-info printCardBtn dropdown-toggle" style="width:205px !important" type="button" id="menu1" data-toggle="dropdown">Print Card
         <span class="caret pull-right"></span></button>
@@ -185,7 +187,16 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo yii::app()->createAbsoluteUrl('cardGenerated/pdfprint', array('id' => $model->id, 'type' => 3)) ?>">Rewritable Print Card</a></li>
     </ul>
 </div>
-<?php endif; ?>
+<?php elseif ($model->card_type == CardType::VIC_CARD_24HOURS and $model->visit_status == VisitStatus::AUTOCLOSED and strtotime($model->date_check_in.' '.$model->time_check_in) > strtotime(date("d-m-Y H:i:s"))):
+    ?>
+    <div class="dropdown">
+        <button class="complete btn btn-info printCardBtn dropdown-toggle" style="width:205px !important" type="button" id="menu1" data-toggle="dropdown">Print Card
+            <span class="caret pull-right"></span></button>
+        <ul class="dropdown-menu" style="left: 62px;" role="menu" aria-labelledby="menu1">
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo yii::app()->createAbsoluteUrl('cardGenerated/pdfprint', array('id' => $model->id, 'type' => 4)) ?>">Reprint Card</a></li>
+        </ul>
+    </div>
+    <?php  endif; ?>
 <?php if ($model->visit_status != VisitStatus::SAVED): ?>
 <div style="margin-top: 10px;">
 <?php
@@ -235,12 +246,7 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
                 }
             }
             echo CHtml::dropDownList('Visit[card_type]', $model->card_type, $cardTypeResults);
-            echo "<br />";
 
-            if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN, Roles::ROLE_SUPERADMIN])) {
-                echo '<input type="submit" class="hidden" id="submitWorkStationForm">';
-                echo '<input type="submit" class="complete" id="btnWorkStationForm" value="Update">';
-            }
         }
         ?>
         
@@ -372,32 +378,20 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
     function populateVisitWorkstation(value) {
         $("#Visit_workstation").val(value.value);
     }
-
-    $(document).on('change', '#Visitor_visitor_card_status', function(e) {
-        var selected = $(this).val();
-        var remainingDays = $('#remaining_day').val();
-        if (selected == "<?php echo Visitor::ASIC_PENDING; ?>" && remainingDays < 27) {
-            $('#checkout_date_warning').html('An EVIC can’t be issued to this VIC holder <br /> as they don’t have 28 days remaining.<br />Please update their Card Status to ASIC <br />Pending or Select another card type.').show();
-            $('#btnWorkStationForm').attr('disabled', true);
-        } else {
-            $('#checkout_date_warning').html('').hide();
-            $('#btnWorkStationForm').attr('disabled', false);
-        }
-    });
 </script>
 <!--POP UP FOR CROP PHOTO -->
 
 <div id="light" class="white_content">
+    <img id="photoCropPreview" width="500px" height="500px" src="<?php echo Photo::model()->returnVisitorPhotoRelativePath($model->visitor) ?>">
+
+</div>
+<div id="fade" class="black_overlay">
     <div style="text-align:right;">
         <input type="button" class="btn btn-success" id="cropPhotoBtn" value="Crop" style="">
         <input type="button" id="closeCropPhoto" onclick="document.getElementById('light').style.display = 'none';
                 document.getElementById('fade').style.display = 'none'" value="x" class="btn btn-danger">
     </div>
-    <br>
-    <img id="photoCropPreview" width="500px" height="500px" src="<?php echo Photo::model()->returnVisitorPhotoRelativePath($model->visitor) ?>">
-
 </div>
-<div id="fade" class="black_overlay"></div>
 
 <input type="hidden" id="x1"/>
 <input type="hidden" id="x2"/>

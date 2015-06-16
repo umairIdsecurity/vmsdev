@@ -43,6 +43,7 @@ class VisitController extends Controller {
                     'exportFileVisitorRecords',
                     'exportFileVicRegister',
                     'importVisitData',
+                    'testFunction',
                     'exportVisitorRecords', 'delete','resetVisitCount', 'negate',
                 ),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
@@ -75,6 +76,10 @@ class VisitController extends Controller {
             if (!isset($_POST['Visit']['date_check_in'])) {
                 $_POST['Visit']['date_check_in'] = date('d-m-Y');
                 $_POST['Visit']['time_check_in'] = date('h:i:s');
+            }
+
+            if (!isset($_POST['Visit']['reason']) || empty($_POST['Visit']['reason'])) {
+                $_POST['Visit']['reason'] = 1;
             }
 
             $model->attributes = $_POST['Visit'];
@@ -342,7 +347,20 @@ class VisitController extends Controller {
                     }
                 }
             }
+            #check card type is V24h and present status visit is active
+            if ($model->card_type == 6 && Visit::model()->findByPk($id)->visit_status == VisitStatus::ACTIVE && $model->visit_status == VisitStatus::CLOSED){
 
+                #Change status autoclosed for vic 24h
+                $model->visit_status = VisitStatus::AUTOCLOSED;
+
+                #change datetime check in and out for vic 24h.
+                $model->date_check_in = $model->date_check_out;
+                $model->date_check_out = date('d-m-Y', strtotime('+1 day', strtotime( $model->date_check_out)));
+                $model->time_check_in = date('H:i:s', strtotime('+1 minutes', strtotime($model->date_check_in.' '.$model->time_check_in)));
+                $model->time_check_out = $model->time_check_in;
+
+
+            }
             // close visit process
             if (isset($_POST['closeVisitForm']) && $model->visit_status == VisitStatus::CLOSED) {
                 $fileUpload = CUploadedFile::getInstance($model, 'card_lost_declaration_file');
@@ -353,6 +371,7 @@ class VisitController extends Controller {
                     }
                     $model->card_lost_declaration_file = '/uploads/card_lost_declaration/'.$fileUpload->name;
                 }
+
             }
 
             if ($model->save()) {
@@ -883,20 +902,29 @@ class VisitController extends Controller {
         $visitorModel = Visitor::model()->findByPk(Yii::app()->getRequest()->getQuery('id'));
 
         if($visitorModel->totalVisit > 0) {
-            $resetHistory = new ResetHistory();
-            $resetHistory->visitor_id = Yii::app()->getRequest()->getQuery('id');
-            $resetHistory->reset_time = date("Y-m-d H:i:s");
-            $resetHistory->reason = Yii::app()->getRequest()->getQuery('reason');
+            $visitorModel->visitor_card_status = 3;
+            $visitorModel->update();
+            if($visitorModel->update()) {
+                $resetHistory = new ResetHistory();
+                $resetHistory->visitor_id = Yii::app()->getRequest()->getQuery('id');
+                $resetHistory->reset_time = date("Y-m-d H:i:s");
+                $resetHistory->reason = Yii::app()->getRequest()->getQuery('reason');
+                $resetHistory->lodgement_date = Yii::app()->getRequest()->getQuery('lodgementDate');
+                $visitorModel->visitor_card_status = 3;
+                $visitorModel->save();
 
-            if($resetHistory->save()) {
-                $activeVisit = $visitorModel->activeVisits;
-                foreach($activeVisit as $item) {
-                    $item->reset_id = $resetHistory->id;
-                    $item->save();
-                    if($item->save()){
+                if($resetHistory->save() ) {
+                    $activeVisit = $visitorModel->activeVisits;
+                    foreach($activeVisit as $item) {
+                        $item->reset_id = $resetHistory->id;
+                        $item->save();
+                        if($item->save()){
+                        }
                     }
+
                 }
             }
+
         }
     }
 
@@ -923,38 +951,45 @@ class VisitController extends Controller {
          * Write a header of csv file
          */
         $headers = array(
-            'id',
-            'company0.code',
-            'first_name',
-            'last_name',
-            'date_of_birth',
-            'contact_number',
-            'contact_street_no',
-            'contact_street_name',
-            'contact_street_type',
-            'contact_suburb',
-            'contact_postcode',
-            'company0.name',
-            'email',
-            'identification_type',
-            'identification_document_no',
-            'identification_document_expiry',
-            'asic_no',
-            'asic_expiry',
+            'id' => 'ID',
+            'card0.card_number' => 'Card Number',
+            'company0.code' => 'Airport Code',
+            'visitor0.first_name' => 'First Name',
+            'visitor0.last_name' => 'Last Name',
+            'visitor0.date_of_birth' => 'Date of Birthday',
+            'visitor0.contact_number' => 'Mobile',
+            'visitor0.contact_street_no' => 'Street No',
+            'visitor0.contact_street_name' => 'Street',
+            'visitor0.contact_street_type' => 'Street Type',
+            'visitor0.contact_suburb' => 'Suburbe',
+            'visitor0.contact_state' => 'State',
+            'visitor0.contact_postcode' => 'Postcode',
+            'reason0.reason' => 'Reason',
+            'company0.contact' => 'Contact Person',
+            'company0.name' => 'Company Name',
+            'company0.email_address' => 'Contact Email',
+            'company0.mobile_number' => 'Contact Phone',
+            'finish_date' => 'Date of Issue',
+            'card_returned_date' => 'Date of Return',
+            'identification_type' => 'Document Type',
+            'identification_document_no' => 'Number',
+            'identification_document_expiry' => 'Expiry',
+            'visitor0.asic_no' => 'ASIC ID Number',
+            'visitor0.asic_expiry' => 'ASIC Expiry',
+            'workstation0.name' => 'Workstation'
         );
         $row = array();
         foreach ($headers as $header) {
             $row[] = Visit::model()->getAttributeLabel($header);
         }
         fputcsv($fp, $row);
-
         /*
          * Init dataProvider for first page
          */
         $merge = new CDbCriteria;
-        $merge->addCondition('profile_type = "'. Visitor::PROFILE_TYPE_VIC .'"');
+        $merge->addCondition('visitor0.profile_type = "'. Visitor::PROFILE_TYPE_VIC .'"');
 
-        $model = new Visitor('search');
+        $model = new Visit('search');
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['Visitor'])) {
             $model->attributes = $_GET['Visitor'];
@@ -975,7 +1010,7 @@ class VisitController extends Controller {
         $models = $dp->getData();
         foreach ($models as $model) {
             $row = array();
-            foreach ($headers as $head) {
+            foreach ($headers as $head => $title) {
                 $row[] = CHtml::value($model, $head);
             }
             fputcsv($fp, $row);
@@ -1000,26 +1035,51 @@ class VisitController extends Controller {
 
             $from = new DateTime($dateFromFilter);
             $to = new DateTime($dateToFilter);
-
-            $dateCondition = '(visits.date_check_in BETWEEN "'.$from->format('d-m-Y').'"'
-                . ' AND "'.$to->format('d-m-Y').'") OR (visits.date_check_in BETWEEN "'.$from->format('Y-m-d').'"'
-                . ' AND "'.$to->format('Y-m-d').'") AND';
+            
+            $dateCondition = "( visitors.date_created BETWEEN  '".$from->format("Y-m-d H:i:s")."' AND  '".$to->format("Y-m-d  H:i:s")."' ) AND ";
+            
+            //OTHER PERSON CODE FIXED---THE CODE SHOULD BE LIKE THAT AS JULIE WANTS TOTAL VICs VISITORS BY WORKSTATIONS OF CURRENT USER
+            //COMMENETED CODE IS OF THAT PERSON CODE
+//            $dateCondition = '(visits.date_check_in BETWEEN "'.$from->format('d-m-Y').'"'
+//                . ' AND "'.$to->format('d-m-Y').'") OR (visits.date_check_in BETWEEN "'.$from->format('Y-m-d').'"'
+//                . ' AND "'.$to->format('Y-m-d').'") AND';
 
         }
-
-        $dateCondition .= '(t.is_deleted = 0) AND (visits.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visits.card_type >= 5) AND (visits.tenant = '.Yii::app()->user->id.')';
-
-
+        $dateCondition .= "(t.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visitors.profile_type='VIC') AND (t.tenant=" . Yii::app()->user->tenant. ")";
+        
+        //$dateCondition .= '(t.is_deleted = 0) AND (visits.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visits.card_type >= 5) AND (t.tenant = '.Yii::app()->user->tenant.')';
+        
+        //count(visitors.id) as visitors,DATE(visitors.date_created) AS date_check_in,t.id,t.name, t.id  as workstationId
         $visitsCount = Yii::app()->db->createCommand()
-            ->select('min(visits.id) as visitId,visits.date_check_in as date_check_in,t.id,t.name,count(visits.id) as visits')
+            ->select('count(visitors.id) as visitors,DATE(visitors.date_created) AS date_check_in,t.id,t.name, t.id  as workstationId')
             ->from('workstation t')
-            ->leftJoin('visitor visitors' , '(t.id = visitors.visitor_workstation)')
-            ->leftJoin('visit visits' , '(visits.visitor = visitors.id)')
+            ->join('visitor visitors' , 't.id = visitors.visitor_workstation')
             ->where($dateCondition)
             ->group('t.id')
             ->queryAll();
 
-        $this->render('totalVicsByWorkstation', array("visit_count" => $visitsCount));
+
+//        $allWorkstations = Yii::app()->db->createCommand()
+//            ->select( 't.id,t.tenant,t.name')
+//            ->from('workstation t')
+//            ->where('t.tenant = '. Yii::app()->user->tenant)
+//            ->queryAll();
+        $allWorkstations = Workstation::model()->findAll("tenant = " . Yii::app()->user->tenant . " AND is_deleted = 0");
+        $otherWorkstations = array();
+        
+        foreach ($allWorkstations as $workstation) {
+            $hasVisitor = false;
+            foreach($visitsCount as $visit) {
+                if($visit['workstationId'] ==  $workstation['id']) {
+                    $hasVisitor =  true;
+                }
+            }
+            if ($hasVisitor == false) {
+                array_push($otherWorkstations, $workstation);
+            }
+        }
+
+        $this->render('totalVicsByWorkstation', array("visit_count" => $visitsCount, "otherWorkstations" => $otherWorkstations));
     }
 
     public function actionImportVisitData()
@@ -1135,6 +1195,34 @@ class VisitController extends Controller {
                 Yii::app()->user->setFlash('success', 'Import Success');
             } else {
                 Yii::app()->user->setFlash('error', 'Please select a xls/xlsx file');
+            }
+        }
+
+        $this->render('importVisitData', array('model' => $model));
+    }
+
+    public function actionTestFunction()
+    {
+        print_r(phpinfo());die;
+        set_time_limit(0);
+        ini_set("memory_limit", "-1");
+
+        $model = new ImportCsvForm;
+
+        if (isset($_POST['ImportCsvForm'])) {
+            $model->attributes = $_POST['ImportCsvForm'];
+
+            $file = CUploadedFile::getInstance($model, 'file_xls');
+
+            if ($file) {
+                $file->saveAs(dirname(Yii::app()->request->scriptFile) . '/uploads/' . $file->name);
+                $file_path = realpath(Yii::app()->basePath . '/../uploads/' . $file->name);
+
+                $objPHPExcel = new PHPExcel();
+                $objPHPExcel = PHPExcel_IOFactory::load($file_path);
+
+                $sheetData = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
+                print_r($sheetData);
             }
         }
 

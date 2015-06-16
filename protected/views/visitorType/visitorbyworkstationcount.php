@@ -15,6 +15,7 @@
                             'dateFormat'=>'dd-mm-yy',
                             'changeMonth'=> true,
                         ),
+                        'htmlOptions'=>array('readonly'=>"readonly"),
 
             )); ?>  
         
@@ -28,6 +29,7 @@
                             'dateFormat'=>'dd-mm-yy',
                             'changeMonth'=> true,
                         ),
+                        'htmlOptions'=>array('readonly'=>"readonly"),
 
             )); ?>
          
@@ -46,29 +48,37 @@
         </tr>
     </thead>
     <tbody>
-        <?php 
-        
-        $datasets = array(
-            array('Workstations', 'Visitors')
-        );
-        
-        $total=0;
-        
-        if($visitor_count) { 
-                
-                $count=1;
-                
-                foreach($visitor_count as $vc ) {
-                    $datasets[$count] =  array($vc['name'],intval($vc['visitors']));
-                    $count++;
-                    $total += intval($vc['visitors']);
-?>
+    <?php
+
+    $datasets = array(
+        array('Workstations', 'Visitors')
+    );
+
+    $total = 0;
+
+    if ($visitor_count) {
+        $count = 1;
+        foreach ($visitor_count as $vc) {
+            $datasets[$count] = array($vc['name'], intval($vc['visitors']));
+            $count++;
+            $total += intval($vc['visitors']);
+            ?>
+            <tr>
+                <td><?php echo $vc['name']; ?></td>
+                <td><?php echo $vc['visitors']; ?></td>
+            </tr>
+        <?php }
+    }
+
+    foreach ($otherWorkstations as $workstation) {
+        ?>
         <tr>
-            <td><?php echo $vc['name']; ?></td>
-            <td><?php echo $vc['visitors'];?></td>
+            <td><?php echo $workstation->name; ?></td>
+            <td>0</td>
         </tr>
-                <?php }
-        } ?>
+    <?php
+    }
+    ?>
     </tbody>
     <tfoot>
         <tr>

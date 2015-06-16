@@ -6,20 +6,25 @@
 	'enableAjaxValidation'=>false,
 )); ?>
         <label> Date From:  </label>
-        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(    
-                        'name'=>'date_from_filter',
-                        'value'=>Yii::app()->request->getParam("date_from_filter"),
-                        // additional javascript options for the date picker plugin
-                        'options'=>array(
-                             'changeYear' => true,
+            <?php
+                $this->widget( 'ext.jui.EJuiDateTimePicker',array(
+                    'language'=> 'en',
+                    'name'=>'date_from_filter',
+                    'value'=>Yii::app()->request->getParam("date_from_filter"),
+                    'options'=>array(
+                            'changeYear' => true,
                             'dateFormat'=>'dd-mm-yy',
                             'changeMonth'=> true,
-                        ),
-
-            )); ?>  
-        
-             <label> Date To: </label>
-              <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(    
+                    ),
+                   'htmlOptions'=>array('readonly'=>"readonly"),
+                ));
+            ?>
+            
+        <br><br>
+        <label> Date To: </label>
+                <?php 
+                    $this->widget('ext.jui.EJuiDateTimePicker', array(    
+                        'language'=> 'en',
                         'name'=>'date_to_filter',
                         'value'=>Yii::app()->request->getParam("date_to_filter"),
                         // additional javascript options for the date picker plugin
@@ -28,8 +33,9 @@
                             'dateFormat'=>'dd-mm-yy',
                             'changeMonth'=> true,
                         ),
-
-            )); ?>
+                        'htmlOptions'=>array('readonly'=>"readonly"),
+                    )); 
+                ?>
          
 	 <?php echo CHtml::submitButton('Filter'); ?>
 	 
@@ -42,7 +48,7 @@
     <thead>
         <tr>
             <th> Workstations </th>
-            <th> VIC Visits Count </th>
+            <th> VIC Visitors Count </th>
         </tr>
     </thead>
     <tbody>
@@ -58,20 +64,29 @@
             $count=1;
 
             foreach($visit_count as $vc ) {
-                $datasets[$count] =  array($vc['name'],intval($vc['visits']));
+                $datasets[$count] =  array($vc['name'],intval($vc['visitors']));
                 $count++;
-                $total += intval($vc['visits']);
+                $total += intval($vc['visitors']);
                 ?>
                 <tr>
                     <td><?php echo $vc['name']; ?></td>
-                    <td><?php echo $vc['visits'];?></td>
+                    <td><?php echo $vc['visitors'];?></td>
                 </tr>
             <?php }
-        } ?>
+        }
+        foreach ($otherWorkstations as $workstation) {
+            ?>
+            <tr>
+                <td><?php echo $workstation['name']; ?></td>
+                <td>0</td>
+            </tr>
+        <?php
+        }
+        ?>
     </tbody>
     <tfoot>
         <tr>
-            <th>Total VIC Visits</th>
+            <th>Total VIC Visitors</th>
             <th><?= $total ?></th>
         </tr>
     </tfoot>

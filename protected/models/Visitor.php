@@ -70,7 +70,7 @@ class Visitor extends CActiveRecord {
         ),
         self::PROFILE_TYPE_VIC => array(
             1 => 'Card Status: Saved',
-            2 => 'Card Status: VIC holder',
+            2 => 'Card Status: VIC Holder',
             3 => 'Card Status: ASIC Pending',
             4 => 'Card Status: ASIC Issued',
             5 => 'Card Status: ASIC Denied',
@@ -180,7 +180,7 @@ class Visitor extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         $rules = array(
-            array('first_name, last_name, email, contact_number, visitor_type', 'required'),
+            array('first_name, last_name, email, contact_number', 'required'),
             array('tenant','required','message' =>'Please select a {attribute}'),
             array('is_deleted', 'numerical', 'integerOnly' => true),
             array('first_name, last_name, email, department, position, staff_id', 'length', 'max' => 50),

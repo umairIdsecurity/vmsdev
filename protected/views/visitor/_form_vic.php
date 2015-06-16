@@ -262,7 +262,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                                 <select id="fromDay" name="Visitor[birthdayDay]" class='daySelect'></select>
                                 <select id="fromMonth" name="Visitor[birthdayMonth]" class='monthSelect'></select>
                                 <select id="fromYear" name="Visitor[birthdayYear]" class='yearSelect'></select>
-
+                                <span class="required">*</span>
                                 <?php echo "<br>" . $form->error($model, 'date_of_birth'); ?>
                             </td>
                         </tr>
@@ -478,6 +478,25 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                                     <label  class="form-label">One of these has a verifiable signature</label>
                                 </td>
                             </tr>
+                            <tr class="hidden">
+                                <td>
+                                    <input placeholder="Password" ng-model="user.passwords" data-ng-class="{
+                                                'ng-invalid':registerform['Visitor[repeatpassword]'].$error.match}"
+                                           type="password" id="Visitor_password" name="Visitor[password]"
+                                           value="(NULL)">
+                                    <span class="required">*</span>
+                                    <?php echo "<br>" . $form->error($model, 'password'); ?>
+                                </td>
+                            </tr>
+                            <tr class="hidden">
+                                <td>
+                                    <input placeholder="Repeat Password" ng-model="user.passwordConfirm" type="password"
+                                           id="Visitor_repeatpassword" data-match="user.passwords"
+                                           name="Visitor[repeatpassword]" value="(NULL)"/>
+                                    <span class="required">*</span>
+                                    <?php echo "<br>" . $form->error($model, 'repeatpassword'); ?>
+                                </td>
+                            </tr>
                             <tr>
                                 <td>
                                     <?php $this->renderPartial('/common_partials/password', array('model' => $model, 'form' => $form, 'session' => $session)); ?>
@@ -527,6 +546,31 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
             $("#Visitor_visitor_workstation_em_").html('Please enter Workstation');
             return false;
         }
+
+        if ($('.password_requirement').filter(':checked').val() == "<?php echo PasswordRequirement::PASSWORD_IS_REQUIRED; ?>") {
+            if ($('.password_option').filter(':checked').val() == "<?php echo PasswordOption::CREATE_PASSWORD; ?>") {
+                $('.visitor_password').empty().hide();
+                $('.visitor_password_repeat').empty().hide();
+                var password_temp = $('#Visitor_password_input').val();
+                var password_repeat_temp = $('#Visitor_repeatpassword_input').val();
+                if (password_temp == '') {
+                    $('.visitor_password').html('Password should be specified').show();
+                    return false;
+                } else if (password_repeat_temp == '') {
+                    $('.visitor_password_repeat').html('Please confirm a password').show();
+                    return false;
+                } else if (password_temp != password_repeat_temp) {
+                    $('.visitor_password_repeat').html('Passwords are not matched').show();
+                    return false;
+                }
+                $('input[name="Visitor[password]"]').val(password_temp);
+                $('input[name="Visitor[repeatpassword]"]').val(password_repeat_temp);
+            }
+        } else {
+            $('.visitor_password').empty().hide();
+            $('.visitor_password_repeat').empty().hide();
+        }
+
         if (!hasError) {
             if (!companyValue || companyValue == "") {
                 $("#company_error_").show();
@@ -922,14 +966,20 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
             type: "POST",
             url: url,
             data: form,
-            success: function (data) {
-                if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
-                    window.location = 'index.php?r=dashboard';
-                } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
-                    window.location = 'index.php?r=dashboard/viewmyvisitors';
-                } else {
-                    window.location = 'index.php?r=visitor/admin';
+            success: function (data, response) {
+                if(data == ''){
+                    if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
+                        window.location = 'index.php?r=dashboard';
+                    } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
+                        window.location = 'index.php?r=dashboard/viewmyvisitors';
+                    } else {
+                        window.location = 'index.php?r=visitor/admin';
+                    }
+                }else {
+                    alert(data); return;
                 }
+
+
             },
             error: function (data) {
                 if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
@@ -1011,10 +1061,24 @@ $('#Visitor_company').on('change', function() {
 });
 
 $('#addContactLink').on('click', function(e) {
+    $("tr.company_contact_field").removeClass('hidden');
+    $("#AddCompanyContactForm_email").val("");
+    $("#AddCompanyContactForm_firstName").val("");
+    $("#AddCompanyContactForm_lastName").val("");
+    $("#AddCompanyContactForm_mobile").val("");
+    $("#AddCompanyContactForm_companyName").val($(".select2-selection__rendered").html());
+    $('#AddCompanyContactForm_companyName').prop('disabled',true);
     $('#typePostForm').val('contact');
 });
 
 $('#addCompanyLink').on('click', function(e) {
+    $('#AddCompanyContactForm_companyName').enable();
+    $("tr.company_contact_field").addClass("hidden");
+    $("#AddCompanyContactForm_companyName").val("");
+    $("#AddCompanyContactForm_email").val("");
+    $("#AddCompanyContactForm_firstName").val("");
+    $("#AddCompanyContactForm_lastName").val("");
+    $("#AddCompanyContactForm_mobile").val("");
     $('#typePostForm').val('company');
 });
 

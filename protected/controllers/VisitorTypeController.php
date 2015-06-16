@@ -208,14 +208,28 @@ class VisitorTypeController extends Controller {
         $dateCondition .= '(t.is_deleted = 0) AND (visitors.is_deleted = 0)';
         
         $visitors = Yii::app()->db->createCommand()
-                ->select("count(visitors.id) as visitors,DATE(visitors.date_created) AS date_check_in,t.id,t.name") 
+                ->select("count(visitors.id) as visitors,DATE(visitors.date_created) AS date_check_in,t.id,t.name, t.id  as workstationId")
                 ->from('workstation t')
                 ->join("visitor visitors",'t.id = visitors.visitor_workstation')
                 ->where($dateCondition)
                 ->group('t.id')
                 ->queryAll();
-        
-        $this->render("visitorbyworkstationcount", array("visitor_count"=>$visitors));
+
+        $allWorkstations = Workstation::model()->findAll();
+        $workstations = array();
+        foreach ($allWorkstations as $workstation) {
+            $hasVisitor = false;
+            foreach($visitors as $visitor) {
+                if($visitor['workstationId'] ==  $workstation->id) {
+                    $hasVisitor =  true;
+                }
+            }
+            if ($hasVisitor == false) {
+                array_push($workstations, $workstation);
+            }
+        }
+
+        $this->render("visitorbyworkstationcount", array("visitor_count"=>$visitors, "workstations" => $workstations));
     }
 
 }

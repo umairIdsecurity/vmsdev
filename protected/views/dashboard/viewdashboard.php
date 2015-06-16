@@ -10,7 +10,8 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
 }
 
 $merge = new CDbCriteria;
-$merge->addCondition('visit_status ="' . VisitStatus::ACTIVE . '" or visit_status ="' . VisitStatus::PREREGISTERED . '"');
+#$merge->addColumnCondition([['visit_status',VisitStatus::ACTIVE],['visit_status',VisitStatus::PREREGISTERED]],"OR");
+$merge->addCondition('visit_status =' . VisitStatus::ACTIVE . ' or visit_status =' . VisitStatus::PREREGISTERED . '');
 
 $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'visit-gridDashboard',

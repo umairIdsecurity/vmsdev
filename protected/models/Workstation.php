@@ -150,7 +150,7 @@ class Workstation extends CActiveRecord {
     public function getWorkstations($userId, $workstationId) {
 
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "user = '" . $userId . "' and workstation='" . $workstationId . "'";
+        $Criteria->condition = "user = " . $userId . " and workstation=" . $workstationId . "";
         $userworkstations = UserWorkstations::model()->findAll($Criteria);
 
         $userworkstations = array_filter($userworkstations);
@@ -165,8 +165,8 @@ class Workstation extends CActiveRecord {
     
     public function beforeDelete() {
         //before delete check user workstation if has record
-        $userWorkstation = UserWorkstations::model()->exists('workstation ="'.$this->id.'" ');
-        $visit = Visit::model()->exists('workstation="'.$this->id.'"');
+        $userWorkstation = UserWorkstations::model()->exists("workstation = ".$this->id."");
+        $visit = Visit::model()->exists('workstation='.$this->id.'');
         if ($userWorkstation || $visit) {
             return false;
         } else {

@@ -1012,11 +1012,11 @@ class VisitController extends Controller {
 
         }
 
-        $dateCondition .= '(t.is_deleted = 0) AND (visits.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visits.card_type >= 5) AND (visits.tenant = '.Yii::app()->user->id.')';
+        $dateCondition .= '(t.is_deleted = 0) AND (visits.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visits.card_type >= 5)';
 
 
         $visitsCount = Yii::app()->db->createCommand()
-            ->select('min(visits.id) as visitId,visits.date_check_in as date_check_in,t.id,t.name,count(visits.id) as visits')
+            ->select('min(visits.id) as visitId,visits.date_check_in as date_check_in,t.id,t.name,count(visits.id) as visits, t.id as workstationId')
             ->from('workstation t')
             ->leftJoin('visitor visitors' , '(t.id = visitors.visitor_workstation)')
             ->leftJoin('visit visits' , '(visits.visitor = visitors.id)')
@@ -1024,7 +1024,21 @@ class VisitController extends Controller {
             ->group('t.id')
             ->queryAll();
 
-        $this->render('totalVicsByWorkstation', array("visit_count" => $visitsCount));
+        $allWorkstations = Workstation::model()->findAll();
+        $workstations = array();
+        foreach ($allWorkstations as $workstation) {
+            $hasVisitor = false;
+            foreach($visitsCount as $visit) {
+                if($visit['workstationId'] ==  $workstation->id) {
+                    $hasVisitor =  true;
+                }
+            }
+            if ($hasVisitor == false) {
+                array_push($workstations, $workstation);
+            }
+        }
+
+        $this->render('totalVicsByWorkstation', array("visit_count" => $visitsCount, "workstations" => $workstations));
     }
 
     public function actionImportVisitData()

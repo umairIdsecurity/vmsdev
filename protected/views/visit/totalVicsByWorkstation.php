@@ -67,7 +67,16 @@
                     <td><?php echo $vc['visits'];?></td>
                 </tr>
             <?php }
-        } ?>
+        }
+        foreach ($workstations as $workstation) {
+            ?>
+            <tr>
+                <td><?php echo $workstation->name; ?></td>
+                <td>0</td>
+            </tr>
+        <?php
+        }
+        ?>
     </tbody>
     <tfoot>
         <tr>

@@ -511,7 +511,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                 ));
                 ?>
                 <ul <?php
-                if ($this->action->id == 'vicTotalVisitCount' || $this->action->id == 'vicRegister' || $this->action->id == 'totalVicsByWorkstation' || $this->action->id == 'avmsVisitorsProfiles') {
+                if ($this->action->id == 'vicTotalVisitCount' || $this->action->id == 'vicRegister' || $this->action->id == 'totalVicsByWorkstation' || $this->action->id == 'profilesAvmsVisitors') {
                     echo "style='display:block ;'";
                 }
                 ?>>
@@ -522,7 +522,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     </li>
                     <li><a href='<?php echo Yii::app()->createUrl('visit/totalVicsByWorkstation'); ?>'><span>Total VICs by Workstation</span></a></li>
                     
-                    <li><a href='<?php echo Yii::app()->createUrl('reports/avmsVisitorsProfiles'); ?>'><span>New Visitor Types ASIC & VIC</span></a></li>
+                    <li><a href='<?php echo Yii::app()->createUrl('reports/profilesAvmsVisitors'); ?>'><span>New Visitor Types ASIC & VIC</span></a></li>
                 </ul>
             </li>
             <!-- menu for AVMS Reports -->

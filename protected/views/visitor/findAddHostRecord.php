@@ -405,7 +405,8 @@ $defaultKey = key($asicCardTypes);
                     }
                     ?>>
                         <?php
-                        $userStaffMemberModel = User::model()->findByPk($session['id']);
+                        #$userStaffMemberModel = User::model()->findByPk($session['id']);
+                        $userStaffMemberModel = new User();
                         // $userStaffMemberModel = User::model()->findByPk($session['id']);
 
                         $staffmemberform = $this->beginWidget('CActiveForm', array(
@@ -446,8 +447,9 @@ $defaultKey = key($asicCardTypes);
                                     <?php
                                     echo $staffmemberform->textField($userStaffMemberModel, 'first_name', array(
                                         'size' => 50,
+                                        'placeholder' => 'First Name',
                                         'maxlength' => 50,
-                                        'disabled' => 'disabled'
+                                        #'disabled' => 'disabled'
                                     ));
                                     ?>
                                     <?php echo "<br>" . $staffmemberform->error($userStaffMemberModel, 'first_name'); ?>
@@ -457,7 +459,7 @@ $defaultKey = key($asicCardTypes);
                             <td>
 
                                 <?php echo $staffmemberform->textField($userStaffMemberModel, 'last_name',
-                                    array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled')); ?>
+                                    array('size' => 50,'placeholder' => 'Last Name', 'maxlength' => 50/*, 'disabled' => 'disabled'*/)); ?>
                                 <?php echo "<br>" . $staffmemberform->error($userStaffMemberModel, 'last_name'); ?>
                             </td>
                             <tr>
@@ -467,7 +469,7 @@ $defaultKey = key($asicCardTypes);
                                     array(
                                         'size' => 50,
                                         'maxlength' => 50,
-                                        'disabled' => 'disabled',
+                                        #'disabled' => 'disabled',
                                         'placeholder' => 'Department'
                                     )); ?>
                                 <?php echo "<br>" . $staffmemberform->error($userStaffMemberModel, 'department'); ?>
@@ -480,7 +482,7 @@ $defaultKey = key($asicCardTypes);
                                         array(
                                             'size' => 50,
                                             'maxlength' => 50,
-                                            'disabled' => 'disabled',
+                                            #'disabled' => 'disabled',
                                             'placeholder' => 'Staff ID'
                                         )); ?>
                                     <?php echo "<br>" . $staffmemberform->error($userStaffMemberModel, 'staff_id'); ?>
@@ -490,7 +492,7 @@ $defaultKey = key($asicCardTypes);
                             <td>
 
                                 <?php echo $staffmemberform->textField($userStaffMemberModel, 'email',
-                                    array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled')); ?>
+                                    array('size' => 50,'placeholder' => 'Email Address', 'maxlength' => 50/*, 'disabled' => 'disabled'*/)); ?>
                                 <?php echo "<br>" . $staffmemberform->error($userStaffMemberModel, 'email'); ?>
                                 <div style="" id="User_email_em_" class="errorMessage errorMessageEmail1">A profile
                                     already exists for this email address.
@@ -503,7 +505,7 @@ $defaultKey = key($asicCardTypes);
                                     array(
                                         'size' => 50,
                                         'maxlength' => 50,
-                                        'disabled' => 'disabled',
+                                        #'disabled' => 'disabled',
                                         'placeholder' => 'Contact Number '
                                     )); ?>
                                 <?php echo "<br>" . $staffmemberform->error($userStaffMemberModel, 'contact_number'); ?>

@@ -67,7 +67,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
 
         </li>
 
-        <?php if (in_array($model->visit_status, array(VisitStatus::PREREGISTERED, VisitStatus::SAVED, VisitStatus::CLOSED))) { ?>
+        <?php if (in_array($model->visit_status, array(VisitStatus::PREREGISTERED, VisitStatus::SAVED, VisitStatus::CLOSED, VisitStatus::AUTOCLOSED))) { ?>
 
             <li class='has-sub' id="activateLi"><span class="log-current">Log Visit</span>
                 <ul>
@@ -126,7 +126,10 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                         <?php echo $logform->error($model, 'date_in'); ?>
                         <?php if ($model->visit_status == VisitStatus::CLOSED) { ?>
                             <button type="button" id='registerNewVisit' class='greenBtn'>Activate Visit</button>
-                        <?php } else {
+                        <?php }elseif ($model->visit_status == VisitStatus::AUTOCLOSED and strtotime($model->date_check_in.' '.$model->time_check_in) > strtotime(date("d-m-Y H:i:s"))){ ?>
+                             <input type="submit" value="Preregistered" class="complete"/>
+
+                       <?php } else {
                             if ($model->card_type == CardType::MANUAL_VISITOR && isset($model->date_check_in) && strtotime($model->date_check_in) < strtotime(date("d-m-Y"))) {
                                 echo '<input type="submit" value="Back Date Visit" class="complete"/>';
                             } else {

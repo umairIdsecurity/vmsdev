@@ -20,7 +20,7 @@ class PreregistrationController extends Controller
 	public function accessRules() {
 		return array(
 			array('allow',
-				'actions' => array('index','privacyPolicy' , 'declaration' , 'Login' ),
+				'actions' => array('index','privacyPolicy' , 'declaration' , 'Login' ,'registration' ),
 				'users' => array('*'),
 			),
 			array('allow',
@@ -36,6 +36,7 @@ class PreregistrationController extends Controller
 
 
 	public function actionIndex(){
+
 		$session = new CHttpSession;
 		//echo $session['workstation'];
 
@@ -72,30 +73,50 @@ class PreregistrationController extends Controller
 			$model->attributes=$_POST['Declaration'];
 			if($model->validate())
 			{
-				$this->redirect(array('preregistration/login'));
+				$this->redirect(array('preregistration/registration'));
 			}
 		}
 		$this->render('declaration' , array('model'=>$model) );
 
 	}
 
-	public function actionLogin(){
+	public function actionRegistration(){
 
-		//echo "hello";
-		$model = new PreregLogin();
-		// if it is ajax validation request
-		if (isset($_POST['ajax']) && $_POST['ajax'] === 'login-form') {
+		$model = new Registration();
+
+		if (isset($_POST['ajax']) && $_POST['ajax'] === 'preregistration-form') {
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
 
-		// collect user input data
+		if (isset($_POST['Registration'])) {
+			$model->attributes = $_POST['Registration'];
+			//print_r($_POST['Registration']);
+			echo $model->username;
+			echo $model->password;
+			//echo "done";
+			//$model->attributes = $_POST['Registration'];
+			//$model->save();
+			//print_r($model->getErrors());
+		}
+
+		$this->render('registration', array('model' => $model));
+	}
+
+	public function actionLogin(){
+
+		$model = new PreregLogin();
+
+		if (isset($_POST['ajax']) && $_POST['ajax'] === 'prereg-login-form') {
+			echo CActiveForm::validate($model);
+			Yii::app()->end();
+		}
+
+
 		if (isset($_POST['PreregLogin'])) {
 			$model->attributes = $_POST['PreregLogin'];
-			// validate user input and redirect to the previous page if valid
+
 			if ($model->validate() && $model->login()) {
-				//$session = new CHttpSession;
-				//echo "login";
 				$this->redirect(array('preregistration/details'));
 			}
 		}

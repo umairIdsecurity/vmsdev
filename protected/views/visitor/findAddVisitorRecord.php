@@ -80,21 +80,25 @@ $model->identification_country_issued = 13;
                                     $("#register-host-form").show();
                                     $(".host-AddBtn").hide();
                                 }
-
-                                var dt = new Date();
-                                if(dt.getFullYear() < $("#fromYear").val()) {
-                                    $("#Visitor_date_of_birth_em_").show();
-                                    $("#Visitor_date_of_birth_em_").html("Birthday is incorrect");
-                                    return false;
-                                }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
-                                    $("#Visitor_date_of_birth_em_").show();
-                                    $("#Visitor_date_of_birth_em_").html("Birthday is incorrect");
-                                    return false;
-                                }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
-                                    $("#Visitor_date_of_birth_em_").show();
-                                    $("#Visitor_date_of_birth_em_").html("Birthday is incorrect");
-                                    return false;
+                                
+                                var bod_field = $("#vic-birth-date-field:hidden");
+                                if (bod_field.length != 1) {
+                                    var dt = new Date();
+                                    if(dt.getFullYear() < $("#fromYear").val()) {
+                                        $("#Visitor_date_of_birth_em_").show();
+                                        $("#Visitor_date_of_birth_em_").html("Birthday is incorrect");
+                                        return false;
+                                    }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
+                                        $("#Visitor_date_of_birth_em_").show();
+                                        $("#Visitor_date_of_birth_em_").html("Birthday is incorrect");
+                                        return false;
+                                    }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
+                                        $("#Visitor_date_of_birth_em_").show();
+                                        $("#Visitor_date_of_birth_em_").html("Birthday is incorrect");
+                                        return false;
+                                    }
                                 }
+                                
 
                                 var visitor_type = $("#Visitor_visitor_type").val();
                                 if (visitor_type == "") {
@@ -213,7 +217,7 @@ $model->identification_country_issued = 13;
                                 </td>
                             </tr>
 
-                            <tr class="vic-visitor-fields">
+                            <tr class="vic-visitor-fields" id="vic-birth-date-field">
                                 <td class="birthdayDropdown">
                                     <span>Date of Birth</span> <br/>
                                     <?php

@@ -213,12 +213,15 @@ WHERE u.id=c.tenant AND c.id !=1";
         $criteria->compare('card_count', $this->card_count);
         $criteria->compare($post_count_sql, $this->isTenant);
 
-        return new CActiveDataProvider($this, array(
+        $data = new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'sort' => array(
                 'defaultOrder' => 'ID DESC',
             ),
         ));
+        $data->setTotalItemCount(count($this->findAll($criteria)));
+
+        return $data;
     }
 
     public function isTenant()

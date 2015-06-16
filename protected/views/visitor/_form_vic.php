@@ -478,6 +478,25 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                                     <label  class="form-label">One of these has a verifiable signature</label>
                                 </td>
                             </tr>
+                            <tr class="hidden">
+                                <td>
+                                    <input placeholder="Password" ng-model="user.passwords" data-ng-class="{
+                                                'ng-invalid':registerform['Visitor[repeatpassword]'].$error.match}"
+                                           type="password" id="Visitor_password" name="Visitor[password]"
+                                           value="(NULL)">
+                                    <span class="required">*</span>
+                                    <?php echo "<br>" . $form->error($model, 'password'); ?>
+                                </td>
+                            </tr>
+                            <tr class="hidden">
+                                <td>
+                                    <input placeholder="Repeat Password" ng-model="user.passwordConfirm" type="password"
+                                           id="Visitor_repeatpassword" data-match="user.passwords"
+                                           name="Visitor[repeatpassword]" value="(NULL)"/>
+                                    <span class="required">*</span>
+                                    <?php echo "<br>" . $form->error($model, 'repeatpassword'); ?>
+                                </td>
+                            </tr>
                             <tr>
                                 <td>
                                     <?php $this->renderPartial('/common_partials/password', array('model' => $model, 'form' => $form, 'session' => $session)); ?>
@@ -527,6 +546,31 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
             $("#Visitor_visitor_workstation_em_").html('Please enter Workstation');
             return false;
         }
+
+        if ($('.password_requirement').filter(':checked').val() == "<?php echo PasswordRequirement::PASSWORD_IS_REQUIRED; ?>") {
+            if ($('.password_option').filter(':checked').val() == "<?php echo PasswordOption::CREATE_PASSWORD; ?>") {
+                $('.visitor_password').empty().hide();
+                $('.visitor_password_repeat').empty().hide();
+                var password_temp = $('#Visitor_password_input').val();
+                var password_repeat_temp = $('#Visitor_repeatpassword_input').val();
+                if (password_temp == '') {
+                    $('.visitor_password').html('Password should be specified').show();
+                    return false;
+                } else if (password_repeat_temp == '') {
+                    $('.visitor_password_repeat').html('Please confirm a password').show();
+                    return false;
+                } else if (password_temp != password_repeat_temp) {
+                    $('.visitor_password_repeat').html('Passwords are not matched').show();
+                    return false;
+                }
+                $('input[name="Visitor[password]"]').val(password_temp);
+                $('input[name="Visitor[repeatpassword]"]').val(password_repeat_temp);
+            }
+        } else {
+            $('.visitor_password').empty().hide();
+            $('.visitor_password_repeat').empty().hide();
+        }
+
         if (!hasError) {
             if (!companyValue || companyValue == "") {
                 $("#company_error_").show();

@@ -84,16 +84,13 @@ class VisitController extends Controller {
             $model->attributes = $_POST['Visit'];
 
             switch ($model->card_type) {
-                case CardType::SAME_DAY_VISITOR: // CORPORATE Sameday
                 case CardType::VIC_CARD_SAMEDATE: // VIC Sameday
                     $model->date_check_out = date('d-m-Y');
                     break;
-                case CardType::MANUAL_VISITOR: // VIC Manual
                 case CardType::VIC_CARD_MANUAL: // VIC Manual
                 case CardType::VIC_CARD_24HOURS: // VIC 24 hour
                     $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 1 day'));
                     break;
-                case CardType::MULTI_DAY_VISITOR: // VIC Extended
                 case CardType::VIC_CARD_EXTENDED: // VIC Extended
                 case CardType::VIC_CARD_MULTIDAY: // VIC Multiday
                     $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 28 day'));

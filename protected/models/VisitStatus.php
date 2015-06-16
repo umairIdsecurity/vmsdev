@@ -21,7 +21,7 @@ class VisitStatus extends CActiveRecord
         3 => 'Closed',
         4 => 'Expired',
         5 => 'Saved',
-		6 => 'Autoclosed',
+        6 => 'Auto Closed'
     );
 
     public static $VISIT_STATUS_DENIED = [1, 2];

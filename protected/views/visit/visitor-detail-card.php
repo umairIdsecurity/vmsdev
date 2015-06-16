@@ -175,7 +175,7 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
         ));
         ?>
 </div>
-<?php if (!in_array($model->card_type, [CardType::SAME_DAY_VISITOR, CardType::MULTI_DAY_VISITOR, CardType::CONTRACTOR_VISITOR, CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_24HOURS, CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY]) || !in_array($model->visit_status, [VisitStatus::SAVED, VisitStatus::CLOSED, VisitStatus::EXPIRED, VisitStatus::PREREGISTERED])): ?>
+<?php if (in_array($model->card_type, [CardType::SAME_DAY_VISITOR, CardType::MULTI_DAY_VISITOR, CardType::CONTRACTOR_VISITOR, CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_24HOURS, CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY]) && $model->visit_status ==VisitStatus::ACTIVE): ?>
 <div class="dropdown">
     <button class="complete btn btn-info printCardBtn dropdown-toggle" style="width:205px !important" type="button" id="menu1" data-toggle="dropdown">Print Card
         <span class="caret pull-right"></span></button>
@@ -372,18 +372,6 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
     function populateVisitWorkstation(value) {
         $("#Visit_workstation").val(value.value);
     }
-
-    $(document).on('change', '#Visitor_visitor_card_status', function(e) {
-        var selected = $(this).val();
-        var remainingDays = $('#remaining_day').val();
-        if (selected == "<?php echo Visitor::ASIC_PENDING; ?>" && remainingDays < 27) {
-            $('#checkout_date_warning').html('An EVIC can’t be issued to this VIC holder <br /> as they don’t have 28 days remaining.<br />Please update their Card Status to ASIC <br />Pending or Select another card type.').show();
-            $('#btnWorkStationForm').attr('disabled', true);
-        } else {
-            $('#checkout_date_warning').html('').hide();
-            $('#btnWorkStationForm').attr('disabled', false);
-        }
-    });
 </script>
 <!--POP UP FOR CROP PHOTO -->
 

@@ -236,12 +236,17 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                     <?php
                                     $cardType = CardType::model()->findAll();
                                     foreach ($cardType as $key => $value) {
+                                        if (in_array($key, CardType::$VIC_CARD_TYPE_LIST)) {
+                                            $prefix = 'VIC: ';
+                                        } else {
+                                            $prefix = 'CORPORATE: ';
+                                        }
                                         ?>
                                         <option value="<?php echo $value->id; ?>" <?php
                                         if ($model->card_type == $value->id) {
                                             echo " selected ";
                                         }
-                                        ?>><?php echo $value->name; ?></option>
+                                        ?>><?php echo $prefix . $value->name; ?></option>
                                     <?php
                                     }
                                     ?>

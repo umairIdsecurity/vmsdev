@@ -29,7 +29,7 @@ class ReportsController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('visitorsByProfiles','profilesAvmsVisitors'),
+				'actions'=>array('visitorsByProfiles','profilesAvmsVisitors','visitorsVicByType'),
 				'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
 			),
 			array('deny',  // deny all users
@@ -442,6 +442,40 @@ class ReportsController extends Controller
                 ->where($dateCondition)
                 ->queryAll();
         return $data;
+    }
+    
+    
+    //**************************************************************************
+    /* 
+    * Report: VIC Reporting: Total Visitors by Visitor Type
+    * Total Visitors by Visitor Type
+    * 
+    * @return view
+    */
+    public function actionVisitorsVicByType() {
+        // Post Date
+        $dateFromFilter = Yii::app()->request->getParam("date_from_filter");
+        $dateToFilter = Yii::app()->request->getParam("date_to_filter");
+        
+        $dateCondition='';
+        
+        if( !empty($dateFromFilter) && !empty($dateToFilter) ) {
+            $from = new DateTime($dateFromFilter);
+            $to = new DateTime($dateToFilter);
+            $dateCondition = "( DATE(visitors.date_created) BETWEEN  '".$from->format("Y-m-d")."' AND  '".$to->format("Y-m-d")."' ) AND ";
+        }
+        
+        $dateCondition .= "(t.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visitors.profile_type='VIC')";
+        
+        $visitsCount = Yii::app()->db->createCommand()
+                ->select("t.id,t.name,count(visitors.id) as visitors,DATE(visitors.date_created) as date_check_in") 
+                ->from('visitor_type t')
+                ->join("visitor visitors",'t.id = visitors.visitor_type')
+                ->where($dateCondition)
+                ->group('t.id')
+                ->queryAll();
+        
+        $this->render("visitorvictypecount", array("visit_count"=>$visitsCount));
     }
 
     

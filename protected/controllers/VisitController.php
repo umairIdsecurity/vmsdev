@@ -349,7 +349,20 @@ class VisitController extends Controller {
                     }
                 }
             }
+            #check card type is V24h and present status visit is active
+            if ($model->card_type == 6 && Visit::model()->findByPk($id)->visit_status == VisitStatus::ACTIVE && $model->visit_status == VisitStatus::CLOSED){
 
+                #Change status autoclosed for vic 24h
+                $model->visit_status = VisitStatus::AUTOCLOSED;
+
+                #change datetime check in and out for vic 24h.
+                $model->date_check_in = $model->date_check_out;
+                $model->date_check_out = date('d-m-Y', strtotime('+1 day', strtotime( $model->date_check_out)));
+                $model->time_check_in = date('H:i:s', strtotime('+1 minutes', strtotime($model->date_check_in.' '.$model->time_check_in)));
+                $model->time_check_out = $model->time_check_in;
+
+
+            }
             // close visit process
             if (isset($_POST['closeVisitForm']) && $model->visit_status == VisitStatus::CLOSED) {
                 $fileUpload = CUploadedFile::getInstance($model, 'card_lost_declaration_file');
@@ -360,6 +373,7 @@ class VisitController extends Controller {
                     }
                     $model->card_lost_declaration_file = '/uploads/card_lost_declaration/'.$fileUpload->name;
                 }
+
             }
 
             if ($model->save()) {

@@ -155,7 +155,7 @@ class VisitorTypeController extends Controller {
     }
     
    /* 
-    * Report: Corporate Reporting: Total Visits by Visitor Type
+    * Report: Corporate Reporting: Total Visitors by Visitor Type
     * Total Visitors by Visitor Type
     * 
     * @return view

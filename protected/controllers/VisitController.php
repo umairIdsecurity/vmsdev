@@ -77,16 +77,23 @@ class VisitController extends Controller {
                 $_POST['Visit']['time_check_in'] = date('h:i:s');
             }
 
+            if (!isset($_POST['Visit']['reason']) || empty($_POST['Visit']['reason'])) {
+                $_POST['Visit']['reason'] = 1;
+            }
+
             $model->attributes = $_POST['Visit'];
 
             switch ($model->card_type) {
+                case CardType::SAME_DAY_VISITOR: // CORPORATE Sameday
                 case CardType::VIC_CARD_SAMEDATE: // VIC Sameday
                     $model->date_check_out = date('d-m-Y');
                     break;
+                case CardType::MANUAL_VISITOR: // VIC Manual
                 case CardType::VIC_CARD_MANUAL: // VIC Manual
                 case CardType::VIC_CARD_24HOURS: // VIC 24 hour
                     $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 1 day'));
                     break;
+                case CardType::MULTI_DAY_VISITOR: // VIC Extended
                 case CardType::VIC_CARD_EXTENDED: // VIC Extended
                 case CardType::VIC_CARD_MULTIDAY: // VIC Multiday
                     $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 28 day'));
@@ -342,7 +349,20 @@ class VisitController extends Controller {
                     }
                 }
             }
+            #check card type is V24h and present status visit is active
+            if ($model->card_type == 6 && Visit::model()->findByPk($id)->visit_status == VisitStatus::ACTIVE && $model->visit_status == VisitStatus::CLOSED){
 
+                #Change status autoclosed for vic 24h
+                $model->visit_status = VisitStatus::AUTOCLOSED;
+
+                #change datetime check in and out for vic 24h.
+                $model->date_check_in = $model->date_check_out;
+                $model->date_check_out = date('d-m-Y', strtotime('+1 day', strtotime( $model->date_check_out)));
+                $model->time_check_in = date('H:i:s', strtotime('+1 minutes', strtotime($model->date_check_in.' '.$model->time_check_in)));
+                $model->time_check_out = $model->time_check_in;
+
+
+            }
             // close visit process
             if (isset($_POST['closeVisitForm']) && $model->visit_status == VisitStatus::CLOSED) {
                 $fileUpload = CUploadedFile::getInstance($model, 'card_lost_declaration_file');
@@ -353,6 +373,7 @@ class VisitController extends Controller {
                     }
                     $model->card_lost_declaration_file = '/uploads/card_lost_declaration/'.$fileUpload->name;
                 }
+
             }
 
             if ($model->save()) {

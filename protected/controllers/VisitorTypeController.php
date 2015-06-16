@@ -155,7 +155,7 @@ class VisitorTypeController extends Controller {
     }
     
    /* 
-    * Report: Corporate Reporting: Total Visits by Visitor Type
+    * Report: Corporate Reporting: Total Visitors by Visitor Type
     * Total Visitors by Visitor Type
     * 
     * @return view
@@ -173,10 +173,10 @@ class VisitorTypeController extends Controller {
             $dateCondition = "( DATE(visitors.date_created) BETWEEN  '".$from->format("Y-m-d")."' AND  '".$to->format("Y-m-d")."' ) AND ";
         }
         
-        $dateCondition .= '(t.is_deleted = 0) AND (visitors.is_deleted = 0)';
+        $dateCondition .= "(t.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visitors.profile_type='CORPORATE')";
         
         $visitsCount = Yii::app()->db->createCommand()
-                ->select("t.id,t.name,count(visitors.id) as visitors") 
+                ->select("t.id,t.name,count(visitors.id) as visitors,DATE(visitors.date_created) as date_check_in") 
                 ->from('visitor_type t')
                 ->join("visitor visitors",'t.id = visitors.visitor_type')
                 ->where($dateCondition)
@@ -205,7 +205,7 @@ class VisitorTypeController extends Controller {
             $dateCondition = "( DATE(visitors.date_created) BETWEEN  '".$from->format("Y-m-d")."' AND  '".$to->format("Y-m-d")."' ) AND ";
         }
         
-        $dateCondition .= '(t.is_deleted = 0) AND (visitors.is_deleted = 0)';
+        $dateCondition .= "(t.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visitors.profile_type='CORPORATE')";
         
         $visitors = Yii::app()->db->createCommand()
                 ->select("count(visitors.id) as visitors,DATE(visitors.date_created) AS date_check_in,t.id,t.name, t.id  as workstationId")

@@ -1009,29 +1009,38 @@ class VisitController extends Controller {
 
             $from = new DateTime($dateFromFilter);
             $to = new DateTime($dateToFilter);
-
-            $dateCondition = '(visits.date_check_in BETWEEN "'.$from->format('d-m-Y').'"'
-                . ' AND "'.$to->format('d-m-Y').'") OR (visits.date_check_in BETWEEN "'.$from->format('Y-m-d').'"'
-                . ' AND "'.$to->format('Y-m-d').'") AND';
+            
+            $dateCondition = "( DATE(visitors.date_created) BETWEEN  '".$from->format("Y-m-d")."' AND  '".$to->format("Y-m-d")."' ) AND ";
+            
+            //OTHER PERSON CODE FIXED---THE CODE SHOULD BE LIKE THAT AS JULIE WANTS TOTAL VICs VISITORS BY WORKSTATIONS OF CURRENT USER
+            //COMMENETED CODE IS OF THAT PERSON CODE
+//            $dateCondition = '(visits.date_check_in BETWEEN "'.$from->format('d-m-Y').'"'
+//                . ' AND "'.$to->format('d-m-Y').'") OR (visits.date_check_in BETWEEN "'.$from->format('Y-m-d').'"'
+//                . ' AND "'.$to->format('Y-m-d').'") AND';
 
         }
-        $dateCondition .= '(t.is_deleted = 0) AND (visits.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visits.card_type >= 5) AND (t.tenant = '.Yii::app()->user->id.')';
+        $dateCondition .= "(t.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visitors.profile_type='VIC') AND (t.tenant=" . Yii::app()->user->tenant. ")";
+        
+        //$dateCondition .= '(t.is_deleted = 0) AND (visits.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visits.card_type >= 5) AND (t.tenant = '.Yii::app()->user->tenant.')';
+        
+        //count(visitors.id) as visitors,DATE(visitors.date_created) AS date_check_in,t.id,t.name, t.id  as workstationId
         $visitsCount = Yii::app()->db->createCommand()
-            ->select('min(visits.id) as visitId,visits.date_check_in as date_check_in,t.id,t.name,count(visits.id) as visits, t.id as workstationId')
+            ->select('count(visitors.id) as visitors,DATE(visitors.date_created) AS date_check_in,t.id,t.name, t.id  as workstationId')
             ->from('workstation t')
-            ->leftJoin('visitor visitors' , '(t.id = visitors.visitor_workstation)')
-            ->leftJoin('visit visits' , '(visits.visitor = visitors.id)')
+            ->join('visitor visitors' , 't.id = visitors.visitor_workstation')
             ->where($dateCondition)
             ->group('t.id')
             ->queryAll();
 
 
-        $allWorkstations = Yii::app()->db->createCommand()
-            ->select( 't.id,t.tenant,t.name')
-            ->from('workstation t')
-            ->where('t.tenant = '. Yii::app()->user->id)
-            ->queryAll();
+//        $allWorkstations = Yii::app()->db->createCommand()
+//            ->select( 't.id,t.tenant,t.name')
+//            ->from('workstation t')
+//            ->where('t.tenant = '. Yii::app()->user->tenant)
+//            ->queryAll();
+        $allWorkstations = Workstation::model()->findAll("tenant = " . Yii::app()->user->tenant . " AND is_deleted = 0");
         $otherWorkstations = array();
+        
         foreach ($allWorkstations as $workstation) {
             $hasVisitor = false;
             foreach($visitsCount as $visit) {

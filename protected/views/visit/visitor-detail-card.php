@@ -372,18 +372,6 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
     function populateVisitWorkstation(value) {
         $("#Visit_workstation").val(value.value);
     }
-
-    $(document).on('change', '#Visitor_visitor_card_status', function(e) {
-        var selected = $(this).val();
-        var remainingDays = $('#remaining_day').val();
-        if (selected == "<?php echo Visitor::ASIC_PENDING; ?>" && remainingDays < 27) {
-            $('#checkout_date_warning').html('An EVIC can’t be issued to this VIC holder <br /> as they don’t have 28 days remaining.<br />Please update their Card Status to ASIC <br />Pending or Select another card type.').show();
-            $('#btnWorkStationForm').attr('disabled', true);
-        } else {
-            $('#checkout_date_warning').html('').hide();
-            $('#btnWorkStationForm').attr('disabled', false);
-        }
-    });
 </script>
 <!--POP UP FOR CROP PHOTO -->
 

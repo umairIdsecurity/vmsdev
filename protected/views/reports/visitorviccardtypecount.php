@@ -1,4 +1,4 @@
-<h1> Total Visitors by Workstations </h1>
+<h1> Total VICs by Card Type </h1>
 <!-- Filter Form -->
 <div class="form">
 <?php $form=$this->beginWidget('CActiveForm', array(
@@ -43,46 +43,38 @@
 <table class="table" cellpadding="4" width="100%">
     <thead>
         <tr>
-            <th> Workstations </th>
-            <th> Visitors Count </th>
+            <th> Card Type </th>
+            <th> VIC Visitor Visits </th>
         </tr>
     </thead>
     <tbody>
-    <?php
-
-    $datasets = array(
-        array('Workstations', 'Visitors')
-    );
-
-    $total = 0;
-
-    if ($visitor_count) {
-        $count = 1;
-        foreach ($visitor_count as $vc) {
-            $datasets[$count] = array($vc['name'], intval($vc['visitors']));
-            $count++;
-            $total += intval($vc['visitors']);
-            ?>
-            <tr>
-                <td><?php echo $vc['name']; ?></td>
-                <td><?php echo $vc['visitors']; ?></td>
-            </tr>
-        <?php }
-    }
-
-    foreach ($otherWorkstations as $workstation) {
-        ?>
+        <?php 
+        
+        $datasets = array(
+            array('VisitorType', 'Visitors per Visitor')
+        );
+        
+        $total=0;
+        
+        if($visit_count) { 
+                
+                $count=1;
+                
+                foreach($visit_count as $vc ) {
+                    $datasets[$count] =  array($vc['name'],intval($vc['visits']));
+                    $count++;
+                    $total += intval($vc['visits']);
+?>
         <tr>
-            <td><?php echo $workstation->name; ?></td>
-            <td>0</td>
+            <td><?php echo $vc['name']; ?></td>
+            <td><?php echo $vc['visits'];?></td>
         </tr>
-    <?php
-    }
-    ?>
+                <?php }
+        } ?>
     </tbody>
     <tfoot>
         <tr>
-            <th>Total Visitors</th>
+            <th>Total VIC Visitor Visits</th>
             <th><?= $total ?></th>
         </tr>
     </tfoot>
@@ -94,6 +86,6 @@
 //very useful google chart
         $this->widget('ext.Hzl.google.HzlVisualizationChart', array('visualization' => 'PieChart',
             'data' => $datasets,
-            'options' => array('title' => 'Total Visitors by Workstations')));
+            'options' => array('title' => 'Total VICs by Visitor Type')));
         ?>
     </div>

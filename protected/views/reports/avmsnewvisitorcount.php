@@ -18,9 +18,11 @@ $form=$this->beginWidget('CActiveForm', array(
                         // additional javascript options for the date picker plugin
                         'options'=>array(
                             'changeYear' => true,
-                            'dateFormat'=>'dd-MM-yy',
+                            'dateFormat'=>'dd-mm-yy',
                             'changeMonth'=> true,
+                            
                         ),
+                        'htmlOptions'=>array('readonly'=>"readonly"),
 
             )); ?>  
         <br><br>
@@ -31,9 +33,10 @@ $form=$this->beginWidget('CActiveForm', array(
                         // additional javascript options for the date picker plugin
                         'options'=>array(
                             'changeYear' => true,
-                            'dateFormat'=>'dd-MM-yy',
+                            'dateFormat'=>'dd-mm-yy',
                             'changeMonth'=> true,
                         ),
+                        'htmlOptions'=>array('readonly'=>"readonly"),
 
             )); ?>
         

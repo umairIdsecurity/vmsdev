@@ -111,8 +111,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
                             'htmlOptions' => array(
                                 'size' => '0',
                                 'maxlength' => '20',
-                                'placeholder' => 'ASIC Application Lodgement Date',
-                                'style' => 'width: 200px hight: 20px;',
+                                'style' => 'width: 80px;',
                             ),
                         ));
                         ?>

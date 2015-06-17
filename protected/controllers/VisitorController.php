@@ -253,7 +253,7 @@ class VisitorController extends Controller {
     }
 
     public function actionGetHostDetails($id) {
-        $resultMessage['data'] = User::model()->findAllByPk($id);
+        $resultMessage['data'] = Visitor::model()->findAllByPk($id);
         echo CJavaScript::jsonEncode($resultMessage);
         Yii::app()->end();
     }

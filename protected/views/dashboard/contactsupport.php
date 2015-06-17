@@ -48,8 +48,7 @@ $arrSubject = array(
                             'role_id',
                             CHtml::listData(Roles::model()->findAll(),
                                     'id',
-                                    'nameFuncForNotifiLabels'),
-                                    array('empty'=>'Send To All Users')
+                                    'nameFuncForNotifiLabels')
                     );?>
             </td>
 	</tr>

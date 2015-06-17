@@ -566,10 +566,10 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
             <!-- Ends Notifications -->
             
             <!-- REASONS -->
-            <?php if ($session['role'] == Roles::ROLE_SUPERADMIN || $session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_ISSUING_BODY_ADMIN) { ?>
+            <?php if ($session['role'] == Roles::ROLE_SUPERADMIN || $session['role'] == Roles::ROLE_ADMIN) { ?>
                 <li class='has-sub'>
                     <a class='managevisitorrecords'
-                       href='<?php echo Yii::app()->createUrl('reasons/admin'); ?>'><span>Reasons</span></a>
+                       href='<?php echo Yii::app()->createUrl('reasons/admin'); ?>'><span>Contact Reasons</span></a>
                     <ul <?php echo $this->id == 'reasons' ? "style='display:block'" : "style='display:none'"; ?>>
                         <li><a href='<?php echo Yii::app()->createUrl('reasons/create'); ?>'
                                class="addSubMenu"><span>Create Reason</span></a></li>

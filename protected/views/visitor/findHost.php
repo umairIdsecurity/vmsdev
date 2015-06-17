@@ -10,7 +10,7 @@ $session = new CHttpSession;
 $visitorName = $_GET['id'];
 $visitorType = $_GET['visitortype'];
 
-if ($cardType > CardType::CONTRACTOR_VISITOR) {
+if (!is_null($cardType) && $cardType > CardType::CONTRACTOR_VISITOR) {
     $hostTitle = 'ASIC Sponsor';
     if (isset($_GET['tenant_agent']) && $_GET['tenant_agent'] != '') {
         $tenant_agent = 'tenant_agent="' . $_GET['tenant_agent'] . '" and';
@@ -65,11 +65,6 @@ if ($cardType > CardType::CONTRACTOR_VISITOR) {
             $tenant_agent = '(t.tenant_agent IS NULL or t.tenant_agent =0 or t.tenant_agent="") and';
         }
         $criteria->addCondition($tenant.$tenant_agent.'  (CONCAT(t.first_name," ",t.last_name) like "%' . $visitorName . '%" or t.first_name like "%' . $visitorName . '%" or t.last_name like "%' . $visitorName . '%" or t.email like "%' . $visitorName . '%")');
-    }
-
-    if (isset($_GET['cardType']) && $_GET['cardType'] > CardType::CONTRACTOR_VISITOR) {
-        $criteria->join = 'INNER JOIN visitor v ON t.`email` = v.`email`';
-        $criteria->addCondition('v.profile_type = "' . Visitor::PROFILE_TYPE_ASIC . '"');
     }
 }
 

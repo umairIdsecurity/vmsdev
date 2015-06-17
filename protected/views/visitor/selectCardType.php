@@ -83,8 +83,6 @@ if (!$cardTypeWorkstationModel) {
                 return false;
             }
 
-            console.log('card_type_value', card_type_value);
-
             var dateoutDiv = $("#dateoutDiv");
             if (card_type_value == SAMEDAY_TYPE ) {
                 var curdateLogVisit = $("#curdateLogVisit");

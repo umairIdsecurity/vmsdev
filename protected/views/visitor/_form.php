@@ -1108,7 +1108,6 @@ $('#Visitor_company').on('change', function() {
     $('#CompanySelectedId').val(companyId);
     $modal = $('#addCompanyContactModal');
     if(!companyId || companyId == ""){
-        console.log(company);
         $('#Visitor_company_em_').show();
         $('#Visitor_company_em_').html('Select a Company');
     } else {

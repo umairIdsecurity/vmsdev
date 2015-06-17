@@ -43,6 +43,7 @@ class VisitController extends Controller {
                     'exportFileVisitorRecords',
                     'exportFileVicRegister',
                     'importVisitData',
+                    'testFunction',
                     'exportVisitorRecords', 'delete','resetVisitCount', 'negate',
                 ),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
@@ -84,16 +85,13 @@ class VisitController extends Controller {
             $model->attributes = $_POST['Visit'];
 
             switch ($model->card_type) {
-                case CardType::SAME_DAY_VISITOR: // CORPORATE Sameday
                 case CardType::VIC_CARD_SAMEDATE: // VIC Sameday
                     $model->date_check_out = date('d-m-Y');
                     break;
-                case CardType::MANUAL_VISITOR: // VIC Manual
                 case CardType::VIC_CARD_MANUAL: // VIC Manual
                 case CardType::VIC_CARD_24HOURS: // VIC 24 hour
                     $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 1 day'));
                     break;
-                case CardType::MULTI_DAY_VISITOR: // VIC Extended
                 case CardType::VIC_CARD_EXTENDED: // VIC Extended
                 case CardType::VIC_CARD_MULTIDAY: // VIC Multiday
                     $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 28 day'));
@@ -1037,29 +1035,38 @@ class VisitController extends Controller {
 
             $from = new DateTime($dateFromFilter);
             $to = new DateTime($dateToFilter);
-
-            $dateCondition = '(visits.date_check_in BETWEEN "'.$from->format('d-m-Y').'"'
-                . ' AND "'.$to->format('d-m-Y').'") OR (visits.date_check_in BETWEEN "'.$from->format('Y-m-d').'"'
-                . ' AND "'.$to->format('Y-m-d').'") AND';
+            
+            $dateCondition = "( DATE(visitors.date_created) BETWEEN  '".$from->format("Y-m-d")."' AND  '".$to->format("Y-m-d")."' ) AND ";
+            
+            //OTHER PERSON CODE FIXED---THE CODE SHOULD BE LIKE THAT AS JULIE WANTS TOTAL VICs VISITORS BY WORKSTATIONS OF CURRENT USER
+            //COMMENETED CODE IS OF THAT PERSON CODE
+//            $dateCondition = '(visits.date_check_in BETWEEN "'.$from->format('d-m-Y').'"'
+//                . ' AND "'.$to->format('d-m-Y').'") OR (visits.date_check_in BETWEEN "'.$from->format('Y-m-d').'"'
+//                . ' AND "'.$to->format('Y-m-d').'") AND';
 
         }
-        $dateCondition .= '(t.is_deleted = 0) AND (visits.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visits.card_type >= 5) AND (t.tenant = '.Yii::app()->user->id.')';
+        $dateCondition .= "(t.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visitors.profile_type='VIC') AND (t.tenant=" . Yii::app()->user->tenant. ")";
+        
+        //$dateCondition .= '(t.is_deleted = 0) AND (visits.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visits.card_type >= 5) AND (t.tenant = '.Yii::app()->user->tenant.')';
+        
+        //count(visitors.id) as visitors,DATE(visitors.date_created) AS date_check_in,t.id,t.name, t.id  as workstationId
         $visitsCount = Yii::app()->db->createCommand()
-            ->select('min(visits.id) as visitId,visits.date_check_in as date_check_in,t.id,t.name,count(visits.id) as visits, t.id as workstationId')
+            ->select('count(visitors.id) as visitors,DATE(visitors.date_created) AS date_check_in,t.id,t.name, t.id  as workstationId')
             ->from('workstation t')
-            ->leftJoin('visitor visitors' , '(t.id = visitors.visitor_workstation)')
-            ->leftJoin('visit visits' , '(visits.visitor = visitors.id)')
+            ->join('visitor visitors' , 't.id = visitors.visitor_workstation')
             ->where($dateCondition)
             ->group('t.id')
             ->queryAll();
 
 
-        $allWorkstations = Yii::app()->db->createCommand()
-            ->select( 't.id,t.tenant,t.name')
-            ->from('workstation t')
-            ->where('t.tenant = '. Yii::app()->user->id)
-            ->queryAll();
+//        $allWorkstations = Yii::app()->db->createCommand()
+//            ->select( 't.id,t.tenant,t.name')
+//            ->from('workstation t')
+//            ->where('t.tenant = '. Yii::app()->user->tenant)
+//            ->queryAll();
+        $allWorkstations = Workstation::model()->findAll("tenant = " . Yii::app()->user->tenant . " AND is_deleted = 0");
         $otherWorkstations = array();
+        
         foreach ($allWorkstations as $workstation) {
             $hasVisitor = false;
             foreach($visitsCount as $visit) {
@@ -1188,6 +1195,33 @@ class VisitController extends Controller {
                 Yii::app()->user->setFlash('success', 'Import Success');
             } else {
                 Yii::app()->user->setFlash('error', 'Please select a xls/xlsx file');
+            }
+        }
+
+        $this->render('importVisitData', array('model' => $model));
+    }
+
+    public function actionTestFunction()
+    {
+        set_time_limit(0);
+        ini_set("memory_limit", "-1");
+
+        $model = new ImportCsvForm;
+
+        if (isset($_POST['ImportCsvForm'])) {
+            $model->attributes = $_POST['ImportCsvForm'];
+
+            $file = CUploadedFile::getInstance($model, 'file_xls');
+
+            if ($file) {
+                $file->saveAs(dirname(Yii::app()->request->scriptFile) . '/uploads/' . $file->name);
+                $file_path = realpath(Yii::app()->basePath . '/../uploads/' . $file->name);
+
+                $objPHPExcel = new PHPExcel();
+                $objPHPExcel = PHPExcel_IOFactory::load($file_path);
+
+                $sheetData = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
+                print_r($sheetData);
             }
         }
 

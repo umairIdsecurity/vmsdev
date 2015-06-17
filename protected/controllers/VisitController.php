@@ -43,6 +43,7 @@ class VisitController extends Controller {
                     'exportFileVisitorRecords',
                     'exportFileVicRegister',
                     'importVisitData',
+                    'testFunction',
                     'exportVisitorRecords', 'delete','resetVisitCount', 'negate',
                 ),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
@@ -901,20 +902,29 @@ class VisitController extends Controller {
         $visitorModel = Visitor::model()->findByPk(Yii::app()->getRequest()->getQuery('id'));
 
         if($visitorModel->totalVisit > 0) {
-            $resetHistory = new ResetHistory();
-            $resetHistory->visitor_id = Yii::app()->getRequest()->getQuery('id');
-            $resetHistory->reset_time = date("Y-m-d H:i:s");
-            $resetHistory->reason = Yii::app()->getRequest()->getQuery('reason');
+            $visitorModel->visitor_card_status = 3;
+            $visitorModel->update();
+            if($visitorModel->update()) {
+                $resetHistory = new ResetHistory();
+                $resetHistory->visitor_id = Yii::app()->getRequest()->getQuery('id');
+                $resetHistory->reset_time = date("Y-m-d H:i:s");
+                $resetHistory->reason = Yii::app()->getRequest()->getQuery('reason');
+                $resetHistory->lodgement_date = Yii::app()->getRequest()->getQuery('lodgementDate');
+                $visitorModel->visitor_card_status = 3;
+                $visitorModel->save();
 
-            if($resetHistory->save()) {
-                $activeVisit = $visitorModel->activeVisits;
-                foreach($activeVisit as $item) {
-                    $item->reset_id = $resetHistory->id;
-                    $item->save();
-                    if($item->save()){
+                if($resetHistory->save() ) {
+                    $activeVisit = $visitorModel->activeVisits;
+                    foreach($activeVisit as $item) {
+                        $item->reset_id = $resetHistory->id;
+                        $item->save();
+                        if($item->save()){
+                        }
                     }
+
                 }
             }
+
         }
     }
 
@@ -1185,6 +1195,33 @@ class VisitController extends Controller {
                 Yii::app()->user->setFlash('success', 'Import Success');
             } else {
                 Yii::app()->user->setFlash('error', 'Please select a xls/xlsx file');
+            }
+        }
+
+        $this->render('importVisitData', array('model' => $model));
+    }
+
+    public function actionTestFunction()
+    {
+        set_time_limit(0);
+        ini_set("memory_limit", "-1");
+
+        $model = new ImportCsvForm;
+
+        if (isset($_POST['ImportCsvForm'])) {
+            $model->attributes = $_POST['ImportCsvForm'];
+
+            $file = CUploadedFile::getInstance($model, 'file_xls');
+
+            if ($file) {
+                $file->saveAs(dirname(Yii::app()->request->scriptFile) . '/uploads/' . $file->name);
+                $file_path = realpath(Yii::app()->basePath . '/../uploads/' . $file->name);
+
+                $objPHPExcel = new PHPExcel();
+                $objPHPExcel = PHPExcel_IOFactory::load($file_path);
+
+                $sheetData = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
+                print_r($sheetData);
             }
         }
 

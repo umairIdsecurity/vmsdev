@@ -28,11 +28,12 @@ class ResetHistory extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('visitor_id, reset_time, reason', 'required'),
+            array('lodgement_date', 'safe'),
 			array('visitor_id', 'length', 'max'=>20),
 			array('reason', 'length', 'max'=>250),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, visitor_id, reset_time, reason', 'safe', 'on'=>'search'),
+			array('id, visitor_id, reset_time, reason,lodgement_date', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -57,6 +58,7 @@ class ResetHistory extends CActiveRecord
 			'visitor_id' => 'Visitor',
 			'reset_time' => 'Reset Time',
 			'reason' => 'Reason',
+            'lodgement_date' => 'Lodgement Date',
 		);
 	}
 
@@ -82,6 +84,7 @@ class ResetHistory extends CActiveRecord
 		$criteria->compare('visitor_id',$this->visitor_id,true);
 		$criteria->compare('reset_time',$this->reset_time,true);
 		$criteria->compare('reason',$this->reason,true);
+		$criteria->compare('lodgement_date',$this->lodgement_date,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

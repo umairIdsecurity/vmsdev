@@ -205,7 +205,7 @@ class VisitorTypeController extends Controller {
             $dateCondition = "( DATE(visitors.date_created) BETWEEN  '".$from->format("Y-m-d")."' AND  '".$to->format("Y-m-d")."' ) AND ";
         }
         
-        $dateCondition .= "(t.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visitors.profile_type='CORPORATE')";
+        $dateCondition .= "(t.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visitors.profile_type='CORPORATE') AND (t.tenant=" . Yii::app()->user->tenant. ")";
         
         $visitors = Yii::app()->db->createCommand()
                 ->select("count(visitors.id) as visitors,DATE(visitors.date_created) AS date_check_in,t.id,t.name, t.id  as workstationId")
@@ -214,8 +214,8 @@ class VisitorTypeController extends Controller {
                 ->where($dateCondition)
                 ->group('t.id')
                 ->queryAll();
-
-        $allWorkstations = Workstation::model()->findAll();
+        
+        $allWorkstations = Workstation::model()->findAll("tenant = " . Yii::app()->user->tenant . " AND is_deleted = 0");
         $otherWorkstations = array();
         foreach ($allWorkstations as $workstation) {
             $hasVisitor = false;

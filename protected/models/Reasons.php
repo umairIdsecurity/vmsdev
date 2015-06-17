@@ -105,4 +105,9 @@ class Reasons extends CActiveRecord
                 return $this->reason_name;
             
         }
+        
+        public function afterFind() {
+		$this->date_created = date("d-m-Y", strtotime($this->date_created) );
+		parent::afterFind();
+	}
 }

@@ -17,7 +17,7 @@ class VisitStatus extends CActiveRecord
     public static $VISIT_STATUS_LIST = array(
 		""=> 'Status',
         1 => 'Active',
-        2 => 'Preregistered',
+        2 => 'Preregister',
         3 => 'Closed',
         4 => 'Expired',
         5 => 'Saved',
@@ -29,7 +29,7 @@ class VisitStatus extends CActiveRecord
     public static $VISIT_STATUS_DASHBOARD_FILTER = array(
 		''=> 'Status',
         1 => 'Active',
-        2 => 'Preregistered'
+        2 => 'Preregister'
     );
     
     

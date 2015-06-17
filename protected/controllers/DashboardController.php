@@ -234,24 +234,16 @@ class DashboardController extends Controller {
                 $criteria = new CDbCriteria;
                 //send emails to current logged in user tenants
                 $criteria->addCondition('tenant ='.Yii::app()->user->tenant);
-                
                        
-                //If Role ID is empty then send it to All CVMS and AVMS Users
-                if( empty($model->role_id) || is_null($model->role_id) )  {
-                    $criteria->addCondition('is_deleted = 0 AND id != '.Yii::app()->user->id);
-                } else {                                
-
-                      // Expected CAVMS-427: When user selects 'Identity Security' option then system should send notifications to below users: 
-                      // Issuing Body admin, Airport Operators, Agent airport Administrators and Agent airport Operators.                              
-                    if($model->role_id == Roles::ROLE_SUPERADMIN) {  // Super Admin is renamed as Identity security under Dropdown                               
-                        $roles = Roles::ROLE_ISSUING_BODY_ADMIN.','.Roles::ROLE_AIRPORT_OPERATOR.','.Roles::ROLE_AGENT_AIRPORT_OPERATOR.','.Roles::ROLE_AGENT_AIRPORT_ADMIN;
-                            $criteria->addCondition('role IN ('.$roles.') AND is_deleted = 0 ');
-                    }
-                    else {
-                        $criteria->addCondition('role ='.$model->role_id.' AND is_deleted = 0 ');
-                    }
-
-                } 
+                // Expected CAVMS-427: When user selects 'Identity Security' option then system should send notifications to below users: 
+                // Issuing Body admin, Airport Operators, Agent airport Administrators and Agent airport Operators.                              
+                if($model->role_id == Roles::ROLE_SUPERADMIN) {  // Super Admin is renamed as Identity security under Dropdown                               
+                    $roles = Roles::ROLE_ISSUING_BODY_ADMIN.','.Roles::ROLE_AIRPORT_OPERATOR.','.Roles::ROLE_AGENT_AIRPORT_OPERATOR.','.Roles::ROLE_AGENT_AIRPORT_ADMIN;
+                    $criteria->addCondition('role IN ('.$roles.') AND is_deleted = 0 ');
+                }
+                else {
+                    $criteria->addCondition('role ='.$model->role_id.' AND is_deleted = 0 ');
+                }
                 
                 $users = User::model()->findAll($criteria);   
                 

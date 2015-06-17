@@ -11,23 +11,26 @@ $form=$this->beginWidget('CActiveForm', array(
 
 ?> 
     <div id="datePickersDiv">   
-        <label> Date From  </label><br>
-        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(    
-                        'name'=>'date_from_filter',
-                        'value'=>Yii::app()->request->getParam("date_from_filter"),
-                        // additional javascript options for the date picker plugin
-                        'options'=>array(
+        <label> Date From:  </label><br>
+            <?php
+                $this->widget( 'ext.jui.EJuiDateTimePicker',array(
+                    'language'=> 'en',
+                    'name'=>'date_from_filter',
+                    'value'=>Yii::app()->request->getParam("date_from_filter"),
+                    'options'=>array(
                             'changeYear' => true,
                             'dateFormat'=>'dd-mm-yy',
                             'changeMonth'=> true,
-                            
-                        ),
-                        'htmlOptions'=>array('readonly'=>"readonly"),
-
-            )); ?>  
+                    ),
+                   'htmlOptions'=>array('readonly'=>"readonly"),
+                ));
+            ?>
+            
         <br><br>
-        <label> Date To </label><br>
-              <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(    
+        <label> Date To: </label><br>
+                <?php 
+                    $this->widget('ext.jui.EJuiDateTimePicker', array(    
+                        'language'=> 'en',
                         'name'=>'date_to_filter',
                         'value'=>Yii::app()->request->getParam("date_to_filter"),
                         // additional javascript options for the date picker plugin
@@ -37,8 +40,8 @@ $form=$this->beginWidget('CActiveForm', array(
                             'changeMonth'=> true,
                         ),
                         'htmlOptions'=>array('readonly'=>"readonly"),
-
-            )); ?>
+                    )); 
+                ?>
         
             &nbsp;
             <input id="filterBtn" type="submit" name="yt0" value="Filter">

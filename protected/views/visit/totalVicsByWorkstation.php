@@ -6,21 +6,25 @@
 	'enableAjaxValidation'=>false,
 )); ?>
         <label> Date From:  </label>
-        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(    
-                        'name'=>'date_from_filter',
-                        'value'=>Yii::app()->request->getParam("date_from_filter"),
-                        // additional javascript options for the date picker plugin
-                        'options'=>array(
-                             'changeYear' => true,
+            <?php
+                $this->widget( 'ext.jui.EJuiDateTimePicker',array(
+                    'language'=> 'en',
+                    'name'=>'date_from_filter',
+                    'value'=>Yii::app()->request->getParam("date_from_filter"),
+                    'options'=>array(
+                            'changeYear' => true,
                             'dateFormat'=>'dd-mm-yy',
                             'changeMonth'=> true,
-                        ),
-                        'htmlOptions'=>array('readonly'=>"readonly"),
-
-            )); ?>  
-        
-             <label> Date To: </label>
-              <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(    
+                    ),
+                   'htmlOptions'=>array('readonly'=>"readonly"),
+                ));
+            ?>
+            
+        <br><br>
+        <label> Date To: </label>
+                <?php 
+                    $this->widget('ext.jui.EJuiDateTimePicker', array(    
+                        'language'=> 'en',
                         'name'=>'date_to_filter',
                         'value'=>Yii::app()->request->getParam("date_to_filter"),
                         // additional javascript options for the date picker plugin
@@ -30,8 +34,8 @@
                             'changeMonth'=> true,
                         ),
                         'htmlOptions'=>array('readonly'=>"readonly"),
-
-            )); ?>
+                    )); 
+                ?>
          
 	 <?php echo CHtml::submitButton('Filter'); ?>
 	 

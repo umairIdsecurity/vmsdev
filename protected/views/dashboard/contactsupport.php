@@ -36,10 +36,40 @@ $arrSubject = array(
             
         </tr>
         <tr>
-            <td><?php echo $form->labelEx($model, 'subject'); ?></td>
-            <td><?php echo $form->dropDownList($model, 'subject', $arrSubject); ?></td>
-            
+            <td><?php //echo $form->labelEx($model, 'subject'); ?></td>
+            <td><?php //echo $form->dropDownList($model, 'subject', $arrSubject); ?></td>
         </tr>
+        
+        
+        <tr>
+            <td><?php echo $form->labelEx($model,'role_id'); ?></td>
+            <td><?php echo $form->dropDownList(
+                            $model,
+                            'role_id',
+                            CHtml::listData(Roles::model()->findAll(),
+                                    'id',
+                                    'nameFuncForNotifiLabels'),
+                                    array('empty'=>'Send To All Users')
+                    );?>
+            </td>
+	</tr>
+        
+        <tr>
+            <td><?php echo $form->labelEx($model, 'reason'); ?></td>
+            <td>
+                <?php echo $form->dropDownList(
+                            $model,
+                            'reason',
+                            CHtml::listData(Reasons::model()->findAll(),
+                                    'nameFuncForReasons',
+                                    'nameFuncForReasons'),
+                                    array('empty'=>'Select a reason')
+                    );?>
+            
+            </td>
+        </tr>
+        
+        
         <tr>
             <td><?php echo $form->labelEx($model, 'message'); ?></td>
             <td><textarea id="ContactForm_message" name="ContactForm[message]" cols="50" rows="8" style="width:700px;"></textarea></td>

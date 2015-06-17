@@ -966,14 +966,20 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
             type: "POST",
             url: url,
             data: form,
-            success: function (data) {
-                if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
-                    window.location = 'index.php?r=dashboard';
-                } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
-                    window.location = 'index.php?r=dashboard/viewmyvisitors';
-                } else {
-                    window.location = 'index.php?r=visitor/admin';
+            success: function (data, response) {
+                if(data == ''){
+                    if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
+                        window.location = 'index.php?r=dashboard';
+                    } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
+                        window.location = 'index.php?r=dashboard/viewmyvisitors';
+                    } else {
+                        window.location = 'index.php?r=visitor/admin';
+                    }
+                }else {
+                    alert(data); return;
                 }
+
+
             },
             error: function (data) {
                 if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {

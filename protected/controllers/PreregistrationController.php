@@ -104,7 +104,12 @@ class PreregistrationController extends Controller
 	}
 
 	public function actionVisitorDetails(){
-		$this->render('confirm-details');
+		$model = new Visitor;
+		//$visitorService = new VisitorServiceImpl();
+		$session = new CHttpSession;
+
+		
+		$this->render('confirm-details' , array('model' => $model));
 	}
 
 	public function actionLogin(){

@@ -1,4 +1,3 @@
-
 <?php
 /**
  * HTML2PDF Librairy - main class
@@ -5603,8 +5602,7 @@ if (!defined('__CLASS_HTML2PDF__')) {
         protected function _tag_open_IMG($param)
         {
             $src    = str_replace('&amp;', '&', $param['src']);
-            $documentRoot  = $_SERVER['DOCUMENT_ROOT'];
-            $src           = $documentRoot. '/' . $src;
+
             $this->parsingCss->save();
             $this->parsingCss->value['width']    = 0;
             $this->parsingCss->value['height']    = 0;

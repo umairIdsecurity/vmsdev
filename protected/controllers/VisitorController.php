@@ -30,7 +30,10 @@ class VisitorController extends Controller {
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('csvSampleDownload','importVisitHistory', 'AddVisitor', 'ajaxCrop', 'create', 'GetIdOfUser','GetHostDetails', 'GetPatientDetails', 'CheckEmailIfUnique', 'GetVisitorDetails', 'FindVisitor', 'FindHost', 'GetTenantAgentWithSameTenant', 'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent','CheckAsicStatusById'),
+                'actions' => array('csvSampleDownload','importVisitHistory', 'AddVisitor', 'ajaxCrop', 'create', 'GetIdOfUser','GetHostDetails',
+                                    'GetPatientDetails', 'CheckEmailIfUnique', 'GetVisitorDetails', 'FindVisitor', 'FindHost', 'GetTenantAgentWithSameTenant',
+                                    'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent','CheckAsicStatusById', 'addAsicSponsor'
+                                ),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -581,5 +584,34 @@ class VisitorController extends Controller {
             'criteria'=>$criteria,
         ));
         return $this->renderPartial('activeVisit',array('dataProvider' => $dataProvider));
+    }
+
+    /**
+     * Add asic sponsor for Log Visit process
+     */
+    public function actionAddAsicSponsor() {
+        $model = new Visitor;
+        $visitorService = new VisitorServiceImpl();
+        $session = new CHttpSession;
+
+
+        if (isset($_POST['User']) && isset($_POST['Visitor'])) {
+            $model->attributes = $_POST['User'];
+            $model->attributes = $_POST['Visitor'];
+
+            if (isset($_POST['User']['asic_expiry']) && $_POST['User']['asic_expiry']) {
+                $model->asic_expiry = date('Y-m-d', strtotime($_POST['User']['asic_expiry']));
+            }
+
+            $model->profile_type = Visitor::PROFILE_TYPE_ASIC;
+
+            if (empty($model->visitor_workstation)) {
+                $model->visitor_workstation = $session['workstation'];
+            }
+
+            if ($result = $visitorService->save($model, NULL, $session['id'])) {
+                Yii::app()->end();
+            }
+        }
     }
 }

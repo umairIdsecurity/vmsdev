@@ -204,20 +204,19 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                                             <?php
                                            // Show Default selected to Admin only 
                                            if(Yii::app()->user->role == Roles::ROLE_ADMIN) {
-                                               echo '<select name="Visitor[visitor_type]" id="Visitor_visitor_type">';
-                                               echo CHtml::tag('option',array('value' => ''),'Select Visitor Type',true);
-                                               $list = VisitorType::model()->findAll();
-
-                                               foreach( $list as $val ) {
-                                                   if ( $val->tenant == Yii::app()->user->tenant && $val->is_default_value == '1' ) {
-                                                       echo CHtml::tag('option', array('value' => $val->id, 'selected' => 'selected'), CHtml::encode('Visitor Type: '.$val->name), true);
-                                                   } else {
-                                                       echo CHtml::tag('option', array('value' => $val->id), CHtml::encode('Visitor Type: '.$val->name), true);
-                                                   }
-                                               } echo "</select>";
-                                           }  else {
-                                               echo $form->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes(NULL,"`name` like '{$model->profile_type}%'"));
-                                           }
+                                                $list = VisitorType::model()->findAll('created_by = :c', [':c' => Yii::app()->user->id]);
+                                                echo '<select name="Visitor[visitor_type]" id="Visitor_visitor_type">';
+                                                echo CHtml::tag('option',array('value' => ''),'Select Visitor Type',true);
+                                                foreach( $list as $val ) {
+                                                    if ( $val->tenant == Yii::app()->user->tenant && $val->is_default_value == '1' ) {
+                                                        echo CHtml::tag('option', array('value' => $val->id, 'selected' => 'selected'), CHtml::encode('Visitor Type: '.$val->name), true);
+                                                    } else {
+                                                        echo CHtml::tag('option', array('value' => $val->id), CHtml::encode('Visitor Type: '.$val->name), true);
+                                                    }
+                                                } echo "</select>";
+                                            }  else {
+                                                echo $form->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes(NULL,"`name` like '{$model->profile_type}%'"));
+                                            }
                                           
                                             ?>
                                             <span class="required">*</span>
@@ -978,8 +977,9 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                 }else {
                     alert(data); return;
                 }
-
-
+            },
+            complete: function() {
+                $("#submitFormVisitor").data('requestRunning', false);
             },
             error: function (data) {
                 if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {

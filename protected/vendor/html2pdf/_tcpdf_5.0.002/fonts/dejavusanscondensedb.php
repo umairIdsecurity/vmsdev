@@ -1,4 +1,3 @@
-
 <?php
 $type='TrueTypeUnicode';
 $name='DejaVuSansCondensed-Bold';

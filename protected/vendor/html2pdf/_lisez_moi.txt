@@ -1,4 +1,3 @@
-
 *******************************************************
 ** Ce programme est distribué sous la licence LGPL,  **
 ** reportez-vous au fichier _LGPL.txt ou à           **
@@ -94,4 +93,3 @@ Remerciement :
  * Nicola Asuni pour les modifications qu'il a accepté d'apporter à TCPDF
  * yAronet pour l'hébergement du forum de support
  * toutes les personnes qui m'ont aidé à développer cette librairie, et à traduire les différents textes
-

@@ -59,7 +59,7 @@ $session = new CHttpSession;
                 //   'value' => 'Yii::app()->dateFormatter->format("d/MM/y",strtotime($data->date_in))',
                 ),
                 array(
-                    'name' => 'ASIC Sponsor',
+                    'header' => 'ASIC Sponsor',
                     'type' => 'html',
                     'value' => 'returnPatientOrHostName($data->id,$GLOBALS["userHost"])',
                 ),

@@ -1017,4 +1017,17 @@ class Visit extends CActiveRecord {
         return;
     }
 
+    /**
+     * get Asic Sponsor
+     * @return bool|CActiveRecord
+     */
+    public function getAsicSponsor ()
+    {
+        if ($this->card_type > CardType::CONTRACTOR_VISITOR) {
+            return Visitor::model()->findByPk($this->host);
+        }
+
+        return false;
+    }
+
 }

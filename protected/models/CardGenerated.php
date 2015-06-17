@@ -24,9 +24,9 @@ class CardGenerated extends CActiveRecord {
 
     public $max_card_count;
 
-    const CORPORATE_CARD_COLOR = 'bgcolor="#ffffff"';
-    const VIC_CARD_COLOR = 'bgcolor="#FFFF00"';
-    const ASIC_CARD_COLOR = 'bgcolor="#ff0000"';
+    const CORPORATE_CARD_COLOR = "#ffffff";
+    const VIC_CARD_COLOR = "#FFFF00";
+    const ASIC_CARD_COLOR = "#ff0000";
 
     /**
      * @return string the associated database table name

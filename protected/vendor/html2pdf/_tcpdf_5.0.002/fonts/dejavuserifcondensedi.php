@@ -1,4 +1,3 @@
-
 <?php
 $type='TrueTypeUnicode';
 $name='DejaVuSerifCondensed-Italic';

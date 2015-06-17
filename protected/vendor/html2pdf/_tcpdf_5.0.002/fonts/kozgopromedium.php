@@ -1,4 +1,3 @@
-
 <?php
 $type = 'cidfont0';
 $name = 'KozGoPro-Medium-Acro';

@@ -93,28 +93,10 @@ class UserController extends Controller
             } else {
                 $model->password_option = '';
             }
-            $workstation = null;
-            if (isset($_POST['User']['workstation'])) {
-                $workstation = $_POST['User']['workstation'];
-            }
 
-            // asic sponsor is saved into visitor table
-            if (isset($_GET['asic']) || isset($_GET['view'])) {
-                $asicSponsor = new Visitor();
-                $asicSponsor->attributes = $_POST['User'];
-                $asicSponsor->attributes = $_POST['Visitor'];
-                $asicSponsor->profile_type = Visitor::PROFILE_TYPE_ASIC;
-                if (isset($_POST['User']['asic_expiry']) && $_POST['User']['asic_expiry'])
-                    $asicSponsor->asic_expiry = date('Y-m-d',strtotime($_POST['User']['asic_expiry']));
-                //$asicSponsor->save(false);
-                $visitorService = new VisitorServiceImpl();
-                $visitorService->save($asicSponsor, "", $session['id']);
-            }
-
-            if ($userService->save($model, Yii::app()->user, $workstation)) {
+            if ($userService->save($model, Yii::app()->user, $_POST['User']['userWorkstation1'])) {
                 Yii::app()->user->setFlash('success', "Record Added Successfully");
-				if (Yii::app()->request->isAjaxRequest)
-                {
+                if (Yii::app()->request->isAjaxRequest) {
                     Yii::app()->end();
                 }
                 if (!isset($_GET['view'])) {
@@ -149,7 +131,12 @@ class UserController extends Controller
                 $_POST['User']['password'] = User::model()->hashPassword($_POST['User']['password']);
             }
             $model->attributes = $_POST['User'];
-
+            if(isset($_POST['User']['userWorkstation1']) && is_array($_POST['User']['userWorkstation1'])){
+                UserWorkstations::model()->deleteAllUserWorkstationsWithSameUserId($model->id);
+                foreach ($_POST['User']['userWorkstation1'] as $wsst):
+                    User::model()->saveWorkstation($model->id, $wsst,Yii::app()->user->id);
+                endforeach;
+            }
             if ($userService->save($model, Yii::app()->user, null)) {
                 $this->redirect(array('admin', 'vms' => $model->is_avms_user() ? 'avms' : 'cvms'));
             }

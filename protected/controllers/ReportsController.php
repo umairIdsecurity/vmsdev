@@ -495,7 +495,12 @@ class ReportsController extends Controller
         if( !empty($dateFromFilter) && !empty($dateToFilter) ) {
             $from = new DateTime($dateFromFilter);
             $to = new DateTime($dateToFilter);
-            $dateCondition = "( DATE(visitors.date_created) BETWEEN  '".$from->format("Y-m-d")."' AND  '".$to->format("Y-m-d")."' ) AND ";
+            
+            $dateCondition = "( (STR_TO_DATE(visits.date_check_in, '%d-%m-%Y') BETWEEN STR_TO_DATE('".$from->format("d-m-Y")."', '%d-%m-%Y') AND STR_TO_DATE('".$to->format("d-m-Y")."', '%d-%m-%Y'))"
+                                ." OR "
+                                ."(STR_TO_DATE(visits.date_check_in, '%Y-%m-%d') BETWEEN STR_TO_DATE('".$from->format("Y-m-d")."', '%Y-%m-%d') AND STR_TO_DATE('".$to->format("Y-m-d")."', '%Y-%m-%d')) ) AND";
+            
+            //$dateCondition = "( visits.date_check_in BETWEEN  '".$from->format("Y-m-d")."' AND  '".$to->format("Y-m-d")."' ) AND ";
         }
         
         $dateCondition .= "(visits.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visitors.profile_type='VIC')";

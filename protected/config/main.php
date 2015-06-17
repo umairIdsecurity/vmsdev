@@ -121,9 +121,9 @@ $result =  CMap::mergeArray(
                         'categories' => 'system.*'
                     ),
                 // uncomment the following to show log messages on web pages
-                 array(
+                 /*array(
                   'class'=>'CWebLogRoute',
-                  ),
+                  ),*/
                 ),
             ),
 

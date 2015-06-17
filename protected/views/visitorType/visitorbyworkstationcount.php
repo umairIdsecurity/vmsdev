@@ -15,6 +15,7 @@
                             'dateFormat'=>'dd-mm-yy',
                             'changeMonth'=> true,
                         ),
+                        'htmlOptions'=>array('readonly'=>"readonly"),
 
             )); ?>  
         
@@ -28,6 +29,7 @@
                             'dateFormat'=>'dd-mm-yy',
                             'changeMonth'=> true,
                         ),
+                        'htmlOptions'=>array('readonly'=>"readonly"),
 
             )); ?>
          

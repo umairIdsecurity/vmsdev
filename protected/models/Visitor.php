@@ -70,7 +70,7 @@ class Visitor extends CActiveRecord {
         ),
         self::PROFILE_TYPE_VIC => array(
             1 => 'Card Status: Saved',
-            2 => 'Card Status: VIC holder',
+            2 => 'Card Status: VIC Holder',
             3 => 'Card Status: ASIC Pending',
             4 => 'Card Status: ASIC Issued',
             5 => 'Card Status: ASIC Denied',

@@ -20,7 +20,7 @@ class PreregistrationController extends Controller
 	public function accessRules() {
 		return array(
 			array('allow',
-				'actions' => array('index','privacyPolicy' , 'declaration' , 'Login' ,'registration' ),
+				'actions' => array('index','privacyPolicy' , 'declaration' , 'Login' ,'registration','VisitorDetails' ),
 				'users' => array('*'),
 			),
 			array('allow',
@@ -38,7 +38,6 @@ class PreregistrationController extends Controller
 	public function actionIndex(){
 
 		$session = new CHttpSession;
-		//echo $session['workstation'];
 
 		$model = new EntryPoint();
 
@@ -82,6 +81,7 @@ class PreregistrationController extends Controller
 
 	public function actionRegistration(){
 
+		$session = new CHttpSession;
 		$model = new Registration();
 
 		if (isset($_POST['ajax']) && $_POST['ajax'] === 'preregistration-form') {
@@ -90,17 +90,21 @@ class PreregistrationController extends Controller
 		}
 
 		if (isset($_POST['Registration'])) {
-			$model->attributes = $_POST['Registration'];
 			//print_r($_POST['Registration']);
-			echo $model->username;
-			echo $model->password;
-			//echo "done";
-			//$model->attributes = $_POST['Registration'];
-			//$model->save();
-			//print_r($model->getErrors());
+			$model->attributes = $_POST['Registration'];
+			$session['account_type'] = $model->account_type;
+			$session['username'] 	 = $model->username;
+			$session['password']     = $model->password;
+
+			$this->redirect(array('preregistration/visitorDetails'));
+
 		}
 
 		$this->render('registration', array('model' => $model));
+	}
+
+	public function actionVisitorDetails(){
+		$this->render('confirm-details');
 	}
 
 	public function actionLogin(){
@@ -125,7 +129,11 @@ class PreregistrationController extends Controller
 	}
 
 	public function actionDetails(){
-		echo "welcome";
+		$session = new CHttpSession;
+		echo $session['account_type']."<br>";
+		echo $session['username']."<br>";
+		echo $session['password']."<br>";
+		//echo "welcome";
 	}
 
 	public function actionLogout() {

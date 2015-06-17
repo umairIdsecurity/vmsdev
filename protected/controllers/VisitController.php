@@ -898,32 +898,42 @@ class VisitController extends Controller {
         Yii::app()->end();
     }
 
-    public function actionResetVisitCount() {
+    public function actionResetVisitCount()
+    {
         $visitorModel = Visitor::model()->findByPk(Yii::app()->getRequest()->getQuery('id'));
 
-        if($visitorModel->totalVisit > 0) {
-            $visitorModel->visitor_card_status = 3;
-            $visitorModel->update();
-            if($visitorModel->update()) {
-                $resetHistory = new ResetHistory();
-                $resetHistory->visitor_id = Yii::app()->getRequest()->getQuery('id');
-                $resetHistory->reset_time = date("Y-m-d H:i:s");
-                $resetHistory->reason = Yii::app()->getRequest()->getQuery('reason');
-                $resetHistory->lodgement_date = Yii::app()->getRequest()->getQuery('lodgementDate');
-                $visitorModel->visitor_card_status = 3;
-                $visitorModel->save();
-
-                if($resetHistory->save() ) {
-                    $activeVisit = $visitorModel->activeVisits;
-                    foreach($activeVisit as $item) {
-                        $item->reset_id = $resetHistory->id;
-                        $item->save();
-                        if($item->save()){
-                        }
-                    }
-
+        if ($visitorModel->totalVisit > 0) {
+            $activeVisit = $visitorModel->activeVisits;
+            $resetErrorMessage = '';
+            foreach ($activeVisit as $item) {
+                if ($item->visit_status == VisitStatus::ACTIVE) {
+                    $resetErrorMessage = 'Please close the active visit before resetting visit count.';
                 }
             }
+            if ($resetErrorMessage == '') {
+                $visitorModel->visitor_card_status = 3;
+                $visitorModel->update();
+                if ($visitorModel->update()) {
+                    $resetHistory = new ResetHistory();
+                    $resetHistory->visitor_id = Yii::app()->getRequest()->getQuery('id');
+                    $resetHistory->reset_time = date("Y-m-d H:i:s");
+                    $resetHistory->reason = Yii::app()->getRequest()->getQuery('reason');
+                    $resetHistory->lodgement_date = Yii::app()->getRequest()->getQuery('lodgementDate');
+                    $visitorModel->visitor_card_status = 3;
+                    $visitorModel->save();
+
+                    if ($resetHistory->save()) {
+                        foreach ($activeVisit as $item) {
+                            $item->reset_id = $resetHistory->id;
+                            $item->save();
+                        }
+
+                    }
+                }
+            } else {
+                echo $resetErrorMessage;
+            }
+
 
         }
     }
@@ -1130,7 +1140,7 @@ class VisitController extends Controller {
                             $visitorModel = new Visitor();
                             $visitorModel->first_name = $row['B'];
                             $visitorModel->last_name = $row['C'];
-                            $visitorModel->date_of_birth = date('Y-m-d', $row['D']);
+                            $visitorModel->date_of_birth = date('Y-m-d', strtotime($row['D']));
                             $visitorModel->profile_type = 'VIC';
                             $visitorModel->visitor_workstation = isset($worstationId) ? $worstationId : '';
                             $visitorModel->tenant = $session['tenant'];

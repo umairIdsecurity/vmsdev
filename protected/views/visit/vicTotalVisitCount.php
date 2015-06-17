@@ -220,8 +220,14 @@ $this->widget('zii.widgets.grid.CGridView', array(
                 type:'GET',
                 url: $('#linkReset').val(),
                 data: {reason: reason, lodgementDate: lodgementDate },
-                success:function(response) {
-                    $.fn.yiiGridView.update('vic-total-visit-count');
+                success:function(data) {
+                    if(! data || data == '') {
+                        $.fn.yiiGridView.update('vic-total-visit-count');
+                    } else {
+                        alert(data);
+                    }
+
+
                 }
             });
             return false;

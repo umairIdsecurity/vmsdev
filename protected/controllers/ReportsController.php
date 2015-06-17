@@ -29,7 +29,7 @@ class ReportsController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('visitorsByProfiles','profilesAvmsVisitors','visitorsVicByType'),
+				'actions'=>array('visitorsByProfiles','profilesAvmsVisitors','visitorsVicByType','visitorsVicByCardType'),
 				'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
 			),
 			array('deny',  // deny all users
@@ -447,7 +447,7 @@ class ReportsController extends Controller
     
     //**************************************************************************
     /* 
-    * Report: VIC Reporting: Total Visitors by Visitor Type
+    * Report: VIC Reporting: Total VIC Visitors by Visitor Type
     * Total Visitors by Visitor Type
     * 
     * @return view
@@ -477,6 +477,44 @@ class ReportsController extends Controller
         
         $this->render("visitorvictypecount", array("visit_count"=>$visitsCount));
     }
-
+    
+    //**************************************************************************
+    /* 
+    * Report: VIC Reporting: Total VIC Visitors' VISITS by VISIT CARD TYPE 
+    * and also if between DIFFERENT DATE RANGES
+    * 
+    * @return view
+    */
+    public function actionVisitorsVicByCardType() {
+        // Post Date
+        $dateFromFilter = Yii::app()->request->getParam("date_from_filter");
+        $dateToFilter = Yii::app()->request->getParam("date_to_filter");
+        
+        $dateCondition='';
+        
+        if( !empty($dateFromFilter) && !empty($dateToFilter) ) {
+            $from = new DateTime($dateFromFilter);
+            $to = new DateTime($dateToFilter);
+            
+            $dateCondition = "( (STR_TO_DATE(visits.date_check_in, '%d-%m-%Y') BETWEEN STR_TO_DATE('".$from->format("d-m-Y")."', '%d-%m-%Y') AND STR_TO_DATE('".$to->format("d-m-Y")."', '%d-%m-%Y'))"
+                                ." OR "
+                                ."(STR_TO_DATE(visits.date_check_in, '%Y-%m-%d') BETWEEN STR_TO_DATE('".$from->format("Y-m-d")."', '%Y-%m-%d') AND STR_TO_DATE('".$to->format("Y-m-d")."', '%Y-%m-%d')) ) AND";
+            
+            //$dateCondition = "( visits.date_check_in BETWEEN  '".$from->format("Y-m-d")."' AND  '".$to->format("Y-m-d")."' ) AND ";
+        }
+        
+        $dateCondition .= "(visits.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visitors.profile_type='VIC')";
+        
+        $visitsCount = Yii::app()->db->createCommand()
+                ->select("cards.id,cards.name,count(visits.id) as visits,date_check_in")
+                ->from('visit visits')
+                ->join("card_type cards",'cards.id = visits.card_type')
+                ->join("visitor visitors",'visitors.id = visits.visitor')
+                ->where($dateCondition)
+                ->group('cards.id')
+                ->queryAll();
+        
+        $this->render("visitorviccardtypecount", array("visit_count"=>$visitsCount));
+    }
     
 }

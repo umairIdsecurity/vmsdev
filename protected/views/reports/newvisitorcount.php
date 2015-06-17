@@ -45,6 +45,7 @@ $form=$this->beginWidget('CActiveForm', array(
                             'dateFormat'=>'dd-MM-yy',
                             'changeMonth'=> true,
                         ),
+                        'htmlOptions'=>array('readonly'=>"readonly"),
 
             )); ?>  
         <br><br>
@@ -58,6 +59,7 @@ $form=$this->beginWidget('CActiveForm', array(
                             'dateFormat'=>'dd-MM-yy',
                             'changeMonth'=> true,
                         ),
+                        'htmlOptions'=>array('readonly'=>"readonly"),
 
             )); ?>
         

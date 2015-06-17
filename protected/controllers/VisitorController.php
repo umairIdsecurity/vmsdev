@@ -234,7 +234,7 @@ class VisitorController extends Controller {
                 ), false, true);
     }
 
-    public function actionFindHost($id,$tenant,$tenant_agent) {
+    public function actionFindHost($id,$tenant,$tenant_agent, $cardType) {
         $this->layout = '//layouts/column1';
         $model = new User('search');
         $model->unsetAttributes();  // clear any default values
@@ -242,7 +242,7 @@ class VisitorController extends Controller {
             $model->attributes = $_GET['User'];
 
         $this->renderPartial('findHost', array(
-            'model' => $model,
+            'model' => $model, 'cardType' => $cardType
                 ), false, true);
     }
 

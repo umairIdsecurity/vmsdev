@@ -92,20 +92,21 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                             'afterValidate' => 'js:function(form, data, hasError){
                                 if (!hasError){
                                     checkEmailIfUnique();
+                                    $("#workstationForm").submit();
                                 }
                                 }'
                         ),
                     ));
                     ?>
                     <input type="hidden" id="emailIsUnique" value="0"/>
-
+                    <input type="hidden" name="Visitor[id]" value="<?php echo $model->visitor; ?>"/>
                     <div class="flash-success success-update-contact-details"> Contact Details Updated Successfully.
                     </div>
                     <table id="contactDetailsTable" class="detailsTable">
                         <tr>
                             <td width="110px;" style="padding-top: 7px;">Email</td>
                             <td><?php echo $visitorForm->textField($visitorModel, 'email',
-                                    array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled', 'class' =>  "visitor-detail-info-field")); ?>
+                                    array('size' => 50, 'maxlength' => 50, 'class' =>  "visitor-detail-info-field")); ?>
                                 <?php echo "<br>" . $visitorForm->error($visitorModel, 'email'); ?>
                                 <div style="" id="Visitor_email_em_" class="errorMessage errorMessageEmail">A profile
                                     already exists for this email address.
@@ -114,8 +115,9 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                         </tr>
                         <tr>
                             <td style="  padding-top: 7px;">Mobile</td>
-                            <td><input class="visitor-detail-info-field" type="text" value="<?php echo $visitorModel->contact_number; ?>" disabled="disabled"
-                                       name="Visitor[contact_number]" id="Visitor_contact_number"></td>
+                            <td><?php echo $visitorForm->textField($visitorModel, 'contact_number',
+                                    array('size' => 50, 'maxlength' => 50, 'class' =>  "visitor-detail-info-field")); ?>
+                                <?php echo "<br>" . $visitorForm->error($visitorModel, 'contact_number'); ?></td>
                         </tr>
                         <!--<tr><td><input type="submit" value="Update" name="yt0" id="submitContactDetailForm" class="complete" /></td></tr>-->
                     </table>
@@ -592,10 +594,30 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                 </li>
             </ul>
         </li>
+        <li>
+            <ul>
+                <li>
+                    <?php
+                    if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN, Roles::ROLE_SUPERADMIN])) {
+                        echo '<input type="submit" class="complete btnUpdateVic"  value="Update">';
+                    }
+                    ?>
+                </li>
+            </ul>
+        </li>
     </ul>
+
 </div>
 <script>
     $(document).ready(function () {
+        $(".complete.btnUpdateVic").click(function(){
+
+                    $('#update-visitor-form').submit();
+
+
+
+        });
+
 
         $("#User_repeatpassword").keyup(checkPasswordMatch);
         if ($("#currentSessionRole").val() == 9) {

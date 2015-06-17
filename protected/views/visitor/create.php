@@ -85,7 +85,15 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
 <input type="text" id="currentRoleOfLoggedInUser" value="<?php echo $session['role']; ?>">
 <input type="text" id="currentCompanyOfLoggedInUser" value="<?php echo User::model()->getCompany($session['id']); ?>">
 <script>
-
+function getCardType() {
+    var card_type = $('#VisitCardType').val();
+    console.log(card_type);
+    if (card_type > "<?php echo CardType::CONTRACTOR_VISITOR; ?>") {
+        return 'ASIC Sponsor';
+    } else {
+        return 'Host';
+    }
+}
 $(document).ready(function () {
         display_ct();
         $("#register-host-patient-form").hide();
@@ -159,6 +167,9 @@ $(document).ready(function () {
 
             // display element by card type
             selectVicCard($("#selectCardDiv input[name=selectCardType]:checked").val());
+
+            $('#findHostA').html('Add or Find ' + getCardType());
+            $('#dummy-host-findBtn').html('Find ' + getCardType());
 
             showHideTabs('findVisitorB', 'findVisitorA', 'findVisitor', 'selectCardA', 'selectCard', 'findHostA', 'findHost');
         });
@@ -430,6 +441,7 @@ function preloadHostDetails(hostId) {
 }
 
 function populateFieldHost(id) {
+    
     if ($("#Visitor_visitor_type").val() != 1) {
 
         $.ajax({
@@ -439,18 +451,18 @@ function populateFieldHost(id) {
             data: id,
             success: function (r) {
                 $.each(r.data, function (index, value) {
-                    $("#searchHostTableDiv h4").html("Selected ASIC Sponsor Record : " + value.first_name + " " + value.last_name);
+                    $("#searchHostTableDiv h4").html("Selected "+getCardType()+" Record : " + value.first_name + " " + value.last_name);
 
                 });
 
 //                    $('#findHostTableIframe').contents().find('.findHostButtonColumn a').removeClass('delete');
 //                    $('#findHostTableIframe').contents().find('.findHostButtonColumn a').html('Select Host');
 //                    $('#findHostTableIframe').contents().find('#' + id).addClass('delete');
-//                    $('#findHostTableIframe').contents().find('#' + id).html('ASIC Sponsor Selected');
+//                    $('#findHostTableIframe').contents().find('#' + id).html(getCardType()+' Selected');
                 $('.findHostButtonColumn a').removeClass('delete');
-                $('.findHostButtonColumn a').html('Select ASIC Sponsor');
+                $('.findHostButtonColumn a').html('Select '+getCardType());
                 $('#' + id).addClass('delete');
-                $('#' + id).html('ASIC Sponsor Selected');
+                $('#' + id).html(getCardType()+' Selected');
             }
         });
     } else {
@@ -903,8 +915,8 @@ function checkReasonIfUnique() {
                             $("#findHostA").html("Add Patient Details");
                             $("#findHostB").html("Add Patient Details");
                         } else {
-                            $("#findHostA").html("Add or Find ASIC Sponsor");
-                            $("#findHostB").html("Add or Find ASIC Sponsor");
+                            $("#findHostA").html("Add or Find "+getCardType());
+                            $("#findHostB").html("Add or Find "+getCardType());
                         }
                         //tenant and tenant agent of visitor and host should be the same
                         var options = $("#search_visitor_tenant > option").clone();
@@ -987,7 +999,7 @@ function selectVicCard(cardType) {
         $('#hostButtonRow').css('padding-top', '130px');
 
         // text changes:
-        $('div.visitor-title-host').text('Add ASIC Sponsor');
+        $('div.visitor-title-host').text('Add '+getCardType());
 
     } else {
         // first table

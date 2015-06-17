@@ -103,8 +103,29 @@ class VisitorController extends Controller {
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['Visitor'])) {
+            $currentCardStatus = $model->visitor_card_status;
             $model->attributes = $_POST['Visitor'];
             if ($visitorService->save($model, NULL, $session['id'])) {
+                if ($currentCardStatus == 2 && $_POST['Visitor']['visitor_card_status'] == 3) {
+                    if (Yii::app()->user->role == 1 || Yii::app()->user->role == 5) {
+                        if ($model->totalVisit > 0) {
+                            $resetHistory = new ResetHistory();
+                            $resetHistory->visitor_id = $model->id;
+                            $resetHistory->reset_time = date("Y-m-d H:i:s");
+                            $resetHistory->reason = 'Update Visitor Card Type form VIC Holder to ASIC Pending';
+
+                            if ($resetHistory->save()) {
+                                $activeVisit = $model->activeVisits;
+                                foreach ($activeVisit as $item) {
+                                    $item->reset_id = $resetHistory->id;
+                                    $item->save();
+                                    if ($item->save()) {
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
                 switch ($isViewedFromModal) {
                     case "1":
                         break;
@@ -234,7 +255,7 @@ class VisitorController extends Controller {
                 ), false, true);
     }
 
-    public function actionFindHost($id,$tenant,$tenant_agent) {
+    public function actionFindHost($id,$tenant,$tenant_agent, $cardType = null) {
         $this->layout = '//layouts/column1';
         $model = new User('search');
         $model->unsetAttributes();  // clear any default values
@@ -242,7 +263,7 @@ class VisitorController extends Controller {
             $model->attributes = $_GET['User'];
 
         $this->renderPartial('findHost', array(
-            'model' => $model,
+            'model' => $model, 'cardType' => $cardType
                 ), false, true);
     }
 

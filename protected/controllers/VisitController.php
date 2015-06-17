@@ -1203,6 +1203,7 @@ class VisitController extends Controller {
 
     public function actionTestFunction()
     {
+        print_r(phpinfo());die;
         set_time_limit(0);
         ini_set("memory_limit", "-1");
 

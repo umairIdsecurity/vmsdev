@@ -1076,7 +1076,20 @@ class VisitController extends Controller {
 //                . ' AND "'.$to->format('Y-m-d').'") AND';
 
         }
-        $dateCondition .= "(t.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visitors.profile_type='VIC') AND (t.tenant=" . Yii::app()->user->tenant. ")";
+        
+        $allWorkstations='';
+        
+        if(Roles::ROLE_SUPERADMIN != Yii::app()->user->role){
+            
+            $dateCondition .= "(visitors.tenant=".Yii::app()->user->tenant.") AND ";
+            //show curren logged in user Workstations
+            $allWorkstations = Workstation::model()->findAll("tenant = " . Yii::app()->user->tenant . " AND is_deleted = 0");
+        }else{
+            //show all work stations to SUPERADMIN
+            $allWorkstations = Workstation::model()->findAll();
+        }
+        
+        $dateCondition .= "(t.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visitors.profile_type='VIC')";
         
         //$dateCondition .= '(t.is_deleted = 0) AND (visits.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visits.card_type >= 5) AND (t.tenant = '.Yii::app()->user->tenant.')';
         
@@ -1095,7 +1108,6 @@ class VisitController extends Controller {
 //            ->from('workstation t')
 //            ->where('t.tenant = '. Yii::app()->user->tenant)
 //            ->queryAll();
-        $allWorkstations = Workstation::model()->findAll("tenant = " . Yii::app()->user->tenant . " AND is_deleted = 0");
         $otherWorkstations = array();
         
         foreach ($allWorkstations as $workstation) {

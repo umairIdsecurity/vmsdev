@@ -562,12 +562,12 @@ $defaultKey = key($asicCardTypes);
 
 </div>
 <div id="fade2" class="black_overlay">
-
-    <div>
-        <input type="button" class="btn btn-success" id="cropPhotoBtn2" value="Crop" style="">
-        <input type="button" id="closeCropPhoto2" onclick="document.getElementById('light2').style.display = 'none';
-                document.getElementById('fade2').style.display = 'none'" value="x" class="btn btn-danger">
-    </div>
+</div>
+<div id="crop_button2">
+    <input type="button" class="btn btn-success" id="cropPhotoBtn2" value="Crop" style="">
+    <input type="button" id="closeCropPhoto2" onclick="document.getElementById('light2').style.display = 'none';
+                document.getElementById('fade2').style.display = 'none';
+                document.getElementById('crop_button2').style.display = 'none'" value="x" class="btn btn-danger">
 </div>
 
 <input type="hidden" id="x12"/>
@@ -580,16 +580,17 @@ $defaultKey = key($asicCardTypes);
 
 <!-- PHOTO CROP-->
 <div id="light3" class="white_content">
-    <div style="text-align:right;">
-        <input type="button" class="btn btn-success" id="cropPhotoBtn3" value="Crop" style="">
-        <input type="button" id="closeCropPhoto3" onclick="document.getElementById('light3').style.display = 'none';
-                document.getElementById('fade3').style.display = 'none'" value="x" class="btn btn-danger">
-    </div>
     <br>
     <img id="photoCropPreview3" src="">
 
 </div>
 <div id="fade3" class="black_overlay"></div>
+<div id="crop_button3">
+    <input type="button" class="btn btn-success" id="cropPhotoBtn3" value="Crop" style="">
+    <input type="button" id="closeCropPhoto3" onclick="document.getElementById('light3').style.display = 'none';
+                document.getElementById('fade3').style.display = 'none';
+                document.getElementById('crop_button3').style.display = 'none'" value="x" class="btn btn-danger">
+</div>
 
 <input type="hidden" id="x13"/>
 <input type="hidden" id="x23"/>

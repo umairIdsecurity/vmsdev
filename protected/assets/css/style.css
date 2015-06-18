@@ -1742,15 +1742,17 @@ p.asic{
 .white_content {
     background-color: #FFFFFF;
     display: none;
-    left: 12%;
-    overflow: auto;
+    left: 10%;
+    overflow: scroll;
     padding: 16px;
     position: fixed;
     top: 15%;
     z-index: 1002;
     width:1000px;
-    height:600px;
+    height:450px;
+    text-align: center;
 }
+#crop_button, #crop_button2, #crop_button3 {position: fixed; right: 0px; top: 0px; z-index: 2005;display:none}
 /**/
 .photoDiv{
     height:154px;width:113px;border:1px solid #EEEEEE;margin-bottom:10px;
@@ -2128,8 +2130,5 @@ label.myLabel input[type="file"] {
  }
 .no-margin-bottom{margin-bottom:0}
 
-.white_content img {
-    width: 100%;
-}
 .fix-modal-ie {width:auto; margin-left: 0!important; left: 0 !important; position: absolute!important}
 .fix-modal-ie-reset {width:auto; margin-left: 0!important; left: 100px !important; position: absolute!important}

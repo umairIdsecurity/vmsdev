@@ -79,7 +79,8 @@ if ($this->Id == 'visitor') {
     ?> </div> 
 <br><br>
 <input type="button"  style="display:none;" id="cropImageBtn3" class="btn actionForward editImageBtn" value="Edit Photo" onclick = "document.getElementById('light3').style.display = 'block';
-        document.getElementById('fade3').style.display = 'block'">
+        document.getElementById('fade3').style.display = 'block';
+        document.getElementById('crop_button3').style.display = 'block'; ">
 
 <input type="hidden" id="actionUpload3" value="<?php echo $this->action->id; ?>"/> 
 <input type="hidden" id="controllerId3" value="<?php echo $this->id; ?>"/> 

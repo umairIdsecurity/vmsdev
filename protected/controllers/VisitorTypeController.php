@@ -206,11 +206,22 @@ class VisitorTypeController extends Controller {
         if( !empty($dateFromFilter) && !empty($dateToFilter) ) {
             $from = new DateTime($dateFromFilter);
             $to = new DateTime($dateToFilter);
-            $dateCondition .= "( DATE(visitors.date_created) BETWEEN  '".$from->format("Y-m-d")."' AND  '".$to->format("Y-m-d")."' ) AND ";
+            $dateCondition = "( DATE(visitors.date_created) BETWEEN  '".$from->format("Y-m-d")."' AND  '".$to->format("Y-m-d")."' ) AND ";
         }
         
+        $allWorkstations='';
         
-        $dateCondition .= "(t.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visitors.profile_type='CORPORATE') AND (t.tenant=" . Yii::app()->user->tenant. ")";
+        if(Roles::ROLE_SUPERADMIN != Yii::app()->user->role){
+            
+            $dateCondition .= "(visitors.tenant=".Yii::app()->user->tenant.") AND ";
+            //show curren logged in user Workstations
+            $allWorkstations = Workstation::model()->findAll("tenant = " . Yii::app()->user->tenant . " AND is_deleted = 0");
+        }else{
+            //show all work stations to SUPERADMIN
+            $allWorkstations = Workstation::model()->findAll();
+        }
+        
+        $dateCondition .= "(t.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visitors.profile_type='CORPORATE')";
         
         $visitors = Yii::app()->db->createCommand()
                 ->select("count(visitors.id) as visitors,DATE(visitors.date_created) AS date_check_in,t.id,t.name, t.id  as workstationId")
@@ -220,7 +231,6 @@ class VisitorTypeController extends Controller {
                 ->group('t.id')
                 ->queryAll();
         
-        $allWorkstations = Workstation::model()->findAll("tenant = " . Yii::app()->user->tenant . " AND is_deleted = 0");
         $otherWorkstations = array();
         foreach ($allWorkstations as $workstation) {
             $hasVisitor = false;

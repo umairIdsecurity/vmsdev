@@ -4,8 +4,11 @@
 $session = new CHttpSession;
 
 // asic sponsor
-$asic = $hostModel->getAsicSponsor();
+$asic = $model->getAsicSponsor();
 
+if ($asic && $hostModel == null) {
+    $hostModel = $asic;
+}
 ?>
 <table id="visitorDetailDiv">
     <tr class="theadVisitorDetail">

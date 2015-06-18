@@ -808,10 +808,11 @@ $defaultKey = key($asicCardTypes);
     function sendHostForm() {
 
         var hostform = $("#register-host-form").serialize();
-        var url = "<?php echo CHtml::normalizeUrl(array("user/create&view=1")); ?>";
 
         if ($("#selectCardDiv input[name=selectCardType]:checked").val() > CONTRACTOR_TYPE) {
-            url += '&asic=1';
+            var url = "<?php echo $this->createUrl("visitor/addAsicSponsor");?>";
+        } else {
+            var url = "<?php echo CHtml::normalizeUrl(array("user/create&view=1")); ?>";
         }
 
         $.ajax({

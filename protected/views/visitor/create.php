@@ -449,7 +449,7 @@ function checkAsicStatusById(id){
         data: id,
         success: function (flag) {
            if(flag == 0){
-               alert('ASIC Denied. A VIC can not be issued to this person.');
+               alert('ASIC Denied. A VIC can not be issued to this person.\n Please inform them to report to the ASIC office.');
                return;
            }else{
                $.ajax({

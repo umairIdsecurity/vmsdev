@@ -12,6 +12,7 @@ class Registration extends CFormModel{
     public $username_repeat;
     public $password;
     public $password_repeat;
+    public $account_type;
 
 
     /**
@@ -22,7 +23,8 @@ class Registration extends CFormModel{
         return array(
 
             array('username', 'unique','className'=>'User','attributeName'=>'email','message'=>"Username already exists"),
-            array('username,password', 'required'),
+            array('username,password,account_type', 'required'),
+            array('password', 'length', 'min' => 5, 'max'=>20, 'message'=>Yii::t("translation", "{attribute} is too short.")),
             array('username_repeat', 'compare', 'compareAttribute'=>'username', 'message'=>"Username don't match"),
             array('password_repeat', 'compare', 'compareAttribute'=>'password', 'message'=>"Passwords don't match"),
 

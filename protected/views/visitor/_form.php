@@ -55,6 +55,12 @@ if (isset($company) && !empty($company)) {
     .select2 {
         margin: 0.2em 0 0.5em;
     }
+    #cropImageBtn {
+        float: left;
+        margin-left: -174px !important;
+        margin-top: 257px;
+        position: absolute;
+    }
 
 </style>
 
@@ -135,7 +141,7 @@ $form = $this->beginWidget('CActiveForm', array(
     <tr>
 
         <td id="uploadRow" rowspan="7" style='width:300px;padding-top:10px;'>
-            <table>
+            <table style="width:300px;float:left;min-height:320px;">
                 <input type="hidden" id="Visitor_photo" name="Visitor[photo]"
                        value="<?php echo $model['photo']; ?>">
                 <?php if ($model['photo'] != NULL) { ?>
@@ -173,8 +179,7 @@ $form = $this->beginWidget('CActiveForm', array(
                                              " style='display:none;'/>
                     <?php } ?>
                 </div>
-                </td>
-                </tr>
+
             </table>
 
 

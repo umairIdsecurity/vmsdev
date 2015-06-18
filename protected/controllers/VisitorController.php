@@ -107,12 +107,12 @@ class VisitorController extends Controller {
             $currentCardStatus = $model->visitor_card_status;
             if ($currentCardStatus == 2 && $_POST['Visitor']['visitor_card_status'] == 3) {
                 $activeVisit = $model->activeVisits;
-                foreach($activeVisit as $item) {
+                foreach ($activeVisit as $item) {
                     if ($item->visit_status == VisitStatus::ACTIVE) {
                         $updateErrorMessage = 'Please close the active visits before changing the status to ASIC Pending.';
                     }
                 }
-                if($updateErrorMessage == '' ) {
+                if ($updateErrorMessage == '') {
                     $model->attributes = $_POST['Visitor'];
                     if ($visitorService->save($model, NULL, $session['id'])) {
                         if ($model->totalVisit > 0) {
@@ -124,19 +124,19 @@ class VisitorController extends Controller {
                                 foreach ($activeVisit as $item) {
                                     $item->reset_id = $resetHistory->id;
                                     $item->save();
-                                    if ($item->save()) {
-                                    }
                                 }
                             }
                         }
-                    }
-                }
-                switch ($isViewedFromModal) {
-                    case "1":
-                        break;
+                        switch ($isViewedFromModal) {
+                            case "1":
+                                break;
 
-                    default:
-                        echo $updateErrorMessage;;
+                            default:
+                                echo $updateErrorMessage;
+                        }
+                    }
+                } else {
+                    echo $updateErrorMessage;
                 }
             } else {
                 $model->attributes = $_POST['Visitor'];

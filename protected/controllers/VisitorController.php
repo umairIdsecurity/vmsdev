@@ -106,8 +106,6 @@ class VisitorController extends Controller {
         if (isset($_POST['Visitor'])) {
             $currentCardStatus = $model->visitor_card_status;
             if ($currentCardStatus == 2 && $_POST['Visitor']['visitor_card_status'] == 3) {
-                echo "<pre>1";
-                die(print_r($model->attributes));
                 $activeVisit = $model->activeVisits;
                 foreach ($activeVisit as $item) {
                     if ($item->visit_status == VisitStatus::ACTIVE) {

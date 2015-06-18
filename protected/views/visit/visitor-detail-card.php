@@ -198,7 +198,7 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
         </ul>
     </div>
 <?php endif; ?>
-<?php if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY]) and $model->visit_status == VisitStatus::AUTOCLOSED and date('d-m-Y') <= $session['disableActiveDate_'.$model->id]):
+<?php if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY]) and $model->visit_status == VisitStatus::AUTOCLOSED and date('d-m-Y') <= $model->date_check_out):
     ?>
     <div class="dropdown">
         <button class="complete btn btn-info printCardBtn dropdown-toggle" style="width:205px !important" type="button" id="menu1" data-toggle="dropdown">Print Card

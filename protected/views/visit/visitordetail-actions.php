@@ -134,7 +134,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                 <b>or </b>
                                 <a id="cancelPreregisteredVisitButton" href="" class="cancelBtnVisitorDetail">Cancel</a>
                             </div>
-                        <?php elseif ($model->visit_status == VisitStatus::AUTOCLOSED && in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY])) : ?>
+                        <?php elseif ($model->visit_status == VisitStatus::AUTOCLOSED) : ?>
                             <?php
                             $disabled = '';
                             if (date('d-m-Y') <= $model->date_check_out) {

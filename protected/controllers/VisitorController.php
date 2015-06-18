@@ -260,7 +260,7 @@ class VisitorController extends Controller {
         Yii::app()->end();
     }
 
-    public function actionFindVisitor($id,$tenant,$tenant_agent, $cardType=0) {
+    public function actionFindVisitor($id,$tenant,$tenant_agent, $cardType = 0) {
         $this->layout = '//layouts/column1';
         $model = new Visitor('search');
         $model->unsetAttributes();  // clear any default values
@@ -268,8 +268,8 @@ class VisitorController extends Controller {
             $model->attributes = $_GET['Visitor'];
 
         $this->renderPartial('findVisitor', array(
-            'model' => $model,
-                ), false, true);
+                'model' => $model
+            ), false, true);
     }
 
     public function actionFindHost($id,$tenant,$tenant_agent, $cardType = null) {
@@ -280,8 +280,8 @@ class VisitorController extends Controller {
             $model->attributes = $_GET['User'];
 
         $this->renderPartial('findHost', array(
-            'model' => $model, 'cardType' => $cardType
-                ), false, true);
+                'model' => $model
+            ), false, true);
     }
 
     public function actionGetVisitorDetails($id) {

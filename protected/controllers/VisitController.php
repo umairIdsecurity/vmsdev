@@ -380,9 +380,6 @@ class VisitController extends Controller {
                             $model->date_check_in = date('d-m-Y', strtotime($model->date_check_in . ' + 1 day'));
                             $model->date_check_out = $model->date_check_in;
                             $model->time_check_in = $model->time_check_out = date('H:i:s');
-                            $remainingTimes = (int)(strtotime(date('23:59:59')) - strtotime(date('H:i:s')));
-                            $session->setTimeout($remainingTimes);
-                            $session['disableActiveDate_'.$model->id] = date('d-m-Y');
                             break;
                     }
                 }

@@ -128,7 +128,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                         if (in_array($model->visit_status, [VisitStatus::CLOSED])) :
                         ?>
                             <button type="button" id='registerNewVisit' class='greenBtn'>Activate Visit</button>
-                        <?php elseif ($model->visit_status == VisitStatus::AUTOCLOSED && in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY])) : ?>
+                        <?php elseif ($model->visit_status == VisitStatus::AUTOCLOSED) : ?>
                             <?php
                             $disabled = '';
                             if (date('d-m-Y') <= $model->date_check_out) {

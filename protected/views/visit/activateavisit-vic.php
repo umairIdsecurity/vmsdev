@@ -23,13 +23,13 @@ $session = new CHttpSession;
                 ?> !important; font-weight:bold"><?php echo VisitStatus::$VISIT_STATUS_LIST[$model->visit_status]; ?></span></a>
         </td>
     </tr>
-    <?php if ($model->visit_status == VisitStatus::AUTOCLOSED && date('d-m-Y') <= $session['disableActiveDate_'.$model->id]): ?>
+    <?php if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY]) && $model->visit_status == VisitStatus::AUTOCLOSED && date('d-m-Y') <= $model->date_check_out): ?>
     <tr><td><span class="label label-warning">Visit can’t be activated again for the same day.</span></td></tr>
     <?php endif; ?>
     <tr>
         <td>&nbsp;</td>
     </tr>
-    <?php if ($model->visit_status != VisitStatus::AUTOCLOSED && date('d-m-Y') > $session['disableActiveDate_'.$model->id]): ?>
+    <?php if ($model->visit_status != VisitStatus::AUTOCLOSED && date('d-m-Y') <= $model->date_check_out): ?>
     <tr>
         <td class="vic-col">
             <input type="checkbox" value="1" name="VivHolderDecalarations" disabled="disabled" id="VivHolderDecalarations" class="vic-active-visit vic-active-declarations"/>

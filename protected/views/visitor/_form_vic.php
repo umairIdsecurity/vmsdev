@@ -978,8 +978,9 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                 }else {
                     alert(data); return;
                 }
-
-
+            },
+            complete: function() {
+                $("#submitFormVisitor").data('requestRunning', false);
             },
             error: function (data) {
                 if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {

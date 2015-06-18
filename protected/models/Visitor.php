@@ -419,7 +419,7 @@ class Visitor extends CActiveRecord {
         $criteria->compare('asic_expiry', $this->asic_expiry, true);
         $criteria->compare('t.is_deleted', self::NOT_DELETED);
 
-        if (Yii::app()->controller->id == 'visit') {
+        if (Yii::app()->controller->id === 'visit') {
             $criteria->compare('CONCAT(first_name, \' \', last_name)', $this->first_name, true);
         } else {
             $criteria->compare('first_name', $this->first_name, true);
@@ -427,7 +427,11 @@ class Visitor extends CActiveRecord {
 
         $user = User::model()->findByPK(Yii::app()->user->id);
         if($user->role != Roles::ROLE_SUPERADMIN){
-             $criteria->condition = 't.is_deleted = 0 and t.tenant ="' . Yii::app()->user->tenant . '"';
+            if(Yii::app()->controller->id === 'visit'){
+                if(Yii::app()->controller->action->id !== 'vicTotalVisitCount' && Yii::app()->controller->action->id !== 'corporateTotalVisitCount'  ) {
+                    $criteria->condition = 't.is_deleted = 0 and t.tenant ="' . Yii::app()->user->tenant . '"';
+                }
+            }
         }
 
         if ($merge !== null) {

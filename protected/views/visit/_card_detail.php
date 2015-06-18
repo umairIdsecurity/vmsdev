@@ -12,8 +12,8 @@ if ($tenant) {
         $companyCode = "N/A";
     }
 
-    $companyLogo = "http://" . $_SERVER['HTTP_HOST'] . Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
-    $userPhoto = "http://" . $_SERVER['HTTP_HOST'] . Photo::model()->returnVisitorPhotoRelativePath($model->visitor);
+    $companyLogo =  Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
+    $userPhoto =  Photo::model()->returnVisitorPhotoRelativePath($model->visitor);
 } else {
     throw new CHttpException(404, 'Company not found for this User.');
 }

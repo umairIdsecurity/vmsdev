@@ -2,26 +2,25 @@
 /**
  * Created by PhpStorm.
  * User: streetcoder
- * Date: 6/8/15
- * Time: 6:00 PM
+ * Date: 6/14/15
+ * Time: 9:34 PM
  */
 
 ?>
+
 <div class="page-content">
 
     <h1 class="text-primary title">CREATE LOGIN</h1>
     <div class="bg-gray-lighter form-info">Please select your account type.</div>
     <?php $form=$this->beginWidget('CActiveForm', array(
-        'id'=>'prereg-login-form',
+        'id'=>'preregistration-form',
+        'enableAjaxValidation' => true,
         'enableClientValidation'=>true,
         'clientOptions'=>array(
             'validateOnSubmit'=>true,
         ),
-        'htmlOptions'=>array(
-            'class'=>"form-create-login"
-        )
     )); ?>
-
+    <div class="form-create-login">
         <div class="form-group">
             <div class="radio">
                 <label>
@@ -45,6 +44,8 @@
                 </label>
             </div>
         </div>
+
+
         <div class="form-group">
             <span class="glyphicon glyphicon-user"></span>
 
@@ -58,6 +59,18 @@
         </div>
 
         <div class="form-group">
+            <span class="glyphicon glyphicon-user"></span>
+
+            <?php echo $form->textField($model,'username_repeat',
+                array(
+                    'placeholder' => 'Repeat Username or Email',
+                    'class'=>'form-control input-lg',
+                    'data-validate-input'
+                )); ?>
+            <?php echo $form->error($model,'username_repeat'); ?>
+        </div>
+
+        <div class="form-group">
             <span class="glyphicon glyphicon-asterisk"></span>
 
             <?php echo $form->passwordField($model,'password',
@@ -66,8 +79,36 @@
                     'class'=>'form-control input-lg',
                     'data-validate-input'
                 )); ?>
+            <?php echo $form->error($model,'password'); ?>
         </div>
-    
-    <?php echo CHtml::submitButton('Login',array('class'=>'btn btn-primary btn-next')); ?>
+
+        <div class="form-group">
+            <span class="glyphicon glyphicon-asterisk"></span>
+
+            <?php echo $form->passwordField($model,'password_repeat',
+                array(
+                    'placeholder' => 'Repeat Password',
+                    'class'=>'form-control input-lg',
+                    'data-validate-input'
+                )); ?>
+            <?php echo $form->error($model,'password_repeat'); ?>
+        </div>
+    </div>
+    <div class="row next-prev-btns">
+        <div class="col-md-1 col-sm-1 col-xs-1">
+            <a href="<?=Yii::app()->createUrl("preregistration/declaration")?>" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>
+        </div>
+
+        <div class="col-md-offset-10 col-sm-offset-10 col-xs-offset-7 col-md-1 col-sm-1 col-xs-1">
+            <?php
+            echo CHtml::tag('button', array(
+                'type'=>'submit',
+                'class' => 'btn btn-primary btn-next'
+            ), 'NEXT <span class="glyphicon glyphicon-chevron-right"></span> ');
+            ?>
+
+        </div>
+    </div>
+
     <?php $this->endWidget(); ?>
 </div>

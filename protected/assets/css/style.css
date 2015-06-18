@@ -1752,7 +1752,13 @@ p.asic{
     height:480px;
     text-align: center;
 }
-#crop_button, #crop_button2, #crop_button3 {position: fixed; right: 0px; top: 0px; z-index: 2005;display:none}
+#crop_button, #crop_button2, #crop_button3 {
+    position: fixed;
+    right: 14%;
+    top: 10%;
+    z-index: 2005;
+    display:none
+}
 /**/
 .photoDiv{
     height:154px;width:113px;border:1px solid #EEEEEE;margin-bottom:10px;

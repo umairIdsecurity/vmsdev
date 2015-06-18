@@ -194,6 +194,7 @@ if ($this->action->id == 'update') {
                                             echo " class='hidden' ";
                                         }
                                         ?>>
+
                                             <select id="Visitor_tenant" onchange="populateTenantAgentAndCompanyField()"
                                                     name="Visitor[tenant]">
                                                 <option value='' selected>Please select a tenant</option>
@@ -795,7 +796,6 @@ if ($this->action->id == 'update') {
     }
 
     function sendVisitorForm() {
-
         var form = $("#register-form").serialize();
         var url;
 
@@ -804,7 +804,6 @@ if ($this->action->id == 'update') {
         } else {
             url = "<?php echo CHtml::normalizeUrl(array("visitor/addvisitor")); ?>";
         }
-
         $.ajax({
             type: "POST",
             url: url,

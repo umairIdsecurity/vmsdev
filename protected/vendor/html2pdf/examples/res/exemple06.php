@@ -1,4 +1,3 @@
-
 <link type="text/css" href="./res/exemple06.css" rel="stylesheet" >
 <style type="text/css">
 <!--
@@ -43,5 +42,4 @@ table.liste td.col1 { color: #FF0000; }
     <s>Texte barré !</s><br>
     <br>
     <span>Texte avec la couleur par défault (style *)</span><br>
-
 </page>

@@ -1,4 +1,3 @@
-
 <style type="text/css">
 <!--
 div.special { margin: auto; width:95%; border:1px solid #000000; padding: 2px; }
@@ -87,5 +86,4 @@ div.special table { width:100%; border:1px solid #000000; font-size:10px; border
             </tr>
         </table>
     </div>
-
 </page>

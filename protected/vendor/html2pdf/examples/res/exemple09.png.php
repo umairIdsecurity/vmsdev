@@ -1,4 +1,3 @@
-
 <?php
     $px = isset($_GET['px']) ? $_GET['px'] : 0; $px = preg_replace('/[^0-9]/isU', '', $px);
     $py = isset($_GET['py']) ? $_GET['py'] : 0; $py = preg_replace('/[^0-9]/isU', '', $py);
@@ -23,4 +22,3 @@
     header("Content-type: image/png");
     imagepng($im);
     imagedestroy($im);
-

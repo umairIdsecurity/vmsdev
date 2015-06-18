@@ -1,4 +1,3 @@
-
 5.0.002 (2010-05-06)
 	- Bookmark() and related methods were fixed to accept HTML code.
 	- A problem on HTML links was fixed.
@@ -1383,4 +1382,3 @@
 	- Now the AddFont and SetFont functions returns the basic font if the styled version do not exist.
 
 EOF ----------------------------------------------------------------------------
-

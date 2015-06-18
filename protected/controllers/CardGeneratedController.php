@@ -234,38 +234,19 @@ class CardGeneratedController extends Controller {
         #data of user of card
         $model = Visit::model()->findByPk($id);
         $visitorModel = Visitor::model()->findByPk($model->visitor);
-        
-        if ($type==1){
-            $pdf = Yii::createComponent('application.extensions.tcpdf.ETcPdf', 'P', 'cm', "A3", true, 'UTF-8');
-            $name = "standard_print";
-        } else if ($type ==2){
-            $pdf = Yii::createComponent('application.extensions.tcpdf.ETcPdf', 'P', 'cm', "CARD_PRINTER", true, 'UTF-8');
-            $name = "card_printer";
-        } else if ($type==3){
-            $pdf = Yii::createComponent('application.extensions.tcpdf.ETcPdf', 'P', 'cm', "CARD_PRINTER", true, 'UTF-8');
-            $name = "rewrittble_print";
-        } else {
-            throw new CHttpException(500,'Something went wrong.');
+        $data = array('model' => $model, 'visitorModel' => $visitorModel, 'type' => $type);
+
+        if($type == 1){
+            $html2pdf = Yii::app()->ePdf->HTML2PDF('P', 'A4', 'en',TRUE,'UTF-8',array(0,0,0,0));
+        }else{
+            $html2pdf = Yii::app()->ePdf->HTML2PDF('P', 'CARDPRINT', 'en',TRUE,'UTF-8',array(0,0,0,0));
         }
         
-        $pdf->SetCreator(PDF_CREATOR);
-        $pdf->SetAuthor("everestek inc.");
-        $pdf->SetTitle($name);
-        $pdf->SetSubject($name);
-        $pdf->SetKeywords("vms,vic,airport");
-        $pdf->setPrintHeader(false);
-        $pdf->setPrintFooter(false);
-        $pdf->getAliasNbPages();
-        $pdf->SetMargins(0, 0, 0, true);
-        $pdf->SetAutoPageBreak(true, 0); 
-        $pdf->AddPage();
-        $data = array('model'=>$model,'visitorModel'=>$visitorModel,'type'=>$type);
-        $html = $this->renderPartial('printpdf', $data, true);
-
-        $pdf->writeHTML($html, true, false, true, false, '');
-        $pdf->SetFont("times", "BI", 20);
-        $pdf->Output($name.".pdf", "I");
+        $html2pdf->WriteHTML($this->renderPartial('printpdf', $data, true));
+        $html2pdf->Output();
+        
     }
+    
 
     /**
      * Returns the data model based on the primary key given in the GET variable.

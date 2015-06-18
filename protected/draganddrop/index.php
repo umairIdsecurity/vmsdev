@@ -286,7 +286,7 @@ if (isset($_GET['viewFrom'])) {
                             $.each(r.data, function(index, value) {
                                 if (($("#actionUpload").val() == 'update' || $("#actionUpload").val() == 'addvisitor' || ($("#actionUpload").val() == 'create') && $("#controllerId").val() == 'visitor')) {
 
-                                    $(".ajax-upload-dragdrop").css("background", "url(<?php echo Yii::app()->request->baseUrl; ?>" + value.relative_path + ") no-repeat center top");
+                                    $(".ajax-upload-dragdrop").css("background", "url(<?php echo Yii::app()->request->baseUrl. '/' ?>" + value.relative_path + ") no-repeat center top");
                                     $(".ajax-upload-dragdrop").css({
                                         "background-size": "132px 152px"
                                     });

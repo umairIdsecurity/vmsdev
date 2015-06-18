@@ -22,11 +22,11 @@ if ($tenant) {
     } else {
         $companyName = "N/A";
         $companyLogoId = "N/A";
-        $companyCode = "";
+        $companyCode = "N/A";
     }
 
-    $companyLogo =  Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
-    $userPhoto =  Photo::model()->returnVisitorPhotoRelativePath($model->visitor);
+    $companyLogo = "http://" . $_SERVER['HTTP_HOST'] . Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
+    $userPhoto = "http://" . $_SERVER['HTTP_HOST'] . Photo::model()->returnVisitorPhotoRelativePath($model->visitor);
 } else {
     throw new CHttpException(404, 'Company not found for this User.');
 }
@@ -39,18 +39,18 @@ if ($card) {
 }
 $visitorName = wordwrap($visitorName, 13, "\n", true);
 
-$dateExpiry = date('d M y');
+$dateExpiry = date('dMy');
 if ($model->card_type != CardType::SAME_DAY_VISITOR) {
-    $dateExpiry = date("d M y", strtotime($model->date_out));
+    $dateExpiry = date("dMy", strtotime($model->date_out));
 }
 
 if ($model->date_check_out != null) {
-    $dateExpiry = date("d M y", strtotime($model->date_check_out));
+    $dateExpiry = date("dMy", strtotime($model->date_check_out));
 }
 
-if ($model->time_check_out && $model->card_type == CardType::VIC_CARD_24HOURS && $model->visit_status == VisitStatus::ACTIVE) {
-    $dateExpiry.="<br>" . substr($model->time_check_out, 0, -3);
-}
+//if ($model->time_check_out && $model->card_type == CardType::VIC_CARD_24HOURS && $model->visit_status == VisitStatus::ACTIVE) {
+//$dateExpiry.="<br>" . substr($model->time_check_out, 0, -3);
+//}
 
 if ($visitorModel->profile_type === 'CORPORATE') {
     $bgcolor = CardGenerated::CORPORATE_CARD_COLOR;
@@ -68,137 +68,123 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
         } else {
             $backText = NULL;
         }
-    }else{
+    } else {
         $backText = NULL;
     }
 }
 
 //die;
 ?>
-<?php if ($type == 1) { ?>
-    <table border="1">
-        <tr>
-            <td <?php echo $bgcolor; ?> width="215px">
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Untitled Document</title>
+    </head>
 
-                <table cellpadding="10" style=" border-radius:10px" width="204px" height="325px">
-                    <tr>
-                        <td colspan="2">
-                            <img border="0" width="129px" height="162px" src="<?php echo $userPhoto; ?>" /> 
-                        </td>
+    <body style="font-family:Arial, sans-serif;">
+        <!--Demo 1 Start-->
+        <?php if ($type == 1) { ?>
+            <table>
+                <tr>
+                    <td>
+                        <div style="float:left; width:256px; border:1px solid #000; height:405px; border-radius:20px; background:<?= $bgcolor; ?>;">
+                            <div style="width:150px; height:200px; background:#fff; margin-left:15px; margin-top:13px; border:1px solid #000;">
+                                <img border="0" style="width:150px; height:200px;" src="<?= $userPhoto; ?>">
+                            </div>
+                            <div style=" text-align:center; line-height:20px;  margin:10px 0 0 5px; color:#000;">
+                                <p style="font-size:25px; font-weight:bold; margin:0 0 10px 0;"><?= $companyCode; ?></p>
+
+                                <strong style="font-size: 40px;font-weight: bold; text-align: left; width: 100%; float: left; margin-bottom: 13px; margin-left: 5px; line-height: 32px; margin-top: 3px;">
+                                    <span style=" margin-top:-8px; font-size: 60px; vertical-align: top; "><?php echo($model->card_type == CardType::CONTRACTOR_VISITOR) ? 'C' : 'V'; ?></span>
+                                    <?= $dateExpiry ?>
+                                </strong>
+                                <p style="font-size:25px; width:256px; float:left; display: inline-block;  font-weight:bold; line-height:20.9px; margin:5px 0 3px 0;">
+                                    <?= strtoupper(($visitorModel->first_name != "") ? $visitorModel->first_name : "N/A") ?><br>
+                                    <?= strtoupper(($visitorModel->last_name != "") ? $visitorModel->last_name : "N/A") ?><br>
+                                    <?= strtoupper(($cardCode != "") ? $cardCode : "N/A") ?></p>
+                            </div>
+                            <div style="background:#fff; border-bottom-right-radius: 20px;border-bottom-left-radius: 20px; width:260px; height:48.7px;">
+                                <div style="width:69px;  height:30px; margin-left:15px; margin-top:2px; display:inline-block; border:1px solid #000;">
+                                    <img border="1" style="height:30x; width:100%;" src="<?= $companyLogo; ?>">
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div style=" float:left; width:256px; border:1px solid #000; height:410px; border-radius:20px; background:#fff;">
+                            <div style="font-size: 20px; padding: 10px; text-align: center;"><?= $backText ?></div>
+                        </div>
+                    </td>
+
+                </tr>
+            </table>
+        <?php } else if ($type == 2) {
+            ?>
+            <div style="width:100%; float:left;"> 
+                <!--Box 1-->
+                <div style="float:left; width:256px; border:1px solid #000; height:405px; border-radius:20px; background:<?= $bgcolor; ?>;">
+                    <div style="width:150px; height:200px; background:#fff; margin-left:15px; margin-top:13px; border:1px solid #000;">
+                        <img border="0" style="width:150px; height:200px;" src="<?= $userPhoto; ?>">
+                    </div>
+                    <div style=" text-align:center; line-height:20px;  margin:10px 0 0 5px; color:#000;">
+                        <p style="font-size:25px; font-weight:bold; margin:0 0 10px 0;"><?= $companyCode; ?></p>
+
+                        <strong style="font-size: 40px;font-weight: bold; text-align: left; width: 100%; float: left; margin-bottom: 13px; margin-left: 5px; line-height: 32px; margin-top: 3px;">
+                            <span style=" margin-top:-8px; font-size: 60px; vertical-align: top; "><?php echo($model->card_type == CardType::CONTRACTOR_VISITOR) ? 'C' : 'V'; ?></span>
+                            <?= $dateExpiry ?>
+                        </strong>
+                        <p style="font-size:25px; width:256px; float:left; display: inline-block;  font-weight:bold; line-height:20.9px; margin:5px 0 3px 0;">
+                            <?= strtoupper(($visitorModel->first_name != "") ? $visitorModel->first_name : "N/A") ?><br>
+                            <?= strtoupper(($visitorModel->last_name != "") ? $visitorModel->last_name : "N/A") ?><br>
+                            <?= strtoupper(($cardCode != "") ? $cardCode : "N/A") ?></p>
+                    </div>
+                    <div style="background:#fff; border-bottom-right-radius: 20px;border-bottom-left-radius: 20px; width:260px; height:48.7px;">
+                        <div style="width:69px;  height:30px; margin-left:15px; margin-top:2px; display:inline-block; border:1px solid #000;">
+                            <img border="1" style="height:30x; width:100%;" src="<?= $companyLogo; ?>">
+                        </div>
+                    </div>
+                </div>
+                <!--Box 2-->
+                <div style=" float:left; width:256px; border:1px solid #000; height:410px; border-radius:20px; background:#fff;">
+                    <div style="font-size: 20px; padding: 10px; text-align: center;"><?= $backText ?></div>
+                </div>
+            </div>
+            <?php
+        } elseif ($type == 3) {?>
+             <div style="width:100%; float:left;"> 
+                <!--Box 1-->
+                <div style="float:left; width:256px; border:1px solid #000; height:405px; border-radius:20px;">
+                    <div style="width:150px; height:200px; background:#fff; margin-left:15px; margin-top:13px; border:1px solid #000;">
+                        <img border="0" style="width:150px; height:200px;" src="<?= $userPhoto; ?>">
+                    </div>
+                    <div style=" text-align:center; line-height:20px;  margin:10px 0 0 5px; color:#000;">
+                        <p style="font-size:25px; font-weight:bold; margin:0 0 10px 0;"><?= $companyCode; ?></p>
+
+                        <strong style="font-size: 40px;font-weight: bold; text-align: left; width: 100%; float: left; margin-bottom: 13px; margin-left: 5px; line-height: 32px; margin-top: 3px;">
+                            <span style=" margin-top:-8px; font-size: 60px; vertical-align: top; "><?php echo($model->card_type == CardType::CONTRACTOR_VISITOR) ? 'C' : 'V'; ?></span>
+                            <?= $dateExpiry ?>
+                        </strong>
+                        <p style="font-size:25px; width:256px; float:left; display: inline-block;  font-weight:bold; line-height:20.9px; margin:5px 0 3px 0;">
+                            <?= strtoupper(($visitorModel->first_name != "") ? $visitorModel->first_name : "N/A") ?><br>
+                            <?= strtoupper(($visitorModel->last_name != "") ? $visitorModel->last_name : "N/A") ?><br>
+                            <?= strtoupper(($cardCode != "") ? $cardCode : "N/A") ?></p>
+                    </div>
+                    <div style="background:#fff; border-bottom-right-radius: 20px;border-bottom-left-radius: 20px; width:260px; height:48.7px;">
+                        <div style="width:69px;  height:30px; margin-left:15px; margin-top:2px; display:inline-block; border:1px solid #000;">
+                            <img border="1" style="height:30x; width:100%;" src="<?= $companyLogo; ?>">
+                        </div>
+                    </div>
+                </div>
+                <!--Box 2-->
+                <div style=" float:left; width:256px; border:1px solid #000; height:410px; border-radius:20px; background:#fff;">
+                    <div style="font-size: 20px; padding: 10px; text-align: center;"><?= $backText ?></div>
+                </div>
+            </div>
+        <?php }
+        ?>
 
 
-                    </tr>
-                    <tr>
-                        <td color="black" align="center" style="font-family: sans-serif;font-size: 73px;font-weight: bolder;" ><?php echo($model->card_type == CardType::CONTRACTOR_VISITOR) ? 'C' : 'V'; ?></td>
-                        <td <?php echo $bgcolor; ?> align="center" style="font-family: sans-serif;font-size: 15px;"><b><?php echo $companyCode; ?><br><?php echo $dateExpiry; ?><br></b><?php echo $visitorName; ?><br><?php echo $cardCode; ?><br></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            <img border="0" width="60px" height="40px" src="<?php echo $companyLogo; ?>">
-                        </td>
-                    </tr>
-                </table>
-            </td>
-            <?php if (($model->card_type != CardType::VIC_CARD_MANUAL) || ($backText != NULL)): ?>
-                <td padding="10" align="center" style="font-family:sans-serif;font-size:18px;font-weight:300;" width="215px">
 
-                    <table cellpadding="10" style=" border-radius:10px" width="204px" height="325px">
-                        <tr>
-                            <td colspan="2"align="center" style="font-family:sans-serif;font-size:15px;font-weight:300;">
-                                <div>&nbsp;&nbsp;&nbsp;</div>
-                                <?php echo $backText; ?>
-                            </td>
-                        </tr>
-
-                    </table>
-                </td>
-            <?php endif; ?>
-        </tr>
-    </table>
-<?php } else if ($type == 2) { ?>
-    <table border="0">
-        <tr>
-            <td <?php echo $bgcolor; ?> width="210px">
-
-                <table cellpadding="10" style=" border-radius:10px" width="204px" height="325px">
-                    <tr>
-                        <td colspan="2">
-                            <img border="1" width="129px" height="162px" src="<?php echo $userPhoto; ?>" /> 
-                        </td>
-
-
-                    </tr>
-                    <tr>
-                        <td color="black" align="center" style="font-family: sans-serif;font-size: 73px;font-weight: bolder;" ><?php echo($model->card_type == 4) ? 'C' : 'V'; ?></td>
-                        <td <?php echo $bgcolor; ?> align="left" style="font-family: sans-serif;font-size: 15px;"><b><?php echo $companyCode; ?><br><?php echo $dateExpiry; ?><br></b><?php echo $visitorName; ?><br><?php echo $cardCode; ?><br></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            <img border="0" width="60px" height="40px" src="<?php echo $companyLogo; ?>">
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <?php if (($model->card_type != CardType::VIC_CARD_MANUAL) || ($backText != NULL)): ?>
-            <tr>
-                <td padding="10" align="center" style="font-family:sans-serif;font-size:15px;font-weight:300;" width="250px">
-
-                    <table cellpadding="10" style=" border-radius:10px" width="204px" height="325px">
-                        <tr>
-                            <td colspan="2"align="center" style="font-family:sans-serif;font-size:15px;font-weight:300;">
-                                <div>&nbsp;&nbsp;&nbsp;</div>
-                                <?php echo $backText; ?>
-                            </td>
-                        </tr>
-
-                    </table>
-                </td>
-            </tr>
-        <?php endif; ?>
-
-    </table>
-<?php } else if ($type == 3) { ?>
-    <table border="0">
-        <tr>
-            <td width="210px">
-
-                <table cellpadding="10" style=" border-radius:10px" width="204px" height="325px">
-                    <tr>
-                        <td colspan="2">
-                            <img border="0" width="129px" height="162px" src="<?php echo $userPhoto; ?>" /> 
-                        </td>
-
-
-                    </tr>
-                    <tr>
-                        <td color="black" align="center" style="font-family: sans-serif;font-size: 73px;font-weight: bolder;" ><?php echo($model->card_type == 4) ? 'C' : 'V'; ?></td>
-                        <td align="left" style="font-family: sans-serif;font-size: 15px;"><b><?php echo $companyCode; ?><br><?php echo $dateExpiry; ?><br></b><?php echo $visitorName; ?><br><?php echo $cardCode; ?><br></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            <img border="0" width="60px" height="40px" src="<?php echo $companyLogo; ?>">
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <?php if (($model->card_type != CardType::VIC_CARD_MANUAL) || ($backText != NULL)): ?>
-            <tr>
-                <td padding="10" align="center" style="font-family:sans-serif;font-size:18px;font-weight:300;" width="250px">
-
-                    <table cellpadding="10" style=" border-radius:10px" width="204px" height="325px">
-                        <tr>
-                            <td colspan="2"align="center" style="font-family:sans-serif;font-size:15px;font-weight:300;">
-                                <div>&nbsp;&nbsp;&nbsp;</div>
-                                <?php echo $backText; ?>
-                            </td>
-                        </tr>
-
-                    </table>
-                </td>
-            </tr>
-        <?php endif; ?>
-
-    </table>
-<?php } ?>
+    </body>
+</html>

@@ -1,4 +1,3 @@
-
 This is the language coverage file for DejaVu fonts
 ($Id$)
 
@@ -241,4 +240,3 @@ zh-mo  Chinese in Macau                              (0/2213)           (0/2213)
 zh-sg  Chinese in Singapore                       0% (2/6765)        0% (2/6765)        0% (2/6765)     
 zh-tw  Chinese (traditional)                         (0/13063)          (0/13063)          (0/13063)    
 zu     Zulu                                     100% (52/52)       100% (52/52)       100% (52/52)      
-

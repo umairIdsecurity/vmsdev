@@ -433,8 +433,8 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                             Document Expiry
                         </td>
                         <td style="padding-left: 0 !important;">
-                            <input type="text" class="visitor-detail-info-field" value="<?php echo $visitorModel->identification_document_expiry; ?>" disabled="disabled"
-                                   name="Visitor[identification_document_expiry]" id="identification_document_expiry">
+                            <input type="text" class="visitor-detail-info-field" value="<?php echo !is_null($visitorModel->identification_document_expiry) ? date("d-m-Y" , strtotime($visitorModel->identification_document_expiry)) : date('d-m-Y'); ?>"
+disabled="disabled" name="Visitor[identification_document_expiry]" id="identification_document_expiry">
                         </td>
                     </tr>
                 </table>

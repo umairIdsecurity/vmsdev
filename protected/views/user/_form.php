@@ -376,10 +376,14 @@ $form = $this->beginWidget('CActiveForm', array(
 
 <tr>
     <td class="workstationRow">
-        <select id="User_workstation" name="User[workstation]" disabled></select>
+
+        <?php
+        $listWorkstation = Workstation::model()->findAll("is_deleted = 0",'id','name');
+        echo $form->listBox($model,'userWorkstation1',CHtml::listData($listWorkstation,'id','name'),array('multiple'=>'multiple','style'=>'height:150px'/*,'options'=>$listWorkstationsOfUser*/));
+        ?>
+        <!--<select id="User_workstation" name="User[workstation]" disabled></select>-->
     </td>
 </tr>
-
 
 <!-- AVMS User specific form fields -->
 <?php if (CHelper::is_managing_avms_user() || $model->is_avms_user()) { ?>
@@ -697,9 +701,9 @@ $(document).ready(function () {
             document.getElementById('User_company').disabled = true;
         }
         else if (getRole == operator) {
-            document.getElementById('User_workstation').disabled = false;
+            /*document.getElementById('User_workstation').disabled = false;*/
             $(".workstationRow").show();
-            getWorkstation();
+            /*getWorkstation();*/
         }
         else if (getRole == agentadmin) {
             $("#addCompanyLink").show();

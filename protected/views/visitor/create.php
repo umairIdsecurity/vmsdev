@@ -551,7 +551,14 @@ function checkHostEmailIfUnique() {
     } else {
         tenant = '<?php echo $session['tenant']; ?>';
     }
+
     var url = $("#createUrlForEmailUnique").val() + email.trim() + '&tenant=' + tenant;
+
+    // ASIC Sponsor
+    if ($("#selectCardDiv input[name=selectCardType]:checked").val() > CONTRACTOR_TYPE) {
+        url = '<?php echo Yii::app()->createUrl('visitor/checkEmailIfUnique&id='); ?>' + email;
+    }
+
     $.ajax({
         type: 'POST',
         url: url,
@@ -843,9 +850,17 @@ function getLastVisitorId(callback) {
 
 function getLastHostId(callback) {
     var id = $("#User_email").val();
+
+    var url = '<?php echo Yii::app()->createUrl('user/GetIdOfUser&id='); ?>' + id.trim();
+
+    // ASIC Sponsor
+    if ($("#selectCardDiv input[name=selectCardType]:checked").val() > CONTRACTOR_TYPE) {
+        url = '<?php echo Yii::app()->createUrl('visitor/GetIdOfUser&id='); ?>' + id.trim();
+    }
+
     return $.ajax({
         type: 'POST',
-        url: '<?php echo Yii::app()->createUrl('user/GetIdOfUser&id='); ?>' + id.trim(),
+        url: url,
         dataType: 'json',
         data: id,
         success: function (r) {

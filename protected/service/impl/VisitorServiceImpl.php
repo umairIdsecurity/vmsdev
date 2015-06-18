@@ -76,7 +76,7 @@ class VisitorServiceImpl implements VisitorService {
                 $visitor->password = $password;
             }
         }
-        
+        $visitor->asic_expiry = date("Y-m-d",strtotime($visitor->asic_expiry));
         if (!($result = $visitor->save())) {
             return false;
         }

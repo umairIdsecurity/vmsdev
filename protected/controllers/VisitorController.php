@@ -30,7 +30,7 @@ class VisitorController extends Controller {
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('csvSampleDownload','importVisitHistory', 'AddVisitor', 'ajaxCrop', 'create', 'GetIdOfUser','GetHostDetails', 'GetPatientDetails', 'CheckEmailIfUnique', 'GetVisitorDetails', 'FindVisitor', 'FindHost', 'GetTenantAgentWithSameTenant', 'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent'),
+                'actions' => array('csvSampleDownload','importVisitHistory', 'AddVisitor', 'ajaxCrop', 'create', 'GetIdOfUser','GetHostDetails', 'GetPatientDetails', 'CheckEmailIfUnique', 'GetVisitorDetails', 'FindVisitor', 'FindHost', 'GetTenantAgentWithSameTenant', 'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent','CheckAsicStatusById'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -106,6 +106,8 @@ class VisitorController extends Controller {
         if (isset($_POST['Visitor'])) {
             $currentCardStatus = $model->visitor_card_status;
             if ($currentCardStatus == 2 && $_POST['Visitor']['visitor_card_status'] == 3) {
+                echo "<pre>1";
+                die(print_r($model->attributes));
                 $activeVisit = $model->activeVisits;
                 foreach ($activeVisit as $item) {
                     if ($item->visit_status == VisitStatus::ACTIVE) {
@@ -322,6 +324,10 @@ class VisitorController extends Controller {
         $resultMessage['data'] = $aArray;
         echo CJavaScript::jsonEncode($resultMessage);
         Yii::app()->end();
+    }
+
+    public function actionCheckAsicStatusById($id){
+        echo Visitor::model()->checkAsicStatusById($id);
     }
 
     public function actionAjaxCrop() {

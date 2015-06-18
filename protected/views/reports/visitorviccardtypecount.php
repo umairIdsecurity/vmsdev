@@ -48,7 +48,7 @@
     <thead>
         <tr>
             <th> Card Type </th>
-            <th> VIC Visitor Visits </th>
+            <th> VIC Visitor </th>
         </tr>
     </thead>
     <tbody>
@@ -60,25 +60,35 @@
         
         $total=0;
         
-        if($visit_count) { 
+        if($visitor_count) { 
                 
                 $count=1;
                 
-                foreach($visit_count as $vc ) {
-                    $datasets[$count] =  array($vc['name'],intval($vc['visits']));
+                foreach($visitor_count as $vc ) {
+                    $datasets[$count] =  array($vc['name'],intval($vc['visitors']));
                     $count++;
-                    $total += intval($vc['visits']);
+                    $total += intval($vc['visitors']);
 ?>
-        <tr>
-            <td><?php echo $vc['name']; ?></td>
-            <td><?php echo $vc['visits'];?></td>
-        </tr>
+                    <tr>
+                        <td><?php echo $vc['name']; ?></td>
+                        <td><?php echo $vc['visitors'];?></td>
+                    </tr>
                 <?php }
-        } ?>
+                
+        } 
+        foreach ($otherCards as $card) {
+            ?>
+            <tr>
+                <td><?php echo $card['name']; ?></td>
+                <td>0</td>
+            </tr>
+        <?php
+        }
+        ?>            
     </tbody>
     <tfoot>
         <tr>
-            <th>Total VIC Visitor Visits</th>
+            <th>Total VIC Visitor</th>
             <th><?= $total ?></th>
         </tr>
     </tfoot>

@@ -86,16 +86,18 @@ class VisitController extends Controller {
 
             switch ($model->card_type) {
                 case CardType::VIC_CARD_SAMEDATE: // VIC Sameday
+                case CardType::VIC_CARD_EXTENDED: // VIC Extended
+                case CardType::VIC_CARD_MULTIDAY: // VIC Multiday
                     $model->date_check_out = date('d-m-Y');
                     break;
                 case CardType::VIC_CARD_MANUAL: // VIC Manual
                 case CardType::VIC_CARD_24HOURS: // VIC 24 hour
                     $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 1 day'));
                     break;
-                case CardType::VIC_CARD_EXTENDED: // VIC Extended
+                /*case CardType::VIC_CARD_EXTENDED: // VIC Extended
                 case CardType::VIC_CARD_MULTIDAY: // VIC Multiday
                     $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 28 day'));
-                    break;
+                    break;*/
             }
 
             $model->time_check_out = $model->time_check_in;
@@ -274,6 +276,7 @@ class VisitController extends Controller {
     public function actionDetail($id) {
         /** @var Visit $model */
         $model = Visit::model()->findByPk($id);
+        $session = new CHttpSession;
         // Check if model is empty then redirect to visit history
         if (empty($model)) {
             return $this->redirect(Yii::app()->createUrl('visit/view'));
@@ -362,7 +365,28 @@ class VisitController extends Controller {
 
             }
             // close visit process
-            if (isset($_POST['closeVisitForm']) && $model->visit_status == VisitStatus::CLOSED) {
+            if (isset($_POST['closeVisitForm'])) {
+
+                if (date('d-m-Y') <= $model->date_check_out) {
+                    $currentDate = date('d-m-Y');
+                    $model->visit_status = VisitStatus::AUTOCLOSED;
+                    switch ($model->card_type) {
+                        case CardType::VIC_CARD_SAMEDATE: // VIC Sameday
+                            break;
+                        case CardType::VIC_CARD_24HOURS: // VIC 24 hour
+                            break;
+                        case CardType::VIC_CARD_EXTENDED: // VIC Extended
+                        case CardType::VIC_CARD_MULTIDAY: // VIC Multiday
+                            $model->date_check_in = date('d-m-Y', strtotime($model->date_check_in . ' + 1 day'));
+                            $model->date_check_out = $model->date_check_in;
+                            $model->time_check_in = $model->time_check_out = date('H:i:s');
+                            $remainingTimes = (int)(strtotime(date('23:59:59')) - strtotime(date('H:i:s')));
+                            $session->setTimeout($remainingTimes);
+                            $session['disableActiveDate_'.$model->id] = date('d-m-Y');
+                            break;
+                    }
+                }
+
                 $fileUpload = CUploadedFile::getInstance($model, 'card_lost_declaration_file');
                 if ($fileUpload != null) {
                     $path = YiiBase::getPathOfAlias('webroot') . '/uploads/card_lost_declaration';
@@ -1140,7 +1164,7 @@ class VisitController extends Controller {
                             $visitorModel = new Visitor();
                             $visitorModel->first_name = $row['B'];
                             $visitorModel->last_name = $row['C'];
-                            $visitorModel->date_of_birth = date('Y-m-d', $row['D']);
+                            $visitorModel->date_of_birth = date('Y-m-d', strtotime($row['D']));
                             $visitorModel->profile_type = 'VIC';
                             $visitorModel->visitor_workstation = isset($worstationId) ? $worstationId : '';
                             $visitorModel->tenant = $session['tenant'];

@@ -87,7 +87,6 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
 <script>
 function getCardType() {
     var card_type = $('#VisitCardType').val();
-    console.log(card_type);
     if (card_type > "<?php echo CardType::CONTRACTOR_VISITOR; ?>") {
         return 'ASIC Sponsor';
     } else {
@@ -458,19 +457,18 @@ function checkAsicStatusById(id){
                    dataType: 'json',
                    data: id,
                    success: function (r) {
-                       $.each(r.data, function (index, value) {
-                           $("#searchHostTableDiv h4").html("Selected "+getCardType()+" Record : " + value.first_name + " " + value.last_name);
+                        $.each(r.data, function (index, value) {
+                            $("#searchHostTableDiv h4").html("Selected "+getCardType()+" Record : " + value.first_name + " " + value.last_name);
+                        });
 
-                       });
-
-//                    $('#findHostTableIframe').contents().find('.findHostButtonColumn a').removeClass('delete');
-//                    $('#findHostTableIframe').contents().find('.findHostButtonColumn a').html('Select Host');
-//                    $('#findHostTableIframe').contents().find('#' + id).addClass('delete');
-//                    $('#findHostTableIframe').contents().find('#' + id).html(getCardType()+' Selected');
-                       $('.findHostButtonColumn a').removeClass('delete');
-                       $('.findHostButtonColumn a').html('Select '+getCardType());
-                       $('#' + id).addClass('delete');
-                       $('#' + id).html(getCardType()+' Selected');
+                        //$('#findHostTableIframe').contents().find('.findHostButtonColumn a').removeClass('delete');
+                        //$('#findHostTableIframe').contents().find('.findHostButtonColumn a').html('Select Host');
+                        //$('#findHostTableIframe').contents().find('#' + id).addClass('delete');
+                        //$('#findHostTableIframe').contents().find('#' + id).html(getCardType()+' Selected');
+                        $('.findHostButtonColumn a').removeClass('delete');
+                        $('.findHostButtonColumn a').html('Select '+getCardType());
+                        $('#' + id).addClass('delete');
+                        $('#' + id).html(getCardType()+' Selected');
                    }
                });
            }
@@ -479,6 +477,7 @@ function checkAsicStatusById(id){
 }
 
 function populateFieldHost(id) {
+    var card_type = $('#VisitCardType').val();
     if ($("#Visitor_visitor_type").val() != 1) {
         checkAsicStatusById(id);
     } else {

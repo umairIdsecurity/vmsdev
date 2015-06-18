@@ -187,7 +187,8 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo yii::app()->createAbsoluteUrl('cardGenerated/pdfprint', array('id' => $model->id, 'type' => 3)) ?>">Rewritable Print Card</a></li>
     </ul>
 </div>
-<?php elseif ($model->card_type == CardType::VIC_CARD_24HOURS and $model->visit_status == VisitStatus::AUTOCLOSED and strtotime($model->date_check_in.' '.$model->time_check_in) > strtotime(date("d-m-Y H:i:s"))):
+<?php endif; ?>
+<?php if ($model->card_type == CardType::VIC_CARD_24HOURS and $model->visit_status == VisitStatus::AUTOCLOSED and strtotime($model->date_check_in.' '.$model->time_check_in) > strtotime(date("d-m-Y H:i:s"))):
     ?>
     <div class="dropdown">
         <button class="complete btn btn-info printCardBtn dropdown-toggle" style="width:205px !important" type="button" id="menu1" data-toggle="dropdown">Print Card
@@ -196,7 +197,17 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
             <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo yii::app()->createAbsoluteUrl('cardGenerated/pdfprint', array('id' => $model->id, 'type' => 4)) ?>">Reprint Card</a></li>
         </ul>
     </div>
-    <?php  endif; ?>
+<?php endif; ?>
+<?php if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY]) and $model->visit_status == VisitStatus::AUTOCLOSED and date('d-m-Y') <= $session['disableActiveDate_'.$model->id]):
+    ?>
+    <div class="dropdown">
+        <button class="complete btn btn-info printCardBtn dropdown-toggle" style="width:205px !important" type="button" id="menu1" data-toggle="dropdown">Print Card
+            <span class="caret pull-right"></span></button>
+        <ul class="dropdown-menu" style="left: 62px;" role="menu" aria-labelledby="menu1">
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo yii::app()->createAbsoluteUrl('cardGenerated/pdfprint', array('id' => $model->id, 'type' => 4)) ?>">Reprint Card</a></li>
+        </ul>
+    </div>
+<?php endif; ?>
 <?php if ($model->visit_status != VisitStatus::SAVED): ?>
 <div style="margin-top: 10px;">
 <?php

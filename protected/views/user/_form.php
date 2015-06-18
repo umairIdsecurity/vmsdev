@@ -1651,12 +1651,12 @@ $this->widget('bootstrap.widgets.TbButton', array(
 
 </div>
 <div id="fade2" class="black_overlay">
-
-    <div style="text-align:right;">
-        <input type="button" class="btn btn-success" id="cropPhotoBtn2" value="Crop" style="">
-        <input type="button" id="closeCropPhoto2" onclick="document.getElementById('light2').style.display = 'none';
-                document.getElementById('fade2').style.display = 'none'" value="x" class="btn btn-danger">
-    </div>
+</div>
+<div  id="crop_button2">
+    <input type="button" class="btn btn-success" id="cropPhotoBtn2" value="Crop" style="">
+    <input type="button" id="closeCropPhoto2" onclick="document.getElementById('light2').style.display = 'none';
+                document.getElementById('fade2').style.display = 'none';
+                document.getElementById('crop_button2').style.display = 'none'" value="x" class="btn btn-danger">
 </div>
 
 <input type="hidden" id="x12"/>

@@ -222,6 +222,7 @@ if (($this->action->id == 'update' && $this->id == 'visitor')) {
     ?> </div>
 <br><br>
 <input type="button" id="cropImageBtn" class="btn actionForward editImageBtn" value="Edit Photo" onclick = "document.getElementById('light').style.display = 'block';
+        document.getElementById('crop_button').style.display = 'block';
         document.getElementById('fade').style.display = 'block'">
 
 <input type="hidden" id="actionUpload" value="<?php echo $this->action->id; ?>"/>

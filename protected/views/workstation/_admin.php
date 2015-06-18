@@ -133,11 +133,12 @@ Yii::app()->clientScript->registerScript('select_card_type_vic', "
 
 
                 <div class="form-group">
-                    <?php echo CHtml::textArea('back-card','',array( 'rows'=>"9", 'cols'=>"500",'style'=>"width:500px;")); ?>
+                    <?php echo CHtml::textArea('back-card', '', array('rows' => "9", 'cols' => "500", 'style' => "width:500px;")); ?>
                     <?php echo CHtml::hiddenField('card_id'); ?>
                 </div>
-
+                <div style="  width: 100%;text-align: right;;color: #446FB6;" id="counter"></div>
             </div>
+
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -157,7 +158,7 @@ Yii::app()->clientScript->registerScript('select_card_type_vic', "
             var modal_name = $('#' + button_id).attr('name');
             var card_id = button_id.split('_');
             getEditText(card_id[1]);
-            modal_name = modal_name+"-Back of Card";
+            modal_name = modal_name + "-Back of Card";
             console.log(modal_name);
             $("#mdlttl").html(modal_name);
             $("#card_id").val(card_id[1]);
@@ -170,15 +171,20 @@ Yii::app()->clientScript->registerScript('select_card_type_vic', "
         $(".items tr:first").after(row);
     }
     function getEditText(cardid) {
-       
+
         $.ajax({
-            url: '<?php echo CController::createAbsoluteUrl('cardType/backtext')?>',
-            data: "cardid="+cardid,
+            url: '<?php echo CController::createAbsoluteUrl('cardType/backtext') ?>',
+            data: "cardid=" + cardid,
             success: function (data) {
                 $('#back-card').val(data);
             },
             type: 'POST'
         });
     }
+    $("#back-card").MaxLength(
+            {
+                MaxLength: 400,
+                CharacterCountControl: $('#counter')
+            });
 
 </script>

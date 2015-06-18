@@ -10,39 +10,38 @@ $session = new CHttpSession;
 $visitorName = $_GET['id'];
 $visitorType = $_GET['visitortype'];
 
-if (!is_null($cardType) && $cardType > CardType::CONTRACTOR_VISITOR) {
-    $hostTitle = 'ASIC Sponsor';
-    if (isset($_GET['tenant_agent']) && $_GET['tenant_agent'] != '') {
-        $tenant_agent = 'tenant_agent="' . $_GET['tenant_agent'] . '" and';
-    } else {
-        $tenant_agent = '(tenant_agent IS NULL or tenant_agent =0 or tenant_agent="") and';
-    }
-    $model = new Visitor;
-    $criteria = new CDbCriteria;
+
+if (isset($_GET['tenant_agent']) && $_GET['tenant_agent'] != '') {
+    $tenant_agent = 'tenant_agent="' . $_GET['tenant_agent'] . '" and';
+} else {
+    $tenant_agent = '(tenant_agent IS NULL or tenant_agent =0 or tenant_agent="") and';
+}
+$model = new Visitor;
+$criteria = new CDbCriteria;
+$tenant = '';
+if($_GET['tenant'] && $_GET['tenant']!=''){
+  $tenant = 'tenant='.$_GET['tenant'].' AND ';
+}else{
     $tenant = '';
-    if($_GET['tenant'] && $_GET['tenant']!=''){
-      $tenant = 'tenant='.$_GET['tenant'].' AND ';
-    }else{
-        $tenant = '';
-    }
+}
 
 
-    $conditionString = $tenant. $tenant_agent . ' (CONCAT(first_name," ",last_name) like "%' . $visitorName
-                        . '%" or first_name like "%' . $visitorName
-                        . '%" or last_name like "%' . $visitorName
-                        . '%" or email like "%' . $visitorName
-                        . '%" or identification_document_no LIKE "%' . $visitorName
-                        . '%" or identification_alternate_document_no1 LIKE "%' . $visitorName
-                        . '%" or identification_alternate_document_no2 LIKE "%' . $visitorName
-                        . '%")';
+$conditionString = $tenant. $tenant_agent . ' (CONCAT(first_name," ",last_name) like "%' . $visitorName
+                    . '%" or first_name like "%' . $visitorName
+                    . '%" or last_name like "%' . $visitorName
+                    . '%" or email like "%' . $visitorName
+                    . '%" or identification_document_no LIKE "%' . $visitorName
+                    . '%" or identification_alternate_document_no1 LIKE "%' . $visitorName
+                    . '%" or identification_alternate_document_no2 LIKE "%' . $visitorName
+                    . '%")';
 
+if (isset($_GET['cardType']) && $_GET['cardType'] > CardType::CONTRACTOR_VISITOR) {
+    $hostTitle = 'ASIC Sponsor';
     $conditionString .= ' AND profile_type = "' . Visitor::PROFILE_TYPE_ASIC . '" ';
-
-
-    $criteria->addCondition($conditionString);
 } else {
     $hostTitle = 'Host';
-    if (isset($_GET['tenant_agent']) && $_GET['tenant_agent'] != '') {
+    $conditionString .= ' AND profile_type = "' . Visitor::PROFILE_TYPE_CORPORATE . '" ';
+    /*if (isset($_GET['tenant_agent']) && $_GET['tenant_agent'] != '') {
         $tenant_agent = 't.tenant_agent="' . $_GET['tenant_agent'] . '" and';
     } else {
         $tenant_agent = '(t.tenant_agent IS NULL or t.tenant_agent =0 or t.tenant_agent="") and';
@@ -65,8 +64,10 @@ if (!is_null($cardType) && $cardType > CardType::CONTRACTOR_VISITOR) {
             $tenant_agent = '(t.tenant_agent IS NULL or t.tenant_agent =0 or t.tenant_agent="") and';
         }
         $criteria->addCondition($tenant.$tenant_agent.'  (CONCAT(t.first_name," ",t.last_name) like "%' . $visitorName . '%" or t.first_name like "%' . $visitorName . '%" or t.last_name like "%' . $visitorName . '%" or t.email like "%' . $visitorName . '%")');
-    }
+    }*/
 }
+
+$criteria->addCondition($conditionString);
 
 $model->unsetAttributes();
 

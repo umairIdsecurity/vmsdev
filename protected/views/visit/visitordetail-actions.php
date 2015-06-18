@@ -126,7 +126,13 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                         <?php echo $logform->error($model, 'date_in'); ?>
                         <?php if ($model->visit_status == VisitStatus::CLOSED) { ?>
                             <button type="button" id='registerNewVisit' class='greenBtn'>Activate Visit</button>
-                        <?php }elseif ($model->visit_status == VisitStatus::AUTOCLOSED and strtotime($model->date_check_in.' '.$model->time_check_in) > strtotime(date("d-m-Y H:i:s"))){ ?>
+                        <?php } elseif($model->visit_status == VisitStatus::PREREGISTERED) { ?>
+                            <button type="button" id='registerNewVisit' class='greenBtn'>Activate Visit</button>
+                            <div style="display:inline;font-size:12px;">
+                                <b>or </b>
+                                <a id="cancelPreregisteredVisitButton" href="" class="cancelBtnVisitorDetail">Cancel</a>
+                            </div>
+                        <?php } elseif ($model->visit_status == VisitStatus::AUTOCLOSED and strtotime($model->date_check_in.' '.$model->time_check_in) > strtotime(date("d-m-Y H:i:s"))){ ?>
                              <input type="submit" value="Preregistered" class="complete"/>
 
                        <?php } else {
@@ -292,6 +298,10 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
         }
 
         $('#cancelActiveVisitButton').on('click', function (e) {
+            e.preventDefault();
+            sendCancelVisit();
+        });
+        $('#cancelPreregisteredVisitButton').on('click', function (e) {
             e.preventDefault();
             sendCancelVisit();
         });

@@ -1172,19 +1172,19 @@ class VisitController extends Controller {
                                 $visitorModel->visitor_card_status = 2;
                             }
                             $visitorModel->email = preg_replace('/\s+/', '', $row['B'] . '@' . $row['C']);
-                            $visitorModel->contact_number = '123456';
+                            $visitorModel->contact_number = 'dummy';
                             $visitorModel->identification_type = 'PASSPORT';
                             $visitorModel->identification_country_issued = 13;
-                            $visitorModel->identification_document_no = 123;
-                            $visitorModel->identification_document_expiry = '2016-06-22';
+                            $visitorModel->identification_document_no = 'dummy';
+                            $visitorModel->identification_document_expiry = date("Y-m-d");
                             $visitorModel->company = 15;
                             $visitorModel->visitor_type = 2;
-                            $visitorModel->contact_street_no = 123;
-                            $visitorModel->contact_street_name = 'abc';
+                            $visitorModel->contact_street_no = 'dummy';
+                            $visitorModel->contact_street_name = 'dummy';
                             $visitorModel->contact_street_type = 'ALLY';
-                            $visitorModel->contact_suburb = 11;
+                            $visitorModel->contact_suburb = 'dummy';
                             $visitorModel->contact_state = 'ACT';
-                            $visitorModel->contact_postcode = 121;
+                            $visitorModel->contact_postcode = 'dummy';
                             $visitorModel->contact_country = 13;
 
                             $visitorModel->save();

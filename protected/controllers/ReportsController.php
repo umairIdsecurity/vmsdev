@@ -497,26 +497,37 @@ class ReportsController extends Controller
         if( !empty($dateFromFilter) && !empty($dateToFilter) ) {
             $from = new DateTime($dateFromFilter);
             $to = new DateTime($dateToFilter);
-            
-            $dateCondition = "( (STR_TO_DATE(visits.date_check_in, '%d-%m-%Y') BETWEEN STR_TO_DATE('".$from->format("d-m-Y")."', '%d-%m-%Y') AND STR_TO_DATE('".$to->format("d-m-Y")."', '%d-%m-%Y'))"
-                                ." OR "
-                                ."(STR_TO_DATE(visits.date_check_in, '%Y-%m-%d') BETWEEN STR_TO_DATE('".$from->format("Y-m-d")."', '%Y-%m-%d') AND STR_TO_DATE('".$to->format("Y-m-d")."', '%Y-%m-%d')) ) AND";
-            
-            //$dateCondition = "( visits.date_check_in BETWEEN  '".$from->format("Y-m-d")."' AND  '".$to->format("Y-m-d")."' ) AND ";
+            $dateCondition = "( visitors.date_created BETWEEN  '".$from->format("Y-m-d H:i:s")."' AND  '".$to->format("Y-m-d H:i:s")."' ) AND ";
         }
         
         $dateCondition .= "(visits.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visitors.profile_type='VIC')";
-        
-        $visitsCount = Yii::app()->db->createCommand()
-                ->select("cards.id,cards.name,count(visits.id) as visits,date_check_in")
-                ->from('visit visits')
+
+        $visitorCount = Yii::app()->db->createCommand()
+                ->select("cards.id as cardId,cards.name,count(visitors.id) as visitors,visitors.date_created")
+                ->from('visitor visitors')
+                ->join("visit visits",'visitors.id = visits.visitor')
                 ->join("card_type cards",'cards.id = visits.card_type')
-                ->join("visitor visitors",'visitors.id = visits.visitor')
                 ->where($dateCondition)
                 ->group('cards.id')
                 ->queryAll();
+
+        $allCards = CardType::model()->findAll();
+        $otherCards = array();
         
-        $this->render("visitorviccardtypecount", array("visit_count"=>$visitsCount));
+        foreach ($allCards as $card) {
+            $hasVisitor = false;
+            foreach($visitorCount as $visitor) {
+                if($visitor['cardId'] ==  $card['id']) {
+                    $hasVisitor =  true;
+                }
+            }
+            if ($hasVisitor == false) {
+                array_push($otherCards, $card);
+            }
+        }
+
+        
+        $this->render("visitorviccardtypecount", array("visitor_count"=>$visitorCount,"otherCards" => $otherCards));
     }
     
 }

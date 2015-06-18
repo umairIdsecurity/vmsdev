@@ -33,13 +33,14 @@ $photoForm = $this->beginWidget('CActiveForm', array(
 </div>
 <?php
 $vstr = Visitor::model()->findByPk($model->visitor);
-if ($vstr->profile_type == "CORPORATE" && $model->card_type == 4) {
+if ($vstr->profile_type == "CORPORATE" && $model->card_type == CardType::CONTRACTOR_VISITOR) {
     $cardclass = "cardDiv";
-} elseif ($vstr->profile_type == "CORPORATE" && $model->card_type != 4) {
+} elseif ($vstr->profile_type == "CORPORATE" && $model->card_type != CardType::CONTRACTOR_VISITOR) {
     $cardclass = "cardDivCD";
-} elseif ($vstr->profile_type == "ASIC") {
-    $cardclass = "cardDivVR";
-} elseif ($vstr->profile_type == "VIC") {
+}/* elseif ($vstr->profile_type == "ASIC") {
+    //$cardclass = "cardDivVR";
+    $cardclass = "cardDivVY";
+}*/ elseif ($vstr->profile_type == "VIC" || $vstr->profile_type == "ASIC") {
     $cardclass = "cardDivVY";
 }
 ?>

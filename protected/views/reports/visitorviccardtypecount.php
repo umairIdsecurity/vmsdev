@@ -48,7 +48,7 @@
     <thead>
         <tr>
             <th> Card Type </th>
-            <th> VIC Visitor </th>
+            <th> VIC Count </th>
         </tr>
     </thead>
     <tbody>
@@ -88,7 +88,7 @@
     </tbody>
     <tfoot>
         <tr>
-            <th>Total VIC Visitor</th>
+            <th>Total VIC </th>
             <th><?= $total ?></th>
         </tr>
     </tfoot>

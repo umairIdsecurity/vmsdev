@@ -170,7 +170,11 @@ class VisitorTypeController extends Controller {
         if( !empty($dateFromFilter) && !empty($dateToFilter) ) {
             $from = new DateTime($dateFromFilter);
             $to = new DateTime($dateToFilter);
-            $dateCondition = "( DATE(visitors.date_created) BETWEEN  '".$from->format("Y-m-d")."' AND  '".$to->format("Y-m-d")."' ) AND ";
+            $dateCondition .= "( DATE(visitors.date_created) BETWEEN  '".$from->format("Y-m-d")."' AND  '".$to->format("Y-m-d")."' ) AND ";
+        }
+        
+        if(Roles::ROLE_SUPERADMIN != Yii::app()->user->role){
+            $dateCondition .= "(visitors.tenant=".Yii::app()->user->tenant.") AND ";
         }
         
         $dateCondition .= "(t.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visitors.profile_type='CORPORATE')";
@@ -202,8 +206,9 @@ class VisitorTypeController extends Controller {
         if( !empty($dateFromFilter) && !empty($dateToFilter) ) {
             $from = new DateTime($dateFromFilter);
             $to = new DateTime($dateToFilter);
-            $dateCondition = "( DATE(visitors.date_created) BETWEEN  '".$from->format("Y-m-d")."' AND  '".$to->format("Y-m-d")."' ) AND ";
+            $dateCondition .= "( DATE(visitors.date_created) BETWEEN  '".$from->format("Y-m-d")."' AND  '".$to->format("Y-m-d")."' ) AND ";
         }
+        
         
         $dateCondition .= "(t.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visitors.profile_type='CORPORATE') AND (t.tenant=" . Yii::app()->user->tenant. ")";
         

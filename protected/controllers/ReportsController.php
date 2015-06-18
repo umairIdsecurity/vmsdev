@@ -223,7 +223,14 @@ class ReportsController extends Controller
      * @return array Data array
      */
     function getNewVisitorsData( $from, $to ) {
-        $dateCondition = "( DATE(t.date_created) BETWEEN  '".$from->format("Y-m-d")."' AND  '".$to->format("Y-m-d")."' )"
+        
+        $dateCondition ='';
+        
+        if(Roles::ROLE_SUPERADMIN != Yii::app()->user->role){
+            $dateCondition .= "(t.tenant=".Yii::app()->user->tenant.") AND ";
+        }
+        
+        $dateCondition .= "( DATE(t.date_created) BETWEEN  '".$from->format("Y-m-d")."' AND  '".$to->format("Y-m-d")."' )"
                          ." AND (t.is_deleted =0 ) AND (t.profile_type='CORPORATE')";
         
         $data = Yii::app()->db->createCommand()
@@ -414,7 +421,13 @@ class ReportsController extends Controller
      */
     function getNewVICVisitorsData( $from, $to ) {
         
-        $dateCondition = "(t.date_created BETWEEN  '".$from->format("Y-m-d H:i:s")."' AND  '".$to->format("Y-m-d H:i:s")."' )"
+        $dateCondition='';
+        
+        if(Roles::ROLE_SUPERADMIN != Yii::app()->user->role){
+            $dateCondition .= "(t.tenant=".Yii::app()->user->tenant.") AND ";
+        }
+        
+        $dateCondition .= "(t.date_created BETWEEN  '".$from->format("Y-m-d H:i:s")."' AND  '".$to->format("Y-m-d H:i:s")."' )"
                          ." AND (t.is_deleted =0 ) AND (t.profile_type='VIC')";
         
         $data = Yii::app()->db->createCommand()
@@ -434,7 +447,13 @@ class ReportsController extends Controller
      */
     function getNewASICVisitorsData( $from, $to ) {
         
-        $dateCondition = "(t.date_created BETWEEN  '".$from->format("Y-m-d H:i:s")."' AND  '".$to->format("Y-m-d H:i:s")."' )"
+        $dateCondition='';
+        
+        if(Roles::ROLE_SUPERADMIN != Yii::app()->user->role){
+            $dateCondition .= "(t.tenant=".Yii::app()->user->tenant.") AND ";
+        }
+        
+        $dateCondition .= "(t.date_created BETWEEN  '".$from->format("Y-m-d H:i:s")."' AND  '".$to->format("Y-m-d H:i:s")."' )"
                          ." AND (t.is_deleted =0 ) AND (t.profile_type='ASIC')";
         
         
@@ -465,6 +484,10 @@ class ReportsController extends Controller
             $from = new DateTime($dateFromFilter);
             $to = new DateTime($dateToFilter);
             $dateCondition = "( visitors.date_created BETWEEN  '".$from->format("Y-m-d H:i:s")."' AND  '".$to->format("Y-m-d H:i:s")."' ) AND ";
+        }
+        
+        if(Roles::ROLE_SUPERADMIN != Yii::app()->user->role){
+            $dateCondition .= "(visitors.tenant=".Yii::app()->user->tenant.") AND ";
         }
         
         $dateCondition .= "(t.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visitors.profile_type='VIC')";
@@ -498,6 +521,11 @@ class ReportsController extends Controller
             $from = new DateTime($dateFromFilter);
             $to = new DateTime($dateToFilter);
             $dateCondition = "( visitors.date_created BETWEEN  '".$from->format("Y-m-d H:i:s")."' AND  '".$to->format("Y-m-d H:i:s")."' ) AND ";
+        }
+        
+        
+        if(Roles::ROLE_SUPERADMIN != Yii::app()->user->role){
+            $dateCondition .= "(visitors.tenant=".Yii::app()->user->tenant.") AND ";
         }
         
         $dateCondition .= "(visits.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visitors.profile_type='VIC')";

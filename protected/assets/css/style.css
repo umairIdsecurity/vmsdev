@@ -1749,7 +1749,7 @@ p.asic{
     top: 15%;
     z-index: 1002;
     width:1000px;
-    height:450px;
+    height:480px;
     text-align: center;
 }
 #crop_button, #crop_button2, #crop_button3 {position: fixed; right: 0px; top: 0px; z-index: 2005;display:none}

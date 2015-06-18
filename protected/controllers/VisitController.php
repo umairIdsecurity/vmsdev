@@ -1140,7 +1140,7 @@ class VisitController extends Controller {
                             $visitorModel = new Visitor();
                             $visitorModel->first_name = $row['B'];
                             $visitorModel->last_name = $row['C'];
-                            $visitorModel->date_of_birth = date('Y-m-d', $row['D']);
+                            $visitorModel->date_of_birth = date('Y-m-d', strtotime($row['D']));
                             $visitorModel->profile_type = 'VIC';
                             $visitorModel->visitor_workstation = isset($worstationId) ? $worstationId : '';
                             $visitorModel->tenant = $session['tenant'];

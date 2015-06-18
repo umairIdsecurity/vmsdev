@@ -758,7 +758,7 @@ class Visit extends CActiveRecord {
             $commandUpdateCard = "";
 
             $command = Yii::app()->db->createCommand("UPDATE visit
-                    SET visit_status = '" . VisitStatus::CLOSED . "', card_option ='" . CardStatus::RETURNED . "', finish_date = DATE_FORMAT(CURDATE(), '%d-%m-%Y'), finish_time = CURTIME() WHERE 'd-m-Y' > date_check_out AND DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 28 DAY), '%d-%m-%Y %h:%i:%s') >= CONCAT(date_check_in, ' ', time_check_in) AND visit_status = '" . VisitStatus::ACTIVE . "' AND (card_type = '" . CardType::VIC_CARD_EXTENDED . "' OR card_type = '". CardType::VIC_CARD_MULTIDAY ."')")->execute();
+                    SET visit_status = '" . VisitStatus::EXPIRED . "', card_option ='" . CardStatus::RETURNED . "', finish_date = DATE_FORMAT(CURDATE(), '%d-%m-%Y'), finish_time = CURTIME() WHERE 'd-m-Y' > date_check_out AND DATE_FORMAT(DATE_SUB(NOW(), INTERVAL DATEDIFF(date_check_out, date_check_in) DAY), '%d-%m-%Y %h:%i:%s') >= CONCAT(date_check_in, ' ', time_check_in) AND visit_status = '" . VisitStatus::ACTIVE . "' AND (card_type = '" . CardType::VIC_CARD_EXTENDED . "' OR card_type = '". CardType::VIC_CARD_MULTIDAY ."')")->execute();
             echo "Affected Rows : " . $command . "\n";
             if ($command > 0) {
                 echo "Success: Update VIC Extended and Multiday visits to close status successful. \n";
@@ -934,7 +934,17 @@ class Visit extends CActiveRecord {
             case CardType::VIC_CARD_SAMEDATE:
                 $dateOut = new DateTime($this->date_check_out);
                 $dateIn = new DateTime($this->date_check_in);
-                return (int)($dateOut->format('z') - $dateIn->format('z')) + 1;
+                $remainingDays = (int)($dateOut->format('z') - $dateIn->format('z'));
+                switch ($this->visit_status) {
+                    case VisitStatus::EXPIRED:
+                        $visitCount = (int)($dateOut->format('z') - $remainingDays);
+                        if ($visitCount < 0) return 0;
+                            return $visitCount;
+                        break;
+                    default:
+                        return $remainingDays;
+                        break;
+                }
                 break;
             case CardType::VIC_CARD_24HOURS:
                 return (int)$this->countByAttributes(['visit_status' => VisitStatus::CLOSED, 'visitor' => $this->visitor]) + 1;
@@ -951,11 +961,23 @@ class Visit extends CActiveRecord {
             case CardType::VIC_CARD_MULTIDAY:
                 $dateNow = new DateTime(date('d-m-Y'));
                 $dateOut = new DateTime($this->date_check_out);
-                return (int)($dateOut->format('z') - $dateNow->format('z'));
+                $dateIn = new DateTime($this->date_check_in);
+                $totalDays = (int)($dateOut->format('z') - $dateIn->format('z'));
+
+                switch ($this->visit_status) {
+                    case VisitStatus::AUTOCLOSED:
+                        return $totalDays;
+                        break;
+                    default:
+                        $remainingDays = $totalDays - $this->visitCounts;
+                        if ($remainingDays < 0) return 0;
+                            return $remainingDays;
+                        break;
+                }
                 break;
             case CardType::VIC_CARD_SAMEDATE:
                 if (date('d-m-Y') == $this->date_check_in) {
-                    return 28 - (int)$this->countByAttributes(['visit_status' => VisitStatus::CLOSED, 'visitor' => $this->visitor]);
+                    return 28 - ((int)$this->countByAttributes(['visit_status' => VisitStatus::CLOSED, 'visitor' => $this->visitor]) + 1);
                 }
                 return 28;
                 break;

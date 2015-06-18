@@ -10,7 +10,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
     <ul>
 
         <li class='has-sub' id="closevisitLi" style="<?php
-        if (in_array($model->visit_status, array(VisitStatus::ACTIVE, VisitStatus::EXPIRED)) && $session['role'] != Roles::ROLE_STAFFMEMBER) {
+        if (in_array($model->visit_status, array(VisitStatus::ACTIVE)) && $session['role'] != Roles::ROLE_STAFFMEMBER) {
             echo "display:block;";
         } else {
             echo "display:none;";
@@ -67,7 +67,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
 
         </li>
 
-        <?php if (in_array($model->visit_status, array(VisitStatus::PREREGISTERED, VisitStatus::SAVED, VisitStatus::CLOSED, VisitStatus::AUTOCLOSED))) { ?>
+        <?php if (in_array($model->visit_status, array(VisitStatus::PREREGISTERED, VisitStatus::SAVED, VisitStatus::CLOSED, VisitStatus::AUTOCLOSED, VisitStatus::EXPIRED))) { ?>
 
             <li class='has-sub' id="activateLi"><span class="log-current">Log Visit</span>
                 <ul>
@@ -124,19 +124,28 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                             </tr>
                         </table>
                         <?php echo $logform->error($model, 'date_in'); ?>
-                        <?php if ($model->visit_status == VisitStatus::CLOSED) { ?>
-                            <button type="button" id='registerNewVisit' class='greenBtn'>Activate Visit</button>
-                        <?php }elseif ($model->visit_status == VisitStatus::AUTOCLOSED and strtotime($model->date_check_in.' '.$model->time_check_in) > strtotime(date("d-m-Y H:i:s"))){ ?>
-                             <input type="submit" value="Preregistered" class="complete"/>
-
-                       <?php } else {
-                            if ($model->card_type == CardType::MANUAL_VISITOR && isset($model->date_check_in) && strtotime($model->date_check_in) < strtotime(date("d-m-Y"))) {
-                                echo '<input type="submit" value="Back Date Visit" class="complete"/>';
-                            } else {
-                                echo '<button type="button" id="registerNewVisit" class="greenBtn">Activate Visit</button>';
-                            }
-                        }
+                        <?php 
+                        if (in_array($model->visit_status, [VisitStatus::CLOSED])) :
                         ?>
+                            <button type="button" id='registerNewVisit' class='greenBtn'>Activate Visit</button>
+                        <?php elseif ($model->visit_status == VisitStatus::AUTOCLOSED && in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY])) : ?>
+                            <?php
+                            $disabled = '';
+                            if (date('d-m-Y') <= $model->date_check_out) {
+                                $disabled = 'disabled';
+                            } elseif (strtotime($model->date_check_in.' '.$model->time_check_in) > strtotime(date("d-m-Y H:i:s"))) {
+                                $disabled = '';
+                            }
+                            ?>
+                            <input type="submit" <?php echo $disabled; ?> value="Preregistered" class="complete"/>
+                        <?php else:
+                            if ($model->card_type == CardType::MANUAL_VISITOR && isset($model->date_check_in) && strtotime($model->date_check_in) < strtotime(date("d-m-Y"))) :
+                        ?>
+                            <input type="submit" value="Back Date Visit" class="complete"/>
+                            <?php else: ?>
+                            <button type="button" id="registerNewVisit" class="greenBtn">Activate Visit</button>
+                            <?php endif; ?>
+                        <?php endif; ?>
                         <?php $this->endWidget();
                         ?>
 

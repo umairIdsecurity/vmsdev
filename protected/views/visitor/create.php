@@ -87,7 +87,6 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
 <script>
 function getCardType() {
     var card_type = $('#VisitCardType').val();
-    console.log(card_type);
     if (card_type > "<?php echo CardType::CONTRACTOR_VISITOR; ?>") {
         return 'ASIC Sponsor';
     } else {
@@ -441,8 +440,8 @@ function preloadHostDetails(hostId) {
 }
 
 function populateFieldHost(id) {
-    
-    if ($("#Visitor_visitor_type").val() != 1) {
+    var card_type = $('#VisitCardType').val();
+    if ($("#Visitor_visitor_type").val() != 1) {    
 
         $.ajax({
             type: 'POST',

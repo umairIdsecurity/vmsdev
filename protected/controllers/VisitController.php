@@ -1076,7 +1076,20 @@ class VisitController extends Controller {
 //                . ' AND "'.$to->format('Y-m-d').'") AND';
 
         }
-        $dateCondition .= "(t.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visitors.profile_type='VIC') AND (t.tenant=" . Yii::app()->user->tenant. ")";
+        
+        $allWorkstations='';
+        
+        if(Roles::ROLE_SUPERADMIN != Yii::app()->user->role){
+            
+            $dateCondition .= "(visitors.tenant=".Yii::app()->user->tenant.") AND ";
+            //show curren logged in user Workstations
+            $allWorkstations = Workstation::model()->findAll("tenant = " . Yii::app()->user->tenant . " AND is_deleted = 0");
+        }else{
+            //show all work stations to SUPERADMIN
+            $allWorkstations = Workstation::model()->findAll();
+        }
+        
+        $dateCondition .= "(t.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visitors.profile_type='VIC')";
         
         //$dateCondition .= '(t.is_deleted = 0) AND (visits.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visits.card_type >= 5) AND (t.tenant = '.Yii::app()->user->tenant.')';
         
@@ -1095,7 +1108,6 @@ class VisitController extends Controller {
 //            ->from('workstation t')
 //            ->where('t.tenant = '. Yii::app()->user->tenant)
 //            ->queryAll();
-        $allWorkstations = Workstation::model()->findAll("tenant = " . Yii::app()->user->tenant . " AND is_deleted = 0");
         $otherWorkstations = array();
         
         foreach ($allWorkstations as $workstation) {
@@ -1172,19 +1184,19 @@ class VisitController extends Controller {
                                 $visitorModel->visitor_card_status = 2;
                             }
                             $visitorModel->email = preg_replace('/\s+/', '', $row['B'] . '@' . $row['C']);
-                            $visitorModel->contact_number = '123456';
+                            $visitorModel->contact_number = 'dummy';
                             $visitorModel->identification_type = 'PASSPORT';
                             $visitorModel->identification_country_issued = 13;
-                            $visitorModel->identification_document_no = 123;
-                            $visitorModel->identification_document_expiry = '2016-06-22';
+                            $visitorModel->identification_document_no = 'dummy';
+                            $visitorModel->identification_document_expiry = date("Y-m-d");
                             $visitorModel->company = 15;
                             $visitorModel->visitor_type = 2;
-                            $visitorModel->contact_street_no = 123;
-                            $visitorModel->contact_street_name = 'abc';
+                            $visitorModel->contact_street_no = 'dummy';
+                            $visitorModel->contact_street_name = 'dummy';
                             $visitorModel->contact_street_type = 'ALLY';
-                            $visitorModel->contact_suburb = 11;
+                            $visitorModel->contact_suburb = 'dummy';
                             $visitorModel->contact_state = 'ACT';
-                            $visitorModel->contact_postcode = 121;
+                            $visitorModel->contact_postcode = 'dummy';
                             $visitorModel->contact_country = 13;
 
                             $visitorModel->save();

@@ -439,31 +439,47 @@ function preloadHostDetails(hostId) {
     $(".host-AddBtn").show();
 }
 
+//check vistor card status is ASIC DENIED then alert.
+function checkAsicStatusById(id){
+    $.ajax({
+        type: 'POST',
+        url: '<?php echo Yii::app()->createUrl('visitor/checkAsicStatusById&id='); ?>' + id,
+        dataType: 'text',
+        data: id,
+        success: function (flag) {
+           if(flag == 0){
+               alert('ASIC Denied. A VIC can not be issued to this person.\n Please inform them to report to the ASIC office.');
+               return;
+           }else{
+               $.ajax({
+                   type: 'POST',
+                   url: '<?php echo Yii::app()->createUrl('visitor/getHostDetails&id='); ?>' + id,
+                   dataType: 'json',
+                   data: id,
+                   success: function (r) {
+                        $.each(r.data, function (index, value) {
+                            $("#searchHostTableDiv h4").html("Selected "+getCardType()+" Record : " + value.first_name + " " + value.last_name);
+                        });
+
+                        //$('#findHostTableIframe').contents().find('.findHostButtonColumn a').removeClass('delete');
+                        //$('#findHostTableIframe').contents().find('.findHostButtonColumn a').html('Select Host');
+                        //$('#findHostTableIframe').contents().find('#' + id).addClass('delete');
+                        //$('#findHostTableIframe').contents().find('#' + id).html(getCardType()+' Selected');
+                        $('.findHostButtonColumn a').removeClass('delete');
+                        $('.findHostButtonColumn a').html('Select '+getCardType());
+                        $('#' + id).addClass('delete');
+                        $('#' + id).html(getCardType()+' Selected');
+                   }
+               });
+           }
+        }
+    });
+}
+
 function populateFieldHost(id) {
     var card_type = $('#VisitCardType').val();
-    if ($("#Visitor_visitor_type").val() != 1) {    
-
-        $.ajax({
-            type: 'POST',
-            url: '<?php echo Yii::app()->createUrl('visitor/getHostDetails&id='); ?>' + id,
-            dataType: 'json',
-            data: id,
-            success: function (r) {
-                $.each(r.data, function (index, value) {
-                    $("#searchHostTableDiv h4").html("Selected "+getCardType()+" Record : " + value.first_name + " " + value.last_name);
-
-                });
-
-//                    $('#findHostTableIframe').contents().find('.findHostButtonColumn a').removeClass('delete');
-//                    $('#findHostTableIframe').contents().find('.findHostButtonColumn a').html('Select Host');
-//                    $('#findHostTableIframe').contents().find('#' + id).addClass('delete');
-//                    $('#findHostTableIframe').contents().find('#' + id).html(getCardType()+' Selected');
-                $('.findHostButtonColumn a').removeClass('delete');
-                $('.findHostButtonColumn a').html('Select '+getCardType());
-                $('#' + id).addClass('delete');
-                $('#' + id).html(getCardType()+' Selected');
-            }
-        });
+    if ($("#Visitor_visitor_type").val() != 1) {
+        checkAsicStatusById(id);
     } else {
         $.ajax({
             type: 'POST',

@@ -91,6 +91,10 @@ class NotificationsController extends Controller
 			if($model->save()) {
                             
                             $criteria = new CDbCriteria;
+                            
+                            //send notifications to current logged in user tenants
+                            $criteria->condition = 'tenant ='.Yii::app()->user->tenant;
+                            
                             //If Role ID is empty then send it to All CVMS and AVMS Users
                             if( empty($model->role_id) || is_null($model->role_id) )  {
                                 $criteria->condition = 'is_deleted = 0 AND id != '.Yii::app()->user->id;

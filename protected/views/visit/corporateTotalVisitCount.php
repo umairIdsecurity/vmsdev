@@ -66,7 +66,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
 
 ?>
 
-<div class="modal fade fix-modal-ie" style="width: 920px; margin-left: -373px" id="activeVisitModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade fix-modal-ie hidden" style="width: 920px; margin-left: -373px" id="activeVisitModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content ">
             <div class="modal-header listActive">
@@ -93,7 +93,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         </div>
     </div>
 </div>
-<div class="modal fade fix-modal-ie-reset" id="resetModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade fix-modal-ie-reset hidden" id="resetModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-body">
@@ -137,6 +137,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
                 data: {id: id},
                 success: function(response) {
                     container.append(response);
+                    $('#activeVisitModal').removeClass('hidden');
                     $('#activeVisitModal').modal('show');
                 }
             });
@@ -185,6 +186,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         $('.resetCount').live('click', function(e){
             e.preventDefault();
             var linkReset = $(this).data('link');
+            $('#resetModal').removeClass('hidden');
             $('#resetModal').modal('show');
             $('#resetModal #linkReset').val(linkReset);
             $('#reasonForReset').val("");

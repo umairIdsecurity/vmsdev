@@ -966,14 +966,20 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
             type: "POST",
             url: url,
             data: form,
-            success: function (data) {
-                if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
-                    window.location = 'index.php?r=dashboard';
-                } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
-                    window.location = 'index.php?r=dashboard/viewmyvisitors';
-                } else {
-                    window.location = 'index.php?r=visitor/admin';
+            success: function (data, response) {
+                if(data == ''){
+                    if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
+                        window.location = 'index.php?r=dashboard';
+                    } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
+                        window.location = 'index.php?r=dashboard/viewmyvisitors';
+                    } else {
+                        window.location = 'index.php?r=visitor/admin';
+                    }
+                }else {
+                    alert(data); return;
                 }
+
+
             },
             error: function (data) {
                 if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
@@ -1107,12 +1113,6 @@ $this->widget('bootstrap.widgets.TbButton', array(
 <!-- PHOTO CROP-->
 
 <div id="light" class="white_content">
-    <div style="text-align:right;">
-        <input type="button" class="btn btn-success" id="cropPhotoBtn" value="Crop" style="">
-        <input type="button" id="closeCropPhoto" onclick="document.getElementById('light').style.display = 'none';
-                document.getElementById('fade').style.display = 'none'" value="x" class="btn btn-danger">
-    </div>
-    <br>
     <?php if ($this->action->id == 'addvisitor') { ?>
         <img id="photoCropPreview" src="">
     <?php } elseif ($this->action->id == 'update') { ?>
@@ -1122,7 +1122,12 @@ $this->widget('bootstrap.widgets.TbButton', array(
 </div>
 
 <div id="fade" class="black_overlay"></div>
-
+<div id="crop_button">
+    <input type="button" class="btn btn-success" id="cropPhotoBtn" value="Crop" style="">
+    <input type="button" id="closeCropPhoto" onclick="document.getElementById('light').style.display = 'none';
+                document.getElementById('fade').style.display = 'none';
+                document.getElementById('crop_button').style.display = 'none'" value="x" class="btn btn-danger">
+</div>
 <input type="hidden" id="x1"/>
 <input type="hidden" id="x2"/>
 <input type="hidden" id="y1"/>

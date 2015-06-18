@@ -194,6 +194,7 @@ if ($this->action->id == 'update') {
                                             echo " class='hidden' ";
                                         }
                                         ?>>
+
                                             <select id="Visitor_tenant" onchange="populateTenantAgentAndCompanyField()"
                                                     name="Visitor[tenant]">
                                                 <option value='' selected>Please select a tenant</option>
@@ -795,7 +796,6 @@ if ($this->action->id == 'update') {
     }
 
     function sendVisitorForm() {
-
         var form = $("#register-form").serialize();
         var url;
 
@@ -804,7 +804,6 @@ if ($this->action->id == 'update') {
         } else {
             url = "<?php echo CHtml::normalizeUrl(array("visitor/addvisitor")); ?>";
         }
-
         $.ajax({
             type: "POST",
             url: url,
@@ -929,11 +928,6 @@ $this->widget('bootstrap.widgets.TbButton', array(
 <!-- PHOTO CROP-->
 
 <div id="light" class="white_content">
-    <div style="text-align:right;">
-        <input type="button" class="btn btn-success" id="cropPhotoBtn" value="Crop" style="">
-        <input type="button" id="closeCropPhoto" onclick="document.getElementById('light').style.display = 'none';
-                document.getElementById('fade').style.display = 'none'" value="x" class="btn btn-danger">
-    </div>
     <br>
     <?php if ($this->action->id == 'addvisitor') { ?>
         <img id="photoCropPreview" src="">
@@ -944,6 +938,12 @@ $this->widget('bootstrap.widgets.TbButton', array(
 </div>
 
 <div id="fade" class="black_overlay"></div>
+<div id="crop_button">
+    <input type="button" class="btn btn-success" id="cropPhotoBtn" value="Crop" style="">
+    <input type="button" id="closeCropPhoto" onclick="document.getElementById('light').style.display = 'none';
+                document.getElementById('fade').style.display = 'none';
+                document.getElementById('crop_button').style.display = 'none'" value="x" class="btn btn-danger">
+</div>
 
 <input type="hidden" id="x1"/>
 <input type="hidden" id="x2"/>

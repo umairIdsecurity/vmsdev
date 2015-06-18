@@ -324,8 +324,8 @@ class ReportsController extends Controller
      */    
     public function actionProfilesAvmsVisitors() {
         // Post Date
-        $dateFromFilter = Yii::app()->request->getParam("date_from_filter");
-        $dateToFilter = Yii::app()->request->getParam("date_to_filter");
+       $dateFromFilter = Yii::app()->request->getParam("date_from_filter");
+       $dateToFilter = Yii::app()->request->getParam("date_to_filter");
        
         $date1YearBack = $this->getTodayAnd1YearBack();
         $this->avmsNewVisitors($dateFromFilter,$dateToFilter,$date1YearBack[0],$date1YearBack[1]);
@@ -413,7 +413,8 @@ class ReportsController extends Controller
      * @return array Data array
      */
     function getNewVICVisitorsData( $from, $to ) {
-        $dateCondition = "( DATE(t.date_created) BETWEEN  '".$from->format("Y-m-d")."' AND  '".$to->format("Y-m-d")."' )"
+        
+        $dateCondition = "(t.date_created BETWEEN  '".$from->format("Y-m-d H:i:s")."' AND  '".$to->format("Y-m-d H:i:s")."' )"
                          ." AND (t.is_deleted =0 ) AND (t.profile_type='VIC')";
         
         $data = Yii::app()->db->createCommand()
@@ -433,8 +434,9 @@ class ReportsController extends Controller
      */
     function getNewASICVisitorsData( $from, $to ) {
         
-        $dateCondition = "( DATE(t.date_created) BETWEEN  '".$from->format("Y-m-d")."' AND  '".$to->format("Y-m-d")."' )"
+        $dateCondition = "(t.date_created BETWEEN  '".$from->format("Y-m-d H:i:s")."' AND  '".$to->format("Y-m-d H:i:s")."' )"
                          ." AND (t.is_deleted =0 ) AND (t.profile_type='ASIC')";
+        
         
         $data = Yii::app()->db->createCommand()
                 ->select("DATE(t.date_created) AS date_check_in, t.first_name, t.id") 
@@ -462,7 +464,7 @@ class ReportsController extends Controller
         if( !empty($dateFromFilter) && !empty($dateToFilter) ) {
             $from = new DateTime($dateFromFilter);
             $to = new DateTime($dateToFilter);
-            $dateCondition = "( DATE(visitors.date_created) BETWEEN  '".$from->format("Y-m-d")."' AND  '".$to->format("Y-m-d")."' ) AND ";
+            $dateCondition = "( visitors.date_created BETWEEN  '".$from->format("Y-m-d H:i:s")."' AND  '".$to->format("Y-m-d H:i:s")."' ) AND ";
         }
         
         $dateCondition .= "(t.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visitors.profile_type='VIC')";

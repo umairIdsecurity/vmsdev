@@ -922,32 +922,42 @@ class VisitController extends Controller {
         Yii::app()->end();
     }
 
-    public function actionResetVisitCount() {
+    public function actionResetVisitCount()
+    {
         $visitorModel = Visitor::model()->findByPk(Yii::app()->getRequest()->getQuery('id'));
 
-        if($visitorModel->totalVisit > 0) {
-            $visitorModel->visitor_card_status = 3;
-            $visitorModel->update();
-            if($visitorModel->update()) {
-                $resetHistory = new ResetHistory();
-                $resetHistory->visitor_id = Yii::app()->getRequest()->getQuery('id');
-                $resetHistory->reset_time = date("Y-m-d H:i:s");
-                $resetHistory->reason = Yii::app()->getRequest()->getQuery('reason');
-                $resetHistory->lodgement_date = Yii::app()->getRequest()->getQuery('lodgementDate');
-                $visitorModel->visitor_card_status = 3;
-                $visitorModel->save();
-
-                if($resetHistory->save() ) {
-                    $activeVisit = $visitorModel->activeVisits;
-                    foreach($activeVisit as $item) {
-                        $item->reset_id = $resetHistory->id;
-                        $item->save();
-                        if($item->save()){
-                        }
-                    }
-
+        if ($visitorModel->totalVisit > 0) {
+            $activeVisit = $visitorModel->activeVisits;
+            $resetErrorMessage = '';
+            foreach ($activeVisit as $item) {
+                if ($item->visit_status == VisitStatus::ACTIVE) {
+                    $resetErrorMessage = 'Please close the active visit before resetting visit count.';
                 }
             }
+            if ($resetErrorMessage == '') {
+                $visitorModel->visitor_card_status = 3;
+                $visitorModel->update();
+                if ($visitorModel->update()) {
+                    $resetHistory = new ResetHistory();
+                    $resetHistory->visitor_id = Yii::app()->getRequest()->getQuery('id');
+                    $resetHistory->reset_time = date("Y-m-d H:i:s");
+                    $resetHistory->reason = Yii::app()->getRequest()->getQuery('reason');
+                    $resetHistory->lodgement_date = Yii::app()->getRequest()->getQuery('lodgementDate');
+                    $visitorModel->visitor_card_status = 3;
+                    $visitorModel->save();
+
+                    if ($resetHistory->save()) {
+                        foreach ($activeVisit as $item) {
+                            $item->reset_id = $resetHistory->id;
+                            $item->save();
+                        }
+
+                    }
+                }
+            } else {
+                echo $resetErrorMessage;
+            }
+
 
         }
     }
@@ -1060,7 +1070,7 @@ class VisitController extends Controller {
             $from = new DateTime($dateFromFilter);
             $to = new DateTime($dateToFilter);
             
-            $dateCondition = "( DATE(visitors.date_created) BETWEEN  '".$from->format("Y-m-d")."' AND  '".$to->format("Y-m-d")."' ) AND ";
+            $dateCondition = "( visitors.date_created BETWEEN  '".$from->format("Y-m-d H:i:s")."' AND  '".$to->format("Y-m-d  H:i:s")."' ) AND ";
             
             //OTHER PERSON CODE FIXED---THE CODE SHOULD BE LIKE THAT AS JULIE WANTS TOTAL VICs VISITORS BY WORKSTATIONS OF CURRENT USER
             //COMMENETED CODE IS OF THAT PERSON CODE
@@ -1154,9 +1164,9 @@ class VisitController extends Controller {
                             $visitorModel = new Visitor();
                             $visitorModel->first_name = $row['B'];
                             $visitorModel->last_name = $row['C'];
-                            $visitorModel->date_of_birth = $row['D'];
+                            $visitorModel->date_of_birth = date('Y-m-d', strtotime($row['D']));
                             $visitorModel->profile_type = 'VIC';
-                            $visitorModel->visitor_workstation = $worstationId;
+                            $visitorModel->visitor_workstation = isset($worstationId) ? $worstationId : '';
                             $visitorModel->tenant = $session['tenant'];
                             $visitorModel->role = Roles::ROLE_VISITOR;
                             if ($row['J'] == 'TRUE') {
@@ -1164,7 +1174,7 @@ class VisitController extends Controller {
                             } else {
                                 $visitorModel->visitor_card_status = 2;
                             }
-                            $visitorModel->email = preg_replace('/\s+/', '', $row['B'] . $row['C'] . '@gmail.com');
+                            $visitorModel->email = preg_replace('/\s+/', '', $row['B'] . '@' . $row['C']);
                             $visitorModel->contact_number = '123456';
                             $visitorModel->identification_type = 'PASSPORT';
                             $visitorModel->identification_country_issued = 13;
@@ -1203,7 +1213,7 @@ class VisitController extends Controller {
 
                             // Add visit
                             $visitModel = new Visit();
-                            $visitModel->card = $cardId;
+                            $visitModel->card = isset($cardId) ? $cardId : '';
                             $visitModel->visitor = isset($visitorId) ? $visitorId : $visitor['id'];
                             $visitModel->reason = isset($reason) ? $reason['id'] : 1;
                             $visitModel->date_check_in = $row['F'];
@@ -1219,34 +1229,6 @@ class VisitController extends Controller {
                 Yii::app()->user->setFlash('success', 'Import Success');
             } else {
                 Yii::app()->user->setFlash('error', 'Please select a xls/xlsx file');
-            }
-        }
-
-        $this->render('importVisitData', array('model' => $model));
-    }
-
-    public function actionTestFunction()
-    {
-        print_r(phpinfo());die;
-        set_time_limit(0);
-        ini_set("memory_limit", "-1");
-
-        $model = new ImportCsvForm;
-
-        if (isset($_POST['ImportCsvForm'])) {
-            $model->attributes = $_POST['ImportCsvForm'];
-
-            $file = CUploadedFile::getInstance($model, 'file_xls');
-
-            if ($file) {
-                $file->saveAs(dirname(Yii::app()->request->scriptFile) . '/uploads/' . $file->name);
-                $file_path = realpath(Yii::app()->basePath . '/../uploads/' . $file->name);
-
-                $objPHPExcel = new PHPExcel();
-                $objPHPExcel = PHPExcel_IOFactory::load($file_path);
-
-                $sheetData = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
-                print_r($sheetData);
             }
         }
 

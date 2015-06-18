@@ -109,7 +109,9 @@ if ($vstr->profile_type == "CORPORATE" && $model->card_type == 4) {
                                     $model->date_check_out = date('d-m-Y', strtotime($today . ' + 28 days'));
                                 }
                                 echo date("d M y", strtotime($model->date_check_out));
-                            } else {
+                            }elseif ($model->card_type == CardType::VIC_CARD_24HOURS){
+                                echo date("d M y", strtotime($model->date_check_out));
+                            }else {
                                 if (strtotime($model->date_check_out)) {
                                     $date2 = date('d M y');
                                     echo date("d M y", strtotime($date2));
@@ -255,12 +257,7 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
                 }
             }
             echo CHtml::dropDownList('Visit[card_type]', $model->card_type, $cardTypeResults);
-            echo "<br />";
 
-            if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN, Roles::ROLE_SUPERADMIN])) {
-                echo '<input type="submit" class="hidden" id="submitWorkStationForm">';
-                echo '<input type="submit" class="complete" id="btnWorkStationForm" value="Update">';
-            }
         }
         ?>
         

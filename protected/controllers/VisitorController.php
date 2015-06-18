@@ -30,7 +30,7 @@ class VisitorController extends Controller {
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('csvSampleDownload','importVisitHistory', 'AddVisitor', 'ajaxCrop', 'create', 'GetIdOfUser','GetHostDetails', 'GetPatientDetails', 'CheckEmailIfUnique', 'GetVisitorDetails', 'FindVisitor', 'FindHost', 'GetTenantAgentWithSameTenant', 'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent'),
+                'actions' => array('csvSampleDownload','importVisitHistory', 'AddVisitor', 'ajaxCrop', 'create', 'GetIdOfUser','GetHostDetails', 'GetPatientDetails', 'CheckEmailIfUnique', 'GetVisitorDetails', 'FindVisitor', 'FindHost', 'GetTenantAgentWithSameTenant', 'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent','CheckAsicStatusById'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -94,6 +94,7 @@ class VisitorController extends Controller {
         $model = $this->loadModel($id);
         $visitorService = new VisitorServiceImpl();
         $session = new CHttpSession;
+        $updateErrorMessage = '';
         // if view value is 1 do not redirect page else redirect to admin
         $isViewedFromModal = 0;
         if (isset($_GET['view'])) {
@@ -103,21 +104,58 @@ class VisitorController extends Controller {
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['Visitor'])) {
-            $model->attributes = $_POST['Visitor'];
-            if ($visitorService->save($model, NULL, $session['id'])) {
-                switch ($isViewedFromModal) {
-                    case "1":
-                        break;
+            $currentCardStatus = $model->visitor_card_status;
+            if ($currentCardStatus == 2 && $_POST['Visitor']['visitor_card_status'] == 3) {
+                $activeVisit = $model->activeVisits;
+                foreach ($activeVisit as $item) {
+                    if ($item->visit_status == VisitStatus::ACTIVE) {
+                        $updateErrorMessage = 'Please close the active visits before changing the status to ASIC Pending.';
+                    }
+                }
+                if ($updateErrorMessage == '') {
+                    $model->attributes = $_POST['Visitor'];
+                    if ($visitorService->save($model, NULL, $session['id'])) {
+                        if ($model->totalVisit > 0) {
+                            $resetHistory = new ResetHistory();
+                            $resetHistory->visitor_id = $model->id;
+                            $resetHistory->reset_time = date("Y-m-d H:i:s");
+                            $resetHistory->reason = 'Update Visitor Card Type form VIC Holder to ASIC Pending';
+                            if ($resetHistory->save()) {
+                                foreach ($activeVisit as $item) {
+                                    $item->reset_id = $resetHistory->id;
+                                    $item->save();
+                                }
+                            }
+                        }
+                        switch ($isViewedFromModal) {
+                            case "1":
+                                break;
 
-                    default:
-                        $this->redirect(array('admin'));
+                            default:
+                                echo $updateErrorMessage;
+                        }
+                    }
+                } else {
+                    echo $updateErrorMessage;
+                }
+            } else {
+                $model->attributes = $_POST['Visitor'];
+                if ($visitorService->save($model, NULL, $session['id'])) {
+                    switch ($isViewedFromModal) {
+                        case "1":
+                            break;
+
+                        default:
+                            echo $updateErrorMessage;;
+                    }
                 }
             }
-        }
 
-        $this->render('update', array(
-            'model' => $model,
-        ));
+        } else{
+            $this->render('update', array(
+                'model' => $model,
+            ));
+        }
     }
 
     /* Visitor detail page */
@@ -284,6 +322,10 @@ class VisitorController extends Controller {
         $resultMessage['data'] = $aArray;
         echo CJavaScript::jsonEncode($resultMessage);
         Yii::app()->end();
+    }
+
+    public function actionCheckAsicStatusById($id){
+        echo Visitor::model()->checkAsicStatusById($id);
     }
 
     public function actionAjaxCrop() {

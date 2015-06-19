@@ -328,6 +328,46 @@ class VisitController extends Controller {
         $hostModel = User::model()->findByPk($host);
 
 
+        #update Visitor and Host
+        if (isset($_POST['Visitor']) && isset($_POST['Company'])){
+            $visitorModel->attributes = $_POST['Visitor'];
+            $asicModel = Visitor::model()->findByPk($model->host);
+            if ($asicModel){
+                $asicModel->first_name = $_POST['Visitor']['host_first_name'];
+                $asicModel->last_name = $_POST['Visitor']['host_last_name'];
+                $asicModel->asic_no = $_POST['Visitor']['host_asic_no'];
+                $asicModel->asic_expiry = $_POST['Visitor']['host_asic_expiry'];
+                $asicModel->save();
+            }
+
+            #update Company
+            if(isset($_POST['Company'])){
+                if($visitorModel->company) {
+                    $companyModel = Company::model()->findByPk($visitorModel->company);
+                    $staffModel = User::model()->findByPk($visitorModel->staff_id);
+                    if ($companyModel) {
+                        $companyModel->name = $_POST['Company']['name'];
+                        if (!$companyModel->validate()) {
+                            echo CHtml::errorSummary($companyModel);
+                            die();
+                        }
+                        $companyModel->save();
+                    }
+                    if (isset($staffModel) && $staffModel){
+                        $staffModel->contact_number = $_POST['Company']['mobile_number'];
+                        $staffModel->email = $_POST['Company']['email_address'];
+                        $staffModel->save();
+                    }
+                }
+            }
+
+            if($visitorModel->save()){
+                $this->redirect(Yii::app()->createUrl('visit/detail&id='.$model->id));
+            }
+        }
+
+
+
         if (isset($_POST['Visit'])) {
             if (empty($_POST['Visit']['finish_time'])) {
                 $model->finish_time = date('H:i:s');

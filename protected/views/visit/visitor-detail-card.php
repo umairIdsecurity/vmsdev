@@ -2,7 +2,7 @@
 $session = new CHttpSession;
 
 $session['count'] = 1;
-date_default_timezone_set('Asia/Manila');
+//date_default_timezone_set('Asia/Manila'); remove hard code
 $tenant = User::model()->findByPk($visitorModel->tenant);
 $photoForm = $this->beginWidget('CActiveForm', array(
     'id' => 'update-photo-form',

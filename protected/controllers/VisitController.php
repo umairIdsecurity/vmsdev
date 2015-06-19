@@ -393,13 +393,10 @@ class VisitController extends Controller {
             }
             // close visit process
             if (isset($_POST['closeVisitForm'])) {
-
-                if (date('d-m-Y') <= $model->date_check_out) {
+                if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY, CardType::VIC_CARD_24HOURS]) && date('d-m-Y') <= $model->date_check_out) {
                     $currentDate = date('d-m-Y');
                     $model->visit_status = VisitStatus::AUTOCLOSED;
                     switch ($model->card_type) {
-                        case CardType::VIC_CARD_SAMEDATE: // VIC Sameday
-                            break;
                         case CardType::VIC_CARD_24HOURS: // VIC 24 hour
                             #change datetime check in and out for vic 24h.
                             $model->date_check_in = $model->date_check_out;

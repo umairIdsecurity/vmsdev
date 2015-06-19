@@ -137,13 +137,11 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                         <?php elseif ($model->visit_status == VisitStatus::AUTOCLOSED) : ?>
                             <?php
                             $disabled = '';
-                            if (date('d-m-Y') <= $model->date_check_out) {
+                            if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY]) && strtotime(date('d-m-Y')) == strtotime($model->finish_date)) {
                                 $disabled = 'disabled';
-                            } elseif (strtotime($model->date_check_in.' '.$model->time_check_in) > strtotime(date("d-m-Y H:i:s"))) {
-                                $disabled = '';
                             }
                             ?>
-                            <input type="submit" <?php echo $disabled; ?> value="Preregistered" class="complete"/>
+                            <input type="submit" style="width: 235px !important;" <?php echo $disabled; ?> value="Preregister Visit for autoclosed visit" class="complete"/>
                         <?php else:
                             if ($model->card_type == CardType::MANUAL_VISITOR && isset($model->date_check_in) && strtotime($model->date_check_in) < strtotime(date("d-m-Y"))) :
                                 ?>

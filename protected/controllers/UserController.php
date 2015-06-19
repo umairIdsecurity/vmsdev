@@ -83,7 +83,8 @@ class UserController extends Controller
         $model = new User;
         $userService = new UserServiceImpl();
         $session = new CHttpSession;
-
+		
+		
         if (isset($_POST['User'])) {
 
             $model->attributes = $_POST['User'];
@@ -93,12 +94,8 @@ class UserController extends Controller
             } else {
                 $model->password_option = '';
             }
-            $workstation = null;
-            if (isset($_POST['User']['workstation'])) {
-                $workstation = $_POST['User']['workstation'];
-            }
 
-            if ($userService->save($model, Yii::app()->user, $workstation)) {
+            if ($userService->save($model, Yii::app()->user, isset($_POST['User']['userWorkstation1'])?$_POST['User']['userWorkstation1']:null)) {
                 Yii::app()->user->setFlash('success', "Record Added Successfully");
                 if (Yii::app()->request->isAjaxRequest) {
                     Yii::app()->end();
@@ -135,7 +132,12 @@ class UserController extends Controller
                 $_POST['User']['password'] = User::model()->hashPassword($_POST['User']['password']);
             }
             $model->attributes = $_POST['User'];
-
+            if(isset($_POST['User']['userWorkstation1']) && is_array($_POST['User']['userWorkstation1'])){
+                UserWorkstations::model()->deleteAllUserWorkstationsWithSameUserId($model->id);
+                foreach ($_POST['User']['userWorkstation1'] as $wsst):
+                    User::model()->saveWorkstation($model->id, $wsst,Yii::app()->user->id);
+                endforeach;
+            }
             if ($userService->save($model, Yii::app()->user, null)) {
                 $this->redirect(array('admin', 'vms' => $model->is_avms_user() ? 'avms' : 'cvms'));
             }

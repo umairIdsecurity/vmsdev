@@ -2,7 +2,7 @@
 $session = new CHttpSession;
 
 $session['count'] = 1;
-date_default_timezone_set('Asia/Manila');
+//date_default_timezone_set('Asia/Manila'); remove hard code
 $tenant = User::model()->findByPk($visitorModel->tenant);
 $photoForm = $this->beginWidget('CActiveForm', array(
     'id' => 'update-photo-form',
@@ -18,7 +18,6 @@ $photoForm = $this->beginWidget('CActiveForm', array(
     ),
         ));
 ?>
-
 <input type="text" value="<?php echo $visitorModel->photo; ?>" name="Visitor[photo]" id="Visitor_photo">
 <?php echo "<br>" . $photoForm->error($visitorModel, 'photo'); ?>
 <input type="submit" id="submitBtnPhoto">
@@ -35,9 +34,9 @@ $photoForm = $this->beginWidget('CActiveForm', array(
 $vstr = Visitor::model()->findByPk($model->visitor);
 if ($vstr->profile_type == "CORPORATE") {
     $bgcolor = CardGenerated::CORPORATE_CARD_COLOR;
-} elseif ($vstr->profile_type == "ASIC") {
+}/* elseif ($vstr->profile_type == "ASIC") {
     $bgcolor = CardGenerated::ASIC_CARD_COLOR;
-} elseif ($vstr->profile_type == "VIC") {
+} */elseif ($vstr->profile_type == "VIC" || $vstr->profile_type == "ASIC") {
      $bgcolor = CardGenerated::VIC_CARD_COLOR;
 }
 ?>

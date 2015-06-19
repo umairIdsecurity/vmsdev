@@ -14,6 +14,7 @@ $form=$this->beginWidget('CActiveForm', array(
         <label> Date From:  </label><br>
             <?php
                 $this->widget( 'ext.jui.EJuiDateTimePicker',array(
+                    'attribute'   => 'date_from_filter',
                     'language'=> 'en',
                     'name'=>'date_from_filter',
                     'value'=>Yii::app()->request->getParam("date_from_filter"),
@@ -21,6 +22,7 @@ $form=$this->beginWidget('CActiveForm', array(
                             'changeYear' => true,
                             'dateFormat'=>'dd-mm-yy',
                             'changeMonth'=> true,
+                            'onClose' => 'js:function (selectedDate) { $("#date_to_filter").datepicker("option", "minDate", selectedDate); }',
                     ),
                    'htmlOptions'=>array('readonly'=>"readonly"),
                 ));
@@ -29,7 +31,8 @@ $form=$this->beginWidget('CActiveForm', array(
         <br><br>
         <label> Date To: </label><br>
                 <?php 
-                    $this->widget('ext.jui.EJuiDateTimePicker', array(    
+                    $this->widget('ext.jui.EJuiDateTimePicker', array(
+                        'attribute'   => 'date_to_filter',
                         'language'=> 'en',
                         'name'=>'date_to_filter',
                         'value'=>Yii::app()->request->getParam("date_to_filter"),

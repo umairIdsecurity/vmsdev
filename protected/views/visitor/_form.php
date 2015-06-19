@@ -1129,10 +1129,7 @@ $('#Visitor_company').on('change', function() {
             if (data == 0) {
                 $('#addContactLink').hide();
                 $('#visitorStaffRow').empty();
-                $modal.find('#myModalLabel').html('Add Company');
-                $("#addCompanyContactModal").modal("show");
             } else {
-                $modal.find('#myModalLabel').html('Add Contact To Company');
                 $('#visitorStaffRow').html(data);
                 $('#addContactLink').show();
             }
@@ -1140,15 +1137,6 @@ $('#Visitor_company').on('change', function() {
         }
     });
 });
-
-$('#addContactLink').on('click', function(e) {
-    $('#typePostForm').val('contact');
-});
-
-$('#addCompanyLink').on('click', function(e) {
-    $('#typePostForm').val('company');
-});
-
 </script>
 
 

@@ -528,7 +528,7 @@ class ReportsController extends Controller
             $dateCondition .= "(visitors.tenant=".Yii::app()->user->tenant.") AND ";
         }
         
-        $dateCondition .= "(visits.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visitors.profile_type='VIC')";
+        $dateCondition .= "(visits.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visitors.profile_type='VIC') AND (cards.module=2)";
 
         $visitorCount = Yii::app()->db->createCommand()
                 ->select("cards.id as cardId,cards.name,count(visitors.id) as visitors,visitors.date_created")
@@ -539,7 +539,7 @@ class ReportsController extends Controller
                 ->group('cards.id')
                 ->queryAll();
 
-        $allCards = CardType::model()->findAll();
+        $allCards = CardType::model()->findAll("module=2");
         $otherCards = array();
         
         foreach ($allCards as $card) {

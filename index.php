@@ -1,5 +1,8 @@
 <?php
 
+//set defaul timezone for all website
+date_default_timezone_set("Australia/Perth");
+
 // change the following paths if necessary
 $yii=dirname(__FILE__).'/yii/framework/yii.php';
 

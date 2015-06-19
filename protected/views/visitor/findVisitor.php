@@ -100,12 +100,16 @@ function displaySelectVisitorButton($visitorData) {
 }
 
 function returnVisitorDetailLink($visitorId) {
-    $visit =  Visit::model()->findByAttributes(array('visitor'=>$visitorId,'visit_status'=>1));
+    $visit = Visit::model()->findByAttributes(array('visitor'=>$visitorId));
+
     if($visit){
         $url = Yii::app()->baseUrl.'/index.php?r=visit/detail&id=' . $visit->id;
     }
-   
-    return '<span style="font-size:12px;">Status: <a class="linkToVisitorDetailPage" href="' . $url . '" style="display:inline;text-decoration:underline !important;">Active</a></span>';
+
+    if (isset($url)) {
+        $status = VisitStatus::$VISIT_STATUS_LIST[$visit->visit_status];
+        return '<span style="font-size:12px;">Status: <a class="linkToVisitorDetailPage" href="' . $url . '" style="display:inline;text-decoration:underline !important;">' . $status . '</a></span>';
+    }
 }
 ?>
 <script>

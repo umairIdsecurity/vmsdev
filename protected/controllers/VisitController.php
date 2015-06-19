@@ -29,7 +29,7 @@ class VisitController extends Controller {
                 'actions' => array('create',
                     'DuplicateVisit', 'isDateConflictingWithAnotherVisit',
                     'GetVisitDetailsOfVisitor', 'getVisitDetailsOfHost', 'IsVisitorHasCurrentSavedVisit',
-                    'update', 'detail', 'admin', 'view', 'exportFile', 'evacuationReport', 'evacuationReportAjax', 'vicTotalVisitCountAjax', 'DeleteAllVisitWithSameVisitorId'),
+                    'update', 'detail', 'admin', 'view', 'exportFile', 'evacuationReport', 'evacuationReportAjax', 'DeleteAllVisitWithSameVisitorId'),
                 'users' => array('@'),
             ),
             array('allow',
@@ -43,7 +43,6 @@ class VisitController extends Controller {
                     'exportFileVisitorRecords',
                     'exportFileVicRegister',
                     'importVisitData',
-                    'testFunction',
                     'exportVisitorRecords', 'delete','resetVisitCount', 'negate',
                 ),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
@@ -329,6 +328,47 @@ class VisitController extends Controller {
         $hostModel = User::model()->findByPk($host);
 
 
+        #update Visitor and Host
+        if (isset($_POST['Visitor']) && isset($_POST['updateVisit'])){
+            $visitorModel->attributes = $_POST['Visitor'];
+            $asicModel = Visitor::model()->findByPk($model->host);
+            if ($asicModel){
+                $asicModel->first_name = $_POST['Visitor']['host_first_name'];
+                $asicModel->last_name = $_POST['Visitor']['host_last_name'];
+                $asicModel->asic_no = $_POST['Visitor']['host_asic_no'];
+                $asicModel->asic_expiry = $_POST['Visitor']['host_asic_expiry'];
+                $asicModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
+                #if(!$asicModel->validate()) die("asicModel-{$asicModel->id}".CHtml::errorSummary($asicModel));
+                $asicModel->save();
+            }
+
+            #update Company
+            if(isset($_POST['Company'])){
+                if($visitorModel->company) {
+                    $companyModel = Company::model()->findByPk($visitorModel->company);
+                    $staffModel = User::model()->findByPk($visitorModel->staff_id);
+                    if ($companyModel) {
+                        $companyModel->name = $_POST['Company']['name'];
+                        #if(!$companyModel->validate()) die('companyModel-'.CHtml::errorSummary($asicModel));
+                        $companyModel->save();
+                    }
+                    if (isset($staffModel) && $staffModel){
+                        $staffModel->contact_number = $_POST['Company']['mobile_number'];
+                        $staffModel->email = $_POST['Company']['email_address'];
+                        #if(!$staffModel->validate()) die('staffModel-'.CHtml::errorSummary($asicModel));
+                        $staffModel->save();
+                    }
+                }
+            }
+            $visitorModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
+            #if(!$visitorModel->validate()) die('visitorModel-'.CHtml::errorSummary($asicModel));
+            if($visitorModel->save()){
+                $this->redirect(Yii::app()->createUrl('visit/detail&id='.$model->id));
+            }
+        }
+
+
+
         if (isset($_POST['Visit'])) {
             if (empty($_POST['Visit']['finish_time'])) {
                 $model->finish_time = date('H:i:s');
@@ -352,36 +392,23 @@ class VisitController extends Controller {
                     }
                 }
             }
-            #check card type is V24h and present status visit is active
-            if ($model->card_type == 6 && Visit::model()->findByPk($id)->visit_status == VisitStatus::ACTIVE && $model->visit_status == VisitStatus::CLOSED){
-
-                #Change status autoclosed for vic 24h
-                $model->visit_status = VisitStatus::AUTOCLOSED;
-
-                #change datetime check in and out for vic 24h.
-                $model->date_check_in = $model->date_check_out;
-                $model->date_check_out = date('d-m-Y', strtotime('+1 day', strtotime( $model->date_check_out)));
-                $model->time_check_in = date('H:i:s', strtotime('+1 minutes', strtotime($model->date_check_in.' '.$model->time_check_in)));
-                $model->time_check_out = $model->time_check_in;
-
-
-            }
             // close visit process
             if (isset($_POST['closeVisitForm'])) {
-
-                if (date('d-m-Y') <= $model->date_check_out) {
+                if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY, CardType::VIC_CARD_24HOURS]) && date('d-m-Y') <= $model->date_check_out) {
                     $currentDate = date('d-m-Y');
                     $model->visit_status = VisitStatus::AUTOCLOSED;
                     switch ($model->card_type) {
-                        case CardType::VIC_CARD_SAMEDATE: // VIC Sameday
-                            break;
                         case CardType::VIC_CARD_24HOURS: // VIC 24 hour
+                            #change datetime check in and out for vic 24h.
+                            $model->date_check_in = $model->date_check_out;
+                            $model->date_check_out = date('d-m-Y', strtotime('+1 day', strtotime( $model->date_check_out)));
+                            $model->time_check_in = date('H:i:s', strtotime('+1 minutes', strtotime($model->date_check_in.' '.$model->time_check_in)));
+                            $model->time_check_out = $model->time_check_in;
                             break;
                         case CardType::VIC_CARD_EXTENDED: // VIC Extended
                         case CardType::VIC_CARD_MULTIDAY: // VIC Multiday
-                            $model->date_check_in = date('d-m-Y', strtotime($model->date_check_in . ' + 1 day'));
-                            $model->date_check_out = $model->date_check_in;
-                            $model->time_check_in = $model->time_check_out = date('H:i:s');
+                            $model->finish_date = date('d-m-Y');
+                            $model->finish_time = date('H:i:s');
                             break;
                     }
                 }
@@ -544,21 +571,6 @@ class VisitController extends Controller {
         }
 
         $this->render('vicRegister', array(
-            'model' => $model, 'merge' => $merge, false, true
-        ));
-    }
-
-    public function actionVicTotalVisitCountAjax() {
-        $merge = new CDbCriteria;
-        $merge->addCondition('profile_type = "'. Visitor::PROFILE_TYPE_VIC .'"');
-
-        $model = new Visitor('search');
-        $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['Visitor'])) {
-            $model->attributes = $_GET['Visitor'];
-        }
-
-        $this->renderPartial('corporateTotalVisitCount', array(
             'model' => $model, 'merge' => $merge, false, true
         ));
     }
@@ -925,40 +937,38 @@ class VisitController extends Controller {
     {
         $visitorModel = Visitor::model()->findByPk(Yii::app()->getRequest()->getQuery('id'));
 
-        if ($visitorModel->totalVisit > 0) {
-            $activeVisit = $visitorModel->activeVisits;
-            $resetErrorMessage = '';
-            foreach ($activeVisit as $item) {
-                if ($item->visit_status == VisitStatus::ACTIVE) {
-                    $resetErrorMessage = 'Please close the active visit before resetting visit count.';
-                }
+        //if ($visitorModel->totalVisit > 0) {
+        $activeVisit = $visitorModel->activeVisits;
+        $resetErrorMessage = '';
+        foreach ($activeVisit as $item) {
+            if ($item->visit_status == VisitStatus::ACTIVE) {
+                $resetErrorMessage = 'Please close the active visit before resetting visit count.';
             }
-            if ($resetErrorMessage == '') {
-                $visitorModel->visitor_card_status = 3;
-                $visitorModel->update();
-                if ($visitorModel->update()) {
-                    $resetHistory = new ResetHistory();
-                    $resetHistory->visitor_id = Yii::app()->getRequest()->getQuery('id');
-                    $resetHistory->reset_time = date("Y-m-d H:i:s");
-                    $resetHistory->reason = Yii::app()->getRequest()->getQuery('reason');
-                    $resetHistory->lodgement_date = Yii::app()->getRequest()->getQuery('lodgementDate');
-                    $visitorModel->visitor_card_status = 3;
-                    $visitorModel->save();
-
-                    if ($resetHistory->save()) {
-                        foreach ($activeVisit as $item) {
-                            $item->reset_id = $resetHistory->id;
-                            $item->save();
-                        }
-
-                    }
-                }
-            } else {
-                echo $resetErrorMessage;
-            }
-
-
         }
+        if ($resetErrorMessage == '') {
+            $visitorModel->visitor_card_status = 3;
+            $visitorModel->update();
+            if ($visitorModel->update()) {
+                $resetHistory = new ResetHistory();
+                $resetHistory->visitor_id = Yii::app()->getRequest()->getQuery('id');
+                $resetHistory->reset_time = date("Y-m-d H:i:s");
+                $resetHistory->reason = Yii::app()->getRequest()->getQuery('reason');
+                $resetHistory->lodgement_date = Yii::app()->getRequest()->getQuery('lodgementDate');
+                $visitorModel->visitor_card_status = 3;
+                $visitorModel->save();
+
+                if ($resetHistory->save()) {
+                    foreach ($activeVisit as $item) {
+                        $item->reset_id = $resetHistory->id;
+                        $item->save();
+                    }
+
+                }
+            }
+        } else {
+            echo $resetErrorMessage;
+        }
+        //}
     }
 
     public function actionNegate() {
@@ -1152,7 +1162,7 @@ class VisitController extends Controller {
                 if (!empty($sheetData)) {
                     array_shift($sheetData);
                     foreach ($sheetData as $row) {
-                        $email = preg_replace('/\s+/', '', $row['B'] . $row['C'] . '@gmail.com');
+                        $email = preg_replace('/\s+/', '', $row['B'] . '@' . $row['C']);
 
                         $visitor = Visitor::model()->findByAttributes(array('email' => $email));
                         if (!$visitor['email']) {
@@ -1233,6 +1243,7 @@ class VisitController extends Controller {
                             $visitModel->created_by = Yii::app()->user->id;
                             $visitModel->workstation = $session['workstation'];
                             $visitModel->tenant = Yii::app()->user->tenant;
+                            $visitModel->visitor_type = 2;
                             $visitModel->save();
                         }
                     }

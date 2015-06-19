@@ -1,46 +1,47 @@
 <h1> Total VICs by Workstation </h1>
 <!-- Filter Form -->
 <div class="form">
-<?php $form=$this->beginWidget('CActiveForm', array(
-	'id'=>'visitor-type-filter-form',
-	'enableAjaxValidation'=>false,
-)); ?>
-        <label> Date From:  </label>
-            <?php
-                $this->widget( 'ext.jui.EJuiDateTimePicker',array(
-                    'language'=> 'en',
-                    'name'=>'date_from_filter',
-                    'value'=>Yii::app()->request->getParam("date_from_filter"),
-                    'options'=>array(
-                            'changeYear' => true,
-                            'dateFormat'=>'dd-mm-yy',
-                            'changeMonth'=> true,
-                    ),
-                   'htmlOptions'=>array('readonly'=>"readonly"),
-                ));
-            ?>
-            
-        <br><br>
-        <label> Date To: </label>
-                <?php 
-                    $this->widget('ext.jui.EJuiDateTimePicker', array(    
-                        'language'=> 'en',
-                        'name'=>'date_to_filter',
-                        'value'=>Yii::app()->request->getParam("date_to_filter"),
-                        // additional javascript options for the date picker plugin
-                        'options'=>array(
-                            'changeYear' => true,
-                            'dateFormat'=>'dd-mm-yy',
-                            'changeMonth'=> true,
-                        ),
-                        'htmlOptions'=>array('readonly'=>"readonly"),
-                    )); 
-                ?>
-         
-	 <?php echo CHtml::submitButton('Filter'); ?>
-	 
-        <?php $this->endWidget()?>    
-    </div>
+    <?php $form = $this->beginWidget('CActiveForm', array(
+        'id' => 'visitor-type-filter-form',
+        'enableAjaxValidation' => false,
+    )); ?>
+    <label> Date From: </label>
+    <?php
+    $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+        'attribute'   => 'date_from_filter',
+        'name' => 'date_from_filter',
+        'value' => Yii::app()->request->getParam("date_from_filter"),
+        'options' => array(
+            'changeYear' => true,
+            'dateFormat' => 'dd-mm-yy',
+            'changeMonth' => true,
+            'onClose' => 'js:function (selectedDate) { $("#date_to_filter").datepicker("option", "minDate", selectedDate); }',
+        ),
+        'htmlOptions' => array('readonly' => "readonly"),
+    ));
+    ?>
+
+    <br>
+    <label> Date To: </label>
+    <?php
+    $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+        'attribute'   => 'date_to_filter',
+        'name' => 'date_to_filter',
+        'value' => Yii::app()->request->getParam("date_to_filter"),
+        // additional javascript options for the date picker plugin
+        'options' => array(
+            'changeYear' => true,
+            'dateFormat' => 'dd-mm-yy',
+            'changeMonth' => true,
+        ),
+        'htmlOptions' => array('readonly' => "readonly"),
+    ));
+    ?>
+
+    <?php echo CHtml::submitButton('Filter'); ?>
+
+    <?php $this->endWidget() ?>
+</div>
 
 <!-- Listing and Pie Chart Div -->
 <div class="content" style="width:40%; float: left; margin:20px 10px 0px 5px;">

@@ -9,6 +9,9 @@ $asic = $model->getAsicSponsor();
 if ($asic && $hostModel == null) {
     $hostModel = $asic;
 }
+
+if(!$hostModel) $hostModel = Visitor::model();
+
 ?>
 <table id="visitorDetailDiv">
     <tr class="theadVisitorDetail">

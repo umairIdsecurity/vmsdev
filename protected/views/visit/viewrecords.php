@@ -18,6 +18,28 @@
 <?php
 $session = new CHttpSession;
 
+// this is the date picker
+$date_check_in = $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+        // 'model'=>$model,
+        'name' => 'Visit[date_check_in]',
+        'language' => 'id',
+        'value' => $model->date_check_in,
+        // additional javascript options for the date picker plugin
+        'options'=>array(
+            'showAnim'=>'fold',
+            'dateFormat'=>'dd-mm-yy',
+            'changeMonth' => 'true',
+            'changeYear'=>'true',
+            'constrainInput' => 'false',
+        ),
+        'htmlOptions'=>array(
+            'placeholder'=>'Date Check In',
+            /*'style'=>'height:20px;width:70px;',*/
+        ),
+// DONT FORGET TO ADD TRUE this will create the datepicker return as string
+    ),true);
+
+
 $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'view-visitor-records',
     'dataProvider' => $model->search_history(),
@@ -28,6 +50,8 @@ $this->widget('zii.widgets.grid.CGridView', array(
     function(id, data) {
         $('th > .asc').append('<div></div>');
         $('th > .desc').append('<div></div>');
+        jQuery('#Visit_date_check_in').datepicker(jQuery.extend({showMonthAfterYear:false}, jQuery.datepicker.regional['id'], {'showAnim':'fold','dateFormat':'yy-mm-dd','changeMonth':'true','showButtonPanel':'true','changeYear':'true','constrainInput':'false'}));
+        jQuery('#Visit_date_check_in').datepicker(jQuery.extend({showMonthAfterYear:false}, jQuery.datepicker.regional['id'], {'showAnim':'fold','dateFormat':'yy-mm-dd','changeMonth':'true','showButtonPanel':'true','changeYear':'true','constrainInput':'false'}));
     }",
 
     'columns' =>
@@ -77,7 +101,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         ),
         array(
             'name' => 'date_check_in',
-            'filter'=>CHtml::activeTextField($model, 'date_check_in', array('placeholder'=>'Check In Date')),
+            'filter'=>$date_check_in,
             'type' => 'html',
             'htmlOptions'=>array('width'=>'100px'),
             'value' => 'formatDate($data->date_check_in, $data->visit_status)',

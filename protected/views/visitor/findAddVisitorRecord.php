@@ -86,15 +86,15 @@ $model->identification_country_issued = 13;
                                     var dt = new Date();
                                     if(dt.getFullYear() < $("#fromYear").val()) {
                                         $("#Visitor_date_of_birth_em_").show();
-                                        $("#Visitor_date_of_birth_em_").html("Birthday is incorrect");
+                                        $("#Visitor_date_of_birth_em_").html("Please update your Date of Birth");
                                         return false;
                                     }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
                                         $("#Visitor_date_of_birth_em_").show();
-                                        $("#Visitor_date_of_birth_em_").html("Birthday is incorrect");
+                                        $("#Visitor_date_of_birth_em_").html("Please update your Date of Birth");
                                         return false;
                                     }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
                                         $("#Visitor_date_of_birth_em_").show();
-                                        $("#Visitor_date_of_birth_em_").html("Birthday is incorrect");
+                                        $("#Visitor_date_of_birth_em_").html("Please update your Date of Birth");
                                         return false;
                                     }
                                 }
@@ -815,15 +815,15 @@ $model->identification_country_issued = 13;
 
             if(dt.getFullYear()< $("#fromYear").val()) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else{
                 $("#Visitor_date_of_birth_em_").hide();
@@ -835,15 +835,15 @@ $model->identification_country_issued = 13;
 
             if(dt.getFullYear()< $("#fromYear").val()) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else{
                 $("#Visitor_date_of_birth_em_").hide();
@@ -854,15 +854,15 @@ $model->identification_country_issued = 13;
 
             if(dt.getFullYear()< $("#fromYear").val()) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else{
                 $("#Visitor_date_of_birth_em_").hide();
@@ -997,7 +997,7 @@ $model->identification_country_issued = 13;
           $("#searchVisitorTable").html(data);
         }).fail(function() {
             Loading.hide();
-           window.location = '<?php echo Yii::app()->createUrl('site/login');?>';
+            window.location = '<?php echo Yii::app()->createUrl('site/login');?>';
         }); 
         //$("#searchVisitorTable").html('<iframe id="findVisitorTableIframe" onLoad="autoResize();" width="100%" height="100%" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
             return false;
@@ -1145,7 +1145,7 @@ $model->identification_country_issued = 13;
                     });
 
                 }
-            },
+            }
         });
     }
 
@@ -1165,7 +1165,7 @@ $model->identification_country_issued = 13;
                 data: reasonForm,
                 success: function(data) {
                     addReasonInDropdown();
-                },
+                }
             });
         }
         else {

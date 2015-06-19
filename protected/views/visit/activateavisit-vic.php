@@ -169,7 +169,7 @@ $session = new CHttpSession;
         </td>
     </tr>
 
-    <?php if($model->card_type == CardType::VIC_CARD_EXTENDED) : ?>
+    <?php if($model->card_type == CardType::VIC_CARD_MANUAL) : ?>
     <tr>
         <td>
             <div id="card_no_manual">

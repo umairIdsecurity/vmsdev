@@ -148,6 +148,10 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                 <input type="submit" value="Back Date Visit" class="complete"/>
                             <?php else: ?>
                                 <button type="button" id="registerNewVisit" class="greenBtn">Activate Visit</button>
+                                <div style="display:inline;font-size:12px;">
+                                <b>or </b>
+                                <a href="" class="cancelBtnVisitorDetail">Cancel</a>
+                                </div>
                             <?php endif; ?>
                         <?php endif; ?>
                         <?php $this->endWidget();

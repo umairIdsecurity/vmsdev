@@ -494,7 +494,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
             <!-- menu for AVMS Reports -->
             <li class='has-sub'>
                 <?php
-                echo CHtml::ajaxLink("AVMS Reports", CController::createUrl('visit/vicTotalVisitCountAjax'), array(
+                echo CHtml::link("AVMS Reports", array('visit/vicTotalVisitCount'), array(
                     'update' => '#content',
                     'complete' => "js:function(html){
                         $('.manageworkstations').next().slideUp('normal');

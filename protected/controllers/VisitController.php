@@ -29,7 +29,7 @@ class VisitController extends Controller {
                 'actions' => array('create',
                     'DuplicateVisit', 'isDateConflictingWithAnotherVisit',
                     'GetVisitDetailsOfVisitor', 'getVisitDetailsOfHost', 'IsVisitorHasCurrentSavedVisit',
-                    'update', 'detail', 'admin', 'view', 'exportFile', 'evacuationReport', 'evacuationReportAjax', 'vicTotalVisitCountAjax', 'DeleteAllVisitWithSameVisitorId'),
+                    'update', 'detail', 'admin', 'view', 'exportFile', 'evacuationReport', 'evacuationReportAjax', 'DeleteAllVisitWithSameVisitorId'),
                 'users' => array('@'),
             ),
             array('allow',
@@ -535,21 +535,6 @@ class VisitController extends Controller {
         }
 
         $this->render('vicRegister', array(
-            'model' => $model, 'merge' => $merge, false, true
-        ));
-    }
-
-    public function actionVicTotalVisitCountAjax() {
-        $merge = new CDbCriteria;
-        $merge->addCondition('profile_type = "'. Visitor::PROFILE_TYPE_VIC .'"');
-
-        $model = new Visitor('search');
-        $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['Visitor'])) {
-            $model->attributes = $_GET['Visitor'];
-        }
-
-        $this->renderPartial('corporateTotalVisitCount', array(
             'model' => $model, 'merge' => $merge, false, true
         ));
     }
@@ -1143,7 +1128,7 @@ class VisitController extends Controller {
                 if (!empty($sheetData)) {
                     array_shift($sheetData);
                     foreach ($sheetData as $row) {
-                        $email = preg_replace('/\s+/', '', $row['B'] . $row['C'] . '@gmail.com');
+                        $email = preg_replace('/\s+/', '', $row['B'] . '@' . $row['C']);
 
                         $visitor = Visitor::model()->findByAttributes(array('email' => $email));
                         if (!$visitor['email']) {
@@ -1224,6 +1209,7 @@ class VisitController extends Controller {
                             $visitModel->created_by = Yii::app()->user->id;
                             $visitModel->workstation = $session['workstation'];
                             $visitModel->tenant = Yii::app()->user->tenant;
+                            $visitModel->visitor_type = 2;
                             $visitModel->save();
                         }
                     }

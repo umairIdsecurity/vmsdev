@@ -18,7 +18,6 @@ $photoForm = $this->beginWidget('CActiveForm', array(
     ),
         ));
 ?>
-
 <input type="text" value="<?php echo $visitorModel->photo; ?>" name="Visitor[photo]" id="Visitor_photo">
 <?php echo "<br>" . $photoForm->error($visitorModel, 'photo'); ?>
 <input type="submit" id="submitBtnPhoto">

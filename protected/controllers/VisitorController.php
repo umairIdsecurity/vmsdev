@@ -32,7 +32,7 @@ class VisitorController extends Controller {
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('csvSampleDownload','importVisitHistory', 'AddVisitor', 'ajaxCrop', 'create', 'GetIdOfUser','GetHostDetails',
                                     'GetPatientDetails', 'CheckEmailIfUnique', 'GetVisitorDetails', 'FindVisitor', 'FindHost', 'GetTenantAgentWithSameTenant',
-                                    'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent','CheckAsicStatusById', 'addAsicSponsor'
+                                    'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent','CheckAsicStatusById', 'addAsicSponsor', 'CheckCardStatus'
                                 ),
                 'users' => array('@'),
             ),
@@ -612,6 +612,14 @@ class VisitorController extends Controller {
             if ($result = $visitorService->save($model, NULL, $session['id'])) {
                 Yii::app()->end();
             }
+        }
+    }
+
+    public function actionCheckCardStatus($id){
+        $visitor = Visitor::model()->findByPk($id);
+        if ($visitor){
+            if ($visitor->visitor_card_status && ($visitor->profile_type == Visitor::PROFILE_TYPE_VIC || $visitor->profile_type == Visitor::PROFILE_TYPE_ASIC))
+                echo 1; else echo 0;
         }
     }
 }

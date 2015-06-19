@@ -311,8 +311,8 @@ class VisitorController extends Controller {
         Yii::app()->end();
     }
 
-    public function actionCheckEmailIfUnique($id) {
-        if (Visitor::model()->isEmailAddressTaken($id)) {
+    public function actionCheckEmailIfUnique($email, $id = 0) {
+        if (Visitor::model()->isEmailAddressTaken($email, $id)) {
             $aArray[] = array(
                 'isTaken' => 1,
             );
@@ -619,7 +619,9 @@ class VisitorController extends Controller {
         $visitor = Visitor::model()->findByPk($id);
         if ($visitor){
             if ($visitor->visitor_card_status && ($visitor->profile_type == Visitor::PROFILE_TYPE_VIC || $visitor->profile_type == Visitor::PROFILE_TYPE_ASIC))
-                echo 1; else echo 0;
+            {echo 1; die();}
+
         }
+        echo 0;
     }
 }

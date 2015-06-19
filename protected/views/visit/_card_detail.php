@@ -38,7 +38,7 @@ if ($card) {
                 <?php echo ($cardCode== "")?"N/A":$cardCode; ?></p>
         </div>
         <div style="background:#fff; border-radius:0 0 20px 20px; width:256px; height:48.7px;">
-            <div style="width:134px; position: relative; overflow: hidden; border:1px solid #000;  min-height:34px; max-height: 34px;   margin-left: -85px; margin-top:2px; display:inline-block;">
+            <div style="width:134px; overflow: hidden; border:1px solid #000;  min-height:34px; max-height: 34px;   margin-left: -85px; margin-top:2px; display:inline-block;">
                 <img border="1" style="height:34px !important;width:100%;" src="<?= $companyLogo; ?>">
             </div>
         </div>

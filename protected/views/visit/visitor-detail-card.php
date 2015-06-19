@@ -90,7 +90,7 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
 <input type="hidden" id="dummycardvalue" value="<?php echo $model->card; ?>"/>
 <input type="hidden" id="remaining_day" value="<?php echo $remainingDays; ?>">
 <?php endif; ?>
-<form method="post" id="workstationForm"  action="<?php echo Yii::app()->createUrl('visit/detail', array('id' => $model->id)); ?>">
+<form method="post" id="workstationForm" action="<?php echo Yii::app()->createUrl('visit/detail', array('id' => $model->id)); ?>">
     <div style="margin: 10px 0px 0px 19px; text-align: left;">
         <?php
         if ($asic) {

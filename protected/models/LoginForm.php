@@ -86,8 +86,28 @@ class LoginForm extends CFormModel {
         } else {
             return false;
         }
-        
-        
     }
-
+	
+	/*
+	*AUTH: DX_TAHIR
+	*@param session id after authentication and validation
+	*return true or false based on inductions Set previously 
+	*while adding ROLE_OPERATOR, ROLE_AIRPORT_OPERATOR and ROLE_AGENT_AIRPORT_ADMIN	
+	*/
+	public function checkInductions($id) {
+        $user = User::model()->findByPk($id);
+		if($user->is_required_induction == 1){
+			if($user->is_completed_induction == 1){
+				if($user->induction_expiry >= date("Y-m-d")){
+					return true;
+				}else{
+					return false;
+				}
+			}else{
+				return false;
+			}
+		}else{
+			return true;
+		}
+    }
 }

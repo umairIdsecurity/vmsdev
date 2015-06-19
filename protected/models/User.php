@@ -50,7 +50,10 @@ class User extends VmsActiveRecord {
     public $asic_expiry_year;
     public $helpdesk_group;
 
-
+	public $is_required_induction;
+    public $is_completed_induction;
+    public $induction_expiry;
+	
     public $password_option;
     private $_companyname;
 
@@ -100,7 +103,13 @@ class User extends VmsActiveRecord {
         // will receive user inputs.
 
         if($this->scenario == 'add_company_contact') {
-            return array(array('first_name, last_name, email, contact_number', 'required'));
+            return array(
+					array('first_name, last_name, email, contact_number', 'required'),
+				
+					array('is_required_induction, is_completed_induction, induction_expiry ', 'safe'),
+					
+				);
+			
         }
 
         if (Yii::app()->controller->action->id == 'update' || Yii::app()->controller->action->id == 'profile') {
@@ -121,6 +130,9 @@ class User extends VmsActiveRecord {
                 // The following rule is used by search().
                 // @todo Please remove those attributes that should not be searched.
                 array('id, companyname,first_name, last_name,email,photo,is_deleted ,contact_number, date_of_birth, company, department, position, staff_id, notes, role_id, user_type_id, user_status_id, created_by', 'safe', 'on' => 'search'),
+				
+				array('is_required_induction, is_completed_induction, induction_expiry ', 'safe'),
+                
             );
         } else {
             return array(
@@ -139,6 +151,9 @@ class User extends VmsActiveRecord {
                 // The following rule is used by search().
                 // @todo Please remove those attributes that should not be searched.
                 array('id, first_name, companyname,last_name,email,photo,is_deleted,assignedWorkstations,contact_number, date_of_birth, company, department, position, staff_id, notes, role_id, user_type_id, user_status_id, created_by', 'safe', 'on' => 'search'),
+				
+				array('is_required_induction, is_completed_induction, induction_expiry ', 'safe'),
+               
             );
         }
     }
@@ -412,7 +427,13 @@ class User extends VmsActiveRecord {
 
     public function beforeSave() {
         $this->email = trim($this->email);
-
+		
+		if(!empty($this->induction_expiry)){
+            $this->induction_expiry = date("Y-m-d",strtotime($this->induction_expiry));
+        }else{
+			$this->induction_expiry = NULL;
+		}
+		
         return parent::beforeSave();
     }
 

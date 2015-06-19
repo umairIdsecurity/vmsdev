@@ -83,7 +83,8 @@ class UserController extends Controller
         $model = new User;
         $userService = new UserServiceImpl();
         $session = new CHttpSession;
-
+		
+		
         if (isset($_POST['User'])) {
 
             $model->attributes = $_POST['User'];

@@ -8,7 +8,7 @@
         </ol>
 <br>  
 
-<div class="form">
+<div class="form" style="width: 12%;">
  
 <?php
 $form = $this->beginWidget('CActiveForm', array(

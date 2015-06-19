@@ -35,9 +35,9 @@ $photoForm = $this->beginWidget('CActiveForm', array(
 $vstr = Visitor::model()->findByPk($model->visitor);
 if ($vstr->profile_type == "CORPORATE") {
     $bgcolor = CardGenerated::CORPORATE_CARD_COLOR;
-} elseif ($vstr->profile_type == "ASIC") {
+}/* elseif ($vstr->profile_type == "ASIC") {
     $bgcolor = CardGenerated::ASIC_CARD_COLOR;
-} elseif ($vstr->profile_type == "VIC") {
+} */elseif ($vstr->profile_type == "VIC" || $vstr->profile_type == "ASIC") {
      $bgcolor = CardGenerated::VIC_CARD_COLOR;
 }
 ?>

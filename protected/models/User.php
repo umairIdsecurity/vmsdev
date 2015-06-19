@@ -281,6 +281,8 @@ class User extends VmsActiveRecord {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
+        $criteria->with = array('company');
+
         $criteria->compare('t.id', $this->id);
         $criteria->compare('last_name', $this->last_name, true);
         $criteria->compare('email', $this->email, true);
@@ -313,7 +315,6 @@ class User extends VmsActiveRecord {
             $criteria->compare('first_name', $this->first_name, true);
         }
 
-        $queryCondition = 'company = "' . $user->company . '" or created_by="' . $user->id . '"';
         switch ($user->role) {
             case Roles::ROLE_ADMIN:
                 if (Yii::app()->controller->action->id == 'systemaccessrules') {
@@ -385,7 +386,7 @@ class User extends VmsActiveRecord {
         $is_cvms_users_requested = CHelper::is_cvms_users_requested();
         $users = [];
         
-        if ($is_avms_users_requested || $is_avms_users_requested) {
+        if ($is_avms_users_requested || $is_cvms_users_requested) {
             if ($is_avms_users_requested) {
                 $users = User::model()->avms_user()->findAll();
             } else {
@@ -397,8 +398,6 @@ class User extends VmsActiveRecord {
             $user_ids = array_values(CHtml::listData($users, 'id', 'id'));
             $criteria->addCondition('t.id in (' . implode(', ', $user_ids) . ')');
         }
-
-
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

@@ -777,7 +777,7 @@ function checkEmailIfUnique() {
 
             type: 'POST',
 
-            url: '<?php echo Yii::app()->createUrl('visitor/checkEmailIfUnique&id='); ?>' + email,
+            url: '<?php echo Yii::app()->createUrl('visitor/checkEmailIfUnique&email='); ?>' + email,
 
             dataType: 'json',
 

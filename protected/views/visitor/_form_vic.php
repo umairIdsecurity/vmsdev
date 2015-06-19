@@ -776,7 +776,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
         if (email != "<?php echo $model->email ?>") {
             $.ajax({
                 type: 'POST',
-                url: '<?php echo Yii::app()->createUrl('visitor/checkEmailIfUnique&id='); ?>' + email,
+                url: '<?php echo Yii::app()->createUrl('visitor/checkEmailIfUnique&email='); ?>' + email,
                 dataType: 'json',
                 data: email,
                 success: function (r) {

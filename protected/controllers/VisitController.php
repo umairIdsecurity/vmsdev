@@ -43,7 +43,6 @@ class VisitController extends Controller {
                     'exportFileVisitorRecords',
                     'exportFileVicRegister',
                     'importVisitData',
-                    'testFunction',
                     'exportVisitorRecords', 'delete','resetVisitCount', 'negate',
                 ),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',

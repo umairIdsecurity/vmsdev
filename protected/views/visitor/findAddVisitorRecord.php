@@ -808,6 +808,7 @@ $model->identification_country_issued = 13;
 		$( ".visitor-title" ).click(function() {
             $('#addvisitor').show();
             $("#searchvisitor").hide();
+            $("#search-visitor").val(''); 
         });
 
         $('#fromDay').on('change', function () {console.log('ok');

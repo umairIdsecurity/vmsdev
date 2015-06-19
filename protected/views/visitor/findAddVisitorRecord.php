@@ -1273,10 +1273,7 @@ $('#Visitor_company').on('change', function() {
             $('#AddCompanyContactForm_companyName').val(companyName).prop('disabled', 'disabled');
             if (data == 0) {
                 $('#addContactLink').hide();
-                $modal.find('#myModalLabel').html('Add Company');
-                $("#addCompanyContactModal").modal("show");
             } else {
-                $modal.find('#myModalLabel').html('Add Contact To Company');
                 $('#visitorStaffRow').html(data);
                 $('#addContactLink').show();
             }
@@ -1284,15 +1281,6 @@ $('#Visitor_company').on('change', function() {
         }
     });
 });
-
-$('#addContactLink').on('click', function(e) {
-    $('#typePostForm').val('contact');
-});
-
-$('#addCompanyLink').on('click', function(e) {
-    $('#typePostForm').val('company');
-});
-
 </script>
 
 <input type="text" id="visitorId" placeholder="visitor id"/>

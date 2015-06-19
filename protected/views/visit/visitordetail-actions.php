@@ -205,7 +205,6 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                 return false;
             }
 
-
             var is_vic_holder_checked = $('#VivHolderDecalarations').is(':checked'),
                 is_asic_holder_checked = $('#AsicSponsorDecalarations').is(':checked');
 
@@ -260,10 +259,18 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                 confirmed = true;
             }
 
-            flag = isCheckboxsChecked(vic_active_visit_checkboxs);
-
             if (confirmed == true) {
+                flag = isCheckboxsChecked(vic_active_visit_checkboxs);
                 if (flag == true) {
+                    var pre_issued_card_no = $("#pre_issued_card_no").val();
+                    if (typeof pre_issued_card_no != "undefined") {
+                        if (pre_issued_card_no == "") {
+                            $("#card_number_required").show();
+                            return false;
+                        } else {
+                            $("#card_number_required").hide();
+                        }
+                    }
                     activeVisit();
                 } else {
                     alert('Please agree VIC verification before active visit.');
@@ -388,14 +395,6 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
     }
 
     function checkIfActiveVisitConflictsWithAnotherVisit(visitType) {
-        <?php if ($model->card_type == CardType::MANUAL_VISITOR) : ?>
-        if ($.trim($('#pre_issued_card_no').val()) != "") {
-            $('#card_number_required').hide();
-        } else { // validate for pre issued card number
-            $('#card_number_required').show();
-            return false;
-        }
-        <?php endif; ?>
         visitType = (typeof visitType === "undefined") ? "defaultValue" : visitType;
         $("#Visit_date_check_in").attr("disabled", false);
         $.ajax({

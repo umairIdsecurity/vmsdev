@@ -23,7 +23,7 @@
 <?php
 $session = new CHttpSession;
 $merge = new CDbCriteria;
-$merge->addCondition('visit_status ="' . VisitStatus::ACTIVE . '"');
+$merge->addCondition("visit_status ='" . VisitStatus::ACTIVE . "'");
 ?>
 <input type="text" id="totalRecordsCount" value="<?php echo $model->search($merge)->getTotalItemCount(); ?>"/>
 <?php

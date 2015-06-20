@@ -134,8 +134,8 @@ class HelpDesk extends CActiveRecord {
     
     public function beforeDelete() {
         //before delete check user helpdesk if has record
-        $userHelpDesk = UserHelpDesks::model()->exists('helpdesk ="'.$this->id.'" ');
-        $visit = Visit::model()->exists('helpdesk="'.$this->id.'"');
+        $userHelpDesk = UserHelpDesks::model()->exists("helpdesk ='".$this->id."' ");
+        $visit = Visit::model()->exists("helpdesk='".$this->id."'");
         if ($userHelpDesk || $visit) {
             return false;
         } else {

@@ -358,7 +358,9 @@ class Visit extends CActiveRecord {
         $criteria->compare('company0.contact', $this->_contactperson, true);
         $criteria->compare('company0.email_address', $this->_contactemail, true);
         $criteria->compare('company0.mobile_number', $this->_contactphone, true);
-        $criteria->compare('DATE_FORMAT(visitor0.date_of_birth, "%d-%m-%Y")', $this->date_of_birth, true);
+        //$criteria->compare('DATE_FORMAT(visitor0.date_of_birth, "%d-%m-%Y")', $this->date_of_birth, true);
+        $criteria->compare('visitor0.date_of_birth', $this->date_of_birth, true);
+
         $criteria->compare('visitor0.contact_street_no', $this->contact_street_no, true);
         $criteria->compare('visitor0.contact_street_name', $this->contact_street_name, true);
         $criteria->compare('visitor0.contact_street_type', $this->contact_street_type, true);
@@ -366,11 +368,15 @@ class Visit extends CActiveRecord {
         $criteria->compare('visitor0.contact_postcode', $this->contact_postcode, true);
         $criteria->compare('visitor0.identification_type', $this->identification_type, true);
         $criteria->compare('visitor0.identification_document_no', $this->identification_document_no, true);
-        $criteria->compare('DATE_FORMAT(visitor0.identification_document_expiry, "%d-%m-%Y")', $this->identification_document_expiry, true);
+        //$criteria->compare('DATE_FORMAT(visitor0.identification_document_expiry, "%d-%m-%Y")', $this->identification_document_expiry, true);
+        $criteria->compare('visitor0.identification_document_expiry', $this->identification_document_expiry, true);
+
         $criteria->compare('CONCAT(host0.first_name,\' \',host0.last_name)',$this->_asicname,true);
 
         $criteria->compare('visitor0.asic_no', $this->asic_no, true);
         $criteria->compare('DATE_FORMAT(visitor0.asic_expiry, "%d-%m-%Y")', $this->asic_expiry, true);
+        $criteria->compare('visitor0.asic_expiry', $this->asic_expiry, true);
+
         $criteria->compare('finish_date', $this->finish_date, true);
         $criteria->compare('card_returned_date', $this->card_returned_date, true);
 
@@ -451,7 +457,7 @@ class Visit extends CActiveRecord {
          * 
          */
         if (Yii::app()->controller->action->id == 'visitorRegistrationHistory') {
-            $criteria->addCondition('profile_type ="' . Visitor::PROFILE_TYPE_CORPORATE . '"');
+            $criteria->addCondition("profile_type ='" . Visitor::PROFILE_TYPE_CORPORATE . "'");
         }
 
         if (Yii::app()->controller->action->id == 'admindashboard') {
@@ -604,7 +610,7 @@ class Visit extends CActiveRecord {
                 break;
 
             case Roles::ROLE_SUPERADMIN:
-                $criteria->addCondition('t.id != ""');
+                $criteria->addCondition("t.id != ''");
                 break;
 
             case Roles::ROLE_ADMIN:
@@ -635,7 +641,7 @@ class Visit extends CActiveRecord {
          * 
          */
         if (Yii::app()->controller->action->id == 'visitorRegistrationHistory') {
-            $criteria->addCondition('profile_type ="' . Visitor::PROFILE_TYPE_CORPORATE . '"');
+            $criteria->addCondition("profile_type ='" . Visitor::PROFILE_TYPE_CORPORATE . "'");
         }
         
         if (Yii::app()->controller->action->id == 'admindashboard') {
@@ -732,7 +738,7 @@ class Visit extends CActiveRecord {
             $commandUpdateCard = "";
 
             $command = Yii::app()->db->createCommand("UPDATE visit
-                    LEFT JOIN card_generated ON card_generated.id = visit.`card` 
+                    LEFT JOIN card_generated ON card_generated.id = visit.`card`
                     SET visit_status = '" . VisitStatus::CLOSED . "',card_status ='" . CardStatus::NOT_RETURNED . "'
                     WHERE 'd-m-Y' > date_out AND date_out != 'd-m-Y' AND visit_status = '" . VisitStatus::ACTIVE . "'
                     AND card_status ='" . CardStatus::ACTIVE . "' and card_type= '" . CardType::SAME_DAY_VISITOR . "'")->execute();
@@ -1015,7 +1021,7 @@ class Visit extends CActiveRecord {
      */
     public function archivePregisteredOldVisits() {
         // Find and Update Status
-        $crieteria = 'visit_status = 2 AND ( date_check_in <= "' . date("Y-m-d", strtotime('-2 days')) . '"  OR date_check_in <= "' . date("d-m-Y", strtotime('-2 days')) . '")';
+        $crieteria = "visit_status = 2 AND ( date_check_in <= '" . date('Y-m-d', strtotime("-2 days")) . "'  OR date_check_in <= '" . date('d-m-Y', strtotime("-2 days")) . "')";
         $preRegistered = $this->findAll($crieteria);
 
         if ($preRegistered)

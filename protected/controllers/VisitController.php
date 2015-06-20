@@ -527,7 +527,7 @@ class VisitController extends Controller {
 
     public function actionCorporateTotalVisitCount() {
         $merge = new CDbCriteria;
-        $merge->addCondition('profile_type = "'. Visitor::PROFILE_TYPE_CORPORATE .'"');
+        $merge->addCondition("profile_type = '". Visitor::PROFILE_TYPE_CORPORATE ."'");
 
         $model = new Visitor('search');
         $model->unsetAttributes();  // clear any default values
@@ -542,7 +542,7 @@ class VisitController extends Controller {
 
     public function actionVicTotalVisitCount() {
         $merge = new CDbCriteria;
-        $merge->addCondition('profile_type = "'. Visitor::PROFILE_TYPE_VIC .'"');
+        $merge->addCondition("profile_type = '". Visitor::PROFILE_TYPE_VIC ."'");
 
         $model = new Visitor('search');
         $model->unsetAttributes();  // clear any default values
@@ -557,7 +557,7 @@ class VisitController extends Controller {
 
     public function actionVicRegister() {
         $merge = new CDbCriteria;
-        $merge->addCondition('visitor0.profile_type = "'. Visitor::PROFILE_TYPE_VIC .'"');
+        $merge->addCondition("visitor0.profile_type = '". Visitor::PROFILE_TYPE_VIC ."'");
 
         $model = new Visit('search');
         $model->unsetAttributes();  // clear any default values
@@ -610,7 +610,7 @@ class VisitController extends Controller {
         }
 
         $merge = new CDbCriteria;
-        $merge->addCondition('visit_status ="' . VisitStatus::ACTIVE . '"');
+        $merge->addCondition("visit_status ='" . VisitStatus::ACTIVE . "'");
 
         $dp = $model->search($merge);
 
@@ -683,7 +683,7 @@ class VisitController extends Controller {
         }
 
         $merge = new CDbCriteria;
-        $merge->addCondition('visit_status ="' . VisitStatus::CLOSED . '"');
+        $merge->addCondition("visit_status ='" . VisitStatus::CLOSED . "'");
 
         $dp = $model->search($merge);
 
@@ -1030,7 +1030,7 @@ class VisitController extends Controller {
          * Init dataProvider for first page
          */
         $merge = new CDbCriteria;
-        $merge->addCondition('visitor0.profile_type = "'. Visitor::PROFILE_TYPE_VIC .'"');
+        $merge->addCondition("visitor0.profile_type = '". Visitor::PROFILE_TYPE_VIC ."'");
 
         $model = new Visit('search');
         $model->unsetAttributes();  // clear any default values

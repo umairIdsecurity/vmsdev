@@ -431,7 +431,7 @@ class Visitor extends CActiveRecord {
         if($user->role != Roles::ROLE_SUPERADMIN){
             if(Yii::app()->controller->id === 'visit'){
                 if(Yii::app()->controller->action->id !== 'vicTotalVisitCount' && Yii::app()->controller->action->id !== 'corporateTotalVisitCount'  ) {
-                    $criteria->condition = 't.is_deleted = 0 and t.tenant ="' . Yii::app()->user->tenant . '"';
+                    $criteria->condition = "t.is_deleted = 0 and t.tenant ='" . Yii::app()->user->tenant . "'";
                 }
             }
         }
@@ -482,7 +482,7 @@ class Visitor extends CActiveRecord {
     public function beforeDelete() {
         $visitorExists = Visit::model()->exists('is_deleted = 0 and visitor =' . $this->id . ' and (visit_status=' . VisitStatus::PREREGISTERED . ' or visit_status=' . VisitStatus::ACTIVE . ')');
         $visitorExistsClosed = Visit::model()->exists('is_deleted = 0 and visitor =' . $this->id . ' and (visit_status=' . VisitStatus::CLOSED . ' or visit_status=' . VisitStatus::EXPIRED . ')');
-        $visitorHasSavedVisitOnly = Visit::model()->exists('is_deleted = 0 and visitor =' . $this->id . ' and visit_status="'.VisitStatus::SAVED.'"');
+        $visitorHasSavedVisitOnly = Visit::model()->exists("is_deleted = 0 and visitor =" . $this->id . " and visit_status='".VisitStatus::SAVED."'");
 
         if ($visitorExists) {
             return false;
@@ -508,7 +508,7 @@ class Visitor extends CActiveRecord {
         $criteria->condition = 't.is_deleted = 0';
         if (isset(yii::app()->user->role)) {
             if (Yii::app()->user->role != Roles::ROLE_SUPERADMIN) {
-                $criteria->condition = 't.is_deleted = 0 and t.tenant ="' . Yii::app()->user->tenant . '"';
+                $criteria->condition = "t.is_deleted = 0 and t.tenant ='" . Yii::app()->user->tenant . "'";
             }
         }
         $this->dbCriteria->mergeWith($criteria);
@@ -548,7 +548,7 @@ class Visitor extends CActiveRecord {
         $aArray = array();
         $tenant = User::model()->findByPk($tenantId);
         $Criteria = new CDbCriteria();
-        $Criteria->condition = 'tenant = "'.$tenantId.'" and (id!=1 and id !="'.$tenant->company.'")';
+        $Criteria->condition = "tenant = '".$tenantId."' and (id!=1 and id !='".$tenant->company."')";
         $company = Company::model()->findAll($Criteria);
 
         foreach ($company as $index => $value) {
@@ -564,7 +564,7 @@ class Visitor extends CActiveRecord {
     public function findAllCompanyByTenant($tenantId) {
         $tenant = User::model()->findByPk($tenantId);
         $Criteria = new CDbCriteria();
-        $Criteria->condition = 'tenant = "'.$tenantId.'" and (id!=1 and id !="'.$tenant->company.'")';
+        $Criteria->condition = "tenant = '".$tenantId."' and (id!=1 and id !='".$tenant->company."')";
         return Company::model()->findAll($Criteria);
     }
 

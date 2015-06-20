@@ -155,7 +155,7 @@ class VisitorTypeController extends Controller {
     }
     
    /* 
-    * Report: Corporate Reporting: Total Visits by Visitor Type
+    * Report: Corporate Reporting: Total Visitors by Visitor Type
     * Total Visitors by Visitor Type
     * 
     * @return view
@@ -170,13 +170,17 @@ class VisitorTypeController extends Controller {
         if( !empty($dateFromFilter) && !empty($dateToFilter) ) {
             $from = new DateTime($dateFromFilter);
             $to = new DateTime($dateToFilter);
-            $dateCondition = "( DATE(visitors.date_created) BETWEEN  '".$from->format("Y-m-d")."' AND  '".$to->format("Y-m-d")."' ) AND ";
+            $dateCondition .= "( DATE(visitors.date_created) BETWEEN  '".$from->format("Y-m-d")."' AND  '".$to->format("Y-m-d")."' ) AND ";
         }
         
-        $dateCondition .= '(t.is_deleted = 0) AND (visitors.is_deleted = 0)';
+        if(Roles::ROLE_SUPERADMIN != Yii::app()->user->role){
+            $dateCondition .= "(visitors.tenant=".Yii::app()->user->tenant.") AND ";
+        }
+        
+        $dateCondition .= "(t.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visitors.profile_type='CORPORATE')";
         
         $visitsCount = Yii::app()->db->createCommand()
-                ->select("t.id,t.name,count(visitors.id) as visitors") 
+                ->select("t.id,t.name,count(visitors.id) as visitors,DATE(visitors.date_created) as date_check_in") 
                 ->from('visitor_type t')
                 ->join("visitor visitors",'t.id = visitors.visitor_type')
                 ->where($dateCondition)
@@ -205,17 +209,42 @@ class VisitorTypeController extends Controller {
             $dateCondition = "( DATE(visitors.date_created) BETWEEN  '".$from->format("Y-m-d")."' AND  '".$to->format("Y-m-d")."' ) AND ";
         }
         
-        $dateCondition .= '(t.is_deleted = 0) AND (visitors.is_deleted = 0)';
+        $allWorkstations='';
+        
+        if(Roles::ROLE_SUPERADMIN != Yii::app()->user->role){
+            
+            $dateCondition .= "(visitors.tenant=".Yii::app()->user->tenant.") AND ";
+            //show curren logged in user Workstations
+            $allWorkstations = Workstation::model()->findAll("tenant = " . Yii::app()->user->tenant . " AND is_deleted = 0");
+        }else{
+            //show all work stations to SUPERADMIN
+            $allWorkstations = Workstation::model()->findAll();
+        }
+        
+        $dateCondition .= "(t.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visitors.profile_type='CORPORATE')";
         
         $visitors = Yii::app()->db->createCommand()
-                ->select("count(visitors.id) as visitors,DATE(visitors.date_created) AS date_check_in,t.id,t.name") 
+                ->select("count(visitors.id) as visitors,DATE(visitors.date_created) AS date_check_in,t.id,t.name, t.id  as workstationId")
                 ->from('workstation t')
                 ->join("visitor visitors",'t.id = visitors.visitor_workstation')
                 ->where($dateCondition)
                 ->group('t.id')
                 ->queryAll();
         
-        $this->render("visitorbyworkstationcount", array("visitor_count"=>$visitors));
+        $otherWorkstations = array();
+        foreach ($allWorkstations as $workstation) {
+            $hasVisitor = false;
+            foreach($visitors as $visitor) {
+                if($visitor['workstationId'] ==  $workstation->id) {
+                    $hasVisitor =  true;
+                }
+            }
+            if ($hasVisitor == false) {
+                array_push($otherWorkstations, $workstation);
+            }
+        }
+
+        $this->render("visitorbyworkstationcount", array("visitor_count"=>$visitors, "otherWorkstations" => $otherWorkstations));
     }
 
 }

@@ -34,8 +34,11 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                 First Name
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" class="visitor-detail-info-field" value="<?php echo $visitorModel->first_name; ?>" disabled="disabled"
+                                <input type="text" class="visitor-detail-info-field" value="<?php echo $visitorModel->first_name; ?>"
                                        name="Visitor[first_name]" id="Visitor_first_name">
+                                <div style="" id="Visitor_first_name_em_" class="errorMessage errorMessageEmail">Please enter a first name.
+                                </div>
+
                             </td>
                         </tr>
 
@@ -45,7 +48,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                     Middle Name
                                 </td>
                                 <td style="padding-left: 0 !important;">
-                                    <input type="text" class="visitor-detail-info-field" value="<?php echo $visitorModel->middle_name; ?>" disabled="disabled"
+                                    <input type="text" class="visitor-detail-info-field" value="<?php echo $visitorModel->middle_name; ?>"
                                            name="Visitor[middle_name]" id="Visitor_middle_name">
                                 </td>
                             </tr>
@@ -56,8 +59,10 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                 Last Name
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" class="visitor-detail-info-field" value="<?php echo $visitorModel->last_name; ?>" disabled="disabled"
+                                <input type="text" class="visitor-detail-info-field" value="<?php echo $visitorModel->last_name; ?>"
                                        name="Visitor[last_name]" id="Visitor_last_name">
+                                <div style="" id="Visitor_last_name_em_" class="errorMessage errorMessageEmail">Please enter a last name.
+                                </div>
                             </td>
                         </tr>
 
@@ -67,8 +72,27 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                 Date of Birth
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" class="visitor-detail-info-field" value="<?php echo date('d-m-Y', strtotime($visitorModel->date_of_birth)); ?>" disabled="disabled"
-                                       name="Visitor[date_of_birth]" id="Visitor_date_of_birth">
+                                <?php
+                                $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                    'model' => $visitorModel,
+                                    'attribute' => 'date_of_birth',
+                                    'htmlOptions' => array(
+                                        'size' => '10', // textField size
+                                        'maxlength' => '10', // textField maxlength
+                                        'placeholder' => 'dd-mm-yyyy',
+                                        'readOnly' => 'readOnly',
+                                        'style' => 'width:83%'
+                                    ),
+                                    'options' => array(
+                                        'dateFormat' => 'dd-mm-yy',
+                                        'showOn' => "button",
+                                        'buttonImage' => Yii::app()->controller->assetsBase . "/images/calendar.png",
+                                        'buttonImageOnly' => true,
+                                        'dateFormat' => "yy-mm-dd",
+                                    )
+                                ));
+                                ?>
+
                             </td>
                         </tr>
                         <?php endif; ?>
@@ -80,46 +104,32 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
         <li class='has-sub' id="contactDetailsLi"><a href="#"><span>Contact Details</span></a>
             <ul>
                 <li>
-                    <?php
-                    $visitorForm = $this->beginWidget('CActiveForm', array(
-                        'id' => 'update-visitor-form',
-                        'action' => Yii::app()->createUrl('/visitor/update&id=' . $model->visitor . '&view=1'),
-                        'htmlOptions' => array("name" => "update-visitor-form"),
-                        'enableAjaxValidation' => false,
-                        'enableClientValidation' => true,
-                        'clientOptions' => array(
-                            'validateOnSubmit' => true,
-                            'afterValidate' => 'js:function(form, data, hasError){
-                                if (!hasError){
-                                    checkEmailIfUnique();
-                                }
-                                }'
-                        ),
-                    ));
-                    ?>
-                    <input type="hidden" id="emailIsUnique" value="0"/>
 
+                    <input type="hidden" id="emailIsUnique" value="0"/>
+                    <input type="hidden" id="Visitor_id" name="Visitor[id]" value="<?php echo $model->visitor; ?>"/>
                     <div class="flash-success success-update-contact-details"> Contact Details Updated Successfully.
                     </div>
                     <table id="contactDetailsTable" class="detailsTable">
                         <tr>
                             <td width="110px;" style="padding-top: 7px;">Email</td>
-                            <td><?php echo $visitorForm->textField($visitorModel, 'email',
-                                    array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled', 'class' =>  "visitor-detail-info-field")); ?>
-                                <?php echo "<br>" . $visitorForm->error($visitorModel, 'email'); ?>
-                                <div style="" id="Visitor_email_em_" class="errorMessage errorMessageEmail">A profile
+                            <td>
+                                <input  type="text" class="visitor-detail-info-field" value="<?php echo $visitorModel->email; ?>"
+                                       name="Visitor[email]" id="Visitor_email">
+                                <div style="" id="Visitor_email_em_" class="errorMessage errorMessageEmail">Email invalid or a profile
                                     already exists for this email address.
                                 </div>
                             </td>
                         </tr>
                         <tr>
                             <td style="  padding-top: 7px;">Mobile</td>
-                            <td><input class="visitor-detail-info-field" type="text" value="<?php echo $visitorModel->contact_number; ?>" disabled="disabled"
-                                       name="Visitor[contact_number]" id="Visitor_contact_number"></td>
+                            <td>
+                                <input  type="text" class="visitor-detail-info-field" value="<?php echo $visitorModel->contact_number; ?>"
+                                        name="Visitor[contact_number]" id="Visitor_contact_number">
+                                <div style="" id="Visitor_contact_number_em_" class="errorMessage errorMessageEmail">Please enter a contact number.
+                                </div>
                         </tr>
                         <!--<tr><td><input type="submit" value="Update" name="yt0" id="submitContactDetailForm" class="complete" /></td></tr>-->
                     </table>
-                    <?php $this->endWidget(); ?>
                 </li>
             </ul>
         </li>
@@ -139,8 +149,10 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                 Company Name
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" class="visitor-detail-info-field" value="<?php echo isset($company->name) ? $company->name : '' ; ?>" disabled="disabled"
-                                       name="Visitor[company_name]" id="Visitor_company_name">
+                                <input type="text" class="visitor-detail-info-field" value="<?php echo isset($company->name) ? $company->name : '' ; ?>"
+                                       name="Company[name]" id="Company_name">
+                                <div style="" id="Company_name_em_" class="errorMessage errorMessageEmail">Please enter a company name.
+                                </div>
                             </td>
                         </tr>
 
@@ -149,8 +161,10 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                 Contact Person
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" class="visitor-detail-info-field" value="<?php echo (!empty($contact)) ? $contact->getFullName() : ''; ?>" disabled="disabled"
-                                       name="Visitor[company_contact]" id="Visitor_company_contact">
+                                <input type="text" class="visitor-detail-info-field" value="<?php echo (!empty($contact)) ? $contact->getFullName() : ''; ?>"
+                                       name="Company[contact]" id="Company_contact">
+                                <div style="" id="Company_contact_em_" class="errorMessage errorMessageEmail">Please enter a company contact.
+                                </div>
                             </td>
                         </tr>
 
@@ -159,9 +173,10 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                 Contact No.
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" class="visitor-detail-info-field" value="<?php echo isset($contact->contact_number) ? $contact->contact_number : ''; ?>" disabled="disabled"
-                                       name="Visitor[mobile_number]" id="Visitor_mobile_number">
-
+                                <input type="text" class="visitor-detail-info-field" value="<?php echo isset($contact->contact_number) ? $contact->contact_number : ''; ?>"
+                                       name="Company[mobile_number]" id="Company_mobile_number">
+                                <div style="" id="Company_mobile_number_em_" class="errorMessage errorMessageEmail">Please enter a company mobile number.
+                                </div>
                             </td>
                         </tr>
 
@@ -170,9 +185,10 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                 Contact Email
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" class="visitor-detail-info-field" value="<?php echo isset($contact->email) ? $contact->email : ''; ?>" disabled="disabled"
-                                       name="Visitor[email_address]" id="Visitor_email_address">
-
+                                <input type="text" class="visitor-detail-info-field" value="<?php echo isset($contact->email) ? $contact->email : ''; ?>"
+                                       name="Company[email_address]" id="Company_email_address">
+                                <div style="" id="Company_email_address_em_" class="errorMessage errorMessageEmail">Please enter a company email address.
+                                </div>
                             </td>
                         </tr>
 
@@ -213,11 +229,11 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                         }
                                         else {
                                             $(".visitorTypePatientHost").hide();
-                                            sendVisitForm("update-visit-form"); 
+                                            sendVisitForm("update-visit-form");
                                         }
                                     } else {
                                     $(".visitorTypePatientHost").hide();
-                                    sendVisitForm("update-visit-form"); 
+                                    sendVisitForm("update-visit-form");
                                     }
                                 }
                                 }'
@@ -236,12 +252,17 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                     <?php
                                     $cardType = CardType::model()->findAll();
                                     foreach ($cardType as $key => $value) {
+                                        if (in_array($key, CardType::$VIC_CARD_TYPE_LIST)) {
+                                            $prefix = 'VIC: ';
+                                        } else {
+                                            $prefix = 'CORPORATE: ';
+                                        }
                                         ?>
                                         <option value="<?php echo $value->id; ?>" <?php
                                         if ($model->card_type == $value->id) {
                                             echo " selected ";
                                         }
-                                        ?>><?php echo $value->name; ?></option>
+                                        ?>><?php echo $prefix . $value->name; ?></option>
                                     <?php
                                     }
                                     ?>
@@ -401,14 +422,19 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                             Type
                         </td>
                         <td style="padding-left: 0 !important;">
-                            <input type="text" class="visitor-detail-info-field" value="<?php
-                            if (!empty($visitorModel->identification_type)) {
-                                if (isset(Visitor::$IDENTIFICATION_TYPE_LIST[$visitorModel->identification_type])) {
-                                    echo Visitor::$IDENTIFICATION_TYPE_LIST[$visitorModel->identification_type];
-                                }
-                            }
-                            ?>" disabled="disabled"
-                                   name="Visitor[identification_type]" id="identification_type">
+                            <?php
+                            if (isset(Visitor::$IDENTIFICATION_TYPE_LIST) and is_array(Visitor::$IDENTIFICATION_TYPE_LIST)): ?>
+                            <select name="Visitor[identification_type]" id="identification_type">
+                                <?php
+                                    foreach (Visitor::$IDENTIFICATION_TYPE_LIST as $id=>$name):
+                                        ?>
+                                            <option <?php if ($id == $visitorModel->identification_type): ?>selected="selected" <?php endif; ?> value="<?php echo $id; ?>"> <?php echo $name; ?> </option>
+                                        <?php
+                                    endforeach;
+                                ?>
+                            </select>
+                                <?php endif; ?>
+
 
                         </td>
                     </tr>
@@ -417,8 +443,10 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                             Document No.
                         </td>
                         <td style="padding-left: 0 !important;">
-                            <input type="text" class="visitor-detail-info-field" value="<?php echo $visitorModel->identification_document_no; ?>" disabled="disabled"
+                            <input type="text" class="visitor-detail-info-field" value="<?php echo $visitorModel->identification_document_no; ?>"
                                    name="Visitor[identification_document_no]" id="identification_document_no">
+                            <div style="" id="Visitor_identification_document_no_em_" class="errorMessage errorMessageEmail">Please enter a identification document no.
+                            </div>
                         </td>
                     </tr>
                     <tr>
@@ -426,8 +454,28 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                             Document Expiry
                         </td>
                         <td style="padding-left: 0 !important;">
-                            <input type="text" class="visitor-detail-info-field" value="<?php echo $visitorModel->identification_document_expiry; ?>" disabled="disabled"
-                                   name="Visitor[identification_document_expiry]" id="identification_document_expiry">
+                            <?php
+                            $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                'model' => $visitorModel,
+                                'attribute' => 'identification_document_expiry',
+                                'htmlOptions' => array(
+                                    'size' => '10', // textField size
+                                    'maxlength' => '10', // textField maxlength
+                                    'placeholder' => 'dd-mm-yyyy',
+                                    'readOnly' => 'readOnly',
+                                    'style' => 'width:83%'
+                                ),
+                                'options' => array(
+                                    'dateFormat' => 'dd-mm-yy',
+                                    'showOn' => "button",
+                                    'buttonImage' => Yii::app()->controller->assetsBase . "/images/calendar.png",
+                                    'buttonImageOnly' => true,
+                                    'minDate' => "0",
+                                    'dateFormat' => "yy-mm-dd",
+                                )
+                            ));
+                            ?>
+
                         </td>
                     </tr>
                 </table>
@@ -445,10 +493,12 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                             <td width="110px;" class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                                 First Name
                             </td>
-                            <td style="padding-left: 0 !important;">
-                                <input class="visitor-detail-info-field" type="text" value="<?php echo $asic->first_name; ?>" disabled="disabled"
-                                       name="Visitor[asic_first_name]" id="Visitor_asic_first_name">
 
+                            <td style="padding-left: 0 !important;">
+                                <input class="visitor-detail-info-field" type="text" value="<?php echo $asic->first_name; ?>"
+                                       name="Visitor[asic_first_name]" id="Visitor_asic_first_name">
+                                <div style="" id="Visitor_asic_first_name_em_" class="errorMessage errorMessageEmail">Please enter a first name.
+                                </div>
                             </td>
                         </tr>
 
@@ -457,9 +507,10 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                 Last Name
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input class="visitor-detail-info-field" type="text" value="<?php echo $asic->last_name; ?>" disabled="disabled"
+                                <input class="visitor-detail-info-field" type="text" value="<?php echo $asic->last_name; ?>"
                                        name="Visitor[asic_last_name]" id="Visitor_asic_last_name">
-
+                                <div style="" id="Visitor_asic_last_name_em_" class="errorMessage errorMessageEmail">Please enter a last name.
+                                </div>
                             </td>
                         </tr>
 
@@ -468,9 +519,10 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                 ASIC No.
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" class="visitor-detail-info-field" value="<?php echo $asic->asic_no; ?>" disabled="disabled"
+                                <input type="text" class="visitor-detail-info-field" value="<?php echo $asic->asic_no; ?>"
                                        name="Visitor[asic_no]" id="Visitor_asic_no">
-
+                                <div style="" id="Visitor_asic_no_em_" class="errorMessage errorMessageEmail">Please enter a asic number.
+                                </div>
                             </td>
                         </tr>
 
@@ -478,11 +530,29 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                             <td class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                                 ASIC Expiry
                             </td>
-                            <?php
-                            ?>
+
                             <td style="padding-left: 0 !important;">
-                                <input type="text" class="visitor-detail-info-field" value="<?php echo ($asic->asic_expiry != '0000-00-00' && $asic->asic_expiry != '')?date("d-m-Y" , strtotime($asic->asic_expiry)):''; ?>" disabled="disabled"
-                                       name="Visitor[asic_expiry]" id="Visitor_asic_expiry">
+                                <?php
+                                $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                    'model' => $asic,
+                                    'attribute' => 'asic_expiry',
+                                    'htmlOptions' => array(
+                                        'size' => '10', // textField size
+                                        'maxlength' => '10', // textField maxlength
+                                        'placeholder' => 'dd-mm-yyyy',
+                                        'readOnly' => 'readOnly',
+                                        'style' => 'width:83%'
+                                    ),
+                                    'options' => array(
+                                        'dateFormat' => 'dd-mm-yy',
+                                        'showOn' => "button",
+                                        'buttonImage' => Yii::app()->controller->assetsBase . "/images/calendar.png",
+                                        'buttonImageOnly' => true,
+                                        'minDate' => "0",
+                                        'dateFormat' => "yy-mm-dd",
+                                    )
+                                ));
+                                ?>
 
                             </td>
                         </tr>
@@ -491,14 +561,15 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                 </li>
             </ul>
         </li>
-        <?php else : ?>
+        <?php else : if ($hostModel):?>
+
         <li class='has-sub' id='hostDetailsLi'>
             <a href="#"><span>Host Details</span></a>
 
             <ul>
                 <li>
-                    <?php
-                    $hostForm = $this->beginWidget('CActiveForm', array(
+                   <!-- --><?php
+/*                    $hostForm = $this->beginWidget('CActiveForm', array(
                         'id' => 'update-host-form',
                         'action' => Yii::app()->createUrl('/user/update&id=' . $model->host),
                         'htmlOptions' => array("name" => "register-host-form"),
@@ -513,34 +584,56 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                     }'
                         ),
                     ));
-                    ?>
+                    */?>
+
                     <input type="text" id="hostEmailIsUnique" value="0"/>
 
                     <table id="hostTable" class="detailsTable">
                         <tr>
-                            <td style="width:110px !important; padding-top: 3px;"><?php echo $hostForm->labelEx($hostModel,
-                                    'first_name'); ?></td>
+                            <td width="110px;" class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
+                                First Name
+                            </td>
+                            <td style="padding-left: 0 !important;">
+                                <input class="visitor-detail-info-field" type="text" value="<?php echo $hostModel->first_name; ?>"
+                                       name="Visitor[host_first_name]" id="Visitor_asic_first_name">
+
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
+                                Last Name
+                            </td>
+                            <td style="padding-left: 0 !important;">
+                                <input class="visitor-detail-info-field" type="text" value="<?php echo $hostModel->last_name; ?>"
+                                       name="Visitor[host_last_name]" id="Visitor_asic_last_name">
+
+                            </td>
+                        </tr>
+                       <!-- <tr>
+                            <td style="width:110px !important; padding-top: 3px;"><?php /*echo $hostForm->labelEx($hostModel,
+                                    'first_name'); */?></td>
                             <td>
-                                <?php echo $hostForm->textField($hostModel, 'first_name',
-                                    array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled', 'class' => "visitor-detail-info-field")); ?>
-                                <?php echo "<br>" . $hostForm->error($hostModel, 'first_name'); ?>
+                                <?php /*echo $hostForm->textField($hostModel, 'first_name',
+                                    array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled', 'class' => "visitor-detail-info-field")); */?>
+                                <?php /*echo "<br>" . $hostForm->error($hostModel, 'first_name'); */?>
                             </td>
                         </tr>
                         <tr>
-                            <td width="110px;" style="  padding-top: 3px;"><?php echo $hostForm->labelEx($hostModel,
-                                    'last_name'); ?></td>
+                            <td width="110px;" style="  padding-top: 3px;"><?php /*echo $hostForm->labelEx($hostModel,
+                                    'last_name'); */?></td>
                             <td>
-                                <?php echo $hostForm->textField($hostModel, 'last_name',
-                                    array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled', 'class' =>  "visitor-detail-info-field")); ?>
-                                <?php echo "<br>" . $hostForm->error($hostModel, 'last_name'); ?>
+                                <?php /*echo $hostForm->textField($hostModel, 'last_name',
+                                    array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled', 'class' =>  "visitor-detail-info-field")); */?>
+                                <?php /*echo "<br>" . $hostForm->error($hostModel, 'last_name'); */?>
                             </td>
-                        </tr>
+                        </tr>-->
                     </table>
-                    <?php $this->endWidget(); ?>
+                    <?php /*$this->endWidget(); */?>
                 </li>
             </ul>
         </li>
-        <?php endif; ?>
+        <?php endif; endif; ?>
 
         <li class='has-sub' id='patientDetailsLi'><a href="#"><span>Patient Details</span></a>
             <ul>
@@ -587,10 +680,91 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                 </li>
             </ul>
         </li>
+        <li>
+            <ul>
+                <li>
+                    <?php
+                    if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN, Roles::ROLE_SUPERADMIN])) {
+                        echo '<input type="submit" class="complete btnUpdateVic"  value="Update">';
+                    }
+                    ?>
+                </li>
+            </ul>
+        </li>
     </ul>
+
 </div>
 <script>
     $(document).ready(function () {
+        $(".complete.btnUpdateVic").click(function(){
+            var check = validateInformation();
+
+            if (check) {
+                $("#workstationForm").append("<input type='hidden' name='updateVisit'  value='1' />");
+                $("#workstationForm").append("<input type='hidden' name='Company[name]'  value='" + $('#Company_name').val() + "' />");
+                $("#workstationForm").append("<input type='hidden' name='Company[contact]'  value='" + $('#Company_contact').val() + "' />");
+                $("#workstationForm").append("<input type='hidden' name='Company[email_address]'  value='" + $('#Company_email_address').val() + "' />");
+                $("#workstationForm").append("<input type='hidden' name='Company[mobile_number]'  value='" + $('#Company_mobile_number').val() + "' />");
+                $("#workstationForm").append("<input name='Visitor[id]' type='hidden'  value='" + $('#Visitor_id').val() + "' />");
+                $("#workstationForm").append("<input name='Visitor[first_name]' type='hidden'  value='" + $('#Visitor_first_name').val() + "' />");
+                $("#workstationForm").append("<input name='Visitor[middle_name]' type='hidden'  value='" + $('#Visitor_middle_name').val() + "' />");
+                $("#workstationForm").append("<input name='Visitor[last_name]' type='hidden'  value='" + $('#Visitor_last_name').val() + "' />");
+                $("#workstationForm").append("<input name='Visitor[date_of_birth]' type='hidden'  value='" + $('#Visitor_date_of_birth').val() + "' />");
+                $("#workstationForm").append("<input name='Visitor[email]' type='hidden'  value='" + $('#Visitor_email').val() + "' />");
+                $("#workstationForm").append("<input name='Visitor[contact_number]' type='hidden'  value='" + $('#Visitor_contact_number').val() + "' />");
+                $("#workstationForm").append("<input name='Visitor[identification_type]' type='hidden'  value='" + $('#identification_type').val() + "' />");
+                $("#workstationForm").append("<input name='Visitor[identification_document_no]' type='hidden'  value='" + $('#identification_document_no').val() + "' />");
+                $("#workstationForm").append("<input name='Visitor[identification_document_expiry]' type='hidden'  value='" + $('#Visitor_identification_document_expiry').val() + "' />");
+                $("#workstationForm").append("<input name='Visitor[host_first_name]' type='hidden'  value='" + $('#Visitor_asic_first_name').val() + "' />");
+                $("#workstationForm").append("<input name='Visitor[host_last_name]' type='hidden'  value='" + $('#Visitor_asic_last_name').val() + "' />");
+                $("#workstationForm").append("<input name='Visitor[host_asic_no]' type='hidden'  value='" + $('#Visitor_asic_no').val() + "' />");
+                $("#workstationForm").append("<input name='Visitor[host_asic_expiry]' type='hidden'  value='" + $('#Visitor_asic_expiry').val() + "' />");
+                var t = checkVistorCardStatusOfHost(<?php echo $model->host; ?>);
+                (t == true) ? $('#workstationForm').submit() : alert('Exception r718 - Vistor Information');
+            }
+        });
+
+        function validateInformation(){
+            var Company_name = $('#Company_name').val();
+            var Company_email_address = $('#Company_email_address').val();
+            var Company_mobile_number = $('#Company_mobile_number').val();
+            var Visitor_first_name =$('#Visitor_first_name').val();
+            var Visitor_last_name =$('#Visitor_last_name').val();
+            var Visitor_date_of_birth =$('#Visitor_date_of_birth').val();
+            var Visitor_email = $('#Visitor_email').val();
+            var Visitor_contact_number =$('#Visitor_contact_number').val();
+            var Visitor_identification_document_no = $('#identification_document_no').val();
+            var Visitor_identification_document_expiry = $('#Visitor_identification_document_expiry').val();
+            var Visitor_host_first_name = $('#Visitor_asic_first_name').val();
+            var Visitor_host_last_name = $('#Visitor_asic_last_name').val();
+            var Visitor_host_asic_no = $('#Visitor_asic_no').val();
+            var Visitor_host_asic_expiry = $('#Visitor_asic_expiry').val();
+            var flag = true;
+
+            if(Company_name.length < 1 || Company_name == ' '){$('#Company_name_em_').show(); flag=false;}else $('#Company_name_em_').hide();
+            if(!validateEmail1(Company_email_address)){$('#Company_email_address_em_').show();flag=false;}else $('#Company_email_address_em_').hide();
+            if(Company_mobile_number.length < 1 || Company_mobile_number == ' '){$('#Company_mobile_number_em_').show();flag=false;}else $('#Company_mobile_number_em_').hide();
+            if(Visitor_first_name.length < 1 || Visitor_first_name == ' '){$('#Visitor_first_name_em_').show();flag=false;}else $('#Visitor_first_name_em_').hide();
+            if(Visitor_date_of_birth.length < 1 || Visitor_date_of_birth == ' '){$('#Visitor_date_of_birth_em_').show();flag=false;}else $('#Visitor_date_of_birth_em_').hide();
+            if(!validateEmail1(Visitor_email)){$('#Visitor_email_em_').show();flag=false;}else $('#Visitor_email_em_').hide();
+            if(Visitor_contact_number.length < 1 || Visitor_contact_number == ' '){$('#Visitor_contact_number_em_').show();flag=false;}else $('#Visitor_contact_number_em_').hide();
+            if(Visitor_identification_document_no.length < 1 || Visitor_identification_document_no == ' '){$('#Visitor_identification_document_no_em_').show();flag=false;}else $('#Visitor_identification_document_no_em_').hide();
+            if(Visitor_identification_document_expiry.length < 1 || Visitor_identification_document_expiry == ' '){$('#Visitor_identification_document_expiry_em_').show();flag=false;}else $('#Visitor_identification_document_expiry_em_').hide();
+            if(Visitor_host_first_name.length < 1 || Visitor_host_first_name == ' '){$('#Visitor_host_first_name_em_').show();flag=false;}else $('#Visitor_host_first_name_em_').hide();
+            if(Visitor_host_last_name.length < 1 || Visitor_host_last_name == ' '){$('#Visitor_host_last_name_em_').show();flag=false;}else $('#Visitor_host_last_name_em_').hide();
+            if(Visitor_host_asic_no.length < 1 || Visitor_host_asic_no == ' '){$('#Visitor_host_asic_no_em_').show();flag=false;}else $('#Visitor_host_asic_no_em_').hide();
+            if(Visitor_host_asic_expiry.length < 1 || Visitor_host_asic_expiry == ' '){$('#Visitor_host_asic_expiry_em_').show();flag=false;}else $('#Visitor_host_asic_expiry_em_').hide();
+
+
+            var vemail = checkVisitorEmail();
+            flag = vemail;
+            return flag;
+        }
+
+        function validateEmail1(email) {
+            var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+            return re.test(email);
+        }
 
         $("#User_repeatpassword").keyup(checkPasswordMatch);
         if ($("#currentSessionRole").val() == 9) {
@@ -795,6 +969,49 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
         else
             $("#passwordErrorMessage").hide();
     }
+
+    //check vistor card status of host before update
+    function checkVistorCardStatusOfHost(id_host){
+        $.ajax({
+            type: 'POST',
+            url: 'index.php?r=visitor/CheckCardStatus&id=' + id_host,
+            dataType: 'json',
+            data: id_host,
+            success: function (r) {
+                if (!r){
+                    alert('Please update Card Status for current Host before Update Asic Sponsor.');
+                }
+                return r;
+            }
+        });
+        return true;
+    }
+
+    function checkVisitorEmail() {
+        var flag = true;
+        var email = $("#Visitor_email").val();
+            $.ajax({
+                type: 'POST',
+                url: '<?php echo Yii::app()->createUrl("visitor/checkEmailIfUnique&email="); ?>' + email.trim()+'&id='+<?php echo $visitorModel->id; ?>,
+                dataType: 'json',
+                data: {email:email, id:<?php echo $visitorModel->id; ?>},
+                success: function(r) {
+                    $.each(r.data, function(index, value) {
+                        if (value.isTaken == 1) {
+                            $("#Visitor_email_em_").show();
+                            flag= false;
+                        } else {
+                            $("#Visitor_email_em_").hide();
+
+                        }
+                    });
+
+                }
+            });
+        return flag;
+
+    }
+
 
 </script>
 <input type="button" id="findHostModalBtn" value="findhost" data-target="#findHostModal" data-toggle="modal"

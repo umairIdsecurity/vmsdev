@@ -47,10 +47,12 @@ h1, .h1 {
     list-style: inside;
 }
 
-.error {
+/*.error {
     background: #fee none repeat scroll 0 0;
     border-color: #c00;
+}*/
+
+.error {
+    background: transparent;
 }
-
-
 

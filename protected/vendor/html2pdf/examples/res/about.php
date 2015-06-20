@@ -1,4 +1,3 @@
-
 <style type="text/css">
 <!--
     table.page_header {width: 100%; border: none; background-color: #DDDDFF; border-bottom: solid 1mm #AAAADD; padding: 2mm }
@@ -239,5 +238,4 @@
         <li>Les formulaires ne marchent pas avec tous les viewers PDFs...</li>
         <li>Lisez bien le wiki : <a href="http://wiki.spipu.net/doku.php?id=html2pdf:Accueil">http://wiki.spipu.net/doku.php?id=html2pdf:Accueil</a>.</li>
     </ul>
-
 </page>

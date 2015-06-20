@@ -50,7 +50,10 @@ class User extends VmsActiveRecord {
     public $asic_expiry_year;
     public $helpdesk_group;
 
-
+	public $is_required_induction;
+    public $is_completed_induction;
+    public $induction_expiry;
+	
     public $password_option;
     private $_companyname;
 
@@ -100,7 +103,13 @@ class User extends VmsActiveRecord {
         // will receive user inputs.
 
         if($this->scenario == 'add_company_contact') {
-            return array(array('first_name, last_name, email, contact_number', 'required'));
+            return array(
+					array('first_name, last_name, email, contact_number', 'required'),
+				
+					array('is_required_induction, is_completed_induction, induction_expiry ', 'safe'),
+					
+				);
+			
         }
 
         if (Yii::app()->controller->action->id == 'update' || Yii::app()->controller->action->id == 'profile') {
@@ -121,6 +130,9 @@ class User extends VmsActiveRecord {
                 // The following rule is used by search().
                 // @todo Please remove those attributes that should not be searched.
                 array('id, companyname,first_name, last_name,email,photo,is_deleted ,contact_number, date_of_birth, company, department, position, staff_id, notes, role_id, user_type_id, user_status_id, created_by', 'safe', 'on' => 'search'),
+				
+				array('is_required_induction, is_completed_induction, induction_expiry ', 'safe'),
+                
             );
         } else {
             return array(
@@ -139,6 +151,9 @@ class User extends VmsActiveRecord {
                 // The following rule is used by search().
                 // @todo Please remove those attributes that should not be searched.
                 array('id, first_name, companyname,last_name,email,photo,is_deleted,assignedWorkstations,contact_number, date_of_birth, company, department, position, staff_id, notes, role_id, user_type_id, user_status_id, created_by', 'safe', 'on' => 'search'),
+				
+				array('is_required_induction, is_completed_induction, induction_expiry ', 'safe'),
+               
             );
         }
     }
@@ -266,6 +281,8 @@ class User extends VmsActiveRecord {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
+        $criteria->with = array('company');
+
         $criteria->compare('t.id', $this->id);
         $criteria->compare('last_name', $this->last_name, true);
         $criteria->compare('email', $this->email, true);
@@ -298,7 +315,6 @@ class User extends VmsActiveRecord {
             $criteria->compare('first_name', $this->first_name, true);
         }
 
-        $queryCondition = 'company = "' . $user->company . '" or created_by="' . $user->id . '"';
         switch ($user->role) {
             case Roles::ROLE_ADMIN:
                 if (Yii::app()->controller->action->id == 'systemaccessrules') {
@@ -370,7 +386,7 @@ class User extends VmsActiveRecord {
         $is_cvms_users_requested = CHelper::is_cvms_users_requested();
         $users = [];
         
-        if ($is_avms_users_requested || $is_avms_users_requested) {
+        if ($is_avms_users_requested || $is_cvms_users_requested) {
             if ($is_avms_users_requested) {
                 $users = User::model()->avms_user()->findAll();
             } else {
@@ -382,8 +398,6 @@ class User extends VmsActiveRecord {
             $user_ids = array_values(CHtml::listData($users, 'id', 'id'));
             $criteria->addCondition('t.id in (' . implode(', ', $user_ids) . ')');
         }
-
-
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -412,7 +426,13 @@ class User extends VmsActiveRecord {
 
     public function beforeSave() {
         $this->email = trim($this->email);
-
+		
+		if(!empty($this->induction_expiry)){
+            $this->induction_expiry = date("Y-m-d",strtotime($this->induction_expiry));
+        }else{
+			$this->induction_expiry = NULL;
+		}
+		
         return parent::beforeSave();
     }
 
@@ -740,8 +760,4 @@ class User extends VmsActiveRecord {
         }
     }
 
-    public function getAsicSponsor()
-    {
-        return Visitor::model()->find('profile_type = "' . Visitor::PROFILE_TYPE_ASIC . '" AND email = "' . $this->email . '"');
-    }
 }

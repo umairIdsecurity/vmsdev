@@ -30,7 +30,10 @@ class VisitorController extends Controller {
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('csvSampleDownload','importVisitHistory', 'AddVisitor', 'ajaxCrop', 'create', 'GetIdOfUser','GetHostDetails', 'GetPatientDetails', 'CheckEmailIfUnique', 'GetVisitorDetails', 'FindVisitor', 'FindHost', 'GetTenantAgentWithSameTenant', 'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent'),
+                'actions' => array('csvSampleDownload','importVisitHistory', 'AddVisitor', 'ajaxCrop', 'create', 'GetIdOfUser','GetHostDetails',
+                                    'GetPatientDetails', 'CheckEmailIfUnique', 'GetVisitorDetails', 'FindVisitor', 'FindHost', 'GetTenantAgentWithSameTenant',
+                                    'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent','CheckAsicStatusById', 'addAsicSponsor', 'CheckCardStatus'
+                                ),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -56,7 +59,11 @@ class VisitorController extends Controller {
             $model->attributes = $_POST['Visitor'];
 
             if (isset($_POST['VisitCardType']) && $_POST['VisitCardType'] > CardType::CONTRACTOR_VISITOR) {
-                $model->profile_type = Visitor::PROFILE_TYPE_VIC;
+                if (isset($_POST['Visitor']['visitor_card_status']) && $_POST['Visitor']['visitor_card_status'] != Visitor::ASIC_ISSUED) {
+                    $model->profile_type = Visitor::PROFILE_TYPE_VIC;
+                } else {
+                    $model->profile_type = Visitor::PROFILE_TYPE_ASIC;
+                }
             }
 
             //check validate for LOG VISIT PROCESS
@@ -90,6 +97,7 @@ class VisitorController extends Controller {
         $model = $this->loadModel($id);
         $visitorService = new VisitorServiceImpl();
         $session = new CHttpSession;
+        $updateErrorMessage = '';
         // if view value is 1 do not redirect page else redirect to admin
         $isViewedFromModal = 0;
         if (isset($_GET['view'])) {
@@ -99,21 +107,58 @@ class VisitorController extends Controller {
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['Visitor'])) {
-            $model->attributes = $_POST['Visitor'];
-            if ($visitorService->save($model, NULL, $session['id'])) {
-                switch ($isViewedFromModal) {
-                    case "1":
-                        break;
+            $currentCardStatus = $model->visitor_card_status;
+            if ($currentCardStatus == 2 && $_POST['Visitor']['visitor_card_status'] == 3) {
+                $activeVisit = $model->activeVisits;
+                foreach ($activeVisit as $item) {
+                    if ($item->visit_status == VisitStatus::ACTIVE) {
+                        $updateErrorMessage = 'Please close the active visits before changing the status to ASIC Pending.';
+                    }
+                }
+                if ($updateErrorMessage == '') {
+                    $model->attributes = $_POST['Visitor'];
+                    if ($visitorService->save($model, NULL, $session['id'])) {
+                        if ($model->totalVisit > 0) {
+                            $resetHistory = new ResetHistory();
+                            $resetHistory->visitor_id = $model->id;
+                            $resetHistory->reset_time = date("Y-m-d H:i:s");
+                            $resetHistory->reason = 'Update Visitor Card Type form VIC Holder to ASIC Pending';
+                            if ($resetHistory->save()) {
+                                foreach ($activeVisit as $item) {
+                                    $item->reset_id = $resetHistory->id;
+                                    $item->save();
+                                }
+                            }
+                        }
+                        switch ($isViewedFromModal) {
+                            case "1":
+                                break;
 
-                    default:
-                        $this->redirect(array('admin'));
+                            default:
+                                echo $updateErrorMessage;
+                        }
+                    }
+                } else {
+                    echo $updateErrorMessage;
+                }
+            } else {
+                $model->attributes = $_POST['Visitor'];
+                if ($visitorService->save($model, NULL, $session['id'])) {
+                    switch ($isViewedFromModal) {
+                        case "1":
+                            break;
+
+                        default:
+                            echo $updateErrorMessage;;
+                    }
                 }
             }
-        }
 
-        $this->render('update', array(
-            'model' => $model,
-        ));
+        } else{
+            $this->render('update', array(
+                'model' => $model,
+            ));
+        }
     }
 
     /* Visitor detail page */
@@ -218,7 +263,7 @@ class VisitorController extends Controller {
         Yii::app()->end();
     }
 
-    public function actionFindVisitor($id,$tenant,$tenant_agent, $cardType=0) {
+    public function actionFindVisitor($id,$tenant,$tenant_agent, $cardType = 0) {
         $this->layout = '//layouts/column1';
         $model = new Visitor('search');
         $model->unsetAttributes();  // clear any default values
@@ -226,11 +271,11 @@ class VisitorController extends Controller {
             $model->attributes = $_GET['Visitor'];
 
         $this->renderPartial('findVisitor', array(
-            'model' => $model,
-                ), false, true);
+                'model' => $model
+            ), false, true);
     }
 
-    public function actionFindHost($id,$tenant,$tenant_agent) {
+    public function actionFindHost($id,$tenant,$tenant_agent, $cardType = null) {
         $this->layout = '//layouts/column1';
         $model = new User('search');
         $model->unsetAttributes();  // clear any default values
@@ -238,8 +283,8 @@ class VisitorController extends Controller {
             $model->attributes = $_GET['User'];
 
         $this->renderPartial('findHost', array(
-            'model' => $model,
-                ), false, true);
+                'model' => $model
+            ), false, true);
     }
 
     public function actionGetVisitorDetails($id) {
@@ -249,7 +294,7 @@ class VisitorController extends Controller {
     }
 
     public function actionGetHostDetails($id) {
-        $resultMessage['data'] = User::model()->findAllByPk($id);
+        $resultMessage['data'] = Visitor::model()->findAllByPk($id);
         echo CJavaScript::jsonEncode($resultMessage);
         Yii::app()->end();
     }
@@ -266,8 +311,8 @@ class VisitorController extends Controller {
         Yii::app()->end();
     }
 
-    public function actionCheckEmailIfUnique($id) {
-        if (Visitor::model()->isEmailAddressTaken($id)) {
+    public function actionCheckEmailIfUnique($email, $id = 0) {
+        if (Visitor::model()->isEmailAddressTaken($email, $id)) {
             $aArray[] = array(
                 'isTaken' => 1,
             );
@@ -280,6 +325,10 @@ class VisitorController extends Controller {
         $resultMessage['data'] = $aArray;
         echo CJavaScript::jsonEncode($resultMessage);
         Yii::app()->end();
+    }
+
+    public function actionCheckAsicStatusById($id){
+        echo Visitor::model()->checkAsicStatusById($id);
     }
 
     public function actionAjaxCrop() {
@@ -535,5 +584,44 @@ class VisitorController extends Controller {
             'criteria'=>$criteria,
         ));
         return $this->renderPartial('activeVisit',array('dataProvider' => $dataProvider));
+    }
+
+    /**
+     * Add asic sponsor for Log Visit process
+     */
+    public function actionAddAsicSponsor() {
+        $model = new Visitor;
+        $visitorService = new VisitorServiceImpl();
+        $session = new CHttpSession;
+
+
+        if (isset($_POST['User']) && isset($_POST['Visitor'])) {
+            $model->attributes = $_POST['User'];
+            $model->attributes = $_POST['Visitor'];
+
+            if (isset($_POST['User']['asic_expiry']) && $_POST['User']['asic_expiry']) {
+                $model->asic_expiry = date('Y-m-d', strtotime($_POST['User']['asic_expiry']));
+            }
+
+            $model->profile_type = Visitor::PROFILE_TYPE_ASIC;
+
+            if (empty($model->visitor_workstation)) {
+                $model->visitor_workstation = $session['workstation'];
+            }
+
+            if ($result = $visitorService->save($model, NULL, $session['id'])) {
+                Yii::app()->end();
+            }
+        }
+    }
+
+    public function actionCheckCardStatus($id){
+        $visitor = Visitor::model()->findByPk($id);
+        if ($visitor){
+            if ($visitor->visitor_card_status && ($visitor->profile_type == Visitor::PROFILE_TYPE_VIC || $visitor->profile_type == Visitor::PROFILE_TYPE_ASIC))
+            {echo 1; die();}
+
+        }
+        echo 0;
     }
 }

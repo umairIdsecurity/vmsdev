@@ -1,4 +1,3 @@
-
 <page orientation="paysage" >
     <bookmark title="Document" level="0" ></bookmark>
     <a name="document_reprise"></a>
@@ -174,5 +173,4 @@ for ($i; $i<12; $i++) {
             <td style="width: 4%"></td>
         </tr>
     </table>
-
 </page>

@@ -10,7 +10,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
     <ul>
 
         <li class='has-sub' id="closevisitLi" style="<?php
-        if (in_array($model->visit_status, array(VisitStatus::ACTIVE, VisitStatus::EXPIRED)) && $session['role'] != Roles::ROLE_STAFFMEMBER) {
+        if (in_array($model->visit_status, array(VisitStatus::ACTIVE)) && $session['role'] != Roles::ROLE_STAFFMEMBER) {
             echo "display:block;";
         } else {
             echo "display:none;";
@@ -67,7 +67,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
 
         </li>
 
-        <?php if (in_array($model->visit_status, array(VisitStatus::PREREGISTERED, VisitStatus::SAVED, VisitStatus::CLOSED))) { ?>
+        <?php if (in_array($model->visit_status, array(VisitStatus::PREREGISTERED, VisitStatus::SAVED, VisitStatus::CLOSED, VisitStatus::AUTOCLOSED, VisitStatus::EXPIRED))) { ?>
 
             <li class='has-sub' id="activateLi"><span class="log-current">Log Visit</span>
                 <ul>
@@ -124,16 +124,36 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                             </tr>
                         </table>
                         <?php echo $logform->error($model, 'date_in'); ?>
-                        <?php if ($model->visit_status == VisitStatus::CLOSED) { ?>
+                        <?php
+                        if (in_array($model->visit_status, [VisitStatus::CLOSED])) :
+                            ?>
                             <button type="button" id='registerNewVisit' class='greenBtn'>Activate Visit</button>
-                        <?php } else {
-                            if ($model->card_type == CardType::MANUAL_VISITOR && isset($model->date_check_in) && strtotime($model->date_check_in) < strtotime(date("d-m-Y"))) {
-                                echo '<input type="submit" value="Back Date Visit" class="complete"/>';
-                            } else {
-                                echo '<button type="button" id="registerNewVisit" class="greenBtn">Activate Visit</button>';
+                        <?php elseif ($model->visit_status == VisitStatus::PREREGISTERED) : ?>
+                            <button type="button" id='registerNewVisit' class='greenBtn'>Activate Visit</button>
+                            <div style="display:inline;font-size:12px;">
+                                <b>or </b>
+                                <a id="cancelPreregisteredVisitButton" href="" class="cancelBtnVisitorDetail">Cancel</a>
+                            </div>
+                        <?php elseif ($model->visit_status == VisitStatus::AUTOCLOSED) : ?>
+                            <?php
+                            $disabled = '';
+                            if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY]) && strtotime(date('d-m-Y')) == strtotime($model->finish_date)) {
+                                $disabled = 'disabled';
                             }
-                        }
-                        ?>
+                            ?>
+                            <input type="submit" style="width: 235px !important;" <?php echo $disabled; ?> value="Preregister Visit for autoclosed visit" class="complete"/>
+                        <?php else:
+                            if ($model->card_type == CardType::MANUAL_VISITOR && isset($model->date_check_in) && strtotime($model->date_check_in) < strtotime(date("d-m-Y"))) :
+                                ?>
+                                <input type="submit" value="Back Date Visit" class="complete"/>
+                            <?php else: ?>
+                                <button type="button" id="registerNewVisit" class="greenBtn">Activate Visit</button>
+                                <div style="display:inline;font-size:12px;">
+                                <b>or </b>
+                                <a href="" class="cancelBtnVisitorDetail">Cancel</a>
+                                </div>
+                            <?php endif; ?>
+                        <?php endif; ?>
                         <?php $this->endWidget();
                         ?>
 
@@ -189,7 +209,6 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                 return false;
             }
 
-            
             var is_vic_holder_checked = $('#VivHolderDecalarations').is(':checked'),
                 is_asic_holder_checked = $('#AsicSponsorDecalarations').is(':checked');
 
@@ -244,17 +263,25 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                 confirmed = true;
             }
 
-            flag = isCheckboxsChecked(vic_active_visit_checkboxs);
-
             if (confirmed == true) {
+                flag = isCheckboxsChecked(vic_active_visit_checkboxs);
                 if (flag == true) {
+                    var pre_issued_card_no = $("#pre_issued_card_no").val();
+                    if (typeof pre_issued_card_no != "undefined") {
+                        if (pre_issued_card_no == "") {
+                            $("#card_number_required").show();
+                            return false;
+                        } else {
+                            $("#card_number_required").hide();
+                        }
+                    }
                     activeVisit();
                 } else {
                     alert('Please agree VIC verification before active visit.');
                     addWarningLabel(vic_active_visit_checkboxs);
                 }
             }
-            
+
         });
 
         function isCheckboxsChecked(checkboxs) {
@@ -293,23 +320,28 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             sendCancelVisit();
         });
 
+        $('#cancelPreregisteredVisitButton').on('click', function (e) {
+            e.preventDefault();
+            sendCancelVisit();
+        });
+
         $(document).on('click', '#preregisterNewVisit', function (e) {
             e.preventDefault();
             checkIfActiveVisitConflictsWithAnotherVisit();
         });
 
 
-<?php
-if ($model->time_check_out && $model->card_type == CardType::VIC_CARD_24HOURS && $model->visit_status == VisitStatus::ACTIVE) {
-    $ctout = explode(':', $model->time_check_out);
-    ?>
-            $(".visit_time_in_hours").val(<?= $ctout[0] ?>);
-            $(".visit_time_in_minutes").val(<?= $ctout[1] ?>);
-    <?php
-} else {
-    ?>
-            display_ct();
-<?php } ?>
+        <?php
+        if ($model->time_check_out && $model->card_type == CardType::VIC_CARD_24HOURS && $model->visit_status == VisitStatus::ACTIVE) {
+            $ctout = explode(':', $model->time_check_out);
+            ?>
+        $(".visit_time_in_hours").val(<?= $ctout[0] ?>);
+        $(".visit_time_in_minutes").val(<?= $ctout[1] ?>);
+        <?php
+    } else {
+        ?>
+        display_ct();
+        <?php } ?>
 
 
         if ('<?php echo $model->card_type; ?>' == 1) {
@@ -367,14 +399,6 @@ if ($model->time_check_out && $model->card_type == CardType::VIC_CARD_24HOURS &&
     }
 
     function checkIfActiveVisitConflictsWithAnotherVisit(visitType) {
-<?php if ($model->card_type == CardType::MANUAL_VISITOR) : ?>
-            if ($.trim($('#pre_issued_card_no').val()) != "") {
-                $('#card_number_required').hide();
-            } else { // validate for pre issued card number
-                $('#card_number_required').show();
-                return false;
-            }
-<?php endif; ?>
         visitType = (typeof visitType === "undefined") ? "defaultValue" : visitType;
         $("#Visit_date_check_in").attr("disabled", false);
         $.ajax({
@@ -414,9 +438,9 @@ if ($model->time_check_out && $model->card_type == CardType::VIC_CARD_24HOURS &&
             'validateOnSubmit' => true,
             'afterValidate' => 'js:function(form, data, hasError){
                                 if (!hasError){
-                                    
-                                    sendCancelVisit(); 
-                                    
+
+                                    sendCancelVisit();
+
                                 }
                                 }'
         ),
@@ -459,21 +483,21 @@ if ($model->time_check_out && $model->card_type == CardType::VIC_CARD_24HOURS &&
     ?>">
     <input type="text" id="CardGenerated_enter_card_number" name="CardGenerated[enter_card_number]" value=""/>
     <?php
-        $tenant = User::model()->findByPk($model->tenant);
-        $code = '';
-        if ($tenant) {
-            if ($tenant->company != '') {
-                $company = Company::model()->findByPk($tenant->company);
-                if ($company) {
-                    $card_count = $company->card_count ? ($company->card_count + 1) : 1;
+    $tenant = User::model()->findByPk($model->tenant);
+    $code = '';
+    if ($tenant) {
+        if ($tenant->company != '') {
+            $company = Company::model()->findByPk($tenant->company);
+            if ($company) {
+                $card_count = $company->card_count ? ($company->card_count + 1) : 1;
 
-                    while (strlen($card_count) < 6) {
-                        $card_count = '0' . $card_count;
-                    }
-                    $code = $company->code . ($card_count);
+                while (strlen($card_count) < 6) {
+                    $card_count = '0' . $card_count;
                 }
+                $code = $company->code . ($card_count);
             }
         }
+    }
     ?>
     <input type="text" id="CardGenerated_card_number" name="CardGenerated[card_number]" value="<?php echo $code; ?>">
 

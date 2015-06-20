@@ -4,7 +4,13 @@
 $session = new CHttpSession;
 
 // asic sponsor
-$asic = $hostModel->getAsicSponsor();
+$asic = $model->getAsicSponsor();
+
+if ($asic && $hostModel == null) {
+    $hostModel = $asic;
+}
+
+if(!$hostModel) $hostModel = Visitor::model();
 
 ?>
 <table id="visitorDetailDiv">
@@ -95,7 +101,7 @@ $this->renderPartial('visithistory', array('model' => $model,
 
             $.ajax({
                 type: 'POST',
-                url: '<?php echo Yii::app()->createUrl("visitor/checkEmailIfUnique&id="); ?>' + email.trim(),
+                url: '<?php echo Yii::app()->createUrl("visitor/checkEmailIfUnique&email="); ?>' + email.trim(),
                 dataType: 'json',
                 data: email,
                 success: function(r) {

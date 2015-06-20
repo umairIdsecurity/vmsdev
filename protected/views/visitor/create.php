@@ -85,7 +85,14 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
 <input type="text" id="currentRoleOfLoggedInUser" value="<?php echo $session['role']; ?>">
 <input type="text" id="currentCompanyOfLoggedInUser" value="<?php echo User::model()->getCompany($session['id']); ?>">
 <script>
-
+function getCardType() {
+    var card_type = $('#VisitCardType').val();
+    if (card_type > "<?php echo CardType::CONTRACTOR_VISITOR; ?>") {
+        return 'ASIC Sponsor';
+    } else {
+        return 'Host';
+    }
+}
 $(document).ready(function () {
         display_ct();
         $("#register-host-patient-form").hide();
@@ -159,6 +166,9 @@ $(document).ready(function () {
 
             // display element by card type
             selectVicCard($("#selectCardDiv input[name=selectCardType]:checked").val());
+
+            $('#findHostA').html('Add or Find ' + getCardType());
+            $('#dummy-host-findBtn').html('Find ' + getCardType());
 
             showHideTabs('findVisitorB', 'findVisitorA', 'findVisitor', 'selectCardA', 'selectCard', 'findHostA', 'findHost');
         });
@@ -413,14 +423,14 @@ function preloadHostDetails(hostId) {
                     $("#cropImageBtn3").show();
 
                 }
-                else {
+                /*else {
                     $("#staffmember-host-form #User_first_name").val(value.first_name);
                     $("#staffmember-host-form #User_last_name").val(value.last_name);
                     $("#staffmember-host-form #User_department").val(value.department);
                     $("#staffmember-host-form #User_staff_id").val(value.staff_id);
                     $("#staffmember-host-form #User_email").val(value.email);
                     $("#staffmember-host-form #User_contact_number").val(value.contact_number);
-                }
+                }*/
             });
         }
     });
@@ -429,30 +439,47 @@ function preloadHostDetails(hostId) {
     $(".host-AddBtn").show();
 }
 
+//check vistor card status is ASIC DENIED then alert.
+function checkAsicStatusById(id){
+    $.ajax({
+        type: 'POST',
+        url: '<?php echo Yii::app()->createUrl('visitor/checkAsicStatusById&id='); ?>' + id,
+        dataType: 'text',
+        data: id,
+        success: function (flag) {
+           if(flag == 0){
+               alert('ASIC Denied. A VIC can not be issued to this person.\n Please inform them to report to the ASIC office.');
+               return;
+           }else{
+               $.ajax({
+                   type: 'POST',
+                   url: '<?php echo Yii::app()->createUrl('visitor/getHostDetails&id='); ?>' + id,
+                   dataType: 'json',
+                   data: id,
+                   success: function (r) {
+                        $.each(r.data, function (index, value) {
+                            $("#searchHostTableDiv h4").html("Selected "+getCardType()+" Record : " + value.first_name + " " + value.last_name);
+                        });
+
+                        //$('#findHostTableIframe').contents().find('.findHostButtonColumn a').removeClass('delete');
+                        //$('#findHostTableIframe').contents().find('.findHostButtonColumn a').html('Select Host');
+                        //$('#findHostTableIframe').contents().find('#' + id).addClass('delete');
+                        //$('#findHostTableIframe').contents().find('#' + id).html(getCardType()+' Selected');
+                        $('.findHostButtonColumn a').removeClass('delete');
+                        $('.findHostButtonColumn a').html('Select '+getCardType());
+                        $('#' + id).addClass('delete');
+                        $('#' + id).html(getCardType()+' Selected');
+                   }
+               });
+           }
+        }
+    });
+}
+
 function populateFieldHost(id) {
+    var card_type = $('#VisitCardType').val();
     if ($("#Visitor_visitor_type").val() != 1) {
-
-        $.ajax({
-            type: 'POST',
-            url: '<?php echo Yii::app()->createUrl('visitor/getHostDetails&id='); ?>' + id,
-            dataType: 'json',
-            data: id,
-            success: function (r) {
-                $.each(r.data, function (index, value) {
-                    $("#searchHostTableDiv h4").html("Selected ASIC Sponsor Record : " + value.first_name + " " + value.last_name);
-
-                });
-
-//                    $('#findHostTableIframe').contents().find('.findHostButtonColumn a').removeClass('delete');
-//                    $('#findHostTableIframe').contents().find('.findHostButtonColumn a').html('Select Host');
-//                    $('#findHostTableIframe').contents().find('#' + id).addClass('delete');
-//                    $('#findHostTableIframe').contents().find('#' + id).html('ASIC Sponsor Selected');
-                $('.findHostButtonColumn a').removeClass('delete');
-                $('.findHostButtonColumn a').html('Select ASIC Sponsor');
-                $('#' + id).addClass('delete');
-                $('#' + id).html('ASIC Sponsor Selected');
-            }
-        });
+        checkAsicStatusById(id);
     } else {
         $.ajax({
             type: 'POST',
@@ -477,7 +504,7 @@ function checkEmailIfUnique() {
 
     $.ajax({
         type: 'POST',
-        url: '<?php echo Yii::app()->createUrl('visitor/checkEmailIfUnique&id='); ?>' + email,
+        url: '<?php echo Yii::app()->createUrl('visitor/checkEmailIfUnique&email='); ?>' + email,
         dataType: 'json',
         data: email,
         success: function (r) {
@@ -524,7 +551,14 @@ function checkHostEmailIfUnique() {
     } else {
         tenant = '<?php echo $session['tenant']; ?>';
     }
+
     var url = $("#createUrlForEmailUnique").val() + email.trim() + '&tenant=' + tenant;
+
+    // ASIC Sponsor
+    if ($("#selectCardDiv input[name=selectCardType]:checked").val() > CONTRACTOR_TYPE) {
+        url = '<?php echo Yii::app()->createUrl('visitor/checkEmailIfUnique&email='); ?>' + email;
+    }
+
     $.ajax({
         type: 'POST',
         url: url,
@@ -816,9 +850,17 @@ function getLastVisitorId(callback) {
 
 function getLastHostId(callback) {
     var id = $("#User_email").val();
+
+    var url = '<?php echo Yii::app()->createUrl('user/GetIdOfUser&id='); ?>' + id.trim();
+
+    // ASIC Sponsor
+    if ($("#selectCardDiv input[name=selectCardType]:checked").val() > CONTRACTOR_TYPE) {
+        url = '<?php echo Yii::app()->createUrl('visitor/GetIdOfUser&id='); ?>' + id.trim();
+    }
+
     return $.ajax({
         type: 'POST',
-        url: '<?php echo Yii::app()->createUrl('user/GetIdOfUser&id='); ?>' + id.trim(),
+        url: url,
         dataType: 'json',
         data: id,
         success: function (r) {
@@ -903,8 +945,8 @@ function checkReasonIfUnique() {
                             $("#findHostA").html("Add Patient Details");
                             $("#findHostB").html("Add Patient Details");
                         } else {
-                            $("#findHostA").html("Add or Find ASIC Sponsor");
-                            $("#findHostB").html("Add or Find ASIC Sponsor");
+                            $("#findHostA").html("Add or Find "+getCardType());
+                            $("#findHostB").html("Add or Find "+getCardType());
                         }
                         //tenant and tenant agent of visitor and host should be the same
                         var options = $("#search_visitor_tenant > option").clone();
@@ -987,7 +1029,7 @@ function selectVicCard(cardType) {
         $('#hostButtonRow').css('padding-top', '130px');
 
         // text changes:
-        $('div.visitor-title-host').text('Add ASIC Sponsor');
+        $('div.visitor-title-host').text('Add '+getCardType());
 
     } else {
         // first table

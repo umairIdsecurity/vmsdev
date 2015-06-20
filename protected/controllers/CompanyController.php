@@ -401,7 +401,7 @@ class CompanyController extends Controller {
             $session = new CHttpSession;
             $formInfo = $_POST['AddCompanyContactForm'];
 
-            if (isset($_POST['CompanySelectedId']) && $_POST['CompanySelectedId'] > 0) {
+            if (isset($_POST['CompanySelectedId']) && $_POST['CompanySelectedId'] > 0 && $_POST['typePostForm'] === 'contact') {
                 $company = Company::model()->findByPk($_POST['CompanySelectedId']);
             } else {
                 $company = new Company();

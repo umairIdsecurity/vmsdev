@@ -1,4 +1,3 @@
-
 <style type="text/css">
 <!--
 div.minifiche
@@ -118,5 +117,4 @@ div.main a:hover
         <a href="http://prgm.spipu.net/"     >Programmes by Spipu         </a><br><br>
         <br><br><br>
     </div>
-
 </page>

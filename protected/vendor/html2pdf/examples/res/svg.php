@@ -1,4 +1,3 @@
-
 <page>
     <draw style="margin: auto; width:150mm; height:100mm; background: #000000; border: solid 0.5mm #777777;">
         <line    style="stroke:#FF0000; stroke-width:1mm" x1="10mm" y1="10mm" x2="140mm" y2="10mm" >
@@ -21,5 +20,4 @@
     Les balises SVG suivantes sont reconnues : LINE, RECT, CIRCLE, ELLIPSE, PATH, POLYGON, POLYLINE, G<br>
     <br>
     Spécifications SVG : <a href="http://www.w3.org/TR/SVG11/expanded-toc.html">http://www.w3.org/TR/SVG11/expanded-toc.html</a>
-
 </page>

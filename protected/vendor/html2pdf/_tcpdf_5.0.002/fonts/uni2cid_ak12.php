@@ -1,4 +1,3 @@
-
 <?php
 // unicode to cid conversion table is from
 // ftp://ftp.oreilly.com/pub/examples/nutshell/cjkv/adobe/

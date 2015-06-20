@@ -80,20 +80,32 @@ $model->identification_country_issued = 13;
                                     $("#register-host-form").show();
                                     $(".host-AddBtn").hide();
                                 }
+                                
+                                var bod_field = $("#vic-birth-date-field:hidden");
+                                if (bod_field.length != 1) {
+                                    var dt = new Date();
+                                    if(dt.getFullYear() < $("#fromYear").val()) {
+                                        $("#Visitor_date_of_birth_em_").show();
+                                        $("#Visitor_date_of_birth_em_").html("Please update your Date of Birth");
+                                        return false;
+                                    }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
+                                        $("#Visitor_date_of_birth_em_").show();
+                                        $("#Visitor_date_of_birth_em_").html("Please update your Date of Birth");
+                                        return false;
+                                    }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
+                                        $("#Visitor_date_of_birth_em_").show();
+                                        $("#Visitor_date_of_birth_em_").html("Please update your Date of Birth");
+                                        return false;
+                                    }
+                                }
+                                
 
-                                var dt = new Date();
-                                if(dt.getFullYear()< $("#fromYear").val()) {
-                                    $("#Visitor_date_of_birth_em_").show();
-                                    $("#Visitor_date_of_birth_em_").html("Birthday is incorrect");
+                                var visitor_type = $("#Visitor_visitor_type").val();
+                                if (visitor_type == "") {
+                                    $("#Visitor_visitor_type_em_").html("Please select visitor type").show();
                                     return false;
-                                }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
-                                    $("#Visitor_date_of_birth_em_").show();
-                                    $("#Visitor_date_of_birth_em_").html("Birthday is incorrect");
-                                    return false;
-                                }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
-                                    $("#Visitor_date_of_birth_em_").show();
-                                    $("#Visitor_date_of_birth_em_").html("Birthday is incorrect");
-                                    return false;
+                                } else {
+                                    $("#Visitor_visitor_type_em_").empty().hide();
                                 }
 
                                 if (!hasError){
@@ -205,7 +217,7 @@ $model->identification_country_issued = 13;
                                 </td>
                             </tr>
 
-                            <tr class="vic-visitor-fields">
+                            <tr class="vic-visitor-fields" id="vic-birth-date-field">
                                 <td class="birthdayDropdown">
                                     <span>Date of Birth</span> <br/>
                                     <?php
@@ -223,6 +235,7 @@ $model->identification_country_issued = 13;
                                     <select id="fromDay" name="Visitor[birthdayDay]" class='daySelect'></select>
                                     <select id="fromMonth" name="Visitor[birthdayMonth]" class='monthSelect'></select>
                                     <select id="fromYear" name="Visitor[birthdayYear]" class='yearSelect'></select>
+                                    <span class="required">*</span>
                                     <br />
                                     <?php
                                     echo $form->error($model, 'date_of_birth');
@@ -355,8 +368,8 @@ $model->identification_country_issued = 13;
                             </tr>
                             <tr>
                                 <td>
-                                    <a style="float: left; margin-right: 5px; width: 95px; height: 21px;" href="#addCompanyContactModal" role="button" data-toggle="modal" id="addCompanyLink">Add Company</a>
-                                    <a href="#addCompanyContactModal" id="addContactLink" class="btn btn-xs btn-info" style="font-size: 12px; font-weight: bold; display: none;" role="button" data-toggle="modal">Add Contact</a>
+                                    <a style="float: left; margin-right: 5px; width: 95px; height: 21px;  margin-bottom: 12px;" href="#addCompanyContactModal" role="button" data-toggle="modal" id="addCompanyLink">Add Company</a>
+                                    <a href="#addCompanyContactModal" id="addContactLink" class="btn btn-xs btn-info" style="font-size: 12px; font-weight: bold; display: none; margin-bottom: 10px;" role="button" data-toggle="modal">Add Contact</a>
                                 </td>
                             </tr>
 
@@ -462,11 +475,25 @@ $model->identification_country_issued = 13;
                                 <td>
 
                                     <?php
-                                    echo $form->dropDownList($model, 'visitor_type',
+                                    if(Yii::app()->user->role == Roles::ROLE_ADMIN) {
+                                        $list = VisitorType::model()->findAll('created_by = :c', [':c' => Yii::app()->user->id]);
+                                        echo '<select onchange="showHideHostPatientName(this)" name="Visitor[visitor_type]" id="Visitor_visitor_type">';
+                                        echo CHtml::tag('option',array('value' => ''),'Select Visitor Type',true);
+                                        foreach( $list as $val ) {
+                                            if ( $val->tenant == Yii::app()->user->tenant && $val->is_default_value == '1' ) {
+                                                echo CHtml::tag('option', array('value' => $val->id, 'selected' => 'selected'), CHtml::encode('Visitor Type: '.$val->name), true);
+                                            } else {
+                                                echo CHtml::tag('option', array('value' => $val->id), CHtml::encode('Visitor Type: '.$val->name), true);
+                                            }
+                                        } echo "</select>";
+                                    } else {
+                                        echo $form->dropDownList($model, 'visitor_type',
                                         VisitorType::model()->returnVisitorTypes(), array(
                                             'onchange' => 'showHideHostPatientName(this)',
                                             //'prompt' => 'Select Visitor Type',
                                         ));
+                                    }
+                                    
                                     ?>
                                     <span class="required">*</span>
                                     <?php echo $form->error($model, 'visitor_type'); ?>
@@ -714,8 +741,7 @@ $model->identification_country_issued = 13;
 
 
             <div id="searchVisitorTableDiv">
-                <h4>Search Results for : <span id='search'></span></h4>
-
+                <h4>Search Results for : <span id='search'></span><?php $this->widget('ext.widgets.loading.LoadingWidget'); ?></h4>
                 <?php
                 $form = $this->beginWidget('CActiveForm', array(
                     'id' => 'register-reason-form-search',
@@ -742,7 +768,7 @@ $model->identification_country_issued = 13;
 
             </div>
             <div class="register-a-visitor-buttons-div" style="padding-right:23px;text-align: right;">
-                <input type="button" class="neutral visitor-backBtn btnBackTab2" id="btnBackTab2" value="Back" onclick="window.location=location.href;return false;"/>
+                <input type="button" class="neutral visitor-backBtn " id="btnBackTab2" value="Back" onclick="javascript:backFillNewVistor();return false;"/>
                 <input type="button" id="clicktabB1" value="Save and Continue" class="actionForward"/>
             </div>
             <input type="text" id="selectedVisitorInSearchTable" value="0"/>
@@ -753,6 +779,14 @@ $model->identification_country_issued = 13;
 
 
 <script>
+
+    function backFillNewVistor(){
+        $('#addvisitor').show();
+        $("#searchvisitor").hide();
+        $('#search-visitor').val('');
+        $('#search-visitor').placeholder = 'Enter name, email, drivers licence';
+    }
+
     function switchIdentification() {
         if ($('#Visitor_alternative_identification').attr('checked')) {
             $('.primary-identification-require').hide();
@@ -774,6 +808,7 @@ $model->identification_country_issued = 13;
 		$( ".visitor-title" ).click(function() {
             $('#addvisitor').show();
             $("#searchvisitor").hide();
+            $("#search-visitor").val(''); 
         });
 
         $('#fromDay').on('change', function () {console.log('ok');
@@ -781,15 +816,15 @@ $model->identification_country_issued = 13;
 
             if(dt.getFullYear()< $("#fromYear").val()) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else{
                 $("#Visitor_date_of_birth_em_").hide();
@@ -801,15 +836,15 @@ $model->identification_country_issued = 13;
 
             if(dt.getFullYear()< $("#fromYear").val()) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else{
                 $("#Visitor_date_of_birth_em_").hide();
@@ -820,15 +855,15 @@ $model->identification_country_issued = 13;
 
             if(dt.getFullYear()< $("#fromYear").val()) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else{
                 $("#Visitor_date_of_birth_em_").hide();
@@ -953,13 +988,17 @@ $model->identification_country_issued = 13;
         //  $("#register-form").hide();
         // append searched text in modal
         var searchText = $("#search-visitor").val();
-		
+        Loading.show();
+        $("#searchVisitorTable").hide();
 //change modal url to pass user searched text
         var url = 'index.php?r=visitor/findvisitor&id=' + searchText + '&tenant=' + $("#search_visitor_tenant").val() + '&tenant_agent=' + $("#search_visitor_tenant_agent").val() + '&cardType=' + $('#selectCardDiv input[name=selectCardType]:checked').val();
         $.ajax(url).done(function(data){
+            Loading.hide();
+            $("#searchVisitorTable").show();
           $("#searchVisitorTable").html(data);
         }).fail(function() {
-           window.location = '<?php echo Yii::app()->createUrl('site/login');?>';
+            Loading.hide();
+            window.location = '<?php echo Yii::app()->createUrl('site/login');?>';
         }); 
         //$("#searchVisitorTable").html('<iframe id="findVisitorTableIframe" onLoad="autoResize();" width="100%" height="100%" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
             return false;
@@ -1107,7 +1146,7 @@ $model->identification_country_issued = 13;
                     });
 
                 }
-            },
+            }
         });
     }
 
@@ -1127,7 +1166,7 @@ $model->identification_country_issued = 13;
                 data: reasonForm,
                 success: function(data) {
                     addReasonInDropdown();
-                },
+                }
             });
         }
         else {
@@ -1235,10 +1274,7 @@ $('#Visitor_company').on('change', function() {
             $('#AddCompanyContactForm_companyName').val(companyName).prop('disabled', 'disabled');
             if (data == 0) {
                 $('#addContactLink').hide();
-                $modal.find('#myModalLabel').html('Add Company');
-                $("#addCompanyContactModal").modal("show");
             } else {
-                $modal.find('#myModalLabel').html('Add Contact To Company');
                 $('#visitorStaffRow').html(data);
                 $('#addContactLink').show();
             }
@@ -1246,29 +1282,21 @@ $('#Visitor_company').on('change', function() {
         }
     });
 });
-
-$('#addContactLink').on('click', function(e) {
-    $('#typePostForm').val('contact');
-});
-
-$('#addCompanyLink').on('click', function(e) {
-    $('#typePostForm').val('company');
-});
-
 </script>
 
 <input type="text" id="visitorId" placeholder="visitor id"/>
 
 <!-- PHOTO CROP-->
 <div id="light" class="white_content">
-    <div style="text-align:right;">
-        <input type="button" class="btn btn-success" id="cropPhotoBtn" value="Crop" style="">
-        <input type="button" id="closeCropPhoto" onclick="document.getElementById('light').style.display = 'none';
-                document.getElementById('fade').style.display = 'none'" value="x" class="btn btn-danger">
-    </div>
     <br>
     <img id="photoCropPreview" src="">
 
+</div>
+<div id="crop_button">
+    <input type="button" class="btn btn-success" id="cropPhotoBtn" value="Crop" style="">
+    <input type="button" id="closeCropPhoto" onclick="document.getElementById('light').style.display = 'none';
+                document.getElementById('fade').style.display = 'none';
+                document.getElementById('crop_button').style.display = 'none'" value="x" class="btn btn-danger">
 </div>
 <div id="fade" class="black_overlay"></div>
 

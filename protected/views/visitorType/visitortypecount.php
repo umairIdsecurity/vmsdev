@@ -6,7 +6,8 @@
 	'enableAjaxValidation'=>false,
 )); ?>
         <label> Date From:  </label>
-        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(    
+        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(   
+                        'attribute'   => 'date_from_filter',
                         'name'=>'date_from_filter',
                         'value'=>Yii::app()->request->getParam("date_from_filter"),
                         // additional javascript options for the date picker plugin
@@ -14,12 +15,15 @@
                              'changeYear' => true,
                             'dateFormat'=>'dd-mm-yy',
                             'changeMonth'=> true,
+                            'onClose' => 'js:function (selectedDate) { $("#date_to_filter").datepicker("option", "minDate", selectedDate); }',
                         ),
+                        'htmlOptions'=>array('readonly'=>"readonly"),
 
             )); ?>  
         
              <label> Date To: </label>
-              <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(    
+              <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(  
+                        'attribute'   => 'date_to_filter',
                         'name'=>'date_to_filter',
                         'value'=>Yii::app()->request->getParam("date_to_filter"),
                         // additional javascript options for the date picker plugin
@@ -28,6 +32,7 @@
                             'dateFormat'=>'dd-mm-yy',
                             'changeMonth'=> true,
                         ),
+                        'htmlOptions'=>array('readonly'=>"readonly"),
 
             )); ?>
          

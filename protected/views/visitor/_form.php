@@ -55,6 +55,12 @@ if (isset($company) && !empty($company)) {
     .select2 {
         margin: 0.2em 0 0.5em;
     }
+    #cropImageBtn {
+        float: left;
+        margin-left: -174px !important;
+        margin-top: 257px;
+        position: absolute;
+    }
 
 </style>
 
@@ -135,7 +141,7 @@ $form = $this->beginWidget('CActiveForm', array(
     <tr>
 
         <td id="uploadRow" rowspan="7" style='width:300px;padding-top:10px;'>
-            <table>
+            <table style="width:300px;float:left;min-height:320px;">
                 <input type="hidden" id="Visitor_photo" name="Visitor[photo]"
                        value="<?php echo $model['photo']; ?>">
                 <?php if ($model['photo'] != NULL) { ?>
@@ -173,8 +179,7 @@ $form = $this->beginWidget('CActiveForm', array(
                                              " style='display:none;'/>
                     <?php } ?>
                 </div>
-                </td>
-                </tr>
+
             </table>
 
 
@@ -772,7 +777,7 @@ function checkEmailIfUnique() {
 
             type: 'POST',
 
-            url: '<?php echo Yii::app()->createUrl('visitor/checkEmailIfUnique&id='); ?>' + email,
+            url: '<?php echo Yii::app()->createUrl('visitor/checkEmailIfUnique&email='); ?>' + email,
 
             dataType: 'json',
 
@@ -1108,7 +1113,6 @@ $('#Visitor_company').on('change', function() {
     $('#CompanySelectedId').val(companyId);
     $modal = $('#addCompanyContactModal');
     if(!companyId || companyId == ""){
-        console.log(company);
         $('#Visitor_company_em_').show();
         $('#Visitor_company_em_').html('Select a Company');
     } else {
@@ -1125,10 +1129,7 @@ $('#Visitor_company').on('change', function() {
             if (data == 0) {
                 $('#addContactLink').hide();
                 $('#visitorStaffRow').empty();
-                $modal.find('#myModalLabel').html('Add Company');
-                $("#addCompanyContactModal").modal("show");
             } else {
-                $modal.find('#myModalLabel').html('Add Contact To Company');
                 $('#visitorStaffRow').html(data);
                 $('#addContactLink').show();
             }
@@ -1136,15 +1137,6 @@ $('#Visitor_company').on('change', function() {
         }
     });
 });
-
-$('#addContactLink').on('click', function(e) {
-    $('#typePostForm').val('contact');
-});
-
-$('#addCompanyLink').on('click', function(e) {
-    $('#typePostForm').val('company');
-});
-
 </script>
 
 
@@ -1247,18 +1239,6 @@ $this->widget('bootstrap.widgets.TbButton', array(
 
 <div id="light" class="white_content">
 
-    <div style="text-align:right;">
-
-        <input type="button" class="btn btn-success" id="cropPhotoBtn" value="Crop" style="">
-
-        <input type="button" id="closeCropPhoto" onclick="document.getElementById('light').style.display = 'none';
-
-                document.getElementById('fade').style.display = 'none'" value="x" class="btn btn-danger">
-
-    </div>
-
-    <br>
-
     <?php if ($this->action->id == 'addvisitor') { ?>
 
         <img id="photoCropPreview" src="">
@@ -1274,8 +1254,18 @@ $this->widget('bootstrap.widgets.TbButton', array(
 
 </div>
 
-<div id="fade" class="black_overlay"></div>
+<div id="fade" class="black_overlay">
+</div>
+<div id="crop_button">
 
+    <input type="button" class="btn btn-success" id="cropPhotoBtn" value="Crop" style="">
+
+    <input type="button" id="closeCropPhoto" onclick="document.getElementById('light').style.display = 'none';
+
+                document.getElementById('fade').style.display = 'none';
+                document.getElementById('crop_button').style.display = 'none'" value="x" class="btn btn-danger">
+
+</div>
 
 <input type="hidden" id="x1"/>
 

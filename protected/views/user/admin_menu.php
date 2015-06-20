@@ -494,7 +494,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
             <!-- menu for AVMS Reports -->
             <li class='has-sub'>
                 <?php
-                echo CHtml::ajaxLink("AVMS Reports", CController::createUrl('visit/vicTotalVisitCountAjax'), array(
+                echo CHtml::link("AVMS Reports", array('visit/vicTotalVisitCount'), array(
                     'update' => '#content',
                     'complete' => "js:function(html){
                         $('.manageworkstations').next().slideUp('normal');
@@ -511,7 +511,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                 ));
                 ?>
                 <ul <?php
-                if ($this->action->id == 'vicTotalVisitCount' || $this->action->id == 'vicRegister') {
+                if ($this->action->id == 'vicTotalVisitCount' || $this->action->id == 'vicRegister' || $this->action->id == 'totalVicsByWorkstation' || $this->action->id == 'profilesAvmsVisitors' || $this->action->id == 'visitorsVicByType' || $this->action->id == 'visitorsVicByCardType') {
                     echo "style='display:block ;'";
                 }
                 ?>>
@@ -521,6 +521,12 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                         <a href='<?php echo Yii::app()->createUrl('visit/vicRegister'); ?>'><span>VIC Register</span></a>
                     </li>
                     <li><a href='<?php echo Yii::app()->createUrl('visit/totalVicsByWorkstation'); ?>'><span>Total VICs by Workstation</span></a></li>
+                    
+                    <li><a href='<?php echo Yii::app()->createUrl('reports/profilesAvmsVisitors'); ?>'><span>New Visitor Types ASIC & VIC</span></a></li>
+                    
+                    <li><a href='<?php echo Yii::app()->createUrl('reports/visitorsVicByType'); ?>'><span>Total VICs by Visitor Type</span></a></li>
+                
+                    <li><a href='<?php echo Yii::app()->createUrl('reports/visitorsVicByCardType'); ?>'><span>Total VICs by Card Type</span></a></li>
                 </ul>
             </li>
             <!-- menu for AVMS Reports -->
@@ -558,14 +564,50 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                 </li>
             <?php } ?>
             <!-- Ends Notifications -->
+            
+            <!-- REASONS -->
+            <?php if ($session['role'] == Roles::ROLE_SUPERADMIN || $session['role'] == Roles::ROLE_ADMIN) { ?>
+                <li class='has-sub'>
+                    <a class='managevisitorrecords'
+                       href='<?php echo Yii::app()->createUrl('reasons/admin'); ?>'><span>Contact Reasons</span></a>
+                    <ul <?php echo $this->id == 'reasons' ? "style='display:block'" : "style='display:none'"; ?>>
+                        <li><a href='<?php echo Yii::app()->createUrl('reasons/create'); ?>'
+                               class="addSubMenu"><span>Create Reason</span></a></li>
+                    </ul>
+                </li>
+            <?php } ?>
+            <!-- Ends REASONS -->
+            
         </ul>
     </div>
 </div>
 
 <script>
     $(document).ready(function () {
+        $('#addContactLink').on('click', function(e) {
+            $('#myModalLabel').html('Add Contact To Company');
+            $("tr.company_contact_field").addClass('hidden');
+            $("#AddCompanyContactForm_email").val("");
+            $("#AddCompanyContactForm_firstName").val("");
+            $("#AddCompanyContactForm_lastName").val("");
+            $("#AddCompanyContactForm_mobile").val("");
+            $("#AddCompanyContactForm_companyName").val($(".select2-selection__rendered").html());
+            $('#AddCompanyContactForm_companyName').prop('disabled',true);
+            $('#typePostForm').val('contact');
+        });
 
-    })
+        $('#addCompanyLink').on('click', function(e) {
+            $('#myModalLabel').html('Add Company');
+            $('#AddCompanyContactForm_companyName').enable();
+            $("tr.company_contact_field").addClass("hidden");
+            $("#AddCompanyContactForm_companyName").val("");
+            $("#AddCompanyContactForm_email").val("");
+            $("#AddCompanyContactForm_firstName").val("");
+            $("#AddCompanyContactForm_lastName").val("");
+            $("#AddCompanyContactForm_mobile").val("");
+            $('#typePostForm').val('company');
+        });
+    });
 </script>
 
 <?php $this->renderPartial('/visitor/_add_company_contact',

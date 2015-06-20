@@ -376,10 +376,14 @@ $form = $this->beginWidget('CActiveForm', array(
 
 <tr>
     <td class="workstationRow">
-        <select id="User_workstation" name="User[workstation]" disabled></select>
+
+        <?php
+        $listWorkstation = Workstation::model()->findAll("is_deleted = 0",'id','name');
+        echo $form->listBox($model,'userWorkstation1',CHtml::listData($listWorkstation,'id','name'),array('multiple'=>'multiple','style'=>'height:150px'/*,'options'=>$listWorkstationsOfUser*/));
+        ?>
+        <!--<select id="User_workstation" name="User[workstation]" disabled></select>-->
     </td>
 </tr>
-
 
 <!-- AVMS User specific form fields -->
 <?php if (CHelper::is_managing_avms_user() || $model->is_avms_user()) { ?>
@@ -497,6 +501,7 @@ $form = $this->beginWidget('CActiveForm', array(
 
         </tr>
     </table>
+	
     <div class="password-border">
         <table class="no-margin-bottom">
             <tr>
@@ -585,6 +590,78 @@ $form = $this->beginWidget('CActiveForm', array(
         </table>
     </div>
     <!-- password-border -->
+	
+	
+	<br>
+    <!-- ********************************************************************************** -->
+    <?php if(Roles::ROLE_OPERATOR == $currentRoleinUrl || Roles::ROLE_AIRPORT_OPERATOR == $currentRoleinUrl || Roles::ROLE_AGENT_AIRPORT_ADMIN == $currentRoleinUrl) { ?>
+    <div class="password-border">
+        <table class="no-margin-bottom">
+            <tr>
+                <td><strong>Inductions</strong></td>
+            </tr>
+
+
+            <tr>
+                <td>
+                    <table
+                        style=" margin-top:18px !important; width:253px; border-left-style:none; border-top-style:none">
+
+                        <tr>
+                            <td>
+                                User requires induction &nbsp;  <input type="radio" value="0" class="is_required_induction_radio" checked="checked" name="User[is_required_induction]"/>&nbsp;No&nbsp;
+                                                                <input type="radio" value="1" class="is_required_induction_radio" name="User[is_required_induction]" <?php if(!empty($model->is_required_induction) && ($model->is_required_induction == "1")){echo 'checked'; } ?>/>&nbsp;Yes
+                            </td>
+                        </tr>
+                        
+                        <tr <?php if($this->action->id == "update"){}else{ echo 'style="display:none"'; } ?> class="is_completed_tr">
+                            <td>
+                                Induction completed &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <input type="radio" value="0" class="is_completed_radio" checked="checked" id="is_completed_radio_no" name="User[is_completed_induction]"/>&nbsp;No&nbsp;
+                                <input type="radio" value="1" class="is_completed_radio" name="User[is_completed_induction]" <?php if(!empty($model->is_completed_induction) && ($model->is_completed_induction == "1")){echo 'checked'; } ?>/>&nbsp;Yes
+                            </td>
+                        </tr>
+                        
+                        <tr <?php if((($model->is_completed_induction == "1")) && !empty($model->induction_expiry) && ($this->action->id == "update")){}else{ echo 'style="display:none"'; } ?> class="induction_expiry_tr" id="induction_expiry_tr_id">
+                            <td>
+                                Expiry date <span class="required">*</span>
+                                <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(    
+                                            'name'=>'User[induction_expiry]',
+                                            'value'=>$model->induction_expiry,
+                                            'options'=>array(
+                                                 'changeYear' => true,
+                                                'dateFormat'=>'dd-mm-yy',
+                                                'changeMonth'=> true,
+                                            ),
+											'htmlOptions'=>array("id"=>"induction_expiry_id","readonly"=>"readonly")
+                                )); ?> 
+                                
+                                <span id="induction_expiry_error" style="display:none;color:red;">
+									Please select an expiry date
+								</span>
+                                    
+                                
+                            </td>
+                        </tr>
+                        
+
+                    </table>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+
+                </td>
+            </tr>
+
+        </table>
+    </div>
+    <?php } ?>
+    <!-- ********************************************************************************** -->
+	
+	
+	
+	
     <div class="row buttons ">
         <?php echo CHtml::submitButton($model->isNewRecord ? 'Save' : 'Save', array('id' => 'submitForm', 'class' => 'complete')); ?>
     </div>
@@ -620,6 +697,39 @@ if ($session['role'] != Roles::ROLE_SUPERADMIN) {
 
 <script>
 
+$(".is_required_induction_radio").click(function(){
+    var value=$(this).val();
+    if(value == 1){
+        $(".is_completed_tr").show();
+        $("#is_completed_radio_no").attr("checked",true);
+    }else{
+        $(".induction_expiry_tr").hide();
+        $(".is_completed_tr").hide();
+    }
+});
+
+$(".is_completed_radio").click(function(){
+    var value=$(this).val();
+    if(value == 1){
+        $(".induction_expiry_tr").show();
+    }else{
+		$("#induction_expiry_id").val("");
+        $(".induction_expiry_tr").hide();
+    }
+});
+
+$("#submitForm").click(function(e){
+	if($("#induction_expiry_tr_id").css('display') != 'none'){
+		if($("#induction_expiry_id").val() == ''){
+			$("#induction_expiry_error").show();
+			e.preventDefault();	
+		}else{
+			$("#induction_expiry_error").hide();
+		}
+	}
+});
+	
+
 $(document).ready(function () {
     var sessionRole = $("#currentRole").val(); //session role of currently logged in user
     var userId = $("#userId").val(); //id in url for update action
@@ -639,10 +749,28 @@ $(document).ready(function () {
     $("#tenantAgentRow").hide();
     $("#tenantRow").hide();
     $(".workstationRow").hide();
-
-    document.getElementById('User_tenant').disabled = true;
-    document.getElementById('User_tenant_agent').disabled = true;
-    document.getElementById('User_company').disabled = true;
+	
+	
+	/* breaking the script thats why ensure if not null */
+	
+	var elem1 = document.getElementById('User_tenant');
+	if(typeof elem1 !== 'undefined' && elem1 !== null) {
+		document.getElementById('User_tenant').disabled = true;
+	}
+	
+	var elem2 = document.getElementById('User_tenant_agent');
+	if(typeof elem2 !== 'undefined' && elem2 !== null) {
+		document.getElementById('User_tenant_agent').disabled = true;
+	}
+	
+	var elem3 = document.getElementById('User_company');
+	if(typeof elem3 !== 'undefined' && elem3 !== null) {
+		document.getElementById('User_company').disabled = true;
+	}
+	
+  
+    
+    
 
     if (actionId == 'update') {
         $("#fromYear").val($("#dateofBirthBreakdownValueYear").val());
@@ -697,9 +825,9 @@ $(document).ready(function () {
             document.getElementById('User_company').disabled = true;
         }
         else if (getRole == operator) {
-            document.getElementById('User_workstation').disabled = false;
+            /*document.getElementById('User_workstation').disabled = false;*/
             $(".workstationRow").show();
-            getWorkstation();
+            /*getWorkstation();*/
         }
         else if (getRole == agentadmin) {
             $("#addCompanyLink").show();
@@ -1646,16 +1774,18 @@ $this->widget('bootstrap.widgets.TbButton', array(
 
 <!-- PHOTO CROP-->
 <div id="light2" class="white_content">
-    <div style="text-align:right;">
-        <input type="button" class="btn btn-success" id="cropPhotoBtn2" value="Crop" style="">
-        <input type="button" id="closeCropPhoto2" onclick="document.getElementById('light2').style.display = 'none';
-                document.getElementById('fade2').style.display = 'none'" value="x" class="btn btn-danger">
-    </div>
-    <br>
+
     <img id="photoCropPreview2" src="">
 
 </div>
-<div id="fade2" class="black_overlay"></div>
+<div id="fade2" class="black_overlay">
+</div>
+<div  id="crop_button2">
+    <input type="button" class="btn btn-success" id="cropPhotoBtn2" value="Crop" style="">
+    <input type="button" id="closeCropPhoto2" onclick="document.getElementById('light2').style.display = 'none';
+                document.getElementById('fade2').style.display = 'none';
+                document.getElementById('crop_button2').style.display = 'none'" value="x" class="btn btn-danger">
+</div>
 
 <input type="hidden" id="x12"/>
 <input type="hidden" id="x22"/>

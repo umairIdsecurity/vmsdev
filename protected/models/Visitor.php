@@ -65,12 +65,13 @@ class Visitor extends CActiveRecord {
     const ASIC_PENDING = 3;
     const ASIC_ISSUED = 4;
 
+
     public static $VISITOR_CARD_TYPE_LIST = array(
         self::PROFILE_TYPE_CORPORATE => array(
         ),
         self::PROFILE_TYPE_VIC => array(
             1 => 'Card Status: Saved',
-            2 => 'Card Status: VIC holder',
+            2 => 'Card Status: VIC Holder',
             3 => 'Card Status: ASIC Pending',
             4 => 'Card Status: ASIC Issued',
             5 => 'Card Status: ASIC Denied',
@@ -78,6 +79,7 @@ class Visitor extends CActiveRecord {
         self::PROFILE_TYPE_ASIC => array(
             6 => 'Card Status: ASIC Issued',
             7 => 'Card Status: ASIC Applicant',
+            5 => 'Card Status: ASIC Denied',
         ),
     );
 
@@ -419,7 +421,7 @@ class Visitor extends CActiveRecord {
         $criteria->compare('asic_expiry', $this->asic_expiry, true);
         $criteria->compare('t.is_deleted', self::NOT_DELETED);
 
-        if (Yii::app()->controller->id == 'visit') {
+        if (Yii::app()->controller->id === 'visit') {
             $criteria->compare('CONCAT(first_name, \' \', last_name)', $this->first_name, true);
         } else {
             $criteria->compare('first_name', $this->first_name, true);
@@ -427,7 +429,11 @@ class Visitor extends CActiveRecord {
 
         $user = User::model()->findByPK(Yii::app()->user->id);
         if($user->role != Roles::ROLE_SUPERADMIN){
-             $criteria->condition = 't.is_deleted = 0 and t.tenant ="' . Yii::app()->user->tenant . '"';
+            if(Yii::app()->controller->id === 'visit'){
+                if(Yii::app()->controller->action->id !== 'vicTotalVisitCount' && Yii::app()->controller->action->id !== 'corporateTotalVisitCount'  ) {
+                    $criteria->condition = 't.is_deleted = 0 and t.tenant ="' . Yii::app()->user->tenant . '"';
+                }
+            }
         }
 
         if ($merge !== null) {
@@ -588,9 +594,9 @@ class Visitor extends CActiveRecord {
         $post->save();
     }
 
-    public function isEmailAddressTaken($email) {
+    public function isEmailAddressTaken($email,$id = 0) {
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "email = '" . $email . "' ";
+        $Criteria->condition = "email = '" . $email . "' ".($id?" AND id <> $id":"");
         $visitorEmail = Visitor::model()->findAll($Criteria);
 
         //$visitorEmail = array_filter($visitorEmail);
@@ -601,6 +607,19 @@ class Visitor extends CActiveRecord {
         } else {
             return true;
         }
+    }
+
+    public function checkAsicStatusById($id=0) {
+        $allow = 1;
+        $visitor = Visitor::model()->findByPk($id);
+
+        if($visitor){
+            //If CardStatus is ASIC DENIED Return FALSE
+            if($visitor->visitor_card_status == 5){
+                $allow = 0;
+            }
+        }
+        return $allow;
     }
 
     public function getIdOfUser($email) {

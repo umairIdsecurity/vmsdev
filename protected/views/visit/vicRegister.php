@@ -123,8 +123,18 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'filter'=>CHtml::activeTextField($model, 'company', array('placeholder'=>'Company Name', 'class' => 'header-form')),
         ),
         array(
+            'name' => 'contactperson',
+            'value' => '$data->company0->contact',
+            'filter'=>CHtml::activeTextField($model, 'contactperson', array('placeholder'=>'Contact Person', 'class' => 'header-form')),
+        ),
+        array(
+            'name' => 'contactphone',
+            'value' => '$data->company0->mobile_number',
+            'filter'=>CHtml::activeTextField($model, 'contactphone', array('placeholder'=>'Contact Phone', 'class' => 'header-form')),
+        ),
+        array(
             'name' => 'contactemail',
-            'value' => '$data->visitor0->email',
+            'value' => '$data->company0->email_address',
             'filter'=>CHtml::activeTextField($model, 'contactemail', array('placeholder'=>'Contact Email', 'class' => 'header-form')),
         ),
         array(
@@ -149,6 +159,11 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'name' => 'identification_document_expiry',
             'value' => 'date("d-m-Y", strtotime($data->visitor0->identification_document_expiry))',
             'filter'=>CHtml::activeTextField($model, 'identification_document_expiry', array('placeholder'=>'Expiry', 'class' => 'header-form')),
+        ),
+        array(
+            'name' => 'asicname',
+            'value' => 'isset($data->getHost()->fullName) ? $data->getHost()->fullName : ""',
+            'filter'=>CHtml::activeTextField($model, 'asicname', array('placeholder'=>'ASIC Name', 'class' => 'header-form')),
         ),
         array(
             'name' => 'asic_no',

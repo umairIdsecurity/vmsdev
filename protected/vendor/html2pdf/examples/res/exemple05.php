@@ -1,4 +1,3 @@
-
 <style type="text/css">
 <!--
 table
@@ -69,5 +68,4 @@ td.col1
         </tr>
     </tfoot>
 </table>
-
 Cool non ?<br>

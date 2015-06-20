@@ -9,7 +9,7 @@
 <?php
 
 $this->widget('zii.widgets.grid.CGridView', array(
-    'id' => 'corporate-total-visit-count',
+    'id' => 'vic-total-visit-count',
     'dataProvider' => $model->search($merge),
     'enableSorting' => false,
     //'ajaxUpdate'=>true,
@@ -66,7 +66,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
 
 ?>
 
-<div class="modal fade fix-modal-ie" style="width: 920px; margin-left: -373px" id="activeVisitModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade fix-modal-ie hidden" style="width: 920px; margin-left: -373px" id="activeVisitModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content ">
             <div class="modal-header listActive">
@@ -93,14 +93,31 @@ $this->widget('zii.widgets.grid.CGridView', array(
         </div>
     </div>
 </div>
-<div class="modal fade fix-modal-ie-reset" id="resetModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade fix-modal-ie-reset hidden" id="resetModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-body">
                 <form id="taskForm" class="form-horizontal">
                     <input type="hidden" id="linkReset"/>
                     <div class="form-group">
-                        <label style="float: left" class="col-md-2">Reason : </label>
+                        <label style="float: left" class="col-md-2">ASIC Application Lodgement Date : </label>
+                        <?php
+                        $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                            'name' => 'datePicker',
+                            'id' => 'lodgementDatePicker',
+                            'options' => array(
+                                'dateFormat' => 'yy-mm-dd',
+                            ),
+                            'htmlOptions' => array(
+                                'size' => '0',
+                                'maxlength' => '20',
+                                'style' => 'width: 80px;',
+                            ),
+                        ));
+                        ?>
+                        <br>
+                        <br>
+                        <label style="float: left" class="col-md-2">Notes : </label>
                         <div class="col-md-9">
                             <input style="width: 450px" type="text" id="reasonForReset" class="form-control input-sm" />
                         </div>
@@ -137,6 +154,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
                 data: {id: id},
                 success: function(response) {
                     container.append(response);
+                    $('#activeVisitModal').removeClass('hidden');
                     $('#activeVisitModal').modal('show');
                 }
             });
@@ -163,7 +181,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
                 url: linkNegate,
                 data: {reason: reason, ids: ids},
                 success: function(response) {
-                    $.fn.yiiGridView.update('corporate-total-visit-count');
+                    $.fn.yiiGridView.update('vic-total-visit-count');
                     $('#reasonForNegate').val('');
                     document.getElementById('negate_reason').style.display="none";
                     $.ajax({
@@ -185,6 +203,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         $('.resetCount').live('click', function(e){
             e.preventDefault();
             var linkReset = $(this).data('link');
+            $('#resetModal').removeClass('hidden');
             $('#resetModal').modal('show');
             $('#resetModal #linkReset').val(linkReset);
             $('#reasonForReset').val("");
@@ -196,12 +215,19 @@ $this->widget('zii.widgets.grid.CGridView', array(
             e.preventDefault();
             $('#resetModal').modal('hide');
             var reason = $('#reasonForReset').val();
+            var lodgementDate = $('#lodgementDatePicker').val();
             $.ajax({
                 type:'GET',
                 url: $('#linkReset').val(),
-                data: {reason: reason},
-                success:function(response) {
-                    $.fn.yiiGridView.update('corporate-total-visit-count');
+                data: {reason: reason, lodgementDate: lodgementDate },
+                success:function(data) {
+                    if(! data || data == '') {
+                        $.fn.yiiGridView.update('vic-total-visit-count');
+                    } else {
+                        alert(data);
+                    }
+
+
                 }
             });
             return false;

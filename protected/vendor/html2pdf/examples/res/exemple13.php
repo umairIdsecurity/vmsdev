@@ -1,4 +1,3 @@
-
 <style type="text/css">
 <!--
 table.tableau { text-align: left; }
@@ -86,5 +85,4 @@ Table :<br>
 Div :<br>
 <div style="width: 103mm; border: solid 1px green; text-align: left; margin: 1mm 0 1mm 0;padding: 1mm;"><?php echo $phrase; ?></div>
 <div style="width: 103mm; border: solid 1px green; text-align: center;margin: 1mm 0 1mm 0;padding: 1mm;"><?php echo $phrase; ?></div>
-
 <div style="width: 103mm; border: solid 1px green; text-align: right; margin: 1mm 0 1mm 0;padding: 1mm;"><?php echo $phrase; ?></div>

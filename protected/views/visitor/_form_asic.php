@@ -194,6 +194,7 @@ if ($this->action->id == 'update') {
                                             echo " class='hidden' ";
                                         }
                                         ?>>
+
                                             <select id="Visitor_tenant" onchange="populateTenantAgentAndCompanyField()"
                                                     name="Visitor[tenant]">
                                                 <option value='' selected>Please select a tenant</option>
@@ -446,15 +447,15 @@ if ($this->action->id == 'update') {
         var dt = new Date();
         if(dt.getFullYear()< $("#fromYear").val()) {
             $("#Visitor_date_of_birth_em_").show();
-            $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+            $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
             return false;
         }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
             $("#Visitor_date_of_birth_em_").show();
-            $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+            $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
             return false;
         }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
             $("#Visitor_date_of_birth_em_").show();
-            $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+            $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
             return false;
         }
 
@@ -485,15 +486,15 @@ if ($this->action->id == 'update') {
 
             if(dt.getFullYear()< $("#fromYear").val()) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else{
                 $("#Visitor_date_of_birth_em_").hide();
@@ -504,15 +505,15 @@ if ($this->action->id == 'update') {
 
             if(dt.getFullYear()< $("#fromYear").val()) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else{
                 $("#Visitor_date_of_birth_em_").hide();
@@ -523,15 +524,15 @@ if ($this->action->id == 'update') {
 
             if(dt.getFullYear()< $("#fromYear").val()) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else{
                 $("#Visitor_date_of_birth_em_").hide();
@@ -633,7 +634,7 @@ if ($this->action->id == 'update') {
         if (email != "<?php echo $model->email ?>") {
             $.ajax({
                 type: 'POST',
-                url: '<?php echo Yii::app()->createUrl('visitor/checkEmailIfUnique&id='); ?>' + email,
+                url: '<?php echo Yii::app()->createUrl('visitor/checkEmailIfUnique&email='); ?>' + email,
                 dataType: 'json',
                 data: email,
                 success: function (r) {
@@ -795,7 +796,6 @@ if ($this->action->id == 'update') {
     }
 
     function sendVisitorForm() {
-
         var form = $("#register-form").serialize();
         var url;
 
@@ -804,7 +804,6 @@ if ($this->action->id == 'update') {
         } else {
             url = "<?php echo CHtml::normalizeUrl(array("visitor/addvisitor")); ?>";
         }
-
         $.ajax({
             type: "POST",
             url: url,
@@ -878,10 +877,7 @@ $('#Visitor_company').on('change', function() {
             if (data == 0) {
                 $('#addContactLink').hide();
                 $('#visitorStaffRow').empty();
-                $modal.find('#myModalLabel').html('Add Company');
-                $("#addCompanyContactModal").modal("show");
             } else {
-                $modal.find('#myModalLabel').html('Add Contact To Company');
                 $('#visitorStaffRow').html(data);
                 $('#addContactLink').show();
             }
@@ -889,15 +885,6 @@ $('#Visitor_company').on('change', function() {
         }
     });
 });
-
-$('#addContactLink').on('click', function(e) {
-    $('#typePostForm').val('contact');
-});
-
-$('#addCompanyLink').on('click', function(e) {
-    $('#typePostForm').val('company');
-});
-
 </script>
 
 
@@ -929,11 +916,6 @@ $this->widget('bootstrap.widgets.TbButton', array(
 <!-- PHOTO CROP-->
 
 <div id="light" class="white_content">
-    <div style="text-align:right;">
-        <input type="button" class="btn btn-success" id="cropPhotoBtn" value="Crop" style="">
-        <input type="button" id="closeCropPhoto" onclick="document.getElementById('light').style.display = 'none';
-                document.getElementById('fade').style.display = 'none'" value="x" class="btn btn-danger">
-    </div>
     <br>
     <?php if ($this->action->id == 'addvisitor') { ?>
         <img id="photoCropPreview" src="">
@@ -944,6 +926,12 @@ $this->widget('bootstrap.widgets.TbButton', array(
 </div>
 
 <div id="fade" class="black_overlay"></div>
+<div id="crop_button">
+    <input type="button" class="btn btn-success" id="cropPhotoBtn" value="Crop" style="">
+    <input type="button" id="closeCropPhoto" onclick="document.getElementById('light').style.display = 'none';
+                document.getElementById('fade').style.display = 'none';
+                document.getElementById('crop_button').style.display = 'none'" value="x" class="btn btn-danger">
+</div>
 
 <input type="hidden" id="x1"/>
 <input type="hidden" id="x2"/>

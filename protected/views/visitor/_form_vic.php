@@ -204,20 +204,19 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                                             <?php
                                            // Show Default selected to Admin only 
                                            if(Yii::app()->user->role == Roles::ROLE_ADMIN) {
-                                               echo '<select name="Visitor[visitor_type]" id="Visitor_visitor_type">';
-                                               echo CHtml::tag('option',array('value' => ''),'Select Visitor Type',true);
-                                               $list = VisitorType::model()->findAll();
-
-                                               foreach( $list as $val ) {
-                                                   if ( $val->tenant == Yii::app()->user->tenant && $val->is_default_value == '1' ) {
-                                                       echo CHtml::tag('option', array('value' => $val->id, 'selected' => 'selected'), CHtml::encode('Visitor Type: '.$val->name), true);
-                                                   } else {
-                                                       echo CHtml::tag('option', array('value' => $val->id), CHtml::encode('Visitor Type: '.$val->name), true);
-                                                   }
-                                               } echo "</select>";
-                                           }  else {
-                                               echo $form->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes(NULL,"`name` like '{$model->profile_type}%'"));
-                                           }
+                                                $list = VisitorType::model()->findAll('created_by = :c', [':c' => Yii::app()->user->id]);
+                                                echo '<select name="Visitor[visitor_type]" id="Visitor_visitor_type">';
+                                                echo CHtml::tag('option',array('value' => ''),'Select Visitor Type',true);
+                                                foreach( $list as $val ) {
+                                                    if ( $val->tenant == Yii::app()->user->tenant && $val->is_default_value == '1' ) {
+                                                        echo CHtml::tag('option', array('value' => $val->id, 'selected' => 'selected'), CHtml::encode('Visitor Type: '.$val->name), true);
+                                                    } else {
+                                                        echo CHtml::tag('option', array('value' => $val->id), CHtml::encode('Visitor Type: '.$val->name), true);
+                                                    }
+                                                } echo "</select>";
+                                            }  else {
+                                                echo $form->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes(NULL,"`name` like '{$model->profile_type}%'"));
+                                            }
                                           
                                             ?>
                                             <span class="required">*</span>
@@ -262,7 +261,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                                 <select id="fromDay" name="Visitor[birthdayDay]" class='daySelect'></select>
                                 <select id="fromMonth" name="Visitor[birthdayMonth]" class='monthSelect'></select>
                                 <select id="fromYear" name="Visitor[birthdayYear]" class='yearSelect'></select>
-
+                                <span class="required">*</span>
                                 <?php echo "<br>" . $form->error($model, 'date_of_birth'); ?>
                             </td>
                         </tr>
@@ -478,6 +477,25 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                                     <label  class="form-label">One of these has a verifiable signature</label>
                                 </td>
                             </tr>
+                            <tr class="hidden">
+                                <td>
+                                    <input placeholder="Password" ng-model="user.passwords" data-ng-class="{
+                                                'ng-invalid':registerform['Visitor[repeatpassword]'].$error.match}"
+                                           type="password" id="Visitor_password" name="Visitor[password]"
+                                           value="(NULL)">
+                                    <span class="required">*</span>
+                                    <?php echo "<br>" . $form->error($model, 'password'); ?>
+                                </td>
+                            </tr>
+                            <tr class="hidden">
+                                <td>
+                                    <input placeholder="Repeat Password" ng-model="user.passwordConfirm" type="password"
+                                           id="Visitor_repeatpassword" data-match="user.passwords"
+                                           name="Visitor[repeatpassword]" value="(NULL)"/>
+                                    <span class="required">*</span>
+                                    <?php echo "<br>" . $form->error($model, 'repeatpassword'); ?>
+                                </td>
+                            </tr>
                             <tr>
                                 <td>
                                     <?php $this->renderPartial('/common_partials/password', array('model' => $model, 'form' => $form, 'session' => $session)); ?>
@@ -508,15 +526,15 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
         var dt = new Date();
         if(dt.getFullYear()< $("#fromYear").val()) {
             $("#Visitor_date_of_birth_em_").show();
-            $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+            $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
             return false;
         }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
             $("#Visitor_date_of_birth_em_").show();
-            $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+            $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
             return false;
         }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
             $("#Visitor_date_of_birth_em_").show();
-            $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+            $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
             return false;
         }
 
@@ -527,6 +545,31 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
             $("#Visitor_visitor_workstation_em_").html('Please enter Workstation');
             return false;
         }
+
+        if ($('.password_requirement').filter(':checked').val() == "<?php echo PasswordRequirement::PASSWORD_IS_REQUIRED; ?>") {
+            if ($('.password_option').filter(':checked').val() == "<?php echo PasswordOption::CREATE_PASSWORD; ?>") {
+                $('.visitor_password').empty().hide();
+                $('.visitor_password_repeat').empty().hide();
+                var password_temp = $('#Visitor_password_input').val();
+                var password_repeat_temp = $('#Visitor_repeatpassword_input').val();
+                if (password_temp == '') {
+                    $('.visitor_password').html('Password should be specified').show();
+                    return false;
+                } else if (password_repeat_temp == '') {
+                    $('.visitor_password_repeat').html('Please confirm a password').show();
+                    return false;
+                } else if (password_temp != password_repeat_temp) {
+                    $('.visitor_password_repeat').html('Passwords are not matched').show();
+                    return false;
+                }
+                $('input[name="Visitor[password]"]').val(password_temp);
+                $('input[name="Visitor[repeatpassword]"]').val(password_repeat_temp);
+            }
+        } else {
+            $('.visitor_password').empty().hide();
+            $('.visitor_password_repeat').empty().hide();
+        }
+
         if (!hasError) {
             if (!companyValue || companyValue == "") {
                 $("#company_error_").show();
@@ -561,15 +604,15 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
 
             if(dt.getFullYear()< $("#fromYear").val()) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else{
                 $("#Visitor_date_of_birth_em_").hide();
@@ -580,15 +623,15 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
 
             if(dt.getFullYear()< $("#fromYear").val()) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else{
                 $("#Visitor_date_of_birth_em_").hide();
@@ -599,15 +642,15 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
 
             if(dt.getFullYear()< $("#fromYear").val()) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else{
                 $("#Visitor_date_of_birth_em_").hide();
@@ -733,7 +776,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
         if (email != "<?php echo $model->email ?>") {
             $.ajax({
                 type: 'POST',
-                url: '<?php echo Yii::app()->createUrl('visitor/checkEmailIfUnique&id='); ?>' + email,
+                url: '<?php echo Yii::app()->createUrl('visitor/checkEmailIfUnique&email='); ?>' + email,
                 dataType: 'json',
                 data: email,
                 success: function (r) {
@@ -922,14 +965,21 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
             type: "POST",
             url: url,
             data: form,
-            success: function (data) {
-                if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
-                    window.location = 'index.php?r=dashboard';
-                } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
-                    window.location = 'index.php?r=dashboard/viewmyvisitors';
-                } else {
-                    window.location = 'index.php?r=visitor/admin';
+            success: function (data, response) {
+                if(data == ''){
+                    if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
+                        window.location = 'index.php?r=dashboard';
+                    } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
+                        window.location = 'index.php?r=dashboard/viewmyvisitors';
+                    } else {
+                        window.location = 'index.php?r=visitor/admin';
+                    }
+                }else {
+                    alert(data); return;
                 }
+            },
+            complete: function() {
+                $("#submitFormVisitor").data('requestRunning', false);
             },
             error: function (data) {
                 if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
@@ -998,10 +1048,7 @@ $('#Visitor_company').on('change', function() {
             if (data == 0) {
                 $('#addContactLink').hide();
                 $('#visitorStaffRow').empty();
-                $modal.find('#myModalLabel').html('Add Company');
-                $("#addCompanyContactModal").modal("show");
             } else {
-                $modal.find('#myModalLabel').html('Add Contact To Company');
                 $('#visitorStaffRow').html(data);
                 $('#addContactLink').show();
             }
@@ -1009,15 +1056,6 @@ $('#Visitor_company').on('change', function() {
         }
     });
 });
-
-$('#addContactLink').on('click', function(e) {
-    $('#typePostForm').val('contact');
-});
-
-$('#addCompanyLink').on('click', function(e) {
-    $('#typePostForm').val('company');
-});
-
 </script>
 
 
@@ -1049,12 +1087,6 @@ $this->widget('bootstrap.widgets.TbButton', array(
 <!-- PHOTO CROP-->
 
 <div id="light" class="white_content">
-    <div style="text-align:right;">
-        <input type="button" class="btn btn-success" id="cropPhotoBtn" value="Crop" style="">
-        <input type="button" id="closeCropPhoto" onclick="document.getElementById('light').style.display = 'none';
-                document.getElementById('fade').style.display = 'none'" value="x" class="btn btn-danger">
-    </div>
-    <br>
     <?php if ($this->action->id == 'addvisitor') { ?>
         <img id="photoCropPreview" src="">
     <?php } elseif ($this->action->id == 'update') { ?>
@@ -1064,7 +1096,12 @@ $this->widget('bootstrap.widgets.TbButton', array(
 </div>
 
 <div id="fade" class="black_overlay"></div>
-
+<div id="crop_button">
+    <input type="button" class="btn btn-success" id="cropPhotoBtn" value="Crop" style="">
+    <input type="button" id="closeCropPhoto" onclick="document.getElementById('light').style.display = 'none';
+                document.getElementById('fade').style.display = 'none';
+                document.getElementById('crop_button').style.display = 'none'" value="x" class="btn btn-danger">
+</div>
 <input type="hidden" id="x1"/>
 <input type="hidden" id="x2"/>
 <input type="hidden" id="y1"/>

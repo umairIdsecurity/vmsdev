@@ -1,4 +1,3 @@
-
 *********************************************************
 ** This program is distributed under the LGPL License, **
 ** for more information see file _LGPL.txt or          **
@@ -92,4 +91,3 @@ Thanks :
  * Nicola Asuni: for the changes he has agreed to make to TCPDF
  * yAronet: for hosting support forum
  * everyone who helped me to develop this library and to bring the texts
-

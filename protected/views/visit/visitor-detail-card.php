@@ -2,7 +2,7 @@
 $session = new CHttpSession;
 
 $session['count'] = 1;
-date_default_timezone_set('Asia/Manila');
+//date_default_timezone_set('Asia/Manila'); remove hard code
 $tenant = User::model()->findByPk($visitorModel->tenant);
 $photoForm = $this->beginWidget('CActiveForm', array(
     'id' => 'update-photo-form',
@@ -18,13 +18,12 @@ $photoForm = $this->beginWidget('CActiveForm', array(
     ),
         ));
 ?>
-
 <input type="text" value="<?php echo $visitorModel->photo; ?>" name="Visitor[photo]" id="Visitor_photo">
 <?php echo "<br>" . $photoForm->error($visitorModel, 'photo'); ?>
 <input type="submit" id="submitBtnPhoto">
 <?php $this->endWidget(); ?>
 
-<div class="cardPhotoPreview" style="height:0px;">
+<div class="cardPhotoPreview" style="height:0px; margin-left: 15px;">
     <?php if ($visitorModel->photo != '') { ?>
         <img id="photoPreview" src="<?php echo Photo::model()->returnVisitorPhotoRelativePath($model->visitor) ?>">
     <?php } else { ?>
@@ -33,133 +32,18 @@ $photoForm = $this->beginWidget('CActiveForm', array(
 </div>
 <?php
 $vstr = Visitor::model()->findByPk($model->visitor);
-if ($vstr->profile_type == "CORPORATE" && $model->card_type == 4) {
-    $cardclass = "cardDiv";
-} elseif ($vstr->profile_type == "CORPORATE" && $model->card_type != 4) {
-    $cardclass = "cardDivCD";
-} elseif ($vstr->profile_type == "ASIC") {
-    $cardclass = "cardDivVR";
-} elseif ($vstr->profile_type == "VIC") {
-    $cardclass = "cardDivVY";
+if ($vstr->profile_type == "CORPORATE") {
+    $bgcolor = CardGenerated::CORPORATE_CARD_COLOR;
+}/* elseif ($vstr->profile_type == "ASIC") {
+    $bgcolor = CardGenerated::ASIC_CARD_COLOR;
+} */elseif ($vstr->profile_type == "VIC" || $vstr->profile_type == "ASIC") {
+     $bgcolor = CardGenerated::VIC_CARD_COLOR;
 }
 ?>
-
-<div id="<?= $cardclass; ?>">
-    <div class="card-content-company-img">
-        <?php
-        if ($tenant) {
-            if ($tenant->company != '') {
-                $company = Company::model()->findByPk($tenant->company);
-                if (!empty($company)) {
-                    $companyLogoId = $company->logo;
-                    $companyLogoId;
-                    if ($companyLogoId == "") {
-                        $companyLogo = Yii::app()->controller->assetsBase . "/" . 'images/companylogohere.png';
-                    } else {
-                        $companyLogo = Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
-                    }
-                }
-
-                if (!empty($companyLogo)):
-                    ?>
-        <img style="  margin-right: 60px; " class='<?php
-                    if ($model->visit_status != VisitStatus::ACTIVE) {
-                        echo "cardCompanyLogoPreregistered";
-                    } else {
-                        echo "cardCompanyLogo";
-                    }
-                    ?>' src="<?php
-                         echo $companyLogo;
-                         ?>"/>
-                         <?php
-                     endif;
-                 }
-             }
-             ?>
-    </div>
-    <div class="card-content">
-        <div class="card-content-table">
-            <table class="" id="cardDetailsTable">
-                <tr>
-                    <td>
-                        <?php
-                        if ($tenant) {
-                            if ($tenant->company != '') {
-                                if (!empty($company)) {
-                                    echo $company->code;
-                                }
-                            }
-                        }
-                        ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td><span class="cardDateText"><?php
-                            if ($model->card_type == CardType::SAME_DAY_VISITOR) {
-                                if (!strtotime($model->date_check_out)) {
-                                    $date1 = date('d M y');
-                                    echo date("d M y", strtotime($date1));
-                                } else {
-                                    // echo Yii::app()->dateFormatter->format("d/MM/y", strtotime($model->date_out));
-                                    echo date("d M y", strtotime($model->date_check_out));
-                                }
-                            } elseif (in_array($model->card_type, array(CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY))) { // Extended Card Type (EVIC) or Multiday
-                                if (strtotime($model->date_check_out) <= 0) {
-                                    $today = date('d-m-Y');
-                                    $model->date_check_out = date('d-m-Y', strtotime($today . ' + 28 days'));
-                                }
-                                echo date("d M y", strtotime($model->date_check_out));
-                            } else {
-                                if (strtotime($model->date_check_out)) {
-                                    $date2 = date('d M y');
-                                    echo date("d M y", strtotime($date2));
-                                } else {
-                                    // echo Yii::app()->dateFormatter->format("d/MM/y", strtotime($model->date_out));
-                                    echo date("d M y", strtotime($model->date_check_out));
-                                }
-                            }
-                            ?></span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div style="width:132px">
-                            <?php
-                            if (strlen($visitorModel->first_name . ' ' . $visitorModel->last_name) > 32) {
-                                $first_name = explode(' ', $visitorModel->first_name);
-                                $last_name = explode(' ', $visitorModel->last_name);
-                                echo $first_name[0] . ' ' . $last_name[0];
-                            } else {
-                                echo $visitorModel->first_name . ' ' . $visitorModel->last_name;
-                            }
-                            ?>
-
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span style="<?php
-                        if ($model->visit_status != VisitStatus::ACTIVE) {
-                            echo 'display:none;';
-                        }
-                        ?>">
-                                  <?php
-                                  if ($model->card != '') {
-                                      echo CardGenerated::model()->findByPk($model->card)->card_number;
-                                  }
-                                  ?>
-                        </span>
-                    </td>
-                </tr>
-            </table>
-        </div>
-    </div>
-
-</div>
+<?php $this->renderPartial("_card_detail",array('bgcolor'=>$bgcolor,'model'=>$model,'visitorModel'=>$visitorModel));?>
 <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
 <?php if ($visitorModel->photo != '') { ?>
-    <input type="button" class="btn editImageBtn actionForward" id="editImageBtn" value="Edit Photo" onclick = "document.getElementById('light').style.display = 'block';
+<input type="button" class="btn editImageBtn actionForward" id="editImageBtn" style="  margin-bottom: 2px!important;" value="Edit Photo" onclick = "document.getElementById('light').style.display = 'block';
                 document.getElementById('fade').style.display = 'block'"/>
        <?php } ?>
 <div
@@ -175,9 +59,9 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
         ));
         ?>
 </div>
-<?php if (!in_array($model->card_type, [CardType::SAME_DAY_VISITOR, CardType::MULTI_DAY_VISITOR, CardType::CONTRACTOR_VISITOR, CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_24HOURS, CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY]) || !in_array($model->visit_status, [VisitStatus::SAVED, VisitStatus::CLOSED, VisitStatus::EXPIRED, VisitStatus::PREREGISTERED])): ?>
+<?php if (in_array($model->card_type, [CardType::SAME_DAY_VISITOR, CardType::MULTI_DAY_VISITOR, CardType::CONTRACTOR_VISITOR, CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_24HOURS, CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY]) && $model->visit_status ==VisitStatus::ACTIVE){ ?>
 <div class="dropdown">
-    <button class="complete btn btn-info printCardBtn dropdown-toggle" style="width:205px !important" type="button" id="menu1" data-toggle="dropdown">Print Card
+    <button class="complete btn btn-info printCardBtn dropdown-toggle" style="width:205px !important; margin-top: 4px; margin-right: 80px;" type="button" id="menu1" data-toggle="dropdown">Print Card
         <span class="caret pull-right"></span></button>
     <ul class="dropdown-menu" style="left: 62px;" role="menu" aria-labelledby="menu1">
         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo yii::app()->createAbsoluteUrl('cardGenerated/pdfprint', array('id' => $model->id, 'type' => 1)) ?>">Print On Standard Printer</a></li>
@@ -185,9 +69,13 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo yii::app()->createAbsoluteUrl('cardGenerated/pdfprint', array('id' => $model->id, 'type' => 3)) ?>">Rewritable Print Card</a></li>
     </ul>
 </div>
-<?php endif; ?>
+<?php }else{ ?>
+<button class="complete btn btn-info printCardBtn dropdown-toggle" disabled="disabled" style="width:205px !important; margin-top: 4px; margin-right: 80px;" type="button" id="menu1" data-toggle="dropdown">Print Card
+        <span class="caret pull-right"></span></button>
+<?php }?>
+
 <?php if ($model->visit_status != VisitStatus::SAVED): ?>
-<div style="margin-top: 10px;">
+<div style="margin-top: 10px;margin-right: 69px;">
 <?php
 $companyName = isset($visitCount['companyName']) ? $visitCount['companyName'] : '';
 $totalCompanyVisit = (isset($visitCount['totalVisits']) && !empty($visitCount['totalVisits'])) ? ($visitCount['totalVisits'] < 0) ? 0 : $visitCount['totalVisits'] : '0';
@@ -203,7 +91,7 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
 <input type="hidden" id="remaining_day" value="<?php echo $remainingDays; ?>">
 <?php endif; ?>
 <form method="post" id="workstationForm" action="<?php echo Yii::app()->createUrl('visit/detail', array('id' => $model->id)); ?>">
-    <div style="margin: 10px 0px 0px 60px; text-align: left;">
+    <div style="margin: 10px 0px 0px 19px; text-align: left;">
         <?php
         if ($asic) {
             array_pop(Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC]);
@@ -235,12 +123,7 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
                 }
             }
             echo CHtml::dropDownList('Visit[card_type]', $model->card_type, $cardTypeResults);
-            echo "<br />";
 
-            if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN, Roles::ROLE_SUPERADMIN])) {
-                echo '<input type="submit" class="hidden" id="submitWorkStationForm">';
-                echo '<input type="submit" class="complete" id="btnWorkStationForm" value="Update">';
-            }
         }
         ?>
         
@@ -372,32 +255,20 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
     function populateVisitWorkstation(value) {
         $("#Visit_workstation").val(value.value);
     }
-
-    $(document).on('change', '#Visitor_visitor_card_status', function(e) {
-        var selected = $(this).val();
-        var remainingDays = $('#remaining_day').val();
-        if (selected == "<?php echo Visitor::ASIC_PENDING; ?>" && remainingDays < 27) {
-            $('#checkout_date_warning').html('An EVIC can’t be issued to this VIC holder <br /> as they don’t have 28 days remaining.<br />Please update their Card Status to ASIC <br />Pending or Select another card type.').show();
-            $('#btnWorkStationForm').attr('disabled', true);
-        } else {
-            $('#checkout_date_warning').html('').hide();
-            $('#btnWorkStationForm').attr('disabled', false);
-        }
-    });
 </script>
 <!--POP UP FOR CROP PHOTO -->
 
 <div id="light" class="white_content">
+    <img id="photoCropPreview" width="500px" height="500px" src="<?php echo Photo::model()->returnVisitorPhotoRelativePath($model->visitor) ?>">
+
+</div>
+<div id="fade" class="black_overlay">
     <div style="text-align:right;">
         <input type="button" class="btn btn-success" id="cropPhotoBtn" value="Crop" style="">
         <input type="button" id="closeCropPhoto" onclick="document.getElementById('light').style.display = 'none';
                 document.getElementById('fade').style.display = 'none'" value="x" class="btn btn-danger">
     </div>
-    <br>
-    <img id="photoCropPreview" width="500px" height="500px" src="<?php echo Photo::model()->returnVisitorPhotoRelativePath($model->visitor) ?>">
-
 </div>
-<div id="fade" class="black_overlay"></div>
 
 <input type="hidden" id="x1"/>
 <input type="hidden" id="x2"/>

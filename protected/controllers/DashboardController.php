@@ -210,61 +210,52 @@ class DashboardController extends Controller {
     }
 
     public function actionContactSupport() {
+        
         $session = new CHttpSession;
+        
         $user_id = Yii::app()->user->id;
         $userModel = User::model()->findByPk($user_id);
 
         $model = new ContactForm;
+        
         if (isset($_POST['ContactForm'])) {
             $model->attributes = $_POST['ContactForm'];
             $model->name = $userModel->first_name . ' ' . $userModel->last_name;
             $model->email = $userModel->email;
 
             if ($model->validate()) {
-                $headers = "From: {$model->email}\r\nReply-To: {$model->email}";
+                
+                $headers = "MIME-Version: 1.0" . "\r\n";
+                $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+                $headers .= "From: {$model->email}\r\nReply-To: {$model->email}";
 
-                $content = $model->message . "\r\n\r\n~This message was sent via Visitor Management System~";
+                $content = "Reason: ".$model->reason."<br><br>Message: ".$model->message . "<br><br>~This message was sent via Visitor Management System~";
 
-                switch ($session['role']) {
-                    case Roles::ROLE_SUPERADMIN:
-                        $to_address = 'support@idsecurity.com.au';
-                        break;
-
-                    case Roles::ROLE_ADMIN:
-                        if ($model->subject == 'Technical Support') {
-                            $to_address = 'support@idsecurity.com.au';
-                        } else {
-                            if ($session['tenant'] == Yii::app()->user->id) {
-                                $email = User::model()->find("role = " . Roles::ROLE_SUPERADMIN)->email;
-                            } else {
-                                $email = User::model()->findByPk($session['tenant'])->email;
-                            }
-                            $to_address = $email;
-                        }
-                        break;
-
-
-                    default:
-                        if ($model->subject == 'Technical Support') {
-                            $to_address = 'support@idsecurity.com.au';
-                        } else {
-
-                            $to_address = User::model()->findByPk($session['tenant'])->email;
-                        }
-
-                        break;
+                $criteria = new CDbCriteria;
+                //send emails to current logged in user tenants
+                $criteria->addCondition('tenant ='.Yii::app()->user->tenant);
+                       
+                // Expected CAVMS-427: When user selects 'Identity Security' option then system should send notifications to below users: 
+                // Issuing Body admin, Airport Operators, Agent airport Administrators and Agent airport Operators.                              
+                if($model->role_id == Roles::ROLE_SUPERADMIN) {  // Super Admin is renamed as Identity security under Dropdown                               
+                    $roles = Roles::ROLE_ISSUING_BODY_ADMIN.','.Roles::ROLE_AIRPORT_OPERATOR.','.Roles::ROLE_AGENT_AIRPORT_OPERATOR.','.Roles::ROLE_AGENT_AIRPORT_ADMIN;
+                    $criteria->addCondition('role IN ('.$roles.') AND is_deleted = 0 ');
                 }
-
-
-                mail($to_address, $model->subject, $content, $headers);
-
+                else {
+                    $criteria->addCondition('role ='.$model->role_id.' AND is_deleted = 0 ');
+                }
+                
+                $users = User::model()->findAll($criteria);   
+                
+                foreach( $users as $key => $u ) {
+                    mail($u->email, "Contact Support", $content, $headers);
+                }    
                 Yii::app()->user->setFlash(
                         'contact', 'Thank you for contacting us. We will respond to you as soon as possible.'
                 );
                 $this->refresh();
             }
         }
-
         $this->render('contactsupport', array(
             'model' => $model,
             'userModel' => $userModel

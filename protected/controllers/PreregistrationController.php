@@ -20,7 +20,7 @@ class PreregistrationController extends Controller
 	public function accessRules() {
 		return array(
 			array('allow',
-				'actions' => array('index','privacyPolicy' , 'declaration' , 'Login' ),
+				'actions' => array('index','privacyPolicy' , 'declaration' , 'Login' ,'registration','VisitorDetails' ),
 				'users' => array('*'),
 			),
 			array('allow',
@@ -36,8 +36,8 @@ class PreregistrationController extends Controller
 
 
 	public function actionIndex(){
+
 		$session = new CHttpSession;
-		//echo $session['workstation'];
 
 		$model = new EntryPoint();
 
@@ -72,30 +72,60 @@ class PreregistrationController extends Controller
 			$model->attributes=$_POST['Declaration'];
 			if($model->validate())
 			{
-				$this->redirect(array('preregistration/login'));
+				$this->redirect(array('preregistration/registration'));
 			}
 		}
 		$this->render('declaration' , array('model'=>$model) );
 
 	}
 
-	public function actionLogin(){
+	public function actionRegistration(){
 
-		//echo "hello";
-		$model = new PreregLogin();
-		// if it is ajax validation request
-		if (isset($_POST['ajax']) && $_POST['ajax'] === 'login-form') {
+		$session = new CHttpSession;
+		$model = new Registration();
+
+		if (isset($_POST['ajax']) && $_POST['ajax'] === 'preregistration-form') {
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
 
-		// collect user input data
+		if (isset($_POST['Registration'])) {
+			//print_r($_POST['Registration']);
+			$model->attributes = $_POST['Registration'];
+			$session['account_type'] = $model->account_type;
+			$session['username'] 	 = $model->username;
+			$session['password']     = $model->password;
+
+			$this->redirect(array('preregistration/visitorDetails'));
+
+		}
+
+		$this->render('registration', array('model' => $model));
+	}
+
+	public function actionVisitorDetails(){
+		$model = new Visitor;
+		//$visitorService = new VisitorServiceImpl();
+		$session = new CHttpSession;
+
+		
+		$this->render('confirm-details' , array('model' => $model));
+	}
+
+	public function actionLogin(){
+
+		$model = new PreregLogin();
+
+		if (isset($_POST['ajax']) && $_POST['ajax'] === 'prereg-login-form') {
+			echo CActiveForm::validate($model);
+			Yii::app()->end();
+		}
+
+
 		if (isset($_POST['PreregLogin'])) {
 			$model->attributes = $_POST['PreregLogin'];
-			// validate user input and redirect to the previous page if valid
+
 			if ($model->validate() && $model->login()) {
-				//$session = new CHttpSession;
-				//echo "login";
 				$this->redirect(array('preregistration/details'));
 			}
 		}
@@ -104,7 +134,11 @@ class PreregistrationController extends Controller
 	}
 
 	public function actionDetails(){
-		echo "welcome";
+		$session = new CHttpSession;
+		echo $session['account_type']."<br>";
+		echo $session['username']."<br>";
+		echo $session['password']."<br>";
+		//echo "welcome";
 	}
 
 	public function actionLogout() {

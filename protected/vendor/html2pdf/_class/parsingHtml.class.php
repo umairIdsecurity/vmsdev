@@ -1,4 +1,3 @@
-
 <?php
 /**
  * HTML2PDF Librairy - parsingHtml class

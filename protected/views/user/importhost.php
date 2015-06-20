@@ -8,7 +8,7 @@
         </ol>
 <br> 
  
-<div class="form">
+<div class="form" style="width: 12%;">
  
 <?php
 $form = $this->beginWidget('CActiveForm', array(
@@ -17,7 +17,7 @@ $form = $this->beginWidget('CActiveForm', array(
     'method'=>'post',
      
     'htmlOptions'=>array(
-    'enctype'=>'multipart/form-data'
+    'enctype'=>'multipart/form-data',
     )
 )); ?>
  

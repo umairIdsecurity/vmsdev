@@ -28,24 +28,23 @@ $visitorName = wordwrap($visitorName, 13, "\n", true);
 if ($companyLogoId == "") {
     $companyLogo = Yii::app()->getBaseUrl(true) . '/uploads/card_generated/nologoavailable.jpg';
 } else {
-    $companyLogo = Yii::app()->getBaseUrl(true) . "/" . Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
+    $companyLogo =  Photo::model()->returnCompanyPhotoRelativePath($tenant->company);
 }
 
 if (Visitor::model()->findByPk($model->visitor)->photo == "") {
     $userPhoto = Yii::app()->getBaseUrl(true) . '/uploads/card_generated/nophoto.png';
 } else {
-    $userPhoto = Yii::app()->getBaseUrl(true) . "/" . Photo::model()->returnVisitorPhotoRelativePath($model->visitor);
+    $userPhoto = Photo::model()->returnVisitorPhotoRelativePath($model->visitor);
 }
 
 if (Visitor::model()->findByPk($model->visitor)->photo == "") {
     $userPhoto = Yii::app()->getBaseUrl(true) . '/uploads/card_generated/nophoto.png';
 } else {
-    $userPhoto = Yii::app()->getBaseUrl(true) . "/" . Photo::model()->returnVisitorPhotoRelativePath($model->visitor);
+    $userPhoto = Photo::model()->returnVisitorPhotoRelativePath($model->visitor);
 }
 
 $src2 = $companyLogo;
 $src3 = $userPhoto;
-
 $dateExpiry = date('d M y');
 if ($model->card_type != CardType::SAME_DAY_VISITOR) {
     $dateExpiry = date("d M y", strtotime($model->date_out));
@@ -91,7 +90,6 @@ $text_width = abs($box[2] - $box[0]);
 $text_height = abs($box[5] - $box[3]);
 
 $image = imagecreatefrompng($src);
-
 if (!$image || !$box) {
     fatal_error('Error: The server could not create this image.');
 }

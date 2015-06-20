@@ -49,6 +49,11 @@ class Utils
                 $Criteria->condition = "tenant ='" . $session['tenant'] . "' and tenant_agent ='" . $session['tenant_agent'] . "' AND is_deleted = 0";
                 $workstationList = Workstation::model()->findAll($Criteria);
                 break;
+            default :
+                $Criteria = new CDbCriteria();
+                $Criteria->condition = "is_deleted = 0";
+                $workstationList = Workstation::model()->findAll($Criteria);
+                break;
         }
 
         return $workstationList;

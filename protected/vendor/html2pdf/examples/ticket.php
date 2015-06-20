@@ -1,4 +1,3 @@
-
 <?php
 /**
  * HTML2PDF Librairy - example
@@ -96,3 +95,4 @@
         echo $e;
         exit;
     }
+

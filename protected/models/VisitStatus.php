@@ -17,10 +17,11 @@ class VisitStatus extends CActiveRecord
     public static $VISIT_STATUS_LIST = array(
 		""=> 'Status',
         1 => 'Active',
-        2 => 'Preregistered',
+        2 => 'Preregister',
         3 => 'Closed',
         4 => 'Expired',
         5 => 'Saved',
+        6 => 'Auto Closed'
     );
 
     public static $VISIT_STATUS_DENIED = [1, 2];
@@ -28,7 +29,7 @@ class VisitStatus extends CActiveRecord
     public static $VISIT_STATUS_DASHBOARD_FILTER = array(
 		''=> 'Status',
         1 => 'Active',
-        2 => 'Preregistered'
+        2 => 'Preregister'
     );
     
     
@@ -37,6 +38,7 @@ class VisitStatus extends CActiveRecord
     CONST CLOSED =3;
     CONST EXPIRED = 4;
     CONST SAVED = 5;
+	CONST AUTOCLOSED = 6;
     
 	/**
 	 * @return string the associated database table name

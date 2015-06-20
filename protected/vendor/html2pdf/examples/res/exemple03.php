@@ -1,4 +1,3 @@
-
 <page backtop="10mm" backbottom="10mm" backleft="20mm" backright="20mm">
     <page_header>
         <table style="width: 100%; border: solid 1px black;">
@@ -85,5 +84,4 @@
 </page>
 <page pageset="old">
     Nouvelle page !!!!
-
 </page>

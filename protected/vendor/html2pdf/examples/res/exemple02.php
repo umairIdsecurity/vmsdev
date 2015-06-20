@@ -1,4 +1,3 @@
-
 <?php
 $content = 'A Test overflow<br>A Test overflow<br>A Test overflow<br>
 <img src="./res/logo.gif" alt="logo" style="width: XXXmm"><br>
@@ -116,5 +115,4 @@ div.zone_over
             </td>
         </tr>
     </table>
-
 </page>

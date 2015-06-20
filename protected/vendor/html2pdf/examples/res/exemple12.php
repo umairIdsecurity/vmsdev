@@ -1,4 +1,3 @@
-
 <?php
     $chaine = 'test de texte assez long pour engendrer des retours à la ligne automatique...';
     $chaine.= ', répétitif car besoin d\'un retour à la ligne';
@@ -112,5 +111,4 @@ ol li
             Point 3 :<br><?php echo $chaine; ?>
         </li>
     </ol>
-
 </page>

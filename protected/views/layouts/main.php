@@ -8,6 +8,7 @@ $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/jquery.uploadf
 $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/jquery.maskedinput.min.js');
 $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/jquery.form.js');
 $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/jquery.imgareaselect.pack.js');
+$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/MaxLength.min.js');
 
 
 $userRole = $session['role'];

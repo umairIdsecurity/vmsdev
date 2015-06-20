@@ -6,6 +6,9 @@
  * Time: 10:43 AM
  */
 
+$cs = Yii::app()->clientScript;
+$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/script-birthday.js');
+
 $countryList = CHtml::listData(Country::model()->findAll(array(
     "order" => "name asc",
     "group" => "name"
@@ -41,69 +44,25 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                 <div class="row form-group">
                     <span class="text-primary col-xs-12">DATE OF BIRTH</span>
 
+                    <input type="hidden" id="dateofBirthBreakdownValueYear"
+                           value="<?php echo date("Y", strtotime($model->date_of_birth)); ?>">
+                    <input type="hidden" id="dateofBirthBreakdownValueMonth"
+                           value="<?php echo date("n", strtotime($model->date_of_birth)); ?>">
+                    <input type="hidden" id="dateofBirthBreakdownValueDay"
+                           value="<?php echo date("j", strtotime($model->date_of_birth)); ?>">
+
                     <div class="col-xs-3">
-                        <select name="year" class="form-control input-lg">
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
-                            <option>6</option>
-                            <option>7</option>
-                            <option>8</option>
-                            <option>9</option>
-                            <option>10</option>
-                            <option>11</option>
-                            <option>12</option>
-                            <option>13</option>
-                            <option>14</option>
-                            <option>15</option>
-                            <option>16</option>
-                            <option>17</option>
-                            <option>18</option>
-                            <option>19</option>
-                            <option>20</option>
-                            <option>21</option>
-                            <option>22</option>
-                            <option>23</option>
-                            <option>24</option>
-                            <option>25</option>
-                            <option>26</option>
-                            <option>27</option>
-                            <option>28</option>
-                            <option>29</option>
-                            <option>30</option>
-                            <option>31</option>
-                        </select>
+                        <select id="fromDay" name="Visitor[birthdayDay]" class='daySelect form-control input-lg'></select>
                     </div>
-                    <div class="col-xs-5">
-                        <select name="month" class="form-control input-lg">
-                            <option>January</option>
-                            <option>February</option>
-                            <option>March</option>
-                            <option>April</option>
-                            <option>May</option>
-                            <option>June</option>
-                            <option>July</option>
-                            <option>August</option>
-                            <option>September</option>
-                            <option>October</option>
-                            <option>November</option>
-                            <option>December</option>
-                        </select>
+                    <div class="col-xs-3">
+                        <select id="fromMonth" name="Visitor[birthdayMonth]" class='monthSelect form-control input-lg'></select>
                     </div>
-                    <div class="col-xs-4">
-                        <select name="year" class="form-control input-lg">
-                            <option>2015</option>
-                            <option>2016</option>
-                            <option>2017</option>
-                            <option>2018</option>
-                            <option>2019</option>
-                            <option>2020</option>
-                            <option>2021</option>
-                            <option>2022</option>
-                        </select>
+                    <div class="col-xs-3">
+                        <select id="fromYear" name="Visitor[birthdayYear]" class='yearSelect form-control input-lg'></select>
                     </div>
+
+                    <?php echo $form->error($model, 'date_of_birth'); ?>
+
                 </div>
                 <div class="form-group">
                     <?php echo $form->dropDownList($model, 'identification_type', Visitor::$IDENTIFICATION_TYPE_LIST, array('prompt' => 'Identification Type' , 'class'=>'form-control input-lg')); ?>
@@ -260,3 +219,6 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
     </div>
     <?php $this->endWidget(); ?>
 </div>
+
+
+

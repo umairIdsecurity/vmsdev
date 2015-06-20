@@ -107,17 +107,19 @@ class PreregistrationController extends Controller
 		$session = new CHttpSession;
 
 		if (isset($_POST['Visitor'])) {
+			//print_r($_POST['Visitor']);
 			$model->profile_type = $session['account_type'];
 			$model->tenant = 47;
 			$model->email 		 = $session['username'];
 			$model->password 	 = $session['password'];
 			$model->attributes = $_POST['Visitor'];
 
-			//$model->save();
+			$model->date_of_birth = date('Y-m-d', strtotime($model->birthdayYear . '-' . $model->birthdayMonth . '-' . $model->birthdayDay));
+
 			if ($model->save()) {
 				$this->redirect(array('preregistration/visitReason'));
 			}
-			//print_r($model->getErrors());
+			print_r($model->getErrors());
 		}
 		
 		$this->render('confirm-details' , array('model' => $model));

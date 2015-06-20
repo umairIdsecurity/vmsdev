@@ -20,8 +20,9 @@ class Photo extends CActiveRecord {
     public function tableName() {
         return 'photo';
     }
-    
 
+    const VISITOR_IMAGE = "visitor";
+    const COMPANY_IMAGE = "companylogo";
     /**
      * @return array validation rules for model attributes.
      */
@@ -145,9 +146,75 @@ class Photo extends CActiveRecord {
             return $photo->relative_path;
         }
     }
-    
-    public function defaultImage(){
+
+    /**
+     * By Rohan M.<rohan@everestek.com>
+     * Name - get Absolute Path Of Image
+     * @param   (image_type) visitor profile or company logo
+     * @param   (photo_id) id of image in database
+     * @return string (absolute path)
+     */
+    public function getAbsolutePathOfImage($image_type, $photo_id) {
+        if ($image_type == "visitor") {
+            $visitor = Visitor::model()->findByPK($photo_id);
+            if ($visitor) {
+                if ($visitor->photo != '') {
+                    $photo = Photo::model()->findByPK($visitor->photo);
+                    if (file_exists($photo->relative_path)) {
+                        if($_SERVER['HTTP_HOST'] == "localhost"){
+                            return $this->siteURL()  .Yii::app()->getBaseUrl()."/".$photo->relative_path;
+                        }
+                        return $this->siteURL() . "/" . $photo->relative_path;
+                    } else {
+                        return $this->defaultAbsoluteImage();
+                    }
+                } else {
+                    return $this->defaultAbsoluteImage();
+                }
+            } else {
+                return $this->defaultAbsoluteImage();
+            }
+        } elseif ($image_type == "companylogo") {
+            $company = Company::model()->findByPK($photo_id);
+            if ($company) {
+                if ($company->logo != '') {
+                    $photo = Photo::model()->findByPK($company->logo);
+                    if (file_exists($photo->relative_path)) {
+                        if($_SERVER['HTTP_HOST'] == "localhost"){
+                            return $this->siteURL() . "/" .Yii::app()->getBaseUrl()."/".$photo->relative_path;
+                        }
+                        return $this->siteURL() . "/" . $photo->relative_path;
+                    } else {
+                        return $this->defaultAbsoluteImage();
+                    }
+                } else {
+                    return $this->defaultAbsoluteImage();
+                }
+            } else {
+                return $this->defaultAbsoluteImage();
+            }
+        }
+    }
+
+    public function defaultImage()
+    {
         return Yii::app()->controller->assetsBase . '/images/companylogohere1.png';
+    }
+
+    public function defaultAbsoluteImage()
+    {
+        if($_SERVER['HTTP_HOST'] != "localhost"){
+            return $this->defaultImage();
+        }
+        return $this->siteURL() . Yii::app()->controller->assetsBase . '/images/companylogohere1.png';
+    }
+
+    public function siteURL()
+    {
+        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+        $domainName = $_SERVER['HTTP_HOST'];
+
+        return $protocol . $domainName;
     }
 
     public function behaviors()

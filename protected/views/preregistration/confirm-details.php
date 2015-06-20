@@ -27,28 +27,20 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
         )
     ));
     ?>
-    <!--<form class="form-comfirm-detail">-->
+
         <div class="row">
             <div class="col-sm-6">
                 <div class="form-group">
-                    <!--<input name="first-name"
-                           class="form-control input-lg"
-                           data-validate-input
-                           placeholder="John" >-->
-
                     <?php echo $form->textField($model, 'first_name', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'First Name' , 'class'=>'form-control input-lg')); ?>
                     <?php echo $form->error($model, 'first_name'); ?>
                 </div>
                 <div class="form-group">
-                    <!--<input name="last-name"
-                           class="form-control input-lg"
-                           data-validate-input
-                           placeholder="Smith" >-->
                     <?php echo $form->textField($model, 'last_name', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Last Name' , 'class'=>'form-control input-lg')); ?>
                     <?php echo $form->error($model, 'last_name'); ?>
                 </div>
                 <div class="row form-group">
                     <span class="text-primary col-xs-12">DATE OF BIRTH</span>
+
                     <div class="col-xs-3">
                         <select name="year" class="form-control input-lg">
                             <option>1</option>
@@ -116,10 +108,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                 <div class="form-group">
                     <?php echo $form->dropDownList($model, 'identification_type', Visitor::$IDENTIFICATION_TYPE_LIST, array('prompt' => 'Identification Type' , 'class'=>'form-control input-lg')); ?>
                     <?php echo $form->error($model, 'identification_type'); ?>
-                    <!--<input name="id-type"
-                           class="form-control input-lg"
-                           data-validate-input
-                           placeholder="ID type" >-->
+
                 </div>
                 <div class="form-group">
                     <input name="id-number"
@@ -132,13 +121,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                     echo $form->dropDownList($model, 'identification_country_issued', $countryList, array('empty' => 'Country of Issue', 'class'=>'form-control input-lg' , 'options' => array(Visitor::AUSTRALIA_ID => array('selected' => 'selected'))));
                     ?>
                     <?php echo $form->error($model, 'identification_country_issued'); ?>
-                    <!--<select name="contry-issue" class="form-control input-lg">
-                        <option disabled selected>Select country of issue</option>
-                        <option>Option 1</option>
-                        <option>Option 2</option>
-                        <option>Option 3</option>
-                        <option>Option 4</option>
-                    </select>-->
+
                 </div>
                 <div class="row form-group">
                     <span class="text-primary col-xs-12">EXPIRY</span>
@@ -212,18 +195,11 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                     <div class="col-xs-5">
                         <?php echo $form->textField($model, 'contact_unit', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Unit / flat no.', 'class'=>'form-control input-lg')); ?>
                         <?php echo $form->error($model, 'contact_unit'); ?>
-                        <!--<input name="flat-no"
-                               class="form-control input-lg"
-                               data-validate-input
-                               placeholder="Unit / flat no." >-->
+
                     </div>
                     <div class="col-xs-7">
                         <?php echo $form->textField($model, 'contact_street_no', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Street No.', 'class'=>'form-control input-lg')); ?>
                         <?php echo $form->error($model, 'contact_street_no'); ?>
-                        <!--<input name="street-no"
-                               class="form-control input-lg"
-                               data-validate-input
-                               placeholder="Street no." >-->
                     </div>
 
                 </div>
@@ -231,49 +207,24 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                     <div class="col-xs-7">
                         <?php echo $form->textField($model, 'contact_street_name', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Street Name', 'class'=>'form-control input-lg')); ?>
                         <?php echo "<br>" . $form->error($model, 'contact_street_name'); ?>
-                        <!--<input name="street-name"
-                               class="form-control input-lg"
-                               data-validate-input
-                               placeholder="Street name" >-->
                     </div>
                     <div class="col-xs-5">
                         <?php echo $form->dropDownList($model, 'contact_street_type', Visitor::$STREET_TYPES, array('empty' => 'Type', 'class'=>'form-control input-lg')); ?>
                         <?php echo $form->error($model, 'contact_street_type'); ?>
-                        <!--<select name="type" class="form-control input-lg">
-                            <option disabled selected>Select St. type</option>
-                            <option>Option 1</option>
-                            <option>Option 2</option>
-                            <option>Option 3</option>
-                            <option>Option 4</option>
-                        </select>-->
                     </div>
                 </div>
                 <div class="form-group form-group-custom">
                     <?php echo $form->textField($model, 'contact_suburb', array('size' => 15, 'maxlength' => 50, 'placeholder' => 'Suburb' , 'class'=>'form-control input-lg')); ?>
                     <?php echo $form->error($model, 'contact_suburb'); ?>
-                    <!--<input name="suburb"
-                           class="form-control input-lg"
-                           data-validate-input
-                           placeholder="Suburb" >-->
                 </div>
                 <div class="form-group">
                     <?php echo $form->textField($model, 'contact_postcode', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Postcode', 'class'=>'form-control input-lg')); ?>
                     <?php echo $form->error($model, 'contact_postcode'); ?>
-                    <!--<input name="postcode"
-                           class="form-control input-lg"
-                           data-validate-input
-                           placeholder="Postcode" >-->
                 </div>
                 <div class="form-group form-group-custom">
                     <?php echo $form->dropDownList($model, 'contact_state', Visitor::$AUSTRALIAN_STATES, array('empty' => 'State', 'class'=>'form-control input-lg')); ?>
                     <?php echo $form->error($model, 'contact_state'); ?>
-                    <!--<select name="state" class="form-control input-lg">
-                        <option disabled selected>Select state</option>
-                        <option>Option 1</option>
-                        <option>Option 2</option>
-                        <option>Option 3</option>
-                        <option>Option 4</option>
-                    </select>-->
+
                 </div>
                 <div class="form-group form-group-custom">
                     <?php
@@ -282,25 +233,15 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                             'options' => array(Visitor::AUSTRALIA_ID => array('selected' => 'selected'))));
                     ?>
                     <?php echo $form->error($model, 'contact_country'); ?>
-                    <!--<select name="country" class="form-control input-lg">
-                        <option disabled selected>Select country</option>
-                        <option>Option 1</option>
-                        <option>Option 2</option>
-                        <option>Option 3</option>
-                        <option>Option 4</option>
-                    </select>-->
+
                 </div>
                 <div class="form-group">
                     <?php echo $form->textField($model, 'contact_number', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Mobile Number', 'class'=>'form-control input-lg')); ?>
                     <?php echo $form->error($model, 'contact_number'); ?>
-                    <!--<input name="mobile-number"
-                           class="form-control input-lg"
-                           data-validate-input
-                           placeholder="Mobile number" >-->
+
                 </div>
             </div>
         </div>
-    <!--</form>-->
 
     <div class="row next-prev-btns">
         <div class="col-md-1 col-sm-1 col-xs-1">

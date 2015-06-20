@@ -76,11 +76,11 @@ $this->widget('zii.widgets.grid.CGridView', array(
 ));
 
 function isWorkstationExists($workstationId) {
-    return UserWorkstations::model()->exists('workstation="' . $workstationId . '"');
+    return UserWorkstations::model()->exists("workstation='" . $workstationId . "'");
 }
 
 function isVisitExistsInClosedVisits($workstationId) {
-    return Visit::model()->exists('workstation="' . $workstationId . '"');
+    return Visit::model()->exists("workstation='" . $workstationId . "'");
 }
 
 $ajaxUrlCardType = Yii::app()->createUrl('workstation/ajaxWorkstationCardtype');

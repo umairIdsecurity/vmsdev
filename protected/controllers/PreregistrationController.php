@@ -20,7 +20,7 @@ class PreregistrationController extends Controller
 	public function accessRules() {
 		return array(
 			array('allow',
-				'actions' => array('index','privacyPolicy' , 'declaration' , 'Login' ,'registration','VisitorDetails' ),
+				'actions' => array('index','privacyPolicy' , 'declaration' , 'Login' ,'registration','confirmDetails', 'visitReason' ),
 				'users' => array('*'),
 			),
 			array('allow',
@@ -90,26 +90,43 @@ class PreregistrationController extends Controller
 		}
 
 		if (isset($_POST['Registration'])) {
-			//print_r($_POST['Registration']);
 			$model->attributes = $_POST['Registration'];
 			$session['account_type'] = $model->account_type;
 			$session['username'] 	 = $model->username;
 			$session['password']     = $model->password;
 
-			$this->redirect(array('preregistration/visitorDetails'));
+			$this->redirect(array('preregistration/confirmDetails'));
 
 		}
 
 		$this->render('registration', array('model' => $model));
 	}
 
-	public function actionVisitorDetails(){
-		$model = new Visitor;
-		//$visitorService = new VisitorServiceImpl();
+	public function actionConfirmDetails(){
+		$model = new ConfirmDetails;
 		$session = new CHttpSession;
 
+		if (isset($_POST['ConfirmDetails'])) {
+			//print_r($_POST['Visitor']);
+			$model->profile_type = $session['account_type'];
+			$model->tenant = 47;
+			$model->email 		 = $session['username'];
+			$model->password 	 = $session['password'];
+			$model->attributes = $_POST['ConfirmDetails'];
+
+			$model->date_of_birth = date('Y-m-d', strtotime($model->birthdayYear . '-' . $model->birthdayMonth . '-' . $model->birthdayDay));
+
+			if ($model->save()) {
+				$this->redirect(array('preregistration/visitReason'));
+			}
+			//print_r($model->getErrors());
+		}
 		
 		$this->render('confirm-details' , array('model' => $model));
+	}
+
+	public function actionVisitReason(){
+		$this->render('visit-reason');
 	}
 
 	public function actionLogin(){

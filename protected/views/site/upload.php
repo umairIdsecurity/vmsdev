@@ -36,14 +36,14 @@ if (isset($_FILES["myfile"])) {
         move_uploaded_file($_FILES["myfile"]["tmp_name"], $output_dir . $uniqueFileName);
         //save in database
         $connection = Yii::app()->db;
-        $command = $connection->createCommand('INSERT INTO `photo` '
-                . '(`filename`, `unique_filename`, `relative_path`) VALUES ("' . $fileName . '","' . $uniqueFileName . '","' . $path . '" )');
+        $command = $connection->createCommand('INSERT INTO photo '
+                . "(filename, unique_filename, relative_path) VALUES ('" . $fileName . "','" . $uniqueFileName . "','" . $path . "' )");
         $command->query();
         //update company
         if ($action == 'update' && ($controllerId == 'visitor' || $controllerId == 'user') ) {
             $ret = Yii::app()->db->lastInsertID;
         } elseif ($action == 'update') {
-            $update = $connection->createCommand('update company set logo="' . Yii::app()->db->lastInsertID . '" where id="' . $_GET['companyId'] . '"');
+            $update = $connection->createCommand("update company set logo='" . Yii::app()->db->lastInsertID . "' where id='" . $_GET['companyId'] . "'");
             $update->query();
             $ret = $path;
         } else if ($action == 'create' || $action == 'addvisitor' || $action == 'detail' || $action == 'customisation') {
@@ -66,8 +66,8 @@ if (isset($_FILES["myfile2"])) {
         move_uploaded_file($_FILES["myfile2"]["tmp_name"], $output_dir . $uniqueFileName);
         //save in database
         $connection = Yii::app()->db;
-        $command = $connection->createCommand('INSERT INTO `photo` '
-                . '(`filename`, `unique_filename`, `relative_path`) VALUES ("' . $fileName . '","' . $uniqueFileName . '","' . $path . '" )');
+        $command = $connection->createCommand('INSERT INTO photo '
+            . "(filename, unique_filename, relative_path) VALUES ('" . $fileName . "','" . $uniqueFileName . "','" . $path . "' )");
         $command->query();
         
             $ret = Yii::app()->db->lastInsertID;

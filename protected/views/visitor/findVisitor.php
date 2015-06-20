@@ -14,9 +14,9 @@ $session = new CHttpSession;
 $visitorName = $_GET['id'];
 
 if (isset($_GET['tenant_agent']) && $_GET['tenant_agent'] != '') {
-    $tenant_agent = 'tenant_agent="' . $_GET['tenant_agent'] . '" and';
+    $tenant_agent = "tenant_agent='" . $_GET["tenant_agent"] . "' and";
 } else {
-    $tenant_agent = '(tenant_agent IS NULL or tenant_agent =0 or tenant_agent="") and';
+    $tenant_agent = "(tenant_agent IS NULL or tenant_agent =0 or tenant_agent='') and";
 }
 $model = new Visitor;
 $criteria = new CDbCriteria;
@@ -28,19 +28,19 @@ if($_GET['tenant'] && $_GET['tenant']!=''){
 }
 
 
-$conditionString = $tenant. $tenant_agent . ' (CONCAT(first_name," ",last_name) like "%' . $visitorName
-                    . '%" or first_name like "%' . $visitorName
-                    . '%" or last_name like "%' . $visitorName
-                    . '%" or email like "%' . $visitorName
-                    . '%" or identification_document_no LIKE "%' . $visitorName
-                    . '%" or identification_alternate_document_no1 LIKE "%' . $visitorName
-                    . '%" or identification_alternate_document_no2 LIKE "%' . $visitorName
-                    . '%")';
+	 $conditionString = $tenant. $tenant_agent . " (CONCAT(first_name,' ',last_name) like '%" . $visitorName
+	                     . "%' or first_name like '%" . $visitorName
+	                     . "%' or last_name like '%" . $visitorName
+	                     . "%' or email like '%" . $visitorName
+	                     . "%' or identification_document_no LIKE '%" . $visitorName
+	                     . "%' or identification_alternate_document_no1 LIKE '%" . $visitorName
+	                     . "%' or identification_alternate_document_no2 LIKE '%" . $visitorName
+	                     . "%')";
 
 if (isset($_GET['cardType']) && $_GET['cardType'] > CardType::CONTRACTOR_VISITOR) {
-    $conditionString .= ' AND profile_type = "' . Visitor::PROFILE_TYPE_VIC . '" ';
+    $conditionString .= " AND profile_type = '" . Visitor::PROFILE_TYPE_VIC . "' ";
 } else {
-    $conditionString .= ' AND profile_type = "' . Visitor::PROFILE_TYPE_CORPORATE . '" ';
+    $conditionString .= " AND profile_type = '" . Visitor::PROFILE_TYPE_CORPORATE . "' ";
 }
 
 

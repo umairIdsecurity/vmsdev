@@ -159,11 +159,11 @@ class UserController extends Controller
         $model = $this->loadModel($id);
 
         if (!$model->delete()) {
-            $visitExists = Visit::model()->exists('is_deleted = 0 and host ="' . $id . '"');
-            $isTenant = Company::model()->exists('is_deleted = 0 and tenant ="' . $id . '"');
-            $userWorkstation = UserWorkstations::model()->exists('user = "' . $id . '"');
-            $visitorExists = Visitor::model()->exists('tenant = "' . $this->id . '" and is_deleted=0');
-            $isTenantAgent = Company::model()->exists('tenant_agent = "' . $this->id . '" and is_deleted=0');
+            $visitExists = Visit::model()->exists("is_deleted = 0 and host ='" . $id . "'");
+            $isTenant = Company::model()->exists("is_deleted = 0 and tenant ='" . $id . "'");
+            $userWorkstation = UserWorkstations::model()->exists("user = '" . $id . "'");
+            $visitorExists = Visitor::model()->exists("tenant = '" . $this->id . "' and is_deleted=0");
+            $isTenantAgent = Company::model()->exists("tenant_agent = '" . $this->id . "' and is_deleted=0");
 
             if (!$visitExists && !$isTenant && !$userWorkstation && !$visitorExists && !$isTenantAgent) {
                 return false;

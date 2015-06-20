@@ -75,7 +75,7 @@ function isCompanyTenant($companyId) {
                     ->select('c.id')
                     ->from('user u')
                     ->join('company c', 'u.company=c.id')
-                    ->where('u.id=c.tenant and c.id !=1 and c.id="' . $companyId . '"')
+                    ->where("u.id=c.tenant and c.id !=1 and c.id='" . $companyId . "'")
                     ->queryAll();
     if(count($company) != 0){
         return  "1";

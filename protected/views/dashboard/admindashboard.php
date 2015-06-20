@@ -85,7 +85,7 @@ foreach ($workstationList as $workstation) {
     } else {
         $workstationId = $workstation->id;
     }
-    $merge->addCondition('workstation ="' . $workstationId . '" and (visit_status ="' . VisitStatus::ACTIVE . '" or visit_status ="' . VisitStatus::PREREGISTERED . '")');
+    $merge->addCondition("workstation ='" . $workstationId . "' and (visit_status ='" . VisitStatus::ACTIVE . "' or visit_status ='" . VisitStatus::PREREGISTERED . "')");
     ?><div  class="admindashboardDiv"><?php
         $this->widget('zii.widgets.grid.CGridView', array(
             'id' => 'visit-gridDashboard' . $x,

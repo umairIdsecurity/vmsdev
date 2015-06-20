@@ -54,7 +54,7 @@ class EDateRangeSearchBehavior extends CActiveRecordBehavior {
                 $criteria->addBetweenCondition($attribute, $dateFrom, $dateTo);
                 
                 $criteria2 = new CDbCriteria;
-                $criteria2->addCondition('date_check_out between "'.$dateFrom.'" and "'.$dateTo.'"');
+                $criteria2->addCondition("date_check_out between '".$dateFrom."' and '".$dateTo."'");
                 $criteria->mergeWith($criteria2, 'OR');
             } else {
                 // The value array is empty so set it to an empty string

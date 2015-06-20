@@ -82,7 +82,7 @@ for ($i = 0; $i < $arrayCount; $i++) {
 
 <?php 
 function checkIfWorkstationIsPrimary($workstationId){
-    $userWorkstation = UserWorkstations::model()->find('workstation="'.$workstationId.'" and user="'.Yii::app()->user->id.'"');
+    $userWorkstation = UserWorkstations::model()->find("workstation='".$workstationId."' and user='".Yii::app()->user->id."'");
     if(isset($userWorkstation->is_primary) && $userWorkstation->is_primary ==1){
         return true;
     } else {

@@ -142,8 +142,8 @@ class CardGeneratedController extends Controller {
             Yii::app()->params['photo_unique_filename'] = $unique_fileName;
 
             $connection = Yii::app()->db;
-            $command = $connection->createCommand('INSERT INTO `photo` '
-                    . '(`filename`, `unique_filename`, `relative_path`) VALUES ("' . $unique_fileName . '","' . $unique_fileName . '","' . $path . '" )');
+            $command = $connection->createCommand('INSERT INTO photo '
+                    . "(filename, unique_filename, relative_path) VALUES ('" . $unique_fileName . "','" . $unique_fileName . "','" . $path . "' )");
             $command->query();
 
 

@@ -594,9 +594,9 @@ class Visitor extends CActiveRecord {
         $post->save();
     }
 
-    public function isEmailAddressTaken($email) {
+    public function isEmailAddressTaken($email,$id = 0) {
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "email = '" . $email . "' ";
+        $Criteria->condition = "email = '" . $email . "' ".($id?" AND id <> $id":"");
         $visitorEmail = Visitor::model()->findAll($Criteria);
 
         //$visitorEmail = array_filter($visitorEmail);

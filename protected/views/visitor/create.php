@@ -504,7 +504,7 @@ function checkEmailIfUnique() {
 
     $.ajax({
         type: 'POST',
-        url: '<?php echo Yii::app()->createUrl('visitor/checkEmailIfUnique&id='); ?>' + email,
+        url: '<?php echo Yii::app()->createUrl('visitor/checkEmailIfUnique&email='); ?>' + email,
         dataType: 'json',
         data: email,
         success: function (r) {
@@ -556,7 +556,7 @@ function checkHostEmailIfUnique() {
 
     // ASIC Sponsor
     if ($("#selectCardDiv input[name=selectCardType]:checked").val() > CONTRACTOR_TYPE) {
-        url = '<?php echo Yii::app()->createUrl('visitor/checkEmailIfUnique&id='); ?>' + email;
+        url = '<?php echo Yii::app()->createUrl('visitor/checkEmailIfUnique&email='); ?>' + email;
     }
 
     $.ajax({

@@ -83,7 +83,8 @@ class UserController extends Controller
         $model = new User;
         $userService = new UserServiceImpl();
         $session = new CHttpSession;
-
+		
+		
         if (isset($_POST['User'])) {
 
             $model->attributes = $_POST['User'];
@@ -94,7 +95,7 @@ class UserController extends Controller
                 $model->password_option = '';
             }
 
-            if ($userService->save($model, Yii::app()->user, $_POST['User']['userWorkstation1'])) {
+            if ($userService->save($model, Yii::app()->user, isset($_POST['User']['userWorkstation1'])?$_POST['User']['userWorkstation1']:null)) {
                 Yii::app()->user->setFlash('success', "Record Added Successfully");
                 if (Yii::app()->request->isAjaxRequest) {
                     Yii::app()->end();

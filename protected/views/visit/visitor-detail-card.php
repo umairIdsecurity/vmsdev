@@ -2,7 +2,7 @@
 $session = new CHttpSession;
 
 $session['count'] = 1;
-date_default_timezone_set('Asia/Manila');
+//date_default_timezone_set('Asia/Manila'); remove hard code
 $tenant = User::model()->findByPk($visitorModel->tenant);
 $photoForm = $this->beginWidget('CActiveForm', array(
     'id' => 'update-photo-form',
@@ -18,7 +18,6 @@ $photoForm = $this->beginWidget('CActiveForm', array(
     ),
         ));
 ?>
-
 <input type="text" value="<?php echo $visitorModel->photo; ?>" name="Visitor[photo]" id="Visitor_photo">
 <?php echo "<br>" . $photoForm->error($visitorModel, 'photo'); ?>
 <input type="submit" id="submitBtnPhoto">
@@ -35,16 +34,16 @@ $photoForm = $this->beginWidget('CActiveForm', array(
 $vstr = Visitor::model()->findByPk($model->visitor);
 if ($vstr->profile_type == "CORPORATE") {
     $bgcolor = CardGenerated::CORPORATE_CARD_COLOR;
-} elseif ($vstr->profile_type == "ASIC") {
+}/* elseif ($vstr->profile_type == "ASIC") {
     $bgcolor = CardGenerated::ASIC_CARD_COLOR;
-} elseif ($vstr->profile_type == "VIC") {
+} */elseif ($vstr->profile_type == "VIC" || $vstr->profile_type == "ASIC") {
      $bgcolor = CardGenerated::VIC_CARD_COLOR;
 }
 ?>
 <?php $this->renderPartial("_card_detail",array('bgcolor'=>$bgcolor,'model'=>$model,'visitorModel'=>$visitorModel));?>
 <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
 <?php if ($visitorModel->photo != '') { ?>
-<input type="button" class="btn editImageBtn actionForward" id="editImageBtn" style="" value="Edit Photo" onclick = "document.getElementById('light').style.display = 'block';
+<input type="button" class="btn editImageBtn actionForward" id="editImageBtn" style="  margin-bottom: 2px!important;" value="Edit Photo" onclick = "document.getElementById('light').style.display = 'block';
                 document.getElementById('fade').style.display = 'block'"/>
        <?php } ?>
 <div
@@ -60,9 +59,9 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
         ));
         ?>
 </div>
-<?php if (in_array($model->card_type, [CardType::SAME_DAY_VISITOR, CardType::MULTI_DAY_VISITOR, CardType::CONTRACTOR_VISITOR, CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_24HOURS, CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY]) && $model->visit_status ==VisitStatus::ACTIVE): ?>
+<?php if (in_array($model->card_type, [CardType::SAME_DAY_VISITOR, CardType::MULTI_DAY_VISITOR, CardType::CONTRACTOR_VISITOR, CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_24HOURS, CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY]) && $model->visit_status ==VisitStatus::ACTIVE){ ?>
 <div class="dropdown">
-    <button class="complete btn btn-info printCardBtn dropdown-toggle" style="width:205px !important;  margin-right: 80px;" type="button" id="menu1" data-toggle="dropdown">Print Card
+    <button class="complete btn btn-info printCardBtn dropdown-toggle" style="width:205px !important; margin-top: 4px; margin-right: 80px;" type="button" id="menu1" data-toggle="dropdown">Print Card
         <span class="caret pull-right"></span></button>
     <ul class="dropdown-menu" style="left: 62px;" role="menu" aria-labelledby="menu1">
         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo yii::app()->createAbsoluteUrl('cardGenerated/pdfprint', array('id' => $model->id, 'type' => 1)) ?>">Print On Standard Printer</a></li>
@@ -70,7 +69,11 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo yii::app()->createAbsoluteUrl('cardGenerated/pdfprint', array('id' => $model->id, 'type' => 3)) ?>">Rewritable Print Card</a></li>
     </ul>
 </div>
-<?php endif; ?>
+<?php }else{ ?>
+<button class="complete btn btn-info printCardBtn dropdown-toggle" disabled="disabled" style="width:205px !important; margin-top: 4px; margin-right: 80px;" type="button" id="menu1" data-toggle="dropdown">Print Card
+        <span class="caret pull-right"></span></button>
+<?php }?>
+
 <?php if ($model->visit_status != VisitStatus::SAVED): ?>
 <div style="margin-top: 10px;margin-right: 69px;">
 <?php

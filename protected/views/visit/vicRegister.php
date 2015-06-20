@@ -162,7 +162,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         ),
         array(
             'name' => 'asicname',
-            'value' => '$data->getHost()->fullName',
+            'value' => 'isset($data->getHost()->fullName) ? $data->getHost()->fullName : ""',
             'filter'=>CHtml::activeTextField($model, 'asicname', array('placeholder'=>'ASIC Name', 'class' => 'header-form')),
         ),
         array(

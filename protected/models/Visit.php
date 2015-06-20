@@ -679,7 +679,9 @@ class Visit extends CActiveRecord {
                     '*',
                 ),
             ),
-                //'pagination'=>false,
+            'pagination' => array(
+                'pageSize' => 10,
+            ),
         ));
     }
 
@@ -921,19 +923,25 @@ class Visit extends CActiveRecord {
     }
 
     public function getVisitCounts() {
+        $dateIn = new DateTime($this->date_check_in);
+        $dateOut = new DateTime($this->date_check_out);
+        $dateNow = new DateTime(date('d-m-Y'));
         switch ($this->card_type) {
             case CardType::VIC_CARD_MANUAL:
                 return (int)$this->countByAttributes(['visit_status' => VisitStatus::CLOSED, 'visitor' => $this->visitor]) + 1;
                 break;
             case CardType::VIC_CARD_EXTENDED:
             case CardType::VIC_CARD_MULTIDAY:
-                $dateIn = new DateTime($this->date_check_in);
-                $dateNow = new DateTime(date('d-m-Y'));
-                return (int)($dateNow->format('z') - $dateIn->format('z')) + 1;
+                switch ($this->visit_status) {
+                    case VisitStatus::AUTOCLOSED:
+                        return (int)($dateOut->format('z') - $dateIn->format('z'));
+                        break;
+                    default:
+                        return (int)($dateNow->format('z') - $dateIn->format('z')) + 1;
+                        break;
+                }
                 break;
             case CardType::VIC_CARD_SAMEDATE:
-                $dateOut = new DateTime($this->date_check_out);
-                $dateIn = new DateTime($this->date_check_in);
                 $remainingDays = (int)($dateOut->format('z') - $dateIn->format('z'));
                 switch ($this->visit_status) {
                     case VisitStatus::EXPIRED:
@@ -953,25 +961,26 @@ class Visit extends CActiveRecord {
     }
 
     public function getRemainingDays() {
+        $dateNow = new DateTime(date('d-m-Y'));
+        $dateOut = new DateTime($this->date_check_out);
+        $dateIn = new DateTime($this->date_check_in);
         switch ($this->card_type) {
             case CardType::VIC_CARD_MANUAL:
                 return 28 - (int)$this->visitCounts;
                 break;
             case CardType::VIC_CARD_EXTENDED:
             case CardType::VIC_CARD_MULTIDAY:
-                $dateNow = new DateTime(date('d-m-Y'));
-                $dateOut = new DateTime($this->date_check_out);
-                $dateIn = new DateTime($this->date_check_in);
                 $totalDays = (int)($dateOut->format('z') - $dateIn->format('z'));
-
                 switch ($this->visit_status) {
                     case VisitStatus::AUTOCLOSED:
-                        return $totalDays;
+                        return (int)($dateOut->format('z') - $dateNow->format('z'));
                         break;
                     default:
                         $remainingDays = $totalDays - $this->visitCounts;
-                        if ($remainingDays < 0) return 0;
-                            return $remainingDays;
+                        if ($remainingDays < 0) {
+                            return 0;
+                        }
+                        return $remainingDays;
                         break;
                 }
                 break;

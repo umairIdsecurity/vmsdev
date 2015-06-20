@@ -526,15 +526,15 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
         var dt = new Date();
         if(dt.getFullYear()< $("#fromYear").val()) {
             $("#Visitor_date_of_birth_em_").show();
-            $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+            $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
             return false;
         }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
             $("#Visitor_date_of_birth_em_").show();
-            $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+            $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
             return false;
         }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
             $("#Visitor_date_of_birth_em_").show();
-            $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+            $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
             return false;
         }
 
@@ -604,15 +604,15 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
 
             if(dt.getFullYear()< $("#fromYear").val()) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else{
                 $("#Visitor_date_of_birth_em_").hide();
@@ -623,15 +623,15 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
 
             if(dt.getFullYear()< $("#fromYear").val()) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else{
                 $("#Visitor_date_of_birth_em_").hide();
@@ -642,15 +642,15 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
 
             if(dt.getFullYear()< $("#fromYear").val()) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
                 $("#Visitor_date_of_birth_em_").show();
-                $("#Visitor_date_of_birth_em_").html('Birthday is incorrect');
+                $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else{
                 $("#Visitor_date_of_birth_em_").hide();
@@ -776,7 +776,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
         if (email != "<?php echo $model->email ?>") {
             $.ajax({
                 type: 'POST',
-                url: '<?php echo Yii::app()->createUrl('visitor/checkEmailIfUnique&id='); ?>' + email,
+                url: '<?php echo Yii::app()->createUrl('visitor/checkEmailIfUnique&email='); ?>' + email,
                 dataType: 'json',
                 data: email,
                 success: function (r) {
@@ -1048,10 +1048,7 @@ $('#Visitor_company').on('change', function() {
             if (data == 0) {
                 $('#addContactLink').hide();
                 $('#visitorStaffRow').empty();
-                $modal.find('#myModalLabel').html('Add Company');
-                $("#addCompanyContactModal").modal("show");
             } else {
-                $modal.find('#myModalLabel').html('Add Contact To Company');
                 $('#visitorStaffRow').html(data);
                 $('#addContactLink').show();
             }
@@ -1059,29 +1056,6 @@ $('#Visitor_company').on('change', function() {
         }
     });
 });
-
-$('#addContactLink').on('click', function(e) {
-    $("tr.company_contact_field").removeClass('hidden');
-    $("#AddCompanyContactForm_email").val("");
-    $("#AddCompanyContactForm_firstName").val("");
-    $("#AddCompanyContactForm_lastName").val("");
-    $("#AddCompanyContactForm_mobile").val("");
-    $("#AddCompanyContactForm_companyName").val($(".select2-selection__rendered").html());
-    $('#AddCompanyContactForm_companyName').prop('disabled',true);
-    $('#typePostForm').val('contact');
-});
-
-$('#addCompanyLink').on('click', function(e) {
-    $('#AddCompanyContactForm_companyName').enable();
-    $("tr.company_contact_field").addClass("hidden");
-    $("#AddCompanyContactForm_companyName").val("");
-    $("#AddCompanyContactForm_email").val("");
-    $("#AddCompanyContactForm_firstName").val("");
-    $("#AddCompanyContactForm_lastName").val("");
-    $("#AddCompanyContactForm_mobile").val("");
-    $('#typePostForm').val('company');
-});
-
 </script>
 
 

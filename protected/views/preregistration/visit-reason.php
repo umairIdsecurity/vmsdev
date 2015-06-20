@@ -7,14 +7,6 @@
  */
 
 ?>
-<?php
-if(Yii::app()->user->isGuest){
-    echo "its guest";
-}
-else{
-    echo "logged in";
-}
-?>
 <div class="page-content">
     <h1 class="text-primary title">REASON FOR VISIT</h1>
     <div class="bg-gray-lighter form-info">Please provide a reason for this visit.</div>

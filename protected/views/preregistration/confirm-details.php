@@ -84,7 +84,26 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                 </div>
                 <div class="row form-group">
                     <span class="text-primary col-xs-12">EXPIRY</span>
-                    <div class="col-xs-3">
+                    <div class="col-md-6">
+                        <?php
+                        $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                            'model'       => $model,
+                            'attribute'   => 'identification_document_expiry',
+                            'options'     => array(
+                                'dateFormat' => 'dd-mm-yy',
+                            ),
+                            'htmlOptions' => array(
+                                'size'        => '0',
+                                'maxlength'   => '10',
+                                'placeholder' => 'Expiry',
+                                /*'style'       => 'width: 80px;',*/
+                                'class' => 'form-control input-lg'
+                            ),
+                        ));
+                        ?>
+                        <?php echo $form->error($model, 'identification_document_expiry'); ?>
+                    </div>
+                    <!--<div class="col-xs-3">
                         <select name="year" class="form-control input-lg">
                             <option>1</option>
                             <option>2</option>
@@ -146,7 +165,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                             <option>2021</option>
                             <option>2022</option>
                         </select>
-                    </div>
+                    </div>-->
                 </div>
             </div>
             <div class="col-sm-6">

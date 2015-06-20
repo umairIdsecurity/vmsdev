@@ -119,7 +119,7 @@ class PreregistrationController extends Controller
 			if ($model->save()) {
 				$this->redirect(array('preregistration/visitReason'));
 			}
-			print_r($model->getErrors());
+			//print_r($model->getErrors());
 		}
 		
 		$this->render('confirm-details' , array('model' => $model));

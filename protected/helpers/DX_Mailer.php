@@ -1147,7 +1147,7 @@ class DX_Mailer
 	            // Can't use addslashes as we don't know what value has magic_quotes_sybase.
 	            $encoded = addcslashes($str, "\0..\37\177\\\"");
 	
-	            if (($str == $encoded) && !preg_match('/[^A-Za-z0-9!#$%&\'*+\/=?^_`{|}~ -]/', $str)) {
+	            if (($str == $encoded) && !preg_match('/[^A-Za-z0-9!#$%&\'*+\/=?^_{|}~ -]/', $str)) {
     	          return ($encoded);
 	            } else {
 	              return ("\"$encoded\"");

@@ -277,7 +277,7 @@ class TenantController extends Controller {
         if(Yii::app()->request->isPostRequest)
         {
 
-            $sql = "UPDATE `tenant` SET `is_deleted`=1 WHERE `id`=$id";
+            $sql = "UPDATE tenant SET is_deleted=1 WHERE id=$id";
             $connection=Yii::app()->db;
             $connection->createCommand($sql)->execute();
 

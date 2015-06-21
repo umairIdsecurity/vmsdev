@@ -215,7 +215,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                                                     }
                                                 } echo "</select>";
                                             }  else {
-                                                echo $form->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes(NULL,"`name` like '{$model->profile_type}%'"));
+                                                echo $form->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes(NULL,"name like '{$model->profile_type}%'"));
                                             }
                                           
                                             ?>

@@ -29,7 +29,7 @@ switch ($session['role']) {
     case Roles::ROLE_OPERATOR:
     case Roles::ROLE_AGENT_OPERATOR:
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "`user`  IN ('".Yii::app()->user->id."')";
+        $Criteria->condition = "user  IN ('".Yii::app()->user->id."')";
         $workstationList = UserWorkstations::model()->findAll($Criteria);
         break;
 }

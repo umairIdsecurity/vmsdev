@@ -371,7 +371,7 @@ class UserController extends Controller
             if ($model->validate()) {
                 //Delete all previous uploads of this user
                 ImportHosts::model()->deleteAll(
-                    "`imported_by` = :user_id",
+                    "imported_by = :user_id",
                     array(':user_id' => Yii::app()->user->id)
                 );
                 //Upload the file

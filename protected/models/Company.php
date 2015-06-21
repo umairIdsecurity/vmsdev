@@ -33,7 +33,7 @@ class Company extends CActiveRecord {
 
 
     protected $tenantQuery = "SELECT COUNT(c.id)
-FROM `user` u
+FROM user u
 LEFT JOIN company c ON u.company=c.id
 WHERE u.id=c.tenant AND c.id !=1";
 
@@ -93,7 +93,7 @@ WHERE u.id=c.tenant AND c.id !=1";
                 //array('user_first_name , user_last_name , user_email , user_contact_number', 'required' , 'on' => 'company_contact'),
 	//            array('code', 'unique'),
 	//            array('code', 'unique', 'criteria' => array(
-	//                    'condition' => '`tenant`=:tenant',
+	//                    'condition' => 'tenant=:tenant',
 	//                    'params' => array(
 	//                        ':tenant' => Yii::app()->user->tenant
 	//                    )

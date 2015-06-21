@@ -17,6 +17,12 @@ return CMap::mergeArray(
     array(
         'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . '..',
         'name' => 'Visitor Management System v<version_number>',
+        // set target language to be Australian
+        'language' => 'en-AU',
+
+        // set source language to be Australian
+        'sourceLanguage' => 'en-AU',
+
         // preloading 'log' component
         'preload' => array('log', 'foundation'),
         'theme' => 'preregistration',

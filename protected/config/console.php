@@ -10,6 +10,12 @@ return CMap::mergeArray(
     array(
         'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . '..',
         'name' => 'Cron Application',
+        // set target language to be Australian
+        'language' => 'en-AU',
+
+        // set source language to be Australian
+        'sourceLanguage' => 'en-AU',
+
         // preloading 'log' component
         'preload' => array('log'),
         'import' => $mainConfigArray['import'],

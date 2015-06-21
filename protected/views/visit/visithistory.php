@@ -105,9 +105,14 @@ function returnPatientOrHostName($visit_id, $userHost) {
     if ($visitDetails['visitor_type'] == VisitorType::PATIENT_VISITOR) {
         $hostFullName = Patient::model()->findByPk($visitDetails['patient'])->name;
     } else {
-        $fname = User::model()->findByPk($visitDetails['host'])->first_name;
-        $lname = User::model()->findByPk($visitDetails['host'])->last_name;
-        $hostFullName = $fname . " " . $lname;
+        $user = Visitor::model()->findByPk($visitDetails['host']);
+        if ($user) {
+            $fname = $user->first_name;
+            $lname = $user->last_name;
+            $hostFullName = $fname . " " . $lname;
+        } else {
+            $hostFullName = '';
+        }
     }
 
     return $hostFullName;

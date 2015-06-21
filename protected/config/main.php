@@ -14,6 +14,13 @@ $result = CMap::mergeArray(
             // preloading 'log' component
             'preload' => array('log', 'foundation'),
             'theme' => 'bootstrap',
+
+            // set target language to be Australian
+            'language' => 'en-AU',
+
+            // set source language to be Australian
+            'sourceLanguage' => 'en-AU',
+
             'modules' => array(
             /* 'gii' => array(
               'generatorPaths' => array(

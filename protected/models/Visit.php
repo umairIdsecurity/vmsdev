@@ -1040,11 +1040,7 @@ class Visit extends CActiveRecord {
      */
     public function archivePregisteredOldVisits() {
         // Find and Update Status
-<<<<<<< HEAD
-        $crieteria = 'visit_status = 2 AND ( date_check_in <= "' . date("Y-m-d", strtotime('-2 days')) . '"  OR date_check_in <= "' . date("d-m-Y", strtotime('-2 days')) . '")';
-=======
         $crieteria = "visit_status = 2 AND ( date_check_in <= '" . date('Y-m-d', strtotime("-2 days")) . "')";
->>>>>>> origin/dev
         $preRegistered = $this->findAll($crieteria);
 
         if ($preRegistered)

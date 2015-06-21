@@ -960,7 +960,7 @@ class Visit extends CActiveRecord {
     public function getVisitCounts() {
         $dateIn = new DateTime($this->date_check_in);
         $dateOut = new DateTime($this->date_check_out);
-        $dateNow = new DateTime(date('d-m-Y'));
+        $dateNow = new DateTime(date('Y-m-d'));
         switch ($this->card_type) {
             case CardType::VIC_CARD_MANUAL:
                 return (int)$this->countByAttributes(['visit_status' => VisitStatus::CLOSED, 'visitor' => $this->visitor]) + 1;
@@ -986,7 +986,7 @@ class Visit extends CActiveRecord {
     }
 
     public function getRemainingDays() {
-        $dateNow = new DateTime(date('d-m-Y'));
+        $dateNow = new DateTime(date('Y-m-d'));
         $dateOut = new DateTime($this->date_check_out);
         $dateIn = new DateTime($this->date_check_in);
         switch ($this->card_type) {
@@ -1010,7 +1010,7 @@ class Visit extends CActiveRecord {
                 }
                 break;
             case CardType::VIC_CARD_SAMEDATE:
-                if (date('d-m-Y') == $this->date_check_in) {
+                if (date('Y-m-d') == $this->date_check_in) {
                     return 28 - ((int)$this->countByAttributes(['visit_status' => VisitStatus::CLOSED, 'visitor' => $this->visitor]) + 1);
                 }
                 return 28;
@@ -1028,8 +1028,8 @@ class Visit extends CActiveRecord {
      */
     public function afterFind() {
 
-        //$this->date_check_in = (string) date("d-m-Y", $this->date_check_in);
-        //$this->date_check_out = (string) date("d-m-Y", $this->date_check_out);
+        //$this->date_check_in = (string) date("Y-m-d", $this->date_check_in);
+        //$this->date_check_out = (string) date("Y-m-d", $this->date_check_out);
         return parent::afterFind();
     }
 

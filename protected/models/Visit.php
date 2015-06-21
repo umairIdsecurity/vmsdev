@@ -374,7 +374,7 @@ class Visit extends CActiveRecord {
         $criteria->compare('CONCAT(host0.first_name,\' \',host0.last_name)',$this->_asicname,true);
 
         $criteria->compare('visitor0.asic_no', $this->asic_no, true);
-        $criteria->compare('DATE_FORMAT(visitor0.asic_expiry, "%d-%m-%Y")', $this->asic_expiry, true);
+        #$criteria->compare('DATE_FORMAT(visitor0.asic_expiry, "%d-%m-%Y")', $this->asic_expiry, true);
         $criteria->compare('visitor0.asic_expiry', $this->asic_expiry, true);
 
         $criteria->compare('finish_date', $this->finish_date, true);
@@ -390,7 +390,7 @@ class Visit extends CActiveRecord {
                 OR company0.code LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.first_name LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.last_name LIKE CONCAT('%', :filterProperties , '%')
-                OR DATE_FORMAT(visitor0.date_of_birth, '%d-%m-%Y') LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.date_of_birth LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.contact_number LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.contact_street_no LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.contact_street_name LIKE CONCAT('%', :filterProperties , '%')
@@ -410,9 +410,9 @@ class Visit extends CActiveRecord {
                 OR card_returned_date LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.identification_type LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.identification_document_no LIKE CONCAT('%', :filterProperties , '%')
-                OR DATE_FORMAT(visitor0.identification_document_expiry, '%d-%m-%Y') LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.identification_document_expiry LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.asic_no LIKE CONCAT('%', :filterProperties , '%')
-                OR DATE_FORMAT(visitor0.asic_expiry, '%d-%m-%Y') LIKE CONCAT('%', :filterProperties , '%')");
+                OR visitor0.asic_expiry LIKE CONCAT('%', :filterProperties , '%')");
             $criteria->params = array(':filterProperties' => $this->filterProperties);
         }
 
@@ -740,7 +740,7 @@ class Visit extends CActiveRecord {
             $command = Yii::app()->db->createCommand("UPDATE visit
                     LEFT JOIN card_generated ON card_generated.id = visit.`card`
                     SET visit_status = '" . VisitStatus::CLOSED . "',card_status ='" . CardStatus::NOT_RETURNED . "'
-                    WHERE 'd-m-Y' > date_out AND date_out != 'd-m-Y' AND visit_status = '" . VisitStatus::ACTIVE . "'
+                    WHERE CURRENT_DATE > date_out AND visit_status = '" . VisitStatus::ACTIVE . "'
                     AND card_status ='" . CardStatus::ACTIVE . "' and card_type= '" . CardType::SAME_DAY_VISITOR . "'")->execute();
             echo "Affected Rows : " . $command . "<br>";
             if ($command > 0) {
@@ -766,7 +766,15 @@ class Visit extends CActiveRecord {
             $commandUpdateCard = "";
 
             $command = Yii::app()->db->createCommand("UPDATE visit
-                    SET visit_status = '" . VisitStatus::EXPIRED . "', card_option ='" . CardStatus::RETURNED . "', finish_date = DATE_FORMAT(CURDATE(), '%d-%m-%Y'), finish_time = CURTIME() WHERE 'd-m-Y' > date_check_out AND DATE_FORMAT(DATE_SUB(NOW(), INTERVAL DATEDIFF(date_check_out, date_check_in) DAY), '%d-%m-%Y %h:%i:%s') >= CONCAT(date_check_in, ' ', time_check_in) AND visit_status = '" . VisitStatus::ACTIVE . "' AND (card_type = '" . CardType::VIC_CARD_EXTENDED . "' OR card_type = '". CardType::VIC_CARD_MULTIDAY ."')")->execute();
+                    SET visit_status = '" . VisitStatus::EXPIRED
+                        . "', card_option ='" . CardStatus::RETURNED
+                        . "', finish_date = CURDATE(), '%d-%m-%Y'), finish_time = CURTIME()
+                    WHERE CURRENT_DATE > date_check_out
+                    AND CURRENT_TIME > time_check_out
+                    AND visit_status = '" . VisitStatus::ACTIVE . "'
+                    AND (card_type = '" . CardType::VIC_CARD_EXTENDED . "'
+                    OR card_type = '". CardType::VIC_CARD_MULTIDAY ."')")->execute();
+
             echo "Affected Rows : " . $command . "\n";
             if ($command > 0) {
                 echo "Success: Update VIC Extended and Multiday visits to close status successful. \n";
@@ -788,7 +796,13 @@ class Visit extends CActiveRecord {
     public function updateOneDayVisitsToClose() {
         try {
             $command = Yii::app()->db->createCommand(
-                "UPDATE visit SET visit_status = '" . VisitStatus::CLOSED . "', card_option ='" . CardStatus::RETURNED . "', finish_date = DATE_FORMAT(CURDATE(), '%d-%m-%Y'), finish_time = CURTIME() WHERE 'd-m-Y' > date_check_out AND DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 24 HOUR), '%d-%m-%Y %h:%i:%s') >= CONCAT(date_check_in, ' ', time_check_in) AND visit_status = '" . VisitStatus::ACTIVE . "' AND card_type = '" . CardType::VIC_CARD_24HOURS . "'")->execute();
+                "UPDATE visit SET visit_status = '" . VisitStatus::CLOSED
+                    . "', card_option ='" . CardStatus::RETURNED
+                    . "', finish_date = CURRENT_DATE, finish_time = CURRENT_DATE
+                    WHERE CURRENT_DATE > date_check_out
+                    AND visit_status = '" . VisitStatus::ACTIVE . "'
+                    AND card_type = '" . CardType::VIC_CARD_24HOURS . "'")->execute();
+
             echo "Affected Rows : " . $command . "\n";
             if ($command > 0) {
                 echo "Success: Update VIC 24 and Manual visits to close status successful. \n";
@@ -806,7 +820,14 @@ class Visit extends CActiveRecord {
     public function updateSameDayVisitsToExpired() {
         try {
             $command = Yii::app()->db->createCommand(
-                "UPDATE visit SET visit_status = '" . VisitStatus::EXPIRED . "', card_option ='" . CardStatus::RETURNED . "', finish_date = DATE_FORMAT(CURDATE(), '%d-%m-%Y'), finish_time = CURTIME() WHERE DATE_FORMAT(NOW(), '%d-%m-%Y') > date_check_out AND CURTIME() >= time_check_out AND visit_status = '" . VisitStatus::ACTIVE . "' AND card_type = '" . CardType::VIC_CARD_SAMEDATE . "'")->execute();
+                "UPDATE visit SET visit_status = '" . VisitStatus::EXPIRED
+                    . "', card_option ='" . CardStatus::RETURNED
+                    . "', finish_date = CURRENT_DATE , finish_time = CURRENT_TIME
+                    WHERE CURRENT_DATE >= date_check_out
+                    AND CURRENT_TIME > time_check_out
+                    AND visit_status = '" . VisitStatus::ACTIVE . "'
+                    AND card_type = '" . CardType::VIC_CARD_SAMEDATE . "'")->execute();
+
             echo "Affected Rows : " . $command . "\n";
             if ($command > 0) {
                 echo "Success: Update VIC Sameday visits to expired status successful. \n";
@@ -827,11 +848,13 @@ class Visit extends CActiveRecord {
          * and card status is still active and if card type is multi day visitor
          */
         try {
+
             $command = Yii::app()->db->createCommand("UPDATE visit
                     LEFT JOIN card_generated ON card_generated.id = visit.`card` 
                     SET visit_status = '" . VisitStatus::EXPIRED . "',card_status ='" . CardStatus::NOT_RETURNED . "'
-                    WHERE 'd-m-Y' > date_expiration AND visit_status = '" . VisitStatus::ACTIVE . "'
+                    WHERE CURRENT_DATE > date_expiration AND visit_status = '" . VisitStatus::ACTIVE . "'
                     AND card_status ='" . CardStatus::ACTIVE . "' and card_type='" . CardType::MULTI_DAY_VISITOR . "'")->execute();
+
             echo "Affected Rows : " . $command . "<br>";
             if ($command > 0) {
                 echo "Update visit to expired status successful.";
@@ -889,7 +912,12 @@ class Visit extends CActiveRecord {
         if ($res_visitor) {
             $visitor = $res_visitor[0]['visitor'];
 
-            $res_company = Yii::app()->db->createCommand("SELECT company.id AS company_id, company.name AS company_name FROM visit LEFT JOIN user ON user.id = visit.host LEFT JOIN company ON user.company = company.id WHERE company.is_deleted=0 AND visit.id= " . $visitId)->queryAll();
+            $res_company = Yii::app()->db->createCommand("SELECT company.id AS company_id, company.name AS company_name
+                                                          FROM visit
+                                                            LEFT JOIN user ON user.id = visit.host
+                                                            LEFT JOIN company ON user.company = company.id
+                                                           WHERE company.is_deleted=0
+                                                           AND visit.id= " . $visitId)->queryAll();
             if ($res_company) {
                 $company = $res_company[0]['company_id'];
             } else {
@@ -897,7 +925,10 @@ class Visit extends CActiveRecord {
             }
 
 
-            $res_host = Yii::app()->db->createCommand("SELECT id FROM user WHERE user.is_deleted=0 AND user.company=" . $company)->queryAll();
+            $res_host = Yii::app()->db->createCommand("SELECT id
+                                                        FROM user
+                                                        WHERE user.is_deleted=0
+                                                        AND user.company=" . $company)->queryAll();
 
             //var_dump($res_host);
             if ($res_host) {
@@ -906,14 +937,17 @@ class Visit extends CActiveRecord {
                 }
 
                 $hosts = implode(",", $arr);
-                $sql_company_visit_by_visitor = "SELECT COUNT(*) as cnt FROM visit"
-                        . " WHERE visit.is_deleted=0 AND visit.visitor= " . $visitor
-                        . " AND host IN (" . $hosts . ")";
+                $sql_company_visit_by_visitor = "SELECT COUNT(*) as cnt
+                        FROM visit
+                        WHERE visit.is_deleted=0 AND visit.visitor= " . $visitor. "
+                        AND host IN (" . $hosts . ")";
 
 
                 $companyVisitsByVisitor = Yii::app()->db->createCommand($sql_company_visit_by_visitor)->queryAll();
 
-                $countData = array('allVisitsByVisitor' => $allVisitsByVisitor[0]['cnt'], 'companyVisitsByVisitor' => $companyVisitsByVisitor[0]['cnt'], 'companyName' => $res_company[0]['company_name']);
+                $countData = array('allVisitsByVisitor' => $allVisitsByVisitor[0]['cnt'],
+                                    'companyVisitsByVisitor' => $companyVisitsByVisitor[0]['cnt'],
+                                    'companyName' => $res_company[0]['company_name']);
 
                 return $countData;
             } else {
@@ -1009,8 +1043,8 @@ class Visit extends CActiveRecord {
      */
     public function afterFind() {
 
-        $this->date_check_in = (string) date("d-m-Y", strtotime($this->date_check_in));
-        $this->date_check_out = (string) date("d-m-Y", strtotime($this->date_check_out));
+        //$this->date_check_in = (string) date("d-m-Y", $this->date_check_in);
+        //$this->date_check_out = (string) date("d-m-Y", $this->date_check_out);
         return parent::afterFind();
     }
 
@@ -1021,7 +1055,7 @@ class Visit extends CActiveRecord {
      */
     public function archivePregisteredOldVisits() {
         // Find and Update Status
-        $crieteria = "visit_status = 2 AND ( date_check_in <= '" . date('Y-m-d', strtotime("-2 days")) . "'  OR date_check_in <= '" . date('d-m-Y', strtotime("-2 days")) . "')";
+        $crieteria = "visit_status = 2 AND ( date_check_in <= '" . date('Y-m-d', strtotime("-2 days")) . "')";
         $preRegistered = $this->findAll($crieteria);
 
         if ($preRegistered)

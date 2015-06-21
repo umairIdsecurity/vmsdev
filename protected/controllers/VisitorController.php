@@ -463,7 +463,7 @@ class VisitorController extends Controller {
                  {   
                     //Delete all previous uploads of this user
                     ImportVisitor::model()->deleteAll(
-                        "`imported_by` = :user_id",
+                        "imported_by = :user_id",
                         array(':user_id' => Yii::app()->user->id)
                     );
                     

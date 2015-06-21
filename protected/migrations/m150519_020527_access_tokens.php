@@ -18,7 +18,7 @@ class m150519_020527_access_tokens extends CDbMigration
 	public function safeDown()
 	{
 	  $this->execute("
-            DROP TABLE IF EXISTS `access_tokens`;
+            DROP TABLE IF EXISTS access_tokens;
             ");
 	}
 

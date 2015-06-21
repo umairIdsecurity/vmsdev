@@ -14,11 +14,11 @@ class m150507_091726_issue_175 extends CDbMigration
         );
 
         $countryDefinition = "
-CREATE TABLE IF NOT EXISTS `country` (
-	`id` int(5) NOT NULL AUTO_INCREMENT,
-	`code` char(2) NOT NULL DEFAULT '',
-	`name` varchar(45) NOT NULL DEFAULT '',
-	PRIMARY KEY (`id`)
+CREATE TABLE IF NOT EXISTS country (
+	id int(5) NOT NULL AUTO_INCREMENT,
+	code char(2) NOT NULL DEFAULT '',
+	name varchar(45) NOT NULL DEFAULT '',
+	PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=0;
        ";
 
@@ -28,13 +28,13 @@ CREATE TABLE IF NOT EXISTS `country` (
             'visitor', 'profile_type', "enum('VIC','ASIC', 'CORPORATE') NOT NULL DEFAULT 'CORPORATE'"
         );
 
-        $idempotent->addColumn('visitor', 'middle_name', "varchar(50) DEFAULT NULL AFTER `first_name`");
+        $idempotent->addColumn('visitor', 'middle_name', "varchar(50) DEFAULT NULL AFTER first_name");
         $idempotent->dropAndAddColumn(
             'visitor', 'identification_type', "enum('PASSPORT','DRIVERS_LICENSE', 'PROOF_OF_AGE') DEFAULT NULL"
         );
         $idempotent->addColumn(
             'visitor', 'identification_country_issued', "int(5) DEFAULT NULL",
-            "ADD CONSTRAINT `identification_country_fk` FOREIGN KEY (`identification_country_issued`) REFERENCES `country` (`id`)"
+            "ADD CONSTRAINT identification_country_fk FOREIGN KEY (identification_country_issued) REFERENCES country (id)"
         );
         $idempotent->addColumn('visitor', 'identification_document_no', "varchar(50) DEFAULT NULL");
         $idempotent->addColumn('visitor', 'identification_document_expiry', "date DEFAULT NULL");
@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS `country` (
         );
         $idempotent->addColumn(
             'visitor', 'contact_country', "int(5) DEFAULT NULL",
-            "ADD CONSTRAINT `contact_country_fk` FOREIGN KEY (`contact_country`) REFERENCES `country` (`id`)"
+            "ADD CONSTRAINT contact_country_fk FOREIGN KEY (contact_country) REFERENCES country (id)"
         );
     }
 
@@ -89,11 +89,11 @@ CREATE TABLE IF NOT EXISTS `country` (
         $idempotent->dropColumn('visitor', 'contact_state');
         $idempotent->dropColumn('visitor', 'contact_country', 'contact_country_fk');
 
-        $this->execute("DROP TABLE IF EXISTS `country`;");
+        $this->execute("DROP TABLE IF EXISTS country;");
     }
 
     protected $countryData = "
-INSERT INTO `country` (`code`, `name`) VALUES
+INSERT INTO country (code, name) VALUES
 ('AD', 'Andorra'),
 ('AE', 'United Arab Emirates'),
 ('AF', 'Afghanistan'),

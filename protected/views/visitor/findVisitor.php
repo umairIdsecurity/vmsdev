@@ -38,9 +38,9 @@ if($_GET['tenant'] && $_GET['tenant']!=''){
 	                     . "%')";
 
 if (isset($_GET['cardType']) && $_GET['cardType'] > CardType::CONTRACTOR_VISITOR) {
-    $conditionString .= " AND profile_type = '" . Visitor::PROFILE_TYPE_VIC . "' ";
+    $conditionString .= " AND profile_type = '" . Visitor::PROFILE_TYPE_VIC . "'";
 } else {
-    $conditionString .= " AND profile_type = '" . Visitor::PROFILE_TYPE_CORPORATE . "' ";
+    $conditionString .= " AND profile_type = '" . Visitor::PROFILE_TYPE_CORPORATE . "'";
 }
 
 
@@ -100,10 +100,9 @@ function displaySelectVisitorButton($visitorData) {
 }
 
 function returnVisitorDetailLink($visitorId) {
-    $visit = Visit::model()->findByAttributes(array('visitor'=>$visitorId));
-
+    $visit = Visit::model()->findByAttributes(array('visitor'=>$visitorId, 'visit_status' => VisitStatus::ACTIVE));
     if($visit){
-        $url = Yii::app()->baseUrl.'/index.php?r=visit/detail&id=' . $visit->id;
+        $url = Yii::app()->baseUrl.'/index.php?r=visit/detail&id=' . $visitorId;
     }
 
     if (isset($url)) {

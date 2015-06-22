@@ -995,13 +995,13 @@ $model->identification_country_issued = 13;
         $.ajax(url).done(function(data){
             Loading.hide();
             $("#searchVisitorTable").show();
-          $("#searchVisitorTable").html(data);
+            $("#searchVisitorTable").html(data);
         }).fail(function() {
             Loading.hide();
             window.location = '<?php echo Yii::app()->createUrl('site/login');?>';
         }); 
         //$("#searchVisitorTable").html('<iframe id="findVisitorTableIframe" onLoad="autoResize();" width="100%" height="100%" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
-            return false;
+        return false;
     }
 
     function populateVisitWorkstation(value) {

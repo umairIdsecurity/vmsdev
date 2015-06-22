@@ -777,6 +777,7 @@ $defaultKey = key($asicCardTypes);
         $("#register-host-patient-form").hide();
         //append searched text in modal
         var searchText = $("#search-host").val();
+        Loading.show();
         var tenant;
         var tenant_agent;
         if ($("#selectedVisitorInSearchTable").val() == '') {
@@ -788,12 +789,16 @@ $defaultKey = key($asicCardTypes);
         }
         //change modal url to pass user searched text
         var url = 'index.php?r=visitor/findhost&id=' + searchText + '&visitortype=' + $("#Visitor_visitor_type").val() + '&tenant=' + tenant + '&tenant_agent=' + tenant_agent + '&cardType=' + $('#selectCardDiv input[name=selectCardType]:checked').val();
-         $.ajax(url).done(function(data){
-          $("#searchHostTable").html(data);
+        $.ajax(url).done(function(data){
+            Loading.hide();
+            $("#searchHostTable").show();
+            $("#searchHostTable").html(data);
         }).fail(function() {
-           window.location = '<?php echo Yii::app()->createUrl('site/login');?>';
+            Loading.hide();
+            window.location = '<?php echo Yii::app()->createUrl('site/login');?>';
         }); 
        // $("#searchHostTable").html('<iframe id="findHostTableIframe" onLoad="autoResize2();" width="100%" height="100%" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
+       return false;
     }
 
     function autoResize2() {

@@ -74,6 +74,7 @@ $this->widget('bootstrap.widgets.TbButton', array(
     }
     $(document).ready(function () {
         $('#addContactLink').on('click', function(e) {
+            $('.errorMessage').hide();
             $('#myModalLabel').html('Add Contact To Company');
             $("tr.company_contact_field").addClass('hidden');
             $("#AddCompanyContactForm_email").val("");
@@ -86,6 +87,7 @@ $this->widget('bootstrap.widgets.TbButton', array(
         });
 
         $('#addCompanyLink').on('click', function(e) {
+            $('.errorMessage').hide();
             $('#myModalLabel').html('Add Company');
             $('#AddCompanyContactForm_companyName').enable();
             $("tr.company_contact_field").addClass("hidden");

@@ -585,6 +585,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
 <script>
     $(document).ready(function () {
         $('#addContactLink').on('click', function(e) {
+            $('.errorMessage').hide();
             $('#myModalLabel').html('Add Contact To Company');
             $("tr.company_contact_field").addClass('hidden');
             $("#AddCompanyContactForm_email").val("");
@@ -597,6 +598,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
         });
 
         $('#addCompanyLink').on('click', function(e) {
+            $('.errorMessage').hide();
             $('#myModalLabel').html('Add Company');
             $('#AddCompanyContactForm_companyName').enable();
             $("tr.company_contact_field").addClass("hidden");

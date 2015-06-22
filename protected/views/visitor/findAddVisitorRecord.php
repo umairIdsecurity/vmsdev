@@ -325,9 +325,20 @@ $model->identification_country_issued = 13;
                             </tr>
                             <tr class="vic-visitor-fields">
                                 <td>
+                                    <i id="cstate">
                                     <?php echo $form->dropDownList($model, 'contact_state', Visitor::$AUSTRALIAN_STATES, array('empty' => 'State', 'style' => 'width: 140px;')); ?>
+                                    </i>
+                                    <select id="state_copy" style="display: none">
+                                        <?php
+                                        if(isset(Visitor::$AUSTRALIAN_STATES) && is_array(Visitor::$AUSTRALIAN_STATES)){
+                                            foreach (Visitor::$AUSTRALIAN_STATES as $key=>$value):
+                                                echo "<option name='$key'>$value</option>";
+                                            endforeach;
+                                        }
+                                        ?>
+                                    </select>
                                     <?php echo $form->textField($model, 'contact_postcode', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Postcode', 'style' => 'width: 62px;')); ?>
-                                    <span class="required">*</span>
+                                        <span class="required">*</span>
                                     <?php echo $form->error($model, 'contact_state'); ?>
                                 </td>
                             </tr>
@@ -471,6 +482,7 @@ $model->identification_country_issued = 13;
 
                                 </td>
                             </tr>
+
                             <tr class="visitorTypeDropdownRow">
                                 <td>
 
@@ -548,6 +560,7 @@ $model->identification_country_issued = 13;
                                     <?php echo "<br>" . $form->error($model, 'identification_type'); ?>
                                 </td>
                             </tr>
+
                             <tr class="vic-visitor-fields">
                                 <td>
                                     <?php
@@ -801,6 +814,15 @@ $model->identification_country_issued = 13;
     }
 
     $(document).ready(function() {
+        if($('#Visitor_contact_country').length){
+            $('#Visitor_contact_country').change(function(){
+                if($(this).val() != <?php echo Visitor::AUSTRALIA_ID ?>){
+                    $("#cstate").html('<input size="15" style="width: 126px;" maxlength="50" placeholder="State" name="Visitor[contact_state]" id="Visitor_contact_state" type="text">');
+                }else{
+                    $("#cstate").html('<select id="#Visitor_contact_state" name="Visitor[contact_state]" style="width: 140px;">'+$('#state_copy').html()+'</select>');
+                }
+            });
+        }
         // for VIC visitor profile
         $("#Visitor_alternative_identification").on('change', switchIdentification);
         switchIdentification();

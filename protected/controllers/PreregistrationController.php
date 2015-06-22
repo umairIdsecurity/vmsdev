@@ -105,9 +105,6 @@ class PreregistrationController extends Controller
 		$session = new CHttpSession;
 		$model = new Registration();
 
-		/*$model->account_type = $session['account_type'];
-		$model->username     = $session['username'];
-		$model->password     = $session['password'];*/
 		if(
 			isset($session['account_type']) && $session['account_type'] !='' &&
 			isset($session['username']) 	&& $session['username']		!='' &&

@@ -311,7 +311,7 @@ class VisitController extends Controller {
         $reasonModel = VisitReason::model()->findByPk($model->reason);
         $patientModel = Patient::model()->findByPk($model->patient);
         $cardTypeModel = CardType::model()->findByPk($model->card_type);
-		$visitCount = Visit::model()->getVisitCount($model->id);
+	$visitCount = Visit::model()->getVisitCount($model->id);
         $visitCount['totalVisits'] = $model->visitCounts;
         $visitCount['remainingDays'] = $model->remainingDays;
 
@@ -331,10 +331,10 @@ class VisitController extends Controller {
             $visitorModel->attributes = $_POST['Visitor'];
             $asicModel = Visitor::model()->findByPk($model->host);
             if ($asicModel){
-                $asicModel->first_name = $_POST['Visitor']['host_first_name'];
-                $asicModel->last_name = $_POST['Visitor']['host_last_name'];
-                $asicModel->asic_no = $_POST['Visitor']['host_asic_no'];
-                $asicModel->asic_expiry = $_POST['Visitor']['host_asic_expiry'];
+                if (isset($_POST['Visitor']['host_first_name']))$asicModel->first_name = $_POST['Visitor']['host_first_name'];
+                if (isset($_POST['Visitor']['host_last_name']))$asicModel->last_name = $_POST['Visitor']['host_last_name'];
+                if (isset($_POST['Visitor']['host_asic_no']))$asicModel->asic_no = $_POST['Visitor']['host_asic_no'];
+                if (isset($_POST['Visitor']['host_asic_expiry']))$asicModel->asic_expiry = $_POST['Visitor']['host_asic_expiry'];
                 $asicModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
                 #if(!$asicModel->validate()) die("asicModel-{$asicModel->id}".CHtml::errorSummary($asicModel));
                 $asicModel->save();
@@ -346,22 +346,22 @@ class VisitController extends Controller {
                     $companyModel = Company::model()->findByPk($visitorModel->company);
                     $staffModel = User::model()->findByPk($visitorModel->staff_id);
                     if ($companyModel) {
-                        $companyModel->name = $_POST['Company']['name'];
+                        if (isset($_POST['Company']['name']))$companyModel->name = $_POST['Company']['name'];
                         #if(!$companyModel->validate()) die('companyModel-'.CHtml::errorSummary($asicModel));
                         $companyModel->save();
                     }
                     if (isset($staffModel) && $staffModel){
-                        $staffModel->contact_number = $_POST['Company']['mobile_number'];
-                        $staffModel->email = $_POST['Company']['email_address'];
+                        if (isset($_POST['Company']['mobile_number']))$staffModel->contact_number = $_POST['Company']['mobile_number'];
+                        if (isset($_POST['Company']['email_address']))$staffModel->email = $_POST['Company']['email_address'];
                         #if(!$staffModel->validate()) die('staffModel-'.CHtml::errorSummary($asicModel));
                         $staffModel->save();
                     }
                 }
             }
-            $visitorModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
-            #if(!$visitorModel->validate()) die('visitorModel-'.CHtml::errorSummary($asicModel));
+            #$visitorModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
+            #if(!$visitorModel->validate()) die('visitorModel-'.CHtml::errorSummary($visitorModel));
             if($visitorModel->save()){
-                $this->redirect(Yii::app()->createUrl('visit/detail&id='.$model->id));
+                #$this->redirect(Yii::app()->createUrl('visit/detail&id='.$model->id));
             }
         }
 

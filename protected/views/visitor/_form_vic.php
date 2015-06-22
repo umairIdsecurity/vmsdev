@@ -937,8 +937,11 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
         }
     }
 
+    var requestRunning = false;
     function sendVisitorForm() {
-
+        if (requestRunning) { // don't do anything if an AJAX request is pending
+            return;
+        }
         $('#Visitor_contact_country').removeAttr('disabled');
 
         if (!$('#Visitor_alternative_identification').attr('checked')) {
@@ -961,7 +964,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
             url = "<?php echo CHtml::normalizeUrl(array("visitor/addvisitor")); ?>";
         }
 
-        $.ajax({
+        var ajaxOpts = {
             type: "POST",
             url: url,
             data: form,
@@ -979,7 +982,8 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                 }
             },
             complete: function() {
-                $("#submitFormVisitor").data('requestRunning', false);
+                //$("#submitFormVisitor").data('requestRunning', false);
+                requestRunning = false;
             },
             error: function (data) {
                 if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
@@ -990,7 +994,10 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                     window.location = 'index.php?r=visitor/admin';
                 }
             }
-        });
+        };
+        requestRunning = true;
+        $.ajax(ajaxOpts);
+        return false;
     }
 
     function getWorkstation() { /*get workstations for operator*/

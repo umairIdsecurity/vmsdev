@@ -795,7 +795,12 @@ if ($this->action->id == 'update') {
         }
     }
 
+    var requestRunning = false;
     function sendVisitorForm() {
+        if (requestRunning) { // don't do anything if an AJAX request is pending
+            return;
+        }
+        
         var form = $("#register-form").serialize();
         var url;
 
@@ -804,7 +809,7 @@ if ($this->action->id == 'update') {
         } else {
             url = "<?php echo CHtml::normalizeUrl(array("visitor/addvisitor")); ?>";
         }
-        $.ajax({
+        var ajaxOpts = {
             type: "POST",
             url: url,
             data: form,
@@ -826,7 +831,10 @@ if ($this->action->id == 'update') {
                     window.location = 'index.php?r=visitor/admin';
                 }
             }
-        });
+        };
+        requestRunning = true;
+        $.ajax(ajaxOpts);
+        return false;
     }
 
     function getWorkstation() { /*get workstations for operator*/

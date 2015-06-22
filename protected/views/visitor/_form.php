@@ -1038,8 +1038,12 @@ function dismissModal(id) {
     }
 }
 
-
+var requestRunning = false;
 function sendVisitorForm() {
+    if (requestRunning) { // don't do anything if an AJAX request is pending
+        return;
+    }
+
     var form = $("#register-form").serialize();
     var url;
 
@@ -1049,7 +1053,7 @@ function sendVisitorForm() {
         url = "<?php echo CHtml::normalizeUrl(array("visitor/addvisitor")); ?>";
     }
 
-    $.ajax({
+    var ajaxOpts = {
         type: "POST",
         url: url,
         data: form,
@@ -1071,7 +1075,10 @@ function sendVisitorForm() {
                 window.location = 'index.php?r=visitor/admin';
             }
         }
-    });
+    };
+    requestRunning = true;
+    $.ajax(ajaxOpts);
+    return false;
 }
 
 

@@ -358,7 +358,7 @@ class Visit extends CActiveRecord {
         $criteria->compare('company0.contact', $this->_contactperson, true);
         $criteria->compare('company0.email_address', $this->_contactemail, true);
         $criteria->compare('company0.mobile_number', $this->_contactphone, true);
-        //$criteria->compare('DATE_FORMAT(visitor0.date_of_birth, "%d-%m-%Y")', $this->date_of_birth, true);
+        //$criteria->compare('DATE_FORMAT(visitor0.date_of_birth, "%Y-%m-%d")', $this->date_of_birth, true);
         $criteria->compare('visitor0.date_of_birth', $this->date_of_birth, true);
 
         $criteria->compare('visitor0.contact_street_no', $this->contact_street_no, true);
@@ -368,13 +368,13 @@ class Visit extends CActiveRecord {
         $criteria->compare('visitor0.contact_postcode', $this->contact_postcode, true);
         $criteria->compare('visitor0.identification_type', $this->identification_type, true);
         $criteria->compare('visitor0.identification_document_no', $this->identification_document_no, true);
-        //$criteria->compare('DATE_FORMAT(visitor0.identification_document_expiry, "%d-%m-%Y")', $this->identification_document_expiry, true);
+        //$criteria->compare('DATE_FORMAT(visitor0.identification_document_expiry, "%Y-%m-%d")', $this->identification_document_expiry, true);
         $criteria->compare('visitor0.identification_document_expiry', $this->identification_document_expiry, true);
 
         $criteria->compare('CONCAT(host0.first_name,\' \',host0.last_name)',$this->_asicname,true);
 
         $criteria->compare('visitor0.asic_no', $this->asic_no, true);
-        #$criteria->compare('DATE_FORMAT(visitor0.asic_expiry, "%d-%m-%Y")', $this->asic_expiry, true);
+        #$criteria->compare('DATE_FORMAT(visitor0.asic_expiry, "%Y-%m-%d")', $this->asic_expiry, true);
         $criteria->compare('visitor0.asic_expiry', $this->asic_expiry, true);
 
         $criteria->compare('finish_date', $this->finish_date, true);
@@ -573,7 +573,7 @@ class Visit extends CActiveRecord {
         if ($merge !== null) {
             $criteria->mergeWith($merge);
         }
-            $criteria->addCondition("str_to_date(t.date_check_out,'%d-%m-%Y') > DATE_ADD(now(),interval -2 day)");
+            $criteria->addCondition("str_to_date(t.date_check_out,'%Y-%m-%d') > DATE_ADD(now(),interval -2 day)");
         if ($this->filterProperties) {
             $criteria->addCondition("t.id LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.first_name LIKE CONCAT('%', :filterProperties , '%')
@@ -768,7 +768,7 @@ class Visit extends CActiveRecord {
             $command = Yii::app()->db->createCommand("UPDATE visit
                     SET visit_status = '" . VisitStatus::EXPIRED
                         . "', card_option ='" . CardStatus::RETURNED
-                        . "', finish_date = CURDATE(), '%d-%m-%Y'), finish_time = CURTIME()
+                        . "', finish_date = CURDATE(), '%Y-%m-%d'), finish_time = CURTIME()
                     WHERE CURRENT_DATE > date_check_out
                     AND CURRENT_TIME > time_check_out
                     AND visit_status = '" . VisitStatus::ACTIVE . "'
@@ -968,6 +968,11 @@ class Visit extends CActiveRecord {
         $dateNow = new DateTime(date('Y-m-d'));
         switch ($this->card_type) {
             case CardType::VIC_CARD_MANUAL:
+            case CardType::VIC_CARD_SAMEDATE:
+            case CardType::VIC_CARD_24HOURS:
+                if (in_array($this->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED, VisitStatus::EXPIRED])) {
+                    return 1;
+                }
                 return (int)$this->countByAttributes(['visit_status' => VisitStatus::CLOSED, 'visitor' => $this->visitor]) + 1;
                 break;
             case CardType::VIC_CARD_EXTENDED:
@@ -981,22 +986,10 @@ class Visit extends CActiveRecord {
                         break;
                 }
                 break;
-            case CardType::VIC_CARD_SAMEDATE:
-                $remainingDays = (int)($dateOut->format('z') - $dateIn->format('z'));
-                switch ($this->visit_status) {
-                    case VisitStatus::EXPIRED:
-                        $visitCount = (int)($dateOut->format('z') - $remainingDays);
-                        if ($visitCount < 0) return 0;
-                            return $visitCount;
-                        break;
-                    default:
-                        return $remainingDays;
-                        break;
-                }
-                break;
+            /*case CardType::VIC_CARD_SAMEDATE:
             case CardType::VIC_CARD_24HOURS:
                 return (int)$this->countByAttributes(['visit_status' => VisitStatus::CLOSED, 'visitor' => $this->visitor]) + 1;
-                break;
+                break;*/
         }
     }
 
@@ -1006,6 +999,8 @@ class Visit extends CActiveRecord {
         $dateIn = new DateTime($this->date_check_in);
         switch ($this->card_type) {
             case CardType::VIC_CARD_MANUAL:
+            case CardType::VIC_CARD_24HOURS:
+            case CardType::VIC_CARD_SAMEDATE:
                 return 28 - (int)$this->visitCounts;
                 break;
             case CardType::VIC_CARD_EXTENDED:
@@ -1023,15 +1018,6 @@ class Visit extends CActiveRecord {
                         return $remainingDays;
                         break;
                 }
-                break;
-            case CardType::VIC_CARD_SAMEDATE:
-                if (date('Y-m-d') == $this->date_check_in) {
-                    return 28 - ((int)$this->countByAttributes(['visit_status' => VisitStatus::CLOSED, 'visitor' => $this->visitor]) + 1);
-                }
-                return 28;
-                break;
-            case CardType::VIC_CARD_24HOURS:
-                return 28 - (int)$this->visitCounts;
                 break;
         }
         

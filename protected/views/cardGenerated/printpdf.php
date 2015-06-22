@@ -27,7 +27,7 @@ if ($tenant) {
 
     $companyLogo =  Photo::model()->getAbsolutePathOfImage(Photo::COMPANY_IMAGE,$tenant->company);
     $userPhoto = Photo::model()->getAbsolutePathOfImage(Photo::VISITOR_IMAGE,$model->visitor);
-    echo "<pre>". print_r([$companyLogo,$userPhoto],true);die;
+   
 } else {
     throw new CHttpException(404, 'Company not found for this User.');
 }

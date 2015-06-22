@@ -49,7 +49,7 @@
 
             <?php
             if (empty($model->finish_date)) {
-                $model->finish_date = strtotime($model->date_check_out) > 0 ? date('Y-m-d', strtotime($model->date_check_out)) : date('d-m-Y');
+                $model->finish_date = strtotime($model->date_check_out) > 0 ? date('d-m-Y', strtotime($model->date_check_out)) : date('d-m-Y');
             }
             $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                 'model' => $model,
@@ -61,14 +61,14 @@
                     'readOnly' => 'readOnly'
                 ),
                 'options' => array(
-                    'dateFormat' => 'dd-mm-yy',
                     'showOn' => "button",
                     'buttonImage' => Yii::app()->controller->assetsBase . "/images/calendar.png",
                     'buttonImageOnly' => true,
                     'minDate' => "0",
                     'dateFormat' => "dd-mm-yy",
                 )
-            ));?>
+            ));
+            ?>
         </td>
     </tr>
 
@@ -88,7 +88,7 @@
         <td>
             <?php
             if (empty($model->card_returned_date)) {
-                $model->card_returned_date = strtotime($model->date_check_out) > 0 ? $model->date_check_out : date('d-m-Y');
+                $model->card_returned_date = strtotime($model->date_check_out) > 0 ? date('d-m-Y', strtotime($model->date_check_out)) : date('d-m-Y');
             }
             $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                 'model' => $model,

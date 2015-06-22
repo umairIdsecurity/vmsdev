@@ -84,7 +84,6 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                         'style' => 'width:83%'
                                     ),
                                     'options' => array(
-                                        'dateFormat' => 'dd-mm-yy',
                                         'showOn' => "button",
                                         'buttonImage' => Yii::app()->controller->assetsBase . "/images/calendar.png",
                                         'buttonImageOnly' => true,

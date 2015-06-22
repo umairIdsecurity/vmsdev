@@ -106,7 +106,7 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
                             </div>
                             <div style="background:#fff; border-bottom-right-radius: 20px;border-bottom-left-radius: 20px; width:260px; height:48.7px;">
                                 <div style="width:69px;  height:30px; margin-left:15px; margin-top:2px; display:inline-block; border:1px solid #000;">
-                                    <img border="1" style="height:30x; width:100%;" src="<?= $companyLogo; ?>">
+                                    <img border="1" style="height:30x; width:100%;" src="<?= ltrim($companyLogo, '/'); ?>">
                                 </div>
                             </div>
                         </div>
@@ -141,7 +141,7 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
                     </div>
                     <div style="background:#fff; border-bottom-right-radius: 20px;border-bottom-left-radius: 20px; width:260px; height:48.7px;">
                         <div style="width:69px;  height:30px; margin-left:15px; margin-top:2px; display:inline-block; border:1px solid #000;">
-                            <img border="1" style="height:30x; width:100%;" src="<?= $companyLogo; ?>">
+                            <img border="1" style="height:30x; width:100%;" src="<?= ltrim($companyLogo, '/'); ?>">
                         </div>
                     </div>
                 </div>
@@ -172,7 +172,7 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
                     </div>
                     <div style="background:#fff; border-bottom-right-radius: 20px;border-bottom-left-radius: 20px; width:260px; height:48.7px;">
                         <div style="width:69px;  height:30px; margin-left:15px; margin-top:2px; display:inline-block; border:1px solid #000;">
-                            <img border="1" style="height:30x; width:100%;" src="<?= $companyLogo; ?>">
+                            <img border="1" style="height:30x; width:100%;" src="<?= ltrim($companyLogo, '/'); ?>">
                         </div>
                     </div>
                 </div>

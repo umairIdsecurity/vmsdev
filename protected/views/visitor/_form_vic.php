@@ -766,6 +766,11 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                     });
                 }
             });
+
+            $("#closeCropPhoto").click(function() {
+                var ias = $('#photoCropPreview').imgAreaSelect({instance: true});
+                ias.cancelSelection();
+            });
         });
     });
 

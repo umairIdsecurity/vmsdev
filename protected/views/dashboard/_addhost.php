@@ -507,7 +507,7 @@ if (isset($company) && !empty($company)) {
 		
 		
 		
-						  $('#photoCropPreview2').imgAreaSelect({
+		$('#photoCropPreview2').imgAreaSelect({
             handles: true,
             onSelectEnd: function(img, selection) {
                 $("#cropPhotoBtn2").show();
@@ -561,7 +561,10 @@ if (isset($company) && !empty($company)) {
             });
         });
 
-		
+        $("#closeCropPhoto2").click(function() {
+            var ias = $('#photoCropPreview2').imgAreaSelect({instance: true});
+            ias.cancelSelection();
+        });
 
     });
     function sendHostForm() {

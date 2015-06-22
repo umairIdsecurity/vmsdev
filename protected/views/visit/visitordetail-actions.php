@@ -141,7 +141,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                 $disabled = 'disabled';
                             }
                             ?>
-                            <input type="submit" style="width: 235px !important;" <?php echo $disabled; ?> value="Preregister Visit for autoclosed visit" class="complete"/>
+                            <input type="submit" style="width: 235px !important;" <?php echo $disabled; ?> value="Preregister Visit" class="complete"/>
                         <?php else:
                             if ($model->card_type == CardType::MANUAL_VISITOR && isset($model->date_check_in) && strtotime($model->date_check_in) < strtotime(date("d-m-Y"))) :
                                 ?>

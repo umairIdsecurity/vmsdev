@@ -184,11 +184,9 @@ class PreregistrationController extends Controller
 	}
 
 	public function actionDetails(){
-		$session = new CHttpSession;
-		echo $session['account_type']."<br>";
-		echo $session['username']."<br>";
-		echo $session['password']."<br>";
-		//echo "welcome";
+		echo "welcome";
+		/*echo Yii::app()->user->id;
+		print_r(Yii::app()->user);*/
 	}
 
 	public function actionLogout() {

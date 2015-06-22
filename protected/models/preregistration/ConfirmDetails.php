@@ -410,18 +410,6 @@ class ConfirmDetails extends CActiveRecord {
         }
     }
 
-    public function beforeFind() {
-        $criteria = new CDbCriteria;
-        $criteria->condition = 't.is_deleted = 0';
-        if (isset(yii::app()->user->role)) {
-            if (Yii::app()->user->role != Roles::ROLE_SUPERADMIN) {
-                $criteria->condition = "t.is_deleted = 0 and t.tenant ='" . Yii::app()->user->tenant . "'";
-            }
-        }
-        $this->dbCriteria->mergeWith($criteria);
-
-    }
-
     /**
      * Radio button auto Select on Edit/Update
      *
@@ -588,6 +576,16 @@ class ConfirmDetails extends CActiveRecord {
                 return '<img style="width: 25px" src="' . Yii::app()->controller->assetsBase . '/images/corporate-visitor-icon.png"/>';
         }
 
+    }
+
+    public function validatePassword($password, $hash) {
+        //return $this->hashPassword($password)===$this->password;
+        //hash saved in database
+        if (CPasswordHelper::verifyPassword($password, $hash)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function behaviors()

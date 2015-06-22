@@ -65,13 +65,34 @@ class PreregistrationController extends Controller
 
 	public function actionDeclaration(){
 
+		$session = new CHttpSession;
+
 		$model = new Declaration();
+
+		if(
+			isset($session['declaration1']) && $session['declaration1'] == 1 &&
+			isset($session['declaration2']) && $session['declaration2'] == 1 &&
+			isset($session['declaration3']) && $session['declaration3'] == 1 &&
+			isset($session['declaration4']) && $session['declaration4'] == 1
+		)
+		{
+			$model->declaration1 = $session['declaration1'];
+			$model->declaration2 = $session['declaration2'];
+			$model->declaration3 = $session['declaration3'];
+			$model->declaration4 = $session['declaration4'];
+		}
+
+
 
 		if(isset($_POST['Declaration'])){
 
 			$model->attributes=$_POST['Declaration'];
 			if($model->validate())
 			{
+				$session['declaration1'] = $model->declaration1;
+				$session['declaration2'] = $model->declaration2;
+				$session['declaration3'] = $model->declaration3;
+				$session['declaration4'] = $model->declaration4;
 				$this->redirect(array('preregistration/registration'));
 			}
 		}
@@ -84,6 +105,16 @@ class PreregistrationController extends Controller
 		$session = new CHttpSession;
 		$model = new Registration();
 
+		if(
+			isset($session['account_type']) && $session['account_type'] !='' &&
+			isset($session['username']) 	&& $session['username']		!='' &&
+			isset($session['password']) 	&& $session['password']		!=''
+		){
+			$model->account_type = $session['account_type'];
+			$model->username     = $session['username'];
+			$model->password     = $session['password'];
+		}
+
 		if (isset($_POST['ajax']) && $_POST['ajax'] === 'preregistration-form') {
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
@@ -91,6 +122,7 @@ class PreregistrationController extends Controller
 
 		if (isset($_POST['Registration'])) {
 			$model->attributes = $_POST['Registration'];
+
 			$session['account_type'] = $model->account_type;
 			$session['username'] 	 = $model->username;
 			$session['password']     = $model->password;
@@ -149,11 +181,9 @@ class PreregistrationController extends Controller
 	}
 
 	public function actionDetails(){
-		$session = new CHttpSession;
-		echo $session['account_type']."<br>";
-		echo $session['username']."<br>";
-		echo $session['password']."<br>";
-		//echo "welcome";
+		echo "welcome";
+		/*echo Yii::app()->user->id;
+		print_r(Yii::app()->user);*/
 	}
 
 	public function actionLogout() {

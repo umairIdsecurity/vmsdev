@@ -49,7 +49,7 @@
 
             <?php
             if (empty($model->finish_date)) {
-                $model->finish_date = strtotime($model->date_check_out) > 0 ? date('d-m-Y', strtotime($model->date_check_out)) : date('d-m-Y');
+                $model->finish_date = strtotime($model->date_check_out) > 0 ? date('Y-m-d', strtotime($model->date_check_out)) : date('d-m-Y');
             }
             $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                 'model' => $model,

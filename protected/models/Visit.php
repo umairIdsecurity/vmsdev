@@ -116,6 +116,16 @@ class Visit extends CActiveRecord {
         }
     }
 
+    public function beforeSave() {
+        if (!empty($this->date_int)) $this->date_int =  date('Y-m-d', strtotime($this->date_int));
+        if (!empty($this->date_out)) $this->date_out =  date('Y-m-d', strtotime($this->date_out));
+        if (!empty($this->date_check_in)) $this->date_check_in =  date('Y-m-d', strtotime($this->date_check_in));
+        if (!empty($this->date_check_out)) $this->date_check_out =  date('Y-m-d', strtotime($this->date_check_out));
+        if (!empty($this->finish_date)) $this->finish_date =  date('Y-m-d', strtotime($this->finish_date));
+        if (!empty($this->card_returned_date)) $this->card_returned_date =  date('Y-m-d', strtotime($this->card_returned_date));
+        return parent::beforeSave();
+    }
+
     public function setDatecheckin1($value) {
         // set private attribute for search
         $this->_datecheckin1 = $value;

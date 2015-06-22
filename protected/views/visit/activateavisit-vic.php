@@ -113,6 +113,8 @@ $session = new CHttpSession;
                 $model->date_check_out = $model->date_check_in = date('d-m-Y', strtotime($model->finish_date.' + 1 days'));
             }
 
+            $model->date_check_in = date('d-m-Y', strtotime($model->date_check_in));
+
             $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                 'model' => $model,
                 'attribute' => 'date_check_in',
@@ -148,6 +150,8 @@ $session = new CHttpSession;
                 $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in. ' + 1 day'));
                 $model->time_check_out = $model->time_check_in;
             }
+
+            $model->date_check_out = date('d-m-Y', strtotime($model->date_check_out));
 
             $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                 'model' => $model,
@@ -245,12 +249,12 @@ $session = new CHttpSession;
                 }
 
                 <?php
-                if (in_array($model->card_type, array(CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY))) {
+                /*if (in_array($model->card_type, array(CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY))) {
                     echo '  var checkoutDate = new Date(selectedDate);
                             checkoutDate.setDate(selectedDate.getDate() + 28);
                             $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "setDate", checkoutDate);
                         ';
-                }
+                }*/
 
                 if (in_array($model->card_type, [CardType::VIC_CARD_24HOURS, CardType::VIC_CARD_MANUAL])) {
                     echo '  var checkoutDate = new Date(selectedDate);
@@ -270,7 +274,7 @@ $session = new CHttpSession;
             buttonImageOnly: true,
             minDate: minDate,
             maxDate: maxDate,
-            dateFormat: "dd-mm-yy",
+            dateFormat: "yy-mm-dd",
             disabled: <?php echo (in_array($model->card_type, [CardType::VIC_CARD_24HOURS])) ? "true" : "false"; ?>,
             onClose: function (date) {
                 var day = date.substring(0, 2);

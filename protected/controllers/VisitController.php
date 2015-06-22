@@ -311,7 +311,7 @@ class VisitController extends Controller {
         $reasonModel = VisitReason::model()->findByPk($model->reason);
         $patientModel = Patient::model()->findByPk($model->patient);
         $cardTypeModel = CardType::model()->findByPk($model->card_type);
-	$visitCount = Visit::model()->getVisitCount($model->id);
+        $visitCount = Visit::model()->getVisitCount($model->id);
         $visitCount['totalVisits'] = $model->visitCounts;
         $visitCount['remainingDays'] = $model->remainingDays;
 

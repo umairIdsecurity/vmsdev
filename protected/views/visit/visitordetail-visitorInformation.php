@@ -73,6 +73,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                             </td>
                             <td style="padding-left: 0 !important;">
                                 <?php
+                                $visitorModel->date_of_birth = date('d-m-Y', strtotime($visitorModel->date_of_birth));
                                 $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                     'model' => $visitorModel,
                                     'attribute' => 'date_of_birth',
@@ -454,6 +455,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                         </td>
                         <td style="padding-left: 0 !important;">
                             <?php
+                            $visitorModel->identification_document_expiry = !is_null($visitorModel->identification_document_expiry) ? date('d-m-Y', strtotime($visitorModel->identification_document_expiry)) : date('d-m-Y');
                             $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                 'model' => $visitorModel,
                                 'attribute' => 'identification_document_expiry',
@@ -465,7 +467,6 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                     'style' => 'width:83%'
                                 ),
                                 'options' => array(
-                                    'dateFormat' => 'dd-mm-yy',
                                     'showOn' => "button",
                                     'buttonImage' => Yii::app()->controller->assetsBase . "/images/calendar.png",
                                     'buttonImageOnly' => true,
@@ -524,7 +525,6 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                 </div>
                             </td>
                         </tr>
-
                         <tr>
                             <td class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                                 ASIC Expiry
@@ -532,6 +532,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
 
                             <td style="padding-left: 0 !important;">
                                 <?php
+                                $asic->asic_expiry = !is_null($asic->asic_expiry) ? date('d-m-Y', strtotime($asic->asic_expiry)) : date('d-m-Y');
                                 $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                     'model' => $asic,
                                     'attribute' => 'asic_expiry',
@@ -543,12 +544,11 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                         'style' => 'width:83%'
                                     ),
                                     'options' => array(
-                                        'dateFormat' => 'dd-mm-yy',
                                         'showOn' => "button",
                                         'buttonImage' => Yii::app()->controller->assetsBase . "/images/calendar.png",
                                         'buttonImageOnly' => true,
                                         'minDate' => "0",
-                                        'dateFormat' => "yy-mm-dd",
+                                        'dateFormat' => "dd-mm-yy",
                                     )
                                 ));
                                 ?>

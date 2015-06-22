@@ -272,8 +272,8 @@ class Visitor extends CActiveRecord {
             );
 
         } else if ($this->profile_type == self::PROFILE_TYPE_VIC) {
-            $rules[] = array(
-                'company,
+                $rules[] = array(
+                    'company,
                 visitor_card_status,
                 visitor_workstation,
                 visitor_type,
@@ -284,8 +284,9 @@ class Visitor extends CActiveRecord {
                 contact_state,
                 contact_postcode,
                 contact_country',
-                'required',
-            );
+                    'required','except'=>'updateVic'
+                );
+
         } else if ($this->profile_type == self::PROFILE_TYPE_ASIC) {
             $rules[] = array(
                 'visitor_card_status, asic_no',

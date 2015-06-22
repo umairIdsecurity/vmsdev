@@ -307,6 +307,9 @@ class VisitController extends Controller {
             }
         }
 
+        /**
+         * @var Visitor $visitorModel
+         */
         $visitorModel = Visitor::model()->findByPk($model->visitor);
         $reasonModel = VisitReason::model()->findByPk($model->reason);
         $patientModel = Patient::model()->findByPk($model->patient);
@@ -358,9 +361,11 @@ class VisitController extends Controller {
                     }
                 }
             }
-            #$visitorModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
-            #if(!$visitorModel->validate()) die('visitorModel-'.CHtml::errorSummary($visitorModel));
+            $visitorModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
+            $visitorModel->setScenario('updateVic');
+            if(!$visitorModel->validate()) die('visitorModel-'.CHtml::errorSummary($visitorModel));
             if($visitorModel->save()){
+
                 #$this->redirect(Yii::app()->createUrl('visit/detail&id='.$model->id));
             }
         }

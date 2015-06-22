@@ -703,9 +703,12 @@ $defaultKey = key($asicCardTypes);
             });
         });
 
+        $("#closeCropPhoto2").click(function() {
+            var ias = $('#photoCropPreview2').imgAreaSelect({instance: true});
+            ias.cancelSelection();
+        });
 
         /*			photo 3			*/
-
 
         $('#photoCropPreview3').imgAreaSelect({
             handles: true,
@@ -759,6 +762,11 @@ $defaultKey = key($asicCardTypes);
                     ias.cancelSelection();
                 }
             });
+        });
+
+        $("#closeCropPhoto3").click(function() {
+            var ias = $('#photoCropPreview3').imgAreaSelect({instance: true});
+            ias.cancelSelection();
         });
 
         /*			end of module			*/
@@ -828,7 +836,7 @@ $defaultKey = key($asicCardTypes);
                 getLastHostId(function (data) {
                     populateVisitFormFields(); // Do what you want with the data returned
                 });
-            },
+            }
         });
 
     }
@@ -843,7 +851,7 @@ $defaultKey = key($asicCardTypes);
                 getLastPatientId(function (data) {
                     populateVisitFormFields(); // Do what you want with the data returned
                 });
-            },
+            }
         });
     }
 

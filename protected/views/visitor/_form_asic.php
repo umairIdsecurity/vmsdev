@@ -625,6 +625,11 @@ if ($this->action->id == 'update') {
                 }
             });
         });
+
+        $("#closeCropPhoto").click(function() {
+            var ias = $('#photoCropPreview').imgAreaSelect({instance: true});
+            ias.cancelSelection();
+        });
     });
 
     function checkEmailIfUnique() {

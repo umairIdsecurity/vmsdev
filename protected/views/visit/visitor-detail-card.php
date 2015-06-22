@@ -204,6 +204,11 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
                 }
             });
         });
+
+        $("#closeCropPhoto").click(function() {
+            var ias = $('#photoCropPreview').imgAreaSelect({instance: true});
+            ias.cancelSelection();
+        });
     });
 
     function uploadImage() {

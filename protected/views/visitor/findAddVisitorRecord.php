@@ -949,6 +949,11 @@ $model->identification_country_issued = 13;
             });
         });
 
+        $("#closeCropPhoto").click(function() {
+            var ias = $('#photoCropPreview').imgAreaSelect({instance: true});
+            ias.cancelSelection();
+        });
+
         $("#dummy-visitor-findBtn").click(function(e) {
             e.preventDefault();
             $("#Visit_reason_search").val("");

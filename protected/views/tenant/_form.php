@@ -659,7 +659,10 @@ if (isset($_GET['viewFrom'])) {
             });
         });
 
-
+        $("#closeCropPhoto2").click(function() {
+            var ias = $('#photoCropPreview2').imgAreaSelect({instance: true});
+            ias.cancelSelection();
+        });
     });
 </script>
 <?php

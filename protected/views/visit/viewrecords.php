@@ -33,12 +33,31 @@ $date_check_in = $this->widget('zii.widgets.jui.CJuiDatePicker', array(
             'constrainInput' => 'false',
         ),
         'htmlOptions'=>array(
-            'placeholder'=>'Date Check In',
+            'placeholder'=>'Check In Date',
             /*'style'=>'height:20px;width:70px;',*/
         ),
 // DONT FORGET TO ADD TRUE this will create the datepicker return as string
     ),true);
-
+// this is the date picker
+$date_check_out = $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+    // 'model'=>$model,
+    'name' => 'Visit[date_check_out]',
+    'language' => 'id',
+    'value' => $model->date_check_out,
+    // additional javascript options for the date picker plugin
+    'options'=>array(
+        'showAnim'=>'fold',
+        'dateFormat'=>'dd-mm-yy',
+        'changeMonth' => 'true',
+        'changeYear'=>'true',
+        'constrainInput' => 'false',
+    ),
+    'htmlOptions'=>array(
+        'placeholder'=>'Check Out Date',
+        /*'style'=>'height:20px;width:70px;',*/
+    ),
+// DONT FORGET TO ADD TRUE this will create the datepicker return as string
+),true);
 
 $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'view-visitor-records',
@@ -50,8 +69,8 @@ $this->widget('zii.widgets.grid.CGridView', array(
     function(id, data) {
         $('th > .asc').append('<div></div>');
         $('th > .desc').append('<div></div>');
-        jQuery('#Visit_date_check_in').datepicker(jQuery.extend({showMonthAfterYear:false}, jQuery.datepicker.regional['id'], {'showAnim':'fold','dateFormat':'yy-mm-dd','changeMonth':'true','showButtonPanel':'true','changeYear':'true','constrainInput':'false'}));
-        jQuery('#Visit_date_check_in').datepicker(jQuery.extend({showMonthAfterYear:false}, jQuery.datepicker.regional['id'], {'showAnim':'fold','dateFormat':'yy-mm-dd','changeMonth':'true','showButtonPanel':'true','changeYear':'true','constrainInput':'false'}));
+        jQuery('#Visit_date_check_in').datepicker(jQuery.extend({showMonthAfterYear:false}, jQuery.datepicker.regional['id'], {'showAnim':'fold','dateFormat':'dd-mm-yy','changeMonth':'true','showButtonPanel':'true','changeYear':'true','constrainInput':'false'}));
+        jQuery('#Visit_date_check_out').datepicker(jQuery.extend({showMonthAfterYear:false}, jQuery.datepicker.regional['id'], {'showAnim':'fold','dateFormat':'dd-mm-yy','changeMonth':'true','showButtonPanel':'true','changeYear':'true','constrainInput':'false'}));
     }",
 
     'columns' =>
@@ -116,7 +135,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' => 'date_check_out',
             'type' => 'html',
-            'filter'=>CHtml::activeTextField($model, 'date_check_out', array('placeholder'=>'Check Out Date')),
+            'filter'=>$date_check_out,
             'htmlOptions'=>array('width'=>'110px'),
             'value' => 'formatDate($data->date_check_out, $data->visit_status)',
         ),

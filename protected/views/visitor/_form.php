@@ -731,6 +731,11 @@ $(document).ready(function () {
 
     });
 
+    $("#closeCropPhoto").click(function() {
+        var ias = $('#photoCropPreview').imgAreaSelect({instance: true});
+        ias.cancelSelection();
+    });
+
 
     /***********************hide password section if not required************************/
     $('.password_requirement').click(function () {

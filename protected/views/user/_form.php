@@ -1723,7 +1723,10 @@ $this->widget('bootstrap.widgets.TbButton', array(
             });
         });
 
-
+        $("#closeCropPhoto2").click(function() {
+            var ias = $('#photoCropPreview2').imgAreaSelect({instance: true});
+            ias.cancelSelection();
+        });
     });
 
     function cancel() {

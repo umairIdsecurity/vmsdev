@@ -6,6 +6,7 @@ Yii::import('ext.validator.PasswordRequirement');
 Yii::import('ext.validator.PasswordOption');
 Yii::import('ext.validator.VisitorPrimaryIdentification');
 Yii::import('ext.validator.VisitorAlternateIdentification');
+Yii::import('ext.validator.EmailCustom');
 
 /**
  * This is the model class for table "visitor".
@@ -238,7 +239,7 @@ class Visitor extends CActiveRecord {
             //array('password_option', 'PasswordOption'),
 
             /// array('vehicle', 'length', 'min'=>6, 'max'=>6, 'tooShort'=>'Vehicle is too short (Should be in 6 characters)'),
-            array('email', 'email'),
+            array('email', 'EmailCustom'),
             array('vehicle', 'match',
                 'pattern' => '/^[A-Za-z0-9_]+$/u',
                 'message' => 'Vehicle accepts alphanumeric characters only'

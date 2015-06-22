@@ -126,7 +126,7 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
             echo "<br />";
             $cardTypes = CHtml::listData(CardType::model()->findAll(), 'id', 'name');
             foreach ($cardTypes as $key => $item) {
-                if (in_array($key, CardType::$VIC_CARD_TYPE_LIST)) {
+                if (in_array($key, CardType::$CORPORATE_CARD_TYPE_LIST)) {
                     $cardTypeResults[$key] = 'Card Type: ' . $item;
                 }
             }

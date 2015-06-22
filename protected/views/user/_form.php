@@ -744,34 +744,29 @@ $(document).ready(function () {
     var operator = 8;
     var staffmember = 9;
     var agentairportadmin = 13;
-
+    
+    
     $("#addCompanyLink").hide(); //button for adding company
     $("#tenantAgentRow").hide();
     $("#tenantRow").hide();
     $(".workstationRow").hide();
 	
 	
-	/* breaking the script thats why ensure if not null */
-	
-	var elem1 = document.getElementById('User_tenant');
-	if(typeof elem1 !== 'undefined' && elem1 !== null) {
-		document.getElementById('User_tenant').disabled = true;
-	}
-	
-	var elem2 = document.getElementById('User_tenant_agent');
-	if(typeof elem2 !== 'undefined' && elem2 !== null) {
-		document.getElementById('User_tenant_agent').disabled = true;
-	}
-	
-	var elem3 = document.getElementById('User_company');
-	if(typeof elem3 !== 'undefined' && elem3 !== null) {
-		document.getElementById('User_company').disabled = true;
-	}
-	
-  
-    
-    
-
+//	var elem1 = document.getElementById('User_tenant');
+//	if(typeof elem1 !== 'undefined' && elem1 !== null) {
+//            elem1.disabled = true;
+//	}
+//        
+//        var elem2 = document.getElementById('User_tenant_agent');
+//	if(typeof elem2 !== 'undefined' && elem2 !== null) {
+//            elem2.disabled = true;
+//	}
+//	
+//	var elem3 = document.getElementById('User_company');
+//	if(typeof elem3 !== 'undefined' && elem3 !== null) {
+//            elem3.disabled = true;
+//	}
+       
     if (actionId == 'update') {
         $("#fromYear").val($("#dateofBirthBreakdownValueYear").val());
         $("#fromMonth").val($("#dateofBirthBreakdownValueMonth").val());
@@ -789,19 +784,43 @@ $(document).ready(function () {
         if (getRole == agentadmin) {
 
             document.getElementById('User_tenant_agent').disabled = true;
-            document.getElementById('User_tenant').disabled = false;
+            
+            // document.getElementById('User_tenant').disabled = false;
+            //Above line creating script breaking.Too much javascript and didn't monitered for errors in console.
+            // Very bad programming. :( 
+            var elem1 = document.getElementById('User_tenant');
+            if(typeof elem1 !== 'undefined' && elem1 !== null) {
+                elem1.disabled = false;
+            }
+            
+            
             $("#tenantRow").show();
             $("#addCompanyLink").show();
             document.getElementById("companyRow").style.paddingBottom = "10px";
         } else if (getRole == operator) {
             document.getElementById('User_tenant_agent').disabled = true;
-            document.getElementById('User_tenant').disabled = false;
+            
+            // document.getElementById('User_tenant').disabled = false;
+            //Above line creating script breaking.Too much javascript and didn't monitered for errors in console.
+            // Very bad programming. :( 
+            var elem1 = document.getElementById('User_tenant');
+            if(typeof elem1 !== 'undefined' && elem1 !== null) {
+                elem1.disabled = false;
+            }
+            
             document.getElementById('User_workstation').disabled = false;
             $(".workstationRow").show();
             $("#tenantRow").show();
         } else if (getRole == agentoperator) {
             // $("#User_company").empty();
-            document.getElementById('User_tenant').disabled = false;
+            // document.getElementById('User_tenant').disabled = false;
+            //Above line creating script breaking.Too much javascript and didn't monitered for errors in console.
+            // Very bad programming. :( 
+            var elem1 = document.getElementById('User_tenant');
+            if(typeof elem1 !== 'undefined' && elem1 !== null) {
+                elem1.disabled = false;
+            }
+            
             document.getElementById('User_tenant_agent').disabled = false;
             $("#tenantRow").show();
             $("#tenantAgentRow").show();
@@ -809,8 +828,21 @@ $(document).ready(function () {
             $(".workstationRow").show();
         }
         else {
-            document.getElementById('User_tenant').disabled = false;
-            document.getElementById('User_tenant_agent').disabled = false;
+            // document.getElementById('User_tenant').disabled = false;
+            //Above line creating script breaking.Too much javascript and didn't monitered for errors in console.
+            // Very bad programming. :( 
+            var elem1 = document.getElementById('User_tenant');
+            if(typeof elem1 !== 'undefined' && elem1 !== null) {
+                elem1.disabled = false;
+            }
+            
+            // document.getElementById('User_tenant_agent').disabled = false;
+            var elem2 = document.getElementById('User_tenant_agent');
+            if(typeof elem2 !== 'undefined' && elem1 !== null) {
+                elem2.disabled = false;
+            }
+            
+           
             $("#tenantRow").show();
             $("#tenantAgentRow").show();
         }
@@ -845,7 +877,15 @@ $(document).ready(function () {
     } else if (sessionRole == agentairportadmin) {
         if (getRole == agentairportadmin) {
             document.getElementById('User_tenant_agent').disabled = true;
-            document.getElementById('User_tenant').disabled = false;
+            
+            // document.getElementById('User_tenant').disabled = false;
+            //Above line creating script breaking.Too much javascript and didn't monitered for errors in console.
+            // Very bad programming. :( 
+            var elem1 = document.getElementById('User_tenant');
+            if(typeof elem1 !== 'undefined' && elem1 !== null) {
+                elem1.disabled = false;
+            }
+            
             $("#tenantRow").show();
             $("#tenantAgentRow").show();
         }
@@ -1068,7 +1108,9 @@ function populateCompanyofTenant(tenant, newcompanyId) {
 
 }
 function populateDynamicFields() {
-
+    
+    var issuing_body_admin = <?php echo Roles::ROLE_ISSUING_BODY_ADMIN; ?>;
+    
     if (is_accessing_avms_features()) {
         return;
     }

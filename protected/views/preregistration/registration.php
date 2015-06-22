@@ -24,21 +24,21 @@
         <div class="form-group">
             <div class="radio">
                 <label>
-                    <?php echo $form->radioButton($model,'account_type',array('value'=>1,'uncheckValue'=>null, 'checked'=>true)); ?>
+                    <?php echo $form->radioButton($model,'account_type',array('value'=>'VIC','uncheckValue'=>null, 'checked'=>true)); ?>
                     <span class="radio-style"></span>
                     VIC applicant
                 </label>
             </div>
             <div class="radio">
                 <label>
-                    <?php echo $form->radioButton($model,'account_type',array('value'=>2,'uncheckValue'=>null)); ?>
+                    <?php echo $form->radioButton($model,'account_type',array('value'=>'CORPORATE','uncheckValue'=>null)); ?>
                     <span class="radio-style"></span>
                     Company preregistering multiple VIC applicants
                 </label>
             </div>
             <div class="radio">
                 <label>
-                    <?php echo $form->radioButton($model,'account_type',array('value'=>3,'uncheckValue'=>null)); ?>
+                    <?php echo $form->radioButton($model,'account_type',array('value'=>'ASIC','uncheckValue'=>null)); ?>
                     <span class="radio-style"></span>
                     ASIC sponsor
                 </label>

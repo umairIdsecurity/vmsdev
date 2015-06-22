@@ -107,9 +107,7 @@ class PreregistrationController extends Controller
 		$session = new CHttpSession;
 
 		if (isset($_POST['ConfirmDetails'])) {
-			//print_r($_POST['Visitor']);
 			$model->profile_type = $session['account_type'];
-			$model->tenant = 47;
 			$model->email 		 = $session['username'];
 			$model->password 	 = $session['password'];
 			$model->attributes = $_POST['ConfirmDetails'];

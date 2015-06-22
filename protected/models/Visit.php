@@ -511,7 +511,9 @@ class Visit extends CActiveRecord {
                     '*',
                 ),
             ),
-                //'pagination'=>false,
+            'pagination' => array(
+                'pageSize' => 10,
+            ),
         ));
     }
 

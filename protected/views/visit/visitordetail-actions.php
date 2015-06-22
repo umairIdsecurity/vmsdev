@@ -150,7 +150,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                 <button type="button" id="registerNewVisit" class="greenBtn">Activate Visit</button>
                                 <div style="display:inline;font-size:12px;">
                                 <b>or </b>
-                                <a href="" class="cancelBtnVisitorDetail">Cancel</a>
+                                <?php echo CHtml::link('Cancel', $this->createAbsoluteUrl('visit/view'), array('class' => 'cancelBtnVisitorDetail')); ?>
                                 </div>
                             <?php endif; ?>
                         <?php endif; ?>

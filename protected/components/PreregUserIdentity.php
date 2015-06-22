@@ -15,7 +15,7 @@ class PreregUserIdentity extends CUserIdentity {
      * @return boolean whether authentication succeeds.
      */
     public function authenticate() {
-        $user = ConfirmDetails::model()->find('LOWER(email)=?', array(strtolower($this->username)));
+        $user = Registration::model()->find('LOWER(email)=?', array(strtolower($this->username)));
         if ($user === null) {
             $this->errorCode = self::ERROR_UNKNOWN_IDENTITY;
         } else if (!$user->validatePassword($this->password, $user->password)) {

@@ -103,7 +103,7 @@ class PreregistrationController extends Controller
 	public function actionRegistration(){
 
 		$session = new CHttpSession;
-		$model = new Registration();
+		$model = new CreateLogin();
 
 		if(
 			isset($session['account_type']) && $session['account_type'] !='' &&
@@ -120,8 +120,8 @@ class PreregistrationController extends Controller
 			Yii::app()->end();
 		}
 
-		if (isset($_POST['Registration'])) {
-			$model->attributes = $_POST['Registration'];
+		if (isset($_POST['CreateLogin'])) {
+			$model->attributes = $_POST['CreateLogin'];
 
 			$session['account_type'] = $model->account_type;
 			$session['username'] 	 = $model->username;
@@ -135,14 +135,14 @@ class PreregistrationController extends Controller
 	}
 
 	public function actionConfirmDetails(){
-		$model = new ConfirmDetails;
+		$model = new Registration();
 		$session = new CHttpSession;
 
-		if (isset($_POST['ConfirmDetails'])) {
+		if (isset($_POST['Registration'])) {
 			$model->profile_type = $session['account_type'];
 			$model->email 		 = $session['username'];
 			$model->password 	 = $session['password'];
-			$model->attributes = $_POST['ConfirmDetails'];
+			$model->attributes = $_POST['Registration'];
 
 			$model->date_of_birth = date('Y-m-d', strtotime($model->birthdayYear . '-' . $model->birthdayMonth . '-' . $model->birthdayDay));
 

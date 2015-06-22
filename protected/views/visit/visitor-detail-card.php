@@ -132,6 +132,14 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
             }
             echo CHtml::dropDownList('Visit[card_type]', $model->card_type, $cardTypeResults);
 
+        }else{
+            $cardTypes = CHtml::listData(CardType::model()->findAll(), 'id', 'name');
+            foreach ($cardTypes as $key => $item) {
+                if (in_array($key, CardType::$CORPORATE_CARD_TYPE_LIST)) {
+                    $cardTypeResults[$key] = 'Card Type: ' . $item;
+                }
+            }
+            echo CHtml::dropDownList('Visit[card_type]', $model->card_type, $cardTypeResults);
         }
         ?>
         

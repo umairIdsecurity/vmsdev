@@ -149,11 +149,11 @@ class SiteController extends Controller {
             if ($model->validate() && $model->login()) {
                 $session = new CHttpSession;
                 switch ($session['role']) {
-					case Roles::ROLE_OPERATOR:
+                    case Roles::ROLE_OPERATOR:
                     case Roles::ROLE_AIRPORT_OPERATOR:
-					case Roles::ROLE_AGENT_AIRPORT_ADMIN:
+                    case Roles::ROLE_AGENT_AIRPORT_ADMIN:
                         if (!($model->checkInductions($session['id']))) {
-                            Yii::app()->user->setFlash('error', "Induction expired. Please, contact Administrator. ");
+                            Yii::app()->user->setFlash('error', "Your Induction has expired. Please, contact ASIC Office. ");
                         } else {
                             $this->redirect('index.php?r=site/selectworkstation&id=' . $session['id']);
                         }

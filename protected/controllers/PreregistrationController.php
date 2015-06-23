@@ -20,7 +20,7 @@ class PreregistrationController extends Controller
 	public function accessRules() {
 		return array(
 			array('allow',
-				'actions' => array('index','privacyPolicy' , 'declaration' , 'Login' ,'registration','confirmDetails', 'visitReason' ),
+				'actions' => array('index','privacyPolicy' , 'declaration' , 'Login' ,'registration','confirmDetails', 'visitReason' , 'addAsic' ),
 				'users' => array('*'),
 			),
 			array('allow',
@@ -160,15 +160,15 @@ class PreregistrationController extends Controller
 
 		$session = new CHttpSession;
 
-		//echo $session['visitor_id'];
-		//unset($session['visitor_id']);
-
 		if($session['visitor_id']=="" or $session['visitor_id']==null){
 			$this->redirect(array('preregistration/registration'));
 		}
 
 		$model = new Visit();
+
 		$companyModel = new Company();
+
+		$companyModel->scenario = 'preregistration';
 
 		if (isset($_POST['Visit']) && isset($_POST['Company']) ) {
 
@@ -188,7 +188,7 @@ class PreregistrationController extends Controller
 			{
 				$model->save();
 			}
-			$companyModel->code = 'abc';
+
 			$companyModel->attributes    = $_POST['Company'];
 
 			if($companyModel->validate())
@@ -201,7 +201,10 @@ class PreregistrationController extends Controller
 					);
 
 				$registrationModel->company = $companyModel->id;
-				$registrationModel->save();
+				//$registrationModel->save();
+				if($registrationModel->save()){
+					$this->redirect(array('preregistration/addAsic'));
+				}
 			}
 
 		}
@@ -213,32 +216,11 @@ class PreregistrationController extends Controller
 				'companyModel' => $companyModel
 			)
 		);
-		/*if (isset($_POST['Registration']) && isset($_POST['Visit'])) {
 
-			$model->attributes = $_POST['Registration'];
+	}
 
-			if(empty($model->visitor_type)){
-				$model->visitor_type = null;
-			}
-
-			if($model->validate())
-			{
-				$model->save();
-			}
-
-			$visitModel->attributes = $_POST['Visit'];
-
-			$visitModel->visitor 	  = $session['visitor_id'];
-			$visitModel->visitor_type = $model->visitor_type;
-
-			if($visitModel->validate())
-			{
-				$visitModel->save();
-			}
-
-		}*/
-
-
+	public function actionAddAsic(){
+		echo "add ASIC Sponsor";
 	}
 
 	public function actionLogin(){

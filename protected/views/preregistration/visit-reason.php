@@ -57,25 +57,7 @@
             <?php echo $form->error($model, 'reason'); ?>
 
         </div>
-        <div class="form-group">
 
-            <?php
-
-            /*$company=Company::model()->findAll();
-
-            $list=CHtml::listData($company,'id','name');
-
-            echo $form->dropDownList($model,'company',
-                $list,
-                array(
-                    'class'=>'form-control input-lg' ,
-                    'empty' => 'Select a Company')
-            );*/
-
-            ?>
-            <?php //echo $form->error($model, 'company'); ?>
-
-        </div>
         <div class="form-group">
             <?php echo $form->textField($companyModel, 'name', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Company Name' ,'class'=>'form-control input-lg')); ?>
 

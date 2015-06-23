@@ -1515,6 +1515,18 @@ function getAssignableRoles($user_role, $model)
                     }
                 }
                 break;
+            case Roles::ROLE_AGENT_AIRPORT_ADMIN: //admin
+
+                $assignableRoles = array(Roles::ROLE_AGENT_ADMIN, Roles::ROLE_OPERATOR, Roles::ROLE_STAFFMEMBER); //keys
+
+                foreach ($assignableRoles as $roles) {
+                    if (isset(User::$USER_ROLE_LIST[$roles])) {
+                        $assignableRolesArray[] = array(
+                            $roles => User::$USER_ROLE_LIST[$roles],
+                        );
+                    }
+                }
+                break;
 
         }
 

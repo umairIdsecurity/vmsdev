@@ -53,8 +53,8 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                     }
                                     ?>
 
-                                    <input type='submit' value='Close Visit' class="complete" id="closeVisitBtn" style=""/>
-
+                                    <input type='submit' id="closeVisitSubmit" style="display: none;" />
+                                    <input type="submit" id="closeVisitBtn" class="complete" value="Close Visit" />
                                     <div style="display:inline;font-size:12px;"><b>or</b><a id="cancelActiveVisitButton" href="" class="cancelBtnVisitorDetail">Cancel</a></div>
                                     <!-- <button class="neutral greenBtn" id="cancelActiveVisitButton">Cancel</button>-->
                                     <?php $this->endWidget(); ?>
@@ -188,6 +188,34 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
 
         $('#activate-a-visit-form').bind('submit', function () {
             $(this).find('#Visit_date_check_in').removeAttr('disabled');
+        });
+
+        $(document).on('click', '#closeVisitBtn', function(e) {
+            e.preventDefault();
+            var flag = true;
+            var card_option = $('#Visit_card_option').val();
+            $('#police_number_required').hide();
+            $('#card_lost_declaration_required').hide();
+
+            if (typeof card_option != 'undefined' && card_option == 'Lost/Stolen') {
+                var card_lost_declaration_file = $('#Visit_card_lost_declaration_file').val();
+                var police_report_no = $('#Visit_police_report_number').val();
+                if (card_lost_declaration_file == '') {
+                    $('#card_lost_declaration_required').show();
+                    return false;
+                }
+
+                if (police_report_no == '') {
+                    $('#police_number_required').show();
+                    return false;
+                }
+
+                if (flag == true) {
+                    $('#closeVisitSubmit').click();
+                }
+            } else {
+                $('#closeVisitSubmit').click();
+            }
         });
 
         $(document).on('click', '#registerNewVisit', function (e) {

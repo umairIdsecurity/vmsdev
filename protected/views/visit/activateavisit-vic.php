@@ -23,7 +23,7 @@ $session = new CHttpSession;
                 ?> !important; font-weight:bold"><?php echo VisitStatus::$VISIT_STATUS_LIST[$model->visit_status]; ?></span></a>
         </td>
     </tr>
-    <?php if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY]) && $model->visit_status == VisitStatus::AUTOCLOSED && strtotime(date('d-m-Y')) == strtotime($model->finish_date)): ?>
+    <?php if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY]) && $model->visit_status == VisitStatus::AUTOCLOSED && strtotime(date('Y-m-d')) == strtotime($model->finish_date)): ?>
     <tr><td><span class="label label-warning">Visit can’t be activated again for the same day.</span></td></tr>
     <?php endif; ?>
     <tr>

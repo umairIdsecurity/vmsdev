@@ -1,5 +1,6 @@
 <?php
 ini_set('xdebug.max_nesting_level', 200);
+Yii::import('ext.validator.DropDown');
 /**
  * This is the model class for table "visit".
  *

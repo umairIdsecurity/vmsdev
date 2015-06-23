@@ -1,6 +1,11 @@
 <?php
 $cs = Yii::app()->clientScript;
 $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/script-birthday.js');
+
+//$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/bootstrapSwitch/bootstrap-switch.js');
+
+$cs->registerCssFile(Yii::app()->controller->assetsBase . '/bootstrapSwitch/bootstrap-switch.css');
+
 /* @var $this UserController */
 /* @var $model User */
 /* @var $form CActiveForm */
@@ -501,7 +506,76 @@ $form = $this->beginWidget('CActiveForm', array(
 
         </tr>
     </table>
-	
+    
+        <!-- ********************************************************************************** -->
+    <?php if(Roles::ROLE_OPERATOR == $currentRoleinUrl || Roles::ROLE_AIRPORT_OPERATOR == $currentRoleinUrl || Roles::ROLE_AGENT_AIRPORT_ADMIN == $currentRoleinUrl) { ?>
+    <div class="password-border">
+        <table class="no-margin-bottom">
+            <tr>
+                <td><strong>Induction Information</strong></td>
+            </tr>
+            <tr>
+                <td>
+                    <table style=" margin-top:18px !important; width:253px; border-left-style:none; border-top-style:none">
+                        <tr>
+                            <td>
+                                <div style="display:inline-block;">Induction Required
+                                    <div class="switch switch-blue">
+                                        <input type="radio" class="switch-input is_required_induction_radio" name="User[is_required_induction]" value="0" id="week" checked>
+                                        <label for="week" class="switch-label switch-label-off">OFF</label>
+                                        <input type="radio" class="switch-input is_required_induction_radio" name="User[is_required_induction]" value="1" id="month" <?php if(!empty($model->is_required_induction) && ($model->is_required_induction == "1")){echo 'checked'; }?>>
+                                        <label for="month" class="switch-label switch-label-on">ON</label>
+                                        <span class="switch-selection"></span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>    
+                        
+                        <tr <?php if($this->action->id == "update"){}else{ echo 'style="display:none"'; } ?> class="is_completed_tr">
+                            <td>
+                                Induction Complete &nbsp; <input type="radio" value="1" class="is_completed_radio" name="User[is_completed_induction]" <?php if(!empty($model->is_completed_induction) && ($model->is_completed_induction == "1")){echo 'checked'; } ?>/>&nbsp;Yes&nbsp; 
+                                                                <input type="radio" value="0" class="is_completed_radio" checked="checked" id="is_completed_radio_no" name="User[is_completed_induction]"/>&nbsp;No
+                           </td>
+                        </tr>
+                        
+                        
+                        <tr <?php if((($model->is_completed_induction == "1")) && !empty($model->induction_expiry) && ($this->action->id == "update")){}else{ echo 'style="display:none"'; } ?> class="induction_expiry_tr" id="induction_expiry_tr_id">
+                            <td>
+                                Induction Expiry <span class="required">*</span>
+                                <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(    
+                                            'name'=>'User[induction_expiry]',
+                                            'value'=>$model->induction_expiry,
+                                            'options'=>array(
+                                                 'changeYear' => true,
+                                                'dateFormat'=>'dd-mm-yy',
+                                                'changeMonth'=> true,
+                                            ),
+                                            'htmlOptions'=>array("style"=>"width:30%","id"=>"induction_expiry_id","readonly"=>"readonly")
+                                )); ?> 
+                                <br>
+                                <span id="induction_expiry_error" style="display:none;color:red;">
+                                    Please select an expiry date
+				</span>
+                            </td>
+                        </tr>
+                        
+                    </table>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+
+                </td>
+            </tr>
+
+        </table>
+    </div>
+    <?php } ?>
+    <!-- ********************************************************************************** -->
+
+    <br>
+    
     <div class="password-border">
         <table class="no-margin-bottom">
             <tr>
@@ -590,78 +664,7 @@ $form = $this->beginWidget('CActiveForm', array(
         </table>
     </div>
     <!-- password-border -->
-	
-	
-	<br>
-    <!-- ********************************************************************************** -->
-    <?php if(Roles::ROLE_OPERATOR == $currentRoleinUrl || Roles::ROLE_AIRPORT_OPERATOR == $currentRoleinUrl || Roles::ROLE_AGENT_AIRPORT_ADMIN == $currentRoleinUrl) { ?>
-    <div class="password-border">
-        <table class="no-margin-bottom">
-            <tr>
-                <td><strong>Inductions</strong></td>
-            </tr>
 
-
-            <tr>
-                <td>
-                    <table
-                        style=" margin-top:18px !important; width:253px; border-left-style:none; border-top-style:none">
-
-                        <tr>
-                            <td>
-                                User requires induction &nbsp;  <input type="radio" value="0" class="is_required_induction_radio" checked="checked" name="User[is_required_induction]"/>&nbsp;No&nbsp;
-                                                                <input type="radio" value="1" class="is_required_induction_radio" name="User[is_required_induction]" <?php if(!empty($model->is_required_induction) && ($model->is_required_induction == "1")){echo 'checked'; } ?>/>&nbsp;Yes
-                            </td>
-                        </tr>
-                        
-                        <tr <?php if($this->action->id == "update"){}else{ echo 'style="display:none"'; } ?> class="is_completed_tr">
-                            <td>
-                                Induction completed &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <input type="radio" value="0" class="is_completed_radio" checked="checked" id="is_completed_radio_no" name="User[is_completed_induction]"/>&nbsp;No&nbsp;
-                                <input type="radio" value="1" class="is_completed_radio" name="User[is_completed_induction]" <?php if(!empty($model->is_completed_induction) && ($model->is_completed_induction == "1")){echo 'checked'; } ?>/>&nbsp;Yes
-                            </td>
-                        </tr>
-                        
-                        <tr <?php if((($model->is_completed_induction == "1")) && !empty($model->induction_expiry) && ($this->action->id == "update")){}else{ echo 'style="display:none"'; } ?> class="induction_expiry_tr" id="induction_expiry_tr_id">
-                            <td>
-                                Expiry date <span class="required">*</span>
-                                <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(    
-                                            'name'=>'User[induction_expiry]',
-                                            'value'=>$model->induction_expiry,
-                                            'options'=>array(
-                                                 'changeYear' => true,
-                                                'dateFormat'=>'dd-mm-yy',
-                                                'changeMonth'=> true,
-                                            ),
-											'htmlOptions'=>array("id"=>"induction_expiry_id","readonly"=>"readonly")
-                                )); ?> 
-                                
-                                <span id="induction_expiry_error" style="display:none;color:red;">
-									Please select an expiry date
-								</span>
-                                    
-                                
-                            </td>
-                        </tr>
-                        
-
-                    </table>
-                </td>
-            </tr>
-
-            <tr>
-                <td>
-
-                </td>
-            </tr>
-
-        </table>
-    </div>
-    <?php } ?>
-    <!-- ********************************************************************************** -->
-	
-	
-	
-	
     <div class="row buttons ">
         <?php echo CHtml::submitButton($model->isNewRecord ? 'Save' : 'Save', array('id' => 'submitForm', 'class' => 'complete')); ?>
     </div>
@@ -703,6 +706,7 @@ $(".is_required_induction_radio").click(function(){
         $(".is_completed_tr").show();
         $("#is_completed_radio_no").attr("checked",true);
     }else{
+        $("#induction_expiry_id").val("");
         $(".induction_expiry_tr").hide();
         $(".is_completed_tr").hide();
     }
@@ -713,7 +717,7 @@ $(".is_completed_radio").click(function(){
     if(value == 1){
         $(".induction_expiry_tr").show();
     }else{
-		$("#induction_expiry_id").val("");
+	$("#induction_expiry_id").val("");
         $(".induction_expiry_tr").hide();
     }
 });
@@ -1506,6 +1510,18 @@ function getAssignableRoles($user_role, $model)
             case Roles::ROLE_ADMIN: //admin
 
                 $assignableRoles = array(Roles::ROLE_ADMIN, Roles::ROLE_AGENT_ADMIN, Roles::ROLE_OPERATOR, Roles::ROLE_STAFFMEMBER); //keys
+
+                foreach ($assignableRoles as $roles) {
+                    if (isset(User::$USER_ROLE_LIST[$roles])) {
+                        $assignableRolesArray[] = array(
+                            $roles => User::$USER_ROLE_LIST[$roles],
+                        );
+                    }
+                }
+                break;
+            case Roles::ROLE_AGENT_AIRPORT_ADMIN: //admin
+
+                $assignableRoles = array(Roles::ROLE_AGENT_ADMIN, Roles::ROLE_OPERATOR, Roles::ROLE_STAFFMEMBER); //keys
 
                 foreach ($assignableRoles as $roles) {
                     if (isset(User::$USER_ROLE_LIST[$roles])) {

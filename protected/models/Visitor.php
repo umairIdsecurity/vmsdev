@@ -7,6 +7,7 @@ Yii::import('ext.validator.PasswordOption');
 Yii::import('ext.validator.VisitorPrimaryIdentification');
 Yii::import('ext.validator.VisitorAlternateIdentification');
 Yii::import('ext.validator.EmailCustom');
+Yii::import('ext.validator.DropDown');
 
 /**
  * This is the model class for table "visitor".
@@ -265,6 +266,14 @@ class Visitor extends CActiveRecord {
             identification_document_expiry',
             'VisitorPrimaryIdentification',
         );
+
+        if (Yii::app()->controller->id === 'visitor') {
+            if (Yii::app()->controller->action->id == 'addvisitor') {
+                $rules[] = array('company, visitor_workstation, visitor_card_status, visitor_type,contact_street_type,contact_state,contact_country, asic_expiry ','DropDown');
+            } elseif(Yii::app()->controller->action->id == 'create'){
+                $rules[] = array('company','DropDown');
+            }
+        }
 
         if ($this->profile_type == self::PROFILE_TYPE_CORPORATE) {
             $rules[] = array(

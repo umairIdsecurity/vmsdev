@@ -87,7 +87,10 @@ $this->widget('zii.widgets.grid.CGridView', array(
 ));
 
 function checkIfanActiveVisitExists($visitorId) {
-    $results = Visit::model()->countByAttributes(array("visitor" => $visitorId, "visit_status" => "1"));
+    $results = Visit::model()->countByAttributes(array("visitor" => $visitorId, "visit_status" => VisitStatus::ACTIVE));
+    if ($results == 0) {
+        $results = Visit::model()->countByAttributes(array("visitor" => $visitorId, "visit_status" => VisitStatus::AUTOCLOSED));
+    }
     return $results;
 }
 
@@ -100,13 +103,16 @@ function displaySelectVisitorButton($visitorData) {
 }
 
 function returnVisitorDetailLink($visitorId) {
-    $visit = Visit::model()->findByAttributes(array('visitor'=>$visitorId, 'visit_status' => VisitStatus::ACTIVE));
-    if($visit){
-        $url = Yii::app()->baseUrl.'/index.php?r=visit/detail&id=' . $visitorId;
+    $criteria = new CDbCriteria;
+    $criteria->order = 'id DESC';
+    $visit = Visit::model()->findByAttributes(array('visitor' => $visitorId), $criteria);
+    //$visit = Yii::app()->db->createCommand("SELECT * FROM visit WHERE visitor = '".$visitorId."' ORDER BY ' DESC")->queryRow();
+    if (!empty($visit)) {
+        $url = Yii::app()->baseUrl.'/index.php?r=visit/detail&id=' . $visit['id'];
     }
 
     if (isset($url)) {
-        $status = VisitStatus::$VISIT_STATUS_LIST[$visit->visit_status];
+        $status = VisitStatus::$VISIT_STATUS_LIST[$visit['visit_status']];
         return '<span style="font-size:12px;">Status: <a class="linkToVisitorDetailPage" href="' . $url . '" style="display:inline;text-decoration:underline !important;">' . $status . '</a></span>';
     }
 }

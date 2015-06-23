@@ -44,10 +44,10 @@
 
             $list=CHtml::listData($vr,'id','reason');
 
-            //$other = array('other'=>'other');
+            $other = array('other'=>'other');
 
             echo $form->dropDownList($model,'reason',
-                $list,
+                $list + $other,
                 array(
                     'class'=>'form-control input-lg' ,
                     'empty' => 'Select a Reason')
@@ -57,6 +57,13 @@
             <?php echo $form->error($model, 'reason'); ?>
 
         </div>
+
+        <div class="form-group" id="other-reason">
+            <?php echo $form->textField($model, 'other_reason', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Other Reason' ,'class'=>'form-control input-lg')); ?>
+
+            <?php echo $form->error($model, 'other_reason'); ?>
+        </div>
+
 
         <div class="form-group">
             <?php echo $form->textField($companyModel, 'name', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Company Name' ,'class'=>'form-control input-lg')); ?>
@@ -101,3 +108,18 @@
     </div>
     <?php $this->endWidget(); ?>
 </div>
+
+<script>
+    $(document).ready(function() {
+        //alert('hello'); other-reason
+        $('#other-reason').hide();
+        $('#Visit_reason').change(function(e){
+            if ($('#Visit_reason').val() == 'other'){
+                //alert('hello');
+                $('#other-reason').show();
+            }else{
+                $('#other-reason').hide();
+            }
+        });
+    });
+</script>

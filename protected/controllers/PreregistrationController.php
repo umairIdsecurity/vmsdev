@@ -172,6 +172,14 @@ class PreregistrationController extends Controller
 
 		if (isset($_POST['Visit']) && isset($_POST['Company']) ) {
 
+			$reasonModel = new VisitReason();
+
+			$reasonModel->reason    = $_POST['Visit']['other_reason'];
+			if($reasonModel->validate())
+			{
+				$reasonModel->save();
+			}
+
 			$model->attributes    = $_POST['Visit'];
 
 			if(
@@ -180,6 +188,10 @@ class PreregistrationController extends Controller
 			){
 				$model->visitor_type = null;
 				$model->reason 		 = null;
+			}
+			elseif($_POST['Visit']['reason']=='other')
+			{
+				$model->reason 		 = $reasonModel->id;
 			}
 
 			$model->visitor 	  = $session['visitor_id'];
@@ -201,7 +213,7 @@ class PreregistrationController extends Controller
 					);
 
 				$registrationModel->company = $companyModel->id;
-				//$registrationModel->save();
+
 				if($registrationModel->save()){
 					$this->redirect(array('preregistration/addAsic'));
 				}

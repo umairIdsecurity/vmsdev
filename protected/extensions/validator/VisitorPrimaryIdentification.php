@@ -18,13 +18,24 @@ class VisitorPrimaryIdentification extends CValidator
 
     public function clientValidateAttribute($object,$attribute)
     {
-        return "
+        if($attribute == 'identification_document_no'){
+            return "
 if(value == '' && $('#Visitor_profile_type').val() == '" . Visitor::PROFILE_TYPE_VIC . "') {
     if ( ! $('#Visitor_alternative_identification').attr('checked')) {
         messages.push(" . CJSON::encode('Please enter a ' . $object->getAttributeLabel($attribute)) . ");
     }
 }
 ";
+        } else {
+            return "
+if(value == '' && $('#Visitor_profile_type').val() == '" . Visitor::PROFILE_TYPE_VIC . "') {
+    if ( ! $('#Visitor_alternative_identification').attr('checked')) {
+        messages.push(" . CJSON::encode('Please select a ' . $object->getAttributeLabel($attribute)) . ");
+    }
+}
+";
+        }
+
     }
 }
 

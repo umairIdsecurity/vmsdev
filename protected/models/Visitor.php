@@ -7,6 +7,7 @@ Yii::import('ext.validator.PasswordOption');
 Yii::import('ext.validator.VisitorPrimaryIdentification');
 Yii::import('ext.validator.VisitorAlternateIdentification');
 Yii::import('ext.validator.EmailCustom');
+Yii::import('ext.validator.DropDown');
 
 /**
  * This is the model class for table "visitor".
@@ -240,6 +241,7 @@ class Visitor extends CActiveRecord {
 
             /// array('vehicle', 'length', 'min'=>6, 'max'=>6, 'tooShort'=>'Vehicle is too short (Should be in 6 characters)'),
             array('email', 'EmailCustom'),
+            array('company, visitor_workstation, visitor_card_status, visitor_type,contact_street_type,contact_state,contact_country ','DropDown'),
             array('vehicle', 'match',
                 'pattern' => '/^[A-Za-z0-9_]+$/u',
                 'message' => 'Vehicle accepts alphanumeric characters only'

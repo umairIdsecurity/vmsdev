@@ -102,7 +102,7 @@ function displaySelectVisitorButton($visitorData) {
 function returnVisitorDetailLink($visitorId) {
     $visit = Visit::model()->findByAttributes(array('visitor'=>$visitorId, 'visit_status' => VisitStatus::ACTIVE));
     if($visit){
-        $url = Yii::app()->baseUrl.'/index.php?r=visit/detail&id=' . $visitorId;
+        $url = Yii::app()->baseUrl.'/index.php?r=visit/detail&id=' . $visit->id;
     }
 
     if (isset($url)) {

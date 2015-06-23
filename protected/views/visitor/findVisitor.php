@@ -103,8 +103,10 @@ function displaySelectVisitorButton($visitorData) {
 }
 
 function returnVisitorDetailLink($visitorId) {
-    //$visit = Visit::model()->findByAttributes(array('visitor' => $visitorId));
-    $visit = Yii::app()->db->createCommand("SELECT * FROM visit WHERE visitor = '".$visitorId."' ORDER BY id DESC")->queryRow();
+    $criteria = new CDbCriteria;
+    $criteria->order = 'id DESC';
+    $visit = Visit::model()->findByAttributes(array('visitor' => $visitorId), $criteria);
+    //$visit = Yii::app()->db->createCommand("SELECT * FROM visit WHERE visitor = '".$visitorId."' ORDER BY ' DESC")->queryRow();
     if (!empty($visit)) {
         $url = Yii::app()->baseUrl.'/index.php?r=visit/detail&id=' . $visit['id'];
     }

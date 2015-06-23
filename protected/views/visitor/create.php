@@ -344,10 +344,10 @@ function closeAndPopulateField(id) {
                 checkIfVisitorHasACurrentSavedVisit(value.id);
             });
             $('.findVisitorButtonColumn a').removeClass('delete');
-            $('.findVisitorButtonColumn a').html('Select Visitor');
+            //$('.findVisitorButtonColumn a').html('Select Visitor');
             $('#' + id).addClass('delete');
             $('#' + id).html('Visitor Selected');
-            $('.findVisitorButtonColumn .linkToVisitorDetailPage').html('Active');
+            //$('.findVisitorButtonColumn .linkToVisitorDetailPage').html('Active');
 
         }
     });

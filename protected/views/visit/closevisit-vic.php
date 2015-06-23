@@ -71,7 +71,7 @@
             ?>
         </td>
     </tr>
-
+    <?php if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY])): ?>
     <tr>
         <td>Card Option</td>
     </tr>
@@ -81,9 +81,37 @@
         </td>
     </tr>
 
-    <tr>
-        <td>Date Card Returned/Lost</td>
+    <tr class="lost_stolen_fields">
+        <td>Please complete sign and upload a declaration or police report or provide the police report number</td>
     </tr>
+    <tr class="lost_stolen_fields">
+        <td>
+            <?php echo $closeVisitForm->fileField($model, 'card_lost_declaration_file')?>
+            <br />
+            <?php echo $closeVisitForm->error($model, 'card_lost_declaration_file'); ?>
+            <div style="display: none" id="card_lost_declaration_required" class="errorMessage">Please add card lost declaration file.</div>
+        </td>
+    </tr>
+
+    <tr class="lost_stolen_fields">
+        <td>&nbsp;</td>
+    </tr>
+
+    <tr class="lost_stolen_fields">
+        <td>Police Report Number</td>
+    </tr>
+    <tr class="lost_stolen_fields">
+        <td>
+            <?php echo $closeVisitForm->textField($model, 'police_report_number')?>
+            <br />
+            <div style="display: none" id="police_number_required" class="errorMessage">Please enter police report number.</div>
+        </td>
+    </tr>
+    <?php endif; ?>
+
+    <tr><td>&nbsp;</td></tr>
+
+    <tr><td>Date Card Returned/Lost</td></tr>
     <tr>
         <td>
             <?php
@@ -110,28 +138,6 @@
             ));
             ?>
         </td>
-    </tr>
-
-    <tr class="lost_stolen_fields">
-        <td>Please complete sign and upload a declaration or police report or provide the police report number</td>
-    </tr>
-    <tr class="lost_stolen_fields">
-        <td>
-            <?php echo $closeVisitForm->fileField($model, 'card_lost_declaration_file')?>
-            <br />
-            <?php echo $closeVisitForm->error($model, 'card_lost_declaration_file'); ?>
-        </td>
-    </tr>
-
-    <tr class="lost_stolen_fields">
-        <td>&nbsp;</td>
-    </tr>
-
-    <tr class="lost_stolen_fields">
-        <td>Police Report Number</td>
-    </tr>
-    <tr class="lost_stolen_fields">
-        <td><?php echo $closeVisitForm->textField($model, 'police_report_number')?></td>
     </tr>
 
 </table>

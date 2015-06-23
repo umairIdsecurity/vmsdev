@@ -10,7 +10,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
     <ul>
 
         <li class='has-sub' id="closevisitLi" style="<?php
-        if (in_array($model->visit_status, array(VisitStatus::ACTIVE)) && $session['role'] != Roles::ROLE_STAFFMEMBER) {
+        if (in_array($model->visit_status, array(VisitStatus::ACTIVE, VisitStatus::EXPIRED)) && $session['role'] != Roles::ROLE_STAFFMEMBER) {
             echo "display:block;";
         } else {
             echo "display:none;";
@@ -33,7 +33,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                     ?>
 
                                     <?php
-                                    if (in_array($model->card_type, array(CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_MULTIDAY, CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MANUAL))) {
+                                    if (in_array($model->card_type, [CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_MULTIDAY, CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MANUAL])) {
                                         $this->renderPartial('closevisit-vic', array(
                                             'model' => $model,
                                             'visitorModel' => $visitorModel,
@@ -64,10 +64,8 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                     </table>
                 </li>
             </ul>
-
         </li>
-
-        <?php if (in_array($model->visit_status, array(VisitStatus::PREREGISTERED, VisitStatus::SAVED, VisitStatus::CLOSED, VisitStatus::AUTOCLOSED, VisitStatus::EXPIRED))) { ?>
+        <?php if (in_array($model->visit_status, [VisitStatus::PREREGISTERED, VisitStatus::SAVED, VisitStatus::CLOSED, VisitStatus::AUTOCLOSED])) { ?>
 
             <li class='has-sub' id="activateLi"><span class="log-current">Log Visit</span>
                 <ul>

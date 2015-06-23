@@ -20,6 +20,7 @@ $session = new CHttpSession;
             $host = $model->patient;
             $GLOBALS['userHost'] = 'patient';
         }
+        $card_type = $model->card_type;
 
 
         $visitor = $model->visitor;
@@ -59,7 +60,7 @@ $session = new CHttpSession;
                 //   'value' => 'Yii::app()->dateFormatter->format("d/MM/y",strtotime($data->date_in))',
                 ),
                 array(
-                    'header' => 'ASIC Sponsor',
+                    'header' => ($card_type > CardType::CONTRACTOR_VISITOR) ? "ASIC Sponsor" : "Host",
                     'type' => 'html',
                     'value' => 'returnPatientOrHostName($data->id,$GLOBALS["userHost"])',
                 ),

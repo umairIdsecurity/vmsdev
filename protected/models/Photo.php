@@ -203,9 +203,6 @@ class Photo extends CActiveRecord {
 
     public function defaultAbsoluteImage()
     {
-        if($_SERVER['HTTP_HOST'] != "localhost"){
-            return $this->defaultImage();
-        }
         return $this->siteURL() . Yii::app()->controller->assetsBase . '/images/companylogohere1.png';
     }
 

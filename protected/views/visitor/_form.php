@@ -390,8 +390,7 @@ $form = $this->beginWidget('CActiveForm', array(
             ));
             ?>
             <span class="required">*</span>
-            <div id="Visitor_company_em_" class="errorMessage" style="display:none"></div>
-
+            <?php echo $form->error($model, 'company'); ?>
         </div>
     </td>
 </tr>
@@ -562,16 +561,6 @@ if (isset($_GET['id'])) {
 <script>
 
 $(document).ready(function () {
-    $('#submitFormVisitor').on('click', function() {
-        var companyId = $('#Visitor_company').val();
-        if(!companyId || companyId == ""){
-            $('#Visitor_company_em_').show();
-            $('#Visitor_company_em_').html('Select a Company');
-        }else {
-            $('#Visitor_company_em_').hide();
-        }
-    });
-
     if( $("#Visitor_password_requirement_1").is(":checked") ) {
          $(".user_requires_password").css("display", "block");
     }
@@ -1122,14 +1111,14 @@ function generatepassword() {
 // company change
 $('#Visitor_company').on('change', function() {
     var companyId = $(this).val();
-    $('#CompanySelectedId').val(companyId);
-    $modal = $('#addCompanyContactModal');
-    if(!companyId || companyId == ""){
-        $('#Visitor_company_em_').show();
-        $('#Visitor_company_em_').html('Select a Company');
-    } else {
-        $('#Visitor_company_em_').hide();
-    }
+//    $('#CompanySelectedId').val(companyId);
+//    $modal = $('#addCompanyContactModal');
+//    if(!companyId || companyId == ""){
+//        $('#Visitor_company_em_').show();
+//        $('#Visitor_company_em_').html('Please select a Company');
+//    } else {
+//        $('#Visitor_company_em_').hide();
+//    }
     $.ajax({
         type: "POST",
         url: "<?php echo $this->createUrl('company/getContacts') ?>",

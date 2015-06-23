@@ -177,7 +177,7 @@ class VisitController extends Controller {
                  User::model()->updateByPk($model->host, array('photo' => $_POST['User']['photo']));
 			 }
 			
-            if ($model->date_check_in > date('Y-m-d')) {
+            if ($model->date_check_in > date('d-m-Y')) {
                 $visitStatus = VisitStatus::model()->findByAttributes(array('name' => 'Pre-registered'));
                 if ($visitStatus) {
                     $model->visit_status = $visitStatus->id;
@@ -307,11 +307,14 @@ class VisitController extends Controller {
             }
         }
 
+        /**
+         * @var Visitor $visitorModel
+         */
         $visitorModel = Visitor::model()->findByPk($model->visitor);
         $reasonModel = VisitReason::model()->findByPk($model->reason);
         $patientModel = Patient::model()->findByPk($model->patient);
         $cardTypeModel = CardType::model()->findByPk($model->card_type);
-	$visitCount = Visit::model()->getVisitCount($model->id);
+        $visitCount = Visit::model()->getVisitCount($model->id);
         $visitCount['totalVisits'] = $model->visitCounts;
         $visitCount['remainingDays'] = $model->remainingDays;
 
@@ -358,9 +361,11 @@ class VisitController extends Controller {
                     }
                 }
             }
-            #$visitorModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
-            #if(!$visitorModel->validate()) die('visitorModel-'.CHtml::errorSummary($visitorModel));
+            $visitorModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
+            $visitorModel->setScenario('updateVic');
+            if(!$visitorModel->validate()) die('visitorModel-'.CHtml::errorSummary($visitorModel));
             if($visitorModel->save()){
+
                 #$this->redirect(Yii::app()->createUrl('visit/detail&id='.$model->id));
             }
         }

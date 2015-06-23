@@ -6,6 +6,8 @@ Yii::import('ext.validator.PasswordRequirement');
 Yii::import('ext.validator.PasswordOption');
 Yii::import('ext.validator.VisitorPrimaryIdentification');
 Yii::import('ext.validator.VisitorAlternateIdentification');
+Yii::import('ext.validator.EmailCustom');
+Yii::import('ext.validator.DropDown');
 
 /**
  * This is the model class for table "visitor".
@@ -238,7 +240,7 @@ class Visitor extends CActiveRecord {
             //array('password_option', 'PasswordOption'),
 
             /// array('vehicle', 'length', 'min'=>6, 'max'=>6, 'tooShort'=>'Vehicle is too short (Should be in 6 characters)'),
-            array('email', 'email'),
+            array('email', 'EmailCustom'),
             array('vehicle', 'match',
                 'pattern' => '/^[A-Za-z0-9_]+$/u',
                 'message' => 'Vehicle accepts alphanumeric characters only'
@@ -265,14 +267,22 @@ class Visitor extends CActiveRecord {
             'VisitorPrimaryIdentification',
         );
 
+        if (Yii::app()->controller->id === 'visitor') {
+            if (Yii::app()->controller->action->id == 'addvisitor') {
+                $rules[] = array('company, visitor_workstation, visitor_card_status, visitor_type,contact_street_type,contact_state,contact_country, asic_expiry ','DropDown');
+            } elseif(Yii::app()->controller->action->id == 'create'){
+                $rules[] = array('company','DropDown');
+            }
+        }
+
         if ($this->profile_type == self::PROFILE_TYPE_CORPORATE) {
             $rules[] = array(
                 'company', 'required'
             );
 
         } else if ($this->profile_type == self::PROFILE_TYPE_VIC) {
-            $rules[] = array(
-                'company,
+                $rules[] = array(
+                    'company,
                 visitor_card_status,
                 visitor_workstation,
                 visitor_type,
@@ -283,8 +293,9 @@ class Visitor extends CActiveRecord {
                 contact_state,
                 contact_postcode,
                 contact_country',
-                'required',
-            );
+                    'required','except'=>'updateVic'
+                );
+
         } else if ($this->profile_type == self::PROFILE_TYPE_ASIC) {
             $rules[] = array(
                 'visitor_card_status, asic_no',

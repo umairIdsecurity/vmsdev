@@ -32,7 +32,15 @@ if ($card) {
         <div style="width:150px; height:205px; background:#fff; margin-left:15px; margin-top:13px; border:1px solid #000;"></div>
         <div style=" text-align:center; line-height:20px; margin:10px 0 0 5px; color:#000;">
             <p style="font-size:25px; font-weight:bold; margin:0 0 10px 0;"><?= $companyCode ?></p>
-            <strong style="font-size: 40px; text-align: left; width: 100%; float: left; margin-bottom: 3px; margin-left: 5px; line-height: 32px; margin-top: 3px;"><small style="font-size: 60px;float: left; margin-right: 10px; margin-top: -1px;"><?= ($model->card_type == CardType::CONTRACTOR_VISITOR)?"C":"V"?></small> 22JUL12</strong>
+            <strong style="font-size: 40px; text-align: left; width: 100%; float: left; margin-bottom: 3px; margin-left: 5px; line-height: 32px; margin-top: 3px;"><small style="font-size: 60px;float: left; margin-right: 10px; margin-top: -1px;"><?= ($model->card_type == CardType::CONTRACTOR_VISITOR)?"C":"V"?></small> 
+            <?php
+                if ($model->card_type == CardType::VIC_CARD_24HOURS) {
+                    echo date('dMy', strtotime($model->date_check_in . '+ 1 DAY'));
+                } else {
+                    echo date('dMy', strtotime($model->date_check_in));
+                }
+            ?>
+            </strong>
             <p style="font-size:25px; font-weight:bold; line-height:20.9px; margin:0 0 3px 0;"><?php echo ($visitorModel->first_name != "")?$visitorModel->first_name:"N/A"; ?><br>
                 <?php echo ($visitorModel->last_name != "")?$visitorModel->last_name:"N/A"; ?><br>
                 <?php echo ($cardCode== "")?"N/A":$cardCode; ?></p>

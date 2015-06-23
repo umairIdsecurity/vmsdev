@@ -637,13 +637,15 @@ class Visit extends CActiveRecord {
             case Roles::ROLE_OPERATOR:
             case Roles::ROLE_AGENT_OPERATOR:
                 $workstations = Workstation::model()->findWorkstationAvailableForUser(Yii::app()->user->id);
-                $text = "";
-                foreach ($workstations as $key => $value) {
-                    $text .="'" . $value['id'] . "',";
-                }
-                $workstations = "IN (" . rtrim($text, ',') . ")";
+                if (!empty($workstations)) {
+                    $text = "";
+                    foreach ($workstations as $key => $value) {
+                        $text .="'" . $value['id'] . "',";
+                    }
+                    $workstations = "IN (" . rtrim($text, ',') . ")";
 
-                $criteria->addCondition('t.workstation ' . $workstations . '');
+                    $criteria->addCondition('t.workstation ' . $workstations . '');
+                }
                 break;
         }
 

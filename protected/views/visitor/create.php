@@ -460,15 +460,10 @@ function checkAsicStatusById(id){
                         $.each(r.data, function (index, value) {
                             $("#searchHostTableDiv h4").html("Selected "+getCardType()+" Record : " + value.first_name + " " + value.last_name);
                         });
-
-                        //$('#findHostTableIframe').contents().find('.findHostButtonColumn a').removeClass('delete');
-                        //$('#findHostTableIframe').contents().find('.findHostButtonColumn a').html('Select Host');
-                        //$('#findHostTableIframe').contents().find('#' + id).addClass('delete');
-                        //$('#findHostTableIframe').contents().find('#' + id).html(getCardType()+' Selected');
-                        $('.findHostButtonColumn a').removeClass('delete');
-                        $('.findHostButtonColumn a').html('Select '+getCardType());
-                        $('#' + id).addClass('delete');
-                        $('#' + id).html(getCardType()+' Selected');
+                        $('#searchHostTable').contents().find('.findHostButtonColumn a').removeClass('delete');
+                        $('#searchHostTable').contents().find('.findHostButtonColumn a').html('Select Host');
+                        $('#searchHostTable').contents().find('#' + id).addClass('delete');
+                        $('#searchHostTable').contents().find('#' + id).html(getCardType()+' Selected');
                    }
                });
            }

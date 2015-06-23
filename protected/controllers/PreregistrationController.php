@@ -232,7 +232,7 @@ class PreregistrationController extends Controller
 	}
 
 	public function actionAddAsic(){
-		echo "add ASIC Sponsor";
+		$this->render('asic-sponsor');
 	}
 
 	public function actionLogin(){

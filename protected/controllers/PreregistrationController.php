@@ -20,7 +20,7 @@ class PreregistrationController extends Controller
 	public function accessRules() {
 		return array(
 			array('allow',
-				'actions' => array('index','privacyPolicy' , 'declaration' , 'Login' ,'registration','confirmDetails', 'visitReason' ),
+				'actions' => array('index','privacyPolicy' , 'declaration' , 'Login' ,'registration','confirmDetails', 'visitReason' , 'addAsic' ),
 				'users' => array('*'),
 			),
 			array('allow',
@@ -135,8 +135,8 @@ class PreregistrationController extends Controller
 	}
 
 	public function actionConfirmDetails(){
-		$model = new Registration();
 		$session = new CHttpSession;
+		$model = new Registration();
 
 		if (isset($_POST['Registration'])) {
 			$model->profile_type = $session['account_type'];
@@ -147,6 +147,7 @@ class PreregistrationController extends Controller
 			$model->date_of_birth = date('Y-m-d', strtotime($model->birthdayYear . '-' . $model->birthdayMonth . '-' . $model->birthdayDay));
 
 			if ($model->save()) {
+				$session['visitor_id'] = $model->id;
 				$this->redirect(array('preregistration/visitReason'));
 			}
 			//print_r($model->getErrors());
@@ -156,7 +157,82 @@ class PreregistrationController extends Controller
 	}
 
 	public function actionVisitReason(){
-		$this->render('visit-reason');
+
+		$session = new CHttpSession;
+
+		if($session['visitor_id']=="" or $session['visitor_id']==null){
+			$this->redirect(array('preregistration/registration'));
+		}
+
+		$model = new Visit();
+
+		$companyModel = new Company();
+
+		$companyModel->scenario = 'preregistration';
+
+		if (isset($_POST['Visit']) && isset($_POST['Company']) ) {
+
+			$reasonModel = new VisitReason();
+
+			$reasonModel->reason    = $_POST['Visit']['other_reason'];
+			if($reasonModel->validate())
+			{
+				$reasonModel->save();
+			}
+
+			$model->attributes    = $_POST['Visit'];
+
+			if(
+				empty($model->visitor_type) OR
+				empty($model->reason)
+			){
+				$model->visitor_type = null;
+				$model->reason 		 = null;
+			}
+			elseif($_POST['Visit']['reason']=='other')
+			{
+				$model->reason 		 = $reasonModel->id;
+			}
+
+			$model->visitor 	  = $session['visitor_id'];
+
+			if($model->validate())
+			{
+				$model->save();
+			}
+
+			$companyModel->attributes    = $_POST['Company'];
+
+			if($companyModel->validate())
+			{
+				$companyModel->save();
+
+				$registrationModel =
+					Registration::model()->findByPk(
+						$session['visitor_id']
+					);
+
+				$registrationModel->company = $companyModel->id;
+
+				if($registrationModel->save()){
+					$this->redirect(array('preregistration/addAsic'));
+				}
+			}
+
+		}
+
+		$this->render(
+			'visit-reason',
+			array(
+				'model'=>$model ,
+				'companyModel' => $companyModel
+			)
+		);
+
+	}
+
+	public function actionAddAsic(){
+		$this->render('asic-sponsor');
 	}
 
 	public function actionLogin(){
@@ -167,7 +243,6 @@ class PreregistrationController extends Controller
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
-
 
 		if (isset($_POST['PreregLogin'])) {
 			$model->attributes = $_POST['PreregLogin'];

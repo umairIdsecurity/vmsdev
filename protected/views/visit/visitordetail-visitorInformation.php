@@ -34,7 +34,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                 First Name
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" class="visitor-detail-info-field" value="<?php echo $visitorModel->first_name; ?>"
+                                <input type="text" disabled class="visitor-detail-info-field" value="<?php echo $visitorModel->first_name; ?>"
                                        name="Visitor[first_name]" id="Visitor_first_name">
                                 <div style="" id="Visitor_first_name_em_" class="errorMessage errorMessageEmail">Please enter a first name.
                                 </div>
@@ -48,7 +48,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                     Middle Name
                                 </td>
                                 <td style="padding-left: 0 !important;">
-                                    <input type="text" class="visitor-detail-info-field" value="<?php echo $visitorModel->middle_name; ?>"
+                                    <input type="text" disabled class="visitor-detail-info-field" value="<?php echo $visitorModel->middle_name; ?>"
                                            name="Visitor[middle_name]" id="Visitor_middle_name">
                                 </td>
                             </tr>
@@ -59,7 +59,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                 Last Name
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" class="visitor-detail-info-field" value="<?php echo $visitorModel->last_name; ?>"
+                                <input type="text" disabled class="visitor-detail-info-field" value="<?php echo $visitorModel->last_name; ?>"
                                        name="Visitor[last_name]" id="Visitor_last_name">
                                 <div style="" id="Visitor_last_name_em_" class="errorMessage errorMessageEmail">Please enter a last name.
                                 </div>
@@ -113,7 +113,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                         <tr>
                             <td width="110px;" style="padding-top: 7px;">Email</td>
                             <td>
-                                <input  type="text" class="visitor-detail-info-field" value="<?php echo $visitorModel->email; ?>"
+                                <input  type="text" disabled class="visitor-detail-info-field" value="<?php echo $visitorModel->email; ?>"
                                        name="Visitor[email]" id="Visitor_email">
                                 <div style="" id="Visitor_email_em_" class="errorMessage errorMessageEmail">Email invalid or a profile
                                     already exists for this email address.
@@ -145,7 +145,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                 <li>
                     <table id="companyDetailsTable" class="detailsTable">
                         <tr>
-                            <td width="110px;" class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
+                            <td width="110px;" disabled class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                                 Company Name
                             </td>
                             <td style="padding-left: 0 !important;">
@@ -495,7 +495,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                             </td>
 
                             <td style="padding-left: 0 !important;">
-                                <input class="visitor-detail-info-field" type="text" value="<?php echo $asic->first_name; ?>"
+                                <input class="visitor-detail-info-field" disabled type="text" value="<?php echo $asic->first_name; ?>"
                                        name="Visitor[asic_first_name]" id="Visitor_asic_first_name">
                                 <div style="" id="Visitor_asic_first_name_em_" class="errorMessage errorMessageEmail">Please enter a first name.
                                 </div>
@@ -507,7 +507,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                 Last Name
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input class="visitor-detail-info-field" type="text" value="<?php echo $asic->last_name; ?>"
+                                <input class="visitor-detail-info-field" disabled type="text" value="<?php echo $asic->last_name; ?>"
                                        name="Visitor[asic_last_name]" id="Visitor_asic_last_name">
                                 <div style="" id="Visitor_asic_last_name_em_" class="errorMessage errorMessageEmail">Please enter a last name.
                                 </div>

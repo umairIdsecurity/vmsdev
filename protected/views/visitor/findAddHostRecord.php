@@ -758,15 +758,14 @@ $defaultKey = key($asicCardTypes);
                     });
 
                     $("#closeCropPhoto3").click();
-                    var ias = $('#photoCropPreview3').imgAreaSelect({instance: true});
-                    ias.cancelSelection();
                 }
             });
         });
 
-        $("#closeCropPhoto3").click(function() {
-            var ias = $('#photoCropPreview3').imgAreaSelect({instance: true});
-            ias.cancelSelection();
+        $("#closeCropPhoto3").click(function () {
+            $('.imgareaselect-selection').parent().addClass('imgareaselect-part');
+            $('.imgareaselect-part').css('display', 'none');
+            $('.imgareaselect-outer').css('display', 'none');
         });
 
         /*			end of module			*/

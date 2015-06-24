@@ -274,7 +274,7 @@ $session = new CHttpSession;
             buttonImageOnly: true,
             minDate: minDate,
             maxDate: maxDate,
-            dateFormat: "yy-mm-dd",
+            dateFormat: "dd-mm-yy",
             disabled: <?php echo (in_array($model->card_type, [CardType::VIC_CARD_24HOURS])) ? "true" : "false"; ?>,
             onClose: function (date) {
                 var day = date.substring(0, 2);

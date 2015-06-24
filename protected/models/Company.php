@@ -89,7 +89,11 @@ WHERE u.id=c.tenant AND c.id !=1";
 		}
 		else{
 			return array(
-	            array('name,code', 'required'),
+                //array('code', 'safe' , 'on' => 'visit_reason'),
+	            array('name', 'required'),
+
+                array('code', 'required', 'except' => 'preregistration'),
+
                 //array('user_first_name , user_last_name , user_email , user_contact_number', 'required' , 'on' => 'company_contact'),
 	//            array('code', 'unique'),
 	//            array('code', 'unique', 'criteria' => array(

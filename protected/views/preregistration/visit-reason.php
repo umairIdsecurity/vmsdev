@@ -10,51 +10,116 @@
 <div class="page-content">
     <h1 class="text-primary title">REASON FOR VISIT</h1>
     <div class="bg-gray-lighter form-info">Please provide a reason for this visit.</div>
-    <form class="form-create-login">
-        <div class="form-group">
-            <select name="type" class="form-control input-lg">
-                <option disabled selected>Select visitor type</option>
-                <option value="1">Entry Point 1</option>
-                <option value="2">Entry Point 2</option>
-                <option value="3">Entry Point 3</option>
-                <option value="4">Entry Point 4</option>
-                <option value="5">Entry Point 5</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <select name="reason" class="form-control input-lg">
-                <option disabled selected>Select reason</option>
-                <option value="1">Entry Point 1</option>
-                <option value="2">Entry Point 2</option>
-                <option value="3">Entry Point 3</option>
-                <option value="4">Entry Point 4</option>
-                <option value="5">Entry Point 5</option>
-            </select>
-        </div>
-        <div class="form-group">
 
-            <input name="first-name"
-                   class="form-control input-lg"
-                   data-validate-input
-                   placeholder="Random co." >
+    <?php $form=$this->beginWidget('CActiveForm', array(
+        'id'=>'preregistration-form',
+        //'enableAjaxValidation' => true,
+        'enableClientValidation'=>true,
+        'clientOptions'=>array(
+            'validateOnSubmit'=>true,
+        ),
+    )); ?>
+    <div class="form-create-login">
+        <div class="form-group">
+            <?php
+
+            $vt=VisitorType::model()->findAll();
+
+            $list=CHtml::listData($vt,'id','name');
+
+            echo $form->dropDownList($model,'visitor_type',
+                $list,
+                array(
+                    'class'=>'form-control input-lg' ,
+                    'empty' => 'Select a Visitor Type')
+            );
+
+            ?>
+            <?php echo $form->error($model, 'visitor_type'); ?>
         </div>
         <div class="form-group">
-            <input name="last-name"
-                   class="form-control input-lg"
-                   data-validate-input
-                   placeholder="Jane Schimdt" >
+            <?php
+
+            $vr=VisitReason::model()->findAll();
+
+            $list=CHtml::listData($vr,'id','reason');
+
+            $other = array('other'=>'other');
+
+            echo $form->dropDownList($model,'reason',
+                $list + $other,
+                array(
+                    'class'=>'form-control input-lg' ,
+                    'empty' => 'Select a Reason')
+            );
+
+            ?>
+            <?php echo $form->error($model, 'reason'); ?>
+
+        </div>
+
+        <div class="form-group" id="other-reason">
+            <?php echo $form->textField($model, 'other_reason', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Other Reason' ,'class'=>'form-control input-lg')); ?>
+
+            <?php echo $form->error($model, 'other_reason'); ?>
+        </div>
+
+
+        <div class="form-group">
+            <?php echo $form->textField($companyModel, 'name', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Company Name' ,'class'=>'form-control input-lg')); ?>
+
+            <?php echo $form->error($companyModel, 'name'); ?>
         </div>
         <div class="form-group">
-            <input name="email"
-                   class="form-control input-lg"
-                   data-validate-input
-                   placeholder="jane.schimdt@company.com" >
+            <?php echo $form->textField($companyModel, 'contact', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Jane Schimdt' ,'class'=>'form-control input-lg')); ?>
+
+            <?php echo $form->error($companyModel, 'contact'); ?>
         </div>
+
         <div class="form-group">
-            <input name="tel"
-                   class="form-control input-lg"
-                   data-validate-input
-                   placeholder="+63512345678" >
+            <?php echo $form->textField($companyModel, 'email_address', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'jane.schimdt@company.com' ,'class'=>'form-control input-lg')); ?>
+
+            <?php echo $form->error($companyModel, 'email_address'); ?>
         </div>
-    </form>
+
+        <div class="form-group">
+            <?php echo $form->textField($companyModel, 'mobile_number', array('size' => 50, 'maxlength' => 50, 'placeholder' => '+63512345678' ,'class'=>'form-control input-lg')); ?>
+
+            <?php echo $form->error($companyModel, 'mobile_number'); ?>
+
+        </div>
+
+    </div>
+
+    <div class="row next-prev-btns">
+        <div class="col-md-1 col-sm-1 col-xs-1">
+            <a href="<?=Yii::app()->createUrl("preregistration/confirmDetails")?>" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>
+        </div>
+
+        <div class="col-md-offset-10 col-sm-offset-10 col-xs-offset-7 col-md-1 col-sm-1 col-xs-1">
+            <?php
+            echo CHtml::tag('button', array(
+                'type'=>'submit',
+                'class' => 'btn btn-primary btn-next'
+            ), 'NEXT <span class="glyphicon glyphicon-chevron-right"></span> ');
+            ?>
+
+        </div>
+    </div>
+    <?php $this->endWidget(); ?>
 </div>
+
+<script>
+    $(document).ready(function() {
+        //alert('hello'); other-reason
+        $('#other-reason').hide();
+        $('#Visit_reason').change(function(e){
+            if ($('#Visit_reason').val() == 'other'){
+                //alert('hello');
+                $('#other-reason').show();
+            }else{
+                $('#other-reason').hide();
+            }
+        });
+    });
+</script>

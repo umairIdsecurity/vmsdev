@@ -68,6 +68,7 @@ class Visit extends CActiveRecord {
     public $_contactperson;
     public $_contactphone;
     public $_asicname;
+    public $other_reason;
 
     /**
      * @return string the associated database table name
@@ -85,11 +86,13 @@ class Visit extends CActiveRecord {
         return array(
             array('is_deleted', 'numerical', 'integerOnly' => true),
             array('visitor', 'required', 'on' => 'api'),
+            //array('other_reason', 'unique','className'=>'VisitReason','attributeName'=>'reason','message'=>"Reason must be unique"),
             array('reason,visitor_type,visitor,visitor_status,workstation', 'required', 'on' => 'webapp'),
             array('visitor,card, visitor_type, reason, visitor_status,host, patient, created_by, tenant, tenant_agent', 'length', 'max' => 20),
-            array('date_in,date_out,time_in_hours,time_in_minutes,visit_status, time_in, time_out, date_check_in, time_check_in, date_check_out, time_check_out,card_type, finish_date, finish_time, card_returned_date, negate_reason, reset_id, card_option, police_report_number, card_lost_declaration_file, workstation', 'safe'),
+            array('date_in,date_out,time_in_hours,time_in_minutes,visit_status, time_in, time_out, date_check_in, time_check_in, date_check_out, time_check_out,card_type, finish_date, finish_time, card_returned_date, negate_reason, reset_id, card_option, police_report_number, card_lost_declaration_file, workstation , other_reason', 'safe'),
             array('patient, host,card,tenant,tenant_agent', 'default', 'setOnEmpty' => true, 'value' => null),
             array('filterProperties', 'length', 'max' => 70),
+
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id,datecheckin1,cardnumber,company,firstname,lastname,contactnumber,contactemail,contactperson,contactphone,visit_status,visitor ,card,workstation, visitor_type, reason, visitor_status, host, patient, created_by, date_in, time_in, date_out, time_out, date_check_in, time_check_in, date_check_out, time_check_out, tenant, tenant_agent, is_deleted, companycode, contact_street_no, contact_street_name, contact_street_type, contact_suburb, contact_postcode, identification_type, identification_document_no, identification_document_expiry,asicname, asic_no, asic_expiry, workstation, date_of_birth, finish_date, card_returned_date', 'safe', 'on' => 'search'),
@@ -245,7 +248,12 @@ class Visit extends CActiveRecord {
 
     public function getHost() {
         // return private attribute on search
-        $visitHost = User::model()->findByPk($this->host);
+        if($this->card_type < 5) {
+            $visitHost = User::model()->findByPk($this->host);
+        } else {
+            $visitHost = Visitor::model()->findByPk($this->host);
+        }
+
         return $visitHost;
 
     }
@@ -264,6 +272,7 @@ class Visit extends CActiveRecord {
             'visitorType' => array(self::BELONGS_TO, 'VisitorType', 'visitor_type'),
             'visitorStatus' => array(self::BELONGS_TO, 'VisitorStatus', 'visitor_status'),
             'host0' => array(self::BELONGS_TO, 'User', 'host'),
+            'host1' => array(self::BELONGS_TO, 'Visitor', 'host'),
             'patient0' => array(self::BELONGS_TO, 'Patient', 'patient'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'created_by'),
             'tenant0' => array(self::BELONGS_TO, 'User', 'tenant'),
@@ -324,7 +333,7 @@ class Visit extends CActiveRecord {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
-        $criteria->with = array('card0','host0', 'visitor0', 'company0', 'reason0', 'workstation0');
+        $criteria->with = array('card0','host0', 'visitor0', 'company0', 'reason0', 'workstation0','host1');
         //$criteria->with .= 'visitor0';
         $criteria->compare('CONCAT(visitor0.first_name, \' \', visitor0.last_name)', $this->visitor, true);
         $criteria->compare('visitor0.first_name', $this->firstname, true);
@@ -381,9 +390,17 @@ class Visit extends CActiveRecord {
         $criteria->compare('visitor0.identification_document_no', $this->identification_document_no, true);
         //$criteria->compare('DATE_FORMAT(visitor0.identification_document_expiry, "%Y-%m-%d")', $this->identification_document_expiry, true);
         $criteria->compare('visitor0.identification_document_expiry', $this->identification_document_expiry, true);
-
-        $criteria->compare('CONCAT(host0.first_name,\' \',host0.last_name)',$this->_asicname,true);
-
+        switch($this->card_type){
+            case CardType::SAME_DAY_VISITOR:
+            case CardType::MULTI_DAY_VISITOR:
+            case CardType::MANUAL_VISITOR:
+            case CardType::CONTRACTOR_VISITOR:
+                $criteria->compare('CONCAT(host0.first_name,\' \',host0.last_name)',$this->_asicname,true);
+                break;
+            default:
+                $criteria->compare('CONCAT(host1.first_name,\' \',host1.last_name)',$this->_asicname,true);
+                break;
+        }
         $criteria->compare('visitor0.asic_no', $this->asic_no, true);
         #$criteria->compare('DATE_FORMAT(visitor0.asic_expiry, "%Y-%m-%d")', $this->asic_expiry, true);
         $criteria->compare('visitor0.asic_expiry', $this->asic_expiry, true);
@@ -396,7 +413,7 @@ class Visit extends CActiveRecord {
         }
         // $criteria->addCondition("t.date_check_out > DATE_ADD(now(),interval -2 day)");
         if ($this->filterProperties) {
-            $criteria->addCondition("t.id LIKE CONCAT('%', :filterProperties , '%')
+            $query = "t.id LIKE CONCAT('%', :filterProperties , '%')
                 OR card0.card_number LIKE CONCAT('%', :filterProperties , '%')
                 OR company0.code LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.first_name LIKE CONCAT('%', :filterProperties , '%')
@@ -414,8 +431,6 @@ class Visit extends CActiveRecord {
                 OR company0.contact LIKE CONCAT('%', :filterProperties , '%')
                 OR company0.mobile_number LIKE CONCAT('%', :filterProperties , '%')
                 OR company0.email_address LIKE CONCAT('%', :filterProperties , '%')
-                OR host0.first_name LIKE CONCAT('%', :filterProperties , '%')
-                OR host0.last_name LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.contact_street_type LIKE CONCAT('%', :filterProperties , '%')
                 OR finish_date LIKE CONCAT('%', :filterProperties , '%')
                 OR card_returned_date LIKE CONCAT('%', :filterProperties , '%')
@@ -423,7 +438,22 @@ class Visit extends CActiveRecord {
                 OR visitor0.identification_document_no LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.identification_document_expiry LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.asic_no LIKE CONCAT('%', :filterProperties , '%')
-                OR visitor0.asic_expiry LIKE CONCAT('%', :filterProperties , '%')");
+                OR visitor0.asic_expiry LIKE CONCAT('%', :filterProperties , '%')";
+
+            switch($this->card_type){
+                case CardType::SAME_DAY_VISITOR:
+                case CardType::MULTI_DAY_VISITOR:
+                case CardType::MANUAL_VISITOR:
+                case CardType::CONTRACTOR_VISITOR:
+                    $query .= "OR host0.first_name LIKE CONCAT('%', :filterProperties , '%')
+                    OR host0.last_name LIKE CONCAT('%', :filterProperties , '%')";
+                    break;
+                default:
+                    $query .= "OR host1.first_name LIKE CONCAT('%', :filterProperties , '%')
+                    OR host1.last_name LIKE CONCAT('%', :filterProperties , '%')";
+                    break;
+            }
+            $criteria->addCondition($query);
             $criteria->params = array(':filterProperties' => $this->filterProperties);
         }
 
@@ -451,13 +481,15 @@ class Visit extends CActiveRecord {
             case Roles::ROLE_OPERATOR:
             case Roles::ROLE_AGENT_OPERATOR:
                 $workstations = Workstation::model()->findWorkstationAvailableForUser(Yii::app()->user->id);
-                $text = "";
-                foreach ($workstations as $key => $value) {
-                    $text .="'" . $value['id'] . "',";
-                }
-                $workstations = "IN (" . rtrim($text, ',') . ")";
+                if (!empty($workstations)) {
+                    $text = "";
+                    foreach ($workstations as $key => $value) {
+                        $text .="'" . $value['id'] . "',";
+                    }
+                    $workstations = "IN (" . rtrim($text, ',') . ")";
 
-                $criteria->addCondition('t.workstation '.$workstations.'');
+                    $criteria->addCondition('t.workstation '.$workstations.'');
+                }
                 break;
         }
         
@@ -523,7 +555,7 @@ class Visit extends CActiveRecord {
 
         $criteria = new CDbCriteria;
 
-        $criteria->with = array('card0','host0', 'visitor0', 'company0');
+        $criteria->with = array('card0','host0', 'visitor0', 'company0','host1');
         //$criteria->with .= 'visitor0';
         $criteria->compare('CONCAT(visitor0.first_name, \' \', visitor0.last_name)', $this->visitor, true);
         $criteria->compare('visitor0.first_name', $this->firstname, true);
@@ -577,7 +609,17 @@ class Visit extends CActiveRecord {
         $criteria->compare('visitor0.identification_type', $this->identification_type, true);
         $criteria->compare('visitor0.identification_document_no', $this->identification_document_no, true);
         $criteria->compare('visitor0.identification_document_expiry', $this->identification_document_expiry, true);
-        $criteria->compare('CONCAT(host0.first_name,\' \',host0.last_name)',$this->_asicname,true);
+        switch($this->card_type){
+            case CardType::SAME_DAY_VISITOR:
+            case CardType::MULTI_DAY_VISITOR:
+            case CardType::MANUAL_VISITOR:
+            case CardType::CONTRACTOR_VISITOR:
+                $criteria->compare('CONCAT(host0.first_name,\' \',host0.last_name)',$this->_asicname,true);
+                break;
+            default:
+                $criteria->compare('CONCAT(host1.first_name,\' \',host1.last_name)',$this->_asicname,true);
+                break;
+        }
         $criteria->compare('visitor0.asic_no', $this->asic_no, true);
         $criteria->compare('visitor0.asic_expiry', $this->asic_expiry, true);
         $criteria->compare('finish_date', $this->finish_date, true);
@@ -588,7 +630,7 @@ class Visit extends CActiveRecord {
         }
             $criteria->addCondition("str_to_date(t.date_check_out,'%Y-%m-%d') > DATE_ADD(now(),interval -2 day)");
         if ($this->filterProperties) {
-            $criteria->addCondition("t.id LIKE CONCAT('%', :filterProperties , '%')
+            $query = "t.id LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.first_name LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.last_name LIKE CONCAT('%', :filterProperties , '%')
                 OR company0.code LIKE CONCAT('%', :filterProperties , '%')
@@ -606,10 +648,22 @@ class Visit extends CActiveRecord {
                 OR visitor0.identification_type LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.identification_document_no LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.identification_document_expiry LIKE CONCAT('%', :filterProperties , '%')
-                OR host0.first_name LIKE CONCAT('%', :filterProperties , '%')
-                OR host0.last_name LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.asic_no LIKE CONCAT('%', :filterProperties , '%')
-                OR visitor0.asic_expiry LIKE CONCAT('%', :filterProperties , '%')");
+                OR visitor0.asic_expiry LIKE CONCAT('%', :filterProperties , '%')";
+            switch($this->card_type){
+                case CardType::SAME_DAY_VISITOR:
+                case CardType::MULTI_DAY_VISITOR:
+                case CardType::MANUAL_VISITOR:
+                case CardType::CONTRACTOR_VISITOR:
+                    $query .= "OR host0.first_name LIKE CONCAT('%', :filterProperties , '%')
+                    OR host0.last_name LIKE CONCAT('%', :filterProperties , '%')";
+                    break;
+                default:
+                    $query .= "OR host1.first_name LIKE CONCAT('%', :filterProperties , '%')
+                    OR host1.last_name LIKE CONCAT('%', :filterProperties , '%')";
+                    break;
+            }
+            $criteria->addCondition($query);
             $criteria->params = array(':filterProperties' => $this->filterProperties);
         }
 
@@ -637,13 +691,15 @@ class Visit extends CActiveRecord {
             case Roles::ROLE_OPERATOR:
             case Roles::ROLE_AGENT_OPERATOR:
                 $workstations = Workstation::model()->findWorkstationAvailableForUser(Yii::app()->user->id);
-                $text = "";
-                foreach ($workstations as $key => $value) {
-                    $text .="'" . $value['id'] . "',";
-                }
-                $workstations = "IN (" . rtrim($text, ',') . ")";
+                if (!empty($workstations)) {
+                    $text = "";
+                    foreach ($workstations as $key => $value) {
+                        $text .="'" . $value['id'] . "',";
+                    }
+                    $workstations = "IN (" . rtrim($text, ',') . ")";
 
-                $criteria->addCondition('t.workstation ' . $workstations . '');
+                    $criteria->addCondition('t.workstation ' . $workstations . '');
+                }
                 break;
         }
 

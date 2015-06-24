@@ -703,4 +703,8 @@ class Visitor extends CActiveRecord {
         );
     }
 
+    public function getFullName() {
+        return trim($this->first_name . ' ' . $this->last_name);
+    }
+
 }

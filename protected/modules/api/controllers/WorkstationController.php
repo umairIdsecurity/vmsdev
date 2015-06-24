@@ -8,7 +8,7 @@ class WorkstationController extends RestfulController {
      * by rohan m.
      * * */
     public function actionIndex() {
-       // try {
+        try {
             $token_user = $this->checkAuth();
             if (Yii::app()->request->getParam('id')) {
                 $id = Yii::app()->request->getParam('id');

@@ -64,7 +64,7 @@ class User extends VmsActiveRecord {
         6 => 'Agent Administrator',
         7 => 'Agent Operator',
         8 => 'Operator',
-        9 => 'Host',
+        9 => 'Staff Member',
         10 => 'Visitor',
 
         Roles::ROLE_ISSUING_BODY_ADMIN => 'Issuing Body Administrator',

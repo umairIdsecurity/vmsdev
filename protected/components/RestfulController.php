@@ -25,8 +25,9 @@ class RestfulController extends CController {
     public $breadcrumbs = array();
 
     Const APPLICATION_ID = 'VMS';
-    const ADMIN_USER = 0;
-    const VISITOR_USER = 1;
+    const VISITOR_ID = "VISITOR";
+    const ADMIN_USER = 1;
+    const VISITOR_USER = 0;
     /**
      * Send raw HTTP response
      * @param int $status HTTP status code
@@ -54,15 +55,45 @@ class RestfulController extends CController {
         // Check if we have the USERNAME and PASSWORD HTTP headers set?
         try {
             if (!isset($headers['HTTP_X_' . self::APPLICATION_ID . '_TOKEN'])) {
-                $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'HEADERS_NOT_FOUND', 'errorDescription' => 'Requset header not found.')));
+                $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'HEADERS_NOT_FOUND', 'errorDescription' => 'Request header not found.')));
             }
             $access_token = $headers['HTTP_X_' . self::APPLICATION_ID . '_TOKEN'];
 
-            $tokens = new AccessTokens();
-            $userData = $tokens->find('ACCESS_TOKEN=:token', array(':token' => $access_token));
+            $criteria = new CDbCriteria();
+            $criteria->addCondition("ACCESS_TOKEN='".$access_token."'");
+            $criteria->addCondition("USER_TYPE=".self::ADMIN_USER);
+            $userData = AccessTokens::model()->find($criteria);
             if ($userData == null) {
                 // Error: Unauthorized
-                $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'UNAUTHORIZED', 'errorDescription' => 'Requseted Token is Invalid')));
+                $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'UNAUTHORIZED', 'errorDescription' => 'Requested Token is Invalid')));
+            } elseif ($userData->EXPIRY === null) {
+                return $userData;
+            } elseif ((strtotime('now') < strtotime($userData->EXPIRY))) {
+                return $userData;
+            }
+        } catch (Exception $exc) {
+            $this->sendResponse(500, CJSON::encode(array('responseCode' => 500, 'errorCode' => 'INTERNAL_SERVER_ERROR', 'errorDescription' => 'Something went wrong.')));
+        }
+    }
+
+    protected function checkAuthVisitor() {
+        $headers = apache_request_headers();
+        // Check if we have the USERNAME and PASSWORD HTTP headers set?
+        try {
+            if (!isset($headers['HTTP_X_' . self::VISITOR_ID . '_TOKEN'])) {
+                $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'HEADERS_NOT_FOUND', 'errorDescription' => 'Request header not found.')));
+            }
+            $access_token = $headers['HTTP_X_' . self::VISITOR_ID . '_TOKEN'];
+
+            //$tokens = new AccessTokens();
+            $criteria = new CDbCriteria();
+            $criteria->addCondition("ACCESS_TOKEN='".$access_token."'");
+            $criteria->addCondition("USER_TYPE=".self::VISITOR_USER);
+            print_r($criteria);
+            $userData = AccessTokens::model()->find($criteria);
+            if ($userData == null) {
+                // Error: Unauthorized
+                $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'UNAUTHORIZED', 'errorDescription' => 'Requested Token is Invalid')));
             } elseif ($userData->EXPIRY === null) {
                 return $userData;
             } elseif ((strtotime('now') < strtotime($userData->EXPIRY))) {

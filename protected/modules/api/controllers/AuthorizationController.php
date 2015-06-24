@@ -46,7 +46,7 @@ class AuthorizationController extends RestfulController {
                         }
                     }
                 } elseif ($data['grant_type'] === 'refresh_token') {
-                    $access_token = AccessTokens::model()->findByAttributes(array('ACCESS_TOKEN' => $data['access_token'], "USER_TYPE" => self::ADMIN_USER));
+                    $access_token = AccessTokens::model()->findByAttributes(array('ACCESS_TOKEN' => $data['access_token'],USER_TYPE => self::ADMIN_USER));
                     if ($access_token) {
                         #$newtimestamp = strtotime(date('Y-m-d H:i:s') . ' + 15 minute');
                         $access_token->EXPIRY = NULL;
@@ -90,7 +90,7 @@ class AuthorizationController extends RestfulController {
                                     $newAccessToken->ACCESS_TOKEN = $this->generateToken(20);
                                     $newAccessToken->EXPIRY = NULL;
                                     $newAccessToken->CREATED = date('Y-m-d H:i:s');
-                                    $newAccessToken->USER_TYPE = self::VISITOR_USER;
+                                    $newAccessToken->USER_TYPE =  self::VISITOR_USER;
                                     $newAccessToken->save(false);
                                     $result['access_token'] = $newAccessToken->ACCESS_TOKEN;
                                 }
@@ -106,7 +106,7 @@ class AuthorizationController extends RestfulController {
                         $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_DATA', 'errorDescription' => 'email & password can not be blank')));
                     }
                 } elseif ($data['grant_type'] === 'refresh_token') {
-                    $access_token = AccessTokens::model()->findByAttributes(array('ACCESS_TOKEN' => $data['access_token'], 'USER_TYPE' => self::ADMIN_USER));
+                    $access_token = AccessTokens::model()->findByAttributes(array('ACCESS_TOKEN' => $data['access_token'],'USER_TYPE' => self::ADMIN_USER));
                     if ($access_token) {
                         #$newtimestamp = strtotime(date('Y-m-d H:i:s') . ' + 15 minute');
                         $access_token->EXPIRY = NULL;
@@ -116,7 +116,7 @@ class AuthorizationController extends RestfulController {
                     } else {
                         $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_TOKEN', 'errorDescription' => 'Requested Token for refresh is invalid.')));
                     }
-                } else {
+                }else{
                     $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_GRANT_TYPE', 'errorDescription' => 'grant type can not be blank')));
                 }
             } else {

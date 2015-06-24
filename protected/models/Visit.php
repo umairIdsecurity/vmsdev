@@ -272,7 +272,7 @@ class Visit extends CActiveRecord {
             'visitorType' => array(self::BELONGS_TO, 'VisitorType', 'visitor_type'),
             'visitorStatus' => array(self::BELONGS_TO, 'VisitorStatus', 'visitor_status'),
             'host0' => array(self::BELONGS_TO, 'User', 'host'),
-            'host1' => array(self::BELONGS_TO, 'Visitor', 'host'),
+            'visitor1' => array(self::BELONGS_TO, 'Visitor', 'host'),
             'patient0' => array(self::BELONGS_TO, 'Patient', 'patient'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'created_by'),
             'tenant0' => array(self::BELONGS_TO, 'User', 'tenant'),
@@ -333,7 +333,7 @@ class Visit extends CActiveRecord {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
-        $criteria->with = array('card0','host0', 'visitor0', 'company0', 'reason0', 'workstation0','host1');
+        $criteria->with = array('card0','host0', 'visitor0', 'company0', 'reason0', 'workstation0','visitor1');
         //$criteria->with .= 'visitor0';
         $criteria->compare('CONCAT(visitor0.first_name, \' \', visitor0.last_name)', $this->visitor, true);
         $criteria->compare('visitor0.first_name', $this->firstname, true);
@@ -398,7 +398,7 @@ class Visit extends CActiveRecord {
                 $criteria->compare('CONCAT(host0.first_name,\' \',host0.last_name)',$this->_asicname,true);
                 break;
             default:
-                $criteria->compare('CONCAT(host1.first_name,\' \',host1.last_name)',$this->_asicname,true);
+                $criteria->compare('CONCAT(visitor1.first_name,\' \',visitor1.last_name)',$this->_asicname,true);
                 break;
         }
         $criteria->compare('visitor0.asic_no', $this->asic_no, true);
@@ -449,8 +449,8 @@ class Visit extends CActiveRecord {
                     OR host0.last_name LIKE CONCAT('%', :filterProperties , '%')";
                     break;
                 default:
-                    $query .= "OR host1.first_name LIKE CONCAT('%', :filterProperties , '%')
-                    OR host1.last_name LIKE CONCAT('%', :filterProperties , '%')";
+                    $query .= "OR visitor1.first_name LIKE CONCAT('%', :filterProperties , '%')
+                    OR visitor1.last_name LIKE CONCAT('%', :filterProperties , '%')";
                     break;
             }
             $criteria->addCondition($query);
@@ -500,7 +500,7 @@ class Visit extends CActiveRecord {
          * 
          */
         if (Yii::app()->controller->action->id == 'visitorRegistrationHistory') {
-            $criteria->addCondition("profile_type ='" . Visitor::PROFILE_TYPE_CORPORATE . "'");
+            $criteria->addCondition("visitor0.profile_type ='" . Visitor::PROFILE_TYPE_CORPORATE . "'");
         }
 
         if (Yii::app()->controller->action->id == 'admindashboard') {
@@ -555,7 +555,7 @@ class Visit extends CActiveRecord {
 
         $criteria = new CDbCriteria;
 
-        $criteria->with = array('card0','host0', 'visitor0', 'company0','host1');
+        $criteria->with = array('card0','host0', 'visitor0', 'company0','visitor1');
         //$criteria->with .= 'visitor0';
         $criteria->compare('CONCAT(visitor0.first_name, \' \', visitor0.last_name)', $this->visitor, true);
         $criteria->compare('visitor0.first_name', $this->firstname, true);
@@ -617,7 +617,7 @@ class Visit extends CActiveRecord {
                 $criteria->compare('CONCAT(host0.first_name,\' \',host0.last_name)',$this->_asicname,true);
                 break;
             default:
-                $criteria->compare('CONCAT(host1.first_name,\' \',host1.last_name)',$this->_asicname,true);
+                $criteria->compare('CONCAT(visitor1.first_name,\' \',visitor1.last_name)',$this->_asicname,true);
                 break;
         }
         $criteria->compare('visitor0.asic_no', $this->asic_no, true);
@@ -659,8 +659,8 @@ class Visit extends CActiveRecord {
                     OR host0.last_name LIKE CONCAT('%', :filterProperties , '%')";
                     break;
                 default:
-                    $query .= "OR host1.first_name LIKE CONCAT('%', :filterProperties , '%')
-                    OR host1.last_name LIKE CONCAT('%', :filterProperties , '%')";
+                    $query .= "OR visitor1.first_name LIKE CONCAT('%', :filterProperties , '%')
+                    OR visitor1.last_name LIKE CONCAT('%', :filterProperties , '%')";
                     break;
             }
             $criteria->addCondition($query);
@@ -710,7 +710,7 @@ class Visit extends CActiveRecord {
          * 
          */
         if (Yii::app()->controller->action->id == 'visitorRegistrationHistory') {
-            $criteria->addCondition("profile_type ='" . Visitor::PROFILE_TYPE_CORPORATE . "'");
+            $criteria->addCondition("visitor0.profile_type ='" . Visitor::PROFILE_TYPE_CORPORATE . "'");
         }
         
         if (Yii::app()->controller->action->id == 'admindashboard') {

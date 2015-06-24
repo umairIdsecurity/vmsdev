@@ -269,7 +269,7 @@ class Visitor extends CActiveRecord {
 
         if (Yii::app()->controller->id === 'visitor') {
             if (Yii::app()->controller->action->id == 'addvisitor') {
-                $rules[] = array('company, visitor_workstation, visitor_card_status, visitor_type,contact_street_type,contact_state,contact_country, asic_expiry ','DropDown');
+                $rules[] = array('company, visitor_workstation, visitor_card_status, visitor_type,contact_street_type,contact_state, contact_country, asic_expiry','DropDown');
             } elseif(Yii::app()->controller->action->id == 'create'){
                 $rules[] = array('company','DropDown');
             }

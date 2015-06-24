@@ -542,7 +542,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
         var workstation = $("#User_workstation").val();
         if (!workstation || workstation == "") {
             $("#Visitor_visitor_workstation_em_").show();
-            $("#Visitor_visitor_workstation_em_").html('Please select a Workstation');
+            $("#Visitor_visitor_workstation_em_").html('Please enter Workstation');
             return false;
         }
 
@@ -662,7 +662,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
             var workstation = $("#User_workstation").val();
             if (!workstation || workstation == "") {
                 $("#Visitor_visitor_workstation_em_").show();
-                $("#Visitor_visitor_workstation_em_").html('Please select a Workstation');
+                $("#Visitor_visitor_workstation_em_").html('Please enter Workstation');
             } else {
                 $("#Visitor_visitor_workstation_em_").hide();
             }

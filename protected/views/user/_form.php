@@ -533,7 +533,7 @@ $form = $this->beginWidget('CActiveForm', array(
                         
                         <tr <?php if($this->action->id == "update"){}else{ echo 'style="display:none"'; } ?> class="is_completed_tr">
                             <td>
-                                Induction Complete &nbsp; <input type="radio" value="1" class="is_completed_radio" name="User[is_completed_induction]" <?php if(!empty($model->is_completed_induction) && ($model->is_completed_induction == "1")){echo 'checked'; } ?>/>&nbsp;Yes&nbsp; 
+                                Induction Completed &nbsp; <input type="radio" value="1" class="is_completed_radio" name="User[is_completed_induction]" <?php if(!empty($model->is_completed_induction) && ($model->is_completed_induction == "1")){echo 'checked'; } ?>/>&nbsp;Yes&nbsp; 
                                                                 <input type="radio" value="0" class="is_completed_radio" checked="checked" id="is_completed_radio_no" name="User[is_completed_induction]"/>&nbsp;No
                            </td>
                         </tr>

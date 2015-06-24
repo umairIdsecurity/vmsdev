@@ -152,10 +152,25 @@ class SiteController extends Controller {
                     case Roles::ROLE_OPERATOR:
                     case Roles::ROLE_AIRPORT_OPERATOR:
                     case Roles::ROLE_AGENT_AIRPORT_ADMIN:
-                        if (!($model->checkInductions($session['id']))) {
-                            Yii::app()->user->setFlash('error', "Your Induction has expired. Please, contact ASIC Office. ");
-                        } else {
-                            $this->redirect('index.php?r=site/selectworkstation&id=' . $session['id']);
+                        
+                        $returnData=$model->checkInductions($session['id']);
+                        
+                        if($returnData["role"]== 12 || $returnData["role"]== 13){
+                            if($returnData["success"] == false){
+                                Yii::app()->user->setFlash('error', "Your Induction has expired. Please, contact ASIC Office. ");
+                            }elseif($returnData["inducComplete"] == false){
+                                Yii::app()->user->setFlash('error', "Access Denied! Please contact Administration to complete your induction. ");
+                            }else{
+                                $this->redirect('index.php?r=site/selectworkstation&id=' . $session['id']);
+                            }
+                        }else{
+                           if($returnData["success"] == false){
+                                Yii::app()->user->setFlash('error', "Your Induction has expired. Please, go to reception. ");
+                            }elseif($returnData["inducComplete"] == false){
+                                Yii::app()->user->setFlash('error', "Access Denied! Please contact Administration to complete your induction. ");
+                            }else{
+                                $this->redirect('index.php?r=site/selectworkstation&id=' . $session['id']);
+                            } 
                         }
                         break;
                     case Roles::ROLE_AGENT_OPERATOR:

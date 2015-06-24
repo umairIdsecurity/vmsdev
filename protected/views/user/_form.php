@@ -1526,7 +1526,7 @@ function getAssignableRoles($user_role, $model)
                 foreach ($assignableRoles as $roles) {
                     if (isset(User::$USER_ROLE_LIST[$roles])) {
                         $assignableRolesArray[] = array(
-                            $roles => User::$USER_ROLE_LIST[$roles],
+                            $roles => User::$USER_ROLE_LIST[$roles]=='Staff Member'?'Host': User::$USER_ROLE_LIST[$roles],
                         );
                     }
                 }

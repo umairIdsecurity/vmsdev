@@ -25,7 +25,8 @@ class RestfulController extends CController {
     public $breadcrumbs = array();
 
     Const APPLICATION_ID = 'VMS';
-
+    const ADMIN_USER = 0;
+    const VISITOR_USER = 1;
     /**
      * Send raw HTTP response
      * @param int $status HTTP status code

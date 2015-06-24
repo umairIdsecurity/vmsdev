@@ -177,7 +177,7 @@ class VisitController extends Controller {
                  User::model()->updateByPk($model->host, array('photo' => $_POST['User']['photo']));
 			 }
 			
-            if ($model->date_check_in > date('d-m-Y')) {
+            if (strtotime($model->date_check_in) > strtotime(date('d-m-Y'))) {
                 $visitStatus = VisitStatus::model()->findByAttributes(array('name' => 'Pre-registered'));
                 if ($visitStatus) {
                     $model->visit_status = $visitStatus->id;
@@ -852,7 +852,7 @@ class VisitController extends Controller {
         $model->attributes = $_POST['Visit'];
 
         //set status to pre-registered
-        if ($model->date_check_in > date('Y-m-d')) {
+        if (strtotime($model->date_check_in) > strtotime(date('d-m-Y'))) {
             $model->visit_status = VisitStatus::PREREGISTERED;
         }
 

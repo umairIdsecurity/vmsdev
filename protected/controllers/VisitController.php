@@ -331,6 +331,7 @@ class VisitController extends Controller {
 
         #update Visitor and Host
         if (isset($_POST['Visitor']) && isset($_POST['updateVisit'])){
+            $currentCardStatus = $visitorModel->visitor_card_status;
             $visitorModel->attributes = $_POST['Visitor'];
             $asicModel = Visitor::model()->findByPk($model->host);
             if ($asicModel){
@@ -365,8 +366,12 @@ class VisitController extends Controller {
             $visitorModel->setScenario('updateVic');
             if(!$visitorModel->validate()) die('visitorModel-'.CHtml::errorSummary($visitorModel));
             if($visitorModel->save()){
-
-                #$this->redirect(Yii::app()->createUrl('visit/detail&id='.$model->id));
+               if ($currentCardStatus == 2 && $_POST['Visitor']['visitor_card_status'] == 3) {
+                   $logCardstatusConvert = new CardstatusConvert();
+                   $logCardstatusConvert->visitor_id = $visitorModel->id;
+                   $logCardstatusConvert->convert_time = date("Y-m-d");
+                   $logCardstatusConvert->save();
+               }
             }
         }
 

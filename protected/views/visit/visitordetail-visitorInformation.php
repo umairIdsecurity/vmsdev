@@ -695,7 +695,16 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
 </div>
 <script>
     $(document).ready(function () {
+
         $(".complete.btnUpdateVic").click(function(){
+            var currentCardStatus = "<?php echo $visitorModel->visitor_card_status; ?>";
+            var currentVisitStatus = "<?php echo $model->visit_status ; ?>"
+            if(currentVisitStatus == "<?php echo VisitStatus::ACTIVE; ?>") {
+                if (currentCardStatus == 2 && $('#Visitor_visitor_card_status').val() == 3) {
+                    alert('Please close the active visits before changing the status to ASIC Pending.');
+                    return false;
+                }
+            }
             if (validateInformation()) {
                 $("#workstationForm").append("<input type='hidden' name='updateVisit'  value='1' />");
                 if (checkElementExist($('#Company_name')))$("#workstationForm").append("<input type='hidden' name='Company[name]'  value='" + $('#Company_name').val() + "' />");

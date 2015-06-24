@@ -118,6 +118,10 @@ class VisitorController extends Controller {
                 if ($updateErrorMessage == '') {
                     $model->attributes = $_POST['Visitor'];
                     if ($visitorService->save($model, NULL, $session['id'])) {
+                        $logCardstatusConvert = new CardstatusConvert();
+                        $logCardstatusConvert->visitor_id = $model->id;
+                        $logCardstatusConvert->convert_time = date("Y-m-d");
+                        $logCardstatusConvert->save();
                         if ($model->totalVisit > 0) {
                             $resetHistory = new ResetHistory();
                             $resetHistory->visitor_id = $model->id;

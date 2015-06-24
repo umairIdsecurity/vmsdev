@@ -29,7 +29,7 @@ class ReportsController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('visitorsByProfiles','profilesAvmsVisitors','visitorsVicByType','visitorsVicByCardType'),
+				'actions'=>array('visitorsByProfiles','profilesAvmsVisitors','visitorsVicByType','visitorsVicByCardType','conversionVicToAsic'),
 				'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
 			),
 			array('deny',  // deny all users
@@ -557,5 +557,54 @@ class ReportsController extends Controller
         
         $this->render("visitorviccardtypecount", array("visitor_count"=>$visitorCount,"otherCards" => $otherCards));
     }
-    
+
+    public function actionConversionVicToAsic() {
+
+        $dateFromFilter = Yii::app()->request->getParam("date_from_filter");
+        $dateToFilter = Yii::app()->request->getParam("date_to_filter");
+
+        $date1YearBack = $this->getTodayAnd1YearBack();
+        $this->avmsConversionCardType($dateFromFilter,$dateToFilter,$date1YearBack[0],$date1YearBack[1]);
+    }
+
+    public function avmsConversionCardType($dateFromFilter,$dateToFilter,$from,$to){
+        if( !empty($dateFromFilter) && !empty($dateToFilter) ) {
+            $from = new DateTime($dateFromFilter);
+            $to = new DateTime($dateToFilter);
+
+            $reversed = $this->getGivenPeriodInterval($from,$to);
+        }
+        else{
+            $reversed = $this->get1YearInterval();
+        }
+        $countArrayConversion=array();
+
+        $Conversions = $this->getConversionData($from,$to);
+
+        foreach($Conversions as $Conversion){
+            $Conversion = $Conversion['convert_time'];
+            $time=strtotime($Conversion);
+            $month=date("m",$time);
+            $year=date("Y",$time);
+            $m = intval($month);
+            $y = intval($year);
+            $countArrayConversion[$y][$m][]=1;
+        }
+
+        $this->render("conversionvictoasic", array("resultsConversion"=>$countArrayConversion,"reversed"=>$reversed));
+    }
+
+    function getConversionData ($from, $to) {
+        $dateCondition='';
+
+        $dateCondition .= "(t.convert_time BETWEEN  '".$from->format("Y-m-d H:i:s")."' AND  '".$to->format("Y-m-d H:i:s")."' )";
+
+        $data = Yii::app()->db->createCommand()
+            ->select("DATE(t.convert_time) AS convert_time, t.visitor_id, t.id")
+            ->from("cardstatus_convert t")
+            ->where($dateCondition)
+            ->queryAll();
+        return $data;
+    }
+
 }

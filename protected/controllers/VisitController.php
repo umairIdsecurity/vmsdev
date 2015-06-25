@@ -382,7 +382,7 @@ class VisitController extends Controller {
 
             $visitorModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
             $visitorModel->setScenario('updateVic');
-            if(!$visitorModel->validate()) die('visitorModel-'.CHtml::errorSummary($visitorModel));
+            #if(!$visitorModel->validate()) die('visitorModel-'.CHtml::errorSummary($visitorModel));
             if($visitorModel->save()){
                if ($currentCardStatus == 2 && $_POST['Visitor']['visitor_card_status'] == 3) {
                    $logCardstatusConvert = new CardstatusConvert();

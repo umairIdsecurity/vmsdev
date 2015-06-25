@@ -136,7 +136,7 @@ class VisitorController extends RestfulController {
                     if($visitor->reset_token != NULL) {
                         $visitor->password = $data['password'];
                         $visitor->repeatpassword = $data['password'];
-                        $visitor->contact_postcode = 0000;
+                        $visitor->contact_postcode = 0;
                         $visitor->reset_token = NULL;
                         if ($visitor->save()) {
                             $this->sendResponse(200);

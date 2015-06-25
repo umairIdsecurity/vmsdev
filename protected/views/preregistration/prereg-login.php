@@ -22,29 +22,7 @@
         )
     )); ?>
 
-        <div class="form-group">
-            <div class="radio">
-                <label>
-                    <input type="radio" name="options" value="option1" checked>
-                    <span class="radio-style"></span>
-                    VIC applicant
-                </label>
-            </div>
-            <div class="radio">
-                <label>
-                    <input type="radio" name="options"  value="option2">
-                    <span class="radio-style"></span>
-                    Company preregistering multiple VIC applicants
-                </label>
-            </div>
-            <div class="radio">
-                <label>
-                    <input type="radio" name="options" value="option3">
-                    <span class="radio-style"></span>
-                    ASIC sponsor
-                </label>
-            </div>
-        </div>
+
         <div class="form-group">
             <span class="glyphicon glyphicon-user"></span>
 
@@ -66,6 +44,7 @@
                     'class'=>'form-control input-lg',
                     'data-validate-input'
                 )); ?>
+            <?php echo $form->error($model,'password'); ?>
         </div>
     
     <?php echo CHtml::submitButton('Login',array('class'=>'btn btn-primary btn-next')); ?>

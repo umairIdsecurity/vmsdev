@@ -90,7 +90,7 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
                 <tr>
                     <td>
                         <div style="float:left; width:256px; border:1px solid #000; height:405px; border-radius:20px; background:<?= $bgcolor; ?>;">
-                            <div style="width:150px; height:200px; background:#fff; margin-left:15px; margin-top:13px; border:1px solid #000;">
+                            <div style="width:150px; height:200px; background:#fff; margin-left:15px; margin-top:13px;">
                                 <img border="0" style="width:150px; height:200px;" src="<?= $userPhoto; ?>">
                             </div>
                             <div style=" text-align:center; line-height:20px;  margin:10px 0 0 5px; color:#000;">
@@ -106,8 +106,8 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
                                     <?= strtoupper(($cardCode != "") ? $cardCode : "N/A") ?></p>
                             </div>
                             <div style="background:#fff; border-bottom-right-radius: 20px;border-bottom-left-radius: 20px; width:260px; height:48.7px;">
-                                <div style="width:69px;  height:30px; margin-left:15px; margin-top:2px; display:inline-block; border:1px solid #000;">
-                                    <img border="1" style="height:30x; width:100%;" src="<?= $companyLogo; ?>">
+                                <div style="width:69px;  height:30px; margin-left:15px; margin-top:2px; display:inline-block;">
+                                    <img border="0" style="height:30x; width:100%;" src="<?= $companyLogo; ?>">
                                 </div>
                             </div>
                         </div>

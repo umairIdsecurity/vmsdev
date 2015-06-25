@@ -118,6 +118,10 @@ class VisitorController extends Controller {
                 if ($updateErrorMessage == '') {
                     $model->attributes = $_POST['Visitor'];
                     if ($visitorService->save($model, NULL, $session['id'])) {
+                        $logCardstatusConvert = new CardstatusConvert();
+                        $logCardstatusConvert->visitor_id = $model->id;
+                        $logCardstatusConvert->convert_time = date("Y-m-d");
+                        $logCardstatusConvert->save();
                         if ($model->totalVisit > 0) {
                             $resetHistory = new ResetHistory();
                             $resetHistory->visitor_id = $model->id;
@@ -197,14 +201,25 @@ class VisitorController extends Controller {
      * Manages all models.
      */
     public function actionAdmin() {
+        //$merge = new CDbCriteria;
+        //$merge->addCondition("profile_type = '". Visitor::PROFILE_TYPE_VIC ."' OR profile_type = '". Visitor::PROFILE_TYPE_ASIC ."'");
+
         $model = new Visitor('search');
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['Visitor']))
             $model->attributes = $_GET['Visitor'];
 
+        if (Yii::app()->request->getParam('vms')) {
+            if (CHelper::is_avms_visitor()) {
+                $model = $model->avms_visitor();
+            } else {
+                $model = $model->cvms_visitor();
+            }
+        }
+
         $this->render('_admin', array(
             'model' => $model,
-                ), false, false);
+        ), false, true);
     }
 
     public function actionAdminAjax() {
@@ -624,4 +639,5 @@ class VisitorController extends Controller {
         }
         echo 0;
     }
+
 }

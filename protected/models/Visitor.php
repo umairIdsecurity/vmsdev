@@ -706,4 +706,26 @@ class Visitor extends CActiveRecord {
         );
     }
 
+    public function getFullName() {
+        return trim($this->first_name . ' ' . $this->last_name);
+    }
+
+    public function avms_visitor()
+    {
+        $condition = "profile_type = '". Visitor::PROFILE_TYPE_CORPORATE ."'";
+        $this->getDbCriteria()->mergeWith(array(
+            'condition' => $condition,
+        ));
+        return $this;
+    }
+
+    public function cvms_visitor()
+    {
+        $condition = "profile_type = '". Visitor::PROFILE_TYPE_VIC ."' OR profile_type = '". Visitor::PROFILE_TYPE_ASIC ."'";
+        $this->getDbCriteria()->mergeWith(array(
+            'condition' => $condition,
+        ));
+        return $this;
+    }
+
 }

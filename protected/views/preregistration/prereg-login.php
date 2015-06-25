@@ -32,6 +32,7 @@
                     'class'=>'form-control input-lg',
                     'data-validate-input'
                 )); ?>
+
             <?php echo $form->error($model,'username'); ?>
         </div>
 
@@ -46,7 +47,8 @@
                 )); ?>
             <?php echo $form->error($model,'password'); ?>
         </div>
-    
+
     <?php echo CHtml::submitButton('Login',array('class'=>'btn btn-primary btn-next')); ?>
+    <a class="btn btn-link" href="#">Forgot password?</a>
     <?php $this->endWidget(); ?>
 </div>

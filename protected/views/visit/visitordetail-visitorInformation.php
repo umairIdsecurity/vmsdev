@@ -22,6 +22,12 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
     }
 </style>
 <input type="text" id="currentSessionRole" value="<?php echo $session['role']; ?>" style="display:none;"/>
+<?php
+$disabled = 'disabled';
+if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
+    $disabled = '';
+}
+?>
 <div id='visitorInformationCssMenu'>
     <ul>
         <li class='has-sub' id="personalDetailsLi">
@@ -34,7 +40,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                 First Name
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" disabled class="visitor-detail-info-field" value="<?php echo $visitorModel->first_name; ?>"
+                                <input type="text" <?php echo $disabled; ?> class="visitor-detail-info-field" value="<?php echo $visitorModel->first_name; ?>"
                                        name="Visitor[first_name]" id="Visitor_first_name">
                                 <div style="" id="Visitor_first_name_em_" class="errorMessage errorMessageEmail">Please enter a first name.
                                 </div>
@@ -48,7 +54,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                     Middle Name
                                 </td>
                                 <td style="padding-left: 0 !important;">
-                                    <input type="text" disabled class="visitor-detail-info-field" value="<?php echo $visitorModel->middle_name; ?>"
+                                    <input type="text" class="visitor-detail-info-field" value="<?php echo $visitorModel->middle_name; ?>"
                                            name="Visitor[middle_name]" id="Visitor_middle_name">
                                 </td>
                             </tr>
@@ -59,7 +65,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                 Last Name
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" disabled class="visitor-detail-info-field" value="<?php echo $visitorModel->last_name; ?>"
+                                <input type="text" <?php echo $disabled; ?> class="visitor-detail-info-field" value="<?php echo $visitorModel->last_name; ?>"
                                        name="Visitor[last_name]" id="Visitor_last_name">
                                 <div style="" id="Visitor_last_name_em_" class="errorMessage errorMessageEmail">Please enter a last name.
                                 </div>
@@ -73,7 +79,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                             </td>
                             <td style="padding-left: 0 !important;">
                                 <?php
-                                $visitorModel->date_of_birth = date('d-m-Y', strtotime($visitorModel->date_of_birth));
+                                $visitorModel->date_of_birth = !is_null($visitorModel->date_of_birth) ? date('d-m-Y', strtotime($visitorModel->date_of_birth)) : date('d-m-Y');
                                 $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                     'model' => $visitorModel,
                                     'attribute' => 'date_of_birth',
@@ -88,7 +94,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                         'showOn' => "button",
                                         'buttonImage' => Yii::app()->controller->assetsBase . "/images/calendar.png",
                                         'buttonImageOnly' => true,
-                                        'dateFormat' => "yy-mm-dd",
+                                        'dateFormat' => "dd-mm-yy",
                                     )
                                 ));
                                 ?>
@@ -113,7 +119,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                         <tr>
                             <td width="110px;" style="padding-top: 7px;">Email</td>
                             <td>
-                                <input  type="text" disabled class="visitor-detail-info-field" value="<?php echo $visitorModel->email; ?>"
+                                <input  type="text" <?php echo $disabled; ?> class="visitor-detail-info-field" value="<?php echo $visitorModel->email; ?>"
                                        name="Visitor[email]" id="Visitor_email">
                                 <div style="" id="Visitor_email_em_" class="errorMessage errorMessageEmail">Email invalid or a profile
                                     already exists for this email address.
@@ -185,7 +191,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                 Contact Email
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" class="visitor-detail-info-field" value="<?php echo isset($contact->email) ? $contact->email : ''; ?>"
+                                <input type="text" <?php echo $disabled; ?> class="visitor-detail-info-field" value="<?php echo isset($contact->email) ? $contact->email : ''; ?>"
                                        name="Company[email_address]" id="Company_email_address">
                                 <div style="" id="Company_email_address_em_" class="errorMessage errorMessageEmail">Please enter a company email address.
                                 </div>
@@ -411,7 +417,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                 </li>
             </ul>
         </li>
-        <?php if(($visitorModel->profile_type == "ASIC")||($visitorModel->profile_type == "VIC")):?>
+        <?php if (($visitorModel->profile_type == "ASIC")||($visitorModel->profile_type == "VIC")): ?>
         <li class='has-sub' id="asicDetailsLi">
             <a href="#"><span>Identification</span></a>
             <ul>
@@ -443,7 +449,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                             Document No.
                         </td>
                         <td style="padding-left: 0 !important;">
-                            <input type="text" class="visitor-detail-info-field" value="<?php echo $visitorModel->identification_document_no; ?>"
+                            <input type="text" <?php echo $disabled; ?> class="visitor-detail-info-field" value="<?php echo $visitorModel->identification_document_no; ?>"
                                    name="Visitor[identification_document_no]" id="Visitor_identification_document_no">
                             <div style="" id="Visitor_identification_document_no_em_" class="errorMessage errorMessageEmail">Please enter a identification document no.
                             </div>
@@ -471,7 +477,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                     'buttonImage' => Yii::app()->controller->assetsBase . "/images/calendar.png",
                                     'buttonImageOnly' => true,
                                     'minDate' => "0",
-                                    'dateFormat' => "yy-mm-dd",
+                                    'dateFormat' => "dd-mm-yy",
                                 )
                             ));
                             ?>
@@ -495,7 +501,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                             </td>
 
                             <td style="padding-left: 0 !important;">
-                                <input class="visitor-detail-info-field" disabled type="text" value="<?php echo $asic->first_name; ?>"
+                                <input class="visitor-detail-info-field"  <?php echo $disabled; ?> type="text" value="<?php echo $asic->first_name; ?>"
                                        name="Visitor[asic_first_name]" id="Visitor_asic_first_name">
                                 <div style="" id="Visitor_asic_first_name_em_" class="errorMessage errorMessageEmail">Please enter a first name.
                                 </div>
@@ -507,7 +513,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
                                 Last Name
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input class="visitor-detail-info-field" disabled type="text" value="<?php echo $asic->last_name; ?>"
+                                <input class="visitor-detail-info-field"  <?php echo $disabled; ?> type="text" value="<?php echo $asic->last_name; ?>"
                                        name="Visitor[asic_last_name]" id="Visitor_asic_last_name">
                                 <div style="" id="Visitor_asic_last_name_em_" class="errorMessage errorMessageEmail">Please enter a last name.
                                 </div>

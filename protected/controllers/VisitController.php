@@ -334,10 +334,10 @@ class VisitController extends Controller {
             $visitorModel->attributes = $_POST['Visitor'];
             $asicModel = Visitor::model()->findByPk($model->host);
             if ($asicModel){
-                if (isset($_POST['Visitor']['host_first_name']))$asicModel->first_name = $_POST['Visitor']['host_first_name'];
-                if (isset($_POST['Visitor']['host_last_name']))$asicModel->last_name = $_POST['Visitor']['host_last_name'];
-                if (isset($_POST['Visitor']['host_asic_no']))$asicModel->asic_no = $_POST['Visitor']['host_asic_no'];
-                if (isset($_POST['Visitor']['host_asic_expiry']))$asicModel->asic_expiry = $_POST['Visitor']['host_asic_expiry'];
+                if (isset($_POST['Visitor']['host_first_name'])) $asicModel->first_name = $_POST['Visitor']['host_first_name'];
+                if (isset($_POST['Visitor']['host_last_name'])) $asicModel->last_name = $_POST['Visitor']['host_last_name'];
+                if (isset($_POST['Visitor']['host_asic_no'])) $asicModel->asic_no = $_POST['Visitor']['host_asic_no'];
+                if (isset($_POST['Visitor']['host_asic_expiry'])) $asicModel->asic_expiry = $_POST['Visitor']['host_asic_expiry'];
                 $asicModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
                 #if(!$asicModel->validate()) die("asicModel-{$asicModel->id}".CHtml::errorSummary($asicModel));
                 $asicModel->save();
@@ -349,18 +349,36 @@ class VisitController extends Controller {
                     $companyModel = Company::model()->findByPk($visitorModel->company);
                     $staffModel = User::model()->findByPk($visitorModel->staff_id);
                     if ($companyModel) {
-                        if (isset($_POST['Company']['name']))$companyModel->name = $_POST['Company']['name'];
+                        if (isset($_POST['Company']['name'])) $companyModel->name = $_POST['Company']['name'];
                         #if(!$companyModel->validate()) die('companyModel-'.CHtml::errorSummary($asicModel));
                         $companyModel->save();
                     }
                     if (isset($staffModel) && $staffModel){
-                        if (isset($_POST['Company']['mobile_number']))$staffModel->contact_number = $_POST['Company']['mobile_number'];
-                        if (isset($_POST['Company']['email_address']))$staffModel->email = $_POST['Company']['email_address'];
+                        if (isset($_POST['Company']['mobile_number'])) $staffModel->contact_number = $_POST['Company']['mobile_number'];
+                        if (isset($_POST['Company']['email_address'])) $staffModel->email = $_POST['Company']['email_address'];
                         #if(!$staffModel->validate()) die('staffModel-'.CHtml::errorSummary($asicModel));
                         $staffModel->save();
                     }
                 }
             }
+
+            if (isset($_POST['Visitor']['visitor_card_status']) && $_POST['Visitor']['visitor_card_status'] != $visitorModel->visitor_card_status) {
+                $visitorModel->visitor_card_status = $_POST['Visitor']['visitor_card_status'];
+                if ($visitorModel->visitor_card_status == Visitor::ASIC_ISSUED) {
+                    $visitorModel->profile_type = Visitor::PROFILE_TYPE_ASIC;
+                }
+
+                if ($visitorModel->save()) {
+                    if (in_array($visitorModel->visitor_card_status, [Visitor::ASIC_PENDING])) {
+                        $model->date_check_in = $model->date_check_out;
+                        if ($model->save()) {
+                            $visitCount['totalVisits'] = $model->visitCounts;
+                            $visitCount['remainingDays'] = $model->remainingDays;
+                        }
+                    }
+                }
+            }
+
             $visitorModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
             $visitorModel->setScenario('updateVic');
             if(!$visitorModel->validate()) die('visitorModel-'.CHtml::errorSummary($visitorModel));
@@ -379,22 +397,6 @@ class VisitController extends Controller {
 
             $model->attributes = $_POST['Visit'];
 
-            if (isset($_POST['Visitor']['visitor_card_status']) && $_POST['Visitor']['visitor_card_status'] != $visitorModel->visitor_card_status) {
-                $visitorModel->visitor_card_status = $_POST['Visitor']['visitor_card_status'];
-                if ($visitorModel->visitor_card_status == Visitor::ASIC_ISSUED) {
-                    $visitorModel->profile_type = Visitor::PROFILE_TYPE_ASIC;
-                }
-
-                if ($visitorModel->save()) {
-                    if (in_array($visitorModel->visitor_card_status, [Visitor::ASIC_PENDING])) {
-                        $model->date_check_in = $model->date_check_out;
-                        if ($model->save()) {
-                            $visitCount['totalVisits'] = $model->visitCounts;
-                            $visitCount['remainingDays'] = $model->remainingDays;
-                        }
-                    }
-                }
-            }
             // close visit process
             if (isset($_POST['closeVisitForm'])) {
                 if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY, CardType::VIC_CARD_24HOURS]) && date('Y-m-d') <= $model->date_check_out) {

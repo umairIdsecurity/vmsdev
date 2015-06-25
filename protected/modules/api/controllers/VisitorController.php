@@ -32,6 +32,7 @@ class VisitorController extends RestfulController {
                     $this->sendResponse(200, CJSON::encode($result));
                 }
             } elseif (yii::app()->request->isPutRequest) {
+                $visitor_token_user= $this->checkAuthVisitor();
                 $data = file_get_contents("php://input");
                 $data = CJSON::decode($data);
                 $visitor = Visitor::model()->findByAttributes(array('email' => $data['email']));
@@ -54,7 +55,7 @@ class VisitorController extends RestfulController {
                 }
             } else {
                 $email = $_GET['email'];
-
+                $visitor_token_user= $this->checkAuthVisitor();
                 $visitor = Visitor::model()->findByAttributes(array('email' => $email));
                 if ($visitor) {
                     $result = $this->populatevisitor($visitor);
@@ -63,6 +64,30 @@ class VisitorController extends RestfulController {
                 } else {
                     $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'VISITOR_NOT_FOUND', 'errorDescription' => 'visitor is not found ')));
                 }
+            }
+        } catch (Exception $ex) {
+            $this->sendResponse(500, CJSON::encode(array('responseCode' => 500, 'errorCode' => 'INTERNAL_SERVER_ERROR', 'errorDescription' => 'something went wrong')));
+        }
+    }
+
+    public function actionLogout(){
+        try {
+            $token_user = $this->checkAuth();
+            $visitor_token_user= $this->checkAuthVisitor();
+            if (Yii::app()->request->getParam('email')) {
+                $email = Yii::app()->request->getParam('email');
+                $visitor = Visitor::model()->findByAttributes(array('email' => $email));
+                if ($visitor) {
+                    $access_token = AccessTokens::model()->findByAttributes(array('USER_ID' => $visitor->id));
+                    if ($access_token) {
+                        $access_token->delete();
+                        $this->sendResponse(204);
+                    }
+                } else {
+                    $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'ADMIN_NOT_FOUND', 'errorDescription' => 'Requested Admin not found')));
+                }
+            } else {
+                $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_PARAMETER', 'errorDescription' => 'GET parameter required for action')));
             }
         } catch (Exception $ex) {
             $this->sendResponse(500, CJSON::encode(array('responseCode' => 500, 'errorCode' => 'INTERNAL_SERVER_ERROR', 'errorDescription' => 'something went wrong')));

@@ -269,7 +269,7 @@ class Visitor extends CActiveRecord {
 
         if (Yii::app()->controller->id === 'visitor') {
             if (Yii::app()->controller->action->id == 'addvisitor') {
-                $rules[] = array('company, visitor_workstation, visitor_card_status, visitor_type,contact_street_type,contact_state,contact_country, asic_expiry ','DropDown');
+                $rules[] = array('company, visitor_workstation, visitor_card_status, visitor_type,contact_street_type,contact_state, contact_country, asic_expiry','DropDown');
             } elseif(Yii::app()->controller->action->id == 'create'){
                 $rules[] = array('company','DropDown');
             }
@@ -478,7 +478,13 @@ class Visitor extends CActiveRecord {
     public function beforeSave() {
         $this->email = trim($this->email);
 
-        $this->contact_country = self::AUSTRALIA_ID;
+        if(!$this->contact_country) {
+            $this->contact_country = self::AUSTRALIA_ID;
+        }
+        
+        if (!empty($this->date_of_birth)) $this->date_of_birth =  date('Y-m-d', strtotime($this->date_of_birth));
+        if (!empty($this->asic_expiry)) $this->asic_expiry =  date('Y-m-d', strtotime($this->asic_expiry));
+        if (!empty($this->identification_document_expiry)) $this->identification_document_expiry =  date('Y-m-d', strtotime($this->identification_document_expiry));
 
         if ($this->password_requirement == PasswordRequirement::PASSWORD_IS_NOT_REQUIRED) {
             $this->password = null;
@@ -701,6 +707,28 @@ class Visitor extends CActiveRecord {
             'AuditTrailBehaviors'=>
                 'application.components.behaviors.AuditTrailBehaviors',
         );
+    }
+
+    public function getFullName() {
+        return trim($this->first_name . ' ' . $this->last_name);
+    }
+
+    public function avms_visitor()
+    {
+        $condition = "profile_type = '". Visitor::PROFILE_TYPE_CORPORATE ."'";
+        $this->getDbCriteria()->mergeWith(array(
+            'condition' => $condition,
+        ));
+        return $this;
+    }
+
+    public function cvms_visitor()
+    {
+        $condition = "profile_type = '". Visitor::PROFILE_TYPE_VIC ."' OR profile_type = '". Visitor::PROFILE_TYPE_ASIC ."'";
+        $this->getDbCriteria()->mergeWith(array(
+            'condition' => $condition,
+        ));
+        return $this;
     }
 
 }

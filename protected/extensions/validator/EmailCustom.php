@@ -50,7 +50,8 @@ if (info)
         if(cardStatus == 2) {
             $validateIDN
             if(".($this->allowEmpty ? "jQuery.trim(value)!='' && " : '').$condition.") {
-                if(value !== firstName + '.' + lastName){
+                var str = firstName + '.' + lastName;
+                if(value.toLowerCase() !== str.toLowerCase()){
                     messages.push(".CJSON::encode($message).");
                 }
 

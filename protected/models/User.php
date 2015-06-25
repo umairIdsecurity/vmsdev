@@ -143,6 +143,7 @@ class User extends VmsActiveRecord {
                 array('date_of_birth, notes,tenant,tenant_agent,birthdayYear,birthdayMonth,birthdayDay', 'safe'),
                 array('email', 'filter', 'filter' => 'trim'),
                 array('email', 'email'),
+                array('email','unique'),
                 array('role, company', 'required', 'message' => 'Please select a {attribute}'),
                 array('tenant, tenant_agent,photo','default', 'setOnEmpty' => true, 'value' => null),
                 array('asic_no', 'AvmsFields'),

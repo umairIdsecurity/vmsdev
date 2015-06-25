@@ -124,24 +124,20 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
             }
             echo CHtml::dropDownList('Visit[reason]', $model->reason, $results);
             echo "<br />";
-            $cardTypes = CHtml::listData(CardType::model()->findAll(), 'id', 'name');
-            foreach ($cardTypes as $key => $item) {
-                $cardList = ($asic) ? CardType::$VIC_CARD_TYPE_LIST : CardType::$CORPORATE_CARD_TYPE_LIST;
-                if (in_array($key, $cardList)) {
-                    $cardTypeResults[$key] = 'Card Type: ' . $item;
-                }
-            }
-            echo CHtml::dropDownList('Visit[card_type]', $model->card_type, $cardTypeResults);
-
-        }else{
-            $cardTypes = CHtml::listData(CardType::model()->findAll(), 'id', 'name');
-            foreach ($cardTypes as $key => $item) {
-                if (in_array($key, CardType::$CORPORATE_CARD_TYPE_LIST)) {
-                    $cardTypeResults[$key] = 'Card Type: ' . $item;
-                }
-            }
-            echo CHtml::dropDownList('Visit[card_type]', $model->card_type, $cardTypeResults);
         }
+
+        $cardTypeOptions = [];
+        if ($model->visit_status == VisitStatus::AUTOCLOSED) {
+            $cardTypeOptions['disabled'] = 'disabled';
+        }
+        $cardTypes = CHtml::listData(CardType::model()->findAll(), 'id', 'name');
+        foreach ($cardTypes as $key => $item) {
+            $cardList = ($asic) ? CardType::$VIC_CARD_TYPE_LIST : CardType::$CORPORATE_CARD_TYPE_LIST;
+            if (in_array($key, $cardList)) {
+                $cardTypeResults[$key] = 'Card Type: ' . $item;
+            }
+        }   
+        echo CHtml::dropDownList('Visit[card_type]', $model->card_type, $cardTypeResults, $cardTypeOptions);
         ?>
         
     </div>

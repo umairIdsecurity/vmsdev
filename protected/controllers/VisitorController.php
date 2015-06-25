@@ -209,10 +209,12 @@ class VisitorController extends Controller {
         if (isset($_GET['Visitor']))
             $model->attributes = $_GET['Visitor'];
 
-        if (CHelper::is_avms_visitor()) {
-            $model = $model->avms_visitor();
-        } else {
-            $model = $model->cvms_visitor();
+        if (Yii::app()->request->getParam('vms')) {
+            if (CHelper::is_avms_visitor()) {
+                $model = $model->avms_visitor();
+            } else {
+                $model = $model->cvms_visitor();
+            }
         }
 
         $this->render('_admin', array(

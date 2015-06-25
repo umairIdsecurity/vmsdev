@@ -384,7 +384,7 @@ class VisitController extends Controller {
             $visitorModel->setScenario('updateVic');
             #if(!$visitorModel->validate()) die('visitorModel-'.CHtml::errorSummary($visitorModel));
             if($visitorModel->save()){
-               if ($currentCardStatus == 2 && $_POST['Visitor']['visitor_card_status'] == 3) {
+               if (isset($_POST['Visitor']['visitor_card_status'])&& $currentCardStatus == 2 && $_POST['Visitor']['visitor_card_status'] == 3) {
                    $logCardstatusConvert = new CardstatusConvert();
                    $logCardstatusConvert->visitor_id = $visitorModel->id;
                    $logCardstatusConvert->convert_time = date("Y-m-d");

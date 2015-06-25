@@ -715,7 +715,7 @@ class Visitor extends CActiveRecord {
 
     public function avms_visitor()
     {
-        $condition = "profile_type = '". Visitor::PROFILE_TYPE_CORPORATE ."'";
+        $condition = "profile_type = '". Visitor::PROFILE_TYPE_VIC ."' OR profile_type = '". Visitor::PROFILE_TYPE_ASIC ."'";
         $this->getDbCriteria()->mergeWith(array(
             'condition' => $condition,
         ));
@@ -724,7 +724,7 @@ class Visitor extends CActiveRecord {
 
     public function cvms_visitor()
     {
-        $condition = "profile_type = '". Visitor::PROFILE_TYPE_VIC ."' OR profile_type = '". Visitor::PROFILE_TYPE_ASIC ."'";
+        $condition = "profile_type = '". Visitor::PROFILE_TYPE_CORPORATE ."'";
         $this->getDbCriteria()->mergeWith(array(
             'condition' => $condition,
         ));

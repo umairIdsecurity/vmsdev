@@ -558,6 +558,12 @@ class ReportsController extends Controller
         $this->render("visitorviccardtypecount", array("visitor_count"=>$visitorCount,"otherCards" => $otherCards));
     }
 
+    //**************************************************************************
+    /*
+    * Report: Visitor Reporting: Conversion of Total VICs to ASIC
+    *
+    * @return view
+    */
     public function actionConversionVicToAsic() {
 
         $dateFromFilter = Yii::app()->request->getParam("date_from_filter");
@@ -591,13 +597,13 @@ class ReportsController extends Controller
             $countArrayConversion[$y][$m][]=1;
         }
 
-        $this->render("conversionvictoasic", array("resultsConversion"=>$countArrayConversion,"reversed"=>$reversed));
+        $this->render("conversionvictoasic", array("resultsConversion" => $countArrayConversion, "reversed"=>$reversed));
     }
 
-    function getConversionData ($from, $to) {
+    function getConversionData($from, $to) {
         $dateCondition='';
 
-        $dateCondition .= "(t.convert_time BETWEEN  '".$from->format("Y-m-d H:i:s")."' AND  '".$to->format("Y-m-d H:i:s")."' )";
+        $dateCondition .= "(t.convert_time BETWEEN '".$from->format("Y-m-d")."' AND '".$to->format("Y-m-d")."' )";
 
         $data = Yii::app()->db->createCommand()
             ->select("DATE(t.convert_time) AS convert_time, t.visitor_id, t.id")

@@ -25,11 +25,7 @@ class PreregUserIdentity extends CUserIdentity {
             $this->_id = $user->id;
             $this->setState('email', $user->email);
             $this->setState('role', $user->role);
-
-            $session = new CHttpSession;
-            $session->open();
-            $session['id'] = $user->id;
-            $session['role'] = $user->role;
+            $this->setState('account', $user->profile_type);
 
             $this->errorCode = self::ERROR_NONE;
         }

@@ -22,7 +22,7 @@
 
     <title><?php echo CHtml::encode($this->pageTitle); ?></title>
     </head>
-    <body class="first-page logout-page login-page">
+    <body class="first-page">
         <div id="header" class="relative">
             <div class="container">
                 <div class="logo">
@@ -31,14 +31,35 @@
                     </a>
                 </div>
                 <ul class="icons">
-                    <li class="group-1"><a href="#"><span class="glyphicon glyphicon-log-in"></span></a></li>
-                    <li class="group-2"><a href="#"><span class="glyphicon glyphicon-user"></span></a></li>
-                    <li class="group-2"><a href="#"><span class="glyphicon glyphicon-envelope"></span></a></li>
-                    <li class="group-2"><a href="#"><span class="glyphicon glyphicon-question-sign"></span></a></li>
-                    <li class="group-2"><a href="#"><span class="glyphicon glyphicon-log-out"></span></a></li>
+                    <?php
+                    if(Yii::app()->user->isGuest) {
+                        ?>
+                        <li class="group-1"><a href="#"><span class="glyphicon glyphicon-log-in"></span></a></li>
+                    <?php
+                    }
+                    else{
+                        ?>
+                        <li class="group-2"><a href="#"><span class="glyphicon glyphicon-user"></span></a></li>
+                        <li class="group-2"><a href="#"><span class="glyphicon glyphicon-envelope"></span></a></li>
+                        <li class="group-2"><a href="#"><span class="glyphicon glyphicon-question-sign"></span></a></li>
+                        <li class="group-2"><a href="#"><span class="glyphicon glyphicon-log-out"></span></a></li>
+                    <?php
+                    }
+                    ?>
                 </ul>
             </div>
         </div>
+        <?php
+        if(Yii::app()->user->isGuest){
+        ?>
+        <div class="header-bottom">
+            <div class="container"></div>
+        </div>
+        <?php
+        }
+        ?>
+
+
         <div id="container">
             <div class="container">
                 <div id="main">

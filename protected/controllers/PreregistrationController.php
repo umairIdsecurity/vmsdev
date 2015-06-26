@@ -24,7 +24,7 @@ class PreregistrationController extends Controller
 				'users' => array('*'),
 			),
 			array('allow',
-				'actions'=>array('details','logout'),
+				'actions'=>array('details','logout' , 'dashboard'),
 				'users' => array('@'),
 				//'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
 			),
@@ -248,11 +248,15 @@ class PreregistrationController extends Controller
 			$model->attributes = $_POST['PreregLogin'];
 
 			if ($model->validate() && $model->login()) {
-				$this->redirect(array('preregistration/details'));
+				$this->redirect(array('preregistration/dashboard'));
 			}
 		}
 		$this->render('prereg-login', array('model' => $model));
 
+	}
+
+	public function actionDashboard(){
+		$this->render('dashboard');
 	}
 
 	public function actionDetails(){

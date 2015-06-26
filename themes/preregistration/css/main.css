@@ -56,3 +56,7 @@ h1, .h1 {
     background: transparent;
 }
 
+.header-bottom .container{
+    border-bottom: 3px solid #eeeeee;
+}
+

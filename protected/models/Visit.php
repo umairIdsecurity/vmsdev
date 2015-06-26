@@ -98,6 +98,7 @@ class Visit extends CActiveRecord {
             array('id,datecheckin1,cardnumber,company,firstname,lastname,contactnumber,contactemail,contactperson,contactphone,visit_status,visitor ,card,workstation, visitor_type, reason, visitor_status, host, patient, created_by, date_in, time_in, date_out, time_out, date_check_in, time_check_in, date_check_out, time_check_out, tenant, tenant_agent, is_deleted, companycode, contact_street_no, contact_street_name, contact_street_type, contact_suburb, contact_postcode, identification_type, identification_document_no, identification_document_expiry,asicname, asic_no, asic_expiry, workstation, date_of_birth, finish_date, card_returned_date', 'safe', 'on' => 'search'),
             array('id,datecheckin1,cardnumber,company,firstname,lastname,contactnumber,contactemail,contactperson,contactphone,visit_status,visitor ,card,workstation, visitor_type, reason, visitor_status, host, patient, created_by, date_in, time_in, date_out, time_out, date_check_in, time_check_in, date_check_out, time_check_out, tenant, tenant_agent, is_deleted, companycode, contact_street_no, contact_street_name, contact_street_type, contact_suburb, contact_postcode, identification_type, identification_document_no, identification_document_expiry,asicname, asic_no, asic_expiry, workstation, date_of_birth, finish_date, card_returned_date', 'safe', 'on' => 'search_history'),
             array('card_lost_declaration_file', 'file', 'types' => 'pdf,doc,docx,jpg,gif,png', 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * 10),
+            
         );
     }
 
@@ -120,15 +121,15 @@ class Visit extends CActiveRecord {
         }
     }
 
-    public function beforeSave() {
-        if (!empty($this->date_int)) $this->date_int =  date('Y-m-d', strtotime($this->date_int));
-        if (!empty($this->date_out)) $this->date_out =  date('Y-m-d', strtotime($this->date_out));
-        if (!empty($this->date_check_in)) $this->date_check_in =  date('Y-m-d', strtotime($this->date_check_in));
-        if (!empty($this->date_check_out)) $this->date_check_out =  date('Y-m-d', strtotime($this->date_check_out));
-        if (!empty($this->finish_date)) $this->finish_date =  date('Y-m-d', strtotime($this->finish_date));
-        if (!empty($this->card_returned_date)) $this->card_returned_date =  date('Y-m-d', strtotime($this->card_returned_date));
-        return parent::beforeSave();
-    }
+//    public function beforeSave() {
+//        if (!empty($this->date_int)) $this->date_int =  date('Y-m-d', strtotime($this->date_int));
+//        if (!empty($this->date_out)) $this->date_out =  date('Y-m-d', strtotime($this->date_out));
+//        if (!empty($this->date_check_in)) $this->date_check_in =  date('Y-m-d', strtotime($this->date_check_in));
+//        if (!empty($this->date_check_out)) $this->date_check_out =  date('Y-m-d', strtotime($this->date_check_out));
+//        if (!empty($this->finish_date)) $this->finish_date =  date('Y-m-d', strtotime($this->finish_date));
+//        if (!empty($this->card_returned_date)) $this->card_returned_date =  date('Y-m-d', strtotime($this->card_returned_date));
+//        return parent::beforeSave();
+//    }
 
     public function setDatecheckin1($value) {
         // set private attribute for search
@@ -780,6 +781,7 @@ class Visit extends CActiveRecord {
             ),
             'AuditTrailBehaviors'=>
                 'application.components.behaviors.AuditTrailBehaviors',
+            'DateTimeZoneAndFormatBehavior' => 'application.components.DateTimeZoneAndFormatBehavior',
         );
     }
 
@@ -1096,12 +1098,12 @@ class Visit extends CActiveRecord {
      * Change date formate to Australian after fetech
      * 
      */
-    public function afterFind() {
-
-        //$this->date_check_in = (string) date("Y-m-d", $this->date_check_in);
-        //$this->date_check_out = (string) date("Y-m-d", $this->date_check_out);
-        return parent::afterFind();
-    }
+//    public function afterFind() {
+//        
+//        //$this->date_check_in = (string) date("Y-m-d", $this->date_check_in);
+//        //$this->date_check_out = (string) date("Y-m-d", $this->date_check_out);
+//        return parent::afterFind();
+//    }
 
     /**
      * If visit is preregistered and date of entry passes 48 hours after proposed visit date 

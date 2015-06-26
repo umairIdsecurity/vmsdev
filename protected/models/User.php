@@ -50,12 +50,15 @@ class User extends VmsActiveRecord {
     public $asic_expiry_year;
     public $helpdesk_group;
 
-	public $is_required_induction;
+    public $is_required_induction;
     public $is_completed_induction;
     public $induction_expiry;
 	
     public $password_option;
     private $_companyname;
+    
+   
+    
 
     public static $USER_ROLE_LIST = array(
 
@@ -104,11 +107,9 @@ class User extends VmsActiveRecord {
 
         if($this->scenario == 'add_company_contact') {
             return array(
-					array('first_name, last_name, email, contact_number', 'required'),
-				
-					array('is_required_induction, is_completed_induction, induction_expiry ', 'safe'),
-					
-				);
+                    array('first_name, last_name, email, contact_number', 'required'),
+                    array('is_required_induction, is_completed_induction, induction_expiry ', 'safe'),
+            );
 			
         }
 
@@ -131,7 +132,7 @@ class User extends VmsActiveRecord {
                 // @todo Please remove those attributes that should not be searched.
                 array('id, companyname,first_name, last_name,email,photo,is_deleted ,contact_number, date_of_birth, company, department, position, staff_id, notes, role_id, user_type_id, user_status_id, created_by', 'safe', 'on' => 'search'),
 				
-				array('is_required_induction, is_completed_induction, induction_expiry ', 'safe'),
+		array('is_required_induction, is_completed_induction, induction_expiry ', 'safe'),
                 
             );
         } else {
@@ -231,7 +232,8 @@ class User extends VmsActiveRecord {
             'userTypes' => array(self::HAS_MANY, 'UserType', 'created_by'),
             'workstation' => array(self::HAS_MANY, 'user_workstation', 'id'),
             'userWorkstation1' => array(self::MANY_MANY, 'Workstation', 'user_workstation(user, workstation)'),
-			'photo1' => array(self::BELONGS_TO, 'Photo', 'photo'),
+            'photo1' => array(self::BELONGS_TO, 'Photo', 'photo'),
+            'userTimezones' => array(self::BELONGS_TO, 'timezone', 'timezone_id'),
         );
     }
 
@@ -520,7 +522,13 @@ class User extends VmsActiveRecord {
                         ->where('u.id=c.tenant and c.id !=1 and u.is_deleted = 0')
                         ->queryAll();
     }
-
+    
+    public function behaviors() {
+        return array(
+            'DateTimeZoneAndFormatBehavior' => 'application.components.DateTimeZoneAndFormatBehavior',
+        );
+    }
+    
     public function findAllAdmin() {
 
         $criteria = new CDbCriteria;

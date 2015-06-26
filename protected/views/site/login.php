@@ -2,6 +2,8 @@
 /* @var $this SiteController */
 /* @var $model LoginForm */
 /* @var $form CActiveForm  */
+$cs = Yii::app()->clientScript;
+$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/script-timezone.js');
 
 $this->pageTitle=Yii::app()->name . ' - Login';
 
@@ -32,6 +34,11 @@ $this->pageTitle=Yii::app()->name . ' - Login';
             <td colspan="3" class="form-group"><span class="add-on"><i class="b-password"></i></span><?php echo $form->passwordField($model,'password', array('placeholder' => 'Password')); ?></td>
             
         </tr>
+        
+        <?php //echo $form->hiddenField($model,'timezone'); ?>
+        
+        <?php echo CHtml::hiddenField('timezone' , 'value', array('id' => 'LoginForm_timezone')); ?>
+        
         <tr>
             <td colspan="2"><?php echo $form->error($model,'password'); ?></td>
         </tr>
@@ -52,3 +59,11 @@ $this->pageTitle=Yii::app()->name . ' - Login';
 <?php $this->endWidget(); ?>
 </div><!-- form -->
 </div>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    var tz = jstz.determine(); // Determines the time zone of the browser client
+    var timezone = tz.name();
+    $("#LoginForm_timezone").val(timezone);
+  });
+</script>

@@ -508,7 +508,7 @@ $form = $this->beginWidget('CActiveForm', array(
     </table>
     
         <!-- ********************************************************************************** -->
-    <?php if(Roles::ROLE_OPERATOR == $currentRoleinUrl || Roles::ROLE_AIRPORT_OPERATOR == $currentRoleinUrl || Roles::ROLE_AGENT_AIRPORT_ADMIN == $currentRoleinUrl) { ?>
+    <?php if(Roles::ROLE_AIRPORT_OPERATOR == $currentRoleinUrl || Roles::ROLE_AGENT_AIRPORT_ADMIN == $currentRoleinUrl || Roles::ROLE_AGENT_AIRPORT_OPERATOR == $currentRoleinUrl) { ?>
     <div class="password-border">
         <table class="no-margin-bottom">
             <tr>
@@ -531,10 +531,10 @@ $form = $this->beginWidget('CActiveForm', array(
                             </td>
                         </tr>    
                         
-                        <tr <?php if($this->action->id == "update"){}else{ echo 'style="display:none"'; } ?> class="is_completed_tr">
+                        <tr <?php if(($this->action->id == "update") && !empty($model->is_required_induction) && ($model->is_required_induction == "1")){}else{ echo 'style="display:none"'; } ?> class="is_completed_tr">
                             <td>
-                                Induction Completed &nbsp; <input type="radio" value="1" class="is_completed_radio" name="User[is_completed_induction]" <?php if(!empty($model->is_completed_induction) && ($model->is_completed_induction == "1")){echo 'checked'; } ?>/>&nbsp;Yes&nbsp; 
-                                                                <input type="radio" value="0" class="is_completed_radio" checked="checked" id="is_completed_radio_no" name="User[is_completed_induction]"/>&nbsp;No
+                                Induction Completed &nbsp; <input type="radio" value="0" class="is_completed_radio" checked="checked" id="is_completed_radio_no" name="User[is_completed_induction]"/>&nbsp;No&nbsp;
+                                <input type="radio" value="1" class="is_completed_radio" name="User[is_completed_induction]" <?php if(!empty($model->is_completed_induction) && ($model->is_completed_induction == "1")){echo 'checked'; } ?>/>&nbsp;Yes 
                            </td>
                         </tr>
                         
@@ -756,20 +756,21 @@ $(document).ready(function () {
     $(".workstationRow").hide();
 	
 	
-//	var elem1 = document.getElementById('User_tenant');
-//	if(typeof elem1 !== 'undefined' && elem1 !== null) {
-//            elem1.disabled = true;
-//	}
-//        
-//        var elem2 = document.getElementById('User_tenant_agent');
-//	if(typeof elem2 !== 'undefined' && elem2 !== null) {
-//            elem2.disabled = true;
-//	}
-//	
-//	var elem3 = document.getElementById('User_company');
-//	if(typeof elem3 !== 'undefined' && elem3 !== null) {
-//            elem3.disabled = true;
-//	}
+	var elem1 = document.getElementById('User_tenant');
+	if(typeof elem1 !== 'undefined' && elem1 !== null) {
+            elem1.disabled = true;
+	}
+        
+        var elem2 = document.getElementById('User_tenant_agent');
+	if(typeof elem2 !== 'undefined' && elem2 !== null) {
+            elem2.disabled = true;
+	}
+	
+	var elem3 = document.getElementById('User_company');
+	if(typeof elem3 !== 'undefined' && elem3 !== null) {
+            elem3.disabled = true;
+	}
+        
        
     if (actionId == 'update') {
         $("#fromYear").val($("#dateofBirthBreakdownValueYear").val());

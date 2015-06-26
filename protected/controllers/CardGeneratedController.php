@@ -241,12 +241,18 @@ class CardGeneratedController extends Controller {
         }else{
             $html2pdf = Yii::app()->ePdf->HTML2PDF('P', 'CARDPRINT', 'en',TRUE,'UTF-8',array(0,0,0,0));
         }
-        
-        $html2pdf->WriteHTML($this->renderPartial('printpdf', $data, true));
+
+        if ($model->card_type > 4) {
+            $html2pdf->WriteHTML($this->renderPartial('printpdf', $data, true));
+        } else {
+            $html2pdf->WriteHTML($this->renderPartial('_card-corporate', $data, true));
+        }
+
+
         $html2pdf->Output();
-        
+
     }
-    
+
 
     /**
      * Returns the data model based on the primary key given in the GET variable.

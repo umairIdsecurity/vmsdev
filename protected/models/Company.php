@@ -31,7 +31,6 @@ class Company extends CActiveRecord {
 	public $user_contact_number;
     public $is_user_field;
 
-
     protected $tenantQuery = "SELECT COUNT(c.id)
 FROM user u
 LEFT JOIN company c ON u.company=c.id
@@ -80,7 +79,7 @@ WHERE u.id=c.tenant AND c.id !=1";
 	            array('email_address, website', 'length', 'max' => 50),
 	            array('contact', 'length', 'max' => 100),
 	            array('tenant', 'length', 'max' => 100),
-	            array('logo,is_deleted,company_laf_preferences ,is_user_field', 'safe'),
+	            array('logo,is_deleted,company_laf_preferences ,is_user_field, company_type', 'safe'),
 	            array('tenant, tenant_agent,logo,card_count', 'default', 'setOnEmpty' => true, 'value' => null),
 	            // The following rule is used by search().
 	            // @todo Please remove those attributes that should not be searched.
@@ -169,7 +168,8 @@ WHERE u.id=c.tenant AND c.id !=1";
             'user_first_name' => 'First Name',
             'user_last_name' => 'Last Name',
             'user_email' => 'Email',
-            'user_contact_number' => 'Contact Number'
+            'user_contact_number' => 'Contact Number',
+            'company_type' => 'Company Type'
         );
     }
 

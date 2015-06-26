@@ -81,7 +81,7 @@ class TenantController extends Controller {
                 $userModel = new User();
                 $companyModel = new Company();
                 $photo = new Photo();
-
+                        
                 $photolastId = 0;
                 if (isset($_POST['TenantForm']['photo']) && $_POST['TenantForm']['photo'] != "") {
                     $photolastId = $_POST['TenantForm']['photo'];
@@ -140,9 +140,12 @@ class TenantController extends Controller {
                         $userModel->save();
                         $userLastID = $userModel->id;
                         //echo ":userModel:".$userLastID;
-
-                        $tenantModel->id = $comapanylastId;
-						$tenantModel->is_deleted = 0;
+                        
+                        
+                        $userModel->timezone_id = $_POST['TenantForm']['timezone_id'];
+                        
+			$tenantModel->id = $comapanylastId;
+			$tenantModel->is_deleted = 0;
                         $tenantModel->created_by = Yii::app()->user->id;
                         if ($tenantModel->validate()) {
                             $tenantModel->save();

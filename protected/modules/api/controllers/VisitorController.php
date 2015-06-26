@@ -32,7 +32,7 @@ class VisitorController extends RestfulController {
                     $this->sendResponse(200, CJSON::encode($result));
                 }
             } elseif (yii::app()->request->isPutRequest) {
-                $visitor_token_user= $this->checkAuthVisitor();
+                $visitor_token_user = $this->checkAuthVisitor();
                 $data = file_get_contents("php://input");
                 $data = CJSON::decode($data);
                 $visitor = Visitor::model()->findByAttributes(array('email' => $data['email']));
@@ -55,7 +55,7 @@ class VisitorController extends RestfulController {
                 }
             } else {
                 $email = $_GET['email'];
-                $visitor_token_user= $this->checkAuthVisitor();
+                $visitor_token_user = $this->checkAuthVisitor();
                 $visitor = Visitor::model()->findByAttributes(array('email' => $email));
                 if ($visitor) {
                     $result = $this->populatevisitor($visitor);
@@ -70,10 +70,10 @@ class VisitorController extends RestfulController {
         }
     }
 
-    public function actionLogout(){
+    public function actionLogout() {
         try {
             $token_user = $this->checkAuth();
-            $visitor_token_user= $this->checkAuthVisitor();
+            $visitor_token_user = $this->checkAuthVisitor();
             if (Yii::app()->request->getParam('email')) {
                 $email = Yii::app()->request->getParam('email');
                 $visitor = Visitor::model()->findByAttributes(array('email' => $email));
@@ -92,6 +92,73 @@ class VisitorController extends RestfulController {
         } catch (Exception $ex) {
             $this->sendResponse(500, CJSON::encode(array('responseCode' => 500, 'errorCode' => 'INTERNAL_SERVER_ERROR', 'errorDescription' => 'something went wrong')));
         }
+    }
+
+    public function actionRequestPassword() {
+        try {
+            $token_user = $this->checkAuth();
+            if (Yii::app()->request->getParam('email')) {
+                $email = Yii::app()->request->getParam('email');
+                $visitor = Visitor::model()->findByAttributes(array('email' => $email));
+                if ($visitor) {
+                    $visitor->reset_token = $token = md5(uniqid(mt_rand(), true));
+                    if ($visitor->save(false)) {
+                        $this->sendResponse(200);
+                    }
+                }else{
+                    $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'VISITOR_NOT_FOUND', 'errorDescription' => 'Requested Visitor not found')));
+                }
+
+            } else {
+                $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_PARAMETER', 'errorDescription' => 'GET parameter required for action')));
+            }
+        } catch (Exception $ex) {
+
+            $this->sendResponse(500, CJSON::encode(array('responseCode' => 500, 'errorCode' => 'INTERNAL_SERVER_ERROR', 'errorDescription' => 'something went wrong')));
+        }
+
+
+    }
+
+    public function actionResetPassword() {
+        try {
+            $token_user = $this->checkAuth();
+            if (Yii::app()->request->getParam('email')) {
+                $email = Yii::app()->request->getParam('email');
+            }else{
+                $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_PARAMETER', 'errorDescription' => 'GET parameter required for action')));
+            }
+            if(yii::app()->request->isPutRequest){
+                $data = file_get_contents("php://input");
+                $data = CJSON::decode($data);
+                $visitor = Visitor::model()->findByAttributes(array('email' => $email));
+                if ($visitor) {
+                    if($visitor->reset_token != NULL) {
+                        $visitor->password = $data['password'];
+                        $visitor->repeatpassword = $data['password'];
+                        $visitor->contact_postcode = 0;
+                        $visitor->reset_token = NULL;
+                        if ($visitor->save()) {
+                            $this->sendResponse(200);
+                        }else{
+                            $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'UNAUTHORISED', 'errorDescription' => 'unauthorized request')));
+                        }
+                    }else{
+                        $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'UNAUTHORISED', 'errorDescription' => 'unauthorized request')));
+                    }
+                }else{
+                    $this->sendResponse(404, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'VISITOR_NOT_FOUND', 'errorDescription' => 'Requested Visitor not found')));
+                }
+
+            } else {
+                $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_PARAMETER', 'errorDescription' => 'GET parameter required for action')));
+            }
+        } catch (Exception $ex) {
+
+            $this->sendResponse(500, CJSON::encode(array('responseCode' => 500, 'errorCode' => 'INTERNAL_SERVER_ERROR', 'errorDescription' => 'something went wrong')));
+        }
+
+
     }
 
     public function validateEmail($email) {

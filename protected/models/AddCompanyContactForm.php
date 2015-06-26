@@ -10,6 +10,7 @@ class AddCompanyContactForm extends CFormModel {
     public $lastName;
     public $email;
     public $mobile;
+    public $companyType;
 
     /**
      * Declares the validation rules.
@@ -19,7 +20,7 @@ class AddCompanyContactForm extends CFormModel {
     public function rules() {
         return array(
             // username and password are required
-            array('companyName, firstName, lastName, email, mobile', 'required'),
+            array('companyName, firstName, lastName, email, mobile, companyType', 'required'),
             array('email', 'email'),
             array('email', 'emailUnique', 'add_company_contact'),
         );
@@ -34,7 +35,8 @@ class AddCompanyContactForm extends CFormModel {
             'firstName'     => 'First Name',
             'lastName'      => 'Last Name',
             'email'         => 'Email',
-            'mobile'    => 'Mobile',
+            'mobile'        => 'Mobile',
+            'companyType'   => 'Company Type',
         );
     }
 

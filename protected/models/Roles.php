@@ -21,7 +21,7 @@ class Roles extends CActiveRecord
         const ROLE_OPERATOR = 8;
         const ROLE_STAFFMEMBER = 9;
         const ROLE_VISITOR = 10;
-
+        
         const ROLE_ISSUING_BODY_ADMIN = 11;     // Same As Administrator with Access to VIC Issuing Module Functionality
         const ROLE_AIRPORT_OPERATOR = 12;       // Same Access Rights as Administrator with view of VIC Issuing Module Functionality
         CONST ROLE_AGENT_AIRPORT_ADMIN = 13;    //Same Access as CVMS Agent with Access to VIC Issuing Module

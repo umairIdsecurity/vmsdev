@@ -29,6 +29,8 @@ class Workstation extends CActiveRecord {
     public $moduleCorporate;
 
     public $moduleVic;
+    
+    public $timezone_id;
 
     /**
      * @return string the associated database table name
@@ -45,6 +47,7 @@ class Workstation extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('name', 'required'),
+            array('timezone_id','required','message' =>'Please select a timezone'),
             array('tenant','required','message' =>'Please select a {attribute}'),
             array('contact_number, card_type,moduleCorporate, moduleVic', 'safe'),
             array('contact_email_address', 'email'),
@@ -66,6 +69,7 @@ class Workstation extends CActiveRecord {
         return array(
             'userWorkstations' => array(self::HAS_MANY, 'UserWorkstation', 'workstation'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'created_by'),
+            'workstationTimezones' => array(self::BELONGS_TO, 'timezone', 'timezone_id'),
         );
     }
 
@@ -86,6 +90,7 @@ class Workstation extends CActiveRecord {
             'tenant' => 'Tenant',
             'tenant_agent' => 'Tenant Agent',
             'is_deleted' => 'Is Deleted',
+            'timezone_id' => 'Timezone'
         );
     }
 

@@ -1,31 +1,21 @@
 <?php
 
 /**
- * This is the model class for table "tenant".
+ * This is the model class for table "company_type".
  *
- * The followings are the available columns in table 'tenant':
- * @property string $id
+ * The followings are the available columns in table 'company_type':
+ * @property integer $id
+ * @property string $name
  * @property string $created_by
- * @property int $is_deleted
- *
- * The followings are the available model relations:
- * @property Company $id0
- * @property TenantContact[] $tenantContacts
  */
-class Tenant extends CActiveRecord
+class CompanyType extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
-    public $name;
-    public $code;
-    public $contact;
-    public $email_address;
-   
-      
 	public function tableName()
 	{
-		return 'tenant';
+		return 'company_type';
 	}
 
 	/**
@@ -36,12 +26,12 @@ class Tenant extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('id, created_by', 'required'),
-			array('id, created_by', 'length', 'max'=>20),
+			array('name', 'required'),
+			array('name', 'length', 'max'=>50),
+			array('created_by', 'length', 'max'=>20),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, created_by,name,code,contact,email_address,is_deleted', 'safe', 'on'=>'search'),
-                        array('id, created_by,name,code,contact,email_address,is_deleted', 'safe', 'on'=>'tenant_contact'),
+			array('id, name, created_by', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -53,8 +43,6 @@ class Tenant extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'id0' => array(self::BELONGS_TO, 'Company', 'id'),
-			'tenantContacts' => array(self::HAS_MANY, 'TenantContact', 'tenant'),
 		);
 	}
 
@@ -65,10 +53,8 @@ class Tenant extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
+			'name' => 'Name',
 			'created_by' => 'Created By',
-                        'is_deleted' => 'Is deleted',
-                        
-                        
 		);
 	}
 
@@ -90,20 +76,12 @@ class Tenant extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-        $criteria->with = array('id0');
+		$criteria->compare('id',$this->id);
+		$criteria->compare('name',$this->name,true);
+		$criteria->compare('created_by',$this->created_by,true);
 
-		$criteria->compare('t.id',$this->id,true);
-		$criteria->compare('t.created_by',$this->created_by,true);
-        $criteria->compare('t.is_deleted',0);
-        $criteria->compare('id0.name',$this->name,true);
-        $criteria->compare('id0.code',$this->code,true);
-        $criteria->compare('id0.contact',$this->contact,true);
-        $criteria->compare('id0.email_address',$this->email_address,true);
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
-            'sort' => array(
-                'defaultOrder' => 't.id DESC',
-            ),
 		));
 	}
 
@@ -111,10 +89,11 @@ class Tenant extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return Tenant the static model class
+	 * @return CompanyType the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
 		return parent::model($className);
 	}
+
 }

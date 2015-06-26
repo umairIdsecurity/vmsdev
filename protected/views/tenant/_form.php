@@ -311,6 +311,22 @@ $currentLoggedUserId = $session['id'];
                 </div> <!-- password-border -->
 
             </td>
+            
+            
+            <tr>
+                <td><?php echo $form->labelEx($model, 'timezone_id'); ?></td>
+                <td>
+                    <?php echo $form->dropDownList(
+                            $model,
+                            'timezone_id',
+                            CHtml::listData(Timezone::model()->findAll(),
+                                    'id',
+                                    'timezone_name'),
+                                    array('empty'=>'Please select a timezone')
+                    );?>
+                </td>
+                <td><?php echo $form->error($model, 'timezone_id',array('style'=>'text-transform:none;')); ?></td>
+            </tr>
 
 
                 </table>

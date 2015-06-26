@@ -18,7 +18,9 @@ class UserIdentity extends CUserIdentity {
     private $_id;
 
     public function authenticate() {
+        
         $user = User::model()->find('LOWER(email)=?', array(strtolower($this->username)));
+        
         if ($user === null) {
             $this->errorCode = self::ERROR_UNKNOWN_IDENTITY;
         } else if (!$user->validatePassword($this->password, $user->password)) {
@@ -33,8 +35,6 @@ class UserIdentity extends CUserIdentity {
             } else {
                 $this->setState('tenant_agent', $user->tenant_agent);
             }
-
-
             $session = new CHttpSession;
             $session->open();
             $session['id'] = $user->id;
@@ -43,7 +43,7 @@ class UserIdentity extends CUserIdentity {
             $session['tenant'] = $user->tenant;
 
             $session['tenant_agent'] = $user->tenant_agent;
-
+            
             $this->errorCode = self::ERROR_NONE;
         }
 

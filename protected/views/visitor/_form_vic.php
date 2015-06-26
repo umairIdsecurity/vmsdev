@@ -105,7 +105,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                                     <?php if ($model['photo'] != NULL) { ?>
                                         <style>
                                             .ajax-upload-dragdrop {
-                                                background: url('<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($dataId) ?>') no-repeat center top;
+                                                background: url('<?php echo Photo::model()->returnVisitorPhotoRelativePath($dataId) ?>') no-repeat center top;
                                                 background-size: 137px 190px !important;
                                             }
                                         </style>
@@ -310,7 +310,11 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                         </tr>  
                         <tr>
                             <td>
-                                <?php echo $form->dropDownList($model, 'contact_state', Visitor::$AUSTRALIAN_STATES, array('empty' => 'State', 'style' => 'width: 140px;')); ?>
+                                <?php if($model->contact_country == Visitor::AUSTRALIA_ID ){
+                                    echo $form->dropDownList($model, 'contact_state', Visitor::$AUSTRALIAN_STATES, array('empty' => 'State', 'style' => 'width: 140px;'));
+                                } else {
+                                    echo $form->textField($model, 'contact_state', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'State', 'style' => 'width: 62px;'));
+                                } ?>
                                 <?php echo $form->textField($model, 'contact_postcode', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Postcode', 'style' => 'width: 62px;')); ?>
                                 <span class="required">*</span>
                                 <?php echo $form->error($model, 'contact_state'); ?>
@@ -756,7 +760,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                             $.each(r.data, function (index, value) {
                                 document.getElementById('photoPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
-                                $(".ajax-upload-dragdrop").css("background", "url(<?php echo Yii::app()->request->baseUrl; ?>" + value.relative_path + ") no-repeat center top");
+                                $(".ajax-upload-dragdrop").css("background", "url(" + value.relative_path + ") no-repeat center top");
                                 $(".ajax-upload-dragdrop").css({"background-size": "132px 152px"});
                             });
                             $("#closeCropPhoto").click();

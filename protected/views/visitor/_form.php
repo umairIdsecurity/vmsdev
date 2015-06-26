@@ -1,5 +1,4 @@
 <?php
-
 $session = new CHttpSession;
 $dataId = '';
 
@@ -139,15 +138,15 @@ $form = $this->beginWidget('CActiveForm', array(
 
 
     <tr>
-
+		
         <td id="uploadRow" rowspan="7" style='width:300px;padding-top:10px;'>
             <table style="width:300px;float:left;min-height:320px;">
-                <input type="hidden" id="Visitor_photo" name="Visitor[photo]"
-                       value="<?php echo $model['photo']; ?>">
+                <input type="hidden" id="Visitor_photo" name="Visitor[photo]" value="<?php echo $model['photo']; ?>">
+                
                 <?php if ($model['photo'] != NULL) { ?>
                     <style>
                         .ajax-upload-dragdrop {
-                            background: url('<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($dataId) ?>') no-repeat center top;
+                            background: url('<?php echo Photo::model()->returnVisitorPhotoRelativePath($dataId) ?>') no-repeat center top !important;
                             background-size: 137px 190px !important;
                         }
                     </style>

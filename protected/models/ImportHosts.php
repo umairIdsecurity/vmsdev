@@ -182,6 +182,8 @@ class ImportHosts extends CActiveRecord
 
 			'AuditTrailBehaviors'=>
 				'application.components.behaviors.AuditTrailBehaviors',
+                    'DateTimeZoneAndFormatBehavior' => 'application.components.DateTimeZoneAndFormatBehavior',
 		);
 	}
+
 }

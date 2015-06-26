@@ -126,6 +126,7 @@ class UserController extends Controller
         $session = new CHttpSession;
 
         if (isset($_POST['User'])) {
+            
             if ($_POST['User']['password'] == '') {
                 $_POST['User']['password'] = $model->password;
             } else {
@@ -142,7 +143,7 @@ class UserController extends Controller
                 $this->redirect(array('admin', 'vms' => $model->is_avms_user() ? 'avms' : 'cvms'));
             }
         }
-
+        
         $this->render('update', array(
             'model' => $model,
         ));

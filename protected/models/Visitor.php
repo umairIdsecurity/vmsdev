@@ -559,6 +559,15 @@ class Visitor extends CActiveRecord {
             //disable if action is update
         }
     }
+    
+    public function behaviors() {
+        return array(
+            'AuditTrailBehaviors'=>
+                'application.components.behaviors.AuditTrailBehaviors',
+            'DateTimeZoneAndFormatBehavior' => 'application.components.DateTimeZoneAndFormatBehavior',
+        );
+    }
+   
 
     public function findAllCompanyWithSameTenant($tenantId) {
         $session = new CHttpSession;
@@ -700,14 +709,7 @@ class Visitor extends CActiveRecord {
 
     }
 
-    public function behaviors()
-    {
-        return array(
 
-            'AuditTrailBehaviors'=>
-                'application.components.behaviors.AuditTrailBehaviors',
-        );
-    }
 
     public function getFullName() {
         return trim($this->first_name . ' ' . $this->last_name);

@@ -80,7 +80,7 @@ class WorkstationController extends Controller {
      */
     public function actionCreate() {
         $model = new Workstation;
-
+        
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 

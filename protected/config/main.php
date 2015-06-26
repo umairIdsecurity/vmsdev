@@ -8,7 +8,7 @@ Yii::setPathOfAlias('helpers','helpers');
 // This is the main Web application configuration. Any writable
 // CWebApplication properties can be configured here.
 $result = CMap::mergeArray(
-                array(
+        array(
             'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . '..',
             'name' => 'Visitor Management System v<version_number>',
             // preloading 'log' component
@@ -17,7 +17,9 @@ $result = CMap::mergeArray(
 
             // set target language to be Australian
             'language' => 'en-AU',
-
+            
+            //'timeZone' => date_default_timezone_get(),
+            
             // set source language to be Australian
             'sourceLanguage' => 'en-AU',
 
@@ -157,7 +159,7 @@ $result = CMap::mergeArray(
                     // uncomment the following to show log messages on web pages
                     /* array(
                       'class'=>'CWebLogRoute',
-                      ), */
+                      ),*/
                     ),
                 ),
             ),

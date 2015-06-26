@@ -294,6 +294,3 @@ function getCompany($id) {
 	
 }
 ?>
-<script>
-    
-</script>

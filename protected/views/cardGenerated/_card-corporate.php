@@ -139,7 +139,7 @@ if($model->card_type ==  CardType::CONTRACTOR_VISITOR){
             </td>
             <td>
                 <div style="float:left;width:256px; border:1px solid #000; height:410px;">
-                    <div style="font-size: 20px;  margin-top: 12px;  padding: 20px;text-align: center;"><?=$backText?>
+                    <div style="font-size: 20px;  margin-top: 12px;  padding: 5px;text-align: center;"><?=$backText?>
                     </div>
                 </div>
             </td>
@@ -190,7 +190,7 @@ if($model->card_type ==  CardType::CONTRACTOR_VISITOR){
 
                 </div>
                 <div style="float:left;width:258px; border:1px solid #000; height:410px;">
-                    <div style="font-size: 20px;  margin-top: 12px;  padding: 20px;text-align: center;"><?=$backText?>
+                    <div style="font-size: 20px;  margin-top: 12px;  padding: 5px;text-align: center;"><?=$backText?>
                     </div>
                 </div>
 <?php
@@ -237,7 +237,7 @@ if($model->card_type ==  CardType::CONTRACTOR_VISITOR){
 
     </div>
     <div style="float:left;width:258px; border:1px solid #000; height:410px;">
-        <div style="font-size: 20px;  margin-top: 12px;  padding: 20px;text-align: center;"><?=$backText?>
+        <div style="font-size: 20px;  margin-top: 12px;  padding: 5px;text-align: center;"><?=$backText?>
         </div>
     </div>
 <?php }

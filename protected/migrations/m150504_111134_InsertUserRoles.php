@@ -28,10 +28,10 @@ class m150504_111134_InsertUserRoles extends CDbMigration
 
 	public function safeDown()
 	{
-        $this->delete('roles', "`id` = ".Roles::ROLE_ISSUING_BODY_ADMIN);
-        $this->delete('roles', "`id` = ".Roles::ROLE_AIRPORT_OPERATOR);
-        $this->delete('roles', "`id` = ".Roles::ROLE_AGENT_AIRPORT_ADMIN);
-        $this->delete('roles', "`id` = ".Roles::ROLE_AGENT_AIRPORT_OPERATOR);
+        $this->delete('roles', "id = ".Roles::ROLE_ISSUING_BODY_ADMIN);
+        $this->delete('roles', "id = ".Roles::ROLE_AIRPORT_OPERATOR);
+        $this->delete('roles', "id = ".Roles::ROLE_AGENT_AIRPORT_ADMIN);
+        $this->delete('roles', "id = ".Roles::ROLE_AGENT_AIRPORT_OPERATOR);
 	}
 
 	/*

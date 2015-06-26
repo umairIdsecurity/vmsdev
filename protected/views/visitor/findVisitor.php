@@ -14,9 +14,9 @@ $session = new CHttpSession;
 $visitorName = $_GET['id'];
 
 if (isset($_GET['tenant_agent']) && $_GET['tenant_agent'] != '') {
-    $tenant_agent = 'tenant_agent="' . $_GET['tenant_agent'] . '" and';
+    $tenant_agent = "tenant_agent='" . $_GET["tenant_agent"] . "' and";
 } else {
-    $tenant_agent = '(tenant_agent IS NULL or tenant_agent =0 or tenant_agent="") and';
+    $tenant_agent = "(tenant_agent IS NULL or tenant_agent =0 or tenant_agent='') and";
 }
 $model = new Visitor;
 $criteria = new CDbCriteria;
@@ -28,19 +28,19 @@ if($_GET['tenant'] && $_GET['tenant']!=''){
 }
 
 
-$conditionString = $tenant. $tenant_agent . ' (CONCAT(first_name," ",last_name) like "%' . $visitorName
-                    . '%" or first_name like "%' . $visitorName
-                    . '%" or last_name like "%' . $visitorName
-                    . '%" or email like "%' . $visitorName
-                    . '%" or identification_document_no LIKE "%' . $visitorName
-                    . '%" or identification_alternate_document_no1 LIKE "%' . $visitorName
-                    . '%" or identification_alternate_document_no2 LIKE "%' . $visitorName
-                    . '%")';
+	 $conditionString = $tenant. $tenant_agent . " (CONCAT(first_name,' ',last_name) like '%" . $visitorName
+	                     . "%' or first_name like '%" . $visitorName
+	                     . "%' or last_name like '%" . $visitorName
+	                     . "%' or email like '%" . $visitorName
+	                     . "%' or identification_document_no LIKE '%" . $visitorName
+	                     . "%' or identification_alternate_document_no1 LIKE '%" . $visitorName
+	                     . "%' or identification_alternate_document_no2 LIKE '%" . $visitorName
+	                     . "%')";
 
 if (isset($_GET['cardType']) && $_GET['cardType'] > CardType::CONTRACTOR_VISITOR) {
-    $conditionString .= ' AND profile_type = "' . Visitor::PROFILE_TYPE_VIC . '" ';
+    $conditionString .= " AND profile_type = '" . Visitor::PROFILE_TYPE_VIC . "'";
 } else {
-    $conditionString .= ' AND profile_type = "' . Visitor::PROFILE_TYPE_CORPORATE . '" ';
+    $conditionString .= " AND profile_type = '" . Visitor::PROFILE_TYPE_CORPORATE . "'";
 }
 
 
@@ -87,7 +87,10 @@ $this->widget('zii.widgets.grid.CGridView', array(
 ));
 
 function checkIfanActiveVisitExists($visitorId) {
-    $results = Visit::model()->countByAttributes(array("visitor" => $visitorId, "visit_status" => "1"));
+    $results = Visit::model()->countByAttributes(array("visitor" => $visitorId, "visit_status" => VisitStatus::ACTIVE));
+    if ($results == 0) {
+        $results = Visit::model()->countByAttributes(array("visitor" => $visitorId, "visit_status" => VisitStatus::AUTOCLOSED));
+    }
     return $results;
 }
 
@@ -100,14 +103,16 @@ function displaySelectVisitorButton($visitorData) {
 }
 
 function returnVisitorDetailLink($visitorId) {
-    $visit = Visit::model()->findByAttributes(array('visitor'=>$visitorId));
-
-    if($visit){
-        $url = Yii::app()->baseUrl.'/index.php?r=visit/detail&id=' . $visit->id;
+    $criteria = new CDbCriteria;
+    $criteria->order = 'id DESC';
+    $visit = Visit::model()->findByAttributes(array('visitor' => $visitorId), $criteria);
+    //$visit = Yii::app()->db->createCommand("SELECT * FROM visit WHERE visitor = '".$visitorId."' ORDER BY ' DESC")->queryRow();
+    if (!empty($visit)) {
+        $url = Yii::app()->baseUrl.'/index.php?r=visit/detail&id=' . $visit['id'];
     }
 
     if (isset($url)) {
-        $status = VisitStatus::$VISIT_STATUS_LIST[$visit->visit_status];
+        $status = VisitStatus::$VISIT_STATUS_LIST[$visit['visit_status']];
         return '<span style="font-size:12px;">Status: <a class="linkToVisitorDetailPage" href="' . $url . '" style="display:inline;text-decoration:underline !important;">' . $status . '</a></span>';
     }
 }

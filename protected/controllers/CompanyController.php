@@ -102,13 +102,11 @@ class CompanyController extends Controller {
 	                } else {
 	                    Yii::app()->user->setFlash('error', 'Company code has already been taken');
 	                }
-				}
-				else{
+				} else {
 
 					if ($companyService->save($model, $session['tenant'], $session['role'], 'create')) {
 
                         $lastId = $model->id;
-
                         $userModel = new User();
 
                         $userModel->first_name = $model->user_first_name;
@@ -215,6 +213,7 @@ class CompanyController extends Controller {
                     Yii::app()->user->setFlash('error', 'Company code has already been taken');
                 }
             }
+            $model->company_type = $_POST['Company']['company_type'];
 
             if (is_null($errorFlashMessage = Yii::app()->user->getFlash('error'))) {
 
@@ -236,36 +235,6 @@ class CompanyController extends Controller {
                     $userModel->asic_expiry_month = 10;
                     $userModel->asic_expiry_year = 15;
                     $userModel->save(); 
-
-                    /*if(!empty($userModel)){
-                        $userModel->first_name = $model->user_first_name;
-                        $userModel->last_name = $model->user_last_name;
-                        $userModel->email = $model->user_email;
-                        $userModel->contact_number = $model->user_contact_number;
-                        $userModel->asic_no = 10;
-                        $userModel->asic_expiry_day = 10;
-                        $userModel->asic_expiry_month = 10;
-                        $userModel->asic_expiry_year = 15;
-                        $userModel->save();
-                    }else{
-                        $userModel = new User();
-
-                        $userModel->first_name = $model->user_first_name;
-                        $userModel->last_name = $model->user_last_name;
-                        $userModel->email = $model->user_email;
-                        $userModel->contact_number = $model->user_contact_number;
-
-                        $userModel->user_type = 2;
-                        $userModel->password = 12345;
-                        $userModel->role = 10;
-                        $userModel->company = $model->id;
-                        $userModel->asic_no = 10;
-                        $userModel->asic_expiry_day = 10;
-                        $userModel->asic_expiry_month = 10;
-                        $userModel->asic_expiry_year = 15;
-                        $userModel->save();
-                    }*/
-
 
                     switch ($session['role']) {
                         case Roles::ROLE_SUPERADMIN:
@@ -302,7 +271,7 @@ class CompanyController extends Controller {
         if(Yii::app()->request->isPostRequest)
         {
 
-            $sql = "UPDATE `company` SET `is_deleted`=1 WHERE `id`=$id";
+            $sql = "UPDATE company SET is_deleted=1 WHERE id=$id";
             $connection=Yii::app()->db;
             $connection->createCommand($sql)->execute();
 
@@ -411,6 +380,7 @@ class CompanyController extends Controller {
                 $company->email_address = $formInfo['email'];
                 $company->mobile_number = $formInfo['mobile'];
                 $company->tenant = $session['tenant'];
+                $company->company_type = $formInfo['companyType'];
                 //todo: update Company Code later
                 $company->code = strtoupper(substr($company->name, 0, 3));
                 $companyService = new CompanyServiceImpl();

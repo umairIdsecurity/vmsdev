@@ -124,6 +124,20 @@ $session = new CHttpSession;
             <td><?php echo $form->textField($model, 'contact_email_address', array('size' => 50, 'maxlength' => 50)); ?></td>
             <td><?php echo $form->error($model, 'contact_email_address',array('style'=>'text-transform:none;')); ?></td>
         </tr>
+        <tr>
+            <td><?php echo $form->labelEx($model, 'timezone_id'); ?></td>
+            <td>
+                <?php echo $form->dropDownList(
+                        $model,
+                        'timezone_id',
+                        CHtml::listData(Timezone::model()->findAll(),
+                                'id',
+                                'timezone_name'),
+                                array('empty'=>'Please select a timezone')
+                );?>
+            </td>
+            <td><?php echo $form->error($model, 'timezone_id',array('style'=>'text-transform:none;')); ?></td>
+        </tr>
         <?php
         if (!empty($_GET['id']) && Yii::app()->urlManager->parseUrl(Yii::app()->request) == 'workstation/update'){
             ?>

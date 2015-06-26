@@ -93,6 +93,9 @@ $userRole = $session['role'];
                                 } else {
                                     $logo = Yii::app()->controller->assetsBase . '/images/companylogohere1.png';
                                 }
+                            }else{
+
+                                $logo = Yii::app()->controller->assetsBase . '/images/companylogohere1.png';
                             }
                         } else {
                             $logo = Yii::app()->controller->assetsBase . '/images/companylogohere1.png';

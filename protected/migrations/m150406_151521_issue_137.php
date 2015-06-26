@@ -8,16 +8,16 @@ class m150406_151521_issue_137 extends CDbMigration
 
             $db = Yii::app()->db;
             /* update */
-            $checkIfColumnExists = $db->createCommand("SHOW COLUMNS FROM `company` LIKE 'card_number'");
+            $checkIfColumnExists = $db->createCommand("SHOW COLUMNS FROM company LIKE 'card_number'");
             $result = $checkIfColumnExists->query();
 
-            $checkIfColumnExists2 = $db->createCommand("SHOW COLUMNS FROM `card_generated` LIKE 'card_count'");
+            $checkIfColumnExists2 = $db->createCommand("SHOW COLUMNS FROM card_generated LIKE 'card_count'");
             $result2 = $checkIfColumnExists2->query();
 
 
             if ($result->rowCount == 0 && $result2->rowCount != 0) {
-                $sql = 'ALTER TABLE `card_generated` ADD COLUMN `card_number` VARCHAR(10) NULL AFTER `id`;
-                    ALTER TABLE `company` ADD COLUMN `card_count` BIGINT NULL AFTER `is_deleted`;
+                $sql = 'ALTER TABLE card_generated ADD COLUMN card_number VARCHAR(10) NULL AFTER id;
+                    ALTER TABLE company ADD COLUMN card_count BIGINT NULL AFTER is_deleted;
                     ';
                 $db->createCommand($sql)->execute();
 
@@ -34,12 +34,12 @@ class m150406_151521_issue_137 extends CDbMigration
                     $max = $command->query();
 
                     foreach ($max as $maxRow) {
-                        $sql = 'update company set card_count="' . $maxRow['max'] . '" where id=(select company from `user`'
+                        $sql = 'update company set card_count="' . $maxRow['max'] . '" where id=(select company from user'
                             . 'where id="' . $row['tenant'] . '")';
                         $db->createCommand($sql)->execute();
                     }
                 }
-                $sql = 'ALTER TABLE `card_generated` DROP COLUMN `company_code`, DROP COLUMN `card_count`; ';
+                $sql = 'ALTER TABLE card_generated DROP COLUMN company_code, DROP COLUMN card_count; ';
                 $db->createCommand($sql)->execute();
                 echo "<br>Done patch for issue137";
             } else {

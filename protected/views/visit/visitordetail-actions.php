@@ -10,7 +10,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
     <ul>
 
         <li class='has-sub' id="closevisitLi" style="<?php
-        if (in_array($model->visit_status, array(VisitStatus::ACTIVE)) && $session['role'] != Roles::ROLE_STAFFMEMBER) {
+        if (in_array($model->visit_status, array(VisitStatus::ACTIVE, VisitStatus::EXPIRED)) && $session['role'] != Roles::ROLE_STAFFMEMBER) {
             echo "display:block;";
         } else {
             echo "display:none;";
@@ -33,7 +33,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                     ?>
 
                                     <?php
-                                    if (in_array($model->card_type, array(CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_MULTIDAY, CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MANUAL))) {
+                                    if (in_array($model->card_type, [CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_MULTIDAY, CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MANUAL])) {
                                         $this->renderPartial('closevisit-vic', array(
                                             'model' => $model,
                                             'visitorModel' => $visitorModel,
@@ -53,8 +53,8 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                     }
                                     ?>
 
-                                    <input type='submit' value='Close Visit' class="complete" id="closeVisitBtn" style=""/>
-
+                                    <input type='submit' id="closeVisitSubmit" style="display: none;" />
+                                    <input type="submit" id="closeVisitBtn" class="complete" value="Close Visit" />
                                     <div style="display:inline;font-size:12px;"><b>or</b><a id="cancelActiveVisitButton" href="" class="cancelBtnVisitorDetail">Cancel</a></div>
                                     <!-- <button class="neutral greenBtn" id="cancelActiveVisitButton">Cancel</button>-->
                                     <?php $this->endWidget(); ?>
@@ -64,10 +64,8 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                     </table>
                 </li>
             </ul>
-
         </li>
-
-        <?php if (in_array($model->visit_status, array(VisitStatus::PREREGISTERED, VisitStatus::SAVED, VisitStatus::CLOSED, VisitStatus::AUTOCLOSED, VisitStatus::EXPIRED))) { ?>
+        <?php if (in_array($model->visit_status, [VisitStatus::PREREGISTERED, VisitStatus::SAVED, VisitStatus::CLOSED, VisitStatus::AUTOCLOSED])) { ?>
 
             <li class='has-sub' id="activateLi"><span class="log-current">Log Visit</span>
                 <ul>
@@ -141,7 +139,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                 $disabled = 'disabled';
                             }
                             ?>
-                            <input type="submit" style="width: 235px !important;" <?php echo $disabled; ?> value="Preregister Visit for autoclosed visit" class="complete"/>
+                            <input type="submit" style="width: 235px !important;" <?php echo $disabled; ?> value="Preregister Visit" class="complete"/>
                         <?php else:
                             if ($model->card_type == CardType::MANUAL_VISITOR && isset($model->date_check_in) && strtotime($model->date_check_in) < strtotime(date("d-m-Y"))) :
                                 ?>
@@ -150,7 +148,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                 <button type="button" id="registerNewVisit" class="greenBtn">Activate Visit</button>
                                 <div style="display:inline;font-size:12px;">
                                 <b>or </b>
-                                <a href="" class="cancelBtnVisitorDetail">Cancel</a>
+                                <?php echo CHtml::link('Cancel', $this->createAbsoluteUrl('visit/view'), array('class' => 'cancelBtnVisitorDetail')); ?>
                                 </div>
                             <?php endif; ?>
                         <?php endif; ?>
@@ -190,7 +188,51 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             $(this).find('#Visit_date_check_in').removeAttr('disabled');
         });
 
+        $(document).on('click', '#closeVisitBtn', function(e) {
+            e.preventDefault();
+            var flag = true;
+            var card_option = $('#Visit_card_option').val();
+            $('#police_number_required').hide();
+            $('#card_lost_declaration_required').hide();
+
+            if (typeof card_option != 'undefined' && card_option == 'Lost/Stolen') {
+                var card_lost_declaration_file = $('#Visit_card_lost_declaration_file').val();
+                var police_report_no = $('#Visit_police_report_number').val();
+                if (card_lost_declaration_file == '') {
+                    $('#card_lost_declaration_required').show();
+                    return false;
+                }
+
+                if (police_report_no == '') {
+                    $('#police_number_required').show();
+                    return false;
+                }
+
+                if (flag == true) {
+                    $('#closeVisitSubmit').click();
+                }
+            } else {
+                $('#closeVisitSubmit').click();
+            }
+        });
+
         $(document).on('click', '#registerNewVisit', function (e) {
+
+            var imgsrc;
+            $("#photoPreview").each(function() {
+                imgsrc = this.src;
+            });
+            var profileImage = '<?php echo $visitorModel->photo;?>';
+            var isDefault = imgsrc.search('companylogohere1.png');
+            if( isDefault > 0 || profileImage == '' || !profileImage) {
+                <?php if($model->card_type != CardType::VIC_CARD_SAMEDATE ) { ?>
+                $("#Visitor_photo_em").attr('style', 'margin-right:84px ; margin-bottom:0px;');
+                $("#editImageBtn.editImageBtn").attr('style', 'margin-top:-5px !important; margin-right:84px ; margin-bottom:0px;');
+                $("#cropImageBtn.editImageBtn").attr('style', 'margin-top:-5px !important; margin-right:84px ; margin-bottom:0px;');
+                return;
+                <?php } ?>
+            }
+
             e.preventDefault();
             $this = $(this);
             var flag = true;

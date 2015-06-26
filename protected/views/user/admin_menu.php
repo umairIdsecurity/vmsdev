@@ -346,9 +346,9 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
 
             <?php } else {
                 ?>
-                <!-- menu for Visitors -->
+                <!-- menu for CVMS Visitors -->
                 <li class='has-sub'><a class='managevisitorrecords'
-                                       href='<?php echo Yii::app()->createUrl('visitor/admin'); ?>'><span>Visitors</span></a>
+                                       href='<?php echo Yii::app()->createUrl('visitor/admin&vms=cvms'); ?>'><span>CVMS Visitors</span></a>
 
                     <ul <?php
                     if ($this->id == 'visitor' || $this->action->id == 'exportvisitorrecords') {
@@ -367,7 +367,21 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                         <li><a href='<?php echo Yii::app()->createUrl('visitor/importVisitHistory'); ?>'><span>Import Visit History</span></a>
                         </li>
                     </ul>
-                </li><!-- menu for Visitors -->
+                </li><!-- menu for CVMS Visitors -->
+
+                <!-- menu for AVMS Visitors -->
+                <li class='has-sub'>
+                    <?php echo CHtml::link('AVMS Visitors', array('visitor/admin&vms=avms'),
+                        array('class' => 'manageavmsvisitor')) ?>
+                    <ul <?php
+                    if ($this->id == 'visitor' || $this->action->id == 'admin&vms=avms') {
+                        echo "style='display:block ;'";
+                    }
+                    ?>>
+                        <li><a href='<?php echo Yii::app()->createUrl('visitor/admin&vms=avms'); ?>'
+                               class="addSubMenu"><span>AVMS Visitors</span></a></li>
+                    </ul>
+                </li><!-- menu for AVMS Visitors -->
             <?php }
             // Show Visitor Types to All Admins only
             if (Yii::app()->user->role == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_ISSUING_BODY_ADMIN) {
@@ -527,6 +541,8 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     <li><a href='<?php echo Yii::app()->createUrl('reports/visitorsVicByType'); ?>'><span>Total VICs by Visitor Type</span></a></li>
                 
                     <li><a href='<?php echo Yii::app()->createUrl('reports/visitorsVicByCardType'); ?>'><span>Total VICs by Card Type</span></a></li>
+
+                    <li><a href='<?php echo Yii::app()->createUrl('reports/conversionVicToAsic'); ?>'><span>Conversion of Total VICs to ASIC</span></a></li>
                 </ul>
             </li>
             <!-- menu for AVMS Reports -->
@@ -585,6 +601,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
 <script>
     $(document).ready(function () {
         $('#addContactLink').on('click', function(e) {
+            $('.errorMessage').hide();
             $('#myModalLabel').html('Add Contact To Company');
             $("tr.company_contact_field").addClass('hidden');
             $("#AddCompanyContactForm_email").val("");
@@ -597,6 +614,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
         });
 
         $('#addCompanyLink').on('click', function(e) {
+            $('.errorMessage').hide();
             $('#myModalLabel').html('Add Company');
             $('#AddCompanyContactForm_companyName').enable();
             $("tr.company_contact_field").addClass("hidden");

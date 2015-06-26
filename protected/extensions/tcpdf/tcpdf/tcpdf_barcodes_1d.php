@@ -1073,7 +1073,7 @@ class TCPDFBarcode {
 		$keys_a .= chr(20).chr(21).chr(22).chr(23).chr(24).chr(25).chr(26).chr(27).chr(28).chr(29);
 		$keys_a .= chr(30).chr(31);
 		// ASCII characters for code B (ASCII 32 - 127)
-		$keys_b = ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~'.chr(127);
+		$keys_b = ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_abcdefghijklmnopqrstuvwxyz{|}~'.chr(127);
 		// special codes
 		$fnc_a = array(241 => 102, 242 => 97, 243 => 96, 244 => 101);
 		$fnc_b = array(241 => 102, 242 => 97, 243 => 96, 244 => 100);

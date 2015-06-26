@@ -31,9 +31,8 @@ class Company extends CActiveRecord {
 	public $user_contact_number;
     public $is_user_field;
 
-
     protected $tenantQuery = "SELECT COUNT(c.id)
-FROM `user` u
+FROM user u
 LEFT JOIN company c ON u.company=c.id
 WHERE u.id=c.tenant AND c.id !=1";
 
@@ -80,7 +79,7 @@ WHERE u.id=c.tenant AND c.id !=1";
 	            array('email_address, website', 'length', 'max' => 50),
 	            array('contact', 'length', 'max' => 100),
 	            array('tenant', 'length', 'max' => 100),
-	            array('logo,is_deleted,company_laf_preferences ,is_user_field', 'safe'),
+	            array('logo,is_deleted,company_laf_preferences ,is_user_field, company_type', 'safe'),
 	            array('tenant, tenant_agent,logo,card_count', 'default', 'setOnEmpty' => true, 'value' => null),
 	            // The following rule is used by search().
 	            // @todo Please remove those attributes that should not be searched.
@@ -89,11 +88,15 @@ WHERE u.id=c.tenant AND c.id !=1";
 		}
 		else{
 			return array(
-	            array('name,code', 'required'),
+                //array('code', 'safe' , 'on' => 'visit_reason'),
+	            array('name', 'required'),
+
+                array('code', 'required', 'except' => 'preregistration'),
+
                 //array('user_first_name , user_last_name , user_email , user_contact_number', 'required' , 'on' => 'company_contact'),
 	//            array('code', 'unique'),
 	//            array('code', 'unique', 'criteria' => array(
-	//                    'condition' => '`tenant`=:tenant',
+	//                    'condition' => 'tenant=:tenant',
 	//                    'params' => array(
 	//                        ':tenant' => Yii::app()->user->tenant
 	//                    )
@@ -165,7 +168,8 @@ WHERE u.id=c.tenant AND c.id !=1";
             'user_first_name' => 'First Name',
             'user_last_name' => 'Last Name',
             'user_email' => 'Email',
-            'user_contact_number' => 'Contact Number'
+            'user_contact_number' => 'Contact Number',
+            'company_type' => 'Company Type'
         );
     }
 
@@ -292,7 +296,7 @@ WHERE u.id=c.tenant AND c.id !=1";
     public function isUserAllowedToViewCompany($companyId, $user) {
 
         $Criteria = new CDbCriteria();
-        $Criteria->condition = 'company = "' . $companyId . '" and id="' . $user->id . '"';
+        $Criteria->condition = "company = '" . $companyId . "' and id='" . $user->id . "'";
         $users = User::model()->findAll($Criteria);
 
         //$users = array_filter($users);
@@ -305,7 +309,7 @@ WHERE u.id=c.tenant AND c.id !=1";
 
     public function isCompanyUniqueWithinTheTenant($companyName, $tenant) {
         $Criteria = new CDbCriteria();
-        $Criteria->condition = 'name = "' . $companyName . '" and tenant="' . $tenant . '"';
+        $Criteria->condition = "name = '" . $companyName . "' and tenant='" . $tenant . "'";
         $company = Company::model()->findAll($Criteria);
 
         $company = array_filter($company);
@@ -314,7 +318,7 @@ WHERE u.id=c.tenant AND c.id !=1";
 
     public function isCompanyCodeUniqueWithinTheTenant($companyCode, $tenant) {
         $Criteria = new CDbCriteria();
-        $Criteria->condition = 'code = "' . $companyCode . '" and tenant="' . $tenant . '"';
+        $Criteria->condition = "code = '" . $companyCode . "' and tenant='" . $tenant . "'";
         $company = Company::model()->findAll($Criteria);
 
         $company = array_filter($company);
@@ -323,7 +327,7 @@ WHERE u.id=c.tenant AND c.id !=1";
 	
 	public function isWithoutCompanyCodeUniqueWithinTheTenant($tenant) {
         $Criteria = new CDbCriteria();
-        $Criteria->condition = 'tenant="' . $tenant . '"';
+        $Criteria->condition = "tenant='" . $tenant . "'";
         $company = Company::model()->findAll($Criteria);
 
         $company = array_filter($company);
@@ -337,7 +341,7 @@ WHERE u.id=c.tenant AND c.id !=1";
             $company = Yii::app()->db->createCommand()
                     ->selectdistinct('*')
                     ->from('company')
-                    ->where('id != 1 and tenant="' . Yii::app()->user->tenant . '"')
+                    ->where("id != 1 and tenant='" . Yii::app()->user->tenant . "'")
                     ->queryAll();
         } else {
             $company = Yii::app()->db->createCommand()

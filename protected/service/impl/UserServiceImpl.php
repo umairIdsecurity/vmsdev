@@ -17,7 +17,9 @@ class UserServiceImpl implements UserService {
 		//print_r($user);exit;
         $user->date_of_birth = date('Y-m-d', strtotime($user->birthdayYear.'-'.$user->birthdayMonth.'-'.$user->birthdayDay));
 
-        $user->asic_expiry = strtotime($user->asic_expiry_year.'-'.$user->asic_expiry_month.'-'.$user->asic_expiry_day);
+        $user->asic_expiry = date('Y-m-d', strtotime($user->asic_expiry_year.'-'.$user->asic_expiry_month.'-'.$user->asic_expiry_day));
+
+        //$user->asic_expiry = strtotime($user->asic_expiry_year.'-'.$user->asic_expiry_month.'-'.$user->asic_expiry_day);
 
 		if($user['password']==''){
 			

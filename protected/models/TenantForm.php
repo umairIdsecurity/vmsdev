@@ -21,6 +21,7 @@ class TenantForm extends CFormModel
     public $user_type;
     public $notes;
     public $photo;
+    public $timezone_id;
 
 
     public static $USER_ROLE_LIST = array(
@@ -56,6 +57,7 @@ class TenantForm extends CFormModel
     {
         return array(
             // name, email, subject and message are required
+            array('timezone_id','required','message' =>'Please select a timezone'),
             array('tenant_name,tenant_code,first_name, last_name, email, contact_number,password_opt', 'required'),
             array('tenant_name,tenant_code,first_name, last_name, email', 'length', 'max' => 50),
             array('tenant_code', 'length', 'max' => 3),
@@ -105,6 +107,7 @@ class TenantForm extends CFormModel
             'password' => 'Password',
             'cnf_password' => 'Repeat Password',
             'photo' => 'Photo',
+            'timezone_id' => 'Timezone'
         );
     }
     public function is_avms_user()

@@ -48,10 +48,10 @@ class IdempotentDbOperation
     {
         if ( ! $this->isColumnPresent($table, $column)) {
 
-            $this->migration->execute("ALTER TABLE `$table` ADD COLUMN `$column` $columnDefinition;");
+            $this->migration->execute("ALTER TABLE $table ADD COLUMN $column $columnDefinition;");
 
             if ( ! is_null($additionalConstraint)) {
-                $this->migration->execute("ALTER TABLE `$table` $additionalConstraint;");
+                $this->migration->execute("ALTER TABLE $table $additionalConstraint;");
             }
         }
     }
@@ -71,10 +71,10 @@ class IdempotentDbOperation
 
         Yii::app()->db->schema->refresh();
 
-        $this->migration->execute("ALTER TABLE `$table` ADD COLUMN `$column` $columnDefinition;");
+        $this->migration->execute("ALTER TABLE $table ADD COLUMN $column $columnDefinition;");
 
         if ( ! is_null($additionalConstraint)) {
-            $this->migration->execute("ALTER TABLE `$table` $additionalConstraint;");
+            $this->migration->execute("ALTER TABLE $table $additionalConstraint;");
         }
     }
 
@@ -91,10 +91,10 @@ class IdempotentDbOperation
         if ($this->isColumnPresent($table, $column)) {
 
             if ( ! is_null($fkSymbol) && $this->_hasForeignKey($table, $column)) {
-                $this->migration->execute("ALTER TABLE `$table`  DROP FOREIGN KEY `$fkSymbol`;");
+                $this->migration->execute("ALTER TABLE $table  DROP FOREIGN KEY $fkSymbol;");
             }
 
-            $this->migration->execute("ALTER TABLE `$table` DROP COLUMN `$column`;");
+            $this->migration->execute("ALTER TABLE $table DROP COLUMN $column;");
             unset($this->tableSchemes[$table]);
         }
     }
@@ -110,7 +110,7 @@ class IdempotentDbOperation
     public function modifyColumn($table, $column, $columnDefinition)
     {
         if ($this->isColumnPresent($table, $column)) {
-            $this->migration->execute("ALTER TABLE `$table` MODIFY COLUMN `$column` $columnDefinition;");
+            $this->migration->execute("ALTER TABLE $table MODIFY COLUMN $column $columnDefinition;");
         }
     }
 

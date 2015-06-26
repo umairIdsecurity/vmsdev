@@ -8,11 +8,11 @@ class m150425_081700_issue_170_addPhoTotoUser extends CDbMigration
 
             $db = Yii::app()->db;
             /* update */
-            $checkIfColumnExists = $db->createCommand("SHOW COLUMNS FROM `user` LIKE 'photo' ");
+            $checkIfColumnExists = $db->createCommand("SHOW COLUMNS FROM user LIKE 'photo' ");
             $result = $checkIfColumnExists->query();
 			
 			  if ($result->rowCount == 0) {
-                $sql = 'ALTER TABLE  `user` ADD  `photo` BIGINT( 20 ) NOT NULL';
+                $sql = 'ALTER TABLE  user ADD  photo BIGINT( 20 ) NOT NULL';
                 $db->createCommand($sql)->execute();
 			  }
 			
@@ -29,11 +29,11 @@ class m150425_081700_issue_170_addPhoTotoUser extends CDbMigration
 
             $db = Yii::app()->db;
             /* update */
-            $checkIfColumnExists = $db->createCommand("SHOW COLUMNS FROM `user` LIKE 'photo' ");
+            $checkIfColumnExists = $db->createCommand("SHOW COLUMNS FROM user LIKE 'photo' ");
             $result = $checkIfColumnExists->query();
 			
 			  if ($result->rowCount > 0) {
-                $sql = 'ALTER TABLE `user` DROP `photo`';
+                $sql = 'ALTER TABLE user DROP photo';
                 $db->createCommand($sql)->execute();
 			  }
 			

@@ -22,7 +22,7 @@ class m150518_090825_import_visitor extends CDbMigration
 	public function safeDown()
 	{
 	  $this->execute("
-            DROP TABLE IF EXISTS `import_visitor`;
+            DROP TABLE IF EXISTS import_visitor;
             ");
 	}
 

@@ -1,5 +1,6 @@
 <?php
 ini_set('xdebug.max_nesting_level', 200);
+Yii::import('ext.validator.DropDown');
 /**
  * This is the model class for table "visit".
  *
@@ -67,6 +68,7 @@ class Visit extends CActiveRecord {
     public $_contactperson;
     public $_contactphone;
     public $_asicname;
+    public $other_reason;
 
     /**
      * @return string the associated database table name
@@ -84,16 +86,19 @@ class Visit extends CActiveRecord {
         return array(
             array('is_deleted', 'numerical', 'integerOnly' => true),
             array('visitor', 'required', 'on' => 'api'),
+            //array('other_reason', 'unique','className'=>'VisitReason','attributeName'=>'reason','message'=>"Reason must be unique"),
             array('reason,visitor_type,visitor,visitor_status,workstation', 'required', 'on' => 'webapp'),
             array('visitor,card, visitor_type, reason, visitor_status,host, patient, created_by, tenant, tenant_agent', 'length', 'max' => 20),
-            array('date_in,date_out,time_in_hours,time_in_minutes,visit_status, time_in, time_out, date_check_in, time_check_in, date_check_out, time_check_out,card_type, finish_date, finish_time, card_returned_date, negate_reason, reset_id, card_option, police_report_number, card_lost_declaration_file, workstation', 'safe'),
+            array('date_in,date_out,time_in_hours,time_in_minutes,visit_status, time_in, time_out, date_check_in, time_check_in, date_check_out, time_check_out,card_type, finish_date, finish_time, card_returned_date, negate_reason, reset_id, card_option, police_report_number, card_lost_declaration_file, workstation , other_reason', 'safe'),
             array('patient, host,card,tenant,tenant_agent', 'default', 'setOnEmpty' => true, 'value' => null),
             array('filterProperties', 'length', 'max' => 70),
+
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id,datecheckin1,cardnumber,company,firstname,lastname,contactnumber,contactemail,contactperson,contactphone,visit_status,visitor ,card,workstation, visitor_type, reason, visitor_status, host, patient, created_by, date_in, time_in, date_out, time_out, date_check_in, time_check_in, date_check_out, time_check_out, tenant, tenant_agent, is_deleted, companycode, contact_street_no, contact_street_name, contact_street_type, contact_suburb, contact_postcode, identification_type, identification_document_no, identification_document_expiry,asicname, asic_no, asic_expiry, workstation, date_of_birth, finish_date, card_returned_date', 'safe', 'on' => 'search'),
             array('id,datecheckin1,cardnumber,company,firstname,lastname,contactnumber,contactemail,contactperson,contactphone,visit_status,visitor ,card,workstation, visitor_type, reason, visitor_status, host, patient, created_by, date_in, time_in, date_out, time_out, date_check_in, time_check_in, date_check_out, time_check_out, tenant, tenant_agent, is_deleted, companycode, contact_street_no, contact_street_name, contact_street_type, contact_suburb, contact_postcode, identification_type, identification_document_no, identification_document_expiry,asicname, asic_no, asic_expiry, workstation, date_of_birth, finish_date, card_returned_date', 'safe', 'on' => 'search_history'),
             array('card_lost_declaration_file', 'file', 'types' => 'pdf,doc,docx,jpg,gif,png', 'allowEmpty' => true, 'maxSize' => 1024 * 1024 * 10),
+            
         );
     }
 
@@ -115,6 +120,16 @@ class Visit extends CActiveRecord {
             return $this->_datecheckin1;
         }
     }
+
+//    public function beforeSave() {
+//        if (!empty($this->date_int)) $this->date_int =  date('Y-m-d', strtotime($this->date_int));
+//        if (!empty($this->date_out)) $this->date_out =  date('Y-m-d', strtotime($this->date_out));
+//        if (!empty($this->date_check_in)) $this->date_check_in =  date('Y-m-d', strtotime($this->date_check_in));
+//        if (!empty($this->date_check_out)) $this->date_check_out =  date('Y-m-d', strtotime($this->date_check_out));
+//        if (!empty($this->finish_date)) $this->finish_date =  date('Y-m-d', strtotime($this->finish_date));
+//        if (!empty($this->card_returned_date)) $this->card_returned_date =  date('Y-m-d', strtotime($this->card_returned_date));
+//        return parent::beforeSave();
+//    }
 
     public function setDatecheckin1($value) {
         // set private attribute for search
@@ -234,7 +249,12 @@ class Visit extends CActiveRecord {
 
     public function getHost() {
         // return private attribute on search
-        $visitHost = User::model()->findByPk($this->host);
+        if($this->card_type < 5) {
+            $visitHost = User::model()->findByPk($this->host);
+        } else {
+            $visitHost = Visitor::model()->findByPk($this->host);
+        }
+
         return $visitHost;
 
     }
@@ -253,6 +273,7 @@ class Visit extends CActiveRecord {
             'visitorType' => array(self::BELONGS_TO, 'VisitorType', 'visitor_type'),
             'visitorStatus' => array(self::BELONGS_TO, 'VisitorStatus', 'visitor_status'),
             'host0' => array(self::BELONGS_TO, 'User', 'host'),
+            'visitor1' => array(self::BELONGS_TO, 'Visitor', 'host'),
             'patient0' => array(self::BELONGS_TO, 'Patient', 'patient'),
             'createdBy' => array(self::BELONGS_TO, 'User', 'created_by'),
             'tenant0' => array(self::BELONGS_TO, 'User', 'tenant'),
@@ -313,7 +334,7 @@ class Visit extends CActiveRecord {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
-        $criteria->with = array('card0','host0', 'visitor0', 'company0', 'reason0', 'workstation0');
+        $criteria->with = array('card0','host0', 'visitor0', 'company0', 'reason0', 'workstation0','visitor1');
         //$criteria->with .= 'visitor0';
         $criteria->compare('CONCAT(visitor0.first_name, \' \', visitor0.last_name)', $this->visitor, true);
         $criteria->compare('visitor0.first_name', $this->firstname, true);
@@ -358,7 +379,9 @@ class Visit extends CActiveRecord {
         $criteria->compare('company0.contact', $this->_contactperson, true);
         $criteria->compare('company0.email_address', $this->_contactemail, true);
         $criteria->compare('company0.mobile_number', $this->_contactphone, true);
-        $criteria->compare('DATE_FORMAT(visitor0.date_of_birth, "%d-%m-%Y")', $this->date_of_birth, true);
+        //$criteria->compare('DATE_FORMAT(visitor0.date_of_birth, "%Y-%m-%d")', $this->date_of_birth, true);
+        $criteria->compare('visitor0.date_of_birth', $this->date_of_birth, true);
+
         $criteria->compare('visitor0.contact_street_no', $this->contact_street_no, true);
         $criteria->compare('visitor0.contact_street_name', $this->contact_street_name, true);
         $criteria->compare('visitor0.contact_street_type', $this->contact_street_type, true);
@@ -366,11 +389,23 @@ class Visit extends CActiveRecord {
         $criteria->compare('visitor0.contact_postcode', $this->contact_postcode, true);
         $criteria->compare('visitor0.identification_type', $this->identification_type, true);
         $criteria->compare('visitor0.identification_document_no', $this->identification_document_no, true);
-        $criteria->compare('DATE_FORMAT(visitor0.identification_document_expiry, "%d-%m-%Y")', $this->identification_document_expiry, true);
-        $criteria->compare('CONCAT(host0.first_name,\' \',host0.last_name)',$this->_asicname,true);
-
+        //$criteria->compare('DATE_FORMAT(visitor0.identification_document_expiry, "%Y-%m-%d")', $this->identification_document_expiry, true);
+        $criteria->compare('visitor0.identification_document_expiry', $this->identification_document_expiry, true);
+        switch($this->card_type){
+            case CardType::SAME_DAY_VISITOR:
+            case CardType::MULTI_DAY_VISITOR:
+            case CardType::MANUAL_VISITOR:
+            case CardType::CONTRACTOR_VISITOR:
+                $criteria->compare('CONCAT(host0.first_name,\' \',host0.last_name)',$this->_asicname,true);
+                break;
+            default:
+                $criteria->compare('CONCAT(visitor1.first_name,\' \',visitor1.last_name)',$this->_asicname,true);
+                break;
+        }
         $criteria->compare('visitor0.asic_no', $this->asic_no, true);
-        $criteria->compare('DATE_FORMAT(visitor0.asic_expiry, "%d-%m-%Y")', $this->asic_expiry, true);
+        #$criteria->compare('DATE_FORMAT(visitor0.asic_expiry, "%Y-%m-%d")', $this->asic_expiry, true);
+        $criteria->compare('visitor0.asic_expiry', $this->asic_expiry, true);
+
         $criteria->compare('finish_date', $this->finish_date, true);
         $criteria->compare('card_returned_date', $this->card_returned_date, true);
 
@@ -379,12 +414,12 @@ class Visit extends CActiveRecord {
         }
         // $criteria->addCondition("t.date_check_out > DATE_ADD(now(),interval -2 day)");
         if ($this->filterProperties) {
-            $criteria->addCondition("t.id LIKE CONCAT('%', :filterProperties , '%')
+            $query = "t.id LIKE CONCAT('%', :filterProperties , '%')
                 OR card0.card_number LIKE CONCAT('%', :filterProperties , '%')
                 OR company0.code LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.first_name LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.last_name LIKE CONCAT('%', :filterProperties , '%')
-                OR DATE_FORMAT(visitor0.date_of_birth, '%d-%m-%Y') LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.date_of_birth LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.contact_number LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.contact_street_no LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.contact_street_name LIKE CONCAT('%', :filterProperties , '%')
@@ -397,16 +432,29 @@ class Visit extends CActiveRecord {
                 OR company0.contact LIKE CONCAT('%', :filterProperties , '%')
                 OR company0.mobile_number LIKE CONCAT('%', :filterProperties , '%')
                 OR company0.email_address LIKE CONCAT('%', :filterProperties , '%')
-                OR host0.first_name LIKE CONCAT('%', :filterProperties , '%')
-                OR host0.last_name LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.contact_street_type LIKE CONCAT('%', :filterProperties , '%')
                 OR finish_date LIKE CONCAT('%', :filterProperties , '%')
                 OR card_returned_date LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.identification_type LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.identification_document_no LIKE CONCAT('%', :filterProperties , '%')
-                OR DATE_FORMAT(visitor0.identification_document_expiry, '%d-%m-%Y') LIKE CONCAT('%', :filterProperties , '%')
+                OR visitor0.identification_document_expiry LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.asic_no LIKE CONCAT('%', :filterProperties , '%')
-                OR DATE_FORMAT(visitor0.asic_expiry, '%d-%m-%Y') LIKE CONCAT('%', :filterProperties , '%')");
+                OR visitor0.asic_expiry LIKE CONCAT('%', :filterProperties , '%')";
+
+            switch($this->card_type){
+                case CardType::SAME_DAY_VISITOR:
+                case CardType::MULTI_DAY_VISITOR:
+                case CardType::MANUAL_VISITOR:
+                case CardType::CONTRACTOR_VISITOR:
+                    $query .= "OR host0.first_name LIKE CONCAT('%', :filterProperties , '%')
+                    OR host0.last_name LIKE CONCAT('%', :filterProperties , '%')";
+                    break;
+                default:
+                    $query .= "OR visitor1.first_name LIKE CONCAT('%', :filterProperties , '%')
+                    OR visitor1.last_name LIKE CONCAT('%', :filterProperties , '%')";
+                    break;
+            }
+            $criteria->addCondition($query);
             $criteria->params = array(':filterProperties' => $this->filterProperties);
         }
 
@@ -434,13 +482,15 @@ class Visit extends CActiveRecord {
             case Roles::ROLE_OPERATOR:
             case Roles::ROLE_AGENT_OPERATOR:
                 $workstations = Workstation::model()->findWorkstationAvailableForUser(Yii::app()->user->id);
-                $text = "";
-                foreach ($workstations as $key => $value) {
-                    $text .="'" . $value['id'] . "',";
-                }
-                $workstations = "IN (" . rtrim($text, ',') . ")";
+                if (!empty($workstations)) {
+                    $text = "";
+                    foreach ($workstations as $key => $value) {
+                        $text .="'" . $value['id'] . "',";
+                    }
+                    $workstations = "IN (" . rtrim($text, ',') . ")";
 
-                $criteria->addCondition('t.workstation '.$workstations.'');
+                    $criteria->addCondition('t.workstation '.$workstations.'');
+                }
                 break;
         }
         
@@ -451,7 +501,7 @@ class Visit extends CActiveRecord {
          * 
          */
         if (Yii::app()->controller->action->id == 'visitorRegistrationHistory') {
-            $criteria->addCondition('profile_type ="' . Visitor::PROFILE_TYPE_CORPORATE . '"');
+            $criteria->addCondition("visitor0.profile_type ='" . Visitor::PROFILE_TYPE_CORPORATE . "'");
         }
 
         if (Yii::app()->controller->action->id == 'admindashboard') {
@@ -495,7 +545,9 @@ class Visit extends CActiveRecord {
                     '*',
                 ),
             ),
-                //'pagination'=>false,
+            'pagination' => array(
+                'pageSize' => 10,
+            ),
         ));
     }
 
@@ -504,7 +556,7 @@ class Visit extends CActiveRecord {
 
         $criteria = new CDbCriteria;
 
-        $criteria->with = array('card0','host0', 'visitor0', 'company0');
+        $criteria->with = array('card0','host0', 'visitor0', 'company0','visitor1');
         //$criteria->with .= 'visitor0';
         $criteria->compare('CONCAT(visitor0.first_name, \' \', visitor0.last_name)', $this->visitor, true);
         $criteria->compare('visitor0.first_name', $this->firstname, true);
@@ -558,7 +610,17 @@ class Visit extends CActiveRecord {
         $criteria->compare('visitor0.identification_type', $this->identification_type, true);
         $criteria->compare('visitor0.identification_document_no', $this->identification_document_no, true);
         $criteria->compare('visitor0.identification_document_expiry', $this->identification_document_expiry, true);
-        $criteria->compare('CONCAT(host0.first_name,\' \',host0.last_name)',$this->_asicname,true);
+        switch($this->card_type){
+            case CardType::SAME_DAY_VISITOR:
+            case CardType::MULTI_DAY_VISITOR:
+            case CardType::MANUAL_VISITOR:
+            case CardType::CONTRACTOR_VISITOR:
+                $criteria->compare('CONCAT(host0.first_name,\' \',host0.last_name)',$this->_asicname,true);
+                break;
+            default:
+                $criteria->compare('CONCAT(visitor1.first_name,\' \',visitor1.last_name)',$this->_asicname,true);
+                break;
+        }
         $criteria->compare('visitor0.asic_no', $this->asic_no, true);
         $criteria->compare('visitor0.asic_expiry', $this->asic_expiry, true);
         $criteria->compare('finish_date', $this->finish_date, true);
@@ -567,9 +629,9 @@ class Visit extends CActiveRecord {
         if ($merge !== null) {
             $criteria->mergeWith($merge);
         }
-            $criteria->addCondition("str_to_date(t.date_check_out,'%d-%m-%Y') > DATE_ADD(now(),interval -2 day)");
+            $criteria->addCondition("str_to_date(t.date_check_out,'%Y-%m-%d') > DATE_ADD(now(),interval -2 day)");
         if ($this->filterProperties) {
-            $criteria->addCondition("t.id LIKE CONCAT('%', :filterProperties , '%')
+            $query = "t.id LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.first_name LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.last_name LIKE CONCAT('%', :filterProperties , '%')
                 OR company0.code LIKE CONCAT('%', :filterProperties , '%')
@@ -587,10 +649,22 @@ class Visit extends CActiveRecord {
                 OR visitor0.identification_type LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.identification_document_no LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.identification_document_expiry LIKE CONCAT('%', :filterProperties , '%')
-                OR host0.first_name LIKE CONCAT('%', :filterProperties , '%')
-                OR host0.last_name LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.asic_no LIKE CONCAT('%', :filterProperties , '%')
-                OR visitor0.asic_expiry LIKE CONCAT('%', :filterProperties , '%')");
+                OR visitor0.asic_expiry LIKE CONCAT('%', :filterProperties , '%')";
+            switch($this->card_type){
+                case CardType::SAME_DAY_VISITOR:
+                case CardType::MULTI_DAY_VISITOR:
+                case CardType::MANUAL_VISITOR:
+                case CardType::CONTRACTOR_VISITOR:
+                    $query .= "OR host0.first_name LIKE CONCAT('%', :filterProperties , '%')
+                    OR host0.last_name LIKE CONCAT('%', :filterProperties , '%')";
+                    break;
+                default:
+                    $query .= "OR visitor1.first_name LIKE CONCAT('%', :filterProperties , '%')
+                    OR visitor1.last_name LIKE CONCAT('%', :filterProperties , '%')";
+                    break;
+            }
+            $criteria->addCondition($query);
             $criteria->params = array(':filterProperties' => $this->filterProperties);
         }
 
@@ -604,7 +678,7 @@ class Visit extends CActiveRecord {
                 break;
 
             case Roles::ROLE_SUPERADMIN:
-                $criteria->addCondition('t.id != ""');
+                $criteria->addCondition("t.id != ''");
                 break;
 
             case Roles::ROLE_ADMIN:
@@ -618,13 +692,15 @@ class Visit extends CActiveRecord {
             case Roles::ROLE_OPERATOR:
             case Roles::ROLE_AGENT_OPERATOR:
                 $workstations = Workstation::model()->findWorkstationAvailableForUser(Yii::app()->user->id);
-                $text = "";
-                foreach ($workstations as $key => $value) {
-                    $text .="'" . $value['id'] . "',";
-                }
-                $workstations = "IN (" . rtrim($text, ',') . ")";
+                if (!empty($workstations)) {
+                    $text = "";
+                    foreach ($workstations as $key => $value) {
+                        $text .="'" . $value['id'] . "',";
+                    }
+                    $workstations = "IN (" . rtrim($text, ',') . ")";
 
-                $criteria->addCondition('t.workstation ' . $workstations . '');
+                    $criteria->addCondition('t.workstation ' . $workstations . '');
+                }
                 break;
         }
 
@@ -635,7 +711,7 @@ class Visit extends CActiveRecord {
          * 
          */
         if (Yii::app()->controller->action->id == 'visitorRegistrationHistory') {
-            $criteria->addCondition('profile_type ="' . Visitor::PROFILE_TYPE_CORPORATE . '"');
+            $criteria->addCondition("visitor0.profile_type ='" . Visitor::PROFILE_TYPE_CORPORATE . "'");
         }
         
         if (Yii::app()->controller->action->id == 'admindashboard') {
@@ -705,6 +781,7 @@ class Visit extends CActiveRecord {
             ),
             'AuditTrailBehaviors'=>
                 'application.components.behaviors.AuditTrailBehaviors',
+            'DateTimeZoneAndFormatBehavior' => 'application.components.DateTimeZoneAndFormatBehavior',
         );
     }
 
@@ -732,9 +809,9 @@ class Visit extends CActiveRecord {
             $commandUpdateCard = "";
 
             $command = Yii::app()->db->createCommand("UPDATE visit
-                    LEFT JOIN card_generated ON card_generated.id = visit.`card` 
+                    LEFT JOIN card_generated ON card_generated.id = visit.`card`
                     SET visit_status = '" . VisitStatus::CLOSED . "',card_status ='" . CardStatus::NOT_RETURNED . "'
-                    WHERE 'd-m-Y' > date_out AND date_out != 'd-m-Y' AND visit_status = '" . VisitStatus::ACTIVE . "'
+                    WHERE CURRENT_DATE > date_out AND visit_status = '" . VisitStatus::ACTIVE . "'
                     AND card_status ='" . CardStatus::ACTIVE . "' and card_type= '" . CardType::SAME_DAY_VISITOR . "'")->execute();
             echo "Affected Rows : " . $command . "<br>";
             if ($command > 0) {
@@ -760,7 +837,15 @@ class Visit extends CActiveRecord {
             $commandUpdateCard = "";
 
             $command = Yii::app()->db->createCommand("UPDATE visit
-                    SET visit_status = '" . VisitStatus::EXPIRED . "', card_option ='" . CardStatus::RETURNED . "', finish_date = DATE_FORMAT(CURDATE(), '%d-%m-%Y'), finish_time = CURTIME() WHERE 'd-m-Y' > date_check_out AND DATE_FORMAT(DATE_SUB(NOW(), INTERVAL DATEDIFF(date_check_out, date_check_in) DAY), '%d-%m-%Y %h:%i:%s') >= CONCAT(date_check_in, ' ', time_check_in) AND visit_status = '" . VisitStatus::ACTIVE . "' AND (card_type = '" . CardType::VIC_CARD_EXTENDED . "' OR card_type = '". CardType::VIC_CARD_MULTIDAY ."')")->execute();
+                    SET visit_status = '" . VisitStatus::EXPIRED
+                        . "', card_option ='" . CardStatus::RETURNED
+                        . "', finish_date = CURDATE(), '%Y-%m-%d'), finish_time = CURTIME()
+                    WHERE CURRENT_DATE > date_check_out
+                    AND CURRENT_TIME > time_check_out
+                    AND visit_status = '" . VisitStatus::ACTIVE . "'
+                    AND (card_type = '" . CardType::VIC_CARD_EXTENDED . "'
+                    OR card_type = '". CardType::VIC_CARD_MULTIDAY ."')")->execute();
+
             echo "Affected Rows : " . $command . "\n";
             if ($command > 0) {
                 echo "Success: Update VIC Extended and Multiday visits to close status successful. \n";
@@ -782,7 +867,13 @@ class Visit extends CActiveRecord {
     public function updateOneDayVisitsToClose() {
         try {
             $command = Yii::app()->db->createCommand(
-                "UPDATE visit SET visit_status = '" . VisitStatus::CLOSED . "', card_option ='" . CardStatus::RETURNED . "', finish_date = DATE_FORMAT(CURDATE(), '%d-%m-%Y'), finish_time = CURTIME() WHERE 'd-m-Y' > date_check_out AND DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 24 HOUR), '%d-%m-%Y %h:%i:%s') >= CONCAT(date_check_in, ' ', time_check_in) AND visit_status = '" . VisitStatus::ACTIVE . "' AND card_type = '" . CardType::VIC_CARD_24HOURS . "'")->execute();
+                "UPDATE visit SET visit_status = '" . VisitStatus::CLOSED
+                    . "', card_option ='" . CardStatus::RETURNED
+                    . "', finish_date = CURRENT_DATE, finish_time = CURRENT_DATE
+                    WHERE CURRENT_DATE > date_check_out
+                    AND visit_status = '" . VisitStatus::ACTIVE . "'
+                    AND card_type = '" . CardType::VIC_CARD_24HOURS . "'")->execute();
+
             echo "Affected Rows : " . $command . "\n";
             if ($command > 0) {
                 echo "Success: Update VIC 24 and Manual visits to close status successful. \n";
@@ -800,7 +891,14 @@ class Visit extends CActiveRecord {
     public function updateSameDayVisitsToExpired() {
         try {
             $command = Yii::app()->db->createCommand(
-                "UPDATE visit SET visit_status = '" . VisitStatus::EXPIRED . "', card_option ='" . CardStatus::RETURNED . "', finish_date = DATE_FORMAT(CURDATE(), '%d-%m-%Y'), finish_time = CURTIME() WHERE DATE_FORMAT(NOW(), '%d-%m-%Y') > date_check_out AND CURTIME() >= time_check_out AND visit_status = '" . VisitStatus::ACTIVE . "' AND card_type = '" . CardType::VIC_CARD_SAMEDATE . "'")->execute();
+                "UPDATE visit SET visit_status = '" . VisitStatus::EXPIRED
+                    . "', card_option ='" . CardStatus::RETURNED
+                    . "', finish_date = CURRENT_DATE , finish_time = CURRENT_TIME
+                    WHERE CURRENT_DATE >= date_check_out
+                    AND CURRENT_TIME > time_check_out
+                    AND visit_status = '" . VisitStatus::ACTIVE . "'
+                    AND card_type = '" . CardType::VIC_CARD_SAMEDATE . "'")->execute();
+
             echo "Affected Rows : " . $command . "\n";
             if ($command > 0) {
                 echo "Success: Update VIC Sameday visits to expired status successful. \n";
@@ -821,11 +919,13 @@ class Visit extends CActiveRecord {
          * and card status is still active and if card type is multi day visitor
          */
         try {
+
             $command = Yii::app()->db->createCommand("UPDATE visit
                     LEFT JOIN card_generated ON card_generated.id = visit.`card` 
                     SET visit_status = '" . VisitStatus::EXPIRED . "',card_status ='" . CardStatus::NOT_RETURNED . "'
-                    WHERE 'd-m-Y' > date_expiration AND visit_status = '" . VisitStatus::ACTIVE . "'
+                    WHERE CURRENT_DATE > date_expiration AND visit_status = '" . VisitStatus::ACTIVE . "'
                     AND card_status ='" . CardStatus::ACTIVE . "' and card_type='" . CardType::MULTI_DAY_VISITOR . "'")->execute();
+
             echo "Affected Rows : " . $command . "<br>";
             if ($command > 0) {
                 echo "Update visit to expired status successful.";
@@ -883,7 +983,12 @@ class Visit extends CActiveRecord {
         if ($res_visitor) {
             $visitor = $res_visitor[0]['visitor'];
 
-            $res_company = Yii::app()->db->createCommand("SELECT company.id AS company_id, company.name AS company_name FROM visit LEFT JOIN user ON user.id = visit.host LEFT JOIN company ON user.company = company.id WHERE company.is_deleted=0 AND visit.id= " . $visitId)->queryAll();
+            $res_company = Yii::app()->db->createCommand("SELECT company.id AS company_id, company.name AS company_name
+                                                          FROM visit
+                                                            LEFT JOIN user ON user.id = visit.host
+                                                            LEFT JOIN company ON user.company = company.id
+                                                           WHERE company.is_deleted=0
+                                                           AND visit.id= " . $visitId)->queryAll();
             if ($res_company) {
                 $company = $res_company[0]['company_id'];
             } else {
@@ -891,7 +996,10 @@ class Visit extends CActiveRecord {
             }
 
 
-            $res_host = Yii::app()->db->createCommand("SELECT id FROM user WHERE user.is_deleted=0 AND user.company=" . $company)->queryAll();
+            $res_host = Yii::app()->db->createCommand("SELECT id
+                                                        FROM user
+                                                        WHERE user.is_deleted=0
+                                                        AND user.company=" . $company)->queryAll();
 
             //var_dump($res_host);
             if ($res_host) {
@@ -900,14 +1008,17 @@ class Visit extends CActiveRecord {
                 }
 
                 $hosts = implode(",", $arr);
-                $sql_company_visit_by_visitor = "SELECT COUNT(*) as cnt FROM visit"
-                        . " WHERE visit.is_deleted=0 AND visit.visitor= " . $visitor
-                        . " AND host IN (" . $hosts . ")";
+                $sql_company_visit_by_visitor = "SELECT COUNT(*) as cnt
+                        FROM visit
+                        WHERE visit.is_deleted=0 AND visit.visitor= " . $visitor. "
+                        AND host IN (" . $hosts . ")";
 
 
                 $companyVisitsByVisitor = Yii::app()->db->createCommand($sql_company_visit_by_visitor)->queryAll();
 
-                $countData = array('allVisitsByVisitor' => $allVisitsByVisitor[0]['cnt'], 'companyVisitsByVisitor' => $companyVisitsByVisitor[0]['cnt'], 'companyName' => $res_company[0]['company_name']);
+                $countData = array('allVisitsByVisitor' => $allVisitsByVisitor[0]['cnt'],
+                                    'companyVisitsByVisitor' => $companyVisitsByVisitor[0]['cnt'],
+                                    'companyName' => $res_company[0]['company_name']);
 
                 return $countData;
             } else {
@@ -925,9 +1036,14 @@ class Visit extends CActiveRecord {
     public function getVisitCounts() {
         $dateIn = new DateTime($this->date_check_in);
         $dateOut = new DateTime($this->date_check_out);
-        $dateNow = new DateTime(date('d-m-Y'));
+        $dateNow = new DateTime(date('Y-m-d'));
         switch ($this->card_type) {
             case CardType::VIC_CARD_MANUAL:
+            case CardType::VIC_CARD_SAMEDATE:
+            case CardType::VIC_CARD_24HOURS:
+                if (in_array($this->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED, VisitStatus::EXPIRED])) {
+                    return 1;
+                }
                 return (int)$this->countByAttributes(['visit_status' => VisitStatus::CLOSED, 'visitor' => $this->visitor]) + 1;
                 break;
             case CardType::VIC_CARD_EXTENDED:
@@ -941,31 +1057,21 @@ class Visit extends CActiveRecord {
                         break;
                 }
                 break;
-            case CardType::VIC_CARD_SAMEDATE:
-                $remainingDays = (int)($dateOut->format('z') - $dateIn->format('z'));
-                switch ($this->visit_status) {
-                    case VisitStatus::EXPIRED:
-                        $visitCount = (int)($dateOut->format('z') - $remainingDays);
-                        if ($visitCount < 0) return 0;
-                            return $visitCount;
-                        break;
-                    default:
-                        return $remainingDays;
-                        break;
-                }
-                break;
+            /*case CardType::VIC_CARD_SAMEDATE:
             case CardType::VIC_CARD_24HOURS:
                 return (int)$this->countByAttributes(['visit_status' => VisitStatus::CLOSED, 'visitor' => $this->visitor]) + 1;
-                break;
+                break;*/
         }
     }
 
     public function getRemainingDays() {
-        $dateNow = new DateTime(date('d-m-Y'));
+        $dateNow = new DateTime(date('Y-m-d'));
         $dateOut = new DateTime($this->date_check_out);
         $dateIn = new DateTime($this->date_check_in);
         switch ($this->card_type) {
             case CardType::VIC_CARD_MANUAL:
+            case CardType::VIC_CARD_24HOURS:
+            case CardType::VIC_CARD_SAMEDATE:
                 return 28 - (int)$this->visitCounts;
                 break;
             case CardType::VIC_CARD_EXTENDED:
@@ -984,15 +1090,6 @@ class Visit extends CActiveRecord {
                         break;
                 }
                 break;
-            case CardType::VIC_CARD_SAMEDATE:
-                if (date('d-m-Y') == $this->date_check_in) {
-                    return 28 - ((int)$this->countByAttributes(['visit_status' => VisitStatus::CLOSED, 'visitor' => $this->visitor]) + 1);
-                }
-                return 28;
-                break;
-            case CardType::VIC_CARD_24HOURS:
-                return 28 - (int)$this->visitCounts;
-                break;
         }
         
     }
@@ -1001,12 +1098,12 @@ class Visit extends CActiveRecord {
      * Change date formate to Australian after fetech
      * 
      */
-    public function afterFind() {
-
-        $this->date_check_in = (string) date("d-m-Y", strtotime($this->date_check_in));
-        $this->date_check_out = (string) date("d-m-Y", strtotime($this->date_check_out));
-        return parent::afterFind();
-    }
+//    public function afterFind() {
+//        
+//        //$this->date_check_in = (string) date("Y-m-d", $this->date_check_in);
+//        //$this->date_check_out = (string) date("Y-m-d", $this->date_check_out);
+//        return parent::afterFind();
+//    }
 
     /**
      * If visit is preregistered and date of entry passes 48 hours after proposed visit date 
@@ -1015,7 +1112,7 @@ class Visit extends CActiveRecord {
      */
     public function archivePregisteredOldVisits() {
         // Find and Update Status
-        $crieteria = 'visit_status = 2 AND ( date_check_in <= "' . date("Y-m-d", strtotime('-2 days')) . '"  OR date_check_in <= "' . date("d-m-Y", strtotime('-2 days')) . '")';
+        $crieteria = "visit_status = 2 AND ( date_check_in <= '" . date('Y-m-d', strtotime("-2 days")) . "')";
         $preRegistered = $this->findAll($crieteria);
 
         if ($preRegistered)

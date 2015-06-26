@@ -21,7 +21,8 @@ class Tenant extends CActiveRecord
     public $code;
     public $contact;
     public $email_address;
-
+   
+      
 	public function tableName()
 	{
 		return 'tenant';
@@ -40,7 +41,7 @@ class Tenant extends CActiveRecord
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('id, created_by,name,code,contact,email_address,is_deleted', 'safe', 'on'=>'search'),
-            array('id, created_by,name,code,contact,email_address,is_deleted', 'safe', 'on'=>'tenant_contact'),
+                        array('id, created_by,name,code,contact,email_address,is_deleted', 'safe', 'on'=>'tenant_contact'),
 		);
 	}
 
@@ -65,7 +66,9 @@ class Tenant extends CActiveRecord
 		return array(
 			'id' => 'ID',
 			'created_by' => 'Created By',
-            'is_deleted' => 'Is deleted',
+                        'is_deleted' => 'Is deleted',
+                        
+                        
 		);
 	}
 

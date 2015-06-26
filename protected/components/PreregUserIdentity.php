@@ -14,8 +14,9 @@ class PreregUserIdentity extends CUserIdentity {
      * Authenticates a user using the User data model.
      * @return boolean whether authentication succeeds.
      */
+
     public function authenticate() {
-        $user = User::model()->find('LOWER(email)=?', array(strtolower($this->username)));
+        $user = Registration::model()->find('LOWER(email)=?', array(strtolower($this->username)));
         if ($user === null) {
             $this->errorCode = self::ERROR_UNKNOWN_IDENTITY;
         } else if (!$user->validatePassword($this->password, $user->password)) {
@@ -24,11 +25,7 @@ class PreregUserIdentity extends CUserIdentity {
             $this->_id = $user->id;
             $this->setState('email', $user->email);
             $this->setState('role', $user->role);
-
-            $session = new CHttpSession;
-            $session->open();
-            $session['id'] = $user->id;
-            $session['role'] = $user->role;
+            $this->setState('account', $user->profile_type);
 
             $this->errorCode = self::ERROR_NONE;
         }

@@ -1,6 +1,11 @@
 <?php
 $cs = Yii::app()->clientScript;
 $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/script-birthday.js');
+
+//$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/bootstrapSwitch/bootstrap-switch.js');
+
+$cs->registerCssFile(Yii::app()->controller->assetsBase . '/bootstrapSwitch/bootstrap-switch.css');
+
 /* @var $this UserController */
 /* @var $model User */
 /* @var $form CActiveForm */
@@ -501,7 +506,76 @@ $form = $this->beginWidget('CActiveForm', array(
 
         </tr>
     </table>
-	
+    
+        <!-- ********************************************************************************** -->
+    <?php if(Roles::ROLE_AIRPORT_OPERATOR == $currentRoleinUrl || Roles::ROLE_AGENT_AIRPORT_ADMIN == $currentRoleinUrl || Roles::ROLE_AGENT_AIRPORT_OPERATOR == $currentRoleinUrl) { ?>
+    <div class="password-border">
+        <table class="no-margin-bottom">
+            <tr>
+                <td><strong>Induction Information</strong></td>
+            </tr>
+            <tr>
+                <td>
+                    <table style=" margin-top:18px !important; width:253px; border-left-style:none; border-top-style:none">
+                        <tr>
+                            <td>
+                                <div style="display:inline-block;">Induction Required
+                                    <div class="switch switch-blue">
+                                        <input type="radio" class="switch-input is_required_induction_radio" name="User[is_required_induction]" value="0" id="week" checked>
+                                        <label for="week" class="switch-label switch-label-off">OFF</label>
+                                        <input type="radio" class="switch-input is_required_induction_radio" name="User[is_required_induction]" value="1" id="month" <?php if(!empty($model->is_required_induction) && ($model->is_required_induction == "1")){echo 'checked'; }?>>
+                                        <label for="month" class="switch-label switch-label-on">ON</label>
+                                        <span class="switch-selection"></span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>    
+                        
+                        <tr <?php if(($this->action->id == "update") && !empty($model->is_required_induction) && ($model->is_required_induction == "1")){}else{ echo 'style="display:none"'; } ?> class="is_completed_tr">
+                            <td>
+                                Induction Completed &nbsp; <input type="radio" value="0" class="is_completed_radio" checked="checked" id="is_completed_radio_no" name="User[is_completed_induction]"/>&nbsp;No&nbsp;
+                                <input type="radio" value="1" class="is_completed_radio" name="User[is_completed_induction]" <?php if(!empty($model->is_completed_induction) && ($model->is_completed_induction == "1")){echo 'checked'; } ?>/>&nbsp;Yes 
+                           </td>
+                        </tr>
+                        
+                        
+                        <tr <?php if((($model->is_completed_induction == "1")) && !empty($model->induction_expiry) && ($this->action->id == "update")){}else{ echo 'style="display:none"'; } ?> class="induction_expiry_tr" id="induction_expiry_tr_id">
+                            <td>
+                                Induction Expiry <span class="required">*</span>
+                                <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(    
+                                            'name'=>'User[induction_expiry]',
+                                            'value'=>$model->induction_expiry,
+                                            'options'=>array(
+                                                 'changeYear' => true,
+                                                'dateFormat'=>'dd-mm-yy',
+                                                'changeMonth'=> true,
+                                            ),
+                                            'htmlOptions'=>array("style"=>"width:30%","id"=>"induction_expiry_id","readonly"=>"readonly")
+                                )); ?> 
+                                <br>
+                                <span id="induction_expiry_error" style="display:none;color:red;">
+                                    Please select an expiry date
+				</span>
+                            </td>
+                        </tr>
+                        
+                    </table>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+
+                </td>
+            </tr>
+
+        </table>
+    </div>
+    <?php } ?>
+    <!-- ********************************************************************************** -->
+
+    <br>
+    
     <div class="password-border">
         <table class="no-margin-bottom">
             <tr>
@@ -590,78 +664,7 @@ $form = $this->beginWidget('CActiveForm', array(
         </table>
     </div>
     <!-- password-border -->
-	
-	
-	<br>
-    <!-- ********************************************************************************** -->
-    <?php if(Roles::ROLE_OPERATOR == $currentRoleinUrl || Roles::ROLE_AIRPORT_OPERATOR == $currentRoleinUrl || Roles::ROLE_AGENT_AIRPORT_ADMIN == $currentRoleinUrl) { ?>
-    <div class="password-border">
-        <table class="no-margin-bottom">
-            <tr>
-                <td><strong>Inductions</strong></td>
-            </tr>
 
-
-            <tr>
-                <td>
-                    <table
-                        style=" margin-top:18px !important; width:253px; border-left-style:none; border-top-style:none">
-
-                        <tr>
-                            <td>
-                                User requires induction &nbsp;  <input type="radio" value="0" class="is_required_induction_radio" checked="checked" name="User[is_required_induction]"/>&nbsp;No&nbsp;
-                                                                <input type="radio" value="1" class="is_required_induction_radio" name="User[is_required_induction]" <?php if(!empty($model->is_required_induction) && ($model->is_required_induction == "1")){echo 'checked'; } ?>/>&nbsp;Yes
-                            </td>
-                        </tr>
-                        
-                        <tr <?php if($this->action->id == "update"){}else{ echo 'style="display:none"'; } ?> class="is_completed_tr">
-                            <td>
-                                Induction completed &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <input type="radio" value="0" class="is_completed_radio" checked="checked" id="is_completed_radio_no" name="User[is_completed_induction]"/>&nbsp;No&nbsp;
-                                <input type="radio" value="1" class="is_completed_radio" name="User[is_completed_induction]" <?php if(!empty($model->is_completed_induction) && ($model->is_completed_induction == "1")){echo 'checked'; } ?>/>&nbsp;Yes
-                            </td>
-                        </tr>
-                        
-                        <tr <?php if((($model->is_completed_induction == "1")) && !empty($model->induction_expiry) && ($this->action->id == "update")){}else{ echo 'style="display:none"'; } ?> class="induction_expiry_tr" id="induction_expiry_tr_id">
-                            <td>
-                                Expiry date <span class="required">*</span>
-                                <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(    
-                                            'name'=>'User[induction_expiry]',
-                                            'value'=>$model->induction_expiry,
-                                            'options'=>array(
-                                                 'changeYear' => true,
-                                                'dateFormat'=>'dd-mm-yy',
-                                                'changeMonth'=> true,
-                                            ),
-											'htmlOptions'=>array("id"=>"induction_expiry_id","readonly"=>"readonly")
-                                )); ?> 
-                                
-                                <span id="induction_expiry_error" style="display:none;color:red;">
-									Please select an expiry date
-								</span>
-                                    
-                                
-                            </td>
-                        </tr>
-                        
-
-                    </table>
-                </td>
-            </tr>
-
-            <tr>
-                <td>
-
-                </td>
-            </tr>
-
-        </table>
-    </div>
-    <?php } ?>
-    <!-- ********************************************************************************** -->
-	
-	
-	
-	
     <div class="row buttons ">
         <?php echo CHtml::submitButton($model->isNewRecord ? 'Save' : 'Save', array('id' => 'submitForm', 'class' => 'complete')); ?>
     </div>
@@ -703,6 +706,7 @@ $(".is_required_induction_radio").click(function(){
         $(".is_completed_tr").show();
         $("#is_completed_radio_no").attr("checked",true);
     }else{
+        $("#induction_expiry_id").val("");
         $(".induction_expiry_tr").hide();
         $(".is_completed_tr").hide();
     }
@@ -713,7 +717,7 @@ $(".is_completed_radio").click(function(){
     if(value == 1){
         $(".induction_expiry_tr").show();
     }else{
-		$("#induction_expiry_id").val("");
+	$("#induction_expiry_id").val("");
         $(".induction_expiry_tr").hide();
     }
 });
@@ -744,34 +748,30 @@ $(document).ready(function () {
     var operator = 8;
     var staffmember = 9;
     var agentairportadmin = 13;
-
+    
+    
     $("#addCompanyLink").hide(); //button for adding company
     $("#tenantAgentRow").hide();
     $("#tenantRow").hide();
     $(".workstationRow").hide();
 	
 	
-	/* breaking the script thats why ensure if not null */
-	
 	var elem1 = document.getElementById('User_tenant');
 	if(typeof elem1 !== 'undefined' && elem1 !== null) {
-		document.getElementById('User_tenant').disabled = true;
+            elem1.disabled = true;
 	}
-	
-	var elem2 = document.getElementById('User_tenant_agent');
+        
+        var elem2 = document.getElementById('User_tenant_agent');
 	if(typeof elem2 !== 'undefined' && elem2 !== null) {
-		document.getElementById('User_tenant_agent').disabled = true;
+            elem2.disabled = true;
 	}
 	
 	var elem3 = document.getElementById('User_company');
 	if(typeof elem3 !== 'undefined' && elem3 !== null) {
-		document.getElementById('User_company').disabled = true;
+            elem3.disabled = true;
 	}
-	
-  
-    
-    
-
+        
+       
     if (actionId == 'update') {
         $("#fromYear").val($("#dateofBirthBreakdownValueYear").val());
         $("#fromMonth").val($("#dateofBirthBreakdownValueMonth").val());
@@ -789,19 +789,43 @@ $(document).ready(function () {
         if (getRole == agentadmin) {
 
             document.getElementById('User_tenant_agent').disabled = true;
-            document.getElementById('User_tenant').disabled = false;
+            
+            // document.getElementById('User_tenant').disabled = false;
+            //Above line creating script breaking.Too much javascript and didn't monitered for errors in console.
+            // Very bad programming. :( 
+            var elem1 = document.getElementById('User_tenant');
+            if(typeof elem1 !== 'undefined' && elem1 !== null) {
+                elem1.disabled = false;
+            }
+            
+            
             $("#tenantRow").show();
             $("#addCompanyLink").show();
             document.getElementById("companyRow").style.paddingBottom = "10px";
         } else if (getRole == operator) {
             document.getElementById('User_tenant_agent').disabled = true;
-            document.getElementById('User_tenant').disabled = false;
+            
+            // document.getElementById('User_tenant').disabled = false;
+            //Above line creating script breaking.Too much javascript and didn't monitered for errors in console.
+            // Very bad programming. :( 
+            var elem1 = document.getElementById('User_tenant');
+            if(typeof elem1 !== 'undefined' && elem1 !== null) {
+                elem1.disabled = false;
+            }
+            
             document.getElementById('User_workstation').disabled = false;
             $(".workstationRow").show();
             $("#tenantRow").show();
         } else if (getRole == agentoperator) {
             // $("#User_company").empty();
-            document.getElementById('User_tenant').disabled = false;
+            // document.getElementById('User_tenant').disabled = false;
+            //Above line creating script breaking.Too much javascript and didn't monitered for errors in console.
+            // Very bad programming. :( 
+            var elem1 = document.getElementById('User_tenant');
+            if(typeof elem1 !== 'undefined' && elem1 !== null) {
+                elem1.disabled = false;
+            }
+            
             document.getElementById('User_tenant_agent').disabled = false;
             $("#tenantRow").show();
             $("#tenantAgentRow").show();
@@ -809,8 +833,21 @@ $(document).ready(function () {
             $(".workstationRow").show();
         }
         else {
-            document.getElementById('User_tenant').disabled = false;
-            document.getElementById('User_tenant_agent').disabled = false;
+            // document.getElementById('User_tenant').disabled = false;
+            //Above line creating script breaking.Too much javascript and didn't monitered for errors in console.
+            // Very bad programming. :( 
+            var elem1 = document.getElementById('User_tenant');
+            if(typeof elem1 !== 'undefined' && elem1 !== null) {
+                elem1.disabled = false;
+            }
+            
+            // document.getElementById('User_tenant_agent').disabled = false;
+            var elem2 = document.getElementById('User_tenant_agent');
+            if(typeof elem2 !== 'undefined' && elem1 !== null) {
+                elem2.disabled = false;
+            }
+            
+           
             $("#tenantRow").show();
             $("#tenantAgentRow").show();
         }
@@ -845,7 +882,15 @@ $(document).ready(function () {
     } else if (sessionRole == agentairportadmin) {
         if (getRole == agentairportadmin) {
             document.getElementById('User_tenant_agent').disabled = true;
-            document.getElementById('User_tenant').disabled = false;
+            
+            // document.getElementById('User_tenant').disabled = false;
+            //Above line creating script breaking.Too much javascript and didn't monitered for errors in console.
+            // Very bad programming. :( 
+            var elem1 = document.getElementById('User_tenant');
+            if(typeof elem1 !== 'undefined' && elem1 !== null) {
+                elem1.disabled = false;
+            }
+            
             $("#tenantRow").show();
             $("#tenantAgentRow").show();
         }
@@ -1068,7 +1113,9 @@ function populateCompanyofTenant(tenant, newcompanyId) {
 
 }
 function populateDynamicFields() {
-
+    
+    var issuing_body_admin = <?php echo Roles::ROLE_ISSUING_BODY_ADMIN; ?>;
+    
     if (is_accessing_avms_features()) {
         return;
     }
@@ -1473,6 +1520,18 @@ function getAssignableRoles($user_role, $model)
                     }
                 }
                 break;
+            case Roles::ROLE_AGENT_AIRPORT_ADMIN: //admin
+
+                $assignableRoles = array(Roles::ROLE_AGENT_ADMIN, Roles::ROLE_AGENT_OPERATOR, Roles::ROLE_STAFFMEMBER); //keys
+
+                foreach ($assignableRoles as $roles) {
+                    if (isset(User::$USER_ROLE_LIST[$roles])) {
+                        $assignableRolesArray[] = array(
+                            $roles => User::$USER_ROLE_LIST[$roles]=='Staff Member'?'Host': User::$USER_ROLE_LIST[$roles],
+                        );
+                    }
+                }
+                break;
 
         }
 
@@ -1681,7 +1740,10 @@ $this->widget('bootstrap.widgets.TbButton', array(
             });
         });
 
-
+        $("#closeCropPhoto2").click(function() {
+            var ias = $('#photoCropPreview2').imgAreaSelect({instance: true});
+            ias.cancelSelection();
+        });
     });
 
     function cancel() {

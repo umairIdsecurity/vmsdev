@@ -80,7 +80,7 @@ class WorkstationController extends Controller {
      */
     public function actionCreate() {
         $model = new Workstation;
-
+        
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
@@ -153,6 +153,19 @@ class WorkstationController extends Controller {
     public function actionDelete($id) {
 
         if (Yii::app()->request->isPostRequest) {
+        	
+        	if (Yii::app()->request->isAjaxRequest) {
+        		$type = Yii::app()->request->getPost("type", "");
+        		if ($type == "check") {
+        			$activeCri = new CDbCriteria();
+        			$activeCri->compare("workstation", $id);
+        			$activeCri->addInCondition("visit_status", array(1, 2));
+        			$activeVisits = Visit::model()->findAll($activeCri);
+        			echo json_encode(array("visit" => count($activeVisits)));
+        			exit();
+        		}
+        	}
+        	
             $criteria = new CDbCriteria();
             $criteria->addCondition("workstation=" . $id);
             $criteria->addInCondition("visit_status", array(1, 2));
@@ -160,10 +173,15 @@ class WorkstationController extends Controller {
             $visits = Visit::model()->findAll($criteria);
            
             if (!empty($visits) && count($visits) > 0) {
-                Yii::app()->user->setFlash('error', 'Please assign user in Set Access Rules before deleting workstation.');
-                return $this->redirect(Yii::app()->createUrl('workstation/admin'));
+                if (Yii::app()->request->isAjaxRequest) {
+                	echo json_encode(array("status" => 1, "message" => 'Please assign user in Set Access Rules before deleting workstation.'));
+                	exit();
+                } else {
+                	Yii::app()->user->setFlash('error', 'Please assign user in Set Access Rules before deleting workstation.');
+                	$this->redirect(Yii::app()->createUrl('workstation/admin'));
+                }
             }
-            $sql = "DELETE FROM `workstation_card_type` WHERE `workstation`=$id";
+            $sql = "DELETE FROM workstation_card_type WHERE workstation=$id";
             $connection=Yii::app()->db;
             $connection->createCommand($sql)->execute();
                 
@@ -171,11 +189,17 @@ class WorkstationController extends Controller {
             $workstation = Workstation::model()->findByPk($id);
             $workstation->is_deleted = 1;
             $workstation->save();
-
+			
             // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-            if (!isset($_GET['ajax']))
-                $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
-        }else {
+            if (Yii::app()->request->isAjaxRequest) {
+            	echo json_encode(array("status" => 1));
+            	exit();
+            } else {
+            	$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+            }
+            
+            
+        } else {
             throw new CHttpException(400, 'Invalid request. Please do not repeat this request');
         }
     }

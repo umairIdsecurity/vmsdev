@@ -153,7 +153,7 @@ class UserWorkstations extends CActiveRecord {
     public function deleteAllUserWorkstationsWithSameUserId($userId) {
 
         UserWorkstations::model()->deleteAll(array(
-            'condition' => "`user` = '$userId'",
+            'condition' => "user = '$userId'",
         ));
     }
 

@@ -21,7 +21,7 @@ class SiteController extends Controller {
             ),
         );
     }
-
+    
 
     /*public function actionRedirect()
     {
@@ -144,19 +144,59 @@ class SiteController extends Controller {
 
         // collect user input data
         if (isset($_POST['LoginForm'])) {
+            
             $model->attributes = $_POST['LoginForm'];
+            
             // validate user input and redirect to the previous page if valid
             if ($model->validate() && $model->login()) {
                 $session = new CHttpSession;
+                /***************************************************************
+                 * 
+                 * GETTING TIMEZONES:
+                 * =================
+                 * First, of browser, if empty then of user logged in
+                 * and if empty, then of workstation
+                 * and if empty then of the server default timezone
+                 * will be available in SESSION VARIABLE named: timezone
+                 * 
+                 **************************************************************/
+                $browserTimezone='';
+                if (isset($_POST['timezone'])) {
+                    $browserTimezone=$_POST['timezone'];
+                }
+                
+                if(!empty($browserTimezone)){
+                    $session['timezone'] = $browserTimezone;
+                }
+                //**************************************************************
+                
                 switch ($session['role']) {
-					case Roles::ROLE_OPERATOR:
                     case Roles::ROLE_AIRPORT_OPERATOR:
-					case Roles::ROLE_AGENT_AIRPORT_ADMIN:
-                        if (!($model->checkInductions($session['id']))) {
-                            Yii::app()->user->setFlash('error', "Induction expired. Please, contact Administrator. ");
-                        } else {
-                            $this->redirect('index.php?r=site/selectworkstation&id=' . $session['id']);
+                    case Roles::ROLE_AGENT_AIRPORT_ADMIN:
+                    case Roles::ROLE_AGENT_AIRPORT_OPERATOR:
+                        
+                        $returnData=$model->checkInductions($session['id']);
+                        
+                        //AVMS USERS
+                        if($returnData["role"]== 12 || $returnData["role"]== 13 || $returnData["role"]== 14){
+                            if($returnData["success"] == false){
+                                Yii::app()->user->setFlash('error', "Your Induction has expired. Please, contact ASIC Office. ");
+                            }elseif($returnData["inducComplete"] == false){
+                                Yii::app()->user->setFlash('error', "Access Denied! Please contact Administration to complete your induction. ");
+                            }else{
+                                $this->redirect('index.php?r=site/selectworkstation&id=' . $session['id']);
+                            }
                         }
+//                        CVMS USERS  
+//                        else{
+//                           if($returnData["success"] == false){
+//                                Yii::app()->user->setFlash('error', "Your Induction has expired. Please, go to reception. ");
+//                            }elseif($returnData["inducComplete"] == false){
+//                                Yii::app()->user->setFlash('error', "Access Denied! Please contact Administration to complete your induction. ");
+//                            }else{
+//                                $this->redirect('index.php?r=site/selectworkstation&id=' . $session['id']);
+//                            } 
+//                        }
                         break;
                     case Roles::ROLE_AGENT_OPERATOR:
                     case Roles::ROLE_OPERATOR:
@@ -184,6 +224,7 @@ class SiteController extends Controller {
         // display the login form
         $this->render('login', array('model' => $model)) ;
     }
+
 
     /**
      * Logs out the current user and redirect to homepage.
@@ -262,7 +303,7 @@ class SiteController extends Controller {
     }
 
     public function actionSelectWorkstation($id) {
-
+        
         if (isset(Yii::app()->user->role) && (Yii::app()->user->role == Roles::ROLE_ADMIN || Yii::app()->user->role == Roles::ROLE_ISSUING_BODY_ADMIN)) {
             $session = new CHttpSession;
             $Criteria = new CDbCriteria();
@@ -299,12 +340,40 @@ class SiteController extends Controller {
         if (isset($_POST['submit']) && $_POST['userWorkstation'] != '') {
             $session = new CHttpSession;
             $session->open();
+            
             $session['workstation'] = $_POST['userWorkstation'];
+            
+            //******************************************************************
+            if(!isset($session['timezone']) || empty($session['timezone'])){
+                $wokstationTimezone = Workstation::model()->with('workstationTimezones')->find('t.tenant='.Yii::App()->user->tenant.' and t.id='.$_POST['userWorkstation']);
+                if(!empty($wokstationTimezone)){
+                    $attributes = $wokstationTimezone->attributes;
+                    $timezone=$attributes['timezone_value'];
+                    $session['timezone'] = $timezone;
+                }else{
+                    $this->checkTimezone();
+                }
+            }
+            //******************************************************************
+            
             $this->redirect('index.php?r=dashboard/adminDashboard');
         }
 
         // display the login form
         $this->render('selectworkstation', array('workstations' => $aArray, 'addWorkstation' => isset($addWorkstation) ? $addWorkstation : 0));
+    }
+    
+    public function checkTimezone(){
+        $userTimezone = User::model()->with('userTimezones')->find('t.tenant='.Yii::App()->user->tenant.' AND t.id='.Yii::App()->user->id);
+        $serverTimezone = date_default_timezone_get();
+        if(!empty($userTimezone)){
+            $attributes = $userTimezone->attributes;
+            $timezone=$attributes['timezone_value'];
+            $session['timezone'] = $timezone;
+        }
+        elseif(!empty($serverTimezone)){
+            $session['timezone'] = $serverTimezone;
+        }     
     }
 
     public function actionTouch(){

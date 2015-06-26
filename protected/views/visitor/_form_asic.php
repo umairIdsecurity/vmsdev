@@ -99,7 +99,7 @@ if ($this->action->id == 'update') {
                                     <?php if ($model['photo'] != NULL) { ?>
                                         <style>
                                             .ajax-upload-dragdrop {
-                                                background: url('<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($dataId) ?>') no-repeat center top;
+                                                background: url('<?php echo Photo::model()->returnVisitorPhotoRelativePath($dataId) ?>') no-repeat center top;
                                                 background-size: 137px 190px !important;
                                             }
                                         </style>
@@ -249,7 +249,7 @@ if ($this->action->id == 'update') {
                                            //if(Yii::app()->user->role == Roles::ROLE_ADMIN) {
                                                //echo '<select name="Visitor[visitor_type]" id="Visitor_visitor_type">';
                                                //echo CHtml::tag('option',array('value' => ''),'Select Visitor Type',true);
-                                               //$list = VisitorType::model()->findAll("`name` like '{$model->profile_type}%'");
+                                               //$list = VisitorType::model()->findAll("name like '{$model->profile_type}%'");
                                                
                                                /*foreach( $list as $val ) {
                                                    if ( $val->tenant == Yii::app()->user->tenant && $val->is_default_value == '1' )
@@ -260,7 +260,7 @@ if ($this->action->id == 'update') {
                                               } 
                                               echo "</select>";*/
                                            //} else
-                                                //echo $form->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes(NULL,"`name` like '{$model->profile_type}%'"));
+                                                //echo $form->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes(NULL,"name like '{$model->profile_type}%'"));
                                             ?>
                                             <?php //echo "<br>" . $form->error($model, 'visitor_type'); ?>
                                         </td>
@@ -614,7 +614,7 @@ if ($this->action->id == 'update') {
                             $.each(r.data, function (index, value) {
                                 document.getElementById('photoPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
-                                $(".ajax-upload-dragdrop").css("background", "url(<?php echo Yii::app()->request->baseUrl; ?>" + value.relative_path + ") no-repeat center top");
+                                $(".ajax-upload-dragdrop").css("background", "url(" + value.relative_path + ") no-repeat center top");
                                 $(".ajax-upload-dragdrop").css({"background-size": "132px 152px"});
                             });
                             $("#closeCropPhoto").click();
@@ -624,6 +624,11 @@ if ($this->action->id == 'update') {
                     });
                 }
             });
+        });
+
+        $("#closeCropPhoto").click(function() {
+            var ias = $('#photoCropPreview').imgAreaSelect({instance: true});
+            ias.cancelSelection();
         });
     });
 
@@ -795,7 +800,12 @@ if ($this->action->id == 'update') {
         }
     }
 
+    var requestRunning = false;
     function sendVisitorForm() {
+        if (requestRunning) { // don't do anything if an AJAX request is pending
+            return;
+        }
+        
         var form = $("#register-form").serialize();
         var url;
 
@@ -804,7 +814,7 @@ if ($this->action->id == 'update') {
         } else {
             url = "<?php echo CHtml::normalizeUrl(array("visitor/addvisitor")); ?>";
         }
-        $.ajax({
+        var ajaxOpts = {
             type: "POST",
             url: url,
             data: form,
@@ -826,7 +836,10 @@ if ($this->action->id == 'update') {
                     window.location = 'index.php?r=visitor/admin';
                 }
             }
-        });
+        };
+        requestRunning = true;
+        $.ajax(ajaxOpts);
+        return false;
     }
 
     function getWorkstation() { /*get workstations for operator*/

@@ -121,4 +121,10 @@ class AuditTrail extends CActiveRecord
 	{
 		return parent::model($className);
 	}
+        
+    public function behaviors() {
+        return array(
+            'DateTimeZoneAndFormatBehavior' => 'application.components.DateTimeZoneAndFormatBehavior',
+        );
+    }
 }

@@ -20,13 +20,14 @@ $session = new CHttpSession;
             $host = $model->patient;
             $GLOBALS['userHost'] = 'patient';
         }
+        $card_type = $model->card_type;
 
 
         $visitor = $model->visitor;
         $model = new Visit;
         $criteria = new CDbCriteria;
         $criteria->order = 'id DESC';
-        $criteria->addCondition('visit_status="' . VisitStatus::CLOSED . '" and visitor="' . $visitor . '"');
+        $criteria->addCondition("visit_status='" . VisitStatus::CLOSED . "' and visitor='" . $visitor . "'");
 
 
         $model->unsetAttributes();
@@ -59,7 +60,7 @@ $session = new CHttpSession;
                 //   'value' => 'Yii::app()->dateFormatter->format("d/MM/y",strtotime($data->date_in))',
                 ),
                 array(
-                    'header' => 'ASIC Sponsor',
+                    'header' => ($card_type > CardType::CONTRACTOR_VISITOR) ? "ASIC Sponsor" : "Host",
                     'type' => 'html',
                     'value' => 'returnPatientOrHostName($data->id,$GLOBALS["userHost"])',
                 ),
@@ -105,9 +106,14 @@ function returnPatientOrHostName($visit_id, $userHost) {
     if ($visitDetails['visitor_type'] == VisitorType::PATIENT_VISITOR) {
         $hostFullName = Patient::model()->findByPk($visitDetails['patient'])->name;
     } else {
-        $fname = User::model()->findByPk($visitDetails['host'])->first_name;
-        $lname = User::model()->findByPk($visitDetails['host'])->last_name;
-        $hostFullName = $fname . " " . $lname;
+        $user = Visitor::model()->findByPk($visitDetails['host']);
+        if ($user) {
+            $fname = $user->first_name;
+            $lname = $user->last_name;
+            $hostFullName = $fname . " " . $lname;
+        } else {
+            $hostFullName = '';
+        }
     }
 
     return $hostFullName;

@@ -73,7 +73,7 @@ class VisitController extends Controller {
         if (isset($_POST['Visit'])) {
 
             if (!isset($_POST['Visit']['date_check_in'])) {
-                $_POST['Visit']['date_check_in'] = date('d-m-Y');
+                $_POST['Visit']['date_check_in'] = date('Y-m-d');
                 $_POST['Visit']['time_check_in'] = date('h:i:s');
             }
 
@@ -87,21 +87,19 @@ class VisitController extends Controller {
                 case CardType::VIC_CARD_SAMEDATE: // VIC Sameday
                 case CardType::VIC_CARD_EXTENDED: // VIC Extended
                 case CardType::VIC_CARD_MULTIDAY: // VIC Multiday
-                    $model->date_check_out = date('d-m-Y');
+                    $model->date_check_out = date('Y-m-d');
                     break;
                 case CardType::VIC_CARD_MANUAL: // VIC Manual
                 case CardType::VIC_CARD_24HOURS: // VIC 24 hour
-                    $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 1 day'));
+                    $model->date_check_out = date('Y-m-d', strtotime($model->date_check_in . ' + 1 day'));
                     break;
                 default :
-                    $model->date_check_out = date('d-m-Y');
+                    $model->date_check_out = date('Y-m-d');
                 /*case CardType::VIC_CARD_EXTENDED: // VIC Extended
                 case CardType::VIC_CARD_MULTIDAY: // VIC Multiday
-                    $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 28 day'));
-                    break;*/
+                    $model->date_check_out = date('Y-m-d', strtotime($model->date_check_in . ' + 28 day'));*/
+                    break;
             }
-
-            $model->time_check_out = $model->time_check_in;
 
             // default workstation:
             if ((!isset($_POST['Visit']['workstation']) || empty($_POST['Visit']['workstation'])) && isset($session['workstation'])) {
@@ -179,7 +177,7 @@ class VisitController extends Controller {
                  User::model()->updateByPk($model->host, array('photo' => $_POST['User']['photo']));
 			 }
 			
-            if ($model->date_check_in > date('d-m-Y')) {
+            if (strtotime($model->date_check_in) > strtotime(date('d-m-Y'))) {
                 $visitStatus = VisitStatus::model()->findByAttributes(array('name' => 'Pre-registered'));
                 if ($visitStatus) {
                     $model->visit_status = $visitStatus->id;
@@ -303,17 +301,20 @@ class VisitController extends Controller {
         
         //update status for Contractor Card Type
         if ($model && $model->card_type == CardType::CONTRACTOR_VISITOR) {
-            if (isset($model->date_check_out) && strtotime($model->date_check_out) < strtotime(date("d-m-Y"))) {
+            if (isset($model->date_check_out) && strtotime($model->date_check_out) < strtotime(date("Y-m-d"))) {
                 $model->visit_status = VisitStatus::EXPIRED;
                 $model->save();
             }
         }
 
+        /**
+         * @var Visitor $visitorModel
+         */
         $visitorModel = Visitor::model()->findByPk($model->visitor);
         $reasonModel = VisitReason::model()->findByPk($model->reason);
         $patientModel = Patient::model()->findByPk($model->patient);
         $cardTypeModel = CardType::model()->findByPk($model->card_type);
-		$visitCount = Visit::model()->getVisitCount($model->id);
+        $visitCount = Visit::model()->getVisitCount($model->id);
         $visitCount['totalVisits'] = $model->visitCounts;
         $visitCount['remainingDays'] = $model->remainingDays;
 
@@ -330,13 +331,14 @@ class VisitController extends Controller {
 
         #update Visitor and Host
         if (isset($_POST['Visitor']) && isset($_POST['updateVisit'])){
+            $currentCardStatus = $visitorModel->visitor_card_status;
             $visitorModel->attributes = $_POST['Visitor'];
             $asicModel = Visitor::model()->findByPk($model->host);
             if ($asicModel){
-                $asicModel->first_name = $_POST['Visitor']['host_first_name'];
-                $asicModel->last_name = $_POST['Visitor']['host_last_name'];
-                $asicModel->asic_no = $_POST['Visitor']['host_asic_no'];
-                $asicModel->asic_expiry = $_POST['Visitor']['host_asic_expiry'];
+                if (isset($_POST['Visitor']['host_first_name'])) $asicModel->first_name = $_POST['Visitor']['host_first_name'];
+                if (isset($_POST['Visitor']['host_last_name'])) $asicModel->last_name = $_POST['Visitor']['host_last_name'];
+                if (isset($_POST['Visitor']['host_asic_no'])) $asicModel->asic_no = $_POST['Visitor']['host_asic_no'];
+                if (isset($_POST['Visitor']['host_asic_expiry'])) $asicModel->asic_expiry = $_POST['Visitor']['host_asic_expiry'];
                 $asicModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
                 #if(!$asicModel->validate()) die("asicModel-{$asicModel->id}".CHtml::errorSummary($asicModel));
                 $asicModel->save();
@@ -348,33 +350,18 @@ class VisitController extends Controller {
                     $companyModel = Company::model()->findByPk($visitorModel->company);
                     $staffModel = User::model()->findByPk($visitorModel->staff_id);
                     if ($companyModel) {
-                        $companyModel->name = $_POST['Company']['name'];
+                        if (isset($_POST['Company']['name'])) $companyModel->name = $_POST['Company']['name'];
                         #if(!$companyModel->validate()) die('companyModel-'.CHtml::errorSummary($asicModel));
                         $companyModel->save();
                     }
                     if (isset($staffModel) && $staffModel){
-                        $staffModel->contact_number = $_POST['Company']['mobile_number'];
-                        $staffModel->email = $_POST['Company']['email_address'];
+                        if (isset($_POST['Company']['mobile_number'])) $staffModel->contact_number = $_POST['Company']['mobile_number'];
+                        if (isset($_POST['Company']['email_address'])) $staffModel->email = $_POST['Company']['email_address'];
                         #if(!$staffModel->validate()) die('staffModel-'.CHtml::errorSummary($asicModel));
                         $staffModel->save();
                     }
                 }
             }
-            $visitorModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
-            #if(!$visitorModel->validate()) die('visitorModel-'.CHtml::errorSummary($asicModel));
-            if($visitorModel->save()){
-                $this->redirect(Yii::app()->createUrl('visit/detail&id='.$model->id));
-            }
-        }
-
-
-
-        if (isset($_POST['Visit'])) {
-            if (empty($_POST['Visit']['finish_time'])) {
-                $model->finish_time = date('H:i:s');
-            }
-
-            $model->attributes = $_POST['Visit'];
 
             if (isset($_POST['Visitor']['visitor_card_status']) && $_POST['Visitor']['visitor_card_status'] != $visitorModel->visitor_card_status) {
                 $visitorModel->visitor_card_status = $_POST['Visitor']['visitor_card_status'];
@@ -392,22 +379,45 @@ class VisitController extends Controller {
                     }
                 }
             }
+
+            $visitorModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
+            $visitorModel->setScenario('updateVic');
+            #if(!$visitorModel->validate()) die('visitorModel-'.CHtml::errorSummary($visitorModel));
+            if($visitorModel->save()){
+               if (isset($_POST['Visitor']['visitor_card_status'])&& $currentCardStatus == 2 && $_POST['Visitor']['visitor_card_status'] == 3) {
+                   $logCardstatusConvert = new CardstatusConvert();
+                   $logCardstatusConvert->visitor_id = $visitorModel->id;
+                   $logCardstatusConvert->convert_time = date("Y-m-d");
+                   $logCardstatusConvert->save();
+               }
+            }
+        }
+
+
+
+        if (isset($_POST['Visit'])) {
+            if (empty($_POST['Visit']['finish_time'])) {
+                $model->finish_time = date('H:i:s');
+            }
+
+            $model->attributes = $_POST['Visit'];
+
             // close visit process
             if (isset($_POST['closeVisitForm'])) {
-                if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY, CardType::VIC_CARD_24HOURS]) && date('d-m-Y') <= $model->date_check_out) {
-                    $currentDate = date('d-m-Y');
+                if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY, CardType::VIC_CARD_24HOURS]) && date('Y-m-d') <= $model->date_check_out) {
+                    $currentDate = date('Y-m-d');
                     $model->visit_status = VisitStatus::AUTOCLOSED;
                     switch ($model->card_type) {
                         case CardType::VIC_CARD_24HOURS: // VIC 24 hour
                             #change datetime check in and out for vic 24h.
                             $model->date_check_in = $model->date_check_out;
-                            $model->date_check_out = date('d-m-Y', strtotime('+1 day', strtotime( $model->date_check_out)));
+                            $model->date_check_out = date('Y-m-d', strtotime('+1 day', strtotime( $model->date_check_out)));
                             $model->time_check_in = date('H:i:s', strtotime('+1 minutes', strtotime($model->date_check_in.' '.$model->time_check_in)));
                             $model->time_check_out = $model->time_check_in;
                             break;
                         case CardType::VIC_CARD_EXTENDED: // VIC Extended
                         case CardType::VIC_CARD_MULTIDAY: // VIC Multiday
-                            $model->finish_date = date('d-m-Y');
+                            $model->finish_date = date('Y-m-d');
                             $model->finish_time = date('H:i:s');
                             break;
                     }
@@ -527,7 +537,7 @@ class VisitController extends Controller {
 
     public function actionCorporateTotalVisitCount() {
         $merge = new CDbCriteria;
-        $merge->addCondition('profile_type = "'. Visitor::PROFILE_TYPE_CORPORATE .'"');
+        $merge->addCondition("profile_type = '". Visitor::PROFILE_TYPE_CORPORATE ."'");
 
         $model = new Visitor('search');
         $model->unsetAttributes();  // clear any default values
@@ -542,7 +552,7 @@ class VisitController extends Controller {
 
     public function actionVicTotalVisitCount() {
         $merge = new CDbCriteria;
-        $merge->addCondition('profile_type = "'. Visitor::PROFILE_TYPE_VIC .'"');
+        $merge->addCondition("profile_type = '". Visitor::PROFILE_TYPE_VIC ."'");
 
         $model = new Visitor('search');
         $model->unsetAttributes();  // clear any default values
@@ -557,7 +567,7 @@ class VisitController extends Controller {
 
     public function actionVicRegister() {
         $merge = new CDbCriteria;
-        $merge->addCondition('visitor0.profile_type = "'. Visitor::PROFILE_TYPE_VIC .'"');
+        $merge->addCondition("visitor0.profile_type = '". Visitor::PROFILE_TYPE_VIC ."'");
 
         $model = new Visit('search');
         $model->unsetAttributes();  // clear any default values
@@ -610,7 +620,7 @@ class VisitController extends Controller {
         }
 
         $merge = new CDbCriteria;
-        $merge->addCondition('visit_status ="' . VisitStatus::ACTIVE . '"');
+        $merge->addCondition("visit_status ='" . VisitStatus::ACTIVE . "'");
 
         $dp = $model->search($merge);
 
@@ -683,7 +693,7 @@ class VisitController extends Controller {
         }
 
         $merge = new CDbCriteria;
-        $merge->addCondition('visit_status ="' . VisitStatus::CLOSED . '"');
+        $merge->addCondition("visit_status ='" . VisitStatus::CLOSED . "'");
 
         $dp = $model->search($merge);
 
@@ -849,7 +859,7 @@ class VisitController extends Controller {
         $model->attributes = $_POST['Visit'];
 
         //set status to pre-registered
-        if ($model->date_check_in > date('d-m-Y')) {
+        if (strtotime($model->date_check_in) > strtotime(date('d-m-Y'))) {
             $model->visit_status = VisitStatus::PREREGISTERED;
         }
 
@@ -857,17 +867,17 @@ class VisitController extends Controller {
         if (!empty($model)) {
             switch ($model->card_type) {
                 case CardType::VIC_CARD_SAMEDATE:
-                    $model->date_check_out = date('d-m-Y');
+                    $model->date_check_out = date('Y-m-d');
                     $model->time_check_out = $model->time_check_in;
                     break;
                 case CardType::VIC_CARD_24HOURS:
                 case CardType::VIC_CARD_MANUAL:
-                    $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 1 day'));
+                    $model->date_check_out = date('Y-m-d', strtotime($model->date_check_in . ' + 1 day'));
                     $model->time_check_out = $model->time_check_in;
                     break;
                 case CardType::VIC_CARD_EXTENDED:
                 case CardType::VIC_CARD_MULTIDAY:
-                    $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . ' + 28 day'));
+                    $model->date_check_out = date('Y-m-d', strtotime($model->date_check_in . ' + 28 day'));
                     $model->time_check_out = $model->time_check_in;
                     break;
             }
@@ -1030,7 +1040,7 @@ class VisitController extends Controller {
          * Init dataProvider for first page
          */
         $merge = new CDbCriteria;
-        $merge->addCondition('visitor0.profile_type = "'. Visitor::PROFILE_TYPE_VIC .'"');
+        $merge->addCondition("visitor0.profile_type = '". Visitor::PROFILE_TYPE_VIC ."'");
 
         $model = new Visit('search');
         $model->unsetAttributes();  // clear any default values
@@ -1083,8 +1093,8 @@ class VisitController extends Controller {
             
             //OTHER PERSON CODE FIXED---THE CODE SHOULD BE LIKE THAT AS JULIE WANTS TOTAL VICs VISITORS BY WORKSTATIONS OF CURRENT USER
             //COMMENETED CODE IS OF THAT PERSON CODE
-//            $dateCondition = '(visits.date_check_in BETWEEN "'.$from->format('d-m-Y').'"'
-//                . ' AND "'.$to->format('d-m-Y').'") OR (visits.date_check_in BETWEEN "'.$from->format('Y-m-d').'"'
+//            $dateCondition = '(visits.date_check_in BETWEEN "'.$from->format('Y-m-d').'"'
+//                . ' AND "'.$to->format('Y-m-d').'") OR (visits.date_check_in BETWEEN "'.$from->format('Y-m-d').'"'
 //                . ' AND "'.$to->format('Y-m-d').'") AND';
 
         }

@@ -142,8 +142,8 @@ class CardGeneratedController extends Controller {
             Yii::app()->params['photo_unique_filename'] = $unique_fileName;
 
             $connection = Yii::app()->db;
-            $command = $connection->createCommand('INSERT INTO `photo` '
-                    . '(`filename`, `unique_filename`, `relative_path`) VALUES ("' . $unique_fileName . '","' . $unique_fileName . '","' . $path . '" )');
+            $command = $connection->createCommand('INSERT INTO photo '
+                    . "(filename, unique_filename, relative_path) VALUES ('" . $unique_fileName . "','" . $unique_fileName . "','" . $path . "' )");
             $command->query();
 
 
@@ -241,12 +241,18 @@ class CardGeneratedController extends Controller {
         }else{
             $html2pdf = Yii::app()->ePdf->HTML2PDF('P', 'CARDPRINT', 'en',TRUE,'UTF-8',array(0,0,0,0));
         }
-        
-        $html2pdf->WriteHTML($this->renderPartial('printpdf', $data, true));
+
+        if ($model->card_type > 4) {
+            $html2pdf->WriteHTML($this->renderPartial('printpdf', $data, true));
+        } else {
+            $html2pdf->WriteHTML($this->renderPartial('_card-corporate', $data, true));
+        }
+
+
         $html2pdf->Output();
-        
+
     }
-    
+
 
     /**
      * Returns the data model based on the primary key given in the GET variable.

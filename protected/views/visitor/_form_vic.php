@@ -105,7 +105,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                                     <?php if ($model['photo'] != NULL) { ?>
                                         <style>
                                             .ajax-upload-dragdrop {
-                                                background: url('<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($dataId) ?>') no-repeat center top;
+                                                background: url('<?php echo Photo::model()->returnVisitorPhotoRelativePath($dataId) ?>') no-repeat center top;
                                                 background-size: 137px 190px !important;
                                             }
                                         </style>
@@ -215,7 +215,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                                                     }
                                                 } echo "</select>";
                                             }  else {
-                                                echo $form->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes(NULL,"`name` like '{$model->profile_type}%'"));
+                                                echo $form->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes(NULL,"name like '{$model->profile_type}%'"));
                                             }
                                           
                                             ?>
@@ -310,7 +310,11 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                         </tr>  
                         <tr>
                             <td>
-                                <?php echo $form->dropDownList($model, 'contact_state', Visitor::$AUSTRALIAN_STATES, array('empty' => 'State', 'style' => 'width: 140px;')); ?>
+                                <?php if($model->contact_country == Visitor::AUSTRALIA_ID ){
+                                    echo $form->dropDownList($model, 'contact_state', Visitor::$AUSTRALIAN_STATES, array('empty' => 'State', 'style' => 'width: 140px;'));
+                                } else {
+                                    echo $form->textField($model, 'contact_state', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'State', 'style' => 'width: 62px;'));
+                                } ?>
                                 <?php echo $form->textField($model, 'contact_postcode', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Postcode', 'style' => 'width: 62px;')); ?>
                                 <span class="required">*</span>
                                 <?php echo $form->error($model, 'contact_state'); ?>
@@ -756,7 +760,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                             $.each(r.data, function (index, value) {
                                 document.getElementById('photoPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
-                                $(".ajax-upload-dragdrop").css("background", "url(<?php echo Yii::app()->request->baseUrl; ?>" + value.relative_path + ") no-repeat center top");
+                                $(".ajax-upload-dragdrop").css("background", "url(" + value.relative_path + ") no-repeat center top");
                                 $(".ajax-upload-dragdrop").css({"background-size": "132px 152px"});
                             });
                             $("#closeCropPhoto").click();
@@ -765,6 +769,11 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                         }
                     });
                 }
+            });
+
+            $("#closeCropPhoto").click(function() {
+                var ias = $('#photoCropPreview').imgAreaSelect({instance: true});
+                ias.cancelSelection();
             });
         });
     });
@@ -937,8 +946,11 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
         }
     }
 
+    var requestRunning = false;
     function sendVisitorForm() {
-
+        if (requestRunning) { // don't do anything if an AJAX request is pending
+            return;
+        }
         $('#Visitor_contact_country').removeAttr('disabled');
 
         if (!$('#Visitor_alternative_identification').attr('checked')) {
@@ -961,7 +973,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
             url = "<?php echo CHtml::normalizeUrl(array("visitor/addvisitor")); ?>";
         }
 
-        $.ajax({
+        var ajaxOpts = {
             type: "POST",
             url: url,
             data: form,
@@ -979,7 +991,8 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                 }
             },
             complete: function() {
-                $("#submitFormVisitor").data('requestRunning', false);
+                //$("#submitFormVisitor").data('requestRunning', false);
+                requestRunning = false;
             },
             error: function (data) {
                 if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
@@ -990,7 +1003,10 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                     window.location = 'index.php?r=visitor/admin';
                 }
             }
-        });
+        };
+        requestRunning = true;
+        $.ajax(ajaxOpts);
+        return false;
     }
 
     function getWorkstation() { /*get workstations for operator*/

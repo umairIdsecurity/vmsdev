@@ -217,6 +217,22 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
         });
 
         $(document).on('click', '#registerNewVisit', function (e) {
+
+            var imgsrc;
+            $("#photoPreview").each(function() {
+                imgsrc = this.src;
+            });
+            var profileImage = '<?php echo $visitorModel->photo;?>';
+            var isDefault = imgsrc.search('companylogohere1.png');
+            if( isDefault > 0 || profileImage == '' || !profileImage) {
+                <?php if($model->card_type != CardType::VIC_CARD_SAMEDATE ) { ?>
+                $("#Visitor_photo_em").attr('style', 'margin-right:84px ; margin-bottom:0px;');
+                $("#editImageBtn.editImageBtn").attr('style', 'margin-top:-5px !important; margin-right:84px ; margin-bottom:0px;');
+                $("#cropImageBtn.editImageBtn").attr('style', 'margin-top:-5px !important; margin-right:84px ; margin-bottom:0px;');
+                return;
+                <?php } ?>
+            }
+
             e.preventDefault();
             $this = $(this);
             var flag = true;

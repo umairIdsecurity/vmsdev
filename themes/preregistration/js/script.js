@@ -153,7 +153,8 @@ jQuery(function() {
 jQuery(function() {
     'use strict';
     var $btnToggleClass = $('[data-toggle-class]'),
-        $btnClosetToggleClass = $('[data-closet-toggle-class]');
+        $btnClosetToggleClass = $('[data-closet-toggle-class]'),
+        $btnClosetUpdateClass = $('[data-closet-update-class]');
 
     if ($btnToggleClass.length) {
         $btnToggleClass.on('click', function(e) {
@@ -186,6 +187,12 @@ jQuery(function() {
         $btnClosetToggleClass.on('click', function(e) {
             e.preventDefault();
             $(this).closest($(this).data('object')).toggleClass($(this).data('closetToggleClass'));
+        });
+    }
+    if ($btnClosetUpdateClass.length) {
+        $btnClosetUpdateClass.on('click', function(e) {
+            e.preventDefault();
+            $(this).closest($(this).data('object')).attr('class', $(this).data('closetUpdateClass'));
         });
     }
 });

@@ -310,7 +310,11 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                         </tr>  
                         <tr>
                             <td>
-                                <?php echo $form->dropDownList($model, 'contact_state', Visitor::$AUSTRALIAN_STATES, array('empty' => 'State', 'style' => 'width: 140px;')); ?>
+                                <?php if($model->contact_country == Visitor::AUSTRALIA_ID ){
+                                    echo $form->dropDownList($model, 'contact_state', Visitor::$AUSTRALIAN_STATES, array('empty' => 'State', 'style' => 'width: 140px;'));
+                                } else {
+                                    echo $form->textField($model, 'contact_state', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'State', 'style' => 'width: 62px;'));
+                                } ?>
                                 <?php echo $form->textField($model, 'contact_postcode', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Postcode', 'style' => 'width: 62px;')); ?>
                                 <span class="required">*</span>
                                 <?php echo $form->error($model, 'contact_state'); ?>
@@ -542,7 +546,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
         var workstation = $("#User_workstation").val();
         if (!workstation || workstation == "") {
             $("#Visitor_visitor_workstation_em_").show();
-            $("#Visitor_visitor_workstation_em_").html('Please select a Workstation');
+            $("#Visitor_visitor_workstation_em_").html('Please enter Workstation');
             return false;
         }
 
@@ -662,7 +666,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
             var workstation = $("#User_workstation").val();
             if (!workstation || workstation == "") {
                 $("#Visitor_visitor_workstation_em_").show();
-                $("#Visitor_visitor_workstation_em_").html('Please select a Workstation');
+                $("#Visitor_visitor_workstation_em_").html('Please enter Workstation');
             } else {
                 $("#Visitor_visitor_workstation_em_").hide();
             }

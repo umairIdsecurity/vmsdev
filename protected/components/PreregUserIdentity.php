@@ -14,6 +14,7 @@ class PreregUserIdentity extends CUserIdentity {
      * Authenticates a user using the User data model.
      * @return boolean whether authentication succeeds.
      */
+
     public function authenticate() {
         $user = Registration::model()->find('LOWER(email)=?', array(strtolower($this->username)));
         if ($user === null) {

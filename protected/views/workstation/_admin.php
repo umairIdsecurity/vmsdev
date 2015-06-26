@@ -164,6 +164,41 @@ Yii::app()->clientScript->registerScript('select_card_type_vic', "
             $("#card_id").val(card_id[1]);
             $('#form_modal_edit').modal('show');
         });
+
+        $(".delete").click(function(e) {
+            e.preventDefault();
+
+            var selected = $(this);
+
+            $.ajax({
+                url: $(selected).attr("href"),
+                data: { type: "check" },
+                type: 'POST',
+                dataType: "json",
+                success: function (data) {
+                    if (data.visit > 0) {
+                    	var ret = confirm("There are active visits in this workstations. Are you sure you want to delete?");
+                    } else {
+                    	var ret = confirm("Are you sure you want to delete this item?");
+                    }
+                    if (ret) {
+                    	$.ajax({
+                            url: $(selected).attr("href"),
+                            data: { type: "delete" },
+                            type: 'POST',
+                            dataType: "json",
+                            success: function (data) {
+                                if (data.status == 1) {
+                                	window.location.reload();
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+
+            return false;
+        });
     });
 
     function generateRow() {

@@ -257,8 +257,8 @@ class PreregistrationController extends Controller
 
 	public function actionDetails(){
 		echo "welcome";
-		/*echo Yii::app()->user->id;
-		print_r(Yii::app()->user);*/
+		echo Yii::app()->user->id;
+		print_r(Yii::app()->user);
 	}
 
 	public function actionLogout() {

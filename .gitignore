@@ -18,3 +18,7 @@ composer.lock
 /.idea
 my-behat-config.yml
 uploads/card_lost_declaration
+/protected/runtime/gii-1.1.14
+/protected/runtime/gii-1.1.14/CrudCode.php
+/protected/runtime/gii-1.1.14/ModelCode.php
+/protected/runtime/gii-1.1.14/ControllerCode.php

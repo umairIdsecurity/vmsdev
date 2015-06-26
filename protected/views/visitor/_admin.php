@@ -4,7 +4,7 @@
 /* @var $model Visitor */
 ?>
 
-<h1>Visitors</h1>
+<h1><?php echo strtoupper(Yii::app()->request->getParam('vms')) ?> Visitors</h1>
 
 <?php
 $this->widget('zii.widgets.grid.CGridView', array(

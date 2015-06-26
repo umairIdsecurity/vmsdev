@@ -32,6 +32,28 @@ class CompaniesController extends RestfulController {
         }
     }
 
+    public function actionSearch() {
+        try {
+            $token_user = $this->checkAuth();
+            if (Yii::app()->request->getParam('query')) {
+                $query = Yii::app()->request->getParam('query');
+                $criteria = new CDbCriteria();
+                $criteria->addSearchCondition("code", $query,true);
+                $company = Company::model()->find($criteria);
+                if($company){
+                    $result = $this->populateCompanies(array($company));
+                    $this->sendResponse(200, CJSON::encode($result));
+                }else{
+                    $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'COMPANY_DOES_NOT_EXIST', 'errorDescription' => 'Requested company not found')));
+                }
+            } else {
+                    $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'UNAUTHORIZED', 'errorDescription' => 'Invalid parameter')));
+            }
+        } catch (Exception $ex) {
+            $this->sendResponse(500, CJSON::encode(array('responseCode' => 500, 'errorCode' => 'INTERNAL_SERVER_ERROR', 'errorDescription' => 'Something went wrong')));
+        }
+    }
+
     private function populateCompanies($companies) {
         try {
             $result = array();

@@ -53,6 +53,13 @@
                 </td>
             </tr>
             <tr>
+                <td style="width:160px;"><?php echo $form->labelEx($model,'companyType'); ?></td>
+                <td>
+                    <?php echo $form->dropDownList($model, 'companyType', CHtml::listData(CompanyType::model()->findAll(), 'id', 'name'), array('prompt'=>'Select a company type', 'placeholder'=>'Company Type')); ?>
+                    <?php echo "<br>" . $form->error($model, 'companyType'); ?>
+                </td>
+            </tr>
+            <tr>
                 <td style="width:200px; padding-left: 9px;">
                     <a class="btn btn-default" href="javascript:void(0)" role="button" id="showCompanyContactFields">+</a> Add Company Contact
                 </td>

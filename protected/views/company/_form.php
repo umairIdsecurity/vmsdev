@@ -96,6 +96,14 @@ if ($this->action->id == 'update') {
             </tr>
         <?php } ?>
 
+        <tr class="user_fields1">
+            <td style="width:160px;">&nbsp;</td>
+            <td style="width:240px;">
+                <?php echo $form->dropDownList($model, 'company_type', CHtml::listData(CompanyType::model()->findAll(), 'id', 'name'), array('prompt'=>'Select a company type', 'placeholder'=>'Company Type', 'style' => 'width: 228px')); ?>
+                <?php echo "<br>" . $form->error($model, 'company_type'); ?>
+            </td>
+        </tr>
+
         <tr>
             <td style="width:160px;">&nbsp;</td>
             <td>

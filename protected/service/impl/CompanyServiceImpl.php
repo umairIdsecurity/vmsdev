@@ -14,9 +14,14 @@
 class CompanyServiceImpl implements CompanyService {
 
     public function save($company, $sessionTenant, $sessionRole, $currentAction) {
-        if($company->tenant_agent == ''){
+        if ($company->tenant_agent == '') {
             $company->tenant_agent = NULL;
         }
+
+        if ($company->code == '') {
+            $company->code = strtoupper(substr($company->name, 0, 3));
+        }
+
         if (!($company->save())) {
             return false;
         }

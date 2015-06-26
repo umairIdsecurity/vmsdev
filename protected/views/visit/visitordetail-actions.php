@@ -228,7 +228,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                 <?php if($model->card_type != CardType::VIC_CARD_SAMEDATE ) { ?>
                 $("#Visitor_photo_em").attr('style', 'margin-right:84px ; margin-bottom:0px;');
                 $("#editImageBtn.editImageBtn").attr('style', 'margin-top:-5px !important; margin-right:84px ; margin-bottom:0px;');
-                console.log('<?php echo $model->card_type;  ?>')
+                $("#cropImageBtn.editImageBtn").attr('style', 'margin-top:-5px !important; margin-right:84px ; margin-bottom:0px;');
                 return;
                 <?php } ?>
             }

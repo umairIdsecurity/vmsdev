@@ -29,9 +29,7 @@ $photoForm = $this->beginWidget('CActiveForm', array(
     <?php } else { ?>
         <img id="photoPreview" src="" style="display:none;"></img>
     <?php } ?>
-
 </div>
-
 <?php
 $vstr = Visitor::model()->findByPk($model->visitor);
 if ($vstr->profile_type == "CORPORATE") {
@@ -42,8 +40,11 @@ if ($vstr->profile_type == "CORPORATE") {
      $bgcolor = CardGenerated::VIC_CARD_COLOR;
 }
 ?>
+<?php if($model->card_type > 4){ ?>
 <?php $this->renderPartial("_card_detail",array('bgcolor'=>$bgcolor,'model'=>$model,'visitorModel'=>$visitorModel));?>
-<div id="Visitor_photo_em" class="errorMessage" style="display: none;">Please upload a profile image.</div>
+<?php } else {?>
+<?php $this->renderPartial("_card-corporate",array('bgcolor'=>$bgcolor,'model'=>$model,'visitorModel'=>$visitorModel));?>
+<?php } ?>
 <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
 <?php if ($visitorModel->photo != '') { ?>
 <input type="button" class="btn editImageBtn actionForward" id="editImageBtn" style="  margin-bottom: 2px!important;" value="Edit Photo" onclick = "document.getElementById('light').style.display = 'block';

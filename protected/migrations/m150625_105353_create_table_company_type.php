@@ -14,7 +14,7 @@ class m150625_105353_create_table_company_type extends CDbMigration
         $this->createTable("company_type", array(
             'id' => 'pk',
             'name' => 'VARCHAR(50) NOT NULL',
-            'created_by' => 'BIGINT(20) NULL',
+            'created_by' => 'BIGINT NULL',
         ));
 
         $this->insert('company_type', array(
@@ -27,7 +27,7 @@ class m150625_105353_create_table_company_type extends CDbMigration
             'name' => 'Visitor'
         ));
 
-        $this->addColumn('company', 'company_type', 'BIGINT(20) NULL AFTER card_count');
+        $this->addColumn('company', 'company_type', 'BIGINT NULL AFTER card_count');
 
 	}
 

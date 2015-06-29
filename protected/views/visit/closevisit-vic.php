@@ -69,7 +69,7 @@
             ?>
         </td>
     </tr>
-    <?php if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY])): ?>
+    <?php if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY, CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_MANUAL])): ?>
     <tr>
         <td>Card Option</td>
     </tr>

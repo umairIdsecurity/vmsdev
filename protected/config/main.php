@@ -4,7 +4,10 @@
 // Yii::setPathOfAlias('local','path/to/local-folder');
 Yii::setPathOfAlias('bootstrap', dirname(__FILE__) . '/../extensions/bootstrap');
 Yii::setPathOfAlias('helpers','helpers');
-
+if (strpos($_SERVER['SERVER_NAME'],'vmsuitest-win') !== false) {
+    $dbDriver = 'mssql';
+    $userTbl = '"user"';
+} else { $userTbl = 'user'; };
 // This is the main Web application configuration. Any writable
 // CWebApplication properties can be configured here.
 $result = CMap::mergeArray(
@@ -169,6 +172,8 @@ $result = CMap::mergeArray(
                 // this is used in contact page
                 'photo_unique_filename' => 'test',
                 'mandrillApiKey' => '49tRGdzmJDhovnkkygttuQ',
+                'dbDriver' => $dbDriver,
+                'userTbl' => $userTbl
             ),
                 ), require(dirname(__FILE__) . '/environment.php')
 );

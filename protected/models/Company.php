@@ -31,16 +31,7 @@ class Company extends CActiveRecord {
 	public $user_contact_number;
     public $is_user_field;
 
-    protected $tenantQuery = "SELECT COUNT(c.id)
-FROM user u
-LEFT JOIN company c ON u.company=c.id
-WHERE u.id=c.tenant AND c.id !=1";
-
-    public function getUserText() {
-        if (strpos($_SERVER['SERVER_NAME'],'vmsuitest-win') !== false) {
-            return '"user"';
-        } else return 'user';
-    }
+    protected $tenantQuery = "SELECT COUNT(c.id) FROM user u LEFT JOIN company c ON u.company=c.id WHERE u.id=c.tenant AND c.id !=1";
 
     /**
      * @return string the associated database table name

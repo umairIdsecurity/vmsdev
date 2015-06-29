@@ -629,7 +629,11 @@ class Visit extends CActiveRecord {
         if ($merge !== null) {
             $criteria->mergeWith($merge);
         }
+        if (Yii::app()->params['dbDriver'] == 'mssql') {
+            $criteria->addCondition("CONVERT(date, t.date_check_out, 102) > DATEADD(day, -2, GETDATE())");
+        } else {
             $criteria->addCondition("str_to_date(t.date_check_out,'%Y-%m-%d') > DATE_ADD(now(),interval -2 day)");
+        }
         if ($this->filterProperties) {
             $query = "t.id LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.first_name LIKE CONCAT('%', :filterProperties , '%')
@@ -982,11 +986,11 @@ class Visit extends CActiveRecord {
         $res_visitor = Yii::app()->db->createCommand("SELECT visitor FROM visit WHERE visit.id= " . $visitId)->queryAll();
         if ($res_visitor) {
             $visitor = $res_visitor[0]['visitor'];
-
+            $userTbl = Yii::app()->params['userTbl'];
             $res_company = Yii::app()->db->createCommand("SELECT company.id AS company_id, company.name AS company_name
                                                           FROM visit
-                                                            LEFT JOIN user ON user.id = visit.host
-                                                            LEFT JOIN company ON user.company = company.id
+                                                            LEFT JOIN $userTbl ON $userTbl.id = visit.host
+                                                            LEFT JOIN company ON $userTbl.company = company.id
                                                            WHERE company.is_deleted=0
                                                            AND visit.id= " . $visitId)->queryAll();
             if ($res_company) {
@@ -997,9 +1001,9 @@ class Visit extends CActiveRecord {
 
 
             $res_host = Yii::app()->db->createCommand("SELECT id
-                                                        FROM user
-                                                        WHERE user.is_deleted=0
-                                                        AND user.company=" . $company)->queryAll();
+                                                        FROM $userTbl
+                                                        WHERE $userTbl.is_deleted=0
+                                                        AND $userTbl.company=" . $company)->queryAll();
 
             //var_dump($res_host);
             if ($res_host) {

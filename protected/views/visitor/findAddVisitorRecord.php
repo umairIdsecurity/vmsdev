@@ -13,11 +13,7 @@ if ($this->action->id == 'update') {
     $dataId = $_GET['id'];
 }
 
-$countryList = CHtml::listData(Country::model()->findAll(array(
-        "order" => "name asc",
-        "group" => "name"
-    )
-), 'id', 'name');
+$countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 
 // set default country is Australia = 13
 $model->identification_country_issued = 13;
@@ -60,7 +56,7 @@ $model->identification_country_issued = 13;
 
                 <div data-ng-app="PwordForm">
                     <?php
-                    $form = $this->beginWidget('CActiveForm', array(
+                   $form = $this->beginWidget('CActiveForm', array(
                         'id' => 'register-form',
                         'htmlOptions' => array("name" => "registerform"),
                         'enableAjaxValidation' => false,
@@ -107,24 +103,21 @@ $model->identification_country_issued = 13;
                                 } else {
                                     $("#Visitor_visitor_type_em_").empty().hide();
                                 }
-
                                 if (!hasError){
                                     var vehicleValue = $("#Visitor_vehicle").val();
                                     if(vehicleValue.length < 6 && vehicleValue != ""){
                                         $("#Visitor_vehicle_em_").show();
                                         $("#Visitor_vehicle_em_").html("Vehicle should have a min. of 6 characters");
-                                    }else if ($("#workstation").val() == ""){
-                                        $(".errorMessageWorkstation").show();
-                                        $(".visitorReason").hide();
-                                    } else if ($("#Visitor_visitor_type").val() == "") {
+                                    }
+                                    else if ($("#Visitor_visitor_type").val() == "") {
                                         $(".visitorType").show();
-                                        $(".errorMessageWorkstation").hide();
+                                       
                                     } else if ($("#Visit_reason").val() == "" || ($("#Visit_reason").val() == "Other" &&  $("#VisitReason_reason").val() == "")) {
                                         $(".visitorReason").show();
-                                        $(".errorMessageWorkstation").hide();
+                                      
                                     } else if ($("#Visit_reason").val() == "Other" &&  $("#VisitReason_reason").val() != "") {
                                         checkReasonIfUnique();
-                                        $(".errorMessageWorkstation").hide();
+                                        
                                     } else if(  $("#Visitor_photo").val() == "" &&
                                                 $("#cardtype").val() != 1 &&
                                                 $("#cardtype").val() != ' . CardType::MANUAL_VISITOR . ' &&
@@ -134,7 +127,7 @@ $model->identification_country_issued = 13;
                                     }
 
                                     else {
-                                        $(".errorMessageWorkstation").hide();
+                                        
                                         $(".visitorReason").hide();
                                         $("#photoErrorMessage").hide();
                                         $(".visitorType").hide();
@@ -144,6 +137,13 @@ $model->identification_country_issued = 13;
 							}'
                         ),
                     ));
+                   
+//else if ($("#workstation").val() == ""){
+//  $(".errorMessageWorkstation").show();
+//  $(".visitorReason").hide();
+//}
+//$(".errorMessageWorkstation").hide();
+
                     ?>
                     <?php /*echo $form->errorSummary($model); */?>
                     <input type="hidden" id="emailIsUnique" value="0"/>
@@ -476,10 +476,11 @@ $model->identification_country_issued = 13;
                                         }
                                         ?>
                                     </select>
+                                    <!--
                                     <span class="required">*</span>
 
                                     <div style="display:none;" class="errorMessage errorMessageWorkstation">Select Workstation</div>
-
+                                    -->
                                 </td>
                             </tr>
 
@@ -488,7 +489,7 @@ $model->identification_country_issued = 13;
 
                                     <?php
                                     if(Yii::app()->user->role == Roles::ROLE_ADMIN) {
-                                        $list = VisitorType::model()->findAll('created_by = :c', [':c' => Yii::app()->user->id]);
+                                        $list = VisitorType::model()->findAll("created_by = :c", [":c" => Yii::app()->user->id]);
                                         echo '<select onchange="showHideHostPatientName(this)" name="Visitor[visitor_type]" id="Visitor_visitor_type">';
                                         echo CHtml::tag('option',array('value' => ''),'Select Visitor Type',true);
                                         foreach( $list as $val ) {

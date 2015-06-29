@@ -73,7 +73,7 @@ function isCompanyTenant($companyId) {
 
     $company = Yii::app()->db->createCommand()
                     ->select('c.id')
-                    ->from('user u')
+                    ->from('"user" u')
                     ->join('company c', 'u.company=c.id')
                     ->where("u.id=c.tenant and c.id !=1 and c.id='" . $companyId . "'")
                     ->queryAll();

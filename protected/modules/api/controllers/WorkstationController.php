@@ -24,8 +24,12 @@ class WorkstationController extends RestfulController {
                 $criteria->addInCondition('card_type',$cardType);
 
                 $workstation  = WorkstationCardType::model()->findAll($criteria);
+                if ($workstation) {
                     $result = $this->populateCardType($workstation);
                     $this->sendResponse(200, CJSON::encode($result));
+                }else{
+                    $this->sendResponse(401, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'WORKSTATION_NOT_FOUND', 'errorDescription' => 'workstation not found')));
+                }
             } else {
                 $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'UNAUTHORIZED', 'errorDescription' => 'wrong param for request')));
             }

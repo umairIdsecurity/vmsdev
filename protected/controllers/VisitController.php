@@ -1117,7 +1117,7 @@ class VisitController extends Controller {
         
         //count(visitors.id) as visitors,DATE(visitors.date_created) AS date_check_in,t.id,t.name, t.id  as workstationId
         $visitsCount = Yii::app()->db->createCommand()
-            ->select('count(visitors.id) as visitors,DATE(visitors.date_created) AS date_check_in,t.id,t.name, t.id  as workstationId')
+            ->select('count(visitors.id) as visitors, convert(varchar(10), visitors.date_created, 120) AS date_check_in, t.id, t.name, t.id as workstationId')
             ->from('workstation t')
             ->join('visitor visitors' , 't.id = visitors.visitor_workstation')
             ->where($dateCondition)

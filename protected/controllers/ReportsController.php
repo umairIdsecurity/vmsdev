@@ -431,7 +431,7 @@ class ReportsController extends Controller
                          ." AND (t.is_deleted =0 ) AND (t.profile_type='VIC')";
         
         $data = Yii::app()->db->createCommand()
-                ->select("DATE(t.date_created) AS date_check_in, t.first_name, t.id") 
+                ->select("convert(varchar(10), t.date_created, 120) AS date_check_in, t.first_name, t.id") 
                 ->from("visitor t")
                 ->where($dateCondition)
                 ->queryAll();
@@ -458,7 +458,7 @@ class ReportsController extends Controller
         
         
         $data = Yii::app()->db->createCommand()
-                ->select("DATE(t.date_created) AS date_check_in, t.first_name, t.id") 
+                ->select("convert(varchar(10), t.date_created, 120) AS date_check_in, t.first_name, t.id") 
                 ->from("visitor t")
                 ->where($dateCondition)
                 ->queryAll();

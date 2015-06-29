@@ -63,13 +63,13 @@ $this->widget('zii.widgets.grid.CGridView', array(
         
         array(
             'name' => 'firstname',
-            'value' => '$data->visitor0->first_name',
+            'value' => '!empty($data->visitor0->first_name) ? $data->visitor0->first_name : ""',
             'header' => 'First Name',
             'filter' => CHtml::textField('Visit[firstname]', '', array('class' => 'filterFirstName','placeholder'=>'First Name')),
         ),
         array(
             'name' => 'lastname',
-            'value' => '$data->visitor0->last_name',
+            'value' => '!empty($data->visitor0->last_name) ? $data->visitor0->last_name : ""',
             'header' => 'Last Name',
             'filter' => CHtml::textField('Visit[lastname]', '', array('class' => 'filterLastName' , 'placeholder'=>'Last Name')),
         ),
@@ -83,13 +83,13 @@ $this->widget('zii.widgets.grid.CGridView', array(
         ),
         array(
             'name' => 'contactnumber',
-            'value' => '$data->visitor0->contact_number',
+            'value' => '!empty($data->visitor0->contact_number) ? $data->visitor0->contact_number : ""',
             'header' => 'Contact Number',
             'filter'=>CHtml::activeTextField($model, 'contactnumber', array('placeholder'=>'Contact Number')),
         ),
         array(
             'name' => 'contactemail',
-            'value' => '$data->visitor0->email',
+            'value' => '!empty($data->visitor0->email) ? $data->visitor0->email : ""',
             'header' => 'Contact Email',
             'filter'=>CHtml::activeTextField($model, 'contactemail', array('placeholder'=>'Contact Email'))
         ),

@@ -41,14 +41,13 @@ class DateTimeZoneAndFormatBehavior extends CActiveRecordBehavior
     
     public function __construct() {
         $session = new CHttpSession;
-        $this->user_timezone = $session['timezone'];
+        //$this->user_timezone = $session['timezone'];
         
-//        if(!empty($session['timezone'])){
-//            $this->user_timezone = $session['timezone'];
-//        }
-//        else{
-//            $this->user_timezone = "Australia/Perth";
-//        }
+        if(!empty($session['timezone'])){
+            $this->user_timezone = $session['timezone'];
+        } else {
+            $this->user_timezone = "Australia/Perth";
+        }
     }
     
     public function beforeSave($event) {

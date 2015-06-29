@@ -101,21 +101,21 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' => 'firstname',
             'filter'=>CHtml::activeTextField($model, 'firstname', array('placeholder'=>'First Name')),
-            'value' => '$data->visitor0->first_name',
+            'value' => '!empty($data->visitor0->first_name) ? $data->visitor0->first_name : ""',
             'header' => 'First Name',
             'htmlOptions'=>array('width'=>'120px'),
         ),
         array(
             'name' => 'lastname',
             'filter'=>CHtml::activeTextField($model, 'lastname', array('placeholder'=>'Last Name')),
-            'value' => '$data->visitor0->last_name',
+            'value' => '!empty($data->visitor0->last_name) ? $data->visitor0->last_name : ""',
             'header' => 'Last Name',
             'htmlOptions'=>array('width'=>'120px')
         ),
         array(
             'name' => 'company',
             'filter'=>CHtml::activeTextField($model, 'company', array('placeholder'=>'Company')),
-            'value' => '$data->company0->name',
+            'value' => '!empty($data->company0->name) ? $data->company0->name : ""',
             'htmlOptions'=>array('width'=>'120px')
         ),
         array(

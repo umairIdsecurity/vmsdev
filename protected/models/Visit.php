@@ -629,7 +629,7 @@ class Visit extends CActiveRecord {
         if ($merge !== null) {
             $criteria->mergeWith($merge);
         }
-            $criteria->addCondition("str_to_date(t.date_check_out,'%Y-%m-%d') > DATE_ADD(now(),interval -2 day)");
+            $criteria->addCondition("CONVERT(date, t.date_check_out, 102) > DATEADD(day, -2, GETDATE())");
         if ($this->filterProperties) {
             $query = "t.id LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.first_name LIKE CONCAT('%', :filterProperties , '%')
@@ -976,19 +976,19 @@ class Visit extends CActiveRecord {
 
         $allVisitsByVisitor = Yii::app()->db->createCommand("SELECT COUNT(*) as cnt "
                         . "FROM visit "
-                        . "WHERE visit.visitor= (SELECT visitor FROM visit "
-                        . "WHERE visit.id= " . $visitId . ")")->queryAll();
+                        . "WHERE visit.visitor = (SELECT visitor FROM visit "
+                        . "WHERE visit.id = " . $visitId . ")")->queryAll();
 
         $res_visitor = Yii::app()->db->createCommand("SELECT visitor FROM visit WHERE visit.id= " . $visitId)->queryAll();
         if ($res_visitor) {
             $visitor = $res_visitor[0]['visitor'];
 
-            $res_company = Yii::app()->db->createCommand("SELECT company.id AS company_id, company.name AS company_name
+            $res_company = Yii::app()->db->createCommand('SELECT company.id AS company_id, company.name AS company_name
                                                           FROM visit
-                                                            LEFT JOIN user ON user.id = visit.host
-                                                            LEFT JOIN company ON user.company = company.id
+                                                            LEFT JOIN "user" ON "user".id = visit.host
+                                                            LEFT JOIN company ON "user".company = company.id
                                                            WHERE company.is_deleted=0
-                                                           AND visit.id= " . $visitId)->queryAll();
+                                                           AND visit.id= ' . $visitId)->queryAll();
             if ($res_company) {
                 $company = $res_company[0]['company_id'];
             } else {
@@ -996,10 +996,10 @@ class Visit extends CActiveRecord {
             }
 
 
-            $res_host = Yii::app()->db->createCommand("SELECT id
-                                                        FROM user
-                                                        WHERE user.is_deleted=0
-                                                        AND user.company=" . $company)->queryAll();
+            $res_host = Yii::app()->db->createCommand('SELECT id
+                                                        FROM "user"
+                                                        WHERE "user".is_deleted=0
+                                                        AND "user".company=' . $company)->queryAll();
 
             //var_dump($res_host);
             if ($res_host) {

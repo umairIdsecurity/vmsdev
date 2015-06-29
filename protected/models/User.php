@@ -502,7 +502,7 @@ class User extends VmsActiveRecord {
 
     public function getCompany($id) {
         $connection = Yii::app()->db;
-        $sql = "select company from user where id='" . $id . "'";
+        $sql = 'select company from "user" where id = ' . $id;
         $command = $connection->createCommand($sql);
         $row = $command->queryRow();
         foreach ($row as $key => $val) {

@@ -31,10 +31,10 @@ class Company extends CActiveRecord {
 	public $user_contact_number;
     public $is_user_field;
 
-    protected $tenantQuery = "SELECT COUNT(c.id)
-FROM user u
+    protected $tenantQuery = 'SELECT COUNT(c.id)
+FROM "user" u
 LEFT JOIN company c ON u.company=c.id
-WHERE u.id=c.tenant AND c.id !=1";
+WHERE u.id=c.tenant AND c.id !=1';
 
     /**
      * @return string the associated database table name

@@ -13,11 +13,7 @@ if ($this->action->id == 'update') {
     $dataId = $_GET['id'];
 }
 
-$countryList = CHtml::listData(Country::model()->findAll(array(
-        "order" => "name asc",
-        "group" => "name"
-    )
-), 'id', 'name');
+$countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 
 // set default country is Australia = 13
 $model->identification_country_issued = 13;
@@ -488,7 +484,7 @@ $model->identification_country_issued = 13;
 
                                     <?php
                                     if(Yii::app()->user->role == Roles::ROLE_ADMIN) {
-                                        $list = VisitorType::model()->findAll('created_by = :c', [':c' => Yii::app()->user->id]);
+                                        $list = VisitorType::model()->findAll("created_by = :c", [":c" => Yii::app()->user->id]);
                                         echo '<select onchange="showHideHostPatientName(this)" name="Visitor[visitor_type]" id="Visitor_visitor_type">';
                                         echo CHtml::tag('option',array('value' => ''),'Select Visitor Type',true);
                                         foreach( $list as $val ) {

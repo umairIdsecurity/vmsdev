@@ -192,8 +192,8 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                         <td class="workstationRow">
                                             <select id="User_workstation" name="Visitor[visitor_workstation]" disabled>
                                             </select>
-                                            <span class="required">*</span>
-                                            <?php echo "<br>" . $form->error($model, 'visitor_workstation'); ?>
+                                            <!--<span class="required">*</span>-->
+                                            <?php //echo "<br>" . $form->error($model, 'visitor_workstation'); ?>
                                         </td>
                                     </tr>
                                     <tr>
@@ -555,11 +555,12 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 
         var companyValue = $("#Visitor_company").val();
         var workstation = $("#User_workstation").val();
-        if (!workstation || workstation == "") {
-            $("#Visitor_visitor_workstation_em_").show();
-            $("#Visitor_visitor_workstation_em_").html('Please enter Workstation');
-            return false;
-        }
+        
+//        if (!workstation || workstation == "") {
+//            $("#Visitor_visitor_workstation_em_").show();
+//            $("#Visitor_visitor_workstation_em_").html('Please enter Workstation');
+//            return false;
+//        }
 
         if ($('.password_requirement').filter(':checked').val() == "<?php echo PasswordRequirement::PASSWORD_IS_REQUIRED; ?>") {
             if ($('.password_option').filter(':checked').val() == "<?php echo PasswordOption::CREATE_PASSWORD; ?>") {
@@ -684,15 +685,15 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
         });
 
 
-        $('#User_workstation').on('change', function () {
-            var workstation = $("#User_workstation").val();
-            if (!workstation || workstation == "") {
-                $("#Visitor_visitor_workstation_em_").show();
-                $("#Visitor_visitor_workstation_em_").html('Please enter Workstation');
-            } else {
-                $("#Visitor_visitor_workstation_em_").hide();
-            }
-        });
+//        $('#User_workstation').on('change', function () {
+//            var workstation = $("#User_workstation").val();
+//            if (!workstation || workstation == "") {
+//                $("#Visitor_visitor_workstation_em_").show();
+//                $("#Visitor_visitor_workstation_em_").html('Please enter Workstation');
+//            } else {
+//                $("#Visitor_visitor_workstation_em_").hide();
+//            }
+//        });
 
         $("#Visitor_alternative_identification").on('change', switchIdentification);
         switchIdentification();

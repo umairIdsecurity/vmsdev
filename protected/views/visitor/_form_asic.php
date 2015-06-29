@@ -235,13 +235,13 @@ if ($this->action->id == 'update') {
                                             <?php echo "<br>" . $form->error($model, 'tenant_agent'); ?>
                                         </td>
                                     </tr>
-                                    <tr>
+                                    <!--<tr>
                                         <td class="workstationRow">
                                             <select id="User_workstation" name="Visitor[visitor_workstation]" disabled>
                                             </select>
-                                            <?php echo "<br>" . $form->error($model, 'visitor_workstation'); ?>
+                                            <?php //echo "<br>" . $form->error($model, 'visitor_workstation'); ?>
                                         </td>
-                                    </tr>
+                                    </tr>-->
                                     <tr>
                                         <td>
                                             <?php
@@ -460,12 +460,14 @@ if ($this->action->id == 'update') {
         }
 
         var companyValue = $("#Visitor_company").val();
-        var workstation = $("#User_workstation").val();
-        if (!workstation || workstation == "") {
-            $("#Visitor_visitor_workstation_em_").show();
-            $("#Visitor_visitor_workstation_em_").html('Please enter Workstation');
-            return false;
-        }
+        
+//        var workstation = $("#User_workstation").val();
+//        if (!workstation || workstation == "") {
+//            $("#Visitor_visitor_workstation_em_").show();
+//            $("#Visitor_visitor_workstation_em_").html('Please enter Workstation');
+//            return false;
+//        }
+        
         if (!hasError) {
             if (!companyValue || companyValue == "") {
                 $("#company_error_").show();
@@ -478,8 +480,8 @@ if ($this->action->id == 'update') {
 
     $(document).ready(function () {
 
-        $(".workstationRow").show();
-        getWorkstation();
+//        $(".workstationRow").show();
+//        getWorkstation();
 
         $('#fromDay').on('change', function () {
             var dt = new Date();
@@ -550,7 +552,7 @@ if ($this->action->id == 'update') {
             }
 
             if ($("#currentRoleOfLoggedInUser").val() != 5) {
-                $("#User_workstation").prop("disabled", false);
+                //$("#User_workstation").prop("disabled", false);
                 $('#Visitor_company option[value!=""]').remove();
 
                 if ($("#Visitor_tenant_agent").val() == '') {
@@ -565,7 +567,7 @@ if ($this->action->id == 'update') {
         } else {
 
             if ($("#currentRoleOfLoggedInUser").val() != 5) {
-                $("#User_workstation").prop("disabled", false);
+                //$("#User_workstation").prop("disabled", false);
                 $('#Visitor_company option[value!=""]').remove();
 
                 if ($("#Visitor_tenant_agent").val() == '') {
@@ -683,9 +685,9 @@ if ($this->action->id == 'update') {
         $('#Visitor_company option[value!=""]').remove();
 
         $('#Visitor_tenant_agent option[value!=""]').remove();
-        $("#User_workstation").empty();
-        getWorkstation();
-        $("#User_workstation").prop("disabled", false);
+        //$("#User_workstation").empty();
+        //getWorkstation();
+        //$("#User_workstation").prop("disabled", false);
         var tenant = $("#Visitor_tenant").val();
         var selected;
 
@@ -842,37 +844,37 @@ if ($this->action->id == 'update') {
         return false;
     }
 
-    function getWorkstation() { /*get workstations for operator*/
+//    function getWorkstation() { /*get workstations for operator*/
+//
+//        var sessionRole = '<?php //echo $session['role']; ?>';
+//        var superadmin = 5;
+//
+//        if (sessionRole == superadmin) {
+//            var tenant = $("#Visitor_tenant").val();
+//        } else {
+//            var tenant = '<?php //echo $session['tenant'] ?>';
+//        }
+//
+//        populateOperatorWorkstations(tenant);
+//    }
 
-        var sessionRole = '<?php echo $session['role']; ?>';
-        var superadmin = 5;
-
-        if (sessionRole == superadmin) {
-            var tenant = $("#Visitor_tenant").val();
-        } else {
-            var tenant = '<?php echo $session['tenant'] ?>';
-        }
-
-        populateOperatorWorkstations(tenant);
-    }
-
-    function populateOperatorWorkstations(tenant, value) {
-        $.ajax({
-            type: 'POST',
-            url: '<?php echo Yii::app()->createUrl('user/getTenantWorkstation&id='); ?>' + tenant,
-            dataType: 'json',
-            data: tenant,
-            success: function (r) {
-                $('#User_workstation option[value!=""]').remove();
-
-                $('#User_workstation').append('<option value="">Select Workstation</option>');
-                $.each(r.data, function (index, value) {
-                    $('#User_workstation').append('<option value="' + value.id + '">' + 'Workstation: ' + value.name + '</option>');
-                });
-                $("#User_workstation").val(value);
-            }
-        });
-    }
+//    function populateOperatorWorkstations(tenant, value) {
+//        $.ajax({
+//            type: 'POST',
+//            url: '<?php //echo Yii::app()->createUrl('user/getTenantWorkstation&id='); ?>' + tenant,
+//            dataType: 'json',
+//            data: tenant,
+//            success: function (r) {
+//                $('#User_workstation option[value!=""]').remove();
+//
+//                $('#User_workstation').append('<option value="">Select Workstation</option>');
+//                $.each(r.data, function (index, value) {
+//                    $('#User_workstation').append('<option value="' + value.id + '">' + 'Workstation: ' + value.name + '</option>');
+//                });
+//                $("#User_workstation").val(value);
+//            }
+//        });
+//    }
 
 // company change
 $('#Visitor_company').on('change', function() {

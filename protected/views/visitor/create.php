@@ -47,7 +47,7 @@ if ((isset($_GET['p']) && !isset($_GET['action'])) || !isset($_GET['action'])) {
     if (isset($_GET['action'])) {
         echo "class='borderTopRightRadius'";
     }
-    ?>" id="findHost">
+    ?> id="findHost">
     <a href="#step3" id="findHostB" <?php if (isset($_GET['action'])) { ?> class="borderTopRightRadius" <?php } ?>>Add
         or Find ASIC Sponsor</a>
     </dd>

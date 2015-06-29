@@ -11,10 +11,7 @@ if ($this->action->id == 'update') {
     $dataId = $_GET['id'];
 }
 
-$countryList = CHtml::listData(Country::model()->findAll(array(
-    "order" => "name asc",
-    "group" => "name"
-)), 'id', 'name');
+$countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 // set default country is Australia = 13
 
 ?>

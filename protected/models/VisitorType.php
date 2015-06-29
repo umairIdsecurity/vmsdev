@@ -119,7 +119,7 @@ class VisitorType extends CActiveRecord {
         $session = new CHttpSession;
         $criteria = new CDbCriteria;
         if(Yii::app()->controller->action->id != 'exportvisitorrecords' && Yii::app()->controller->action->id != 'evacuationReport' && Yii::app()->controller->action->id != 'visitorRegistrationHistory' && Yii::app()->controller->action->id != 'view'){
-            $criteria->condition = "t.is_deleted = 0 && t.id !=1";
+            $criteria->condition = "t.is_deleted = 0 AND t.id !=1";
         }
         
         if(Yii::app()->controller->action->id == 'visitorsByTypeReport' || Yii::app()->controller->action->id == 'visitorsByWorkstationReport'){

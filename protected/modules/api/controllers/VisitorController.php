@@ -84,7 +84,7 @@ class VisitorController extends RestfulController {
                         $this->sendResponse(204);
                     }
                 } else {
-                    $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'ADMIN_NOT_FOUND', 'errorDescription' => 'Requested Admin not found')));
+                    $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'VISITOR_NOT_FOUND', 'errorDescription' => 'Requested visitor not found')));
                 }
             } else {
                 $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_PARAMETER', 'errorDescription' => 'GET parameter required for action')));
@@ -101,9 +101,12 @@ class VisitorController extends RestfulController {
                 $email = Yii::app()->request->getParam('email');
                 $visitor = Visitor::model()->findByAttributes(array('email' => $email));
                 if ($visitor) {
-                    $visitor->reset_token = $token = md5(uniqid(mt_rand(), true));
-                    if ($visitor->save(false)) {
-                        $this->sendResponse(200);
+                    $vistorAccesstoken = AccessTokens::model()->findByAttributes(array('USER_ID'=>$visitor->id,'USER_TYPE'=>$visitor->visitor_type));
+                    if($vistorAccesstoken) {
+                        $vistorAccesstoken->ACCESS_TOKEN = md5(uniqid(mt_rand(), true));
+                        if ($vistorAccesstoken->save(false)) {
+                            $this->sendResponse(200);
+                        }
                     }
                 }else{
                     $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'VISITOR_NOT_FOUND', 'errorDescription' => 'Requested Visitor not found')));
@@ -128,30 +131,30 @@ class VisitorController extends RestfulController {
             }else{
                 $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_PARAMETER', 'errorDescription' => 'GET parameter required for action')));
             }
-            if(yii::app()->request->isPutRequest){
+            if(Yii::app()->request->isPutRequest){
                 $data = file_get_contents("php://input");
                 $data = CJSON::decode($data);
                 $visitor = Visitor::model()->findByAttributes(array('email' => $email));
                 if ($visitor) {
-                    if($visitor->reset_token != NULL) {
+                   /* if($visitor->reset_token != NULL) {*/
                         $visitor->password = $data['password'];
                         $visitor->repeatpassword = $data['password'];
-                        $visitor->contact_postcode = 0;
-                        $visitor->reset_token = NULL;
-                        if ($visitor->save()) {
+                        /*$visitor->contact_postcode = 0;
+                        $visitor->reset_token = NULL;*/
+                        if ($visitor->save()) /*{*/
                             $this->sendResponse(200);
-                        }else{
+                        /*}else{
                             $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'UNAUTHORISED', 'errorDescription' => 'unauthorized request')));
-                        }
-                    }else{
+                        }*/
+                    /*}else{
                         $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'UNAUTHORISED', 'errorDescription' => 'unauthorized request')));
-                    }
+                    }*/
                 }else{
-                    $this->sendResponse(404, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'VISITOR_NOT_FOUND', 'errorDescription' => 'Requested Visitor not found')));
+                    $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'VISITOR_NOT_FOUND', 'errorDescription' => 'Requested Visitor not found')));
                 }
 
             } else {
-                $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_PARAMETER', 'errorDescription' => 'GET parameter required for action')));
+                $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_PARAMETER', 'errorDescription' => 'PUT parameter required for action')));
             }
         } catch (Exception $ex) {
 

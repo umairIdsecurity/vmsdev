@@ -153,7 +153,7 @@ class VisitorController extends Controller {
                             break;
 
                         default:
-                            echo $updateErrorMessage;;
+                            echo $updateErrorMessage;
                     }
                 }
             }

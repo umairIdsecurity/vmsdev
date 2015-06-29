@@ -125,26 +125,26 @@ class UserWorkstations extends CActiveRecord {
             case Roles::ROLE_ADMIN:
                 $queryCondition = "tenant='" . $currentlyLoggedInUser->tenant . "'";
                 if ($user->role == Roles::ROLE_OPERATOR) {
-                    $queryCondition = "tenant='" . $user->tenant . "' and tenant_agent IS NULL";
+                    $queryCondition = "tenant= " . $user->tenant . " and tenant_agent IS NULL";
                 } else {
-                    $queryCondition = "tenant='" . $currentlyLoggedInUser->tenant . "'";
+                    $queryCondition = "tenant= " . $currentlyLoggedInUser->tenant;
                 }
                 break;
             case Roles::ROLE_AGENT_ADMIN:
-                $queryCondition = "tenant='" . $currentlyLoggedInUser->tenant . "' and tenant_agent ='" . $currentlyLoggedInUser->tenant_agent . "'";
+                $queryCondition = "tenant= " . $currentlyLoggedInUser->tenant . " and tenant_agent = " . $currentlyLoggedInUser->tenant_agent;
 
                 break;
             default:
                 if ($user->role == Roles::ROLE_OPERATOR) {
-                    $queryCondition = "tenant='" . $user->tenant . "' and tenant_agent IS NULL";
+                    $queryCondition = "tenant = " . $user->tenant . " and tenant_agent IS NULL";
                 } else {
-                    $queryCondition = "tenant='" . $user->tenant . "' and tenant_agent ='" . $user->tenant_agent . "'";
+                    $queryCondition = "tenant = " . $user->tenant . " and tenant_agent = " . $user->tenant_agent;
                 }
         }
 
         $Criteria = new CDbCriteria();
         $Criteria->condition = $queryCondition;
-        $Criteria->addCondition("is_deleted=0");
+        $Criteria->addCondition("is_deleted = 0");
         $workstations = Workstation::model()->findAll($Criteria);
 
         return $workstations;

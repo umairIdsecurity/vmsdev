@@ -847,11 +847,11 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
             $("#contactDetailsLi").html("<a href='#'><span>Contact Details</span></a>");
         }
 
-        if ("<?php echo $model->visit_status; ?>" == '3')
+        /*if ("<?php echo $model->visit_status; ?>" == '3')
         {
             $("#visitorInformationCssMenu :input").attr('disabled', true);
             $("#visitorInformationCssMenu input[type='submit']").hide();
-        }
+        }*/
 
         $("#dummy-host-findBtn").click(function (e) {
             e.preventDefault();

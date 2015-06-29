@@ -88,7 +88,8 @@ return CMap::mergeArray(
             'urlManager' => array(
                 'urlFormat' => 'path',
                 'rules' => array(
-                    'authorization/admin'       => 'api/authorization/admin',
+                    'authorization/<action:\w+>'             => 'api/authorization/<action>',
+                    //'authorization/admin'       => 'api/authorization/admin',
                     'companies'                 => 'api/companies/index',
                     'companies/<id:\d+>'        => 'api/companies/index',
                     'admin/<email>'             => 'api/admin/index',
@@ -99,6 +100,7 @@ return CMap::mergeArray(
                     'visit/<visitID:\+d>'       => 'api/visit/index',
                     'visitor'                   => 'api/visitor/index',
                     'visitor/<email>'           => 'api/visitor/index',
+                    'visitor/<email>/logout'    => 'api/visitor/logout',
                     'visit/<visit>/file/'        => 'api/visit/file',
                     array('api/authorization/preflight', 'pattern'=>'/authorization/preflight', 'verb'=>'OPTIONS'),
                 ),

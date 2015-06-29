@@ -72,19 +72,22 @@ class VisitorController extends RestfulController {
 
     public function actionLogout() {
         try {
-            $token_user = $this->checkAuth();
-            $visitor_token_user = $this->checkAuthVisitor();
-            if (Yii::app()->request->getParam('email')) {
+            $data = file_get_contents("php://input");
+            $data = CJSON::decode($data);
+            if (Yii::app()->request->getParam('email') && $data) {
                 $email = Yii::app()->request->getParam('email');
                 $visitor = Visitor::model()->findByAttributes(array('email' => $email));
-                if ($visitor) {
+                if ($visitor ) {
                     $access_token = AccessTokens::model()->findByAttributes(array('USER_ID' => $visitor->id));
-                    if ($access_token) {
+                    if ($access_token && $access_token->ACCESS_TOKEN === $data["access_token"]) {
                         $access_token->delete();
                         $this->sendResponse(204);
                     }
+                    else {
+                        $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'VISITOR_NOT_FOUND', 'errorDescription' => 'Access token don\'t match')));
+                    }
                 } else {
-                    $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'ADMIN_NOT_FOUND', 'errorDescription' => 'Requested Admin not found')));
+                    $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'VISITOR_NOT_FOUND', 'errorDescription' => 'Requested Visitor not found')));
                 }
             } else {
                 $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_PARAMETER', 'errorDescription' => 'GET parameter required for action')));

@@ -12,17 +12,17 @@ $session = new CHttpSession();
 switch ($session['role']) {
     case Roles::ROLE_ADMIN:
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant ='" . $session['tenant'] . "' AND is_deleted = 0";
+        $Criteria->condition = "tenant = " . $session['tenant'] . " AND is_deleted = 0";
         $workstationList = Workstation::model()->findAll($Criteria);
         break;
     case Roles::ROLE_ISSUING_BODY_ADMIN:
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant ='" . $session['tenant'] . "' AND is_deleted = 0";
+        $Criteria->condition = "tenant = " . $session['tenant'] . " AND is_deleted = 0";
         $workstationList = Workstation::model()->findAll($Criteria);
         break;
     case Roles::ROLE_AGENT_ADMIN:
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant ='" . $session['tenant'] . "' and tenant_agent ='" . $session['tenant_agent'] . "' AND is_deleted = 0";
+        $Criteria->condition = "tenant = " . $session['tenant'] . " and tenant_agent = " . $session['tenant_agent'] . " AND is_deleted = 0";
         $workstationList = Workstation::model()->findAll($Criteria);
         break;
     
@@ -120,14 +120,14 @@ foreach ($workstationList as $workstation) {
                 array(
                     'name' => 'firstname',
                     'filter'=>CHtml::activeTextField($model, 'firstname', array('placeholder'=>'First Name')),
-                    'value' => 'Visitor::model()->findByPk($data->visitor)->first_name',
+                    'value' => '!empty($data->visitor0->first_name) ? $data->visitor0->first_name : ""',
                     'header' => 'First Name',
                     'htmlOptions'=>array('width'=>'120px'),
                 ),
                 array(
                     'name' => 'lastname',
                     'filter'=>CHtml::activeTextField($model, 'lastname', array('placeholder'=>'Last Name')),
-                    'value' => 'Visitor::model()->findByPk($data->visitor)->last_name',
+                    'value' => '!empty($data->visitor0->last_name) ? $data->visitor0->last_name : ""',
                     'header' => 'Last Name',
                     'htmlOptions'=>array('width'=>'120px'),
                 ),
@@ -136,21 +136,21 @@ foreach ($workstationList as $workstation) {
                     'filter'=>CHtml::activeTextField($model, 'company', array('placeholder'=>'Company')),
                     'value' => 'getCompany($data->visitor)',
                     'header' => 'Company',
-                    'cssClassExpression' => '( getCompany($data->visitor)== "Not Available" ? "errorNotAvailable" : "" ) ',
+                    'cssClassExpression' => '(getCompany($data->visitor) == "Not Available" ? "errorNotAvailable" : "")',
                     'type' => 'raw',
                     'htmlOptions'=>array('width'=>'120px'),
                 ),
                 array(
                     'name' => 'contactnumber',
                     'filter'=>CHtml::activeTextField($model, 'contactnumber', array('placeholder'=>'Contact Number')),
-                    'value' => 'Visitor::model()->findByPk($data->visitor)->contact_number',
+                    'value' => '!empty($data->visitor0->contact_number) ? $data->visitor0->contact_number : ""',
                     'header' => 'Contact Number',
                     'htmlOptions'=>array('width'=>'120px'),
                 ),
                 array(
                     'name' => 'contactemail',
                     'filter'=>CHtml::activeTextField($model, 'contactemail', array('placeholder'=>'Contact Email')),
-                    'value' => 'Visitor::model()->findByPk($data->visitor)->email',
+                    'value' => '!empty($data->visitor0->email) ? $data->visitor0->email : ""',
                     'header' => 'Contact Email',
                     'htmlOptions'=>array('width'=>'100px'),
                 ),
@@ -188,13 +188,13 @@ function getVisitorFullName($id) {
 
 function getCompany($id) {
 
-    $company_id = Visitor::model()->findByPk($id)->company;
+    $visitor = Visitor::model()->findByPk($id);
 
-    if (isset($company_id)) {
-
+    if ($visitor) {
+        $companyID = $visitor->company;
         $companyModel = Company::model();
 
-        $company = $companyModel->findByPk($company_id, "is_deleted >= 0 " );
+        $company = $companyModel->findByPk($companyID, "is_deleted >= 0");
 
         if(isset($company))
         {

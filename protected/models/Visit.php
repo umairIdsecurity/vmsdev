@@ -336,7 +336,7 @@ class Visit extends CActiveRecord {
         $criteria = new CDbCriteria;
         $criteria->with = array('card0','host0', 'visitor0', 'company0', 'reason0', 'workstation0','visitor1');
         //$criteria->with .= 'visitor0';
-        $criteria->compare('CONCAT(visitor0.first_name, \' \', visitor0.last_name)', $this->visitor, true);
+        $criteria->compare("CONCAT(visitor0.first_name, ' ', visitor0.last_name)", $this->visitor, true);
         $criteria->compare('visitor0.first_name', $this->firstname, true);
         $criteria->compare('visitor0.last_name', $this->lastname, true);
         $criteria->compare('visitor0.contact_number', $this->contactnumber, true);
@@ -396,10 +396,10 @@ class Visit extends CActiveRecord {
             case CardType::MULTI_DAY_VISITOR:
             case CardType::MANUAL_VISITOR:
             case CardType::CONTRACTOR_VISITOR:
-                $criteria->compare('CONCAT(host0.first_name,\' \',host0.last_name)',$this->_asicname,true);
+                $criteria->compare("CONCAT(host0.first_name,' ',host0.last_name)",$this->_asicname,true);
                 break;
             default:
-                $criteria->compare('CONCAT(visitor1.first_name,\' \',visitor1.last_name)',$this->_asicname,true);
+                $criteria->compare("CONCAT(visitor1.first_name,' ',visitor1.last_name)",$this->_asicname,true);
                 break;
         }
         $criteria->compare('visitor0.asic_no', $this->asic_no, true);
@@ -464,7 +464,7 @@ class Visit extends CActiveRecord {
 
         switch (Yii::app()->user->role) {
             case Roles::ROLE_STAFFMEMBER:
-                $criteria->addCondition('host = ' . Yii::app()->user->id);
+                $criteria->addCondition("host = " . Yii::app()->user->id);
                 break;
 
             case Roles::ROLE_SUPERADMIN:
@@ -485,7 +485,7 @@ class Visit extends CActiveRecord {
                 if (!empty($workstations)) {
                     $text = "";
                     foreach ($workstations as $key => $value) {
-                        $text .="'" . $value['id'] . "',";
+                        $text .= "'" . $value['id'] . "',";
                     }
                     $workstations = "IN (" . rtrim($text, ',') . ")";
 
@@ -501,7 +501,7 @@ class Visit extends CActiveRecord {
          * 
          */
         if (Yii::app()->controller->action->id == 'visitorRegistrationHistory') {
-            $criteria->addCondition("visitor0.profile_type ='" . Visitor::PROFILE_TYPE_CORPORATE . "'");
+            $criteria->addCondition("visitor0.profile_type = '" . Visitor::PROFILE_TYPE_CORPORATE . "'");
         }
 
         if (Yii::app()->controller->action->id == 'admindashboard') {

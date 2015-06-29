@@ -118,7 +118,7 @@ $model->identification_country_issued = 13;
                                        
                                     } else if ($("#Visit_reason").val() == "" || ($("#Visit_reason").val() == "Other" &&  $("#VisitReason_reason").val() == "")) {
                                         $(".visitorReason").show();
-                                       );
+                                      
                                     } else if ($("#Visit_reason").val() == "Other" &&  $("#VisitReason_reason").val() != "") {
                                         checkReasonIfUnique();
                                         

@@ -310,11 +310,25 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                         </tr>  
                         <tr>
                             <td>
-                                <?php if($model->contact_country == Visitor::AUSTRALIA_ID ){
-                                    echo $form->dropDownList($model, 'contact_state', Visitor::$AUSTRALIAN_STATES, array('empty' => 'State', 'style' => 'width: 140px;'));
-                                } else {
-                                    echo $form->textField($model, 'contact_state', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'State', 'style' => 'width: 62px;'));
-                                } ?>
+                                <i id="cstate">
+                                    <?php
+                                    if(Yii::app()->controller->action->id == 'addvisitor'){
+                                        echo $form->dropDownList($model, 'contact_state', Visitor::$AUSTRALIAN_STATES, array('empty' => 'State', 'style' => 'width: 140px;'));
+                                    } elseif(Yii::app()->controller->action->id == 'update' && $model->contact_country == Visitor::AUSTRALIA_ID ) {
+                                        echo $form->dropDownList($model, 'contact_state', Visitor::$AUSTRALIAN_STATES, array('empty' => 'State', 'style' => 'width: 140px;'));
+                                    } else {
+                                        echo $form->textField($model, 'contact_state', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'State', 'style' => 'width: 62px;'));
+                                    } ?>
+                                </i>
+                                <select id="state_copy" style="display: none">
+                                    <?php
+                                    if(isset(Visitor::$AUSTRALIAN_STATES) && is_array(Visitor::$AUSTRALIAN_STATES)){
+                                        foreach (Visitor::$AUSTRALIAN_STATES as $key=>$value):
+                                            echo "<option name='$key'>$value</option>";
+                                        endforeach;
+                                    }
+                                    ?>
+                                </select>
                                 <?php echo $form->textField($model, 'contact_postcode', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Postcode', 'style' => 'width: 62px;')); ?>
                                 <span class="required">*</span>
                                 <?php echo $form->error($model, 'contact_state'); ?>
@@ -602,6 +616,17 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
 
         $(".workstationRow").show();
         getWorkstation();
+
+
+        if($('#Visitor_contact_country').length){
+            $('#Visitor_contact_country').change(function(){
+                if($(this).val() != <?php echo Visitor::AUSTRALIA_ID ?>){
+                    $("#cstate").html('<input size="15" style="width: 126px;" maxlength="50" placeholder="State" name="Visitor[contact_state]" id="Visitor_contact_state" type="text">');
+                }else{
+                    $("#cstate").html('<select id="#Visitor_contact_state" name="Visitor[contact_state]" style="width: 140px;">'+$('#state_copy').html()+'</select>');
+                }
+            });
+        }
 
         $('#fromDay').on('change', function () {
             var dt = new Date();
@@ -995,6 +1020,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                 requestRunning = false;
             },
             error: function (data) {
+                return;
                 if ($("#currentRoleOfLoggedInUser").val() == 8 || $("#currentRoleOfLoggedInUser").val() == 7) {
                     window.location = 'index.php?r=dashboard';
                 } else if ($("#currentRoleOfLoggedInUser").val() == 9) {

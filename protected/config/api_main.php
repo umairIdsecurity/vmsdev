@@ -100,6 +100,7 @@ return CMap::mergeArray(
                     'visitor'                   => 'api/visitor/index',
                     'visitor/<email>'           => 'api/visitor/index',
                     'visit/<visit>/file/'        => 'api/visit/file',
+                    '/workstations/<id>/cardtypes'        => 'api/workstation/index',
                     array('api/authorization/preflight', 'pattern'=>'/authorization/preflight', 'verb'=>'OPTIONS'),
                 ),
             ),

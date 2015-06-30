@@ -397,6 +397,10 @@ class CompanyController extends Controller {
                 $contact->contact_number = $formInfo['mobile'];
                 $contact->created_by = Yii::app()->user->id;
 
+                // Todo: temporary value for saving contact, will be update later
+                $contact->timezone_id = 1; 
+                $contact->photo = 0;
+
                 // foreign keys // todo: need to check and change for HARD-CODE
                 $contact->tenant = $session['tenant'];
                 $contact->user_type = 1;

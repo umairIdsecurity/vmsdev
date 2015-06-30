@@ -434,8 +434,12 @@ function preloadHostDetails(hostId) {
             });
         }
     });
-    $("#currentHostDetailsDiv").show();
-    $("#register-host-form").hide();
+    /**
+    * CHANGED ON : Savita Munde recommendation
+    * CAVMS-597
+    * */
+    $("#currentHostDetailsDiv").hide();
+    $("#register-host-form").show();
     $(".host-AddBtn").show();
 }
 

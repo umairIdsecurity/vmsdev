@@ -190,8 +190,6 @@ $form = $this->beginWidget('CActiveForm', array(
 
 
 <table style="float:left;width:300px;">
-
-
 <tr>
 
     <td id="visitorTenantRow" <?php
@@ -216,11 +214,10 @@ $form = $this->beginWidget('CActiveForm', array(
 
                 ?>
 
-                <option value="<?php echo $value['tenant']; ?>"
+                <option value="<?php echo $value['id']; ?>"
 
                     <?php
-
-                    if (($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant'] && $this->action->id != 'update') || ($model['tenant'] == $value['tenant'])) {
+                    if (($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant'] && $this->action->id != 'update') || ($model['tenant'] == $value['id'])) {
 
                         echo "selected ";
 
@@ -849,9 +846,7 @@ function populateTenantAgentAndCompanyField() {
     $('#Visitor_tenant_agent option[value!=""]').remove();
 
     var tenant = $("#Visitor_tenant").val();
-
     var selected;
-
 
     if ($("#currentAction").val() == 'update') {
 

@@ -100,13 +100,16 @@ class VisitorController extends RestfulController {
 
     public function actionRequestPassword() {
         try {
-            #$token_user = $this->checkAuth();
+            $token_user = $this->checkAuth();
             if (Yii::app()->request->getParam('email')) {
                 $email = Yii::app()->request->getParam('email');
                 $visitor = Visitor::model()->findByAttributes(array('email' => $email));
                 if ($visitor) {
-                    $visitor->reset_token = $token = md5(uniqid(mt_rand(), true));
-                    if ($visitor->save(false)) {
+                   /* $visitor->reset_token = $token = md5(uniqid(mt_rand(), true));*/
+                    $new_pass = uniqid(mt_rand(), true);
+                    $visitor->password = $new_pass;
+                    $visitor->repeatpassword = $new_pass;
+                    if ($visitor->save()) {
                         $this->sendResponse(200);
                     }
                 }else{
@@ -120,13 +123,11 @@ class VisitorController extends RestfulController {
 
             $this->sendResponse(500, CJSON::encode(array('responseCode' => 500, 'errorCode' => 'INTERNAL_SERVER_ERROR', 'errorDescription' => 'something went wrong')));
         }
-
-
     }
 
     public function actionResetPassword() {
         try {
-            #$token_user = $this->checkAuth();
+            $token_user = $this->checkAuth();
             if (Yii::app()->request->getParam('email')) {
                 $email = Yii::app()->request->getParam('email');
             }else{

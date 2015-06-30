@@ -946,7 +946,7 @@ class Visit extends CActiveRecord {
 
     public function isVisitorHasCurrentSavedVisit($visitorId) {
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "visitor = '" . $visitorId . "' && visit_status='" . VisitStatus::SAVED . "'";
+        $Criteria->condition = "visitor = " . $visitorId . " AND visit_status = " . VisitStatus::SAVED;
         $visit = Visit::model()->findAll($Criteria);
 
         $visitCount = count($visit);
@@ -961,9 +961,9 @@ class Visit extends CActiveRecord {
     public function isDateConflictingWithAnotherVisit($date_in, $date_out, $visitorId, $visitStatus) {
         $Criteria = new CDbCriteria();
         if ($visitStatus == VisitStatus::ACTIVE) {
-            $Criteria->condition = "visitor='" . $visitorId . "' && visit_status='" . $visitStatus . "'";
+            $Criteria->condition = "visitor = " . $visitorId . " AND visit_status = " . $visitStatus;
         } else {
-            $Criteria->condition = "date_in = '" . $date_in . "' && visitor='" . $visitorId . "' && visit_status='" . $visitStatus . "'";
+            $Criteria->condition = "date_in = '" . $date_in . "' AND visitor = " . $visitorId . " AND visit_status = " . $visitStatus;
         }
         $visit = Visit::model()->findAll($Criteria);
 
@@ -1014,7 +1014,7 @@ class Visit extends CActiveRecord {
                 $hosts = implode(",", $arr);
                 $sql_company_visit_by_visitor = "SELECT COUNT(*) as cnt
                         FROM visit
-                        WHERE visit.is_deleted=0 AND visit.visitor= " . $visitor. "
+                        WHERE visit.is_deleted = 0 AND visit.visitor= " . $visitor. "
                         AND host IN (" . $hosts . ")";
 
 

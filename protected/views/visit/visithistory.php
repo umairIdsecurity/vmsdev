@@ -27,7 +27,7 @@ $session = new CHttpSession;
         $model = new Visit;
         $criteria = new CDbCriteria;
         $criteria->order = 'id DESC';
-        $criteria->addCondition("visit_status='" . VisitStatus::CLOSED . "' and visitor='" . $visitor . "'");
+        $criteria->addCondition("visit_status = " . VisitStatus::CLOSED . " and visitor = " . $visitor);
 
 
         $model->unsetAttributes();

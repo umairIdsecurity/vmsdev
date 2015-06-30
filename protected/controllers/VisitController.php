@@ -173,9 +173,9 @@ class VisitController extends Controller {
                 $model->reason = $oldReason;
             }
 
-             if (isset($_POST['User']['photo']) && $model->host > 0) {
-                 User::model()->updateByPk($model->host, array('photo' => $_POST['User']['photo']));
-			 }
+            if (isset($_POST['User']['photo']) && $model->host > 0) {
+                User::model()->updateByPk($model->host, array('photo' => $_POST['User']['photo']));
+            }
 			
             if (strtotime($model->date_check_in) > strtotime(date('d-m-Y'))) {
                 $visitStatus = VisitStatus::model()->findByAttributes(array('name' => 'Pre-registered'));

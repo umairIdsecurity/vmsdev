@@ -258,6 +258,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                 <select id="fromDay" name="Visitor[birthdayDay]" class='daySelect'></select>
                                 <select id="fromMonth" name="Visitor[birthdayMonth]" class='monthSelect'></select>
                                 <select id="fromYear" name="Visitor[birthdayYear]" class='yearSelect'></select>
+                                <?php //echo $form->dropDownList($model, 'birthdayYear',array(), array('class' => 'yearSelect')) ;?>
                                 <span class="required">*</span>
                                 <?php echo "<br>" . $form->error($model, 'date_of_birth'); ?>
                             </td>
@@ -421,6 +422,16 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                     <?php echo $form->error($model, 'identification_document_expiry'); ?>
                                 </td>
                             </tr>
+                            <tr id="u18_identification" style="display:none">
+                                <td>
+                                    <?php //echo $form->checkBox($model, 'alternative_identification', array('style' => 'float: left;')); ?>
+                                    <input type="checkbox" style="float: left;" id="Visitor_u18_identification" name="Visitor_u18_identification" value="">
+                                    <label for="Visitor_identification" class="form-label">I have verified that the applicant is under 18<span class="required primary-identification-require">*</span></label>
+                                    <div class="errorMessage" style="float: left; display: none;" id="Visitor_u18_identification_em_">Please verify the age of the applicant.</div>
+                                    <input type="text" name="Visitor_u18_identification_document_no" style="" placeholder="Details">
+                                    <?php //echo $form->textField($model, 'identification_document_no', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Document No.', 'style' => 'width: 110px;')); ?>
+                                </td>
+                            </tr>
                             <tr>
                                 <td>
                                     <?php echo $form->checkBox($model, 'alternative_identification', array('style' => 'float: left;')); ?>
@@ -553,6 +564,15 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
             return false;
         }
 
+        var u18_identification = $('#u18_identification:hidden');
+        if (u18_identification.length != 1) {
+            if (!$('#Visitor_u18_identification').checked) {
+                $('#Visitor_u18_identification_em_').show();
+            }
+        } else {
+            $('#Visitor_u18_identification_em_').show();
+        }
+
         var companyValue = $("#Visitor_company").val();
         var workstation = $("#User_workstation").val();
         
@@ -645,6 +665,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                 $("#Visitor_date_of_birth_em_").hide();
             }
         });
+
         $('#fromMonth').on('change', function () {
             var dt = new Date();
 
@@ -664,6 +685,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                 $("#Visitor_date_of_birth_em_").hide();
             }
         });
+
         $('#fromYear').on('change', function () {
             var dt = new Date();
 
@@ -679,7 +701,12 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                 $("#Visitor_date_of_birth_em_").show();
                 $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
-            }else{
+            }else{//u18_identification
+                if (dt.getFullYear() - $("#fromYear").val() < 18) {
+                    $('#u18_identification').show();
+                } else {
+                    $('#u18_identification').hide();
+                }
                 $("#Visitor_date_of_birth_em_").hide();
             }
         });

@@ -253,19 +253,22 @@ class Visitor extends CActiveRecord {
 
         $rules[] = array(
             'identification_alternate_document_name1,
-                    identification_alternate_document_no1,
-                    identification_alternate_document_name2,
-                    identification_alternate_document_no2',
+            identification_alternate_document_no1,
+            identification_alternate_document_name2,
+            identification_alternate_document_no2',
             'VisitorAlternateIdentification'
         );
 
-        $rules[] = array(
-            'identification_type,
-            identification_country_issued,
-            identification_document_no,
-            identification_document_expiry',
-            'VisitorPrimaryIdentification',
-        );
+        if (date('Y') - $this->birthdayYear > 18) {
+            $rules[] = array(
+                'identification_type,
+                identification_country_issued,
+                identification_document_no,
+                identification_document_expiry',
+                'VisitorPrimaryIdentification',
+            );
+        }
+
 
         if (Yii::app()->controller->id === 'visitor') {
             if (Yii::app()->controller->action->id == 'addvisitor') {

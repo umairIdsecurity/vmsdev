@@ -100,7 +100,7 @@ class VisitorController extends RestfulController {
 
     public function actionRequestPassword() {
         try {
-            $token_user = $this->checkAuth();
+            #$token_user = $this->checkAuth();
             if (Yii::app()->request->getParam('email')) {
                 $email = Yii::app()->request->getParam('email');
                 $visitor = Visitor::model()->findByAttributes(array('email' => $email));
@@ -126,7 +126,7 @@ class VisitorController extends RestfulController {
 
     public function actionResetPassword() {
         try {
-            $token_user = $this->checkAuth();
+            #$token_user = $this->checkAuth();
             if (Yii::app()->request->getParam('email')) {
                 $email = Yii::app()->request->getParam('email');
             }else{
@@ -137,19 +137,19 @@ class VisitorController extends RestfulController {
                 $data = CJSON::decode($data);
                 $visitor = Visitor::model()->findByAttributes(array('email' => $email));
                 if ($visitor) {
-                    if($visitor->reset_token != NULL) {
+                    /*if($visitor->reset_token != NULL) {*/
                         $visitor->password = $data['password'];
                         $visitor->repeatpassword = $data['password'];
-                        $visitor->contact_postcode = 0;
-                        $visitor->reset_token = NULL;
+                        /*$visitor->contact_postcode = 0;
+                        $visitor->reset_token = NULL;*/
                         if ($visitor->save()) {
                             $this->sendResponse(200);
                         }else{
                             $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'UNAUTHORISED', 'errorDescription' => 'unauthorized request')));
                         }
-                    }else{
+                   /* }else{
                         $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'UNAUTHORISED', 'errorDescription' => 'unauthorized request')));
-                    }
+                    }*/
                 }else{
                     $this->sendResponse(404, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'VISITOR_NOT_FOUND', 'errorDescription' => 'Requested Visitor not found')));
                 }

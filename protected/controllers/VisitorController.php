@@ -118,10 +118,6 @@ class VisitorController extends Controller {
                 if ($updateErrorMessage == '') {
                     $model->attributes = $_POST['Visitor'];
                     if ($visitorService->save($model, NULL, $session['id'])) {
-                        $logCardstatusConvert = new CardstatusConvert();
-                        $logCardstatusConvert->visitor_id = $model->id;
-                        $logCardstatusConvert->convert_time = date("Y-m-d");
-                        $logCardstatusConvert->save();
                         if ($model->totalVisit > 0) {
                             $resetHistory = new ResetHistory();
                             $resetHistory->visitor_id = $model->id;
@@ -144,6 +140,16 @@ class VisitorController extends Controller {
                     }
                 } else {
                     echo $updateErrorMessage;
+                }
+            }elseif (isset($_POST['Visitor']['visitor_card_status']) && $_POST['Visitor']['visitor_card_status'] == Visitor::ASIC_ISSUED && $model->profile_type == Visitor::PROFILE_TYPE_VIC  ){
+                $model->attributes = $_POST['Visitor'];
+                $model->profile_type = Visitor::PROFILE_TYPE_ASIC;
+                $model->visitor_card_status = 6;
+                if($visitorService->save($model, NULL, $session['id'])) {
+                    $logCardstatusConvert = new CardstatusConvert();
+                    $logCardstatusConvert->visitor_id = $model->id;
+                    $logCardstatusConvert->convert_time = date("Y-m-d");
+                    $logCardstatusConvert->save();
                 }
             } else {
                 $model->attributes = $_POST['Visitor'];

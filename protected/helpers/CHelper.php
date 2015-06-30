@@ -71,7 +71,7 @@ class CHelper
 
         $notifications = Notification::model()->with('user_notification')->findAll(
             array(
-                "condition" => "user_notification.has_read != 1 AND user_notification.user_id = '" . Yii::app()->user->id . "'",
+                "condition" => "user_notification.has_read != 1 AND user_notification.user_id = " . Yii::app()->user->id,
                 "order" => "user_notification.notification_id DESC"
             ));
 

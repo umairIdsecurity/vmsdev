@@ -98,16 +98,16 @@ class Notification extends CActiveRecord
 		$criteria->compare('role_id',$this->role_id);
 		$criteria->compare('notification_type',$this->notification_type,true);
                 
-                if( Roles::ROLE_SUPERADMIN != Yii::app()->user->role && Roles::ROLE_ADMIN != Yii::app()->user->role )
-                {
-                    $criteria->with = array('user_notification' );
-                    $criteria->together = true;
-                    $criteria->condition = "user_notification.user_id=:user_id";
-                    $criteria->params = array(':user_id' => Yii::app()->user->id);
-                     
-                }
-                
-                $criteria->order = 't.id DESC';        
+        if( Roles::ROLE_SUPERADMIN != Yii::app()->user->role && Roles::ROLE_ADMIN != Yii::app()->user->role )
+        {
+            $criteria->with = array('user_notification' );
+            $criteria->together = true;
+            $criteria->condition = "user_notification.user_id = :user_id";
+            $criteria->params = array(':user_id' => Yii::app()->user->id);
+             
+        }
+        
+        $criteria->order = 't.id DESC';        
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
@@ -130,11 +130,11 @@ class Notification extends CActiveRecord
 		$criteria->compare('date_created',$this->date_created,true);	
 		$criteria->compare('role_id',$this->role_id);
 		$criteria->compare('notification_type',$this->notification_type,true);
-                $criteria->with = array('user_notification' );
-                $criteria->together = true;
-                $criteria->condition = "user_notification.user_id=:user_id";
-                $criteria->params = array(':user_id' => Yii::app()->user->id);
-                $criteria->order = 't.id DESC';        
+        $criteria->with = array('user_notification' );
+        $criteria->together = true;
+        $criteria->condition = "user_notification.user_id=:user_id";
+        $criteria->params = array(':user_id' => Yii::app()->user->id);
+        $criteria->order = 't.id DESC';        
                 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

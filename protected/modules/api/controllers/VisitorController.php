@@ -105,8 +105,11 @@ class VisitorController extends RestfulController {
                 $email = Yii::app()->request->getParam('email');
                 $visitor = Visitor::model()->findByAttributes(array('email' => $email));
                 if ($visitor) {
-                    $visitor->reset_token = $token = md5(uniqid(mt_rand(), true));
-                    if ($visitor->save(false)) {
+                   /* $visitor->reset_token = $token = md5(uniqid(mt_rand(), true));*/
+                    $new_pass = uniqid(mt_rand(), true);
+                    $visitor->password = $new_pass;
+                    $visitor->repeatpassword = $new_pass;
+                    if ($visitor->save()) {
                         $this->sendResponse(200);
                     }
                 }else{
@@ -120,8 +123,6 @@ class VisitorController extends RestfulController {
 
             $this->sendResponse(500, CJSON::encode(array('responseCode' => 500, 'errorCode' => 'INTERNAL_SERVER_ERROR', 'errorDescription' => 'something went wrong')));
         }
-
-
     }
 
     public function actionResetPassword() {
@@ -137,19 +138,19 @@ class VisitorController extends RestfulController {
                 $data = CJSON::decode($data);
                 $visitor = Visitor::model()->findByAttributes(array('email' => $email));
                 if ($visitor) {
-                    if($visitor->reset_token != NULL) {
+                    /*if($visitor->reset_token != NULL) {*/
                         $visitor->password = $data['password'];
                         $visitor->repeatpassword = $data['password'];
-                        $visitor->contact_postcode = 0;
-                        $visitor->reset_token = NULL;
+                        /*$visitor->contact_postcode = 0;
+                        $visitor->reset_token = NULL;*/
                         if ($visitor->save()) {
                             $this->sendResponse(200);
                         }else{
                             $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'UNAUTHORISED', 'errorDescription' => 'unauthorized request')));
                         }
-                    }else{
+                   /* }else{
                         $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'UNAUTHORISED', 'errorDescription' => 'unauthorized request')));
-                    }
+                    }*/
                 }else{
                     $this->sendResponse(404, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'VISITOR_NOT_FOUND', 'errorDescription' => 'Requested Visitor not found')));
                 }

@@ -250,7 +250,7 @@ class NotificationsController extends Controller
 	 */
 	public function actionAdmin()
 	{
-		$model=new Notification('search');
+		$model = new Notification('search');
 		$model->unsetAttributes();  // clear any default values
 		if(isset($_GET['Notification']))
 			$model->attributes=$_GET['Notification'];

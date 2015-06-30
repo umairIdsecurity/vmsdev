@@ -356,7 +356,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                     ));
                                     ?>
                                     <span class="required">*</span>
-                                    <?php echo $form->error($model, 'company'); ?>
+                                    <?php echo $form->error($model, 'company', array("style" => "margin-top:0px")); ?>
                                 </div>
                             </td>
                         </tr>

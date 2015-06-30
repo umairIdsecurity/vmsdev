@@ -340,7 +340,7 @@ if ($this->action->id == 'update') {
                                     ));
                                     ?>
                                     <span class="required">*</span>
-                                    <?php echo $form->error($model, 'company'); ?>
+                                    <?php echo $form->error($model, 'company', array("style" => "margin-top:0px")); ?>
                                 </div>
                             </td>
                         </tr>

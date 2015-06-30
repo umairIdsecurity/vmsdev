@@ -107,9 +107,16 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
     <div style="margin: 10px 0px 0px 19px; text-align: left;">
         <?php
         if ($asic) {
-            array_pop(Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC]);
-            echo CHtml::dropDownList('Visitor[visitor_card_status]', $visitorModel->visitor_card_status, Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC], ['empty' => 'Select Card Status']);
-            echo "<br />";
+            if($visitorModel->profile_type ==  Visitor::PROFILE_TYPE_VIC) {
+                array_pop(Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC]);
+                echo CHtml::dropDownList('Visitor[visitor_card_status]', $visitorModel->visitor_card_status, Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC], ['empty' => 'Select Card Status']);
+                echo "<br />";
+            } elseif($visitorModel->profile_type ==  Visitor::PROFILE_TYPE_ASIC) {
+                array_pop(Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_ASIC]);
+                echo CHtml::dropDownList('Visitor[visitor_card_status]', $visitorModel->visitor_card_status, Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_ASIC], ['empty' => 'Select Card Status']);
+                echo "<br />";
+            }
+
         }
 
         $workstationList = CHtml::listData(Utils::populateWorkstation(), 'id', 'name');
@@ -150,6 +157,10 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
 
 <script>
     $(document).ready(function () {
+        var currentCardStatus = $('#Visitor_visitor_card_status').val();
+        if (currentCardStatus == 6) {
+            $('#Visitor_visitor_card_status').attr("disabled", true);
+        }
 <?php if ($asic) { ?>
             // remove Denied card status
             $("#visitor_card_status option[value='5']").remove();

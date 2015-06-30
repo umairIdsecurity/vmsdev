@@ -7,7 +7,11 @@ Yii::setPathOfAlias('helpers','helpers');
 if (strpos($_SERVER['SERVER_NAME'],'vmsuitest-win') !== false) {
     $dbDriver = 'mssql';
     $userTbl = '"user"';
-} else { $userTbl = 'user'; };
+} else {
+    $userTbl = 'user';
+    $dbDriver = 'mysql';
+};
+
 // This is the main Web application configuration. Any writable
 // CWebApplication properties can be configured here.
 $result = CMap::mergeArray(

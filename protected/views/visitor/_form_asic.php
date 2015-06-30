@@ -482,6 +482,10 @@ if ($this->action->id == 'update') {
 
 //        $(".workstationRow").show();
 //        getWorkstation();
+        currentCardStatus = $('#Visitor_visitor_card_status').val();
+        if(currentCardStatus == 6) {
+            $('#Visitor_visitor_card_status').attr("disabled", true);
+        }
 
         $('#fromDay').on('change', function () {
             var dt = new Date();

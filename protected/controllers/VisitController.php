@@ -363,12 +363,12 @@ class VisitController extends Controller {
                 }
             }
 
-            if (isset($_POST['Visitor']['visitor_card_status']) && $_POST['Visitor']['visitor_card_status'] != $visitorModel->visitor_card_status) {
-                $visitorModel->visitor_card_status = $_POST['Visitor']['visitor_card_status'];
-                if ($visitorModel->visitor_card_status == Visitor::ASIC_ISSUED) {
+            if ($_POST['Visitor']['visitor_card_status'] != $currentCardStatus) {
+
+                if ($_POST['Visitor']['visitor_card_status'] == Visitor::ASIC_ISSUED) {
+                    $visitorModel->visitor_card_status  = 6;
                     $visitorModel->profile_type = Visitor::PROFILE_TYPE_ASIC;
                 }
-
                 if ($visitorModel->save()) {
                     if (in_array($visitorModel->visitor_card_status, [Visitor::ASIC_PENDING])) {
                         $model->date_check_in = $model->date_check_out;
@@ -384,12 +384,12 @@ class VisitController extends Controller {
             $visitorModel->setScenario('updateVic');
             #if(!$visitorModel->validate()) die('visitorModel-'.CHtml::errorSummary($visitorModel));
             if($visitorModel->save()){
-               if (isset($_POST['Visitor']['visitor_card_status'])&& $currentCardStatus == 2 && $_POST['Visitor']['visitor_card_status'] == 3) {
-                   $logCardstatusConvert = new CardstatusConvert();
-                   $logCardstatusConvert->visitor_id = $visitorModel->id;
-                   $logCardstatusConvert->convert_time = date("Y-m-d");
-                   $logCardstatusConvert->save();
-               }
+                if ($_POST['Visitor']['visitor_card_status'] == Visitor::ASIC_ISSUED) {
+                    $logCardstatusConvert = new CardstatusConvert();
+                    $logCardstatusConvert->visitor_id = $visitorModel->id;
+                    $logCardstatusConvert->convert_time = date("Y-m-d");
+                    $logCardstatusConvert->save();
+                }
             }
         }
 

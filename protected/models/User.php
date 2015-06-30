@@ -502,10 +502,7 @@ class User extends VmsActiveRecord {
 
     public function getCompany($id) {
         $connection = Yii::app()->db;
-        if (strpos($_SERVER['SERVER_NAME'],'vmsuitest-win') !== false) {
-            $user = '"user"';
-        } else { $user = 'user'; }
-        $sql = 'select company from '.$user.' where id = ' . $id;
+        $sql = 'select company from '.Yii::app()->params['userTbl'].' where id = ' . $id;
         $command = $connection->createCommand($sql);
         $row = $command->queryRow();
         foreach ($row as $key => $val) {

@@ -988,11 +988,11 @@ class Visit extends CActiveRecord {
             $visitor = $res_visitor[0]['visitor'];
             $userTbl = Yii::app()->params['userTbl'];
             $res_company = Yii::app()->db->createCommand("SELECT company.id AS company_id, company.name AS company_name
-                                                          FROM visit
-                                                            LEFT JOIN $userTbl ON $userTbl.id = visit.host
-                                                            LEFT JOIN company ON $userTbl.company = company.id
-                                                           WHERE company.is_deleted=0
-                                                           AND visit.id= " . $visitId)->queryAll();
+                                                        FROM visit
+                                                        LEFT JOIN $userTbl ON $userTbl.id = visit.host
+                                                        LEFT JOIN company ON $userTbl.company = company.id
+                                                        WHERE company.is_deleted = 0
+                                                        AND visit.id = " . $visitId)->queryAll();
             if ($res_company) {
                 $company = $res_company[0]['company_id'];
             } else {

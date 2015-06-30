@@ -368,7 +368,7 @@ $model->identification_country_issued = 13;
                                         ));
                                         ?>
                                         <span class="required">*</span>
-                                        <?php echo $form->error($model, 'company'); ?>
+                                        <?php echo $form->error($model, 'company',array("style" => "margin-top:0px")); ?>
                                     </div>
                                 </td>
                             </tr>

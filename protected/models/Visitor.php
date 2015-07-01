@@ -253,19 +253,22 @@ class Visitor extends CActiveRecord {
 
         $rules[] = array(
             'identification_alternate_document_name1,
-                    identification_alternate_document_no1,
-                    identification_alternate_document_name2,
-                    identification_alternate_document_no2',
+            identification_alternate_document_no1,
+            identification_alternate_document_name2,
+            identification_alternate_document_no2',
             'VisitorAlternateIdentification'
         );
 
-        $rules[] = array(
-            'identification_type,
-            identification_country_issued,
-            identification_document_no,
-            identification_document_expiry',
-            'VisitorPrimaryIdentification',
-        );
+        if ((date('Y') - date("Y", strtotime($this->date_of_birth))) > 18) {
+            $rules[] = array(
+                'identification_type,
+                identification_country_issued,
+                identification_document_no,
+                identification_document_expiry',
+                'VisitorPrimaryIdentification',
+            );
+        }
+
 
         if (Yii::app()->controller->id === 'visitor') {
             if (Yii::app()->controller->action->id == 'addvisitor') {
@@ -567,15 +570,14 @@ class Visitor extends CActiveRecord {
             'DateTimeZoneAndFormatBehavior' => 'application.components.DateTimeZoneAndFormatBehavior',
         );
     }
+   
 
-
-    public function findAllCompanyWithSameTenant() {
+    public function findAllCompanyWithSameTenant($tenantId) {
         $session = new CHttpSession;
         $aArray = array();
         $tenant = User::model()->findByPk($session['tenant']);
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = '" . $session['tenant'] . "' and (id!=1 and id !='" . $tenant->company . "')";
-
+        $Criteria->condition = "tenant = " . $session['tenant'] . " and (id != 1 and id != ".$tenant->company.")";
         $company = Company::model()->findAll($Criteria);
 
         foreach ($company as $index => $value) {
@@ -589,9 +591,11 @@ class Visitor extends CActiveRecord {
     }
 
     public function findAllCompanyByTenant($tenantId) {
-        $tenant = User::model()->findByPk($tenantId);
+        $session = new CHttpSession;
+
+        $tenant = User::model()->findByPk($session['tenant']);
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = '".$tenantId."' and (id!=1 and id !='".$tenant->company."')";
+        $Criteria->condition = "tenant = '" . $session['tenant'] . "' and (id!=1 and id !='".$tenant->company."')";
         return Company::model()->findAll($Criteria);
     }
 

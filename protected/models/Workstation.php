@@ -49,7 +49,7 @@ class Workstation extends CActiveRecord {
             array('name', 'required'),
             array('timezone_id','required','message' =>'Please select a timezone'),
             array('tenant','required','message' =>'Please select a {attribute}'),
-            array('contact_number, card_type,moduleCorporate, moduleVic', 'safe'),
+            array('contact_number, card_type,moduleCorporate, moduleVic, password', 'safe'),
             array('contact_email_address', 'email'),
             array('number_of_operators, assign_kiosk', 'numerical', 'integerOnly' => true),
             array('name, contact_name,tenant,tenant_agent,created_by', 'length', 'max' => 50),
@@ -209,7 +209,7 @@ class Workstation extends CActiveRecord {
     public function findWorkstationAvailableForUser($userId) {
 
         $Criteria = new CDbCriteria();
-        $Criteria->condition = Yii::app()->params['userTbl'] . ' = $userId';
+        $Criteria->condition = Yii::app()->params['userTbl'] .'='.$userId;
         $userworkstations = UserWorkstations::model()->findAll($Criteria);
 
         $aArray = array();

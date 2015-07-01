@@ -53,7 +53,7 @@ if (isset($company) && !empty($company)) {
                                     <table id="passwordInputsTable" style="margin-top:10px">
                                         <tr>
                                             <td>
-                                                <input placeholder="Password" type="password" class="original-password" id="Visitor_password_input" name="Visitor[password]">
+                                                <input placeholder="Password" type="password" class="original-password" id="Visitor_password_input">
                                                 <span class="required">*</span>
                                                 <?php echo "<br>" . $form->error($model, 'password'); ?>
                                                 <div class="errorMessage visitor_password" style="display:none"></div>

@@ -46,10 +46,13 @@ class AuthorizationController extends RestfulController {
                         }
                     }
                 } elseif ($data['grant_type'] === 'refresh_token') {
-                    $access_token = AccessTokens::model()->findByAttributes(array('ACCESS_TOKEN' => $data['access_token'],USER_TYPE => self::ADMIN_USER));
+                    $access_token = AccessTokens::model()->findByAttributes(array('ACCESS_TOKEN' => $data['access_token'], 'USER_TYPE' => self::ADMIN_USER));
                     if ($access_token) {
                         #$newtimestamp = strtotime(date('Y-m-d H:i:s') . ' + 15 minute');
                         $access_token->EXPIRY = NULL;
+                        $access_token->CREATED = date('Y-m-d H:i:s');
+                        $access_token->ACCESS_TOKEN = $this->generateToken(20);
+                        $access_token->USER_TYPE = self::ADMIN_USER;
                         $access_token->save(false);
                         $result['access_token'] = $access_token->ACCESS_TOKEN;
                         $this->sendResponse(200, CJSON::encode($result));

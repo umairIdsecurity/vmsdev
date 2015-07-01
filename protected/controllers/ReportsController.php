@@ -227,7 +227,7 @@ class ReportsController extends Controller
         $dateCondition ='';
         
         if(Roles::ROLE_SUPERADMIN != Yii::app()->user->role){
-            $dateCondition .= "(t.tenant=".Yii::app()->user->tenant.") AND ";
+            $dateCondition .= "(t.created_by=".Yii::app()->user->id.") AND ";
         }
         
         $dateCondition .= "( DATE(t.date_created) BETWEEN  '".$from->format("Y-m-d")."' AND  '".$to->format("Y-m-d")."' )"
@@ -424,14 +424,15 @@ class ReportsController extends Controller
         $dateCondition='';
         
         if(Roles::ROLE_SUPERADMIN != Yii::app()->user->role){
-            $dateCondition .= "(t.tenant=".Yii::app()->user->tenant.") AND ";
+            $dateCondition .= "(t.created_by=".Yii::app()->user->id.") AND ";
         }
         
         $dateCondition .= "(t.date_created BETWEEN  '".$from->format("Y-m-d H:i:s")."' AND  '".$to->format("Y-m-d H:i:s")."' )"
                          ." AND (t.is_deleted =0 ) AND (t.profile_type='VIC')";
         
         $data = Yii::app()->db->createCommand()
-                ->select("convert(varchar(10), t.date_created, 120) AS date_check_in, t.first_name, t.id") 
+                //->select("convert(varchar(10), t.date_created, 120) AS date_check_in, t.first_name, t.id")
+                ->select("t.date_created AS date_check_in, t.first_name, t.id")
                 ->from("visitor t")
                 ->where($dateCondition)
                 ->queryAll();
@@ -450,7 +451,7 @@ class ReportsController extends Controller
         $dateCondition='';
         
         if(Roles::ROLE_SUPERADMIN != Yii::app()->user->role){
-            $dateCondition .= "(t.tenant=".Yii::app()->user->tenant.") AND ";
+            $dateCondition .= "(t.created_by=".Yii::app()->user->id.") AND ";
         }
         
         $dateCondition .= "(t.date_created BETWEEN  '".$from->format("Y-m-d H:i:s")."' AND  '".$to->format("Y-m-d H:i:s")."' )"
@@ -458,7 +459,8 @@ class ReportsController extends Controller
         
         
         $data = Yii::app()->db->createCommand()
-                ->select("convert(varchar(10), t.date_created, 120) AS date_check_in, t.first_name, t.id") 
+                //->select("convert(varchar(10), t.date_created, 120) AS date_check_in, t.first_name, t.id")
+                ->select("t.date_created AS date_check_in, t.first_name, t.id")
                 ->from("visitor t")
                 ->where($dateCondition)
                 ->queryAll();
@@ -487,7 +489,7 @@ class ReportsController extends Controller
         }
         
         if(Roles::ROLE_SUPERADMIN != Yii::app()->user->role){
-            $dateCondition .= "(visitors.tenant=".Yii::app()->user->tenant.") AND ";
+            $dateCondition .= "(visitors.created_by=".Yii::app()->user->id.") AND ";
         }
         
         $dateCondition .= "(t.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visitors.profile_type='VIC')";
@@ -525,7 +527,7 @@ class ReportsController extends Controller
         
         
         if(Roles::ROLE_SUPERADMIN != Yii::app()->user->role){
-            $dateCondition .= "(visitors.tenant=".Yii::app()->user->tenant.") AND ";
+            $dateCondition .= "(visitors.created_by=".Yii::app()->user->id.") AND ";
         }
         
         $dateCondition .= "(visits.is_deleted = 0) AND (visitors.is_deleted = 0) AND (visitors.profile_type='VIC') AND (cards.module=2)";

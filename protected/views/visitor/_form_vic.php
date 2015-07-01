@@ -75,7 +75,30 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
         'enableClientValidation' => true,
         'clientOptions'          => array(
             'validateOnSubmit' => true,
-            'afterValidate'    => 'js:function(form, data, hasError){ return afterValidate(form, data, hasError); }'
+            'afterValidate'    => 'js:function(form, data, hasError){
+                if (hasError) {
+                    var currentYear = new Date().getFullYear();
+                    var selectedYear = $("#fromYear").val();
+
+                    if (currentYear - selectedYear < 18) {
+                        $("#Visitor_identification_type_em_").hide();
+                        $("#Visitor_identification_document_no_em_").hide();
+                        $("#Visitor_identification_document_expiry_em_").hide();
+
+                        //remove item
+                        delete data.Visitor_identification_document_expiry;
+                        delete data.Visitor_identification_document_no;
+                        delete data.Visitor_identification_type;
+                    }
+
+                }
+
+                if(jQuery.isEmptyObject(data)) {
+                    hasError = false;
+                }
+
+                return afterValidate(form, data, hasError);
+            }'
         ),
     ));
     ?>
@@ -258,6 +281,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                 <select id="fromDay" name="Visitor[birthdayDay]" class='daySelect'></select>
                                 <select id="fromMonth" name="Visitor[birthdayMonth]" class='monthSelect'></select>
                                 <select id="fromYear" name="Visitor[birthdayYear]" class='yearSelect'></select>
+                                <?php //echo $form->dropDownList($model, 'birthdayYear',array(), array('class' => 'yearSelect')) ;?>
                                 <span class="required">*</span>
                                 <?php echo "<br>" . $form->error($model, 'date_of_birth'); ?>
                             </td>
@@ -356,7 +380,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                     ));
                                     ?>
                                     <span class="required">*</span>
-                                    <?php echo $form->error($model, 'company'); ?>
+                                    <?php echo $form->error($model, 'company', array("style" => "margin-top:0px")); ?>
                                 </div>
                             </td>
                         </tr>
@@ -419,6 +443,16 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                     ?><span class="required primary-identification-require">*</span>
                                     <?php echo "<br>" . $form->error($model, 'identification_document_no'); ?>
                                     <?php echo $form->error($model, 'identification_document_expiry'); ?>
+                                </td>
+                            </tr>
+                            <tr id="u18_identification" style="display:none">
+                                <td>
+                                    <?php //echo $form->checkBox($model, 'alternative_identification', array('style' => 'float: left;')); ?>
+                                    <input type="checkbox" style="float: left;" id="Visitor_u18_identification" name="Visitor_u18_identification" value="">
+                                    <label for="Visitor_identification" class="form-label">I have verified that the applicant is under 18<span class="required primary-identification-require">*</span></label>
+                                    <div class="errorMessage" style="float: left; display: none;" id="Visitor_u18_identification_em_">Please verify the age of the applicant.</div>
+                                    <input type="text" name="Visitor_u18_identification_document_no" style="" placeholder="Details">
+                                    <?php //echo $form->textField($model, 'identification_document_no', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Document No.', 'style' => 'width: 110px;')); ?>
                                 </td>
                             </tr>
                             <tr>
@@ -530,7 +564,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 </div>
 
 <input type="hidden" id="currentAction" value="<?php echo $this->action->id; ?>">
-<input type="hidden" id="currentRoleOfLogge:wdInUser" value="<?php echo $session['role']; ?>">
+<input type="hidden" id="currentRoleOfLoggedInUser" value="<?php echo $session['role']; ?>">
 <input type="hidden" id="currentlyEditedVisitorId" value="<?php if (isset($_GET['id'])) {
     echo $_GET['id'];
 } ?>">
@@ -551,6 +585,15 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
             $("#Visitor_date_of_birth_em_").show();
             $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
             return false;
+        }
+
+        var u18_identification = $('#u18_identification:hidden');
+        if (u18_identification.length != 1) {
+            if (!$('#Visitor_u18_identification').checked) {
+                $('#Visitor_u18_identification_em_').show();
+            }
+        } else {
+            $('#Visitor_u18_identification_em_').show();
         }
 
         var companyValue = $("#Visitor_company").val();
@@ -645,6 +688,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                 $("#Visitor_date_of_birth_em_").hide();
             }
         });
+
         $('#fromMonth').on('change', function () {
             var dt = new Date();
 
@@ -664,6 +708,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                 $("#Visitor_date_of_birth_em_").hide();
             }
         });
+
         $('#fromYear').on('change', function () {
             var dt = new Date();
 
@@ -679,7 +724,12 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                 $("#Visitor_date_of_birth_em_").show();
                 $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
-            }else{
+            }else{//u18_identification
+                if (dt.getFullYear() - $("#fromYear").val() < 18) {
+                    $('#u18_identification').show();
+                } else {
+                    $('#u18_identification').hide();
+                }
                 $("#Visitor_date_of_birth_em_").hide();
             }
         });

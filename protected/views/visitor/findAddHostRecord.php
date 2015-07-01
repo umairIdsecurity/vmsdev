@@ -196,7 +196,7 @@ $defaultKey = key($asicCardTypes);
                                         $allTenantCompanyNames = User::model()->findAllCompanyTenant();
                                         foreach ($allTenantCompanyNames as $key => $value) {
                                             ?>
-                                            <option value="<?php echo $value['tenant']; ?>"
+                                            <option value="<?php echo $value['id']; ?>"
                                                 <?php
                                                 if ($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant']) {
                                                     echo " selected ";
@@ -367,7 +367,7 @@ $defaultKey = key($asicCardTypes);
 
                             <tr class="vic-visitor-fields">
                                 <td id="passwordVicForm">
-                                    <?php $this->renderPartial('/common_partials/password', array('model' => $userModel, 'form' => $form, 'session' => $session)); ?>
+                                    <?php $this->renderPartial('/common_partials/hostpassword', array('model' => $userModel, 'form' => $form, 'session' => $session)); ?>
                                 </td>
                             </tr>
 

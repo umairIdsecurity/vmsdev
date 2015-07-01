@@ -368,7 +368,7 @@ $model->identification_country_issued = 13;
                                         ));
                                         ?>
                                         <span class="required">*</span>
-                                        <?php echo $form->error($model, 'company'); ?>
+                                        <?php echo $form->error($model, 'company',array("style" => "margin-top:0px")); ?>
                                     </div>
                                 </td>
                             </tr>
@@ -394,12 +394,12 @@ $model->identification_country_issued = 13;
 
                                     <select id="Visitor_tenant" onchange="populateTenantAgentAndCompanyField()"
                                             name="Visitor[tenant]">
-                                        <option value='' selected>Please select a tenant</option>
+                                        <option value=''>Please select a tenant</option>
                                         <?php
                                         $allTenantCompanyNames = User::model()->findAllCompanyTenant();
                                         foreach ($allTenantCompanyNames as $key => $value) {
                                             ?>
-                                            <option value="<?php echo $value['tenant']; ?>"
+                                            <option value="<?php echo $value['id']; ?>"
                                                 <?php
                                                 if ($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant']) {
                                                     echo " selected ";
@@ -728,7 +728,7 @@ $model->identification_country_issued = 13;
                                 $allTenantCompanyNames = User::model()->findAllCompanyTenant();
                                 foreach ($allTenantCompanyNames as $key => $value) {
                                     ?>
-                                    <option value="<?php echo $value['tenant']; ?>"
+                                    <option value="<?php echo $value['id']; ?>"
                                         <?php
                                         if ($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant']) {
                                             echo " selected ";
@@ -1019,7 +1019,7 @@ $model->identification_country_issued = 13;
         Loading.show();
         $("#searchVisitorTable").hide();
 //change modal url to pass user searched text
-        var url = 'index.php?r=visitor/findvisitor&id=' + searchText + '&tenant=' + $("#search_visitor_tenant").val() + '&tenant_agent=' + $("#search_visitor_tenant_agent").val() + '&cardType=' + $('#selectCardDiv input[name=selectCardType]:checked').val();
+        var url = 'index.php?r=visitor/findvisitor&id=' + searchText + '&tenant=' + <?php echo $session['tenant']; ?> + '&tenant_agent=' + $("#search_visitor_tenant_agent").val() + '&cardType=' + $('#selectCardDiv input[name=selectCardType]:checked').val();
         $.ajax(url).done(function(data){
             Loading.hide();
             $("#searchVisitorTable").show();

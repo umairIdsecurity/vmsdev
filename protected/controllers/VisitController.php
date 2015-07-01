@@ -338,7 +338,7 @@ class VisitController extends Controller {
             }
 
             #update Company
-            if(isset($_POST['Company'])){
+            if (isset($_POST['Company'])) {
                 if($visitorModel->company) {
                     $companyModel = Company::model()->findByPk($visitorModel->company);
                     $staffModel = User::model()->findByPk($visitorModel->staff_id);
@@ -400,8 +400,8 @@ class VisitController extends Controller {
                 if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && strtotime(date('Y-m-d')) <= strtotime($model->date_check_out)) {
                     $currentDate = date('Y-m-d');
                     $model->visit_status = VisitStatus::AUTOCLOSED;
-                    $model->finish_date = date('Y-m-d');
-                    $model->finish_time = date('H:i:s');
+                    $model->finish_date = $model->date_check_in = date('Y-m-d');
+                    $model->finish_time = $model->time_check_in = date('H:i:s');
                     switch ($model->card_type) {
                         case CardType::VIC_CARD_24HOURS: // VIC 24 hour
                             #change datetime check in and out for vic 24h.

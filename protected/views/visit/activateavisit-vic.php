@@ -142,7 +142,7 @@ $session = new CHttpSession;
 
             // Extended Card Type (EVIC) or Multiday
             if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED]) && $model->visit_status == VisitStatus::AUTOCLOSED) {
-                $model->date_check_out = date('d-m-Y', strtotime($model->finish_date. ' + 1 day'));
+                $model->date_check_out = date('d-m-Y', strtotime($model->finish_date));
             }
 
             // VIC_CARD_24HOURS

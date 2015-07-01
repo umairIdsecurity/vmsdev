@@ -225,12 +225,18 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             var profileImage = '<?php echo $visitorModel->photo;?>';
             var isDefault = imgsrc.search('companylogohere1.png');
             if( isDefault > 0 || profileImage == '' || !profileImage) {
-                <?php if($model->card_type != CardType::VIC_CARD_SAMEDATE ) { ?>
-                $("#Visitor_photo_em").attr('style', 'margin-right:84px ; margin-bottom:0px;');
-                $("#editImageBtn.editImageBtn").attr('style', 'margin-top:-5px !important; margin-right:84px ; margin-bottom:0px;');
-                $("#cropImageBtn.editImageBtn").attr('style', 'margin-top:-5px !important; margin-right:84px ; margin-bottom:0px;');
-                return;
-                <?php } ?>
+                <?php if ($model->card_type > 4 ) : ?>
+                    <?php if($model->card_type != CardType::VIC_CARD_SAMEDATE ) : ?>
+                    $("#Visitor_photo_em").attr('style', 'margin-right:84px ; margin-bottom:0px; margin-top:0px ;');
+                    $("#editImageBtn.editImageBtn").attr('style', 'margin-top:-5px !important; margin-right:84px ; margin-bottom:0px;');
+                    $("#cropImageBtn.editImageBtn").attr('style', 'margin-top:-5px !important; margin-right:84px ; margin-bottom:0px;');
+                    return;
+                    <?php endif ?>
+                <?php else : ?>
+                    $("#Visitor_photo_em").attr('style', 'margin-bottom: -17px; margin-right: 0px; margin-top: 13px;');
+                    $("#cropImageBtn.editImageBtn").attr('style', 'margin-bottom: 0; margin-right: 0 !important; margin-top: 0 !important;');
+                    return;
+                <?php endif ?>
             }
 
             e.preventDefault();

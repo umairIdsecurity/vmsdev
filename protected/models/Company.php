@@ -360,9 +360,10 @@ class Company extends CActiveRecord {
 
     public function findAllCompanyWithSameTenant($tenant) {
         $aArray = array();
+        $session = new CHttpSession;
 
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = '".$tenant."'";
+        $Criteria->condition = "tenant = '" . $session['tenant'] . "'";
         $company = Company::model()->findAll($Criteria);
 
         foreach ($company as $index => $value) {

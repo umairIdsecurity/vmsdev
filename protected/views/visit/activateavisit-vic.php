@@ -141,12 +141,12 @@ $session = new CHttpSession;
             }
 
             // Extended Card Type (EVIC) or Multiday
-            if (in_array($model->card_type, array(CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY)) && $model->visit_status == VisitStatus::AUTOCLOSED) {
-                $model->date_check_out = date('d-m-Y', strtotime('+ 1 days'));
+            if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED]) && $model->visit_status == VisitStatus::AUTOCLOSED) {
+                $model->date_check_out = date('d-m-Y', strtotime($model->finish_date. ' + 28 day'));
             }
 
             // VIC_CARD_24HOURS
-            if (in_array($model->visit_status, [VisitStatus::SAVED, VisitStatus::CLOSED])) {
+            if (!in_array($model->card_type, [CardType::VIC_CARD_EXTENDED]) && in_array($model->visit_status, [VisitStatus::SAVED, VisitStatus::CLOSED])) {
                 $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in. ' + 1 day'));
                 $model->time_check_out = $model->time_check_in;
             }
@@ -192,7 +192,7 @@ $session = new CHttpSession;
     $(document).ready(function() {
         // for Card Type Manual
         var minDate = '<?php echo $model->card_type == CardType::VIC_CARD_MANUAL ? "-3m" : "0"; ?>';
-        var maxDate = '<?php echo in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY]) ? "+28d" : "0"; ?>';
+        var maxDate = '<?php echo in_array($model->card_type, [CardType::VIC_CARD_MULTIDAY]) ? "+28d" : "0"; ?>';
         refreshTimeIn();
 
         $("#Visit_date_check_in").datepicker({
@@ -273,9 +273,9 @@ $session = new CHttpSession;
             buttonImage: "<?php echo Yii::app()->controller->assetsBase; ?>/images/calendar.png",
             buttonImageOnly: true,
             minDate: minDate,
-            //maxDate: maxDate,
+            maxDate: maxDate,
             dateFormat: "dd-mm-yy",
-            disabled: true,
+            disabled: <?php echo (in_array($model->card_type, [CardType::VIC_CARD_24HOURS, CardType::VIC_CARD_EXTENDED])) ? "true" : "false"; ?>,
             onClose: function (date) {
                 var day = date.substring(0, 2);
                 var month = date.substring(3, 5);

@@ -196,7 +196,7 @@ $defaultKey = key($asicCardTypes);
                                         $allTenantCompanyNames = User::model()->findAllCompanyTenant();
                                         foreach ($allTenantCompanyNames as $key => $value) {
                                             ?>
-                                            <option value="<?php echo $value['tenant']; ?>"
+                                            <option value="<?php echo $value['id']; ?>"
                                                 <?php
                                                 if ($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant']) {
                                                     echo " selected ";

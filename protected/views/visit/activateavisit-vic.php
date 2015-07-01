@@ -142,7 +142,7 @@ $session = new CHttpSession;
 
             // Extended Card Type (EVIC) or Multiday
             if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED]) && $model->visit_status == VisitStatus::AUTOCLOSED) {
-                $model->date_check_out = date('d-m-Y', strtotime($model->finish_date. ' + 28 day'));
+                $model->date_check_out = date('d-m-Y', strtotime($model->finish_date. ' + 1 day'));
             }
 
             // VIC_CARD_24HOURS
@@ -150,8 +150,6 @@ $session = new CHttpSession;
                 $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in. ' + 1 day'));
                 $model->time_check_out = $model->time_check_in;
             }
-
-            $model->date_check_out = date('d-m-Y', strtotime($model->date_check_out));
 
             $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                 'model' => $model,
@@ -213,13 +211,7 @@ $session = new CHttpSession;
                 $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "option", "minDate", selectedDate);
 
                 function updateTextVisitButton(text, id) {
-                    var visitButton = $("#activate-a-visit-form input.complete");
-                    if (visitButton.length) {
-                        visitButton.attr('id', id).val(text);
-                    } else {
-                        visitButton = $("#registerNewVisit");
-                        visitButton.attr('id', id).text(text);
-                    }
+                    $("#registerNewVisit").text(text);
                 }
 
                 if (selectedDate >= currentDate) {
@@ -249,7 +241,7 @@ $session = new CHttpSession;
                 }
 
                 <?php
-                if (in_array($model->card_type, array(CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY))) {
+                if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED])) {
                     echo '  var checkoutDate = new Date(selectedDate);
                             checkoutDate.setDate(selectedDate.getDate() + 28);
                             $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "setDate", checkoutDate);
@@ -273,7 +265,7 @@ $session = new CHttpSession;
             buttonImage: "<?php echo Yii::app()->controller->assetsBase; ?>/images/calendar.png",
             buttonImageOnly: true,
             minDate: minDate,
-            maxDate: maxDate,
+            //maxDate: "+28d",
             dateFormat: "dd-mm-yy",
             disabled: <?php echo (in_array($model->card_type, [CardType::VIC_CARD_24HOURS, CardType::VIC_CARD_EXTENDED])) ? "true" : "false"; ?>,
             onClose: function (date) {

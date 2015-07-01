@@ -403,8 +403,8 @@ class VisitController extends Controller {
             $model->attributes = $_POST['Visit'];
 
             // close visit process
-            if (isset($_POST['closeVisitForm'])) {
-                if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY, CardType::VIC_CARD_24HOURS]) && date('Y-m-d') <= $model->date_check_out) {
+            if (isset($_POST['Visit']['visit_status']) && $_POST['Visit']['visit_status'] == VisitStatus::CLOSED) {
+                if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY, CardType::VIC_CARD_24HOURS]) && strtotime(date('Y-m-d')) <= strtotime($model->date_check_out)) {
                     $currentDate = date('Y-m-d');
                     $model->visit_status = VisitStatus::AUTOCLOSED;
                     switch ($model->card_type) {
@@ -435,7 +435,7 @@ class VisitController extends Controller {
             }
 
             if ($model->save()) {
-                if (isset($_POST['closeVisitForm'])) {
+                if (isset($_POST['Visit']['visit_status']) && $_POST['Visit']['visit_status'] == VisitStatus::CLOSED) {
                     $visitCount['totalVisits'] = $model->visitCounts;
                     $visitCount['remainingDays'] = $model->remainingDays;
                 }

@@ -31,7 +31,7 @@ class DateTimeZoneAndFormatBehavior extends CActiveRecordBehavior
 {
     
     public $user_timezone;
-    public $edtTimeZone = "EST5EDT";
+    public $edtTimeZone = "Australia/Perth"; // use 'Australia/Perth' replace 'EST5EDT' if get error
     public $php_user_short_date = 'd-m-Y';
     public $php_user_time = 'H:i:s';
     public $php_user_datetime = 'd-m-Y H:i:s';

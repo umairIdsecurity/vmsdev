@@ -223,8 +223,10 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                 imgsrc = this.src;
             });
             var profileImage = '<?php echo $visitorModel->photo;?>';
-            var isDefault = imgsrc.search('companylogohere1.png');
-            if( isDefault > 0 || profileImage == '' || !profileImage) {
+            var isDefault = imgsrc.search('images/companylogohere1.png');
+            var isChanged = imgsrc.search('visit/detail&id='+'<?php echo $model->id; ?>');
+
+            if( isDefault > 0 || (profileImage == '' && isChanged > 0)) {
                 <?php if ($model->card_type > 4 ) : ?>
                     <?php if($model->card_type != CardType::VIC_CARD_SAMEDATE ) : ?>
                     $("#Visitor_photo_em").attr('style', 'margin-right:84px ; margin-bottom:0px; margin-top:0px ;');

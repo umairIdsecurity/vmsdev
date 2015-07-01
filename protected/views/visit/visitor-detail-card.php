@@ -3,7 +3,7 @@ $session = new CHttpSession;
 
 $session['count'] = 1;
 //date_default_timezone_set('Asia/Manila'); remove hard code
-$tenant = User::model()->findByPk($visitorModel->tenant);
+//$tenant = User::model()->findByPk($visitorModel->tenant);
 $photoForm = $this->beginWidget('CActiveForm', array(
     'id' => 'update-photo-form',
     'action' => Yii::app()->createUrl('/visitor/update&id=' . $model->visitor . '&view=1'),
@@ -32,12 +32,13 @@ $photoForm = $this->beginWidget('CActiveForm', array(
 </div>
 <?php
 $vstr = Visitor::model()->findByPk($model->visitor);
-if ($vstr->profile_type == "CORPORATE") {
-    $bgcolor = CardGenerated::CORPORATE_CARD_COLOR;
-}/* elseif ($vstr->profile_type == "ASIC") {
-    $bgcolor = CardGenerated::ASIC_CARD_COLOR;
-} */elseif ($vstr->profile_type == "VIC" || $vstr->profile_type == "ASIC") {
-     $bgcolor = CardGenerated::VIC_CARD_COLOR;
+$bgcolor = "";
+if ($vstr) {
+	if ($vstr->profile_type == "CORPORATE") {
+	    $bgcolor = CardGenerated::CORPORATE_CARD_COLOR;
+	} elseif ($vstr->profile_type == "VIC" || $vstr->profile_type == "ASIC") {
+	     $bgcolor = CardGenerated::VIC_CARD_COLOR;
+	}
 }
 ?>
 <?php if($model->card_type > 4){ ?>

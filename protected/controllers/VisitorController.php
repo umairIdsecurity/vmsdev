@@ -72,6 +72,30 @@ class VisitorController extends Controller {
             }
 
             if ($visitorService->save($model, $_POST['Visitor']['reason'], $session['id'])) {
+                //email sending
+                if(!empty($model->password_requirement)){
+                    $passwordRequire= intval($model->password_requirement);
+                    if($passwordRequire == 2){
+                        $loggedUserEmail = Yii::app()->user->email;
+                        $headers = "MIME-Version: 1.0" . "\r\n";
+                        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+                        $headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
+                        $to=$model->email;
+                        $subject="Preregistration email notification";
+                        $body = "<html><body>Hi,<br><br>".
+                                "This is preregistration email.<br><br>".
+                                "Please click on the below URL:<br>".
+                                "http://vmsprdev.identitysecurity.info/index.php/preregistration<br>";
+                        if(!empty($model->password_option)){
+                            $passwordCreate= intval($model->password_option);
+                            if($passwordCreate == 1){
+                                $body .= "Password: ".$_POST['Visitor']['password']."<br>";
+                            }
+                        }
+                        $body .="<br>"."Thanks,"."<br>Admin</body></html>";
+                        mail($to, $subject, $body, $headers);
+                    }
+                }
                 Yii::app()->end();
             } else { //todo: for debugging
                 print_r($model->errors);
@@ -427,27 +451,20 @@ class VisitorController extends Controller {
 
             if ($result = $visitorService->save($model, NULL, $session['id'])) {
                 
+                //email sending 
                 if(!empty($model->password_requirement)){
-                    
                     $passwordRequire= intval($model->password_requirement);
-                    
                     if($passwordRequire == 2){
-                        
                         $loggedUserEmail = Yii::app()->user->email;
-
                         $headers = "MIME-Version: 1.0" . "\r\n";
                         $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
                         $headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
-
                         $to=$model->email;
-
                         $subject="Preregistration email notification";
-
                         $body = "<html><body>Hi,<br><br>".
                                 "This is preregistration email.<br><br>".
                                 "Please click on the below URL:<br>".
                                 "http://vmsprdev.identitysecurity.info/index.php/preregistration<br>";
-                        
                         if(!empty($model->password_option)){
                             $passwordCreate= intval($model->password_option);
                             if($passwordCreate == 1){
@@ -458,7 +475,6 @@ class VisitorController extends Controller {
                         mail($to, $subject, $body, $headers);
                     }
                 }
-                
             	Yii::app()->end();
             }
         }

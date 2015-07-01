@@ -22,7 +22,8 @@ if(!$hostModel) $hostModel = Visitor::model();
     <tr>
         <td style="padding:5px;text-align: center;">
             <?php
-            $this->renderPartial('visitor-detail-card', array('model' => $model,
+            $this->renderPartial('visitor-detail-card', array(
+            	'model' => $model,
                 'visitorModel' => $visitorModel,
 				'visitCount' => $visitCount,
                 'hostModel' => $hostModel,

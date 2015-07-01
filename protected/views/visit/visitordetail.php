@@ -25,7 +25,7 @@ if(!$hostModel) $hostModel = Visitor::model();
             $this->renderPartial('visitor-detail-card', array(
             	'model' => $model,
                 'visitorModel' => $visitorModel,
-				'visitCount' => $visitCount,
+		'visitCount' => $visitCount,
                 'hostModel' => $hostModel,
                 'patientModel' => $patientModel,
                 'cardTypeModel' => $cardTypeModel,

@@ -30,7 +30,7 @@ class VisitorController extends Controller {
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('csvSampleDownload','importVisitHistory', 'AddVisitor', 'ajaxCrop', 'create', 'GetIdOfUser','GetHostDetails',
+                'actions' => array('csvSampleDownload','importVisitHistory', 'addVisitor', 'ajaxCrop', 'create', 'GetIdOfUser','GetHostDetails',
                                     'GetPatientDetails', 'CheckEmailIfUnique', 'GetVisitorDetails', 'FindVisitor', 'FindHost', 'GetTenantAgentWithSameTenant',
                                     'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent','CheckAsicStatusById', 'addAsicSponsor', 'CheckCardStatus'
                                 ),

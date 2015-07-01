@@ -443,7 +443,7 @@ class VisitController extends Controller {
 
         $this->render('visitordetail', array(
             'model' => $model,
-            'visitorModel' => $visitorModel,
+            'visitorModel' => $visitorModel ? $visitorModel : new Visitor(),
             'reasonModel' => $reasonModel,
             'hostModel' => $hostModel,
             'patientModel' => $patientModel,

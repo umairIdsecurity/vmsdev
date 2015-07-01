@@ -1140,4 +1140,11 @@ class Visit extends CActiveRecord {
         return false;
     }
 
+
+    public function getVisitorProfile()
+    {
+    	$visitor = Visitor::model()->findByPk($this->visitor);
+    	 
+    	return $visitor;
+    }
 }

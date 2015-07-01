@@ -47,14 +47,14 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' => 'firstname',
             'filter'=>CHtml::activeTextField($model, 'firstname', array('placeholder'=>'First Name')),
-            'value' => 'Visitor::model()->findByPk($data->visitor)->first_name',
+            'value' => '$data->getVisitorProfile() ? $data->getVisitorProfile()->first_name : ""',
             'header' => 'First Name',
             'htmlOptions'=>array('width'=>'120px'),
         ),
         array(
             'name' => 'lastname',
             'filter'=>CHtml::activeTextField($model, 'lastname', array('placeholder'=>'Last Name')),
-            'value' => 'Visitor::model()->findByPk($data->visitor)->last_name',
+            'value' => '$data->getVisitorProfile() ? $data->getVisitorProfile()->last_name : ""',
             'header' => 'Last Name',
             'htmlOptions'=>array('width'=>'120px'),
         ),
@@ -70,14 +70,14 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' => 'contactnumber',
             'filter'=>CHtml::activeTextField($model, 'contactnumber', array('placeholder'=>'Contact Number')),
-            'value' => 'Visitor::model()->findByPk($data->visitor)->contact_number',
+            'value' => '$data->getVisitorProfile() ? $data->getVisitorProfile()->contact_number : ""',
             'header' => 'Contact Number',
             'htmlOptions'=>array('width'=>'120px'),
         ),
         array(
             'name' => 'contactemail',
             'filter'=>CHtml::activeTextField($model, 'contactemail', array('placeholder'=>'Contact Email')),
-            'value' => 'Visitor::model()->findByPk($data->visitor)->email',
+            'value' => '$data->getVisitorProfile() ? $data->getVisitorProfile()->email : ""',
             'header' => 'Contact Email',
             'htmlOptions'=>array('width'=>'100px'),
         ),
@@ -112,20 +112,22 @@ function getVisitorFullName($id) {
 }
 
 function getCompany($id) {
-
-    $company_id = Visitor::model()->findByPk($id)->company;
-
-    if (isset($company_id)) {
-
-        $companyModel = Company::model();
-
-        $company = $companyModel->findByPk($company_id, "is_deleted >= 0 " );
-
-        if(isset($company))
-        {
-            return $company->name;
-        }
-    }
+	$visitor = Visitor::model()->findByPk($id);
+	
+	if ($visitor) {
+	    $company_id = $visitor->company;
+	
+	    if ($company_id) {
+	
+	        $companyModel = Company::model();
+	
+	        $company = $companyModel->findByPk($company_id, "is_deleted >= 0 " );
+	
+	        if (isset($company)) {
+	            return $company->name;
+	        }
+	    }
+	}
     return "Not Available";
 
 }

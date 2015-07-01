@@ -50,6 +50,7 @@ class CardGeneratedController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate($visitId) {
+        $session = new CHttpSession;
         $model = new CardGenerated;
 
         // Uncomment the following line if AJAX validation is needed
@@ -68,6 +69,8 @@ class CardGeneratedController extends Controller {
             } else {
                 $model->card_number = $_POST['CardGenerated']['card_number'];
             }
+
+            $model->tenant = $session['tenant'];
 
             if ($model->save()) {
                 Visit::model()->updateByPk($visitId, array('card' => $model->id));

@@ -1095,10 +1095,10 @@ class VisitController extends Controller {
         $allWorkstations='';
         
         if(Roles::ROLE_SUPERADMIN != Yii::app()->user->role){
-            
-            $dateCondition .= "(visitors.tenant=".Yii::app()->user->tenant.") AND ";
+
+            $dateCondition .= "(visitors.created_by=".Yii::app()->user->id.") AND ";
             //show curren logged in user Workstations
-            $allWorkstations = Workstation::model()->findAll("tenant = " . Yii::app()->user->tenant . " AND is_deleted = 0");
+            $allWorkstations = Workstation::model()->findAll("created_by = " . Yii::app()->user->id . " AND is_deleted = 0");
         }else{
             //show all work stations to SUPERADMIN
             $allWorkstations = Workstation::model()->findAll();
@@ -1117,8 +1117,6 @@ class VisitController extends Controller {
             ->where($dateCondition)
             ->group('t.id')
             ->queryAll();
-
-
 //        $allWorkstations = Yii::app()->db->createCommand()
 //            ->select( 't.id,t.tenant,t.name')
 //            ->from('workstation t')

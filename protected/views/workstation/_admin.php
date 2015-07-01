@@ -38,7 +38,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' => 'name',
             'header' => 'Workstation',
-            'htmlOptions' => array('width' => '180px'),
+            'htmlOptions' => array('width' => '180px', 'class' => 'ws-padding'),
         ),
         array(
             'name' => 'moduleCorporate',

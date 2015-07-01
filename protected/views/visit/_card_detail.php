@@ -1,5 +1,5 @@
 <?php
-$tenant = User::model()->findByPk($visitorModel->tenant);
+$tenant = User::model()->findByPk($visitorModel->created_by);
 if ($tenant) {
     $company = Company::model()->findByPk($tenant->company);
     if ($company) {

@@ -179,6 +179,14 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'name' => 'workstation',
             'value' => 'isset(Workstation::model()->findByPk($data->workstation)->name) ? Workstation::model()->findByPk($data->workstation)->name : ""',
             'filter'=>CHtml::activeTextField($model, 'workstation', array('placeholder'=>'Workstation', 'class' => 'header-form')),
+        ),array(
+            'name' => 'card_lost_declaration_file',
+            'value' => '$data->card_lost_declaration_file',
+            'filter'=>CHtml::activeTextField($model, 'card_lost_declaration_file', array('placeholder'=>'Card Lost Declaration File', 'class' => 'header-form')),
+        ),array(
+            'name' => 'police_report_number',
+            'value' => '$data->police_report_number',
+            'filter'=>CHtml::activeTextField($model, 'police_report_number', array('placeholder'=>'Police Number', 'class' => 'header-form')),
         ),
     ),
 ));

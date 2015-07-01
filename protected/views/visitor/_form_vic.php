@@ -75,7 +75,9 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
         'enableClientValidation' => true,
         'clientOptions'          => array(
             'validateOnSubmit' => true,
-            'afterValidate'    => 'js:function(form, data, hasError){ return afterValidate(form, data, hasError); }'
+            'afterValidate'    => 'js:function(form, data, hasError){
+                return afterValidate(form, data, hasError); 
+            }'
         ),
     ));
     ?>
@@ -357,7 +359,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                     ));
                                     ?>
                                     <span class="required">*</span>
-                                    <?php echo $form->error($model, 'company', array("style" => "margin-top:0px")); ?>
+                                    <?php echo $form->error($model, 'company'); ?>
                                 </div>
                             </td>
                         </tr>
@@ -541,7 +543,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 </div>
 
 <input type="hidden" id="currentAction" value="<?php echo $this->action->id; ?>">
-<input type="hidden" id="currentRoleOfLogge:wdInUser" value="<?php echo $session['role']; ?>">
+<input type="hidden" id="currentRoleOfLoggedInUser" value="<?php echo $session['role']; ?>">
 <input type="hidden" id="currentlyEditedVisitorId" value="<?php if (isset($_GET['id'])) {
     echo $_GET['id'];
 } ?>">
@@ -566,11 +568,12 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 
         var u18_identification = $('#u18_identification:hidden');
         if (u18_identification.length != 1) {
-            if (!$('#Visitor_u18_identification').checked) {
+            if (!$('#Visitor_u18_identification').is(':checked')) {
                 $('#Visitor_u18_identification_em_').show();
+                return false;
             }
         } else {
-            $('#Visitor_u18_identification_em_').show();
+            $('#Visitor_u18_identification_em_').hide();
         }
 
         var companyValue = $("#Visitor_company").val();
@@ -646,6 +649,8 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
             });
         }
 
+        $('#dateofBirthBreakdownValueYear').val($('#fromYear').val());
+
         $('#fromDay').on('change', function () {
             var dt = new Date();
 
@@ -702,10 +707,15 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                 $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else{//u18_identification
+                $('#dateofBirthBreakdownValueYear').val($('#fromYear').val());
                 if (dt.getFullYear() - $("#fromYear").val() < 18) {
                     $('#u18_identification').show();
+                    $('#Visitor_identification_type_em_').hide();
+                    $('#Visitor_identification_document_no_em_').hide();
+                    $('#Visitor_identification_document_expiry_em_').hide();
                 } else {
                     $('#u18_identification').hide();
+                    $('#Visitor_u18_identification_em_').hide();
                 }
                 $("#Visitor_date_of_birth_em_").hide();
             }

@@ -84,20 +84,13 @@ class VisitController extends Controller {
             $model->attributes = $_POST['Visit'];
 
             switch ($model->card_type) {
-                case CardType::VIC_CARD_SAMEDATE: // VIC Sameday
                 case CardType::VIC_CARD_EXTENDED: // VIC Extended
-                case CardType::VIC_CARD_MULTIDAY: // VIC Multiday
-                    $model->date_check_out = date('Y-m-d');
+                    $model->date_check_out = date('Y-m-d', strtotime($model->date_check_in . ' + 28 day'));
                     break;
+                case CardType::VIC_CARD_SAMEDATE: // VIC Sameday
                 case CardType::VIC_CARD_MANUAL: // VIC Manual
                 case CardType::VIC_CARD_24HOURS: // VIC 24 hour
                     $model->date_check_out = date('Y-m-d', strtotime($model->date_check_in . ' + 1 day'));
-                    break;
-                default :
-                    $model->date_check_out = date('Y-m-d');
-                /*case CardType::VIC_CARD_EXTENDED: // VIC Extended
-                case CardType::VIC_CARD_MULTIDAY: // VIC Multiday
-                    $model->date_check_out = date('Y-m-d', strtotime($model->date_check_in . ' + 28 day'));*/
                     break;
             }
 
@@ -345,7 +338,7 @@ class VisitController extends Controller {
             }
 
             #update Company
-            if(isset($_POST['Company'])){
+            if (isset($_POST['Company'])) {
                 if($visitorModel->company) {
                     $companyModel = Company::model()->findByPk($visitorModel->company);
                     $staffModel = User::model()->findByPk($visitorModel->staff_id);
@@ -403,22 +396,22 @@ class VisitController extends Controller {
             $model->attributes = $_POST['Visit'];
 
             // close visit process
-            if (isset($_POST['closeVisitForm'])) {
-                if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY, CardType::VIC_CARD_24HOURS]) && date('Y-m-d') <= $model->date_check_out) {
+            if (isset($_POST['Visit']['visit_status']) && $_POST['Visit']['visit_status'] == VisitStatus::CLOSED) {
+                if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && strtotime(date('Y-m-d')) <= strtotime($model->date_check_out)) {
                     $currentDate = date('Y-m-d');
                     $model->visit_status = VisitStatus::AUTOCLOSED;
+                    $model->finish_date = $model->date_check_in = date('Y-m-d');
+                    $model->finish_time = $model->time_check_in = date('H:i:s');
                     switch ($model->card_type) {
                         case CardType::VIC_CARD_24HOURS: // VIC 24 hour
                             #change datetime check in and out for vic 24h.
                             $model->date_check_in = $model->date_check_out;
-                            $model->date_check_out = date('Y-m-d', strtotime('+1 day', strtotime( $model->date_check_out)));
+                            $model->date_check_out = date('Y-m-d', strtotime('+1 day', strtotime($model->date_check_out)));
                             $model->time_check_in = date('H:i:s', strtotime('+1 minutes', strtotime($model->date_check_in.' '.$model->time_check_in)));
                             $model->time_check_out = $model->time_check_in;
                             break;
                         case CardType::VIC_CARD_EXTENDED: // VIC Extended
                         case CardType::VIC_CARD_MULTIDAY: // VIC Multiday
-                            $model->finish_date = date('Y-m-d');
-                            $model->finish_time = date('H:i:s');
                             break;
                     }
                 }
@@ -435,7 +428,7 @@ class VisitController extends Controller {
             }
 
             if ($model->save()) {
-                if (isset($_POST['closeVisitForm'])) {
+                if (isset($_POST['Visit']['visit_status']) && $_POST['Visit']['visit_status'] == VisitStatus::CLOSED) {
                     $visitCount['totalVisits'] = $model->visitCounts;
                     $visitCount['remainingDays'] = $model->remainingDays;
                 }
@@ -450,13 +443,13 @@ class VisitController extends Controller {
 
         $this->render('visitordetail', array(
             'model' => $model,
-            'visitorModel' => $visitorModel,
+            'visitorModel' => $visitorModel ? $visitorModel : new Visitor(),
             'reasonModel' => $reasonModel,
             'hostModel' => $hostModel,
             'patientModel' => $patientModel,
             'newPatient' => $newPatient,
             'newHost' => $newHost,
-			'visitCount' => $visitCount,
+            'visitCount' => $visitCount,
             'cardTypeModel' => $cardTypeModel,
         ));
     }
@@ -1102,10 +1095,10 @@ class VisitController extends Controller {
         $allWorkstations='';
         
         if(Roles::ROLE_SUPERADMIN != Yii::app()->user->role){
-            
-            $dateCondition .= "(visitors.tenant=".Yii::app()->user->tenant.") AND ";
+
+            $dateCondition .= "(visitors.created_by=".Yii::app()->user->id.") AND ";
             //show curren logged in user Workstations
-            $allWorkstations = Workstation::model()->findAll("tenant = " . Yii::app()->user->tenant . " AND is_deleted = 0");
+            $allWorkstations = Workstation::model()->findAll("created_by = " . Yii::app()->user->id . " AND is_deleted = 0");
         }else{
             //show all work stations to SUPERADMIN
             $allWorkstations = Workstation::model()->findAll();
@@ -1117,14 +1110,13 @@ class VisitController extends Controller {
         
         //count(visitors.id) as visitors,DATE(visitors.date_created) AS date_check_in,t.id,t.name, t.id  as workstationId
         $visitsCount = Yii::app()->db->createCommand()
-            ->select('count(visitors.id) as visitors, convert(varchar(10), visitors.date_created, 120) AS date_check_in, t.id, t.name, t.id as workstationId')
+            ->select('count(visitors.id) as visitors, visitors.date_created AS date_check_in, t.id, t.name, t.id as workstationId')
+            //->select('count(visitors.id) as visitors, convert(varchar(10), visitors.date_created, 120) AS date_check_in, t.id, t.name, t.id as workstationId')
             ->from('workstation t')
             ->join('visitor visitors' , 't.id = visitors.visitor_workstation')
             ->where($dateCondition)
             ->group('t.id')
             ->queryAll();
-
-
 //        $allWorkstations = Yii::app()->db->createCommand()
 //            ->select( 't.id,t.tenant,t.name')
 //            ->from('workstation t')

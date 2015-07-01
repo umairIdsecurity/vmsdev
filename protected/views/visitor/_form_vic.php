@@ -76,7 +76,28 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
         'clientOptions'          => array(
             'validateOnSubmit' => true,
             'afterValidate'    => 'js:function(form, data, hasError){
-                return afterValidate(form, data, hasError); 
+                if (hasError) {
+                    var currentYear = new Date().getFullYear();
+                    var selectedYear = $("#fromYear").val();
+
+                    if (currentYear - selectedYear < 18) {
+                        $("#Visitor_identification_type_em_").hide();
+                        $("#Visitor_identification_document_no_em_").hide();
+                        $("#Visitor_identification_document_expiry_em_").hide();
+
+                        //remove item
+                        delete data.Visitor_identification_document_expiry;
+                        delete data.Visitor_identification_document_no;
+                        delete data.Visitor_identification_type;
+                    }
+
+                }
+
+                if(jQuery.isEmptyObject(data)) {
+                    hasError = false;
+                }
+
+                return afterValidate(form, data, hasError);
             }'
         ),
     ));
@@ -359,7 +380,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                     ));
                                     ?>
                                     <span class="required">*</span>
-                                    <?php echo $form->error($model, 'company'); ?>
+                                    <?php echo $form->error($model, 'company', array("style" => "margin-top:0px")); ?>
                                 </div>
                             </td>
                         </tr>
@@ -568,12 +589,11 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 
         var u18_identification = $('#u18_identification:hidden');
         if (u18_identification.length != 1) {
-            if (!$('#Visitor_u18_identification').is(':checked')) {
+            if (!$('#Visitor_u18_identification').checked) {
                 $('#Visitor_u18_identification_em_').show();
-                return false;
             }
         } else {
-            $('#Visitor_u18_identification_em_').hide();
+            $('#Visitor_u18_identification_em_').show();
         }
 
         var companyValue = $("#Visitor_company").val();
@@ -649,8 +669,6 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
             });
         }
 
-        $('#dateofBirthBreakdownValueYear').val($('#fromYear').val());
-
         $('#fromDay').on('change', function () {
             var dt = new Date();
 
@@ -707,15 +725,10 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                 $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else{//u18_identification
-                $('#dateofBirthBreakdownValueYear').val($('#fromYear').val());
                 if (dt.getFullYear() - $("#fromYear").val() < 18) {
                     $('#u18_identification').show();
-                    $('#Visitor_identification_type_em_').hide();
-                    $('#Visitor_identification_document_no_em_').hide();
-                    $('#Visitor_identification_document_expiry_em_').hide();
                 } else {
                     $('#u18_identification').hide();
-                    $('#Visitor_u18_identification_em_').hide();
                 }
                 $("#Visitor_date_of_birth_em_").hide();
             }

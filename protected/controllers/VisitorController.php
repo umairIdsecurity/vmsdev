@@ -54,8 +54,9 @@ class VisitorController extends Controller {
         $visitModel = new Visit();
 
         $visitorService = new VisitorServiceImpl();
-
+        
         if (isset($_POST['Visitor'])) {
+            
             $model->attributes = $_POST['Visitor'];
 
             if (isset($_POST['VisitCardType']) && $_POST['VisitCardType'] > CardType::CONTRACTOR_VISITOR) {
@@ -101,6 +102,7 @@ class VisitorController extends Controller {
                 print_r($model->errors);
                 die("--DONE--");
             }
+            
         }
 
         $this->render('create', array(

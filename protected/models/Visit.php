@@ -472,11 +472,11 @@ class Visit extends CActiveRecord {
                 break;
 
             case Roles::ROLE_ADMIN:
-                $criteria->addCondition('t.tenant = ' . Yii::app()->user->tenant);
+                $criteria->addCondition('t.created_by = ' . Yii::app()->user->tenant);
                 break;
 
             case Roles::ROLE_AGENT_ADMIN:
-                $criteria->addCondition('t.tenant = ' . Yii::app()->user->tenant . ' and t.tenant_agent = ' . Yii::app()->user->tenant_agent);
+                $criteria->addCondition('t.created_by = ' . Yii::app()->user->tenant . ' and t.tenant_agent = ' . Yii::app()->user->tenant_agent);
                 break;
 
             case Roles::ROLE_OPERATOR:
@@ -493,12 +493,12 @@ class Visit extends CActiveRecord {
                 }
                 break;
         }
-        
+
         $criteria->addCondition('t.is_deleted = 0');
-        
+
         /*
          * this condition is a hack to show only CORPORATE VISITOR in the listing report
-         * 
+         *
          */
         if (Yii::app()->controller->action->id == 'visitorRegistrationHistory') {
             $criteria->addCondition("visitor0.profile_type = '" . Visitor::PROFILE_TYPE_CORPORATE . "'");
@@ -686,11 +686,11 @@ class Visit extends CActiveRecord {
                 break;
 
             case Roles::ROLE_ADMIN:
-                $criteria->addCondition('t.tenant = ' . Yii::app()->user->tenant);
+                $criteria->addCondition('t.created_by = ' . Yii::app()->user->tenant);
                 break;
 
             case Roles::ROLE_AGENT_ADMIN:
-                $criteria->addCondition('t.tenant = ' . Yii::app()->user->tenant . ' and t.tenant_agent = ' . Yii::app()->user->tenant_agent);
+                $criteria->addCondition('t.created_by = ' . Yii::app()->user->tenant . ' and t.tenant_agent = ' . Yii::app()->user->tenant_agent);
                 break;
 
             case Roles::ROLE_OPERATOR:
@@ -723,7 +723,7 @@ class Visit extends CActiveRecord {
         } else {
             Yii::app()->user->setState('pageSize', (int) '');
         }
-       
+
         return new CActiveDataProvider($this, array(
             'pagination' => array(
                 'pageSize' => Yii::app()->user->getState('pageSize', Yii::app()->params['defaultPageSize']),

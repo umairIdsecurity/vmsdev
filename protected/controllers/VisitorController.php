@@ -284,7 +284,7 @@ class VisitorController extends Controller {
         Yii::app()->end();
     }
 
-    public function actionFindVisitor($id,$tenant,$tenant_agent, $cardType = 0) {
+    public function actionFindVisitor() {
         $this->layout = '//layouts/column1';
         $model = new Visitor('search');
         $model->unsetAttributes();  // clear any default values
@@ -420,7 +420,7 @@ class VisitorController extends Controller {
                 $model->profile_type = $_POST['Visitor']['profile_type'];
             }
             $model->attributes = $_POST['Visitor'];
-            
+
             if (empty($model->visitor_workstation)) {
                 $model->visitor_workstation = $session['workstation'];
             }

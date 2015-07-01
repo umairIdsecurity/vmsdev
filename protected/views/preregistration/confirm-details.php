@@ -21,9 +21,11 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
     <?php
     $form=$this->beginWidget('CActiveForm', array(
         'id'=>'confirm-details-form',
+        'enableAjaxValidation'   => false,
         'enableClientValidation'=>true,
         'clientOptions'=>array(
             'validateOnSubmit'=>true,
+            'afterValidate'    => 'js:function(form, data, hasError){ return afterValidate(form, data, hasError); }'
         ),
         'htmlOptions'=>array(
             'class'=> 'form-comfirm-detail'
@@ -53,13 +55,13 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
                            value="<?php echo date("j", strtotime($model->date_of_birth)); ?>">
 
                     <div class="col-xs-4">
-                        <select id="fromDay" name="Visitor[birthdayDay]" class='daySelect form-control input-lg'></select>
+                        <select id="fromDay" name="Registration[birthdayDay]" class='daySelect form-control input-lg'></select>
                     </div>
                     <div class="col-xs-4">
-                        <select id="fromMonth" name="Visitor[birthdayMonth]" class='monthSelect form-control input-lg'></select>
+                        <select id="fromMonth" name="Registration[birthdayMonth]" class='monthSelect form-control input-lg'></select>
                     </div>
                     <div class="col-xs-4">
-                        <select id="fromYear" name="Visitor[birthdayYear]" class='yearSelect form-control input-lg'></select>
+                        <select id="fromYear" name="Registration[birthdayYear]" class='yearSelect form-control input-lg'></select>
                     </div>
 
 
@@ -181,6 +183,24 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
 
 
 <script>
+
+    function afterValidate(form, data, hasError) {
+        var dt = new Date();
+        if(dt.getFullYear()< $("#fromYear").val()) {
+            $("#Registration_date_of_birth_em_").show();
+            $("#Registration_date_of_birth_em_").html('Please update your Date of Birth');
+            return false;
+        }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
+            $("#Registration_date_of_birth_em_").show();
+            $("#Registration_date_of_birth_em_").html('Please update your Date of Birth');
+            return false;
+        }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
+            $("#Registration_date_of_birth_em_").show();
+            $("#Registration_date_of_birth_em_").html('Please update your Date of Birth');
+            return false;
+        }
+
+    }
 
     $(document).ready(function () {
 

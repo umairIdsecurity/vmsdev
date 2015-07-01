@@ -64,7 +64,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
     }
 
 </style>
- 
+
 
 <div>
     <?php
@@ -157,7 +157,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                 <table style="margin-top: 70px;">
                                     <tr>
                                         <td>
-                                            <?php 
+                                            <?php
                                             array_pop(Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC]);
                                             echo $form->dropDownList($model, 'visitor_card_status', Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC], ['empty' => 'Select Card Status', 'options'=>['1' => ['selected'=>true]]]); ?>
                                             <span class="required">*</span>
@@ -222,8 +222,8 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                     <tr>
                                         <td>
                                             <?php
-                                           // Show Default selected to Admin only 
-                                           if(Yii::app()->user->role == Roles::ROLE_ADMIN) {
+                                            // Show Default selected to Admin only
+                                            if(Yii::app()->user->role == Roles::ROLE_ADMIN) {
                                                 $list = VisitorType::model()->findAll('created_by = :c', [':c' => Yii::app()->user->id]);
                                                 echo '<select name="Visitor[visitor_type]" id="Visitor_visitor_type">';
                                                 echo CHtml::tag('option',array('value' => ''),'Select Visitor Type',true);
@@ -237,7 +237,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                             }  else {
                                                 echo $form->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes(NULL,"name like '{$model->profile_type}%'"));
                                             }
-                                          
+
                                             ?>
                                             <span class="required">*</span>
                                             <?php echo "<br>" . $form->error($model, 'visitor_type'); ?>
@@ -326,9 +326,9 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                         <tr>
                             <td>
                                 <?php echo $form->textField($model, 'contact_suburb', array('size' => 15, 'maxlength' => 50, 'placeholder' => 'Suburb')); ?>
-                               <span class="required">*</span> <?php echo $form->error($model, 'contact_suburb'); ?>
+                                <span class="required">*</span> <?php echo $form->error($model, 'contact_suburb'); ?>
                             </td>
-                        </tr>  
+                        </tr>
                         <tr>
                             <td>
                                 <i id="cstate">
@@ -521,8 +521,8 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                     ?><span class="required alternate-identification-require">*</span>
                                     <?php echo "<br>" . $form->error($model, 'identification_alternate_document_no2'); ?>
                                     <?php echo $form->error($model, 'identification_alternate_document_expiry2'); ?>
-                                    
-                                     <?php echo $form->checkBox($model, 'verifiable_signature', array('style' => 'float: left;')); ?>
+
+                                    <?php echo $form->checkBox($model, 'verifiable_signature', array('style' => 'float: left;')); ?>
                                     <label  class="form-label">One of these has a verifiable signature</label>
                                 </td>
                             </tr>
@@ -598,7 +598,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 
         var companyValue = $("#Visitor_company").val();
         var workstation = $("#User_workstation").val();
-        
+
 //        if (!workstation || workstation == "") {
 //            $("#Visitor_visitor_workstation_em_").show();
 //            $("#Visitor_visitor_workstation_em_").html('Please enter Workstation');
@@ -645,7 +645,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
             $('.primary-identification-require').hide();
             $('.alternate-identification-require').show();
             $('.row_document_name_number').show('slow');
-             
+
         } else {
             $('.primary-identification-require').show();
             $('.alternate-identification-require').hide();
@@ -1122,30 +1122,30 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
     }
 
 
-// company change
-$('#Visitor_company').on('change', function() {
-    var companyId = $(this).val();
-    $('#CompanySelectedId').val(companyId);
-    $modal = $('#addCompanyContactModal');
-    $.ajax({
-        type: "POST",
-        url: "<?php echo $this->createUrl('company/getContacts') ?>",
-        dataType: "json",
-        data: {id:companyId},
-        success: function(data) {
-            var companyName = $('.select2-selection__rendered').text();
-            $('#AddCompanyContactForm_companyName').val(companyName).prop('disabled', 'disabled');
-            if (data == 0) {
-                $('#addContactLink').hide();
-                $('#visitorStaffRow').empty();
-            } else {
-                $('#visitorStaffRow').html(data);
-                $('#addContactLink').show();
+    // company change
+    $('#Visitor_company').on('change', function() {
+        var companyId = $(this).val();
+        $('#CompanySelectedId').val(companyId);
+        $modal = $('#addCompanyContactModal');
+        $.ajax({
+            type: "POST",
+            url: "<?php echo $this->createUrl('company/getContacts') ?>",
+            dataType: "json",
+            data: {id:companyId},
+            success: function(data) {
+                var companyName = $('.select2-selection__rendered').text();
+                $('#AddCompanyContactForm_companyName').val(companyName).prop('disabled', 'disabled');
+                if (data == 0) {
+                    $('#addContactLink').hide();
+                    $('#visitorStaffRow').empty();
+                } else {
+                    $('#visitorStaffRow').html(data);
+                    $('#addContactLink').show();
+                }
+                return false;
             }
-            return false;
-        }
+        });
     });
-});
 </script>
 
 

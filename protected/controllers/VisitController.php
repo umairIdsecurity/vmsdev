@@ -87,7 +87,7 @@ class VisitController extends Controller {
                 case CardType::VIC_CARD_SAMEDATE: // VIC Sameday
                 case CardType::VIC_CARD_EXTENDED: // VIC Extended
                 case CardType::VIC_CARD_MULTIDAY: // VIC Multiday
-                    $model->date_check_out = date('Y-m-d');
+                    $model->date_check_out = date('Y-m-d', strtotime($model->date_check_in . ' + 28 day'));
                     break;
                 case CardType::VIC_CARD_MANUAL: // VIC Manual
                 case CardType::VIC_CARD_24HOURS: // VIC 24 hour

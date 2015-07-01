@@ -1,5 +1,5 @@
 <?php
-$tenant = User::model()->findByPk($visitorModel->tenant);
+$tenant = User::model()->findByPk($visitorModel->created_by);
 if ($tenant) {
     $company = Company::model()->findByPk($tenant->company);
     if ($company) {
@@ -26,8 +26,14 @@ if ($card) {
 }
 
 $host = User::model()->findByPk($model->host);
-$host_first_name = $host->first_name;
-$host_last_name = $host->last_name;
+
+if (isset($host)) {
+    $host_first_name = $host->first_name;
+    $host_last_name = $host->last_name;
+} else {
+    $host_first_name = '';
+    $host_last_name = '';
+}
 
 ?>
 

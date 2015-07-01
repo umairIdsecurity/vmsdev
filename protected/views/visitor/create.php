@@ -115,10 +115,10 @@ $(document).ready(function () {
 
         if ($("#currentRoleOfLoggedInUser").val() != 5) { //not superadmin
 
-            $("#Visitor_tenant").val("<?php echo $session['tenant']; ?>");
+            /*$("#Visitor_tenant").val("<?php echo $session['tenant']; ?>");
             $("#User_tenant").val("<?php echo $session['tenant']; ?>");
             $("#Visitor_tenant_agent").val("<?php echo $session['tenant_agent']; ?>");
-            $("#User_tenant_agent").val("<?php echo $session['tenant_agent']; ?>");
+            $("#User_tenant_agent").val("<?php echo $session['tenant_agent']; ?>");*/
 
             /*check if current logged in role is staff member
              * if staff member check if tenant agent admin is null

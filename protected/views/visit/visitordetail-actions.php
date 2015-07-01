@@ -122,11 +122,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                             </tr>
                         </table>
                         <?php echo $logform->error($model, 'date_in'); ?>
-                        <?php
-                        if (in_array($model->visit_status, [VisitStatus::CLOSED])) :
-                            ?>
-                            <button type="button" id='registerNewVisit' class='greenBtn'>Activate Visit</button>
-                        <?php elseif ($model->visit_status == VisitStatus::PREREGISTERED) : ?>
+                        <?php if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::PREREGISTERED])) : ?>
                             <button type="button" id='registerNewVisit' class='greenBtn'>Activate Visit</button>
                             <div style="display:inline;font-size:12px;">
                                 <b>or </b>
@@ -135,7 +131,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                         <?php elseif ($model->visit_status == VisitStatus::AUTOCLOSED) : ?>
                             <?php
                             $disabled = '';
-                            if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY]) && strtotime(date('d-m-Y')) == strtotime($model->finish_date)) {
+                            if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && strtotime(date('d-m-Y')) <= strtotime($model->finish_date)) {
                                 $disabled = 'disabled';
                             }
                             ?>
@@ -223,8 +219,10 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                 imgsrc = this.src;
             });
             var profileImage = '<?php echo $visitorModel->photo;?>';
-            var isDefault = imgsrc.search('companylogohere1.png');
-            if( isDefault > 0 || profileImage == '' || !profileImage) {
+            var isDefault = imgsrc.search('images/companylogohere1.png');
+            var isChanged = imgsrc.search('visit/detail&id='+'<?php echo $model->id; ?>');
+
+            if( isDefault > 0 || (profileImage == '' && isChanged > 0)) {
                 <?php if ($model->card_type > 4 ) : ?>
                     <?php if($model->card_type != CardType::VIC_CARD_SAMEDATE ) : ?>
                     $("#Visitor_photo_em").attr('style', 'margin-right:84px ; margin-bottom:0px; margin-top:0px ;');

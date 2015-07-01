@@ -461,7 +461,7 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                         </td>
                         <td style="padding-left: 0 !important;">
                             <?php
-                            $visitorModel->identification_document_expiry = !is_null($visitorModel->identification_document_expiry) ? date('d-m-Y', strtotime($visitorModel->identification_document_expiry)) : date('d-m-Y');
+                            $visitorModel->identification_document_expiry = $visitorModel->identification_document_expiry == 'NULL' ? date('d-m-Y', strtotime($visitorModel->identification_document_expiry)) : date('d-m-Y');
                             $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                 'model' => $visitorModel,
                                 'attribute' => 'identification_document_expiry',

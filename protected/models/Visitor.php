@@ -259,7 +259,7 @@ class Visitor extends CActiveRecord {
             'VisitorAlternateIdentification'
         );
 
-        if (date('Y') - $this->birthdayYear > 18) {
+        if ((date('Y') - $this->birthdayYear) > 18) {
             $rules[] = array(
                 'identification_type,
                 identification_country_issued,
@@ -575,9 +575,9 @@ class Visitor extends CActiveRecord {
     public function findAllCompanyWithSameTenant($tenantId) {
         $session = new CHttpSession;
         $aArray = array();
-        $tenant = User::model()->findByPk($tenantId);
+        $tenant = User::model()->findByPk($session['tenant']);
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = ".$tenantId." and (id != 1 and id != ".$tenant->company.")";
+        $Criteria->condition = "tenant = ".$session['tenant']." and (id != 1 and id != ".$tenant->company.")";
         $company = Company::model()->findAll($Criteria);
 
         foreach ($company as $index => $value) {

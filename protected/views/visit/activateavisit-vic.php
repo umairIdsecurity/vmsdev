@@ -146,7 +146,7 @@ $session = new CHttpSession;
             }*/
 
             // VIC_CARD_24HOURS
-            if ($model->card_type == CardType::VIC_CARD_24HOURS) {
+            if (in_array($model->visit_status, [VisitStatus::SAVED, VisitStatus::CLOSED])) {
                 $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in. ' + 1 day'));
                 $model->time_check_out = $model->time_check_in;
             }

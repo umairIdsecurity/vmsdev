@@ -2014,6 +2014,11 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
 #workstation-grid {
     width: 1280px;
 }
+
+#workstation-grid tr td.ws-padding{
+    padding-left: 20px!important;
+}
+
 #audit-trail-grid {
     width: 1100px;
 }

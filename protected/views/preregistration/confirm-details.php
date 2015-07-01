@@ -24,7 +24,6 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
         'enableClientValidation'=>true,
         'clientOptions'=>array(
             'validateOnSubmit'=>true,
-            'afterValidate'    => 'js:function(form, data, hasError){ return afterValidate(form, data, hasError); }'
         ),
         'htmlOptions'=>array(
             'class'=> 'form-comfirm-detail'
@@ -144,6 +143,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
 
                 </div>
                 <div class="form-group form-group-custom">
+
                     <?php
                     echo $form->dropDownList($model, 'contact_country', $countryList,
                         array('prompt' => 'Country', 'class'=>'form-control input-lg',

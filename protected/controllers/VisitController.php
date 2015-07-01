@@ -1095,10 +1095,10 @@ class VisitController extends Controller {
         $allWorkstations='';
         
         if(Roles::ROLE_SUPERADMIN != Yii::app()->user->role){
-            
-            $dateCondition .= "(visitors.tenant=".Yii::app()->user->tenant.") AND ";
+
+            $dateCondition .= "(visitors.created_by=".Yii::app()->user->id.") AND ";
             //show curren logged in user Workstations
-            $allWorkstations = Workstation::model()->findAll("tenant = " . Yii::app()->user->tenant . " AND is_deleted = 0");
+            $allWorkstations = Workstation::model()->findAll("created_by = " . Yii::app()->user->id . " AND is_deleted = 0");
         }else{
             //show all work stations to SUPERADMIN
             $allWorkstations = Workstation::model()->findAll();
@@ -1110,14 +1110,13 @@ class VisitController extends Controller {
         
         //count(visitors.id) as visitors,DATE(visitors.date_created) AS date_check_in,t.id,t.name, t.id  as workstationId
         $visitsCount = Yii::app()->db->createCommand()
-            ->select('count(visitors.id) as visitors, convert(varchar(10), visitors.date_created, 120) AS date_check_in, t.id, t.name, t.id as workstationId')
+            ->select('count(visitors.id) as visitors, visitors.date_created AS date_check_in, t.id, t.name, t.id as workstationId')
+            //->select('count(visitors.id) as visitors, convert(varchar(10), visitors.date_created, 120) AS date_check_in, t.id, t.name, t.id as workstationId')
             ->from('workstation t')
             ->join('visitor visitors' , 't.id = visitors.visitor_workstation')
             ->where($dateCondition)
             ->group('t.id')
             ->queryAll();
-
-
 //        $allWorkstations = Yii::app()->db->createCommand()
 //            ->select( 't.id,t.tenant,t.name')
 //            ->from('workstation t')

@@ -75,7 +75,7 @@ class AuthorizationController extends RestfulController {
                 $data = CJSON::decode($data);
                 if ($data['grant_type'] === 'password') {
                     if ($data['password'] !== null && $data['email'] !== null) {
-                        $visitor = Visitor::model()->findByAttributes(array('email' => $data['email'], 'USER_TYPE' => self::VISITOR_USER)));
+                        $visitor = Visitor::model()->findByAttributes(array('email' => $data['email'], 'USER_TYPE' => self::VISITOR_USER));
                         if ($visitor) {
                             if (CPasswordHelper::verifyPassword($data['password'], $visitor->password)) {
                                 $access_token = AccessTokens::model()->findByAttributes(array('USER_ID' => $visitor->id, 'USER_TYPE' => self::VISITOR_USER));
@@ -109,7 +109,7 @@ class AuthorizationController extends RestfulController {
                         $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_DATA', 'errorDescription' => 'email & password can not be blank')));
                     }
                 } elseif ($data['grant_type'] === 'refresh_token') {
-                    $access_token = AccessTokens::model()->findByAttributes(array('ACCESS_TOKEN' => $data['access_token'], 'USER_TYPE' => self::VISITOR_USER));
+                    $access_token = AccessTokens::model()->findByAttributes(array('ACCESS_TOKEN' => $data['access_token'], 'USER_TYPE' => self::VISITOR_USER) );
                     if ($access_token) {
                         #$newtimestamp = strtotime(date('Y-m-d H:i:s') . ' + 15 minute');
                         $access_token->EXPIRY = NULL;

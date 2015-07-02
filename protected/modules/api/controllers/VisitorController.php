@@ -18,7 +18,7 @@ class VisitorController extends RestfulController {
             }
 
             // check AccessTokens
-            $access_token = AccessTokens::model()->findByAttributes(array('ACCESS_TOKEN' => $headers['HTTP_X_VMS_TOKEN'], 'USER_TYPE' => self::VISITOR_USER));
+            $access_token = AccessTokens::model()->findByAttributes(array('ACCESS_TOKEN' => $headers['HTTP_X_VMS_TOKEN']));
 
             if(!$access_token) {
                 $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'HTTP_X_VMS_TOKEN', 'errorDescription' => 'HTTP_X_VMS_TOKEN is invalid.')));
@@ -27,29 +27,34 @@ class VisitorController extends RestfulController {
 
             // do response
             if (Yii::app()->request->isPostRequest) {
-                $data = file_get_contents("php://input");
-                $data = CJSON::decode($data);
-                $companyID = $this->getCompany($data['company']);
-                $this->validateData($data);
-                $visitor = new Visitor();
-                $visitorService = new VisitorServiceImpl();
-                $visitor->first_name = $data['firstName'];
-                $visitor->last_name = $data['lastName'];
-                $visitor->email = $this->validateEmail($data['email']);
-                $visitor->visitor_type = $data['visitorType'];
-                $visitor->company = $companyID;
-                $visitor->password = CPasswordHelper::hashPassword($data['password']);
-                $visitor->created_by = $access_token->USER_ID;
-                $visitor->photo = NULL;
+                if( $access_token->USER_TYPE == self::ADMIN_USER ) {
+                    $data = file_get_contents("php://input");
+                    $data = CJSON::decode($data);
+                    $companyID = $this->getCompany($data['company']);
+                    $this->validateData($data);
+                    $visitor = new Visitor();
+                    $visitorService = new VisitorServiceImpl();
+                    $visitor->first_name = $data['firstName'];
+                    $visitor->last_name = $data['lastName'];
+                    $visitor->email = $this->validateEmail($data['email']);
+                    $visitor->visitor_type = $data['visitorType'];
+                    $visitor->company = $companyID;
+                    $visitor->password = CPasswordHelper::hashPassword($data['password']);
+                    $visitor->created_by = $access_token->USER_ID;
+                    $visitor->photo = NULL;
 
-                if ($visitor->save(false)) {
-                    $result = array();
-                    $result = $this->populatevisitor($visitor);
+                    if ($visitor->save(false)) {
+                        $result = array();
+                        $result = $this->populatevisitor($visitor);
 
-                    $this->sendResponse(200, CJSON::encode($result));
+                        $this->sendResponse(200, CJSON::encode($result));
+                    }
+                }
+                else {
+                    $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'NOT_PERMISSION', 'errorDescription' => 'Not permission create visitor')));
                 }
             } elseif (yii::app()->request->isPutRequest) {
-                $visitor_token_user = $this->checkAuthVisitor();
+                // $visitor_token_user = $this->checkAuthVisitor();
                 $data = file_get_contents("php://input");
                 $data = CJSON::decode($data);
                 $visitor = Visitor::model()->findByAttributes(array('email' => $data['email']));
@@ -60,7 +65,7 @@ class VisitorController extends RestfulController {
                     $visitor->last_name = $data['lastName'];
                     $visitor->visitor_type = $data['visitorType'];
                     $visitor->company = $companyID;
-                    $visitor->password = CPasswordHelper::hashPassword($data['password']);
+                    //$visitor->password = CPasswordHelper::hashPassword($data['password']);
                     $visitor->photo = NULL;
                     if ($visitor->save(false)) {
                         $result = $this->populatevisitor($visitor);

@@ -35,14 +35,21 @@ class HostController extends RestfulController {
                 $query = explode(" ", Yii::app()->request->getParam('query'));
 
                 $criteria = new CDbCriteria();
+
+
+
                 foreach ($query as $q):
-                    $criteria->addSearchCondition('email', $q, TRUE, "OR", "LIKE");
-                    $criteria->addSearchCondition('first_name', $q, TRUE, "OR", "LIKE");
-                    $criteria->addSearchCondition('last_name', $q, TRUE, "OR", "LIKE");
-                endforeach; 
+                    $criteria->addSearchCondition("email", $q, TRUE, "OR", "LIKE");
+                    $criteria->addSearchCondition("first_name", $q, TRUE, "OR", "LIKE");
+                    $criteria->addSearchCondition("last_name", $q, TRUE, "OR", "LIKE");
+                endforeach;
+                $criteria->addCondition("role = 9","AND");
+
                 $hosts = User::model()->with('com')->findAll($criteria);
                 if ($hosts) {
                     $result = $this->populateHost($hosts);
+                    echo "<pre>";
+                    die(print_r($result));
                     $this->sendResponse(200, CJSON::encode($result));
                 } else {
                     $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'HOST_NOT_FOUND', 'errorDescription' => 'No host for requseted query')));

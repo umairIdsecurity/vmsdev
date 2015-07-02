@@ -78,33 +78,44 @@
             <?php echo $closeVisitForm->dropDownList($model, 'card_option', array('Returned' => 'Returned', 'Lost/Stolen' => 'Lost/Stolen'))?>
         </td>
     </tr>
+        <tr class="lost_stolen_fields">
+        <?php if (!empty($model->card_lost_declaration_file)): ?>
+            <td>Download Document</td>
+        <?php else: ?>
+            <td>Please complete sign and upload a declaration or police report or provide the police report number</td>
+        <?php endif; ?>
+        </tr>
+        <tr class="lost_stolen_fields">
+            <td>
+                <?php 
+                    if (!empty($model->card_lost_declaration_file)) {
+                        $urlArr = explode('/', $model->card_lost_declaration_file);
+                        $docName = $urlArr[count($urlArr) - 1];
+                        echo CHtml::link($docName, $model->card_lost_declaration_file, ["style" => "padding-left:0px !important;"]);
+                    } else {
+                        echo $closeVisitForm->fileField($model, 'card_lost_declaration_file');
+                    }
+                ?>
+                <br />
+                <?php echo $closeVisitForm->error($model, 'card_lost_declaration_file'); ?>
+                <div style="display: none" id="card_lost_declaration_required" class="errorMessage">Please add card lost declaration file.</div>
+            </td>
+        </tr>
 
-    <tr class="lost_stolen_fields">
-        <td>Please complete sign and upload a declaration or police report or provide the police report number</td>
-    </tr>
-    <tr class="lost_stolen_fields">
-        <td>
-            <?php echo $closeVisitForm->fileField($model, 'card_lost_declaration_file')?>
-            <br />
-            <?php echo $closeVisitForm->error($model, 'card_lost_declaration_file'); ?>
-            <div style="display: none" id="card_lost_declaration_required" class="errorMessage">Please add card lost declaration file.</div>
-        </td>
-    </tr>
+        <tr class="lost_stolen_fields">
+            <td>&nbsp;</td>
+        </tr>
 
-    <tr class="lost_stolen_fields">
-        <td>&nbsp;</td>
-    </tr>
-
-    <tr class="lost_stolen_fields">
-        <td>Police Report Number</td>
-    </tr>
-    <tr class="lost_stolen_fields">
-        <td>
-            <?php echo $closeVisitForm->textField($model, 'police_report_number')?>
-            <br />
-            <div style="display: none" id="police_number_required" class="errorMessage">Please enter police report number.</div>
-        </td>
-    </tr>
+        <tr class="lost_stolen_fields">
+            <td>Police Report Number</td>
+        </tr>
+        <tr class="lost_stolen_fields">
+            <td>
+                <?php echo $closeVisitForm->textField($model, 'police_report_number')?>
+                <br />
+                <div style="display: none" id="police_number_required" class="errorMessage">Please enter police report number.</div>
+            </td>
+        </tr>
     <?php endif; ?>
 
     <tr><td>&nbsp;</td></tr>

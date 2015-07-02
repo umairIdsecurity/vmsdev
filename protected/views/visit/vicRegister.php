@@ -180,8 +180,11 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'value' => 'isset(Workstation::model()->findByPk($data->workstation)->name) ? Workstation::model()->findByPk($data->workstation)->name : ""',
             'filter'=>CHtml::activeTextField($model, 'workstation', array('placeholder'=>'Workstation', 'class' => 'header-form')),
         ),array(
+            'type' => 'raw',
             'name' => 'card_lost_declaration_file',
-            'value' => '$data->card_lost_declaration_file',
+            'value' => '
+                !empty($data->card_lost_declaration_file) ? CHtml::link("Download", $data->card_lost_declaration_file, ["style" => "text-align:center;"]) : "";
+            ',
             'filter'=>CHtml::activeTextField($model, 'card_lost_declaration_file', array('placeholder'=>'Card Lost Declaration File', 'class' => 'header-form')),
         ),array(
             'name' => 'police_report_number',

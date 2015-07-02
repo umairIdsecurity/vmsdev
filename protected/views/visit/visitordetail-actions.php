@@ -278,12 +278,18 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                 } else if (!$('#AsicSponsorDecalarations').is(':checked') && $('#VivHolderDecalarations').is(':checked')){
                     $('#asicSponsorModal').modal('show');
                     $btnASIC.on('click', function(e) {
-                        var asicChecked = asicCheck();
-                        if (asicChecked) {
-                            confirmed = true;
+                        var checkAsicEscort = validateAsicEscort();
+                        if( checkAsicEscort == true ) {
+                            var asicChecked = asicCheck();
+                            if (asicChecked) {
+                                confirmed = true;
+                            } else {
+                                alert('Please select all the declarations.');
+                                return false;
+                            }
                         } else {
-                            alert('Please select all the declarations.');
-                            return false;
+                            alert('Please input all Asic Escort Information');
+                            return;
                         }
                     });
                 } else {
@@ -293,12 +299,18 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                         if (vicChecked) {
                             $('#asicSponsorModal').modal('show');
                             $btnASIC.on('click', function(e) {
-                                var asicChecked = asicCheck();
-                                if (asicChecked) {
-                                    confirmed = true;
+                                var checkAsicEscort = validateAsicEscort();
+                                if( checkAsicEscort == true ) {
+                                    var asicChecked = asicCheck();
+                                    if (asicChecked) {
+                                        confirmed = true;
+                                    } else {
+                                        alert('Please select all the declarations.');
+                                        return false;
+                                    }
                                 } else {
-                                    alert('Please select all the declarations.');
-                                    return false;
+                                    alert('Please input all Asic Escort Information');
+                                    return;
                                 }
                             });
                         } else {

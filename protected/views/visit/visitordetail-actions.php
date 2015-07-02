@@ -160,10 +160,110 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
         <?php } ?>
     </ul>
 </div>
+
+<!-- Identification Modal -->
+<div id="identificationModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3>Identification Detail</h3>
+    </div>
+    <div class="modal-body">
+        <table style="border-collapse: initial;">
+            <tr><td colspan="2"><strong>Does document number match the identification provided?</strong></td></tr>
+            <tr><td colspan="2"><strong>&nbsp;</strong></td></tr>
+            <tr>
+                <td width="5%"><input type="radio" name="identification" id="identificationChkBoxYes"/></td>
+                <td><label for="identificationChkBoxYes">Yes</label></td>
+            </tr>
+            <tr>
+                <td width="5%"><input type="radio" name="identification" id="identificationChkBoxNo"/></td>
+                <td><label for="identificationChkBoxNo">No</label></td>
+            </tr>
+            
+            <tr id="identificationNotExpired" style="display:none;">
+            <form id="identification_not_expired_form">
+                <td>&nbsp;</td>
+                <td><input type="text" name="Visitor['identification_alternate_document_no1']" placeholder="Enter Alternate Identification"> <span class="required primary-identification-require">*</span>
+                </td>
+            </form>
+            </tr>
+            <tr id="identificationExpired" style="display:none;">
+            <form id="identification_expired_form">
+                <td>&nbsp;</td>
+                <td>
+                    <table style="border-collapse: initial;">
+                        <tbody>
+                            <tr>
+                                <td><strong>New Identification Details:</strong></td>
+                                <td colspan="2">&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">&nbsp;</td>
+                                <td>
+                                    <select name="Visitor[identification_type]" id="identification_type">
+                                        <?php foreach(Visitor::$IDENTIFICATION_TYPE_LIST as $key => $item): ?>
+                                        <option value="<?php echo $key; ?>"><?php echo $item; ?></option>
+                                        <?php endforeach; ?>
+                                    </select> <span class="required primary-identification-require">*</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">&nbsp;</td>
+                                <td>
+                                    <?php
+                                    $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');?>
+                                    <select name="Visitor[identification_country_issued]" id="identification_country_issued">
+                                        <option value="">Country of Issue</option>
+                                        <?php foreach($countryList as $key => $item): ?>
+                                        <option <?php echo ($key == Visitor::AUSTRALIA_ID) ? 'selected': ''; ?> value="<?php echo $key; ?>"><?php echo $item; ?></option>
+                                        <?php endforeach; ?>
+                                     </select> <span class="required primary-identification-require">*</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">&nbsp;</td>
+                                <td>
+                                    <input type="text" name="Visitor[identification_document_no]" id="identification_document_no" placeholder="Document No." style="width: 110px;">
+
+                                    <?php
+                                    $this->widget('zii.widgets.jui.CJuiDatePicker',array(
+                                        'id' => 'identification_document_expiry',
+                                        'name'=>'Visitor[identification_document_expiry]',
+                                        // additional javascript options for the date picker plugin
+                                        'options'=>array(
+                                            'dateFormat' => 'dd-mm-yy',
+                                        ),
+                                        'htmlOptions'=>array(
+                                            'size'        => '0',
+                                            'maxlength'   => '10',
+                                            'placeholder' => 'Expiry',
+                                            'style'       => 'width: 80px;',
+                                        ),
+                                    ));
+                                    ?> <span class="required primary-identification-require">*</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </form>    
+            </tr>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="btnIdentificationConfirm">Confirm</button>
+    </div>
+</div>
+<!-- END Identification Modal -->
+
 <input type="hidden" value="<?php echo $session['previousVisitAction']; ?>" id="previousVisitAction"/>
 <input type="hidden" value="<?php echo $model->visit_status; ?>" id="visitStatus"/>
 <script>
     $(document).ready(function () {
+        $("#identification_modal_form #identification_document_expiry").datepicker({
+            dateFormat: "dd-mm-yy",
+        });
+
         if ($("#visitStatus").val() == 5) {
 
             if ($("#previousVisitAction").val() == 'Preregister') {
@@ -552,97 +652,3 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
     <?php $this->endWidget(); ?>
 
 </div>
-
-
-<!-- Identification Modal -->
-<div id="identificationModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
-<form id="identification_modal_form" method="post">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3>Identification Detail</h3>
-    </div>
-    <div class="modal-body">
-        <table style="border-collapse: initial;">
-            <tr><td colspan="2"><strong>Does document number match the identification provided?</strong></td></tr>
-            <tr><td colspan="2"><strong>&nbsp;</strong></td></tr>
-            <tr>
-                <td width="5%"><input type="radio" name="identification" id="identificationChkBoxYes"/></td>
-                <td><label for="identificationChkBoxYes">Yes</label></td>
-            </tr>
-            <tr>
-                <td width="5%"><input type="radio" name="identification" id="identificationChkBoxNo"/></td>
-                <td><label for="identificationChkBoxNo">No</label></td>
-            </tr>
-            
-            <tr id="identificationNotExpired" style="display:none;">
-                <td>&nbsp;</td>
-                <td><input type="text" name="Visitor_identification_alternate_document_no1" placeholder="Enter Alternate Identification"> <span class="required primary-identification-require">*</span>
-                </td>
-            </tr>
-            <tr id="identificationExpired" style="display:none;">
-                <td>&nbsp;</td>
-                <td>
-                    <table style="border-collapse: initial;">
-                        <tbody>
-                            <tr>
-                                <td><strong>New Identification Details:</strong></td>
-                                <td colspan="2">&nbsp;</td>
-                            </tr>
-                            <tr>
-                                <td colspan="2">&nbsp;</td>
-                                <td>
-                                    <select name="Visitor[identification_type]" id="identification_type">
-                                        <?php foreach(Visitor::$IDENTIFICATION_TYPE_LIST as $key => $item): ?>
-                                        <option value="<?php echo $key; ?>"><?php echo $item; ?></option>
-                                        <?php endforeach; ?>
-                                    </select> <span class="required primary-identification-require">*</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="2">&nbsp;</td>
-                                <td>
-                                    <?php
-                                    $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');?>
-                                    <select name="Visitor[identification_country_issued]" id="identification_country_issued">
-                                        <option value="">Country of Issue</option>
-                                        <?php foreach($countryList as $key => $item): ?>
-                                        <option <?php echo ($key == Visitor::AUSTRALIA_ID) ? 'selected': ''; ?> value="<?php echo $key; ?>"><?php echo $item; ?></option>
-                                        <?php endforeach; ?>
-                                     </select> <span class="required primary-identification-require">*</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="2">&nbsp;</td>
-                                <td>
-                                    <input type="text" name="Visitor[identification_document_no]" id="identification_document_no" placeholder="Document No." style="width: 110px;">
-
-                                    <?php
-                                    $this->widget('zii.widgets.jui.CJuiDatePicker',array(
-                                        'name'=>'Visitor[identification_document_expiry]',
-                                        // additional javascript options for the date picker plugin
-                                        'options'=>array(
-                                            'dateFormat' => 'dd-mm-yy',
-                                        ),
-                                        'htmlOptions'=>array(
-                                            'size'        => '0',
-                                            'maxlength'   => '10',
-                                            'placeholder' => 'Expiry',
-                                            'style'       => 'width: 80px;',
-                                        ),
-                                    ));
-                                    ?> <span class="required primary-identification-require">*</span>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </td>
-                
-            </tr>
-        </table>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="btnIdentificationConfirm">Confirm</button>
-    </div>
-</form>
-</div>
-<!-- END Identification Modal -->

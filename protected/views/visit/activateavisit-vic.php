@@ -389,7 +389,6 @@ $asicEscort = new AddAsicEscort();
     </div>
 </div>
 
-
 <button id="btnActivate" style="display: none;"></button>
 <script type="text/javascript">
     function vicHolderDeclarationChange() {
@@ -465,13 +464,13 @@ $asicEscort = new AddAsicEscort();
         }
     });
 
-    var requestRunning = false;
     function updateIdentificationDetails() {
-        if (requestRunning) { // don't do anything if an AJAX request is pending
-            return;
-        }
 
-        var data = $("#identification_modal_form").serialize();
+        if (isExpired()) {
+            var data = $("#identification_expired_form").serialize();
+        } else {
+            var data = $("#identification_not_expired_form").serialize();
+        }
 
         var ajaxOpts = {
             url: "<?php echo Yii::app()->createUrl('visitor/updateIdentificationDetails&id='.$visitorModel->id); ?>",
@@ -480,10 +479,13 @@ $asicEscort = new AddAsicEscort();
             data: data,
             success: function (r) {
                 console.log(r);
+                if (r == 1) {
+                    $('#identificationModal').modal('hide');
+                    $('input[name="identificationActiveVisit"]').prop('checked', true);
+                }
             }
         };
 
-        requestRunning = true;
         $.ajax(ajaxOpts);
         return false;
     }

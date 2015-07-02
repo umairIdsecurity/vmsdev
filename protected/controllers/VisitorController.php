@@ -671,14 +671,14 @@ class VisitorController extends Controller {
 
     public function actionUpdateIdentificationDetails($id) {
         $model = $this->loadModel($id);
-
+        $model->setscenario('updateIdentification');
         if ($model) {
             $model->attributes = $_POST['Visitor'];
-            if ($model->save()) {
-                echo 1; die;
+            if (!$model->save()) {
+                echo 0; Yii::app()->end();
             }
         }
-        echo 0; die;
+        echo 1; Yii::app()->end();
         
     }
 

@@ -296,7 +296,8 @@ class Visitor extends CActiveRecord {
                 contact_state,
                 contact_postcode,
                 contact_country',
-                    'required','except'=>'updateVic'
+                'required',
+                'except'=> ['updateVic', 'updateIdentification']
                 );
 
         } else if ($this->profile_type == self::PROFILE_TYPE_ASIC) {
@@ -485,9 +486,12 @@ class Visitor extends CActiveRecord {
             $this->contact_country = self::AUSTRALIA_ID;
         }
         
-        if (!empty($this->date_of_birth)) $this->date_of_birth =  date('Y-m-d', strtotime($this->date_of_birth));
-        if (!empty($this->asic_expiry)) $this->asic_expiry =  date('Y-m-d', strtotime($this->asic_expiry));
-        if (!empty($this->identification_document_expiry)) $this->identification_document_expiry =  date('Y-m-d', strtotime($this->identification_document_expiry));
+        if (!empty($this->date_of_birth)) 
+            $this->date_of_birth =  date('Y-m-d', strtotime($this->date_of_birth));
+        if (!empty($this->asic_expiry)) 
+            $this->asic_expiry =  date('Y-m-d', strtotime($this->asic_expiry));
+        if (!empty($this->identification_document_expiry)) 
+            $this->identification_document_expiry =  date('Y-m-d', strtotime($this->identification_document_expiry));
 
         if ($this->password_requirement == PasswordRequirement::PASSWORD_IS_NOT_REQUIRED) {
             $this->password = null;

@@ -138,18 +138,18 @@ $session = new CHttpSession;
                         <td><?php echo $form->error($model, 'contact_email_address',array('style'=>'text-transform:none;')); ?></td>
                     </tr>
                     <tr>
-                        <td><?php /*echo $form->labelEx($model, 'timezone_id'); */?></td>
+                        <td><?php echo $form->labelEx($model, 'timezone_id'); ?></td>
                         <td>
-                            <?php /*echo $form->dropDownList(
+                            <?php echo $form->dropDownList(
                                     $model,
                                     'timezone_id',
                                     CHtml::listData(Timezone::model()->findAll(),
                                             'id',
                                             'timezone_name'),
                                             array('empty'=>'Please select a timezone')
-                            );*/?>
+                            );?>
                         </td>
-                        <td><?php /*echo $form->error($model, 'timezone_id',array('style'=>'text-transform:none;')); */?></td>
+                        <td><?php echo $form->error($model, 'timezone_id',array('style'=>'text-transform:none;')); ?></td>
                     </tr>
 
                     <input type="hidden" id="Workstation_created_by" name="Workstation[created_by]" value="<?php echo $session['id']; ?>">
@@ -267,7 +267,17 @@ $session = new CHttpSession;
 
 
     <div class="row buttons buttonsAlignToRight">
-        <?php echo CHtml::submitButton($model->isNewRecord ? 'Add' : 'Save', array("data-ng-disabled"=>"Workstation['assign_kiosk']? workstation['Workstation[repeatpassword]'].\$error.match || !workstation.passwordConfirm : false")); ?>
+        <?php
+        $arrayRuleButton = null;
+        if($model->password){
+            $arrayRuleButton = array("data-ng-disabled"=>"Workstation['assign_kiosk']? workstation['Workstation[repeatpassword]'].\$error.match : false");
+        }
+        else {
+            $arrayRuleButton = array("data-ng-disabled"=>"Workstation['assign_kiosk']? workstation['Workstation[repeatpassword]'].\$error.match || !workstation.passwordConfirm : false");
+        }
+
+        ?>
+        <?php echo CHtml::submitButton($model->isNewRecord ? 'Add' : 'Save', $arrayRuleButton ); ?>
     </div>
 
     <?php $this->endWidget(); ?>

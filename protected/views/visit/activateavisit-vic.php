@@ -430,7 +430,10 @@ $asicEscort = new AddAsicEscort();
             return false;
         }
     }
-<<<<<<< HEAD
+
+    function asicEscort() {
+        $('.asic-escort').removeClass('hidden');
+    }
 
     $(document).on('click', '#identificationChkBoxNo', function(e) {console.log(isExpired());
         if (isExpired()) {
@@ -495,12 +498,3 @@ $asicEscort = new AddAsicEscort();
         return document_expiry_date <= today;
     }
 </script>
-=======
-    function asicEscort() {
-        $('.asic-escort').removeClass('hidden');
-    }
-
-    $(document).ready(function(){
-    });
-</script>
->>>>>>> origin/dev

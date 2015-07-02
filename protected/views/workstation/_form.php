@@ -36,7 +36,7 @@ $session = new CHttpSession;
                                 if ($model['tenant'] == $value['tenant']) {
                                     echo " selected ";
                                 }
-                                        ?> value="<?php echo $value['tenant']; ?>"><?php echo $value['name']; ?></option>
+                                        ?> value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
                                             <?php
                                         }
                                         ?>
@@ -71,7 +71,7 @@ $session = new CHttpSession;
                             <td><?php echo $form->error($model, 'tenant_agent'); ?></td>
                         </tr>
                     <?php } else { ?>
-                        <input type="hidden" id="Workstation_tenant" name="Workstation[tenant]" value="<?php echo $session['tenant']; ?>">
+                        <input type="hidden" id="Workstation_tenant" name="Workstation[tenant]" value="<?php echo isset($session['company']) ? $session['comapny'] : $session['tenant']; ?>">
                         <?php if($session['role'] == Roles::ROLE_ADMIN) {?>
                         <tr>
                             <td><?php echo $form->labelEx($model, 'tenant_agent'); ?></td>

@@ -32,7 +32,10 @@
                 </div>
                 <ul class="icons">
                     <?php
-                    if(Yii::app()->user->isGuest) {
+                    if(
+                        Yii::app()->user->isGuest ||
+                        Yii::app()->urlManager->parseUrl(Yii::app()->request) =='preregistration/login'
+                      ) {
                         ?>
                         <li class="group-1"><a href="#"><span class="glyphicon glyphicon-log-in"></span></a></li>
                     <?php

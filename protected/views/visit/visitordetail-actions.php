@@ -276,19 +276,13 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                 } else if (!$('#AsicSponsorDecalarations').is(':checked') && $('#VivHolderDecalarations').is(':checked')){
                     $('#asicSponsorModal').modal('show');
                     $btnASIC.on('click', function(e) {
-                        var checkValueAsicEscort = checkAsicEscort();
-                        if(checkValueAsicEscort ==  true ) {
-                            var asicChecked = asicCheck();
-                            if (asicChecked) {
-                                confirmed = true;
-                            } else {
-                                alert('Please select all the declarations.');
-                                return false;
-                            }
+                        var asicChecked = asicCheck();
+                        if (asicChecked) {
+                            confirmed = true;
                         } else {
-                            return;
+                            alert('Please select all the declarations.');
+                            return false;
                         }
-
                     });
                 } else {
                     $('#vicHolderModal').modal('show');
@@ -297,19 +291,13 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                         if (vicChecked) {
                             $('#asicSponsorModal').modal('show');
                             $btnASIC.on('click', function(e) {
-                                var checkValueAsicEscort = checkAsicEscort();
-                                if(checkValueAsicEscort ==  true ) {
-                                    var asicChecked = asicCheck();
-                                    if (asicChecked) {
-                                        confirmed = true;
-                                    } else {
-                                        alert('Please select all the declarations.');
-                                        return false;
-                                    }
+                                var asicChecked = asicCheck();
+                                if (asicChecked) {
+                                    confirmed = true;
                                 } else {
-                                    return;
+                                    alert('Please select all the declarations.');
+                                    return false;
                                 }
-
                             });
                         } else {
                             alert('Please select all the declarations.');
@@ -541,21 +529,19 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
     ?>">
     <input type="text" id="CardGenerated_enter_card_number" name="CardGenerated[enter_card_number]" value=""/>
     <?php
-    $tenant = User::model()->findByPk($model->tenant);
-    $code = '';
-    if ($tenant) {
-        if ($tenant->company != '') {
-            $company = Company::model()->findByPk($tenant->company);
-            if ($company) {
-                $card_count = $company->card_count ? ($company->card_count + 1) : 1;
 
-                while (strlen($card_count) < 6) {
-                    $card_count = '0' . $card_count;
-                }
-                $code = $company->code . ($card_count);
-            }
+    //$tenant = User::model()->findByPk($model->tenant);
+    $code = '';
+    $company = Company::model()->findByPk($model->tenant);
+    if ($company) {
+        $card_count = $company->card_count ? ($company->card_count + 1) : 1;
+
+        while (strlen($card_count) < 6) {
+            $card_count = '0' . $card_count;
         }
+        $code = $company->code . ($card_count);
     }
+
     ?>
     <input type="text" id="CardGenerated_card_number" name="CardGenerated[card_number]" value="<?php echo $code; ?>">
 

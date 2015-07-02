@@ -5,11 +5,11 @@
  */
 class AddAsicEscort extends CFormModel {
 
-    public $firstName;
-    public $lastName;
+    public $first_name;
+    public $last_name;
     public $asic_no;
-    public $expiry;
-    public $contact_no;
+    public $asic_expiry;
+    public $contact_number;
     public $email;
 
     /**
@@ -20,7 +20,7 @@ class AddAsicEscort extends CFormModel {
     public function rules() {
         return array(
             // username and password are required
-            array('firstName, lastName, email,contact_no, asic_no, expiry', 'required'),
+            array('first_name, last_name, email,contact_number, asic_no, asic_expiry', 'required'),
             array('email', 'email'),
             //array('email', 'emailUnique', 'add_asic_escort'),
         );
@@ -31,12 +31,12 @@ class AddAsicEscort extends CFormModel {
      */
     public function attributeLabels() {
         return array(
-            'firstName'     => 'First Name',
-            'lastName'      => 'Last Name',
+            'first_name'     => 'First Name',
+            'last_name'      => 'Last Name',
             'email'         => 'Email',
             'asic_no'    => 'Asic No',
-            'expiry'   => 'Expiry',
-            'contact_no' => 'Contact No',
+            'asicexpiry'   => 'Expiry',
+            'contact_number' => 'Contact No',
         );
     }
 //

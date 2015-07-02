@@ -228,6 +228,7 @@ class Visitor extends CActiveRecord {
                 password_requirement,
                 alternative_identification,
                 verifiable_signature,
+                escort_flag,
                 ',
                 'safe'
             ),
@@ -248,7 +249,7 @@ class Visitor extends CActiveRecord {
             array('vehicle', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, first_name, photo,last_name, email,companycode, vehicle,contact_number, date_of_birth, company, department, position, staff_id, notes, role, visitor_status, created_by, is_deleted, tenant, tenant_agent, profile_type', 'safe', 'on' => 'search'),
+            array('id, first_name, photo,last_name, email,companycode, vehicle,contact_number, date_of_birth, company, department, position, staff_id, notes, role, visitor_status, created_by, is_deleted, tenant, tenant_agent, profile_type,escort_flag', 'safe', 'on' => 'search'),
         );
 
         $rules[] = array(

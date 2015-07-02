@@ -49,7 +49,7 @@ class Workstation extends CActiveRecord {
             array('name', 'required'),
             array('timezone_id','required','message' =>'Please select a timezone'),
             array('tenant','required','message' =>'Please select a {attribute}'),
-            array('contact_number, card_type,moduleCorporate, moduleVic', 'safe'),
+            array('contact_number, card_type,moduleCorporate, moduleVic, password', 'safe'),
             array('contact_email_address', 'email'),
             array('number_of_operators, assign_kiosk', 'numerical', 'integerOnly' => true),
             array('name, contact_name,tenant,tenant_agent,created_by', 'length', 'max' => 50),
@@ -127,9 +127,9 @@ class Workstation extends CActiveRecord {
         $criteria->compare('is_deleted', $this->is_deleted);
         $user = User::model()->findByPK(Yii::app()->user->id);
         if ($user->role == Roles::ROLE_ADMIN) {
-            $criteria->compare('tenant', $user->tenant);
+            $criteria->compare('created_by', $user->tenant);
         } else if ($user->role == Roles::ROLE_AGENT_ADMIN) {
-            $criteria->compare('tenant', $user->tenant);
+            $criteria->compare('created_by', $user->tenant);
             $criteria->compare('tenant_agent', $user->tenant_agent);
         }
         $criteria->compare('is_deleted', 0);

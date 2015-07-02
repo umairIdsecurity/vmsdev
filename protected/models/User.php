@@ -332,7 +332,7 @@ class User extends VmsActiveRecord {
                                     Roles::ROLE_STAFFMEMBER . ', '.
                                     implode(',',$avms_roles). ')';
                 }
-                $queryCondition = "t.tenant = '" . $user->tenant . "'";
+                $queryCondition = "t.created_by = '" . $user->tenant . "'";
                 break;
             case Roles::ROLE_AGENT_ADMIN:
                 $avms_roles = Roles::get_agent_admin_allowed_roles(true);
@@ -450,9 +450,9 @@ class User extends VmsActiveRecord {
         } else {
             $this->is_deleted = 1;
             if ($this->asic_expiry || $this->asic_expiry == 0) {
-                $this->asic_expiry_day = date('d', $this->asic_expiry);
-                $this->asic_expiry_month = date('m', $this->asic_expiry);
-                $this->asic_expiry_year = date('Y', $this->asic_expiry);
+                $this->asic_expiry_day = date('d', strtotime($this->asic_expiry));
+                $this->asic_expiry_month = date('m', strtotime($this->asic_expiry));
+                $this->asic_expiry_year = date('Y', strtotime($this->asic_expiry));
             }
 
             $this->save();
@@ -553,7 +553,7 @@ class User extends VmsActiveRecord {
         $ownerCondition = "where id ='" . $currentlyEditedUserId . "'";
 
         if ($user->role == Roles::ROLE_ADMIN) {
-            $ownerCondition = "WHERE tenant = '" . $user->tenant . "' ";
+            $ownerCondition = "WHERE created_by = '" . $user->tenant . "' ";
         } else if ($user->role == Roles::ROLE_AGENT_ADMIN) {
             $ownerCondition = "WHERE tenant_agent='" . $user->tenant_agent . "'";
         }
@@ -581,13 +581,14 @@ class User extends VmsActiveRecord {
 
     public function findAllTenantAgent($tenantId) {
         //select all companies of tenant agents with same tenant
+        $session = new CHttpSession;
         $tenantId = trim($tenantId);
         $aArray = array();
         $company = Yii::app()->db->createCommand()
                 ->selectdistinct(' c.id as id, c.name as name,c.tenant,c.tenant_agent, u.first_name, u.last_name')
                 ->from('user u')
                 ->join('company c', 'u.company=c.id')
-                ->where("u.is_deleted = 0 and u.tenant='" . $tenantId . "' and u.role =" . Roles::ROLE_AGENT_ADMIN)
+                ->where("u.is_deleted = 0 and u.tenant='" . $session['tenant'] . "' and u.role =" . Roles::ROLE_AGENT_ADMIN)
                 ->queryAll();
 
         foreach ($company as $index => $value) {
@@ -633,11 +634,11 @@ class User extends VmsActiveRecord {
 
         $user = User::model()->findByPK(Yii::app()->user->id);
         if ($user->role == Roles::ROLE_ADMIN) {
-            $criteria->condition = "tenant = " . $session['tenant'] . " AND is_deleted = 0";
+            $criteria->condition = "created_by = " . $session['tenant'] . " AND is_deleted = 0";
         } else if ($user->role == Roles::ROLE_AGENT_ADMIN) {
-            $criteria->condition = "tenant = " . $session['tenant'] . " AND tenant_agent = " . $user->tenant_agent . " AND is_deleted = 0";
+            $criteria->condition = "created_by = " . $session['tenant'] . " AND tenant_agent = " . $user->tenant_agent . " AND is_deleted = 0";
         } else {
-            $criteria->condition = "tenant = '" . $session['tenant'] . "' and (tenant_agent IS NULL or tenant_agent = 0 or tenant_agent = '') AND is_deleted = 0";
+            $criteria->condition = "created_by = '" . $session['tenant'] . "' and (tenant_agent IS NULL or tenant_agent = 0 or tenant_agent = '') AND is_deleted = 0";
         }
 
         $workstation = Workstation::model()->findAll($criteria);

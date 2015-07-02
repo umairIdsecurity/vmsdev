@@ -1,5 +1,6 @@
 <?php 
 $session = new CHttpSession;
+$asicEscort = new AddAsicEscort();
 ?>
 
 <style>
@@ -351,18 +352,40 @@ $session = new CHttpSession;
             </tr>
             <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
             <tr>
+                <td width="5%"><input type="checkbox" id="asicDecalarationCbx4"/></td>
+                <td><label for="asicDecalarationCbx4">I request that a VIC be issued to the applicant for the areas and reason indicated.</label></td>
+            </tr>
+            <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+            <tr>
                 <td width="5%"><input type="checkbox" id="asicDecalarationCbx3"/></td>
                 <td><label for="asicDecalarationCbx3">I note that they must be under my direct supervision at all times whilst they are airside.</label></td>
             </tr>
             <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
             <tr>
-                <td width="5%"><input type="checkbox" id="asicDecalarationCbx4"/></td>
-                <td><label for="asicDecalarationCbx4">I request that a VIC be issued to the applicant for the areas and reason indicated.</label></td>
+                <td width="5%"><input type="radio" id="asicEscortRbtn" onclick="asicEscort()"/></td>
+                <td><label for="asicEscortRbtn">Add ASIC Escort.</label></td>
+            </tr>
+
+            <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+            <tr class="asic-escort hidden">
+                <td></td>
+                <td>
+                    <div class="esic-escort-field">
+                        <?php $this->renderPartial('_add_asic_escort',array('model' => $asicEscort)) ?>
+                    </div>
+
+                    <input type="hidden" id="tmpAsicEscortFirstName"/>
+                    <input type="hidden" id="tmpAsicEscortLastName"/>
+                    <input type="hidden" id="tmpAsicEscortAsicNo"/>
+                    <input type="hidden" id="tmpAsicEscortExpiry"/>
+                    <input type="hidden" id="tmpAsicEscortContactNo"/>
+                    <input type="hidden" id="tmpAsicEscortEmail"/>
+                </td>
             </tr>
         </table>
     </div>
     <div class="modal-footer">
-        <button type="button" onclick="asicCheck()" class="btn btn-primary" id="btnAsicConfirm">Confirm</button>
+        <button type="button" class="btn btn-primary" id="btnAsicConfirm">Confirm</button>
     </div>
 </div>
 <button id="btnActivate" style="display: none;"></button>
@@ -405,4 +428,10 @@ $session = new CHttpSession;
             return false;
         }
     }
+    function asicEscort() {
+        $('.asic-escort').removeClass('hidden');
+    }
+
+    $(document).ready(function(){
+    });
 </script>

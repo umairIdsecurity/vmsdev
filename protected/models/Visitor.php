@@ -259,7 +259,7 @@ class Visitor extends CActiveRecord {
             'VisitorAlternateIdentification'
         );
 
-        if ((date('Y') - $this->birthdayYear) > 18) {
+        if ((date('Y') - date("Y", strtotime($this->date_of_birth))) > 18) {
             $rules[] = array(
                 'identification_type,
                 identification_country_issued,

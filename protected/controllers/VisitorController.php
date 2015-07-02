@@ -450,6 +450,9 @@ class VisitorController extends Controller {
             if (empty($model->visitor_workstation)) {
                 $model->visitor_workstation = $session['workstation'];
             }
+            //print_r($model->rules());
+            //die("--DONE--");
+
 
             if ($result = $visitorService->save($model, NULL, $session['id'])) {
                 
@@ -477,6 +480,7 @@ class VisitorController extends Controller {
                         mail($to, $subject, $body, $headers);
                     }
                 }
+
             	Yii::app()->end();
             }
         }

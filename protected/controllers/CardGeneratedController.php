@@ -57,7 +57,6 @@ class CardGeneratedController extends Controller {
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['CardGenerated'])) {
-        	
             if ($_POST['CardGenerated']['tenant_agent'] == '') {
                 $_POST['CardGenerated']['tenant_agent'] = null;
             }
@@ -70,14 +69,13 @@ class CardGeneratedController extends Controller {
                 $model->card_number = $_POST['CardGenerated']['card_number'];
             }
 
-            $model->tenant = $session['tenant'];
+            //$model->tenant = $session['tenant'];
 
             if ($model->save()) {
                 Visit::model()->updateByPk($visitId, array('card' => $model->id));
-                
-                $tenant = User::model()->findByPk($model->tenant);
+                //$tenant = User::model()->findByPk($model->tenant);
 
-                $company = Company::model()->findByPk($tenant->company);
+                $company = Company::model()->findByPk($_POST['CardGenerated']['tenant']);
 
                 if (!is_null($company)) {
                     $cardCount = $company->card_count;

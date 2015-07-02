@@ -75,7 +75,7 @@ class AuthorizationController extends RestfulController {
                 $data = CJSON::decode($data);
                 if ($data['grant_type'] === 'password') {
                     if ($data['password'] !== null && $data['email'] !== null) {
-                        $visitor = Visitor::model()->findByAttributes(array('email' => $data['email'], 'USER_TYPE' => self::VISITOR_USER));
+                        $visitor = Visitor::model()->findByAttributes(array('email' => $data['email']));
                         if ($visitor) {
                             if (CPasswordHelper::verifyPassword($data['password'], $visitor->password)) {
                                 $access_token = AccessTokens::model()->findByAttributes(array('USER_ID' => $visitor->id, 'USER_TYPE' => self::VISITOR_USER));

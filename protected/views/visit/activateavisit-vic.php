@@ -369,40 +369,43 @@ $session = new CHttpSession;
             <tr class="asic-escort hidden">
                 <td></td>
                 <td>
-                    <input id="asicEscortFirstName" type="text" name="firstname" placeholder="First Name">
-                    <input id="asicEscortLastName" type="text" name="lastname" placeholder="Last Name">
-                    <span class="required">*</span>
-                    <br><br>
-                    <div id="asicEscortFirstName_em" class="errorMessage" style="display:none"></div>
-                    <div id="asicEscortLastName_em" class="errorMessage" style="display:none"></div>
-                    <br>
-                    <input id="asicEscortAsicNo" type="text" name="asic_no" placeholder="Asic No">
-                    <?php
-                    $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                        'name' => 'asicEscortExpiry',
-                        'options' => array(
-                            'id' => 'asicEscortExpiry',
-                            'dateFormat' => 'dd-mm-yy',
-                        ),
-                        'htmlOptions' => array(
-                            'size' => '0',
-                            'maxlength' => '10',
-                            'placeholder' => 'Expiry',
-                            'style' => 'width: 205px;',
-                        ),
-                    ));
-                    ?>
-                    <span class="required">*</span>
-                    <br><br>
-                    <div id="asicEscortAsicNo_em" class="errorMessage" style="display:none"></div>
-                    <div id="asicEscortExpiry_em" class="errorMessage" style="display:none"></div>
-                    <br>
-                    <input id="asicEscortContactNo" type="text" name="ContactNo" placeholder="ContactNo">
-                    <input id="asicEscortEmail" type="text" name="EmailAddress" placeholder="EmailAddress">
-                    <span class="required">*</span>
-                    <br><br>
-                    <div id="asicEscortContactNo_em" class="errorMessage" style="display:none"></div>
-                    <div id="asicEscortEmail_em" class="errorMessage" style="display:none"></div>
+                    <div class="esic-escort-field">
+                        <input class="esic-escort-value" id="asicEscortFirstName" type="text" name="firstname" placeholder="First Name">
+                        <input class="esic-escort-value" id="asicEscortLastName" type="text" name="lastname" placeholder="Last Name">
+                        <span class="required">*</span>
+                        <br><br>
+                        <div id="asicEscortFirstName_em" class="errorMessage" style="display:none">Please enter First Name</div>
+                        <div id="asicEscortLastName_em" class="errorMessage" style="display:none">Please enter Last Name</div>
+                        <br>
+                        <input class="esic-escort-value" id="asicEscortAsicNo" type="text" name="asic_no" placeholder="Asic No">
+                        <?php
+                        $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                            'name' => 'asicEscortExpiry',
+                            'options' => array(
+                                'id' => 'asicEscortExpiry',
+                                'dateFormat' => 'dd-mm-yy',
+                            ),
+                            'htmlOptions' => array(
+                                'size' => '0',
+                                'maxlength' => '10',
+                                'placeholder' => 'Expiry',
+                                'style' => 'width: 205px;',
+                            ),
+                        ));
+                        ?>
+                        <span class="required">*</span>
+                        <br><br>
+                        <div id="asicEscortAsicNo_em" class="errorMessage" style="display:none">Please enter Asic No</div>
+                        <div id="asicEscortExpiry_em" class="errorMessage" style="display:none">Please select Expiry</div>
+                        <br>
+                        <input class="esic-escort-value" id="asicEscortContactNo" type="text" name="ContactNo" placeholder="ContactNo">
+                        <input class="esic-escort-value" id="asicEscortEmail" type="text" name="EmailAddress" placeholder="EmailAddress">
+                        <span class="required">*</span>
+                        <br><br>
+                        <div id="asicEscortContactNo_em" class="errorMessage" style="display:none">Please enter Contact No</div>
+                        <div id="asicEscortEmail_em" class="errorMessage" style="display:none">Please enter Email Address</div>
+                        <div id="asicEscortEmailFormat_em" class="errorMessage" style="display:none">Email Address is not in a recognised format.</div>
+                    </div>
 
                     <input type="hidden" id="tmpAsicEscortFirstName"/>
                     <input type="hidden" id="tmpAsicEscortLastName"/>
@@ -461,9 +464,51 @@ $session = new CHttpSession;
     function asicEscort() {
         $('.asic-escort').removeClass('hidden');
     }
+    function checkAsicEscort() {
+        if($('#asicEscortRbtn').is(':checked') == true) {
+            var fieldHasValue = 0;
+            $(".esic-escort-field input" ).each(function() {
+                var fieldId = $(this).attr('id');
+                var errorMess = fieldId+'_em';
+                if($(this).val() != '') {
+                    console.log($(this).val());
+                    $('#'+errorMess).hide();
+                    fieldHasValue += 1;
+                } else {
+                    $('#'+errorMess).show();
+                    return;
+                }
+            });
+            if(fieldHasValue == 6){
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
+
     $(document).ready(function(){
-        $("#btnAsicConfirm").on('click',function(){
-            asicCheck();
-        })
+
+        $('.esic-escort-value').change(function(){
+            var fieldId = $(this).attr('id');
+            var errorMess = fieldId+'_em';
+            if($(this).val() == ""){
+                $('#'+errorMess).show();
+                return;
+            } else {
+                $('#'+errorMess).hide();
+            }
+        });
+        $('#asicEscortExpiry').on('change', function () {
+            var fieldId = $(this).attr('id');
+            var errorMess = fieldId+'_em';
+            if($(this).val() == ""){
+                $('#'+errorMess).show();
+            } else {
+                $('#'+errorMess).hide();
+            }
+        });
     });
 </script>

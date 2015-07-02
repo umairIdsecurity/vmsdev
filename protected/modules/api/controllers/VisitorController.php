@@ -65,7 +65,7 @@ class VisitorController extends RestfulController {
                     $visitor->last_name = $data['lastName'];
                     $visitor->visitor_type = $data['visitorType'];
                     $visitor->company = $companyID;
-                    //$visitor->password = CPasswordHelper::hashPassword($data['password']);
+                    $visitor->password = $data['password'];
                     $visitor->photo = NULL;
                     if ($visitor->save(false)) {
                         $result = $this->populatevisitor($visitor);

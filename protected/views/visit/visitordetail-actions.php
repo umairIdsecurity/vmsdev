@@ -276,13 +276,19 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                 } else if (!$('#AsicSponsorDecalarations').is(':checked') && $('#VivHolderDecalarations').is(':checked')){
                     $('#asicSponsorModal').modal('show');
                     $btnASIC.on('click', function(e) {
-                        var asicChecked = asicCheck();
-                        if (asicChecked) {
-                            confirmed = true;
+                        var checkValueAsicEscort = checkAsicEscort();
+                        if(checkValueAsicEscort ==  true ) {
+                            var asicChecked = asicCheck();
+                            if (asicChecked) {
+                                confirmed = true;
+                            } else {
+                                alert('Please select all the declarations.');
+                                return false;
+                            }
                         } else {
-                            alert('Please select all the declarations.');
-                            return false;
+                            return;
                         }
+
                     });
                 } else {
                     $('#vicHolderModal').modal('show');
@@ -291,13 +297,19 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                         if (vicChecked) {
                             $('#asicSponsorModal').modal('show');
                             $btnASIC.on('click', function(e) {
-                                var asicChecked = asicCheck();
-                                if (asicChecked) {
-                                    confirmed = true;
+                                var checkValueAsicEscort = checkAsicEscort();
+                                if(checkValueAsicEscort ==  true ) {
+                                    var asicChecked = asicCheck();
+                                    if (asicChecked) {
+                                        confirmed = true;
+                                    } else {
+                                        alert('Please select all the declarations.');
+                                        return false;
+                                    }
                                 } else {
-                                    alert('Please select all the declarations.');
-                                    return false;
+                                    return;
                                 }
+
                             });
                         } else {
                             alert('Please select all the declarations.');

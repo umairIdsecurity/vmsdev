@@ -48,8 +48,6 @@ class HostController extends RestfulController {
                 $hosts = User::model()->with('com')->findAll($criteria);
                 if ($hosts) {
                     $result = $this->populateHost($hosts);
-                    echo "<pre>";
-                    die(print_r($result));
                     $this->sendResponse(200, CJSON::encode($result));
                 } else {
                     $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'HOST_NOT_FOUND', 'errorDescription' => 'No host for requseted query')));

@@ -22,7 +22,7 @@ $session = new CHttpSession;
     <table>
         <tr>
             <td>
-                <table style="width: 400px;">
+                <table style="width: 540px;">
                     <?php if ($session['role'] == Roles::ROLE_SUPERADMIN) { ?>
                         <tr>
                             <td><?php echo $form->labelEx($model, 'tenant'); ?></td>

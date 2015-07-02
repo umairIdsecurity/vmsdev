@@ -41,6 +41,8 @@ $userRole = $session['role'];
         <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->controller->assetsBase; ?>/css/imgareaselect-default.css" />
         <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->controller->assetsBase; ?>/css/gridview.css" />
         <?php
+        $session['tenant'] = $session['id'];
+
         $tenantCompany = User::model()->findByPk($session['tenant'])->company;
         $company = Company::model()->findByPk($tenantCompany);
 

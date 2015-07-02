@@ -54,8 +54,9 @@ class VisitorController extends Controller {
         $visitModel = new Visit();
 
         $visitorService = new VisitorServiceImpl();
-
+        
         if (isset($_POST['Visitor'])) {
+            
             $model->attributes = $_POST['Visitor'];
 
             if (isset($_POST['VisitCardType']) && $_POST['VisitCardType'] > CardType::CONTRACTOR_VISITOR) {
@@ -101,6 +102,7 @@ class VisitorController extends Controller {
                 print_r($model->errors);
                 die("--DONE--");
             }
+            
         }
 
         $this->render('create', array(
@@ -109,7 +111,7 @@ class VisitorController extends Controller {
             'patientModel' => $patientModel,
             'reasonModel' => $reasonModel,
             'visitModel' => $visitModel,
-		), false, true);
+	), false, true);
     }
 
     /**
@@ -448,6 +450,9 @@ class VisitorController extends Controller {
             if (empty($model->visitor_workstation)) {
                 $model->visitor_workstation = $session['workstation'];
             }
+            //print_r($model->rules());
+            //die("--DONE--");
+
 
             if ($result = $visitorService->save($model, NULL, $session['id'])) {
                 
@@ -475,6 +480,7 @@ class VisitorController extends Controller {
                         mail($to, $subject, $body, $headers);
                     }
                 }
+
             	Yii::app()->end();
             }
         }

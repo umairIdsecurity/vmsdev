@@ -9,7 +9,23 @@ class VisitorController extends RestfulController {
      * * */
     public function actionIndex() {
         try {
-            $token_user = $this->checkAuth();
+
+            // check headers HTTP_X_VMS_TOKEN
+            $headers = apache_request_headers();
+            if(!isset($headers['HTTP_X_VMS_TOKEN'])) {
+                $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'HTTP_X_VMS_TOKEN', 'errorDescription' => 'Missing access token')));
+                return false;
+            }
+
+            // check AccessTokens
+            $access_token = AccessTokens::model()->findByAttributes(array('ACCESS_TOKEN' => $headers['HTTP_X_VMS_TOKEN'], 'USER_TYPE' => self::VISITOR_USER));
+
+            if(!$access_token) {
+                $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'HTTP_X_VMS_TOKEN', 'errorDescription' => 'HTTP_X_VMS_TOKEN is invalid.')));
+                return false;
+            }
+
+            // do response
             if (Yii::app()->request->isPostRequest) {
                 $data = file_get_contents("php://input");
                 $data = CJSON::decode($data);
@@ -23,6 +39,7 @@ class VisitorController extends RestfulController {
                 $visitor->visitor_type = $data['visitorType'];
                 $visitor->company = $companyID;
                 $visitor->password = CPasswordHelper::hashPassword($data['password']);
+                $visitor->created_by = $access_token->USER_ID;
                 $visitor->photo = NULL;
 
                 if ($visitor->save(false)) {
@@ -55,11 +72,9 @@ class VisitorController extends RestfulController {
                 }
             } else {
                 $email = $_GET['email'];
-                $visitor_token_user = $this->checkAuthVisitor();
                 $visitor = Visitor::model()->findByAttributes(array('email' => $email));
                 if ($visitor) {
                     $result = $this->populatevisitor($visitor);
-
                     $this->sendResponse(200, CJSON::encode($result));
                 } else {
                     $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'VISITOR_NOT_FOUND', 'errorDescription' => 'visitor is not found ')));

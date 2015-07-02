@@ -449,7 +449,7 @@ class VisitController extends Controller {
             'patientModel' => $patientModel,
             'newPatient' => $newPatient,
             'newHost' => $newHost,
-			'visitCount' => $visitCount,
+            'visitCount' => $visitCount,
             'cardTypeModel' => $cardTypeModel,
         ));
     }

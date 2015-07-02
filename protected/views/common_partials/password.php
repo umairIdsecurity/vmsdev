@@ -42,7 +42,7 @@ if (isset($company) && !empty($company)) {
                                     <?php echo $form->radioButtonList($model, 'password_option',
                                         array(
                                             PasswordOption::SEND_INVITATION => 'Send User Invitation',
-											PasswordOption::CREATE_PASSWORD => 'Create Password',
+                                            PasswordOption::CREATE_PASSWORD => 'Create Password',
                                         ), array('class' => 'password_option form-label', 'separator' => ''));
                                     ?>
                                     <?php echo $form->error($model, 'password_option'); ?>
@@ -53,7 +53,8 @@ if (isset($company) && !empty($company)) {
                                     <table id="passwordInputsTable" style="margin-top:10px">
                                         <tr>
                                             <td>
-                                                <input placeholder="Password" type="password" class="original-password" id="Visitor_password_input" name="Visitor[password]">
+                                                <!--<input placeholder="Password" type="password" class="original-password" id="Visitor_password_input">-->
+                                                <?php echo $form->passwordField($model,'password',array("class"=>"original-password","id"=>"Visitor_password_input","placeholder"=>"Password"));?>
                                                 <span class="required">*</span>
                                                 <?php echo "<br>" . $form->error($model, 'password'); ?>
                                                 <div class="errorMessage visitor_password" style="display:none"></div>
@@ -61,8 +62,8 @@ if (isset($company) && !empty($company)) {
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input placeholder="Repeat Password" type="password"
-                                                       id="Visitor_repeatpassword_input" />
+                                                <!--<input placeholder="Repeat Password" type="password" id="Visitor_repeatpassword_input" />-->
+                                                <?php echo $form->passwordField($model,'repeatpassword',array("id"=>"Visitor_repeatpassword_input","placeholder"=>"Repeat Password"));?>
                                                 <span class="required">*</span>
                                                 <?php echo "<br>" . $form->error($model, 'repeatpassword'); ?>
                                                 <div class="errorMessage visitor_password_repeat" style="display:none"></div>

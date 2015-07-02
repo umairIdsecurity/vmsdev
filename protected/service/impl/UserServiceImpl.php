@@ -14,7 +14,6 @@
 class UserServiceImpl implements UserService {
 
     public function save($user, $userLoggedIn, $workstation) {
-		//print_r($user);exit;
         $user->date_of_birth = date('Y-m-d', strtotime($user->birthdayYear.'-'.$user->birthdayMonth.'-'.$user->birthdayDay));
 
         $user->asic_expiry = date('Y-m-d', strtotime($user->asic_expiry_year.'-'.$user->asic_expiry_month.'-'.$user->asic_expiry_day));
@@ -64,6 +63,7 @@ class UserServiceImpl implements UserService {
          * if agent admin logged in , all created 
          * * */
         $company = Company::model()->findByPK($user->company);
+
         if (Yii::app()->controller->action->id == 'create') {
 
             switch ($userLoggedIn->role) {
@@ -73,11 +73,11 @@ class UserServiceImpl implements UserService {
                     // commenting it out as it is causing issue while saving user....
 					//echo $user->role; exit;
                     if ($user->role == Roles::ROLE_ADMIN) {
-                        $this->assignTenantOfUserAndCompanyForRoleAdmin($user, $company->tenant);
+                        $this->assignTenantOfUserAndCompanyForRoleAdmin($user, $company->id);
                     }else if ($user->role == Roles::ROLE_ISSUING_BODY_ADMIN) {
-                        $this->assignTenantOfUserAndCompanyForRoleAdmin($user, $company->tenant);
+                        $this->assignTenantOfUserAndCompanyForRoleAdmin($user, $company->id);
                     } else if ($user->role == Roles::ROLE_AGENT_ADMIN) {
-                        $this->assignTenantAndTenantAgentOfUserAndCompanyForRoleAgentAdmin($user, $company->tenant, $company->tenant_agent);
+                        $this->assignTenantAndTenantAgentOfUserAndCompanyForRoleAgentAdmin($user, $company->id, $company->tenant_agent);
                     } elseif ($user->role == Roles::ROLE_STAFFMEMBER) {
                         $this->removeTenantAgentofUserIfTenantIsSetForRoleStaffMember($user);
                     }
@@ -86,26 +86,26 @@ class UserServiceImpl implements UserService {
 
                 default:
                     if ($user->role == Roles::ROLE_ADMIN) {
-                        $this->assignTenantOfUserAndCompanyForRoleAdmin($user, $company->tenant);
+                        $this->assignTenantOfUserAndCompanyForRoleAdmin($user, $company->id);
                     }else if ($user->role == Roles::ROLE_ISSUING_BODY_ADMIN) {
-                        $this->assignTenantOfUserAndCompanyForRoleAdmin($user, $company->tenant);
+                        $this->assignTenantOfUserAndCompanyForRoleAdmin($user, $company->id);
                     }
                     else if ($user->role == Roles::ROLE_AGENT_ADMIN) {
-                        $this->assignSessionTenantAndTenantAgentOfUserAndCompanyForRoleAgentAdmin($user, $company->tenant, $company->tenant_agent, $userLoggedIn);
+                        $this->assignSessionTenantAndTenantAgentOfUserAndCompanyForRoleAgentAdmin($user, $company->id, $company->tenant_agent, $userLoggedIn);
                     } else if ($user->role == Roles::ROLE_AGENT_OPERATOR) {
                         /* if user role is agent operator, set tenant agent = tenant agent of current logged user */
-                        User::model()->updateByPk($user->id, array('tenant_agent' => $userLoggedIn->tenant_agent, 'tenant' => $userLoggedIn->tenant));
+                        User::model()->updateByPk($user->id, array('tenant_agent' => $userLoggedIn->tenant_agent, 'tenant' => $company->id));
                     } else if ($user->role == Roles::ROLE_AGENT_ADMIN) {
                         $this->assignSessionTenantAgentForRoleStaffMember($user,$userLoggedIn);
                     } else {
                         $session = new CHttpSession;
-                        User::model()->updateByPk($user->id, array('tenant' => $userLoggedIn->tenant));
+                        User::model()->updateByPk($user->id, array('tenant' => $company->id));
                         User::model()->updateByPk($user->id, array('tenant_agent' => $session['tenant_agent']));
                     }
             }
         } else { //else if update
             if ($user->role == Roles::ROLE_ADMIN) {
-                $this->updateTenantForRoleAdmin($user, $company->tenant);
+                $this->updateTenantForRoleAdmin($user, $company->id);
             }
         }
 

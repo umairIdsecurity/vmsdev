@@ -146,6 +146,8 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
         $cardTypes = CHtml::listData(CardType::model()->findAll(), 'id', 'name');
         foreach ($cardTypes as $key => $item) {
             $cardList = ($asic) ? CardType::$VIC_CARD_TYPE_LIST : CardType::$CORPORATE_CARD_TYPE_LIST;
+            if($item == 'Multiday Visitor'){$item="MultiDay";}
+            if($item == 'Same Day Visitor'){$item="Same Day";}
             if (in_array($key, $cardList)) {
                 $cardTypeResults[$key] = 'Card Type: ' . $item;
             }

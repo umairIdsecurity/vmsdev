@@ -123,7 +123,6 @@ class UserController extends Controller
     {
         $model = $this->loadModel($id);
         $userService = new UserServiceImpl();
-        $session = new CHttpSession;
 
         if (isset($_POST['User'])) {
             

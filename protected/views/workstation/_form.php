@@ -22,7 +22,7 @@ $session = new CHttpSession;
     <table>
         <tr>
             <td>
-                <table style="width: 400px;">
+                <table style="width: 540px;">
                     <?php if ($session['role'] == Roles::ROLE_SUPERADMIN) { ?>
                         <tr>
                             <td><?php echo $form->labelEx($model, 'tenant'); ?></td>
@@ -36,7 +36,7 @@ $session = new CHttpSession;
                                 if ($model['tenant'] == $value['tenant']) {
                                     echo " selected ";
                                 }
-                                        ?> value="<?php echo $value['tenant']; ?>"><?php echo $value['name']; ?></option>
+                                        ?> value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
                                             <?php
                                         }
                                         ?>
@@ -71,7 +71,7 @@ $session = new CHttpSession;
                             <td><?php echo $form->error($model, 'tenant_agent'); ?></td>
                         </tr>
                     <?php } else { ?>
-                        <input type="hidden" id="Workstation_tenant" name="Workstation[tenant]" value="<?php echo $session['tenant']; ?>">
+                        <input type="hidden" id="Workstation_tenant" name="Workstation[tenant]" value="<?php echo isset($session['company']) ? $session['company'] : $session['tenant']; ?>">
                         <?php if($session['role'] == Roles::ROLE_ADMIN) {?>
                         <tr>
                             <td><?php echo $form->labelEx($model, 'tenant_agent'); ?></td>
@@ -138,18 +138,18 @@ $session = new CHttpSession;
                         <td><?php echo $form->error($model, 'contact_email_address',array('style'=>'text-transform:none;')); ?></td>
                     </tr>
                     <tr>
-                        <td><?php /*echo $form->labelEx($model, 'timezone_id'); */?></td>
+                        <td><?php echo $form->labelEx($model, 'timezone_id'); ?></td>
                         <td>
-                            <?php /*echo $form->dropDownList(
+                            <?php echo $form->dropDownList(
                                     $model,
                                     'timezone_id',
                                     CHtml::listData(Timezone::model()->findAll(),
                                             'id',
                                             'timezone_name'),
                                             array('empty'=>'Please select a timezone')
-                            );*/?>
+                            );?>
                         </td>
-                        <td><?php /*echo $form->error($model, 'timezone_id',array('style'=>'text-transform:none;')); */?></td>
+                        <td><?php echo $form->error($model, 'timezone_id',array('style'=>'text-transform:none;')); ?></td>
                     </tr>
 
                     <input type="hidden" id="Workstation_created_by" name="Workstation[created_by]" value="<?php echo $session['id']; ?>">
@@ -267,7 +267,17 @@ $session = new CHttpSession;
 
 
     <div class="row buttons buttonsAlignToRight">
-        <?php echo CHtml::submitButton($model->isNewRecord ? 'Add' : 'Save', array("data-ng-disabled"=>"Workstation['assign_kiosk']? workstation['Workstation[repeatpassword]'].\$error.match || !workstation.passwordConfirm : false")); ?>
+        <?php
+        $arrayRuleButton = null;
+        if($model->password){
+            $arrayRuleButton = array("data-ng-disabled"=>"Workstation['assign_kiosk']? workstation['Workstation[repeatpassword]'].\$error.match : false");
+        }
+        else {
+            $arrayRuleButton = array("data-ng-disabled"=>"Workstation['assign_kiosk']? workstation['Workstation[repeatpassword]'].\$error.match || !workstation.passwordConfirm : false");
+        }
+
+        ?>
+        <?php echo CHtml::submitButton($model->isNewRecord ? 'Add' : 'Save', $arrayRuleButton ); ?>
     </div>
 
     <?php $this->endWidget(); ?>

@@ -1057,9 +1057,6 @@ class Visit extends CActiveRecord {
                         return (int)($dateOut->format('z') - $dateIn->format('z'));
                         break;
                     default:
-                        if ((int)($dateNow->format('z') > (int)($dateOut->format('z')) {
-                            return (int)($dateOut->format('z') - $dateIn->format('z'));
-                        }
                         return (int)($dateNow->format('z') - $dateIn->format('z')) + 1;
                         break;
                 }

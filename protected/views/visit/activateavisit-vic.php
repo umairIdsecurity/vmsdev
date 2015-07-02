@@ -1,7 +1,7 @@
 <?php 
 $session = new CHttpSession;
+$identification_document_expiry = date('Y-m-d', strtotime($visitorModel->identification_document_expiry));
 ?>
-
 <style>
     .vic-active-visit {margin-top: 0px !important;padding-top: 5px;}
     .vic-col {padding-top: 5px;}
@@ -52,13 +52,13 @@ $session = new CHttpSession;
     <tr>
         <td class="vic-col">
             <input type="checkbox" <?php echo $model->reason > 0 ? 'checked="checked"' : '';?> value="1" name="reasonActiveVisit" class="vic-active-visit vic-active-verification"/>
-            <a href="#" style="text-decoration: none !important;">Visit Reason</a>
+            <a href="javascript:void(0)" style="text-decoration: none !important;">Visit Reason</a>
         </td>
     </tr>
     <tr>
         <td class="vic-col">
-            <input type="checkbox"  value="1" name="identificationActiveVisit" class="vic-active-visit vic-active-verification"/>
-            <a href="#" style="text-decoration: none !important;">Identification</a>
+            <input type="checkbox" disabled value="1" name="identificationActiveVisit" class="vic-active-visit vic-active-verification"/>
+            <a href="#identificationModal" data-toggle="modal" id="identificationActiveVisitLink" style="text-decoration: none !important;">Identification</a>
         </td>
     </tr>
     <tr>
@@ -365,6 +365,8 @@ $session = new CHttpSession;
         <button type="button" onclick="asicCheck()" class="btn btn-primary" id="btnAsicConfirm">Confirm</button>
     </div>
 </div>
+
+
 <button id="btnActivate" style="display: none;"></button>
 <script type="text/javascript">
     function vicHolderDeclarationChange() {
@@ -404,5 +406,68 @@ $session = new CHttpSession;
         } else {
             return false;
         }
+    }
+
+    $(document).on('click', '#identificationChkBoxNo', function(e) {console.log(isExpired());
+        if (isExpired()) {
+            $('#identificationNotExpired').hide();
+            $('#identificationExpired').show();
+        } else {
+            $('#identificationExpired').hide();
+            $('#identificationNotExpired').show();
+        }
+    });
+
+    $(document).on('click', '#identificationChkBoxYes', function(e) {
+        $('#identificationExpired').hide();
+        $('#identificationNotExpired').hide();
+    });
+
+    $(document).on('click', '#btnIdentificationConfirm', function(e) {
+        var isChecked = $('input[name="identification"]').filter(':checked');
+        if (isChecked.length == 0) {
+            alert('Please chose option after confirm.');
+            return false;
+        }
+
+        if ($('#identificationChkBoxYes').is(':checked')) {
+            $('#identificationModal').modal('hide');
+            $('input[name="identificationActiveVisit"]').prop('checked', true);
+        } else {
+            updateIdentificationDetails();
+        }
+    });
+
+    var requestRunning = false;
+    function updateIdentificationDetails() {
+        if (requestRunning) { // don't do anything if an AJAX request is pending
+            return;
+        }
+
+        var data = $("#identification_modal_form").serialize();
+
+        var ajaxOpts = {
+            url: "<?php echo Yii::app()->createUrl('visitor/updateIdentificationDetails&id='.$visitorModel->id); ?>",
+            type: 'POST',
+            dataType: 'json',
+            data: data,
+            success: function (r) {
+                console.log(r);
+            }
+        };
+
+        requestRunning = true;
+        $.ajax(ajaxOpts);
+        return false;
+    }
+
+    function isExpired() {
+        var dt = new Date();
+        var dd = dt.getDate();
+        var mm = dt.getMonth()+1; //January is 0!
+        var yyyy = dt.getFullYear();
+        var document_expiry_date = Date.parse("<?php echo $identification_document_expiry; ?>");
+        var today = Date.parse(yyyy+'-'+mm+'-'+dd);
+        return document_expiry_date <= today;
     }
 </script>

@@ -18,7 +18,7 @@ class VisitorController extends RestfulController {
             }
 
             // check AccessTokens
-            $access_token = AccessTokens::model()->findByAttributes(array('ACCESS_TOKEN' => $headers['HTTP_X_VMS_TOKEN'], 'USER_TYPE' => self::ADMIN_USER));
+            $access_token = AccessTokens::model()->findByAttributes(array('ACCESS_TOKEN' => $headers['HTTP_X_VMS_TOKEN'], 'USER_TYPE' => self::VISITOR_USER));
 
             if(!$access_token) {
                 $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'HTTP_X_VMS_TOKEN', 'errorDescription' => 'HTTP_X_VMS_TOKEN is invalid.')));
@@ -72,11 +72,9 @@ class VisitorController extends RestfulController {
                 }
             } else {
                 $email = $_GET['email'];
-                $visitor_token_user = $this->checkAuthVisitor();
                 $visitor = Visitor::model()->findByAttributes(array('email' => $email));
                 if ($visitor) {
                     $result = $this->populatevisitor($visitor);
-
                     $this->sendResponse(200, CJSON::encode($result));
                 } else {
                     $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'VISITOR_NOT_FOUND', 'errorDescription' => 'visitor is not found ')));

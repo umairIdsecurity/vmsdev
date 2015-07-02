@@ -25,33 +25,39 @@
 
 )); ?>
     <table>
-        <tr class="asic-escort hidden">
-            <td>
+        <tr>
+            <td class="asic-escort-field">
                 <?php echo $form->textField($model, 'firstName', array('size' => 50, 'maxlength' => 50,'placeholder'=>'First Name')); ?>
                 <?php echo $form->textField($model, 'lastName', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Last Name')); ?>
                 <span class="required">*</span>
                 <?php echo "<br>" . $form->error($model, 'firstName'); ?>
                 <?php echo "" . $form->error($model, 'lastName'); ?>
-            </td>
-        </tr>
-        <tr class="asic-escort hidden">
-            <td>
-                <?php echo $form->textField($model, 'asic_no', array('size' => 50, 'maxlength' => 50,'placeholder'=>'ASIC No')); ?>
-                <?php echo $form->textField($model, 'expiry', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Expiry')); ?>
+
+                <?php echo "<br>" . $form->textField($model, 'asic_no', array('size' => 50, 'maxlength' => 50,'placeholder'=>'ASIC No')); ?>
+                <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                    'model' => $model,
+                    'attribute' => 'expiry',
+                    'options' => array(
+                        'dateFormat' => 'dd-mm-yy',
+                    ),
+                    'htmlOptions' => array(
+                        'maxlength' => '10',
+                        'placeholder' => 'Expiry',
+                        'style' => 'width: 205px;',
+                    ),
+                )); ?>
                 <span class="required">*</span>
                 <?php echo "<br>" . $form->error($model, 'asic_no'); ?>
                 <?php echo "" . $form->error($model, 'expiry'); ?>
-            </td>
-        </tr>
-        <tr class="asic-escort hidden">
-            <td>
-                <?php echo $form->textField($model, 'contact_no', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Contact No')); ?>
+
+                <?php echo "<br>" . $form->textField($model, 'contact_no', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Contact No')); ?>
                 <?php echo $form->textField($model, 'email', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Email Address')); ?>
                 <span class="required">*</span>
                 <?php echo "<br>" . $form->error($model, 'contact_no'); ?>
                 <?php echo "" . $form->error($model, 'email'); ?>
             </td>
-        </tr>
     </table>
 
 <?php $this->endWidget(); ?>
+
+

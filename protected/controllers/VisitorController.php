@@ -32,7 +32,7 @@ class VisitorController extends Controller {
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('csvSampleDownload','importVisitHistory', 'addVisitor', 'ajaxCrop', 'create', 'GetIdOfUser','GetHostDetails',
                                     'GetPatientDetails', 'CheckEmailIfUnique', 'GetVisitorDetails', 'FindVisitor', 'FindHost', 'GetTenantAgentWithSameTenant',
-                                    'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent','CheckAsicStatusById', 'addAsicSponsor', 'CheckCardStatus'
+                                    'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent','CheckAsicStatusById', 'addAsicSponsor', 'CheckCardStatus', 'UpdateIdentificationDetails'
                                 ),
                 'users' => array('@'),
             ),
@@ -667,6 +667,19 @@ class VisitorController extends Controller {
 
         }
         echo 0;
+    }
+
+    public function actionUpdateIdentificationDetails($id) {
+        $model = $this->loadModel($id);
+
+        if ($model) {
+            $model->attributes = $_POST['Visitor'];
+            if ($model->save()) {
+                echo 1; die;
+            }
+        }
+        echo 0; die;
+        
     }
 
 }

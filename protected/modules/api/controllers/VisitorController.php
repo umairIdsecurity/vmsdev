@@ -92,15 +92,18 @@ class VisitorController extends RestfulController {
 
     public function actionLogout() {
         try {
-            $data = file_get_contents("php://input");
-            $data = CJSON::decode($data);
+            $headers = apache_request_headers();
+            if(!isset($headers['HTTP_X_VMS_TOKEN'])) {
+                $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'HTTP_X_VMS_TOKEN', 'errorDescription' => 'Missing access token')));
+                return false;
+            }
 
-            if (Yii::app()->request->getParam('email') && $data) {
+            if (Yii::app()->request->getParam('email') ) {
                 $email = Yii::app()->request->getParam('email');
                 $visitor = Visitor::model()->findByAttributes(array('email' => $email));
                 if ($visitor) {
                     $access_token = AccessTokens::model()->findByAttributes(array('USER_ID' => $visitor->id));
-                    if ($access_token && $access_token->ACCESS_TOKEN == $data["access_token"]) {
+                    if ($access_token && $access_token->ACCESS_TOKEN == $headers['HTTP_X_VMS_TOKEN']) {
                         $access_token->delete();
                         $this->sendResponse(204);
                     }

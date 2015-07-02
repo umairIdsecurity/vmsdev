@@ -104,6 +104,23 @@ class RestfulController extends CController {
         }
     }
 
+    protected function getAccessToken () {
+        try {
+            $headers = apache_request_headers();
+            if (!isset($headers['HTTP_X_VMS_TOKEN'])) {
+                $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'HTTP_X_VMS_TOKEN', 'errorDescription' => 'Missing access token')));
+                return false;
+            }
+
+            return AccessTokens::model()->findByAttributes(array('ACCESS_TOKEN' => $headers['HTTP_X_VMS_TOKEN']));
+
+        } catch (Exception $exc) {
+            $this->sendResponse(500, CJSON::encode(array('responseCode' => 500, 'errorCode' => 'INTERNAL_SERVER_ERROR', 'errorDescription' => 'Something went wrong.')));
+        }
+
+    }
+
+
     /**
      * Return the http status message based on integer status code
      * @param int $status HTTP status code

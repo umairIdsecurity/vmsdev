@@ -9,17 +9,8 @@ class VisitorController extends RestfulController {
      * * */
     public function actionIndex() {
         try {
-
-            // check headers HTTP_X_VMS_TOKEN
-            $headers = apache_request_headers();
-            if(!isset($headers['HTTP_X_VMS_TOKEN'])) {
-                $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'HTTP_X_VMS_TOKEN', 'errorDescription' => 'Missing access token')));
-                return false;
-            }
-
-            // check AccessTokens
-            $access_token = AccessTokens::model()->findByAttributes(array('ACCESS_TOKEN' => $headers['HTTP_X_VMS_TOKEN']));
-
+            // get AccessTokens
+            $access_token = $this->getAccessToken() ;
             if(!$access_token) {
                 $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'HTTP_X_VMS_TOKEN', 'errorDescription' => 'HTTP_X_VMS_TOKEN is invalid.')));
                 return false;
@@ -92,24 +83,16 @@ class VisitorController extends RestfulController {
 
     public function actionLogout() {
         try {
-            $headers = apache_request_headers();
-            if(!isset($headers['HTTP_X_VMS_TOKEN'])) {
-                $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'HTTP_X_VMS_TOKEN', 'errorDescription' => 'Missing access token')));
-                return false;
+            $access_token = $this->getAccessToken() ;
+            if(!$access_token) {
+                $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'VISITOR_NOT_FOUND', 'errorDescription' => 'Access Token Admin not match')));
             }
-
             if (Yii::app()->request->getParam('email') ) {
                 $email = Yii::app()->request->getParam('email');
                 $visitor = Visitor::model()->findByAttributes(array('email' => $email));
                 if ($visitor) {
-                    $access_token = AccessTokens::model()->findByAttributes(array('USER_ID' => $visitor->id));
-                    if ($access_token && $access_token->ACCESS_TOKEN == $headers['HTTP_X_VMS_TOKEN']) {
-                        $access_token->delete();
-                        $this->sendResponse(204);
-                    }
-                    else {
-                        $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'VISITOR_NOT_FOUND', 'errorDescription' => 'Access Token Admin not match')));
-                    }
+                    $access_token->delete();
+                    $this->sendResponse(204);
                 } else {
                     $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'VISITOR_NOT_FOUND', 'errorDescription' => 'Requested Admin not found')));
                 }

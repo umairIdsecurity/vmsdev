@@ -1087,9 +1087,6 @@ class Visit extends CActiveRecord {
                         break;
                     default:
                         $remainingDays = $totalDays - $this->visitCounts;
-                        if ((int)($dateNow->format('z') > (int)($dateOut->format('z')) {
-                            return (int)($dateOut->format('z') - $dateIn->format('z'));
-                        }
                         return $remainingDays;
                         break;
                 }

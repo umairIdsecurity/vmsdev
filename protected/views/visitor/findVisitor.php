@@ -86,6 +86,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
     ),
 ));
 
+
 function checkIfanActiveVisitExists($visitorId) {
     $results = Visit::model()->countByAttributes(array("visitor" => $visitorId, "visit_status" => VisitStatus::ACTIVE));
     if ($results == 0) {

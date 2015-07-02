@@ -370,7 +370,7 @@ $asicEscort = new AddAsicEscort();
             <tr class="asic-escort hidden">
                 <td></td>
                 <td>
-                    <div class="esic-escort-field">
+                    <div class="add-esic-escort">
                         <?php $this->renderPartial('_add_asic_escort',array('model' => $asicEscort)) ?>
                     </div>
 
@@ -432,6 +432,25 @@ $asicEscort = new AddAsicEscort();
 
     function asicEscort() {
         $('.asic-escort').removeClass('hidden');
+    }
+
+    function validateAsicEscort() {
+        if($('#asicEscortRbtn').is(':checked') == true) {
+            var noError = true;
+            $('.asic-escort-field .errorMessage ').each(function(){
+                if($(this).css('display') == 'block'){
+                    noError = false;
+                };
+            });
+            $('.asic-escort-field input').each(function(){
+                if($(this).val() == ''){
+                    noError = false;
+                };
+            });
+            return noError;
+        } else {
+            return true;
+        }
     }
 
     $(document).on('click', '#identificationChkBoxNo', function(e) {console.log(isExpired());

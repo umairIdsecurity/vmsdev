@@ -71,7 +71,7 @@ $session = new CHttpSession;
                             <td><?php echo $form->error($model, 'tenant_agent'); ?></td>
                         </tr>
                     <?php } else { ?>
-                        <input type="hidden" id="Workstation_tenant" name="Workstation[tenant]" value="<?php echo isset($session['company']) ? $session['comapny'] : $session['tenant']; ?>">
+                        <input type="hidden" id="Workstation_tenant" name="Workstation[tenant]" value="<?php echo isset($session['company']) ? $session['company'] : $session['tenant']; ?>">
                         <?php if($session['role'] == Roles::ROLE_ADMIN) {?>
                         <tr>
                             <td><?php echo $form->labelEx($model, 'tenant_agent'); ?></td>

@@ -93,7 +93,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 
                 }
 
-                if(jQuery.isEmptyObject(data)) {
+                if(isEmpty(data)) {
                     hasError = false;
                 }
 
@@ -587,13 +587,15 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
             return false;
         }
 
-        var u18_identification = $('#u18_identification:hidden');
-        if (u18_identification.length != 1) {
-            if (!$('#Visitor_u18_identification').checked) {
+        if ($('#u18_identification:hidden').length != 1) {
+            if (!$('#Visitor_u18_identification').is(':checked')) {
                 $('#Visitor_u18_identification_em_').show();
+                return false;
+            } else {
+                $('#Visitor_u18_identification_em_').hide();
             }
         } else {
-            $('#Visitor_u18_identification_em_').show();
+            $('#Visitor_u18_identification_em_').hide();
         }
 
         var companyValue = $("#Visitor_company").val();
@@ -1146,6 +1148,15 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
             }
         });
     });
+
+    function isEmpty(obj) {
+        for(var prop in obj) {
+            if(obj.hasOwnProperty(prop))
+                return false;
+        }
+
+        return true;
+    }
 </script>
 
 

@@ -475,7 +475,12 @@ $this->renderPartial('visithistory', array('model' => $model,
     }
 
     function duplicateVisit(formId) {
-        var visitForm = $("#" + formId).serialize();
+        //var visitForm = $("#" + formId).serialize();
+        if($('#asicEscortRbtn').is(':checked') == true) {
+            var visitForm = $("#" + formId + ", #add-asic-escort-form").serialize();
+        } else {
+            var visitForm = $("#" + formId).serialize();
+        }
         $.ajax({
             type: "POST",
             url: "<?php echo CHtml::normalizeUrl(array("visit/duplicateVisit&id=" . $model->id)); ?>",

@@ -64,7 +64,7 @@ $asicEscort = new AddAsicEscort();
     </tr>
     <tr>
         <td class="vic-col">
-            <input type="checkbox" value="1" name="asicSponsorActiveVisit" class="vic-active-visit vic-active-verification"/>
+            <input type="checkbox" value="1" name="asicSponsorActiveVisit" class="vic-active-visit vic-active-verification" id="asicSponsorActiveVisitLink"/>
             <a href="#" style="text-decoration: none !important;">ASIC Sponsor</a>
         </td>
     </tr>
@@ -352,13 +352,13 @@ $asicEscort = new AddAsicEscort();
             </tr>
             <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
             <tr>
-                <td width="5%"><input type="checkbox" id="asicDecalarationCbx4"/></td>
+                <td width="5%"><input type="checkbox" id="asicDecalarationCbx3"/></td>
                 <td><label for="asicDecalarationCbx4">I request that a VIC be issued to the applicant for the areas and reason indicated.</label></td>
             </tr>
             <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
             <tr>
-                <td width="5%"><input type="checkbox" id="asicDecalarationCbx3"/></td>
-                <td><label for="asicDecalarationCbx3">I note that they must be under my direct supervision at all times whilst they are airside.</label></td>
+                <td width="5%"><input type="radio" id="asicDecalarationRbtn1"/></td>
+                <td><label for="asicDecalarationRbtn1">I note that they must be under my direct supervision at all times whilst they are airside.</label></td>
             </tr>
             <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
             <tr>
@@ -401,8 +401,11 @@ $asicEscort = new AddAsicEscort();
     }
 
     function asicSponsorDeclarationChange() {
-        if ($("#asicDecalarationCbx4").is(':checked') && $('#asicDecalarationCbx3').is(':checked') && $('#asicDecalarationCbx2').is(':checked') && $('#asicDecalarationCbx1').is(':checked')) {
-            $('#AsicSponsorDecalarations').prop('checked', true);
+        if ($('#asicDecalarationCbx3').is(':checked') && $('#asicDecalarationCbx2').is(':checked') && $('#asicDecalarationCbx1').is(':checked')) {
+            if($('#asicDecalarationRbtn1').is(':checked') || $('#asicEscortRbtn').is(':checked')) {
+                $('#AsicSponsorDecalarations').prop('checked', true);
+                $('#asicSponsorActiveVisitLink').prop('checked', true);
+            }
         } else {
             $('#AsicSponsorDecalarations').prop('checked', false);
         }
@@ -422,9 +425,11 @@ $asicEscort = new AddAsicEscort();
         var checknum = $('#asicSponsorModal')
                         .find('input[type="checkbox"]')
                         .filter(':checked');
-        if (checknum.length == 4) {
-            asicSponsorDeclarationChange();
-            return true;
+        if (checknum.length == 3) {
+            if($('#asicDecalarationRbtn1').is(':checked') || $('#asicEscortRbtn').is(':checked')) {
+                asicSponsorDeclarationChange();
+                return true;
+            }
         } else {
             return false;
         }
@@ -518,4 +523,14 @@ $asicEscort = new AddAsicEscort();
         var today = Date.parse(yyyy+'-'+mm+'-'+dd);
         return document_expiry_date <= today;
     }
+    $(document).ready(function(){
+        $('#asicDecalarationRbtn1').on('click',function(){
+            $(this).prop('checked',true);
+            $('#asicEscortRbtn').prop('checked',false);
+        });
+        $('#asicEscortRbtn').on('click',function(){
+            $(this).prop('checked',true);
+            $('#asicDecalarationRbtn1').prop('checked',false);
+        });
+    });
 </script>

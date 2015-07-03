@@ -14,18 +14,19 @@ $visitorType = $_GET['visitortype'];
 if (isset($_GET['tenant_agent']) && $_GET['tenant_agent'] != '') {
     $tenant_agent = "tenant_agent='" . $_GET["tenant_agent"] . "' and";
     } else {
-    $tenant_agent = "(tenant_agent IS NULL or tenant_agent =0 or tenant_agent='') and";
+    //$tenant_agent = "(tenant_agent IS NULL or tenant_agent =0 or tenant_agent='') and";
+    $tenant_agent = "";
 }
 $model = new Visitor;
 $criteria = new CDbCriteria;
 $tenant = '';
-if($_GET['tenant'] && $_GET['tenant']!=''){
-  $tenant = 'tenant='.$_GET['tenant'].' AND ';
-}else{
-    $tenant = '';
-}
-
-	 $conditionString = $tenant. $tenant_agent . " (CONCAT(first_name,' ',last_name) like '%" . $visitorName
+//if($_GET['tenant'] && $_GET['tenant']!=''){
+//  $tenant = 'tenant='.$_GET['tenant'].' AND ';
+//}else{
+//    $tenant = '';
+//}
+$tenant = 'tenant='.Yii::app()->user->tenant.' AND ';
+$conditionString = $tenant. $tenant_agent . " (CONCAT(first_name,' ',last_name) like '%" . $visitorName
 	                     . "%' or first_name like '%" . $visitorName
 	                     . "%' or last_name like '%" . $visitorName
 	                     . "%' or email like '%" . $visitorName
@@ -74,6 +75,8 @@ $model->unsetAttributes();
 $customDataProvider = new CActiveDataProvider($model, array(
     'criteria' => $criteria,
         ));
+
+
 if ($visitorType != VisitorType::PATIENT_VISITOR) {
     $this->widget('zii.widgets.grid.CGridView', array(
         'id' => 'findHost-grid-1',

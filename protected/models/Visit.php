@@ -472,11 +472,11 @@ class Visit extends CActiveRecord {
                 break;
 
             case Roles::ROLE_ADMIN:
-                $criteria->addCondition('t.created_by = ' . Yii::app()->user->tenant);
+                $criteria->addCondition('t.tenant = ' . Yii::app()->user->tenant);
                 break;
 
             case Roles::ROLE_AGENT_ADMIN:
-                $criteria->addCondition('t.created_by = ' . Yii::app()->user->tenant . ' and t.tenant_agent = ' . Yii::app()->user->tenant_agent);
+                $criteria->addCondition('t.tenant = ' . Yii::app()->user->tenant . ' and t.tenant_agent = ' . Yii::app()->user->tenant_agent);
                 break;
 
             case Roles::ROLE_OPERATOR:
@@ -686,11 +686,11 @@ class Visit extends CActiveRecord {
                 break;
 
             case Roles::ROLE_ADMIN:
-                $criteria->addCondition('t.created_by = ' . Yii::app()->user->tenant);
+                $criteria->addCondition('t.tenant = ' . Yii::app()->user->tenant);
                 break;
 
             case Roles::ROLE_AGENT_ADMIN:
-                $criteria->addCondition('t.created_by = ' . Yii::app()->user->tenant . ' and t.tenant_agent = ' . Yii::app()->user->tenant_agent);
+                $criteria->addCondition('t.tenant = ' . Yii::app()->user->tenant . ' and t.tenant_agent = ' . Yii::app()->user->tenant_agent);
                 break;
 
             case Roles::ROLE_OPERATOR:

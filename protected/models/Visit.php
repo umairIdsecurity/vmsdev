@@ -1143,6 +1143,11 @@ class Visit extends CActiveRecord {
         return false;
     }
 
+    public function getAsicEscort()
+    {
+        return Visitor::model()->findByPk($this->asic_escort);
+    }
+
 
     public function getVisitorProfile()
     {

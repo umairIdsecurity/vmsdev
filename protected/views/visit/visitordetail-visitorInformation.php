@@ -639,7 +639,78 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
             </ul>
         </li>
         <?php endif; endif; ?>
+        <?php if($asicEscort != '') : ?>
+            <li class='has-sub' id="asicEscortDetailLi">
+                <a href="#"><span>ASIC Escort</span></a>
+                <ul>
+                    <li>
+                        <table id="asicSponsorDetailsTable" class="detailsTable">
+                            <tr>
+                                <td width="110px;" class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
+                                    First Name
+                                </td>
 
+                                <td style="padding-left: 0 !important;">
+                                    <input class="visitor-detail-info-field"  <?php echo $disabled; ?> type="text" value="<?php echo $asicEscort->first_name; ?>"
+                                           name="Visitor[asic_first_name]" id="Visitor_asic_first_name">
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
+                                    Last Name
+                                </td>
+                                <td style="padding-left: 0 !important;">
+                                    <input class="visitor-detail-info-field"  <?php echo $disabled; ?> type="text" value="<?php echo $asicEscort->last_name; ?>"
+                                           name="Visitor[asic_last_name]" id="Visitor_asic_last_name">
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
+                                    ASIC No.
+                                </td>
+                                <td style="padding-left: 0 !important;">
+                                    <input type="text" <?php echo $disabled; ?> class="visitor-detail-info-field" value="<?php echo $asicEscort->asic_no; ?>"
+                                           name="Visitor[asic_no]" id="Visitor_asic_no">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
+                                    ASIC Expiry
+                                </td>
+
+                                <td style="padding-left: 0 !important;">
+                                    <?php
+                                    $asicEscort->asic_expiry = !is_null($asicEscort->asic_expiry) ? date('d-m-Y', strtotime($asicEscort->asic_expiry)) : date('d-m-Y');
+                                    $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                        'model' => $asicEscort,
+                                        'attribute' => 'asic_expiry',
+                                        'htmlOptions' => array(
+                                            'size' => '10', // textField size
+                                            'maxlength' => '10', // textField maxlength
+                                            'placeholder' => 'dd-mm-yyyy',
+                                            'readOnly' => 'readOnly',
+                                            'style' => 'width:83%'
+                                        ),
+                                        'options' => array(
+                                            'showOn' => "button",
+                                            'buttonImage' => Yii::app()->controller->assetsBase . "/images/calendar.png",
+                                            'buttonImageOnly' => true,
+                                            'minDate' => "0",
+                                            'dateFormat' => "dd-mm-yy",
+                                        )
+                                    ));
+                                    ?>
+
+                                </td>
+                            </tr>
+
+                        </table>
+                    </li>
+                </ul>
+            </li>
+        <?php endif ?>
         <li class='has-sub' id='patientDetailsLi'><a href="#"><span>Patient Details</span></a>
             <ul>
                 <li>

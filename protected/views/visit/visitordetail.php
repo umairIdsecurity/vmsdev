@@ -5,6 +5,7 @@ $session = new CHttpSession;
 
 // asic sponsor
 $asic = $model->getAsicSponsor();
+$asicEscort = $model->getAsicEscort();
 
 if ($asic && $hostModel == null) {
     $hostModel = $asic;
@@ -43,7 +44,8 @@ if(!$hostModel) $hostModel = Visitor::model();
                 'patientModel' => $patientModel,
                 'newPatient' => $newPatient,
                 'newHost' => $newHost,
-                'asic' => $asic
+                'asic' => $asic,
+                'asicEscort' => $asicEscort,
             ));
             ?>
 

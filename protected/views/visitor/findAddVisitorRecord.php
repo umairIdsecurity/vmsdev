@@ -1019,7 +1019,7 @@ $model->identification_country_issued = 13;
         Loading.show();
         $("#searchVisitorTable").hide();
 //change modal url to pass user searched text
-        var url = 'index.php?r=visitor/findvisitor&id=' + searchText + '&tenant=' + <?php echo $session['tenant']; ?> + '&tenant_agent=' + $("#search_visitor_tenant_agent").val() + '&cardType=' + $('#selectCardDiv input[name=selectCardType]:checked').val();
+        var url = 'index.php?r=visitor/findvisitor&id=' + searchText + '&tenant=' + $("#search_visitor_tenant").val() + '&tenant_agent=' + $("#search_visitor_tenant_agent").val() + '&cardType=' + $('#selectCardDiv input[name=selectCardType]:checked').val();
         $.ajax(url).done(function(data){
             Loading.hide();
             $("#searchVisitorTable").show();

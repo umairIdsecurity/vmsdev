@@ -104,6 +104,7 @@ return CMap::mergeArray(
                     'visitor/<email>/resetPassword'           => 'api/visitor/resetPassword',
                     'visitor/<email>/logout'           => 'api/visitor/logout',
                     'visit/<visit>/file/'        => 'api/visit/file',
+                    'visit/<visitID>/checkout'        => 'api/visit/checkout',
                     '/workstations/<id>/cardtypes'        => 'api/workstation/index',
                     array('api/authorization/preflight', 'pattern'=>'/authorization/preflight', 'verb'=>'OPTIONS'),    
                 ),

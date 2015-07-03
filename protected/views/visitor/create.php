@@ -198,6 +198,19 @@ $(document).ready(function () {
                 $('.visitor_password').empty().hide();
                 $('.visitor_password_repeat').empty().hide();
             }
+
+            /*var contact = $('#Visitor_staff_id').val();
+            if (typeof contact != 'undefined') {
+                $.ajax({
+                    type: "POST",
+                    url: "<?php echo $this->createUrl('company/getContact') ?>",
+                    dataType: "json",
+                    data: {id:contact},
+                    success: function(data) {
+                        console.log(data);return false;
+                    }
+                });
+            }*/
             
             $(".visitorType").hide();
             if ($("#Visitor_visitor_type").val() == 1 || $("#Visitor_visitor_type_search").val() == 1) {

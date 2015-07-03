@@ -19,7 +19,7 @@ class CompanyController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow all users to perform 'GetCompanyList' and 'GetCompanyWithSameTenant' actions
-                'actions' => array('GetCompanyList', 'GetCompanyWithSameTenant', 'create', 'delete', 'addCompanyContact', 'getContacts', 'addContact'),
+                'actions' => array('GetCompanyList', 'GetCompanyWithSameTenant', 'create', 'delete', 'addCompanyContact', 'getContacts', 'addContact', 'getContact'),
                 'users' => array('@'),
             ),
             array('allow', // allow user if same company
@@ -443,6 +443,26 @@ class CompanyController extends Controller {
 
             } else { // company has no any contact
                 echo "0";
+            }
+            Yii::app()->end();
+        }
+    }
+
+    public function actionGetContact() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $contact = User::model()->findByPk($_POST['id']);
+
+            if ($contact) {
+                $ret = [
+                    'first_name' => $contact->first_name,
+                    'last_name' => $contact->last_name,
+                    'contact_number' => $contact->contact_number,
+                    'email' => $contact->email
+                ];
+                echo json_encode($contact);
+
+            } else { // company has no any contact
+                echo 0;
             }
             Yii::app()->end();
         }

@@ -64,7 +64,7 @@ $asicEscort = new AddAsicEscort();
     </tr>
     <tr>
         <td class="vic-col">
-            <input type="checkbox" value="1" name="asicSponsorActiveVisit" class="vic-active-visit vic-active-verification"/>
+            <input type="checkbox" value="1" name="asicSponsorActiveVisit" class="vic-active-visit vic-active-verification" id="asicSponsorActiveVisitLink"/>
             <a href="#" style="text-decoration: none !important;">ASIC Sponsor</a>
         </td>
     </tr>
@@ -404,6 +404,7 @@ $asicEscort = new AddAsicEscort();
         if ($('#asicDecalarationCbx3').is(':checked') && $('#asicDecalarationCbx2').is(':checked') && $('#asicDecalarationCbx1').is(':checked')) {
             if($('#asicDecalarationRbtn1').is(':checked') || $('#asicEscortRbtn').is(':checked')) {
                 $('#AsicSponsorDecalarations').prop('checked', true);
+                $('#asicSponsorActiveVisitLink').prop('checked', true);
             }
         } else {
             $('#AsicSponsorDecalarations').prop('checked', false);
@@ -531,6 +532,5 @@ $asicEscort = new AddAsicEscort();
             $(this).prop('checked',true);
             $('#asicDecalarationRbtn1').prop('checked',false);
         });
-
     });
 </script>

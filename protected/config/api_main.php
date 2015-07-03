@@ -97,7 +97,7 @@ return CMap::mergeArray(
                     'host/search'               => "api/host/search",
                     'host/<email>'              => 'api/host/index',
                     'visit'                     => 'api/visit/index',
-                    'visit/<visitID:\+d>'       => 'api/visit/index',
+                    'visit/<visitID:\d+>'       => 'api/visit/index',
                     'visitor'                   => 'api/visitor/index',
                     'visitor/<email>'           => 'api/visitor/index',
                     'visitor/<email>/requestPassword'           => 'api/visitor/requestPassword',

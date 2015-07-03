@@ -77,6 +77,11 @@ class VisitorServiceImpl implements VisitorService {
             }
         }
         $visitor->asic_expiry = date("Y-m-d",strtotime($visitor->asic_expiry));
+
+        if (date('Y') - date('Y', strtotime($visitor->date_of_birth)) < 18) {
+            $visitor->setScenario('u18Rule');
+        }
+
         if (!($result = $visitor->save())) {
             return false;
         }

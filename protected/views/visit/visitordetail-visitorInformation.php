@@ -24,7 +24,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
 <?php
 $disabled = 'disabled';
 if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
-    $disabled = '';
+    $disabled = 'disabled';
 }
 ?>
 <div id='visitorInformationCssMenu' <?php if($cardTypeModel->id <= CardType::CONTRACTOR_VISITOR){echo 'style="height:615px !important"';} ?>>
@@ -53,7 +53,7 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                                     Middle Name
                                 </td>
                                 <td style="padding-left: 0 !important;">
-                                    <input type="text" class="visitor-detail-info-field" value="<?php echo $visitorModel->middle_name; ?>"
+                                    <input type="text"<?php echo $disabled; ?> class="visitor-detail-info-field" value="<?php echo $visitorModel->middle_name; ?>"
                                            name="Visitor[middle_name]" id="Visitor_middle_name">
                                 </td>
                             </tr>
@@ -128,7 +128,7 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                         <tr>
                             <td style="  padding-top: 7px;">Mobile</td>
                             <td>
-                                <input  type="text" class="visitor-detail-info-field" value="<?php echo $visitorModel->contact_number; ?>"
+                                <input type="text" <?php echo $disabled; ?> class="visitor-detail-info-field" value="<?php echo $visitorModel->contact_number; ?>"
                                         name="Visitor[contact_number]" id="Visitor_contact_number">
                                 <div style="" id="Visitor_contact_number_em_" class="errorMessage errorMessageEmail">Please enter a contact number.
                                 </div>
@@ -150,11 +150,11 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                 <li>
                     <table id="companyDetailsTable" class="detailsTable">
                         <tr>
-                            <td width="110px;" disabled class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
+                            <td width="110px;" <?php echo $disabled; ?> class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                                 Company Name
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" class="visitor-detail-info-field" value="<?php echo isset($company->name) ? $company->name : '' ; ?>"
+                                <input type="text" <?php echo $disabled; ?> class="visitor-detail-info-field" value="<?php echo isset($company->name) ? $company->name : '' ; ?>"
                                        name="Company[name]" id="Company_name">
                                 <div style="" id="Company_name_em_" class="errorMessage errorMessageEmail">Please enter a company name.
                                 </div>
@@ -166,7 +166,7 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                                 Contact Person
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" class="visitor-detail-info-field" value="<?php echo (!empty($contact)) ? $contact->getFullName() : ''; ?>"
+                                <input type="text" <?php echo $disabled; ?> class="visitor-detail-info-field" value="<?php echo (!empty($contact)) ? $contact->getFullName() : ''; ?>"
                                        name="Company[contact]" id="Company_contact">
                                 <div style="" id="Company_contact_em_" class="errorMessage errorMessageEmail">Please enter a company contact.
                                 </div>
@@ -178,7 +178,7 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                                 Contact No.
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" class="visitor-detail-info-field" value="<?php echo isset($contact->contact_number) ? $contact->contact_number : ''; ?>"
+                                <input type="text" <?php echo $disabled; ?> class="visitor-detail-info-field" value="<?php echo isset($contact->contact_number) ? $contact->contact_number : ''; ?>"
                                        name="Company[mobile_number]" id="Company_mobile_number">
                                 <div style="" id="Company_mobile_number_em_" class="errorMessage errorMessageEmail">Please enter a company mobile number.
                                 </div>
@@ -429,7 +429,7 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                         <td style="padding-left: 0 !important;">
                             <?php
                             if (isset(Visitor::$IDENTIFICATION_TYPE_LIST) and is_array(Visitor::$IDENTIFICATION_TYPE_LIST)): ?>
-                            <select name="Visitor[identification_type]" id="identification_type">
+                            <select <?php echo $disabled; ?> name="Visitor[identification_type]" id="identification_type">
                                 <?php
                                     foreach (Visitor::$IDENTIFICATION_TYPE_LIST as $id=>$name):
                                         ?>
@@ -523,7 +523,7 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                                 ASIC No.
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" class="visitor-detail-info-field" value="<?php echo $asic->asic_no; ?>"
+                                <input type="text" <?php echo $disabled; ?> class="visitor-detail-info-field" value="<?php echo $asic->asic_no; ?>"
                                        name="Visitor[asic_no]" id="Visitor_asic_no">
                                 <div style="" id="Visitor_asic_no_em_" class="errorMessage errorMessageEmail">Please enter a asic number.
                                 </div>

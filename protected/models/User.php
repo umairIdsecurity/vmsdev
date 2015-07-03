@@ -332,7 +332,7 @@ class User extends VmsActiveRecord {
                                     Roles::ROLE_STAFFMEMBER . ', '.
                                     implode(',',$avms_roles). ')';
                 }
-                $queryCondition = "t.created_by = '" . $user->tenant . "'";
+                $queryCondition = "t.tenant = '" . $user->tenant . "'";
                 break;
             case Roles::ROLE_AGENT_ADMIN:
                 $avms_roles = Roles::get_agent_admin_allowed_roles(true);
@@ -553,7 +553,7 @@ class User extends VmsActiveRecord {
         $ownerCondition = "where id ='" . $currentlyEditedUserId . "'";
 
         if ($user->role == Roles::ROLE_ADMIN) {
-            $ownerCondition = "WHERE created_by = '" . $user->tenant . "' ";
+            $ownerCondition = "WHERE tenant = '" . $user->tenant . "' ";
         } else if ($user->role == Roles::ROLE_AGENT_ADMIN) {
             $ownerCondition = "WHERE tenant_agent='" . $user->tenant_agent . "'";
         }

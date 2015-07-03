@@ -228,6 +228,7 @@ class Visitor extends CActiveRecord {
                 password_requirement,
                 alternative_identification,
                 verifiable_signature,
+                escort_flag,
                 ',
                 'safe'
             ),
@@ -248,7 +249,7 @@ class Visitor extends CActiveRecord {
             array('vehicle', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, first_name, photo,last_name, email,companycode, vehicle,contact_number, date_of_birth, company, department, position, staff_id, notes, role, visitor_status, created_by, is_deleted, tenant, tenant_agent, profile_type', 'safe', 'on' => 'search'),
+            array('id, first_name, photo,last_name, email,companycode, vehicle,contact_number, date_of_birth, company, department, position, staff_id, notes, role, visitor_status, created_by, is_deleted, tenant, tenant_agent, profile_type,escort_flag', 'safe', 'on' => 'search'),
         );
 
         $rules[] = array(
@@ -259,15 +260,14 @@ class Visitor extends CActiveRecord {
             'VisitorAlternateIdentification'
         );
 
-        if ((date('Y') - date("Y", strtotime($this->date_of_birth))) > 18) {
-            $rules[] = array(
-                'identification_type,
-                identification_country_issued,
-                identification_document_no,
-                identification_document_expiry',
-                'VisitorPrimaryIdentification',
-            );
-        }
+        $rules[] = array(
+            'identification_type,
+            identification_country_issued,
+            identification_document_no,
+            identification_document_expiry',
+            'VisitorPrimaryIdentification',
+            'except' => ['u18Rule']
+        );
 
 
         if (Yii::app()->controller->id === 'visitor') {
@@ -443,6 +443,7 @@ class Visitor extends CActiveRecord {
         }
 
         $user = User::model()->findByPK(Yii::app()->user->id);
+
         if($user->role != Roles::ROLE_SUPERADMIN){
             if(Yii::app()->controller->id === 'visit'){
                 if(Yii::app()->controller->action->id !== 'vicTotalVisitCount' && Yii::app()->controller->action->id !== 'corporateTotalVisitCount'  ) {
@@ -454,6 +455,7 @@ class Visitor extends CActiveRecord {
         if ($merge !== null) {
             $criteria->mergeWith($merge);
         }
+
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'sort' => array(
@@ -532,7 +534,7 @@ class Visitor extends CActiveRecord {
         $criteria->condition = 't.is_deleted = 0';
         if (isset(yii::app()->user->role)) {
             if (Yii::app()->user->role != Roles::ROLE_SUPERADMIN) {
-                $criteria->condition = "t.is_deleted = 0 and t.created_by = " . Yii::app()->user->tenant;
+                $criteria->condition = "t.is_deleted = 0 and t.tenant = " . Yii::app()->user->tenant;
             }
         }
         $this->dbCriteria->mergeWith($criteria);

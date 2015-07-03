@@ -445,14 +445,19 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                     <?php echo $form->error($model, 'identification_document_expiry'); ?>
                                 </td>
                             </tr>
-                            <tr id="u18_identification" style="display:none">
+                            <?php
+                            $birthYear = date('Y', strtotime($model->date_of_birth));
+                            $visibility = 'none';
+                            if (Yii::app()->controller->action->id == 'update' && (date('Y') - $birthYear) < 18) {
+                                $visibility = 'block';
+                            }
+                            ?>
+                            <tr id="u18_identification" style="display: <?php echo $visibility; ?>">
                                 <td>
-                                    <?php //echo $form->checkBox($model, 'alternative_identification', array('style' => 'float: left;')); ?>
                                     <input type="checkbox" style="float: left;" id="Visitor_u18_identification" name="Visitor_u18_identification" value="">
                                     <label for="Visitor_identification" class="form-label">I have verified that the applicant is under 18<span class="required primary-identification-require">*</span></label>
                                     <div class="errorMessage" style="float: left; display: none;" id="Visitor_u18_identification_em_">Please verify the age of the applicant.</div>
                                     <input type="text" name="Visitor_u18_identification_document_no" style="" placeholder="Details">
-                                    <?php //echo $form->textField($model, 'identification_document_no', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Document No.', 'style' => 'width: 110px;')); ?>
                                 </td>
                             </tr>
                             <tr>

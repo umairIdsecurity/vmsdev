@@ -43,6 +43,7 @@ if(!$hostModel) $hostModel = Visitor::model();
                 'patientModel' => $patientModel,
                 'newPatient' => $newPatient,
                 'newHost' => $newHost,
+                'cardTypeModel' => $cardTypeModel,
                 'asic' => $asic
             ));
             ?>

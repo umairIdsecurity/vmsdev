@@ -553,7 +553,7 @@ class User extends VmsActiveRecord {
         $ownerCondition = "where id ='" . $currentlyEditedUserId . "'";
 
         if ($user->role == Roles::ROLE_ADMIN) {
-            $ownerCondition = "WHERE created_by = '" . $user->tenant . "' ";
+            $ownerCondition = "WHERE tenant = '" . $user->tenant . "' ";
         } else if ($user->role == Roles::ROLE_AGENT_ADMIN) {
             $ownerCondition = "WHERE tenant_agent='" . $user->tenant_agent . "'";
         }

@@ -328,9 +328,9 @@ class VisitController extends Controller {
             $visitorModel->attributes = $_POST['Visitor'];
             $asicModel = Visitor::model()->findByPk($model->host);
             if ($asicModel){
-                if (isset($_POST['Visitor']['host_first_name'])) $asicModel->first_name = $_POST['Visitor']['host_first_name'];
-                if (isset($_POST['Visitor']['host_last_name'])) $asicModel->last_name = $_POST['Visitor']['host_last_name'];
-                if (isset($_POST['Visitor']['host_asic_no'])) $asicModel->asic_no = $_POST['Visitor']['host_asic_no'];
+                if (isset($_POST['Visitor']['host_first_name'])) $asicModel->first_name   = $_POST['Visitor']['host_first_name'];
+                if (isset($_POST['Visitor']['host_last_name'])) $asicModel->last_name     = $_POST['Visitor']['host_last_name'];
+                if (isset($_POST['Visitor']['host_asic_no'])) $asicModel->asic_no         = $_POST['Visitor']['host_asic_no'];
                 if (isset($_POST['Visitor']['host_asic_expiry'])) $asicModel->asic_expiry = $_POST['Visitor']['host_asic_expiry'];
                 $asicModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
                 #if(!$asicModel->validate()) die("asicModel-{$asicModel->id}".CHtml::errorSummary($asicModel));

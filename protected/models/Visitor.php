@@ -260,15 +260,14 @@ class Visitor extends CActiveRecord {
             'VisitorAlternateIdentification'
         );
 
-        if ((date('Y') - date("Y", strtotime($this->date_of_birth))) > 18) {
-            $rules[] = array(
-                'identification_type,
-                identification_country_issued,
-                identification_document_no,
-                identification_document_expiry',
-                'VisitorPrimaryIdentification',
-            );
-        }
+        $rules[] = array(
+            'identification_type,
+            identification_country_issued,
+            identification_document_no,
+            identification_document_expiry',
+            'VisitorPrimaryIdentification',
+            'except' => ['u18Rule']
+        );
 
 
         if (Yii::app()->controller->id === 'visitor') {

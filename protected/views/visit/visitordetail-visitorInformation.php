@@ -26,13 +26,10 @@ $disabled = 'disabled';
 if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
     $disabled = 'disabled';
 }
-
-$attributes = $cardTypeModel->attributes;
-
 ?>
 
 
-<div id='visitorInformationCssMenu' <?php if(!empty($attributes)){if($attributes['id'] <= CardType::CONTRACTOR_VISITOR){echo 'style="height:615px !important"';}}?>>
+<div id='visitorInformationCssMenu' <?php if ($model && $model->card_type <= CardType::CONTRACTOR_VISITOR) {echo 'style="height:615px !important"';} ?>>
     <ul>
         <li class='has-sub' id="personalDetailsLi">
             <a href="#"><span>Personal Details</span></a>

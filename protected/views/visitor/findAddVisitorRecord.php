@@ -64,80 +64,10 @@ $model->identification_country_issued = 13;
                         'clientOptions' => array(
                             'validateOnSubmit' => true,
                             'afterValidate' => 'js:function(form, data, hasError){
-                                $("#selectedVisitorInSearchTable").val("");
-                                $("#register-host-form").show();
-                                $("#searchHostDiv").show();
-                                if($("#currentRoleOfLoggedInUser").val() == 9){
-                                    $("#currentHostDetailsDiv").show();
-                                    $("#register-host-form").hide();
-                                    $(".host-AddBtn").show();
-                                } else {
-                                    $("#currentHostDetailsDiv").hide();
-                                    $("#register-host-form").show();
-                                    $(".host-AddBtn").hide();
-                                }
-                                
-                                var bod_field = $("#vic-birth-date-field:hidden");
-                                if (bod_field.length != 1) {
-                                    var dt = new Date();
-                                    if(dt.getFullYear() < $("#fromYear").val()) {
-                                        $("#Visitor_date_of_birth_em_").show();
-                                        $("#Visitor_date_of_birth_em_").html("Please update your Date of Birth");
-                                        return false;
-                                    }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
-                                        $("#Visitor_date_of_birth_em_").show();
-                                        $("#Visitor_date_of_birth_em_").html("Please update your Date of Birth");
-                                        return false;
-                                    }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
-                                        $("#Visitor_date_of_birth_em_").show();
-                                        $("#Visitor_date_of_birth_em_").html("Please update your Date of Birth");
-                                        return false;
-                                    }
-                                }
-                                
-
-                                var visitor_type = $("#Visitor_visitor_type").val();
-                                if (visitor_type == "") {
-                                    $("#Visitor_visitor_type_em_").html("Please select visitor type").show();
-                                    return false;
-                                } else {
-                                    $("#Visitor_visitor_type_em_").empty().hide();
-                                }
-                                if (!hasError){
-                                    var vehicleValue = $("#Visitor_vehicle").val();
-                                    if(vehicleValue.length < 6 && vehicleValue != ""){
-                                        $("#Visitor_vehicle_em_").show();
-                                        $("#Visitor_vehicle_em_").html("Vehicle should have a min. of 6 characters");
-                                    }
-                                    else if ($("#Visitor_visitor_type").val() == "") {
-                                        $(".visitorType").show();
-                                       
-                                    } else if ($("#Visit_reason").val() == "" || ($("#Visit_reason").val() == "Other" &&  $("#VisitReason_reason").val() == "")) {
-                                        $(".visitorReason").show();
-                                      
-                                    } else if ($("#Visit_reason").val() == "Other" &&  $("#VisitReason_reason").val() != "") {
-                                        checkReasonIfUnique();
-                                        
-                                    } else if(  $("#Visitor_photo").val() == "" &&
-                                                $("#cardtype").val() != 1 &&
-                                                $("#cardtype").val() != ' . CardType::MANUAL_VISITOR . ' &&
-                                                $("#cardtype").val() != ' . CardType::VIC_CARD_SAMEDATE . '
-                                            ){
-                                        $("#photoErrorMessage").show();
-                                    }
-
-                                    else {
-                                        
-                                        $(".visitorReason").hide();
-                                        $("#photoErrorMessage").hide();
-                                        $(".visitorType").hide();
-                                        checkEmailIfUnique();
-                                    }
-                                }
+                                return afterValidate(form, data, hasError);
 							}'
                         ),
                     ));
-                   
 //else if ($("#workstation").val() == ""){
 //  $(".errorMessageWorkstation").show();
 //  $(".visitorReason").hide();
@@ -596,6 +526,14 @@ $model->identification_country_issued = 13;
                                     <?php echo $form->error($model, 'identification_document_expiry'); ?>
                                 </td>
                             </tr>
+                            <tr id="u18_identification" style="display:none">
+                                <td>
+                                    <input type="checkbox" style="float: left;" id="Visitor_u18_identification" name="Visitor_u18_identification" value="">
+                                    <label for="Visitor_identification" class="form-label">I have verified that the applicant is under 18<span class="required primary-identification-require">*</span></label>
+                                    <div class="errorMessage" style="float: left; display: none;" id="Visitor_u18_identification_em_">Please verify the age of the applicant.</div>
+                                    <input type="text" name="Visitor_u18_identification_document_no" style="" placeholder="Details">
+                                </td>
+                            </tr>
                             <tr class="vic-visitor-fields">
                                 <td>
                                     <?php echo $form->checkBox($model, 'alternative_identification', array('style' => 'float: left;')); ?>
@@ -794,6 +732,92 @@ $model->identification_country_issued = 13;
 
 <script>
 
+    function afterValidate(form, data, hasError) {
+        $("#selectedVisitorInSearchTable").val("");
+        $("#register-host-form").show();
+        $("#searchHostDiv").show();
+        if($("#currentRoleOfLoggedInUser").val() == 9){
+            $("#currentHostDetailsDiv").show();
+            $("#register-host-form").hide();
+            $(".host-AddBtn").show();
+        } else {
+            $("#currentHostDetailsDiv").hide();
+            $("#register-host-form").show();
+            $(".host-AddBtn").hide();
+        }
+        
+        var bod_field = $("#vic-birth-date-field:hidden");
+        if (bod_field.length != 1) {
+            var dt = new Date();
+            if(dt.getFullYear() < $("#fromYear").val()) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html("Please update your Date of Birth");
+                return false;
+            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html("Please update your Date of Birth");
+                return false;
+            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html("Please update your Date of Birth");
+                return false;
+            }
+        }
+
+        if ($("#u18_identification:hidden").length != 1) {
+            if (!$("#Visitor_u18_identification").is(":checked")) {
+                $("#Visitor_u18_identification_em_").show();
+                return false;
+            } else {
+                $("#Visitor_u18_identification_em_").hide();
+            }
+        } else {
+            $("#Visitor_u18_identification_em_").hide();
+        }
+        
+        var visitor_type = $("#Visitor_visitor_type").val();
+        if (visitor_type == "") {
+            $("#Visitor_visitor_type_em_").html("Please select visitor type").show();
+            return false;
+        } else {
+            $("#Visitor_visitor_type_em_").empty().hide();
+        }
+        if (!hasError){
+            var vehicleValue = $("#Visitor_vehicle").val();
+            if(vehicleValue.length < 6 && vehicleValue != ""){
+
+                $("#Visitor_vehicle_em_").show();
+                $("#Visitor_vehicle_em_").html("Vehicle should have a min. of 6 characters");
+
+            } else if ($("#Visitor_visitor_type").val() == "") {
+
+                $(".visitorType").show();
+
+            } else if ($("#Visit_reason").val() == "" || ($("#Visit_reason").val() == "Other" &&  $("#VisitReason_reason").val() == "")) {
+
+                $(".visitorReason").show();
+
+            } else if ($("#Visit_reason").val() == "Other" &&  $("#VisitReason_reason").val() != "") {
+
+                checkReasonIfUnique();
+
+            } else if(  $("#Visitor_photo").val() == "" &&
+                $("#cardtype").val() != 1 &&
+                $("#cardtype").val() != ' . CardType::MANUAL_VISITOR . ' &&
+                $("#cardtype").val() != ' . CardType::VIC_CARD_SAMEDATE . '
+            ){
+                $("#photoErrorMessage").show();
+            } else {
+
+                $(".visitorReason").hide();
+                $("#photoErrorMessage").hide();
+                $(".visitorType").hide();
+                checkEmailIfUnique();
+                
+            }
+        }
+    }
+
     function backFillNewVistor(){
         $('#addvisitor').show();
         $("#searchvisitor").hide();
@@ -889,6 +913,11 @@ $model->identification_country_issued = 13;
                 $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else{
+                if (dt.getFullYear() - $("#fromYear").val() < 18) {
+                    $('#u18_identification').show();
+                } else {
+                    $('#u18_identification').hide();
+                }
                 $("#Visitor_date_of_birth_em_").hide();
             }
         });
@@ -1019,7 +1048,7 @@ $model->identification_country_issued = 13;
         Loading.show();
         $("#searchVisitorTable").hide();
 //change modal url to pass user searched text
-        var url = 'index.php?r=visitor/findvisitor&id=' + searchText + '&tenant=' + <?php echo $session['tenant']; ?> + '&tenant_agent=' + $("#search_visitor_tenant_agent").val() + '&cardType=' + $('#selectCardDiv input[name=selectCardType]:checked').val();
+        var url = 'index.php?r=visitor/findvisitor&id=' + searchText + '&tenant=' + $("#search_visitor_tenant").val() + '&tenant_agent=' + $("#search_visitor_tenant_agent").val() + '&cardType=' + $('#selectCardDiv input[name=selectCardType]:checked').val();
         $.ajax(url).done(function(data){
             Loading.hide();
             $("#searchVisitorTable").show();

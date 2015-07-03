@@ -183,6 +183,34 @@ class VisitController extends RestfulController {
         }
     }
 
+    public function actionCheckout() {
+        try {
+            $access_token = $this->getAccessToken() ;
+            if(!$access_token) {
+                $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'VISITOR_NOT_FOUND', 'errorDescription' => 'Access Token not match')));
+            }
+            if (Yii::app()->request->getParam('visitID') ) {
+                $visitID = Yii::app()->request->getParam('visitID');
+                $visit = Visit::model()->findByPk($visitID);
+                if ($visit) {
+                    $visit->date_check_out = date('Y-m-d');
+                    $visit->time_check_out = date('H:i:s');
+                    if($visit->save()) {
+                        $this->sendResponse(204, CJSON::encode(['responseCode' => 204]));
+                    } else {
+                        $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'VISIT_NOT_CHECKOUT', 'errorDescription' => 'Visit cant not checkout')));
+                    }
+                } else {
+                    $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'VISIT_NOT_FOUND', 'errorDescription' => 'Requested visit not found')));
+                }
+            } else {
+                $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_PARAMETER', 'errorDescription' => 'GET parameter required for action')));
+            }
+        } catch (Exception $ex) {
+            $this->sendResponse(500, CJSON::encode(array('responseCode' => 500, 'errorCode' => 'INTERNAL_SERVER_ERROR', 'errorDescription' => 'something went wrong')));
+        }
+    }
+
     public function validateDate($data){
         if (!isset($data['startTime']) || empty($data['startTime'])) {
             $this->sendResponse(400, CJSON::encode(array('responseCode' => 400, 'errorCode' => 'START_TIME_INVALID', 'errorDescription' => 'Start Time invalid')));

@@ -23,12 +23,13 @@ class VisitController extends RestfulController {
                 $visit->host = $data['hostID'];
                 $visit->visitor_type = isset($data['visitorType']) ? $data['visitorType'] : NULL;
                 $visit->visitor = $data['visitorID'];
-                $visit->visit_status = 1;
+                $visit->card_type = isset($data['visitCardType']) ? $data['visitCardType']:1;
+                $visit->visit_status = isset($data['visitorStatus']) ? $data['visitorStatus']:5;
                 $visit->date_check_in = isset($data['startTime']) ? date('d-m-Y', strtotime($data['startTime'])) : NULL;
                 $visit->time_check_in = isset($data['startTime']) ? date('H:i:s', strtotime($data['startTime'])) : NULL;
                 $visit->date_check_out = isset($data['expectedEndTime']) ? date('d-m-Y', strtotime($data['expectedEndTime'])) : NULL;
                 $visit->time_check_out = isset($data['expectedEndTime']) ? date('H:i:s', strtotime($data['expectedEndTime'])) : NULL;
-                $visit->reason = isset($data['visitReason']) ? $data['visitReason'] : NULL;
+                $visit->reason = isset($data['visitReason']) ? $data['visitReason'] : 1;
                 $visit->workstation = isset($data['workstation']) ? $data['workstation'] : NULL;
                 if ($visit->validate()) {
                     $visit->save();

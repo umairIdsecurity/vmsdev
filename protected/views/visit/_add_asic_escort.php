@@ -27,16 +27,16 @@
     <table>
         <tr>
             <td class="asic-escort-field">
-                <?php echo $form->textField($model, 'firstName', array('size' => 50, 'maxlength' => 50,'placeholder'=>'First Name')); ?>
-                <?php echo $form->textField($model, 'lastName', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Last Name')); ?>
+                <?php echo $form->textField($model, 'first_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'First Name')); ?>
+                <?php echo $form->textField($model, 'last_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Last Name')); ?>
                 <span class="required">*</span>
-                <?php echo "<br>" . $form->error($model, 'firstName'); ?>
-                <?php echo "" . $form->error($model, 'lastName'); ?>
+                <?php echo "<br>" . $form->error($model, 'first_name'); ?>
+                <?php echo "" . $form->error($model, 'last_name'); ?>
 
                 <?php echo "<br>" . $form->textField($model, 'asic_no', array('size' => 50, 'maxlength' => 50,'placeholder'=>'ASIC No')); ?>
                 <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                     'model' => $model,
-                    'attribute' => 'expiry',
+                    'attribute' => 'asic_expiry',
                     'options' => array(
                         'dateFormat' => 'dd-mm-yy',
                     ),
@@ -48,12 +48,12 @@
                 )); ?>
                 <span class="required">*</span>
                 <?php echo "<br>" . $form->error($model, 'asic_no'); ?>
-                <?php echo "" . $form->error($model, 'expiry'); ?>
+                <?php echo "" . $form->error($model, 'asic_expiry'); ?>
 
-                <?php echo "<br>" . $form->textField($model, 'contact_no', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Contact No')); ?>
+                <?php echo "<br>" . $form->textField($model, 'contact_number', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Contact No')); ?>
                 <?php echo $form->textField($model, 'email', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Email Address')); ?>
                 <span class="required">*</span>
-                <?php echo "<br>" . $form->error($model, 'contact_no'); ?>
+                <?php echo "<br>" . $form->error($model, 'contact_number'); ?>
                 <?php echo "" . $form->error($model, 'email'); ?>
             </td>
     </table>

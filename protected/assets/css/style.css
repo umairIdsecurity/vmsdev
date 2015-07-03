@@ -822,11 +822,27 @@ dt.tabs dt{
 
 
 /*for visitor detail page*/
-#visitorDetailDiv, #visitHistoryVisitDetailDiv{
-    padding:0px;margin-left:-30px;height:100%;width:106.59% !important;max-width:107%;
+#visitorDetailDiv
+{
+    padding:0px;margin-left:-30px;
+    //height:100%;
+    width:106.59% !important;
+    max-width:107%;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
 }
+
+#visitHistoryVisitDetailDiv
+{
+    padding:0px;
+    margin-left:-30px;
+    //height:100%;
+    width:106.59% !important;
+    max-width:107%;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
 #visitorDetailDiv .theadVisitorDetail td{
     font-size:12px;
     text-align:center;

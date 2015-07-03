@@ -10,7 +10,6 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
             width: 88px !important;
             height: 24px !important;
         }
-
     </style>
 <?php
 }
@@ -28,7 +27,7 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
     $disabled = '';
 }
 ?>
-<div id='visitorInformationCssMenu'>
+<div id='visitorInformationCssMenu' <?php if($cardTypeModel->id <= CardType::CONTRACTOR_VISITOR){echo 'style="height:615px !important"';} ?>>
     <ul>
         <li class='has-sub' id="personalDetailsLi">
             <a href="#"><span>Personal Details</span></a>

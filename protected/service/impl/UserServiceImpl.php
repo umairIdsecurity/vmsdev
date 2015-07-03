@@ -62,7 +62,7 @@ class UserServiceImpl implements UserService {
          * if superadmin and user created != admin .. tenant id = choose admin_id
          * if agent admin logged in , all created 
          * * */
-        $company = Company::model()->findByPK($user->company);
+        $company = Company::model()->findByPk($user->company);
 
         if (Yii::app()->controller->action->id == 'create') {
 

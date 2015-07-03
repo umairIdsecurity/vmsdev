@@ -134,52 +134,52 @@ if ($this->action->id == 'update') {
                                     </td>
                                     </tr>
                                 </table>
-                                <table style="float:left;width:300px;">
+                                <!--<table style="float:left;width:300px;">
                                     <tr>
                                         <td id="visitorTenantRow" <?php
-                                        if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+/*                                        if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                                             echo " class='hidden' ";
                                         }
-                                        ?>>
+                                        */?>>
                                             <select id="Visitor_tenant" onchange="populateTenantAgentAndCompanyField()"
                                                     name="Visitor[tenant]">
                                                 <option value='' selected>Please select a tenant</option>
                                                 <?php
-                                                $allTenantCompanyNames = User::model()->findAllCompanyTenant();
+/*                                                $allTenantCompanyNames = User::model()->findAllCompanyTenant();
                                                 foreach ($allTenantCompanyNames as $key => $value) {
-                                                    ?>
-                                                    <option value="<?php echo $value['id']; ?>"
+                                                    */?>
+                                                    <option value="<?php /*echo $value['id']; */?>"
                                                         <?php
-                                                        if (($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant'] && $this->action->id != 'update') || ($model['tenant'] == $value['id'])) {
+/*                                                        if (($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant'] && $this->action->id != 'update') || ($model['tenant'] == $value['id'])) {
                                                             echo "selected ";
                                                         }
-                                                        ?> ><?php echo $value['name']; ?></option>
+                                                        */?> ><?php /*echo $value['name']; */?></option>
                                                 <?php
-                                                }
-                                                ?>
+/*                                                }
+                                                */?>
                                             </select>
                                             <span class="required">*</span>
-                                            <?php echo "<br>" . $form->error($model, 'tenant'); ?>
+                                            <?php /*echo "<br>" . $form->error($model, 'tenant'); */?>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td id="visitorTenantAgentRow" <?php
-                                        if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+/*                                        if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                                             echo " class='hidden' ";
                                         }
-                                        ?> >
+                                        */?> >
                                             <select id="Visitor_tenant_agent" name="Visitor[tenant_agent]"
                                                     onchange="populateCompanyWithSameTenantAndTenantAgent()">
                                                 <?php
-                                                echo "<option value='' selected>Please select a tenant agent</option>";
+/*                                                echo "<option value='' selected>Please select a tenant agent</option>";
                                                 if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                                                     echo "<option value='" . $session['tenant_agent'] . "' selected>TenantAgent</option>";
                                                 }
-                                                ?>
+                                                */?>
                                             </select>
 
-                                            <?php echo "<br>" . $form->error($model, 'tenant_agent'); ?>
-                                </table>
+                                            <?php /*echo "<br>" . $form->error($model, 'tenant_agent'); */?>
+                                </table>-->
                                 <table style="margin-top: 70px;">
                                     <tr>
                                         <td>
@@ -202,9 +202,9 @@ if ($this->action->id == 'update') {
                                                 $allTenantCompanyNames = User::model()->findAllCompanyTenant();
                                                 foreach ($allTenantCompanyNames as $key => $value) {
                                                     ?>
-                                                    <option value="<?php echo $value['tenant']; ?>"
+                                                    <option value="<?php echo $value['id']; ?>"
                                                         <?php
-                                                        if (($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant'] && $this->action->id != 'update') || ($model['tenant'] == $value['tenant'])) {
+                                                        if (($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant'] && $this->action->id != 'update') || ($model['tenant'] == $value['id'])) {
                                                             echo "selected ";
                                                         }
                                                         ?> ><?php echo $value['name']; ?></option>

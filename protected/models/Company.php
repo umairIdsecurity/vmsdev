@@ -338,13 +338,13 @@ class Company extends CActiveRecord {
             $company = Yii::app()->db->createCommand()
                     ->selectdistinct('*')
                     ->from('company')
-                    ->where("id != 1 and id='" . Yii::app()->user->tenant . "'")
+                    ->where("id != 1 and id=" . Yii::app()->user->tenant . " AND is_deleted = 0")
                     ->queryAll();
         } else {
             $company = Yii::app()->db->createCommand()
                     ->selectdistinct('*')
                     ->from('company')
-                    ->where('id != 1')
+                    ->where('id != 1 AND is_deleted = 0')
                     ->queryAll();
         }
 

@@ -109,12 +109,11 @@ $asicEscort = new AddAsicEscort();
                 $model->date_check_in = date('d-m-Y');
             }
 
-            // Extended Card Type (EVIC) or Multiday
-            /*if (in_array($model->card_type, array(CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY)) && $model->visit_status == VisitStatus::AUTOCLOSED) {
-                $model->date_check_out = $model->date_check_in = date('d-m-Y', strtotime($model->finish_date.' + 1 days'));
-            }*/
-
             $model->date_check_in = date('d-m-Y', strtotime($model->date_check_in));
+
+            if (in_array($model->visit_status, [VisitStatus::SAVED, VisitStatus::CLOSED, VisitStatus::AUTOCLOSED])) {
+                $model->date_check_in = date('d-m-Y');
+            }
 
             $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                 'model' => $model,
@@ -142,12 +141,12 @@ $asicEscort = new AddAsicEscort();
             }
 
             // Extended Card Type (EVIC) or Multiday
-            if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED]) && $model->visit_status == VisitStatus::AUTOCLOSED) {
+            /*if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED]) && $model->visit_status == VisitStatus::AUTOCLOSED) {
                 $model->date_check_out = date('d-m-Y', strtotime($model->finish_date));
-            }
+            }*/
 
-            // VIC_CARD_24HOURS
-            if (!in_array($model->card_type, [CardType::VIC_CARD_EXTENDED]) && in_array($model->visit_status, [VisitStatus::SAVED, VisitStatus::CLOSED])) {
+            // Update date check out for Saved, Closed, AutoClosed Visit
+            if (in_array($model->visit_status, [VisitStatus::SAVED, VisitStatus::CLOSED, VisitStatus::AUTOCLOSED])) {
                 $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in. ' + 1 day'));
                 $model->time_check_out = $model->time_check_in;
             }

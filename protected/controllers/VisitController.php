@@ -182,6 +182,25 @@ class VisitController extends Controller {
                 $model->finish_time = date('H:i:s');
             }
 
+            if(isset($_POST['AddAsicEscort'])) {
+                $asicEscort = new Visitor();
+                $visitorService = new VisitorServiceImpl();
+                $asicEscort->attributes = $_POST['AddAsicEscort'];
+                $asicEscort->profile_type = Visitor::PROFILE_TYPE_ASIC;
+                $asicEscort->visitor_card_status = 6;
+                $asicEscort->escort_flag = 1;
+                $asicEscort->date_created = date("Y-m-d H:i:s");
+                $asicEscort->company = Yii::app()->user->tenant;
+                $asicEscort->tenant = Yii::app()->user->tenant;
+                if (empty($asicEscort->visitor_workstation)) {
+                    $asicEscort->visitor_workstation = $session['workstation'];
+                }
+                if ($result = $visitorService->save($asicEscort, NULL, $session['id'])) {
+                    $model->asic_escort = $asicEscort->id;
+                } else {
+                    Yii::app()->end();
+                }
+            }
 
             if ($visitService->save($model, $session['id'])) {
                 if ($model->card_lost_declaration_file != null) {

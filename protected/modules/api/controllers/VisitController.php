@@ -9,7 +9,12 @@ class VisitController extends RestfulController {
      * * */
     public function actionIndex() {
         try {
-            $token_user = $this->checkAuth();
+            $access_token = $this->getAccessToken();
+            if(!$access_token) {
+                $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'HTTP_X_VMS_TOKEN', 'errorDescription' => 'HTTP_X_VMS_TOKEN is invalid.')));
+                return false;
+            }
+
             if (Yii::app()->request->isPostRequest) {
                 $data = file_get_contents("php://input");
                 $data = CJSON::decode($data);
@@ -100,13 +105,23 @@ class VisitController extends RestfulController {
     }
 
     public function actionfile() {
+
         try {
             if (yii::app()->request->getParam('visit')) {
                 $visitorid = Visit::model()->findByPk(yii::app()->request->getParam('visit'))->visitor;
-                if (!isset($_FILES['file']['name'])) {
-                    $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_REQUEST', 'errorDescription' => 'File not available')));
+
+                if(!$visitorid ) {
+                    $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_REQUEST', 'errorDescription' => 'invalid request visit required')));
                 }
-                if ($visitorid) {
+
+
+                if (Yii::app()->request->isPostRequest) {
+                    // post file
+
+                    if (!isset($_FILES['file']['name'])) {
+                        $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_REQUEST', 'errorDescription' => 'File not available')));
+                    }
+
                     $usernameHash = hash('adler32', "KIOSK");
                     $path_parts = pathinfo($_FILES["file"]["name"]);
                     $filename = $_FILES['file']['name'];
@@ -132,8 +147,17 @@ class VisitController extends RestfulController {
                     } else {
                         $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_REQUEST', 'errorDescription' => 'invalid request visit required')));
                     }
-                } else {
-                    $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'NO_VISITOR_FOUND', 'errorDescription' => 'no visitor found')));
+                }
+                else {
+                    // get file
+                    $visitor = Visitor::model()->findByPk($visitorid);
+                    if($visitor->photo) {
+                        $result = ["image"=>Yii::app()->getBaseUrl(true)."/".Photo::model()->findByPk($visitor->photo)->relative_path];
+                        $this->sendResponse(200, CJSON::encode($result));
+                    }
+                    else {
+                        $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_REQUEST', 'errorDescription' => 'File not available')));
+                    }
                 }
             } else {
                 $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_REQUEST', 'errorDescription' => 'invalid request visit required')));

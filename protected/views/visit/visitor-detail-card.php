@@ -121,6 +121,7 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
         }
 
         $workstationList = CHtml::listData(Utils::populateWorkstation(), 'id', 'name');
+        $workstationResults = [];
         foreach ($workstationList as $key => $item) {
             $workstationResults[$key] = 'Workstation: ' . $item;
         }

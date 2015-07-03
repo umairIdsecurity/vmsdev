@@ -18,6 +18,14 @@ class VisitController extends RestfulController {
             if (Yii::app()->request->isPostRequest) {
                 $data = file_get_contents("php://input");
                 $data = CJSON::decode($data);
+
+                //check Visitor ID
+                $visitor = Visitor::model()->findByPk($data['visitorID']);
+                if(!$visitor) {
+                    $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'NO_VISIT_FOUND', 'errorDescription' => 'Visitor found for this visit')));
+                    return false;
+                }
+
                 $visit = new Visit();
                 $visit->scenario = 'api';
                 $visit->host = $data['hostID'];

@@ -407,7 +407,11 @@ $this->renderPartial('visithistory', array('model' => $model,
     }
 
     function sendActivateVisitForm(formId) {
-        var visitForm = $("#" + formId).serialize();
+        if($('#asicEscortRbtn').is(':checked') == true) {
+            var visitForm = $("#" + formId + ", #add-asic-escort-form").serialize();
+        } else {
+            var visitForm = $("#" + formId).serialize();
+        }
         $.ajax({
             type: "POST",
             url: "<?php echo CHtml::normalizeUrl(array("visit/update&id=" . $model->id)); ?>",

@@ -136,6 +136,7 @@ class PreregistrationController extends Controller
 
 	public function actionConfirmDetails(){
 		$session = new CHttpSession;
+
 		$model = new Registration();
 
 		if (isset($_POST['Registration'])) {
@@ -150,7 +151,7 @@ class PreregistrationController extends Controller
 				$session['visitor_id'] = $model->id;
 				$this->redirect(array('preregistration/visitReason'));
 			}
-			//print_r($model->getErrors());
+
 		}
 		
 		$this->render('confirm-details' , array('model' => $model));

@@ -9,7 +9,7 @@
  */
 angular.module('kiosk.ConfigService', [])
   .factory('ConfigService', ['$rootScope', 'DataService', function ($rootScope, DataService) {
-    var initialConfig = {companyTagLine: '', pickupLocation: 'Reception', brandInfo: {companyLogoURL: '../images/IDSecLogo.png', actionForwardButton: {}, completeButton: {}, neutralButton: {}, navigationMenu: {}, sideMenueAndHeaderText: {}}};
+    var initialConfig = {companyTagLine: '', pickupLocation: 'Reception', brandInfo: {companyLogoURL: 'images/IDSecLogo.png', actionForwardButton: {}, completeButton: {}, neutralButton: {}, navigationMenu: {}, sideMenueAndHeaderText: {}}};
 
     function setBrandingInfo(info) {
       initialConfig.brandInfo.companyLogoURL = info.companyLogoURL;

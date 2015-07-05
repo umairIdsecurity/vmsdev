@@ -32,7 +32,7 @@ class VisitorController extends Controller {
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('csvSampleDownload','importVisitHistory', 'addVisitor', 'ajaxCrop', 'create', 'GetIdOfUser','GetHostDetails',
                                     'GetPatientDetails', 'CheckEmailIfUnique', 'GetVisitorDetails', 'FindVisitor', 'FindHost', 'GetTenantAgentWithSameTenant',
-                                    'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent','CheckAsicStatusById', 'addAsicSponsor', 'CheckCardStatus', 'UpdateIdentificationDetails'
+                                    'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent','CheckAsicStatusById', 'addAsicSponsor', 'CheckCardStatus', 'UpdateIdentificationDetails','checkAsicEscort',
                                 ),
                 'users' => array('@'),
             ),
@@ -707,4 +707,14 @@ class VisitorController extends Controller {
         
     }
 
+    public function actionCheckAsicEscort() {
+        $existed = Visitor::model()->findAllByAttributes([
+            'email' => $_POST['emailEscort'],
+        ]);
+        if (count($existed)> 0) {
+            echo 'existed';
+        } else {
+            echo 'ok';
+        }
+    }
 }

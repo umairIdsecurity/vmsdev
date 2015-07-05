@@ -438,23 +438,55 @@ $asicEscort = new AddAsicEscort();
         $('.asic-escort').removeClass('hidden');
     }
 
-    function validateAsicEscort() {
-        if($('#asicEscortRbtn').is(':checked') == true) {
-            var noError = true;
-            $('.asic-escort-field .errorMessage ').each(function(){
-                if($(this).css('display') == 'block'){
-                    noError = false;
-                };
-            });
-            $('.asic-escort-field input').each(function(){
-                if($(this).val() == ''){
-                    noError = false;
-                };
-            });
-            return noError;
+    function asicConfirm () {
+        var checkAsicEscort = validateAsicEscort();
+        if( checkAsicEscort == true ) {
+            var asicChecked = asicCheck();
+            if (asicChecked) {
+                confirmed = true;
+            } else {
+                alert('Please select all the declarations.');
+                return false;
+            }
         } else {
-            return true;
+            alert('Please input all Asic Escort Information');
+            return;
         }
+    }
+    function checkEscortEmailUnique () {
+        var email = $('#AddAsicEscort_email').val();
+        $.ajax({
+            type: "POST",
+            url: "<?php echo CHtml::normalizeUrl(array("visitor/checkAsicEscort")); ?>",
+            data: {emailEscort: email},
+            success: function(data) {
+                if(data == 'existed') {
+                    $('#AddAsicEscort_email_unique_em_').show();
+                    asicConfirm();
+
+                } else {
+                    $('#AddAsicEscort_email_unique_em_').hide();
+                    asicConfirm();
+                }
+            }
+        });
+    }
+
+    function validateAsicEscort() {
+        var noError = true;
+        $('.asic-escort-field .errorMessage ').each(function () {
+            if ($(this).css('display') == 'block') {
+                noError = false;
+            }
+            ;
+        });
+        $('.asic-escort-field input').each(function () {
+            if ($(this).val() == '') {
+                noError = false;
+            }
+            ;
+        });
+        return noError;
     }
 
     $(document).on('click', '#identificationChkBoxNo', function(e) {console.log(isExpired());

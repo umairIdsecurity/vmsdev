@@ -1051,10 +1051,11 @@ class Visit extends CActiveRecord {
         switch ($this->card_type) {
             case CardType::VIC_CARD_MANUAL:
             case CardType::VIC_CARD_SAMEDATE:
-            case CardType::VIC_CARD_24HOURS:
-                /*if (in_array($this->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED, VisitStatus::EXPIRED])) {
+                if (in_array($this->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED, VisitStatus::EXPIRED])) {
                     return 1;
-                }*/
+                }
+                return (int)$this->count($criteria) + 1;
+            case CardType::VIC_CARD_24HOURS:
                 return (int)$this->count($criteria) + 1;
                 break;
             case CardType::VIC_CARD_EXTENDED:

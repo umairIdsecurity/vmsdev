@@ -584,11 +584,11 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
             <!-- REASONS -->
             <?php if ($session['role'] == Roles::ROLE_SUPERADMIN || $session['role'] == Roles::ROLE_ADMIN) { ?>
                 <li class='has-sub'>
-                    <a class='managevisitorrecords'
-                       href='<?php echo Yii::app()->createUrl('reasons/admin'); ?>'><span>Contact Reasons</span></a>
-                    <ul <?php echo $this->id == 'reasons' ? "style='display:block'" : "style='display:none'"; ?>>
-                        <li><a href='<?php echo Yii::app()->createUrl('reasons/create'); ?>'
-                               class="addSubMenu"><span>Create Reason</span></a></li>
+                    <a class='managevisitorrecords' href='<?php echo Yii::app()->createUrl('contactPerson/admin'); ?>'><span>Contact Support Options</span></a>
+                    
+                    <ul <?php if($this->id == 'reasons' || $this->id == 'contactPerson'){echo "style='display:block'";}else{echo "style='display:none'";}?>>
+                        <li><a href='<?php echo Yii::app()->createUrl('contactPerson/create'); ?>' class="addSubMenu"><span>Add Contact Person</span></a></li>
+                        <li><a href='<?php echo Yii::app()->createUrl('reasons/create'); ?>' class="addSubMenu"><span>Add Contact Reason</span></a></li>
                     </ul>
                 </li>
             <?php } ?>

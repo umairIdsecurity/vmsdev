@@ -9,106 +9,106 @@
 <div class="page-content">
     <h1 class="text-primary title">ADD / FIND ASIC SPONSOR</h1>
 
-    <form class="form-create-login" action"?">
-    <div class="form-group">
-        <input name="first-name"
-               class="form-control input-lg"
-               data-validate-input
-               placeholder="John" >
-    </div>
-    <div class="form-group">
-        <input name="last-name"
-               class="form-control input-lg"
-               data-validate-input
-               placeholder="Smith" >
-    </div>
-    <div class="form-group">
-        <input name="asic"
-               class="form-control input-lg"
-               data-validate-input
-               placeholder="ASIC no." >
-    </div>
-    <div class="row form-group">
-        <span class="text-primary col-xs-12">ASIC EXPIRY</span>
-        <div class="col-xs-3">
-            <select name="year" class="form-control input-lg">
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
-                <option>6</option>
-                <option>7</option>
-                <option>8</option>
-                <option>9</option>
-                <option>10</option>
-                <option>11</option>
-                <option>12</option>
-                <option>13</option>
-                <option>14</option>
-                <option>15</option>
-                <option>16</option>
-                <option>17</option>
-                <option>18</option>
-                <option>19</option>
-                <option>20</option>
-                <option>21</option>
-                <option>22</option>
-                <option>23</option>
-                <option>24</option>
-                <option>25</option>
-                <option>26</option>
-                <option>27</option>
-                <option>28</option>
-                <option>29</option>
-                <option>30</option>
-                <option>31</option>
-            </select>
+    <?php
+    $form=$this->beginWidget('CActiveForm', array(
+        'id'=>'add-asic-form',
+        'enableAjaxValidation'   => false,
+        'enableClientValidation'=>true,
+        'clientOptions'=>array(
+            'validateOnSubmit'=>true
+        ),
+        'htmlOptions'=>array(
+        'class'=> 'declarations'
+    )
+    ));
+    ?>
+
+    <div class="form-create-login">
+
+        <div class="form-group">
+            <?php echo $form->textField($model, 'first_name', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'First Name' , 'class'=>'form-control input-lg')); ?>
+            <?php echo $form->error($model, 'first_name'); ?>
         </div>
-        <div class="col-xs-5">
-            <select name="month" class="form-control input-lg">
-                <option>January</option>
-                <option>February</option>
-                <option>March</option>
-                <option>April</option>
-                <option>May</option>
-                <option>June</option>
-                <option>July</option>
-                <option>August</option>
-                <option>September</option>
-                <option>October</option>
-                <option>November</option>
-                <option>December</option>
-            </select>
+
+        <div class="form-group">
+            <?php echo $form->textField($model, 'last_name', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Last Name' , 'class'=>'form-control input-lg')); ?>
+            <?php echo $form->error($model, 'last_name'); ?>
         </div>
-        <div class="col-xs-4">
-            <select name="year" class="form-control input-lg">
-                <option>2015</option>
-                <option>2016</option>
-                <option>2017</option>
-                <option>2018</option>
-                <option>2019</option>
-                <option>2020</option>
-                <option>2021</option>
-                <option>2022</option>
-            </select>
+
+        <div class="form-group">
+            <?php echo $form->textField($model, 'asic_no', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'ASIC no.', 'class'=>'form-control input-lg')); ?>
+            <?php echo $form->error($model, 'asic_no'); ?>
         </div>
+
+        <div class="row form-group">
+            <div class="col-md-6">
+                <?php
+                $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                    'model'       => $model,
+                    'attribute'   => 'asic_expiry',
+                    'options'     => array(
+                        'dateFormat' => 'dd-mm-yy',
+                    ),
+                    'htmlOptions' => array(
+                        'size'        => '0',
+                        'maxlength'   => '10',
+                        'placeholder' => 'Expiry',
+                        'class' => 'form-control input-lg'
+                    ),
+                ));
+                ?>
+                <?php echo $form->error($model, 'asic_expiry'); ?>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <?php echo $form->textField($model, 'contact_number', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Mobile Number', 'class'=>'form-control input-lg')); ?>
+            <?php echo $form->error($model, 'contact_number'); ?>
+
+        </div>
+
+        <div class="form-group">
+            <?php echo $form->textField($model, 'email', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Email', 'class'=>'form-control input-lg')); ?>
+            <?php echo $form->error($model, 'email'); ?>
+
+        </div>
+        <div class="form-group">
+            <label class="checkbox">
+                <?php echo $form->checkBox($model,'is_asic_verification'); ?>
+                <span class="checkbox-style"></span>
+                <a class="btn btn-sm btn-success" href="">
+                    Request ASIC Sponsor Verification
+                </a>
+            </label>
+            <?php echo $form->error($model,'is_asic_verification'); ?>
+        </div>
+
     </div>
 
-    <div class="form-group">
-        <input name="mobile"
-               class="form-control input-lg"
-               data-validate-input
-               placeholder="Mobile no." >
+    <div class="row next-prev-btns">
+        <div class="col-md-1 col-sm-1 col-xs-1">
+            <a href="<?=Yii::app()->createUrl("preregistration/visitReason")?>" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>
+        </div>
+
+        <div class="col-md-offset-9 col-sm-offset-9 col-xs-offset-8 col-md-1 col-sm-1 col-xs-1">
+            <?php
+            echo CHtml::tag('button', array(
+                'type'=>'submit',
+                'class' => 'btn btn-primary btn-next'
+            ), 'NEXT <span class="glyphicon glyphicon-chevron-right"></span> ');
+            ?>
+
+        </div>
+
+        <div class="col-md-1 col-sm-1 col-xs-1">
+
+            <a href="" class="btn btn-primary btn-next">
+                SKIP
+                <span class="glyphicon glyphicon-chevron-right"></span>
+
+            </a>
+        </div>
+
     </div>
-    <div class="form-group">
-        <input name="email"
-               class="form-control input-lg"
-               data-validate-input
-               placeholder="Email" >
-    </div>
-    <div class="form-group">
-        <input type="submit" class="btn btn-lg btn-success" value="Request ASIC Sponsor Verification">
-    </div>
-    </form>
+    <?php $this->endWidget(); ?>
 </div>

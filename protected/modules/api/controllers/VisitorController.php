@@ -197,6 +197,9 @@ class VisitorController extends RestfulController {
 
     private function populatevisitor($visitor) {
         $result = array();
+        $visitype = VisitorType::model()->findByPk($visitor->visitor_type);
+        $aliasVisitype = "NULL";
+        if ($visitype) $aliasVisitype = $visitype->name;
         $result['visitorID'] = $visitor->id;
         $result['firstName'] = $visitor->first_name;
         $result['lastName'] = $visitor->last_name;
@@ -208,7 +211,8 @@ class VisitorController extends RestfulController {
         $result['department'] = $visitor->department;
         $result['staffId'] = $visitor->staff_id;
         $result['notes'] = $visitor->notes;
-        $result['visitorType'] = $visitor->visitor_type;
+        $result['visitorType'] = $aliasVisitype;
+        $result['profileType'] = $visitor->profile_type;
         $result['vehicle'] = $visitor->vehicle;
         $result['createdBy'] = $visitor->created_by;
         $result['tenant'] = $visitor->tenant;

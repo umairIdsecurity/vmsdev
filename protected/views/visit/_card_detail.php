@@ -28,8 +28,8 @@ if ($card) {
 
 <div style="width:100%; float:left;"> 
     <!--Box 1-->
-    <div style="float:left; width:256px; border:1px solid #000; height:410px; border-radius:20px; background:<?= $bgcolor ?>;">
-        <div style="width:150px; height:205px; background:#fff; margin-left:15px; margin-top:13px;"></div>
+    <div  class="box-card-style">
+        <div class="box-image-style"></div>
         <div style=" text-align:center; line-height:20px; margin:10px 0 0 5px; color:#000;">
             <p style="font-size:25px; font-weight:bold; margin:0 0 10px 0;"><?= $companyCode ?></p>
             <strong style="font-size: 40px; text-align: left; width: 100%; float: left; margin-bottom: 3px; margin-left: 5px; line-height: 32px; margin-top: 3px;"><small style="font-size: 60px;float: left; margin-right: 10px; margin-top: -1px;"><?= ($model->card_type == CardType::CONTRACTOR_VISITOR)?"C":"V"?></small> 
@@ -45,7 +45,7 @@ if ($card) {
                 <?php echo ($visitorModel->last_name != "")?$visitorModel->last_name:"N/A"; ?><br>
                 <?php echo ($cardCode== "")?"N/A":$cardCode; ?></p>
         </div>
-        <div style="background:#fff; border-radius:0 0 20px 20px; width:256px; height:50.7px;">
+        <div class="box-card-logo">
             <div style="width:134px; overflow: hidden;  min-height:34px; max-height: 34px;   margin-left: -85px; margin-top:2px; display:inline-block;">
                 <img border="1" style="height:34px !important;width:100%;" src="<?= $companyLogo; ?>">
             </div>
@@ -54,9 +54,33 @@ if ($card) {
     <!--Box 2-->
 </div>
 <style>
+    .box-card-style {
+        float:left;
+        width:256px;
+        border:1px solid #000;
+        height:410px;
+        border-radius:20px;
+        background:<?= $bgcolor ?>;
+        position: relative;
+    }
+    .box-image-style {
+        width:100px;
+        height:150px;
+        margin-left:15px;
+        margin-top:13px;
+    }
+    .box-card-logo {
+        background:#fff;
+        border-radius:0 0 20px 20px;
+        width:256px;
+        height:50.7px;
+        position: absolute;
+        bottom: 0px;
+        left: 0px;
+    }
     #photoPreview {
-        height: 206px;
-        width: 152px;
+        height: 133px;
+        width: 100px;
     }
     .ajax-file-upload{
         margin-left: -228px !important;

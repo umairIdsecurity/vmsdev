@@ -6,6 +6,7 @@ Yii::import('ext.validator.PasswordRequirement');
 Yii::import('ext.validator.PasswordOption');
 Yii::import('ext.validator.VisitorPrimaryIdentification');
 Yii::import('ext.validator.VisitorAlternateIdentification');
+Yii::import('ext.validator.EmailCustom');
 
 /**
  * This is the model class for table "visitor".
@@ -52,6 +53,7 @@ class Registration extends CActiveRecord {
     public $password_requirement;
     public $alternative_identification;
     public $companycode;
+    public $is_asic_verification;
 
     const PROFILE_TYPE_CORPORATE = 'CORPORATE';
     const PROFILE_TYPE_VIC = 'VIC';
@@ -183,10 +185,19 @@ class Registration extends CActiveRecord {
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('first_name, last_name, email, contact_number, identification_type,
+
+            array('first_name, last_name, email, contact_number', 'required'),
+
+			array('identification_type,
 			identification_document_no, identification_document_expiry, contact_unit , contact_street_no,
 			contact_street_name, contact_street_type, contact_suburb, contact_postcode,
-			contact_state', 'required'),
+			contact_state', 'required' ,'on' => 'preregistration'),
+
+            array('first_name, last_name, email, contact_number, asic_no , asic_expiry', 'required' , 'on' => 'asic'),
+
+            array('is_asic_verification', 'required' ,'message'=>'Please check to request for ASIC Sponsor verification.' ,'on' => 'asic'),
+
+
 			array('is_deleted, identification_country_issued, contact_country, verifiable_signature', 'numerical', 'integerOnly'=>true),
 			array('first_name, middle_name, last_name, email, department, position, staff_id, identification_document_no, identification_alternate_document_name1, identification_alternate_document_no1, identification_alternate_document_name2, identification_alternate_document_no2, contact_unit, contact_street_no, contact_street_name, contact_suburb, asic_no', 'length', 'max'=>50),
 			array('contact_number, company, role, visitor_type, visitor_status, vehicle, photo, created_by, tenant, tenant_agent, visitor_card_status, visitor_workstation', 'length', 'max'=>20),

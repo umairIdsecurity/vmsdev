@@ -26,7 +26,7 @@ class CardGeneratedController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin', 'delete', 'print', 'reprint', 'pdfprint'),
+                'actions' => array('create', 'update', 'admin', 'delete', 'print', 'preprint', 'pdfprint'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -251,6 +251,26 @@ class CardGeneratedController extends Controller {
 
 
         $html2pdf->Output();
+
+    }
+
+    public function actionPreprint($id) {
+
+        if (!isset($_GET['type'])){
+            throw new CHttpException(404,'Parameter missing');
+        } else {
+            $type=$_GET['type'];
+        }
+        #data of user of card
+        $model = Visit::model()->findByPk($id);
+        $visitorModel = Visitor::model()->findByPk($model->visitor);
+        $data = array('model' => $model, 'visitorModel' => $visitorModel, 'type' => $type);
+
+        if ($model->card_type > 4) {
+            $this->renderPartial('printpdf', $data);
+        } else {
+            $this->renderPartial('_card-corporate', $data);
+        }
 
     }
 

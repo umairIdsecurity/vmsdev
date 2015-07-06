@@ -248,19 +248,12 @@ class PreregistrationController extends Controller
 			$model->profile_type = 'ASIC';
 			$model->attributes = $_POST['Registration'];
 			if ($model->save()) {
-				/*$loggedUserEmail = Yii::app()->user->email;
-				$headers = "MIME-Version: 1.0" . "\r\n";
-				$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-				$headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;*/
 				$to = 'proshimul@yahoo.com';
-				$subject="Preregistration email notification";
-				$body = "<html><body>Hi,<br><br>".
-					"This is preregistration email.<br><br>".
-					"Please click on the below URL:<br>".
-					"http://vmsprdev.identitysecurity.info/index.php/preregistration<br>";
+				$subject = 'Test email';
+				$body = 'Test email';
+
 				$body .="<br>"."Thanks,"."<br>Admin</body></html>";
 				mail($to, $subject, $body);
-				//mail($to, $subject, $body, $headers);
 
 			}
 			//print_r($model->getErrors());

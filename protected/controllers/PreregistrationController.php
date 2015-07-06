@@ -248,23 +248,20 @@ class PreregistrationController extends Controller
 			$model->profile_type = 'ASIC';
 			$model->attributes = $_POST['Registration'];
 			if ($model->save()) {
-				/*$to = 'proshimul@yahoo.com';
-				$subject = 'Test email';
-				$body = 'Test email';*/
 
 				$loggedUserEmail = 'shimulcsc@yahoo.com';
-				$headers = "MIME-Version: 1.0" . "\r\n";
-				$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+				$headers  = 'MIME-Version: 1.0' . "\r\n";
+				$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+				//$headers .= 'From: Admin <shimulcsc@yahoo.com>' . "\r\n";
 				$headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
 				$to=$model->email;
-				$subject="Preregistration email notification";
+				$subject="Request for verification of VIC profile";
 				$body = "<html><body>Hi,<br><br>".
-					"This is preregistration email.<br><br>".
-					"Please click on the below URL:<br>".
-					"http://vmsprdev.identitysecurity.info/index.php/preregistration<br>";
+					"VIC Holder urgently requires your Verification of their visit.<br><br>".
+					"Link of the VIC profile<br>".
+					"http://vmsprdev.identitysecurity.info/index.php/preregistration/login<br>";
 				$body .="<br>"."Thanks,"."<br>Admin</body></html>";
-				mail($to, $subject, $body, $headers);
-
+				mail($to, $subject, $body,$headers);
 
 				//mail($to, $subject, $body);
 			}

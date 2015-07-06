@@ -87,7 +87,7 @@ $arrSubject = array(
     </table>
 
     <div class="row">
-        <?php
+        <?php   
             echo $form->textField($model, 'email', array(
                 'value'     =>  $userModel->email,
                 'disabled'  =>  'disabled',

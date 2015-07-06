@@ -202,6 +202,10 @@ class VisitController extends Controller {
                 }
             }
 
+            if(isset($_POST['selectedAsicEscort'])){
+                $model->asic_escort = $_POST['selectedAsicEscort'];
+            }
+
             if ($visitService->save($model, $session['id'])) {
                 if ($model->card_lost_declaration_file != null) {
                     $model->card_lost_declaration_file->saveAs(YiiBase::getPathOfAlias('webroot') . '/uploads/card_lost_declaration/'.$model->card_lost_declaration_file->name);
@@ -912,6 +916,10 @@ class VisitController extends Controller {
             } else {
                 Yii::app()->end();
             }
+        }
+
+        if(isset($_POST['selectedAsicEscort'])){
+            $model->asic_escort = $_POST['selectedAsicEscort'];
         }
 
         if ($visitService->save($model, $session['id'])) {

@@ -56,17 +56,23 @@ class Visitor extends CActiveRecord {
     public $companycode;
 
     const PROFILE_TYPE_CORPORATE = 'CORPORATE';
-    const PROFILE_TYPE_VIC = 'VIC';
-    const PROFILE_TYPE_ASIC = 'ASIC';
-
-    const AUSTRALIA_ID = 13;
+    const PROFILE_TYPE_VIC       = 'VIC';
+    const PROFILE_TYPE_ASIC      = 'ASIC';
     
-    const DELTED = 1;
-    const NOT_DELETED = 0;
-
-    const ASIC_PENDING = 3;
-    const ASIC_ISSUED = 4;
-
+    const AUSTRALIA_ID           = 13;
+    
+    const DELTED                 = 1;
+    const NOT_DELETED            = 0;
+    
+    # Visitor Card Status
+    const SAVED            = 1;
+    const VIC_HOLDER       = 2;
+    const VIC_ASIC_PENDING = 3;
+    const VIC_ASIC_ISSUED  = 4;
+    const ASIC_DENIED      = 5;
+    const ASIC_ISSUED      = 6;
+    const ASIC_APPLICANT   = 7;
+    const ASIC_EXPIRED     = 8;
 
     public static $VISITOR_CARD_TYPE_LIST = array(
         self::PROFILE_TYPE_CORPORATE => array(
@@ -272,41 +278,46 @@ class Visitor extends CActiveRecord {
 
         if (Yii::app()->controller->id === 'visitor') {
             if (Yii::app()->controller->action->id == 'addvisitor') {
-                $rules[] = array('company, visitor_workstation, visitor_card_status, visitor_type,contact_street_type,contact_state, contact_country, asic_expiry','DropDown');
+                $rules[] = array('company, visitor_workstation, visitor_card_status, visitor_type,contact_street_type,contact_state, contact_country', 'DropDown');
             } elseif(Yii::app()->controller->action->id == 'create'){
                 $rules[] = array('company','DropDown');
             }
         }
 
-        if ($this->profile_type == self::PROFILE_TYPE_CORPORATE) {
-            $rules[] = array(
-                'company', 'required'
-            );
-
-        } else if ($this->profile_type == self::PROFILE_TYPE_VIC) {
+        switch ($this->profile_type) {
+            case self::PROFILE_TYPE_CORPORATE:
+                $rules[] = array(
+                    'company', 'required'
+                );
+                break;
+            case self::PROFILE_TYPE_VIC:
                 $rules[] = array(
                     'company,
-                visitor_card_status,
-                visitor_workstation,
-                visitor_type,
-                contact_street_no,
-                contact_street_name,
-                contact_street_type,
-                contact_suburb,
-                contact_state,
-                contact_postcode,
-                contact_country',
-                'required',
-                'except'=> ['updateVic', 'updateIdentification']
+                    visitor_card_status,
+                    visitor_workstation,
+                    visitor_type,
+                    contact_street_no,
+                    contact_street_name,
+                    contact_street_type,
+                    contact_suburb,
+                    contact_state,
+                    contact_postcode,
+                    contact_country',
+                    'required',
+                    'except'=> ['updateVic', 'updateIdentification']
                 );
-
-        } else if ($this->profile_type == self::PROFILE_TYPE_ASIC) {
-            $rules[] = array(
-                'visitor_card_status, asic_no',
-                'required'
-            );
+                break;
+            case self::PROFILE_TYPE_ASIC:
+                $rules[] = [
+                    'identification_type, identification_document_no, identification_document_expiry', 'required',
+                    'on' => 'asicApplicant'
+                ];
+                $rules[] = array(
+                    'visitor_card_status, asic_no, asic_expiry', 'required',
+                    'on' => 'asicIssued'
+                );
+                break;
         }
-
 
         return $rules;
     }

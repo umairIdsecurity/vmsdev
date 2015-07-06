@@ -250,9 +250,9 @@ $asicEscort = new AddAsicEscort();
 
                 if (in_array($model->card_type, [CardType::VIC_CARD_24HOURS, CardType::VIC_CARD_MANUAL])) {
                     echo '  var checkoutDate = new Date(selectedDate);
-                    checkoutDate.setDate(selectedDate.getDate() + 1);
-                    $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "setDate", checkoutDate);
-                ';
+                            checkoutDate.setDate(selectedDate.getDate() + 1);
+                            $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "setDate", checkoutDate);
+                        ';
                 }
                 ?>
             }
@@ -359,7 +359,9 @@ $asicEscort = new AddAsicEscort();
                 <td width="5%"><input type="radio" id="asicDecalarationRbtn1"/></td>
                 <td><label for="asicDecalarationRbtn1">I note that they must be under my direct supervision at all times whilst they are airside.</label></td>
             </tr>
-            <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+            <tr><td>&nbsp;</td>
+                <td><hr style="border-color: black;"></td>
+            </tr>
             <tr>
                 <td width="5%"><input type="radio" id="asicEscortRbtn" onclick="asicEscort()"/></td>
                 <td><label for="asicEscortRbtn">Add ASIC Escort.</label></td>
@@ -371,7 +373,7 @@ $asicEscort = new AddAsicEscort();
                 <td>
                     <input type="text" id="search-escort" style="width:280px" name="search-host"
                            placeholder="Enter name, email address" class="search-text"/>
-                    <button type="button" class="btn btn-primary" id="findEscortBtn" style="margin-bottom: 14px!important;" onclick="" id="escort-findBtn">Search Asic Escort</button>
+                    <button type="button" class="btn btn-primary" id="findEscortBtn" style="margin-bottom: 14px!important;" onclick="" id="escort-findBtn">Search ASIC Escort</button>
                     <div id="divMsg" style="display:none;">
                         <img id="findEscortBtn" src="<?php echo Yii::app()->controller->assetsBase; ?>/images/loading.gif" alt="Please wait.." />
                     </div>
@@ -380,19 +382,13 @@ $asicEscort = new AddAsicEscort();
                     <div class="add-esic-escort">
                         <?php $this->renderPartial('_add_asic_escort',array('model' => $asicEscort)) ?>
                     </div>
-
-                    <input type="hidden" id="tmpAsicEscortFirstName"/>
-                    <input type="hidden" id="tmpAsicEscortLastName"/>
-                    <input type="hidden" id="tmpAsicEscortAsicNo"/>
-                    <input type="hidden" id="tmpAsicEscortExpiry"/>
-                    <input type="hidden" id="tmpAsicEscortContactNo"/>
-                    <input type="hidden" id="tmpAsicEscortEmail"/>
+                    <input type="hidden" id="selectedAsicEscort"/>
                 </td>
             </tr>
         </table>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="btnAsicConfirm">Confirm</button>
+        <button type="button" class="btn btn-primary" id="btnAsicConfirm" onclick="asicCheck()">Confirm</button>
     </div>
 </div>
 
@@ -430,14 +426,20 @@ $asicEscort = new AddAsicEscort();
 
     function asicCheck() {
         var checknum = $('#asicSponsorModal')
-                        .find('input[type="checkbox"]')
-                        .filter(':checked');
+            .find('input[type="checkbox"]')
+            .filter(':checked');
         if (checknum.length == 3) {
             if($('#asicDecalarationRbtn1').is(':checked') || $('#asicEscortRbtn').is(':checked')) {
-                asicSponsorDeclarationChange();
-                return true;
+                if(validateAsicEscort()== true) {
+                    asicSponsorDeclarationChange();
+                    return true;
+                } else{
+                    alert('Please input all Asic Escort Information');
+                    return;
+                }
             }
         } else {
+            alert('Please select all the declarations.');
             return false;
         }
     }
@@ -453,11 +455,11 @@ $asicEscort = new AddAsicEscort();
             if (asicChecked) {
                 confirmed = true;
             } else {
-                alert('Please select all the declarations.');
+                //alert('Please select all the declarations.');
                 return false;
             }
         } else {
-            alert('Please input all Asic Escort Information');
+            //alert('Please input all Asic Escort Information');
             return;
         }
     }
@@ -482,16 +484,23 @@ $asicEscort = new AddAsicEscort();
 
     function validateAsicEscort() {
         var noError = true;
-        $('.asic-escort-field .errorMessage ').each(function () {
-            if ($(this).css('display') == 'block') {
+        if ($('#asicEscortRbtn').is(':checked') == true) {
+            if ($('.add-esic-escort').css('display') == 'block') {
+                $('.asic-escort-field .errorMessage ').each(function () {
+                    if ($(this).css('display') == 'block') {
+                        noError = false;
+                    }
+                });
+                $('.asic-escort-field input').each(function () {
+                    if ($(this).val() == '') {
+                        noError = false;
+                    }
+                });
+            } else if ($('.searchAsicEscortResult').css('display') == 'block' && $('#selectedAsicEscort').val() == '') {
                 noError = false;
             }
-        });
-        $('.asic-escort-field input').each(function () {
-            if ($(this).val() == '') {
-                noError = false;
-            }
-        });
+
+        }
         return noError;
     }
 
@@ -570,26 +579,28 @@ $asicEscort = new AddAsicEscort();
             $('#asicDecalarationRbtn1').prop('checked',false);
         });
         $('#findEscortBtn').on('click', function(){
-           if($('#search-escort').val() == ''){
-               $('#searchEscortErrorMessage').show();
-               return;
-           } else {
-               $('#searchEscortErrorMessage').hide();
-               $(this).css('display','none');
-               $('#divMsg').show();
-               $('.add-esic-escort').hide();
-               var searchAsicEscortResult = $('.searchAsicEscortResult').empty();
-               $.ajax({
-                   type: "POST",
-                   url: "<?php echo CHtml::normalizeUrl(array("visitor/getAsicEscort")); ?>",
-                   data: {},
-                   success: function(data) {
-                       searchAsicEscortResult.append(data);
-                       $(this).css('display','block');
-                       $('#divMsg').hide();
-                   }
-               });
-           }
+            if($('#search-escort').val() == ''){
+                $('#searchEscortErrorMessage').show();
+                return;
+            } else {
+                $('#searchEscortErrorMessage').hide();
+                $('.searchAsicEscortResult').show();
+                $(this).hide();
+                $('#divMsg').show();
+                $('.add-esic-escort').hide();
+                var searchInfo = $('#search-escort').val();
+                var searchAsicEscortResult = $('.searchAsicEscortResult').empty();
+                $.ajax({
+                    type: "GET",
+                    url: "<?php echo CHtml::normalizeUrl(array("visitor/getAsicEscort")); ?>",
+                    data: {searchInfo :searchInfo},
+                    success: function(data) {
+                        searchAsicEscortResult.append(data);
+                        $('#findEscortBtn' ).show();
+                        $('#divMsg').hide();
+                    }
+                });
+            }
         });
     });
 </script>

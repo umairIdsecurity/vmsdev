@@ -454,12 +454,12 @@ class CompanyController extends Controller {
 
             if ($contact) {
                 $ret = [
-                    'first_name' => $contact->first_name,
-                    'last_name' => $contact->last_name,
+                    'first_name'     => $contact->first_name,
+                    'last_name'      => $contact->last_name,
                     'contact_number' => $contact->contact_number,
-                    'email' => $contact->email
+                    'email'          => $contact->email
                 ];
-                echo json_encode($contact);
+                echo CJavaScript::jsonEncode($ret);
 
             } else { // company has no any contact
                 echo 0;

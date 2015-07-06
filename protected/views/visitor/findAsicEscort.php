@@ -26,33 +26,34 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' => 'first_name',
             'filter' => false,
-            'htmlOptions' => array('style'=>'width:10px; min-width: 0px !important;'),
-            'headerHtmlOptions' =>  array('style'=>'width:10px; min-width: 0px !important;'),
+            'htmlOptions' => array('style'=>'width:7px !important; min-width: 0px !important;'),
+            'headerHtmlOptions' =>  array('style'=>'width:7px !important; min-width: 0px !important;'),
         ),
         array(
             'name' => 'last_name',
             'filter' => false,
-            'htmlOptions' => array('style'=>'width:10px; min-width: 0px !important;'),
-            'headerHtmlOptions' =>  array('style'=>'width:10px; min-width: 0px !important;'),
+            'htmlOptions' => array('style'=>'width:7px; min-width: 0px !important;'),
+            'headerHtmlOptions' =>  array('style'=>'width:7px; min-width: 0px !important;'),
         ),
         array(
             'header' => 'Company',
             'filter' => false,
             'value' => 'isset($data->getCompany()->name) ? $data->getCompany()->name : "NO COMPANY"',
-            'htmlOptions' => array('style'=>'width:10px; min-width: 0px !important;'),
-            'headerHtmlOptions' =>  array('style'=>'width:10px; min-width: 0px !important;'),
+            'htmlOptions' => array('style'=>'width:7px; min-width: 0px !important;'),
+            'headerHtmlOptions' =>  array('style'=>'width:7px; min-width: 0px !important;'),
         ),
         array(
             'header' => 'Action',
-            'name' => 'Select',
             'type' => 'raw',
-            'htmlOptions' => array('style' => 'text-align:center width:10px; min-width: 0px !important;', 'class' => 'findVisitorButtonColumn'),
-            'headerHtmlOptions' =>  array('style'=>'width:10px; min-width: 0px !important;'),
+            'htmlOptions' => array('style' => 'text-align:center width:20px; min-width: 0px !important;', 'class' => 'findVisitorButtonColumn'),
+            'headerHtmlOptions' =>  array('style'=>'width:20px; min-width: 0px !important;'),
             'value' => 'displaySelectVisitorButton($data)',
         ),
     )
 ));
-
+?>
+<input id="btnBackSearchAsicEscort" class="neutral AsicEscort-backBtn " type="button" onclick="javascript:backFillAsicEscort();return false;" value="Back">
+<?php
 function displaySelectVisitorButton($visitorData) {
     return CHtml::link("Select", "javascript:void(0)", array(
             "id" => $visitorData["id"],
@@ -63,6 +64,17 @@ function displaySelectVisitorButton($visitorData) {
 ?>
 <script>
     function selectEscort(id) {
-        console.log(id);
+        $('.searchAsicEscortResult a').removeClass('delete');
+        $('.searchAsicEscortResult a').html('Select');
+        $('#' + id).addClass('delete');
+        $('#' + id).html('ASIC Escort Selected');
+        $('#selectedAsicEscort').val(id);
+    }
+    function backFillAsicEscort() {
+        $('.searchAsicEscortResult').empty();
+        $('#search-escort').val('');
+        $('#selectedAsicEscort').val('');
+        $('.searchAsicEscortResult').hide();
+        $('.add-esic-escort').show();
     }
 </script>

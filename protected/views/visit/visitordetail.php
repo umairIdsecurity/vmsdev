@@ -409,8 +409,12 @@ $this->renderPartial('visithistory', array('model' => $model,
     }
 
     function sendActivateVisitForm(formId) {
-        if($('#asicEscortRbtn').is(':checked') == true) {
-            var visitForm = $("#" + formId + ", #add-asic-escort-form").serialize();
+        if ($('#asicEscortRbtn').is(':checked') == true) {
+            if ($('.add-esic-escort').css('display') == 'block') {
+                var visitForm = $("#" + formId + ", #add-asic-escort-form").serialize();
+            } else if ($('#selectedAsicEscort').val() != '') {
+                var visitForm = $("#" + formId).serialize() + '&selectedAsicEscort=' + $('#selectedAsicEscort').val();
+            }
         } else {
             var visitForm = $("#" + formId).serialize();
         }
@@ -476,8 +480,12 @@ $this->renderPartial('visithistory', array('model' => $model,
 
     function duplicateVisit(formId) {
         //var visitForm = $("#" + formId).serialize();
-        if($('#asicEscortRbtn').is(':checked') == true) {
-            var visitForm = $("#" + formId + ", #add-asic-escort-form").serialize();
+        if ($('#asicEscortRbtn').is(':checked') == true) {
+            if ($('.add-esic-escort').css('display') == 'block') {
+                var visitForm = $("#" + formId + ", #add-asic-escort-form").serialize();
+            } else if ($('#selectedAsicEscort').val() != '') {
+                var visitForm = $("#" + formId).serialize() + '&selectedAsicEscort=' + $('#selectedAsicEscort').val();
+            }
         } else {
             var visitForm = $("#" + formId).serialize();
         }

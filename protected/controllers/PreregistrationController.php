@@ -139,6 +139,8 @@ class PreregistrationController extends Controller
 
 		$model = new Registration();
 
+		$model->scenario = 'preregistration';
+
 		if (isset($_POST['Registration'])) {
 			$model->profile_type = $session['account_type'];
 			$model->email 		 = $session['username'];
@@ -216,8 +218,10 @@ class PreregistrationController extends Controller
 				$registrationModel->company = $companyModel->id;
 
 				if($registrationModel->save()){
+
 					$this->redirect(array('preregistration/addAsic'));
 				}
+				//print_r($registrationModel->getErrors());
 			}
 
 		}
@@ -233,7 +237,30 @@ class PreregistrationController extends Controller
 	}
 
 	public function actionAddAsic(){
-		$this->render('asic-sponsor');
+
+		$session = new CHttpSession;
+
+		$model = new Registration();
+
+		$model->scenario = 'asic';
+
+		if (isset($_POST['Registration'])) {
+			$model->profile_type = 'ASIC';
+			$model->attributes = $_POST['Registration'];
+			if ($model->save()) {
+				$to = 'proshimul@yahoo.com';
+				$subject = 'Test email';
+				$body = 'Test email';
+
+				$body .="<br>"."Thanks,"."<br>Admin</body></html>";
+				mail($to, $subject, $body);
+
+			}
+			//print_r($model->getErrors());
+
+		}
+
+		$this->render('asic-sponsor' , array('model'=>$model) );
 	}
 
 	public function actionLogin(){

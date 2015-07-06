@@ -86,7 +86,7 @@ class VisitorController extends Controller {
                         $body = "<html><body>Hi,<br><br>".
                                 "This is preregistration email.<br><br>".
                                 "Please click on the below URL:<br>".
-                                "http://vmsprdev.identitysecurity.info/index.php/preregistration<br>";
+                                "http://vmsprdev.identitysecurity.info/index.php/preregistration/login<br>";
                         if(!empty($model->password_option)){
                             $passwordCreate= intval($model->password_option);
                             if($passwordCreate == 1){
@@ -469,7 +469,7 @@ class VisitorController extends Controller {
                         $body = "<html><body>Hi,<br><br>".
                                 "This is preregistration email.<br><br>".
                                 "Please click on the below URL:<br>".
-                                "http://vmsprdev.identitysecurity.info/index.php/preregistration<br>";
+                                "http://vmsprdev.identitysecurity.info/index.php/preregistration/login<br>";
                         if(!empty($model->password_option)){
                             $passwordCreate= intval($model->password_option);
                             if($passwordCreate == 1){

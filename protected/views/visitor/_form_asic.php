@@ -444,6 +444,8 @@ if ($this->action->id == 'update') {
                                         'attribute'   => 'identification_document_expiry',
                                         'options'     => array(
                                             'dateFormat' => 'dd-mm-yy',
+                                            'changeMonth' => true,
+                                            'changeYear' => true
                                         ),
                                         'htmlOptions' => array(
                                             'size'        => '0',
@@ -470,7 +472,9 @@ if ($this->action->id == 'update') {
                                         'attribute'   => 'asic_expiry',
                                         'options'     => array(
                                             'dateFormat' => 'dd-mm-yy',
-                                            'maxDate' => $interval->days
+                                            'maxDate' => $interval->days,
+                                            'changeMonth' => true,
+                                            'changeYear' => true
                                         ),
                                         'htmlOptions' => array(
                                             'size'        => '0',

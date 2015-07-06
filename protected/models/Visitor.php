@@ -86,7 +86,7 @@ class Visitor extends CActiveRecord {
         ),
         self::PROFILE_TYPE_ASIC => array(
             6 => 'Card Status: ASIC Issued',
-            7 => 'Card Status: ASIC Applicant',
+            7 => 'Card Status: ASIC Expired',
             5 => 'Card Status: ASIC Denied',
         ),
     );

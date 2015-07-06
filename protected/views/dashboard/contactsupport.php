@@ -42,13 +42,14 @@ $arrSubject = array(
         
         
         <tr>
-            <td><?php echo $form->labelEx($model,'role_id'); ?></td>
+            <td><?php echo $form->labelEx($model,'contact_person_name'); ?></td>
             <td><?php echo $form->dropDownList(
                             $model,
-                            'role_id',
-                            CHtml::listData(Roles::model()->findAll(),
+                            'contact_person_name',
+                            CHtml::listData(ContactPerson::model()->findAll(),
                                     'id',
-                                    'nameFuncForNotifiLabels')
+                                    'contact_person_name'),
+                                    array('empty'=>'Select a person')
                     );?>
             </td>
 	</tr>

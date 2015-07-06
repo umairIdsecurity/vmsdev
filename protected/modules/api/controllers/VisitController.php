@@ -271,7 +271,11 @@ class VisitController extends RestfulController {
                 } else {
                     $email = "N/A";
                 }
-
+                if (isset($visit->visitor0->profile_type) && ($visit->visitor0->profile_type != null)) {
+                    $profile_type = $visit->visitor0->profile_type;
+                } else {
+                    $profile_type = "N/A";
+                }
                 if (isset($visit->visitor0->company) && ($visit->visitor0->company != null)) {
                     $company = Company::model()->findByPk($visit->visitor0->company);
                     if ($company) {
@@ -288,6 +292,7 @@ class VisitController extends RestfulController {
                     'lastName' => $lastname,
                     'email' => $email,
                     'companyName' => $companyname,
+                    'profileType' => $profile_type,
                 );
             } else {
                 $result[$i]['visitor'] = array();

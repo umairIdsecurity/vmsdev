@@ -378,17 +378,6 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                 } else if (!$('#AsicSponsorDecalarations').is(':checked') && $('#VivHolderDecalarations').is(':checked')){
                     $('#asicSponsorModal').modal('show');
                     $btnASIC.on('click', function(e) {
-                        if ($('#asicEscortRbtn').is(':checked') == true) {
-                            checkEscortEmailUnique();
-                        } else {
-                            var asicChecked = asicCheck();
-                            if (asicChecked) {
-                                confirmed = true;
-                            } else {
-                                //alert('Please select all the declarations.');
-                                return false;
-                            }
-                        }
                     });
                 } else {
                     $('#vicHolderModal').modal('show');
@@ -397,18 +386,6 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                         if (vicChecked) {
                             $('#asicSponsorModal').modal('show');
                             $btnASIC.on('click', function(e) {
-                                if ($('#asicEscortRbtn').is(':checked') == true) {
-                                    checkEscortEmailUnique();
-                                } else {
-                                    var asicChecked = asicCheck();
-                                    if (asicChecked) {
-                                        confirmed = true;
-                                    } else {
-                                        //alert('Please select all the declarations.');
-                                        return false;
-                                    }
-                                }
-
                             });
                         } else {
                             //alert('Please select all the declarations.');

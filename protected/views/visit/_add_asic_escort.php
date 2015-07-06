@@ -8,15 +8,7 @@
         'validateOnSubmit' => true,
         'afterValidate' => 'js:function(form, data, hasError){
                 if (!hasError){ // no errors
-                    $.ajax({
-                        type: "POST",
-                        url: "' . $this->createUrl('') . '",
-                        dataType: "json",
-                        data: $("#add-asic-escort-form").serialize(),
-                        success: function(data) {
-                            return false;
-                        }
-                    });
+
                 } else { // has error
                     return false;
                 }

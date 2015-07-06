@@ -393,7 +393,7 @@ $asicEscort = new AddAsicEscort();
         </table>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="btnAsicConfirm" onclick="asicCheck()">Confirm</button>
+        <button type="button" class="btn btn-primary" id="btnAsicConfirm">Confirm</button>
     </div>
 </div>
 
@@ -408,20 +408,18 @@ $asicEscort = new AddAsicEscort();
         $('#vicHolderModal').modal('hide');
     }
 
-    function asicSponsorDeclarationChange() {
-        if ($('#asicDecalarationCbx3').is(':checked') && $('#asicDecalarationCbx2').is(':checked') && $('#asicDecalarationCbx1').is(':checked')) {
-            if($('#asicDecalarationRbtn1').is(':checked') || $('#asicEscortRbtn').is(':checked')) {
-                $('#AsicSponsorDecalarations').prop('checked', true);
-                $('#asicSponsorActiveVisitLink').prop('checked', true);
-            } else {
-                $('#AsicSponsorDecalarations').prop('checked', false);
-                $('#asicSponsorActiveVisitLink').prop('checked', false);
-            }
-        } else {
+    function asicSponsorDeclarationChange(asicCheck) {
+        if(asicCheck == true) {
+            $('#searchEscortErrorMessage').hide();
+            $('#AsicSponsorDecalarations').prop('checked', true);
+            $('#asicSponsorActiveVisitLink').prop('checked', true);
+            $('#asicSponsorModal').modal('hide');
+        } else{
             $('#AsicSponsorDecalarations').prop('checked', false);
+            $('#asicSponsorActiveVisitLink').prop('checked', false);
         }
-        $('#asicSponsorModal').modal('hide');
     }
+
     function vicCheck() {
         var checknum = $('#vicHolderModal').find('input[type="checkbox"]').filter(':checked');
         if (checknum.length == 2) {
@@ -437,26 +435,27 @@ $asicEscort = new AddAsicEscort();
             .find('input[type="checkbox"]')
             .filter(':checked');
         if (checknum.length == 3) {
-            if($('#asicDecalarationRbtn1').is(':checked') || $('#asicEscortRbtn').is(':checked')) {
-                if(validateAsicEscort()== true) {
-                    $('#searchEscortErrorMessage').hide();
-                    asicSponsorDeclarationChange();
+            if($('#asicEscortRbtn').is(':checked')){
+                var checkAsicEscortType = validateAsicEscort();
+                if(checkAsicEscortType == true) {
+                    asicSponsorDeclarationChange(true);
                     return true;
-                } else{
-                    $('#AsicSponsorDecalarations').prop('checked', false);
-                    $('#asicSponsorActiveVisitLink').prop('checked', false);
-                    alert('Please input all Asic Escort Information');
-                    return;
+                } else {
+                    alert('Please input correct ASIC Escort profile.');
+                    asicSponsorDeclarationChange(false);
+                    return false;
                 }
+            } else if ($('#asicDecalarationRbtn1').is(':checked')) {
+                asicSponsorDeclarationChange(true);
+                return true;
             } else {
-                $('#AsicSponsorDecalarations').prop('checked', false);
-                $('#asicSponsorActiveVisitLink').prop('checked', false);
-                alert('Please select ASIC Escort type.');
+                alert('Please select all the declarations.');
+                asicSponsorDeclarationChange(false);
+                return false;
             }
         } else {
-            $('#AsicSponsorDecalarations').prop('checked', false);
-            $('#asicSponsorActiveVisitLink').prop('checked', false);
             alert('Please select all the declarations.');
+            asicSponsorDeclarationChange(false);
             return false;
         }
     }
@@ -470,38 +469,30 @@ $asicEscort = new AddAsicEscort();
 
     }
 
-    function asicConfirm () {
-        var checkAsicEscort = validateAsicEscort();
-        if( checkAsicEscort == true ) {
-            var asicChecked = asicCheck();
-            if (asicChecked) {
-                confirmed = true;
-            } else {
-                //alert('Please select all the declarations.');
-                return false;
-            }
-        } else {
-            //alert('Please input all Asic Escort Information');
-            return;
-        }
-    }
     function checkEscortEmailUnique () {
-        var email = $('#AddAsicEscort_email').val();
-        $.ajax({
-            type: "POST",
-            url: "<?php echo CHtml::normalizeUrl(array("visitor/checkAsicEscort")); ?>",
-            data: {emailEscort: email},
-            success: function(data) {
-                if(data == 'existed') {
-                    $('#AddAsicEscort_email_unique_em_').show();
-                    asicConfirm();
-
-                } else {
-                    $('#AddAsicEscort_email_unique_em_').hide();
-                    asicConfirm();
+        if(validateAsicEscort() == true ) {
+            var email = $('#AddAsicEscort_email').val();
+            $.ajax({
+                type: "POST",
+                url: "<?php echo CHtml::normalizeUrl(array("visitor/checkAsicEscort")); ?>",
+                data: {emailEscort: email},
+                success: function(data) {
+                    if(data == 'existed') {
+                        $('#AddAsicEscort_email_unique_em_').show();
+                        return;
+                    } else {
+                        $('#AddAsicEscort_email_unique_em_').hide();
+                        if(asicCheck() == true ) {
+                            confirmed = true;
+                        } else {
+                            asicCheck();
+                        }
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            alert('Please input correct ASIC Escort profile.');
+        }
     }
 
     function validateAsicEscort() {
@@ -521,7 +512,6 @@ $asicEscort = new AddAsicEscort();
             } else if ($('.searchAsicEscortResult').css('display') == 'block' && $('#selectedAsicEscort').val() == '') {
                 noError = false;
             }
-
         }
         return noError;
     }
@@ -623,6 +613,17 @@ $asicEscort = new AddAsicEscort();
                     }
                 });
             }
+        });
+        $('#btnAsicConfirm').on('click',function(){
+            if ($('#asicEscortRbtn').is(':checked')) {
+                checkEscortEmailUnique();
+            } else {
+                asicCheck();
+            }
+        });
+
+        $('#AddAsicEscort_email').on('change',function(){
+            $('#AddAsicEscort_email_unique_em_').hide();
         });
     });
 </script>

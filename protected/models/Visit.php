@@ -629,11 +629,15 @@ class Visit extends CActiveRecord {
         if ($merge !== null) {
             $criteria->mergeWith($merge);
         }
-        if (Yii::app()->params['dbDriver'] == 'mssql') {
-            $criteria->addCondition("CONVERT(date, t.date_check_out, 102) > DATEADD(day, -2, GETDATE())");
-        } else {
-            $criteria->addCondition("str_to_date(t.date_check_out,'%Y-%m-%d') > DATE_ADD(now(),interval -2 day)");
+
+        if ($this->date_check_out) {
+            if (Yii::app()->params['dbDriver'] == 'mssql') {
+                $criteria->addCondition("CONVERT(date, t.date_check_out, 102) > DATEADD(day, -2, GETDATE())");
+            } else {
+                $criteria->addCondition("str_to_date(t.date_check_out,'%Y-%m-%d') > DATE_ADD(now(),interval -2 day)");
+            }
         }
+
         if ($this->filterProperties) {
             $query = "t.id LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.first_name LIKE CONCAT('%', :filterProperties , '%')
@@ -1041,14 +1045,18 @@ class Visit extends CActiveRecord {
         $dateIn = new DateTime($this->date_check_in);
         $dateOut = new DateTime($this->date_check_out);
         $dateNow = new DateTime(date('Y-m-d'));
+        $criteria = new CDbCriteria;
+
+        $criteria->addCondition("(visit_status = " . VisitStatus::AUTOCLOSED . " OR visit_status = " . VisitStatus::CLOSED . ") AND visitor = " . $this->visitor);
         switch ($this->card_type) {
             case CardType::VIC_CARD_MANUAL:
             case CardType::VIC_CARD_SAMEDATE:
-            case CardType::VIC_CARD_24HOURS:
                 if (in_array($this->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED, VisitStatus::EXPIRED])) {
                     return 1;
                 }
-                return (int)$this->countByAttributes(['visit_status' => VisitStatus::CLOSED, 'visitor' => $this->visitor]) + 1;
+                return (int)$this->count($criteria) + 1;
+            case CardType::VIC_CARD_24HOURS:
+                return (int)$this->count($criteria) + 1;
                 break;
             case CardType::VIC_CARD_EXTENDED:
             case CardType::VIC_CARD_MULTIDAY:

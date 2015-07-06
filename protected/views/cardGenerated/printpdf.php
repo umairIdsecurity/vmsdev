@@ -12,25 +12,18 @@ if (strlen($visitorModel->first_name . ' ' . $visitorModel->last_name) > 32) {
     $visitorName = $visitorModel->first_name . ' ' . $visitorModel->last_name;
 }
 
-$tenant = User::model()->findByPk($visitorModel->tenant);
-if ($tenant) {
-    $company = Company::model()->findByPk($tenant->company);
-    if ($company) {
-        $companyName = $company->name;
-        $companyLogoId = $company->logo;
-        $companyCode = $company->code;
-    } else {
-        $companyName = "N/A";
-        $companyLogoId = "N/A";
-        $companyCode = "N/A";
-    }
-
-    $companyLogo =  Photo::model()->getAbsolutePathOfImage(Photo::COMPANY_IMAGE,$tenant->company);
-    $userPhoto = Photo::model()->getAbsolutePathOfImage(Photo::VISITOR_IMAGE,$model->visitor);
-   
+$company = Company::model()->findByPk($visitorModel->company);
+if ($company) {
+    $companyName = $company->name;
+    $companyLogoId = $company->logo;
+    $companyCode = $company->code;
 } else {
     throw new CHttpException(404, 'Company not found for this User.');
 }
+
+$companyLogo =  Photo::model()->getAbsolutePathOfImage(Photo::COMPANY_IMAGE, $visitorModel->company);
+$userPhoto = Photo::model()->getAbsolutePathOfImage(Photo::VISITOR_IMAGE,$model->visitor);
+
 $card = CardGenerated::model()->findByPk($model->card);
 if ($card) {
     $cardCode = $card->card_number;
@@ -43,10 +36,6 @@ $visitorName = wordwrap($visitorName, 13, "\n", true);
 $dateExpiry = date('dMy');
 if ($model->card_type != CardType::SAME_DAY_VISITOR) {
     $dateExpiry = date("dMy", strtotime($model->date_out));
-}
-
-if ($model->date_check_out != null) {
-    $dateExpiry = date("dMy", strtotime($model->date_check_out));
 }
 
 //if ($model->time_check_out && $model->card_type == CardType::VIC_CARD_24HOURS && $model->visit_status == VisitStatus::ACTIVE) {

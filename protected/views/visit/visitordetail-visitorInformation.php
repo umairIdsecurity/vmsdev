@@ -96,6 +96,8 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                                         'buttonImage' => Yii::app()->controller->assetsBase . "/images/calendar.png",
                                         'buttonImageOnly' => true,
                                         'dateFormat' => "dd-mm-yy",
+                                        'changeMonth' => true,
+                                        'changeYear' => true
                                     )
                                 ));
                                 ?>
@@ -478,6 +480,8 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                                     'buttonImageOnly' => true,
                                     'minDate' => "0",
                                     'dateFormat' => "dd-mm-yy",
+                                    'changeMonth' => true,
+                                    'changeYear' => true
                                 )
                             ));
                             ?>
@@ -555,6 +559,8 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                                         'buttonImageOnly' => true,
                                         'minDate' => "0",
                                         'dateFormat' => "dd-mm-yy",
+                                        'changeMonth' => true,
+                                        'changeYear' => true
                                     )
                                 ));
                                 ?>

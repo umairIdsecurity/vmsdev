@@ -199,7 +199,7 @@ $(document).ready(function () {
                 $('.visitor_password_repeat').empty().hide();
             }
 
-            /*var contact = $('#Visitor_staff_id').val();
+            var contact = $('#Visitor_staff_id').val();
             if (typeof contact != 'undefined') {
                 $.ajax({
                     type: "POST",
@@ -207,10 +207,15 @@ $(document).ready(function () {
                     dataType: "json",
                     data: {id:contact},
                     success: function(data) {
-                        console.log(data);return false;
+                        if (data != 0) {
+                            $('#User_first_name').val(data.first_name);
+                            $('#User_last_name').val(data.last_name);
+                            $('#User_email').val(data.email);
+                            $('#User_contact_number').val(data.contact_number);
+                        }
                     }
                 });
-            }*/
+            }
             
             $(".visitorType").hide();
             if ($("#Visitor_visitor_type").val() == 1 || $("#Visitor_visitor_type_search").val() == 1) {

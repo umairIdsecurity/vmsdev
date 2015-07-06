@@ -78,8 +78,12 @@ class VisitorServiceImpl implements VisitorService {
         }
         $visitor->asic_expiry = date("Y-m-d",strtotime($visitor->asic_expiry));
 
-        if (date('Y') - date('Y', strtotime($visitor->date_of_birth)) < 18) {
+        if ($visitor->profile_type == Visitor::PROFILE_TYPE_VIC && date('Y') - date('Y', strtotime($visitor->date_of_birth)) < 18) {
             $visitor->setScenario('u18Rule');
+        }
+
+        if ($visitor->profile_type == Visitor::PROFILE_TYPE_ASIC && $visitor->visitor_card_status == Visitor::ASIC_ISSUED) {
+            $visitor->setScenario('asicIssued');
         }
 
         if (!($result = $visitor->save())) {

@@ -343,6 +343,9 @@ $defaultKey = key($asicCardTypes);
                                     )); ?>
 
                                     <?php
+                                    $now = new DateTime(date('Y-m-d'));
+                                    $asicMaxDate = new DateTime(date('Y-m-d', strtotime('+2 month +2 year')));
+                                    $interval = $asicMaxDate->diff($now);
                                     $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                         'model' => $userModel,
                                         'attribute' => 'asic_expiry',
@@ -350,7 +353,8 @@ $defaultKey = key($asicCardTypes);
                                             'dateFormat' => 'dd-mm-yy',
                                             'changeMonth' => 'true',
                                             'changeYear' => 'true',
-                                            'minDate' => '0'
+                                            'minDate' => '0',
+                                            'maxDate' => $interval->days
                                         ),
                                         'htmlOptions' => array(
                                             'size' => '0',

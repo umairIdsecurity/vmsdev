@@ -72,7 +72,37 @@ if ($this->action->id == 'update') {
         'enableClientValidation' => true,
         'clientOptions'          => array(
             'validateOnSubmit' => true,
-            'afterValidate'    => 'js:function(form, data, hasError){ return afterValidate(form, data, hasError); }'
+            'afterValidate'    => 'js:function(form, data, hasError){ 
+                
+                var visitor_card_status = $("#Visitor_visitor_card_status").val();
+                if (visitor_card_status == '.Visitor::ASIC_ISSUED.') {
+                    var visitor_asic_no = $("#Visitor_asic_no").val();
+                    var visitor_asic_expiry = $("#Visitor_asic_expiry").val();
+                    if (visitor_asic_no == "" || visitor_asic_expiry == "") {
+                        //add validation item
+                        data["Visitor_asic_no"] = ["Please enter an asic no"];
+                        data["Visitor_asic_expiry"] = ["Please select an asic expiry"];
+                        
+                        if (visitor_asic_no == "") {
+                            $("#Visitor_asic_no_em_").html(data["Visitor_asic_no"]).show();
+                        }
+
+                        if (visitor_asic_expiry == "") {
+                            $("#Visitor_asic_expiry_em_").html(data["Visitor_asic_expiry"]).show();
+                        }
+
+                        hasError = true;
+                    } else {
+                        hasError = false;
+                    }
+                }
+
+                if(isEmpty(data)) {
+                    hasError = false;
+                }
+
+                return afterValidate(form, data, hasError); 
+            }'
         ),
     ));
     ?>
@@ -402,11 +432,15 @@ if ($this->action->id == 'update') {
                                     <?php echo $form->textField($model, 'asic_no', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'ASIC No.', 'style' => 'width: 110px;')); ?>
 
                                     <?php
+                                    $now         = new DateTime(date('Y-m-d'));
+                                    $asicMaxDate = new DateTime(date('Y-m-d', strtotime('+2 month +2 year')));
+                                    $interval    = $asicMaxDate->diff($now);
                                     $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                         'model'       => $model,
                                         'attribute'   => 'asic_expiry',
                                         'options'     => array(
                                             'dateFormat' => 'dd-mm-yy',
+                                            'maxDate' => $interval->days
                                         ),
                                         'htmlOptions' => array(
                                             'size'        => '0',
@@ -444,6 +478,7 @@ if ($this->action->id == 'update') {
 <script>
 
     function afterValidate(form, data, hasError) {
+
         var dt = new Date();
         if(dt.getFullYear()< $("#fromYear").val()) {
             $("#Visitor_date_of_birth_em_").show();
@@ -904,6 +939,15 @@ $('#Visitor_company').on('change', function() {
         }
     });
 });
+
+function isEmpty(obj) {
+    for(var prop in obj) {
+        if(obj.hasOwnProperty(prop))
+            return false;
+    }
+
+    return true;
+}
 </script>
 
 

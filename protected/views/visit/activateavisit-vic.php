@@ -64,7 +64,7 @@ $asicEscort = new AddAsicEscort();
     </tr>
     <tr>
         <td class="vic-col">
-            <input type="checkbox" value="1" name="asicSponsorActiveVisit" class="vic-active-visit vic-active-verification"/>
+            <input type="checkbox" value="1" name="asicSponsorActiveVisit" class="vic-active-visit vic-active-verification" id="asicSponsorActiveVisitLink"/>
             <a href="#" style="text-decoration: none !important;">ASIC Sponsor</a>
         </td>
     </tr>
@@ -109,12 +109,11 @@ $asicEscort = new AddAsicEscort();
                 $model->date_check_in = date('d-m-Y');
             }
 
-            // Extended Card Type (EVIC) or Multiday
-            /*if (in_array($model->card_type, array(CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY)) && $model->visit_status == VisitStatus::AUTOCLOSED) {
-                $model->date_check_out = $model->date_check_in = date('d-m-Y', strtotime($model->finish_date.' + 1 days'));
-            }*/
-
             $model->date_check_in = date('d-m-Y', strtotime($model->date_check_in));
+
+            if (in_array($model->visit_status, [VisitStatus::SAVED, VisitStatus::CLOSED, VisitStatus::AUTOCLOSED])) {
+                $model->date_check_in = date('d-m-Y');
+            }
 
             $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                 'model' => $model,
@@ -142,12 +141,12 @@ $asicEscort = new AddAsicEscort();
             }
 
             // Extended Card Type (EVIC) or Multiday
-            if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED]) && $model->visit_status == VisitStatus::AUTOCLOSED) {
+            /*if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED]) && $model->visit_status == VisitStatus::AUTOCLOSED) {
                 $model->date_check_out = date('d-m-Y', strtotime($model->finish_date));
-            }
+            }*/
 
-            // VIC_CARD_24HOURS
-            if (!in_array($model->card_type, [CardType::VIC_CARD_EXTENDED]) && in_array($model->visit_status, [VisitStatus::SAVED, VisitStatus::CLOSED])) {
+            // Update date check out for Saved, Closed, AutoClosed Visit
+            if (in_array($model->visit_status, [VisitStatus::SAVED, VisitStatus::CLOSED, VisitStatus::AUTOCLOSED])) {
                 $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in. ' + 1 day'));
                 $model->time_check_out = $model->time_check_in;
             }
@@ -251,9 +250,9 @@ $asicEscort = new AddAsicEscort();
 
                 if (in_array($model->card_type, [CardType::VIC_CARD_24HOURS, CardType::VIC_CARD_MANUAL])) {
                     echo '  var checkoutDate = new Date(selectedDate);
-                    checkoutDate.setDate(selectedDate.getDate() + 1);
-                    $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "setDate", checkoutDate);
-                ';
+                            checkoutDate.setDate(selectedDate.getDate() + 1);
+                            $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "setDate", checkoutDate);
+                        ';
                 }
                 ?>
             }
@@ -352,15 +351,17 @@ $asicEscort = new AddAsicEscort();
             </tr>
             <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
             <tr>
-                <td width="5%"><input type="checkbox" id="asicDecalarationCbx4"/></td>
+                <td width="5%"><input type="checkbox" id="asicDecalarationCbx3"/></td>
                 <td><label for="asicDecalarationCbx4">I request that a VIC be issued to the applicant for the areas and reason indicated.</label></td>
             </tr>
             <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
             <tr>
-                <td width="5%"><input type="checkbox" id="asicDecalarationCbx3"/></td>
-                <td><label for="asicDecalarationCbx3">I note that they must be under my direct supervision at all times whilst they are airside.</label></td>
+                <td width="5%"><input type="radio" id="asicDecalarationRbtn1"/></td>
+                <td><label for="asicDecalarationRbtn1">I note that they must be under my direct supervision at all times whilst they are airside.</label></td>
             </tr>
-            <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+            <tr><td>&nbsp;</td>
+                <td><hr style="border-color: black;"></td>
+            </tr>
             <tr>
                 <td width="5%"><input type="radio" id="asicEscortRbtn" onclick="asicEscort()"/></td>
                 <td><label for="asicEscortRbtn">Add ASIC Escort.</label></td>
@@ -370,22 +371,24 @@ $asicEscort = new AddAsicEscort();
             <tr class="asic-escort hidden">
                 <td></td>
                 <td>
+                    <input type="text" id="search-escort" style="width:280px" name="search-host"
+                           placeholder="Enter name, email address" class="search-text"/>
+                    <button type="button" class="btn btn-primary" id="findEscortBtn" style="margin-bottom: 14px!important;" onclick="" id="escort-findBtn">Search ASIC Escort</button>
+                    <div id="divMsg" style="display:none;">
+                        <img id="findEscortBtn" src="<?php echo Yii::app()->controller->assetsBase; ?>/images/loading.gif" alt="Please wait.." />
+                    </div>
+                    <div class="errorMessage" id="searchEscortErrorMessage" style=" display:none;">Please enter asic escort name or email for searching</div>
+                    <div class="searchAsicEscortResult"></div>
                     <div class="add-esic-escort">
                         <?php $this->renderPartial('_add_asic_escort',array('model' => $asicEscort)) ?>
                     </div>
-
-                    <input type="hidden" id="tmpAsicEscortFirstName"/>
-                    <input type="hidden" id="tmpAsicEscortLastName"/>
-                    <input type="hidden" id="tmpAsicEscortAsicNo"/>
-                    <input type="hidden" id="tmpAsicEscortExpiry"/>
-                    <input type="hidden" id="tmpAsicEscortContactNo"/>
-                    <input type="hidden" id="tmpAsicEscortEmail"/>
+                    <input type="hidden" id="selectedAsicEscort"/>
                 </td>
             </tr>
         </table>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="btnAsicConfirm">Confirm</button>
+        <button type="button" class="btn btn-primary" id="btnAsicConfirm" onclick="asicCheck()">Confirm</button>
     </div>
 </div>
 
@@ -401,8 +404,11 @@ $asicEscort = new AddAsicEscort();
     }
 
     function asicSponsorDeclarationChange() {
-        if ($("#asicDecalarationCbx4").is(':checked') && $('#asicDecalarationCbx3').is(':checked') && $('#asicDecalarationCbx2').is(':checked') && $('#asicDecalarationCbx1').is(':checked')) {
-            $('#AsicSponsorDecalarations').prop('checked', true);
+        if ($('#asicDecalarationCbx3').is(':checked') && $('#asicDecalarationCbx2').is(':checked') && $('#asicDecalarationCbx1').is(':checked')) {
+            if($('#asicDecalarationRbtn1').is(':checked') || $('#asicEscortRbtn').is(':checked')) {
+                $('#AsicSponsorDecalarations').prop('checked', true);
+                $('#asicSponsorActiveVisitLink').prop('checked', true);
+            }
         } else {
             $('#AsicSponsorDecalarations').prop('checked', false);
         }
@@ -420,12 +426,20 @@ $asicEscort = new AddAsicEscort();
 
     function asicCheck() {
         var checknum = $('#asicSponsorModal')
-                        .find('input[type="checkbox"]')
-                        .filter(':checked');
-        if (checknum.length == 4) {
-            asicSponsorDeclarationChange();
-            return true;
+            .find('input[type="checkbox"]')
+            .filter(':checked');
+        if (checknum.length == 3) {
+            if($('#asicDecalarationRbtn1').is(':checked') || $('#asicEscortRbtn').is(':checked')) {
+                if(validateAsicEscort()== true) {
+                    asicSponsorDeclarationChange();
+                    return true;
+                } else{
+                    alert('Please input all Asic Escort Information');
+                    return;
+                }
+            }
         } else {
+            alert('Please select all the declarations.');
             return false;
         }
     }
@@ -434,23 +448,60 @@ $asicEscort = new AddAsicEscort();
         $('.asic-escort').removeClass('hidden');
     }
 
-    function validateAsicEscort() {
-        if($('#asicEscortRbtn').is(':checked') == true) {
-            var noError = true;
-            $('.asic-escort-field .errorMessage ').each(function(){
-                if($(this).css('display') == 'block'){
-                    noError = false;
-                };
-            });
-            $('.asic-escort-field input').each(function(){
-                if($(this).val() == ''){
-                    noError = false;
-                };
-            });
-            return noError;
+    function asicConfirm () {
+        var checkAsicEscort = validateAsicEscort();
+        if( checkAsicEscort == true ) {
+            var asicChecked = asicCheck();
+            if (asicChecked) {
+                confirmed = true;
+            } else {
+                //alert('Please select all the declarations.');
+                return false;
+            }
         } else {
-            return true;
+            //alert('Please input all Asic Escort Information');
+            return;
         }
+    }
+    function checkEscortEmailUnique () {
+        var email = $('#AddAsicEscort_email').val();
+        $.ajax({
+            type: "POST",
+            url: "<?php echo CHtml::normalizeUrl(array("visitor/checkAsicEscort")); ?>",
+            data: {emailEscort: email},
+            success: function(data) {
+                if(data == 'existed') {
+                    $('#AddAsicEscort_email_unique_em_').show();
+                    asicConfirm();
+
+                } else {
+                    $('#AddAsicEscort_email_unique_em_').hide();
+                    asicConfirm();
+                }
+            }
+        });
+    }
+
+    function validateAsicEscort() {
+        var noError = true;
+        if ($('#asicEscortRbtn').is(':checked') == true) {
+            if ($('.add-esic-escort').css('display') == 'block') {
+                $('.asic-escort-field .errorMessage ').each(function () {
+                    if ($(this).css('display') == 'block') {
+                        noError = false;
+                    }
+                });
+                $('.asic-escort-field input').each(function () {
+                    if ($(this).val() == '') {
+                        noError = false;
+                    }
+                });
+            } else if ($('.searchAsicEscortResult').css('display') == 'block' && $('#selectedAsicEscort').val() == '') {
+                noError = false;
+            }
+
+        }
+        return noError;
     }
 
     $(document).on('click', '#identificationChkBoxNo', function(e) {console.log(isExpired());
@@ -518,4 +569,38 @@ $asicEscort = new AddAsicEscort();
         var today = Date.parse(yyyy+'-'+mm+'-'+dd);
         return document_expiry_date <= today;
     }
+    $(document).ready(function(){
+        $('#asicDecalarationRbtn1').on('click',function(){
+            $(this).prop('checked',true);
+            $('#asicEscortRbtn').prop('checked',false);
+        });
+        $('#asicEscortRbtn').on('click',function(){
+            $(this).prop('checked',true);
+            $('#asicDecalarationRbtn1').prop('checked',false);
+        });
+        $('#findEscortBtn').on('click', function(){
+            if($('#search-escort').val() == ''){
+                $('#searchEscortErrorMessage').show();
+                return;
+            } else {
+                $('#searchEscortErrorMessage').hide();
+                $('.searchAsicEscortResult').show();
+                $(this).hide();
+                $('#divMsg').show();
+                $('.add-esic-escort').hide();
+                var searchInfo = $('#search-escort').val();
+                var searchAsicEscortResult = $('.searchAsicEscortResult').empty();
+                $.ajax({
+                    type: "GET",
+                    url: "<?php echo CHtml::normalizeUrl(array("visitor/getAsicEscort")); ?>",
+                    data: {searchInfo :searchInfo},
+                    success: function(data) {
+                        searchAsicEscortResult.append(data);
+                        $('#findEscortBtn' ).show();
+                        $('#divMsg').hide();
+                    }
+                });
+            }
+        });
+    });
 </script>

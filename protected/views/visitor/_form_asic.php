@@ -72,7 +72,67 @@ if ($this->action->id == 'update') {
         'enableClientValidation' => true,
         'clientOptions'          => array(
             'validateOnSubmit' => true,
-            'afterValidate'    => 'js:function(form, data, hasError){ return afterValidate(form, data, hasError); }'
+            'afterValidate'    => 'js:function(form, data, hasError){ 
+                
+                var visitor_card_status = $("#Visitor_visitor_card_status").val();
+                console.log(visitor_card_status);
+                switch (visitor_card_status) {
+                    case "'.Visitor::ASIC_ISSUED.'":
+                        var visitor_asic_no = $("#Visitor_asic_no").val();
+                        var visitor_asic_expiry = $("#Visitor_asic_expiry").val();
+                        if (visitor_asic_no == "" || visitor_asic_expiry == "") {
+                            //add validation item
+                            data["Visitor_asic_no"] = ["Please enter an asic no"];
+                            data["Visitor_asic_expiry"] = ["Please select an asic expiry"];
+
+                            if (visitor_asic_no == "") {
+                                $("#Visitor_asic_no_em_").html(data["Visitor_asic_no"]).show();
+                            }
+
+                            if (visitor_asic_expiry == "") {
+                                $("#Visitor_asic_expiry_em_").html(data["Visitor_asic_expiry"]).show();
+                            }
+
+                            hasError = true;
+                        } else {
+                            hasError = false;
+                        }
+                        break;
+                    
+                    case "'.Visitor::ASIC_APPLICANT.'":
+                        var identification_type = $("#Visitor_identification_type").val();
+                        var identification_document_no = $("#Visitor_identification_document_no").val();
+                        var identification_document_expiry = $("#Visitor_identification_document_expiry").val();
+                        if (identification_type == "" || identification_document_no == "" || identification_document_expiry == "") {
+                            data["Visitor_identification_type"] = ["Please select an identification type"];
+                            data["Visitor_identification_document_no"] = ["Please enter a document no"];
+                            data["Visitor_identification_document_expiry"] = ["Please select a document expiry"];
+
+                            if (identification_type == "") {
+                                $("#Visitor_identification_type_em_").html(data["Visitor_identification_type"]).show();
+                            }
+
+                            if (identification_document_no == "") {
+                                $("#Visitor_identification_document_no_em_").html(data["Visitor_identification_document_no"]).show();
+                            }
+
+                            if (identification_document_expiry == "") {
+                                $("#Visitor_identification_document_expiry_em_").html(data["Visitor_identification_document_expiry"]).show();
+                            }
+
+                            hasError = true;
+                        } else {
+                            hasError = false;
+                        }
+                        break;
+                }
+
+                if(isEmpty(data)) {
+                    hasError = false;
+                }
+
+                return afterValidate(form, data, hasError); 
+            }'
         ),
     ));
     ?>
@@ -134,52 +194,52 @@ if ($this->action->id == 'update') {
                                     </td>
                                     </tr>
                                 </table>
-                                <table style="float:left;width:300px;">
+                                <!--<table style="float:left;width:300px;">
                                     <tr>
                                         <td id="visitorTenantRow" <?php
-                                        if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+/*                                        if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                                             echo " class='hidden' ";
                                         }
-                                        ?>>
+                                        */?>>
                                             <select id="Visitor_tenant" onchange="populateTenantAgentAndCompanyField()"
                                                     name="Visitor[tenant]">
                                                 <option value='' selected>Please select a tenant</option>
                                                 <?php
-                                                $allTenantCompanyNames = User::model()->findAllCompanyTenant();
+/*                                                $allTenantCompanyNames = User::model()->findAllCompanyTenant();
                                                 foreach ($allTenantCompanyNames as $key => $value) {
-                                                    ?>
-                                                    <option value="<?php echo $value['id']; ?>"
+                                                    */?>
+                                                    <option value="<?php /*echo $value['id']; */?>"
                                                         <?php
-                                                        if (($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant'] && $this->action->id != 'update') || ($model['tenant'] == $value['id'])) {
+/*                                                        if (($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant'] && $this->action->id != 'update') || ($model['tenant'] == $value['id'])) {
                                                             echo "selected ";
                                                         }
-                                                        ?> ><?php echo $value['name']; ?></option>
+                                                        */?> ><?php /*echo $value['name']; */?></option>
                                                 <?php
-                                                }
-                                                ?>
+/*                                                }
+                                                */?>
                                             </select>
                                             <span class="required">*</span>
-                                            <?php echo "<br>" . $form->error($model, 'tenant'); ?>
+                                            <?php /*echo "<br>" . $form->error($model, 'tenant'); */?>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td id="visitorTenantAgentRow" <?php
-                                        if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+/*                                        if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                                             echo " class='hidden' ";
                                         }
-                                        ?> >
+                                        */?> >
                                             <select id="Visitor_tenant_agent" name="Visitor[tenant_agent]"
                                                     onchange="populateCompanyWithSameTenantAndTenantAgent()">
                                                 <?php
-                                                echo "<option value='' selected>Please select a tenant agent</option>";
+/*                                                echo "<option value='' selected>Please select a tenant agent</option>";
                                                 if ($session['role'] != Roles::ROLE_SUPERADMIN) {
                                                     echo "<option value='" . $session['tenant_agent'] . "' selected>TenantAgent</option>";
                                                 }
-                                                ?>
+                                                */?>
                                             </select>
 
-                                            <?php echo "<br>" . $form->error($model, 'tenant_agent'); ?>
-                                </table>
+                                            <?php /*echo "<br>" . $form->error($model, 'tenant_agent'); */?>
+                                </table>-->
                                 <table style="margin-top: 70px;">
                                     <tr>
                                         <td>
@@ -202,9 +262,9 @@ if ($this->action->id == 'update') {
                                                 $allTenantCompanyNames = User::model()->findAllCompanyTenant();
                                                 foreach ($allTenantCompanyNames as $key => $value) {
                                                     ?>
-                                                    <option value="<?php echo $value['tenant']; ?>"
+                                                    <option value="<?php echo $value['id']; ?>"
                                                         <?php
-                                                        if (($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant'] && $this->action->id != 'update') || ($model['tenant'] == $value['tenant'])) {
+                                                        if (($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant'] && $this->action->id != 'update') || ($model['tenant'] == $value['id'])) {
                                                             echo "selected ";
                                                         }
                                                         ?> ><?php echo $value['name']; ?></option>
@@ -402,11 +462,15 @@ if ($this->action->id == 'update') {
                                     <?php echo $form->textField($model, 'asic_no', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'ASIC No.', 'style' => 'width: 110px;')); ?>
 
                                     <?php
+                                    $now         = new DateTime(date('Y-m-d'));
+                                    $asicMaxDate = new DateTime(date('Y-m-d', strtotime('+2 month +2 year')));
+                                    $interval    = $asicMaxDate->diff($now);
                                     $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                         'model'       => $model,
                                         'attribute'   => 'asic_expiry',
                                         'options'     => array(
                                             'dateFormat' => 'dd-mm-yy',
+                                            'maxDate' => $interval->days
                                         ),
                                         'htmlOptions' => array(
                                             'size'        => '0',
@@ -444,6 +508,7 @@ if ($this->action->id == 'update') {
 <script>
 
     function afterValidate(form, data, hasError) {
+
         var dt = new Date();
         if(dt.getFullYear()< $("#fromYear").val()) {
             $("#Visitor_date_of_birth_em_").show();
@@ -904,6 +969,15 @@ $('#Visitor_company').on('change', function() {
         }
     });
 });
+
+function isEmpty(obj) {
+    for(var prop in obj) {
+        if(obj.hasOwnProperty(prop))
+            return false;
+    }
+
+    return true;
+}
 </script>
 
 

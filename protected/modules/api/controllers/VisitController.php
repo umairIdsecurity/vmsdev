@@ -18,6 +18,14 @@ class VisitController extends RestfulController {
             if (Yii::app()->request->isPostRequest) {
                 $data = file_get_contents("php://input");
                 $data = CJSON::decode($data);
+
+                //check Visitor ID
+                $visitor = Visitor::model()->findByPk($data['visitorID']);
+                if(!$visitor) {
+                    $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'NO_VISIT_FOUND', 'errorDescription' => 'Visitor found for this visit')));
+                    return false;
+                }
+
                 $visit = new Visit();
                 $visit->scenario = 'api';
                 $visit->host = $data['hostID'];
@@ -177,6 +185,34 @@ class VisitController extends RestfulController {
                 }
             } else {
                 $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_REQUEST', 'errorDescription' => 'invalid request visit required')));
+            }
+        } catch (Exception $ex) {
+            $this->sendResponse(500, CJSON::encode(array('responseCode' => 500, 'errorCode' => 'INTERNAL_SERVER_ERROR', 'errorDescription' => 'something went wrong')));
+        }
+    }
+
+    public function actionCheckout() {
+        try {
+            $access_token = $this->getAccessToken() ;
+            if(!$access_token) {
+                $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'VISITOR_NOT_FOUND', 'errorDescription' => 'Access Token not match')));
+            }
+            if (Yii::app()->request->getParam('visitID') ) {
+                $visitID = Yii::app()->request->getParam('visitID');
+                $visit = Visit::model()->findByPk($visitID);
+                if ($visit) {
+                    $visit->date_check_out = date('Y-m-d');
+                    $visit->time_check_out = date('H:i:s');
+                    if($visit->save()) {
+                        $this->sendResponse(204, CJSON::encode(['responseCode' => 204]));
+                    } else {
+                        $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'VISIT_NOT_CHECKOUT', 'errorDescription' => 'Visit cant not checkout')));
+                    }
+                } else {
+                    $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'VISIT_NOT_FOUND', 'errorDescription' => 'Requested visit not found')));
+                }
+            } else {
+                $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_PARAMETER', 'errorDescription' => 'GET parameter required for action')));
             }
         } catch (Exception $ex) {
             $this->sendResponse(500, CJSON::encode(array('responseCode' => 500, 'errorCode' => 'INTERNAL_SERVER_ERROR', 'errorDescription' => 'something went wrong')));

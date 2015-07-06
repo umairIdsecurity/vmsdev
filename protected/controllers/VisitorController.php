@@ -26,13 +26,13 @@ class VisitorController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('update', 'delete', 'admin', 'adminAjax', 'csvSampleDownload','getActiveVisit'),
+                'actions' => array('update', 'delete', 'admin', 'adminAjax', 'csvSampleDownload','getActiveVisit','getAsicEscort'),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('csvSampleDownload','importVisitHistory', 'addVisitor', 'ajaxCrop', 'create', 'GetIdOfUser','GetHostDetails',
                                     'GetPatientDetails', 'CheckEmailIfUnique', 'GetVisitorDetails', 'FindVisitor', 'FindHost', 'GetTenantAgentWithSameTenant',
-                                    'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent','CheckAsicStatusById', 'addAsicSponsor', 'CheckCardStatus', 'UpdateIdentificationDetails'
+                                    'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent','CheckAsicStatusById', 'addAsicSponsor', 'CheckCardStatus', 'UpdateIdentificationDetails','checkAsicEscort',
                                 ),
                 'users' => array('@'),
             ),
@@ -436,7 +436,6 @@ class VisitorController extends Controller {
     }
 
     public function actionAddVisitor() {
-        
         $model = new Visitor;
         $visitorService = new VisitorServiceImpl();
         $session = new CHttpSession;
@@ -455,7 +454,33 @@ class VisitorController extends Controller {
 
 
             if ($result = $visitorService->save($model, NULL, $session['id'])) {
-                
+                // Add company contact for this visitor if profile is ASIC
+                if (isset($_POST['profile_type']) && $_POST['profile_type'] == 'ASIC') {
+                    $company = Company::model()->findByPk($model->company);
+                    if ($company) {
+                        $contact = new User('add_company_contact');
+                        $contact->company = $company->id;
+                        $contact->first_name = $model->first_name;
+                        $contact->last_name = $model->last_name;
+                        $contact->email = $model->email;
+                        $contact->contact_number = $model->contact_number;
+                        $contact->created_by = Yii::app()->user->id;
+
+                        // Todo: temporary value for saving contact, will be update later
+                        $contact->timezone_id = 1; 
+                        $contact->photo = 0;
+
+                        // foreign keys // todo: need to check and change for HARD-CODE
+                        $contact->tenant = $session['tenant'];
+                        $contact->user_type = UserType::USERTYPE_INTERNAL;
+                        $contact->user_status = 1;
+                        $contact->role = Roles::ROLE_STAFFMEMBER;
+                        if (!$contact->save()) {
+                            echo 0;
+                            Yii::app()->end();
+                        }
+                    }
+                }
                 //email sending 
                 if(!empty($model->password_requirement)){
                     $passwordRequire= intval($model->password_requirement);
@@ -682,4 +707,38 @@ class VisitorController extends Controller {
         
     }
 
+    public function actionCheckAsicEscort() {
+        $existed = Visitor::model()->findAllByAttributes([
+            'email' => $_POST['emailEscort'],
+        ]);
+        if (count($existed)> 0) {
+            echo 'existed';
+        } else {
+            echo 'ok';
+        }
+    }
+
+    public function actionGetAsicEscort()
+    {
+        if (isset($_GET['searchInfo'])) {
+            $searchInfo = $_GET['searchInfo'];
+            $merge = new CDbCriteria;
+            $conditionString = "escort_flag = 1 AND (CONCAT(first_name,' ',last_name) like '%" . $searchInfo
+                . "%' or first_name like '%" . $searchInfo
+                . "%' or last_name like '%" . $searchInfo
+                . "%' or email like '%" . $searchInfo
+                . "%')";
+            $merge->addCondition($conditionString);
+
+            $model = new Visitor('search');
+            $model->unsetAttributes();
+
+
+            return $this->renderPartial('findAsicEscort', array(
+                'merge' => $merge,
+                'model' => $model,
+            ));
+        } else {
+        }
+    }
 }

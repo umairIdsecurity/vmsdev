@@ -57,7 +57,7 @@ class VisitorController extends RestfulController {
                     $visitor->visitor_type = $data['visitorType'];
                     $visitor->company = $companyID;
                     $visitor->password = $data['password'];
-                    $visitor->photo = NULL;
+                    //$visitor->photo = NULL;
                     if ($visitor->save(false)) {
                         $result = $this->populatevisitor($visitor);
                         $this->sendResponse(200, CJSON::encode($result));
@@ -208,7 +208,7 @@ class VisitorController extends RestfulController {
         $result['department'] = $visitor->department;
         $result['staffId'] = $visitor->staff_id;
         $result['notes'] = $visitor->notes;
-        $result['visitor_type'] = $visitor->visitor_type;
+        $result['visitorType'] = $visitor->visitor_type;
         $result['vehicle'] = $visitor->vehicle;
         $result['createdBy'] = $visitor->created_by;
         $result['tenant'] = $visitor->tenant;

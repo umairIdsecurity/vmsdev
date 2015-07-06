@@ -210,7 +210,6 @@ class DashboardController extends Controller {
     }
 
     public function actionContactSupport() {
-        
         $session = new CHttpSession;
         
         $user_id = Yii::app()->user->id;
@@ -219,51 +218,42 @@ class DashboardController extends Controller {
         $model = new ContactForm;
         
         if (isset($_POST['ContactForm'])) {
+            
             $model->attributes = $_POST['ContactForm'];
-            $model->name = $userModel->first_name . ' ' . $userModel->last_name;
-            $model->email = $userModel->email;
-
+            
             if ($model->validate()) {
                 
                 $headers = "MIME-Version: 1.0" . "\r\n";
                 $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-                $headers .= "From: {$model->email}\r\nReply-To: {$model->email}";
+                $headers .= "From: {$userModel->email}\r\nReply-To: {$userModel->email}";
 
                 $content = "Reason: ".$model->reason."<br><br>Message: ".$model->message . "<br><br>~This message was sent via Visitor Management System~";
 
-                $criteria = new CDbCriteria;
-                //send emails to current logged in user tenants
-                $criteria->addCondition('tenant ='.Yii::app()->user->tenant);
-                       
-                // Expected CAVMS-427: When user selects 'Identity Security' option then system should send notifications to below users: 
-                // Issuing Body admin, Airport Operators, Agent airport Administrators and Agent airport Operators.                              
-                if($model->role_id == Roles::ROLE_SUPERADMIN) {  // Super Admin is renamed as Identity security under Dropdown                               
-                    $roles = Roles::ROLE_ISSUING_BODY_ADMIN.','.Roles::ROLE_AIRPORT_OPERATOR.','.Roles::ROLE_AGENT_AIRPORT_OPERATOR.','.Roles::ROLE_AGENT_AIRPORT_ADMIN;
-                    $criteria->addCondition('role IN ('.$roles.') AND is_deleted = 0 ');
-                }
-                else {
-                    $criteria->addCondition('role ='.$model->role_id.' AND is_deleted = 0 ');
-                }
+                /*
+                 * contact_person_name is actually the Primary key of contact person
+                 */
+                $contactModel = ContactPerson::model()->findByPk($model->contact_person_name);
+                $contactModel->attributes=$contactModel;
+                $contactModel->contact_person_message=$model->message;
+		$contactModel->save();
+		
+                mail($contactModel->contact_person_email, "Contact Support", $content, $headers);
                 
-                $users = User::model()->findAll($criteria);   
-                
-                foreach( $users as $key => $u ) {
-                    mail($u->email, "Contact Support", $content, $headers);
-                }    
                 Yii::app()->user->setFlash(
                         'contact', 'Thank you for contacting us. We will respond to you as soon as possible.'
                 );
                 $this->refresh();
             }
         }
+       
         $this->render('contactsupport', array(
             'model' => $model,
             'userModel' => $userModel
         ));
     }
 	
-	   public function actionHelpDesk() {
-		$helpDeskGroupRecords = HelpDeskGroup::model()->getAllHelpDeskGroup();
+    public function actionHelpDesk() {
+	$helpDeskGroupRecords = HelpDeskGroup::model()->getAllHelpDeskGroup();
         $session = new CHttpSession;
         $this->render('helpdesk', array(
             'helpDeskGroupRecords' => $helpDeskGroupRecords

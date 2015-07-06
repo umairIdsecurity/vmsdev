@@ -7,12 +7,14 @@
  */
 class ContactForm extends CFormModel
 {
-    public $name;
-    public $email;
-    public $role_id;
+//    public $name;
+//    public $email;
+//    public $role_id;
     public $reason;
     public $message;
     public $verifyCode;
+
+    public $contact_person_name;
 
     /**
      * Declares the validation rules.
@@ -21,10 +23,11 @@ class ContactForm extends CFormModel
     {
         return array(
             // name, email, subject and message are required
-            array('name, email, reason, message', 'required'),
+            array('reason, message', 'required'),
+            array('contact_person_name', 'required'),
             // email has to be a valid email address
-            array('email', 'email'),
-            array('role_id', 'safe'),
+            //array('email', 'email'),
+            array('contact_person_name', 'safe'),
             // verifyCode needs to be entered correctly
             //array('verifyCode', 'captcha', 'allowEmpty'=>!CCaptcha::checkRequirements()),
         );
@@ -39,8 +42,10 @@ class ContactForm extends CFormModel
     {
         return array(
             'verifyCode'=>'Verification Code',
-	    'role_id'=>'Who',
+	    'contact_person_name'=>'Who',
             'reason'=>'Reason',
+            'message'=>'Message',
+            
         );
     }
 }

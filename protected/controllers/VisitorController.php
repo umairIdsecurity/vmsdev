@@ -720,15 +720,25 @@ class VisitorController extends Controller {
 
     public function actionGetAsicEscort()
     {
-        $merge = new CDbCriteria;
-        $merge->addCondition("escort_flag = 1");
+        if (isset($_GET['searchInfo'])) {
+            $searchInfo = $_GET['searchInfo'];
+            $merge = new CDbCriteria;
+            $conditionString = "escort_flag = 1 AND (CONCAT(first_name,' ',last_name) like '%" . $searchInfo
+                . "%' or first_name like '%" . $searchInfo
+                . "%' or last_name like '%" . $searchInfo
+                . "%' or email like '%" . $searchInfo
+                . "%')";
+            $merge->addCondition($conditionString);
 
-        $model = new Visitor('search');
-        $model->unsetAttributes();
+            $model = new Visitor('search');
+            $model->unsetAttributes();
 
-        return $this->renderPartial('findAsicEscort', array(
-            'merge' => $merge,
-            'model' => $model,
-        ));
+
+            return $this->renderPartial('findAsicEscort', array(
+                'merge' => $merge,
+                'model' => $model,
+            ));
+        } else {
+        }
     }
 }

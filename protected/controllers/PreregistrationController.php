@@ -139,6 +139,8 @@ class PreregistrationController extends Controller
 
 		$model = new Registration();
 
+		$model->scenario = 'preregistration';
+
 		if (isset($_POST['Registration'])) {
 			$model->profile_type = $session['account_type'];
 			$model->email 		 = $session['username'];
@@ -216,8 +218,10 @@ class PreregistrationController extends Controller
 				$registrationModel->company = $companyModel->id;
 
 				if($registrationModel->save()){
+
 					$this->redirect(array('preregistration/addAsic'));
 				}
+				//print_r($registrationModel->getErrors());
 			}
 
 		}
@@ -233,7 +237,37 @@ class PreregistrationController extends Controller
 	}
 
 	public function actionAddAsic(){
-		$this->render('asic-sponsor');
+
+		$session = new CHttpSession;
+
+		$model = new Registration();
+
+		$model->scenario = 'asic';
+
+		if (isset($_POST['Registration'])) {
+			$model->profile_type = 'ASIC';
+			$model->attributes = $_POST['Registration'];
+			if ($model->save()) {
+				/*$loggedUserEmail = Yii::app()->user->email;
+				$headers = "MIME-Version: 1.0" . "\r\n";
+				$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+				$headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;*/
+				$to = 'proshimul@yahoo.com';
+				$subject="Preregistration email notification";
+				$body = "<html><body>Hi,<br><br>".
+					"This is preregistration email.<br><br>".
+					"Please click on the below URL:<br>".
+					"http://vmsprdev.identitysecurity.info/index.php/preregistration<br>";
+				$body .="<br>"."Thanks,"."<br>Admin</body></html>";
+				mail($to, $subject, $body);
+				//mail($to, $subject, $body, $headers);
+
+			}
+			//print_r($model->getErrors());
+
+		}
+
+		$this->render('asic-sponsor' , array('model'=>$model) );
 	}
 
 	public function actionLogin(){

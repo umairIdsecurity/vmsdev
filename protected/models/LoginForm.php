@@ -101,8 +101,8 @@ class LoginForm extends CFormModel {
             $validateNotifiSend2Weeks = Notification::model()->with('user_notification')->find("user_id=".$user->id." and subject='Login Expire in 2 weeks'");
             $validateNotifiSend1Day = Notification::model()->with('user_notification')->find("user_id=".$user->id." and subject='Login Expire in 1 day'");
             if(empty($validateNotifiSend2Weeks)){
-                //2 weeks or 14 days prior to expiry date from today date
-                if (strtotime($date_db) == strtotime($current_date) + 86400*14) {
+                //2 weeks + 1 day or 15 days prior to expiry date from today date
+                if (strtotime($date_db) <= strtotime($current_date) + 86400*15) {
                     $model=new Notification;
                     $model->created_by = Yii::app()->user->tenant;
                     $model->date_created = date("Y-m-d");
@@ -123,7 +123,7 @@ class LoginForm extends CFormModel {
             
             if(empty($validateNotifiSend1Day)){
                 //1 day prior to expiry date from today date
-                if (strtotime($date_db) == strtotime($current_date) + 86400*1) {
+                if (strtotime($date_db) <= strtotime($current_date) + 86400*1) {
                     $model=new Notification;
                     $model->created_by = Yii::app()->user->tenant;
                     $model->date_created = date("Y-m-d");
@@ -146,7 +146,7 @@ class LoginForm extends CFormModel {
             
             if($user->is_required_induction == 1){
                 if($user->is_completed_induction == 1){
-                        if($user->induction_expiry >= date("Y-m-d")){
+                        if(strtotime($user->induction_expiry) >= strtotime(date("Y-m-d"))){
                             $returnData["success"]=true;
                             return $returnData;
                         }else{

@@ -252,10 +252,10 @@ class PreregistrationController extends Controller
 				$subject = 'Test email';
 				$body = 'Test email';*/
 
-				$loggedUserEmail = 'shimulcsc@yahoo.com';
+				/*$loggedUserEmail = 'shimulcsc@yahoo.com';
 				$headers = "MIME-Version: 1.0" . "\r\n";
 				$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-				$headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
+				$headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;*/
 				$to=$model->email;
 				$subject="Preregistration email notification";
 				$body = "<html><body>Hi,<br><br>".
@@ -263,7 +263,7 @@ class PreregistrationController extends Controller
 					"Please click on the below URL:<br>".
 					"http://vmsprdev.identitysecurity.info/index.php/preregistration<br>";
 				$body .="<br>"."Thanks,"."<br>Admin</body></html>";
-				mail($to, $subject, $body, $headers);
+				mail($to, $subject, $body);
 
 
 				//mail($to, $subject, $body);

@@ -253,7 +253,7 @@ class PreregistrationController extends Controller
 				$headers  = 'MIME-Version: 1.0' . "\r\n";
 				$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
 				//$headers .= 'From: Admin <shimulcsc@yahoo.com>' . "\r\n";
-				$headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
+				//$headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
 				$to=$model->email;
 				$subject="Request for verification of VIC profile";
 				$body = "<html><body>Hi,<br><br>".

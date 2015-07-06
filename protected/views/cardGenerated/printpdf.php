@@ -90,8 +90,8 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
                 <tr>
                     <td>
                         <div style="float:left; width:256px; border:1px solid #000; height:405px; border-radius:20px; background:<?= $bgcolor; ?>;">
-                            <div style="width:150px; height:200px; background:#fff; margin-left:15px; margin-top:13px;">
-                                <img border="0" style="width:150px; height:200px;" src="<?= $userPhoto; ?>">
+                            <div style="width:100px; height:133px; background:#fff; margin-left:15px; margin-top:13px;">
+                                <img border="0" style="width:100px; height:133px;" src="<?= $userPhoto; ?>">
                             </div>
                             <div style=" text-align:center; line-height:20px;  margin:10px 0 0 5px; color:#000;">
                                 <p style="font-size:25px; font-weight:bold; margin:0 0 10px 0;"><?= $companyCode; ?></p>
@@ -125,8 +125,8 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
             <div style="width:100%; float:left;">
                 <!--Box 1-->
                 <div style="float:left; width:256px; border:1px solid #000; height:405px; border-radius:20px; background:<?= $bgcolor; ?>;">
-                    <div style="width:150px; height:200px; background:#fff; margin-left:15px; margin-top:13px; border:1px solid #000;">
-                        <img border="0" style="width:150px; height:200px;" src="<?= $userPhoto; ?>">
+                    <div style="width:100px; height:133px; background:#fff; margin-left:15px; margin-top:13px; border:1px solid #000;">
+                        <img border="0" style="width:100px; height:133px;" src="<?= $userPhoto; ?>">
                     </div>
                     <div style=" text-align:center; line-height:20px;  margin:10px 0 0 5px; color:#000;">
                         <p style="font-size:25px; font-weight:bold; margin:0 0 10px 0;"><?= $companyCode; ?></p>
@@ -156,8 +156,8 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
              <div style="width:100%; float:left;">
                 <!--Box 1-->
                 <div style="float:left; width:256px; border:1px solid #000; height:405px; border-radius:20px;">
-                    <div style="width:150px; height:200px; background:#fff; margin-left:15px; margin-top:13px; border:1px solid #000;">
-                        <img border="0" style="width:150px; height:200px;" src="<?= $userPhoto; ?>">
+                    <div style="width:100px; height:133px; background:#fff; margin-left:15px; margin-top:13px; border:1px solid #000;">
+                        <img border="0" style="width:100px; height:133px;" src="<?= $userPhoto; ?>">
                     </div>
                     <div style=" text-align:center; line-height:20px;  margin:10px 0 0 5px; color:#000;">
                         <p style="font-size:25px; font-weight:bold; margin:0 0 10px 0;"><?= $companyCode; ?></p>

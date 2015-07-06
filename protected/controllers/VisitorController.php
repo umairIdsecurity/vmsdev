@@ -86,7 +86,7 @@ class VisitorController extends Controller {
                         $body = "<html><body>Hi,<br><br>".
                                 "This is preregistration email.<br><br>".
                                 "Please click on the below URL:<br>".
-                                "http://vmsprdev.identitysecurity.info/index.php/preregistration<br>";
+                                "http://vmsprdev.identitysecurity.info/index.php/preregistration/login<br>";
                         if(!empty($model->password_option)){
                             $passwordCreate= intval($model->password_option);
                             if($passwordCreate == 1){
@@ -494,7 +494,7 @@ class VisitorController extends Controller {
                         $body = "<html><body>Hi,<br><br>".
                                 "This is preregistration email.<br><br>".
                                 "Please click on the below URL:<br>".
-                                "http://vmsprdev.identitysecurity.info/index.php/preregistration<br>";
+                                "http://vmsprdev.identitysecurity.info/index.php/preregistration/login<br>";
                         if(!empty($model->password_option)){
                             $passwordCreate= intval($model->password_option);
                             if($passwordCreate == 1){
@@ -720,15 +720,25 @@ class VisitorController extends Controller {
 
     public function actionGetAsicEscort()
     {
-        $merge = new CDbCriteria;
-        $merge->addCondition("escort_flag = 1");
+        if (isset($_GET['searchInfo'])) {
+            $searchInfo = $_GET['searchInfo'];
+            $merge = new CDbCriteria;
+            $conditionString = "escort_flag = 1 AND (CONCAT(first_name,' ',last_name) like '%" . $searchInfo
+                . "%' or first_name like '%" . $searchInfo
+                . "%' or last_name like '%" . $searchInfo
+                . "%' or email like '%" . $searchInfo
+                . "%')";
+            $merge->addCondition($conditionString);
 
-        $model = new Visitor('search');
-        $model->unsetAttributes();
+            $model = new Visitor('search');
+            $model->unsetAttributes();
 
-        return $this->renderPartial('findAsicEscort', array(
-            'merge' => $merge,
-            'model' => $model,
-        ));
+
+            return $this->renderPartial('findAsicEscort', array(
+                'merge' => $merge,
+                'model' => $model,
+            ));
+        } else {
+        }
     }
 }

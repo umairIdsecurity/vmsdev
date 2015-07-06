@@ -209,6 +209,7 @@ class VisitorController extends RestfulController {
         $result['staffId'] = $visitor->staff_id;
         $result['notes'] = $visitor->notes;
         $result['visitorType'] = $visitor->visitor_type;
+        $result['profileType'] = $visitor->profile_type;
         $result['vehicle'] = $visitor->vehicle;
         $result['createdBy'] = $visitor->created_by;
         $result['tenant'] = $visitor->tenant;

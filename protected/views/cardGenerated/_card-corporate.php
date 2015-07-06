@@ -100,8 +100,8 @@ if($model->card_type ==  CardType::CONTRACTOR_VISITOR){
                         <tr>
                             <td>
                                 <div
-                                    style="float:left; width:150px; height:200px; background:#fff; margin-left:15px; margin-top:13px;">
-                                    <img border="0" style="width:150px; height:200px;"
+                                    style="float:left; width:100px; height:133px; background:#fff; margin-left:15px; margin-top:13px;">
+                                    <img border="0" style="width:100px; height:133px;"
                                          src="<?=$userPhoto;?>">
                                 </div>
                             </td>
@@ -153,8 +153,8 @@ if($model->card_type ==  CardType::CONTRACTOR_VISITOR){
                         <tr>
                             <td>
                                 <div
-                                    style="float:left; width:150px; height:200px; background:#fff; margin-left:15px; margin-top:13px;">
-                                    <img border="0" style="width:150px; height:200px;"
+                                    style="float:left; width:100px; height:133px; background:#fff; margin-left:15px; margin-top:13px;">
+                                    <img border="0" style="width:100px; height:133px;"
                                          src="<?=$userPhoto;?>">
                                 </div>
                             </td>
@@ -200,8 +200,8 @@ if($model->card_type ==  CardType::CONTRACTOR_VISITOR){
             <tr>
                 <td>
                     <div
-                        style="float:left; width:150px; height:200px; background:#fff; margin-left:15px; margin-top:13px;">
-                        <img border="0" style="width:150px; height:200px;"
+                        style="float:left; width:100px; height:133px; background:#fff; margin-left:15px; margin-top:13px;">
+                        <img border="0" style="width:100px; height:133px;"
                              src="<?=$userPhoto;?>">
                     </div>
                 </td>

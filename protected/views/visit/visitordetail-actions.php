@@ -385,7 +385,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                             if (asicChecked) {
                                 confirmed = true;
                             } else {
-                                alert('Please select all the declarations.');
+                                //alert('Please select all the declarations.');
                                 return false;
                             }
                         }
@@ -404,14 +404,14 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                     if (asicChecked) {
                                         confirmed = true;
                                     } else {
-                                        alert('Please select all the declarations.');
+                                        //alert('Please select all the declarations.');
                                         return false;
                                     }
                                 }
 
                             });
                         } else {
-                            alert('Please select all the declarations.');
+                            //alert('Please select all the declarations.');
                             return false;
                         }
                     });

@@ -336,10 +336,10 @@ $defaultKey = key($asicCardTypes);
                             <tr class="vic-host-fields">
                                 <td>
                                     <?php echo $form->textField($userModel, 'asic_no', array(
-                                        'size' => 10,
-                                        'maxlength' => 50,
+                                        'size'        => 10,
+                                        'maxlength'   => 50,
                                         'placeholder' => 'ASIC No.',
-                                        'style' => 'width: 110px;'
+                                        'style'       => 'width: 110px;'
                                     )); ?>
 
                                     <?php
@@ -350,17 +350,17 @@ $defaultKey = key($asicCardTypes);
                                         'model' => $userModel,
                                         'attribute' => 'asic_expiry',
                                         'options' => array(
-                                            'dateFormat' => 'dd-mm-yy',
+                                            'dateFormat'  => 'dd-mm-yy',
                                             'changeMonth' => 'true',
-                                            'changeYear' => 'true',
-                                            'minDate' => '0',
-                                            'maxDate' => $interval->days
+                                            'changeYear'  => 'true',
+                                            'minDate'     => '0',
+                                            'maxDate'     => $interval->days
                                         ),
                                         'htmlOptions' => array(
-                                            'size' => '0',
-                                            'maxlength' => '10',
+                                            'size'        => '0',
+                                            'maxlength'   => '10',
                                             'placeholder' => 'Expiry',
-                                            'style' => 'width: 80px;',
+                                            'style'       => 'width: 80px;',
                                         ),
                                     ));
                                     ?><span class="required primary-identification-require">*</span>

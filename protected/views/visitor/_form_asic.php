@@ -75,26 +75,56 @@ if ($this->action->id == 'update') {
             'afterValidate'    => 'js:function(form, data, hasError){ 
                 
                 var visitor_card_status = $("#Visitor_visitor_card_status").val();
-                if (visitor_card_status == '.Visitor::ASIC_ISSUED.') {
-                    var visitor_asic_no = $("#Visitor_asic_no").val();
-                    var visitor_asic_expiry = $("#Visitor_asic_expiry").val();
-                    if (visitor_asic_no == "" || visitor_asic_expiry == "") {
-                        //add validation item
-                        data["Visitor_asic_no"] = ["Please enter an asic no"];
-                        data["Visitor_asic_expiry"] = ["Please select an asic expiry"];
-                        
-                        if (visitor_asic_no == "") {
-                            $("#Visitor_asic_no_em_").html(data["Visitor_asic_no"]).show();
-                        }
+                console.log(visitor_card_status);
+                switch (visitor_card_status) {
+                    case "'.Visitor::ASIC_ISSUED.'":
+                        var visitor_asic_no = $("#Visitor_asic_no").val();
+                        var visitor_asic_expiry = $("#Visitor_asic_expiry").val();
+                        if (visitor_asic_no == "" || visitor_asic_expiry == "") {
+                            //add validation item
+                            data["Visitor_asic_no"] = ["Please enter an asic no"];
+                            data["Visitor_asic_expiry"] = ["Please select an asic expiry"];
 
-                        if (visitor_asic_expiry == "") {
-                            $("#Visitor_asic_expiry_em_").html(data["Visitor_asic_expiry"]).show();
-                        }
+                            if (visitor_asic_no == "") {
+                                $("#Visitor_asic_no_em_").html(data["Visitor_asic_no"]).show();
+                            }
 
-                        hasError = true;
-                    } else {
-                        hasError = false;
-                    }
+                            if (visitor_asic_expiry == "") {
+                                $("#Visitor_asic_expiry_em_").html(data["Visitor_asic_expiry"]).show();
+                            }
+
+                            hasError = true;
+                        } else {
+                            hasError = false;
+                        }
+                        break;
+                    
+                    case "'.Visitor::ASIC_APPLICANT.'":
+                        var identification_type = $("#Visitor_identification_type").val();
+                        var identification_document_no = $("#Visitor_identification_document_no").val();
+                        var identification_document_expiry = $("#Visitor_identification_document_expiry").val();
+                        if (identification_type == "" || identification_document_no == "" || identification_document_expiry == "") {
+                            data["Visitor_identification_type"] = ["Please select an identification type"];
+                            data["Visitor_identification_document_no"] = ["Please enter a document no"];
+                            data["Visitor_identification_document_expiry"] = ["Please select a document expiry"];
+
+                            if (identification_type == "") {
+                                $("#Visitor_identification_type_em_").html(data["Visitor_identification_type"]).show();
+                            }
+
+                            if (identification_document_no == "") {
+                                $("#Visitor_identification_document_no_em_").html(data["Visitor_identification_document_no"]).show();
+                            }
+
+                            if (identification_document_expiry == "") {
+                                $("#Visitor_identification_document_expiry_em_").html(data["Visitor_identification_document_expiry"]).show();
+                            }
+
+                            hasError = true;
+                        } else {
+                            hasError = false;
+                        }
+                        break;
                 }
 
                 if(isEmpty(data)) {

@@ -308,9 +308,12 @@ class Visitor extends CActiveRecord {
                 );
                 break;
             case self::PROFILE_TYPE_ASIC:
+                $rules[] = [
+                    'identification_type, identification_document_no, identification_document_expiry', 'required',
+                    'on' => 'asicApplicant'
+                ];
                 $rules[] = array(
-                    'visitor_card_status, asic_no, asic_expiry',
-                    'required',
+                    'visitor_card_status, asic_no, asic_expiry', 'required',
                     'on' => 'asicIssued'
                 );
                 break;

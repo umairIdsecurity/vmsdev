@@ -82,8 +82,20 @@ class VisitorServiceImpl implements VisitorService {
             $visitor->setScenario('u18Rule');
         }
 
-        if ($visitor->profile_type == Visitor::PROFILE_TYPE_ASIC && $visitor->visitor_card_status == Visitor::ASIC_ISSUED) {
-            $visitor->setScenario('asicIssued');
+        if ($visitor->profile_type == Visitor::PROFILE_TYPE_ASIC) {
+            switch ($visitor->visitor_card_status) {
+                case Visitor::ASIC_ISSUED:
+                    $visitor->setScenario('asicIssued');
+                    break;
+                case Visitor::ASIC_APPLICANT:
+                    $visitor->setScenario('asicApplicant');
+                    break;
+            }
+
+            #Todo: If ASIC no and ASIC expiry is empty then change visitor card status to expired
+            if (empty($visitor->asic_no) && empty($visitor->asic_expiry)) {
+                $visitor->visitor_card_status == Visitor::ASIC_EXPIRED;
+            }
         }
 
         if (!($result = $visitor->save())) {

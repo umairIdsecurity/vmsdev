@@ -19,11 +19,19 @@ class VisitController extends RestfulController {
                 $data = file_get_contents("php://input");
                 $data = CJSON::decode($data);
 
+                $this->validateData($data);
+
                 //check Visitor ID
                 $visitor = Visitor::model()->findByPk($data['visitorID']);
                 if(!$visitor) {
                     $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'NO_VISIT_FOUND', 'errorDescription' => 'Visitor found for this visit')));
                     return false;
+                }
+
+                //check Host ID
+                $host = User::model()->with('com')->findByPk($data['hostID']);
+                if (!$host) {
+                    $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'NO_VISIT_FOUND', 'errorDescription' => 'Host not found for this visit')));
                 }
 
                 $visit = new Visit();
@@ -237,6 +245,43 @@ class VisitController extends RestfulController {
             if (strtotime(date('d-m-Y H:i:s', strtotime($data['startTime']))) > strtotime(date('d-m-Y H:i:s', strtotime($data['checkOutTime']))))
                 $this->sendResponse(400, CJSON::encode(array('responseCode' => 400, 'errorCode' => 'START_TIME_AFTER_CHECKOUT_TIME', 'errorDescription' => 'Start time after check out time')));
         }
+    }
+
+    public function validateData($data){
+        if (!isset($data['startTime']) || empty($data['startTime'])) {
+            $this->sendResponse(400, CJSON::encode(array('responseCode' => 400, 'errorCode' => 'START_TIME_INVALID', 'errorDescription' => 'Start Time invalid')));
+        }
+
+        if (isset($data['startTime']) && isset($data['expectedEndTime'])) {
+            if (strtotime(date('d-m-Y H:i:s', strtotime($data['startTime']))) > strtotime(date('d-m-Y H:i:s', strtotime($data['expectedEndTime']))))
+                $this->sendResponse(400, CJSON::encode(array('responseCode' => 400, 'errorCode' => 'START_TIME_AFTER_END_TIME', 'errorDescription' => 'Start time after end time')));
+        }
+
+        if (isset($data['startTime']) && isset($data['checkOutTime'])) {
+            if (strtotime(date('d-m-Y H:i:s', strtotime($data['startTime']))) > strtotime(date('d-m-Y H:i:s', strtotime($data['checkOutTime']))))
+                $this->sendResponse(400, CJSON::encode(array('responseCode' => 400, 'errorCode' => 'START_TIME_AFTER_CHECKOUT_TIME', 'errorDescription' => 'Start time after check out time')));
+        }
+
+        if (!isset($data['visitCardType']) || empty($data['visitCardType']) ) {
+            $this->sendResponse(400, CJSON::encode(array('responseCode' => 400, 'errorCode' => 'VISIT_CARD_TYPE', 'errorDescription' => 'VisitCardType invalid')));
+        }
+
+        if (!isset($data['visitReason']) || empty($data['visitReason']) ) {
+            $this->sendResponse(400, CJSON::encode(array('responseCode' => 400, 'errorCode' => 'VISIT_REASON', 'errorDescription' => 'VisitReason invalid')));
+        }
+
+        if (!isset($data['workstation']) || empty($data['workstation'])  ) {
+            $this->sendResponse(400, CJSON::encode(array('responseCode' => 400, 'errorCode' => 'WORKSTATION', 'errorDescription' => 'Workstation invalid')));
+        }
+
+        if (!isset($data['visitorID']) || empty($data['visitorID'])  ) {
+            $this->sendResponse(400, CJSON::encode(array('responseCode' => 400, 'errorCode' => 'VISITOR_ID', 'errorDescription' => 'VisitorID invalid')));
+        }
+
+        if (!isset($data['hostID']) || empty($data['hostID'])  ) {
+            $this->sendResponse(400, CJSON::encode(array('responseCode' => 400, 'errorCode' => 'HOST_ID', 'errorDescription' => 'HostID invalid')));
+        }
+
     }
 
     private function populateVisits($visits) {

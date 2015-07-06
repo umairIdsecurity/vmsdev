@@ -20,7 +20,7 @@ class PreregistrationController extends Controller
 	public function accessRules() {
 		return array(
 			array('allow',
-				'actions' => array('index','privacyPolicy' , 'declaration' , 'Login' ,'registration','confirmDetails', 'visitReason' , 'addAsic' ),
+				'actions' => array('index','privacyPolicy' , 'declaration' , 'Login' ,'registration','confirmDetails', 'visitReason' , 'addAsic' , 'asicPass',  ),
 				'users' => array('*'),
 			),
 			array('allow',
@@ -248,28 +248,28 @@ class PreregistrationController extends Controller
 			$model->profile_type = 'ASIC';
 			$model->attributes = $_POST['Registration'];
 			if ($model->save()) {
-
 				$loggedUserEmail = 'shimulcsc@yahoo.com';
-				$headers  = 'MIME-Version: 1.0' . "\r\n";
-				$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-				//$headers .= 'From: Admin <shimulcsc@yahoo.com>' . "\r\n";
-				//$headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
+				$headers = "MIME-Version: 1.0" . "\r\n";
+				$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+				$headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
 				$to=$model->email;
 				$subject="Request for verification of VIC profile";
 				$body = "<html><body>Hi,<br><br>".
 					"VIC Holder urgently requires your Verification of their visit.<br><br>".
 					"Link of the VIC profile<br>".
-					"http://vmsprdev.identitysecurity.info/index.php/preregistration/login<br>";
+					Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?vid=".$model->id."email=".$model->email."<br>";
 				$body .="<br>"."Thanks,"."<br>Admin</body></html>";
 				mail($to, $subject, $body,$headers);
 
-				//mail($to, $subject, $body);
 			}
-			//print_r($model->getErrors());
 
 		}
 
 		$this->render('asic-sponsor' , array('model'=>$model) );
+	}
+
+	public function actionAsicPass(){
+		echo "enter ASIC password";
 	}
 
 	public function actionLogin(){

@@ -88,7 +88,7 @@ class TenantController extends Controller {
                 } else {
 
                 }
-
+                $companyModel->company_type = 1; // tenant company type
                 $companyModel->code = $_POST['TenantForm']['tenant_code'];
                 $companyModel->name = $_POST['TenantForm']['tenant_name'];
                 $companyModel->trading_name = $_POST['TenantForm']['tenant_name'];

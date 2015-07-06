@@ -352,7 +352,7 @@ $asicEscort = new AddAsicEscort();
             <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
             <tr>
                 <td width="5%"><input type="checkbox" id="asicDecalarationCbx3"/></td>
-                <td><label for="asicDecalarationCbx4">I request that a VIC be issued to the applicant for the areas and reason indicated.</label></td>
+                <td><label for="asicDecalarationCbx3">I request that a VIC be issued to the applicant for the areas and reason indicated.</label></td>
             </tr>
 
             <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
@@ -362,7 +362,7 @@ $asicEscort = new AddAsicEscort();
                     <hr style="border-color: black;"></td>
             </tr>
             <tr>
-                <td width="5%"><input type="radio" id="asicDecalarationRbtn1"/></td>
+                <td width="5%"><input type="radio" id="asicDecalarationRbtn1"  onclick="asicEscortDefault()"/></td>
                 <td><label for="asicDecalarationRbtn1">I note that they must be under my direct supervision at all times whilst they are airside.</label></td>
             </tr>
             <tr><td>Or</td><td>&nbsp;</td></tr>
@@ -463,6 +463,11 @@ $asicEscort = new AddAsicEscort();
 
     function asicEscort() {
         $('.asic-escort').removeClass('hidden');
+
+    }
+    function asicEscortDefault() {
+        $('.asic-escort').addClass('hidden');
+
     }
 
     function asicConfirm () {

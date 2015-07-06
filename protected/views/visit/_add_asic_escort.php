@@ -55,6 +55,7 @@
                 <span class="required">*</span>
                 <?php echo "<br>" . $form->error($model, 'contact_number'); ?>
                 <?php echo "" . $form->error($model, 'email'); ?>
+                <div id="AddAsicEscort_email_unique_em_" class="errorMessage" style="display: none;">Email is existed.</div>
             </td>
     </table>
 

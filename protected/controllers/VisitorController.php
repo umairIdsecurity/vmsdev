@@ -26,13 +26,13 @@ class VisitorController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('update', 'delete', 'admin', 'adminAjax', 'csvSampleDownload','getActiveVisit'),
+                'actions' => array('update', 'delete', 'admin', 'adminAjax', 'csvSampleDownload','getActiveVisit','getAsicEscort'),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('csvSampleDownload','importVisitHistory', 'addVisitor', 'ajaxCrop', 'create', 'GetIdOfUser','GetHostDetails',
                                     'GetPatientDetails', 'CheckEmailIfUnique', 'GetVisitorDetails', 'FindVisitor', 'FindHost', 'GetTenantAgentWithSameTenant',
-                                    'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent','CheckAsicStatusById', 'addAsicSponsor', 'CheckCardStatus', 'UpdateIdentificationDetails'
+                                    'GetCompanyWithSameTenant', 'GetCompanyWithSameTenantAndTenantAgent','CheckAsicStatusById', 'addAsicSponsor', 'CheckCardStatus', 'UpdateIdentificationDetails','checkAsicEscort',
                                 ),
                 'users' => array('@'),
             ),
@@ -707,4 +707,28 @@ class VisitorController extends Controller {
         
     }
 
+    public function actionCheckAsicEscort() {
+        $existed = Visitor::model()->findAllByAttributes([
+            'email' => $_POST['emailEscort'],
+        ]);
+        if (count($existed)> 0) {
+            echo 'existed';
+        } else {
+            echo 'ok';
+        }
+    }
+
+    public function actionGetAsicEscort()
+    {
+        $merge = new CDbCriteria;
+        $merge->addCondition("escort_flag = 1");
+
+        $model = new Visitor('search');
+        $model->unsetAttributes();
+
+        return $this->renderPartial('findAsicEscort', array(
+            'merge' => $merge,
+            'model' => $model,
+        ));
+    }
 }

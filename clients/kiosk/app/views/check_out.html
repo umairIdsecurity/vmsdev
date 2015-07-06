@@ -1,0 +1,24 @@
+<div class="col-xs-12">
+  <h2>Check Out</h2>
+  <hr>
+</div>
+
+<div class="container default">
+  <div class="centered-child">
+    <div class="alert alert-danger" role="alert" ng-show="hasError">
+      <span class="error">Error: please try again, or contact Identity Security if the issue persists.</span>
+    </div>
+
+    <div class="form-group">
+      <input type="text" class="form-control input-lg" ng-model="query" ng-change="searchVisits(query)" placeholder="Please enter your Visitor Card Number">
+    </div>
+    <div ng-show="visit == null">
+      <div class="list-group">
+        <a ng-repeat="v in visits" ng-click="choose(v)" class="list-group-item">{{ v.visitor.firstName }} {{ v.visitor.lastName }}</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button class="btn btn-success  sticky-pull-left" ng-style="backButtonStyle" ng-click="goBack()"><span class="glyphicon glyphicon-chevron-left"></span>Back</button>
+<button class="btn btn-success  sticky-pull-right" ng-style="forwardButtonStyle" ng-click="searchVisits(query)">Next<span class="glyphicon glyphicon-chevron-right"></span></button>

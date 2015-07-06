@@ -369,6 +369,14 @@ $asicEscort = new AddAsicEscort();
             <tr class="asic-escort hidden">
                 <td></td>
                 <td>
+                    <input type="text" id="search-escort" style="width:280px" name="search-host"
+                           placeholder="Enter name, email address" class="search-text"/>
+                    <button type="button" class="btn btn-primary" id="findEscortBtn" style="margin-bottom: 14px!important;" onclick="" id="escort-findBtn">Search Asic Escort</button>
+                    <div id="divMsg" style="display:none;">
+                        <img id="findEscortBtn" src="<?php echo Yii::app()->controller->assetsBase; ?>/images/loading.gif" alt="Please wait.." />
+                    </div>
+                    <div class="errorMessage" id="searchEscortErrorMessage" style=" display:none;">Please enter asic escort name or email for searching</div>
+                    <div class="searchAsicEscortResult"></div>
                     <div class="add-esic-escort">
                         <?php $this->renderPartial('_add_asic_escort',array('model' => $asicEscort)) ?>
                     </div>
@@ -438,23 +446,53 @@ $asicEscort = new AddAsicEscort();
         $('.asic-escort').removeClass('hidden');
     }
 
-    function validateAsicEscort() {
-        if($('#asicEscortRbtn').is(':checked') == true) {
-            var noError = true;
-            $('.asic-escort-field .errorMessage ').each(function(){
-                if($(this).css('display') == 'block'){
-                    noError = false;
-                };
-            });
-            $('.asic-escort-field input').each(function(){
-                if($(this).val() == ''){
-                    noError = false;
-                };
-            });
-            return noError;
+    function asicConfirm () {
+        var checkAsicEscort = validateAsicEscort();
+        if( checkAsicEscort == true ) {
+            var asicChecked = asicCheck();
+            if (asicChecked) {
+                confirmed = true;
+            } else {
+                alert('Please select all the declarations.');
+                return false;
+            }
         } else {
-            return true;
+            alert('Please input all Asic Escort Information');
+            return;
         }
+    }
+    function checkEscortEmailUnique () {
+        var email = $('#AddAsicEscort_email').val();
+        $.ajax({
+            type: "POST",
+            url: "<?php echo CHtml::normalizeUrl(array("visitor/checkAsicEscort")); ?>",
+            data: {emailEscort: email},
+            success: function(data) {
+                if(data == 'existed') {
+                    $('#AddAsicEscort_email_unique_em_').show();
+                    asicConfirm();
+
+                } else {
+                    $('#AddAsicEscort_email_unique_em_').hide();
+                    asicConfirm();
+                }
+            }
+        });
+    }
+
+    function validateAsicEscort() {
+        var noError = true;
+        $('.asic-escort-field .errorMessage ').each(function () {
+            if ($(this).css('display') == 'block') {
+                noError = false;
+            }
+        });
+        $('.asic-escort-field input').each(function () {
+            if ($(this).val() == '') {
+                noError = false;
+            }
+        });
+        return noError;
     }
 
     $(document).on('click', '#identificationChkBoxNo', function(e) {console.log(isExpired());
@@ -530,6 +568,28 @@ $asicEscort = new AddAsicEscort();
         $('#asicEscortRbtn').on('click',function(){
             $(this).prop('checked',true);
             $('#asicDecalarationRbtn1').prop('checked',false);
+        });
+        $('#findEscortBtn').on('click', function(){
+           if($('#search-escort').val() == ''){
+               $('#searchEscortErrorMessage').show();
+               return;
+           } else {
+               $('#searchEscortErrorMessage').hide();
+               $(this).css('display','none');
+               $('#divMsg').show();
+               $('.add-esic-escort').hide();
+               var searchAsicEscortResult = $('.searchAsicEscortResult').empty();
+               $.ajax({
+                   type: "POST",
+                   url: "<?php echo CHtml::normalizeUrl(array("visitor/getAsicEscort")); ?>",
+                   data: {},
+                   success: function(data) {
+                       searchAsicEscortResult.append(data);
+                       $(this).css('display','block');
+                       $('#divMsg').hide();
+                   }
+               });
+           }
         });
     });
 </script>

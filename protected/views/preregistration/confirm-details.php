@@ -25,7 +25,9 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
         'enableClientValidation'=>true,
         'clientOptions'=>array(
             'validateOnSubmit'=>true,
-            'afterValidate'    => 'js:function(form, data, hasError){ return afterValidate(form, data, hasError); }'
+            'afterValidate'    => 'js:function(form, data, hasError){
+                return afterValidate(form, data, hasError);
+            }'
         ),
         'htmlOptions'=>array(
             'class'=> 'form-comfirm-detail'
@@ -198,6 +200,8 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
             $("#Registration_date_of_birth_em_").show();
             $("#Registration_date_of_birth_em_").html('Please update your Date of Birth');
             return false;
+        }else{
+            return true;
         }
 
     }

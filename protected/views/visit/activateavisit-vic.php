@@ -439,6 +439,7 @@ $asicEscort = new AddAsicEscort();
         if (checknum.length == 3) {
             if($('#asicDecalarationRbtn1').is(':checked') || $('#asicEscortRbtn').is(':checked')) {
                 if(validateAsicEscort()== true) {
+                    $('#searchEscortErrorMessage').hide();
                     asicSponsorDeclarationChange();
                     return true;
                 } else{
@@ -447,6 +448,10 @@ $asicEscort = new AddAsicEscort();
                     alert('Please input all Asic Escort Information');
                     return;
                 }
+            } else {
+                $('#AsicSponsorDecalarations').prop('checked', false);
+                $('#asicSponsorActiveVisitLink').prop('checked', false);
+                alert('Please select ASIC Escort type.');
             }
         } else {
             $('#AsicSponsorDecalarations').prop('checked', false);

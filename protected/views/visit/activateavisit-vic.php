@@ -354,14 +354,19 @@ $asicEscort = new AddAsicEscort();
                 <td width="5%"><input type="checkbox" id="asicDecalarationCbx3"/></td>
                 <td><label for="asicDecalarationCbx4">I request that a VIC be issued to the applicant for the areas and reason indicated.</label></td>
             </tr>
+
             <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+            <tr>
+                <td></td>
+                <td>ASIC Escort
+                    <hr style="border-color: black;"></td>
+            </tr>
             <tr>
                 <td width="5%"><input type="radio" id="asicDecalarationRbtn1"/></td>
                 <td><label for="asicDecalarationRbtn1">I note that they must be under my direct supervision at all times whilst they are airside.</label></td>
             </tr>
-            <tr><td>&nbsp;</td>
-                <td><hr style="border-color: black;"></td>
-            </tr>
+            <tr><td>Or</td><td>&nbsp;</td></tr>
+            <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
             <tr>
                 <td width="5%"><input type="radio" id="asicEscortRbtn" onclick="asicEscort()"/></td>
                 <td><label for="asicEscortRbtn">Add ASIC Escort.</label></td>
@@ -408,6 +413,9 @@ $asicEscort = new AddAsicEscort();
             if($('#asicDecalarationRbtn1').is(':checked') || $('#asicEscortRbtn').is(':checked')) {
                 $('#AsicSponsorDecalarations').prop('checked', true);
                 $('#asicSponsorActiveVisitLink').prop('checked', true);
+            } else {
+                $('#AsicSponsorDecalarations').prop('checked', false);
+                $('#asicSponsorActiveVisitLink').prop('checked', false);
             }
         } else {
             $('#AsicSponsorDecalarations').prop('checked', false);
@@ -434,11 +442,15 @@ $asicEscort = new AddAsicEscort();
                     asicSponsorDeclarationChange();
                     return true;
                 } else{
+                    $('#AsicSponsorDecalarations').prop('checked', false);
+                    $('#asicSponsorActiveVisitLink').prop('checked', false);
                     alert('Please input all Asic Escort Information');
                     return;
                 }
             }
         } else {
+            $('#AsicSponsorDecalarations').prop('checked', false);
+            $('#asicSponsorActiveVisitLink').prop('checked', false);
             alert('Please select all the declarations.');
             return false;
         }

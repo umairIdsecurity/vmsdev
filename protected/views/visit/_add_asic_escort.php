@@ -39,6 +39,8 @@
                     'attribute' => 'asic_expiry',
                     'options' => array(
                         'dateFormat' => 'dd-mm-yy',
+                        'changeMonth' => true,
+                        'changeYear' => true
                     ),
                     'htmlOptions' => array(
                         'maxlength' => '10',

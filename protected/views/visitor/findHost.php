@@ -92,8 +92,13 @@ if ($visitorType != VisitorType::PATIENT_VISITOR) {
                 'filter' => false
             ),
             'last_name',
-            'email',
-            'contact_number',
+            //'email',
+            //'contact_number',
+            [
+                'name' => 'company',
+                'filter' => false,
+                'value' => '$data->getCompany() ? $data->getCompany()->name : ""'
+            ],
             array(
                 'header' => 'Action',
                 'type' => 'raw',

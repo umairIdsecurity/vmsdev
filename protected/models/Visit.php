@@ -1041,14 +1041,17 @@ class Visit extends CActiveRecord {
         $dateIn = new DateTime($this->date_check_in);
         $dateOut = new DateTime($this->date_check_out);
         $dateNow = new DateTime(date('Y-m-d'));
+        $criteria = new CDbCriteria;
+
+        $criteria->addCondition("(visit_status = " . VisitStatus::AUTOCLOSED . " OR visit_status = " . VisitStatus::CLOSED . ") AND visitor = " . $this->visitor);
         switch ($this->card_type) {
             case CardType::VIC_CARD_MANUAL:
             case CardType::VIC_CARD_SAMEDATE:
             case CardType::VIC_CARD_24HOURS:
-                if (in_array($this->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED, VisitStatus::EXPIRED])) {
+                /*if (in_array($this->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED, VisitStatus::EXPIRED])) {
                     return 1;
-                }
-                return (int)$this->countByAttributes(['visit_status' => VisitStatus::CLOSED, 'visitor' => $this->visitor]) + 1;
+                }*/
+                return (int)$this->count($criteria) + 1;
                 break;
             case CardType::VIC_CARD_EXTENDED:
             case CardType::VIC_CARD_MULTIDAY:

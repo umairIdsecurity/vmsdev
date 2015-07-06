@@ -146,7 +146,7 @@ $asicEscort = new AddAsicEscort();
             }*/
 
             // Update date check out for Saved, Closed, AutoClosed Visit
-            if (in_array($model->visit_status, [VisitStatus::SAVED, VisitStatus::CLOSED, VisitStatus::AUTOCLOSED])) {
+            if (in_array($model->visit_status, [VisitStatus::SAVED, VisitStatus::CLOSED, VisitStatus::AUTOCLOSED]) && $model->card_type != CardType::VIC_CARD_24HOURS) {
                 $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in. ' + 1 day'));
                 $model->time_check_out = $model->time_check_in;
             }

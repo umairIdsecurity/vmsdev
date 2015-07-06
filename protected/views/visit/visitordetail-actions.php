@@ -137,7 +137,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                 $disabled = 'disabled';
                             }
                             ?>
-                            <input type="submit" style="width: 235px !important;" <?php echo $disabled; ?> value="Preregister Visit" class="complete"/>
+                            <input type="submit" style="width: 131px !important;" <?php echo $disabled; ?> value="Preregister Visit" class="complete"/>
                         <?php else:
                             if ($model->card_type == CardType::MANUAL_VISITOR && isset($model->date_check_in) && strtotime($model->date_check_in) < strtotime(date("d-m-Y"))) :
                                 ?>
@@ -165,7 +165,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
 <div id="identificationModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3>Identification Detail</h3>
+        <h3>Identification Verification</h3>
     </div>
     <div class="modal-body">
         <table style="border-collapse: initial;">

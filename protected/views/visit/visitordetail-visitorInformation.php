@@ -531,7 +531,7 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                                 ASIC No.
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" <?php echo $disabled; ?> class="visitor-detail-info-field" value="<?php echo $asic->asic_no; ?>"
+                                <input type="text" <?php //echo $disabled; ?> class="visitor-detail-info-field" value="<?php echo $asic->asic_no; ?>"
                                        name="Visitor[asic_no]" id="Visitor_asic_no">
                                 <div style="" id="Visitor_asic_no_em_" class="errorMessage errorMessageEmail">Please enter a asic number.
                                 </div>

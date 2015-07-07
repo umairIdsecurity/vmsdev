@@ -325,7 +325,7 @@ class PreregistrationController extends Controller
 				$body = "<html><body>Hi,<br><br>".
 					"VIC Holder urgently requires your Verification of their visit.<br><br>".
 					"Link of the VIC profile<br>".
-					"<a heref=' " .Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?k_string=".$encodedData['data']. " '>".Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?k_string=".$encodedData['data']."</a><br>";
+					"<a href=' " .Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?k_string=".$encodedData['data']. " '>".Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?k_string=".$encodedData['data']."</a><br>";
 				$body .="<br>"."Thanks,"."<br>Admin</body></html>";
 				mail($to, $subject, $body,$headers);
 
@@ -337,7 +337,7 @@ class PreregistrationController extends Controller
 	}
 
 	public function actionAsicPass(){
-		echo "enter ASIC password 2";
+		echo "enter ASIC password 3";
 	}
 
 	public function actionLogin(){

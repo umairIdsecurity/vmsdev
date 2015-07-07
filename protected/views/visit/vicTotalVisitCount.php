@@ -106,7 +106,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
                             'name' => 'datePicker',
                             'id' => 'lodgementDatePicker',
                             'options' => array(
-                                'dateFormat' => 'yy-mm-dd',
+                                'dateFormat' => 'dd-mm-yy',
                             ),
                             'htmlOptions' => array(
                                 'size' => '0',

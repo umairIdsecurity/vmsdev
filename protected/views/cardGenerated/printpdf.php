@@ -136,9 +136,14 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
         margin:5px 0 3px 0;
         text-transform: capitalize;
     }
+    .card-visit-info .last-name {
+        text-transform: uppercase;
+    }
 
     .text-cmp {
-        font-size:25px; font-weight:bold; margin:0 0 10px 0;
+        font-size:25px;
+        font-weight:bold;
+        margin:0 0 10px 0;
     }
     .card-footer{
         background:#fff;
@@ -190,21 +195,25 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
                             <div class="card-info">
                                 <p class="text-cmp"><?= $companyCode; ?></p>
                                 <p class="card-date-text">
-                                    <span> <?php echo($model->card_type == CardType::CONTRACTOR_VISITOR) ? 'C' : 'V'; ?> </span><?= $dateExpiry ?>
+                                    <span><?php echo($model->card_type == CardType::CONTRACTOR_VISITOR) ? 'C' : 'V'; ?> </span><?= $dateExpiry ?>
                                 </p>
-                                <p class="card-visit-info"><?=$first_name ?><br><?= $last_name ?><br><?= $cardCode ?></p>
+                                <p class="card-visit-info">
+                                    <span class="first-name"><?=$first_name ?></span><br/>
+                                    <span class="last-name"><?=$last_name ?></span><br/>
+                                    <span class="card-code"><?= $cardCode ?></span>
+                                </p>
                             </div>
-                            <?php
-                            if($companyLogo) {
-                                ?>
-                                <div class="card-footer">
+                            <div class="card-footer">
+                                <?php
+                                if($companyLogo) {
+                                    ?>
                                     <div class="img-logo">
                                         <img src="<?= $companyLogo; ?>">
                                     </div>
-                                </div>
-                            <?php
-                            }
-                            ?>
+                                <?php
+                                }
+                                ?>
+                            </div>
                         </div>
                     </td>
                     <td>
@@ -228,21 +237,27 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
             <div class="card-info">
                 <p class="text-cmp"><?= $companyCode; ?></p>
                 <p class="card-date-text">
-                    <span> <?php echo($model->card_type == CardType::CONTRACTOR_VISITOR) ? 'C' : 'V'; ?> </span><?= $dateExpiry ?>
+                    <span><?php echo($model->card_type == CardType::CONTRACTOR_VISITOR) ? 'C' : 'V'; ?> </span><?= $dateExpiry ?>
                 </p>
-                <p class="card-visit-info"><?=$first_name ?><br><?= $last_name ?><br><?= $cardCode ?></p>
+                <p class="card-visit-info">
+                    <span class="first-name"><?=$first_name ?></span><br/>
+                    <span class="last-name"><?=$last_name ?></span><br/>
+                    <span class="card-code"><?= $cardCode ?></span>
+                </p>
             </div>
-            <?php
-            if($companyLogo) {
-                ?>
+
             <div class="card-footer">
-                <div class="img-logo">
-                    <img src="<?= $companyLogo; ?>">
-                </div>
+                <?php
+                if($companyLogo) {
+                ?>
+                    <div class="img-logo">
+                        <img src="<?= $companyLogo; ?>">
+                    </div>
+                <?php
+                }
+                ?>
             </div>
-            <?php
-            }
-            ?>
+
         </div>
         <!--Box 2-->
         <div class="card-text">

@@ -297,7 +297,7 @@ $defaultKey = key($asicCardTypes);
                                 </td>
                             </tr>
                             <tr>
-                                <td id="visitorCompanyRow">
+                                <td id="userCompanyRow">
                                     <div style="margin-bottom: 5px;">
                                         <?php
                                         $this->widget('application.extensions.select2.Select2', array(
@@ -320,8 +320,8 @@ $defaultKey = key($asicCardTypes);
                             </tr>
                             <tr>
                                 <td>
-                                   <a style="float: left; margin-right: 5px; width: 95px; height: 21px;" href="#addCompanyContactModal" role="button" data-toggle="modal" id="addCompanyLink">Add Company</a>
-                                    <a href="#addCompanyContactModal" style="font-size: 12px; font-weight: bold; display: none;" id="addUserContactLink" class="btn btn-xs btn-info" role="button" data-toggle="modal">Add Contact</a>
+                                   <a style="float: left; margin-right: 5px; width: 86px; height: 16px;   border: 1px solid #63B421; border-radius: 5px; background: -webkit-gradient(linear, center top, center bottom, from(#A1DC33), to(#82BD12)); font-size: 12px; padding: 3px 15px 5px; color: #fff;   font-weight: bold;" href="#addCompanyContactModal" role="button" data-toggle="modal" id="addUserCompanyLink">Add Company</a>
+                                    <a href="#addCompanyContactModal" style="font-size: 12px; font-weight: bold; display: none;" id="addUserContactLink" class="btn btn-xs btn-info" role="button" data-toggle="modal" data-id="asic">Add Contact</a>
                                 </td>
                             </tr>
                             <tr class="vic-host-fields">
@@ -890,8 +890,8 @@ $defaultKey = key($asicCardTypes);
             url: "<?php echo $this->createUrl('company/getContacts') ?>",
             dataType: "json",
             data: {id:companyId},
-            success: function(data) {console.log(data);
-                var companyName = $('.select2-selection__rendered').text();
+            success: function(data) {
+                var companyName = $('#userCompanyRow .select2-selection__rendered').text();
                 $('#AddCompanyContactForm_companyName').val(companyName).prop('disabled', 'disabled');
                 if (data == 0) {
                     $('#addUserContactLink').hide();

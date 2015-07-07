@@ -636,5 +636,8 @@ $asicEscort = new AddAsicEscort();
         $('#AddAsicEscort_email').on('change',function(){
             $('#AddAsicEscort_email_unique_em_').hide();
         });
+        $('#addCompanyLink').on('click',function(){
+            $('#asicSponsorModal').modal('hide');
+        });
     });
 </script>

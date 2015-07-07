@@ -248,10 +248,10 @@ class PreregistrationController extends Controller
 			$model->profile_type = 'ASIC';
 			$model->attributes = $_POST['Registration'];
 			if ($model->save()) {
-				//$loggedUserEmail = 'shimulcsc@yahoo.com';
+				$loggedUserEmail = 'shimulcsc@yahoo.com';
 				$headers = "MIME-Version: 1.0" . "\r\n";
 				$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-				//$headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
+				$headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
 				$to=$model->email;
 				$subject="Request for verification of VIC profile";
 				$body = "<html><body>Hi,<br><br>".

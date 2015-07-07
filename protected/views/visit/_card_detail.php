@@ -61,6 +61,7 @@ if ($card) {
         height:410px;
         border-radius:20px;
         background:<?= $bgcolor ?>;
+        position: relative;
     }
     .box-image-style {
         width:150px;
@@ -73,7 +74,10 @@ if ($card) {
         background:#fff;
         border-radius:0 0 20px 20px;
         width:256px;
-        height:50.7px;
+        height:50px;
+        position: absolute;
+        bottom: 0px;
+        left: 0px;
     }
     #photoPreview {
         height: 206px;

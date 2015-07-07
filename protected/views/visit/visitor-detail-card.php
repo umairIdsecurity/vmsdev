@@ -116,7 +116,7 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
                 array_pop(Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_ASIC]);
                 $profileType = Visitor::PROFILE_TYPE_ASIC;
             }
-            
+
             echo CHtml::dropDownList('Visitor[visitor_card_status]', $visitorModel->visitor_card_status, Visitor::$VISITOR_CARD_TYPE_LIST[$profileType], ['empty' => 'Select Card Status']);
                 echo "<br />";
 
@@ -157,7 +157,7 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
         }   
         echo CHtml::dropDownList('Visit[card_type]', $model->card_type, $cardTypeResults, $cardTypeOptions);
         echo '<br />';
-        if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN, Roles::ROLE_SUPERADMIN])) {
+        if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED])) {
             echo '<input type="submit" name="updateWorkstationForm" class="complete btnUpdateWorkstationForm"  value="Update">';
         }
         ?>
@@ -241,7 +241,7 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
             ias.cancelSelection();
         });
 
-        $(document).on('click', '.btnUpdateWorkstationForm', function(e) {
+        /*$(document).on('click', '.btnUpdateWorkstationForm', function(e) {
             e.preventDefault();
             var currentCardStatus = "<?php echo $visitorModel->visitor_card_status; ?>";
             var currentVisitStatus = "<?php echo $model->visit_status ; ?>"
@@ -253,7 +253,7 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
             }
             var t = checkVistorCardStatusOfHost(<?php echo $model->host; ?>);
             (t == true) ? $('#workstationForm').submit() : alert('Exception r718 - Vistor Information');
-        });
+        });*/
     });
 
     function uploadImage() {

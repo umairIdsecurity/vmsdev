@@ -324,92 +324,107 @@ class VisitController extends Controller {
         }
 
         /**
-         * @var Visitor $visitorModel
+         * Define needed models
          */
-        $visitorModel = Visitor::model()->findByPk($model->visitor);
-        $reasonModel = VisitReason::model()->findByPk($model->reason);
-        $patientModel = Patient::model()->findByPk($model->patient);
+        $visitorModel  = Visitor::model()->findByPk($model->visitor);
+        $reasonModel   = VisitReason::model()->findByPk($model->reason);
+        $patientModel  = Patient::model()->findByPk($model->patient);
         $cardTypeModel = CardType::model()->findByPk($model->card_type);
-        $visitCount = Visit::model()->getVisitCount($model->id);
-        $visitCount['totalVisits'] = $model->visitCounts;
-        $visitCount['remainingDays'] = $model->remainingDays;
-
-        $newPatient = new Patient;
-        $newHost = new User;
+        $visitCount    = Visit::model()->getVisitCount($model->id);
+        
+        $newPatient    = new Patient;
+        $newHost       = new User;
 
         if ($model->visitor_type == VisitorType::PATIENT_VISITOR) {
             $host = 16;
         } else {
             $host = $model->host;
         }
+
         $hostModel = User::model()->findByPk($host);
 
-
-        #update Visitor and Host
-        if (isset($_POST['Visitor']) && isset($_POST['updateVisit'])){
-            $currentCardStatus = $visitorModel->visitor_card_status;
+        // Update Workstation form ( left column on visitor detail page )
+        if (isset($_POST['updateWorkstationForm'])) {
             $visitorModel->attributes = $_POST['Visitor'];
-            $asicModel = Visitor::model()->findByPk($model->host);
-            if ($asicModel){
-                if (isset($_POST['Visitor']['host_first_name'])) $asicModel->first_name   = $_POST['Visitor']['host_first_name'];
-                if (isset($_POST['Visitor']['host_last_name'])) $asicModel->last_name     = $_POST['Visitor']['host_last_name'];
-                if (isset($_POST['Visitor']['host_asic_no'])) $asicModel->asic_no         = $_POST['Visitor']['host_asic_no'];
-                if (isset($_POST['Visitor']['host_asic_expiry'])) $asicModel->asic_expiry = $_POST['Visitor']['host_asic_expiry'];
-                $asicModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
-                #if(!$asicModel->validate()) die("asicModel-{$asicModel->id}".CHtml::errorSummary($asicModel));
-                $asicModel->save();
+            if ($visitorModel->visitor_card_status == Visitor::VIC_ASIC_ISSUED) {
+                $visitorModel->profile_type = Visitor::PROFILE_TYPE_ASIC;
             }
 
-            #update Company
+            $visitorModel->scenario = 'updateVic';
+            if ($visitorModel->save()) {
+                if (in_array($visitorModel->visitor_card_status, [Visitor::ASIC_PENDING])) {
+                    $model->date_check_in = $model->date_check_out;
+                    if (!$model->save()) {
+                        // Do something if model save failure
+                    }
+                }
+            }
+        }
+
+        #update Visitor and Host form ( middle column on visitor detail page )
+        if (isset($_POST['updateVisitorInfo'])) {
+
+            $asicModel = Visitor::model()->findByPk($model->host);
+            if ($asicModel && isset($_POST['Visitor'])) {
+                if (isset($_POST['Visitor']['asic_first_name'])) 
+                    $asicModel->first_name  = $_POST['Visitor']['asic_first_name'];
+                if (isset($_POST['Visitor']['asic_last_name'])) 
+                    $asicModel->last_name   = $_POST['Visitor']['asic_last_name'];
+                if (isset($_POST['Visitor']['asic_asic_no'])) 
+                    $asicModel->asic_no     = $_POST['Visitor']['asic_asic_no'];
+                if (isset($_POST['Visitor']['asic_asic_expiry']))
+                    $asicModel->asic_expiry = $_POST['Visitor']['asic_asic_expiry'];
+
+                $asicModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
+
+                // Save asic profile
+                if (!$asicModel->save()) {
+                    // Do something if save process failure
+                }
+            }
+
             if (isset($_POST['Company'])) {
-                if($visitorModel->company) {
+                if (!empty($visitorModel->company)) {
+
                     $companyModel = Company::model()->findByPk($visitorModel->company);
-                    $staffModel = User::model()->findByPk($visitorModel->staff_id);
                     if ($companyModel) {
-                        if (isset($_POST['Company']['name'])) $companyModel->name = $_POST['Company']['name'];
-                        #if(!$companyModel->validate()) die('companyModel-'.CHtml::errorSummary($asicModel));
+                        $companyModel->attributes = $_POST['Company'];
                         $companyModel->save();
                     }
-                    if (isset($staffModel) && $staffModel){
-                        if (isset($_POST['Company']['mobile_number'])) $staffModel->contact_number = $_POST['Company']['mobile_number'];
-                        if (isset($_POST['Company']['email_address'])) $staffModel->email = $_POST['Company']['email_address'];
-                        #if(!$staffModel->validate()) die('staffModel-'.CHtml::errorSummary($asicModel));
-                        $staffModel->save();
-                    }
-                }
-            }
 
-            if ($_POST['Visitor']['visitor_card_status'] != $currentCardStatus) {
+                    $staffModel   = User::model()->findByPk($visitorModel->staff_id);
+                    if ($staffModel) {
+                        if (isset($_POST['Company']['mobile_number'])) 
+                            $staffModel->contact_number = $_POST['Company']['mobile_number'];
+                        if (isset($_POST['Company']['email_address'])) 
+                            $staffModel->email          = $_POST['Company']['email_address'];
 
-                if ($_POST['Visitor']['visitor_card_status'] == Visitor::ASIC_ISSUED) {
-                    $visitorModel->visitor_card_status  = 6;
-                    $visitorModel->profile_type = Visitor::PROFILE_TYPE_ASIC;
-                }
-                if ($visitorModel->save()) {
-                    if (in_array($visitorModel->visitor_card_status, [Visitor::ASIC_PENDING])) {
-                        $model->date_check_in = $model->date_check_out;
-                        if ($model->save()) {
-                            $visitCount['totalVisits'] = $model->visitCounts;
-                            $visitCount['remainingDays'] = $model->remainingDays;
+                        // Save staff member
+                        if (!$staffModel->save()) {
+                            // Do something if save process failure
                         }
                     }
                 }
             }
 
+            $visitorModel->attributes           = $_POST['Visitor'];
             $visitorModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
             $visitorModel->setScenario('updateVic');
-            #if(!$visitorModel->validate()) die('visitorModel-'.CHtml::errorSummary($visitorModel));
-            if($visitorModel->save()){
+
+            // Save visitor
+            if ($visitorModel->save()) {
                 if ($_POST['Visitor']['visitor_card_status'] == Visitor::ASIC_ISSUED) {
-                    $logCardstatusConvert = new CardstatusConvert();
-                    $logCardstatusConvert->visitor_id = $visitorModel->id;
+                    $logCardstatusConvert               = new CardstatusConvert;
+                    $logCardstatusConvert->visitor_id   = $visitorModel->id;
                     $logCardstatusConvert->convert_time = date("Y-m-d");
-                    $logCardstatusConvert->save();
+
+                    // save Log 
+                    if (!$logCardstatusConvert->save()) {
+                        // Do something if save process failure
+                    }
                 }
             }
         }
-
-
 
         if (isset($_POST['Visit'])) {
             if (empty($_POST['Visit']['finish_time'])) {
@@ -450,12 +465,9 @@ class VisitController extends Controller {
 
             }
 
+            // save visit model
             if ($model->save()) {
-                if (isset($_POST['Visit']['visit_status']) && $_POST['Visit']['visit_status'] == VisitStatus::CLOSED) {
-                    $visitCount['totalVisits'] = $model->visitCounts;
-                    $visitCount['remainingDays'] = $model->remainingDays;
-                }
-                
+                // if has file upload then upload and save
                 if (!empty($fileUpload)) {
                     $fileUpload->saveAs(YiiBase::getPathOfAlias('webroot') . $model->card_lost_declaration_file);
                 }
@@ -463,6 +475,10 @@ class VisitController extends Controller {
                 $model->visit_status = $oldStatus;
             }
         }
+
+        // Get visit count and remaining days
+        $visitCount['totalVisits'] = $model->visitCounts;
+        $visitCount['remainingDays'] = $model->remainingDays;
 
         $this->render('visitordetail', array(
             'model' => $model,

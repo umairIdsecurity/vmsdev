@@ -551,7 +551,7 @@ if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED
                             </td>
                             <td style="padding-left: 0 !important;">
                                 <input type="text" <?php echo $disabled; ?> class="visitor-detail-info-field" value="<?php echo $asic->asic_no; ?>"
-                                       name="Visitor[asic_no]" id="Visitor_asic_no">
+                                       name="Visitor[asic_asic_no]" id="Visitor_asic_no">
                                 <div style="" id="Visitor_asic_no_em_" class="errorMessage errorMessageEmail">Please enter a asic number.
                                 </div>
                             </td>
@@ -572,7 +572,8 @@ if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED
                                         'maxlength' => '10', // textField maxlength
                                         'placeholder' => 'dd-mm-yyyy',
                                         'readOnly' => 'readOnly',
-                                        'style' => $datePickerStyle
+                                        'style' => $datePickerStyle,
+                                        'name' => 'Vsitor[asic_asic_expiry]'
                                     ),
                                     'options' => $datePickerOptionAttributes
                                 ));
@@ -779,7 +780,7 @@ if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED
             <ul>
                 <li>
                     <?php
-                    if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN, Roles::ROLE_SUPERADMIN])) {
+                    if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN, Roles::ROLE_SUPERADMIN]) && !in_array($model->visit_status, [VisitStatus::CLOSED])) {
                         echo '<input type="submit" class="complete btnUpdateVisitorInfo" name="updateVisitorInfo"  value="Update">';
                     }
                     ?>
@@ -792,7 +793,8 @@ if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED
 <script>
     $(document).ready(function () {
 
-        $(document).on('click', ".btnUpdateVisitorInfo",function(){
+        $(document).on('click', ".btnUpdateVisitorInfo",function(e) {
+            e.preventDefault();
             if (validateInformation()) {
 
             }
@@ -802,27 +804,25 @@ if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED
             var t = 1;
             if($('#personalDetailsLi').length){
                 $('#personalDetailsLi').find(':input').each(function(){
-                    var em = $('#'+$(this).attr('id')+"_em_");
-                    if($(this).attr('id').indexOf('middle_name') == -1){
+                    var em = $('#' + $(this).attr('id') + "_em_");
+                    if ($(this).attr('id').indexOf('middle_name') == -1) {
                         if($(this).val() == '' || $(this).val().length < 1){
-                            if(em.length)em.show();
+                            if (em.length) em.show();
                             t = 0;
-
-                        }else{
-                            if(em.length)em.hide();
+                        } else {
+                            if (em.length) em.hide();
                         }
                     }
-                })
+                });
             }
 
             if($('#contactDetailsLi').length){
                 $('#contactDetailsLi').find(':input').each(function(){
                     var em = $('#'+$(this).attr('id')+"_em_");
-                    //$(this).change(function(){
-                    if($(this).attr('id').indexOf('email') != -1){
-                        if($(this).attr('id') != 'emailIsUnique') {
+                    if ($(this).attr('id').indexOf('email') != -1) {
+                        if ($(this).attr('id') != 'emailIsUnique') {
                             if (validateEmail1($(this).val()) == false || checkVisitorEmail($(this).val()) == false) {
-                                if (em.length)em.show();
+                                if (em.length) em.show();
                                 t = 0;
                             } else {
                                 if (em.length)em.hide();
@@ -830,66 +830,63 @@ if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED
                         }
                     } else {
                         if ($(this).val() == '' || $(this).val().length < 1) {
-                            if(em.length)em.show();
+                            if (em.length) em.show();
                              t=0;
                         } else {
-                            if(em.length)em.hide();
+                            if (em.length) em.hide();
                         }
                     }
-                    //});
-                })
+                });
             }
-            if($('#companyDetailsLi').length){
+
+            if ($('#companyDetailsLi').length) {
                 $('#companyDetailsLi').find(':input').each(function(){
-                    //$(this).change(function(){
                     var em = $('#'+$(this).attr('id')+"_em_");
-                    if($(this).attr('id').indexOf('email_address')>0){
+                    if ($(this).attr('id').indexOf('email_address')>0){
                         if(!validateEmail1($(this).val())){
-                            if(em.length)em.show();
+                            if (em.length) em.show();
                             t=0;
                         }else{
-                            if(em.length)em.hide();
+                            if(em.length) em.hide();
                         }
                     } else {
                         if ($(this).val() == '' || $(this).val().length < 1) {
-                            if(em.length)em.show();
+                            if (em.length) em.show();
                             t=0;
                         } else {
-                            if(em.length)em.hide();
+                            if (em.length) em.hide();
                         }
                     }
-                    //});
-                })
-            }
-            if($('#asicDetailsLi').length){
-                $('#asicDetailsLi').find(':input').each(function(){
-                    var em = $('#'+$(this).attr('id')+"_em_");
-                    //$(this).change(function(){
-                    if($(this).val() == ''){
-                        if(em.length)em.show();
-                        t=0;
-                    }else{
-                        if(em.length)em.hide();
-                    }
-                    //});
-                })
-            }
-            if($('#asicDetails1Li').length){
-                $('#asicDetails1Li').find(':input').each(function(){
-                    var em = $('#'+$(this).attr('id')+"_em_");
-                    //$(this).change(function(){
-                    if($(this).val() == ''){
-                        if(em.length)em.show();
-                        t=0;
-                    }else{
-                        if(em.length)em.hide();
-                    }
-                    //});
-                })
+                });
             }
 
-            if(t==1) return true; else return false;
-            //return true;
+            if ($('#asicDetailsLi').length) {
+                $('#asicDetailsLi').find(':input').each(function() {
+                    var em = $('#' + $(this).attr('id') + "_em_");
+                    if($(this).val() == ''){
+                        if (em.length) em.show();
+                        t = 0;
+                    }else{
+                        if (em.length) em.hide();
+                    }
+                });
+            }
+
+            if ($('#asicDetails1Li').length){
+                $('#asicDetails1Li').find(':input').each(function() {
+                    var em = $('#'+$(this).attr('id')+"_em_");
+                    if($(this).val() == ''){
+                        if (em.length) em.show();
+                        t = 0;
+                    }else{
+                        if (em.length) em.hide();
+                    }
+                });
+            }
+
+            if(t == 1) 
+                return true; 
+            else return false;
         }
 
         function checkElementExist(element){

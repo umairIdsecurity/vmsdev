@@ -268,7 +268,21 @@ class PreregistrationController extends Controller
 	}
 
 	public function actionAsicPass(){
-		echo "enter ASIC password 4";
+
+		if(
+			isset($_GET['id'], $_GET['email'], $_GET['k_str']) &&
+			!empty($_GET['id']) && !empty($_GET['email']) && !empty($_GET['k_str'])
+		){
+			$model = Registration::model()->findByPk($_GET['id']);
+			if($model->key_string === $_GET['k_str']){
+
+				$this->render('asic-password', array('model' => $model));
+			}
+
+		}
+		else{
+			echo "unable to solve the request";
+		}
 	}
 
 	public function actionLogin(){

@@ -8,7 +8,6 @@
         'validateOnSubmit' => true,
         'afterValidate' => 'js:function(form, data, hasError){
                 if (!hasError){ // no errors
-
                 } else { // has error
                     return false;
                 }
@@ -50,6 +49,18 @@
                 <?php echo "<br>" . $form->error($model, 'contact_number'); ?>
                 <?php echo "" . $form->error($model, 'email'); ?>
                 <div id="AddAsicEscort_email_unique_em_" class="errorMessage" style="display: none;">Email is existed.</div>
+                <?php
+                $this->widget('application.extensions.select2.Select2', array(
+                    'model' => $model,
+                    'attribute' => 'company',
+                    'items' => CHtml::listData(Visitor::model()->findAllCompanyByTenant($session['tenant']),
+                        'id', 'name'),
+                    'selectedItems' => array(), // Items to be selected as default
+                    'placeHolder' => 'Please select a company'
+                ));
+                ?>
+                <span class="required">*</span>
+                <?php echo $form->error($model, 'company', array("style" => "margin-top:0px")); ?>
             </td>
     </table>
 

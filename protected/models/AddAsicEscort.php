@@ -11,6 +11,7 @@ class AddAsicEscort extends CFormModel {
     public $asic_expiry;
     public $contact_number;
     public $email;
+    public $company;
 
     /**
      * Declares the validation rules.
@@ -20,9 +21,8 @@ class AddAsicEscort extends CFormModel {
     public function rules() {
         return array(
             // username and password are required
-            array('first_name, last_name, email,contact_number, asic_no, asic_expiry', 'required'),
+            array('first_name, last_name, email,contact_number, asic_no, asic_expiry, company', 'required'),
             array('email', 'email'),
-            //array('email', 'emailUnique', 'add_asic_escort'),
         );
     }
 
@@ -37,19 +37,12 @@ class AddAsicEscort extends CFormModel {
             'asic_no'    => 'Asic No',
             'asicexpiry'   => 'Expiry',
             'contact_number' => 'Contact No',
+            'company'       => 'Company',
         );
     }
-//
-//    public function emailUnique($attribute, $params) {
-//        $company = Company::model()->find("name=':name'", ['name' => $this->companyName]);
-//        $contact = User::model()->find("email=:email and company=:cid", [
-//            'email' => $this->email,
-//            'cid' => $company->id
-//        ]);
-//
-//        if ($contact) {
-//            $this->addError($attribute, 'Contact existed !');
-//        }
-//    }
 
+    public function getModelName()
+    {
+        return __CLASS__;
+    }
 }

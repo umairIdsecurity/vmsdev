@@ -588,7 +588,8 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
             $("#Visitor_date_of_birth_em_").show();
             $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
             return false;
-        }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
+        }else if(
+            dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
             $("#Visitor_date_of_birth_em_").show();
             $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
             return false;
@@ -736,8 +737,10 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
             }else{//u18_identification
                 if (dt.getFullYear() - $("#fromYear").val() < 18) {
                     $('#u18_identification').show();
+                    $('.primary-identification-require').hide();
                 } else {
                     $('#u18_identification').hide();
+                    $('.primary-identification-require').show();
                 }
                 $("#Visitor_date_of_birth_em_").hide();
             }

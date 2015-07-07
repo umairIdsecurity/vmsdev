@@ -915,8 +915,10 @@ $model->identification_country_issued = 13;
             }else{
                 if (dt.getFullYear() - $("#fromYear").val() < 18) {
                     $('#u18_identification').show();
+                    $('.primary-identification-require').hide();
                 } else {
                     $('#u18_identification').hide();
+                    $('.primary-identification-require').show();
                 }
                 $("#Visitor_date_of_birth_em_").hide();
             }

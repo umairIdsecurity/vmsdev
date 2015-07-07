@@ -304,7 +304,7 @@ $asicEscort = new AddAsicEscort();
 <div id="vicHolderModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="VicHolderDeclarations" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3>VIC Holder Declarations</h3>
+        <h3>VIC Holder Declaration</h3>
     </div>
     <div class="modal-body">
         <table>

@@ -177,7 +177,7 @@ Yii::app()->clientScript->registerScript('select_card_type_vic', "
                 dataType: "json",
                 success: function (data) {
                     if (data.visit > 0) {
-                    	var ret = confirm("There are active visits in this workstations. Are you sure you want to delete?");
+                    	alert("This workstation has preregistered or active visits. Please close or cancel the visits before deleting workstation.");
                     } else {
                     	var ret = confirm("Are you sure you want to delete this item?");
                     }

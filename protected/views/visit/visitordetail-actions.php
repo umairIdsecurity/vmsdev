@@ -106,7 +106,8 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                                 'hostModel' => $hostModel,
                                                 'reasonModel' => $reasonModel,
                                                 'asic' => $asic,
-                                                'logform' => $logform
+                                                'logform' => $logform,
+                                                'session' => $session,
                                             ));
                                         } else {
                                             $this->renderPartial('activateavisit', array(
@@ -137,7 +138,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                 $disabled = 'disabled';
                             }
                             ?>
-                            <input type="submit" style="width: 131px !important;" <?php echo $disabled; ?> value="Preregister Visit" class="complete"/>
+                            <button type="submit" id="registerNewVisit" <?php echo $disabled; ?> class="greenBtn">Preregister Visit</button>
                         <?php else:
                             if ($model->card_type == CardType::MANUAL_VISITOR && isset($model->date_check_in) && strtotime($model->date_check_in) < strtotime(date("d-m-Y"))) :
                                 ?>
@@ -172,20 +173,79 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             <tr><td colspan="2"><strong>Does document number match the identification provided?</strong></td></tr>
             <tr><td colspan="2"><strong>&nbsp;</strong></td></tr>
             <tr>
-                <td width="5%"><input type="radio" name="identification" id="identificationChkBoxYes"/></td>
+                <td colspan="2">
+                    <table style="border-collapse: initial;">
+                    <tbody>
+                        <tr>
+                            <td style="width: 120px; color: lightgray;">Type</td>
+                            <td><?php
+                                if (isset(Visitor::$IDENTIFICATION_TYPE_LIST[$visitorModel->identification_type])) {
+                                    echo Visitor::$IDENTIFICATION_TYPE_LIST[$visitorModel->identification_type];
+                                } else {
+                                    echo 'N/A';
+                                }
+                            ?></td>
+                        </tr>
+                        <tr>
+                            <td style="width: 120px; color: lightgray;">Document No.</td>
+                            <td><?php echo !empty($visitorModel->identification_document_no) ? $visitorModel->identification_document_no : 'N/A'; ?></td>
+                        </tr>
+                        <tr>
+                            <td style="width: 120px; color: lightgray;">Document Expiry</td>
+                            <td><?php
+                                if ($visitorModel->identification_document_expiry == '' || $visitorModel->identification_document_expiry == '0000-00-00') {
+                                    echo 'N/A';
+                                } else {
+                                    echo $visitorModel->identification_document_expiry;
+                                }
+                            ?></td>
+                        </tr>
+                    </tbody>
+                </table>
+                </td>
+            </tr>
+            <tr>
+                <td width="20px"><input type="radio" name="identification" id="identificationChkBoxYes"/></td>
                 <td><label for="identificationChkBoxYes">Yes</label></td>
             </tr>
             <tr>
-                <td width="5%"><input type="radio" name="identification" id="identificationChkBoxNo"/></td>
+                <td width="20px"><input type="radio" name="identification" id="identificationChkBoxNo"/></td>
                 <td><label for="identificationChkBoxNo">No</label></td>
             </tr>
             
             <tr id="identificationNotExpired" style="display:none;">
-            <form id="identification_not_expired_form">
-                <td>&nbsp;</td>
-                <td><input type="text" name="Visitor['identification_alternate_document_no1']" placeholder="Enter Alternate Identification"> <span class="required primary-identification-require">*</span>
+                <td colspan="2">
+                    <table style="border-collapse: initial;">
+                        <tbody>
+                            <tr>
+                                <form id="identification_not_expired_form">
+                                    <td><input type="text" style="width: 300px;" name="Visitor['identification_type']" placeholder="Enter drivers licence, passport or proof of age"> <span class="required primary-identification-require">*</span>
+                                    </td>
+                                    <td>
+                                        <?php
+                                        $this->widget('zii.widgets.jui.CJuiDatePicker',array(
+                                            'id' => 'identification_document_expiry',
+                                            'name'=>'Visitor[identification_document_expiry]',
+                                            // additional javascript options for the date picker plugin
+                                            'options'=>array(
+                                                'dateFormat' => 'dd-mm-yy',
+                                                'changeYear' => true,
+                                                'changeMonth' => true
+                                            ),
+                                            'htmlOptions'=>array(
+                                                'size'        => '0',
+                                                'maxlength'   => '10',
+                                                'placeholder' => 'Expiry',
+                                                'style'       => 'width: 120px;',
+                                            ),
+                                        ));
+                                        ?> <span class="required primary-identification-require">*</span>
+                                    </td>
+                                </form>
+                            </tr>
+                        </tbody>
+                    </table>
                 </td>
-            </form>
             </tr>
             <tr id="identificationExpired" style="display:none;">
             <form id="identification_expired_form">
@@ -232,6 +292,8 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                         // additional javascript options for the date picker plugin
                                         'options'=>array(
                                             'dateFormat' => 'dd-mm-yy',
+                                            'changeYear' => true,
+                                            'changeMonth' => true
                                         ),
                                         'htmlOptions'=>array(
                                             'size'        => '0',
@@ -325,7 +387,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             var isChanged = imgsrc.search('visit/detail&id='+'<?php echo $model->id; ?>');
 
             if( isDefault > 0 || (profileImage == '' && isChanged > 0)) {
-                <?php if ($model->card_type > 4 ) : ?>
+                <?php if ($model->card_type > CardType::CONTRACTOR_VISITOR ) : ?>
                     <?php if($model->card_type != CardType::VIC_CARD_SAMEDATE ) : ?>
                     $("#Visitor_photo_em").attr('style', 'margin-right:84px ; margin-bottom:0px; margin-top:0px ;');
                     $("#editImageBtn.editImageBtn").attr('style', 'margin-top:-5px !important; margin-right:84px ; margin-bottom:0px;');
@@ -398,7 +460,13 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             }
 
             if (confirmed == true) {
-                flag = isCheckboxsChecked(vic_active_visit_checkboxs);
+
+                if ($this.val() == 'preregister') {
+                    flag = true;
+                } else {
+                    flag = isCheckboxsChecked(vic_active_visit_checkboxs);
+                }
+                
                 if (flag == true) {
                     var pre_issued_card_no = $("#pre_issued_card_no").val();
                     if (typeof pre_issued_card_no != "undefined") {

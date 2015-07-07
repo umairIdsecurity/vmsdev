@@ -22,9 +22,43 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
 </style>
 <input type="text" id="currentSessionRole" value="<?php echo $session['role']; ?>" style="display:none;"/>
 <?php
-$disabled = 'disabled';
-if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
+// If visit status is closed and user role different from admin or superadmin then disable fields
+$disabled = '';
+if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED])) {
     $disabled = 'disabled';
+}
+
+/**
+ * Date picker config if visit status is close and other state
+ * If visit status is close then disable datepicker
+ */
+$datePickerOptionAttributes = [];
+if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED])) {
+
+    // Please edit datePicker options attributes here for apply all datePicker fields
+    $datePickerOptionAttributes = [
+        'disabled' => 'disabled',
+        'dateFormat' => "dd-mm-yy",
+        'changeMonth' => true,
+        'changeYear' => true
+    ];
+
+    // Please update datePicker style here for apply to all datePicker field on visitor detail page
+    $datePickerStyle = 'width:107%';
+} else {
+
+    // Please edit datePicker options attributes here for apply all datePicker fields
+    $datePickerOptionAttributes = [
+        'showOn' => "button",
+        'buttonImage' => Yii::app()->controller->assetsBase . "/images/calendar.png",
+        'buttonImageOnly' => true,
+        'dateFormat' => "dd-mm-yy",
+        'changeMonth' => true,
+        'changeYear' => true
+    ];
+
+    // Please update datePicker style here for apply all datePicker fields
+    $datePickerStyle = 'width:83%';
 }
 ?>
 
@@ -81,6 +115,7 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                             <td style="padding-left: 0 !important;">
                                 <?php
                                 $visitorModel->date_of_birth = !is_null($visitorModel->date_of_birth) ? date('d-m-Y', strtotime($visitorModel->date_of_birth)) : date('d-m-Y');
+                                $options = [];
                                 $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                     'model' => $visitorModel,
                                     'attribute' => 'date_of_birth',
@@ -90,16 +125,9 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                                         'placeholder' => 'dd-mm-yyyy',
                                         'readOnly' => 'readOnly',
                                         'disabled' => 'disabled',
-                                        'style' => 'width:107%'
+                                        'style' => $datePickerStyle
                                     ),
-                                    'options' => array(
-                                        /*'showOn' => "button",
-                                        'buttonImage' => Yii::app()->controller->assetsBase . "/images/calendar.png",
-                                        'buttonImageOnly' => true,*/
-                                        'dateFormat' => "dd-mm-yy",
-                                        'changeMonth' => true,
-                                        'changeYear' => true
-                                    )
+                                    'options' => $datePickerOptionAttributes
                                 ));
                                 ?>
 
@@ -473,18 +501,9 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                                     'maxlength' => '10', // textField maxlength
                                     'placeholder' => 'dd-mm-yyyy',
                                     'readOnly' => 'readOnly',
-                                    'style' => 'width:107%'
+                                    'style' => $datePickerStyle
                                 ),
-                                'options' => array(
-                                    // 'showOn' => "button",
-                                    // 'buttonImage' => Yii::app()->controller->assetsBase . "/images/calendar.png",
-                                    // 'buttonImageOnly' => true,
-                                    'minDate' => "0",
-                                    'disabled' => 'disabled',
-                                    'dateFormat' => "dd-mm-yy",
-                                    'changeMonth' => true,
-                                    'changeYear' => true
-                                )
+                                'options' => $datePickerOptionAttributes
                             ));
                             ?>
 
@@ -531,8 +550,8 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                                 ASIC No.
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" <?php //echo $disabled; ?> class="visitor-detail-info-field" value="<?php echo $asic->asic_no; ?>"
-                                       name="Visitor[asic_no]" id="Visitor_asic_no">
+                                <input type="text" <?php echo $disabled; ?> class="visitor-detail-info-field" value="<?php echo $asic->asic_no; ?>"
+                                       name="Visitor[asic_asic_no]" id="Visitor_asic_no">
                                 <div style="" id="Visitor_asic_no_em_" class="errorMessage errorMessageEmail">Please enter a asic number.
                                 </div>
                             </td>
@@ -553,18 +572,10 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                                         'maxlength' => '10', // textField maxlength
                                         'placeholder' => 'dd-mm-yyyy',
                                         'readOnly' => 'readOnly',
-                                        'style' => 'width:107%'
+                                        'style' => $datePickerStyle,
+                                        'name' => 'Vsitor[asic_asic_expiry]'
                                     ),
-                                    'options' => array(
-                                        // 'showOn' => "button",
-                                        // 'buttonImage' => Yii::app()->controller->assetsBase . "/images/calendar.png",
-                                        // 'buttonImageOnly' => true,
-                                        'minDate' => "0",
-                                        'disabled' => 'disabled',
-                                        'dateFormat' => "dd-mm-yy",
-                                        'changeMonth' => true,
-                                        'changeYear' => true
-                                    )
+                                    'options' => $datePickerOptionAttributes
                                 ));
                                 ?>
 
@@ -582,8 +593,8 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
 
             <ul>
                 <li>
-                   <!-- --><?php
-/*                    $hostForm = $this->beginWidget('CActiveForm', array(
+                    <?php
+                    $hostForm = $this->beginWidget('CActiveForm', array(
                         'id' => 'update-host-form',
                         'action' => Yii::app()->createUrl('/user/update&id=' . $model->host),
                         'htmlOptions' => array("name" => "register-host-form"),
@@ -592,13 +603,13 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                         'clientOptions' => array(
                             'validateOnSubmit' => true,
                             'afterValidate' => 'js:function(form,data,hasError){
-                    if(!hasError){
-                            checkHostEmailIfUnique();
-                            }
-                    }'
+                                if(!hasError){
+                                    checkHostEmailIfUnique();
+                                }
+                            }'
                         ),
                     ));
-                    */?>
+                    ?>
 
                     <input type="text" id="hostEmailIsUnique" value="0"/>
 
@@ -643,7 +654,7 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                             </td>
                         </tr>-->
                     </table>
-                    <?php /*$this->endWidget(); */?>
+                    <?php $this->endWidget(); ?>
                 </li>
             </ul>
         </li>
@@ -734,10 +745,10 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                             'clientOptions' => array(
                                 'validateOnSubmit' => true,
                                 'afterValidate' => 'js:function(form,data,hasError){
-                        if(!hasError){
-                                sendNewPatientForm();
-                            }
-                        }'
+                                    if(!hasError) {
+                                        sendNewPatientForm();
+                                    }
+                                }'
                             ),
                         ));
                         ?>
@@ -769,8 +780,8 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
             <ul>
                 <li>
                     <?php
-                    if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN, Roles::ROLE_SUPERADMIN])) {
-                        echo '<input type="submit" class="complete btnUpdateVic"  value="Update">';
+                    if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN, Roles::ROLE_SUPERADMIN]) && !in_array($model->visit_status, [VisitStatus::CLOSED])) {
+                        echo '<input type="submit" class="complete btnUpdateVisitorInfo" name="updateVisitorInfo"  value="Update">';
                     }
                     ?>
                 </li>
@@ -782,36 +793,10 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
 <script>
     $(document).ready(function () {
 
-        $(".complete.btnUpdateVic").click(function(){
-            var currentCardStatus = "<?php echo $visitorModel->visitor_card_status; ?>";
-            var currentVisitStatus = "<?php echo $model->visit_status ; ?>"
-            if(currentVisitStatus == "<?php echo VisitStatus::ACTIVE; ?>") {
-                if (currentCardStatus == 2 && $('#Visitor_visitor_card_status').val() == 3) {
-                    alert('Please close the active visits before changing the status to ASIC Pending.');
-                    return false;
-                }
-            }
+        $(document).on('click', ".btnUpdateVisitorInfo",function(e) {
+            e.preventDefault();
             if (validateInformation()) {
-                $("#workstationForm").append("<input type='hidden' name='updateVisit'  value='1' />");
-                if (checkElementExist($('#Company_name')))$("#workstationForm").append("<input type='hidden' name='Company[name]'  value='" + $('#Company_name').val() + "' />");
-                //$("#workstationForm").append("<input type='hidden' name='Company[contact]'  value='" + $('#Company_contact').val() + "' />");
-                if ( checkElementExist($('#Company_mobile_number')))$("#workstationForm").append("<input type='hidden' name='Company[mobile_number]'  value='" + $('#Company_mobile_number').val() + "' />");
-                $("#workstationForm").append("<input name='Visitor[id]' type='hidden'  value='" + $('#Visitor_id').val() + "' />");
-                if (checkElementExist($('#Visitor_first_name')))$("#workstationForm").append("<input name='Visitor[first_name]' type='hidden'  value='" + $('#Visitor_first_name').val() + "' />");
-                if (checkElementExist($('#Visitor_middle_name')))$("#workstationForm").append("<input name='Visitor[middle_name]' type='hidden'  value='" + $('#Visitor_middle_name').val() + "' />");
-                if (checkElementExist($('#Visitor_last_name')))$("#workstationForm").append("<input name='Visitor[last_name]' type='hidden'  value='" + $('#Visitor_last_name').val() + "' />");
-                if (checkElementExist($('#Visitor_date_of_birth')))$("#workstationForm").append("<input name='Visitor[date_of_birth]' type='hidden'  value='" + $('#Visitor_date_of_birth').val() + "' />");
-                if (checkElementExist($('#Visitor_email')))$("#workstationForm").append("<input name='Visitor[email]' type='hidden'  value='" + $('#Visitor_email').val() + "' />");
-                if (checkElementExist($('#Visitor_contact_number')))$("#workstationForm").append("<input name='Visitor[contact_number]' type='hidden'  value='" + $('#Visitor_contact_number').val() + "' />");
-                if (checkElementExist($('#identification_type')))$("#workstationForm").append("<input name='Visitor[identification_type]' type='hidden'  value='" + $('#identification_type').val() + "' />");
-                if (checkElementExist($('#Visitor_identification_document_no')))$("#workstationForm").append("<input name='Visitor[identification_document_no]' type='hidden'  value='" + $('#Visitor_identification_document_no').val() + "' />");
-                if (checkElementExist($('#Visitor_identification_document_expiry')))$("#workstationForm").append("<input name='Visitor[identification_document_expiry]' type='hidden'  value='" + $('#Visitor_identification_document_expiry').val() + "' />");
-                if (checkElementExist($('#Visitor_asic_first_name')))$("#workstationForm").append("<input name='Visitor[host_first_name]' type='hidden'  value='" + $('#Visitor_asic_first_name').val() + "' />");
-                if (checkElementExist($('#Visitor_asic_last_name')))$("#workstationForm").append("<input name='Visitor[host_last_name]' type='hidden'  value='" + $('#Visitor_asic_last_name').val() + "' />");
-                if (checkElementExist($('#Visitor_asic_no')))$("#workstationForm").append("<input name='Visitor[host_asic_no]' type='hidden'  value='" + $('#Visitor_asic_no').val() + "' />");
-                if (checkElementExist($('#Visitor_asic_expiry')))$("#workstationForm").append("<input name='Visitor[host_asic_expiry]' type='hidden'  value='" + $('#Visitor_asic_expiry').val() + "' />");
-                var t = checkVistorCardStatusOfHost(<?php echo $model->host; ?>);
-                (t == true) ? $('#workstationForm').submit() : alert('Exception r718 - Vistor Information');
+
             }
         });
 
@@ -819,27 +804,25 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
             var t = 1;
             if($('#personalDetailsLi').length){
                 $('#personalDetailsLi').find(':input').each(function(){
-                    var em = $('#'+$(this).attr('id')+"_em_");
-                    if($(this).attr('id').indexOf('middle_name') == -1){
+                    var em = $('#' + $(this).attr('id') + "_em_");
+                    if ($(this).attr('id').indexOf('middle_name') == -1) {
                         if($(this).val() == '' || $(this).val().length < 1){
-                            if(em.length)em.show();
+                            if (em.length) em.show();
                             t = 0;
-
-                        }else{
-                            if(em.length)em.hide();
+                        } else {
+                            if (em.length) em.hide();
                         }
                     }
-                })
+                });
             }
 
             if($('#contactDetailsLi').length){
                 $('#contactDetailsLi').find(':input').each(function(){
                     var em = $('#'+$(this).attr('id')+"_em_");
-                    //$(this).change(function(){
-                    if($(this).attr('id').indexOf('email') != -1){
-                        if($(this).attr('id') != 'emailIsUnique') {
+                    if ($(this).attr('id').indexOf('email') != -1) {
+                        if ($(this).attr('id') != 'emailIsUnique') {
                             if (validateEmail1($(this).val()) == false || checkVisitorEmail($(this).val()) == false) {
-                                if (em.length)em.show();
+                                if (em.length) em.show();
                                 t = 0;
                             } else {
                                 if (em.length)em.hide();
@@ -847,66 +830,63 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                         }
                     } else {
                         if ($(this).val() == '' || $(this).val().length < 1) {
-                            if(em.length)em.show();
+                            if (em.length) em.show();
                              t=0;
                         } else {
-                            if(em.length)em.hide();
+                            if (em.length) em.hide();
                         }
                     }
-                    //});
-                })
+                });
             }
-            if($('#companyDetailsLi').length){
+
+            if ($('#companyDetailsLi').length) {
                 $('#companyDetailsLi').find(':input').each(function(){
-                    //$(this).change(function(){
                     var em = $('#'+$(this).attr('id')+"_em_");
-                    if($(this).attr('id').indexOf('email_address')>0){
+                    if ($(this).attr('id').indexOf('email_address')>0){
                         if(!validateEmail1($(this).val())){
-                            if(em.length)em.show();
+                            if (em.length) em.show();
                             t=0;
                         }else{
-                            if(em.length)em.hide();
+                            if(em.length) em.hide();
                         }
                     } else {
                         if ($(this).val() == '' || $(this).val().length < 1) {
-                            if(em.length)em.show();
+                            if (em.length) em.show();
                             t=0;
                         } else {
-                            if(em.length)em.hide();
+                            if (em.length) em.hide();
                         }
                     }
-                    //});
-                })
-            }
-            if($('#asicDetailsLi').length){
-                $('#asicDetailsLi').find(':input').each(function(){
-                    var em = $('#'+$(this).attr('id')+"_em_");
-                    //$(this).change(function(){
-                    if($(this).val() == ''){
-                        if(em.length)em.show();
-                        t=0;
-                    }else{
-                        if(em.length)em.hide();
-                    }
-                    //});
-                })
-            }
-            if($('#asicDetails1Li').length){
-                $('#asicDetails1Li').find(':input').each(function(){
-                    var em = $('#'+$(this).attr('id')+"_em_");
-                    //$(this).change(function(){
-                    if($(this).val() == ''){
-                        if(em.length)em.show();
-                        t=0;
-                    }else{
-                        if(em.length)em.hide();
-                    }
-                    //});
-                })
+                });
             }
 
-            if(t==1) return true; else return false;
-            //return true;
+            if ($('#asicDetailsLi').length) {
+                $('#asicDetailsLi').find(':input').each(function() {
+                    var em = $('#' + $(this).attr('id') + "_em_");
+                    if($(this).val() == ''){
+                        if (em.length) em.show();
+                        t = 0;
+                    }else{
+                        if (em.length) em.hide();
+                    }
+                });
+            }
+
+            if ($('#asicDetails1Li').length){
+                $('#asicDetails1Li').find(':input').each(function() {
+                    var em = $('#'+$(this).attr('id')+"_em_");
+                    if($(this).val() == ''){
+                        if (em.length) em.show();
+                        t = 0;
+                    }else{
+                        if (em.length) em.hide();
+                    }
+                });
+            }
+
+            if(t == 1) 
+                return true; 
+            else return false;
         }
 
         function checkElementExist(element){

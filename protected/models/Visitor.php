@@ -99,7 +99,7 @@ class Visitor extends CActiveRecord {
 
     public static $IDENTIFICATION_TYPE_LIST = array(
         'PASSPORT'        => 'Passport',
-        'DRIVERS_LICENSE' => 'Drivers Licence',
+        'DRIVERS_LICENSE' => 'Driver Licence',
         'PROOF_OF_AGE'    => 'Proof of Age Card',
     );
 
@@ -236,6 +236,8 @@ class Visitor extends CActiveRecord {
                 verifiable_signature,
                 escort_flag,
                 key_string
+                is_under_18,
+                under_18_detail
                 ',
                 'safe'
             ),

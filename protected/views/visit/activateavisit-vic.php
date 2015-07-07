@@ -136,7 +136,7 @@ $asicEscort = new AddAsicEscort();
         <td>Check Out Date
             <br><?php
 
-            if (!strtotime($model->date_check_out)) {
+            if (!strtotime($model->date_check_out) || $model->date_check_out == '0000-00-00') {
                 $model->date_check_out = date('d-m-Y');
             }
 
@@ -210,15 +210,15 @@ $asicEscort = new AddAsicEscort();
 
                 $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "option", "minDate", selectedDate);
 
-                function updateTextVisitButton(text, id) {
-                    $("#registerNewVisit").text(text);
+                function updateTextVisitButton(text, id, val) {
+                    $("#registerNewVisit").text(text).val(val);
                 }
 
                 if (selectedDate >= currentDate) {
                     <?php if ($model->card_type == CardType::VIC_CARD_MANUAL) { // show Back Date Visit
-                        echo 'updateTextVisitButton("Activate Visit", "registerNewVisit");';
+                        echo 'updateTextVisitButton("Activate Visit", "registerNewVisit", "active");';
                     } else {
-                        echo 'updateTextVisitButton("Preregister Visit", "preregisterNewVisit");
+                        echo 'updateTextVisitButton("Preregister Visit", "preregisterNewVisit", "preregister");
                               $("#card_no_manual").hide();';
                     }
                     ?>
@@ -385,7 +385,7 @@ $asicEscort = new AddAsicEscort();
                     <div class="errorMessage" id="searchEscortErrorMessage" style=" display:none;">Please enter asic escort name or email for searching</div>
                     <div class="searchAsicEscortResult"></div>
                     <div class="add-esic-escort">
-                        <?php $this->renderPartial('_add_asic_escort',array('model' => $asicEscort)) ?>
+                        <?php $this->renderPartial('_add_asic_escort',array('model' => $asicEscort, 'session' => $session,)) ?>
                     </div>
                     <input type="hidden" id="selectedAsicEscort"/>
                 </td>
@@ -479,19 +479,18 @@ $asicEscort = new AddAsicEscort();
                 success: function(data) {
                     if(data == 'existed') {
                         $('#AddAsicEscort_email_unique_em_').show();
+                        asicSponsorDeclarationChange(false);
                         return;
                     } else {
                         $('#AddAsicEscort_email_unique_em_').hide();
                         if(asicCheck() == true ) {
                             confirmed = true;
                         } else {
-                            asicCheck();
+                            asicSponsorDeclarationChange(false);
                         }
                     }
                 }
             });
-        } else {
-            alert('Please input correct ASIC Escort profile.');
         }
     }
 
@@ -499,6 +498,11 @@ $asicEscort = new AddAsicEscort();
         var noError = true;
         if ($('#asicEscortRbtn').is(':checked') == true) {
             if ($('.add-esic-escort').css('display') == 'block') {
+                if($('#AddAsicEscort_company').val() == "") {
+                    $('#AddAsicEscort_company_em_').html('Please Select a Company');
+                    $('#AddAsicEscort_company_em_').show();
+                    noError = false;
+                }
                 $('.asic-escort-field .errorMessage ').each(function () {
                     if ($(this).css('display') == 'block') {
                         noError = false;
@@ -506,12 +510,19 @@ $asicEscort = new AddAsicEscort();
                 });
                 $('.asic-escort-field input').each(function () {
                     if ($(this).val() == '') {
+                        var error = '#' + $(this).attr('id') + '_em_';
+                        var placeholder = $(this).attr('placeholder');
+                        $(error).html('Please enter a ' + placeholder );
+                        $(error).show();
                         noError = false;
                     }
                 });
             } else if ($('.searchAsicEscortResult').css('display') == 'block' && $('#selectedAsicEscort').val() == '') {
                 noError = false;
             }
+        }
+        if(noError == false) {
+            asicSponsorDeclarationChange(false);
         }
         return noError;
     }
@@ -624,6 +635,9 @@ $asicEscort = new AddAsicEscort();
 
         $('#AddAsicEscort_email').on('change',function(){
             $('#AddAsicEscort_email_unique_em_').hide();
+        });
+        $('#addCompanyLink').on('click',function(){
+            $('#asicSponsorModal').modal('hide');
         });
     });
 </script>

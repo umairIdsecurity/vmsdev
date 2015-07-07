@@ -1082,8 +1082,8 @@ function populateCompanyofTenant(tenant, newcompanyId) {
         data: tenant,
         success: function (r) {
             $('#User_company option[value!=""]').remove();
-            $('#User_company').append('<option value =></option>');
-            $('#select2-User_company-container').html('');
+            $('#User_company').append('<option></option>');
+            $('#select2-User_company-container').html('Please select a company');
             var selectedId = '';
             var selectedVal = '';
             $.each(r.data, function (index, value) {

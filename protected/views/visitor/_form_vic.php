@@ -456,10 +456,13 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                             ?>
                             <tr id="u18_identification" style="display: <?php echo $visibility; ?>">
                                 <td>
-                                    <input type="checkbox" style="float: left;" id="Visitor_u18_identification" name="Visitor_u18_identification" value="">
+                                    <?php
+                                    echo $form->checkBox($model, 'is_under_18', ['style' => 'float:left;']);
+                                    ?>
                                     <label for="Visitor_identification" class="form-label">I have verified that the applicant is under 18<span class="required primary-identification-require">*</span></label>
-                                    <div class="errorMessage" style="float: left; display: none;" id="Visitor_u18_identification_em_">Please verify the age of the applicant.</div>
-                                    <input type="text" name="Visitor_u18_identification_document_no" style="" placeholder="Details">
+                                    <div class="errorMessage" style="float: left; display: none;" id="Visitor_is_under_18_em_">Please verify the age of the applicant.</div>
+                                    <?php echo $form->textField($model, 'under_18_detail', ['placeholder' => 'Detail']); ?>
+
                                 </td>
                             </tr>
                             <tr>
@@ -588,21 +591,22 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
             $("#Visitor_date_of_birth_em_").show();
             $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
             return false;
-        }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
+        }else if(
+            dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
             $("#Visitor_date_of_birth_em_").show();
             $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
             return false;
         }
 
         if ($('#u18_identification:hidden').length != 1) {
-            if (!$('#Visitor_u18_identification').is(':checked')) {
-                $('#Visitor_u18_identification_em_').show();
+            if (!$('#Visitor_is_under_18').is(':checked')) {
+                $('#Visitor_is_under_18_em_').show();
                 return false;
             } else {
-                $('#Visitor_u18_identification_em_').hide();
+                $('#Visitor_is_under_18_em_').hide();
             }
         } else {
-            $('#Visitor_u18_identification_em_').hide();
+            $('#Visitor_is_under_18_em_').hide();
         }
 
         var companyValue = $("#Visitor_company").val();
@@ -736,8 +740,10 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
             }else{//u18_identification
                 if (dt.getFullYear() - $("#fromYear").val() < 18) {
                     $('#u18_identification').show();
+                    $('.primary-identification-require').hide();
                 } else {
                     $('#u18_identification').hide();
+                    $('.primary-identification-require').show();
                 }
                 $("#Visitor_date_of_birth_em_").hide();
             }

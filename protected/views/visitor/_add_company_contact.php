@@ -20,8 +20,16 @@
                                 $("#Visitor_staff_id").append(data.contactDropDown).val(data.id);
                             } else {
                                 //update company dropdown:
-                                $("#Visitor_company").prepend($("<option>", {value:data.id, text: data.name}));
-                                $("#Visitor_company").select2("val", data.id);
+                                var currentController = "'.Yii::app()->controller->id.'";
+                                var currentAction = "'.Yii::app()->controller->action->id.'";
+                                if(currentController == "visit" && currentAction == "detail") {
+                                    $("#AddAsicEscort_company").prepend($("<option>", {value:data.id, text: data.name}));
+                                    $("#AddAsicEscort_company").select2("val", data.id);
+                                    $("#asicSponsorModal").modal("show");
+                                } else{
+                                    $("#Visitor_company").prepend($("<option>", {value:data.id, text: data.name}));
+                                    $("#Visitor_company").select2("val", data.id);
+                                }
                             }
                             return false;
                         }

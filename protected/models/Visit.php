@@ -1127,7 +1127,7 @@ class Visit extends CActiveRecord {
      */
     public function archivePregisteredOldVisits() {
         // Find and Update Status
-        $crieteria = "visit_status = 2 AND ( date_check_in <= '" . date('Y-m-d', strtotime("-2 days")) . "')";
+       /* $crieteria = "visit_status = 2 AND ( date_check_in <= '" . date('Y-m-d', strtotime("-2 days")) . "')";
         $preRegistered = $this->findAll($crieteria);
 
         if ($preRegistered)
@@ -1135,7 +1135,7 @@ class Visit extends CActiveRecord {
                 $this->updateByPk($visit->id, array('is_deleted' => '1'));
             }
 
-        return;
+        return;*/
     }
 
     /**

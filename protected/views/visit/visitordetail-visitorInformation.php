@@ -89,12 +89,13 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                                         'maxlength' => '10', // textField maxlength
                                         'placeholder' => 'dd-mm-yyyy',
                                         'readOnly' => 'readOnly',
-                                        'style' => 'width:83%'
+                                        'disabled' => 'disabled',
+                                        'style' => 'width:107%'
                                     ),
                                     'options' => array(
-                                        'showOn' => "button",
+                                        /*'showOn' => "button",
                                         'buttonImage' => Yii::app()->controller->assetsBase . "/images/calendar.png",
-                                        'buttonImageOnly' => true,
+                                        'buttonImageOnly' => true,*/
                                         'dateFormat' => "dd-mm-yy",
                                         'changeMonth' => true,
                                         'changeYear' => true
@@ -472,13 +473,14 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                                     'maxlength' => '10', // textField maxlength
                                     'placeholder' => 'dd-mm-yyyy',
                                     'readOnly' => 'readOnly',
-                                    'style' => 'width:83%'
+                                    'style' => 'width:107%'
                                 ),
                                 'options' => array(
-                                    'showOn' => "button",
-                                    'buttonImage' => Yii::app()->controller->assetsBase . "/images/calendar.png",
-                                    'buttonImageOnly' => true,
+                                    // 'showOn' => "button",
+                                    // 'buttonImage' => Yii::app()->controller->assetsBase . "/images/calendar.png",
+                                    // 'buttonImageOnly' => true,
                                     'minDate' => "0",
+                                    'disabled' => 'disabled',
                                     'dateFormat' => "dd-mm-yy",
                                     'changeMonth' => true,
                                     'changeYear' => true
@@ -551,13 +553,14 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                                         'maxlength' => '10', // textField maxlength
                                         'placeholder' => 'dd-mm-yyyy',
                                         'readOnly' => 'readOnly',
-                                        'style' => 'width:83%'
+                                        'style' => 'width:107%'
                                     ),
                                     'options' => array(
-                                        'showOn' => "button",
-                                        'buttonImage' => Yii::app()->controller->assetsBase . "/images/calendar.png",
-                                        'buttonImageOnly' => true,
+                                        // 'showOn' => "button",
+                                        // 'buttonImage' => Yii::app()->controller->assetsBase . "/images/calendar.png",
+                                        // 'buttonImageOnly' => true,
                                         'minDate' => "0",
+                                        'disabled' => 'disabled',
                                         'dateFormat' => "dd-mm-yy",
                                         'changeMonth' => true,
                                         'changeYear' => true

@@ -177,11 +177,17 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                     <tbody>
                         <tr>
                             <td style="width: 120px; color: lightgray;">Type</td>
-                            <td><?php echo Visitor::$IDENTIFICATION_TYPE_LIST[$visitorModel->identification_type]; ?></td>
+                            <td><?php
+                                if (isset(Visitor::$IDENTIFICATION_TYPE_LIST[$visitorModel->identification_type])) {
+                                    echo Visitor::$IDENTIFICATION_TYPE_LIST[$visitorModel->identification_type];
+                                } else {
+                                    echo 'N/A';
+                                }
+                            ?></td>
                         </tr>
                         <tr>
                             <td style="width: 120px; color: lightgray;">Document No.</td>
-                            <td><?php echo $visitorModel->identification_document_no; ?></td>
+                            <td><?php echo !empty($visitorModel->identification_document_no) ? $visitorModel->identification_document_no : 'N/A'; ?></td>
                         </tr>
                         <tr>
                             <td style="width: 120px; color: lightgray;">Document Expiry</td>

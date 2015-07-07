@@ -55,8 +55,12 @@
             <tr>
                 <td style="width:160px;"><?php echo $form->labelEx($model,'companyType'); ?></td>
                 <td>
-                    <?php echo $form->dropDownList($model, 'companyType', CHtml::listData(CompanyType::model()->findAll(), 'id', 'name'), array('prompt'=>'Select a company type', 'placeholder'=>'Company Type')); ?>
-                    <?php echo "<br>" . $form->error($model, 'companyType'); ?>
+                    <?php if (in_array(Yii::app()->controller->action->id, array('addvisitor', 'create'))) {
+                        echo $form->dropDownList($model, 'companyType', CHtml::listData(CompanyType::model()->findAll(), 'id', 'name'), array('prompt' => 'Select a company type', 'placeholder' => 'Company Type', 'disabled' => 'disabled', 'options' => array('3' => array('selected' => true))));
+                    } else {
+                        echo $form->dropDownList($model, 'companyType', CHtml::listData(CompanyType::model()->findAll(), 'id', 'name'), array('prompt' => 'Select a company type', 'placeholder' => 'Company Type'));
+                    }?>
+                    <?php echo "<br>" . $form->error($model, 'companyType');?>
                 </td>
             </tr>
             <tr>

@@ -26,13 +26,13 @@ if ($card) {
 }
 ?>
 
-<div style="width:100%; float:left;"> 
+<div style="width:100%; float:left;">
     <!--Box 1-->
     <div  class="box-card-style">
         <div class="box-image-style"></div>
         <div style=" text-align:center; line-height:20px; margin:10px 0 0 5px; color:#000;">
             <p style="font-size:25px; font-weight:bold; margin:0 0 10px 0;"><?= $companyCode ?></p>
-            <strong style="font-size: 40px; text-align: left; width: 100%; float: left; margin-bottom: 3px; margin-left: 5px; line-height: 32px; margin-top: 3px;"><small style="font-size: 60px;float: left; margin-right: 10px; margin-top: -1px;"><?= ($model->card_type == CardType::CONTRACTOR_VISITOR)?"C":"V"?></small> 
+            <strong style="font-size: 40px; text-align: left; width: 100%; float: left; margin-bottom: 3px; margin-left: 5px; line-height: 32px; margin-top: 3px;"><small style="font-size: 60px;float: left; margin-right: 10px; margin-top: -1px;"><?= ($model->card_type == CardType::CONTRACTOR_VISITOR)?"C":"V"?></small>
             <?php
                 if ($model->card_type == CardType::VIC_CARD_24HOURS) {
                     echo date('dMy', strtotime($model->date_check_in . '+ 1 DAY'));
@@ -64,8 +64,9 @@ if ($card) {
         position: relative;
     }
     .box-image-style {
-        width:100px;
-        height:150px;
+        width:150px;
+        height:205px;
+        background:#fff;
         margin-left:15px;
         margin-top:13px;
     }
@@ -73,14 +74,14 @@ if ($card) {
         background:#fff;
         border-radius:0 0 20px 20px;
         width:256px;
-        height:50.7px;
+        height:50px;
         position: absolute;
         bottom: 0px;
         left: 0px;
     }
     #photoPreview {
-        height: 133px;
-        width: 100px;
+        height: 206px;
+        width: 152px;
     }
     .ajax-file-upload{
         margin-left: -228px !important;

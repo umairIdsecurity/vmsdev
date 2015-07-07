@@ -34,7 +34,7 @@ $asicEscort = new AddAsicEscort();
     <tr>
         <td class="vic-col">
             <input type="checkbox" value="1" name="VivHolderDecalarations" disabled="disabled" id="VivHolderDecalarations" class="vic-active-visit vic-active-declarations"/>
-            <a href="#vicHolderModal" data-toggle="modal">VIC Holder's Declarations</a>
+            <a href="#vicHolderModal" data-toggle="modal">VIC Holder Declarations</a>
         </td>
     </tr>
     <tr>

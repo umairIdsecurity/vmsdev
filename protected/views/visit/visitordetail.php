@@ -24,13 +24,13 @@ if(!$hostModel) $hostModel = Visitor::model();
         <td style="padding:5px;text-align: center;">
             <?php
             $this->renderPartial('visitor-detail-card', array(
-            	'model' => $model,
-                'visitorModel' => $visitorModel,
-		'visitCount' => $visitCount,
-                'hostModel' => $hostModel,
-                'patientModel' => $patientModel,
+                'model'         => $model,
+                'visitorModel'  => $visitorModel,
+                'visitCount'    => $visitCount,
+                'hostModel'     => $hostModel,
+                'patientModel'  => $patientModel,
                 'cardTypeModel' => $cardTypeModel,
-                'asic' => $asic
+                'asic'          => $asic
             ));
             ?>
 
@@ -39,27 +39,26 @@ if(!$hostModel) $hostModel = Visitor::model();
             <?php
             $this->renderPartial('visitordetail-visitorInformation', array('model' => $model,
                 'visitorModel' => $visitorModel,
-                'hostModel' => $hostModel,
-                'reasonModel' => $reasonModel,
+                'hostModel'    => $hostModel,
+                'reasonModel'  => $reasonModel,
                 'patientModel' => $patientModel,
-                'newPatient' => $newPatient,
-                'newHost' => $newHost,
-                'asic' => $asic,
-                'asicEscort' => $asicEscort,
+                'newPatient'   => $newPatient,
+                'newHost'      => $newHost,
+                'asic'         => $asic,
+                'asicEscort'   => $asicEscort,
             ));
             ?>
 
         </td>
         <td>
-
             <?php
             $this->renderPartial('visitordetail-actions', array(
-                    'model' => $model,
+                    'model'        => $model,
                     'visitorModel' => $visitorModel,
-                    'hostModel' => $hostModel,
-                    'reasonModel' => $reasonModel,
+                    'hostModel'    => $hostModel,
+                    'reasonModel'  => $reasonModel,
                     'patientModel' => $patientModel,
-                    'asic' => $asic
+                    'asic'         => $asic
                 ));
             ?>
         </td>
@@ -69,8 +68,8 @@ if(!$hostModel) $hostModel = Visitor::model();
 <?php
 $this->renderPartial('visithistory', array('model' => $model,
     'visitorModel' => $visitorModel,
-    'hostModel' => $hostModel,
-    'reasonModel' => $reasonModel,
+    'hostModel'    => $hostModel,
+    'reasonModel'  => $reasonModel,
 ));
 ?>
 <input type="text" style="display:none;" id="createUrlForEmailUnique" value="<?php echo Yii::app()->createUrl('user/checkEmailIfUnique&id='); ?>"/>

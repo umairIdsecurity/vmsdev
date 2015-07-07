@@ -35,7 +35,7 @@ $visitorName = wordwrap($visitorName, 13, "\n", true);
 
 $dateExpiry = date('dMy');
 if ($model->card_type != CardType::SAME_DAY_VISITOR) {
-    $dateExpiry = date("dMy", strtotime($model->date_out));
+    $dateExpiry = date("dMy", strtotime($model->date_check_out));
 }
 
 //if ($model->time_check_out && $model->card_type == CardType::VIC_CARD_24HOURS && $model->visit_status == VisitStatus::ACTIVE) {

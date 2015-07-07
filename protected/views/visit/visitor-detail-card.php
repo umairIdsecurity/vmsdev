@@ -110,13 +110,15 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
         if ($asic) {
             if($visitorModel->profile_type ==  Visitor::PROFILE_TYPE_VIC) {
                 array_pop(Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC]);
-                echo CHtml::dropDownList('Visitor[visitor_card_status]', $visitorModel->visitor_card_status, Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC], ['empty' => 'Select Card Status']);
-                echo "<br />";
+                $profileType = Visitor::PROFILE_TYPE_VIC;
+                
             } elseif($visitorModel->profile_type ==  Visitor::PROFILE_TYPE_ASIC) {
                 array_pop(Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_ASIC]);
-                echo CHtml::dropDownList('Visitor[visitor_card_status]', $visitorModel->visitor_card_status, Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_ASIC], ['empty' => 'Select Card Status']);
-                echo "<br />";
+                $profileType = Visitor::PROFILE_TYPE_ASIC;
             }
+            
+            echo CHtml::dropDownList('Visitor[visitor_card_status]', $visitorModel->visitor_card_status, Visitor::$VISITOR_CARD_TYPE_LIST[$profileType], ['empty' => 'Select Card Status']);
+                echo "<br />";
 
         }
 
@@ -154,9 +156,13 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
             }
         }   
         echo CHtml::dropDownList('Visit[card_type]', $model->card_type, $cardTypeResults, $cardTypeOptions);
+        echo '<br />';
+        if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN, Roles::ROLE_SUPERADMIN])) {
+            echo '<input type="submit" name="updateWorkstationForm" class="complete btnUpdateWorkstationForm"  value="Update">';
+        }
         ?>
-        
     </div>
+        
 </form>
 
 <script>
@@ -233,6 +239,20 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
         $("#closeCropPhoto").click(function() {
             var ias = $('#photoCropPreview').imgAreaSelect({instance: true});
             ias.cancelSelection();
+        });
+
+        $(document).on('click', '.btnUpdateWorkstationForm', function(e) {
+            e.preventDefault();
+            var currentCardStatus = "<?php echo $visitorModel->visitor_card_status; ?>";
+            var currentVisitStatus = "<?php echo $model->visit_status ; ?>"
+            if(currentVisitStatus == "<?php echo VisitStatus::ACTIVE; ?>") {
+                if (currentCardStatus == 2 && $('#Visitor_visitor_card_status').val() == 3) {
+                    alert('Please close the active visits before changing the status to ASIC Pending.');
+                    return false;
+                }
+            }
+            var t = checkVistorCardStatusOfHost(<?php echo $model->host; ?>);
+            (t == true) ? $('#workstationForm').submit() : alert('Exception r718 - Vistor Information');
         });
     });
 

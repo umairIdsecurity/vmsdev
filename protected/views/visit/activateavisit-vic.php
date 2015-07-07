@@ -136,7 +136,7 @@ $asicEscort = new AddAsicEscort();
         <td>Check Out Date
             <br><?php
 
-            if (!strtotime($model->date_check_out)) {
+            if (!strtotime($model->date_check_out) || $model->date_check_out == '0000-00-00') {
                 $model->date_check_out = date('d-m-Y');
             }
 

@@ -179,6 +179,12 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
         float: left;
     }
 
+    .card-text-content {
+        font-size: 20px;
+        padding: 10px;
+        text-align: center;
+    }
+
     .card-style-3  .card-print {
         background-color: #FFFFFF;
     }
@@ -224,7 +230,7 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
                     <td>
                         <!--Box 2-->
                         <div class="card-text">
-                            <div style="font-size: 20px; padding: 10px; text-align: center;"><?= $backText ?></div>
+                            <div class="card-text-content"><?= $backText ?></div>
                         </div>
                     </td>
                 </tr>
@@ -266,7 +272,7 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
         </div>
         <!--Box 2-->
         <div class="card-text">
-            <div style="font-size: 20px; padding: 10px; text-align: center;"><?= $backText ?></div>
+            <div class="card-text-content"><?= $backText ?></div>
         </div>
     <?php
     }

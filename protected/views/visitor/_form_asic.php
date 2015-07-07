@@ -899,7 +899,7 @@ if ($this->action->id == 'update') {
                 } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
                     window.location = 'index.php?r=dashboard/viewmyvisitors';
                 } else {
-                    window.location = 'index.php?r=visitor/admin';
+                    window.location = 'index.php?r=visitor/admin&vms=avms';
                 }
             },
             error: function (data) {
@@ -908,7 +908,7 @@ if ($this->action->id == 'update') {
                 } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
                     window.location = 'index.php?r=dashboard/viewmyvisitors';
                 } else {
-                    window.location = 'index.php?r=visitor/admin';
+                    window.location = 'index.php?r=visitor/admin&vms=avms';
                 }
             }
         };

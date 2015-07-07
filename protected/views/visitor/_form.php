@@ -1051,7 +1051,7 @@ function sendVisitorForm() {
             } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
                 window.location = 'index.php?r=dashboard/viewmyvisitors';
             } else {
-                window.location = 'index.php?r=visitor/admin';
+                window.location = 'index.php?r=visitor/admin&vms=cvms';
             }
         },
         error: function (data) {
@@ -1060,7 +1060,7 @@ function sendVisitorForm() {
             } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
                 window.location = 'index.php?r=dashboard/viewmyvisitors';
             } else {
-                window.location = 'index.php?r=visitor/admin';
+                window.location = 'index.php?r=visitor/admin&vms=cvms';
             }
         }
     };

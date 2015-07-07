@@ -1066,7 +1066,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                     } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
                         window.location = 'index.php?r=dashboard/viewmyvisitors';
                     } else {
-                        window.location = 'index.php?r=visitor/admin';
+                        window.location = 'index.php?r=visitor/admin&vms=avms';
                     }
                 }else {
                     alert(data); return;
@@ -1083,7 +1083,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                 } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
                     window.location = 'index.php?r=dashboard/viewmyvisitors';
                 } else {
-                    window.location = 'index.php?r=visitor/admin';
+                    window.location = 'index.php?r=visitor/admin&vms=avms';
                 }
             }
         };

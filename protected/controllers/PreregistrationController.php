@@ -269,7 +269,7 @@ class PreregistrationController extends Controller
 	}
 
 	public function actionAsicPass(){
-		echo "enter ASIC password";
+		echo "enter ASIC password 1";
 	}
 
 	public function actionLogin(){

@@ -22,14 +22,17 @@ if ($company) {
     throw new CHttpException(404, 'Company not found for this User.');
 }
 
-$image = Photo::model()->findByPk($visitorModel->company);
-
 $companyLogo =  Photo::model()->getAbsolutePathOfImage(Photo::COMPANY_IMAGE, $visitorModel->company);
 
 if ($companyLogo  == Photo::model()->defaultAbsoluteImage() ){
     $companyLogo = null;
 }
+
 $userPhoto = Photo::model()->getAbsolutePathOfImage(Photo::VISITOR_IMAGE,$model->visitor);
+
+if ($userPhoto  == Photo::model()->defaultAbsoluteImage() ){
+    $userPhoto = null;
+}
 
 $card = CardGenerated::model()->findByPk($model->card);
 if ($card) {
@@ -201,7 +204,7 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
                         <!--Box 1-->
                         <div class="card-print">
                             <div class="img-visitor">
-                                <img src="<?= $userPhoto; ?>">
+                                <?=$userPhoto ? "<img src=\"{$userPhoto}\">":"";?>
                             </div>
                             <div class="card-info">
                                 <p class="text-cmp"><?= $companyCode; ?></p>
@@ -243,7 +246,7 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
         <!--Box 1-->
         <div class="card-print">
             <div class="img-visitor">
-                <img src="<?= $userPhoto; ?>">
+                <?=$userPhoto ? "<img src=\"{$userPhoto}\">":"";?>
             </div>
             <div class="card-info">
                 <p class="text-cmp"><?= $companyCode; ?></p>

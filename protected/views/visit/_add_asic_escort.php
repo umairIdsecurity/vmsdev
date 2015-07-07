@@ -15,6 +15,9 @@
     ),
 
 )); ?>
+<style type="text/css">
+    .addcompanymenu{   background-position-x: 3px !important;background-position-y: 5px !important;}
+</style>
     <table>
         <tr>
             <td class="asic-escort-field">
@@ -61,6 +64,7 @@
                 ?>
                 <span class="required">*</span>
                 <?php echo $form->error($model, 'company', array("style" => "margin-top:0px")); ?>
+                <a style="margin-top: 5px; margin-right: 5px; width: 95px; height: 21px;" href="#addCompanyContactModal" role="button" data-toggle="modal" id="addCompanyLink">Add Company</a>
             </td>
     </table>
 

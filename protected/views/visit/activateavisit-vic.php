@@ -479,19 +479,18 @@ $asicEscort = new AddAsicEscort();
                 success: function(data) {
                     if(data == 'existed') {
                         $('#AddAsicEscort_email_unique_em_').show();
+                        asicSponsorDeclarationChange(false);
                         return;
                     } else {
                         $('#AddAsicEscort_email_unique_em_').hide();
                         if(asicCheck() == true ) {
                             confirmed = true;
                         } else {
-                            asicCheck();
+                            asicSponsorDeclarationChange(false);
                         }
                     }
                 }
             });
-        } else {
-            alert('Please input correct ASIC Escort profile.');
         }
     }
 
@@ -521,6 +520,9 @@ $asicEscort = new AddAsicEscort();
             } else if ($('.searchAsicEscortResult').css('display') == 'block' && $('#selectedAsicEscort').val() == '') {
                 noError = false;
             }
+        }
+        if(noError == false) {
+            asicSponsorDeclarationChange(false);
         }
         return noError;
     }

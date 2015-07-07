@@ -172,11 +172,37 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             <tr><td colspan="2"><strong>Does document number match the identification provided?</strong></td></tr>
             <tr><td colspan="2"><strong>&nbsp;</strong></td></tr>
             <tr>
-                <td width="5%"><input type="radio" name="identification" id="identificationChkBoxYes"/></td>
+                <td colspan="2">
+                    <table style="border-collapse: initial;">
+                    <tbody>
+                        <tr>
+                            <td style="width: 120px; color: lightgray;">Type</td>
+                            <td><?php echo Visitor::$IDENTIFICATION_TYPE_LIST[$visitorModel->identification_type]; ?></td>
+                        </tr>
+                        <tr>
+                            <td style="width: 120px; color: lightgray;">Document No.</td>
+                            <td><?php echo $visitorModel->identification_document_no; ?></td>
+                        </tr>
+                        <tr>
+                            <td style="width: 120px; color: lightgray;">Document Expiry</td>
+                            <td><?php
+                                if ($visitorModel->identification_document_expiry == '' || $visitorModel->identification_document_expiry == '0000-00-00') {
+                                    echo 'N/A';
+                                } else {
+                                    echo $visitorModel->identification_document_expiry;
+                                }
+                            ?></td>
+                        </tr>
+                    </tbody>
+                </table>
+                </td>
+            </tr>
+            <tr>
+                <td width="20px"><input type="radio" name="identification" id="identificationChkBoxYes"/></td>
                 <td><label for="identificationChkBoxYes">Yes</label></td>
             </tr>
             <tr>
-                <td width="5%"><input type="radio" name="identification" id="identificationChkBoxNo"/></td>
+                <td width="20px"><input type="radio" name="identification" id="identificationChkBoxNo"/></td>
                 <td><label for="identificationChkBoxNo">No</label></td>
             </tr>
             

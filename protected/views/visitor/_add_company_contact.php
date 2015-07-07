@@ -8,11 +8,23 @@
             'validateOnSubmit' => true,
             'afterValidate' => 'js:function(form, data, hasError){
                 if (!hasError){ // no errors
+
+                    var currentController = "'.Yii::app()->controller->id.'";
+                    var currentAction = "'.Yii::app()->controller->action->id.'";
+                    if(currentController == "visitor"){
+                        if(currentAction == "addvisitor" || currentAction == "create") {
+                            var formInfo = $("#add-company-contact-form").serialize()+ "&AddCompanyContactForm%5BcompanyType%5D=" + $("#AddCompanyContactForm_companyType").val();
+                        }
+                    } else {
+                        var formInfo = $("#add-company-contact-form").serialize();
+                    }
+
                     $.ajax({
                         type: "POST",
                         url: "' . $this->createUrl('company/addCompanyContact') .'",
                         dataType: "json",
-                        data: $("#add-company-contact-form").serialize(),
+                        data: formInfo,
+
                         success: function(data) {
                             $("#addCompanyContactModal").modal("hide");
                             if (data.type == "contact") {
@@ -20,13 +32,11 @@
                                 $("#Visitor_staff_id").append(data.contactDropDown).val(data.id);
                             } else {
                                 //update company dropdown:
-                                var currentController = "'.Yii::app()->controller->id.'";
-                                var currentAction = "'.Yii::app()->controller->action->id.'";
                                 if(currentController == "visit" && currentAction == "detail") {
                                     $("#AddAsicEscort_company").prepend($("<option>", {value:data.id, text: data.name}));
                                     $("#AddAsicEscort_company").select2("val", data.id);
                                     $("#asicSponsorModal").modal("show");
-                                } else{
+                                } else if (currentController == "visitor"){
                                     $("#Visitor_company").prepend($("<option>", {value:data.id, text: data.name}));
                                     $("#Visitor_company").select2("val", data.id);
                                 }

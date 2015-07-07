@@ -5,6 +5,8 @@ class PreregistrationController extends Controller
 
 	public $layout = '';
 
+	private $_key = '123456789';
+
 	public function filters() {
 		return array(
 			'accessControl', // perform access control for CRUD operations
@@ -20,7 +22,7 @@ class PreregistrationController extends Controller
 	public function accessRules() {
 		return array(
 			array('allow',
-				'actions' => array('index','privacyPolicy' , 'declaration' , 'Login' ,'registration','confirmDetails', 'visitReason' , 'addAsic' , 'asicPass',  ),
+				'actions' => array('index','privacyPolicy' , 'declaration' , 'Login' ,'registration','confirmDetails', 'visitReason' , 'addAsic' , 'asicPass'),
 				'users' => array('*'),
 			),
 			array('allow',
@@ -33,6 +35,58 @@ class PreregistrationController extends Controller
 			),
 		);
 	}
+
+
+	private function _encrypt($data){
+
+		$m = mcrypt_module_open('rijndael-256', '', 'cbc', '');
+
+		$iv = mcrypt_create_iv(mcrypt_enc_get_iv_size($m), MCRYPT_DEV_RANDOM);
+
+		mcrypt_generic_init($m, $this->_key, $iv);
+
+		$data = mcrypt_generic($m, $data);
+
+		mcrypt_generic_deinit($m);
+
+		mcrypt_module_close($m);
+
+		return	$enryptedData = array(
+					'data' => base64_encode($data),
+					'iv' => base64_encode($iv)
+				);
+
+	}
+
+	private function _decrypt($data,$iv){
+
+		$m = mcrypt_module_open('rijndael-256', '', 'cbc', '');
+
+		$iv = base64_decode($iv);
+
+		mcrypt_generic_init($m, $this->_key, $iv);
+
+		$data = mdecrypt_generic($m, base64_decode($data));
+
+		mcrypt_generic_deinit($m);
+
+		mcrypt_module_close($m);
+
+		return $data;
+	}
+
+	/*public function actionEncTest(){
+		$session = new CHttpSession;
+		$enData = $this->_encrypt('id=101&email=shimulcsc@yahoo.com');
+		$session['enc_data'] = $enData['data'];
+		$session['iv'] 		 = $enData['iv'];
+	}
+
+	public function actionDecTest(){
+		$session = new CHttpSession;
+		$mainData = $this->_decrypt($session['enc_data'],$session['iv']);
+		echo $mainData;
+	}*/
 
 
 	public function actionIndex(){
@@ -238,6 +292,15 @@ class PreregistrationController extends Controller
 
 	public function actionAddAsic(){
 
+		/*$templateParams = array(
+			'email' => 'proshimul@yahoo.com',
+		);
+
+		$emailTransport = new EmailTransport();
+		$emailTransport->sendResetPasswordConfirmationEmail(
+			$templateParams, 'proshimul@yahoo.com', 'shimul' . ' ' . 'last name'
+		);*/
+
 		$session = new CHttpSession;
 
 		$model = new Registration();
@@ -248,16 +311,21 @@ class PreregistrationController extends Controller
 			$model->profile_type = 'ASIC';
 			$model->attributes = $_POST['Registration'];
 			if ($model->save()) {
-				$loggedUserEmail = 'shimulcsc@yahoo.com';
+
+				$urlStr = 'id='.$model->id.'&email='.$model->email;
+
+				$encodedData = $this->_encrypt($urlStr);
+
+				//$loggedUserEmail = 'shimulcsc@yahoo.com';
 				$headers = "MIME-Version: 1.0" . "\r\n";
 				$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-				$headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
+				//$headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
 				$to=$model->email;
 				$subject="Request for verification of VIC profile";
 				$body = "<html><body>Hi,<br><br>".
 					"VIC Holder urgently requires your Verification of their visit.<br><br>".
 					"Link of the VIC profile<br>".
-					Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?vid=".$model->id."email=".$model->email."<br>";
+					"<a heref=' " .Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?k_string=".$encodedData['data']. " '>".Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?k_string=".$encodedData['data']."</a><br>";
 				$body .="<br>"."Thanks,"."<br>Admin</body></html>";
 				mail($to, $subject, $body,$headers);
 

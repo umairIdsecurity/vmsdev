@@ -106,7 +106,8 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                                 'hostModel' => $hostModel,
                                                 'reasonModel' => $reasonModel,
                                                 'asic' => $asic,
-                                                'logform' => $logform
+                                                'logform' => $logform,
+                                                'session' => $session,
                                             ));
                                         } else {
                                             $this->renderPartial('activateavisit', array(

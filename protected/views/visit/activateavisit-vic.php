@@ -385,7 +385,7 @@ $asicEscort = new AddAsicEscort();
                     <div class="errorMessage" id="searchEscortErrorMessage" style=" display:none;">Please enter asic escort name or email for searching</div>
                     <div class="searchAsicEscortResult"></div>
                     <div class="add-esic-escort">
-                        <?php $this->renderPartial('_add_asic_escort',array('model' => $asicEscort)) ?>
+                        <?php $this->renderPartial('_add_asic_escort',array('model' => $asicEscort, 'session' => $session,)) ?>
                     </div>
                     <input type="hidden" id="selectedAsicEscort"/>
                 </td>
@@ -499,6 +499,11 @@ $asicEscort = new AddAsicEscort();
         var noError = true;
         if ($('#asicEscortRbtn').is(':checked') == true) {
             if ($('.add-esic-escort').css('display') == 'block') {
+                if($('#AddAsicEscort_company').val() == "") {
+                    $('#AddAsicEscort_company_em_').html('Please Select a Company');
+                    $('#AddAsicEscort_company_em_').show();
+                    noError = false;
+                }
                 $('.asic-escort-field .errorMessage ').each(function () {
                     if ($(this).css('display') == 'block') {
                         noError = false;
@@ -506,6 +511,10 @@ $asicEscort = new AddAsicEscort();
                 });
                 $('.asic-escort-field input').each(function () {
                     if ($(this).val() == '') {
+                        var error = '#' + $(this).attr('id') + '_em_';
+                        var placeholder = $(this).attr('placeholder');
+                        $(error).html('Please enter a ' + placeholder );
+                        $(error).show();
                         noError = false;
                     }
                 });

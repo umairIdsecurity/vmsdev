@@ -190,7 +190,6 @@ class VisitController extends Controller {
                 $asicEscort->visitor_card_status = 6;
                 $asicEscort->escort_flag = 1;
                 $asicEscort->date_created = date("Y-m-d H:i:s");
-                $asicEscort->company = Yii::app()->user->tenant;
                 $asicEscort->tenant = Yii::app()->user->tenant;
                 if (empty($asicEscort->visitor_workstation)) {
                     $asicEscort->visitor_workstation = $session['workstation'];
@@ -922,7 +921,6 @@ class VisitController extends Controller {
             $asicEscort->visitor_card_status = 6;
             $asicEscort->escort_flag = 1;
             $asicEscort->date_created = date("Y-m-d H:i:s");
-            $asicEscort->company = Yii::app()->user->tenant;
             $asicEscort->tenant = Yii::app()->user->tenant;
             if (empty($asicEscort->visitor_workstation)) {
                 $asicEscort->visitor_workstation = $session['workstation'];

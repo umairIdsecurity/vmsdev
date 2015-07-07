@@ -235,6 +235,7 @@ class Visitor extends CActiveRecord {
                 alternative_identification,
                 verifiable_signature,
                 escort_flag,
+                key_string
                 ',
                 'safe'
             ),

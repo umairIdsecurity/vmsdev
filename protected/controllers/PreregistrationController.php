@@ -22,7 +22,7 @@ class PreregistrationController extends Controller
 	public function accessRules() {
 		return array(
 			array('allow',
-				'actions' => array('index','privacyPolicy' , 'declaration' , 'Login' ,'registration','confirmDetails', 'visitReason' , 'addAsic' , 'asicPass'),
+				'actions' => array('index','privacyPolicy' , 'declaration' , 'Login' ,'registration','confirmDetails', 'visitReason' , 'addAsic' , 'asicPass' , 'encTest','decTest'),
 				'users' => array('*'),
 			),
 			array('allow',
@@ -35,7 +35,6 @@ class PreregistrationController extends Controller
 			),
 		);
 	}
-
 
 	private function _encrypt($data){
 
@@ -77,9 +76,11 @@ class PreregistrationController extends Controller
 
 	/*public function actionEncTest(){
 		$session = new CHttpSession;
-		$enData = $this->_encrypt('id=101&email=shimulcsc@yahoo.com');
+		$enData = $this->_encrypt('id=30210&email=proshimul@yahoo.com');
 		$session['enc_data'] = $enData['data'];
 		$session['iv'] 		 = $enData['iv'];
+		echo $enData['data']."<br>";
+		//echo $enData['iv']."<br>";
 	}
 
 	public function actionDecTest(){
@@ -292,15 +293,6 @@ class PreregistrationController extends Controller
 
 	public function actionAddAsic(){
 
-		/*$templateParams = array(
-			'email' => 'proshimul@yahoo.com',
-		);
-
-		$emailTransport = new EmailTransport();
-		$emailTransport->sendResetPasswordConfirmationEmail(
-			$templateParams, 'proshimul@yahoo.com', 'shimul' . ' ' . 'last name'
-		);*/
-
 		$session = new CHttpSession;
 
 		$model = new Registration();
@@ -308,7 +300,9 @@ class PreregistrationController extends Controller
 		$model->scenario = 'asic';
 
 		if (isset($_POST['Registration'])) {
+
 			$model->profile_type = 'ASIC';
+
 			$model->attributes = $_POST['Registration'];
 			if ($model->save()) {
 
@@ -316,16 +310,20 @@ class PreregistrationController extends Controller
 
 				$encodedData = $this->_encrypt($urlStr);
 
-				//$loggedUserEmail = 'shimulcsc@yahoo.com';
+				$key_str =
+					Registration::model()->findByPk($model->id);
+				$key_str->key_string = $encodedData['iv'];
+
+				$key_str->save();
+
 				$headers = "MIME-Version: 1.0" . "\r\n";
 				$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-				//$headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
 				$to=$model->email;
 				$subject="Request for verification of VIC profile";
 				$body = "<html><body>Hi,<br><br>".
 					"VIC Holder urgently requires your Verification of their visit.<br><br>".
 					"Link of the VIC profile<br>".
-					"<a href=' " .Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?k_string=".$encodedData['data']. " '>".Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?k_string=".$encodedData['data']."</a><br>";
+					"<a href=' " .Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?k_str=".$encodedData['data']. " '>".Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?k_str=".$encodedData['data']."</a><br>";
 				$body .="<br>"."Thanks,"."<br>Admin</body></html>";
 				mail($to, $subject, $body,$headers);
 
@@ -337,7 +335,7 @@ class PreregistrationController extends Controller
 	}
 
 	public function actionAsicPass(){
-		echo "enter ASIC password 3";
+		echo "enter ASIC password 4";
 	}
 
 	public function actionLogin(){
@@ -376,3 +374,5 @@ class PreregistrationController extends Controller
 	}
 
 }
+
+

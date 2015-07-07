@@ -341,7 +341,7 @@ $form = $this->beginWidget('CActiveForm', array(
         </select>
 
         <a onclick="addCompany()" id="addCompanyLink" style="text-decoration: none; display:none;">Add New Company</a>
-        <?php echo $form->error($model, 'company'); ?>
+        <?php echo '<br>'.$form->error($model, 'company'); ?>
     </td>
     <td></td>
 </tr>
@@ -1075,8 +1075,6 @@ function checkHostEmailIfUnique() {
     }
 }
 function populateCompanyofTenant(tenant, newcompanyId) {
-    $('#User_company option[value!=""]').remove();
-
     $.ajax({
         type: 'POST',
         url: '<?php echo Yii::app()->createUrl('user/GetTenantOrTenantAgentCompany&id='); ?>' + tenant,
@@ -1084,7 +1082,8 @@ function populateCompanyofTenant(tenant, newcompanyId) {
         data: tenant,
         success: function (r) {
             $('#User_company option[value!=""]').remove();
-
+            $('#User_company').append('<option></option>');
+            $('#select2-User_company-container').html('Please select a company');
             var selectedId = '';
             var selectedVal = '';
             $.each(r.data, function (index, value) {
@@ -1094,7 +1093,6 @@ function populateCompanyofTenant(tenant, newcompanyId) {
                     selectedVal = value.name;
                 }
             });
-
             if ($("#User_role").val() == 6) {
                 document.getElementById('User_company').disabled = false;
                 newcompanyId = (typeof newcompanyId === "undefined") ? "defaultValue" : newcompanyId;
@@ -1109,8 +1107,6 @@ function populateCompanyofTenant(tenant, newcompanyId) {
 
         }
     });
-
-
 }
 function populateDynamicFields() {
     

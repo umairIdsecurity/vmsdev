@@ -296,22 +296,32 @@ $defaultKey = key($asicCardTypes);
                                     <?php echo "<br>" . $form->error($userModel, 'repeatpassword'); ?>
                                 </td>
                             </tr>
-                            <tr class="vms-visitor-fields">
-                                <td id="hostCompanyRow" <?php
-                                if ($session['role'] == Roles::ROLE_AGENT_ADMIN || $session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles::ROLE_STAFFMEMBER) {
-                                    echo "style='display:none;'";
-                                }
-                                ?>>
-                                    <select id="User_company" disabled name="User[company]">
-                                        <option value=''>Please select a company</option>
+                            <tr>
+                                <td id="visitorCompanyRow">
+                                    <div style="margin-bottom: 5px;">
                                         <?php
-                                        if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
-                                            echo "<option value='" . $session['company'] . "' selected>Company</option>";
-                                        }
+                                        $this->widget('application.extensions.select2.Select2', array(
+                                            'model' => $userModel,
+                                            'attribute' => 'company',
+                                            'items' => CHtml::listData(Visitor::model()->findAllCompanyByTenant($session['tenant']), 'id', 'name'),
+                                            'selectedItems' => array(), // Items to be selected as default
+                                            'placeHolder' => 'Please select a company'
+                                        ));
                                         ?>
-                                    </select>
-                                    <span class="required">*</span>
-                                    <?php echo "<br>" . $form->error($userModel, 'company'); ?>
+                                        <span class="required">*</span>
+                                        <?php echo $form->error($userModel, 'company', array("style" => "margin-top:0px")); ?>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div style="margin-bottom: 5px;" id="userStaffRow"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                   <a style="float: left; margin-right: 5px; width: 95px; height: 21px;" href="#addCompanyContactModal" role="button" data-toggle="modal" id="addCompanyLink">Add Company</a>
+                                    <a href="#addCompanyContactModal" style="font-size: 12px; font-weight: bold; display: none;" id="addUserContactLink" class="btn btn-xs btn-info" role="button" data-toggle="modal">Add Contact</a>
                                 </td>
                             </tr>
                             <tr class="vic-host-fields">
@@ -322,7 +332,9 @@ $defaultKey = key($asicCardTypes);
                                            value="<?php echo UserType::USERTYPE_INTERNAL; ?>"/>
                                 </td>
                             </tr>
-
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
                             <tr class="vic-host-fields">
                                 <td>
                                     <a onclick="" style="text-decoration: none;" id="requestASICVerify" class="greenBtn">Request verification ASIC Sponsor </a><br>
@@ -862,10 +874,43 @@ $defaultKey = key($asicCardTypes);
         var password = $("#User_password").val();
         var confirmPassword = $("#User_repeatpassword").val();
 
-        if (password != confirmPassword)
+        if (password != confirmPasswordUser)
             $("#passwordErrorMessage").show();
         else
             $("#passwordErrorMessage").hide();
     }
 
+    // company change
+    $('#User_company').on('change', function() {
+        var companyId = $(this).val();
+        $('#CompanySelectedId').val(companyId);
+        $modal = $('#addCompanyContactModal');
+        $.ajax({
+            type: "POST",
+            url: "<?php echo $this->createUrl('company/getContacts') ?>",
+            dataType: "json",
+            data: {id:companyId},
+            success: function(data) {console.log(data);
+                var companyName = $('.select2-selection__rendered').text();
+                $('#AddCompanyContactForm_companyName').val(companyName).prop('disabled', 'disabled');
+                if (data == 0) {
+                    $('#addUserContactLink').hide();
+                    $('#userStaffRow').empty();
+                } else {
+                    $('#userStaffRow').html(data);
+                    $('#addUserContactLink').show();
+                }
+                return false;
+            }
+        });
+    });
+
+    function isEmpty(obj) {
+        for(var prop in obj) {
+            if(obj.hasOwnProperty(prop))
+                return false;
+        }
+
+        return true;
+    }
 </script>

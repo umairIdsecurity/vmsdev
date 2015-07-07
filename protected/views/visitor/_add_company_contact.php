@@ -20,8 +20,16 @@
                                 $("#Visitor_staff_id").append(data.contactDropDown).val(data.id);
                             } else {
                                 //update company dropdown:
-                                $("#Visitor_company").prepend($("<option>", {value:data.id, text: data.name}));
-                                $("#Visitor_company").select2("val", data.id);
+                                var currentController = "'.Yii::app()->controller->id.'";
+                                var currentAction = "'.Yii::app()->controller->action->id.'";
+                                if(currentController == "visit" && currentAction == "detail") {
+                                    $("#AddAsicEscort_company").prepend($("<option>", {value:data.id, text: data.name}));
+                                    $("#AddAsicEscort_company").select2("val", data.id);
+                                    $("#asicSponsorModal").modal("show");
+                                } else{
+                                    $("#Visitor_company").prepend($("<option>", {value:data.id, text: data.name}));
+                                    $("#Visitor_company").select2("val", data.id);
+                                }
                             }
                             return false;
                         }
@@ -55,8 +63,12 @@
             <tr>
                 <td style="width:160px;"><?php echo $form->labelEx($model,'companyType'); ?></td>
                 <td>
-                    <?php echo $form->dropDownList($model, 'companyType', CHtml::listData(CompanyType::model()->findAll(), 'id', 'name'), array('prompt'=>'Select a company type', 'placeholder'=>'Company Type')); ?>
-                    <?php echo "<br>" . $form->error($model, 'companyType'); ?>
+                    <?php if (in_array(Yii::app()->controller->action->id, array('addvisitor', 'create'))) {
+                        echo $form->dropDownList($model, 'companyType', CHtml::listData(CompanyType::model()->findAll(), 'id', 'name'), array('prompt' => 'Select a company type', 'placeholder' => 'Company Type', 'disabled' => 'disabled', 'options' => array('3' => array('selected' => true))));
+                    } else {
+                        echo $form->dropDownList($model, 'companyType', CHtml::listData(CompanyType::model()->findAll(), 'id', 'name'), array('prompt' => 'Select a company type', 'placeholder' => 'Company Type'));
+                    }?>
+                    <?php echo "<br>" . $form->error($model, 'companyType');?>
                 </td>
             </tr>
             <tr>

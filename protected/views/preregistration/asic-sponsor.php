@@ -10,6 +10,8 @@
     <h1 class="text-primary title">ADD / FIND ASIC SPONSOR</h1>
 
     <?php
+    //echo Yii::app()->getBaseUrl(true);
+    //echo Yii::app()->getHomeUrl();
     $form=$this->beginWidget('CActiveForm', array(
         'id'=>'add-asic-form',
         'enableAjaxValidation'   => false,
@@ -91,6 +93,15 @@
         </div>
 
         <div class="col-md-offset-9 col-sm-offset-9 col-xs-offset-8 col-md-1 col-sm-1 col-xs-1">
+
+            <a href="" class="btn btn-primary btn-next">
+                SKIP
+                <span class="glyphicon glyphicon-chevron-right"></span>
+
+            </a>
+        </div>
+
+        <div class="col-md-1 col-sm-1 col-xs-1">
             <?php
             echo CHtml::tag('button', array(
                 'type'=>'submit',
@@ -98,15 +109,6 @@
             ), 'NEXT <span class="glyphicon glyphicon-chevron-right"></span> ');
             ?>
 
-        </div>
-
-        <div class="col-md-1 col-sm-1 col-xs-1">
-
-            <a href="" class="btn btn-primary btn-next">
-                SKIP
-                <span class="glyphicon glyphicon-chevron-right"></span>
-
-            </a>
         </div>
 
     </div>

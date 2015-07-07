@@ -7,7 +7,7 @@
  */
 class ContactForm extends CFormModel
 {
-//    public $name;
+    //public $name;
 //    public $email;
 //    public $role_id;
     public $reason;
@@ -23,6 +23,7 @@ class ContactForm extends CFormModel
     {
         return array(
             // name, email, subject and message are required
+            //array('name', 'required'),
             array('reason, message', 'required'),
             array('contact_person_name', 'required'),
             // email has to be a valid email address

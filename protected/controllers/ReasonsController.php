@@ -67,7 +67,11 @@ class ReasonsController extends Controller
 		if(isset($_POST['Reasons']))
 		{
 			$model->attributes=$_POST['Reasons'];
-			if($model->save())
+                        
+                        $model->created_by=Yii::app()->user->id;
+                        $model->tenant=Yii::app()->user->tenant;
+                        
+                        if($model->save())
 				$this->redirect(array('admin'));
 		}
 

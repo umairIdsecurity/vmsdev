@@ -187,6 +187,9 @@ class Registration extends CActiveRecord {
 		return array(
 
             array('first_name, last_name, email, contact_number', 'required'),
+            array('email', 'unique', 'className' => 'Registration',
+                'attributeName' => 'email',
+                'message'=>'This Email is already in use'),
 
 			array('identification_type,
 			identification_document_no, identification_document_expiry, contact_unit , contact_street_no,

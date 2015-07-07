@@ -10,7 +10,7 @@
     <h1 class="text-primary title">ADD / FIND ASIC SPONSOR</h1>
 
     <?php
-    echo Yii::app()->getBaseUrl(true);
+    //echo Yii::app()->getBaseUrl(true);
     //echo Yii::app()->getHomeUrl();
     $form=$this->beginWidget('CActiveForm', array(
         'id'=>'add-asic-form',

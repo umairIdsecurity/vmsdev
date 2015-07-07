@@ -214,11 +214,38 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             </tr>
             
             <tr id="identificationNotExpired" style="display:none;">
-            <form id="identification_not_expired_form">
-                <td>&nbsp;</td>
-                <td><input type="text" name="Visitor['identification_alternate_document_no1']" placeholder="Enter Alternate Identification"> <span class="required primary-identification-require">*</span>
+                <td colspan="2">
+                    <table style="border-collapse: initial;">
+                        <tbody>
+                            <tr>
+                                <form id="identification_not_expired_form">
+                                    <td><input type="text" style="width: 300px;" name="Visitor['identification_type']" placeholder="Enter drivers licence, passport or proof of age"> <span class="required primary-identification-require">*</span>
+                                    </td>
+                                    <td>
+                                        <?php
+                                        $this->widget('zii.widgets.jui.CJuiDatePicker',array(
+                                            'id' => 'identification_document_expiry',
+                                            'name'=>'Visitor[identification_document_expiry]',
+                                            // additional javascript options for the date picker plugin
+                                            'options'=>array(
+                                                'dateFormat' => 'dd-mm-yy',
+                                                'changeYear' => true,
+                                                'changeMonth' => true
+                                            ),
+                                            'htmlOptions'=>array(
+                                                'size'        => '0',
+                                                'maxlength'   => '10',
+                                                'placeholder' => 'Expiry',
+                                                'style'       => 'width: 120px;',
+                                            ),
+                                        ));
+                                        ?> <span class="required primary-identification-require">*</span>
+                                    </td>
+                                </form>
+                            </tr>
+                        </tbody>
+                    </table>
                 </td>
-            </form>
             </tr>
             <tr id="identificationExpired" style="display:none;">
             <form id="identification_expired_form">
@@ -265,6 +292,8 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                         // additional javascript options for the date picker plugin
                                         'options'=>array(
                                             'dateFormat' => 'dd-mm-yy',
+                                            'changeYear' => true,
+                                            'changeMonth' => true
                                         ),
                                         'htmlOptions'=>array(
                                             'size'        => '0',

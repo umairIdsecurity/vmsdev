@@ -343,7 +343,7 @@ class VisitController extends Controller {
         $hostModel = User::model()->findByPk($host);
 
         // Update Workstation form ( left column on visitor detail page )
-        if (isset($_POST['updateWorkstationForm'])) {
+        if (isset($_POST['updateWorkstationForm']) && isset($_POST['Visitor'])) {
             $visitorModel->attributes = $_POST['Visitor'];
             if ($visitorModel->visitor_card_status == Visitor::VIC_ASIC_ISSUED) {
                 $visitorModel->profile_type = Visitor::PROFILE_TYPE_ASIC;

@@ -41,8 +41,13 @@ if ($card) {
 $visitorName = wordwrap($visitorName, 13, "\n", true);
 
 $dateExpiry = date('dMy');
-if ($model->card_type != CardType::SAME_DAY_VISITOR) {
-    $dateExpiry = date("dMy", strtotime($model->date_check_out));
+switch ($model->card_type) {
+    case CardType::SAME_DAY_VISITOR:
+    case CardType::VIC_CARD_24HOURS:
+        $dateExpiry = date("dMy", strtotime($model->date_check_out));
+        break;
+    default:
+        break;
 }
 
 $first_name = $visitorModel->first_name != "" ? $visitorModel->first_name : "N/A";

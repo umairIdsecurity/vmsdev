@@ -137,7 +137,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                 $disabled = 'disabled';
                             }
                             ?>
-                            <input type="submit" style="width: 131px !important;" <?php echo $disabled; ?> value="Preregister Visit" class="complete"/>
+                            <button type="submit" id="registerNewVisit" <?php echo $disabled; ?> class="greenBtn">Preregister Visit</button>
                         <?php else:
                             if ($model->card_type == CardType::MANUAL_VISITOR && isset($model->date_check_in) && strtotime($model->date_check_in) < strtotime(date("d-m-Y"))) :
                                 ?>
@@ -357,7 +357,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             var isChanged = imgsrc.search('visit/detail&id='+'<?php echo $model->id; ?>');
 
             if( isDefault > 0 || (profileImage == '' && isChanged > 0)) {
-                <?php if ($model->card_type > 4 ) : ?>
+                <?php if ($model->card_type > CardType::CONTRACTOR_VISITOR ) : ?>
                     <?php if($model->card_type != CardType::VIC_CARD_SAMEDATE ) : ?>
                     $("#Visitor_photo_em").attr('style', 'margin-right:84px ; margin-bottom:0px; margin-top:0px ;');
                     $("#editImageBtn.editImageBtn").attr('style', 'margin-top:-5px !important; margin-right:84px ; margin-bottom:0px;');
@@ -430,7 +430,13 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             }
 
             if (confirmed == true) {
-                flag = isCheckboxsChecked(vic_active_visit_checkboxs);
+
+                if ($this.val() == 'preregister') {
+                    flag = true;
+                } else {
+                    flag = isCheckboxsChecked(vic_active_visit_checkboxs);
+                }
+                
                 if (flag == true) {
                     var pre_issued_card_no = $("#pre_issued_card_no").val();
                     if (typeof pre_issued_card_no != "undefined") {

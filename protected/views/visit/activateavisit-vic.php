@@ -210,15 +210,15 @@ $asicEscort = new AddAsicEscort();
 
                 $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "option", "minDate", selectedDate);
 
-                function updateTextVisitButton(text, id) {
-                    $("#registerNewVisit").text(text);
+                function updateTextVisitButton(text, id, val) {
+                    $("#registerNewVisit").text(text).val(val);
                 }
 
                 if (selectedDate >= currentDate) {
                     <?php if ($model->card_type == CardType::VIC_CARD_MANUAL) { // show Back Date Visit
-                        echo 'updateTextVisitButton("Activate Visit", "registerNewVisit");';
+                        echo 'updateTextVisitButton("Activate Visit", "registerNewVisit", "active");';
                     } else {
-                        echo 'updateTextVisitButton("Preregister Visit", "preregisterNewVisit");
+                        echo 'updateTextVisitButton("Preregister Visit", "preregisterNewVisit", "preregister");
                               $("#card_no_manual").hide();';
                     }
                     ?>

@@ -93,7 +93,7 @@
 
         <div class="col-md-offset-9 col-sm-offset-9 col-xs-offset-8 col-md-1 col-sm-1 col-xs-1">
 
-            <a href="" class="btn btn-primary btn-next">
+            <a href="<?=Yii::app()->createUrl("preregistration/uploadPhoto")?>" class="btn btn-primary btn-next">
                 SKIP
                 <span class="glyphicon glyphicon-chevron-right"></span>
 

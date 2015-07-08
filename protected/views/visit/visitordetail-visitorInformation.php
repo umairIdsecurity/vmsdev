@@ -161,6 +161,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                 <?php echo $visitorForm->textField($visitorModel, 'contact_number', ['disabled' => $disabled]); ?>
                                 <br />
                                 <?php echo $visitorForm->error($model, 'first_name'); ?>
+                            </td>
                         </tr>
                     </table>
                 </li>
@@ -168,10 +169,9 @@ $visitorForm = $this->beginWidget('CActiveForm', [
         </li>
 
         <?php
-        if ($asic) :
-            $company = $visitorModel->getCompany();
-            if (!empty($company)) :
-                $contact = $newHost->findByPk($visitorModel->staff_id);
+        $company = $visitorModel->getCompany();
+        if (!empty($company)) :
+            $contact = $newHost->findByPk($visitorModel->staff_id);
         ?>
         <li class='has-sub' id="companyDetailsLi"><a href="#"><span>Company Details</span></a>
             <ul>
@@ -182,10 +182,9 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                 Company Name
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" <?php echo $disabled; ?> class="visitor-detail-info-field" value="<?php echo isset($company->name) ? $company->name : '' ; ?>"
-                                       name="Company[name]" id="Company_name">
-                                <div style="" id="Company_name_em_" class="errorMessage errorMessageEmail">Please enter a company name.
-                                </div>
+                                <?php echo $visitorForm->textField($company, 'name', ['disabled' => $disabled]); ?>
+                                <br />
+                                <?php echo $visitorForm->error($company, 'name'); ?>
                             </td>
                         </tr>
 
@@ -194,10 +193,9 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                 Contact Person
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" <?php echo $disabled; ?> class="visitor-detail-info-field" value="<?php echo (!empty($contact)) ? $contact->getFullName() : ''; ?>"
-                                       name="Company[contact]" id="Company_contact">
-                                <div style="" id="Company_contact_em_" class="errorMessage errorMessageEmail">Please enter a company contact.
-                                </div>
+                                <?php echo $visitorForm->textField($company, 'contact', ['disabled' => $disabled, 'value' => $contact->getFullName()]); ?>
+                                <br />
+                                <?php echo $visitorForm->error($company, 'contact'); ?>
                             </td>
                         </tr>
 
@@ -206,10 +204,9 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                 Contact No.
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" <?php echo $disabled; ?> class="visitor-detail-info-field" value="<?php echo isset($contact->contact_number) ? $contact->contact_number : ''; ?>"
-                                       name="Company[mobile_number]" id="Company_mobile_number">
-                                <div style="" id="Company_mobile_number_em_" class="errorMessage errorMessageEmail">Please enter a company mobile number.
-                                </div>
+                                <?php echo $visitorForm->textField($company, 'mobile_number', ['disabled' => $disabled, 'value' => $contact->contact_number]); ?>
+                                <br />
+                                <?php echo $visitorForm->error($company, 'mobile_number'); ?>
                             </td>
                         </tr>
 
@@ -218,10 +215,9 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                 Contact Email
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" <?php echo $disabled; ?> class="visitor-detail-info-field" value="<?php echo isset($contact->email) ? $contact->email : ''; ?>"
-                                       name="Company[email_address]" id="Company_email_address">
-                                <div style="" id="Company_email_address_em_" class="errorMessage errorMessageEmail">Please enter a company email address.
-                                </div>
+                                <?php echo $visitorForm->textField($company, 'email_address', ['disabled' => $disabled, 'value' => $contact->email]); ?>
+                                <br />
+                                <?php echo $visitorForm->error($company, 'email_address'); ?>
                             </td>
                         </tr>
 
@@ -230,7 +226,6 @@ $visitorForm = $this->beginWidget('CActiveForm', [
             </ul>
         </li>
         <?php 
-            endif;
         endif;
         ?>
         <?php if (!$asic) : ?>

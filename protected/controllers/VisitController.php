@@ -415,7 +415,7 @@ class VisitController extends Controller {
 
                         // Save staff member
                         if (!$staffModel->save()) {
-                            // Do something if save process failure
+                            // Do something if save staff failure
                         }
                     }
                 }

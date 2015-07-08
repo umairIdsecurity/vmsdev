@@ -209,6 +209,7 @@ class VisitorController extends Controller {
         if(Yii::app()->request->isPostRequest)
         {
             $model = $this->loadModel($id);
+            $model->scenario = "delete";
             if ($model->delete()) {
                 //throw new CHttpException(400, "This is a required field and cannot be deleted");
             } else {

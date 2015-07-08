@@ -242,7 +242,7 @@ class Visitor extends CActiveRecord {
             ),
             array('tenant, tenant_agent,company, visitor_type, visitor_workstation, photo,vehicle, visitor_card_status', 'default', 'setOnEmpty' => true, 'value' => null),
             array('password', 'PasswordCustom'),
-            array('repeatpassword', 'PasswordRepeat'),
+            array('repeatpassword', 'PasswordRepeat','except' => ['delete']),
 
             //todo: check to enable again. why do we need this validation ?
             //array('password_requirement', 'PasswordRequirement'),
@@ -266,7 +266,7 @@ class Visitor extends CActiveRecord {
             identification_alternate_document_name2,
             identification_alternate_document_no2',
             'VisitorAlternateIdentification',
-            'except' => ['u18Rule', 'updateVic']
+            'except' => ['u18Rule', 'updateVic','delete']
         );
 
         $rules[] = array(
@@ -275,7 +275,7 @@ class Visitor extends CActiveRecord {
             identification_document_no,
             identification_document_expiry',
             'VisitorPrimaryIdentification',
-            'except' => ['u18Rule', 'updateVic']
+            'except' => ['u18Rule', 'updateVic','delete']
         );
 
 
@@ -307,13 +307,14 @@ class Visitor extends CActiveRecord {
                     contact_postcode,
                     contact_country',
                     'required',
-                    'except'=> ['updateVic', 'updateIdentification']
+                    'except'=> ['updateVic', 'updateIdentification','delete']
                 );
                 break;
             case self::PROFILE_TYPE_ASIC:
                 $rules[] = [
                     'identification_type, identification_document_no, identification_document_expiry', 'required',
-                    'on' => 'asicApplicant'
+                    'on' => 'asicApplicant',
+                    'except'=> ['delete']
                 ];
                 $rules[] = array(
                     'visitor_card_status, asic_no, asic_expiry', 'required',
@@ -523,14 +524,20 @@ class Visitor extends CActiveRecord {
         } elseif($visitorHasSavedVisitOnly){
 
             $this->is_deleted = 1;
-            $this->save();
-            echo "true";
+            if($this->save()){
+                echo "true";
+            } else {
+                var_dump($this->getErrors());
+            }
             Visit::model()->updateCounters(array('is_deleted' => 1), 'visitor=:visitor', array(':visitor' => $this->id));
             return false;
         } else {
             $this->is_deleted = 1;
-            $this->save();
-            echo "true";
+            if($this->save()){
+                echo "true";
+            } else {
+                var_dump($this->getErrors());
+            }
             return false;
         }
     }

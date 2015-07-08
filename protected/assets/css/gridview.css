@@ -3,22 +3,31 @@
     background:url(loading.gif) no-repeat;
 }
 
-
-.grid-view table.items th a.asc
-{
-	background:url('../images/icon-down.png') right center no-repeat !important;
-	padding-right: 10px;
-}
-.grid-view a.sort-link 
-{
-    background: url('../images/icon-updown.png') right center no-repeat !important;
+.grid-view a.sort-link {
     padding-right: 10px !important;
 }
-
-.grid-view table.items th a.desc
+.grid-view a.sort-link:before
 {
-        background:url('../images/icon-up.png') right center no-repeat !important;
-        padding-right: 10px;
+    width: 10px;
+    height: 15px;
+    position: absolute;
+    right: 0px;
+    top: 50%;
+    margin-top: -8px;
+    content: " ";
+    background: url('../images/icon-updown.png') 3px 0 no-repeat !important;
+}
+
+.grid-view table.items th a.asc:before
+{
+    margin-top: -12px;
+    background:url('../images/icon-down.png') 2px 0 no-repeat !important;
+}
+
+.grid-view table.items th a.desc:before
+{
+    margin-top: -4px;
+    background:url('../images/icon-up.png') 2px 0 no-repeat !important;
 }
 
 .grid-view table.items tr.even

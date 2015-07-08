@@ -266,7 +266,8 @@ class Visitor extends CActiveRecord {
             identification_alternate_document_no1,
             identification_alternate_document_name2,
             identification_alternate_document_no2',
-            'VisitorAlternateIdentification'
+            'VisitorAlternateIdentification',
+            'except' => ['u18Rule', 'updateVic']
         );
 
         $rules[] = array(
@@ -275,7 +276,7 @@ class Visitor extends CActiveRecord {
             identification_document_no,
             identification_document_expiry',
             'VisitorPrimaryIdentification',
-            'except' => ['u18Rule']
+            'except' => ['u18Rule', 'updateVic']
         );
 
 
@@ -501,13 +502,6 @@ class Visitor extends CActiveRecord {
         if(!$this->contact_country) {
             $this->contact_country = self::AUSTRALIA_ID;
         }
-        
-        if (!empty($this->date_of_birth)) 
-            $this->date_of_birth =  date('Y-m-d', strtotime($this->date_of_birth));
-        if (!empty($this->asic_expiry)) 
-            $this->asic_expiry =  date('Y-m-d', strtotime($this->asic_expiry));
-        if (!empty($this->identification_document_expiry)) 
-            $this->identification_document_expiry =  date('Y-m-d', strtotime($this->identification_document_expiry));
 
         if ($this->password_requirement == PasswordRequirement::PASSWORD_IS_NOT_REQUIRED) {
             $this->password = null;
@@ -518,6 +512,20 @@ class Visitor extends CActiveRecord {
         return parent::beforeSave();
     }
 
+    public function afterSave() {
+        // Convert all date/time fields to yyyy-mm-dd format
+        if (!empty($this->date_of_birth)) 
+            $this->date_of_birth =  date('Y-m-d', strtotime($this->date_of_birth));
+
+        if (!empty($this->asic_expiry)) 
+            $this->asic_expiry =  date('Y-m-d', strtotime($this->asic_expiry));
+
+        if (!empty($this->identification_document_expiry)) 
+            $this->identification_document_expiry =  date('Y-m-d', strtotime($this->identification_document_expiry));
+        // End Conver section
+        
+        return parent::afterSave();
+    }
 
     public function beforeDelete() {
         $visitorExists = Visit::model()->exists('is_deleted = 0 and visitor =' . $this->id . ' and (visit_status=' . VisitStatus::PREREGISTERED . ' or visit_status=' . VisitStatus::ACTIVE . ')');

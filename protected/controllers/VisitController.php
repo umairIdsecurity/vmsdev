@@ -344,75 +344,18 @@ class VisitController extends Controller {
 
         // Update Workstation form ( left column on visitor detail page )
         if (isset($_POST['updateWorkstationForm']) && isset($_POST['Visitor'])) {
-            $visitorModel->attributes = $_POST['Visitor'];
+            $visitorModel->attributes = Yii::app()->request->getPost('Visitor');
+
+            $visitorModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
+
             if ($visitorModel->visitor_card_status == Visitor::VIC_ASIC_ISSUED) {
                 $visitorModel->profile_type = Visitor::PROFILE_TYPE_ASIC;
             }
 
             $visitorModel->scenario = 'updateVic';
             if ($visitorModel->save()) {
-                if (in_array($visitorModel->visitor_card_status, [Visitor::ASIC_PENDING])) {
-                    $model->date_check_in = $model->date_check_out;
-                    if (!$model->save()) {
-                        // Do something if model save failure
-                    }
-                }
-            }
-        }
-
-        #update Visitor and Host form ( middle column on visitor detail page )
-        if (isset($_POST['updateVisitorInfo'])) {
-
-            $asicModel = Visitor::model()->findByPk($model->host);
-            if ($asicModel && isset($_POST['Visitor'])) {
-                if (isset($_POST['Visitor']['asic_first_name'])) 
-                    $asicModel->first_name  = $_POST['Visitor']['asic_first_name'];
-                if (isset($_POST['Visitor']['asic_last_name'])) 
-                    $asicModel->last_name   = $_POST['Visitor']['asic_last_name'];
-                if (isset($_POST['Visitor']['asic_asic_no'])) 
-                    $asicModel->asic_no     = $_POST['Visitor']['asic_asic_no'];
-                if (isset($_POST['Visitor']['asic_asic_expiry']))
-                    $asicModel->asic_expiry = $_POST['Visitor']['asic_asic_expiry'];
-
-                $asicModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
-
-                // Save asic profile
-                if (!$asicModel->save()) {
-                    // Do something if save process failure
-                }
-            }
-
-            if (isset($_POST['Company'])) {
-                if (!empty($visitorModel->company)) {
-
-                    $companyModel = Company::model()->findByPk($visitorModel->company);
-                    if ($companyModel) {
-                        $companyModel->attributes = $_POST['Company'];
-                        $companyModel->save();
-                    }
-
-                    $staffModel   = User::model()->findByPk($visitorModel->staff_id);
-                    if ($staffModel) {
-                        if (isset($_POST['Company']['mobile_number'])) 
-                            $staffModel->contact_number = $_POST['Company']['mobile_number'];
-                        if (isset($_POST['Company']['email_address'])) 
-                            $staffModel->email          = $_POST['Company']['email_address'];
-
-                        // Save staff member
-                        if (!$staffModel->save()) {
-                            // Do something if save process failure
-                        }
-                    }
-                }
-            }
-
-            $visitorModel->attributes           = $_POST['Visitor'];
-            $visitorModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
-            $visitorModel->setScenario('updateVic');
-
-            // Save visitor
-            if ($visitorModel->save()) {
-                if ($_POST['Visitor']['visitor_card_status'] == Visitor::ASIC_ISSUED) {
+                // If visitor card status is VIC ASIC Issued then add new card status convert
+                if ($visitorModel->visitor_card_status == Visitor::VIC_ASIC_ISSUED) {
                     $logCardstatusConvert               = new CardstatusConvert;
                     $logCardstatusConvert->visitor_id   = $visitorModel->id;
                     $logCardstatusConvert->convert_time = date("Y-m-d");
@@ -425,15 +368,79 @@ class VisitController extends Controller {
             }
         }
 
+        #update Visitor and Host form ( middle column on visitor detail page )
+        if (isset($_POST['updateVisitorInfo'])) {
+            // Get visitor params
+            $asicParams = Yii::app()->request->getPost('ASIC');
+
+            $asicModel = Visitor::model()->findByPk($model->host);
+            if ($asicModel && !empty($asicParams)) {
+
+                if (isset($asicParams['first_name'])) 
+                    $asicModel->first_name  = $asicParams['first_name'];
+                if (isset($asicParams['last_name'])) 
+                    $asicModel->last_name   = $asicParams['last_name'];
+                if (isset($asicParams['asic_no'])) 
+                    $asicModel->asic_no     = $asicParams['asic_no'];
+                if (isset($asicParams['asic_expiry']))
+                    $asicModel->asic_expiry = $asicParams['asic_expiry'];
+
+                $asicModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
+
+                $asicModel->scenario = 'updateVic';
+                // Save asic profile
+                if (!$asicModel->save()) {
+                    // Do something if save process failure
+                }
+            }
+
+            if (isset($_POST['Company'])) {
+                $companyParams = Yii::app()->request->getPost('Company');
+                // If visitor has company id then save / continue
+                if (!empty($visitorModel->company)) {
+                    $companyModel = Company::model()->findByPk($visitorModel->company);
+
+                    if ($companyModel) {
+                        $companyModel->attributes = $companyParams;
+                        $companyModel->save();
+                    }
+
+                    // Update company contact process
+                    $staffModel   = User::model()->findByPk($visitorModel->staff_id);
+                    if ($staffModel) {
+                        if (isset($companyParams['mobile_number'])) 
+                            $staffModel->contact_number = $companyParams['mobile_number'];
+                        if (isset($companyParams['email_address'])) 
+                            $staffModel->email          = $companyParams['email_address'];
+
+                        // Save staff member
+                        if (!$staffModel->save()) {
+                            // Do something if save process failure
+                        }
+                    }
+                }
+            }
+
+            $visitorModel->attributes           = Yii::app()->request->getPost('Visitor');
+            $visitorModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
+            $visitorModel->setScenario('updateVic');
+
+            // Save visitor
+            if (!$visitorModel->save()) {
+                // Do something if save visitor failure
+            }
+        }
+
         if (isset($_POST['Visit'])) {
+            $visitParams = Yii::app()->request->getPost('Visit');
             if (empty($_POST['Visit']['finish_time'])) {
                 $model->finish_time = date('H:i:s');
             }
 
-            $model->attributes = $_POST['Visit'];
+            $model->attributes = $visitParams;
 
             // close visit process
-            if (isset($_POST['Visit']['visit_status']) && $_POST['Visit']['visit_status'] == VisitStatus::CLOSED) {
+            if (isset($visitParams['visit_status']) && $visitParams['visit_status'] == VisitStatus::CLOSED) {
                 if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && strtotime(date('Y-m-d')) <= strtotime($model->date_check_out)) {
                     $currentDate = date('Y-m-d');
                     $model->visit_status = VisitStatus::AUTOCLOSED;

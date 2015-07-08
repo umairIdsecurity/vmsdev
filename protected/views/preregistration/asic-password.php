@@ -25,8 +25,13 @@
     <div class="form-create-login">
         <h1 class="text-primary title">Add Password</h1>
         <div class="form-group">
-            <?php echo $form->textField($model, 'password', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Password' , 'class'=>'form-control input-lg' , 'value'=>'')); ?>
+            <?php echo $form->passwordField($model, 'password', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Password' , 'class'=>'form-control input-lg')); ?>
             <?php echo $form->error($model, 'password'); ?>
+        </div>
+
+        <div class="form-group">
+            <?php echo $form->passwordField($model, 'password_repeat', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Repeat password' , 'class'=>'form-control input-lg')); ?>
+            <?php echo $form->error($model, 'password_repeat'); ?>
         </div>
 
         <div class="form-group">

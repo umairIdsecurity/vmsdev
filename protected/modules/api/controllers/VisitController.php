@@ -52,7 +52,7 @@ class VisitController extends RestfulController {
                     $visit = Visit::model()->with('visitor0')->findByPk($visit->id);
                     $result = $this->populateVisits(array($visit));
 
-                    $this->sendResponse(200, CJSON::encode($result));
+                    $this->sendResponse(201, CJSON::encode($result));
                 } else {
                     $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_DATA', 'errorDescription' => 'Requsted data are invalid')));
                 }
@@ -292,8 +292,8 @@ class VisitController extends RestfulController {
             $result[$i]['visitorID'] = $visit->visitor;
             $result[$i]['hostID'] = $visit->host;
             $result[$i]['visitorType'] = $visit->visitor_type;
-            $result[$i]['startTime'] = ($visit->date_check_in != NULL) ? date("Y-m-dTH:i:sZ", strtotime($visit->date_check_in . '' . $visit->time_check_in)) : "N/A";
-            $result[$i]['expectedEndTime'] = ($visit->date_check_out != NULL) ? date("Y-m-dTH:i:sZ", strtotime($visit->date_check_out . '' . $visit->time_check_out)) : "N/A";
+            $result[$i]['startTime'] = ($visit->date_check_in != NULL) ? date("Y-m-d\TH:i:s\Z", strtotime($visit->date_check_in . '' . $visit->time_check_in)) : "N/A";
+            $result[$i]['expectedEndTime'] = ($visit->date_check_out != NULL) ? date("Y-m-d\TH:i:s\Z", strtotime($visit->date_check_out . '' . $visit->time_check_out)) : "N/A";
             $result[$i]['visitorPicture'] = !empty($visit->visitor0->photo) ? $visit->visitor0->photo : "N/A";
             if ($visit->visitor0) {
                 if (isset($visit->visitor0->id) && ($visit->visitor0->id != null)) {

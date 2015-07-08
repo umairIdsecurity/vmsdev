@@ -2,6 +2,18 @@
     .visit-selected-header input {
         display: none;
     }
+    .AsicEscort-backBtn{
+        background: rgba(0, 0, 0, 0) -moz-linear-gradient(center top , #cccccc, #999999) repeat scroll 0 0 !important;
+        border: 1px solid #999999 !important;
+        width: 80px!important;
+        float: right;
+        border-radius: 5px;
+        color: #ffffff;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 3px 15px 5px;
+    }
 </style>
 <?php
 $this->widget('zii.widgets.grid.CGridView', array(
@@ -52,7 +64,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
     )
 ));
 ?>
-<input id="btnBackSearchAsicEscort" class="neutral AsicEscort-backBtn " type="button" onclick="javascript:backFillAsicEscort();return false;" value="Back">
+<input id="btnBackSearchAsicEscort" class="AsicEscort-backBtn " type="button" onclick="javascript:backFillAsicEscort();return false;" value="Back">
 <?php
 function displaySelectVisitorButton($visitorData) {
     return CHtml::link("Select", "javascript:void(0)", array(

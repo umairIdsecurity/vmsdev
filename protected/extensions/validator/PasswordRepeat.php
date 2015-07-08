@@ -22,9 +22,7 @@ class PasswordRepeat extends CValidator
 
             if ($passwordOption == PasswordOption::CREATE_PASSWORD) {
                 if (empty($passwordRepeat) || $passwordRepeat == '(NULL)') {
-                    if(Yii::app()->controller->id == 'visitor' && Yii::app()->controller->action->id != 'delete'){
-                        $this->addError($object, $attribute, 'Please confirm a password');
-                    }
+                    $this->addError($object, $attribute, 'Please confirm a password');
                 } else if ($passwordRepeat != $object->password) {
                     $this->addError($object, $attribute, 'Passwords are not matched!');
                 }

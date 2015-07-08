@@ -271,6 +271,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                     <div class="flash-success success-update-visitor-type"> Visitor Type Updated Successfully.</div>
 
                     <table id="visitorTypeTable" class="detailsTable">
+                        <?php if ($asic) : ?>
                         <tr>
 
                             <td width="110px;" style="padding-top: 4px;"><?php echo $visitForm->labelEx($model,
@@ -300,6 +301,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                             </td>
 
                         </tr>
+                        <?php endif; ?>
                         <tr>
 
                             <td width="110px;" style="padding-top:4px;"><?php echo $visitForm->labelEx($model,

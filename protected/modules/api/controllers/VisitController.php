@@ -52,7 +52,7 @@ class VisitController extends RestfulController {
                     $visit = Visit::model()->with('visitor0')->findByPk($visit->id);
                     $result = $this->populateVisits(array($visit));
 
-                    $this->sendResponse(200, CJSON::encode($result));
+                    $this->sendResponse(201, CJSON::encode($result));
                 } else {
                     $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_DATA', 'errorDescription' => 'Requsted data are invalid')));
                 }

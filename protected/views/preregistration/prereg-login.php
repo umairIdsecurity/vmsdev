@@ -9,8 +9,7 @@
 ?>
 <div class="page-content">
 
-    <h1 class="text-primary title">CREATE LOGIN</h1>
-    <div class="bg-gray-lighter form-info">Please select your account type.</div>
+
     <?php $form=$this->beginWidget('CActiveForm', array(
         'id'=>'prereg-login-form',
         'enableClientValidation'=>true,
@@ -22,7 +21,9 @@
         )
     )); ?>
 
-
+        <div class="form-group">
+            <h1 class="text-primary title">LOGIN</h1>
+        </div>
         <div class="form-group">
             <span class="glyphicon glyphicon-user"></span>
 

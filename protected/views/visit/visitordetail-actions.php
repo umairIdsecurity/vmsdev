@@ -128,8 +128,8 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                         <?php if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::PREREGISTERED])) : ?>
                             <button type="button" id='registerNewVisit' class='greenBtn'>Activate Visit</button>
                             <div style="display:inline;font-size:12px;">
-                                <b>or </b>
-                                <a id="cancelPreregisteredVisitButton" href="" class="cancelBtnVisitorDetail">Cancel</a>
+                                <strong>or </strong>
+                                <?php echo CHtml::link('Cancel', $this->createAbsoluteUrl('visit/view'), array('class' => 'cancelBtnVisitorDetail')); ?>
                             </div>
                         <?php elseif ($model->visit_status == VisitStatus::AUTOCLOSED) : ?>
                             <?php
@@ -140,13 +140,12 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                             ?>
                             <button type="submit" id="registerNewVisit" <?php echo $disabled; ?> class="greenBtn">Preregister Visit</button>
                         <?php else:
-                            if ($model->card_type == CardType::MANUAL_VISITOR && isset($model->date_check_in) && strtotime($model->date_check_in) < strtotime(date("d-m-Y"))) :
-                                ?>
+                            if ($model->card_type == CardType::MANUAL_VISITOR && isset($model->date_check_in) && strtotime($model->date_check_in) < strtotime(date("d-m-Y"))) : ?>
                                 <input type="submit" value="Back Date Visit" class="complete"/>
                             <?php else: ?>
                                 <button type="button" id="registerNewVisit" class="greenBtn">Activate Visit</button>
                                 <div style="display:inline;font-size:12px;">
-                                <b>or </b>
+                                <strong>or </strong>
                                 <?php echo CHtml::link('Cancel', $this->createAbsoluteUrl('visit/view'), array('class' => 'cancelBtnVisitorDetail')); ?>
                                 </div>
                             <?php endif; ?>
@@ -214,38 +213,38 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             </tr>
             
             <tr id="identificationNotExpired" style="display:none;">
+                <form id="identification_not_expired_form">
                 <td colspan="2">
                     <table style="border-collapse: initial;">
                         <tbody>
                             <tr>
-                                <form id="identification_not_expired_form">
-                                    <td><input type="text" style="width: 300px;" name="Visitor['identification_type']" placeholder="Enter drivers licence, passport or proof of age"> <span class="required primary-identification-require">*</span>
-                                    </td>
-                                    <td>
-                                        <?php
-                                        $this->widget('zii.widgets.jui.CJuiDatePicker',array(
-                                            'id' => 'identification_document_expiry',
-                                            'name'=>'Visitor[identification_document_expiry]',
-                                            // additional javascript options for the date picker plugin
-                                            'options'=>array(
-                                                'dateFormat' => 'dd-mm-yy',
-                                                'changeYear' => true,
-                                                'changeMonth' => true
-                                            ),
-                                            'htmlOptions'=>array(
-                                                'size'        => '0',
-                                                'maxlength'   => '10',
-                                                'placeholder' => 'Expiry',
-                                                'style'       => 'width: 120px;',
-                                            ),
-                                        ));
-                                        ?> <span class="required primary-identification-require">*</span>
-                                    </td>
-                                </form>
+                                <td><input type="text" style="width: 300px;" name="Visitor['identification_type']" placeholder="Enter drivers licence, passport or proof of age"> <span class="required primary-identification-require">*</span>
+                                </td>
+                                <td>
+                                <?php
+                                $this->widget('zii.widgets.jui.CJuiDatePicker',array(
+                                    'id' => 'identification_document_expiry',
+                                    'name'=>'Visitor[identification_document_expiry]',
+                                    // additional javascript options for the date picker plugin
+                                    'options'=>array(
+                                        'dateFormat' => 'dd-mm-yy',
+                                        'changeYear' => true,
+                                        'changeMonth' => true
+                                    ),
+                                    'htmlOptions'=>array(
+                                        'size'        => '0',
+                                        'maxlength'   => '10',
+                                        'placeholder' => 'Expiry',
+                                        'style'       => 'width: 120px;',
+                                    ),
+                                ));
+                                ?> <span class="required primary-identification-require">*</span>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
                 </td>
+                </form>
             </tr>
             <tr id="identificationExpired" style="display:none;">
             <form id="identification_expired_form">
@@ -287,7 +286,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
 
                                     <?php
                                     $this->widget('zii.widgets.jui.CJuiDatePicker',array(
-                                        'id' => 'identification_document_expiry',
+                                        'id' => '_identification_document_expiry',
                                         'name'=>'Visitor[identification_document_expiry]',
                                         // additional javascript options for the date picker plugin
                                         'options'=>array(
@@ -322,9 +321,6 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
 <input type="hidden" value="<?php echo $model->visit_status; ?>" id="visitStatus"/>
 <script>
     $(document).ready(function () {
-        $("#identification_modal_form #identification_document_expiry").datepicker({
-            dateFormat: "dd-mm-yy",
-        });
 
         if ($("#visitStatus").val() == 5) {
 

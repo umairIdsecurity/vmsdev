@@ -81,8 +81,6 @@ class Visitor extends CActiveRecord {
             1 => 'Card Status: Saved',
             2 => 'Card Status: VIC Holder',
             3 => 'Card Status: ASIC Pending',
-            4 => 'Card Status: ASIC Issued',
-            5 => 'Card Status: ASIC Denied',
         ),
         self::PROFILE_TYPE_ASIC => array(
             6 => 'Card Status: ASIC Issued',
@@ -235,6 +233,7 @@ class Visitor extends CActiveRecord {
                 alternative_identification,
                 verifiable_signature,
                 escort_flag,
+                key_string
                 is_under_18,
                 under_18_detail
                 ',
@@ -242,7 +241,7 @@ class Visitor extends CActiveRecord {
             ),
             array('tenant, tenant_agent,company, visitor_type, visitor_workstation, photo,vehicle, visitor_card_status', 'default', 'setOnEmpty' => true, 'value' => null),
             array('password', 'PasswordCustom'),
-            array('repeatpassword', 'PasswordRepeat'),
+            array('repeatpassword', 'PasswordRepeat','except' => ['delete']),
 
             //todo: check to enable again. why do we need this validation ?
             //array('password_requirement', 'PasswordRequirement'),
@@ -265,7 +264,8 @@ class Visitor extends CActiveRecord {
             identification_alternate_document_no1,
             identification_alternate_document_name2,
             identification_alternate_document_no2',
-            'VisitorAlternateIdentification'
+            'VisitorAlternateIdentification',
+            'except' => ['u18Rule', 'updateVic','delete']
         );
 
         $rules[] = array(
@@ -274,7 +274,7 @@ class Visitor extends CActiveRecord {
             identification_document_no,
             identification_document_expiry',
             'VisitorPrimaryIdentification',
-            'except' => ['u18Rule']
+            'except' => ['u18Rule', 'updateVic','delete']
         );
 
 
@@ -306,13 +306,14 @@ class Visitor extends CActiveRecord {
                     contact_postcode,
                     contact_country',
                     'required',
-                    'except'=> ['updateVic', 'updateIdentification']
+                    'except'=> ['updateVic', 'updateIdentification','delete']
                 );
                 break;
             case self::PROFILE_TYPE_ASIC:
                 $rules[] = [
                     'identification_type, identification_document_no, identification_document_expiry', 'required',
-                    'on' => 'asicApplicant'
+                    'on' => 'asicApplicant',
+                    'except'=> ['delete']
                 ];
                 $rules[] = array(
                     'visitor_card_status, asic_no, asic_expiry', 'required',
@@ -500,13 +501,6 @@ class Visitor extends CActiveRecord {
         if(!$this->contact_country) {
             $this->contact_country = self::AUSTRALIA_ID;
         }
-        
-        if (!empty($this->date_of_birth)) 
-            $this->date_of_birth =  date('Y-m-d', strtotime($this->date_of_birth));
-        if (!empty($this->asic_expiry)) 
-            $this->asic_expiry =  date('Y-m-d', strtotime($this->asic_expiry));
-        if (!empty($this->identification_document_expiry)) 
-            $this->identification_document_expiry =  date('Y-m-d', strtotime($this->identification_document_expiry));
 
         if ($this->password_requirement == PasswordRequirement::PASSWORD_IS_NOT_REQUIRED) {
             $this->password = null;
@@ -517,6 +511,20 @@ class Visitor extends CActiveRecord {
         return parent::beforeSave();
     }
 
+    public function afterSave() {
+        // Convert all date/time fields to yyyy-mm-dd format
+        if (!empty($this->date_of_birth)) 
+            $this->date_of_birth =  date('Y-m-d', strtotime($this->date_of_birth));
+
+        if (!empty($this->asic_expiry)) 
+            $this->asic_expiry =  date('Y-m-d', strtotime($this->asic_expiry));
+
+        if (!empty($this->identification_document_expiry)) 
+            $this->identification_document_expiry =  date('Y-m-d', strtotime($this->identification_document_expiry));
+        // End Conver section
+        
+        return parent::afterSave();
+    }
 
     public function beforeDelete() {
         $visitorExists = Visit::model()->exists('is_deleted = 0 and visitor =' . $this->id . ' and (visit_status=' . VisitStatus::PREREGISTERED . ' or visit_status=' . VisitStatus::ACTIVE . ')');
@@ -530,14 +538,20 @@ class Visitor extends CActiveRecord {
         } elseif($visitorHasSavedVisitOnly){
 
             $this->is_deleted = 1;
-            $this->save();
-            echo "true";
+            if($this->save()){
+                echo "true";
+            } else {
+                var_dump($this->getErrors());
+            }
             Visit::model()->updateCounters(array('is_deleted' => 1), 'visitor=:visitor', array(':visitor' => $this->id));
             return false;
         } else {
             $this->is_deleted = 1;
-            $this->save();
-            echo "true";
+            if($this->save()){
+                echo "true";
+            } else {
+                var_dump($this->getErrors());
+            }
             return false;
         }
     }

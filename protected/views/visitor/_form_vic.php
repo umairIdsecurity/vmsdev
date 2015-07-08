@@ -158,7 +158,6 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                     <tr>
                                         <td>
                                             <?php
-                                            array_pop(Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC]);
                                             echo $form->dropDownList($model, 'visitor_card_status', Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC], ['empty' => 'Select Card Status', 'options'=>['1' => ['selected'=>true]]]); ?>
                                             <span class="required">*</span>
                                             <?php echo "<br>" . $form->error($model, 'visitor_card_status'); ?>

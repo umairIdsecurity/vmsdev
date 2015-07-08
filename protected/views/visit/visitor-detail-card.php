@@ -4,19 +4,19 @@ $session = new CHttpSession;
 $session['count'] = 1;
 //date_default_timezone_set('Asia/Manila'); remove hard code
 //$tenant = User::model()->findByPk($visitorModel->tenant);
-$photoForm = $this->beginWidget('CActiveForm', array(
+$photoForm = $this->beginWidget('CActiveForm', [
     'id' => 'update-photo-form',
     'action' => Yii::app()->createUrl('/visitor/update&id=' . $model->visitor . '&view=1'),
-    'htmlOptions' => array("name" => "update-visitor-form"),
+    'htmlOptions' => ["name" => "update-visitor-form"],
     'enableAjaxValidation' => false,
     'enableClientValidation' => true,
-    'clientOptions' => array(
+    'clientOptions' => [
         'validateOnSubmit' => true,
         'afterValidate' => 'js:function(form, data, hasError){
-                                sendPhoto();
-                                }'
-    ),
-        ));
+            sendPhoto();
+        }'
+    ],
+]);
 ?>
 <input type="text" value="<?php echo $visitorModel->photo; ?>" name="Visitor[photo]" id="Visitor_photo">
 <?php echo "<br>" . $photoForm->error($visitorModel, 'photo'); ?>
@@ -160,7 +160,7 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
         }   
         echo CHtml::dropDownList('Visit[card_type]', $model->card_type, $cardTypeResults, $cardTypeOptions);
         echo '<br />';
-        if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED])) {
+        if (in_array($model->visit_status, [VisitStatus::CLOSED])) {
             echo '<input type="submit" name="updateWorkstationForm" class="complete btnUpdateWorkstationForm"  value="Update">';
         }
         ?>

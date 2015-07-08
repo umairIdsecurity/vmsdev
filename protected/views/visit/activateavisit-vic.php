@@ -115,17 +115,24 @@ $asicEscort = new AddAsicEscort();
                 $model->date_check_in = date('d-m-Y');
             }
 
+            // Extended Card Type (EVIC) or Multiday
+            if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED]) && $model->visit_status == VisitStatus::AUTOCLOSED) {
+                $model->date_check_in = date("d-m-Y", time() + 86400);
+            }
+
             $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                 'model' => $model,
                 'attribute' => 'date_check_in',
                 'htmlOptions' => array(
-                    'size' => '10', // textField size
-                    'maxlength' => '10', // textField maxlength
-                    'readonly' => 'readonly',
+                    'size'        => '10', // textField size
+                    'maxlength'   => '10', // textField maxlength
+                    'readonly'    => 'readonly',
                     'placeholder' => 'dd-mm-yyyy',
                 ),
                 'options' => array(
-                    'dateFormat' => 'dd-mm-yy',
+                    'dateFormat'  => 'dd-mm-yy',
+                    'changeYear'  => true,
+                    'changeMonth' => true
                 )
             ));
             ?>
@@ -140,14 +147,16 @@ $asicEscort = new AddAsicEscort();
                 $model->date_check_out = date('d-m-Y');
             }
 
+            $model->date_check_out = date('d-m-Y', strtotime($model->date_check_out));
+
             // Extended Card Type (EVIC) or Multiday
-            /*if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED]) && $model->visit_status == VisitStatus::AUTOCLOSED) {
-                $model->date_check_out = date('d-m-Y', strtotime($model->finish_date));
-            }*/
+            if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED]) && $model->visit_status == VisitStatus::AUTOCLOSED) {
+                $model->date_check_out = date('d-m-Y');
+            }
 
             // Update date check out for Saved, Closed, AutoClosed Visit
-            if (in_array($model->visit_status, [VisitStatus::SAVED, VisitStatus::CLOSED, VisitStatus::AUTOCLOSED]) && $model->card_type != CardType::VIC_CARD_24HOURS) {
-                $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in. ' + 1 day'));
+            if (in_array($model->visit_status, [VisitStatus::SAVED, VisitStatus::CLOSED, VisitStatus::AUTOCLOSED]) && !in_array($model->card_type, [CardType::VIC_CARD_24HOURS, CardType::VIC_CARD_EXTENDED])) {
+                $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in. ' +1 day'));
                 $model->time_check_out = $model->time_check_in;
             }
 
@@ -155,14 +164,16 @@ $asicEscort = new AddAsicEscort();
                 'model' => $model,
                 'attribute' => 'date_check_out',
                 'htmlOptions' => array(
-                    'size' => '10', // textField size
-                    'maxlength' => '10', // textField maxlength
-                    //'disabled' => 'disabled',
-                    'readonly' => 'readonly',
+                    'size'        => '10', // textField size
+                    'maxlength'   => '10', // textField maxlength
+                    //'disabled'  => 'disabled',
+                    'readonly'    => 'readonly',
                     'placeholder' => 'dd-mm-yyyy',
                 ),
                 'options' => array(
-                   'dateFormat' => 'dd-mm-yy',
+                   'dateFormat'  => 'dd-mm-yy',
+                   'changeYear'  => true,
+                   'changeMonth' => true
                 )
             ));
             ?>
@@ -202,10 +213,10 @@ $asicEscort = new AddAsicEscort();
             minDate: minDate,
             dateFormat: "dd-mm-yy",
             onClose: function (dateText) {
-                var currentDate = new Date();
-                var date = dateText.substring(0, 2);
-                var month = dateText.substring(3, 5);
-                var year = dateText.substring(6, 10);
+                var currentDate  = new Date();
+                var date         = dateText.substring(0, 2);
+                var month        = dateText.substring(3, 5);
+                var year         = dateText.substring(6, 10);
                 var selectedDate = new Date(year, month-1, date);
 
                 $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "option", "minDate", selectedDate);
@@ -267,13 +278,12 @@ $asicEscort = new AddAsicEscort();
             minDate: minDate,
             //maxDate: "+28d",
             dateFormat: "dd-mm-yy",
-            disabled: <?php echo (in_array($model->card_type, [CardType::VIC_CARD_24HOURS, CardType::VIC_CARD_EXTENDED])) ? "true" : "false"; ?>,
+            disabled: <?php echo in_array($model->card_type, [CardType::VIC_CARD_24HOURS]) ? "true" : "false"; ?>,
             onClose: function (date) {
-                var day = date.substring(0, 2);
-                var month = date.substring(3, 5);
-                var year = date.substring(6, 10);
-                var newDate = new Date(year, month-1, day);
-
+                var day      = date.substring(0, 2);
+                var month    = date.substring(3, 5);
+                var year     = date.substring(6, 10);
+                var newDate  = new Date(year, month-1, day);
                 var cardDate = $.datepicker.formatDate('dd M y', newDate);
                 $("#cardDetailsTable span.cardDateText").html(cardDate);
             }
@@ -638,6 +648,10 @@ $asicEscort = new AddAsicEscort();
         });
         $('#addCompanyLink').on('click',function(){
             $('#asicSponsorModal').modal('hide');
+        });
+
+        $('#btnCloseModalAddCompanyContact').on('click',function(){
+            $("#asicSponsorModal").modal("show");
         });
     });
 </script>

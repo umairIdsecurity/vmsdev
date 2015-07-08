@@ -49,6 +49,7 @@ class Registration extends CActiveRecord {
     public $birthdayYear;
     public $birthdayDay;
     public $repeatpassword;
+    public $password_repeat;
     public $password_option;
     public $password_requirement;
     public $alternative_identification;
@@ -197,6 +198,8 @@ class Registration extends CActiveRecord {
 			contact_state', 'required' ,'on' => 'preregistration'),
 
             array('first_name, last_name, email, contact_number, asic_no , asic_expiry', 'required' , 'on' => 'asic'),
+            array('password', 'required' , 'on' => 'asic-pass'),
+            array('password_repeat', 'compare', 'compareAttribute'=>'password', 'message'=>"Passwords don't match"),
 
             array('is_asic_verification', 'required' ,'message'=>'Please check to request for ASIC Sponsor verification.' ,'on' => 'asic'),
 
@@ -204,13 +207,17 @@ class Registration extends CActiveRecord {
 			array('is_deleted, identification_country_issued, contact_country, verifiable_signature', 'numerical', 'integerOnly'=>true),
 			array('first_name, middle_name, last_name, email, department, position, staff_id, identification_document_no, identification_alternate_document_name1, identification_alternate_document_no1, identification_alternate_document_name2, identification_alternate_document_no2, contact_unit, contact_street_no, contact_street_name, contact_suburb, asic_no', 'length', 'max'=>50),
 			array('contact_number, company, role, visitor_type, visitor_status, vehicle, photo, created_by, tenant, tenant_agent, visitor_card_status, visitor_workstation', 'length', 'max'=>20),
-			array('password', 'length', 'max'=>150),
+			array('password', 'length', 'min' => 5,'max'=>20,
+                'tooShort'=>Yii::t("translation", "{attribute} is too short."),
+                'tooLong'=>Yii::t("translation", "{attribute} is too long.")
+                ),
+
 			array('profile_type', 'length', 'max'=>9),
 			array('identification_type', 'length', 'max'=>15),
 			array('contact_street_type', 'length', 'max'=>8),
 			array('contact_state', 'length', 'max'=>3),
 			array('contact_postcode', 'length', 'max'=>10),
-			array('date_of_birth, notes, identification_document_expiry, identification_alternate_document_expiry1, identification_alternate_document_expiry2, asic_expiry', 'safe'),
+			array('date_of_birth, notes, identification_document_expiry, identification_alternate_document_expiry1, identification_alternate_document_expiry2, asic_expiry,key_string', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('id, first_name, middle_name, last_name, email, contact_number, date_of_birth, company, department, position, staff_id, notes, password, role, visitor_type, visitor_status, vehicle, photo, created_by, is_deleted, tenant, tenant_agent, visitor_card_status, visitor_workstation, profile_type, identification_type, identification_country_issued, identification_document_no, identification_document_expiry, identification_alternate_document_name1, identification_alternate_document_no1, identification_alternate_document_expiry1, identification_alternate_document_name2, identification_alternate_document_no2, identification_alternate_document_expiry2, contact_unit, contact_street_no, contact_street_name, contact_street_type, contact_suburb, contact_state, contact_country, asic_no, asic_expiry, verifiable_signature, contact_postcode, date_created', 'safe', 'on'=>'search'),

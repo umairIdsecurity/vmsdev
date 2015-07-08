@@ -52,6 +52,7 @@
                 <?php echo "<br>" . $form->error($model, 'contact_number'); ?>
                 <?php echo "" . $form->error($model, 'email'); ?>
                 <div id="AddAsicEscort_email_unique_em_" class="errorMessage" style="display: none;">Email is existed.</div>
+                <br>
                 <?php
                 $this->widget('application.extensions.select2.Select2', array(
                     'model' => $model,
@@ -64,7 +65,10 @@
                 ?>
                 <span class="required">*</span>
                 <?php echo $form->error($model, 'company', array("style" => "margin-top:0px")); ?>
-                <a style="margin-top: 5px; margin-right: 5px; width: 95px; height: 21px;" href="#addCompanyContactModal" role="button" data-toggle="modal" id="addCompanyLink">Add Company</a>
+                <div>
+                    <a style="margin-top: 15px; margin-right: 5px; width: 95px; height: 21px; text-align: center;" href="#addCompanyContactModal" role="button" data-toggle="modal" id="addCompanyLink">Add Company</a>
+                </div>
+
             </td>
     </table>
 

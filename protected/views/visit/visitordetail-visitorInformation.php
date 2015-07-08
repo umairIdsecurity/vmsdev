@@ -24,7 +24,7 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
 <?php
 // If visit status is closed and user role different from admin or superadmin then disable fields
 $disabled = '';
-if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED])) {
+if (in_array($model->visit_status, [VisitStatus::CLOSED])) {
     $disabled = 'disabled';
 }
 
@@ -33,7 +33,7 @@ if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED
  * If visit status is close then disable datepicker
  */
 $datePickerOptionAttributes = [];
-if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED])) {
+if (in_array($model->visit_status, [VisitStatus::CLOSED])) {
 
     // Please edit datePicker options attributes here for apply all datePicker fields
     $datePickerOptionAttributes = [
@@ -61,9 +61,14 @@ if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED
     $datePickerStyle = 'width:83%';
 }
 ?>
+<?php
+$visitorForm = $this->beginWidget('CActiveForm', [
+    'id' => 'update-visitor-information-form',
+    'htmlOptions' => ['name' => 'update-visitor-information-form']
+]);
+?>
+<div id='visitorInformationCssMenu' <?php //if ($model && $model->card_type <= CardType::CONTRACTOR_VISITOR) {echo 'style="height:615px !important"';} ?>>
 
-
-<div id='visitorInformationCssMenu' <?php if ($model && $model->card_type <= CardType::CONTRACTOR_VISITOR) {echo 'style="height:615px !important"';} ?>>
     <ul>
         <li class='has-sub' id="personalDetailsLi">
             <a href="#"><span>Personal Details</span></a>
@@ -75,11 +80,9 @@ if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED
                                 First Name
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" <?php echo $disabled; ?> class="visitor-detail-info-field" value="<?php echo $visitorModel->first_name; ?>"
-                                       name="Visitor[first_name]" id="Visitor_first_name">
-                                <div style="" id="Visitor_first_name_em_" class="errorMessage errorMessageEmail">Please enter a first name.
-                                </div>
-
+                                <?php echo $visitorForm->textField($visitorModel, 'first_name', ['disabled' => $disabled]); ?>
+                                <br />
+                                <?php echo $visitorForm->error($model, 'first_name'); ?>
                             </td>
                         </tr>
 
@@ -89,21 +92,18 @@ if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED
                                     Middle Name
                                 </td>
                                 <td style="padding-left: 0 !important;">
-                                    <input type="text"<?php echo $disabled; ?> class="visitor-detail-info-field" value="<?php echo $visitorModel->middle_name; ?>"
-                                           name="Visitor[middle_name]" id="Visitor_middle_name">
+                                    <?php echo $visitorForm->textField($visitorModel, 'middle_name', ['disabled' => $disabled]); ?>
                                 </td>
                             </tr>
                         <?php endif; ?>
-
                         <tr>
                             <td class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                                 Last Name
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" <?php echo $disabled; ?> class="visitor-detail-info-field" value="<?php echo $visitorModel->last_name; ?>"
-                                       name="Visitor[last_name]" id="Visitor_last_name">
-                                <div style="" id="Visitor_last_name_em_" class="errorMessage errorMessageEmail">Please enter a last name.
-                                </div>
+                                <?php echo $visitorForm->textField($visitorModel, 'last_name', ['disabled' => $disabled]); ?>
+                                <br />
+                                <?php echo $visitorForm->error($model, 'last_name'); ?>
                             </td>
                         </tr>
 
@@ -134,7 +134,6 @@ if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED
                             </td>
                         </tr>
                         <?php endif; ?>
-
                     </table>
                 </li>
             </ul>
@@ -142,7 +141,6 @@ if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED
         <li class='has-sub' id="contactDetailsLi"><a href="#"><span>Contact Details</span></a>
             <ul>
                 <li>
-
                     <input type="hidden" id="emailIsUnique" value="0"/>
                     <input type="hidden" id="Visitor_id" name="Visitor[id]" value="<?php echo $model->visitor; ?>"/>
                     <div class="flash-success success-update-contact-details"> Contact Details Updated Successfully.
@@ -151,32 +149,29 @@ if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED
                         <tr>
                             <td width="110px;" style="padding-top: 7px;">Email</td>
                             <td>
-                                <input  type="text" <?php echo $disabled; ?> class="visitor-detail-info-field" value="<?php echo $visitorModel->email; ?>"
-                                       name="Visitor[email]" id="Visitor_email">
-                                <div style="" id="Visitor_email_em_" class="errorMessage errorMessageEmail">Email invalid or a profile
-                                    already exists for this email address.
+                                <?php echo $visitorForm->textField($visitorModel, 'email', ['disabled' => $disabled]); ?>
+                                <br />
+                                <div id="Visitor_email_em_" class="errorMessage errorMessageEmail">Email invalid or a profile already exists for this email address.
                                 </div>
                             </td>
                         </tr>
                         <tr>
-                            <td style="  padding-top: 7px;">Mobile</td>
+                            <td style="padding-top: 7px;">Mobile</td>
                             <td>
-                                <input type="text" <?php echo $disabled; ?> class="visitor-detail-info-field" value="<?php echo $visitorModel->contact_number; ?>"
-                                        name="Visitor[contact_number]" id="Visitor_contact_number">
-                                <div style="" id="Visitor_contact_number_em_" class="errorMessage errorMessageEmail">Please enter a contact number.
-                                </div>
+                                <?php echo $visitorForm->textField($visitorModel, 'contact_number', ['disabled' => $disabled]); ?>
+                                <br />
+                                <?php echo $visitorForm->error($model, 'first_name'); ?>
+                            </td>
                         </tr>
-                        <!--<tr><td><input type="submit" value="Update" name="yt0" id="submitContactDetailForm" class="complete" /></td></tr>-->
                     </table>
                 </li>
             </ul>
         </li>
 
         <?php
-        if ($asic) :
-            $company = $visitorModel->getCompany();
-            if (!empty($company)) :
-                $contact = $newHost->findByPk($visitorModel->staff_id);
+        $company = $visitorModel->getCompany();
+        if (!empty($company)) :
+            $contact = $newHost->findByPk($visitorModel->staff_id);
         ?>
         <li class='has-sub' id="companyDetailsLi"><a href="#"><span>Company Details</span></a>
             <ul>
@@ -187,10 +182,9 @@ if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED
                                 Company Name
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" <?php echo $disabled; ?> class="visitor-detail-info-field" value="<?php echo isset($company->name) ? $company->name : '' ; ?>"
-                                       name="Company[name]" id="Company_name">
-                                <div style="" id="Company_name_em_" class="errorMessage errorMessageEmail">Please enter a company name.
-                                </div>
+                                <?php echo $visitorForm->textField($company, 'name', ['disabled' => $disabled]); ?>
+                                <br />
+                                <?php echo $visitorForm->error($company, 'name'); ?>
                             </td>
                         </tr>
 
@@ -199,10 +193,9 @@ if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED
                                 Contact Person
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" <?php echo $disabled; ?> class="visitor-detail-info-field" value="<?php echo (!empty($contact)) ? $contact->getFullName() : ''; ?>"
-                                       name="Company[contact]" id="Company_contact">
-                                <div style="" id="Company_contact_em_" class="errorMessage errorMessageEmail">Please enter a company contact.
-                                </div>
+                                <?php echo $visitorForm->textField($company, 'contact', ['disabled' => $disabled, 'value' => $contact->getFullName()]); ?>
+                                <br />
+                                <?php echo $visitorForm->error($company, 'contact'); ?>
                             </td>
                         </tr>
 
@@ -211,10 +204,9 @@ if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED
                                 Contact No.
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" <?php echo $disabled; ?> class="visitor-detail-info-field" value="<?php echo isset($contact->contact_number) ? $contact->contact_number : ''; ?>"
-                                       name="Company[mobile_number]" id="Company_mobile_number">
-                                <div style="" id="Company_mobile_number_em_" class="errorMessage errorMessageEmail">Please enter a company mobile number.
-                                </div>
+                                <?php echo $visitorForm->textField($company, 'mobile_number', ['disabled' => $disabled, 'value' => $contact->contact_number]); ?>
+                                <br />
+                                <?php echo $visitorForm->error($company, 'mobile_number'); ?>
                             </td>
                         </tr>
 
@@ -223,10 +215,9 @@ if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED
                                 Contact Email
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" <?php echo $disabled; ?> class="visitor-detail-info-field" value="<?php echo isset($contact->email) ? $contact->email : ''; ?>"
-                                       name="Company[email_address]" id="Company_email_address">
-                                <div style="" id="Company_email_address_em_" class="errorMessage errorMessageEmail">Please enter a company email address.
-                                </div>
+                                <?php echo $visitorForm->textField($company, 'email_address', ['disabled' => $disabled, 'value' => $contact->email]); ?>
+                                <br />
+                                <?php echo $visitorForm->error($company, 'email_address'); ?>
                             </td>
                         </tr>
 
@@ -234,12 +225,11 @@ if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED
                 </li>
             </ul>
         </li>
-
         <?php 
-            endif;
         endif;
         ?>
-        <li class='has-sub' id="visitorTypeDetailsLi" <?php echo !is_null($asic) ? 'style="display: none;"' : ""; ?>><a href="#"><span>Visitor Type</span></a>
+        <?php if (!$asic) : ?>
+        <li class='has-sub' id="visitorTypeDetailsLi"><a href="#"><span>Visitor Type</span></a>
             <ul>
                 <li>
                     <?php
@@ -281,6 +271,7 @@ if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED
                     <div class="flash-success success-update-visitor-type"> Visitor Type Updated Successfully.</div>
 
                     <table id="visitorTypeTable" class="detailsTable">
+                        <?php if ($asic) : ?>
                         <tr>
 
                             <td width="110px;" style="padding-top: 4px;"><?php echo $visitForm->labelEx($model,
@@ -310,6 +301,7 @@ if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED
                             </td>
 
                         </tr>
+                        <?php endif; ?>
                         <tr>
 
                             <td width="110px;" style="padding-top:4px;"><?php echo $visitForm->labelEx($model,
@@ -349,7 +341,9 @@ if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED
                 </li>
             </ul>
         </li>
-        <li class='has-sub' id="reasonLi" <?php echo !is_null($asic) ? 'style="display: none;"' : ""; ?>><a href="#"><span>Reason</span></a>
+        <?php endif; ?>
+        <?php if (!$asic) : ?>
+        <li class='has-sub' id="reasonLi"><a href="#"><span>Reason</span></a>
             <ul>
                 <li>
                     <?php
@@ -424,7 +418,7 @@ if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED
                                 if (!hasError){
                                     checkReasonIfUnique();
                                 }
-                                }'
+                            }'
                         ),
                     ));
                     ?>
@@ -449,7 +443,8 @@ if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED
                 </li>
             </ul>
         </li>
-        <?php if (($visitorModel->profile_type == "ASIC")||($visitorModel->profile_type == "VIC")): ?>
+        <?php endif; ?>
+        <?php if (($visitorModel->profile_type == "ASIC") || ($visitorModel->profile_type == "VIC")) : ?>
         <li class='has-sub' id="asicDetailsLi">
             <a href="#"><span>Identification</span></a>
             <ul>
@@ -461,19 +456,10 @@ if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED
                         </td>
                         <td style="padding-left: 0 !important;">
                             <?php
-                            if (isset(Visitor::$IDENTIFICATION_TYPE_LIST) and is_array(Visitor::$IDENTIFICATION_TYPE_LIST)): ?>
-                            <select <?php echo $disabled; ?> name="Visitor[identification_type]" id="identification_type">
-                                <?php
-                                    foreach (Visitor::$IDENTIFICATION_TYPE_LIST as $id=>$name):
-                                        ?>
-                                            <option <?php if ($id == $visitorModel->identification_type): ?>selected="selected" <?php endif; ?> value="<?php echo $id; ?>"> <?php echo $name; ?> </option>
-                                        <?php
-                                    endforeach;
-                                ?>
-                            </select>
-                                <?php endif; ?>
-
-
+                            if (isset(Visitor::$IDENTIFICATION_TYPE_LIST) and is_array(Visitor::$IDENTIFICATION_TYPE_LIST)) {
+                                echo CHtml::dropDownList('Visitor[identification_type]', $visitorModel->identification_type, Visitor::$IDENTIFICATION_TYPE_LIST, ['disabled' => $disabled]);
+                            }
+                            ?>
                         </td>
                     </tr>
                     <tr>
@@ -481,10 +467,9 @@ if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED
                             Document No.
                         </td>
                         <td style="padding-left: 0 !important;">
-                            <input type="text" <?php echo $disabled; ?> class="visitor-detail-info-field" value="<?php echo $visitorModel->identification_document_no; ?>"
-                                   name="Visitor[identification_document_no]" id="Visitor_identification_document_no">
-                            <div style="" id="Visitor_identification_document_no_em_" class="errorMessage errorMessageEmail">Please enter a identification document no.
-                            </div>
+                            <?php echo $visitorForm->textField($visitorModel, 'identification_document_no', ['disabled' => $disabled]); ?>
+                            <br />
+                            <?php echo $visitorForm->error($visitorModel, 'identification_document_no'); ?>
                         </td>
                     </tr>
                     <tr>
@@ -513,7 +498,7 @@ if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED
                 </li>
             </ul>
         </li>
-           <?php endif;?>
+        <?php endif;?>
         <?php if ($asic) : ?>
         <li class='has-sub' id="asicDetails1Li">
             <a href="#"><span>ASIC Sponsor</span></a>
@@ -524,12 +509,10 @@ if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED
                             <td width="110px;" class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                                 First Name
                             </td>
-
                             <td style="padding-left: 0 !important;">
-                                <input class="visitor-detail-info-field"  <?php echo $disabled; ?> type="text" value="<?php echo $asic->first_name; ?>"
-                                       name="Visitor[asic_first_name]" id="Visitor_asic_first_name">
-                                <div style="" id="Visitor_asic_first_name_em_" class="errorMessage errorMessageEmail">Please enter a first name.
-                                </div>
+                                <?php echo $visitorForm->textField($asic, 'first_name', ['disabled' => $disabled, 'name' => 'ASIC[first_name]']); ?>
+                                <br />
+                                <?php echo $visitorForm->error($asic, 'first_name'); ?>
                             </td>
                         </tr>
 
@@ -538,10 +521,9 @@ if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED
                                 Last Name
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input class="visitor-detail-info-field"  <?php echo $disabled; ?> type="text" value="<?php echo $asic->last_name; ?>"
-                                       name="Visitor[asic_last_name]" id="Visitor_asic_last_name">
-                                <div style="" id="Visitor_asic_last_name_em_" class="errorMessage errorMessageEmail">Please enter a last name.
-                                </div>
+                                <?php echo $visitorForm->textField($asic, 'last_name', ['disabled' => $disabled, 'name' => 'ASIC[last_name]']); ?>
+                                <br />
+                                <?php echo $visitorForm->error($asic, 'last_name'); ?>
                             </td>
                         </tr>
 
@@ -550,10 +532,9 @@ if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED
                                 ASIC No.
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" <?php echo $disabled; ?> class="visitor-detail-info-field" value="<?php echo $asic->asic_no; ?>"
-                                       name="Visitor[asic_asic_no]" id="Visitor_asic_no">
-                                <div style="" id="Visitor_asic_no_em_" class="errorMessage errorMessageEmail">Please enter a asic number.
-                                </div>
+                                <?php echo $visitorForm->textField($asic, 'asic_no', ['disabled' => $disabled, 'name' => 'ASIC[asic_no]']); ?>
+                                <br />
+                                <?php echo $visitorForm->error($asic, 'asic_no'); ?>
                             </td>
                         </tr>
                         <tr>
@@ -573,7 +554,7 @@ if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED
                                         'placeholder' => 'dd-mm-yyyy',
                                         'readOnly' => 'readOnly',
                                         'style' => $datePickerStyle,
-                                        'name' => 'Vsitor[asic_asic_expiry]'
+                                        'name' => 'ASIC[asic_expiry]'
                                     ),
                                     'options' => $datePickerOptionAttributes
                                 ));
@@ -586,42 +567,19 @@ if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED
                 </li>
             </ul>
         </li>
-        <?php else : if ($hostModel):?>
-
+        <?php elseif ($hostModel) : ?>
         <li class='has-sub' id='hostDetailsLi'>
             <a href="#"><span>Host Details</span></a>
-
             <ul>
                 <li>
-                    <?php
-                    $hostForm = $this->beginWidget('CActiveForm', array(
-                        'id' => 'update-host-form',
-                        'action' => Yii::app()->createUrl('/user/update&id=' . $model->host),
-                        'htmlOptions' => array("name" => "register-host-form"),
-                        'enableAjaxValidation' => false,
-                        'enableClientValidation' => true,
-                        'clientOptions' => array(
-                            'validateOnSubmit' => true,
-                            'afterValidate' => 'js:function(form,data,hasError){
-                                if(!hasError){
-                                    checkHostEmailIfUnique();
-                                }
-                            }'
-                        ),
-                    ));
-                    ?>
-
                     <input type="text" id="hostEmailIsUnique" value="0"/>
-
                     <table id="hostTable" class="detailsTable">
                         <tr>
                             <td width="110px;" class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                                 First Name
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input class="visitor-detail-info-field" type="text" value="<?php echo $hostModel->first_name; ?>"
-                                       name="Visitor[host_first_name]" id="Visitor_asic_first_name">
-
+                            <?php echo $visitorForm->textField($hostModel, 'first_name', ['disabled' => $disabled, 'name' => 'Host[first_name]']); ?>
                             </td>
                         </tr>
 
@@ -630,107 +588,85 @@ if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED
                                 Last Name
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input class="visitor-detail-info-field" type="text" value="<?php echo $hostModel->last_name; ?>"
-                                       name="Visitor[host_last_name]" id="Visitor_asic_last_name">
-
+                                <?php echo $visitorForm->textField($hostModel, 'last_name', ['disabled' => $disabled, 'name' => 'Host[last_name]']); ?>
                             </td>
                         </tr>
-                       <!-- <tr>
-                            <td style="width:110px !important; padding-top: 3px;"><?php /*echo $hostForm->labelEx($hostModel,
-                                    'first_name'); */?></td>
-                            <td>
-                                <?php /*echo $hostForm->textField($hostModel, 'first_name',
-                                    array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled', 'class' => "visitor-detail-info-field")); */?>
-                                <?php /*echo "<br>" . $hostForm->error($hostModel, 'first_name'); */?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td width="110px;" style="  padding-top: 3px;"><?php /*echo $hostForm->labelEx($hostModel,
-                                    'last_name'); */?></td>
-                            <td>
-                                <?php /*echo $hostForm->textField($hostModel, 'last_name',
-                                    array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled', 'class' =>  "visitor-detail-info-field")); */?>
-                                <?php /*echo "<br>" . $hostForm->error($hostModel, 'last_name'); */?>
-                            </td>
-                        </tr>-->
                     </table>
-                    <?php $this->endWidget(); ?>
                 </li>
             </ul>
         </li>
-        <?php endif; endif; ?>
-        <?php if($asicEscort != '') : ?>
-            <li class='has-sub' id="asicEscortDetailLi">
-                <a href="#"><span>ASIC Escort</span></a>
-                <ul>
-                    <li>
-                        <table id="asicSponsorDetailsTable" class="detailsTable">
-                            <tr>
-                                <td width="110px;" class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
-                                    First Name
-                                </td>
+        <?php endif; ?>
+        <?php if ($asicEscort != '') : ?>
+        <li class='has-sub' id="asicEscortDetailLi">
+            <a href="#"><span>ASIC Escort</span></a>
+            <ul>
+                <li>
+                    <table id="asicSponsorDetailsTable" class="detailsTable">
+                        <tr>
+                            <td width="110px;" class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
+                                First Name
+                            </td>
 
-                                <td style="padding-left: 0 !important;">
-                                    <input class="visitor-detail-info-field"  <?php echo $disabled; ?> type="text" value="<?php echo $asicEscort->first_name; ?>"
-                                           name="Visitor[asic_first_name]" id="Visitor_asic_first_name">
-                                </td>
-                            </tr>
+                            <td style="padding-left: 0 !important;">
+                                <input class="visitor-detail-info-field"  <?php echo $disabled; ?> type="text" value="<?php echo $asicEscort->first_name; ?>"
+                                       name="Escort[asic_escort_asic_first_name]" id="Visitor_asic_first_name">
+                            </td>
+                        </tr>
 
-                            <tr>
-                                <td class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
-                                    Last Name
-                                </td>
-                                <td style="padding-left: 0 !important;">
-                                    <input class="visitor-detail-info-field"  <?php echo $disabled; ?> type="text" value="<?php echo $asicEscort->last_name; ?>"
-                                           name="Visitor[asic_last_name]" id="Visitor_asic_last_name">
-                                </td>
-                            </tr>
+                        <tr>
+                            <td class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
+                                Last Name
+                            </td>
+                            <td style="padding-left: 0 !important;">
+                                <input class="visitor-detail-info-field"  <?php echo $disabled; ?> type="text" value="<?php echo $asicEscort->last_name; ?>"
+                                       name="Escort[last_name]" id="Visitor_asic_last_name">
+                            </td>
+                        </tr>
 
-                            <tr>
-                                <td class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
-                                    ASIC No.
-                                </td>
-                                <td style="padding-left: 0 !important;">
-                                    <input type="text" <?php echo $disabled; ?> class="visitor-detail-info-field" value="<?php echo $asicEscort->asic_no; ?>"
-                                           name="Visitor[asic_no]" id="Visitor_asic_no">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
-                                    ASIC Expiry
-                                </td>
-
-                                <td style="padding-left: 0 !important;">
-                                    <?php
-                                    $asicEscort->asic_expiry = !is_null($asicEscort->asic_expiry) ? date('d-m-Y', strtotime($asicEscort->asic_expiry)) : date('d-m-Y');
-                                    $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                        'model' => $asicEscort,
-                                        'attribute' => 'asic_expiry',
-                                        'htmlOptions' => array(
-                                            'size' => '10', // textField size
-                                            'maxlength' => '10', // textField maxlength
-                                            'placeholder' => 'dd-mm-yyyy',
-                                            'readOnly' => 'readOnly',
-                                            'style' => 'width:83%'
-                                        ),
-                                        'options' => array(
-                                            'showOn' => "button",
-                                            'buttonImage' => Yii::app()->controller->assetsBase . "/images/calendar.png",
-                                            'buttonImageOnly' => true,
-                                            'minDate' => "0",
-                                            'dateFormat' => "dd-mm-yy",
-                                        )
-                                    ));
-                                    ?>
-
-                                </td>
-                            </tr>
-
-                        </table>
-                    </li>
-                </ul>
-            </li>
+                        <tr>
+                            <td class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
+                                ASIC No.
+                            </td>
+                            <td style="padding-left: 0 !important;">
+                                <input type="text" <?php echo $disabled; ?> class="visitor-detail-info-field" value="<?php echo $asicEscort->asic_no; ?>"
+                                       name="Escort[asic_no]" id="Visitor_asic_no">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
+                                ASIC Expiry
+                            </td>
+                            <td style="padding-left: 0 !important;">
+                                <?php
+                                $asicEscort->asic_expiry = !is_null($asicEscort->asic_expiry) ? date('d-m-Y', strtotime($asicEscort->asic_expiry)) : date('d-m-Y');
+                                $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                    'model' => $asicEscort,
+                                    'attribute' => 'asic_expiry',
+                                    'htmlOptions' => array(
+                                        'size'        => '10', // textField size
+                                        'maxlength'   => '10', // textField maxlength
+                                        'placeholder' => 'dd-mm-yyyy',
+                                        'readOnly'    => 'readOnly',
+                                        'style'       => 'width:83%',
+                                        'name'        => 'Escort[asic_expiry]'
+                                    ),
+                                    'options' => array(
+                                        'showOn'          => "button",
+                                        'buttonImage'     => Yii::app()->controller->assetsBase . "/images/calendar.png",
+                                        'buttonImageOnly' => true,
+                                        'minDate'         => "0",
+                                        'dateFormat'      => "dd-mm-yy",
+                                    )
+                                ));
+                                ?>
+                            </td>
+                        </tr>
+                    </table>
+                </li>
+            </ul>
+        </li>
         <?php endif ?>
+        <?php if (!$asic) : ?>
         <li class='has-sub' id='patientDetailsLi'><a href="#"><span>Patient Details</span></a>
             <ul>
                 <li>
@@ -770,35 +706,32 @@ if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED
                                 </td>
                             </tr>
                         </table>
-
                         <?php $this->endWidget(); ?>
                     </div>
                 </li>
             </ul>
         </li>
+        <?php endif; ?>
         <li>
             <ul>
                 <li>
-                    <?php
-                    if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN, Roles::ROLE_SUPERADMIN]) && !in_array($model->visit_status, [VisitStatus::CLOSED])) {
-                        echo '<input type="submit" class="complete btnUpdateVisitorInfo" name="updateVisitorInfo"  value="Update">';
-                    }
-                    ?>
+                <?php
+                if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN, Roles::ROLE_SUPERADMIN]) && !in_array($model->visit_status, [VisitStatus::CLOSED])) :
+                ?>
+                    <button type="submit" class="greenBtn btnUpdateVisitorInfo" name="updateVisitorInfo">Update</button>
+                <?php endif; ?>
                 </li>
             </ul>
         </li>
     </ul>
-
 </div>
+<?php $this->endWidget(); ?>
 <script>
+    function afterValidate(form, data, hasError) {
+        hasError = false;
+    }
+    
     $(document).ready(function () {
-
-        $(document).on('click', ".btnUpdateVisitorInfo",function(e) {
-            e.preventDefault();
-            if (validateInformation()) {
-
-            }
-        });
 
         function validateInformation(){
             var t = 1;

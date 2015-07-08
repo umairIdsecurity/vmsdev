@@ -5,8 +5,6 @@ class PreregistrationController extends Controller
 
 	public $layout = '';
 
-	private $_key = '123456789';
-
 	public function filters() {
 		return array(
 			'accessControl', // perform access control for CRUD operations
@@ -22,7 +20,7 @@ class PreregistrationController extends Controller
 	public function accessRules() {
 		return array(
 			array('allow',
-				'actions' => array('index','privacyPolicy' , 'declaration' , 'Login' ,'registration','confirmDetails', 'visitReason' , 'addAsic' , 'asicPass' , 'encTest','decTest'),
+				'actions' => array('index','privacyPolicy' , 'declaration' , 'Login' ,'registration','confirmDetails', 'visitReason' , 'addAsic' , 'asicPass', 'error' ),
 				'users' => array('*'),
 			),
 			array('allow',
@@ -36,59 +34,19 @@ class PreregistrationController extends Controller
 		);
 	}
 
-	private function _encrypt($data){
-
-		$m = mcrypt_module_open('rijndael-256', '', 'cbc', '');
-
-		$iv = mcrypt_create_iv(mcrypt_enc_get_iv_size($m), MCRYPT_DEV_RANDOM);
-
-		mcrypt_generic_init($m, $this->_key, $iv);
-
-		$data = mcrypt_generic($m, $data);
-
-		mcrypt_generic_deinit($m);
-
-		mcrypt_module_close($m);
-
-		return	$enryptedData = array(
-					'data' => base64_encode($data),
-					'iv' => base64_encode($iv)
-				);
-
+	/**
+	 * This is the action to handle external exceptions.
+	 */
+	public function actionError()
+	{
+		if($error=Yii::app()->errorHandler->error)
+		{
+			if(Yii::app()->request->isAjaxRequest)
+				echo $error['message'];
+			else
+				$this->render('error', $error);
+		}
 	}
-
-	private function _decrypt($data,$iv){
-
-		$m = mcrypt_module_open('rijndael-256', '', 'cbc', '');
-
-		$iv = base64_decode($iv);
-
-		mcrypt_generic_init($m, $this->_key, $iv);
-
-		$data = mdecrypt_generic($m, base64_decode($data));
-
-		mcrypt_generic_deinit($m);
-
-		mcrypt_module_close($m);
-
-		return $data;
-	}
-
-	/*public function actionEncTest(){
-		$session = new CHttpSession;
-		$enData = $this->_encrypt('id=30210&email=proshimul@yahoo.com');
-		$session['enc_data'] = $enData['data'];
-		$session['iv'] 		 = $enData['iv'];
-		echo $enData['data']."<br>";
-		//echo $enData['iv']."<br>";
-	}
-
-	public function actionDecTest(){
-		$session = new CHttpSession;
-		$mainData = $this->_decrypt($session['enc_data'],$session['iv']);
-		echo $mainData;
-	}*/
-
 
 	public function actionIndex(){
 
@@ -293,8 +251,6 @@ class PreregistrationController extends Controller
 
 	public function actionAddAsic(){
 
-		$session = new CHttpSession;
-
 		$model = new Registration();
 
 		$model->scenario = 'asic';
@@ -303,19 +259,10 @@ class PreregistrationController extends Controller
 
 			$model->profile_type = 'ASIC';
 
+			$model->key_string = hash('ripemd160', uniqid());
+
 			$model->attributes = $_POST['Registration'];
 			if ($model->save()) {
-
-				$urlStr = 'id='.$model->id.'&email='.$model->email;
-
-				$encodedData = $this->_encrypt($urlStr);
-
-				$key_str =
-					Registration::model()->findByPk($model->id);
-				$key_str->key_string = $encodedData['iv'];
-
-				$key_str->save();
-
 				$headers = "MIME-Version: 1.0" . "\r\n";
 				$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
 				$to=$model->email;
@@ -323,7 +270,7 @@ class PreregistrationController extends Controller
 				$body = "<html><body>Hi,<br><br>".
 					"VIC Holder urgently requires your Verification of their visit.<br><br>".
 					"Link of the VIC profile<br>".
-					"<a href=' " .Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?k_str=".$encodedData['data']. " '>".Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?k_str=".$encodedData['data']."</a><br>";
+					"<a href=' " .Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?id=".$model->id."&email=".$model->email."&k_str=" .$model->key_string." '>".Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?id=".$model->id."&email=".$model->email."&k_str=".$model->key_string."</a><br>";
 				$body .="<br>"."Thanks,"."<br>Admin</body></html>";
 				mail($to, $subject, $body,$headers);
 
@@ -335,7 +282,27 @@ class PreregistrationController extends Controller
 	}
 
 	public function actionAsicPass(){
-		echo "enter ASIC password 4";
+
+		if(
+			isset($_GET['id'], $_GET['email'], $_GET['k_str']) &&
+			!empty($_GET['id']) && !empty($_GET['email']) && !empty($_GET['k_str'])
+		){
+			$model = Registration::model()->findByPk($_GET['id']);
+			if(!empty($model)){
+				if($model->key_string === $_GET['k_str']){
+
+					$this->render('asic-password', array('model' => $model));
+				}
+			}
+			else{
+				throw new CHttpException(404,'Unable to solve the request');
+			}
+
+		}
+		else{
+			throw new CHttpException(404,'Unable to solve the request');
+			//echo "unable to solve the request";
+		}
 	}
 
 	public function actionLogin(){

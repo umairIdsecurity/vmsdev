@@ -639,5 +639,9 @@ $asicEscort = new AddAsicEscort();
         $('#addCompanyLink').on('click',function(){
             $('#asicSponsorModal').modal('hide');
         });
+
+        $('#btnCloseModalAddCompanyContact').on('click',function(){
+            $("#asicSponsorModal").modal("show");
+        });
     });
 </script>

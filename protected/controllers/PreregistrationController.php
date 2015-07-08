@@ -20,7 +20,7 @@ class PreregistrationController extends Controller
 	public function accessRules() {
 		return array(
 			array('allow',
-				'actions' => array('index','privacyPolicy' , 'declaration' , 'Login' ,'registration','confirmDetails', 'visitReason' , 'addAsic' , 'asicPass' ),
+				'actions' => array('index','privacyPolicy' , 'declaration' , 'Login' ,'registration','confirmDetails', 'visitReason' , 'addAsic' , 'asicPass', 'error' ),
 				'users' => array('*'),
 			),
 			array('allow',
@@ -32,6 +32,20 @@ class PreregistrationController extends Controller
 				'users'=>array('*'),
 			),
 		);
+	}
+
+	/**
+	 * This is the action to handle external exceptions.
+	 */
+	public function actionError()
+	{
+		if($error=Yii::app()->errorHandler->error)
+		{
+			if(Yii::app()->request->isAjaxRequest)
+				echo $error['message'];
+			else
+				$this->render('error', $error);
+		}
 	}
 
 	public function actionIndex(){
@@ -274,14 +288,20 @@ class PreregistrationController extends Controller
 			!empty($_GET['id']) && !empty($_GET['email']) && !empty($_GET['k_str'])
 		){
 			$model = Registration::model()->findByPk($_GET['id']);
-			if($model->key_string === $_GET['k_str']){
+			if(!empty($model)){
+				if($model->key_string === $_GET['k_str']){
 
-				$this->render('asic-password', array('model' => $model));
+					$this->render('asic-password', array('model' => $model));
+				}
+			}
+			else{
+				throw new CHttpException(404,'Unable to solve the request');
 			}
 
 		}
 		else{
-			echo "unable to solve the request";
+			throw new CHttpException(404,'Unable to solve the request');
+			//echo "unable to solve the request";
 		}
 	}
 

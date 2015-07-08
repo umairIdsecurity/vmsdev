@@ -128,8 +128,8 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                         <?php if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::PREREGISTERED])) : ?>
                             <button type="button" id='registerNewVisit' class='greenBtn'>Activate Visit</button>
                             <div style="display:inline;font-size:12px;">
-                                <b>or </b>
-                                <a id="cancelPreregisteredVisitButton" href="" class="cancelBtnVisitorDetail">Cancel</a>
+                                <strong>or </strong>
+                                <?php echo CHtml::link('Cancel', $this->createAbsoluteUrl('visit/view'), array('class' => 'cancelBtnVisitorDetail')); ?>
                             </div>
                         <?php elseif ($model->visit_status == VisitStatus::AUTOCLOSED) : ?>
                             <?php
@@ -140,13 +140,12 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                             ?>
                             <button type="submit" id="registerNewVisit" <?php echo $disabled; ?> class="greenBtn">Preregister Visit</button>
                         <?php else:
-                            if ($model->card_type == CardType::MANUAL_VISITOR && isset($model->date_check_in) && strtotime($model->date_check_in) < strtotime(date("d-m-Y"))) :
-                                ?>
+                            if ($model->card_type == CardType::MANUAL_VISITOR && isset($model->date_check_in) && strtotime($model->date_check_in) < strtotime(date("d-m-Y"))) : ?>
                                 <input type="submit" value="Back Date Visit" class="complete"/>
                             <?php else: ?>
                                 <button type="button" id="registerNewVisit" class="greenBtn">Activate Visit</button>
                                 <div style="display:inline;font-size:12px;">
-                                <b>or </b>
+                                <strong>or </strong>
                                 <?php echo CHtml::link('Cancel', $this->createAbsoluteUrl('visit/view'), array('class' => 'cancelBtnVisitorDetail')); ?>
                                 </div>
                             <?php endif; ?>

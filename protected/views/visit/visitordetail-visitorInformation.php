@@ -772,6 +772,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
     function afterValidate(form, data, hasError) {
         hasError = false;
     }
+    
     $(document).ready(function () {
 
         function validateInformation(){

@@ -188,9 +188,9 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
         text-align: center;
     }
 
-    /*.card-style-3  .card-print {
+    .card-style-3  .card-print {
         background-color: #FFFFFF;
-    }*/
+    }
 </style>
 <body style="font-family:Arial, sans-serif;">
 <div class="card-style-<?=$type?>">

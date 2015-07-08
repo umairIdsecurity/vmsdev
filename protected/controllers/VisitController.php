@@ -370,26 +370,33 @@ class VisitController extends Controller {
 
         #update Visitor and Host form ( middle column on visitor detail page )
         if (isset($_POST['updateVisitorInfo'])) {
-            // Get visitor params
-            $asicParams = Yii::app()->request->getPost('ASIC');
+            if (isset($_POST['ASIC'])) {
+                $asicModel = Visitor::model()->findByPk($model->host);
 
-            $asicModel = Visitor::model()->findByPk($model->host);
-            if ($asicModel && !empty($asicParams)) {
+                // Get visitor params
+                $asicParams = Yii::app()->request->getPost('ASIC');
 
-                if (isset($asicParams['first_name'])) 
-                    $asicModel->first_name  = $asicParams['first_name'];
-                if (isset($asicParams['last_name'])) 
-                    $asicModel->last_name   = $asicParams['last_name'];
-                if (isset($asicParams['asic_no'])) 
-                    $asicModel->asic_no     = $asicParams['asic_no'];
-                if (isset($asicParams['asic_expiry']))
-                    $asicModel->asic_expiry = $asicParams['asic_expiry'];
+                $asicModel->attributes = $asicParams;
 
                 $asicModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
 
                 $asicModel->scenario = 'updateVic';
                 // Save asic profile
                 if (!$asicModel->save()) {
+                    // Do something if save process failure
+                }
+            }
+
+            if (isset($_POST['Host'])) {
+                // Get visitor params
+                $hostParams = Yii::app()->request->getPost('Host');
+
+                $hostModel->attributes = $hostParams;
+                $hostModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
+
+                $hostModel->scenario = 'updateVic';
+                // Save host profile
+                if (!$hostModel->save()) {
                     // Do something if save process failure
                 }
             }

@@ -67,7 +67,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
     'htmlOptions' => ['name' => 'update-visitor-information-form']
 ]);
 ?>
-<div id='visitorInformationCssMenu' <?php if ($model && $model->card_type <= CardType::CONTRACTOR_VISITOR) {echo 'style="height:615px !important"';} ?>>
+<div id='visitorInformationCssMenu' <?php //if ($model && $model->card_type <= CardType::CONTRACTOR_VISITOR) {echo 'style="height:615px !important"';} ?>>
 
     <ul>
         <li class='has-sub' id="personalDetailsLi">
@@ -467,7 +467,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                         <td style="padding-left: 0 !important;">
                             <?php echo $visitorForm->textField($visitorModel, 'identification_document_no', ['disabled' => $disabled]); ?>
                             <br />
-                            <?php echo $visitorForm->error($model, 'identification_document_no'); ?>
+                            <?php echo $visitorForm->error($visitorModel, 'identification_document_no'); ?>
                         </td>
                     </tr>
                     <tr>
@@ -507,12 +507,10 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                             <td width="110px;" class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                                 First Name
                             </td>
-
                             <td style="padding-left: 0 !important;">
-                                <input class="visitor-detail-info-field"  <?php echo $disabled; ?> type="text" value="<?php echo $asic->first_name; ?>"
-                                       name="ASIC[first_name]" id="Visitor_asic_first_name">
-                                <div style="" id="Visitor_asic_first_name_em_" class="errorMessage errorMessageEmail">Please enter a first name.
-                                </div>
+                                <?php echo $visitorForm->textField($asic, 'first_name', ['disabled' => $disabled, 'name' => 'ASIC[first_name]']); ?>
+                                <br />
+                                <?php echo $visitorForm->error($asic, 'first_name'); ?>
                             </td>
                         </tr>
 
@@ -521,10 +519,9 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                 Last Name
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input class="visitor-detail-info-field"  <?php echo $disabled; ?> type="text" value="<?php echo $asic->last_name; ?>"
-                                       name="ASIC[last_name]" id="Visitor_asic_last_name">
-                                <div style="" id="Visitor_asic_last_name_em_" class="errorMessage errorMessageEmail">Please enter a last name.
-                                </div>
+                                <?php echo $visitorForm->textField($asic, 'last_name', ['disabled' => $disabled, 'name' => 'ASIC[last_name]']); ?>
+                                <br />
+                                <?php echo $visitorForm->error($asic, 'last_name'); ?>
                             </td>
                         </tr>
 
@@ -533,10 +530,9 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                 ASIC No.
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" <?php echo $disabled; ?> class="visitor-detail-info-field" value="<?php echo $asic->asic_no; ?>"
-                                       name="ASIC[asic_no]" id="Visitor_asic_no">
-                                <div style="" id="Visitor_asic_no_em_" class="errorMessage errorMessageEmail">Please enter a asic number.
-                                </div>
+                                <?php echo $visitorForm->textField($asic, 'asic_no', ['disabled' => $disabled, 'name' => 'ASIC[asic_no]']); ?>
+                                <br />
+                                <?php echo $visitorForm->error($asic, 'asic_no'); ?>
                             </td>
                         </tr>
                         <tr>
@@ -574,23 +570,6 @@ $visitorForm = $this->beginWidget('CActiveForm', [
             <a href="#"><span>Host Details</span></a>
             <ul>
                 <li>
-                    <?php
-                    $hostForm = $this->beginWidget('CActiveForm', array(
-                        'id' => 'update-host-form',
-                        'action' => Yii::app()->createUrl('/user/update&id=' . $model->host),
-                        'htmlOptions' => array("name" => "register-host-form"),
-                        'enableAjaxValidation' => false,
-                        'enableClientValidation' => true,
-                        'clientOptions' => array(
-                            'validateOnSubmit' => true,
-                            'afterValidate' => 'js:function(form,data,hasError){
-                                if(!hasError){
-                                    checkHostEmailIfUnique();
-                                }
-                            }'
-                        ),
-                    ));
-                    ?>
                     <input type="text" id="hostEmailIsUnique" value="0"/>
                     <table id="hostTable" class="detailsTable">
                         <tr>
@@ -598,9 +577,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                 First Name
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input class="visitor-detail-info-field" type="text" value="<?php echo $hostModel->first_name; ?>"
-                                       name="Visitor[host_first_name]" id="Visitor_asic_first_name">
-
+                            <?php echo $visitorForm->textField($hostModel, 'first_name', ['disabled' => $disabled, 'name' => 'Host[first_name]']); ?>
                             </td>
                         </tr>
 
@@ -609,31 +586,10 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                 Last Name
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input class="visitor-detail-info-field" type="text" value="<?php echo $hostModel->last_name; ?>"
-                                       name="Visitor[host_last_name]" id="Visitor_asic_last_name">
-
+                                <?php echo $visitorForm->textField($hostModel, 'last_name', ['disabled' => $disabled, 'name' => 'Host[last_name]']); ?>
                             </td>
                         </tr>
-                       <!-- <tr>
-                            <td style="width:110px !important; padding-top: 3px;"><?php /*echo $hostForm->labelEx($hostModel,
-                                    'first_name'); */?></td>
-                            <td>
-                                <?php /*echo $hostForm->textField($hostModel, 'first_name',
-                                    array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled', 'class' => "visitor-detail-info-field")); */?>
-                                <?php /*echo "<br>" . $hostForm->error($hostModel, 'first_name'); */?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td width="110px;" style="  padding-top: 3px;"><?php /*echo $hostForm->labelEx($hostModel,
-                                    'last_name'); */?></td>
-                            <td>
-                                <?php /*echo $hostForm->textField($hostModel, 'last_name',
-                                    array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled', 'class' =>  "visitor-detail-info-field")); */?>
-                                <?php /*echo "<br>" . $hostForm->error($hostModel, 'last_name'); */?>
-                            </td>
-                        </tr>-->
                     </table>
-                    <?php $this->endWidget(); ?>
                 </li>
             </ul>
         </li>

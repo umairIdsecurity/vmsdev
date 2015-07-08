@@ -370,6 +370,17 @@ class VisitController extends Controller {
 
         #update Visitor and Host form ( middle column on visitor detail page )
         if (isset($_POST['updateVisitorInfo'])) {
+
+            // Change date formate from d-m-Y to Y-m-d
+            if (!empty($this->date_of_birth)) 
+                $this->date_of_birth =  date('Y-m-d', strtotime($this->date_of_birth));
+
+            if (!empty($this->asic_expiry)) 
+                $this->asic_expiry =  date('Y-m-d', strtotime($this->asic_expiry));
+
+            if (!empty($this->identification_document_expiry)) 
+                $this->identification_document_expiry =  date('Y-m-d', strtotime($this->identification_document_expiry));
+            
             if (isset($_POST['ASIC'])) {
                 $asicModel = Visitor::model()->findByPk($model->host);
 

@@ -78,21 +78,22 @@ class Visitor extends CActiveRecord {
         self::PROFILE_TYPE_CORPORATE => array(
         ),
         self::PROFILE_TYPE_VIC => array(
-            1 => 'Card Status: Saved',
-            2 => 'Card Status: VIC Holder',
-            3 => 'Card Status: ASIC Pending',
+            self::SAVED            => 'Card Status: Saved',
+            self::VIC_HOLDER       => 'Card Status: VIC Holder',
+            self::VIC_ASIC_PENDING => 'Card Status: ASIC Pending'
         ),
         self::PROFILE_TYPE_ASIC => array(
-            6 => 'Card Status: ASIC Issued',
-            7 => 'Card Status: ASIC Expired',
-            5 => 'Card Status: ASIC Denied',
+            self::ASIC_ISSUED    => 'Card Status: ASIC Issued',
+            self::ASIC_EXPIRED   => 'Card Status: ASIC Expired',
+            self::ASIC_DENIED    => 'Card Status: ASIC Denied',
+            self::ASIC_APPLICANT => 'Card Status: ASIC Applicant'
         ),
     );
 
     public static $PROFILE_TYPE_LIST = array(
         self::PROFILE_TYPE_CORPORATE => 'Corporate',
-        self::PROFILE_TYPE_VIC => 'VIC',
-        self::PROFILE_TYPE_ASIC => 'ASIC',
+        self::PROFILE_TYPE_VIC       => 'VIC',
+        self::PROFILE_TYPE_ASIC      => 'ASIC'
     );
 
     public static $IDENTIFICATION_TYPE_LIST = array(
@@ -508,21 +509,6 @@ class Visitor extends CActiveRecord {
         }
 
         return parent::beforeSave();
-    }
-
-    public function afterSave() {
-        // Convert all date/time fields to yyyy-mm-dd format
-        if (!empty($this->date_of_birth)) 
-            $this->date_of_birth =  date('Y-m-d', strtotime($this->date_of_birth));
-
-        if (!empty($this->asic_expiry)) 
-            $this->asic_expiry =  date('Y-m-d', strtotime($this->asic_expiry));
-
-        if (!empty($this->identification_document_expiry)) 
-            $this->identification_document_expiry =  date('Y-m-d', strtotime($this->identification_document_expiry));
-        // End Conver section
-        
-        return parent::afterSave();
     }
 
     public function beforeDelete() {

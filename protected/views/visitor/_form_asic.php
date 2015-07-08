@@ -78,7 +78,7 @@ if ($this->action->id == 'update') {
                 console.log(visitor_card_status);
                 switch (visitor_card_status) {
                     case "'.Visitor::ASIC_ISSUED.'":
-                        var visitor_asic_no = $("#Visitor_asic_no").val();
+                        var visitor_asic_no     = $("#Visitor_asic_no").val();
                         var visitor_asic_expiry = $("#Visitor_asic_expiry").val();
                         if (visitor_asic_no == "" || visitor_asic_expiry == "") {
                             //add validation item
@@ -104,8 +104,8 @@ if ($this->action->id == 'update') {
                         var identification_document_no = $("#Visitor_identification_document_no").val();
                         var identification_document_expiry = $("#Visitor_identification_document_expiry").val();
                         if (identification_type == "" || identification_document_no == "" || identification_document_expiry == "") {
-                            data["Visitor_identification_type"] = ["Please select an identification type"];
-                            data["Visitor_identification_document_no"] = ["Please enter a document no"];
+                            data["Visitor_identification_type"]            = ["Please select an identification type"];
+                            data["Visitor_identification_document_no"]     = ["Please enter a document no"];
                             data["Visitor_identification_document_expiry"] = ["Please select a document expiry"];
 
                             if (identification_type == "") {
@@ -472,6 +472,7 @@ if ($this->action->id == 'update') {
                                         'attribute'   => 'asic_expiry',
                                         'options'     => array(
                                             'dateFormat' => 'dd-mm-yy',
+                                            'minDate' => '0',
                                             'maxDate' => $interval->days,
                                             'changeMonth' => true,
                                             'changeYear' => true
@@ -530,14 +531,50 @@ if ($this->action->id == 'update') {
 
         var companyValue = $("#Visitor_company").val();
         
-//        var workstation = $("#User_workstation").val();
-//        if (!workstation || workstation == "") {
-//            $("#Visitor_visitor_workstation_em_").show();
-//            $("#Visitor_visitor_workstation_em_").html('Please enter Workstation');
-//            return false;
-//        }
-        
+        if ($('.password_requirement').filter(':checked').val() == "<?php echo PasswordRequirement::PASSWORD_IS_REQUIRED; ?>") {
+            if ($('.password_option').filter(':checked').val() == "<?php echo PasswordOption::CREATE_PASSWORD; ?>") {
+                $('.visitor_password').empty().hide();
+                $('.visitor_password_repeat').empty().hide();
+                var password_temp = $('#Visitor_password_input').val();
+                var password_repeat_temp = $('#Visitor_repeatpassword_input').val();
+                if (password_temp == '') {
+                    $('.visitor_password').html('Password should be specified').show();
+                    return false;
+                } else if (password_repeat_temp == '') {
+                    $('.visitor_password_repeat').html('Please confirm a password').show();
+                    return false;
+                } else if (password_temp != password_repeat_temp) {
+                    $('.visitor_password_repeat').html('Passwords are not matched').show();
+                    return false;
+                }
+                $('input[name="Visitor[password]"]').val(password_temp);
+                $('input[name="Visitor[repeatpassword]"]').val(password_repeat_temp);
+            }
+        } else {
+            $('.visitor_password').empty().hide();
+            $('.visitor_password_repeat').empty().hide();
+        }
+
         if (!hasError) {
+
+            var asic_no = $('#Visitor_asic_no').val();
+            var asic_expiry = $('#Visitor_asic_expiry').val();
+
+            if (asic_no == "" && asic_expiry == "") {
+                $('#Visitor_visitor_card_status').val(<?php echo Visitor::ASIC_EXPIRED; ?>);
+                var card_status = $('#Visitor_visitor_card_status').val();
+                if (card_status == "<?php echo Visitor::ASIC_EXPIRED; ?>") {
+                    $('#Visitor_password_requirement_1').trigger('click');
+                    $('.user_requires_password').show();
+                    $('#Visitor_password_option_1').trigger('click');
+                    $('#Visitor_password_requirement_0').prop('disabled', true);
+                } else {
+                    $('#Visitor_password_requirement_0').prop('disabled', false).trigger('click');
+                    $('.user_requires_password').hide();
+                }
+                return false;
+            }
+
             if (!companyValue || companyValue == "") {
                 $("#company_error_").show();
                 return false;
@@ -555,6 +592,19 @@ if ($this->action->id == 'update') {
         if(currentCardStatus == 6) {
             $('#Visitor_visitor_card_status').attr("disabled", true);
         }
+
+        $(document).on('change', '#Visitor_visitor_card_status', function(e) {
+            var card_status = $(this).val();
+            if (card_status == "<?php echo Visitor::ASIC_EXPIRED; ?>") {
+                $('#Visitor_password_requirement_1').trigger('click');
+                $('.user_requires_password').show();
+                $('#Visitor_password_option_1').trigger('click');
+                $('#Visitor_password_requirement_0').prop('disabled', true);
+            } else {
+                $('#Visitor_password_requirement_0').prop('disabled', false).trigger('click');
+                $('.user_requires_password').hide();
+            }
+        });
 
         $('#fromDay').on('change', function () {
             var dt = new Date();

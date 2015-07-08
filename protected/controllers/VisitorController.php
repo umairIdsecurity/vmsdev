@@ -437,7 +437,7 @@ class VisitorController extends Controller {
 
     public function actionAddVisitor() {
         $model = new Visitor;
-        $visitorService = new VisitorServiceImpl();
+        $visitorService = new VisitorServiceImpl;
         $session = new CHttpSession;
 		
         if (isset($_POST['Visitor'])) {
@@ -679,6 +679,31 @@ class VisitorController extends Controller {
             }
 
             if ($result = $visitorService->save($model, NULL, $session['id'])) {
+                $company = Company::model()->findByPk($model->company);
+                if ($company) {
+                    $contact = new User('add_company_contact');
+                    $contact->company = $company->id;
+                    $contact->first_name = $model->first_name;
+                    $contact->last_name = $model->last_name;
+                    $contact->email = $model->email;
+                    $contact->contact_number = $model->contact_number;
+                    $contact->created_by = Yii::app()->user->id;
+
+                    // Todo: temporary value for saving contact, will be update later
+                    $contact->timezone_id = 1; 
+                    $contact->photo = 0;
+
+                    // foreign keys // todo: need to check and change for HARD-CODE
+                    $contact->tenant = $session['tenant'];
+                    $contact->user_type = UserType::USERTYPE_INTERNAL;
+                    $contact->user_status = 1;
+                    $contact->role = Roles::ROLE_STAFFMEMBER;
+                    if (!$contact->save()) {
+                        echo 0;
+                        Yii::app()->end();
+                    }
+                }
+                echo 1;
                 Yii::app()->end();
             }
         }

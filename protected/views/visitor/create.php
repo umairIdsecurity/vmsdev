@@ -199,7 +199,7 @@ $(document).ready(function () {
                 $('.visitor_password_repeat').empty().hide();
             }
 
-            /*var contact = $('#Visitor_staff_id').val();
+            var contact = $('#Visitor_staff_id').val();
             if (typeof contact != 'undefined') {
                 $.ajax({
                     type: "POST",
@@ -215,7 +215,7 @@ $(document).ready(function () {
                         }
                     }
                 });
-            }*/
+            }
             
             $(".visitorType").hide();
             if ($("#Visitor_visitor_type").val() == 1 || $("#Visitor_visitor_type_search").val() == 1) {

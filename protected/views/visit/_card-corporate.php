@@ -166,8 +166,19 @@ if (isset($host)) {
             height: 868px !important;
         }
         #visitorDetailDiv .ajax-upload-dragdrop{
-            margin-right: -55px !important;
-            clear: both;
+            float: left !important;
+            margin: 0 0 10px !important;
             display: block;
+        }
+
+        #visitorDetailDiv .ajax-file-upload{
+            display: block;
+            margin-left: 31px !important;
+        }
+        #visitorDetailDiv .editImageBtn {
+            float: left;
+            margin-left: 31px !important;
+            position: relative;
+            z-index: 1;
         }
     </style>

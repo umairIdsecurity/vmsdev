@@ -129,7 +129,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         ),
         array(
             'name' => 'contactphone',
-            'value' => '$data->company0->mobile_number',
+            'value' => 'User::model()->findByPk($data->visitor0->staff_id)->contact_number',
             'filter'=>CHtml::activeTextField($model, 'contactphone', array('placeholder'=>'Contact Phone', 'class' => 'header-form')),
         ),
         array(

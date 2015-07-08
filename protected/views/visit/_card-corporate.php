@@ -165,5 +165,9 @@ if (isset($host)) {
         #visitorInformationCssMenu {
             height: 868px !important;
         }
-
+        #visitorDetailDiv .ajax-upload-dragdrop{
+            margin-right: -55px !important;
+            clear: both;
+            display: block;
+        }
     </style>

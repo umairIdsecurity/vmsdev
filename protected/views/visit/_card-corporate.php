@@ -37,31 +37,112 @@ if (isset($host)) {
 
 ?>
 
-    <div style="float:left;width:256px; border:1px solid #000; height:410px;">
-        <div style="display: inline-flex;">
-            <div style="width:150px; height:205px; background:#fff; margin-left:15px; margin-top:13px;"></div>
+    <div class="corporate-card">
+        <div class="card-header">
+            <div class="box-visitor-image"></div>
             <?php if ($model->card_type == CardType::CONTRACTOR_VISITOR) {
-                echo "<div style='width: 74px;height: 210px; margin-left: 50px; float: left;font-size: 28px; font-weight: bold;  color: black; margin-top: 17px;transform: rotate(90deg);transform-origin: left top 0;'>CONTRACTOR</div>";
+                echo '<div class="card-text">CONTRACTOR</div>';
             } else {
-                echo "<div style='width: 74px;height: 210px; margin-left: 50px; float: left;font-size: 47px; font-weight: bold;  color: black; margin-top: 23px;transform: rotate(90deg);transform-origin: left top 0;'>VISITOR</div>";
+                echo '<div class="card-text card-text-visitor">VISITOR</div>';
             } ?>
-
         </div>
 
-        <div style="text-align:left; line-height:20px; margin:10px 0 0 14px; color:#000;">
-            <p style="font-size:25px; font-weight:bold; margin:0 0 10px 0;"><?php  echo date('dMy', strtotime($model->date_check_in));?></p>
+        <div class="card-container">
+            <p class="date-check-in"><?php  echo date('dMy', strtotime($model->date_check_in));?></p>
 
-            <p style="font-size:25px; font-weight:bold; line-height:24.9px; margin:0 0 3px 0;"><?php echo ($visitorModel->first_name != "")?$visitorModel->first_name." ".$visitorModel->last_name:"N/A"?><br>
-                <?php echo ($cardCode== "")?"N/A":$cardCode; ?></p></p>
+            <p class="card-info"><?php echo ($visitorModel->first_name != "")?$visitorModel->first_name." ".$visitorModel->last_name:"N/A"?><br>
+                <?php echo ($cardCode== "")?"N/A":$cardCode; ?></p>
         </div>
-        <div style="width:256px; height:48.7px; margin-top:30px; ">
-            <div style="width:69px;  height:38px; margin-left:15px; margin-top:2px; display:inline-block;"><img border="0" style="height:34px !important;width: 120px;  margin-left: -35px;
-  margin-bottom: 19px;" src="<?= $companyLogo?>"></div>
-            <div style="height:38px; margin-left:19px;padding-right:15px;  margin-top:2px;   float: right;   display:inline-block; font-weight:bolder;"><?=$host_first_name?> <br>
-                <?=$host_last_name?>
+        <div class="card-footer">
+            <div class="logo-company"><img src="<?= $companyLogo?>"></div>
+            <div class="full-name">
+                <div class="first-name"><?=$host_first_name?></div>
+                <div class="last-name"><?=$host_last_name?></div>
             </div>
         </div>
+        <div style="clear: both"></div>
+    </div>
     <style>
+        .corporate-card {
+            width:256px;
+            border:1px solid #000;
+            height:410px;
+            border-radius: 20px;
+            box-sizing: border-box;
+            position: relative;
+        }
+        .card-header {
+            display: inline-flex;
+            height: 236px;
+        }
+        .card-container {
+            text-align:left;
+            line-height:20px;
+            margin:10px 0 0 14px;
+            color:#000;
+        }
+        .card-container .date-check-in{
+            font-size:25px; font-weight:bold; margin:0 0 10px 0;
+        }
+        .card-container .card-info{
+            font-size:25px;
+            font-weight:bold;
+            line-height:24.9px;
+            margin:0 0 3px 0;
+        }
+        .box-visitor-image {
+            width:152px;
+            height:206px;
+            background:#fff;
+            border: 1px solid #000000;
+            margin-left:13px;
+            margin-top:12px;
+        }
+        .card-text {
+            width: 74px;
+            height: 210px;
+            margin-left: 50px;
+            float: left;
+            font-size: 28px;
+            font-weight: bold;
+            color: black;
+            margin-top: 17px;
+            transform: rotate(90deg);
+            transform-origin: left top 0;
+        }
+
+        .card-text.card-text-visitor {
+            font-size: 47px;
+            margin-top: 23px;
+        }
+        .card-footer {
+            width:254px;
+            height:48px;
+            position: absolute;
+            background-color: #ffffff;
+            border-radius: 0 0 20px 20px;
+            z-index: 1;
+            bottom: 0;
+            left: 0;
+        }
+        .card-footer .logo-company {
+            margin:8px 0 0 20px;
+            float: left;
+            width: 100px;
+            text-align: left;
+        }
+        .card-footer .logo-company img {
+            height:34px !important;
+            width: auto;
+        }
+        .card-footer .full-name {
+            height:38px;
+            padding-right:15px;
+            margin-top:2px;
+            float: right;
+            font-weight:bolder;
+        }
+
         #photoPreview {
             height: 206px;
             width: 152px;
@@ -84,5 +165,20 @@ if (isset($host)) {
         #visitorInformationCssMenu {
             height: 868px !important;
         }
+        #visitorDetailDiv .ajax-upload-dragdrop{
+            float: left !important;
+            margin: 0 0 10px !important;
+            display: block;
+        }
 
+        #visitorDetailDiv .ajax-file-upload{
+            display: block;
+            margin-left: 31px !important;
+        }
+        #visitorDetailDiv .editImageBtn {
+            float: left;
+            margin-left: 31px !important;
+            position: relative;
+            z-index: 1;
+        }
     </style>

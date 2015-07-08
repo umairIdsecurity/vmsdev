@@ -130,7 +130,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
 		),
 		array(
 			'name'   => 'contactphone',
-			'value'  => 'User::model()->findByPk($data->visitor0->staff_id)->contact_number',
+			'value'  => 'isset($data->visitor0->staff_id) ? User::model()->findByPk($data->visitor0->staff_id)->contact_number : ""',
 			'filter' => CHtml::activeTextField($model, 'contactphone', array('placeholder' => 'Contact Phone', 'class' => 'header-form')),
 		),
 		array(
@@ -177,23 +177,23 @@ $this->widget('zii.widgets.grid.CGridView', array(
 			'value'  => 'isset(Workstation::model()->findByPk($data->workstation)->name) ? Workstation::model()->findByPk($data->workstation)->name : ""',
 			'filter' => CHtml::activeTextField($model, 'workstation', array('placeholder' => 'Workstation', 'class' => 'header-form')),
 		),
-        array(
-            'name'   => 'card_returned_date',
-            'filter' => CHtml::activeTextField($model, 'card_returned_date', array('placeholder' => 'Date Card Returned/Lost', 'class' => 'header-form')),
-        ),
+		array(
+			'name'   => 'card_returned_date',
+			'filter' => CHtml::activeTextField($model, 'card_returned_date', array('placeholder' => 'Date Card Returned/Lost', 'class' => 'header-form')),
+		),
 		array(
 			'name'   => 'police_report_number',
 			'value'  => '$data->police_report_number',
 			'filter' => CHtml::activeTextField($model, 'police_report_number', array('placeholder' => 'Police Report Number', 'class' => 'header-form')),
 		),
-        array(
-            'type'   => 'raw',
-            'name'   => 'card_lost_declaration_file',
-            'value'  => '
+		array(
+			'type'   => 'raw',
+			'name'   => 'card_lost_declaration_file',
+			'value'  => '
                 !empty($data->card_lost_declaration_file) ? CHtml::link("Download", $data->card_lost_declaration_file, ["style" => "text-align:center;"]) : "";
             ',
-            'filter' => CHtml::activeTextField($model, 'card_lost_declaration_file', array('placeholder' => 'Police Report or Declaration', 'class' => 'header-form')),
-        )
+			'filter' => CHtml::activeTextField($model, 'card_lost_declaration_file', array('placeholder' => 'Police Report or Declaration', 'class' => 'header-form')),
+		),
 	),
 ));
 

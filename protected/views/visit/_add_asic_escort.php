@@ -66,7 +66,7 @@
                 <span class="required">*</span>
                 <?php echo $form->error($model, 'company', array("style" => "margin-top:0px")); ?>
                 <div>
-                    <a style="margin-top: 15px; margin-right: 5px; width: 95px; height: 21px;" href="#addCompanyContactModal" role="button" data-toggle="modal" id="addCompanyLink">Add Company</a>
+                    <a style="margin-top: 15px; margin-right: 5px; width: 95px; height: 21px; text-align: center;" href="#addCompanyContactModal" role="button" data-toggle="modal" id="addCompanyLink">Add Company</a>
                 </div>
 
             </td>

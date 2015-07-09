@@ -262,13 +262,23 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                                    href='<?php echo Yii::app()->createUrl('visitor/admin', array('vms' => 'cvms')); ?>'><span>CVMS Visitors</span></a>
 
                 <ul <?php
-                if ( ($this->id == 'visitor' && Yii::app()->request->getParam('vms') == 'cvms') || $this->action->id == 'exportvisitorrecords') {
+                if ( ( ($this->id == 'visitor' || $this->id == 'visitorType' ) && Yii::app()->request->getParam('vms') == 'cvms') || $this->action->id == 'exportvisitorrecords') {
                     echo "style='display:block ;'";
                 }
                 ?>>
                     <li><a href='<?php echo Yii::app()->createUrl('visit/exportvisitorrecords'); ?>'><span>Export Visit History</span></a>
                     </li>
                     <li><a href='<?php echo Yii::app()->createUrl('visitor/importVisitHistory'); ?>'><span>Import Visit History</span></a>
+                    </li>
+                    <li>
+                        <a class="managevisitortype addSubMenu" href='<?php echo Yii::app()->createUrl('visitorType/index', array('vms' => 'cvms')); ?>'><span>Visitor Types</span></a>
+                        <ul <?php
+                        if ($this->id == 'visitorType') {
+                            echo "style='display:block ;'";
+                        }
+                        ?>>
+                            <li><a href='<?php echo Yii::app()->createUrl('visitorType/create', array('vms' => 'cvms')); ?>'><span>Add Visitor Type</span></a></li>
+                        </ul>
                     </li>
                 </ul>
             </li>  <!-- end menu for CVMS Visitors -->
@@ -278,19 +288,23 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                                    href='<?php echo Yii::app()->createUrl('visitor/admin', array('vms' => 'avms')); ?>'><span>AVMS Visitors</span></a>
 
                 <ul <?php
-                if ( ($this->id == 'visitor' && Yii::app()->request->getParam('vms') == 'avms')  || $this->action->id == 'exportvisitorrecords') {
+                if ( ( ($this->id == 'visitor' || $this->id == 'visitorType' ) && Yii::app()->request->getParam('vms') == 'avms' )  || $this->action->id == 'exportvisitorrecords') {
                     echo "style='display:block ;'";
                 }
                 ?>>
-                    <li><a href='<?php echo Yii::app()->createUrl('visitor/addvisitor'); ?>'
-                           class="addSubMenu"><span>Add Visitor Profile</span></a></li>
-                    <li><a href='<?php echo Yii::app()->createUrl('visitor/create&action=register'); ?>'
-                           class="addSubMenu"><span>Log Visit</span></a></li>
-                    <li><a href='<?php echo Yii::app()->createUrl('visitor/create&action=preregister'); ?>'
-                           class="addSubMenu"><span>Preregister Visit</span></a></li>
                     <li><a href='<?php echo Yii::app()->createUrl('visit/exportvisitorrecords'); ?>'><span>Export Visit History</span></a>
                     </li>
                     <li><a href='<?php echo Yii::app()->createUrl('visitor/importVisitHistory'); ?>'><span>Import Visit History</span></a>
+                    </li>
+                    <li>
+                        <a class="managevisitortype addSubMenu" href='<?php echo Yii::app()->createUrl('visitorType/index', array('vms' => 'avms')); ?>'><span>Visitor Types</span></a>
+                        <ul <?php
+                        if ($this->id == 'visitorType') {
+                            echo "style='display:block ;'";
+                        }
+                        ?>>
+                            <li><a href='<?php echo Yii::app()->createUrl('visitorType/create', array('vms' => 'avms')); ?>'><span>Add Visitor Type</span></a></li>
+                        </ul>
                     </li>
                 </ul>
             </li>   <!-- end menu for AVMS Visitors -->
@@ -298,20 +312,6 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
 
             <?php if ($session['role'] == Roles::ROLE_SUPERADMIN) {
                 ?>
-
-                        <!-- menu for Visitors Types -->
-                <li class='has-sub'>
-                    <?php echo CHtml::link('Visitor Types', array('visitorType/index'),
-                        array('class' => 'managevisitortype')) ?>
-                    <ul <?php
-                    if ($this->id == 'visitorType' && $this->action->id != 'visitorsByWorkstationReport' && $this->action->id != 'visitorsByTypeReport' && $this->action->id != 'visitorsByProfiles') {
-                        echo "style='display:block ;'";
-                    }
-                    ?>>
-                        <li><a href='<?php echo Yii::app()->createUrl('visitorType/create'); ?>'
-                               class="addSubMenu"><span>Add Visitor Type</span></a></li>
-                    </ul>
-                </li> <!-- menu for Visitors Types -->
 
                       <!-- menu for Visitors Reasons -->
                 <li class='has-sub'><?php
@@ -339,7 +339,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                         <li><a href='<?php echo Yii::app()->createUrl('visitReason/create'); ?>'
                                class="addSubMenu"><span>Add Visit Reason</span></a></li>
                     </ul>
-                </li><!-- menu for Visitors Reasons --
+                </li><!-- menu for Visitors Reasons -->
 
                 <!-- menu for Visits -->
                 <li class=''><?php
@@ -394,26 +394,6 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
             */
             ?>
 
-            <?php
-            // Show Visitor Types to All Admins only
-            if (Yii::app()->user->role == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_ISSUING_BODY_ADMIN) {
-                ?>    <!-- menu for Visitors Types -->
-                <li class='has-sub'>
-                    <?php echo CHtml::link('Visitor Types', array('visitorType/index'),
-                        array('class' => 'managevisitortype')) ?>
-                    <ul <?php
-                    if ($this->id == 'visitorType') {
-                        echo "style='display:block ;'";
-                    }
-                    ?>>
-                        <li><a href='<?php echo Yii::app()->createUrl('visitorType/create'); ?>'
-                               class="addSubMenu"><span>Add Visitor Type</span></a></li>
-                    </ul>
-                </li> <!-- menu for Visitors Types -->
-
-            <?php
-            }
-            ?>
 
             <!-- menu for companies -->
             <?php if ($session['role'] == Roles::ROLE_SUPERADMIN) {

@@ -1,18 +1,16 @@
 <?php
 
-class AuditTrailController extends Controller
-{
+class AuditTrailController extends Controller {
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
 	 * using two-column layout. See 'protected/views/layouts/column2.php'.
 	 */
-	public $layout='//layouts/column2';
+	public $layout = '//layouts/column2';
 
 	/**
 	 * @return array action filters
 	 */
-	public function filters()
-	{
+	public function filters() {
 		return array(
 			'accessControl', // perform access control for CRUD operations
 			'postOnly + delete', // we only allow deletion via POST request
@@ -24,16 +22,15 @@ class AuditTrailController extends Controller
 	 * This method is used by the 'accessControl' filter.
 	 * @return array access control rules
 	 */
-	public function accessRules()
-	{
+	public function accessRules() {
 		return array(
 
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('view','admin'),
+				'actions'    => array('view', 'cvms', 'avms'),
 				'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
 			),
-			array('deny',  // deny all users
-				'users'=>array('*'),
+			array('deny', // deny all users
+				'users' => array('*'),
 			),
 		);
 	}
@@ -42,25 +39,36 @@ class AuditTrailController extends Controller
 	 * Displays a particular model.
 	 * @param integer $id the ID of the model to be displayed
 	 */
-	public function actionView($id)
-	{
-		$this->render('view',array(
-			'model'=>$this->loadModel($id),
+	public function actionView($id) {
+		$this->render('view', array(
+			'model' => $this->loadModel($id),
 		));
 	}
 
 	/**
 	 * Manages all models.
 	 */
-	public function actionAdmin()
-	{
-		$model=new AuditTrail('search');
-		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['AuditTrail']))
-			$model->attributes=$_GET['AuditTrail'];
+	public function actionCvms() {
+		$model = new AuditTrail('search');
+		$model->unsetAttributes(); // clear any default values
+		if (isset($_GET['AuditTrail'])) {
+			$model->attributes = $_GET['AuditTrail'];
+		}
 
-		$this->render('_admin',array(
-			'model'=>$model,
+		$this->render('_cvms', array(
+			'model' => $model,
+		));
+	}
+
+	public function actionAvms() {
+		$model = new AuditTrail('search');
+		$model->unsetAttributes(); // clear any default values
+		if (isset($_GET['AuditTrail'])) {
+			$model->attributes = $_GET['AuditTrail'];
+		}
+
+		$this->render('_avms', array(
+			'model' => $model,
 		));
 	}
 
@@ -71,11 +79,12 @@ class AuditTrailController extends Controller
 	 * @return AuditTrail the loaded model
 	 * @throws CHttpException
 	 */
-	public function loadModel($id)
-	{
-		$model=AuditTrail::model()->findByPk($id);
-		if($model===null)
-			throw new CHttpException(404,'The requested page does not exist.');
+	public function loadModel($id) {
+		$model = AuditTrail::model()->findByPk($id);
+		if ($model === null) {
+			throw new CHttpException(404, 'The requested page does not exist.');
+		}
+
 		return $model;
 	}
 
@@ -83,10 +92,8 @@ class AuditTrailController extends Controller
 	 * Performs the AJAX validation.
 	 * @param AuditTrail $model the model to be validated
 	 */
-	protected function performAjaxValidation($model)
-	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='audit-trail-form')
-		{
+	protected function performAjaxValidation($model) {
+		if (isset($_POST['ajax']) && $_POST['ajax'] === 'audit-trail-form') {
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}

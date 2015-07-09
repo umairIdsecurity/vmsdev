@@ -149,9 +149,9 @@ $currentLoggedUserId = $session['id'];
                             <select  <?php
                             // if ($this->action->Id == 'create' && isset($_GET['role']) && $_GET['role'] != 'avms' ) { //if action create with user roles selected in url
                             if ($this->action->Id == 'create' && !CHelper::is_add_avms_user() ) { //if action create with user roles selected in url
-                                echo "disabled";
+                                //echo "disabled";
                             }
-                            ?> id="User_role" name="User[role]">
+                            ?> id="User_role" name="TenantForm[role]">
                                 <option disabled value='' selected>Select Role</option>
                                 <?php
 

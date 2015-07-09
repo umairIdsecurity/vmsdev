@@ -560,7 +560,7 @@ $asicEscort = new AddAsicEscort();
     $(document).on('click', '#btnIdentificationConfirm', function(e) {
         var isChecked = $('input[name="identification"]').filter(':checked');
         if (isChecked.length == 0) {
-            alert('Please chose option after confirm.');
+            alert('Please select an option.');
             return false;
         }
 
@@ -586,7 +586,6 @@ $asicEscort = new AddAsicEscort();
             dataType: 'json',
             data: data,
             success: function (r) {
-                console.log(r);
                 if (r == 1) {
                     $('#identificationModal').modal('hide');
                     $('input[name="identificationActiveVisit"]').prop('checked', true);
@@ -607,6 +606,7 @@ $asicEscort = new AddAsicEscort();
         var today = Date.parse(yyyy+'-'+mm+'-'+dd);
         return document_expiry_date <= today;
     }
+
     $(document).ready(function(){
         $('#asicDecalarationRbtn1').on('click',function(){
             $(this).prop('checked',true);

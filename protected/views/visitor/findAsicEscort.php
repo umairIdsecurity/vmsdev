@@ -57,7 +57,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'header' => 'Action',
             'type' => 'raw',
-            'htmlOptions' => array('style' => 'text-align:center width:20px; min-width: 0px !important;', 'class' => 'findVisitorButtonColumn'),
+            'htmlOptions' => array('style' => 'text-align:right!important width:20px; min-width: 0px !important;', 'class' => 'findVisitorButtonColumn'),
             'headerHtmlOptions' =>  array('style'=>'width:20px; min-width: 0px !important;'),
             'value' => 'displaySelectVisitorButton($data)',
         ),
@@ -69,6 +69,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
 function displaySelectVisitorButton($visitorData) {
     return CHtml::link("Select", "javascript:void(0)", array(
             "id" => $visitorData["id"],
+            "style" => "text-align:center!important",
             "onclick" => "selectEscort({$visitorData['id']})",
         )
     );

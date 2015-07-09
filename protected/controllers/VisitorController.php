@@ -325,13 +325,50 @@ class VisitorController extends Controller {
 
     public function actionFindHost($id,$tenant,$tenant_agent, $cardType = null) {
         $this->layout = '//layouts/column1';
-        $model = new User('search');
-        $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['User']))
-            $model->attributes = $_GET['User'];
+        $visitorType = $_GET['visitortype'];
+        $searchInfo = $_GET['id'];
+        $tenant = 'tenant='.Yii::app()->user->tenant.' AND ';
+        if (isset($_GET['tenant_agent']) && $_GET['tenant_agent'] != '') {
+            $tenant_agent = "tenant_agent='" . $_GET["tenant_agent"] . "' and";
+        } else {
+            $tenant_agent = "";
+        }
+
+        $criteria = new CDbCriteria;
+
+        if (isset($_GET['cardType']) && $_GET['cardType'] > CardType::CONTRACTOR_VISITOR) {
+            $model = new Visitor('search');
+            $model->unsetAttributes();
+            $conditionString = $tenant. $tenant_agent . " (CONCAT(first_name,' ',last_name) like '%" . $searchInfo
+                . "%' or first_name like '%" . $searchInfo
+                . "%' or last_name like '%" . $searchInfo
+                . "%' or email like '%" . $searchInfo
+                . "%' or identification_document_no LIKE '%" . $searchInfo
+                . "%' or identification_alternate_document_no1 LIKE '%" . $searchInfo
+                . "%' or identification_alternate_document_no2 LIKE '%" . $searchInfo
+                . "%')";
+            $hostTitle = 'ASIC Sponsor';
+            $conditionString .= " AND profile_type = '" . Visitor::PROFILE_TYPE_ASIC . "' ";
+        } else {
+            $model = new User('search');
+            $model->unsetAttributes();
+            if (isset($_GET['User'])){
+                $model->attributes = $_GET['User'];
+            }
+            $conditionString = $tenant. $tenant_agent . " (CONCAT(first_name,' ',last_name) like '%" . $searchInfo
+                . "%' or first_name like '%" . $searchInfo
+                . "%' or last_name like '%" . $searchInfo
+                . "%' or email like '%" . $searchInfo
+                . "%')";
+            $hostTitle = 'Host';
+        }
+        $criteria->addCondition($conditionString);
 
         $this->renderPartial('findHost', array(
-                'model' => $model
+            'model' => $model,
+            'criteria' => $criteria,
+            'hostTitle' => $hostTitle,
+            'visitorType' => $visitorType
             ), false, true);
     }
 

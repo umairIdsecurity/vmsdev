@@ -441,26 +441,11 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
             <?php if ($session['role'] == Roles::ROLE_SUPERADMIN) {
             ?>
 
-            <li class='has-sub'><?php
-                echo CHtml::ajaxLink("Tenant", CController::createUrl('tenant/adminAjax'), array(
-                    'update' => '#content',
-                    'complete' => "js:function(html){
-                        $('.manageworkstations').next().slideUp('normal');
-                        $('.managecompanies').next().slideUp('normal');
-                        $('.managetenant').next().slideDown('normal');
-                        $('.manageusers').next().slideUp('normal');
-                        //$('.manageusers').next().hide();
-                        $('.managevisitorrecords').next().slideUp('normal');
-                        $('.managevisitreasons').next().slideUp('normal');
-                        $('.managereports').next().slideUp('normal');
-                        $('.managevisitortype').next().slideUp('normal');
-                    }",
-                ), array(
-                    'class' => 'managetenant',
-                ));
-                ?>
+            <li class='has-sub'>
+                <?php echo CHtml::link('Tenant', array('tenant/admin'), array('class' => 'managetenant')) ?>
+              
                 <ul <?php
-                if ($this->id == 'company' || $this->id == 'companyLafPreferences') {
+                if ($this->id == 'tenant') {
                     echo "style='display:block ;'";
                 }
                 ?>>

@@ -845,7 +845,7 @@ $defaultKey = key($asicCardTypes);
             type: "POST",
             url: url,
             data: hostform,
-            success: function (data) {console.log(data);return false;
+            success: function (data) {
                 getLastHostId(function (data) {
                     populateVisitFormFields(); // Do what you want with the data returned
                 });

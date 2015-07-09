@@ -195,7 +195,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                 Contact Person
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <?php echo $visitorForm->textField($company, 'contact', ['disabled' => $disabled, 'value' => $contact->getFullName()]); ?>
+                                <?php echo $visitorForm->textField($company, 'contact', ['disabled' => $disabled, 'value' => isset($contact) ? $contact->getFullName(): ""]); ?>
                                 <br />
                                 <?php echo $visitorForm->error($company, 'contact'); ?>
                             </td>
@@ -206,7 +206,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                 Contact No.
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <?php echo $visitorForm->textField($company, 'mobile_number', ['disabled' => $disabled, 'value' => $contact->contact_number]); ?>
+                                <?php echo $visitorForm->textField($company, 'mobile_number', ['disabled' => $disabled, 'value' => isset($contact) ? $contact->contact_number : ""]); ?>
                                 <br />
                                 <?php echo $visitorForm->error($company, 'mobile_number'); ?>
                             </td>
@@ -217,7 +217,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                 Contact Email
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <?php echo $visitorForm->textField($company, 'email_address', ['disabled' => $disabled, 'value' => $contact->email]); ?>
+                                <?php echo $visitorForm->textField($company, 'email_address', ['disabled' => $disabled, 'value' => isset($contact) ? $contact->email : ""]); ?>
                                 <br />
                                 <?php echo $visitorForm->error($company, 'email_address'); ?>
                             </td>
@@ -598,7 +598,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
             </ul>
         </li>
         <?php endif; ?>
-        <?php if ($asicEscort != '') : ?>
+        <?php if (!empty($asicEscort) || $asicEscort != "") : ?>
         <li class='has-sub' id="asicEscortDetailLi">
             <a href="#"><span>ASIC Escort</span></a>
             <ul>

@@ -771,4 +771,7 @@ class User extends VmsActiveRecord {
         }
     }
 
+    public function getCompanyForLogVisit() {
+        return Company::model()->findByPk($this->company);
+    }
 }

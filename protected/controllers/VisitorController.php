@@ -669,7 +669,7 @@ class VisitorController extends Controller {
             $model->attributes = $_POST['User'];
             $model->attributes = $_POST['Visitor'];
 
-            if (isset($_POST['User']['asic_expiry']) && $_POST['User']['asic_expiry']) {
+            if (isset($_POST['User']['asic_expiry']) && !empty($_POST['User']['asic_expiry'])) {
                 $model->asic_expiry = date('Y-m-d', strtotime($_POST['User']['asic_expiry']));
             }
 

@@ -105,7 +105,7 @@ $asicEscort = new AddAsicEscort();
             <input name="Visit[visit_status]" id="Visit_visit_status" type="text" value="1" style="display:none;">
             <input name="Visit[time_check_in]" id="Visit_time_check_in" class="activatevisittimein" type="text" style="display:none;">
             <?php
-            if (!strtotime($model->date_check_in)) {
+            if (!strtotime($model->date_check_in) || $model->date_check_out == '0000-00-00') {
                 $model->date_check_in = date('d-m-Y');
             }
 
@@ -115,9 +115,14 @@ $asicEscort = new AddAsicEscort();
                 $model->date_check_in = date('d-m-Y');
             }
 
-            // Extended Card Type (EVIC) or Multiday
-            if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED]) && $model->visit_status == VisitStatus::AUTOCLOSED) {
-                $model->date_check_in = date("d-m-Y", time() + 86400);
+            // Extended Card Type (EVIC) or 24h
+            if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && $model->visit_status == VisitStatus::AUTOCLOSED) {
+                switch ($model->card_type) {
+                    case CardType::VIC_CARD_24HOURS:
+                    case CardType::VIC_CARD_EXTENDED:
+                        $model->date_check_in = date("d-m-Y", time() + 86400);
+                        break;
+                }
             }
 
             $this->widget('zii.widgets.jui.CJuiDatePicker', array(

@@ -106,17 +106,14 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
         <?php
         if ($asic) {
             if($visitorModel->profile_type ==  Visitor::PROFILE_TYPE_VIC) {
-                array_pop(Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC]);
                 $profileType = Visitor::PROFILE_TYPE_VIC;
                 
             } elseif($visitorModel->profile_type ==  Visitor::PROFILE_TYPE_ASIC) {
-                array_pop(Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_ASIC]);
                 $profileType = Visitor::PROFILE_TYPE_ASIC;
             }
 
             echo CHtml::dropDownList('Visitor[visitor_card_status]', $visitorModel->visitor_card_status, Visitor::$VISITOR_CARD_TYPE_LIST[$profileType], ['empty' => 'Select Card Status']);
                 echo "<br />";
-
         }
 
         $workstationList = CHtml::listData(Utils::populateWorkstation(), 'id', 'name');

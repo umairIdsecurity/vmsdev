@@ -9,10 +9,16 @@ class WorkstationController extends RestfulController {
      * * */
     public function actionIndex() {
         try {
-            $token_user = $this->checkAuth();
+
+            $access_token = $this->getAccessToken() ;
+            if(!$access_token) {
+                $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'HTTP_X_VMS_TOKEN', 'errorDescription' => 'HTTP_X_VMS_TOKEN is invalid.')));
+                return false;
+            }
+
             if (Yii::app()->request->getParam('id')) {
                 $id = Yii::app()->request->getParam('id');
-                $criteria = new CDbCriteria();
+                /*$criteria = new CDbCriteria();
                 $criteria->addCondition('module=1');
                 $validcards = CardType::model()->findAll($criteria);
                 $cardType = array();
@@ -29,7 +35,15 @@ class WorkstationController extends RestfulController {
                     $this->sendResponse(200, CJSON::encode($result));
                 }else{
                     $this->sendResponse(401, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'WORKSTATION_NOT_FOUND', 'errorDescription' => 'workstation not found')));
+                }*/
+                $workstation = WorkstationCardType::model()->findAllByAttributes(array('workstation'=>$id));
+                if ($workstation) {
+                    $result = $this->populateCardType($workstation);
+                    $this->sendResponse(200, CJSON::encode($result));
+                }else{
+                    $this->sendResponse(401, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'WORKSTATION_NOT_FOUND', 'errorDescription' => 'workstation not found')));
                 }
+
             } else {
                 $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'UNAUTHORIZED', 'errorDescription' => 'wrong param for request')));
             }

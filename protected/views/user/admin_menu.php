@@ -17,11 +17,8 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
     echo 'display:none;';
 }
 ?>" class="administrationMenu">
-    <div class="sidebarTitle" style=""><a href="<?php echo Yii::app()->createUrl('workstation/admin') ?>"
-                                          class="dashboard-icon"></a>Administration
-    </div>
+    <div class="sidebarTitle" style=""><a href="<?php echo Yii::app()->createUrl('dashboard/admindashboard'); ?>" class="dashboard-icon"></a>Administration</div>
     <br>
-
     <div id='cssmenu'>
         <ul>
 

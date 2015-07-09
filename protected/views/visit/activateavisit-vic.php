@@ -109,9 +109,7 @@ $asicEscort = new AddAsicEscort();
                 $model->date_check_in = date('d-m-Y');
             }
 
-            $model->date_check_in = date('d-m-Y', strtotime($model->date_check_in));
-
-            if (in_array($model->visit_status, [VisitStatus::SAVED, VisitStatus::CLOSED, VisitStatus::AUTOCLOSED])) {
+            if (in_array($model->visit_status, [VisitStatus::SAVED, VisitStatus::CLOSED, VisitStatus::AUTOCLOSED]) && !in_array($model->card_type, [CardType::VIC_CARD_MANUAL])) {
                 $model->date_check_in = date('d-m-Y');
             }
 
@@ -160,7 +158,7 @@ $asicEscort = new AddAsicEscort();
             }
 
             // Update date check out for Saved, Closed, AutoClosed Visit
-            if (in_array($model->visit_status, [VisitStatus::SAVED, VisitStatus::CLOSED, VisitStatus::AUTOCLOSED]) && !in_array($model->card_type, [CardType::VIC_CARD_24HOURS, CardType::VIC_CARD_EXTENDED])) {
+            if (in_array($model->visit_status, [VisitStatus::SAVED, VisitStatus::CLOSED, VisitStatus::AUTOCLOSED]) && !in_array($model->card_type, [CardType::VIC_CARD_24HOURS, CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MANUAL])) {
                 $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in. ' +1 day'));
                 $model->time_check_out = $model->time_check_in;
             }
@@ -205,7 +203,7 @@ $asicEscort = new AddAsicEscort();
 <script>
     $(document).ready(function() {
         // for Card Type Manual
-        var minDate = '<?php echo $model->card_type == CardType::VIC_CARD_MANUAL ? "-3m" : "0"; ?>';
+        var minDate = '<?php echo $model->card_type == CardType::VIC_CARD_MANUAL ? "-12m" : "0"; ?>';
         var maxDate = '<?php echo in_array($model->card_type, [CardType::VIC_CARD_MULTIDAY]) ? "+28d" : "0"; ?>';
         refreshTimeIn();
 
@@ -222,7 +220,7 @@ $asicEscort = new AddAsicEscort();
                 var date         = dateText.substring(0, 2);
                 var month        = dateText.substring(3, 5);
                 var year         = dateText.substring(6, 10);
-                var selectedDate = new Date(year, month-1, date);
+                var selectedDate = new Date(year, month-1, date, '23', '59', '59');
 
                 $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "option", "minDate", selectedDate);
 
@@ -247,9 +245,9 @@ $asicEscort = new AddAsicEscort();
                     updateTextVisitButton("");
 
                     <?php if ($model->card_type == CardType::VIC_CARD_MANUAL) { // show Back Date Visit
-                        echo 'updateTextVisitButton("Back Date Visit", "");';
+                        echo 'updateTextVisitButton("Back Date Visit", "backDateVisit", "backdate");';
                     } else {
-                        echo 'updateTextVisitButton("Activate Visit", "registerNewVisit");';
+                        echo 'updateTextVisitButton("Activate Visit", "registerNewVisit", "active");';
                     }
                     ?>
 
@@ -264,7 +262,14 @@ $asicEscort = new AddAsicEscort();
                         ';
                 }
 
-                if (in_array($model->card_type, [CardType::VIC_CARD_24HOURS, CardType::VIC_CARD_MANUAL])) {
+                if (in_array($model->card_type, [CardType::VIC_CARD_MANUAL])) {
+                    echo '  var checkoutDate = new Date(selectedDate);
+                            checkoutDate.setDate(selectedDate.getDate());
+                            $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "setDate", checkoutDate);
+                        ';
+                }
+
+                if (in_array($model->card_type, [CardType::VIC_CARD_24HOURS])) {
                     echo '  var checkoutDate = new Date(selectedDate);
                             checkoutDate.setDate(selectedDate.getDate() + 1);
                             $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "setDate", checkoutDate);
@@ -283,7 +288,7 @@ $asicEscort = new AddAsicEscort();
             minDate: minDate,
             //maxDate: "+28d",
             dateFormat: "dd-mm-yy",
-            disabled: <?php echo in_array($model->card_type, [CardType::VIC_CARD_24HOURS]) ? "true" : "false"; ?>,
+            disabled: <?php echo in_array($model->card_type, [CardType::VIC_CARD_24HOURS, CardType::VIC_CARD_MANUAL]) ? "true" : "false"; ?>,
             onClose: function (date) {
                 var day      = date.substring(0, 2);
                 var month    = date.substring(3, 5);

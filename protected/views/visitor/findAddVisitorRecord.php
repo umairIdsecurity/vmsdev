@@ -801,10 +801,11 @@ $model->identification_country_issued = 13;
 
                 checkReasonIfUnique();
 
-            } else if(  $("#Visitor_photo").val() == "" &&
-                $("#cardtype").val() != 1 &&
-                $("#cardtype").val() != ' . CardType::MANUAL_VISITOR . ' &&
-                $("#cardtype").val() != ' . CardType::VIC_CARD_SAMEDATE . '
+            } else if($("#Visitor_photo").val() == "" &&
+                $("#cardtype").val() != <?php echo CardType::SAME_DAY_VISITOR; ?>  &&
+                $("#cardtype").val() != <?php echo CardType::MANUAL_VISITOR; ?>  &&
+                $("#cardtype").val() != <?php echo CardType::VIC_CARD_SAMEDATE; ?>  && 
+                $("#cardtype").val() != <?php echo CardType::VIC_CARD_MANUAL; ?>
             ){
                 $("#photoErrorMessage").show();
             } else {

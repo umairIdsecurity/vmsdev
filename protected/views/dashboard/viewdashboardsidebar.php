@@ -16,7 +16,7 @@ $session = new ChttpSession;
 <input type="hidden" value="<?php echo $session['role'] ?>" id="sessionRoleForSideBar">
 
 <div id="sidebar2">
-    <div class="sidebarTitle" style=""><a href="#" class="dashboard-icon"></a>Main Menu</div><br><div id='cssmenu' class="dashboardMenu">
+    <div class="sidebarTitle" style=""><a href="<?php echo Yii::app()->createUrl('dashboard/admindashboard') ?>" class="dashboard-icon"></a>Main Menu</div><br><div id='cssmenu' class="dashboardMenu">
         <ul>
 
             <li class=''><a href='<?php echo Yii::app()->createUrl('visitor/create&action=register'); ?>' id="addvisitorSidebar" class="sidemenu-icon log-current"><span>Log Visit</span></a></li>

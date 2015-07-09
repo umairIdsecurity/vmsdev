@@ -749,7 +749,7 @@ class VisitorController extends Controller {
         if (isset($_GET['searchInfo'])) {
             $searchInfo = $_GET['searchInfo'];
             $merge = new CDbCriteria;
-            $conditionString = "escort_flag = 1 AND (CONCAT(first_name,' ',last_name) like '%" . $searchInfo
+            $conditionString = "profile_type = 'ASIC' AND (CONCAT(first_name,' ',last_name) like '%" . $searchInfo
                 . "%' or first_name like '%" . $searchInfo
                 . "%' or last_name like '%" . $searchInfo
                 . "%' or email like '%" . $searchInfo
@@ -759,12 +759,10 @@ class VisitorController extends Controller {
             $model = new Visitor('search');
             $model->unsetAttributes();
 
-
             return $this->renderPartial('findAsicEscort', array(
                 'merge' => $merge,
                 'model' => $model,
-            ));
-        } else {
+            ),false,true);
         }
     }
 }

@@ -284,7 +284,7 @@ $form = $this->beginWidget('CActiveForm', array(
     <td>
 
 
-        <?php echo $form->textField($model, 'first_name', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'First Name')); ?>
+        <?php echo $form->textField($model, 'first_name', array('size' => 15, 'maxlength' => 15, 'placeholder' => 'First Name')); ?>
         <span class="required">*</span>
 
         <?php echo "<br>" . $form->error($model, 'first_name'); ?>
@@ -297,7 +297,7 @@ $form = $this->beginWidget('CActiveForm', array(
 
     <td>
 
-        <?php echo $form->textField($model, 'last_name', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Last Name')); ?>
+        <?php echo $form->textField($model, 'last_name', array('size' => 15, 'maxlength' => 15, 'placeholder' => 'Last Name')); ?>
         <span class="required">*</span>
 
         <?php echo "<br>" . $form->error($model, 'last_name'); ?>

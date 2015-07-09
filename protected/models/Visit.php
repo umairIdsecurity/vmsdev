@@ -847,7 +847,7 @@ class Visit extends CActiveRecord {
             $command = Yii::app()->db->createCommand("UPDATE visit
                     SET visit_status = '" . VisitStatus::EXPIRED
                         . "', card_option ='" . CardStatus::RETURNED
-                        . "', finish_date = CURDATE(), '%Y-%m-%d'), finish_time = CURTIME()
+                        . "', finish_date = CURDATE(), finish_time = CURTIME()
                     WHERE CURRENT_DATE > date_check_out
                     AND CURRENT_TIME > time_check_out
                     AND visit_status = '" . VisitStatus::ACTIVE . "'

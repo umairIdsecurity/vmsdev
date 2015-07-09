@@ -547,7 +547,11 @@ class Visitor extends CActiveRecord {
         $criteria->condition = 't.is_deleted = 0';
         if (isset(yii::app()->user->role)) {
             if (Yii::app()->user->role != Roles::ROLE_SUPERADMIN) {
-                $criteria->condition = "t.is_deleted = 0 and t.tenant = " . Yii::app()->user->tenant;
+                if(isset(Yii::app()->user->tenant)){
+                    $criteria->condition = "t.is_deleted = 0 and t.tenant = " . Yii::app()->user->tenant;
+                } else {
+                    $criteria->condition = 't.is_deleted = 0';
+                }
             }
         }
         $this->dbCriteria->mergeWith($criteria);

@@ -37,10 +37,11 @@ if (in_array($model->visit_status, [VisitStatus::CLOSED])) {
 
     // Please edit datePicker options attributes here for apply all datePicker fields
     $datePickerOptionAttributes = [
-        'disabled' => 'disabled',
-        'dateFormat' => "dd-mm-yy",
+        'disabled'    => 'disabled',
+        'dateFormat'  => "dd-mm-yy",
+        'minDate'     => "0",
         'changeMonth' => true,
-        'changeYear' => true
+        'changeYear'  => true
     ];
 
     // Please update datePicker style here for apply to all datePicker field on visitor detail page
@@ -49,12 +50,13 @@ if (in_array($model->visit_status, [VisitStatus::CLOSED])) {
 
     // Please edit datePicker options attributes here for apply all datePicker fields
     $datePickerOptionAttributes = [
-        'showOn' => "button",
-        'buttonImage' => Yii::app()->controller->assetsBase . "/images/calendar.png",
+        'showOn'          => "button",
+        'buttonImage'     => Yii::app()->controller->assetsBase . "/images/calendar.png",
         'buttonImageOnly' => true,
-        'dateFormat' => "dd-mm-yy",
-        'changeMonth' => true,
-        'changeYear' => true
+        'dateFormat'      => "dd-mm-yy",
+        'minDate'         => "0",
+        'changeMonth'     => true,
+        'changeYear'      => true
     ];
 
     // Please update datePicker style here for apply all datePicker fields
@@ -602,14 +604,14 @@ $visitorForm = $this->beginWidget('CActiveForm', [
             <ul>
                 <li>
                     <table id="asicSponsorDetailsTable" class="detailsTable">
+                        <input type="hidden" name="Escort[id]" value="<?php echo $asicEscort->id; ?>">
                         <tr>
                             <td width="110px;" class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                                 First Name
                             </td>
 
                             <td style="padding-left: 0 !important;">
-                                <input class="visitor-detail-info-field"  <?php echo $disabled; ?> type="text" value="<?php echo $asicEscort->first_name; ?>"
-                                       name="Escort[asic_escort_asic_first_name]" id="Visitor_asic_first_name">
+                                <?php echo $visitorForm->textField($asicEscort, 'first_name', ['disabled' => $disabled, 'name' => 'Escort[first_name]']); ?>
                             </td>
                         </tr>
 
@@ -618,8 +620,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                 Last Name
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input class="visitor-detail-info-field"  <?php echo $disabled; ?> type="text" value="<?php echo $asicEscort->last_name; ?>"
-                                       name="Escort[last_name]" id="Visitor_asic_last_name">
+                                <?php echo $visitorForm->textField($asicEscort, 'last_name', ['disabled' => $disabled, 'name' => 'Escort[last_name]']); ?>
                             </td>
                         </tr>
 
@@ -628,8 +629,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                 ASIC No.
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" <?php echo $disabled; ?> class="visitor-detail-info-field" value="<?php echo $asicEscort->asic_no; ?>"
-                                       name="Escort[asic_no]" id="Visitor_asic_no">
+                                <?php echo $visitorForm->textField($asicEscort, 'asic_no', ['disabled' => $disabled, 'name' => 'Escort[asic_no]']); ?>
                             </td>
                         </tr>
                         <tr>
@@ -639,25 +639,19 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                             <td style="padding-left: 0 !important;">
                                 <?php
                                 $asicEscort->asic_expiry = !is_null($asicEscort->asic_expiry) ? date('d-m-Y', strtotime($asicEscort->asic_expiry)) : date('d-m-Y');
-                                $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                    'model' => $asicEscort,
+                                $this->widget('zii.widgets.jui.CJuiDatePicker', [
+                                    'model'     => $asicEscort,
                                     'attribute' => 'asic_expiry',
-                                    'htmlOptions' => array(
+                                    'htmlOptions' => [
                                         'size'        => '10', // textField size
                                         'maxlength'   => '10', // textField maxlength
                                         'placeholder' => 'dd-mm-yyyy',
                                         'readOnly'    => 'readOnly',
-                                        'style'       => 'width:83%',
-                                        'name'        => 'Escort[asic_expiry]'
-                                    ),
-                                    'options' => array(
-                                        'showOn'          => "button",
-                                        'buttonImage'     => Yii::app()->controller->assetsBase . "/images/calendar.png",
-                                        'buttonImageOnly' => true,
-                                        'minDate'         => "0",
-                                        'dateFormat'      => "dd-mm-yy",
-                                    )
-                                ));
+                                        'name'        => 'Escort[asic_expiry]',
+                                        'style'       => $datePickerStyle
+                                    ],
+                                    'options' => $datePickerOptionAttributes
+                                ]);
                                 ?>
                             </td>
                         </tr>

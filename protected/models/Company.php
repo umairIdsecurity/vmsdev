@@ -79,7 +79,7 @@ class Company extends CActiveRecord {
 	            array('logo,is_deleted,company_laf_preferences ,is_user_field, company_type', 'safe'),
                     
                     // Senario for Add Tenant
-                    array('code, name, contact, email_address, office_number, created_by_user','required', 'on' => 'add_tenant'),
+                    array('code, name, contact, email_address, office_number','required', 'on' => 'add_tenant'),
                     
 	            array('tenant, tenant_agent,logo,card_count', 'default', 'setOnEmpty' => true, 'value' => null),
 	            // The following rule is used by search().
@@ -110,7 +110,7 @@ class Company extends CActiveRecord {
                             array('tenant, tenant_agent,logo,card_count', 'default', 'setOnEmpty' => true, 'value' => null),
                             
                             // Senario for Add Tenant
-                            array('code, name, contact, email_address, office_number, created_by_user','required', 'on' => 'add_tenant'),
+                            array('code, name,  email_address, office_number','required', 'on' => 'add_tenant'),
                             
                             // The following rule is used by search().
                             // @todo Please remove those attributes that should not be searched.
@@ -119,11 +119,6 @@ class Company extends CActiveRecord {
                             
                             );
 		}
-                  $companyModel->email_address = $_POST['TenantForm']['email'];
-                $companyModel->office_number = $_POST['TenantForm']['contact_number'];
-                $companyModel->mobile_number = $_POST['TenantForm']['contact_number'];
-                $companyModel->is_deleted = 0;
-                $companyModel->created_by_user = Yii::app()->user->id;
         
     }
 

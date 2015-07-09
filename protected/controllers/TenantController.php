@@ -58,9 +58,9 @@ class TenantController extends Controller {
         $session = new CHttpSession;
         $model = new TenantForm;
         if(yii::app()->request->isAjaxRequest){
-            if($_POST['TenantForm']['password_opt']==1){
+            if( $_POST['TenantForm']['password_opt']==1 ){
                 $model->scenario = "passwordrequire";
-            }
+            }  
             $this->performAjaxValidation($model);
         }
         
@@ -75,29 +75,32 @@ class TenantController extends Controller {
                     $companyModel = new Company;
                     $photo = new Photo;
                         
-                $photolastId = 0;
+                $photolastId = NULL;
                 if (isset($_POST['TenantForm']['photo']) && $_POST['TenantForm']['photo'] != "") {
-                    $photolastId = $_POST['TenantForm']['photo'];
+                    $photolastId = $_POST['TenantForm']['photo']; 
                 }  
                 /**
                  * Saving Tenant Info as a new company
                  */
+                
                 $companyModel->scenario = 'add_tenant';
                 $companyModel->code = $_POST['TenantForm']['tenant_code'];
                 $companyModel->name = $_POST['TenantForm']['tenant_name'];
                 $companyModel->trading_name = $_POST['TenantForm']['tenant_name'];
-                $companyModel->logo = $photolastId;/*logo image id*/
+                $companyModel->logo = $photolastId; /*logo image id*/
                 $companyModel->contact = $_POST['TenantForm']['contact_number'];
                 $companyModel->email_address = $_POST['TenantForm']['email'];
-                $companyModel->office_number = $_POST['TenantForm']['contact_number'];
-                $companyModel->mobile_number = $_POST['TenantForm']['contact_number'];
+                $companyModel->office_number = str_replace(" ","",$_POST['TenantForm']['contact_number']);
+                $companyModel->mobile_number =  str_replace(" ","", $_POST['TenantForm']['contact_number']);
                 $companyModel->is_deleted = 0;
                 $companyModel->created_by_user = Yii::app()->user->id;
-                $comapanylastId = 0;
+                $companyModel->company_type = 1; // For Tenant 
                 
-               
-                if ( $companyModel->validate() ) {
-                    $companyModel->save();
+                $comapanylastId = 0;
+                                 
+                   if ( $companyModel->validate() ) {
+                    
+                    $companyModel->save();  
                     $comapanylastId = $companyModel->id;
                     
                     $userModel->first_name = $_POST['TenantForm']['first_name'];
@@ -146,7 +149,14 @@ class TenantController extends Controller {
                             $tenantContact->user = $userLastID;
                             if ($tenantContact->validate()) {
                                 $tenantContact->save();
-                                $transaction->commit();
+                                $transaction->commit(); 
+                                
+                                /** 
+                                 * Send User invitation to set password him/her self.
+                                 */
+                                 if( $_POST['TenantForm']['password_opt'] == 2 ){
+                                    User::model()->restorePassword($userModel->email);                           
+                                 }
                                  
                             } else {
                                 $transaction->rollback();
@@ -160,23 +170,24 @@ class TenantController extends Controller {
                         
                  }
  
-                } else {  
+                } else { 
+                    //print_r($companyModel->getErrors());
                     $transaction->rollback();
                   }
                 
                   Yii::app()->user->setFlash('success', "Tenant inserted Successfully");
-                echo json_encode(array('success'=>TRUE));
+                //echo json_encode(array('success'=>TRUE));
             
                 
                 }   catch (CDbException $e)
                     {
                         $transaction->rollback();
-                                        echo $e->getMessage();
+                        echo $e->getMessage();
                         Yii::app()->user->setFlash('error', "There was an error processing request");
-                        echo json_encode(array('success'=>FALSE));
+                        //echo json_encode(array('success'=>FALSE));
                     }
              
-            exit;
+           
         }
         $this->render('create', array(
             'model' => $model,

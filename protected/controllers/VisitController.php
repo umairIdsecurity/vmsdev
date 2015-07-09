@@ -370,6 +370,17 @@ class VisitController extends Controller {
 
         #update Visitor and Host form ( middle column on visitor detail page )
         if (isset($_POST['updateVisitorInfo'])) {
+
+            // Change date formate from d-m-Y to Y-m-d
+            if (!empty($this->date_of_birth)) 
+                $this->date_of_birth =  date('Y-m-d', strtotime($this->date_of_birth));
+
+            if (!empty($this->asic_expiry)) 
+                $this->asic_expiry =  date('Y-m-d', strtotime($this->asic_expiry));
+
+            if (!empty($this->identification_document_expiry)) 
+                $this->identification_document_expiry =  date('Y-m-d', strtotime($this->identification_document_expiry));
+            
             if (isset($_POST['ASIC'])) {
                 $asicModel = Visitor::model()->findByPk($model->host);
 
@@ -398,6 +409,18 @@ class VisitController extends Controller {
                 // Save host profile
                 if (!$hostModel->save()) {
                     // Do something if save process failure
+                }
+            }
+
+            if (isset($_POST['Escort'])) {
+                $escortParams = Yii::app()->request->getPost('Escort');
+                $escortModel  = Visitor::model()->findByPk($escortParams['id']);
+
+                $escortModel->attributes = $escortParams;
+                $escortModel->scenario   = 'updateVic';
+                // Save escort profile
+                if (!$escortModel->save()) {
+                    // Do something if save escort failure
                 }
             }
 
@@ -456,9 +479,9 @@ class VisitController extends Controller {
                     switch ($model->card_type) {
                         case CardType::VIC_CARD_24HOURS: // VIC 24 hour
                             #change datetime check in and out for vic 24h.
-                            $model->date_check_in = $model->date_check_out;
+                            $model->date_check_in  = $model->date_check_out;
                             $model->date_check_out = date('Y-m-d', strtotime('+1 day', strtotime($model->date_check_out)));
-                            $model->time_check_in = date('H:i:s', strtotime('+1 minutes', strtotime($model->date_check_in.' '.$model->time_check_in)));
+                            $model->time_check_in  = date('H:i:s', strtotime('+1 minutes', strtotime($model->date_check_in.' '.$model->time_check_in)));
                             $model->time_check_out = $model->time_check_in;
                             break;
                         case CardType::VIC_CARD_EXTENDED: // VIC Extended
@@ -494,15 +517,15 @@ class VisitController extends Controller {
         $visitCount['remainingDays'] = $model->remainingDays;
 
         $this->render('visitordetail', array(
-            'model' => $model,
-            'visitorModel' => $visitorModel ? $visitorModel : new Visitor(),
-            'reasonModel' => $reasonModel,
-            'hostModel' => $hostModel,
-            'patientModel' => $patientModel,
-            'newPatient' => $newPatient,
-            'newHost' => $newHost,
-            'visitCount' => $visitCount,
-            'cardTypeModel' => $cardTypeModel,
+            'model'         => $model,
+            'visitorModel'  => $visitorModel ? $visitorModel : new Visitor,
+            'reasonModel'   => $reasonModel,
+            'hostModel'     => $hostModel,
+            'patientModel'  => $patientModel,
+            'newPatient'    => $newPatient,
+            'newHost'       => $newHost,
+            'visitCount'    => $visitCount,
+            'cardTypeModel' => $cardTypeModel
         ));
     }
 

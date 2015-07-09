@@ -124,7 +124,7 @@ $model->identification_country_issued = 13;
 
                         <table id="addvisitor-table" class="second-column" data-ng-app="PwordForm" style="width:262px;float:left;">
 
-                            <tr>
+                            <tr id="limit-first-name">
                                 <td>
                                     <?php echo $form->textField($model, 'first_name',
                                         array('size' => 50, 'maxlength' => 50, 'placeholder' => 'First Name')); ?>
@@ -138,7 +138,7 @@ $model->identification_country_issued = 13;
                                     <?php echo "<br>" . $form->error($model, 'middle_name'); ?>
                                 </td>
                             </tr>
-                            <tr>
+                            <tr id="limit-last-name">
                                 <td>
                                     <?php echo $form->textField($model, 'last_name',
                                         array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Last Name')); ?>
@@ -1029,7 +1029,6 @@ $model->identification_country_issued = 13;
                 $("#searchTextErrorMessage").html("Please enter a name");
             }
         });
-
 
     });
 	

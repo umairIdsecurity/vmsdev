@@ -454,6 +454,7 @@ class CompanyController extends Controller {
 
             if ($contact) {
                 $ret = [
+                    'id'             => $contact->id,
                     'first_name'     => $contact->first_name,
                     'last_name'      => $contact->last_name,
                     'contact_number' => $contact->contact_number,

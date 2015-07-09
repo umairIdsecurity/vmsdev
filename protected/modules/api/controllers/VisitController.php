@@ -21,26 +21,49 @@ class VisitController extends RestfulController {
 
                 $this->validateData($data);
 
-                //check Visitor ID
-                $visitor = Visitor::model()->findByPk($data['visitorID']);
+                // check workstation:
+                $workstation = Workstation::model()->findByPk($data['workstation']);
+                if(!$workstation) {
+                    $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'NO_WORKSTATION_FOUND', 'errorDescription' => 'Workstation found for this visit')));
+                    return false;
+                }
+
+                // check Visitor ID
+                if ( $data['visitCardType'] > CardType::CONTRACTOR_VISITOR) {
+                    $visitorProfileType = Visitor::PROFILE_TYPE_VIC;
+                } else {
+                    $visitorProfileType = Visitor::PROFILE_TYPE_CORPORATE;
+                }
+
+                // $visitor = Visitor::model()->findByPk($data['visitorID']);
+                $visitor = Visitor::model()->findByAttributes(['id' => $data['visitorID'], 'profile_type'=>$visitorProfileType]);
+
                 if(!$visitor) {
                     $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'NO_VISIT_FOUND', 'errorDescription' => 'Visitor found for this visit')));
                     return false;
                 }
 
                 //check Host ID
-                $host = User::model()->with('com')->findByPk($data['hostID']);
-                if (!$host) {
+                $getHost = Visitor::model()->findByAttributes(['id' => $data['hostID'], 'profile_type'=>$visitorProfileType]);
+                //$getHost = User::model()->with('com')->findByPk($data['hostID']);
+                if (!$getHost) {
                     $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'NO_VISIT_FOUND', 'errorDescription' => 'Host not found for this visit')));
+                }
+
+                // check visit is created ? and return visit
+
+                $isVisit = Visit::model()->findByAttributes(array('visitor' => $data['visitorID'], 'host' => $data['hostID'], 'visit_status'=>VisitStatus::SAVED) );
+                if($isVisit){
+                    $this->sendResponse(201, CJSON::encode($isVisit));
                 }
 
                 $visit = new Visit();
                 $visit->scenario = 'api';
                 $visit->host = $data['hostID'];
-                $visit->visitor_type = isset($data['visitorType']) ? $data['visitorType'] : NULL;
+                $visit->visitor_type = $data['visitorType'];
                 $visit->visitor = $data['visitorID'];
-                $visit->card_type = isset($data['visitCardType']) ? $data['visitCardType']:1;
-                $visit->visit_status = isset($data['visitorStatus']) ? $data['visitorStatus']:5;
+                $visit->card_type = $data['visitCardType'];
+                $visit->visit_status = isset($data['visitorStatus']) ? $data['visitorStatus']: VisitStatus::SAVED;
                 $visit->date_check_in = isset($data['startTime']) ? date('d-m-Y', strtotime($data['startTime'])) : NULL;
                 $visit->time_check_in = isset($data['startTime']) ? date('H:i:s', strtotime($data['startTime'])) : NULL;
                 $visit->date_check_out = isset($data['expectedEndTime']) ? date('d-m-Y', strtotime($data['expectedEndTime'])) : NULL;

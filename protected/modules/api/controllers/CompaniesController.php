@@ -38,7 +38,8 @@ class CompaniesController extends RestfulController {
             if (Yii::app()->request->getParam('query')) {
                 $query = Yii::app()->request->getParam('query');
                 $criteria = new CDbCriteria();
-                $criteria->addSearchCondition("code", $query,true);
+                $criteria->addSearchCondition("code", $query,true,'OR');
+                $criteria->addSearchCondition("name", $query,true,'OR','LIKE');
                 $company = Company::model()->find($criteria);
                 if($company){
                     $result = $this->populateCompanies(array($company));

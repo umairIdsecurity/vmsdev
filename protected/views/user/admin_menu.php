@@ -259,27 +259,43 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
 
             <?php if ($session['role'] == Roles::ROLE_SUPERADMIN) {
                 ?>
-                <!-- menu for Visitors -->
+                <!-- menu for CVMS Visitors -->
                 <li class='has-sub'><a class='managevisitorrecords'
-                                       href='<?php echo Yii::app()->createUrl('visitor/admin'); ?>'><span>Visitors</span></a>
+                                       href='<?php echo Yii::app()->createUrl('visitor/admin', array('vms' => 'cvms')); ?>'><span>CVMS Visitors</span></a>
 
                     <ul <?php
-                    if ($this->id == 'visitor' || $this->action->id == 'exportvisitorrecords') {
+                    if ( ($this->id == 'visitor' && Yii::app()->request->getParam('vms') == 'cvms') || $this->action->id == 'exportvisitorrecords') {
                         echo "style='display:block ;'";
                     }
                     ?>>
-                        <li><a href='<?php echo Yii::app()->createUrl('visitor/addvisitor'); ?>'
-                               class="addSubMenu"><span>Add Visitor Profile</span></a></li>
-                        <li><a href='<?php echo Yii::app()->createUrl('visitor/create&action=register'); ?>'
-                               class="addSubMenu"><span>Log Visit</span></a></li>
-                        <li><a href='<?php echo Yii::app()->createUrl('visitor/create&action=preregister'); ?>'
-                               class="addSubMenu"><span>Preregister Visit</span></a></li>
                         <li><a href='<?php echo Yii::app()->createUrl('visit/exportvisitorrecords'); ?>'><span>Export Visit History</span></a>
                         </li>
                         <li><a href='<?php echo Yii::app()->createUrl('visitor/importVisitHistory'); ?>'><span>Import Visit History</span></a>
                         </li>
                     </ul>
-                </li>   <!-- menu for Visitors -->
+                </li>  <!-- end menu for CVMS Visitors -->
+
+                <!-- menu for AVMS Visitors -->
+                <li class='has-sub'><a class='managevisitorrecords'
+                                       href='<?php echo Yii::app()->createUrl('visitor/admin', array('vms' => 'avms')); ?>'><span>AVMS Visitors</span></a>
+
+                    <ul <?php
+                    if ( ($this->id == 'visitor' && Yii::app()->request->getParam('vms') == 'avms')  || $this->action->id == 'exportvisitorrecords') {
+                        echo "style='display:block ;'";
+                    }
+                    ?>>
+                        <!--<li><a href='<?php /*echo Yii::app()->createUrl('visitor/addvisitor'); */?>'
+                               class="addSubMenu"><span>Add Visitor Profile</span></a></li>
+                        <li><a href='<?php /*echo Yii::app()->createUrl('visitor/create&action=register'); */?>'
+                               class="addSubMenu"><span>Log Visit</span></a></li>
+                        <li><a href='<?php /*echo Yii::app()->createUrl('visitor/create&action=preregister'); */?>'
+                               class="addSubMenu"><span>Preregister Visit</span></a></li>-->
+                        <li><a href='<?php echo Yii::app()->createUrl('visit/exportvisitorrecords'); ?>'><span>Export Visit History</span></a>
+                        </li>
+                        <li><a href='<?php echo Yii::app()->createUrl('visitor/importVisitHistory'); ?>'><span>Import Visit History</span></a>
+                        </li>
+                    </ul>
+                </li>   <!-- end menu for AVMS Visitors -->
 
                         <!-- menu for Visitors Types -->
                 <li class='has-sub'>

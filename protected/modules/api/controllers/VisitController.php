@@ -50,13 +50,20 @@ class VisitController extends RestfulController {
                     $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'NO_VISIT_FOUND', 'errorDescription' => 'Host not found for this visit')));
                 }
 
+                // check visit is created ? and return visit
+
+                $isVisit = Visit::model()->findByAttributes(array('visitor' => $data['visitorID'], 'host' => $data['hostID'], 'visit_status'=>VisitStatus::SAVED) );
+                if($isVisit){
+                    $this->sendResponse(201, CJSON::encode($isVisit));
+                }
+
                 $visit = new Visit();
                 $visit->scenario = 'api';
                 $visit->host = $data['hostID'];
                 $visit->visitor_type = $data['visitorType'];
                 $visit->visitor = $data['visitorID'];
                 $visit->card_type = $data['visitCardType'];
-                $visit->visit_status = isset($data['visitorStatus']) ? $data['visitorStatus']:5;
+                $visit->visit_status = isset($data['visitorStatus']) ? $data['visitorStatus']: VisitStatus::SAVED;
                 $visit->date_check_in = isset($data['startTime']) ? date('d-m-Y', strtotime($data['startTime'])) : NULL;
                 $visit->time_check_in = isset($data['startTime']) ? date('H:i:s', strtotime($data['startTime'])) : NULL;
                 $visit->date_check_out = isset($data['expectedEndTime']) ? date('d-m-Y', strtotime($data['expectedEndTime'])) : NULL;

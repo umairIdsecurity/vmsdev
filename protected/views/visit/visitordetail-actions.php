@@ -401,6 +401,13 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
 
             e.preventDefault();
             $this = $(this);
+
+            if ($this.val() == 'backdate') {
+                // Close a visit if card type is manual and operator select check in date less then current date
+                closeVisit();
+                return false;
+            }
+
             var flag = true;
             var $btnVic = $('#btnVicConfirm'),
                 $btnASIC = $('#btnAsicConfirm');
@@ -513,6 +520,28 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             } else {
                 checkIfActiveVisitConflictsWithAnotherVisit('new');
             }
+        }
+
+        function closeVisit() {
+            var data = $('#activate-a-visit-form').serialize();
+            var url = "<?php echo Yii::app()->createUrl('visit/closeVisit&id='.$model->id); ?>";
+            $.post(url, {data: data}, function(r) {
+                if (r == 1) {
+                    window.location.reload();
+                }   
+            });
+            /*$.ajax({
+                url: "<?php echo Yii::app()->createUrl('visit/closeVisit?id='.$model->id); ?>",
+                type: 'POST',
+                dataType: 'json',
+                data: data,
+                success: function(r) {console.log(r);return false;
+                    if (r == 1) {
+                        window.location.reload();
+                    }
+                }
+            });*/
+            
         }
 
         $('#cancelActiveVisitButton').on('click', function (e) {

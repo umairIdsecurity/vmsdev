@@ -29,7 +29,7 @@ class VisitController extends Controller {
                 'actions' => array('create',
                     'DuplicateVisit', 'isDateConflictingWithAnotherVisit',
                     'GetVisitDetailsOfVisitor', 'getVisitDetailsOfHost', 'IsVisitorHasCurrentSavedVisit',
-                    'update', 'detail', 'admin', 'view', 'exportFile', 'evacuationReport', 'evacuationReportAjax', 'DeleteAllVisitWithSameVisitorId'),
+                    'update', 'detail', 'admin', 'view', 'exportFile', 'evacuationReport', 'evacuationReportAjax', 'DeleteAllVisitWithSameVisitorId', 'closeVisit'),
                 'users' => array('@'),
             ),
             array('allow',
@@ -527,6 +527,26 @@ class VisitController extends Controller {
             'visitCount'    => $visitCount,
             'cardTypeModel' => $cardTypeModel
         ));
+    }
+
+    public function actionCloseVisit($id) {
+        $model = $this->loadModel($id);
+
+        if ($model) {
+            parse_str(Yii::app()->request->getPost('data'), $request);
+            $model->attributes = $request['Visit'];
+            $model->visit_status = VisitStatus::CLOSED;
+
+            if (!$model->save()) {
+                echo 0;
+                Yii::app()->end();
+            }
+            echo 1;
+            Yii::app()->end();
+        } else {
+            echo 0;
+            Yii::app()->end();
+        }
     }
 
     /* Visitor Records */

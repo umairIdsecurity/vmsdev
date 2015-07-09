@@ -501,7 +501,7 @@ function checkAsicStatusById(id){
                             $("#searchHostTableDiv h4").html("Selected "+getCardType()+" Record : " + value.first_name + " " + value.last_name);
                         });
                         $('#searchHostTable').contents().find('.findHostButtonColumn a').removeClass('delete');
-                        $('#searchHostTable').contents().find('.findHostButtonColumn a').html('Select Host');
+                        $('#searchHostTable').contents().find('.findHostButtonColumn a').html('Select'+getCardType());
                         $('#searchHostTable').contents().find('#' + id).addClass('delete');
                         $('#searchHostTable').contents().find('#' + id).html(getCardType()+' Selected');
                    }

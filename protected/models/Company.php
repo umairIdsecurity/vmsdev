@@ -58,9 +58,9 @@ class Company extends CActiveRecord {
     public function rules() {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
-		echo $this->userRole;
+		 $this->userRole = Yii::app()->user->role;
 		if($this->userRole == 1){
-			return array(
+		return array(
 	            array('name', 'required'),
 	            array('user_first_name , user_last_name , user_email , user_contact_number', 'required' , 'on' => 'company_contact'),
 				array('name , code , email_address , mobile_number', 'required' , 'on' => 'updatetenant'),
@@ -77,6 +77,10 @@ class Company extends CActiveRecord {
 	            array('contact', 'length', 'max' => 100),
 	            array('tenant', 'length', 'max' => 100),
 	            array('logo,is_deleted,company_laf_preferences ,is_user_field, company_type', 'safe'),
+                    
+                    // Senario for Add Tenant
+                    array('code, name, contact, email_address, office_number, created_by_user','required', 'on' => 'add_tenant'),
+                    
 	            array('tenant, tenant_agent,logo,card_count', 'default', 'setOnEmpty' => true, 'value' => null),
 	            // The following rule is used by search().
 	            // @todo Please remove those attributes that should not be searched.
@@ -85,41 +89,41 @@ class Company extends CActiveRecord {
 		}
 		else{
 			return array(
-                //array('code', 'safe' , 'on' => 'visit_reason'),
-	            array('name', 'required'),
+                
+                            array('name', 'required'),
+                            array('code', 'required', 'except' => 'preregistration'),
+                            array(' email_address , mobile_number', 'required' , 'on' => 'updatetenant'),
+                            array('mobile_number', 'numerical', 'integerOnly' => true, 'on' => 'updatetenant'),
 
-                array('code', 'required', 'except' => 'preregistration'),
-
-                //array('user_first_name , user_last_name , user_email , user_contact_number', 'required' , 'on' => 'company_contact'),
-	//            array('code', 'unique'),
-	//            array('code', 'unique', 'criteria' => array(
-	//                    'condition' => 'tenant=:tenant',
-	//                    'params' => array(
-	//                        ':tenant' => Yii::app()->user->tenant
-	//                    )
-	//                )),
-	
-				array(' email_address , mobile_number', 'required' , 'on' => 'updatetenant'),
-                array('mobile_number', 'numerical', 'integerOnly' => true, 'on' => 'updatetenant'),
-				
-	            array('code', 'length', 'min' => 3, 'max' => 3, 'tooShort' => 'Code is too short (Should be in 3 characters)'),
-	            array('code', 'match',
-	                'pattern' => '/^[a-zA-Z\s]+$/',
-	                'message' => 'Code can only contain letters'),
-	            array('email_address', 'email'),
-	            array('website', 'url'),
-	            array('office_number, mobile_number, created_by_user, created_by_visitor', 'numerical', 'integerOnly' => true),
-	            array('name, trading_name, billing_address', 'length', 'max' => 150),
-	            array('email_address, website', 'length', 'max' => 50),
-	            array('contact', 'length', 'max' => 100),
-	            array('tenant', 'length', 'max' => 100),
-	            array('logo,is_deleted,company_laf_preferences', 'safe'),
-	            array('tenant, tenant_agent,logo,card_count', 'default', 'setOnEmpty' => true, 'value' => null),
-	            // The following rule is used by search().
-	            // @todo Please remove those attributes that should not be searched.
-	            array('id, isTenant,card_count, name,code,company_laf_preferences, trading_name, logo,tenant, contact, billing_address, email_address, office_number, mobile_number, website, created_by_user, created_by_visitor', 'safe', 'on' => 'search'),
-	        );
+                            array('code', 'length', 'min' => 3, 'max' => 3, 'tooShort' => 'Code is too short (Should be in 3 characters)'),
+                            array('code', 'match',
+                                'pattern' => '/^[a-zA-Z\s]+$/',
+                                'message' => 'Code can only contain letters'),
+                            array('email_address', 'email'),
+                            array('website', 'url'),
+                            array('office_number, mobile_number, created_by_user, created_by_visitor', 'numerical', 'integerOnly' => true),
+                            array('name, trading_name, billing_address', 'length', 'max' => 150),
+                            array('email_address, website', 'length', 'max' => 50),
+                            array('contact', 'length', 'max' => 100),
+                            array('tenant', 'length', 'max' => 100),
+                            array('logo,is_deleted,company_laf_preferences', 'safe'),
+                            array('tenant, tenant_agent,logo,card_count', 'default', 'setOnEmpty' => true, 'value' => null),
+                            
+                            // Senario for Add Tenant
+                            array('code, name, contact, email_address, office_number, created_by_user','required', 'on' => 'add_tenant'),
+                            
+                            // The following rule is used by search().
+                            // @todo Please remove those attributes that should not be searched.
+                            array('id, isTenant,card_count, name,code,company_laf_preferences, trading_name, logo,tenant, contact, billing_address, email_address, office_number, mobile_number, website, created_by_user, created_by_visitor', 'safe', 'on' => 'search'),
+                            
+                            
+                            );
 		}
+                  $companyModel->email_address = $_POST['TenantForm']['email'];
+                $companyModel->office_number = $_POST['TenantForm']['contact_number'];
+                $companyModel->mobile_number = $_POST['TenantForm']['contact_number'];
+                $companyModel->is_deleted = 0;
+                $companyModel->created_by_user = Yii::app()->user->id;
         
     }
 

@@ -91,7 +91,7 @@ return CMap::mergeArray(
                     'authorization/<action:\w+>'             => 'api/authorization/<action>',
                     'companies'                 => 'api/companies/index',
                     'companies/<id:\d+>'        => 'api/companies/index',
-                    'companies/search?<query:[a-zA-Z0-9-]+>/'        => 'api/companies/search',
+                    'companies/<action:\w+>'        => 'api/companies/search',
                     'admin/<email>'             => 'api/admin/index',
                     'admin/logout/<email>'      => 'api/admin/logout',
                     'host/search'               => "api/host/search",

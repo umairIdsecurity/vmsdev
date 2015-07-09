@@ -59,7 +59,7 @@ $asicEscort = new AddAsicEscort();
     <tr>
         <td class="vic-col">
             <input type="checkbox" disabled value="1" name="identificationActiveVisit" class="vic-active-visit vic-active-verification"/>
-            <a href="#identificationModal" data-toggle="modal" id="identificationActiveVisitLink" style="text-decoration: none !important;">Identification</a>
+            <a href="#identificationModal" data-toggle="modal" id="identificationActiveVisitLink" style="text-decoration: underline !important;">Identification</a>
         </td>
     </tr>
     <tr>
@@ -105,7 +105,7 @@ $asicEscort = new AddAsicEscort();
             <input name="Visit[visit_status]" id="Visit_visit_status" type="text" value="1" style="display:none;">
             <input name="Visit[time_check_in]" id="Visit_time_check_in" class="activatevisittimein" type="text" style="display:none;">
             <?php
-            if (!strtotime($model->date_check_in)) {
+            if (!strtotime($model->date_check_in) || $model->date_check_out == '0000-00-00') {
                 $model->date_check_in = date('d-m-Y');
             }
 
@@ -115,9 +115,14 @@ $asicEscort = new AddAsicEscort();
                 $model->date_check_in = date('d-m-Y');
             }
 
-            // Extended Card Type (EVIC) or Multiday
-            if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED]) && $model->visit_status == VisitStatus::AUTOCLOSED) {
-                $model->date_check_in = date("d-m-Y", time() + 86400);
+            // Extended Card Type (EVIC) or 24h
+            if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && $model->visit_status == VisitStatus::AUTOCLOSED) {
+                switch ($model->card_type) {
+                    case CardType::VIC_CARD_24HOURS:
+                    case CardType::VIC_CARD_EXTENDED:
+                        $model->date_check_in = date("d-m-Y", time() + 86400);
+                        break;
+                }
             }
 
             $this->widget('zii.widgets.jui.CJuiDatePicker', array(
@@ -555,7 +560,7 @@ $asicEscort = new AddAsicEscort();
     $(document).on('click', '#btnIdentificationConfirm', function(e) {
         var isChecked = $('input[name="identification"]').filter(':checked');
         if (isChecked.length == 0) {
-            alert('Please chose option after confirm.');
+            alert('Please select an option.');
             return false;
         }
 
@@ -581,7 +586,6 @@ $asicEscort = new AddAsicEscort();
             dataType: 'json',
             data: data,
             success: function (r) {
-                console.log(r);
                 if (r == 1) {
                     $('#identificationModal').modal('hide');
                     $('input[name="identificationActiveVisit"]').prop('checked', true);
@@ -602,6 +606,7 @@ $asicEscort = new AddAsicEscort();
         var today = Date.parse(yyyy+'-'+mm+'-'+dd);
         return document_expiry_date <= today;
     }
+
     $(document).ready(function(){
         $('#asicDecalarationRbtn1').on('click',function(){
             $(this).prop('checked',true);

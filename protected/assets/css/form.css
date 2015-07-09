@@ -105,7 +105,7 @@ div.form select.error
 
 }
 
-div.form div.success input,
+div.form div.success input[type="text"],
 div.form div.success textarea,
 div.form div.success select,
 div.form div.success .select2-selection,

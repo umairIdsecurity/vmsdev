@@ -171,6 +171,23 @@ $(document).ready(function () {
             $('#dummy-host-findBtn').html('Find ' + getCardType());
 
             showHideTabs('findVisitorB', 'findVisitorA', 'findVisitor', 'selectCardA', 'selectCard', 'findHostA', 'findHost');
+
+            if ($('#VisitCardType').val() < 5) {
+                $('#limit-first-name').html(
+                    '<td><input type="text" size="15" maxlength="15" placeholder="First Name" name="Visitor[first_name]" id="Visitor_first_name"><span class="required">*</span><br><div style="display:none" id="Visitor_first_name_em_" class="errorMessage"></div></td>'
+                );
+                $('#limit-last-name').html(
+                    '<td><input type="text" size="15" maxlength="15" placeholder="Last Name" name="Visitor[last_name]" id="Visitor_last_name"><span class="required">*</span><br><div style="display:none" id="Visitor_last_name_em_" class="errorMessage"></div></td>'
+                );
+            } else {
+                $('#limit-first-name').html(
+                    '<td><input type="text" size="50" maxlength="50" placeholder="First Name" name="Visitor[first_name]" id="Visitor_first_name"><span class="required">*</span><br><div style="display:none" id="Visitor_first_name_em_" class="errorMessage"></div></td>'
+                );
+                $('#limit-last-name').html(
+                    '<td><input type="text" size="50" maxlength="50" placeholder="Last Name" name="Visitor[last_name]" id="Visitor_last_name"><span class="required">*</span><br><div style="display:none" id="Visitor_last_name_em_" class="errorMessage"></div></td>'
+                );
+            }
+
         });
 
         $(document).on("click", "#clicktabB", function (e) {
@@ -199,7 +216,7 @@ $(document).ready(function () {
                 $('.visitor_password_repeat').empty().hide();
             }
 
-            /*var contact = $('#Visitor_staff_id').val();
+            var contact = $('#Visitor_staff_id').val();
             if (typeof contact != 'undefined') {
                 $.ajax({
                     type: "POST",
@@ -208,6 +225,7 @@ $(document).ready(function () {
                     data: {id:contact},
                     success: function(data) {
                         if (data != 0) {
+                            $('#User_id').val(data.id);
                             $('#User_first_name').val(data.first_name);
                             $('#User_last_name').val(data.last_name);
                             $('#User_email').val(data.email);
@@ -215,7 +233,7 @@ $(document).ready(function () {
                         }
                     }
                 });
-            }*/
+            }
             
             $(".visitorType").hide();
             if ($("#Visitor_visitor_type").val() == 1 || $("#Visitor_visitor_type_search").val() == 1) {

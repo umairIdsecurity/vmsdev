@@ -60,7 +60,7 @@ class VisitorServiceImpl implements VisitorService {
         }
 
         #Send mail
-        if (isset($_POST['Visitor']['password_option']) && $_POST['Visitor']['password_option'] == 2) {
+        if (isset($_POST['Visitor']['password_option']) && $_POST['Visitor']['password_option'] == PasswordRequirement::PASSWORD_IS_REQUIRED) {
             $length = 10;
             $chars = array_merge(range(0, 9), range('a', 'z'), range('A', 'Z'));
             shuffle($chars);

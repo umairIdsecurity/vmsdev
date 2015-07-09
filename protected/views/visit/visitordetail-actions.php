@@ -169,7 +169,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
     </div>
     <div class="modal-body">
         <table style="border-collapse: initial;">
-            <tr><td colspan="2"><strong>Does document number match the identification provided?</strong></td></tr>
+            <tr><td colspan="2"><strong>Does the document number match the identification provided?</strong></td></tr>
             <tr><td colspan="2"><strong>&nbsp;</strong></td></tr>
             <tr>
                 <td colspan="2">
@@ -227,8 +227,9 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                     'name'=>'Visitor[identification_document_expiry]',
                                     // additional javascript options for the date picker plugin
                                     'options'=>array(
-                                        'dateFormat' => 'dd-mm-yy',
-                                        'changeYear' => true,
+                                        'dateFormat'  => 'dd-mm-yy',
+                                        'minDate'     => '0',
+                                        'changeYear'  => true,
                                         'changeMonth' => true
                                     ),
                                     'htmlOptions'=>array(
@@ -290,8 +291,9 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                         'name'=>'Visitor[identification_document_expiry]',
                                         // additional javascript options for the date picker plugin
                                         'options'=>array(
-                                            'dateFormat' => 'dd-mm-yy',
-                                            'changeYear' => true,
+                                            'dateFormat'  => 'dd-mm-yy',
+                                            'minDate'     => '0',
+                                            'changeYear'  => true,
                                             'changeMonth' => true
                                         ),
                                         'htmlOptions'=>array(

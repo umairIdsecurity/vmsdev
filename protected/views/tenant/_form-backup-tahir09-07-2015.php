@@ -32,7 +32,29 @@ $currentLoggedUserId = $session['id'];
             'enableClientValidation' => false,
             'clientOptions'=>array(
                 'validateOnSubmit'=>true,
-                 )
+                'afterValidate'=>'js:function(form,data,hasError){
+                        if(!hasError){
+                                $.ajax({
+                                        "type":"POST",
+                                        "url":"'.$this->createAbsoluteUrl("tenant/create").'",
+                                        "data":form.serialize(),
+                                        "success":function(data){
+
+                                                obj = JSON.parse(data);
+
+                                                if(obj["success"]){
+                                                    window.location.href = "'.$this->createUrl("tenant/create/&role=1").'";
+                                                }else{
+                                                    //window.location.href = "'.$this->createUrl("tenant/create/&role=1").'";
+                                                }
+                                            },
+
+                                        });
+                                }
+                        }'
+
+
+            )
     ));
     ?>
     <?php
@@ -145,8 +167,8 @@ $currentLoggedUserId = $session['id'];
                 <table>
                     <tr>
                         <td>
-                            <!-- <select  onchange="populateDynamicFields()"  -->  
-                            <select  <?php
+
+                            <select  onchange="populateDynamicFields()" <?php
                             // if ($this->action->Id == 'create' && isset($_GET['role']) && $_GET['role'] != 'avms' ) { //if action create with user roles selected in url
                             if ($this->action->Id == 'create' && !CHelper::is_add_avms_user() ) { //if action create with user roles selected in url
                                 echo "disabled";
@@ -244,7 +266,7 @@ $currentLoggedUserId = $session['id'];
                                         <td>
                                             <input placeholder="Password" type="password" id="TenantForm_password"  name="TenantForm[password]">
                                             <span class="required">*</span>
-                                            <?php   echo $form->error($model,'password'); ?>
+                                            <?php echo $form->error($model,'password'); ?>
 
                                         </td>
                                     </tr>
@@ -327,8 +349,17 @@ $currentLoggedUserId = $session['id'];
         <?php if (isset($_GET['viewFrom'])) { ?>
 
         <?php
-        }  
-        ?>
+        } else {/*
+        if ($session['role'] != Roles::ROLE_SUPERADMIN) {
+            ?>
+            <button class="yiiBtn" id="modalBtn" style="padding:1.5px 6px;margin-top:-4.1px;height:30.1px;" data-target="#viewLicense" data-toggle="modal">View License Details</button>
+        <?php } else { ?>
+        <button class="yiiBtn actionForward" style="padding:2px 6px;margin-top:-4.1px;height:30.1px;" type='button' onclick="gotoLicensePage()">License Details</button>
+            <?php
+            }
+            */
+            }
+            ?>
     </div>
 
     <?php $this->endWidget(); ?>
@@ -343,6 +374,213 @@ if (isset($_GET['viewFrom'])) {
 }
 ?>"/>
 <script>
+
+    function closeParent() {
+        window.parent.dismissModal();
+    }
+
+    function gotoLicensePage() {
+        window.location = 'index.php?r=licenseDetails/update&id=1';
+    }
+
+
+    $(document).ready(function() {
+
+    });
+
+    function populateDynamicFields() {
+
+        if(is_accessing_avms_features()){
+            return;
+        }
+
+        $('#third_option').empty();
+        /*if superadmin user company set to empty*/
+        if (<?php echo $session['role'] ?> == 5)
+        {
+            $("#User_company").empty();
+        }
+        $("#User_workstation").empty();
+
+        var selectedRole = $("#User_role").val();
+
+        var sessionRole = $("#currentRole").val(); //session role of currently logged in user
+
+        var actionId = $("#currentAction").val(); // current action
+        var admin = 1;
+        var operator = 8;
+        var staffmember = 9;
+        var superadmin = 5;
+        var agentadmin = 6;
+
+
+
+        //hide required * label if role is staffmember
+        if (selectedRole == staffmember) {
+            $('#third_option').append('<td><input type="radio" value="3" class="pass_option" name="User[password_option]" />&nbsp;User does not require a password</td>');
+            $("#third_option").show();
+            $(".tenantField").hide();
+        } else {
+            $(".tenantField").show();
+        }
+        if (sessionRole == admin )
+        {
+            if (selectedRole == admin)
+            {
+                document.getElementById('User_company').disabled = true;
+                document.getElementById('User_workstation').disabled = true;
+                $(".workstationRow").hide();
+                $('#User_company').find('option[value=<?php echo $session['company']; ?>]').show();
+                $("#User_company").val("<?php echo $session['company']; ?>");
+            }
+            else if (selectedRole == operator)
+            {
+                $("#User_company").val($("#sessionCompany").val());
+                document.getElementById('User_company').disabled = true;
+                document.getElementById('User_workstation').disabled = false;
+                $(".workstationRow").show();
+                $('#User_company').find('option[value=<?php echo $session['company']; ?>]').show();
+                $("#User_company").val("<?php echo $session['company']; ?>");
+                getWorkstation();
+            }
+            else if (selectedRole == staffmember) {
+
+
+
+
+                $('#User_company').find('option[value=<?php echo $session['company']; ?>]').show();
+                $("#User_company").val("<?php echo $session['company']; ?>");
+                document.getElementById('User_workstation').disabled = true;
+                $(".workstationRow").hide();
+                $("#User_company").val($("#sessionCompany").val());
+                document.getElementById('User_tenant').disabled = true;
+                document.getElementById('User_company').disabled = true;
+                var selectedUserId = $("#selectedUserId").val();
+                $.ajax({
+                    type: 'POST',
+                    url: '<?php echo Yii::app()->createUrl('user/GetTenantAgentAjax&id='); ?>' + selectedUserId,
+                    dataType: 'json',
+                    data: selectedUserId,
+                    success: function(r) {
+                        $('#User_tenant_agent option[value!=""]').remove();
+                        $('#User_tenant_agent').append('<option value="">Please select a tenant agent</option>');
+                        $.each(r.data, function(index, value) {
+                            $('#User_tenant_agent').append('<option value="' + value.id + '">' + value.name + '</option>');
+
+                        });
+                        $("#User_tenant_agent").val('');
+                    }
+                });
+            }
+            else {
+                document.getElementById('User_workstation').disabled = true;
+                $(".workstationRow").hide();
+                //$('#User_company option[value=""]').remove;
+                $('#User_company').find('option[value=<?php echo $session['company']; ?>]').hide();
+                $("#User_company").val("");
+                document.getElementById('User_company').disabled = false;
+
+            }
+        }
+        else if (sessionRole == superadmin)
+        {
+            $("#User_company_em_").hide();
+            if (selectedRole != admin) { // if selected is not equal to admin enable tenant
+                if (selectedRole == operator) {
+                    document.getElementById('User_tenant_agent').disabled = true;
+                    document.getElementById('User_workstation').disabled = false;
+                    $("#tenantAgentRow").hide();
+                    $("#tenantRow").show();
+                    $(".workstationRow").show();
+                    document.getElementById('User_tenant').disabled = false;
+                    document.getElementById('User_company').disabled = true;
+                    $("#User_tenant").val('');
+
+
+                }
+                else if (selectedRole == 9) {
+
+
+
+                    document.getElementById('User_tenant_agent').disabled = false;
+                    $("#tenantAgentRow").show();
+                    $("#tenantRow").show();
+                    document.getElementById('User_tenant').disabled = false;
+                    document.getElementById('User_company').disabled = true;
+                    document.getElementById('User_workstation').disabled = true;
+                    $(".workstationRow").hide();
+                    $("#User_tenant").val('');
+                    $("#User_tenant_agent").empty();
+
+                }
+                else if (selectedRole == 6) {
+                    $("#User_tenant").val('');
+                    document.getElementById('User_tenant_agent').disabled = true;
+                    $("#tenantAgentRow").hide();
+                    document.getElementById('User_company').disabled = true;
+                    document.getElementById('User_workstation').disabled = true;
+                    $(".workstationRow").hide();
+                    $("#tenantRow").show();
+                    document.getElementById('User_tenant').disabled = false;
+
+                }
+                else if (selectedRole == 7) {
+
+                    $("#tenantAgentRow").show();
+                    document.getElementById('User_company').disabled = true;
+                    $("#tenantRow").show();
+                    document.getElementById('User_tenant').disabled = false;
+                    document.getElementById('User_workstation').disabled = false;
+                    $(".workstationRow").show();
+                    $("#User_tenant").val('');
+                    $("#User_tenant_agent").empty();
+
+                }
+                else {
+                    document.getElementById('User_company').disabled = false;
+
+                }
+            }
+            else {
+                document.getElementById('User_tenant').disabled = true;
+                document.getElementById('User_tenant_agent').disabled = true;
+                document.getElementById('User_company').disabled = false;
+
+                //reset company list
+                /*Taking an array of all companybase and kind of embedding it on the company*/
+                $("#User_company").data('options', $('#User_company_base option').clone());
+                var id = $("#User_company").val();
+                var options = $("#User_company").data('options');
+                $('#User_company').html(options);
+                document.getElementById('User_workstation').disabled = true;
+                $(".workstationRow").hide();
+                $("#tenantRow").hide();
+                $("#tenantAgentRow").hide();
+            }
+        }
+        else if (sessionRole == agentadmin) {
+            if (selectedRole == 7) { /*if selected role field is agent operator*/
+                document.getElementById('User_workstation').disabled = false;
+                $(".workstationRow").show();
+                getWorkstationAgentOperator();
+            } else {
+                document.getElementById('User_workstation').disabled = true;
+                $(".workstationRow").hide();
+            }
+        }
+
+        /*show or hide add company button*/
+        if ((sessionRole == superadmin && (selectedRole == admin || selectedRole == agentadmin || selectedRole == issuing_body_admin )) || (sessionRole == admin && (selectedRole == agentadmin || selectedRole == issuing_body_admin))) {
+            $("#addCompanyLink").show();
+            document.getElementById("companyRow").style.paddingBottom = "10px";
+        }
+        else {
+            $("#addCompanyLink").hide();
+            document.getElementById("companyRow").style.paddingBottom = "0px";
+        }
+    }
+
+
     function generatepassword() {
 
         $("#random_password").val('');

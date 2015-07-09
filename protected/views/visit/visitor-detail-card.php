@@ -41,30 +41,27 @@ if ($vstr) {
 	}
 }
 ?>
-<?php if($model->card_type > 4){ ?>
-<?php $this->renderPartial("_card_detail",array('bgcolor'=>$bgcolor,'model'=>$model,'visitorModel'=>$visitorModel));?>
-<?php } else {?>
-<?php $this->renderPartial("_card-corporate",array('bgcolor'=>$bgcolor,'model'=>$model,'visitorModel'=>$visitorModel));?>
-<?php } ?>
-<div id="Visitor_photo_em" class="errorMessage" style="display: none;">Please upload a profile image.</div>
-<?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
-<?php if ($visitorModel->photo != '') { ?>
-<input type="button" class="btn editImageBtn actionForward" id="editImageBtn" style="  margin-bottom: 2px!important;" value="Edit Photo" onclick = "document.getElementById('light').style.display = 'block';
-                document.getElementById('fade').style.display = 'block'"/>
-       <?php } ?>
-<div
+
 <?php
-if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
-    echo "style='display:none'";
+if($model->card_type > CardType::CONTRACTOR_VISITOR) {
+    $this->renderPartial("_card_detail",['bgcolor' => $bgcolor,'model' => $model,'visitorModel' => $visitorModel]);
+} else {
+    $this->renderPartial("_card-corporate",['bgcolor' => $bgcolor,'model' => $model,'visitorModel' => $visitorModel]);
 }
 ?>
-    >
-        <?php
-        $cardDetail = CardGenerated::model()->findAllByAttributes(array(
-            'visitor_id' => $model->visitor
-        ));
-        ?>
+
+<div id="Visitor_photo_em" class="errorMessage" style="display: none;">Please upload a profile image.</div>
+
+<?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
+<?php if ($visitorModel->photo != '') : ?>
+<input type="button" class="btn editImageBtn actionForward" id="editImageBtn" style="  margin-bottom: 2px!important;" value="Edit Photo" onclick = "document.getElementById('light').style.display = 'block';
+                document.getElementById('fade').style.display = 'block'"/>
+<?php endif; ?>
+
+<div style="display:<?php echo $session['role'] == Roles::ROLE_STAFFMEMBER ? 'none' : 'block'; ?>">
+    <?php $cardDetail = CardGenerated::model()->findAllByAttributes(array('visitor_id' => $model->visitor)); ?>
 </div>
+
 <div class="dropdown">
 <?php if (in_array($model->card_type, [CardType::SAME_DAY_VISITOR, CardType::MULTI_DAY_VISITOR, CardType::CONTRACTOR_VISITOR, CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_24HOURS, CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY]) && $model->visit_status ==VisitStatus::ACTIVE): ?>
 
@@ -75,7 +72,7 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo yii::app()->createAbsoluteUrl('cardGenerated/pdfprint', array('id' => $model->id, 'type' => 2)) ?>">Print On Card Printer</a></li>
         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo yii::app()->createAbsoluteUrl('cardGenerated/pdfprint', array('id' => $model->id, 'type' => 3)) ?>">Rewritable Print Card</a></li>
     </ul>
-<?php elseif (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY, CardType::VIC_CARD_24HOURS]) && $model->visit_status == VisitStatus::AUTOCLOSED && $model->finish_date == date('Y-m-d')): ?>
+<?php elseif (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && $model->visit_status == VisitStatus::AUTOCLOSED && $model->finish_date == date('Y-m-d')): ?>
     <button class="complete btn btn-info printCardBtn dropdown-toggle" style="width:205px !important; margin-top: 4px; margin-right: 80px;" type="button" id="menu1" data-toggle="dropdown">Print Card
         <span class="caret pull-right"></span></button>
         <ul class="dropdown-menu" style="left: 62px;" role="menu" aria-labelledby="menu1">
@@ -109,17 +106,14 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
         <?php
         if ($asic) {
             if($visitorModel->profile_type ==  Visitor::PROFILE_TYPE_VIC) {
-                array_pop(Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC]);
                 $profileType = Visitor::PROFILE_TYPE_VIC;
                 
             } elseif($visitorModel->profile_type ==  Visitor::PROFILE_TYPE_ASIC) {
-                array_pop(Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_ASIC]);
                 $profileType = Visitor::PROFILE_TYPE_ASIC;
             }
 
             echo CHtml::dropDownList('Visitor[visitor_card_status]', $visitorModel->visitor_card_status, Visitor::$VISITOR_CARD_TYPE_LIST[$profileType], ['empty' => 'Select Card Status']);
                 echo "<br />";
-
         }
 
         $workstationList = CHtml::listData(Utils::populateWorkstation(), 'id', 'name');

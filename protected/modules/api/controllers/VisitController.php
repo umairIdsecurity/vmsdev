@@ -211,6 +211,9 @@ class VisitController extends RestfulController {
                 if ($visit) {
                     $visit->date_check_out = date('Y-m-d');
                     $visit->time_check_out = date('H:i:s');
+                    if($visit->visit_status == visitStatus::ACTIVE) {
+                        $visit->visit_status = visitStatus::CLOSED;
+                    }
                     if($visit->save()) {
                         $this->sendResponse(204, CJSON::encode(['responseCode' => 204]));
                     } else {

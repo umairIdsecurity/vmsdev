@@ -244,7 +244,7 @@ $currentLoggedUserId = $session['id'];
                                         <td>
                                             <input placeholder="Password" type="password" id="TenantForm_password"  name="TenantForm[password]">
                                             <span class="required">*</span>
-                                            <?php // echo $form->error($model,'password'); ?>
+                                            <?php   echo $form->error($model,'password'); ?>
 
                                         </td>
                                     </tr>

@@ -208,6 +208,7 @@ $(document).ready(function () {
                     data: {id:contact},
                     success: function(data) {
                         if (data != 0) {
+                            $('#User_id').val(data.id);
                             $('#User_first_name').val(data.first_name);
                             $('#User_last_name').val(data.last_name);
                             $('#User_email').val(data.email);

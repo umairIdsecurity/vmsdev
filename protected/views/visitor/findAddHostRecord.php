@@ -187,7 +187,7 @@ $defaultKey = key($asicCardTypes);
                         </table>
 
                         <table id="addhost-table" style="width: 280px;float: left;" class="host-second-column">
-
+                            <input type="hidden" name="User[id]" id="User_id" value="">
                             <tr <?php echo $session['role'] != Roles::ROLE_SUPERADMIN ? "style='display:none;'" : ""; ?>>
                                 <td id="hostTenantRow">
                                     <select id="User_tenant" onchange="populateHostTenantAgentAndCompanyField()"name="User[tenant]" disabled>
@@ -326,10 +326,8 @@ $defaultKey = key($asicCardTypes);
                             </tr>
                             <tr class="vic-host-fields">
                                 <td>
-                                    <input name="User[role]" id="User_role"
-                                           value="<?php echo Roles::ROLE_STAFFMEMBER ?>"/>
-                                    <input name="User[user_type]" id="User_user_type"
-                                           value="<?php echo UserType::USERTYPE_INTERNAL; ?>"/>
+                                    <input name="User[role]" id="User_role" value="<?php echo Roles::ROLE_STAFFMEMBER ?>"/>
+                                    <input name="User[user_type]" id="User_user_type" value="<?php echo UserType::USERTYPE_INTERNAL; ?>"/>
                                 </td>
                             </tr>
                             <tr>
@@ -847,7 +845,7 @@ $defaultKey = key($asicCardTypes);
             type: "POST",
             url: url,
             data: hostform,
-            success: function (data) {
+            success: function (data) {console.log(data);return false;
                 getLastHostId(function (data) {
                     populateVisitFormFields(); // Do what you want with the data returned
                 });

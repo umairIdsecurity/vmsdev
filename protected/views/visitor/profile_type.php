@@ -1,18 +1,17 @@
 <div class="choose-profile">
 <h1>Select Visitor Profile Type</h1>
-  
             <input type="radio" value="<?php echo Visitor::PROFILE_TYPE_CORPORATE; ?>" id="<?php echo Visitor::PROFILE_TYPE_CORPORATE; ?>" name="Visitor[profile_type]" />
-            <label for="<?php echo Visitor::PROFILE_TYPE_CORPORATE; ?>" >
+            <label class="corplabel000" for="<?php echo Visitor::PROFILE_TYPE_CORPORATE; ?>" >
                 <p class="corp">Corporate</p>
             </label>
  
             <input type="radio" value="<?php echo Visitor::PROFILE_TYPE_VIC; ?>" id="<?php echo Visitor::PROFILE_TYPE_VIC; ?>" name="Visitor[profile_type]" />
-            <label for="<?php echo Visitor::PROFILE_TYPE_VIC; ?>" >
+            <label class="viclabel000" for="<?php echo Visitor::PROFILE_TYPE_VIC; ?>" >
                 <p class="vic">VIC</p>
             </label>
  
             <input type="radio" value="<?php echo Visitor::PROFILE_TYPE_ASIC; ?>" id="<?php echo Visitor::PROFILE_TYPE_ASIC; ?>" name="Visitor[profile_type]" />
-            <label for="<?php echo Visitor::PROFILE_TYPE_ASIC; ?>" >
+            <label class="viclabel000" for="<?php echo Visitor::PROFILE_TYPE_ASIC; ?>" >
                 <p class="asic">ASIC</p>
             </label>
  
@@ -32,8 +31,16 @@
         <?php $profileType = isset($_GET['profile_type']) ? $_GET['profile_type'] : $model->profile_type; ?>
         $(profileTypeSelector).filter('[value="<?php echo $profileType; ?>"]').attr('checked', true);
 
-        <?php if ($this->action->id == 'update') { ?>
+        <?php if ($this->action->id == 'update') {
+                    if ($profileType == Visitor::PROFILE_TYPE_CORPORATE)
+                    {
+                        ?>  $('.viclabel000').css('display','none'); <?php
+                    } else {
+                        ?>  $('.corplabel000').css('display','none'); <?php
+                    }
+        ?>
             $(profileTypeSelector).attr('disabled',true);
+            $(profileTypeSelector).css('display','none');
         <?php } ?>
 
         $(profileTypeSelector).change(function() {

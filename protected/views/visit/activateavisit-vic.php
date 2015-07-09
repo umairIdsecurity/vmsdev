@@ -59,7 +59,7 @@ $asicEscort = new AddAsicEscort();
     <tr>
         <td class="vic-col">
             <input type="checkbox" disabled value="1" name="identificationActiveVisit" class="vic-active-visit vic-active-verification"/>
-            <a href="#identificationModal" data-toggle="modal" id="identificationActiveVisitLink" style="text-decoration: none !important;">Identification</a>
+            <a href="#identificationModal" data-toggle="modal" id="identificationActiveVisitLink" style="text-decoration: underline !important;">Identification</a>
         </td>
     </tr>
     <tr>

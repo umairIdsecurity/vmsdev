@@ -384,7 +384,7 @@ $form = $this->beginWidget('CActiveForm', array(
 
         <?php
         $listWorkstation = Workstation::model()->findAll("is_deleted = 0",'id','name');
-        echo $form->listBox($model,'userWorkstation1',CHtml::listData($listWorkstation,'id','name'),array('multiple'=>'multiple','style'=>'height:150px'/*,'options'=>$listWorkstationsOfUser*/));
+        echo $form->listBox($model,'userWorkstation1',CHtml::listData($listWorkstation,'id','name'),array('style'=>'height:150px'));
         ?>
         <!--<select id="User_workstation" name="User[workstation]" disabled></select>-->
     </td>

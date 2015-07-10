@@ -93,7 +93,7 @@ if (!$cardTypeWorkstationModel) {
                 success: function (r) {
                     var opt = '';
                     $.each(r, function (index, value) {
-                        opt += '<option value="' + value.id + '">' + value.name + '</option>';
+                        opt += '<option value="' + value.id + '">Card Status: ' + value.name + '</option>';
                     });
                     $('#Visitor_visitor_type').html(opt);
                 }

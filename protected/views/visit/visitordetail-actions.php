@@ -80,7 +80,13 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                 'validateOnSubmit' => true,
                                 'afterValidate' => 'js:function(form, data, hasError){
                                     if (!hasError){
-                                        if($("#Visitor_photo").val() == "" && $("#Visit_card_type").val() == "2" ){
+                                        if(
+                                            $("#Visitor_photo").val() == "" &&
+                                            $("#Visit_card_type").val() != ' . CardType::SAME_DAY_VISITOR . '  &&
+                                            $("#Visit_card_type").val() != ' . CardType::MANUAL_VISITOR . '  &&
+                                            $("#Visit_card_type").val() != ' . CardType::VIC_CARD_SAMEDATE . '  && 
+                                            $("#Visit_card_type").val() != ' . CardType::VIC_CARD_MANUAL . '
+                                        ){
                                             alert("Please upload a photo.");
                                         }else if ($("#Visit_card_type").val() == "9" && $("#pre_issued_card_no").val() == "" ) {
                                             $("#card_number_required").show();
@@ -386,12 +392,12 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
 
             if( isDefault > 0 || (profileImage == '' && isChanged > 0)) {
                 <?php if ($model->card_type > CardType::CONTRACTOR_VISITOR ) : ?>
-                    <?php if($model->card_type != CardType::VIC_CARD_SAMEDATE ) : ?>
+                    <?php if(!in_array($model->card_type, [CardType::SAME_DAY_VISITOR, CardType::MANUAL_VISITOR, CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_MANUAL])) : ?>
                     $("#Visitor_photo_em").attr('style', 'margin-right:84px ; margin-bottom:0px; margin-top:0px ;');
                     $("#editImageBtn.editImageBtn").attr('style', 'margin-top:-5px !important; margin-right:84px ; margin-bottom:0px;');
                     $("#cropImageBtn.editImageBtn").attr('style', 'margin-top:-5px !important; margin-right:84px ; margin-bottom:0px;');
                     return;
-                    <?php endif ?>
+                    <?php endif; ?>
                 <?php else : ?>
                     $("#Visitor_photo_em").attr('style', 'margin-bottom: -17px; margin-right: 0px; margin-top: 13px;');
                     $("#cropImageBtn.editImageBtn").attr('style', 'margin-bottom: 0; margin-right: 0 !important; margin-top: 0 !important;');
@@ -529,18 +535,6 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                     window.location.reload();
                 }   
             });
-            /*$.ajax({
-                url: "<?php echo Yii::app()->createUrl('visit/closeVisit?id='.$model->id); ?>",
-                type: 'POST',
-                dataType: 'json',
-                data: data,
-                success: function(r) {console.log(r);return false;
-                    if (r == 1) {
-                        window.location.reload();
-                    }
-                }
-            });*/
-            
         }
 
         $('#cancelActiveVisitButton').on('click', function (e) {
@@ -665,12 +659,10 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
         'clientOptions' => array(
             'validateOnSubmit' => true,
             'afterValidate' => 'js:function(form, data, hasError){
-                                if (!hasError){
-
-                                    sendCancelVisit();
-
-                                }
-                                }'
+                if (!hasError){
+                    sendCancelVisit();
+                }
+            }'
         ),
     ));
     ?>

@@ -1050,6 +1050,8 @@ class Visit extends CActiveRecord {
         $criteria->addCondition("(visit_status = " . VisitStatus::AUTOCLOSED . " OR visit_status = " . VisitStatus::CLOSED . ") AND visitor = " . $this->visitor);
         switch ($this->card_type) {
             case CardType::VIC_CARD_MANUAL:
+                return (int)$this->count($criteria) + 1;
+                break;
             case CardType::VIC_CARD_SAMEDATE:
                 if (in_array($this->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED, VisitStatus::EXPIRED])) {
                     return 1;
@@ -1058,8 +1060,11 @@ class Visit extends CActiveRecord {
             case CardType::VIC_CARD_24HOURS:
                 return (int)$this->count($criteria) + 1;
                 break;
-            case CardType::VIC_CARD_EXTENDED:
+
             case CardType::VIC_CARD_MULTIDAY:
+                return (int)($dateNow->format('z') - $dateIn->format('z')) + 1;
+                break;
+            case CardType::VIC_CARD_EXTENDED:
                 switch ($this->visit_status) {
                     case VisitStatus::AUTOCLOSED:
                         return (int)($dateOut->format('z') - $dateIn->format('z'));
@@ -1072,10 +1077,6 @@ class Visit extends CActiveRecord {
                         break;
                 }
                 break;
-            /*case CardType::VIC_CARD_SAMEDATE:
-            case CardType::VIC_CARD_24HOURS:
-                return (int)$this->countByAttributes(['visit_status' => VisitStatus::CLOSED, 'visitor' => $this->visitor]) + 1;
-                break;*/
         }
     }
 
@@ -1089,8 +1090,10 @@ class Visit extends CActiveRecord {
             case CardType::VIC_CARD_SAMEDATE:
                 return 28 - (int)$this->visitCounts;
                 break;
-            case CardType::VIC_CARD_EXTENDED:
             case CardType::VIC_CARD_MULTIDAY:
+                return (int)($dateNow->format('z') - $dateIn->format('z'));
+                break;
+            case CardType::VIC_CARD_EXTENDED:
                 $totalDays = (int)($dateOut->format('z') - $dateIn->format('z'));
                 switch ($this->visit_status) {
                     case VisitStatus::AUTOCLOSED:

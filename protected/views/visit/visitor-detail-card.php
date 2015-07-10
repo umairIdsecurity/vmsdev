@@ -126,11 +126,13 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
         }
 
         echo CHtml::dropDownList('Visit[workstation]', $model->workstation, $workstationResults, ['empty' => 'Select Workstation']);
-        echo "<br />";
+        echo "<span class='required'>*</span>";
+        echo '<div id="Visit_workstation_em_" class="errorMessage" style="display: none">Please select a workstation</div>';
 
         if ($asic) {
             echo CHtml::dropDownList('Visit[visitor_type]', $model->visitor_type, VisitorType::model()->returnVisitorTypes());
-            echo "<br />";
+            echo "<span class='required'>*</span>";
+            echo '<div id="Visit_visitor_type_em_" class="errorMessage" style="display: none">Please select a Visitor type</div>';
             $reasons = CHtml::listData(VisitReason::model()->findAll(), 'id', 'reason');
             foreach ($reasons as $key => $item) {
                 $results[$key] = 'Reason: ' . $item;
@@ -154,16 +156,75 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
         }   
         echo CHtml::dropDownList('Visit[card_type]', $model->card_type, $cardTypeResults, $cardTypeOptions);
         echo '<br />';
-        if (in_array($model->visit_status, [VisitStatus::CLOSED])) {
-            echo '<input type="submit" name="updateWorkstationForm" class="complete btnUpdateWorkstationForm"  value="Update">';
-        }
+        //if (in_array($model->visit_status, [VisitStatus::CLOSED])) {
+            echo '<input type="submit" name="updateWorkstationForm" id="updateWorkstationForm" class="complete btnUpdateWorkstationForm"  value="Update">';
+        //}
         ?>
+        <input type="hidden" id="workstationForm">
     </div>
-        
 </form>
 
 <script>
     $(document).ready(function () {
+        $('#Visit_workstation').on('change',function(){
+            var workstation = $('#Visit_workstation').val();
+            if(!workstation || workstation == "") {
+                $('#Visit_workstation_em_').show();
+            } else {
+                $('#Visit_workstation_em_').hide();
+            }
+        })
+        $('#Visit_visitor_type').on('change',function(){
+            var visitortype = $('#Visit_visitor_type').val();
+            if(!visitortype || visitortype == "") {
+                $('#Visit_visitor_type_em_').show();
+            } else {
+                $('#Visit_visitor_type_em_').hide();
+            }
+        })
+        function checkWorkstation() {
+            var workstation = $('#Visit_workstation').val();
+            if(!workstation || workstation == "") {
+                $('#Visit_workstation_em_').show();
+                return false;
+            } else {
+                return true;
+            }
+        }
+        function checkVisitorType(){
+            var visitortype = $('#Visit_visitor_type').val();
+            if(!visitortype || visitortype == "") {
+                $('#Visit_visitor_type_em_').show();
+                return false;
+            }else {
+                return true;
+            }
+        }
+         function checkCardStatus(){
+             var currentCardStatus = "<?php echo $visitorModel->visitor_card_status; ?>";
+             var currentVisitStatus = "<?php echo $model->visit_status ; ?>";
+             if(currentVisitStatus == "<?php echo VisitStatus::ACTIVE; ?>") {
+                 if (currentCardStatus == 2 && $('#Visitor_visitor_card_status').val() == 3) {
+                     alert('Please close the active visits before changing the status to ASIC Pending.');
+                     return false;
+                 } else {
+                     return true;
+                 }
+             } else {
+                 return true;
+             }
+         }
+        $('.btnUpdateWorkstationForm').on('click', function (e) {
+            var checkWorkStation1 = checkWorkstation();
+            var checkVisitorType1 = checkVisitorType();
+            var checkCardStatus1 = checkCardStatus();
+            if( checkCardStatus1 == true && checkVisitorType1 == true && checkWorkStation1 == true) {
+                $('#workstationForm').submit();
+            } else {
+                return false;
+            }
+        });
+
         var currentCardStatus = $('#Visitor_visitor_card_status').val();
         if (currentCardStatus == 6) {
             $('#Visitor_visitor_card_status').attr("disabled", true);

@@ -288,6 +288,7 @@ class VisitController extends Controller {
      */
 
     public function actionDetail($id) {
+        $session = new CHttpSession;
         /** @var Visit $model */
         $model = Visit::model()->findByPk($id);
 
@@ -445,6 +446,17 @@ class VisitController extends Controller {
                             // Do something if save staff failure
                         }
                     }
+                }
+            }
+
+            // If operator select other reason then save new one
+            if (isset($_POST['VisitReason'])) {
+                $visitReasonModel             = new VisitReason;
+                $visitReasonService           = new VisitReasonServiceImpl;
+                $visitReasonParams            = Yii::app()->request->getPost('VisitReason');
+                $visitReasonModel->attributes = $visitReasonParams;
+                if (!$visitReasonService->save($visitReasonModel, $session['id'])) {
+                    // Do something if visit reason do not save
                 }
             }
 

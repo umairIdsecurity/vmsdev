@@ -77,9 +77,9 @@
             <label class="checkbox">
                 <?php echo $form->checkBox($model,'is_asic_verification'); ?>
                 <span class="checkbox-style"></span>
-                <a class="btn btn-sm btn-success" href="">
+                <p class="text-success">
                     Request ASIC Sponsor Verification
-                </a>
+                </p>
             </label>
             <?php echo $form->error($model,'is_asic_verification'); ?>
         </div>
@@ -91,16 +91,7 @@
             <a href="<?=Yii::app()->createUrl("preregistration/visitReason")?>" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>
         </div>
 
-        <div class="col-md-offset-9 col-sm-offset-9 col-xs-offset-8 col-md-1 col-sm-1 col-xs-1">
-
-            <a href="<?=Yii::app()->createUrl("preregistration/uploadPhoto")?>" class="btn btn-primary btn-next">
-                SKIP
-                <span class="glyphicon glyphicon-chevron-right"></span>
-
-            </a>
-        </div>
-
-        <div class="col-md-1 col-sm-1 col-xs-1">
+        <div class="col-md-offset-10 col-sm-offset-10 col-xs-offset-9 col-md-1 col-sm-1 col-xs-1">
             <?php
             echo CHtml::tag('button', array(
                 'type'=>'submit',
@@ -109,6 +100,7 @@
             ?>
 
         </div>
+
 
     </div>
     <?php $this->endWidget(); ?>

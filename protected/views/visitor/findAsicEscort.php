@@ -1,7 +1,7 @@
 <?php
-Yii::app()->clientScript->scriptMap['jquery.js']=false;
-Yii::app()->clientScript->scriptMap['jquery-ui.css']=false;
-Yii::app()->clientScript->scriptMap['jquery-ui.min.js']=false;
+if(Yii::app()->controller->id == 'visitor' && Yii::app()->controller->action->id == 'getAsicEscort'){
+    Yii::app()->clientScript->scriptMap['jquery.js']=false;
+}
 ?>
 <style>
     .visit-selected-header input {

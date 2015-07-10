@@ -175,6 +175,10 @@ if (isset($host)) {
             display: block;
             margin-left: 31px !important;
         }
+        #visitorDetailDiv .ajax-file-upload-error {
+            margin:0 0 0 31px !important;
+            position: relative !important;
+        }
         #visitorDetailDiv .editImageBtn {
             float: left;
             margin-left: 31px !important;

@@ -446,6 +446,7 @@ $asicEscort = new AddAsicEscort();
             vicHolderDeclarationChange();
             return true;
         } else {
+            alert('Please select all the declarations.');
             return false;
         }
     }

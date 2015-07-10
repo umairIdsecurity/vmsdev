@@ -219,6 +219,9 @@
 
         $('#search_asic_btn').click(function(event) {
             event.preventDefault();
+            
+            $("#loader").show();
+
             var search = $("#search_asic_box").val();
             var base_url = $("#base_url").val();
 
@@ -230,9 +233,10 @@
                     type: 'POST',
                     data: search_value,
                     success: function(data) {
-                        $("#loader").show();
+
                         if(data == 'No Record'){
                             $("#asic-notification").show();
+                            $("#asic_search_result").hide();
                         }
                         else{
                             $("#asic-notification").hide();

@@ -384,8 +384,13 @@ $form = $this->beginWidget('CActiveForm', array(
 
         <?php
         $listWorkstation = Workstation::model()->findAll("is_deleted = 0",'id','name');
-        echo $form->listBox($model,'userWorkstation1',CHtml::listData($listWorkstation,'id','name'),array('style'=>'height:150px'));
-        ?>
+        ?> <select disabled>
+                <?php foreach ($listWorkstation as $worksta) { ?>
+                        <option value="<?php echo $worksta->id; ?>" <?php if ($worksta->id == Yii::app()->session['workstation']) echo 'selected'; ?> ><?php echo $worksta->name; ?></option>
+                <?php } ?>
+            </select>
+        <!--echo $form->dropDownList($model,'userWorkstation1',CHtml::listData($listWorkstation,'id','name'),array('disabled'=>'disabled'));-->
+
         <!--<select id="User_workstation" name="User[workstation]" disabled></select>-->
     </td>
 </tr>

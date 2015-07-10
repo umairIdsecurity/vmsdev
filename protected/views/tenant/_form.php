@@ -138,6 +138,15 @@ $currentLoggedUserId = $session['id'];
                         </tbody>
                     </table>
                 </div>
+                
+                <div class="password-border t-top20 paddingBottom10px">
+                    
+                    <strong>Module Access </strong> <br> <br>
+                    <input type="checkbox" name="module_access_avms" value="1" checked> AVMS <br>
+                    <input type="checkbox" name="module_access_cvms" value="2"> CVMS <br>
+                    
+                </div> 
+                    
         </td>
 
             <td style="vertical-align: top; float:left; width:300px">
@@ -197,7 +206,21 @@ $currentLoggedUserId = $session['id'];
                         </td>
 
                     </tr>
-
+                     <tr>
+                         
+                        <td>
+                            <?php echo $form->dropDownList(
+                                    $model,
+                                    'timezone_id',
+                                    CHtml::listData(Timezone::model()->findAll(),
+                                            'id',
+                                            'timezone_name'),
+                                            array('empty'=>'Please select a timezone')
+                            );?>
+                            <?php echo $form->error($model, 'timezone_id',array('style'=>'text-transform:none;')); ?>
+                        </td>
+                 
+                    </tr>
                 </table>
 
                 <table>
@@ -289,25 +312,8 @@ $currentLoggedUserId = $session['id'];
                 </div> <!-- password-border -->
 
             </td>
+             
             
-            
-            <tr>
-                <td><?php //echo $form->labelEx($model, 'timezone_id'); ?></td>
-                <td>
-                    <?php echo $form->dropDownList(
-                            $model,
-                            'timezone_id',
-                            CHtml::listData(Timezone::model()->findAll(),
-                                    'id',
-                                    'timezone_name'),
-                                    array('empty'=>'Please select a timezone')
-                    );?>
-                    <?php echo $form->error($model, 'timezone_id',array('style'=>'text-transform:none;')); ?>
-                </td>
-                 
-            </tr>
-
-
                 </table>
             </td>
         </tr>

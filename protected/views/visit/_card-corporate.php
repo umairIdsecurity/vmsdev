@@ -185,4 +185,7 @@ if (isset($host)) {
             position: relative;
             z-index: 1;
         }
+        #Visitor_photo_em.errorMessage {
+            width: 260px !important;
+        }
     </style>

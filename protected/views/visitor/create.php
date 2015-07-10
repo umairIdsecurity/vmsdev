@@ -425,6 +425,7 @@ function preloadVisit(visitorId) {
                 $("#workstation_search").val(value.workstation);
                 $("#Visit_reason_search").val(value.reason);
                 $("#Visitor_visitor_type_search").val(value.visitor_type);
+                $("#Visitor_visitor_type").val(value.visitor_type);
                 $("#Visit_host").val(value.host);
                 $("#Visit_reason").val(value.reason);
                 $("#Visit_workstation").val(value.workstation);

@@ -58,7 +58,8 @@ if(!$hostModel) $hostModel = Visitor::model();
                     'hostModel'    => $hostModel,
                     'reasonModel'  => $reasonModel,
                     'patientModel' => $patientModel,
-                    'asic'         => $asic
+                    'asic'         => $asic,
+                    'visitCount'   => $visitCount,
                 ));
             ?>
         </td>

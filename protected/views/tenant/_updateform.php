@@ -123,6 +123,14 @@ if ($this->action->id == 'update') {
                 <?php echo "<br>" . $form->error($model, 'mobile_number'); ?>
             </td>
         </tr>
+        
+        <tr class="user_fields">
+            <td style="width:160px;">Module Access </td>
+            <td>
+              <input type="checkbox" name="module_access_avms" value="1" <?php echo $contacts[0]->allowed_module == '1' || $contacts[0]->allowed_module == 3?"checked":"";?>> AVMS     
+              <input type="checkbox" name="module_access_cvms" value="2" <?php echo $contacts[0]->allowed_module == '2' || $contacts[0]->allowed_module == 3?"checked":"";?> style="margin-left: 15px"> CVMS  
+            </td>
+        </tr>
 
 </div>
 

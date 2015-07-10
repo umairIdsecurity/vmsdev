@@ -227,88 +227,18 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                 </li>
             </ul>
         </li>
-        <?php 
-        endif;
-        ?>
+        <?php endif; ?>
         <?php if (!$asic) : ?>
         <li class='has-sub' id="visitorTypeDetailsLi"><a href="#"><span>Visitor Type</span></a>
             <ul>
                 <li>
-                    <?php
-                    $visitForm = $this->beginWidget('CActiveForm', array(
-                        'id' => 'update-visit-form',
-                        'htmlOptions' => array("name" => "update-visit-form"),
-                        'enableAjaxValidation' => false,
-                        'enableClientValidation' => true,
-                        'clientOptions' => array(
-                            'validateOnSubmit' => true,
-                            'afterValidate' => 'js:function(form, data, hasError){
-                                if (!hasError){
-                                if($("#Visitor_photo").val() == "" && $("#Visit_card_type").val() == "2" ){
-                                    alert("Please upload a photo.");
-                                }
-                                   else if($(".visitortypedetails").val() == 1){
-                                        if($(".visitortypepatient").val() == ""){
-                                            $("#visitorTypePatientHost").html("Patient Name cannot be blank");
-                                            $("#visitorTypePatientHost").show();
-                                        }
-                                    } else if ($(".visitortypedetails").val() == 2) {
-                                        if($(".visitortypehost").val() == ""){
-                                            $("#visitorTypePatientHost").html("Please select a host");
-                                            $("#visitorTypePatientHost").show();
-                                        }
-                                        else {
-                                            $(".visitorTypePatientHost").hide();
-                                            sendVisitForm("update-visit-form");
-                                        }
-                                    } else {
-                                    $(".visitorTypePatientHost").hide();
-                                    sendVisitForm("update-visit-form");
-                                    }
-                                }
-                                }'
-                        ),
-                    ));
-                    ?>
                     <div class="flash-success success-update-visitor-type"> Visitor Type Updated Successfully.</div>
 
                     <table id="visitorTypeTable" class="detailsTable">
-                        <?php if ($asic) : ?>
                         <tr>
-
-                            <td width="110px;" style="padding-top: 4px;"><?php echo $visitForm->labelEx($model,
-                                    'card_type'); ?></td>
+                            <td width="110px;" style="padding-top:4px;"><?php echo $visitorForm->labelEx($model, 'visitor_type', array('style' => 'padding-left:0;')); ?></td>
                             <td>
-                                <select id="Visit_card_type" name="Visit[card_type]">
-                                    <?php
-                                    $cardType = CardType::model()->findAll();
-                                    foreach ($cardType as $key => $value) {
-                                        if (in_array($key, CardType::$VIC_CARD_TYPE_LIST)) {
-                                            $prefix = 'VIC: ';
-                                        } else {
-                                            $prefix = 'CORPORATE: ';
-                                        }
-                                        ?>
-                                        <option value="<?php echo $value->id; ?>" <?php
-                                        if ($model->card_type == $value->id) {
-                                            echo " selected ";
-                                        }
-                                        ?>><?php echo $prefix . $value->name; ?></option>
-                                    <?php
-                                    }
-                                    ?>
-
-                                </select>
-                                <?php echo "<br>" . $visitForm->error($model, 'card_type'); ?>
-                            </td>
-
-                        </tr>
-                        <?php endif; ?>
-                        <tr>
-
-                            <td width="110px;" style="padding-top:4px;"><?php echo $visitForm->labelEx($model,
-                                    'visitor_type', array('style' => 'padding-left:0;')); ?></td>
-                            <td><?php
+                            <?php
                                 if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
                                     ?>
                                     <select id="Visit_visitor_type" name="Visit[visitor_type]"
@@ -317,29 +247,14 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                     </select>
                                 <?php
                                 } else {
-                                    echo $visitForm->dropDownList($model, 'visitor_type',
-                                        VisitorType::model()->returnVisitorTypes(), array(
-                                            'onchange' => 'visitorTypeOnChange()',
-                                            'class' => 'visitortypedetails',
-                                        ));
+                                    echo $visitorForm->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes(), ['onchange' => 'visitorTypeOnChange()', 'class' => 'visitortypedetails']);
                                 }
-                                ?>
-                                <?php echo "<br>" . $visitForm->error($model, 'visitor_type'); ?>
-                                <div class="errorMessage" id="visitorTypePatientHost" style="display:none;">hello</div>
-                                <input type="text" name="Visit[patient]" id="Visit_patient" style="display:none;"
-                                       class="visitortypepatient" value="<?php echo $model->patient; ?>"/>
-                                <input type="text" name="Visit[host]" id="Visit_host" class="visitortypehost"
-                                       style="display:none;" value="<?php echo $model->host; ?>"/>
+                            ?>
+                            <br />
+                            <?php $visitorForm->error($model, 'visitor_type'); ?>
                             </td>
-
                         </tr>
-                        <?php /* if ($session['role'] != Roles::ROLE_STAFFMEMBER) { */ ?><!--
-                            <tr>
-                                <td><input type='submit' value='Update' class='submitBtn complete'></td>
-                            </tr>
-                        --><?php /* } */ ?>
                     </table>
-                    <?php $this->endWidget(); ?>
                 </li>
             </ul>
         </li>
@@ -348,100 +263,28 @@ $visitorForm = $this->beginWidget('CActiveForm', [
         <li class='has-sub' id="reasonLi"><a href="#"><span>Reason</span></a>
             <ul>
                 <li>
-                    <?php
-                    $reasonForm = $this->beginWidget('CActiveForm', array(
-                        'id' => 'update-reason-form',
-                        'action' => Yii::app()->createUrl('/visit/update&id=' . $model->reason),
-                        'htmlOptions' => array("name" => "update-reason-form"),
-                        'enableAjaxValidation' => false,
-                        'enableClientValidation' => true,
-                        'clientOptions' => array(
-                            'validateOnSubmit' => true,
-                            'afterValidate' => 'js:function(form, data, hasError){
-                                if (!hasError){
-                                    if($("#Visit_reason").val() == "" || $("#Visit_reason").val() == "Other" ){
-                                        $("#visitReason").show();
-                                        
-                                    }else 
-                                    {
-                                        $("#visitReason").hide();
-                                        sendUpdateReasonForm();
-                                    }
-                                }
-                                }'
-                        ),
-                    ));
-                    ?>
-                    <div class="flash-success success-update-reason">Reason Updated Successfully.</div>
-                    <div class="flash-success success-add-reason">Reason Added Successfully.</div>
-
                     <table id="reasonTable" class="detailsTable">
                         <tr>
                             <td width="110px;" style="padding-top:4px;"><label for="Visit_reason">Reason</label></td>
                             <td>
-                                <select id="Visit_reason" name="Visit[reason]"
-                                        onchange="ifSelectedIsOtherShowAddReasonDiv(this)">
-                                    <option value='' selected>Please select a reason</option>
-                                    <option value="Other">Other</option>
-                                    <?php
-                                    $reason = VisitReason::model()->findAllReason();
-                                    foreach ($reason as $key => $value) {
-                                        ?>
-                                        <option value="<?php echo $value->id; ?>" <?php
-                                        if ($model->reason == $value->id) {
-                                            echo " selected ";
-                                        }
-                                        ?>><?php echo $value->reason; ?></option>
-                                    <?php
-                                    }
-                                    ?>
-
-                                </select><br>
-                                <?php echo $reasonForm->error($model, 'reason'); ?>
-                                <div class="errorMessage visitorReason" id="visitReason">Please select a reason</div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><input type="submit" value="Update" name="yt0" id="submitReasonForm" class="complete"/>
+                            <?php
+                                $reason = CHtml::listData(VisitReason::model()->findAllReason(), 'id', 'reason');
+                                $reason['Other'] = 'Other';
+                                echo $visitorForm->dropDownList($model, 'reason', $reason, ['onchange' => 'ifSelectedIsOtherShowAddReasonDiv(this)', 'empty' => 'Please select a reason']);
+                            ?>
+                            <br />
+                            <?php echo $visitorForm->error($model, 'reason'); ?>
                             </td>
                         </tr>
                     </table>
-                    <?php $this->endWidget(); ?>
-                    <?php
-                    $addReasonForm = $this->beginWidget('CActiveForm', array(
-                        'id' => 'add-reason-form',
-                        'action' => Yii::app()->createUrl('/visitReason/create&register=1'),
-                        'htmlOptions' => array("name" => "add-reason-form"),
-                        'enableAjaxValidation' => false,
-                        'enableClientValidation' => true,
-                        'clientOptions' => array(
-                            'validateOnSubmit' => true,
-                            'afterValidate' => 'js:function(form, data, hasError){
-                                if (!hasError){
-                                    checkReasonIfUnique();
-                                }
-                            }'
-                        ),
-                    ));
-                    ?>
                     <table id="addreasonTable" class="detailsTable">
                         <tr>
                             <td width="110px;"><label for="VisitReason_reason">Reason</label></td>
-                            <td><textarea id="VisitReason_reason" name="VisitReason[reason]"
-                                          style="width:200px !important;text-transform: capitalize;" cols="80" rows="3"><?php
-                                    echo $reasonModel->reason;
-                                    ?></textarea> <?php echo $addReasonForm->error($reasonModel, 'reason'); ?>
-                                <div class="errorMessage visitorReason" id="visitReasonErrorMessage">Please select a
-                                    reason
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><input type="submit" value="Add" name="yt0" id="submitAddReasonForm" class="complete"/>
+                            <td>
+                            <?php echo $visitorForm->textArea($reasonModel, 'reason', ['style' => 'width:200px !important;text-transform: capitalize;', 'rows' => '3', 'cols' => '80']) ?>
                             </td>
                         </tr>
                     </table>
-                    <?php $this->endWidget(); ?>
                 </li>
             </ul>
         </li>
@@ -709,9 +552,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
         <li>
             <ul>
                 <li>
-                <?php
-                if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN, Roles::ROLE_SUPERADMIN]) && !in_array($model->visit_status, [VisitStatus::CLOSED])) :
-                ?>
+                <?php if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN, Roles::ROLE_SUPERADMIN])) : ?>
                     <button type="submit" class="greenBtn btnUpdateVisitorInfo" name="updateVisitorInfo">Update</button>
                 <?php endif; ?>
                 </li>

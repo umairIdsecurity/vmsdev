@@ -107,21 +107,23 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                         <?php
                                         if ($asic) {
                                             $this->renderPartial('activateavisit-vic', array(
-                                                'model' => $model,
+                                                'model'        => $model,
                                                 'visitorModel' => $visitorModel,
-                                                'hostModel' => $hostModel,
-                                                'reasonModel' => $reasonModel,
-                                                'asic' => $asic,
-                                                'logform' => $logform,
-                                                'session' => $session,
+                                                'hostModel'    => $hostModel,
+                                                'reasonModel'  => $reasonModel,
+                                                'asic'         => $asic,
+                                                'logform'      => $logform,
+                                                'session'      => $session,
+                                                'visitCount'   => $visitCount
                                             ));
                                         } else {
                                             $this->renderPartial('activateavisit', array(
-                                                'model' => $model,
+                                                'model'        => $model,
                                                 'visitorModel' => $visitorModel,
-                                                'hostModel' => $hostModel,
-                                                'reasonModel' => $reasonModel,
-                                                'logform' => $logform
+                                                'hostModel'    => $hostModel,
+                                                'reasonModel'  => $reasonModel,
+                                                'logform'      => $logform,
+                                                'visitCount'   => $visitCount
                                             ));
                                         }
                                         ?>
@@ -381,7 +383,6 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
         });
 
         $(document).on('click', '#registerNewVisit', function (e) {
-
             var imgsrc;
             $("#photoPreview").each(function() {
                 imgsrc = this.src;
@@ -392,16 +393,18 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
 
             if( isDefault > 0 || (profileImage == '' && isChanged > 0)) {
                 <?php if ($model->card_type > CardType::CONTRACTOR_VISITOR ) : ?>
-                    <?php if(!in_array($model->card_type, [CardType::SAME_DAY_VISITOR, CardType::MANUAL_VISITOR, CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_MANUAL])) : ?>
-                    $("#Visitor_photo_em").attr('style', 'margin-right:84px ; margin-bottom:0px; margin-top:0px ;');
-                    $("#editImageBtn.editImageBtn").attr('style', 'margin-top:-5px !important; margin-right:84px ; margin-bottom:0px;');
-                    $("#cropImageBtn.editImageBtn").attr('style', 'margin-top:-5px !important; margin-right:84px ; margin-bottom:0px;');
-                    return;
+                    <?php if(!in_array($model->card_type, [ CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_MANUAL])) : ?>
+                        $("#Visitor_photo_em").attr('style', 'margin-right:84px ; margin-bottom:0px; margin-top:0px ;');
+                        $("#editImageBtn.editImageBtn").attr('style', 'margin-top:-5px !important; margin-right:84px ; margin-bottom:0px;');
+                        $("#cropImageBtn.editImageBtn").attr('style', 'margin-top:-5px !important; margin-right:84px ; margin-bottom:0px;');
+                        return;
                     <?php endif; ?>
                 <?php else : ?>
-                    $("#Visitor_photo_em").attr('style', 'margin-bottom: -17px; margin-right: 0px; margin-top: 13px;');
-                    $("#cropImageBtn.editImageBtn").attr('style', 'margin-bottom: 0; margin-right: 0 !important; margin-top: 0 !important;');
-                    return;
+                    <?php if(!in_array($model->card_type, [CardType::SAME_DAY_VISITOR, CardType::MANUAL_VISITOR])) : ?>
+                        $("#Visitor_photo_em").attr('style', 'margin-bottom: -17px; margin-right: 0px; margin-top: 13px;');
+                        $("#cropImageBtn.editImageBtn").attr('style', 'margin-bottom: 0; margin-right: 0 !important; margin-top: 0 !important;');
+                        return;
+                    <?php endif; ?>
                 <?php endif; ?>
             }
 

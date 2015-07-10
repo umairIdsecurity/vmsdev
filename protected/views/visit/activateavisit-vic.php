@@ -202,9 +202,19 @@ $asicEscort = new AddAsicEscort();
 </table>
 <script>
     $(document).ready(function() {
-        // for Card Type Manual
-        var minDate = '<?php echo $model->card_type == CardType::VIC_CARD_MANUAL ? "-12m" : "0"; ?>';
-        var maxDate = '<?php echo in_array($model->card_type, [CardType::VIC_CARD_MULTIDAY]) ? "+28d" : "0"; ?>';
+        // Set min & max date for check out datepicker
+        var cardType = "<?php echo $model->card_type; ?>";
+        switch(cardType) {
+            case "<?php echo CardType::VIC_CARD_MANUAL; ?>":
+                var minDate = "-12m";
+                break;
+            case "<?php echo CardType::VIC_CARD_MULTIDAY; ?>":
+                var minDate = "0";
+                break;
+            default:
+                var minDate = "0";
+                break;
+        }
         refreshTimeIn();
 
         $("#Visit_date_check_in").datepicker({
@@ -215,14 +225,20 @@ $asicEscort = new AddAsicEscort();
             buttonImageOnly: true,
             minDate: minDate,
             dateFormat: "dd-mm-yy",
-            onClose: function (dateText) {
+            onClose: function (selectedDate) {
                 var currentDate  = new Date();
-                var date         = dateText.substring(0, 2);
-                var month        = dateText.substring(3, 5);
-                var year         = dateText.substring(6, 10);
-                var selectedDate = new Date(year, month-1, date, '23', '59', '59');
 
-                $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "option", "minDate", selectedDate);
+                switch(cardType) {
+                    case "<?php echo CardType::VIC_CARD_MULTIDAY; ?>":
+                        var addDays = $("#Visit_date_check_in").datepicker('getDate');
+                        addDays.setDate(addDays.getDate()+<?php echo $visitCount['remainingDays'];?>);
+                        $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "option", "minDate", selectedDate);
+                        $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "option", "maxDate", addDays);
+                        break;
+                    default:
+                        $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "option", "minDate", selectedDate);
+                        break;
+                }
 
                 function updateTextVisitButton(text, id, val) {
                     $("#registerNewVisit").text(text).val(val);
@@ -286,16 +302,16 @@ $asicEscort = new AddAsicEscort();
             buttonImage: "<?php echo Yii::app()->controller->assetsBase; ?>/images/calendar.png",
             buttonImageOnly: true,
             minDate: minDate,
-            //maxDate: "+28d",
             dateFormat: "dd-mm-yy",
             disabled: <?php echo in_array($model->card_type, [CardType::VIC_CARD_24HOURS, CardType::VIC_CARD_MANUAL]) ? "true" : "false"; ?>,
-            onClose: function (date) {
-                var day      = date.substring(0, 2);
-                var month    = date.substring(3, 5);
-                var year     = date.substring(6, 10);
+            onClose: function (selectDate) {
+                var day      = selectDate.substring(0, 2);
+                var month    = selectDate.substring(3, 5);
+                var year     = selectDate.substring(6, 10);
                 var newDate  = new Date(year, month-1, day);
                 var cardDate = $.datepicker.formatDate('dd M y', newDate);
                 $("#cardDetailsTable span.cardDateText").html(cardDate);
+
             }
         });
 
@@ -396,7 +412,7 @@ $asicEscort = new AddAsicEscort();
             <tr class="asic-escort hidden">
                 <td></td>
                 <td>
-                    <input type="text" id="search-escort" style="width:280px" name="search-host"
+                    <input type="text" id="search-escort" style="width:293px" name="search-host"
                            placeholder="Enter name, email address" class="search-text"/>
                     <button type="button" class="btn btn-primary" id="findEscortBtn" style="margin-bottom: 14px!important;" onclick="" id="escort-findBtn">Search ASIC Escort</button>
                     <div id="divMsg" style="display:none;">

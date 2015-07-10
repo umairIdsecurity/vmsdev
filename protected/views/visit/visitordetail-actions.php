@@ -433,27 +433,22 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                 return false;
             }
 
-            var is_vic_holder_checked = $('#VivHolderDecalarations').is(':checked'),
+            var is_vic_holder_checked = $('#VicHolderDecalarations').is(':checked'),
                 is_asic_holder_checked = $('#AsicSponsorDecalarations').is(':checked');
 
             var declarations_checkboxs = $('.vic-active-declarations');
             var confirmed = isCheckboxsChecked(declarations_checkboxs);
 
             if (!confirmed && $this.val() !== 'preregister') {
-                if (!$('#VivHolderDecalarations').is(':checked') && $('#AsicSponsorDecalarations').is(':checked')) {
+                if (!$('#VicHolderDecalarations').is(':checked') && $('#AsicSponsorDecalarations').is(':checked')) {
                     $('#vicHolderModal').modal('show');
                     $btnVic.on('click', function(e) {
-                        var vicChecked = vicCheck();
-                        if (vicChecked) {
-                            activeVisit();
-                        } else {
-                            alert('Please select all the declarations.');
-                            return false;
-                        }
+                        $('#identificationModal').modal('show');
                     });
-                } else if (!$('#AsicSponsorDecalarations').is(':checked') && $('#VivHolderDecalarations').is(':checked')){
+                } else if (!$('#AsicSponsorDecalarations').is(':checked') && $('#VicHolderDecalarations').is(':checked')){
                     $('#asicSponsorModal').modal('show');
                     $btnASIC.on('click', function(e) {
+                        $('#identificationModal').modal('show');
                     });
                 } else {
                     $('#vicHolderModal').modal('show');
@@ -462,9 +457,15 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                         if (vicChecked) {
                             $('#asicSponsorModal').modal('show');
                             $btnASIC.on('click', function(e) {
+                                if ($('#asicEscortRbtn').is(':checked')) {
+                                    checkEscortEmailUnique();
+                                } else {
+                                    if (asicCheck()) {
+                                        $('#identificationModal').modal('show');
+                                    }
+                                }
                             });
                         } else {
-                            //alert('Please select all the declarations.');
                             return false;
                         }
                     });

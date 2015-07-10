@@ -33,7 +33,7 @@ $asicEscort = new AddAsicEscort();
     <?php if ($model->visit_status != VisitStatus::AUTOCLOSED): ?>
     <tr>
         <td class="vic-col">
-            <input type="checkbox" value="1" name="VivHolderDecalarations" disabled="disabled" id="VivHolderDecalarations" class="vic-active-visit vic-active-declarations"/>
+            <input type="checkbox" value="1" name="VicHolderDecalarations" disabled="disabled" id="VicHolderDecalarations" class="vic-active-visit vic-active-declarations"/>
             <a href="#vicHolderModal" data-toggle="modal">VIC Holder Declarations</a>
         </td>
     </tr>
@@ -437,9 +437,9 @@ $asicEscort = new AddAsicEscort();
 <script type="text/javascript">
     function vicHolderDeclarationChange() {
         if ($("#refusedAsicCbx").is(':checked') && $('#issuedVicCbx').is(':checked')) {
-            $('#VivHolderDecalarations').prop('checked', true);
+            $('#VicHolderDecalarations').prop('checked', true);
         } else {
-            $('#VivHolderDecalarations').prop('checked', false);
+            $('#VicHolderDecalarations').prop('checked', false);
         }
         $('#vicHolderModal').modal('hide');
     }
@@ -665,13 +665,6 @@ $asicEscort = new AddAsicEscort();
                         $('#divMsg').hide();
                     }
                 });
-            }
-        });
-        $('#btnAsicConfirm').on('click',function(){
-            if ($('#asicEscortRbtn').is(':checked')) {
-                checkEscortEmailUnique();
-            } else {
-                asicCheck();
             }
         });
 

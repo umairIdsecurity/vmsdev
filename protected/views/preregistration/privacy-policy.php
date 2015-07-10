@@ -27,7 +27,7 @@
         </ol>
     </div>
     <div class="privacy-info">
-        <p>Please read this information carefully and complete all the sections. Failure to do so may result in processing delays.</p>
+
         <h3 class="text-primary">Important information regarding the Visitor Information Card (VIC):</h3>
         <div class="bg-gray-lighter privacy-notice">
             <div>

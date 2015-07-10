@@ -197,7 +197,7 @@ class Registration extends CActiveRecord {
 			contact_street_name, contact_street_type, contact_suburb, contact_postcode,
 			contact_state', 'required' ,'on' => 'preregistration'),
 
-            //array('first_name, last_name, email, contact_number, asic_no , asic_expiry', 'required' , 'on' => 'asic'),
+            array('first_name, last_name, email, contact_number, asic_no , asic_expiry', 'required' , 'on' => 'asic'),
             array('password', 'required' , 'on' => 'asic-pass'),
             array('password_repeat', 'compare', 'compareAttribute'=>'password', 'message'=>"Passwords don't match"),
 

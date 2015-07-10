@@ -222,12 +222,11 @@
         $('#search_asic_btn').click(function(event) {
             event.preventDefault();
 
-            $("#loader").show();
-
             var search = $("#search_asic_box").val();
             var base_url = $("#base_url").val();
 
             if (search.length > 0) {
+                $("#loader").show();
                 var search_value = 'search_value=' + search;
 
                 $.ajax({
@@ -238,10 +237,8 @@
 
                         if(data == 'No Record'){
                             $("#asic-notification").show();
-                            //$("#asic_search_result").hide();
                         }
                         else{
-                            //$("#asic-notification").hide();
                             $("#asic_search_result").show();
                             $('#showresults').html(data);
                         }

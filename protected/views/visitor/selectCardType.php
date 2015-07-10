@@ -85,6 +85,20 @@ if (!$cardTypeWorkstationModel) {
                 return false;
             }
 
+            $.ajax({
+                type: 'POST',
+                url: '<?php echo Yii::app()->createUrl('VisitorType/getFromCardType&cardtype='); ?>' + card_type_value,
+                dataType: 'json',
+                data: card_type_value,
+                success: function (r) {
+                    var opt = '';
+                    $.each(r, function (index, value) {
+                        opt += '<option value="' + value.id + '">' + value.name + '</option>';
+                    });
+                    $('#Visitor_visitor_type').html(opt);
+                }
+            });
+
             var dateoutDiv = $("#dateoutDiv");
             if (card_type_value == SAMEDAY_TYPE ) {
                 var curdateLogVisit = $("#curdateLogVisit");
@@ -98,6 +112,9 @@ if (!$cardTypeWorkstationModel) {
                 dateoutDiv.show();
                 $(".ui-datepicker-trigger").show();
             }
+
+
+
 
             $("#cardtype").val(card_type_value);
             $("#Visit_card_type").val(card_type_value);

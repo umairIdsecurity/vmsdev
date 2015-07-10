@@ -219,7 +219,7 @@
 
         $('#search_asic_btn').click(function(event) {
             event.preventDefault();
-            
+
             $("#loader").show();
 
             var search = $("#search_asic_box").val();
@@ -252,6 +252,7 @@
             }
             else{
                 $("#asic_search_result").hide();
+                $("#asic-notification").hide();
                 $("#search_asic_error").show();
             }
 

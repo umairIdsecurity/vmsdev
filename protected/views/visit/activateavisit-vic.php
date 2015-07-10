@@ -205,10 +205,10 @@ $asicEscort = new AddAsicEscort();
         // Set min & max date for check out datepicker
         var cardType = "<?php echo $model->card_type; ?>";
         switch(cardType) {
-            case "<?php echo CardType::VIC_CARD_MANUAL ?>":
+            case "<?php echo CardType::VIC_CARD_MANUAL; ?>":
                 var minDate = "-12m";
                 break;
-            case "<?php echo CardType::VIC_CARD_MULTIDAY ?>":
+            case "<?php echo CardType::VIC_CARD_MULTIDAY; ?>":
                 var minDate = "0";
                 break;
             default:
@@ -216,7 +216,6 @@ $asicEscort = new AddAsicEscort();
                 break;
         }
         refreshTimeIn();
-        var onCloseCheckInDate;
 
         $("#Visit_date_check_in").datepicker({
             changeMonth: true,
@@ -228,8 +227,18 @@ $asicEscort = new AddAsicEscort();
             dateFormat: "dd-mm-yy",
             onClose: function (selectedDate) {
                 var currentDate  = new Date();
-                onCloseCheckInDate = selectedDate;
-                $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "option", "minDate", selectedDate);
+
+                switch(cardType) {
+                    case "<?php echo CardType::VIC_CARD_MULTIDAY; ?>":
+                        var addDays = $("#Visit_date_check_in").datepicker('getDate');
+                        addDays.setDate(addDays.getDate()+<?php echo $visitCount['remainingDays'];?>);
+                        $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "option", "minDate", selectedDate);
+                        $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "option", "maxDate", addDays);
+                        break;
+                    default:
+                        $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "option", "minDate", selectedDate);
+                        break;
+                }
 
                 function updateTextVisitButton(text, id, val) {
                     $("#registerNewVisit").text(text).val(val);
@@ -286,20 +295,6 @@ $asicEscort = new AddAsicEscort();
             }
         });
 
-        switch(cardType) {
-            case "<?php echo CardType::VIC_CARD_MANUAL ?>":
-                var minDate = "-12m";
-                break;
-            case "<?php echo CardType::VIC_CARD_MULTIDAY ?>":
-                var minDate = "0";
-                var maxDate = "+<?php echo $visitCount['remainingDays']; ?>d";
-                //$( "#dateoutDiv #Visit_date_check_out" ).datepicker( "option", "maxDate", maxDate);
-                break;
-            default:
-                var minDate = "0";
-                break;
-        }
-
         $("#dateoutDiv #Visit_date_check_out").datepicker({
             changeMonth: true,
             changeYear: true,
@@ -307,7 +302,6 @@ $asicEscort = new AddAsicEscort();
             buttonImage: "<?php echo Yii::app()->controller->assetsBase; ?>/images/calendar.png",
             buttonImageOnly: true,
             minDate: minDate,
-            maxDate: maxDate,
             dateFormat: "dd-mm-yy",
             disabled: <?php echo in_array($model->card_type, [CardType::VIC_CARD_24HOURS, CardType::VIC_CARD_MANUAL]) ? "true" : "false"; ?>,
             onClose: function (selectDate) {

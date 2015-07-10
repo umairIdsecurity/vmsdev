@@ -63,7 +63,7 @@
             <tr>
                 <td style="width:160px;"><?php echo $form->labelEx($model,'companyName'); ?></td>
                 <td>
-                    <?php echo $form->textField($model, 'companyName', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Company Name', 'class' => 'ui-autocomplete-input', 'autocomplete' => 'off')); ?>
+                    <?php echo $form->textField($model, 'companyName', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Company Name', 'class' => 'ui-autocomplete-input', 'autocomplete' => 'on')); ?>
                     <?php echo "<br>" . $form->error($model, 'companyName'); ?>
                 </td>
             </tr>
@@ -166,6 +166,7 @@
         $("#AddCompanyContactForm_companyName").autocomplete({
             source: availableTags
         });
+        $(".ui-front").css("z-index", 1051);
     });
 
 </script>

@@ -13,7 +13,20 @@ if (strlen($visitorModel->first_name . ' ' . $visitorModel->last_name) > 32) {
     $visitorName = $visitorModel->first_name . ' ' . $visitorModel->last_name;
 }
 
-$company = Company::model()->findByPk($visitorModel->company);
+$tenant = User::model()->findByPk($visitorModel->created_by);
+if ($tenant) {
+    $company = Company::model()->findByPk($tenant->company);
+    if ($company) {
+        $companyName = $company->name;
+        $companyLogoId = $company->logo;
+        $companyCode = $company->code;
+    } else {
+        throw new CHttpException(404, 'Company not found for this User.');
+    }
+} else {
+    throw new CHttpException(404, 'Company not found for this User.');
+}
+/*$company = Company::model()->findByPk($visitorModel->company);
 if ($company) {
     $companyName = $company->name;
     $companyLogoId = $company->logo;
@@ -21,8 +34,8 @@ if ($company) {
 } else {
     throw new CHttpException(404, 'Company not found for this User.');
 }
-
-$companyLogo =  Photo::model()->getAbsolutePathOfImage(Photo::COMPANY_IMAGE, $visitorModel->company);
+*/
+$companyLogo =  Photo::model()->getAbsolutePathOfImage(Photo::COMPANY_IMAGE, $tenant->company);
 
 if ($companyLogo  == Photo::model()->defaultAbsoluteImage() ){
     $companyLogo = null;
@@ -55,7 +68,7 @@ switch ($model->card_type) {
 
 $first_name = $visitorModel->first_name != "" ? $visitorModel->first_name : "N/A";
 $last_name = $visitorModel->last_name != "" ? $visitorModel->last_name : "N/A";
-$cardCode = $cardCode != "" ? $cardCode : "N/A";
+//$cardCode = $cardCode != "" ? $cardCode : "N/A";
 
 //if ($model->time_check_out && $model->card_type == CardType::VIC_CARD_24HOURS && $model->visit_status == VisitStatus::ACTIVE) {
 //$dateExpiry.="<br>" . substr($model->time_check_out, 0, -3);

@@ -430,7 +430,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             var declarations_checkboxs = $('.vic-active-declarations');
             var confirmed = isCheckboxsChecked(declarations_checkboxs);
 
-            if (!confirmed && $('#registerNewVisit').html() !== 'Preregister Visit') {
+            if (!confirmed && $this.val() !== 'preregister') {
                 if (!$('#VivHolderDecalarations').is(':checked') && $('#AsicSponsorDecalarations').is(':checked')) {
                     $('#vicHolderModal').modal('show');
                     $btnVic.on('click', function(e) {
@@ -484,8 +484,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                     }
                     activeVisit();
                 } else {
-                    alert('Please agree VIC verification before active visit.');
-                    addWarningLabel(vic_active_visit_checkboxs);
+                    $('#identificationModal').modal('show');
                 }
             }
 

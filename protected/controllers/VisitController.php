@@ -472,10 +472,7 @@ class VisitController extends Controller {
             // close visit process
             if (isset($visitParams['visit_status']) && $visitParams['visit_status'] == VisitStatus::CLOSED) {
                 if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && strtotime(date('Y-m-d')) <= strtotime($model->date_check_out)) {
-                    $currentDate = date('Y-m-d');
                     $model->visit_status = VisitStatus::AUTOCLOSED;
-                    $model->finish_date = $model->date_check_in = date('Y-m-d');
-                    $model->finish_time = $model->time_check_in = date('H:i:s');
                     switch ($model->card_type) {
                         case CardType::VIC_CARD_24HOURS: // VIC 24 hour
                             #change datetime check in and out for vic 24h.

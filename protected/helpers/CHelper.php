@@ -110,5 +110,22 @@ class CHelper
         }
         return false;
     }
+    
+    /**
+     * Send Access code for Tenant
+     * 1= AVMS, 2= CVMS, 3= Both
+     * @return int code of allowed module
+     */
+    public static function get_module_access($post) {
+        $access = NULL;
+        if( isset($post['module_access_avms']))
+            $access = 1; // 1= AVMS
+        if( isset($post['module_access_cvms']))
+            $access = 2; // 2= CVMS
+        if(isset($post['module_access_avms']) && isset($post['module_access_cvms']))
+            $access = 3; // 3= For both AVMS and CVMS
+        
+        return $access;            
+    }
 
 }

@@ -134,7 +134,7 @@ class VisitorController extends Controller {
 
         if (isset($_POST['Visitor'])) {
             $currentCardStatus = $model->visitor_card_status;
-            if (isset($_POST['Visitor']['visitor_card_status']) && $currentCardStatus == 2 && $_POST['Visitor']['visitor_card_status'] == 3) {
+            if (isset($_POST['Visitor']['visitor_card_status']) && $currentCardStatus == Visitor::VIC_HOLDER && $_POST['Visitor']['visitor_card_status'] == Visitor::VIC_ASIC_PENDING) {
                 $activeVisit = $model->activeVisits;
                 foreach ($activeVisit as $item) {
                     if ($item->visit_status == VisitStatus::ACTIVE) {
@@ -142,9 +142,10 @@ class VisitorController extends Controller {
                     }
                 }
                 if ($updateErrorMessage == '') {
+                    $totalVisitCountBefore = $model->totalVisit;
                     $model->attributes = $_POST['Visitor'];
                     if ($visitorService->save($model, NULL, $session['id'])) {
-                        if ($model->totalVisit > 0) {
+                        if ($totalVisitCountBefore > 0) {
                             $resetHistory = new ResetHistory();
                             $resetHistory->visitor_id = $model->id;
                             $resetHistory->reset_time = date("Y-m-d H:i:s");
@@ -170,7 +171,7 @@ class VisitorController extends Controller {
             }elseif (isset($_POST['Visitor']['visitor_card_status']) && $_POST['Visitor']['visitor_card_status'] == Visitor::ASIC_ISSUED && $model->profile_type == Visitor::PROFILE_TYPE_VIC  ){
                 $model->attributes = $_POST['Visitor'];
                 $model->profile_type = Visitor::PROFILE_TYPE_ASIC;
-                $model->visitor_card_status = 6;
+                $model->visitor_card_status = Visitor::ASIC_ISSUED;
                 if($visitorService->save($model, NULL, $session['id'])) {
                     $logCardstatusConvert = new CardstatusConvert();
                     $logCardstatusConvert->visitor_id = $model->id;

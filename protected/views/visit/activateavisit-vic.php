@@ -402,7 +402,7 @@ $asicEscort = new AddAsicEscort();
                     <div id="divMsg" style="display:none;">
                         <img id="findEscortBtn" src="<?php echo Yii::app()->controller->assetsBase; ?>/images/loading.gif" alt="Please wait.." />
                     </div>
-                    <div class="errorMessage" id="searchEscortErrorMessage" style=" display:none;">Please enter asic escort name or email for searching</div>
+                    <div class="errorMessage" id="searchEscortErrorMessage" style=" display:none;">Search cannot be blank</div>
                     <div class="searchAsicEscortResult"></div>
                     <div class="add-esic-escort">
                         <?php $this->renderPartial('_add_asic_escort',array('model' => $asicEscort, 'session' => $session,)) ?>
@@ -532,7 +532,12 @@ $asicEscort = new AddAsicEscort();
                     if ($(this).val() == '') {
                         var error = '#' + $(this).attr('id') + '_em_';
                         var placeholder = $(this).attr('placeholder');
-                        $(error).html('Please enter a ' + placeholder );
+                        if(placeholder == 'ASIC No' ||placeholder == 'Expiry' ||placeholder == 'Email Address') {
+                            $(error).html('Please enter an ' + placeholder);
+                        } else {
+                            $(error).html('Please enter a ' + placeholder );
+                        }
+
                         $(error).show();
                         noError = false;
                     }

@@ -4,15 +4,9 @@
     }
 </style>
 <?php
-
-if (isset($_GET['cardType']) && $_GET['cardType'] > CardType::CONTRACTOR_VISITOR) {
     $dataProvider = new CActiveDataProvider($model, array(
         'criteria' => $criteria,
     ));
-} else {
-    $dataProvider = $model->search($criteria);
-}
-
 if ($visitorType != VisitorType::PATIENT_VISITOR) {
     $this->widget('zii.widgets.grid.CGridView', array(
         'id' => 'findHost-grid-1',
@@ -31,7 +25,7 @@ if ($visitorType != VisitorType::PATIENT_VISITOR) {
             [
                 'name' => 'company',
                 'filter' => false,
-                'value' => '$data->getCompanyForLogVisit()? $data->getCompanyForLogVisit()->name : ""'
+                'value' => '$data->getCompanyForLogVisit()? $data->getCompanyForLogVisit()->name : "NO COMPANY"'
             ],
             array(
                 'header' => 'Action',

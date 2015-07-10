@@ -396,7 +396,7 @@ $asicEscort = new AddAsicEscort();
             <tr class="asic-escort hidden">
                 <td></td>
                 <td>
-                    <input type="text" id="search-escort" style="width:280px" name="search-host"
+                    <input type="text" id="search-escort" style="width:293px" name="search-host"
                            placeholder="Enter name, email address" class="search-text"/>
                     <button type="button" class="btn btn-primary" id="findEscortBtn" style="margin-bottom: 14px!important;" onclick="" id="escort-findBtn">Search ASIC Escort</button>
                     <div id="divMsg" style="display:none;">

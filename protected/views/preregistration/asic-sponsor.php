@@ -22,10 +22,10 @@
         font-size: 10px;
         position: relative;
         text-indent: -9999em;
-        border-top: 1.1em solid rgba(153, 153, 153, 0.20);
-        border-right: 1.1em solid rgba(153, 153, 153, 0.20);
-        border-bottom: 1.1em solid rgba(153, 153, 153, 0.20);
-        border-left: 1.1em solid #428bca;
+        border-top: .5em solid rgba(153, 153, 153, 0.20);
+        border-right: .5em solid rgba(153, 153, 153, 0.20);
+        border-bottom: .5em solid rgba(153, 153, 153, 0.20);
+        border-left: .5em solid #428bca;
         -webkit-transform: translateZ(0);
         -ms-transform: translateZ(0);
         transform: translateZ(0);
@@ -35,8 +35,8 @@
     .loader,
     .loader:after {
         border-radius: 50%;
-        width: 10em;
-        height: 10em;
+        width: 3em;
+        height: 3em;
     }
     @-webkit-keyframes load8 {
         0% {

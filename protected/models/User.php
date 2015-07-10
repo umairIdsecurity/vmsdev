@@ -85,6 +85,13 @@ class User extends VmsActiveRecord {
         1 => 'Open',
         2 => 'Access Denied',
     );
+    
+    // Module  Allowed to view by a Tenant user
+    public static $allowed_module = array(
+            1 => 'AVMS',
+            2 => 'CVMS',
+            3 => 'Both'
+        );
 
     /**
      * @return string the associated database table name
@@ -132,7 +139,7 @@ class User extends VmsActiveRecord {
                 // @todo Please remove those attributes that should not be searched.
                 array('id, companyname,first_name, last_name,email,photo,is_deleted ,contact_number, date_of_birth, company, department, position, staff_id, notes, role_id, user_type_id, user_status_id, created_by', 'safe', 'on' => 'search'),
 				
-		array('is_required_induction, is_completed_induction, induction_expiry ', 'safe'),
+		array('is_required_induction, is_completed_induction, induction_expiry, allowed_module', 'safe'),
                 
             );
         } else {
@@ -154,7 +161,7 @@ class User extends VmsActiveRecord {
                 // @todo Please remove those attributes that should not be searched.
                 array('id, first_name, companyname,last_name,email,photo,is_deleted,assignedWorkstations,contact_number, date_of_birth, company, department, position, staff_id, notes, role_id, user_type_id, user_status_id, created_by', 'safe', 'on' => 'search'),
 				
-				array('is_required_induction, is_completed_induction, induction_expiry ', 'safe'),
+		array('is_required_induction, is_completed_induction, induction_expiry, allowed_module', 'safe'),
                
             );
         }

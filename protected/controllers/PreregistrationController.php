@@ -8,7 +8,7 @@ class PreregistrationController extends Controller
 	public function filters() {
 		return array(
 			'accessControl', // perform access control for CRUD operations
-			'postOnly + delete', // we only allow deletion via POST request
+			'postOnly + delete , ajaxAsicSearch', // we only allow deletion via POST request
 		);
 	}
 
@@ -20,7 +20,7 @@ class PreregistrationController extends Controller
 	public function accessRules() {
 		return array(
 			array('allow',
-				'actions' => array('index','privacyPolicy' , 'declaration' , 'Login' ,'registration','confirmDetails', 'visitReason' , 'addAsic' , 'asicPass', 'error' , 'uploadPhoto' ),
+				'actions' => array('index','privacyPolicy' , 'declaration' , 'Login' ,'registration','confirmDetails', 'visitReason' , 'addAsic' , 'asicPass', 'error' , 'uploadPhoto','ajaxAsicSearch' ),
 				'users' => array('*'),
 			),
 			array('allow',
@@ -280,6 +280,65 @@ class PreregistrationController extends Controller
 		}
 
 		$this->render('asic-sponsor' , array('model'=>$model) );
+	}
+
+	public function actionAjaxAsicSearch(){
+
+		if(isset($_POST['search_value']) && !empty($_POST['search_value'])){
+
+			$searchValue = trim($_POST['search_value']);
+			$purifier = new CHtmlPurifier();
+			$searchValue = $purifier->purify($searchValue);
+
+			if (filter_var($searchValue, FILTER_VALIDATE_EMAIL)) {
+				$model =  Registration::model()->findAllByAttributes(
+					array(
+						'email'=>$searchValue
+					)
+				);
+				if(!empty($model)){
+					foreach($model as $data){
+						echo '<tr>
+						<th scope="row">
+							<input type="radio" name="selected_asic" id="selected_asic" value="'.$data->id.'">
+						</th>
+						<td>'.$data->first_name.'</td>
+						<td>'.$data->last_name.'</td>
+						<td>'.$data->visitorStatus->name.'</td>
+					</tr>';
+					}
+				}
+				else{
+					echo "No Record";
+				}
+
+			}
+			else{
+				$model =  Registration::model()->findAllByAttributes(
+					array(
+						'first_name'=>$searchValue
+					)
+				);
+				if(!empty($model)){
+					foreach($model as $data){
+						echo '<tr>
+						<th scope="row">
+							<input type="radio" name="selected_asic" id="selected_asic" value="'.$data->id.'">
+						</th>
+						<td>'.$data->first_name.'</td>
+						<td>'.$data->last_name.'</td>
+						<td>'.$data->visitorStatus->name.'</td>
+					</tr>';
+					}
+				}
+				else{
+					echo "No Record";
+				}
+			}
+		}
+		else{
+			throw new CHttpException(400,'Unable to solve the request');
+		}
 	}
 
 	public function actionUploadPhoto(){

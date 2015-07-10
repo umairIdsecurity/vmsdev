@@ -6,6 +6,67 @@
  * Time: 2:59 AM
  */
 ?>
+<style type="text/css">
+    #search_asic_error{
+        display: none;
+    }
+    #asic_search_result{
+        display: none;
+    }
+
+    #loader{
+        display: none;
+    }
+    .loader {
+        margin: 60px auto;
+        font-size: 10px;
+        position: relative;
+        text-indent: -9999em;
+        border-top: .5em solid rgba(153, 153, 153, 0.20);
+        border-right: .5em solid rgba(153, 153, 153, 0.20);
+        border-bottom: .5em solid rgba(153, 153, 153, 0.20);
+        border-left: .5em solid #428bca;
+        -webkit-transform: translateZ(0);
+        -ms-transform: translateZ(0);
+        transform: translateZ(0);
+        -webkit-animation: load8 1.1s infinite linear;
+        animation: load8 1.1s infinite linear;
+    }
+    .loader,
+    .loader:after {
+        border-radius: 50%;
+        width: 3em;
+        height: 3em;
+    }
+    @-webkit-keyframes load8 {
+        0% {
+            -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+        }
+        100% {
+            -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+        }
+    }
+    @keyframes load8 {
+        0% {
+            -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+        }
+        100% {
+            -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+        }
+    }
+
+    #asic-notification{
+        display: none;
+    }
+    .bg-info{
+        padding: 7px;
+    }
+
+</style>
 <div class="page-content">
     <h1 class="text-primary title">ADD / FIND ASIC SPONSOR</h1>
 
@@ -25,6 +86,48 @@
     ?>
 
     <div class="form-create-login">
+
+        <div class="row form-group">
+
+            <div class="col-md-8">
+                <?php  echo CHtml::textField('search_asic_box' , '',
+                    array(
+                        'class'=>'form-control input-lg',
+                        'placeholder'=>'First Name or email'
+                    )
+                );
+                ?>
+                <div id="search_asic_error" class="errorMessage">Please type something on search box</div>
+                <?php
+                echo CHtml::hiddenField('base_url',Yii::app()->getBaseUrl(true));
+                ?>
+            </div>
+            <div class="col-md-4">
+                <?php
+                echo CHtml::tag('button', array(
+                    'id'=>'search_asic_btn',
+                    'type'=>'button',
+                    'class' => 'btn btn-primary btn-next btn-lg'
+                ), 'Search ASIC');
+                ?>
+            </div>
+
+        </div>
+        <div class="loader" id="loader">Loading...</div>
+
+        <p id="asic-notification" class="bg-info">No Record Found</p>
+        <table class="table table-striped" id="asic_search_result">
+            <thead>
+            <tr>
+                <th></th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Company</th>
+            </tr>
+            </thead>
+            <tbody id="showresults">
+            </tbody>
+        </table>
 
         <div class="form-group">
             <?php echo $form->textField($model, 'first_name', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'First Name' , 'class'=>'form-control input-lg')); ?>
@@ -105,3 +208,53 @@
     </div>
     <?php $this->endWidget(); ?>
 </div>
+
+<script type="text/javascript">
+
+    $(document).ready(function() {
+
+        $('#search_asic_box').on('input', function() {
+            $("#search_asic_error").hide();
+            $("#asic_search_result").hide();
+            $("#asic-notification").hide();
+        });
+
+        $('#search_asic_btn').click(function(event) {
+            event.preventDefault();
+
+            var search = $("#search_asic_box").val();
+            var base_url = $("#base_url").val();
+
+            if (search.length > 0) {
+                $("#loader").show();
+                var search_value = 'search_value=' + search;
+
+                $.ajax({
+                    url: base_url + '/index.php/preregistration/ajaxAsicSearch',
+                    type: 'POST',
+                    data: search_value,
+                    success: function(data) {
+
+                        if(data == 'No Record'){
+                            $("#asic-notification").show();
+                        }
+                        else{
+                            $("#asic_search_result").show();
+                            $('#showresults').html(data);
+                        }
+
+                        $("#loader").hide();
+                    }
+
+                });
+
+            }
+            else{
+                $("#search_asic_error").show();
+            }
+
+        });
+
+    });
+
+</script>

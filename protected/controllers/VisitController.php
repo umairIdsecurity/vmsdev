@@ -150,7 +150,7 @@ class VisitController extends Controller {
         $oldVisitorType = $model->visitor_type;
         $oldReason = $model->reason;
 
-        $visitService = new VisitServiceImpl();
+        $visitService = new VisitServiceImpl;
         $session = new CHttpSession;
 
         // Uncomment the following line if AJAX validation is needed
@@ -382,16 +382,14 @@ class VisitController extends Controller {
                 $this->identification_document_expiry =  date('Y-m-d', strtotime($this->identification_document_expiry));
             
             if (isset($_POST['ASIC'])) {
-                $asicModel = Visitor::model()->findByPk($model->host);
+                $asicModel                       = Visitor::model()->findByPk($model->host);
 
                 // Get visitor params
-                $asicParams = Yii::app()->request->getPost('ASIC');
-
-                $asicModel->attributes = $asicParams;
-
+                $asicParams                      = Yii::app()->request->getPost('ASIC');
+                $asicModel->attributes           = $asicParams;
                 $asicModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
-
-                $asicModel->scenario = 'updateVic';
+                $asicModel->scenario             = 'updateVic';
+                
                 // Save asic profile
                 if (!$asicModel->save()) {
                     // Do something if save process failure
@@ -400,12 +398,11 @@ class VisitController extends Controller {
 
             if (isset($_POST['Host'])) {
                 // Get visitor params
-                $hostParams = Yii::app()->request->getPost('Host');
-
-                $hostModel->attributes = $hostParams;
+                $hostParams                      = Yii::app()->request->getPost('Host');
+                $hostModel->attributes           = $hostParams;
                 $hostModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
+                $hostModel->scenario             = 'updateVic';
 
-                $hostModel->scenario = 'updateVic';
                 // Save host profile
                 if (!$hostModel->save()) {
                     // Do something if save process failure

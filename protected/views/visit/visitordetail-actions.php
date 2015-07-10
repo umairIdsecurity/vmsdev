@@ -107,21 +107,23 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                         <?php
                                         if ($asic) {
                                             $this->renderPartial('activateavisit-vic', array(
-                                                'model' => $model,
+                                                'model'        => $model,
                                                 'visitorModel' => $visitorModel,
-                                                'hostModel' => $hostModel,
-                                                'reasonModel' => $reasonModel,
-                                                'asic' => $asic,
-                                                'logform' => $logform,
-                                                'session' => $session,
+                                                'hostModel'    => $hostModel,
+                                                'reasonModel'  => $reasonModel,
+                                                'asic'         => $asic,
+                                                'logform'      => $logform,
+                                                'session'      => $session,
+                                                'visitCount'   => $visitCount
                                             ));
                                         } else {
                                             $this->renderPartial('activateavisit', array(
-                                                'model' => $model,
+                                                'model'        => $model,
                                                 'visitorModel' => $visitorModel,
-                                                'hostModel' => $hostModel,
-                                                'reasonModel' => $reasonModel,
-                                                'logform' => $logform
+                                                'hostModel'    => $hostModel,
+                                                'reasonModel'  => $reasonModel,
+                                                'logform'      => $logform,
+                                                'visitCount'   => $visitCount
                                             ));
                                         }
                                         ?>

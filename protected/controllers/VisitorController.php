@@ -121,20 +121,24 @@ class VisitorController extends Controller {
      */
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
-        $visitorService = new VisitorServiceImpl();
-        $session = new CHttpSession;
+        $profileType        = $model->profile_type;
+        $visitorService     = new VisitorServiceImpl();
+        $session            = new CHttpSession;
         $updateErrorMessage = '';
         // if view value is 1 do not redirect page else redirect to admin
-        $isViewedFromModal = 0;
+        $isViewedFromModal  = 0;
+
         if (isset($_GET['view'])) {
             $isViewedFromModal = 1;
         }
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
+        
+        $visitorParams = Yii::app()->request->getPost('Visitor');
 
-        if (isset($_POST['Visitor'])) {
+        if (isset($visitorParams)) {
             $currentCardStatus = $model->visitor_card_status;
-            if (isset($_POST['Visitor']['visitor_card_status']) && $currentCardStatus == 2 && $_POST['Visitor']['visitor_card_status'] == 3) {
+            if (isset($visitorParams['visitor_card_status']) && $currentCardStatus == 2 && $visitorParams['visitor_card_status'] == 3) {
                 $activeVisit = $model->activeVisits;
                 foreach ($activeVisit as $item) {
                     if ($item->visit_status == VisitStatus::ACTIVE) {
@@ -142,13 +146,13 @@ class VisitorController extends Controller {
                     }
                 }
                 if ($updateErrorMessage == '') {
-                    $model->attributes = $_POST['Visitor'];
+                    $model->attributes = $visitorParams;
                     if ($visitorService->save($model, NULL, $session['id'])) {
                         if ($model->totalVisit > 0) {
-                            $resetHistory = new ResetHistory();
+                            $resetHistory             = new ResetHistory();
                             $resetHistory->visitor_id = $model->id;
                             $resetHistory->reset_time = date("Y-m-d H:i:s");
-                            $resetHistory->reason = 'Update Visitor Card Type form VIC Holder to ASIC Pending';
+                            $resetHistory->reason     = 'Update Visitor Card Type form VIC Holder to ASIC Pending';
                             if ($resetHistory->save()) {
                                 foreach ($activeVisit as $item) {
                                     $item->reset_id = $resetHistory->id;
@@ -167,8 +171,8 @@ class VisitorController extends Controller {
                 } else {
                     echo $updateErrorMessage;
                 }
-            }elseif (isset($_POST['Visitor']['visitor_card_status']) && $_POST['Visitor']['visitor_card_status'] == Visitor::ASIC_ISSUED && $model->profile_type == Visitor::PROFILE_TYPE_VIC  ){
-                $model->attributes = $_POST['Visitor'];
+            } elseif (isset($visitorParams) && isset($visitorParams['visitor_card_status']) &&  $visitorParams['visitor_card_status'] == Visitor::ASIC_ISSUED && $model->profile_type == Visitor::PROFILE_TYPE_VIC  ){
+                $model->attributes = $visitorParams;
                 $model->profile_type = Visitor::PROFILE_TYPE_ASIC;
                 $model->visitor_card_status = 6;
                 if($visitorService->save($model, NULL, $session['id'])) {
@@ -178,7 +182,7 @@ class VisitorController extends Controller {
                     $logCardstatusConvert->save();
                 }
             } else {
-                $model->attributes = $_POST['Visitor'];
+                $model->attributes = $visitorParams;
                 if ($visitorService->save($model, NULL, $session['id'])) {
                     switch ($isViewedFromModal) {
                         case "1":

@@ -215,6 +215,8 @@
 
         $('#search_asic_box').on('input', function() {
             $("#search_asic_error").hide();
+            $("#asic_search_result").hide();
+            $("#asic-notification").hide();
         });
 
         $('#search_asic_btn').click(function(event) {
@@ -236,10 +238,10 @@
 
                         if(data == 'No Record'){
                             $("#asic-notification").show();
-                            $("#asic_search_result").hide();
+                            //$("#asic_search_result").hide();
                         }
                         else{
-                            $("#asic-notification").hide();
+                            //$("#asic-notification").hide();
                             $("#asic_search_result").show();
                             $('#showresults').html(data);
                         }
@@ -251,8 +253,6 @@
 
             }
             else{
-                $("#asic_search_result").hide();
-                $("#asic-notification").hide();
                 $("#search_asic_error").show();
             }
 

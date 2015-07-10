@@ -48,10 +48,8 @@ class UserServiceImpl implements UserService {
 			if ($user->password_option==2)
 			User::model()->restorePassword($user['email']);
 
-            if (is_array($workstation)){
-                foreach ($workstation as $wsst):
-                    User::model()->saveWorkstation($user->id, $wsst,$userLoggedIn->id);
-                endforeach;
+            if ($workstation){
+                    User::model()->saveWorkstation($user->id, $workstation,$userLoggedIn->id);
             }
 			
 		}

@@ -703,13 +703,17 @@ class Visitor extends CActiveRecord {
 
     public function getTotalVisit()
     {
-        $totalVisit = 0;
-        $activeVisits = $this->activeVisits;
-        foreach($activeVisits as $visit) {
-            $totalVisit += $visit->visitCounts;
-        }
-        if($totalVisit > 0 ) {
-            return $totalVisit;
+        if($this->visitor_card_status != Visitor::VIC_ASIC_PENDING) {
+            $totalVisit = 0;
+            $activeVisits = $this->activeVisits;
+            foreach($activeVisits as $visit) {
+                $totalVisit += $visit->visitCounts;
+            }
+            if($totalVisit > 0 ) {
+                return $totalVisit;
+            } else {
+                return "";
+            }
         } else {
             return "";
         }
@@ -719,7 +723,7 @@ class Visitor extends CActiveRecord {
     {
         return Visit::model()->findAllByAttributes([
             'visitor' => $this->id,
-            'reset_id'       => null,
+            'reset_id'      => null,
             'negate_reason' => null
         ]);
     }

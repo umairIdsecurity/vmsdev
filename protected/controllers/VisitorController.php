@@ -138,7 +138,7 @@ class VisitorController extends Controller {
 
         if (isset($visitorParams)) {
             $currentCardStatus = $model->visitor_card_status;
-            if (isset($visitorParams['visitor_card_status']) && $currentCardStatus == 2 && $visitorParams['visitor_card_status'] == 3) {
+            if (isset($visitorParams['visitor_card_status']) && $currentCardStatus == Visitor::VIC_HOLDER && $visitorParams['visitor_card_status'] == Visitor::VIC_ASIC_PENDING) {
                 $activeVisit = $model->activeVisits;
                 foreach ($activeVisit as $item) {
                     if ($item->visit_status == VisitStatus::ACTIVE) {
@@ -146,10 +146,11 @@ class VisitorController extends Controller {
                     }
                 }
                 if ($updateErrorMessage == '') {
+                    $totalVisitCountBefore = $model->totalVisit;
                     $model->attributes = $visitorParams;
                     if ($visitorService->save($model, NULL, $session['id'])) {
-                        if ($model->totalVisit > 0) {
-                            $resetHistory             = new ResetHistory();
+                        if ($totalVisitCountBefore > 0) {
+                            $resetHistory = new ResetHistory;
                             $resetHistory->visitor_id = $model->id;
                             $resetHistory->reset_time = date("Y-m-d H:i:s");
                             $resetHistory->reason     = 'Update Visitor Card Type form VIC Holder to ASIC Pending';
@@ -174,7 +175,7 @@ class VisitorController extends Controller {
             } elseif (isset($visitorParams) && isset($visitorParams['visitor_card_status']) &&  $visitorParams['visitor_card_status'] == Visitor::ASIC_ISSUED && $model->profile_type == Visitor::PROFILE_TYPE_VIC  ){
                 $model->attributes = $visitorParams;
                 $model->profile_type = Visitor::PROFILE_TYPE_ASIC;
-                $model->visitor_card_status = 6;
+                $model->visitor_card_status = Visitor::ASIC_ISSUED;
                 if($visitorService->save($model, NULL, $session['id'])) {
                     $logCardstatusConvert = new CardstatusConvert();
                     $logCardstatusConvert->visitor_id = $model->id;

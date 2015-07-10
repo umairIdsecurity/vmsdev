@@ -100,9 +100,15 @@ class VisitorType extends CActiveRecord {
         if( Yii::app()->user->role == Roles::ROLE_ADMIN )
             $criteria->addCondition("created_by ='" . Yii::app()->user->id . "'");
         
-        return new CActiveDataProvider($this, array(
+        $data =  new CActiveDataProvider($this, array(
             'criteria' => $criteria,
         ));
+
+        $data->setTotalItemCount(count($data->getData()));
+        $data->pagination->setItemCount(count($data->getData()));
+
+        return $data;
+
     }
 
     /**
@@ -118,11 +124,18 @@ class VisitorType extends CActiveRecord {
     public function beforeFind() {
         $session = new CHttpSession;
         $criteria = new CDbCriteria;
-        if(Yii::app()->controller->action->id != 'exportvisitorrecords' && Yii::app()->controller->action->id != 'evacuationReport' && Yii::app()->controller->action->id != 'visitorRegistrationHistory' && Yii::app()->controller->action->id != 'view'){
+        if (Yii::app()->controller->action->id != 'exportvisitorrecords' && Yii::app()->controller->action->id != 'evacuationReport' && Yii::app()->controller->action->id != 'visitorRegistrationHistory' && Yii::app()->controller->action->id != 'view' && Yii::app()->controller->action->id != 'index') {
             $criteria->condition = "t.is_deleted = 0 AND t.id !=1";
         }
-        
-        if(Yii::app()->controller->action->id == 'visitorsByTypeReport' || Yii::app()->controller->action->id == 'visitorsByWorkstationReport'){
+
+
+        if (Yii::app()->controller->action->id == 'index') {
+            if(Yii::app()->request->getParam('vms') == 'cvms')
+                $criteria->condition = " t.name not like 'Vic%'";
+            else $criteria->condition = " t.name like 'Vic%'";
+        }
+
+        if (Yii::app()->controller->action->id == 'visitorsByTypeReport' || Yii::app()->controller->action->id == 'visitorsByWorkstationReport') {
             $criteria->condition = "";
             $criteria->condition = "t.is_deleted=0";
         }

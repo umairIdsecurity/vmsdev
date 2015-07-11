@@ -10,7 +10,7 @@ class m150706_065150_create_contact_person_table extends CDbMigration
                 'contact_person_name'=>'VARCHAR(50) NOT NULL',
                 'contact_person_email'=>'VARCHAR(50) NOT NULL',
                 'contact_person_message'=>'VARCHAR(100) NULL',
-                'date_created' =>'TIMESTAMP DEFAULT CURRENT_TIMESTAMP'
+                'date_created' =>'datetime DEFAULT CURRENT_TIMESTAMP'
               ));
 	}
 

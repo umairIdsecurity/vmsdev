@@ -431,7 +431,7 @@ $model->identification_country_issued = 13;
                                         } echo "</select>";
                                     } else {
                                         echo $form->dropDownList($model, 'visitor_type',
-                                        VisitorType::model()->returnVisitorTypes(), array(
+                                        VisitorType::model()->returnVisitorTypes(null,""), array(
                                             'onchange' => 'showHideHostPatientName(this)',
                                             //'prompt' => 'Select Visitor Type',
                                         ));
@@ -453,7 +453,7 @@ $model->identification_country_issued = 13;
                                         $reason = VisitReason::model()->findAllReason();
                                         foreach ($reason as $key => $value) {
                                             ?>
-                                            <option
+                                            <option`
                                                 value="<?php echo $value->id; ?>"><?php echo 'Reason: ' . $value->reason; ?></option>
                                         <?php
                                         }
@@ -801,7 +801,8 @@ $model->identification_country_issued = 13;
 
                 checkReasonIfUnique();
 
-            } else if($("#Visitor_photo").val() == "" &&
+            } else if(
+                $("#Visitor_photo").val() == "" &&
                 $("#cardtype").val() != <?php echo CardType::SAME_DAY_VISITOR; ?>  &&
                 $("#cardtype").val() != <?php echo CardType::MANUAL_VISITOR; ?>  &&
                 $("#cardtype").val() != <?php echo CardType::VIC_CARD_SAMEDATE; ?>  && 
@@ -840,6 +841,7 @@ $model->identification_country_issued = 13;
     }
 
     $(document).ready(function() {
+
         if($('#Visitor_contact_country').length){
             $('#Visitor_contact_country').change(function(){
                 if($(this).val() != <?php echo Visitor::AUSTRALIA_ID ?>){

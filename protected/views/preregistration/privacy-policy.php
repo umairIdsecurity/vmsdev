@@ -27,10 +27,11 @@
         </ol>
     </div>
     <div class="privacy-info">
+
         <h3 class="text-primary">Important information regarding the Visitor Information Card (VIC):</h3>
         <div class="bg-gray-lighter privacy-notice">
             <div>
-                <p>Please read this information carefully and complete all the sections. Failure to do so may result in processing delays.</p>
+
                 <h3 class="text-danger">PRIVACY NOTICE - What does Perth Airport do with your personal information?</h3>
                 <p>Information you provide on the VIC application includes personal information, the collection, use and disclosure of which is governed by the Privacy Act 1998 (Commonwealth).
                     Perth Airport uses this information internally for the purposes of its functions under the Aviation Transport Security Act 2004 and Aviation Transport Security Regulations 2005.

@@ -33,7 +33,7 @@ $asicEscort = new AddAsicEscort();
     <?php if ($model->visit_status != VisitStatus::AUTOCLOSED): ?>
     <tr>
         <td class="vic-col">
-            <input type="checkbox" value="1" name="VivHolderDecalarations" disabled="disabled" id="VivHolderDecalarations" class="vic-active-visit vic-active-declarations"/>
+            <input type="checkbox" value="1" name="VicHolderDecalarations" disabled="disabled" id="VicHolderDecalarations" class="vic-active-visit vic-active-declarations"/>
             <a href="#vicHolderModal" data-toggle="modal">VIC Holder Declarations</a>
         </td>
     </tr>
@@ -202,9 +202,19 @@ $asicEscort = new AddAsicEscort();
 </table>
 <script>
     $(document).ready(function() {
-        // for Card Type Manual
-        var minDate = '<?php echo $model->card_type == CardType::VIC_CARD_MANUAL ? "-12m" : "0"; ?>';
-        var maxDate = '<?php echo in_array($model->card_type, [CardType::VIC_CARD_MULTIDAY]) ? "+28d" : "0"; ?>';
+        // Set min & max date for check out datepicker
+        var cardType = "<?php echo $model->card_type; ?>";
+        switch(cardType) {
+            case "<?php echo CardType::VIC_CARD_MANUAL; ?>":
+                var minDate = "-12m";
+                break;
+            case "<?php echo CardType::VIC_CARD_MULTIDAY; ?>":
+                var minDate = "0";
+                break;
+            default:
+                var minDate = "0";
+                break;
+        }
         refreshTimeIn();
 
         $("#Visit_date_check_in").datepicker({
@@ -215,14 +225,20 @@ $asicEscort = new AddAsicEscort();
             buttonImageOnly: true,
             minDate: minDate,
             dateFormat: "dd-mm-yy",
-            onClose: function (dateText) {
+            onClose: function (selectedDate) {
                 var currentDate  = new Date();
-                var date         = dateText.substring(0, 2);
-                var month        = dateText.substring(3, 5);
-                var year         = dateText.substring(6, 10);
-                var selectedDate = new Date(year, month-1, date, '23', '59', '59');
 
-                $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "option", "minDate", selectedDate);
+                switch(cardType) {
+                    case "<?php echo CardType::VIC_CARD_MULTIDAY; ?>":
+                        var addDays = $("#Visit_date_check_in").datepicker('getDate');
+                        addDays.setDate(addDays.getDate()+<?php echo $visitCount['remainingDays'];?>);
+                        $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "option", "minDate", selectedDate);
+                        $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "option", "maxDate", addDays);
+                        break;
+                    default:
+                        $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "option", "minDate", selectedDate);
+                        break;
+                }
 
                 function updateTextVisitButton(text, id, val) {
                     $("#registerNewVisit").text(text).val(val);
@@ -286,16 +302,16 @@ $asicEscort = new AddAsicEscort();
             buttonImage: "<?php echo Yii::app()->controller->assetsBase; ?>/images/calendar.png",
             buttonImageOnly: true,
             minDate: minDate,
-            //maxDate: "+28d",
             dateFormat: "dd-mm-yy",
             disabled: <?php echo in_array($model->card_type, [CardType::VIC_CARD_24HOURS, CardType::VIC_CARD_MANUAL]) ? "true" : "false"; ?>,
-            onClose: function (date) {
-                var day      = date.substring(0, 2);
-                var month    = date.substring(3, 5);
-                var year     = date.substring(6, 10);
+            onClose: function (selectDate) {
+                var day      = selectDate.substring(0, 2);
+                var month    = selectDate.substring(3, 5);
+                var year     = selectDate.substring(6, 10);
                 var newDate  = new Date(year, month-1, day);
                 var cardDate = $.datepicker.formatDate('dd M y', newDate);
                 $("#cardDetailsTable span.cardDateText").html(cardDate);
+
             }
         });
 
@@ -396,13 +412,13 @@ $asicEscort = new AddAsicEscort();
             <tr class="asic-escort hidden">
                 <td></td>
                 <td>
-                    <input type="text" id="search-escort" style="width:280px" name="search-host"
+                    <input type="text" id="search-escort" style="width:293px" name="search-host"
                            placeholder="Enter name, email address" class="search-text"/>
                     <button type="button" class="btn btn-primary" id="findEscortBtn" style="margin-bottom: 14px!important;" onclick="" id="escort-findBtn">Search ASIC Escort</button>
                     <div id="divMsg" style="display:none;">
                         <img id="findEscortBtn" src="<?php echo Yii::app()->controller->assetsBase; ?>/images/loading.gif" alt="Please wait.." />
                     </div>
-                    <div class="errorMessage" id="searchEscortErrorMessage" style=" display:none;">Please enter asic escort name or email for searching</div>
+                    <div class="errorMessage" id="searchEscortErrorMessage" style=" display:none;">Search cannot be blank</div>
                     <div class="searchAsicEscortResult"></div>
                     <div class="add-esic-escort">
                         <?php $this->renderPartial('_add_asic_escort',array('model' => $asicEscort, 'session' => $session,)) ?>
@@ -421,9 +437,9 @@ $asicEscort = new AddAsicEscort();
 <script type="text/javascript">
     function vicHolderDeclarationChange() {
         if ($("#refusedAsicCbx").is(':checked') && $('#issuedVicCbx').is(':checked')) {
-            $('#VivHolderDecalarations').prop('checked', true);
+            $('#VicHolderDecalarations').prop('checked', true);
         } else {
-            $('#VivHolderDecalarations').prop('checked', false);
+            $('#VicHolderDecalarations').prop('checked', false);
         }
         $('#vicHolderModal').modal('hide');
     }
@@ -446,6 +462,7 @@ $asicEscort = new AddAsicEscort();
             vicHolderDeclarationChange();
             return true;
         } else {
+            alert('Please select all the declarations.');
             return false;
         }
     }
@@ -532,7 +549,12 @@ $asicEscort = new AddAsicEscort();
                     if ($(this).val() == '') {
                         var error = '#' + $(this).attr('id') + '_em_';
                         var placeholder = $(this).attr('placeholder');
-                        $(error).html('Please enter a ' + placeholder );
+                        if(placeholder == 'ASIC No' ||placeholder == 'Expiry' ||placeholder == 'Email Address') {
+                            $(error).html('Please enter an ' + placeholder);
+                        } else {
+                            $(error).html('Please enter a ' + placeholder );
+                        }
+
                         $(error).show();
                         noError = false;
                     }
@@ -643,13 +665,6 @@ $asicEscort = new AddAsicEscort();
                         $('#divMsg').hide();
                     }
                 });
-            }
-        });
-        $('#btnAsicConfirm').on('click',function(){
-            if ($('#asicEscortRbtn').is(':checked')) {
-                checkEscortEmailUnique();
-            } else {
-                asicCheck();
             }
         });
 

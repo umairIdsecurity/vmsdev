@@ -80,7 +80,13 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                 'validateOnSubmit' => true,
                                 'afterValidate' => 'js:function(form, data, hasError){
                                     if (!hasError){
-                                        if($("#Visitor_photo").val() == "" && $("#Visit_card_type").val() == "2" ){
+                                        if(
+                                            $("#Visitor_photo").val() == "" &&
+                                            $("#Visit_card_type").val() != ' . CardType::SAME_DAY_VISITOR . '  &&
+                                            $("#Visit_card_type").val() != ' . CardType::MANUAL_VISITOR . '  &&
+                                            $("#Visit_card_type").val() != ' . CardType::VIC_CARD_SAMEDATE . '  && 
+                                            $("#Visit_card_type").val() != ' . CardType::VIC_CARD_MANUAL . '
+                                        ){
                                             alert("Please upload a photo.");
                                         }else if ($("#Visit_card_type").val() == "9" && $("#pre_issued_card_no").val() == "" ) {
                                             $("#card_number_required").show();
@@ -101,21 +107,23 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                         <?php
                                         if ($asic) {
                                             $this->renderPartial('activateavisit-vic', array(
-                                                'model' => $model,
+                                                'model'        => $model,
                                                 'visitorModel' => $visitorModel,
-                                                'hostModel' => $hostModel,
-                                                'reasonModel' => $reasonModel,
-                                                'asic' => $asic,
-                                                'logform' => $logform,
-                                                'session' => $session,
+                                                'hostModel'    => $hostModel,
+                                                'reasonModel'  => $reasonModel,
+                                                'asic'         => $asic,
+                                                'logform'      => $logform,
+                                                'session'      => $session,
+                                                'visitCount'   => $visitCount
                                             ));
                                         } else {
                                             $this->renderPartial('activateavisit', array(
-                                                'model' => $model,
+                                                'model'        => $model,
                                                 'visitorModel' => $visitorModel,
-                                                'hostModel' => $hostModel,
-                                                'reasonModel' => $reasonModel,
-                                                'logform' => $logform
+                                                'hostModel'    => $hostModel,
+                                                'reasonModel'  => $reasonModel,
+                                                'logform'      => $logform,
+                                                'visitCount'   => $visitCount
                                             ));
                                         }
                                         ?>
@@ -375,7 +383,6 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
         });
 
         $(document).on('click', '#registerNewVisit', function (e) {
-
             var imgsrc;
             $("#photoPreview").each(function() {
                 imgsrc = this.src;
@@ -386,16 +393,18 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
 
             if( isDefault > 0 || (profileImage == '' && isChanged > 0)) {
                 <?php if ($model->card_type > CardType::CONTRACTOR_VISITOR ) : ?>
-                    <?php if($model->card_type != CardType::VIC_CARD_SAMEDATE ) : ?>
-                    $("#Visitor_photo_em").attr('style', 'margin-right:84px ; margin-bottom:0px; margin-top:0px ;');
-                    $("#editImageBtn.editImageBtn").attr('style', 'margin-top:-5px !important; margin-right:84px ; margin-bottom:0px;');
-                    $("#cropImageBtn.editImageBtn").attr('style', 'margin-top:-5px !important; margin-right:84px ; margin-bottom:0px;');
-                    return;
-                    <?php endif ?>
+                    <?php if(!in_array($model->card_type, [ CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_MANUAL])) : ?>
+                        $("#Visitor_photo_em").attr('style', 'margin-right:84px ; margin-bottom:0px; margin-top:0px ;');
+                        $("#editImageBtn.editImageBtn").attr('style', 'margin-top:-5px !important; margin-right:84px ; margin-bottom:0px;');
+                        $("#cropImageBtn.editImageBtn").attr('style', 'margin-top:-5px !important; margin-right:84px ; margin-bottom:0px;');
+                        return;
+                    <?php endif; ?>
                 <?php else : ?>
-                    $("#Visitor_photo_em").attr('style', 'margin-bottom: -17px; margin-right: 0px; margin-top: 13px;');
-                    $("#cropImageBtn.editImageBtn").attr('style', 'margin-bottom: 0; margin-right: 0 !important; margin-top: 0 !important;');
-                    return;
+                    <?php if(!in_array($model->card_type, [CardType::SAME_DAY_VISITOR, CardType::MANUAL_VISITOR])) : ?>
+                        $("#Visitor_photo_em").attr('style', 'margin-bottom: -17px; margin-right: 0px; margin-top: 13px;');
+                        $("#cropImageBtn.editImageBtn").attr('style', 'margin-bottom: 0; margin-right: 0 !important; margin-top: 0 !important;');
+                        return;
+                    <?php endif; ?>
                 <?php endif; ?>
             }
 
@@ -424,27 +433,22 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                 return false;
             }
 
-            var is_vic_holder_checked = $('#VivHolderDecalarations').is(':checked'),
+            var is_vic_holder_checked = $('#VicHolderDecalarations').is(':checked'),
                 is_asic_holder_checked = $('#AsicSponsorDecalarations').is(':checked');
 
             var declarations_checkboxs = $('.vic-active-declarations');
             var confirmed = isCheckboxsChecked(declarations_checkboxs);
 
-            if (!confirmed && $('#registerNewVisit').html() !== 'Preregister Visit') {
-                if (!$('#VivHolderDecalarations').is(':checked') && $('#AsicSponsorDecalarations').is(':checked')) {
+            if (!confirmed && $this.val() !== 'preregister') {
+                if (!$('#VicHolderDecalarations').is(':checked') && $('#AsicSponsorDecalarations').is(':checked')) {
                     $('#vicHolderModal').modal('show');
                     $btnVic.on('click', function(e) {
-                        var vicChecked = vicCheck();
-                        if (vicChecked) {
-                            activeVisit();
-                        } else {
-                            alert('Please select all the declarations.');
-                            return false;
-                        }
+                        $('#identificationModal').modal('show');
                     });
-                } else if (!$('#AsicSponsorDecalarations').is(':checked') && $('#VivHolderDecalarations').is(':checked')){
+                } else if (!$('#AsicSponsorDecalarations').is(':checked') && $('#VicHolderDecalarations').is(':checked')){
                     $('#asicSponsorModal').modal('show');
                     $btnASIC.on('click', function(e) {
+                        $('#identificationModal').modal('show');
                     });
                 } else {
                     $('#vicHolderModal').modal('show');
@@ -453,9 +457,15 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                         if (vicChecked) {
                             $('#asicSponsorModal').modal('show');
                             $btnASIC.on('click', function(e) {
+                                if ($('#asicEscortRbtn').is(':checked')) {
+                                    checkEscortEmailUnique();
+                                } else {
+                                    if (asicCheck()) {
+                                        $('#identificationModal').modal('show');
+                                    }
+                                }
                             });
                         } else {
-                            //alert('Please select all the declarations.');
                             return false;
                         }
                     });
@@ -484,8 +494,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                     }
                     activeVisit();
                 } else {
-                    alert('Please agree VIC verification before active visit.');
-                    addWarningLabel(vic_active_visit_checkboxs);
+                    $('#identificationModal').modal('show');
                 }
             }
 
@@ -530,18 +539,6 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                     window.location.reload();
                 }   
             });
-            /*$.ajax({
-                url: "<?php echo Yii::app()->createUrl('visit/closeVisit?id='.$model->id); ?>",
-                type: 'POST',
-                dataType: 'json',
-                data: data,
-                success: function(r) {console.log(r);return false;
-                    if (r == 1) {
-                        window.location.reload();
-                    }
-                }
-            });*/
-            
         }
 
         $('#cancelActiveVisitButton').on('click', function (e) {
@@ -666,12 +663,10 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
         'clientOptions' => array(
             'validateOnSubmit' => true,
             'afterValidate' => 'js:function(form, data, hasError){
-                                if (!hasError){
-
-                                    sendCancelVisit();
-
-                                }
-                                }'
+                if (!hasError){
+                    sendCancelVisit();
+                }
+            }'
         ),
     ));
     ?>

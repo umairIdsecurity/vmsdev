@@ -135,6 +135,11 @@ class TenantController extends Controller {
                     $userModel->asic_expiry_day = 10;
                     $userModel->asic_expiry_month = 10;
                     $userModel->asic_expiry_year = 15;
+                    /**
+                     * Module Access
+                     */ 
+                    $access = CHelper::get_module_access($_POST);
+                    $userModel->allowed_module = $access;    
                     $userLastID = 0;
                     if ($userModel->validate()) {
                         $userModel->save();
@@ -244,14 +249,23 @@ class TenantController extends Controller {
         $session = new CHttpSession;
         $model = $this->loadModel($id);
         $model->scenario = "updatetenant";
-
+                       
         if(isset($_POST['Company'])){
             print_r($_POST['Company']);
             $model->attributes = $_POST['Company'];
             $model->office_number = $_POST['Company']['mobile_number'];
             $model->contact = $_POST['Company']['mobile_number'];
+            
             if($model->validate()){
                 $model->save();
+                $userModel = User::model()->find('company=:c', ['c' => $model->id]);
+                /**
+                  * Module Access
+                 */ 
+                 $access = CHelper::get_module_access($_POST);
+                 $userModel->allowed_module = $access;  
+                 $userModel->save(false);
+         
                 Yii::app()->user->setFlash('success', "Tenant updated Successfully");
                 $this->redirect(array("tenant/update&id=".$id));
 
@@ -283,7 +297,7 @@ class TenantController extends Controller {
             $sql = "UPDATE tenant SET is_deleted=1 WHERE id=$id";
             $connection=Yii::app()->db;
             $connection->createCommand($sql)->execute();
-
+                       
             // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
             if (!isset($_GET['ajax']))
                 $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));

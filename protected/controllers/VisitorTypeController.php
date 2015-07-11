@@ -26,7 +26,7 @@ class VisitorTypeController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin', 'delete','adminAjax','visitorsByWorkstationReport','visitorsByTypeReport', 'index'),
+                'actions' => array('create', 'update', 'admin', 'delete','adminAjax','visitorsByWorkstationReport','visitorsByTypeReport', 'index','GetFromCardType'),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
            
             ),
@@ -119,6 +119,15 @@ class VisitorTypeController extends Controller {
         if ($model === null)
             throw new CHttpException(404, 'The requested page does not exist.');
         return $model;
+    }
+
+    /**
+     * Return list Vistor Type suitable with cardtype chose
+     * @param int $cardtype the id cardtype
+     */
+    public function actionGetFromCardType($cardtype = 0)
+    {
+        echo VisitorType::model()->getFromCardType($cardtype);
     }
 
     /**

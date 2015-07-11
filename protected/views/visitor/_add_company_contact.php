@@ -63,11 +63,12 @@
             <tr>
                 <td style="width:160px;"><?php echo $form->labelEx($model,'companyName'); ?></td>
                 <td>
-                    <?php echo $form->textField($model, 'companyName', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Company Name')); ?>
+                    <?php echo $form->textField($model, 'companyName', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Company Name', 'class' => 'ui-autocomplete-input', 'autocomplete' => 'on')); ?>
                     <?php echo "<br>" . $form->error($model, 'companyName'); ?>
                 </td>
             </tr>
-            <tr>
+
+            <tr class="hidden">
                 <td style="width:160px;"><?php echo $form->labelEx($model,'companyType'); ?></td>
                 <td>
                     <?php if (Yii::app()->controller->id == 'visitor' && in_array(Yii::app()->controller->action->id, array('addvisitor', 'create'))) {
@@ -80,6 +81,7 @@
                     <?php echo "<br>" . $form->error($model, 'companyType');?>
                 </td>
             </tr>
+
             <tr>
                 <td style="width:200px; padding-left: 9px;">
                     <a class="btn btn-default" href="javascript:void(0)" role="button" id="showCompanyContactFields">+</a> Add Company Contact
@@ -126,6 +128,12 @@
     </div>
 <?php $this->endWidget(); ?>
 </div>
+
+<?php $companyList = CHtml::listData(Company::model()->findAll(), 'id', 'name');
+    $companyList = array_unique($companyList);
+    $listsCom = implode('", "', $companyList);
+?>
+
 <script>
     $(function() {
         $(document).on('click', '#showCompanyContactFields', function(e) {
@@ -152,4 +160,13 @@
             }
         });
     });
+
+    $(function() {
+        var availableTags = ["<?php echo $listsCom; ?>"];
+        $("#AddCompanyContactForm_companyName").autocomplete({
+            source: availableTags
+        });
+        $(".ui-front").css("z-index", 1051);
+    });
+
 </script>

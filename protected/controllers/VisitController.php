@@ -150,7 +150,7 @@ class VisitController extends Controller {
         $oldVisitorType = $model->visitor_type;
         $oldReason = $model->reason;
 
-        $visitService = new VisitServiceImpl();
+        $visitService = new VisitServiceImpl;
         $session = new CHttpSession;
 
         // Uncomment the following line if AJAX validation is needed
@@ -288,6 +288,7 @@ class VisitController extends Controller {
      */
 
     public function actionDetail($id) {
+        $session = new CHttpSession;
         /** @var Visit $model */
         $model = Visit::model()->findByPk($id);
 
@@ -382,16 +383,14 @@ class VisitController extends Controller {
                 $this->identification_document_expiry =  date('Y-m-d', strtotime($this->identification_document_expiry));
             
             if (isset($_POST['ASIC'])) {
-                $asicModel = Visitor::model()->findByPk($model->host);
+                $asicModel                       = Visitor::model()->findByPk($model->host);
 
                 // Get visitor params
-                $asicParams = Yii::app()->request->getPost('ASIC');
-
-                $asicModel->attributes = $asicParams;
-
+                $asicParams                      = Yii::app()->request->getPost('ASIC');
+                $asicModel->attributes           = $asicParams;
                 $asicModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
-
-                $asicModel->scenario = 'updateVic';
+                $asicModel->scenario             = 'updateVic';
+                
                 // Save asic profile
                 if (!$asicModel->save()) {
                     // Do something if save process failure
@@ -400,12 +399,11 @@ class VisitController extends Controller {
 
             if (isset($_POST['Host'])) {
                 // Get visitor params
-                $hostParams = Yii::app()->request->getPost('Host');
-
-                $hostModel->attributes = $hostParams;
+                $hostParams                      = Yii::app()->request->getPost('Host');
+                $hostModel->attributes           = $hostParams;
                 $hostModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
+                $hostModel->scenario             = 'updateVic';
 
-                $hostModel->scenario = 'updateVic';
                 // Save host profile
                 if (!$hostModel->save()) {
                     // Do something if save process failure
@@ -451,6 +449,17 @@ class VisitController extends Controller {
                 }
             }
 
+            // If operator select other reason then save new one
+            if (isset($_POST['VisitReason'])) {
+                $visitReasonModel             = new VisitReason;
+                $visitReasonService           = new VisitReasonServiceImpl;
+                $visitReasonParams            = Yii::app()->request->getPost('VisitReason');
+                $visitReasonModel->attributes = $visitReasonParams;
+                if (!$visitReasonService->save($visitReasonModel, $session['id'])) {
+                    // Do something if visit reason do not save
+                }
+            }
+
             $visitorModel->attributes           = Yii::app()->request->getPost('Visitor');
             $visitorModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
             $visitorModel->setScenario('updateVic');
@@ -472,10 +481,7 @@ class VisitController extends Controller {
             // close visit process
             if (isset($visitParams['visit_status']) && $visitParams['visit_status'] == VisitStatus::CLOSED) {
                 if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && strtotime(date('Y-m-d')) <= strtotime($model->date_check_out)) {
-                    $currentDate = date('Y-m-d');
                     $model->visit_status = VisitStatus::AUTOCLOSED;
-                    $model->finish_date = $model->date_check_in = date('Y-m-d');
-                    $model->finish_time = $model->time_check_in = date('H:i:s');
                     switch ($model->card_type) {
                         case CardType::VIC_CARD_24HOURS: // VIC 24 hour
                             #change datetime check in and out for vic 24h.

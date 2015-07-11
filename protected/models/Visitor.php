@@ -257,7 +257,7 @@ class Visitor extends CActiveRecord {
             array('vehicle', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, first_name, photo,last_name, email,companycode, vehicle,contact_number, date_of_birth, company, department, position, staff_id, notes, role, visitor_status, created_by, is_deleted, tenant, tenant_agent, profile_type,escort_flag', 'safe', 'on' => 'search'),
+            array('id, first_name, photo, last_name, email,companycode, vehicle,contact_number, date_of_birth, company, department, position, staff_id, notes, role, visitor_status, created_by, is_deleted, tenant, tenant_agent, profile_type,escort_flag', 'safe', 'on' => 'search'),
         );
 
         $rules[] = array(
@@ -266,7 +266,7 @@ class Visitor extends CActiveRecord {
             identification_alternate_document_name2,
             identification_alternate_document_no2',
             'VisitorAlternateIdentification',
-            'except' => ['u18Rule', 'updateVic','delete']
+            'except' => ['u18Rule', 'updateVic', 'delete']
         );
 
         $rules[] = array(
@@ -275,7 +275,7 @@ class Visitor extends CActiveRecord {
             identification_document_no,
             identification_document_expiry',
             'VisitorPrimaryIdentification',
-            'except' => ['u18Rule', 'updateVic','delete']
+            'except' => ['u18Rule', 'updateVic', 'delete']
         );
 
 
@@ -307,7 +307,7 @@ class Visitor extends CActiveRecord {
                     contact_postcode,
                     contact_country',
                     'required',
-                    'except'=> ['updateVic', 'updateIdentification','delete']
+                    'except'=> ['updateVic', 'updateIdentification', 'delete']
                 );
                 break;
             case self::PROFILE_TYPE_ASIC:
@@ -703,13 +703,17 @@ class Visitor extends CActiveRecord {
 
     public function getTotalVisit()
     {
-        $totalVisit = 0;
-        $activeVisits = $this->activeVisits;
-        foreach($activeVisits as $visit) {
-            $totalVisit += $visit->visitCounts;
-        }
-        if($totalVisit > 0 ) {
-            return $totalVisit;
+        if($this->visitor_card_status != Visitor::VIC_ASIC_PENDING) {
+            $totalVisit = 0;
+            $activeVisits = $this->activeVisits;
+            foreach($activeVisits as $visit) {
+                $totalVisit += $visit->visitCounts;
+            }
+            if($totalVisit > 0 ) {
+                return $totalVisit;
+            } else {
+                return "";
+            }
         } else {
             return "";
         }
@@ -719,7 +723,7 @@ class Visitor extends CActiveRecord {
     {
         return Visit::model()->findAllByAttributes([
             'visitor' => $this->id,
-            'reset_id'       => null,
+            'reset_id'      => null,
             'negate_reason' => null
         ]);
     }

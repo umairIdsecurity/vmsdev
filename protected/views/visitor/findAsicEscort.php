@@ -1,3 +1,8 @@
+<?php
+if(Yii::app()->controller->id == 'visitor' && Yii::app()->controller->action->id == 'getAsicEscort'){
+    Yii::app()->clientScript->scriptMap['jquery.js']=false;
+}
+?>
 <style>
     .visit-selected-header input {
         display: none;
@@ -77,8 +82,8 @@ function displaySelectVisitorButton($visitorData) {
 ?>
 <script>
     function selectEscort(id) {
-        $('.searchAsicEscortResult a').removeClass('delete');
-        $('.searchAsicEscortResult a').html('Select');
+        $('.searchAsicEscortResult td a').removeClass('delete');
+        $('.searchAsicEscortResult td a').html('Select');
         $('#' + id).addClass('delete');
         $('#' + id).html('ASIC Escort Selected');
         $('#selectedAsicEscort').val(id);

@@ -388,7 +388,7 @@ class PreregistrationController extends Controller
 	}
 
 	public function actionUploadPhoto(){
-		echo "Upload Photo";
+		$this->render('upload-photo');
 	}
 
 	public function actionAsicPass(){

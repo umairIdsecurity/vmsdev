@@ -360,13 +360,19 @@ class PreregistrationController extends Controller
 				if(!empty($records)){
 					foreach($records as $data){
 						$companyModel = Company::model()->findByPk($data['company']);
+						if(!empty($companyModel)){
+							$companyName = $companyModel->name;
+						}
+						else{
+							$companyName = null;
+						}
 						echo '<tr>
 						<th scope="row">
 							<input type="radio" name="selected_asic" class="selected_asic" value="'.$data['id'].'">
 						</th>
 						<td>'.$data['first_name'].'</td>
 						<td>'.$data['last_name'].'</td>
-						<td>'.$companyModel->name.'</td>
+						<td>'.$companyName.'</td>
 					</tr>';
 					}
 				}

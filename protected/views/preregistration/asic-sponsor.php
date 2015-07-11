@@ -93,7 +93,7 @@
                 <?php  echo CHtml::textField('search_asic_box' , '',
                     array(
                         'class'=>'form-control input-lg',
-                        'placeholder'=>'First Name or email'
+                        'placeholder'=>'First Name, Last Name or email'
                     )
                 );
                 ?>

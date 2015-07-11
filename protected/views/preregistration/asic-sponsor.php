@@ -70,23 +70,8 @@
 <div class="page-content">
     <h1 class="text-primary title">ADD / FIND ASIC SPONSOR</h1>
 
-    <?php
-
-    $form=$this->beginWidget('CActiveForm', array(
-        'id'=>'add-asic-form',
-        'enableAjaxValidation'   => false,
-        'enableClientValidation'=>true,
-        'clientOptions'=>array(
-            'validateOnSubmit'=>true
-        ),
-        'htmlOptions'=>array(
-        'class'=> 'declarations'
-    )
-    ));
-    ?>
-
+    <!--  searching ASIC -->
     <div class="form-create-login">
-
         <div class="row form-group">
 
             <div class="col-md-8">
@@ -113,6 +98,7 @@
             </div>
 
         </div>
+
         <div class="loader" id="loader">Loading...</div>
 
         <p id="asic-notification" class="bg-info">No Record Found</p>
@@ -128,6 +114,25 @@
             <tbody id="showresults">
             </tbody>
         </table>
+    </div><!--  end searching ASIC -->
+
+
+    <?php
+
+    $form=$this->beginWidget('CActiveForm', array(
+        'id'=>'add-asic-form',
+        'enableAjaxValidation'   => false,
+        'enableClientValidation'=>true,
+        'clientOptions'=>array(
+            'validateOnSubmit'=>true
+        ),
+        'htmlOptions'=>array(
+        'class'=> 'declarations'
+    )
+    ));
+    ?>
+
+    <div class="form-create-login">
 
         <div class="form-group">
             <?php echo $form->textField($model, 'first_name', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'First Name' , 'class'=>'form-control input-lg')); ?>

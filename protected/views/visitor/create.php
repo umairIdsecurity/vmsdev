@@ -115,10 +115,10 @@ $(document).ready(function () {
 
         if ($("#currentRoleOfLoggedInUser").val() != 5) { //not superadmin
 
-            $("#Visitor_tenant").val("<?php echo $session['tenant']; ?>");
+            /*$("#Visitor_tenant").val("<?php echo $session['tenant']; ?>");
             $("#User_tenant").val("<?php echo $session['tenant']; ?>");
             $("#Visitor_tenant_agent").val("<?php echo $session['tenant_agent']; ?>");
-            $("#User_tenant_agent").val("<?php echo $session['tenant_agent']; ?>");
+            $("#User_tenant_agent").val("<?php echo $session['tenant_agent']; ?>");*/
 
             /*check if current logged in role is staff member
              * if staff member check if tenant agent admin is null
@@ -171,6 +171,23 @@ $(document).ready(function () {
             $('#dummy-host-findBtn').html('Find ' + getCardType());
 
             showHideTabs('findVisitorB', 'findVisitorA', 'findVisitor', 'selectCardA', 'selectCard', 'findHostA', 'findHost');
+
+            if ($('#VisitCardType').val() < 5) {
+                $('#limit-first-name').html(
+                    '<td><input type="text" size="15" maxlength="15" placeholder="First Name" name="Visitor[first_name]" id="Visitor_first_name"><span class="required">*</span><br><div style="display:none" id="Visitor_first_name_em_" class="errorMessage"></div></td>'
+                );
+                $('#limit-last-name').html(
+                    '<td><input type="text" size="15" maxlength="15" placeholder="Last Name" name="Visitor[last_name]" id="Visitor_last_name"><span class="required">*</span><br><div style="display:none" id="Visitor_last_name_em_" class="errorMessage"></div></td>'
+                );
+            } else {
+                $('#limit-first-name').html(
+                    '<td><input type="text" size="50" maxlength="50" placeholder="First Name" name="Visitor[first_name]" id="Visitor_first_name"><span class="required">*</span><br><div style="display:none" id="Visitor_first_name_em_" class="errorMessage"></div></td>'
+                );
+                $('#limit-last-name').html(
+                    '<td><input type="text" size="50" maxlength="50" placeholder="Last Name" name="Visitor[last_name]" id="Visitor_last_name"><span class="required">*</span><br><div style="display:none" id="Visitor_last_name_em_" class="errorMessage"></div></td>'
+                );
+            }
+
         });
 
         $(document).on("click", "#clicktabB", function (e) {
@@ -197,6 +214,25 @@ $(document).ready(function () {
             } else {
                 $('.visitor_password').empty().hide();
                 $('.visitor_password_repeat').empty().hide();
+            }
+
+            var contact = $('#Visitor_staff_id').val();
+            if (typeof contact != 'undefined') {
+                $.ajax({
+                    type: "POST",
+                    url: "<?php echo $this->createUrl('company/getContact') ?>",
+                    dataType: "json",
+                    data: {id:contact},
+                    success: function(data) {
+                        if (data != 0) {
+                            $('#User_id').val(data.id);
+                            $('#User_first_name').val(data.first_name);
+                            $('#User_last_name').val(data.last_name);
+                            $('#User_email').val(data.email);
+                            $('#User_contact_number').val(data.contact_number);
+                        }
+                    }
+                });
             }
             
             $(".visitorType").hide();
@@ -389,6 +425,7 @@ function preloadVisit(visitorId) {
                 $("#workstation_search").val(value.workstation);
                 $("#Visit_reason_search").val(value.reason);
                 $("#Visitor_visitor_type_search").val(value.visitor_type);
+                $("#Visitor_visitor_type").val(value.visitor_type);
                 $("#Visit_host").val(value.host);
                 $("#Visit_reason").val(value.reason);
                 $("#Visit_workstation").val(value.workstation);
@@ -434,8 +471,12 @@ function preloadHostDetails(hostId) {
             });
         }
     });
-    $("#currentHostDetailsDiv").show();
-    $("#register-host-form").hide();
+    /**
+    * CHANGED ON : Savita Munde recommendation
+    * CAVMS-597
+    * */
+    $("#currentHostDetailsDiv").hide();
+    $("#register-host-form").show();
     $(".host-AddBtn").show();
 }
 
@@ -461,7 +502,7 @@ function checkAsicStatusById(id){
                             $("#searchHostTableDiv h4").html("Selected "+getCardType()+" Record : " + value.first_name + " " + value.last_name);
                         });
                         $('#searchHostTable').contents().find('.findHostButtonColumn a').removeClass('delete');
-                        $('#searchHostTable').contents().find('.findHostButtonColumn a').html('Select Host');
+                        $('#searchHostTable').contents().find('.findHostButtonColumn a').html('Select'+getCardType());
                         $('#searchHostTable').contents().find('#' + id).addClass('delete');
                         $('#searchHostTable').contents().find('#' + id).html(getCardType()+' Selected');
                    }

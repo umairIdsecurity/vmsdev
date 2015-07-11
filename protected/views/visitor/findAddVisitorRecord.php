@@ -36,7 +36,7 @@ $model->identification_country_issued = 13;
     <div style="float:left;width:270px;text-align:center">
     <div class="visitor-title" style="cursor:pointer;color:#2f96b4">Add Visitor Profile</div>
     </div>
-    <input type="text" id="search-visitor" name="search-visitor" placeholder="Enter name, email, drivers licence "
+    <input type="text" id="search-visitor" name="search-visitor" placeholder="Enter name, email, driver licence "
            class="search-text" style="margin-left:30px;"/>
     <button class="visitor-findBtn" onclick="findVisitorRecord()" id="visitor-findBtn" style="display:none;"
             data-target="#findVisitorRecordModal" data-toggle="modal">Find Record
@@ -64,80 +64,10 @@ $model->identification_country_issued = 13;
                         'clientOptions' => array(
                             'validateOnSubmit' => true,
                             'afterValidate' => 'js:function(form, data, hasError){
-                                $("#selectedVisitorInSearchTable").val("");
-                                $("#register-host-form").show();
-                                $("#searchHostDiv").show();
-                                if($("#currentRoleOfLoggedInUser").val() == 9){
-                                    $("#currentHostDetailsDiv").show();
-                                    $("#register-host-form").hide();
-                                    $(".host-AddBtn").show();
-                                } else {
-                                    $("#currentHostDetailsDiv").hide();
-                                    $("#register-host-form").show();
-                                    $(".host-AddBtn").hide();
-                                }
-                                
-                                var bod_field = $("#vic-birth-date-field:hidden");
-                                if (bod_field.length != 1) {
-                                    var dt = new Date();
-                                    if(dt.getFullYear() < $("#fromYear").val()) {
-                                        $("#Visitor_date_of_birth_em_").show();
-                                        $("#Visitor_date_of_birth_em_").html("Please update your Date of Birth");
-                                        return false;
-                                    }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
-                                        $("#Visitor_date_of_birth_em_").show();
-                                        $("#Visitor_date_of_birth_em_").html("Please update your Date of Birth");
-                                        return false;
-                                    }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
-                                        $("#Visitor_date_of_birth_em_").show();
-                                        $("#Visitor_date_of_birth_em_").html("Please update your Date of Birth");
-                                        return false;
-                                    }
-                                }
-                                
-
-                                var visitor_type = $("#Visitor_visitor_type").val();
-                                if (visitor_type == "") {
-                                    $("#Visitor_visitor_type_em_").html("Please select visitor type").show();
-                                    return false;
-                                } else {
-                                    $("#Visitor_visitor_type_em_").empty().hide();
-                                }
-                                if (!hasError){
-                                    var vehicleValue = $("#Visitor_vehicle").val();
-                                    if(vehicleValue.length < 6 && vehicleValue != ""){
-                                        $("#Visitor_vehicle_em_").show();
-                                        $("#Visitor_vehicle_em_").html("Vehicle should have a min. of 6 characters");
-                                    }
-                                    else if ($("#Visitor_visitor_type").val() == "") {
-                                        $(".visitorType").show();
-                                       
-                                    } else if ($("#Visit_reason").val() == "" || ($("#Visit_reason").val() == "Other" &&  $("#VisitReason_reason").val() == "")) {
-                                        $(".visitorReason").show();
-                                      
-                                    } else if ($("#Visit_reason").val() == "Other" &&  $("#VisitReason_reason").val() != "") {
-                                        checkReasonIfUnique();
-                                        
-                                    } else if(  $("#Visitor_photo").val() == "" &&
-                                                $("#cardtype").val() != 1 &&
-                                                $("#cardtype").val() != ' . CardType::MANUAL_VISITOR . ' &&
-                                                $("#cardtype").val() != ' . CardType::VIC_CARD_SAMEDATE . '
-                                            ){
-                                        $("#photoErrorMessage").show();
-                                    }
-
-                                    else {
-                                        
-                                        $(".visitorReason").hide();
-                                        $("#photoErrorMessage").hide();
-                                        $(".visitorType").hide();
-                                        checkEmailIfUnique();
-                                    }
-                                }
+                                return afterValidate(form, data, hasError);
 							}'
                         ),
                     ));
-                   
 //else if ($("#workstation").val() == ""){
 //  $(".errorMessageWorkstation").show();
 //  $(".visitorReason").hide();
@@ -194,7 +124,7 @@ $model->identification_country_issued = 13;
 
                         <table id="addvisitor-table" class="second-column" data-ng-app="PwordForm" style="width:262px;float:left;">
 
-                            <tr>
+                            <tr id="limit-first-name">
                                 <td>
                                     <?php echo $form->textField($model, 'first_name',
                                         array('size' => 50, 'maxlength' => 50, 'placeholder' => 'First Name')); ?>
@@ -208,7 +138,7 @@ $model->identification_country_issued = 13;
                                     <?php echo "<br>" . $form->error($model, 'middle_name'); ?>
                                 </td>
                             </tr>
-                            <tr>
+                            <tr id="limit-last-name">
                                 <td>
                                     <?php echo $form->textField($model, 'last_name',
                                         array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Last Name')); ?>
@@ -368,7 +298,7 @@ $model->identification_country_issued = 13;
                                         ));
                                         ?>
                                         <span class="required">*</span>
-                                        <?php echo $form->error($model, 'company'); ?>
+                                        <?php echo $form->error($model, 'company',array("style" => "margin-top:0px")); ?>
                                     </div>
                                 </td>
                             </tr>
@@ -394,12 +324,12 @@ $model->identification_country_issued = 13;
 
                                     <select id="Visitor_tenant" onchange="populateTenantAgentAndCompanyField()"
                                             name="Visitor[tenant]">
-                                        <option value='' selected>Please select a tenant</option>
+                                        <option value=''>Please select a tenant</option>
                                         <?php
                                         $allTenantCompanyNames = User::model()->findAllCompanyTenant();
                                         foreach ($allTenantCompanyNames as $key => $value) {
                                             ?>
-                                            <option value="<?php echo $value['tenant']; ?>"
+                                            <option value="<?php echo $value['id']; ?>"
                                                 <?php
                                                 if ($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant']) {
                                                     echo " selected ";
@@ -501,7 +431,7 @@ $model->identification_country_issued = 13;
                                         } echo "</select>";
                                     } else {
                                         echo $form->dropDownList($model, 'visitor_type',
-                                        VisitorType::model()->returnVisitorTypes(), array(
+                                        VisitorType::model()->returnVisitorTypes(null,""), array(
                                             'onchange' => 'showHideHostPatientName(this)',
                                             //'prompt' => 'Select Visitor Type',
                                         ));
@@ -523,7 +453,7 @@ $model->identification_country_issued = 13;
                                         $reason = VisitReason::model()->findAllReason();
                                         foreach ($reason as $key => $value) {
                                             ?>
-                                            <option
+                                            <option`
                                                 value="<?php echo $value->id; ?>"><?php echo 'Reason: ' . $value->reason; ?></option>
                                         <?php
                                         }
@@ -594,6 +524,14 @@ $model->identification_country_issued = 13;
                                     ?><span class="required primary-identification-require">*</span>
                                     <?php echo "<br>" . $form->error($model, 'identification_document_no'); ?>
                                     <?php echo $form->error($model, 'identification_document_expiry'); ?>
+                                </td>
+                            </tr>
+                            <tr id="u18_identification" style="display:none">
+                                <td>
+                                    <input type="checkbox" style="float: left;" id="Visitor_u18_identification" name="Visitor_u18_identification" value="">
+                                    <label for="Visitor_identification" class="form-label">I have verified that the applicant is under 18<span class="required primary-identification-require">*</span></label>
+                                    <div class="errorMessage" style="float: left; display: none;" id="Visitor_u18_identification_em_">Please verify the age of the applicant.</div>
+                                    <input type="text" name="Visitor_u18_identification_document_no" style="" placeholder="Details">
                                 </td>
                             </tr>
                             <tr class="vic-visitor-fields">
@@ -728,7 +666,7 @@ $model->identification_country_issued = 13;
                                 $allTenantCompanyNames = User::model()->findAllCompanyTenant();
                                 foreach ($allTenantCompanyNames as $key => $value) {
                                     ?>
-                                    <option value="<?php echo $value['tenant']; ?>"
+                                    <option value="<?php echo $value['id']; ?>"
                                         <?php
                                         if ($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant']) {
                                             echo " selected ";
@@ -794,11 +732,99 @@ $model->identification_country_issued = 13;
 
 <script>
 
+    function afterValidate(form, data, hasError) {
+        $("#selectedVisitorInSearchTable").val("");
+        $("#register-host-form").show();
+        $("#searchHostDiv").show();
+        if($("#currentRoleOfLoggedInUser").val() == 9){
+            $("#currentHostDetailsDiv").show();
+            $("#register-host-form").hide();
+            $(".host-AddBtn").show();
+        } else {
+            $("#currentHostDetailsDiv").hide();
+            $("#register-host-form").show();
+            $(".host-AddBtn").hide();
+        }
+        
+        var bod_field = $("#vic-birth-date-field:hidden");
+        if (bod_field.length != 1) {
+            var dt = new Date();
+            if(dt.getFullYear() < $("#fromYear").val()) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html("Please update your Date of Birth");
+                return false;
+            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1)< $("#fromMonth").val()) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html("Please update your Date of Birth");
+                return false;
+            }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
+                $("#Visitor_date_of_birth_em_").show();
+                $("#Visitor_date_of_birth_em_").html("Please update your Date of Birth");
+                return false;
+            }
+        }
+
+        if ($("#u18_identification:hidden").length != 1) {
+            if (!$("#Visitor_u18_identification").is(":checked")) {
+                $("#Visitor_u18_identification_em_").show();
+                return false;
+            } else {
+                $("#Visitor_u18_identification_em_").hide();
+            }
+        } else {
+            $("#Visitor_u18_identification_em_").hide();
+        }
+        
+        var visitor_type = $("#Visitor_visitor_type").val();
+        if (visitor_type == "") {
+            $("#Visitor_visitor_type_em_").html("Please select visitor type").show();
+            return false;
+        } else {
+            $("#Visitor_visitor_type_em_").empty().hide();
+        }
+        if (!hasError){
+            var vehicleValue = $("#Visitor_vehicle").val();
+            if(vehicleValue.length < 6 && vehicleValue != ""){
+
+                $("#Visitor_vehicle_em_").show();
+                $("#Visitor_vehicle_em_").html("Vehicle should have a min. of 6 characters");
+
+            } else if ($("#Visitor_visitor_type").val() == "") {
+
+                $(".visitorType").show();
+
+            } else if ($("#Visit_reason").val() == "" || ($("#Visit_reason").val() == "Other" &&  $("#VisitReason_reason").val() == "")) {
+
+                $(".visitorReason").show();
+
+            } else if ($("#Visit_reason").val() == "Other" &&  $("#VisitReason_reason").val() != "") {
+
+                checkReasonIfUnique();
+
+            } else if(
+                $("#Visitor_photo").val() == "" &&
+                $("#cardtype").val() != <?php echo CardType::SAME_DAY_VISITOR; ?>  &&
+                $("#cardtype").val() != <?php echo CardType::MANUAL_VISITOR; ?>  &&
+                $("#cardtype").val() != <?php echo CardType::VIC_CARD_SAMEDATE; ?>  && 
+                $("#cardtype").val() != <?php echo CardType::VIC_CARD_MANUAL; ?>
+            ){
+                $("#photoErrorMessage").show();
+            } else {
+
+                $(".visitorReason").hide();
+                $("#photoErrorMessage").hide();
+                $(".visitorType").hide();
+                checkEmailIfUnique();
+                
+            }
+        }
+    }
+
     function backFillNewVistor(){
         $('#addvisitor').show();
         $("#searchvisitor").hide();
         $('#search-visitor').val('');
-        $('#search-visitor').placeholder = 'Enter name, email, drivers licence';
+        $('#search-visitor').placeholder = 'Enter name, email, driver licence';
     }
 
     function switchIdentification() {
@@ -815,6 +841,7 @@ $model->identification_country_issued = 13;
     }
 
     $(document).ready(function() {
+
         if($('#Visitor_contact_country').length){
             $('#Visitor_contact_country').change(function(){
                 if($(this).val() != <?php echo Visitor::AUSTRALIA_ID ?>){
@@ -889,6 +916,13 @@ $model->identification_country_issued = 13;
                 $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
             }else{
+                if (dt.getFullYear() - $("#fromYear").val() < 18) {
+                    $('#u18_identification').show();
+                    $('.primary-identification-require').hide();
+                } else {
+                    $('#u18_identification').hide();
+                    $('.primary-identification-require').show();
+                }
                 $("#Visitor_date_of_birth_em_").hide();
             }
         });
@@ -998,7 +1032,6 @@ $model->identification_country_issued = 13;
                 $("#searchTextErrorMessage").html("Please enter a name");
             }
         });
-
 
     });
 	

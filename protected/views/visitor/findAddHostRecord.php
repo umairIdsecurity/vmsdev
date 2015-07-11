@@ -187,7 +187,7 @@ $defaultKey = key($asicCardTypes);
                         </table>
 
                         <table id="addhost-table" style="width: 280px;float: left;" class="host-second-column">
-
+                            <input type="hidden" name="User[id]" id="User_id" value="">
                             <tr <?php echo $session['role'] != Roles::ROLE_SUPERADMIN ? "style='display:none;'" : ""; ?>>
                                 <td id="hostTenantRow">
                                     <select id="User_tenant" onchange="populateHostTenantAgentAndCompanyField()"name="User[tenant]" disabled>
@@ -196,7 +196,7 @@ $defaultKey = key($asicCardTypes);
                                         $allTenantCompanyNames = User::model()->findAllCompanyTenant();
                                         foreach ($allTenantCompanyNames as $key => $value) {
                                             ?>
-                                            <option value="<?php echo $value['tenant']; ?>"
+                                            <option value="<?php echo $value['id']; ?>"
                                                 <?php
                                                 if ($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant']) {
                                                     echo " selected ";
@@ -296,33 +296,43 @@ $defaultKey = key($asicCardTypes);
                                     <?php echo "<br>" . $form->error($userModel, 'repeatpassword'); ?>
                                 </td>
                             </tr>
-                            <tr class="vms-visitor-fields">
-                                <td id="hostCompanyRow" <?php
-                                if ($session['role'] == Roles::ROLE_AGENT_ADMIN || $session['role'] == Roles::ROLE_OPERATOR || $session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles::ROLE_STAFFMEMBER) {
-                                    echo "style='display:none;'";
-                                }
-                                ?>>
-                                    <select id="User_company" disabled name="User[company]">
-                                        <option value=''>Please select a company</option>
+                            <tr>
+                                <td id="userCompanyRow">
+                                    <div style="margin-bottom: 5px;">
                                         <?php
-                                        if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
-                                            echo "<option value='" . $session['company'] . "' selected>Company</option>";
-                                        }
+                                        $this->widget('application.extensions.select2.Select2', array(
+                                            'model' => $userModel,
+                                            'attribute' => 'company',
+                                            'items' => CHtml::listData(Visitor::model()->findAllCompanyByTenant($session['tenant']), 'id', 'name'),
+                                            'selectedItems' => array(), // Items to be selected as default
+                                            'placeHolder' => 'Please select a company'
+                                        ));
                                         ?>
-                                    </select>
-                                    <span class="required">*</span>
-                                    <?php echo "<br>" . $form->error($userModel, 'company'); ?>
+                                        <span class="required">*</span>
+                                        <?php echo $form->error($userModel, 'company', array("style" => "margin-top:0px")); ?>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div style="margin-bottom: 5px;" id="userStaffRow"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                   <a style="float: left; margin-right: 5px; width: 86px; height: 16px;   border: 1px solid #63B421; border-radius: 5px; background: -webkit-gradient(linear, center top, center bottom, from(#A1DC33), to(#82BD12)); font-size: 12px; padding: 3px 15px 5px; color: #fff;   font-weight: bold;" href="#addCompanyContactModal" role="button" data-toggle="modal" id="addUserCompanyLink">Add Company</a>
+                                    <a href="#addCompanyContactModal" style="font-size: 12px; font-weight: bold; display: none;" id="addUserContactLink" class="btn btn-xs btn-info" role="button" data-toggle="modal" data-id="asic">Add Contact</a>
                                 </td>
                             </tr>
                             <tr class="vic-host-fields">
                                 <td>
-                                    <input name="User[role]" id="User_role"
-                                           value="<?php echo Roles::ROLE_STAFFMEMBER ?>"/>
-                                    <input name="User[user_type]" id="User_user_type"
-                                           value="<?php echo UserType::USERTYPE_INTERNAL; ?>"/>
+                                    <input name="User[role]" id="User_role" value="<?php echo Roles::ROLE_STAFFMEMBER ?>"/>
+                                    <input name="User[user_type]" id="User_user_type" value="<?php echo UserType::USERTYPE_INTERNAL; ?>"/>
                                 </td>
                             </tr>
-
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
                             <tr class="vic-host-fields">
                                 <td>
                                     <a onclick="" style="text-decoration: none;" id="requestASICVerify" class="greenBtn">Request verification ASIC Sponsor </a><br>
@@ -336,27 +346,31 @@ $defaultKey = key($asicCardTypes);
                             <tr class="vic-host-fields">
                                 <td>
                                     <?php echo $form->textField($userModel, 'asic_no', array(
-                                        'size' => 10,
-                                        'maxlength' => 50,
+                                        'size'        => 10,
+                                        'maxlength'   => 50,
                                         'placeholder' => 'ASIC No.',
-                                        'style' => 'width: 110px;'
+                                        'style'       => 'width: 110px;'
                                     )); ?>
 
                                     <?php
+                                    $now = new DateTime(date('Y-m-d'));
+                                    $asicMaxDate = new DateTime(date('Y-m-d', strtotime('+2 month +2 year')));
+                                    $interval = $asicMaxDate->diff($now);
                                     $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                         'model' => $userModel,
                                         'attribute' => 'asic_expiry',
                                         'options' => array(
-                                            'dateFormat' => 'dd-mm-yy',
+                                            'dateFormat'  => 'dd-mm-yy',
                                             'changeMonth' => 'true',
-                                            'changeYear' => 'true',
-                                            'minDate' => '0'
+                                            'changeYear'  => 'true',
+                                            'minDate'     => '0',
+                                            'maxDate'     => $interval->days
                                         ),
                                         'htmlOptions' => array(
-                                            'size' => '0',
-                                            'maxlength' => '10',
+                                            'size'        => '0',
+                                            'maxlength'   => '10',
                                             'placeholder' => 'Expiry',
-                                            'style' => 'width: 80px;',
+                                            'style'       => 'width: 80px;',
                                         ),
                                     ));
                                     ?><span class="required primary-identification-require">*</span>
@@ -858,10 +872,43 @@ $defaultKey = key($asicCardTypes);
         var password = $("#User_password").val();
         var confirmPassword = $("#User_repeatpassword").val();
 
-        if (password != confirmPassword)
+        if (password != confirmPasswordUser)
             $("#passwordErrorMessage").show();
         else
             $("#passwordErrorMessage").hide();
     }
 
+    // company change
+    $('#User_company').on('change', function() {
+        var companyId = $(this).val();
+        $('#CompanySelectedId').val(companyId);
+        $modal = $('#addCompanyContactModal');
+        $.ajax({
+            type: "POST",
+            url: "<?php echo $this->createUrl('company/getContacts') ?>",
+            dataType: "json",
+            data: {id:companyId},
+            success: function(data) {
+                var companyName = $('#userCompanyRow .select2-selection__rendered').text();
+                $('#AddCompanyContactForm_companyName').val(companyName).prop('disabled', 'disabled');
+                if (data == 0) {
+                    $('#addUserContactLink').hide();
+                    $('#userStaffRow').empty();
+                } else {
+                    $('#userStaffRow').html(data);
+                    $('#addUserContactLink').show();
+                }
+                return false;
+            }
+        });
+    });
+
+    function isEmpty(obj) {
+        for(var prop in obj) {
+            if(obj.hasOwnProperty(prop))
+                return false;
+        }
+
+        return true;
+    }
 </script>

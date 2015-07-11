@@ -49,13 +49,13 @@ for ($i = 0; $i < $arrayCount; $i++) {
                 </td>
             </tr>
             
-            <tr>
+            <!--<tr>
             	<td style="text-align: center">
-            		<?php if ($addWorkstation) { ?>
-            			<a class="addSubMenu" href="<?php echo Yii::app()->createUrl('workstation/create'); ?>" ><span>Add Workstation</span></a>
-            		<?php } ?>
+            		<?php /*if ($addWorkstation) { */?>
+            			<a class="addSubMenu" href="<?php /*echo Yii::app()->createUrl('workstation/create'); */?>" ><span>Add Workstation</span></a>
+            		<?php /*} */?>
             	</td>
-            </tr>
+            </tr>-->
 
         </table>
 

@@ -26,19 +26,19 @@ class ReasonsController extends Controller
 	 */
 	public function accessRules()
 	{
-		return array(
-			array('allow', // allow admin user to perform actions
-                            'actions' => array('admin','delete','create','update','index','view'),
-                            'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_SUPERADMIN_DASHBOARD)',
-                        ),
-                        array('allow', // allow admin user to perform actions
-                            'actions' => array('admin','delete','create','update','index','view'),
-                            'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION_DASHBOARD)',
-                        ),
-			array('deny',  // deny all users
-				'users'=>array('*'),
-			),
-		);
+            return array(
+                    array('allow', // allow admin user to perform actions
+                        'actions' => array('admin','delete','create','update','index','view'),
+                        'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_SUPERADMIN_DASHBOARD)',
+                    ),
+                    array('allow', // allow admin user to perform actions
+                        'actions' => array('admin','delete','create','update','index','view'),
+                        'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION_DASHBOARD)',
+                    ),
+                    array('deny',  // deny all users
+                            'users'=>array('*'),
+                    ),
+            );
                 
 	}
 
@@ -67,7 +67,11 @@ class ReasonsController extends Controller
 		if(isset($_POST['Reasons']))
 		{
 			$model->attributes=$_POST['Reasons'];
-			if($model->save())
+                        
+                        $model->created_by=Yii::app()->user->id;
+                        $model->tenant=Yii::app()->user->tenant;
+                        
+                        if($model->save())
 				$this->redirect(array('admin'));
 		}
 

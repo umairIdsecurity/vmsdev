@@ -3,20 +3,20 @@ $session = new CHttpSession;
 
 $session['count'] = 1;
 //date_default_timezone_set('Asia/Manila'); remove hard code
-$tenant = User::model()->findByPk($visitorModel->tenant);
-$photoForm = $this->beginWidget('CActiveForm', array(
+//$tenant = User::model()->findByPk($visitorModel->tenant);
+$photoForm = $this->beginWidget('CActiveForm', [
     'id' => 'update-photo-form',
     'action' => Yii::app()->createUrl('/visitor/update&id=' . $model->visitor . '&view=1'),
-    'htmlOptions' => array("name" => "update-visitor-form"),
+    'htmlOptions' => ["name" => "update-visitor-form"],
     'enableAjaxValidation' => false,
     'enableClientValidation' => true,
-    'clientOptions' => array(
+    'clientOptions' => [
         'validateOnSubmit' => true,
         'afterValidate' => 'js:function(form, data, hasError){
-                                sendPhoto();
-                                }'
-    ),
-        ));
+            sendPhoto();
+        }'
+    ],
+]);
 ?>
 <input type="text" value="<?php echo $visitorModel->photo; ?>" name="Visitor[photo]" id="Visitor_photo">
 <?php echo "<br>" . $photoForm->error($visitorModel, 'photo'); ?>
@@ -32,38 +32,36 @@ $photoForm = $this->beginWidget('CActiveForm', array(
 </div>
 <?php
 $vstr = Visitor::model()->findByPk($model->visitor);
-if ($vstr->profile_type == "CORPORATE") {
-    $bgcolor = CardGenerated::CORPORATE_CARD_COLOR;
-}/* elseif ($vstr->profile_type == "ASIC") {
-    $bgcolor = CardGenerated::ASIC_CARD_COLOR;
-} */elseif ($vstr->profile_type == "VIC" || $vstr->profile_type == "ASIC") {
-     $bgcolor = CardGenerated::VIC_CARD_COLOR;
+$bgcolor = "";
+if ($vstr) {
+	if ($vstr->profile_type == "CORPORATE") {
+	    $bgcolor = CardGenerated::CORPORATE_CARD_COLOR;
+	} elseif ($vstr->profile_type == "VIC" || $vstr->profile_type == "ASIC") {
+	     $bgcolor = CardGenerated::VIC_CARD_COLOR;
+	}
 }
 ?>
-<?php if($model->card_type > 4){ ?>
-<?php $this->renderPartial("_card_detail",array('bgcolor'=>$bgcolor,'model'=>$model,'visitorModel'=>$visitorModel));?>
-<?php } else {?>
-<?php $this->renderPartial("_card-corporate",array('bgcolor'=>$bgcolor,'model'=>$model,'visitorModel'=>$visitorModel));?>
-<?php } ?>
+
+<?php
+if($model->card_type > CardType::CONTRACTOR_VISITOR) {
+    $this->renderPartial("_card_detail",['bgcolor' => $bgcolor,'model' => $model,'visitorModel' => $visitorModel]);
+} else {
+    $this->renderPartial("_card-corporate",['bgcolor' => $bgcolor,'model' => $model,'visitorModel' => $visitorModel]);
+}
+?>
+
 <div id="Visitor_photo_em" class="errorMessage" style="display: none;">Please upload a profile image.</div>
+
 <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
-<?php if ($visitorModel->photo != '') { ?>
+<?php if ($visitorModel->photo != '') : ?>
 <input type="button" class="btn editImageBtn actionForward" id="editImageBtn" style="  margin-bottom: 2px!important;" value="Edit Photo" onclick = "document.getElementById('light').style.display = 'block';
                 document.getElementById('fade').style.display = 'block'"/>
-       <?php } ?>
-<div
-<?php
-if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
-    echo "style='display:none'";
-}
-?>
-    >
-        <?php
-        $cardDetail = CardGenerated::model()->findAllByAttributes(array(
-            'visitor_id' => $model->visitor
-        ));
-        ?>
+<?php endif; ?>
+
+<div style="display:<?php echo $session['role'] == Roles::ROLE_STAFFMEMBER ? 'none' : 'block'; ?>">
+    <?php $cardDetail = CardGenerated::model()->findAllByAttributes(array('visitor_id' => $model->visitor)); ?>
 </div>
+
 <div class="dropdown">
 <?php if (in_array($model->card_type, [CardType::SAME_DAY_VISITOR, CardType::MULTI_DAY_VISITOR, CardType::CONTRACTOR_VISITOR, CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_24HOURS, CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY]) && $model->visit_status ==VisitStatus::ACTIVE): ?>
 
@@ -74,7 +72,7 @@ if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo yii::app()->createAbsoluteUrl('cardGenerated/pdfprint', array('id' => $model->id, 'type' => 2)) ?>">Print On Card Printer</a></li>
         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo yii::app()->createAbsoluteUrl('cardGenerated/pdfprint', array('id' => $model->id, 'type' => 3)) ?>">Rewritable Print Card</a></li>
     </ul>
-<?php elseif (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY, CardType::VIC_CARD_24HOURS]) && $model->visit_status == VisitStatus::AUTOCLOSED && $model->finish_date == date('Y-m-d')): ?>
+<?php elseif (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && $model->visit_status == VisitStatus::AUTOCLOSED && $model->finish_date == date('Y-m-d')): ?>
     <button class="complete btn btn-info printCardBtn dropdown-toggle" style="width:205px !important; margin-top: 4px; margin-right: 80px;" type="button" id="menu1" data-toggle="dropdown">Print Card
         <span class="caret pull-right"></span></button>
         <ul class="dropdown-menu" style="left: 62px;" role="menu" aria-labelledby="menu1">
@@ -108,28 +106,33 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
         <?php
         if ($asic) {
             if($visitorModel->profile_type ==  Visitor::PROFILE_TYPE_VIC) {
-                array_pop(Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC]);
-                echo CHtml::dropDownList('Visitor[visitor_card_status]', $visitorModel->visitor_card_status, Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC], ['empty' => 'Select Card Status']);
-                echo "<br />";
+                $profileType = Visitor::PROFILE_TYPE_VIC;
+                
             } elseif($visitorModel->profile_type ==  Visitor::PROFILE_TYPE_ASIC) {
-                array_pop(Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_ASIC]);
-                echo CHtml::dropDownList('Visitor[visitor_card_status]', $visitorModel->visitor_card_status, Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_ASIC], ['empty' => 'Select Card Status']);
-                echo "<br />";
+                $profileType = Visitor::PROFILE_TYPE_ASIC;
             }
 
+            echo CHtml::dropDownList('Visitor[visitor_card_status]', $visitorModel->visitor_card_status, Visitor::$VISITOR_CARD_TYPE_LIST[$profileType], ['empty' => 'Select Card Status']);
+                echo "<br />";
         }
 
         $workstationList = CHtml::listData(Utils::populateWorkstation(), 'id', 'name');
-        foreach ($workstationList as $key => $item) {
-            $workstationResults[$key] = 'Workstation: ' . $item;
+        if (!empty($workstationList)) {
+            foreach ($workstationList as $key => $item) {
+                $workstationResults[$key] = 'Workstation: ' . $item;
+            }
+        } else {
+            $workstationResults = [];
         }
 
         echo CHtml::dropDownList('Visit[workstation]', $model->workstation, $workstationResults, ['empty' => 'Select Workstation']);
-        echo "<br />";
+        echo "<span class='required'>*</span>";
+        echo '<div id="Visit_workstation_em_" class="errorMessage" style="display: none">Please select a workstation</div>';
 
         if ($asic) {
             echo CHtml::dropDownList('Visit[visitor_type]', $model->visitor_type, VisitorType::model()->returnVisitorTypes());
-            echo "<br />";
+            echo "<span class='required'>*</span>";
+            echo '<div id="Visit_visitor_type_em_" class="errorMessage" style="display: none">Please select a Visitor type</div>';
             $reasons = CHtml::listData(VisitReason::model()->findAll(), 'id', 'reason');
             foreach ($reasons as $key => $item) {
                 $results[$key] = 'Reason: ' . $item;
@@ -145,18 +148,83 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
         $cardTypes = CHtml::listData(CardType::model()->findAll(), 'id', 'name');
         foreach ($cardTypes as $key => $item) {
             $cardList = ($asic) ? CardType::$VIC_CARD_TYPE_LIST : CardType::$CORPORATE_CARD_TYPE_LIST;
+            if($item == 'Multiday Visitor'){$item="MultiDay";}
+            if($item == 'Same Day Visitor'){$item="Same Day";}
             if (in_array($key, $cardList)) {
                 $cardTypeResults[$key] = 'Card Type: ' . $item;
             }
         }   
         echo CHtml::dropDownList('Visit[card_type]', $model->card_type, $cardTypeResults, $cardTypeOptions);
+        echo '<br />';
+        //if (in_array($model->visit_status, [VisitStatus::CLOSED])) {
+            echo '<input type="submit" name="updateWorkstationForm" id="updateWorkstationForm" class="complete btnUpdateWorkstationForm"  value="Update">';
+        //}
         ?>
-        
+        <input type="hidden" id="workstationForm">
     </div>
 </form>
 
 <script>
     $(document).ready(function () {
+        $('#Visit_workstation').on('change',function(){
+            var workstation = $('#Visit_workstation').val();
+            if(!workstation || workstation == "") {
+                $('#Visit_workstation_em_').show();
+            } else {
+                $('#Visit_workstation_em_').hide();
+            }
+        })
+        $('#Visit_visitor_type').on('change',function(){
+            var visitortype = $('#Visit_visitor_type').val();
+            if(!visitortype || visitortype == "") {
+                $('#Visit_visitor_type_em_').show();
+            } else {
+                $('#Visit_visitor_type_em_').hide();
+            }
+        })
+        function checkWorkstation() {
+            var workstation = $('#Visit_workstation').val();
+            if(!workstation || workstation == "") {
+                $('#Visit_workstation_em_').show();
+                return false;
+            } else {
+                return true;
+            }
+        }
+        function checkVisitorType(){
+            var visitortype = $('#Visit_visitor_type').val();
+            if(!visitortype || visitortype == "") {
+                $('#Visit_visitor_type_em_').show();
+                return false;
+            }else {
+                return true;
+            }
+        }
+         function checkCardStatus(){
+             var currentCardStatus = "<?php echo $visitorModel->visitor_card_status; ?>";
+             var currentVisitStatus = "<?php echo $model->visit_status ; ?>";
+             if(currentVisitStatus == "<?php echo VisitStatus::ACTIVE; ?>") {
+                 if (currentCardStatus == 2 && $('#Visitor_visitor_card_status').val() == 3) {
+                     alert('Please close the active visits before changing the status to ASIC Pending.');
+                     return false;
+                 } else {
+                     return true;
+                 }
+             } else {
+                 return true;
+             }
+         }
+        $('.btnUpdateWorkstationForm').on('click', function (e) {
+            var checkWorkStation1 = checkWorkstation();
+            var checkVisitorType1 = checkVisitorType();
+            var checkCardStatus1 = checkCardStatus();
+            if( checkCardStatus1 == true && checkVisitorType1 == true && checkWorkStation1 == true) {
+                $('#workstationForm').submit();
+            } else {
+                return false;
+            }
+        });
+
         var currentCardStatus = $('#Visitor_visitor_card_status').val();
         if (currentCardStatus == 6) {
             $('#Visitor_visitor_card_status').attr("disabled", true);
@@ -230,6 +298,20 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
             var ias = $('#photoCropPreview').imgAreaSelect({instance: true});
             ias.cancelSelection();
         });
+
+        /*$(document).on('click', '.btnUpdateWorkstationForm', function(e) {
+            e.preventDefault();
+            var currentCardStatus = "<?php echo $visitorModel->visitor_card_status; ?>";
+            var currentVisitStatus = "<?php echo $model->visit_status ; ?>"
+            if(currentVisitStatus == "<?php echo VisitStatus::ACTIVE; ?>") {
+                if (currentCardStatus == 2 && $('#Visitor_visitor_card_status').val() == 3) {
+                    alert('Please close the active visits before changing the status to ASIC Pending.');
+                    return false;
+                }
+            }
+            var t = checkVistorCardStatusOfHost(<?php echo $model->host; ?>);
+            (t == true) ? $('#workstationForm').submit() : alert('Exception r718 - Vistor Information');
+        });*/
     });
 
     function uploadImage() {

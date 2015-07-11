@@ -190,8 +190,6 @@ $form = $this->beginWidget('CActiveForm', array(
 
 
 <table style="float:left;width:300px;">
-
-
 <tr>
 
     <td id="visitorTenantRow" <?php
@@ -216,11 +214,10 @@ $form = $this->beginWidget('CActiveForm', array(
 
                 ?>
 
-                <option value="<?php echo $value['tenant']; ?>"
+                <option value="<?php echo $value['id']; ?>"
 
                     <?php
-
-                    if (($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant'] && $this->action->id != 'update') || ($model['tenant'] == $value['tenant'])) {
+                    if (($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant'] && $this->action->id != 'update') || ($model['tenant'] == $value['id'])) {
 
                         echo "selected ";
 
@@ -287,7 +284,7 @@ $form = $this->beginWidget('CActiveForm', array(
     <td>
 
 
-        <?php echo $form->textField($model, 'first_name', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'First Name')); ?>
+        <?php echo $form->textField($model, 'first_name', array('size' => 15, 'maxlength' => 15, 'placeholder' => 'First Name')); ?>
         <span class="required">*</span>
 
         <?php echo "<br>" . $form->error($model, 'first_name'); ?>
@@ -300,7 +297,7 @@ $form = $this->beginWidget('CActiveForm', array(
 
     <td>
 
-        <?php echo $form->textField($model, 'last_name', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Last Name')); ?>
+        <?php echo $form->textField($model, 'last_name', array('size' => 15, 'maxlength' => 15, 'placeholder' => 'Last Name')); ?>
         <span class="required">*</span>
 
         <?php echo "<br>" . $form->error($model, 'last_name'); ?>
@@ -849,9 +846,7 @@ function populateTenantAgentAndCompanyField() {
     $('#Visitor_tenant_agent option[value!=""]').remove();
 
     var tenant = $("#Visitor_tenant").val();
-
     var selected;
-
 
     if ($("#currentAction").val() == 'update') {
 
@@ -1056,7 +1051,7 @@ function sendVisitorForm() {
             } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
                 window.location = 'index.php?r=dashboard/viewmyvisitors';
             } else {
-                window.location = 'index.php?r=visitor/admin';
+                window.location = 'index.php?r=visitor/admin&vms=cvms';
             }
         },
         error: function (data) {
@@ -1065,7 +1060,7 @@ function sendVisitorForm() {
             } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
                 window.location = 'index.php?r=dashboard/viewmyvisitors';
             } else {
-                window.location = 'index.php?r=visitor/admin';
+                window.location = 'index.php?r=visitor/admin&vms=cvms';
             }
         }
     };

@@ -822,11 +822,27 @@ dt.tabs dt{
 
 
 /*for visitor detail page*/
-#visitorDetailDiv, #visitHistoryVisitDetailDiv{
-    padding:0px;margin-left:-30px;height:100%;width:106.59% !important;max-width:107%;
+#visitorDetailDiv
+{
+    padding:0px;margin-left:-30px;
+    //height:100%;
+    width:106.59% !important;
+    max-width:107%;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
 }
+
+#visitHistoryVisitDetailDiv
+{
+    padding:0px;
+    margin-left:-30px;
+    //height:100%;
+    width:106.59% !important;
+    max-width:107%;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
 #visitorDetailDiv .theadVisitorDetail td{
     font-size:12px;
     text-align:center;
@@ -1587,6 +1603,19 @@ p.asic{
     color: red;
     font-size: 0.9em;
     text-transform: lowercase;
+    margin-bottom: 11px;
+    margin-top: -11px;
+}
+select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {
+    border-radius: 4px;
+    color: #555555;
+    display: inline-block;
+    font-size: 14px;
+    height: 20px;
+    line-height: 20px;
+    margin-bottom: 11px !important;
+    padding: 4px 6px;
+    vertical-align: middle;
 }
 
 .errorMessage:first-letter {
@@ -2001,6 +2030,11 @@ p.asic{
 #workstation-grid {
     width: 1280px;
 }
+
+#workstation-grid tr td.ws-padding{
+    padding-left: 20px!important;
+}
+
 #audit-trail-grid {
     width: 1100px;
 }

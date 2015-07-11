@@ -66,7 +66,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             </ul>
         </li>
         <?php if (in_array($model->visit_status, [VisitStatus::PREREGISTERED, VisitStatus::SAVED, VisitStatus::CLOSED, VisitStatus::AUTOCLOSED])) { ?>
-
+            
             <li class='has-sub' id="activateLi"><span class="log-current">Log Visit</span>
                 <ul>
                     <li>
@@ -80,7 +80,13 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                 'validateOnSubmit' => true,
                                 'afterValidate' => 'js:function(form, data, hasError){
                                     if (!hasError){
-                                        if($("#Visitor_photo").val() == "" && $("#Visit_card_type").val() == "2" ){
+                                        if(
+                                            $("#Visitor_photo").val() == "" &&
+                                            $("#Visit_card_type").val() != ' . CardType::SAME_DAY_VISITOR . '  &&
+                                            $("#Visit_card_type").val() != ' . CardType::MANUAL_VISITOR . '  &&
+                                            $("#Visit_card_type").val() != ' . CardType::VIC_CARD_SAMEDATE . '  && 
+                                            $("#Visit_card_type").val() != ' . CardType::VIC_CARD_MANUAL . '
+                                        ){
                                             alert("Please upload a photo.");
                                         }else if ($("#Visit_card_type").val() == "9" && $("#pre_issued_card_no").val() == "" ) {
                                             $("#card_number_required").show();
@@ -101,18 +107,23 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                         <?php
                                         if ($asic) {
                                             $this->renderPartial('activateavisit-vic', array(
-                                                'model' => $model,
+                                                'model'        => $model,
                                                 'visitorModel' => $visitorModel,
-                                                'hostModel' => $hostModel,
-                                                'reasonModel' => $reasonModel,
-                                                'asic' => $asic
+                                                'hostModel'    => $hostModel,
+                                                'reasonModel'  => $reasonModel,
+                                                'asic'         => $asic,
+                                                'logform'      => $logform,
+                                                'session'      => $session,
+                                                'visitCount'   => $visitCount
                                             ));
                                         } else {
                                             $this->renderPartial('activateavisit', array(
-                                                'model' => $model,
+                                                'model'        => $model,
                                                 'visitorModel' => $visitorModel,
-                                                'hostModel' => $hostModel,
-                                                'reasonModel' => $reasonModel,
+                                                'hostModel'    => $hostModel,
+                                                'reasonModel'  => $reasonModel,
+                                                'logform'      => $logform,
+                                                'visitCount'   => $visitCount
                                             ));
                                         }
                                         ?>
@@ -122,32 +133,27 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                             </tr>
                         </table>
                         <?php echo $logform->error($model, 'date_in'); ?>
-                        <?php
-                        if (in_array($model->visit_status, [VisitStatus::CLOSED])) :
-                            ?>
-                            <button type="button" id='registerNewVisit' class='greenBtn'>Activate Visit</button>
-                        <?php elseif ($model->visit_status == VisitStatus::PREREGISTERED) : ?>
+                        <?php if (in_array($model->visit_status, [VisitStatus::CLOSED, VisitStatus::PREREGISTERED])) : ?>
                             <button type="button" id='registerNewVisit' class='greenBtn'>Activate Visit</button>
                             <div style="display:inline;font-size:12px;">
-                                <b>or </b>
-                                <a id="cancelPreregisteredVisitButton" href="" class="cancelBtnVisitorDetail">Cancel</a>
+                                <strong>or </strong>
+                                <?php echo CHtml::link('Cancel', $this->createAbsoluteUrl('visit/view'), array('class' => 'cancelBtnVisitorDetail')); ?>
                             </div>
                         <?php elseif ($model->visit_status == VisitStatus::AUTOCLOSED) : ?>
                             <?php
                             $disabled = '';
-                            if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MULTIDAY]) && strtotime(date('d-m-Y')) == strtotime($model->finish_date)) {
+                            if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && strtotime(date('d-m-Y')) <= strtotime($model->finish_date)) {
                                 $disabled = 'disabled';
                             }
                             ?>
-                            <input type="submit" style="width: 235px !important;" <?php echo $disabled; ?> value="Preregister Visit" class="complete"/>
+                            <button type="submit" id="registerNewVisit" <?php echo $disabled; ?> class="greenBtn">Preregister Visit</button>
                         <?php else:
-                            if ($model->card_type == CardType::MANUAL_VISITOR && isset($model->date_check_in) && strtotime($model->date_check_in) < strtotime(date("d-m-Y"))) :
-                                ?>
+                            if ($model->card_type == CardType::MANUAL_VISITOR && isset($model->date_check_in) && strtotime($model->date_check_in) < strtotime(date("d-m-Y"))) : ?>
                                 <input type="submit" value="Back Date Visit" class="complete"/>
                             <?php else: ?>
                                 <button type="button" id="registerNewVisit" class="greenBtn">Activate Visit</button>
                                 <div style="display:inline;font-size:12px;">
-                                <b>or </b>
+                                <strong>or </strong>
                                 <?php echo CHtml::link('Cancel', $this->createAbsoluteUrl('visit/view'), array('class' => 'cancelBtnVisitorDetail')); ?>
                                 </div>
                             <?php endif; ?>
@@ -162,10 +168,170 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
         <?php } ?>
     </ul>
 </div>
+
+<!-- Identification Modal -->
+<div id="identificationModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3>Identification Verification</h3>
+    </div>
+    <div class="modal-body">
+        <table style="border-collapse: initial;">
+            <tr><td colspan="2"><strong>Does the document number match the identification provided?</strong></td></tr>
+            <tr><td colspan="2"><strong>&nbsp;</strong></td></tr>
+            <tr>
+                <td colspan="2">
+                    <table style="border-collapse: initial;">
+                    <tbody>
+                        <tr>
+                            <td style="width: 120px; color: lightgray;">Type</td>
+                            <td><?php
+                                if (isset(Visitor::$IDENTIFICATION_TYPE_LIST[$visitorModel->identification_type])) {
+                                    echo Visitor::$IDENTIFICATION_TYPE_LIST[$visitorModel->identification_type];
+                                } else {
+                                    echo 'N/A';
+                                }
+                            ?></td>
+                        </tr>
+                        <tr>
+                            <td style="width: 120px; color: lightgray;">Document No.</td>
+                            <td><?php echo !empty($visitorModel->identification_document_no) ? $visitorModel->identification_document_no : 'N/A'; ?></td>
+                        </tr>
+                        <tr>
+                            <td style="width: 120px; color: lightgray;">Document Expiry</td>
+                            <td><?php
+                                if ($visitorModel->identification_document_expiry == '' || $visitorModel->identification_document_expiry == '0000-00-00') {
+                                    echo 'N/A';
+                                } else {
+                                    echo $visitorModel->identification_document_expiry;
+                                }
+                            ?></td>
+                        </tr>
+                    </tbody>
+                </table>
+                </td>
+            </tr>
+            <tr>
+                <td width="20px"><input type="radio" name="identification" id="identificationChkBoxYes"/></td>
+                <td><label for="identificationChkBoxYes">Yes</label></td>
+            </tr>
+            <tr>
+                <td width="20px"><input type="radio" name="identification" id="identificationChkBoxNo"/></td>
+                <td><label for="identificationChkBoxNo">No</label></td>
+            </tr>
+            
+            <tr id="identificationNotExpired" style="display:none;">
+                <form id="identification_not_expired_form">
+                <td colspan="2">
+                    <table style="border-collapse: initial;">
+                        <tbody>
+                            <tr>
+                                <td><input type="text" style="width: 300px;" name="Visitor['identification_type']" placeholder="Enter drivers licence, passport or proof of age"> <span class="required primary-identification-require">*</span>
+                                </td>
+                                <td>
+                                <?php
+                                $this->widget('zii.widgets.jui.CJuiDatePicker',array(
+                                    'id' => 'identification_document_expiry',
+                                    'name'=>'Visitor[identification_document_expiry]',
+                                    // additional javascript options for the date picker plugin
+                                    'options'=>array(
+                                        'dateFormat'  => 'dd-mm-yy',
+                                        'minDate'     => '0',
+                                        'changeYear'  => true,
+                                        'changeMonth' => true
+                                    ),
+                                    'htmlOptions'=>array(
+                                        'size'        => '0',
+                                        'maxlength'   => '10',
+                                        'placeholder' => 'Expiry',
+                                        'style'       => 'width: 120px;',
+                                    ),
+                                ));
+                                ?> <span class="required primary-identification-require">*</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+                </form>
+            </tr>
+            <tr id="identificationExpired" style="display:none;">
+            <form id="identification_expired_form">
+                <td>&nbsp;</td>
+                <td>
+                    <table style="border-collapse: initial;">
+                        <tbody>
+                            <tr>
+                                <td><strong>New Identification Details:</strong></td>
+                                <td colspan="2">&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">&nbsp;</td>
+                                <td>
+                                    <select name="Visitor[identification_type]" id="identification_type">
+                                        <?php foreach(Visitor::$IDENTIFICATION_TYPE_LIST as $key => $item): ?>
+                                        <option value="<?php echo $key; ?>"><?php echo $item; ?></option>
+                                        <?php endforeach; ?>
+                                    </select> <span class="required primary-identification-require">*</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">&nbsp;</td>
+                                <td>
+                                    <?php
+                                    $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');?>
+                                    <select name="Visitor[identification_country_issued]" id="identification_country_issued">
+                                        <option value="">Country of Issue</option>
+                                        <?php foreach($countryList as $key => $item): ?>
+                                        <option <?php echo ($key == Visitor::AUSTRALIA_ID) ? 'selected': ''; ?> value="<?php echo $key; ?>"><?php echo $item; ?></option>
+                                        <?php endforeach; ?>
+                                     </select> <span class="required primary-identification-require">*</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">&nbsp;</td>
+                                <td>
+                                    <input type="text" name="Visitor[identification_document_no]" id="identification_document_no" placeholder="Document No." style="width: 110px;">
+
+                                    <?php
+                                    $this->widget('zii.widgets.jui.CJuiDatePicker',array(
+                                        'id' => '_identification_document_expiry',
+                                        'name'=>'Visitor[identification_document_expiry]',
+                                        // additional javascript options for the date picker plugin
+                                        'options'=>array(
+                                            'dateFormat'  => 'dd-mm-yy',
+                                            'minDate'     => '0',
+                                            'changeYear'  => true,
+                                            'changeMonth' => true
+                                        ),
+                                        'htmlOptions'=>array(
+                                            'size'        => '0',
+                                            'maxlength'   => '10',
+                                            'placeholder' => 'Expiry',
+                                            'style'       => 'width: 80px;',
+                                        ),
+                                    ));
+                                    ?> <span class="required primary-identification-require">*</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </form>    
+            </tr>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="btnIdentificationConfirm">Confirm</button>
+    </div>
+</div>
+<!-- END Identification Modal -->
+
 <input type="hidden" value="<?php echo $session['previousVisitAction']; ?>" id="previousVisitAction"/>
 <input type="hidden" value="<?php echo $model->visit_status; ?>" id="visitStatus"/>
 <script>
     $(document).ready(function () {
+
         if ($("#visitStatus").val() == 5) {
 
             if ($("#previousVisitAction").val() == 'Preregister') {
@@ -217,24 +383,40 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
         });
 
         $(document).on('click', '#registerNewVisit', function (e) {
-
             var imgsrc;
             $("#photoPreview").each(function() {
                 imgsrc = this.src;
             });
             var profileImage = '<?php echo $visitorModel->photo;?>';
-            var isDefault = imgsrc.search('companylogohere1.png');
-            if( isDefault > 0 || profileImage == '' || !profileImage) {
-                <?php if($model->card_type != CardType::VIC_CARD_SAMEDATE ) { ?>
-                $("#Visitor_photo_em").attr('style', 'margin-right:84px ; margin-bottom:0px;');
-                $("#editImageBtn.editImageBtn").attr('style', 'margin-top:-5px !important; margin-right:84px ; margin-bottom:0px;');
-                $("#cropImageBtn.editImageBtn").attr('style', 'margin-top:-5px !important; margin-right:84px ; margin-bottom:0px;');
-                return;
-                <?php } ?>
+            var isDefault = imgsrc.search('images/companylogohere1.png');
+            var isChanged = imgsrc.search('visit/detail&id='+'<?php echo $model->id; ?>');
+
+            if( isDefault > 0 || (profileImage == '' && isChanged > 0)) {
+                <?php if ($model->card_type > CardType::CONTRACTOR_VISITOR ) : ?>
+                    <?php if(!in_array($model->card_type, [ CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_MANUAL])) : ?>
+                        $("#Visitor_photo_em").attr('style', 'margin-right:84px ; margin-bottom:0px; margin-top:0px ;');
+                        $("#editImageBtn.editImageBtn").attr('style', 'margin-top:-5px !important; margin-right:84px ; margin-bottom:0px;');
+                        $("#cropImageBtn.editImageBtn").attr('style', 'margin-top:-5px !important; margin-right:84px ; margin-bottom:0px;');
+                        return;
+                    <?php endif; ?>
+                <?php else : ?>
+                    <?php if(!in_array($model->card_type, [CardType::SAME_DAY_VISITOR, CardType::MANUAL_VISITOR])) : ?>
+                        $("#Visitor_photo_em").attr('style', 'margin-bottom: -17px; margin-right: 0px; margin-top: 13px;');
+                        $("#cropImageBtn.editImageBtn").attr('style', 'margin-bottom: 0; margin-right: 0 !important; margin-top: 0 !important;');
+                        return;
+                    <?php endif; ?>
+                <?php endif; ?>
             }
 
             e.preventDefault();
             $this = $(this);
+
+            if ($this.val() == 'backdate') {
+                // Close a visit if card type is manual and operator select check in date less then current date
+                closeVisit();
+                return false;
+            }
+
             var flag = true;
             var $btnVic = $('#btnVicConfirm'),
                 $btnASIC = $('#btnAsicConfirm');
@@ -251,34 +433,22 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                 return false;
             }
 
-            var is_vic_holder_checked = $('#VivHolderDecalarations').is(':checked'),
+            var is_vic_holder_checked = $('#VicHolderDecalarations').is(':checked'),
                 is_asic_holder_checked = $('#AsicSponsorDecalarations').is(':checked');
 
             var declarations_checkboxs = $('.vic-active-declarations');
             var confirmed = isCheckboxsChecked(declarations_checkboxs);
 
-            if (!confirmed && $('#registerNewVisit').html() !== 'Preregister Visit') {
-                if (!$('#VivHolderDecalarations').is(':checked') && $('#AsicSponsorDecalarations').is(':checked')) {
+            if (!confirmed && $this.val() !== 'preregister') {
+                if (!$('#VicHolderDecalarations').is(':checked') && $('#AsicSponsorDecalarations').is(':checked')) {
                     $('#vicHolderModal').modal('show');
                     $btnVic.on('click', function(e) {
-                        var vicChecked = vicCheck();
-                        if (vicChecked) {
-                            activeVisit();
-                        } else {
-                            alert('Please select all the declarations.');
-                            return false;
-                        }
+                        $('#identificationModal').modal('show');
                     });
-                } else if (!$('#AsicSponsorDecalarations').is(':checked') && $('#VivHolderDecalarations').is(':checked')){
+                } else if (!$('#AsicSponsorDecalarations').is(':checked') && $('#VicHolderDecalarations').is(':checked')){
                     $('#asicSponsorModal').modal('show');
                     $btnASIC.on('click', function(e) {
-                        var asicChecked = asicCheck();
-                        if (asicChecked) {
-                            confirmed = true;
-                        } else {
-                            alert('Please select all the declarations.');
-                            return false;
-                        }
+                        $('#identificationModal').modal('show');
                     });
                 } else {
                     $('#vicHolderModal').modal('show');
@@ -287,16 +457,15 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                         if (vicChecked) {
                             $('#asicSponsorModal').modal('show');
                             $btnASIC.on('click', function(e) {
-                                var asicChecked = asicCheck();
-                                if (asicChecked) {
-                                    confirmed = true;
+                                if ($('#asicEscortRbtn').is(':checked')) {
+                                    checkEscortEmailUnique();
                                 } else {
-                                    alert('Please select all the declarations.');
-                                    return false;
+                                    if (asicCheck()) {
+                                        $('#identificationModal').modal('show');
+                                    }
                                 }
                             });
                         } else {
-                            alert('Please select all the declarations.');
                             return false;
                         }
                     });
@@ -306,7 +475,13 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             }
 
             if (confirmed == true) {
-                flag = isCheckboxsChecked(vic_active_visit_checkboxs);
+
+                if ($this.val() == 'preregister') {
+                    flag = true;
+                } else {
+                    flag = isCheckboxsChecked(vic_active_visit_checkboxs);
+                }
+                
                 if (flag == true) {
                     var pre_issued_card_no = $("#pre_issued_card_no").val();
                     if (typeof pre_issued_card_no != "undefined") {
@@ -319,8 +494,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                     }
                     activeVisit();
                 } else {
-                    alert('Please agree VIC verification before active visit.');
-                    addWarningLabel(vic_active_visit_checkboxs);
+                    $('#identificationModal').modal('show');
                 }
             }
 
@@ -355,6 +529,16 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             } else {
                 checkIfActiveVisitConflictsWithAnotherVisit('new');
             }
+        }
+
+        function closeVisit() {
+            var data = $('#activate-a-visit-form').serialize();
+            var url = "<?php echo Yii::app()->createUrl('visit/closeVisit&id='.$model->id); ?>";
+            $.post(url, {data: data}, function(r) {
+                if (r == 1) {
+                    window.location.reload();
+                }   
+            });
         }
 
         $('#cancelActiveVisitButton').on('click', function (e) {
@@ -479,12 +663,10 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
         'clientOptions' => array(
             'validateOnSubmit' => true,
             'afterValidate' => 'js:function(form, data, hasError){
-                                if (!hasError){
-
-                                    sendCancelVisit();
-
-                                }
-                                }'
+                if (!hasError){
+                    sendCancelVisit();
+                }
+            }'
         ),
     ));
     ?>
@@ -525,21 +707,19 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
     ?>">
     <input type="text" id="CardGenerated_enter_card_number" name="CardGenerated[enter_card_number]" value=""/>
     <?php
-    $tenant = User::model()->findByPk($model->tenant);
-    $code = '';
-    if ($tenant) {
-        if ($tenant->company != '') {
-            $company = Company::model()->findByPk($tenant->company);
-            if ($company) {
-                $card_count = $company->card_count ? ($company->card_count + 1) : 1;
 
-                while (strlen($card_count) < 6) {
-                    $card_count = '0' . $card_count;
-                }
-                $code = $company->code . ($card_count);
-            }
+    //$tenant = User::model()->findByPk($model->tenant);
+    $code = '';
+    $company = Company::model()->findByPk($model->tenant);
+    if ($company) {
+        $card_count = $company->card_count ? ($company->card_count + 1) : 1;
+
+        while (strlen($card_count) < 6) {
+            $card_count = '0' . $card_count;
         }
+        $code = $company->code . ($card_count);
     }
+
     ?>
     <input type="text" id="CardGenerated_card_number" name="CardGenerated[card_number]" value="<?php echo $code; ?>">
 

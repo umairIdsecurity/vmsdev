@@ -16,7 +16,7 @@ $session = new ChttpSession;
 <input type="hidden" value="<?php echo $session['role'] ?>" id="sessionRoleForSideBar">
 
 <div id="sidebar2">
-    <div class="sidebarTitle" style=""><a href="#" class="dashboard-icon"></a>Main Menu</div><br><div id='cssmenu' class="dashboardMenu">
+    <div class="sidebarTitle" style=""><a href="<?php echo Yii::app()->createUrl('dashboard/admindashboard') ?>" class="dashboard-icon"></a>Main Menu</div><br><div id='cssmenu' class="dashboardMenu">
         <ul>
 
             <li class=''><a href='<?php echo Yii::app()->createUrl('visitor/create&action=register'); ?>' id="addvisitorSidebar" class="sidemenu-icon log-current"><span>Log Visit</span></a></li>
@@ -60,6 +60,8 @@ $this->widget('bootstrap.widgets.TbButton', array(
 
 </div>
 
+<?php $this->renderPartial('/visitor/_add_company_contact', array('tenant' => $session['tenant'],'model' => new AddCompanyContactForm())); ?>
+
 <script>
     function addCompany2() {
         
@@ -73,7 +75,7 @@ $this->widget('bootstrap.widgets.TbButton', array(
         
     }
     $(document).ready(function () {
-        $('#addContactLink').on('click', function(e) {
+        $('#addContactLink, #addUserContactLink').on('click', function(e) {
             $('.errorMessage').hide();
             $('#myModalLabel').html('Add Contact To Company');
             $("tr.company_contact_field").addClass('hidden');
@@ -81,12 +83,16 @@ $this->widget('bootstrap.widgets.TbButton', array(
             $("#AddCompanyContactForm_firstName").val("");
             $("#AddCompanyContactForm_lastName").val("");
             $("#AddCompanyContactForm_mobile").val("");
-            $("#AddCompanyContactForm_companyName").val($(".select2-selection__rendered").html());
+            if (typeof $(this).data('id') != 'undefined' && $(this).data('id') == 'asic') {
+                $("#AddCompanyContactForm_companyName").val($("#userCompanyRow .select2-selection__rendered").html());
+            } else {
+                $("#AddCompanyContactForm_companyName").val($("#visitorCompanyRow .select2-selection__rendered").html());
+            }
             $('#AddCompanyContactForm_companyName').prop('disabled',true);
             $('#typePostForm').val('contact');
         });
 
-        $('#addCompanyLink').on('click', function(e) {
+        $('#addCompanyLink , #addUserCompanyLink').on('click', function(e) {
             $('.errorMessage').hide();
             $('#myModalLabel').html('Add Company');
             $('#AddCompanyContactForm_companyName').enable();
@@ -100,5 +106,3 @@ $this->widget('bootstrap.widgets.TbButton', array(
         });
     });
 </script>
-
-<?php $this->renderPartial('/visitor/_add_company_contact', array('tenant' => $session['tenant'],'model' => new AddCompanyContactForm())); ?>

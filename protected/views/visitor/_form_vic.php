@@ -64,7 +64,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
     }
 
 </style>
- 
+
 
 <div>
     <?php
@@ -75,7 +75,30 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
         'enableClientValidation' => true,
         'clientOptions'          => array(
             'validateOnSubmit' => true,
-            'afterValidate'    => 'js:function(form, data, hasError){ return afterValidate(form, data, hasError); }'
+            'afterValidate'    => 'js:function(form, data, hasError){
+                if (hasError) {
+                    var currentYear = new Date().getFullYear();
+                    var selectedYear = $("#fromYear").val();
+
+                    if (currentYear - selectedYear < 18) {
+                        $("#Visitor_identification_type_em_").hide();
+                        $("#Visitor_identification_document_no_em_").hide();
+                        $("#Visitor_identification_document_expiry_em_").hide();
+
+                        //remove item
+                        delete data.Visitor_identification_document_expiry;
+                        delete data.Visitor_identification_document_no;
+                        delete data.Visitor_identification_type;
+                    }
+
+                }
+
+                if(isEmpty(data)) {
+                    hasError = false;
+                }
+
+                return afterValidate(form, data, hasError);
+            }'
         ),
     ));
     ?>
@@ -134,8 +157,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                 <table style="margin-top: 70px;">
                                     <tr>
                                         <td>
-                                            <?php 
-                                            array_pop(Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC]);
+                                            <?php
                                             echo $form->dropDownList($model, 'visitor_card_status', Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_VIC], ['empty' => 'Select Card Status', 'options'=>['1' => ['selected'=>true]]]); ?>
                                             <span class="required">*</span>
                                             <?php echo "<br>" . $form->error($model, 'visitor_card_status'); ?>
@@ -155,9 +177,9 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                                 $allTenantCompanyNames = User::model()->findAllCompanyTenant();
                                                 foreach ($allTenantCompanyNames as $key => $value) {
                                                     ?>
-                                                    <option value="<?php echo $value['tenant']; ?>"
+                                                    <option value="<?php echo $value['id']; ?>"
                                                         <?php
-                                                        if (($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant'] && $this->action->id != 'update') || ($model['tenant'] == $value['tenant'])) {
+                                                        if (($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant'] && $this->action->id != 'update') || ($model['tenant'] == $value['id'])) {
                                                             echo "selected ";
                                                         }
                                                         ?> ><?php echo $value['name']; ?></option>
@@ -199,8 +221,8 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                     <tr>
                                         <td>
                                             <?php
-                                           // Show Default selected to Admin only 
-                                           if(Yii::app()->user->role == Roles::ROLE_ADMIN) {
+                                            // Show Default selected to Admin only
+                                            if(Yii::app()->user->role == Roles::ROLE_ADMIN) {
                                                 $list = VisitorType::model()->findAll('created_by = :c', [':c' => Yii::app()->user->id]);
                                                 echo '<select name="Visitor[visitor_type]" id="Visitor_visitor_type">';
                                                 echo CHtml::tag('option',array('value' => ''),'Select Visitor Type',true);
@@ -214,7 +236,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                             }  else {
                                                 echo $form->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes(NULL,"name like '{$model->profile_type}%'"));
                                             }
-                                          
+
                                             ?>
                                             <span class="required">*</span>
                                             <?php echo "<br>" . $form->error($model, 'visitor_type'); ?>
@@ -258,6 +280,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                 <select id="fromDay" name="Visitor[birthdayDay]" class='daySelect'></select>
                                 <select id="fromMonth" name="Visitor[birthdayMonth]" class='monthSelect'></select>
                                 <select id="fromYear" name="Visitor[birthdayYear]" class='yearSelect'></select>
+                                <?php //echo $form->dropDownList($model, 'birthdayYear',array(), array('class' => 'yearSelect')) ;?>
                                 <span class="required">*</span>
                                 <?php echo "<br>" . $form->error($model, 'date_of_birth'); ?>
                             </td>
@@ -302,9 +325,9 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                         <tr>
                             <td>
                                 <?php echo $form->textField($model, 'contact_suburb', array('size' => 15, 'maxlength' => 50, 'placeholder' => 'Suburb')); ?>
-                               <span class="required">*</span> <?php echo $form->error($model, 'contact_suburb'); ?>
+                                <span class="required">*</span> <?php echo $form->error($model, 'contact_suburb'); ?>
                             </td>
-                        </tr>  
+                        </tr>
                         <tr>
                             <td>
                                 <i id="cstate">
@@ -356,7 +379,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                     ));
                                     ?>
                                     <span class="required">*</span>
-                                    <?php echo $form->error($model, 'company'); ?>
+                                    <?php echo $form->error($model, 'company', array("style" => "margin-top:0px")); ?>
                                 </div>
                             </td>
                         </tr>
@@ -408,6 +431,8 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                         'attribute'   => 'identification_document_expiry',
                                         'options'     => array(
                                             'dateFormat' => 'dd-mm-yy',
+                                            'changeMonth' => true,
+                                            'changeYear' => true
                                         ),
                                         'htmlOptions' => array(
                                             'size'        => '0',
@@ -419,6 +444,24 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                     ?><span class="required primary-identification-require">*</span>
                                     <?php echo "<br>" . $form->error($model, 'identification_document_no'); ?>
                                     <?php echo $form->error($model, 'identification_document_expiry'); ?>
+                                </td>
+                            </tr>
+                            <?php
+                            $birthYear = date('Y', strtotime($model->date_of_birth));
+                            $visibility = 'none';
+                            if (Yii::app()->controller->action->id == 'update' && (date('Y') - $birthYear) < 18) {
+                                $visibility = 'block';
+                            }
+                            ?>
+                            <tr id="u18_identification" style="display: <?php echo $visibility; ?>">
+                                <td>
+                                    <?php
+                                    echo $form->checkBox($model, 'is_under_18', ['style' => 'float:left;']);
+                                    ?>
+                                    <label for="Visitor_identification" class="form-label">I have verified that the applicant is under 18<span class="required primary-identification-require">*</span></label>
+                                    <div class="errorMessage" style="float: left; display: none;" id="Visitor_is_under_18_em_">Please verify the age of the applicant.</div>
+                                    <?php echo $form->textField($model, 'under_18_detail', ['placeholder' => 'Detail']); ?>
+
                                 </td>
                             </tr>
                             <tr>
@@ -487,8 +530,8 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                     ?><span class="required alternate-identification-require">*</span>
                                     <?php echo "<br>" . $form->error($model, 'identification_alternate_document_no2'); ?>
                                     <?php echo $form->error($model, 'identification_alternate_document_expiry2'); ?>
-                                    
-                                     <?php echo $form->checkBox($model, 'verifiable_signature', array('style' => 'float: left;')); ?>
+
+                                    <?php echo $form->checkBox($model, 'verifiable_signature', array('style' => 'float: left;')); ?>
                                     <label  class="form-label">One of these has a verifiable signature</label>
                                 </td>
                             </tr>
@@ -530,7 +573,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 </div>
 
 <input type="hidden" id="currentAction" value="<?php echo $this->action->id; ?>">
-<input type="hidden" id="currentRoleOfLogge:wdInUser" value="<?php echo $session['role']; ?>">
+<input type="hidden" id="currentRoleOfLoggedInUser" value="<?php echo $session['role']; ?>">
 <input type="hidden" id="currentlyEditedVisitorId" value="<?php if (isset($_GET['id'])) {
     echo $_GET['id'];
 } ?>">
@@ -547,15 +590,27 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
             $("#Visitor_date_of_birth_em_").show();
             $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
             return false;
-        }else if(dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
+        }else if(
+            dt.getFullYear() == $("#fromYear").val() &&(dt.getMonth()+1) == $("#fromMonth").val() && dt.getDate() <= $("#fromDay").val() ) {
             $("#Visitor_date_of_birth_em_").show();
             $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
             return false;
         }
 
+        if ($('#u18_identification:hidden').length != 1) {
+            if (!$('#Visitor_is_under_18').is(':checked')) {
+                $('#Visitor_is_under_18_em_').show();
+                return false;
+            } else {
+                $('#Visitor_is_under_18_em_').hide();
+            }
+        } else {
+            $('#Visitor_is_under_18_em_').hide();
+        }
+
         var companyValue = $("#Visitor_company").val();
         var workstation = $("#User_workstation").val();
-        
+
 //        if (!workstation || workstation == "") {
 //            $("#Visitor_visitor_workstation_em_").show();
 //            $("#Visitor_visitor_workstation_em_").html('Please enter Workstation');
@@ -602,7 +657,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
             $('.primary-identification-require').hide();
             $('.alternate-identification-require').show();
             $('.row_document_name_number').show('slow');
-             
+
         } else {
             $('.primary-identification-require').show();
             $('.alternate-identification-require').hide();
@@ -645,6 +700,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                 $("#Visitor_date_of_birth_em_").hide();
             }
         });
+
         $('#fromMonth').on('change', function () {
             var dt = new Date();
 
@@ -664,6 +720,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                 $("#Visitor_date_of_birth_em_").hide();
             }
         });
+
         $('#fromYear').on('change', function () {
             var dt = new Date();
 
@@ -679,7 +736,14 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                 $("#Visitor_date_of_birth_em_").show();
                 $("#Visitor_date_of_birth_em_").html('Please update your Date of Birth');
                 return false;
-            }else{
+            }else{//u18_identification
+                if (dt.getFullYear() - $("#fromYear").val() < 18) {
+                    $('#u18_identification').show();
+                    $('.primary-identification-require').hide();
+                } else {
+                    $('#u18_identification').hide();
+                    $('.primary-identification-require').show();
+                }
                 $("#Visitor_date_of_birth_em_").hide();
             }
         });
@@ -1007,7 +1071,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                     } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
                         window.location = 'index.php?r=dashboard/viewmyvisitors';
                     } else {
-                        window.location = 'index.php?r=visitor/admin';
+                        window.location = 'index.php?r=visitor/admin&vms=avms';
                     }
                 }else {
                     alert(data); return;
@@ -1024,7 +1088,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                 } else if ($("#currentRoleOfLoggedInUser").val() == 9) {
                     window.location = 'index.php?r=dashboard/viewmyvisitors';
                 } else {
-                    window.location = 'index.php?r=visitor/admin';
+                    window.location = 'index.php?r=visitor/admin&vms=avms';
                 }
             }
         };
@@ -1072,30 +1136,39 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
     }
 
 
-// company change
-$('#Visitor_company').on('change', function() {
-    var companyId = $(this).val();
-    $('#CompanySelectedId').val(companyId);
-    $modal = $('#addCompanyContactModal');
-    $.ajax({
-        type: "POST",
-        url: "<?php echo $this->createUrl('company/getContacts') ?>",
-        dataType: "json",
-        data: {id:companyId},
-        success: function(data) {
-            var companyName = $('.select2-selection__rendered').text();
-            $('#AddCompanyContactForm_companyName').val(companyName).prop('disabled', 'disabled');
-            if (data == 0) {
-                $('#addContactLink').hide();
-                $('#visitorStaffRow').empty();
-            } else {
-                $('#visitorStaffRow').html(data);
-                $('#addContactLink').show();
+    // company change
+    $('#Visitor_company').on('change', function() {
+        var companyId = $(this).val();
+        $('#CompanySelectedId').val(companyId);
+        $modal = $('#addCompanyContactModal');
+        $.ajax({
+            type: "POST",
+            url: "<?php echo $this->createUrl('company/getContacts') ?>",
+            dataType: "json",
+            data: {id:companyId},
+            success: function(data) {
+                var companyName = $('.select2-selection__rendered').text();
+                $('#AddCompanyContactForm_companyName').val(companyName).prop('disabled', 'disabled');
+                if (data == 0) {
+                    $('#addContactLink').hide();
+                    $('#visitorStaffRow').empty();
+                } else {
+                    $('#visitorStaffRow').html(data);
+                    $('#addContactLink').show();
+                }
+                return false;
             }
-            return false;
-        }
+        });
     });
-});
+
+    function isEmpty(obj) {
+        for(var prop in obj) {
+            if(obj.hasOwnProperty(prop))
+                return false;
+        }
+
+        return true;
+    }
 </script>
 
 

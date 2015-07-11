@@ -56,44 +56,49 @@ class Visitor extends CActiveRecord {
     public $companycode;
 
     const PROFILE_TYPE_CORPORATE = 'CORPORATE';
-    const PROFILE_TYPE_VIC = 'VIC';
-    const PROFILE_TYPE_ASIC = 'ASIC';
-
-    const AUSTRALIA_ID = 13;
+    const PROFILE_TYPE_VIC       = 'VIC';
+    const PROFILE_TYPE_ASIC      = 'ASIC';
     
-    const DELTED = 1;
-    const NOT_DELETED = 0;
-
-    const ASIC_PENDING = 3;
-    const ASIC_ISSUED = 4;
-
+    const AUSTRALIA_ID           = 13;
+    
+    const DELTED                 = 1;
+    const NOT_DELETED            = 0;
+    
+    # Visitor Card Status
+    const SAVED            = 1;
+    const VIC_HOLDER       = 2;
+    const VIC_ASIC_PENDING = 3;
+    const VIC_ASIC_ISSUED  = 4;
+    const ASIC_DENIED      = 5;
+    const ASIC_ISSUED      = 6;
+    const ASIC_APPLICANT   = 7;
+    const ASIC_EXPIRED     = 8;
 
     public static $VISITOR_CARD_TYPE_LIST = array(
         self::PROFILE_TYPE_CORPORATE => array(
         ),
         self::PROFILE_TYPE_VIC => array(
-            1 => 'Card Status: Saved',
-            2 => 'Card Status: VIC Holder',
-            3 => 'Card Status: ASIC Pending',
-            4 => 'Card Status: ASIC Issued',
-            5 => 'Card Status: ASIC Denied',
+            self::SAVED            => 'Card Status: Saved',
+            self::VIC_HOLDER       => 'Card Status: VIC Holder',
+            self::VIC_ASIC_PENDING => 'Card Status: ASIC Pending'
         ),
         self::PROFILE_TYPE_ASIC => array(
-            6 => 'Card Status: ASIC Issued',
-            7 => 'Card Status: ASIC Applicant',
-            5 => 'Card Status: ASIC Denied',
+            self::ASIC_ISSUED    => 'Card Status: ASIC Issued',
+            self::ASIC_EXPIRED   => 'Card Status: ASIC Expired',
+            self::ASIC_DENIED    => 'Card Status: ASIC Denied',
+            self::ASIC_APPLICANT => 'Card Status: ASIC Applicant'
         ),
     );
 
     public static $PROFILE_TYPE_LIST = array(
         self::PROFILE_TYPE_CORPORATE => 'Corporate',
-        self::PROFILE_TYPE_VIC => 'VIC',
-        self::PROFILE_TYPE_ASIC => 'ASIC',
+        self::PROFILE_TYPE_VIC       => 'VIC',
+        self::PROFILE_TYPE_ASIC      => 'ASIC'
     );
 
     public static $IDENTIFICATION_TYPE_LIST = array(
         'PASSPORT'        => 'Passport',
-        'DRIVERS_LICENSE' => 'Drivers License',
+        'DRIVERS_LICENSE' => 'Driver Licence',
         'PROOF_OF_AGE'    => 'Proof of Age Card',
     );
 
@@ -228,12 +233,16 @@ class Visitor extends CActiveRecord {
                 password_requirement,
                 alternative_identification,
                 verifiable_signature,
+                escort_flag,
+                key_string
+                is_under_18,
+                under_18_detail
                 ',
                 'safe'
             ),
             array('tenant, tenant_agent,company, visitor_type, visitor_workstation, photo,vehicle, visitor_card_status', 'default', 'setOnEmpty' => true, 'value' => null),
             array('password', 'PasswordCustom'),
-            array('repeatpassword', 'PasswordRepeat'),
+            array('repeatpassword', 'PasswordRepeat','except' => ['delete']),
 
             //todo: check to enable again. why do we need this validation ?
             //array('password_requirement', 'PasswordRequirement'),
@@ -248,15 +257,16 @@ class Visitor extends CActiveRecord {
             array('vehicle', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, first_name, photo,last_name, email,companycode, vehicle,contact_number, date_of_birth, company, department, position, staff_id, notes, role, visitor_status, created_by, is_deleted, tenant, tenant_agent, profile_type', 'safe', 'on' => 'search'),
+            array('id, first_name, photo, last_name, email,companycode, vehicle,contact_number, date_of_birth, company, department, position, staff_id, notes, role, visitor_status, created_by, is_deleted, tenant, tenant_agent, profile_type,escort_flag', 'safe', 'on' => 'search'),
         );
 
         $rules[] = array(
             'identification_alternate_document_name1,
-                    identification_alternate_document_no1,
-                    identification_alternate_document_name2,
-                    identification_alternate_document_no2',
-            'VisitorAlternateIdentification'
+            identification_alternate_document_no1,
+            identification_alternate_document_name2,
+            identification_alternate_document_no2',
+            'VisitorAlternateIdentification',
+            'except' => ['u18Rule', 'updateVic', 'delete']
         );
 
         $rules[] = array(
@@ -265,44 +275,53 @@ class Visitor extends CActiveRecord {
             identification_document_no,
             identification_document_expiry',
             'VisitorPrimaryIdentification',
+            'except' => ['u18Rule', 'updateVic', 'delete']
         );
+
 
         if (Yii::app()->controller->id === 'visitor') {
             if (Yii::app()->controller->action->id == 'addvisitor') {
-                $rules[] = array('company, visitor_workstation, visitor_card_status, visitor_type,contact_street_type,contact_state, contact_country, asic_expiry','DropDown');
+                $rules[] = array('company, visitor_workstation, visitor_card_status, visitor_type,contact_street_type,contact_state, contact_country', 'DropDown');
             } elseif(Yii::app()->controller->action->id == 'create'){
                 $rules[] = array('company','DropDown');
             }
         }
 
-        if ($this->profile_type == self::PROFILE_TYPE_CORPORATE) {
-            $rules[] = array(
-                'company', 'required'
-            );
-
-        } else if ($this->profile_type == self::PROFILE_TYPE_VIC) {
+        switch ($this->profile_type) {
+            case self::PROFILE_TYPE_CORPORATE:
+                $rules[] = array(
+                    'company', 'required'
+                );
+                break;
+            case self::PROFILE_TYPE_VIC:
                 $rules[] = array(
                     'company,
-                visitor_card_status,
-                visitor_workstation,
-                visitor_type,
-                contact_street_no,
-                contact_street_name,
-                contact_street_type,
-                contact_suburb,
-                contact_state,
-                contact_postcode,
-                contact_country',
-                    'required','except'=>'updateVic'
+                    visitor_card_status,
+                    visitor_workstation,
+                    visitor_type,
+                    contact_street_no,
+                    contact_street_name,
+                    contact_street_type,
+                    contact_suburb,
+                    contact_state,
+                    contact_postcode,
+                    contact_country',
+                    'required',
+                    'except'=> ['updateVic', 'updateIdentification', 'delete']
                 );
-
-        } else if ($this->profile_type == self::PROFILE_TYPE_ASIC) {
-            $rules[] = array(
-                'visitor_card_status, asic_no',
-                'required'
-            );
+                break;
+            case self::PROFILE_TYPE_ASIC:
+                $rules[] = [
+                    'identification_type, identification_document_no, identification_document_expiry', 'required',
+                    'on' => 'asicApplicant',
+                    'except'=> ['delete']
+                ];
+                $rules[] = array(
+                    'visitor_card_status, asic_no, asic_expiry', 'required',
+                    'on' => 'asicIssued'
+                );
+                break;
         }
-
 
         return $rules;
     }
@@ -439,6 +458,7 @@ class Visitor extends CActiveRecord {
         }
 
         $user = User::model()->findByPK(Yii::app()->user->id);
+
         if($user->role != Roles::ROLE_SUPERADMIN){
             if(Yii::app()->controller->id === 'visit'){
                 if(Yii::app()->controller->action->id !== 'vicTotalVisitCount' && Yii::app()->controller->action->id !== 'corporateTotalVisitCount'  ) {
@@ -450,6 +470,7 @@ class Visitor extends CActiveRecord {
         if ($merge !== null) {
             $criteria->mergeWith($merge);
         }
+
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'sort' => array(
@@ -481,10 +502,6 @@ class Visitor extends CActiveRecord {
         if(!$this->contact_country) {
             $this->contact_country = self::AUSTRALIA_ID;
         }
-        
-        if (!empty($this->date_of_birth)) $this->date_of_birth =  date('Y-m-d', strtotime($this->date_of_birth));
-        if (!empty($this->asic_expiry)) $this->asic_expiry =  date('Y-m-d', strtotime($this->asic_expiry));
-        if (!empty($this->identification_document_expiry)) $this->identification_document_expiry =  date('Y-m-d', strtotime($this->identification_document_expiry));
 
         if ($this->password_requirement == PasswordRequirement::PASSWORD_IS_NOT_REQUIRED) {
             $this->password = null;
@@ -494,7 +511,6 @@ class Visitor extends CActiveRecord {
 
         return parent::beforeSave();
     }
-
 
     public function beforeDelete() {
         $visitorExists = Visit::model()->exists('is_deleted = 0 and visitor =' . $this->id . ' and (visit_status=' . VisitStatus::PREREGISTERED . ' or visit_status=' . VisitStatus::ACTIVE . ')');
@@ -508,14 +524,20 @@ class Visitor extends CActiveRecord {
         } elseif($visitorHasSavedVisitOnly){
 
             $this->is_deleted = 1;
-            $this->save();
-            echo "true";
+            if($this->save()){
+                echo "true";
+            } else {
+                var_dump($this->getErrors());
+            }
             Visit::model()->updateCounters(array('is_deleted' => 1), 'visitor=:visitor', array(':visitor' => $this->id));
             return false;
         } else {
             $this->is_deleted = 1;
-            $this->save();
-            echo "true";
+            if($this->save()){
+                echo "true";
+            } else {
+                var_dump($this->getErrors());
+            }
             return false;
         }
     }
@@ -525,7 +547,11 @@ class Visitor extends CActiveRecord {
         $criteria->condition = 't.is_deleted = 0';
         if (isset(yii::app()->user->role)) {
             if (Yii::app()->user->role != Roles::ROLE_SUPERADMIN) {
-                $criteria->condition = "t.is_deleted = 0 and t.tenant = " . Yii::app()->user->tenant;
+                if(isset(Yii::app()->user->tenant)){
+                    $criteria->condition = "t.is_deleted = 0 and t.tenant = " . Yii::app()->user->tenant;
+                } else {
+                    $criteria->condition = 't.is_deleted = 0';
+                }
             }
         }
         $this->dbCriteria->mergeWith($criteria);
@@ -572,9 +598,9 @@ class Visitor extends CActiveRecord {
     public function findAllCompanyWithSameTenant($tenantId) {
         $session = new CHttpSession;
         $aArray = array();
-        $tenant = User::model()->findByPk($tenantId);
+        $tenant = User::model()->findByPk($session['tenant']);
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = '".$tenantId."' and (id!=1 and id !='".$tenant->company."')";
+        $Criteria->condition = "tenant = " . $session['tenant'] . " and (id != 1 and id != ".$tenant->company.")";
         $company = Company::model()->findAll($Criteria);
 
         foreach ($company as $index => $value) {
@@ -588,9 +614,11 @@ class Visitor extends CActiveRecord {
     }
 
     public function findAllCompanyByTenant($tenantId) {
-        $tenant = User::model()->findByPk($tenantId);
+        $session = new CHttpSession;
+
+        $tenant = User::model()->findByPk($session['tenant']);
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = '".$tenantId."' and (id!=1 and id !='".$tenant->company."')";
+        $Criteria->condition = "tenant = '" . $session['tenant'] . "' and (id != 1 and id != " . $tenant->company . ")";
         return Company::model()->findAll($Criteria);
     }
 
@@ -675,13 +703,17 @@ class Visitor extends CActiveRecord {
 
     public function getTotalVisit()
     {
-        $totalVisit = 0;
-        $activeVisits = $this->activeVisits;
-        foreach($activeVisits as $visit) {
-            $totalVisit += $visit->visitCounts;
-        }
-        if($totalVisit > 0 ) {
-            return $totalVisit;
+        if($this->visitor_card_status != Visitor::VIC_ASIC_PENDING) {
+            $totalVisit = 0;
+            $activeVisits = $this->activeVisits;
+            foreach($activeVisits as $visit) {
+                $totalVisit += $visit->visitCounts;
+            }
+            if($totalVisit > 0 ) {
+                return $totalVisit;
+            } else {
+                return "";
+            }
         } else {
             return "";
         }
@@ -691,7 +723,7 @@ class Visitor extends CActiveRecord {
     {
         return Visit::model()->findAllByAttributes([
             'visitor' => $this->id,
-            'reset_id'       => null,
+            'reset_id'      => null,
             'negate_reason' => null
         ]);
     }
@@ -733,4 +765,7 @@ class Visitor extends CActiveRecord {
         return $this;
     }
 
+    public function getCompanyForLogVisit() {
+        return Company::model()->findByPk($this->company);
+    }
 }

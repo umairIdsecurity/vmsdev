@@ -10,7 +10,6 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
             width: 88px !important;
             height: 24px !important;
         }
-
     </style>
 <?php
 }
@@ -23,12 +22,55 @@ if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
 </style>
 <input type="text" id="currentSessionRole" value="<?php echo $session['role']; ?>" style="display:none;"/>
 <?php
-$disabled = 'disabled';
-if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
-    $disabled = '';
+// If visit status is closed and user role different from admin or superadmin then disable fields
+$disabled = '';
+if (in_array($model->visit_status, [VisitStatus::CLOSED])) {
+    $disabled = 'disabled';
+}
+
+/**
+ * Date picker config if visit status is close and other state
+ * If visit status is close then disable datepicker
+ */
+$datePickerOptionAttributes = [];
+if (in_array($model->visit_status, [VisitStatus::CLOSED])) {
+
+    // Please edit datePicker options attributes here for apply all datePicker fields
+    $datePickerOptionAttributes = [
+        'disabled'    => 'disabled',
+        'dateFormat'  => "dd-mm-yy",
+        'minDate'     => "0",
+        'changeMonth' => true,
+        'changeYear'  => true
+    ];
+
+    // Please update datePicker style here for apply to all datePicker field on visitor detail page
+    $datePickerStyle = 'width:107%';
+} else {
+
+    // Please edit datePicker options attributes here for apply all datePicker fields
+    $datePickerOptionAttributes = [
+        'showOn'          => "button",
+        'buttonImage'     => Yii::app()->controller->assetsBase . "/images/calendar.png",
+        'buttonImageOnly' => true,
+        'dateFormat'      => "dd-mm-yy",
+        'minDate'         => "0",
+        'changeMonth'     => true,
+        'changeYear'      => true
+    ];
+
+    // Please update datePicker style here for apply all datePicker fields
+    $datePickerStyle = 'width:83%';
 }
 ?>
-<div id='visitorInformationCssMenu'>
+<?php
+$visitorForm = $this->beginWidget('CActiveForm', [
+    'id' => 'update-visitor-information-form',
+    'htmlOptions' => ['name' => 'update-visitor-information-form']
+]);
+?>
+<div id='visitorInformationCssMenu' <?php //if ($model && $model->card_type <= CardType::CONTRACTOR_VISITOR) {echo 'style="height:615px !important"';} ?>>
+
     <ul>
         <li class='has-sub' id="personalDetailsLi">
             <a href="#"><span>Personal Details</span></a>
@@ -40,11 +82,9 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                                 First Name
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" <?php echo $disabled; ?> class="visitor-detail-info-field" value="<?php echo $visitorModel->first_name; ?>"
-                                       name="Visitor[first_name]" id="Visitor_first_name">
-                                <div style="" id="Visitor_first_name_em_" class="errorMessage errorMessageEmail">Please enter a first name.
-                                </div>
-
+                                <?php echo $visitorForm->textField($visitorModel, 'first_name', ['disabled' => $disabled]); ?>
+                                <br />
+                                <?php echo $visitorForm->error($model, 'first_name'); ?>
                             </td>
                         </tr>
 
@@ -54,21 +94,18 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                                     Middle Name
                                 </td>
                                 <td style="padding-left: 0 !important;">
-                                    <input type="text" class="visitor-detail-info-field" value="<?php echo $visitorModel->middle_name; ?>"
-                                           name="Visitor[middle_name]" id="Visitor_middle_name">
+                                    <?php echo $visitorForm->textField($visitorModel, 'middle_name', ['disabled' => $disabled]); ?>
                                 </td>
                             </tr>
                         <?php endif; ?>
-
                         <tr>
                             <td class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                                 Last Name
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" <?php echo $disabled; ?> class="visitor-detail-info-field" value="<?php echo $visitorModel->last_name; ?>"
-                                       name="Visitor[last_name]" id="Visitor_last_name">
-                                <div style="" id="Visitor_last_name_em_" class="errorMessage errorMessageEmail">Please enter a last name.
-                                </div>
+                                <?php echo $visitorForm->textField($visitorModel, 'last_name', ['disabled' => $disabled]); ?>
+                                <br />
+                                <?php echo $visitorForm->error($model, 'last_name'); ?>
                             </td>
                         </tr>
 
@@ -80,6 +117,7 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                             <td style="padding-left: 0 !important;">
                                 <?php
                                 $visitorModel->date_of_birth = !is_null($visitorModel->date_of_birth) ? date('d-m-Y', strtotime($visitorModel->date_of_birth)) : date('d-m-Y');
+                                $options = [];
                                 $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                     'model' => $visitorModel,
                                     'attribute' => 'date_of_birth',
@@ -88,21 +126,16 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                                         'maxlength' => '10', // textField maxlength
                                         'placeholder' => 'dd-mm-yyyy',
                                         'readOnly' => 'readOnly',
-                                        'style' => 'width:83%'
+                                        'disabled' => 'disabled',
+                                        'style' => $datePickerStyle
                                     ),
-                                    'options' => array(
-                                        'showOn' => "button",
-                                        'buttonImage' => Yii::app()->controller->assetsBase . "/images/calendar.png",
-                                        'buttonImageOnly' => true,
-                                        'dateFormat' => "dd-mm-yy",
-                                    )
+                                    'options' => $datePickerOptionAttributes
                                 ));
                                 ?>
 
                             </td>
                         </tr>
                         <?php endif; ?>
-
                     </table>
                 </li>
             </ul>
@@ -110,7 +143,6 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
         <li class='has-sub' id="contactDetailsLi"><a href="#"><span>Contact Details</span></a>
             <ul>
                 <li>
-
                     <input type="hidden" id="emailIsUnique" value="0"/>
                     <input type="hidden" id="Visitor_id" name="Visitor[id]" value="<?php echo $model->visitor; ?>"/>
                     <div class="flash-success success-update-contact-details"> Contact Details Updated Successfully.
@@ -119,46 +151,42 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                         <tr>
                             <td width="110px;" style="padding-top: 7px;">Email</td>
                             <td>
-                                <input  type="text" <?php echo $disabled; ?> class="visitor-detail-info-field" value="<?php echo $visitorModel->email; ?>"
-                                       name="Visitor[email]" id="Visitor_email">
-                                <div style="" id="Visitor_email_em_" class="errorMessage errorMessageEmail">Email invalid or a profile
-                                    already exists for this email address.
+                                <?php echo $visitorForm->textField($visitorModel, 'email', ['disabled' => $disabled]); ?>
+                                <br />
+                                <div id="Visitor_email_em_" class="errorMessage errorMessageEmail">Email invalid or a profile already exists for this email address.
                                 </div>
                             </td>
                         </tr>
                         <tr>
-                            <td style="  padding-top: 7px;">Mobile</td>
+                            <td style="padding-top: 7px;">Mobile</td>
                             <td>
-                                <input  type="text" class="visitor-detail-info-field" value="<?php echo $visitorModel->contact_number; ?>"
-                                        name="Visitor[contact_number]" id="Visitor_contact_number">
-                                <div style="" id="Visitor_contact_number_em_" class="errorMessage errorMessageEmail">Please enter a contact number.
-                                </div>
+                                <?php echo $visitorForm->textField($visitorModel, 'contact_number', ['disabled' => $disabled]); ?>
+                                <br />
+                                <?php echo $visitorForm->error($model, 'first_name'); ?>
+                            </td>
                         </tr>
-                        <!--<tr><td><input type="submit" value="Update" name="yt0" id="submitContactDetailForm" class="complete" /></td></tr>-->
                     </table>
                 </li>
             </ul>
         </li>
 
         <?php
-        if ($asic) :
-            $company = $visitorModel->getCompany();
-            if (!empty($company)) :
-                $contact = $newHost->findByPk($visitorModel->staff_id);
+        $company = $visitorModel->getCompany();
+        if (!empty($company)) :
+            $contact = $newHost->findByPk($visitorModel->staff_id);
         ?>
         <li class='has-sub' id="companyDetailsLi"><a href="#"><span>Company Details</span></a>
             <ul>
                 <li>
                     <table id="companyDetailsTable" class="detailsTable">
                         <tr>
-                            <td width="110px;" disabled class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
+                            <td width="110px;" <?php echo $disabled; ?> class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                                 Company Name
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" class="visitor-detail-info-field" value="<?php echo isset($company->name) ? $company->name : '' ; ?>"
-                                       name="Company[name]" id="Company_name">
-                                <div style="" id="Company_name_em_" class="errorMessage errorMessageEmail">Please enter a company name.
-                                </div>
+                                <?php echo $visitorForm->textField($company, 'name', ['disabled' => $disabled]); ?>
+                                <br />
+                                <?php echo $visitorForm->error($company, 'name'); ?>
                             </td>
                         </tr>
 
@@ -167,10 +195,9 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                                 Contact Person
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" class="visitor-detail-info-field" value="<?php echo (!empty($contact)) ? $contact->getFullName() : ''; ?>"
-                                       name="Company[contact]" id="Company_contact">
-                                <div style="" id="Company_contact_em_" class="errorMessage errorMessageEmail">Please enter a company contact.
-                                </div>
+                                <?php echo $visitorForm->textField($company, 'contact', ['disabled' => $disabled, 'value' => isset($contact) ? $contact->getFullName(): ""]); ?>
+                                <br />
+                                <?php echo $visitorForm->error($company, 'contact'); ?>
                             </td>
                         </tr>
 
@@ -179,10 +206,9 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                                 Contact No.
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" class="visitor-detail-info-field" value="<?php echo isset($contact->contact_number) ? $contact->contact_number : ''; ?>"
-                                       name="Company[mobile_number]" id="Company_mobile_number">
-                                <div style="" id="Company_mobile_number_em_" class="errorMessage errorMessageEmail">Please enter a company mobile number.
-                                </div>
+                                <?php echo $visitorForm->textField($company, 'mobile_number', ['disabled' => $disabled, 'value' => isset($contact) ? $contact->contact_number : ""]); ?>
+                                <br />
+                                <?php echo $visitorForm->error($company, 'mobile_number'); ?>
                             </td>
                         </tr>
 
@@ -191,10 +217,9 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                                 Contact Email
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" <?php echo $disabled; ?> class="visitor-detail-info-field" value="<?php echo isset($contact->email) ? $contact->email : ''; ?>"
-                                       name="Company[email_address]" id="Company_email_address">
-                                <div style="" id="Company_email_address_em_" class="errorMessage errorMessageEmail">Please enter a company email address.
-                                </div>
+                                <?php echo $visitorForm->textField($company, 'email_address', ['disabled' => $disabled, 'value' => isset($contact) ? $contact->email : ""]); ?>
+                                <br />
+                                <?php echo $visitorForm->error($company, 'email_address'); ?>
                             </td>
                         </tr>
 
@@ -202,87 +227,18 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                 </li>
             </ul>
         </li>
-
-        <?php 
-            endif;
-        endif;
-        ?>
-        <li class='has-sub' id="visitorTypeDetailsLi" <?php echo !is_null($asic) ? 'style="display: none;"' : ""; ?>><a href="#"><span>Visitor Type</span></a>
+        <?php endif; ?>
+        <?php if (!$asic) : ?>
+        <li class='has-sub' id="visitorTypeDetailsLi"><a href="#"><span>Visitor Type</span></a>
             <ul>
                 <li>
-                    <?php
-                    $visitForm = $this->beginWidget('CActiveForm', array(
-                        'id' => 'update-visit-form',
-                        'htmlOptions' => array("name" => "update-visit-form"),
-                        'enableAjaxValidation' => false,
-                        'enableClientValidation' => true,
-                        'clientOptions' => array(
-                            'validateOnSubmit' => true,
-                            'afterValidate' => 'js:function(form, data, hasError){
-                                if (!hasError){
-                                if($("#Visitor_photo").val() == "" && $("#Visit_card_type").val() == "2" ){
-                                    alert("Please upload a photo.");
-                                }
-                                   else if($(".visitortypedetails").val() == 1){
-                                        if($(".visitortypepatient").val() == ""){
-                                            $("#visitorTypePatientHost").html("Patient Name cannot be blank");
-                                            $("#visitorTypePatientHost").show();
-                                        }
-                                    } else if ($(".visitortypedetails").val() == 2) {
-                                        if($(".visitortypehost").val() == ""){
-                                            $("#visitorTypePatientHost").html("Please select a host");
-                                            $("#visitorTypePatientHost").show();
-                                        }
-                                        else {
-                                            $(".visitorTypePatientHost").hide();
-                                            sendVisitForm("update-visit-form");
-                                        }
-                                    } else {
-                                    $(".visitorTypePatientHost").hide();
-                                    sendVisitForm("update-visit-form");
-                                    }
-                                }
-                                }'
-                        ),
-                    ));
-                    ?>
                     <div class="flash-success success-update-visitor-type"> Visitor Type Updated Successfully.</div>
 
                     <table id="visitorTypeTable" class="detailsTable">
                         <tr>
-
-                            <td width="110px;" style="padding-top: 4px;"><?php echo $visitForm->labelEx($model,
-                                    'card_type'); ?></td>
+                            <td width="110px;" style="padding-top:4px;"><?php echo $visitorForm->labelEx($model, 'visitor_type', array('style' => 'padding-left:0;')); ?></td>
                             <td>
-                                <select id="Visit_card_type" name="Visit[card_type]">
-                                    <?php
-                                    $cardType = CardType::model()->findAll();
-                                    foreach ($cardType as $key => $value) {
-                                        if (in_array($key, CardType::$VIC_CARD_TYPE_LIST)) {
-                                            $prefix = 'VIC: ';
-                                        } else {
-                                            $prefix = 'CORPORATE: ';
-                                        }
-                                        ?>
-                                        <option value="<?php echo $value->id; ?>" <?php
-                                        if ($model->card_type == $value->id) {
-                                            echo " selected ";
-                                        }
-                                        ?>><?php echo $prefix . $value->name; ?></option>
-                                    <?php
-                                    }
-                                    ?>
-
-                                </select>
-                                <?php echo "<br>" . $visitForm->error($model, 'card_type'); ?>
-                            </td>
-
-                        </tr>
-                        <tr>
-
-                            <td width="110px;" style="padding-top:4px;"><?php echo $visitForm->labelEx($model,
-                                    'visitor_type', array('style' => 'padding-left:0;')); ?></td>
-                            <td><?php
+                            <?php
                                 if ($session['role'] == Roles::ROLE_STAFFMEMBER) {
                                     ?>
                                     <select id="Visit_visitor_type" name="Visit[visitor_type]"
@@ -291,133 +247,49 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                                     </select>
                                 <?php
                                 } else {
-                                    echo $visitForm->dropDownList($model, 'visitor_type',
-                                        VisitorType::model()->returnVisitorTypes(), array(
-                                            'onchange' => 'visitorTypeOnChange()',
-                                            'class' => 'visitortypedetails',
-                                        ));
+                                    echo $visitorForm->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes(), ['onchange' => 'visitorTypeOnChange()', 'class' => 'visitortypedetails']);
                                 }
-                                ?>
-                                <?php echo "<br>" . $visitForm->error($model, 'visitor_type'); ?>
-                                <div class="errorMessage" id="visitorTypePatientHost" style="display:none;">hello</div>
-                                <input type="text" name="Visit[patient]" id="Visit_patient" style="display:none;"
-                                       class="visitortypepatient" value="<?php echo $model->patient; ?>"/>
-                                <input type="text" name="Visit[host]" id="Visit_host" class="visitortypehost"
-                                       style="display:none;" value="<?php echo $model->host; ?>"/>
+                            ?>
+                            <br />
+                            <?php $visitorForm->error($model, 'visitor_type'); ?>
                             </td>
-
                         </tr>
-                        <?php /* if ($session['role'] != Roles::ROLE_STAFFMEMBER) { */ ?><!--
-                            <tr>
-                                <td><input type='submit' value='Update' class='submitBtn complete'></td>
-                            </tr>
-                        --><?php /* } */ ?>
                     </table>
-                    <?php $this->endWidget(); ?>
                 </li>
             </ul>
         </li>
-        <li class='has-sub' id="reasonLi" <?php echo !is_null($asic) ? 'style="display: none;"' : ""; ?>><a href="#"><span>Reason</span></a>
+        <?php endif; ?>
+        <?php if (!$asic) : ?>
+        <li class='has-sub' id="reasonLi"><a href="#"><span>Reason</span></a>
             <ul>
                 <li>
-                    <?php
-                    $reasonForm = $this->beginWidget('CActiveForm', array(
-                        'id' => 'update-reason-form',
-                        'action' => Yii::app()->createUrl('/visit/update&id=' . $model->reason),
-                        'htmlOptions' => array("name" => "update-reason-form"),
-                        'enableAjaxValidation' => false,
-                        'enableClientValidation' => true,
-                        'clientOptions' => array(
-                            'validateOnSubmit' => true,
-                            'afterValidate' => 'js:function(form, data, hasError){
-                                if (!hasError){
-                                    if($("#Visit_reason").val() == "" || $("#Visit_reason").val() == "Other" ){
-                                        $("#visitReason").show();
-                                        
-                                    }else 
-                                    {
-                                        $("#visitReason").hide();
-                                        sendUpdateReasonForm();
-                                    }
-                                }
-                                }'
-                        ),
-                    ));
-                    ?>
-                    <div class="flash-success success-update-reason">Reason Updated Successfully.</div>
-                    <div class="flash-success success-add-reason">Reason Added Successfully.</div>
-
                     <table id="reasonTable" class="detailsTable">
                         <tr>
                             <td width="110px;" style="padding-top:4px;"><label for="Visit_reason">Reason</label></td>
                             <td>
-                                <select id="Visit_reason" name="Visit[reason]"
-                                        onchange="ifSelectedIsOtherShowAddReasonDiv(this)">
-                                    <option value='' selected>Please select a reason</option>
-                                    <option value="Other">Other</option>
-                                    <?php
-                                    $reason = VisitReason::model()->findAllReason();
-                                    foreach ($reason as $key => $value) {
-                                        ?>
-                                        <option value="<?php echo $value->id; ?>" <?php
-                                        if ($model->reason == $value->id) {
-                                            echo " selected ";
-                                        }
-                                        ?>><?php echo $value->reason; ?></option>
-                                    <?php
-                                    }
-                                    ?>
-
-                                </select><br>
-                                <?php echo $reasonForm->error($model, 'reason'); ?>
-                                <div class="errorMessage visitorReason" id="visitReason">Please select a reason</div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><input type="submit" value="Update" name="yt0" id="submitReasonForm" class="complete"/>
+                            <?php
+                                $reason = CHtml::listData(VisitReason::model()->findAllReason(), 'id', 'reason');
+                                $reason['Other'] = 'Other';
+                                echo $visitorForm->dropDownList($model, 'reason', $reason, ['onchange' => 'ifSelectedIsOtherShowAddReasonDiv(this)', 'empty' => 'Please select a reason']);
+                            ?>
+                            <br />
+                            <?php echo $visitorForm->error($model, 'reason'); ?>
                             </td>
                         </tr>
                     </table>
-                    <?php $this->endWidget(); ?>
-                    <?php
-                    $addReasonForm = $this->beginWidget('CActiveForm', array(
-                        'id' => 'add-reason-form',
-                        'action' => Yii::app()->createUrl('/visitReason/create&register=1'),
-                        'htmlOptions' => array("name" => "add-reason-form"),
-                        'enableAjaxValidation' => false,
-                        'enableClientValidation' => true,
-                        'clientOptions' => array(
-                            'validateOnSubmit' => true,
-                            'afterValidate' => 'js:function(form, data, hasError){
-                                if (!hasError){
-                                    checkReasonIfUnique();
-                                }
-                                }'
-                        ),
-                    ));
-                    ?>
                     <table id="addreasonTable" class="detailsTable">
                         <tr>
                             <td width="110px;"><label for="VisitReason_reason">Reason</label></td>
-                            <td><textarea id="VisitReason_reason" name="VisitReason[reason]"
-                                          style="width:200px !important;text-transform: capitalize;" cols="80" rows="3"><?php
-                                    echo $reasonModel->reason;
-                                    ?></textarea> <?php echo $addReasonForm->error($reasonModel, 'reason'); ?>
-                                <div class="errorMessage visitorReason" id="visitReasonErrorMessage">Please select a
-                                    reason
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><input type="submit" value="Add" name="yt0" id="submitAddReasonForm" class="complete"/>
+                            <td>
+                            <?php echo $visitorForm->textArea($reasonModel, 'reason', ['style' => 'width:200px !important;text-transform: capitalize;', 'rows' => '3', 'cols' => '80']) ?>
                             </td>
                         </tr>
                     </table>
-                    <?php $this->endWidget(); ?>
                 </li>
             </ul>
         </li>
-        <?php if (($visitorModel->profile_type == "ASIC")||($visitorModel->profile_type == "VIC")): ?>
+        <?php endif; ?>
+        <?php if (($visitorModel->profile_type == "ASIC") || ($visitorModel->profile_type == "VIC")) : ?>
         <li class='has-sub' id="asicDetailsLi">
             <a href="#"><span>Identification</span></a>
             <ul>
@@ -429,19 +301,10 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                         </td>
                         <td style="padding-left: 0 !important;">
                             <?php
-                            if (isset(Visitor::$IDENTIFICATION_TYPE_LIST) and is_array(Visitor::$IDENTIFICATION_TYPE_LIST)): ?>
-                            <select name="Visitor[identification_type]" id="identification_type">
-                                <?php
-                                    foreach (Visitor::$IDENTIFICATION_TYPE_LIST as $id=>$name):
-                                        ?>
-                                            <option <?php if ($id == $visitorModel->identification_type): ?>selected="selected" <?php endif; ?> value="<?php echo $id; ?>"> <?php echo $name; ?> </option>
-                                        <?php
-                                    endforeach;
-                                ?>
-                            </select>
-                                <?php endif; ?>
-
-
+                            if (isset(Visitor::$IDENTIFICATION_TYPE_LIST) and is_array(Visitor::$IDENTIFICATION_TYPE_LIST)) {
+                                echo CHtml::dropDownList('Visitor[identification_type]', $visitorModel->identification_type, Visitor::$IDENTIFICATION_TYPE_LIST, ['disabled' => $disabled]);
+                            }
+                            ?>
                         </td>
                     </tr>
                     <tr>
@@ -449,10 +312,9 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                             Document No.
                         </td>
                         <td style="padding-left: 0 !important;">
-                            <input type="text" <?php echo $disabled; ?> class="visitor-detail-info-field" value="<?php echo $visitorModel->identification_document_no; ?>"
-                                   name="Visitor[identification_document_no]" id="Visitor_identification_document_no">
-                            <div style="" id="Visitor_identification_document_no_em_" class="errorMessage errorMessageEmail">Please enter a identification document no.
-                            </div>
+                            <?php echo $visitorForm->textField($visitorModel, 'identification_document_no', ['disabled' => $disabled]); ?>
+                            <br />
+                            <?php echo $visitorForm->error($visitorModel, 'identification_document_no'); ?>
                         </td>
                     </tr>
                     <tr>
@@ -461,7 +323,6 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                         </td>
                         <td style="padding-left: 0 !important;">
                             <?php
-                            $visitorModel->identification_document_expiry = !is_null($visitorModel->identification_document_expiry) ? date('d-m-Y', strtotime($visitorModel->identification_document_expiry)) : date('d-m-Y');
                             $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                 'model' => $visitorModel,
                                 'attribute' => 'identification_document_expiry',
@@ -470,15 +331,9 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                                     'maxlength' => '10', // textField maxlength
                                     'placeholder' => 'dd-mm-yyyy',
                                     'readOnly' => 'readOnly',
-                                    'style' => 'width:83%'
+                                    'style' => $datePickerStyle
                                 ),
-                                'options' => array(
-                                    'showOn' => "button",
-                                    'buttonImage' => Yii::app()->controller->assetsBase . "/images/calendar.png",
-                                    'buttonImageOnly' => true,
-                                    'minDate' => "0",
-                                    'dateFormat' => "dd-mm-yy",
-                                )
+                                'options' => $datePickerOptionAttributes
                             ));
                             ?>
 
@@ -488,7 +343,7 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                 </li>
             </ul>
         </li>
-           <?php endif;?>
+        <?php endif;?>
         <?php if ($asic) : ?>
         <li class='has-sub' id="asicDetails1Li">
             <a href="#"><span>ASIC Sponsor</span></a>
@@ -499,12 +354,10 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                             <td width="110px;" class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                                 First Name
                             </td>
-
                             <td style="padding-left: 0 !important;">
-                                <input class="visitor-detail-info-field"  <?php echo $disabled; ?> type="text" value="<?php echo $asic->first_name; ?>"
-                                       name="Visitor[asic_first_name]" id="Visitor_asic_first_name">
-                                <div style="" id="Visitor_asic_first_name_em_" class="errorMessage errorMessageEmail">Please enter a first name.
-                                </div>
+                                <?php echo $visitorForm->textField($asic, 'first_name', ['disabled' => $disabled, 'name' => 'ASIC[first_name]']); ?>
+                                <br />
+                                <?php echo $visitorForm->error($asic, 'first_name'); ?>
                             </td>
                         </tr>
 
@@ -513,10 +366,9 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                                 Last Name
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input class="visitor-detail-info-field"  <?php echo $disabled; ?> type="text" value="<?php echo $asic->last_name; ?>"
-                                       name="Visitor[asic_last_name]" id="Visitor_asic_last_name">
-                                <div style="" id="Visitor_asic_last_name_em_" class="errorMessage errorMessageEmail">Please enter a last name.
-                                </div>
+                                <?php echo $visitorForm->textField($asic, 'last_name', ['disabled' => $disabled, 'name' => 'ASIC[last_name]']); ?>
+                                <br />
+                                <?php echo $visitorForm->error($asic, 'last_name'); ?>
                             </td>
                         </tr>
 
@@ -525,10 +377,9 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                                 ASIC No.
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input type="text" class="visitor-detail-info-field" value="<?php echo $asic->asic_no; ?>"
-                                       name="Visitor[asic_no]" id="Visitor_asic_no">
-                                <div style="" id="Visitor_asic_no_em_" class="errorMessage errorMessageEmail">Please enter a asic number.
-                                </div>
+                                <?php echo $visitorForm->textField($asic, 'asic_no', ['disabled' => $disabled, 'name' => 'ASIC[asic_no]']); ?>
+                                <br />
+                                <?php echo $visitorForm->error($asic, 'asic_no'); ?>
                             </td>
                         </tr>
                         <tr>
@@ -547,15 +398,10 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                                         'maxlength' => '10', // textField maxlength
                                         'placeholder' => 'dd-mm-yyyy',
                                         'readOnly' => 'readOnly',
-                                        'style' => 'width:83%'
+                                        'style' => $datePickerStyle,
+                                        'name' => 'ASIC[asic_expiry]'
                                     ),
-                                    'options' => array(
-                                        'showOn' => "button",
-                                        'buttonImage' => Yii::app()->controller->assetsBase . "/images/calendar.png",
-                                        'buttonImageOnly' => true,
-                                        'minDate' => "0",
-                                        'dateFormat' => "dd-mm-yy",
-                                    )
+                                    'options' => $datePickerOptionAttributes
                                 ));
                                 ?>
 
@@ -566,42 +412,19 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                 </li>
             </ul>
         </li>
-        <?php else : if ($hostModel):?>
-
+        <?php elseif ($hostModel) : ?>
         <li class='has-sub' id='hostDetailsLi'>
             <a href="#"><span>Host Details</span></a>
-
             <ul>
                 <li>
-                   <!-- --><?php
-/*                    $hostForm = $this->beginWidget('CActiveForm', array(
-                        'id' => 'update-host-form',
-                        'action' => Yii::app()->createUrl('/user/update&id=' . $model->host),
-                        'htmlOptions' => array("name" => "register-host-form"),
-                        'enableAjaxValidation' => false,
-                        'enableClientValidation' => true,
-                        'clientOptions' => array(
-                            'validateOnSubmit' => true,
-                            'afterValidate' => 'js:function(form,data,hasError){
-                    if(!hasError){
-                            checkHostEmailIfUnique();
-                            }
-                    }'
-                        ),
-                    ));
-                    */?>
-
                     <input type="text" id="hostEmailIsUnique" value="0"/>
-
                     <table id="hostTable" class="detailsTable">
                         <tr>
                             <td width="110px;" class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
                                 First Name
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input class="visitor-detail-info-field" type="text" value="<?php echo $hostModel->first_name; ?>"
-                                       name="Visitor[host_first_name]" id="Visitor_asic_first_name">
-
+                            <?php echo $visitorForm->textField($hostModel, 'first_name', ['disabled' => $disabled, 'name' => 'Host[first_name]']); ?>
                             </td>
                         </tr>
 
@@ -610,36 +433,77 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                                 Last Name
                             </td>
                             <td style="padding-left: 0 !important;">
-                                <input class="visitor-detail-info-field" type="text" value="<?php echo $hostModel->last_name; ?>"
-                                       name="Visitor[host_last_name]" id="Visitor_asic_last_name">
-
+                                <?php echo $visitorForm->textField($hostModel, 'last_name', ['disabled' => $disabled, 'name' => 'Host[last_name]']); ?>
                             </td>
                         </tr>
-                       <!-- <tr>
-                            <td style="width:110px !important; padding-top: 3px;"><?php /*echo $hostForm->labelEx($hostModel,
-                                    'first_name'); */?></td>
-                            <td>
-                                <?php /*echo $hostForm->textField($hostModel, 'first_name',
-                                    array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled', 'class' => "visitor-detail-info-field")); */?>
-                                <?php /*echo "<br>" . $hostForm->error($hostModel, 'first_name'); */?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td width="110px;" style="  padding-top: 3px;"><?php /*echo $hostForm->labelEx($hostModel,
-                                    'last_name'); */?></td>
-                            <td>
-                                <?php /*echo $hostForm->textField($hostModel, 'last_name',
-                                    array('size' => 50, 'maxlength' => 50, 'disabled' => 'disabled', 'class' =>  "visitor-detail-info-field")); */?>
-                                <?php /*echo "<br>" . $hostForm->error($hostModel, 'last_name'); */?>
-                            </td>
-                        </tr>-->
                     </table>
-                    <?php /*$this->endWidget(); */?>
                 </li>
             </ul>
         </li>
-        <?php endif; endif; ?>
+        <?php endif; ?>
+        <?php if (!empty($asicEscort) || $asicEscort != "") : ?>
+        <li class='has-sub' id="asicEscortDetailLi">
+            <a href="#"><span>ASIC Escort</span></a>
+            <ul>
+                <li>
+                    <table id="asicSponsorDetailsTable" class="detailsTable">
+                        <input type="hidden" name="Escort[id]" value="<?php echo $asicEscort->id; ?>">
+                        <tr>
+                            <td width="110px;" class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
+                                First Name
+                            </td>
 
+                            <td style="padding-left: 0 !important;">
+                                <?php echo $visitorForm->textField($asicEscort, 'first_name', ['disabled' => $disabled, 'name' => 'Escort[first_name]']); ?>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
+                                Last Name
+                            </td>
+                            <td style="padding-left: 0 !important;">
+                                <?php echo $visitorForm->textField($asicEscort, 'last_name', ['disabled' => $disabled, 'name' => 'Escort[last_name]']); ?>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
+                                ASIC No.
+                            </td>
+                            <td style="padding-left: 0 !important;">
+                                <?php echo $visitorForm->textField($asicEscort, 'asic_no', ['disabled' => $disabled, 'name' => 'Escort[asic_no]']); ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="visitor-detail-info" style="padding-left: 0 !important; padding-bottom: 6px; padding-top: 6px;">
+                                ASIC Expiry
+                            </td>
+                            <td style="padding-left: 0 !important;">
+                                <?php
+                                $asicEscort->asic_expiry = !is_null($asicEscort->asic_expiry) ? date('d-m-Y', strtotime($asicEscort->asic_expiry)) : date('d-m-Y');
+                                $this->widget('zii.widgets.jui.CJuiDatePicker', [
+                                    'model'     => $asicEscort,
+                                    'attribute' => 'asic_expiry',
+                                    'htmlOptions' => [
+                                        'size'        => '10', // textField size
+                                        'maxlength'   => '10', // textField maxlength
+                                        'placeholder' => 'dd-mm-yyyy',
+                                        'readOnly'    => 'readOnly',
+                                        'name'        => 'Escort[asic_expiry]',
+                                        'style'       => $datePickerStyle
+                                    ],
+                                    'options' => $datePickerOptionAttributes
+                                ]);
+                                ?>
+                            </td>
+                        </tr>
+                    </table>
+                </li>
+            </ul>
+        </li>
+        <?php endif ?>
+        <?php if (!$asic) : ?>
         <li class='has-sub' id='patientDetailsLi'><a href="#"><span>Patient Details</span></a>
             <ul>
                 <li>
@@ -654,10 +518,10 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                             'clientOptions' => array(
                                 'validateOnSubmit' => true,
                                 'afterValidate' => 'js:function(form,data,hasError){
-                        if(!hasError){
-                                sendNewPatientForm();
-                            }
-                        }'
+                                    if(!hasError) {
+                                        sendNewPatientForm();
+                                    }
+                                }'
                             ),
                         ));
                         ?>
@@ -679,87 +543,54 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                                 </td>
                             </tr>
                         </table>
-
                         <?php $this->endWidget(); ?>
                     </div>
                 </li>
             </ul>
         </li>
+        <?php endif; ?>
         <li>
             <ul>
                 <li>
-                    <?php
-                    if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN, Roles::ROLE_SUPERADMIN])) {
-                        echo '<input type="submit" class="complete btnUpdateVic"  value="Update">';
-                    }
-                    ?>
+                <?php if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN, Roles::ROLE_SUPERADMIN])) : ?>
+                    <button type="submit" class="greenBtn btnUpdateVisitorInfo" name="updateVisitorInfo">Update</button>
+                <?php endif; ?>
                 </li>
             </ul>
         </li>
     </ul>
-
 </div>
+<?php $this->endWidget(); ?>
 <script>
+    function afterValidate(form, data, hasError) {
+        hasError = false;
+    }
+    
     $(document).ready(function () {
-
-        $(".complete.btnUpdateVic").click(function(){
-            var currentCardStatus = "<?php echo $visitorModel->visitor_card_status; ?>";
-            var currentVisitStatus = "<?php echo $model->visit_status ; ?>"
-            if(currentVisitStatus == "<?php echo VisitStatus::ACTIVE; ?>") {
-                if (currentCardStatus == 2 && $('#Visitor_visitor_card_status').val() == 3) {
-                    alert('Please close the active visits before changing the status to ASIC Pending.');
-                    return false;
-                }
-            }
-            if (validateInformation()) {
-                $("#workstationForm").append("<input type='hidden' name='updateVisit'  value='1' />");
-                if (checkElementExist($('#Company_name')))$("#workstationForm").append("<input type='hidden' name='Company[name]'  value='" + $('#Company_name').val() + "' />");
-                //$("#workstationForm").append("<input type='hidden' name='Company[contact]'  value='" + $('#Company_contact').val() + "' />");
-                if ( checkElementExist($('#Company_mobile_number')))$("#workstationForm").append("<input type='hidden' name='Company[mobile_number]'  value='" + $('#Company_mobile_number').val() + "' />");
-                $("#workstationForm").append("<input name='Visitor[id]' type='hidden'  value='" + $('#Visitor_id').val() + "' />");
-                if (checkElementExist($('#Visitor_first_name')))$("#workstationForm").append("<input name='Visitor[first_name]' type='hidden'  value='" + $('#Visitor_first_name').val() + "' />");
-                if (checkElementExist($('#Visitor_middle_name')))$("#workstationForm").append("<input name='Visitor[middle_name]' type='hidden'  value='" + $('#Visitor_middle_name').val() + "' />");
-                if (checkElementExist($('#Visitor_last_name')))$("#workstationForm").append("<input name='Visitor[last_name]' type='hidden'  value='" + $('#Visitor_last_name').val() + "' />");
-                if (checkElementExist($('#Visitor_date_of_birth')))$("#workstationForm").append("<input name='Visitor[date_of_birth]' type='hidden'  value='" + $('#Visitor_date_of_birth').val() + "' />");
-                if (checkElementExist($('#Visitor_email')))$("#workstationForm").append("<input name='Visitor[email]' type='hidden'  value='" + $('#Visitor_email').val() + "' />");
-                if (checkElementExist($('#Visitor_contact_number')))$("#workstationForm").append("<input name='Visitor[contact_number]' type='hidden'  value='" + $('#Visitor_contact_number').val() + "' />");
-                if (checkElementExist($('#identification_type')))$("#workstationForm").append("<input name='Visitor[identification_type]' type='hidden'  value='" + $('#identification_type').val() + "' />");
-                if (checkElementExist($('#Visitor_identification_document_no')))$("#workstationForm").append("<input name='Visitor[identification_document_no]' type='hidden'  value='" + $('#Visitor_identification_document_no').val() + "' />");
-                if (checkElementExist($('#Visitor_identification_document_expiry')))$("#workstationForm").append("<input name='Visitor[identification_document_expiry]' type='hidden'  value='" + $('#Visitor_identification_document_expiry').val() + "' />");
-                if (checkElementExist($('#Visitor_asic_first_name')))$("#workstationForm").append("<input name='Visitor[host_first_name]' type='hidden'  value='" + $('#Visitor_asic_first_name').val() + "' />");
-                if (checkElementExist($('#Visitor_asic_last_name')))$("#workstationForm").append("<input name='Visitor[host_last_name]' type='hidden'  value='" + $('#Visitor_asic_last_name').val() + "' />");
-                if (checkElementExist($('#Visitor_asic_no')))$("#workstationForm").append("<input name='Visitor[host_asic_no]' type='hidden'  value='" + $('#Visitor_asic_no').val() + "' />");
-                if (checkElementExist($('#Visitor_asic_expiry')))$("#workstationForm").append("<input name='Visitor[host_asic_expiry]' type='hidden'  value='" + $('#Visitor_asic_expiry').val() + "' />");
-                var t = checkVistorCardStatusOfHost(<?php echo $model->host; ?>);
-                (t == true) ? $('#workstationForm').submit() : alert('Exception r718 - Vistor Information');
-            }
-        });
 
         function validateInformation(){
             var t = 1;
             if($('#personalDetailsLi').length){
                 $('#personalDetailsLi').find(':input').each(function(){
-                    var em = $('#'+$(this).attr('id')+"_em_");
-                    if($(this).attr('id').indexOf('middle_name') == -1){
+                    var em = $('#' + $(this).attr('id') + "_em_");
+                    if ($(this).attr('id').indexOf('middle_name') == -1) {
                         if($(this).val() == '' || $(this).val().length < 1){
-                            if(em.length)em.show();
+                            if (em.length) em.show();
                             t = 0;
-
-                        }else{
-                            if(em.length)em.hide();
+                        } else {
+                            if (em.length) em.hide();
                         }
                     }
-                })
+                });
             }
 
             if($('#contactDetailsLi').length){
                 $('#contactDetailsLi').find(':input').each(function(){
                     var em = $('#'+$(this).attr('id')+"_em_");
-                    //$(this).change(function(){
-                    if($(this).attr('id').indexOf('email') != -1){
-                        if($(this).attr('id') != 'emailIsUnique') {
+                    if ($(this).attr('id').indexOf('email') != -1) {
+                        if ($(this).attr('id') != 'emailIsUnique') {
                             if (validateEmail1($(this).val()) == false || checkVisitorEmail($(this).val()) == false) {
-                                if (em.length)em.show();
+                                if (em.length) em.show();
                                 t = 0;
                             } else {
                                 if (em.length)em.hide();
@@ -767,66 +598,63 @@ if (in_array($session['role'], [Roles::ROLE_ADMIN, Roles::ROLE_SUPERADMIN])) {
                         }
                     } else {
                         if ($(this).val() == '' || $(this).val().length < 1) {
-                            if(em.length)em.show();
+                            if (em.length) em.show();
                              t=0;
                         } else {
-                            if(em.length)em.hide();
+                            if (em.length) em.hide();
                         }
                     }
-                    //});
-                })
+                });
             }
-            if($('#companyDetailsLi').length){
+
+            if ($('#companyDetailsLi').length) {
                 $('#companyDetailsLi').find(':input').each(function(){
-                    //$(this).change(function(){
                     var em = $('#'+$(this).attr('id')+"_em_");
-                    if($(this).attr('id').indexOf('email_address')>0){
+                    if ($(this).attr('id').indexOf('email_address')>0){
                         if(!validateEmail1($(this).val())){
-                            if(em.length)em.show();
+                            if (em.length) em.show();
                             t=0;
                         }else{
-                            if(em.length)em.hide();
+                            if(em.length) em.hide();
                         }
                     } else {
                         if ($(this).val() == '' || $(this).val().length < 1) {
-                            if(em.length)em.show();
+                            if (em.length) em.show();
                             t=0;
                         } else {
-                            if(em.length)em.hide();
+                            if (em.length) em.hide();
                         }
                     }
-                    //});
-                })
-            }
-            if($('#asicDetailsLi').length){
-                $('#asicDetailsLi').find(':input').each(function(){
-                    var em = $('#'+$(this).attr('id')+"_em_");
-                    //$(this).change(function(){
-                    if($(this).val() == ''){
-                        if(em.length)em.show();
-                        t=0;
-                    }else{
-                        if(em.length)em.hide();
-                    }
-                    //});
-                })
-            }
-            if($('#asicDetails1Li').length){
-                $('#asicDetails1Li').find(':input').each(function(){
-                    var em = $('#'+$(this).attr('id')+"_em_");
-                    //$(this).change(function(){
-                    if($(this).val() == ''){
-                        if(em.length)em.show();
-                        t=0;
-                    }else{
-                        if(em.length)em.hide();
-                    }
-                    //});
-                })
+                });
             }
 
-            if(t==1) return true; else return false;
-            //return true;
+            if ($('#asicDetailsLi').length) {
+                $('#asicDetailsLi').find(':input').each(function() {
+                    var em = $('#' + $(this).attr('id') + "_em_");
+                    if($(this).val() == ''){
+                        if (em.length) em.show();
+                        t = 0;
+                    }else{
+                        if (em.length) em.hide();
+                    }
+                });
+            }
+
+            if ($('#asicDetails1Li').length){
+                $('#asicDetails1Li').find(':input').each(function() {
+                    var em = $('#'+$(this).attr('id')+"_em_");
+                    if($(this).val() == ''){
+                        if (em.length) em.show();
+                        t = 0;
+                    }else{
+                        if (em.length) em.hide();
+                    }
+                });
+            }
+
+            if(t == 1) 
+                return true; 
+            else return false;
         }
 
         function checkElementExist(element){

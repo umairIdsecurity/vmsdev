@@ -8,11 +8,20 @@
             'validateOnSubmit' => true,
             'afterValidate' => 'js:function(form, data, hasError){
                 if (!hasError){ // no errors
+
+                    var currentController = "'.Yii::app()->controller->id.'";
+                    var currentAction = "'.Yii::app()->controller->action->id.'";
+                    if($("#AddCompanyContactForm_companyType").attr("disabled") == "disabled" && $("#AddCompanyContactForm_companyType").val() != ""){
+                        var formInfo = $("#add-company-contact-form").serialize()+ "&AddCompanyContactForm%5BcompanyType%5D=" + $("#AddCompanyContactForm_companyType").val();
+                    } else {
+                        var formInfo = $("#add-company-contact-form").serialize();
+                    }
                     $.ajax({
                         type: "POST",
                         url: "' . $this->createUrl('company/addCompanyContact') .'",
                         dataType: "json",
-                        data: $("#add-company-contact-form").serialize(),
+                        data: formInfo,
+
                         success: function(data) {
                             $("#addCompanyContactModal").modal("hide");
                             if (data.type == "contact") {
@@ -20,8 +29,14 @@
                                 $("#Visitor_staff_id").append(data.contactDropDown).val(data.id);
                             } else {
                                 //update company dropdown:
-                                $("#Visitor_company").prepend($("<option>", {value:data.id, text: data.name}));
-                                $("#Visitor_company").select2("val", data.id);
+                                if(currentController == "visit" && currentAction == "detail") {
+                                    $("#AddAsicEscort_company").prepend($("<option>", {value:data.id, text: data.name}));
+                                    $("#AddAsicEscort_company").select2("val", data.id);
+                                    $("#asicSponsorModal").modal("show");
+                                } else if (currentController == "visitor"){
+                                    $("#Visitor_company").prepend($("<option>", {value:data.id, text: data.name}));
+                                    $("#Visitor_company").select2("val", data.id);
+                                }
                             }
                             return false;
                         }
@@ -48,17 +63,25 @@
             <tr>
                 <td style="width:160px;"><?php echo $form->labelEx($model,'companyName'); ?></td>
                 <td>
-                    <?php echo $form->textField($model, 'companyName', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Company Name')); ?>
+                    <?php echo $form->textField($model, 'companyName', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Company Name', 'class' => 'ui-autocomplete-input', 'autocomplete' => 'on')); ?>
                     <?php echo "<br>" . $form->error($model, 'companyName'); ?>
                 </td>
             </tr>
-            <tr>
+
+            <tr class="hidden">
                 <td style="width:160px;"><?php echo $form->labelEx($model,'companyType'); ?></td>
                 <td>
-                    <?php echo $form->dropDownList($model, 'companyType', CHtml::listData(CompanyType::model()->findAll(), 'id', 'name'), array('prompt'=>'Select a company type', 'placeholder'=>'Company Type')); ?>
-                    <?php echo "<br>" . $form->error($model, 'companyType'); ?>
+                    <?php if (Yii::app()->controller->id == 'visitor' && in_array(Yii::app()->controller->action->id, array('addvisitor', 'create'))) {
+                        echo $form->dropDownList($model, 'companyType', CHtml::listData(CompanyType::model()->findAll(), 'id', 'name'), array('prompt' => 'Select a company type', 'placeholder' => 'Company Type', 'disabled' => 'disabled', 'options' => array('3' => array('selected' => true))));
+                    } elseif (Yii::app()->controller->id == 'visit' && in_array(Yii::app()->controller->action->id, array('detail'))) {
+                        echo $form->dropDownList($model, 'companyType', CHtml::listData(CompanyType::model()->findAll(), 'id', 'name'), array('prompt' => 'Select a company type', 'placeholder' => 'Company Type', 'disabled' => 'disabled', 'options' => array('3' => array('selected' => true))));
+                    } else {
+                        echo $form->dropDownList($model, 'companyType', CHtml::listData(CompanyType::model()->findAll(), 'id', 'name'), array('prompt' => 'Select a company type', 'placeholder' => 'Company Type'));
+                    }?>
+                    <?php echo "<br>" . $form->error($model, 'companyType');?>
                 </td>
             </tr>
+
             <tr>
                 <td style="width:200px; padding-left: 9px;">
                     <a class="btn btn-default" href="javascript:void(0)" role="button" id="showCompanyContactFields">+</a> Add Company Contact
@@ -99,12 +122,18 @@
 
     </div>
     <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+        <button class="btn" id="btnCloseModalAddCompanyContact" data-dismiss="modal" aria-hidden="true">Close</button>
         <button type="button" id="btnAddCompanyContact" class="btn btn-primary">Save</button>
         <button type="submit" id="btnAddCompanyContactConfirm" class="hidden"></button>
     </div>
 <?php $this->endWidget(); ?>
 </div>
+
+<?php $companyList = CHtml::listData(Company::model()->findAll(), 'id', 'name');
+    $companyList = array_unique($companyList);
+    $listsCom = implode('", "', $companyList);
+?>
+
 <script>
     $(function() {
         $(document).on('click', '#showCompanyContactFields', function(e) {
@@ -131,4 +160,13 @@
             }
         });
     });
+
+    $(function() {
+        var availableTags = ["<?php echo $listsCom; ?>"];
+        $("#AddCompanyContactForm_companyName").autocomplete({
+            source: availableTags
+        });
+        $(".ui-front").css("z-index", 1051);
+    });
+
 </script>

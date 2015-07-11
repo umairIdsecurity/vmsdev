@@ -175,7 +175,7 @@ if ($this->action->id == 'update') {
 
     <?php $this->endWidget(); ?>
     <div class="page-header">
-      <h1>Organisation contacts</h1>
+      <h1>Organisation Contacts</h1>
     </div>
     <?php if (isset($contacts) && !empty($contacts)): ?>
         <table class="table table-striped table-hover">

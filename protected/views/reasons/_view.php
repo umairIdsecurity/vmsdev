@@ -16,6 +16,4 @@
 	<b><?php echo CHtml::encode($data->getAttributeLabel('date_created')); ?>:</b>
 	<?php echo CHtml::encode($data->date_created); ?>
 	<br />
-
-
 </div>

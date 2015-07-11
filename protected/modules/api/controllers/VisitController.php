@@ -9,28 +9,73 @@ class VisitController extends RestfulController {
      * * */
     public function actionIndex() {
         try {
-            $token_user = $this->checkAuth();
+            $access_token = $this->getAccessToken();
+            if(!$access_token) {
+                $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'HTTP_X_VMS_TOKEN', 'errorDescription' => 'HTTP_X_VMS_TOKEN is invalid.')));
+                return false;
+            }
+
             if (Yii::app()->request->isPostRequest) {
                 $data = file_get_contents("php://input");
                 $data = CJSON::decode($data);
+
+                $this->validateData($data);
+
+                // check workstation:
+                $workstation = Workstation::model()->findByPk($data['workstation']);
+                if(!$workstation) {
+                    $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'NO_WORKSTATION_FOUND', 'errorDescription' => 'Workstation found for this visit')));
+                    return false;
+                }
+
+                // check Visitor ID
+                if ( $data['visitCardType'] > CardType::CONTRACTOR_VISITOR) {
+                    $visitorProfileType = Visitor::PROFILE_TYPE_VIC;
+                } else {
+                    $visitorProfileType = Visitor::PROFILE_TYPE_CORPORATE;
+                }
+
+                // $visitor = Visitor::model()->findByPk($data['visitorID']);
+                $visitor = Visitor::model()->findByAttributes(['id' => $data['visitorID'], 'profile_type'=>$visitorProfileType]);
+
+                if(!$visitor) {
+                    $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'NO_VISIT_FOUND', 'errorDescription' => 'Visitor found for this visit')));
+                    return false;
+                }
+
+                //check Host ID
+                $getHost = Visitor::model()->findByAttributes(['id' => $data['hostID'], 'profile_type'=>$visitorProfileType]);
+                //$getHost = User::model()->with('com')->findByPk($data['hostID']);
+                if (!$getHost) {
+                    $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'NO_VISIT_FOUND', 'errorDescription' => 'Host not found for this visit')));
+                }
+
+                // check visit is created ? and return visit
+
+                $isVisit = Visit::model()->findByAttributes(array('visitor' => $data['visitorID'], 'host' => $data['hostID'], 'visit_status'=>VisitStatus::SAVED) );
+                if($isVisit){
+                    $this->sendResponse(201, CJSON::encode($isVisit));
+                }
+
                 $visit = new Visit();
                 $visit->scenario = 'api';
                 $visit->host = $data['hostID'];
-                $visit->visitor_type = isset($data['visitorType']) ? $data['visitorType'] : NULL;
+                $visit->visitor_type = $data['visitorType'];
                 $visit->visitor = $data['visitorID'];
-                $visit->visit_status = 1;
+                $visit->card_type = $data['visitCardType'];
+                $visit->visit_status = isset($data['visitorStatus']) ? $data['visitorStatus']: VisitStatus::SAVED;
                 $visit->date_check_in = isset($data['startTime']) ? date('d-m-Y', strtotime($data['startTime'])) : NULL;
                 $visit->time_check_in = isset($data['startTime']) ? date('H:i:s', strtotime($data['startTime'])) : NULL;
                 $visit->date_check_out = isset($data['expectedEndTime']) ? date('d-m-Y', strtotime($data['expectedEndTime'])) : NULL;
                 $visit->time_check_out = isset($data['expectedEndTime']) ? date('H:i:s', strtotime($data['expectedEndTime'])) : NULL;
-                $visit->reason = isset($data['visitReason']) ? $data['visitReason'] : NULL;
+                $visit->reason = isset($data['visitReason']) ? $data['visitReason'] : 1;
                 $visit->workstation = isset($data['workstation']) ? $data['workstation'] : NULL;
                 if ($visit->validate()) {
                     $visit->save();
                     $visit = Visit::model()->with('visitor0')->findByPk($visit->id);
                     $result = $this->populateVisits(array($visit));
 
-                    $this->sendResponse(200, CJSON::encode($result));
+                    $this->sendResponse(201, CJSON::encode($result));
                 } else {
                     $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_DATA', 'errorDescription' => 'Requsted data are invalid')));
                 }
@@ -60,31 +105,46 @@ class VisitController extends RestfulController {
                     }
                 }
             } elseif (yii::app()->request->isPutRequest) {
+
                 $data = file_get_contents("php://input");
                 $data = CJSON::decode($data);
                
                 $visit = Visit::model()->findByPk($data['visitID']);
-                $visit->host = $data['hostID'];
-                $visit->visit_status = 1;
-                $visit->visitor_type = $data['visitorType'];
-                $visit->visitor = $data['visitorID'];
-                $visit->date_check_in = date('d-m-Y', strtotime($data['startTime']));
-                $visit->time_check_in = date('H:i:s', strtotime($data['startTime']));
-                $visit->date_check_out = date('d-m-Y', strtotime($data['expectedEndTime']));
-                $visit->time_check_out = date('H:i:s', strtotime($data['expectedEndTime']));
-                if (!empty($data['checkOutTime'])) {
-                    $visit->date_check_out = date('d-m-Y', strtotime($data['checkOutTime']));
-                    $visit->time_check_out = date('H:i:s', strtotime($data['checkOutTime']));
-                }
-                $visit->reason = $data['visitReason'];
-                $visit->workstation = $data['workstation'];
-                if ($visit->validate()) {
-                    $visit->save();
-                    $visit = Visit::model()->with('visitor0')->findByPk($visit->id);
-                    $result = $this->populateVisits(array($visit));
-                    $this->sendResponse(200, CJSON::encode($result));
-                } else {
-                    $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_DATA', 'errorDescription' => 'Requsted data are invalid')));
+                $host = Visitor::model()->findByPk($data['hostID']);
+                if($host) {
+                    if ($visit) {
+                        if ($data['visitorType'] == Visitor::PROFILE_TYPE_CORPORATE || $data['visitorType'] == Visitor::PROFILE_TYPE_VIC || $data['visitorType'] == Visitor::PROFILE_TYPE_ASIC) {
+                            $this->validateDate($data);
+                            $visit->host = $data['hostID'];
+                            $visit->visit_status = 1;
+                            $visit->visitor_type = $data['visitorType'];
+                            $visit->visitor = $data['visitorID'];
+                            $visit->date_check_in = date('d-m-Y', strtotime($data['startTime']));
+                            $visit->time_check_in = date('H:i:s', strtotime($data['startTime']));
+                            $visit->date_check_out = date('d-m-Y', strtotime($data['expectedEndTime']));
+                            $visit->time_check_out = date('H:i:s', strtotime($data['expectedEndTime']));
+                            if (!empty($data['checkOutTime'])) {
+                                $visit->date_check_out = date('d-m-Y', strtotime($data['checkOutTime']));
+                                $visit->time_check_out = date('H:i:s', strtotime($data['checkOutTime']));
+                            }
+                            $visit->reason = $data['visitReason'];
+                            $visit->workstation = $data['workstation'];
+                            if ($visit->validate()) {
+                                $visit->save();
+                                $visit = Visit::model()->with('visitor0')->findByPk($visit->id);
+                                $result = $this->populateVisits(array($visit));
+                                $this->sendResponse(200, CJSON::encode($result));
+                            } else {
+                                $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_DATA', 'errorDescription' => 'Requsted data are invalid')));
+                            }
+                        }else{
+                            $this->sendResponse(400, CJSON::encode(array('responseCode' => 400, 'errorCode' => 'VISITOR_TYPE_INVALID', 'errorDescription' => 'Requsted visitor type is invalid')));
+                        }
+                    } else {
+                        $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'VISIT_NOT_FOUND', 'errorDescription' => 'Requested visit not found')));
+                    }
+                } else{
+                    $this->sendResponse(400, CJSON::encode(array('responseCode' => 400, 'errorCode' => 'HOST_NOT_FOUND', 'errorDescription' => 'Requested host not found')));
                 }
             } elseif (yii::app()->request->getParam('visit')) {
                 $visit = Visit::model()->findByPk(yii::app()->request->getParam('visit'));
@@ -100,13 +160,23 @@ class VisitController extends RestfulController {
     }
 
     public function actionfile() {
+
         try {
             if (yii::app()->request->getParam('visit')) {
                 $visitorid = Visit::model()->findByPk(yii::app()->request->getParam('visit'))->visitor;
-                if (!isset($_FILES['file']['name'])) {
-                    $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_REQUEST', 'errorDescription' => 'File not available')));
+
+                if(!$visitorid ) {
+                    $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_REQUEST', 'errorDescription' => 'invalid request visit required')));
                 }
-                if ($visitorid) {
+
+
+                if (Yii::app()->request->isPostRequest) {
+                    // post file
+
+                    if (!isset($_FILES['file']['name'])) {
+                        $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_REQUEST', 'errorDescription' => 'File not available')));
+                    }
+
                     $usernameHash = hash('adler32', "KIOSK");
                     $path_parts = pathinfo($_FILES["file"]["name"]);
                     $filename = $_FILES['file']['name'];
@@ -132,8 +202,17 @@ class VisitController extends RestfulController {
                     } else {
                         $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_REQUEST', 'errorDescription' => 'invalid request visit required')));
                     }
-                } else {
-                    $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'NO_VISITOR_FOUND', 'errorDescription' => 'no visitor found')));
+                }
+                else {
+                    // get file
+                    $visitor = Visitor::model()->findByPk($visitorid);
+                    if($visitor->photo) {
+                        $result = ["image"=>Yii::app()->getBaseUrl(true)."/".Photo::model()->findByPk($visitor->photo)->relative_path];
+                        $this->sendResponse(200, CJSON::encode($result));
+                    }
+                    else {
+                        $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_REQUEST', 'errorDescription' => 'File not available')));
+                    }
                 }
             } else {
                 $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_REQUEST', 'errorDescription' => 'invalid request visit required')));
@@ -141,6 +220,94 @@ class VisitController extends RestfulController {
         } catch (Exception $ex) {
             $this->sendResponse(500, CJSON::encode(array('responseCode' => 500, 'errorCode' => 'INTERNAL_SERVER_ERROR', 'errorDescription' => 'something went wrong')));
         }
+    }
+
+    public function actionCheckout() {
+        try {
+            $access_token = $this->getAccessToken() ;
+            if(!$access_token) {
+                $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'VISITOR_NOT_FOUND', 'errorDescription' => 'Access Token not match')));
+            }
+            if (Yii::app()->request->getParam('visitID') ) {
+                $visitID = Yii::app()->request->getParam('visitID');
+                $visit = Visit::model()->findByPk($visitID);
+                if ($visit) {
+                    $visit->date_check_out = date('Y-m-d');
+                    $visit->time_check_out = date('H:i:s');
+                    if($visit->visit_status == visitStatus::ACTIVE) {
+                        $visit->visit_status = visitStatus::CLOSED;
+                    }
+                    if($visit->save()) {
+                        $this->sendResponse(204, CJSON::encode(['responseCode' => 204]));
+                    } else {
+                        $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'VISIT_NOT_CHECKOUT', 'errorDescription' => 'Visit cant not checkout')));
+                    }
+                } else {
+                    $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'VISIT_NOT_FOUND', 'errorDescription' => 'Requested visit not found')));
+                }
+            } else {
+                $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_PARAMETER', 'errorDescription' => 'GET parameter required for action')));
+            }
+        } catch (Exception $ex) {
+            $this->sendResponse(500, CJSON::encode(array('responseCode' => 500, 'errorCode' => 'INTERNAL_SERVER_ERROR', 'errorDescription' => 'something went wrong')));
+        }
+    }
+
+    public function validateDate($data){
+        if (!isset($data['startTime']) || empty($data['startTime'])) {
+            $this->sendResponse(400, CJSON::encode(array('responseCode' => 400, 'errorCode' => 'START_TIME_INVALID', 'errorDescription' => 'Start Time invalid')));
+        }
+        if (!isset($data['expectedEndTime']) || empty($data['expectedEndTime'])) {
+            $this->sendResponse(400, CJSON::encode(array('responseCode' => 400, 'errorCode' => 'END_TIME_INVALID', 'errorDescription' => 'End Time invalid')));
+        }
+        if (!isset($data['checkOutTime']) || empty($data['checkOutTime'])) {
+            $this->sendResponse(400, CJSON::encode(array('responseCode' => 400, 'errorCode' => 'CHECKOUT_TIME_INVALID', 'errorDescription' => 'Check out time invalid')));
+        }
+        if (isset($data['startTime']) || isset($data['expectedEndTime'])) {
+            if (strtotime(date('d-m-Y H:i:s', strtotime($data['startTime']))) > strtotime(date('d-m-Y H:i:s', strtotime($data['expectedEndTime']))))
+            $this->sendResponse(400, CJSON::encode(array('responseCode' => 400, 'errorCode' => 'START_TIME_AFTER_END_TIME', 'errorDescription' => 'Start time after end time')));
+        }
+        if (isset($data['startTime']) || isset($data['checkOutTime'])) {
+            if (strtotime(date('d-m-Y H:i:s', strtotime($data['startTime']))) > strtotime(date('d-m-Y H:i:s', strtotime($data['checkOutTime']))))
+                $this->sendResponse(400, CJSON::encode(array('responseCode' => 400, 'errorCode' => 'START_TIME_AFTER_CHECKOUT_TIME', 'errorDescription' => 'Start time after check out time')));
+        }
+    }
+
+    public function validateData($data){
+        if (!isset($data['startTime']) || empty($data['startTime'])) {
+            $this->sendResponse(400, CJSON::encode(array('responseCode' => 400, 'errorCode' => 'START_TIME_INVALID', 'errorDescription' => 'Start Time invalid')));
+        }
+
+        if (isset($data['startTime']) && isset($data['expectedEndTime'])) {
+            if (strtotime(date('d-m-Y H:i:s', strtotime($data['startTime']))) > strtotime(date('d-m-Y H:i:s', strtotime($data['expectedEndTime']))))
+                $this->sendResponse(400, CJSON::encode(array('responseCode' => 400, 'errorCode' => 'START_TIME_AFTER_END_TIME', 'errorDescription' => 'Start time after end time')));
+        }
+
+        if (isset($data['startTime']) && isset($data['checkOutTime'])) {
+            if (strtotime(date('d-m-Y H:i:s', strtotime($data['startTime']))) > strtotime(date('d-m-Y H:i:s', strtotime($data['checkOutTime']))))
+                $this->sendResponse(400, CJSON::encode(array('responseCode' => 400, 'errorCode' => 'START_TIME_AFTER_CHECKOUT_TIME', 'errorDescription' => 'Start time after check out time')));
+        }
+
+        if (!isset($data['visitCardType']) || empty($data['visitCardType']) ) {
+            $this->sendResponse(400, CJSON::encode(array('responseCode' => 400, 'errorCode' => 'VISIT_CARD_TYPE', 'errorDescription' => 'VisitCardType invalid')));
+        }
+
+        if (!isset($data['visitReason']) || empty($data['visitReason']) ) {
+            $this->sendResponse(400, CJSON::encode(array('responseCode' => 400, 'errorCode' => 'VISIT_REASON', 'errorDescription' => 'VisitReason invalid')));
+        }
+
+        if (!isset($data['workstation']) || empty($data['workstation'])  ) {
+            $this->sendResponse(400, CJSON::encode(array('responseCode' => 400, 'errorCode' => 'WORKSTATION', 'errorDescription' => 'Workstation invalid')));
+        }
+
+        if (!isset($data['visitorID']) || empty($data['visitorID'])  ) {
+            $this->sendResponse(400, CJSON::encode(array('responseCode' => 400, 'errorCode' => 'VISITOR_ID', 'errorDescription' => 'VisitorID invalid')));
+        }
+
+        if (!isset($data['hostID']) || empty($data['hostID'])  ) {
+            $this->sendResponse(400, CJSON::encode(array('responseCode' => 400, 'errorCode' => 'HOST_ID', 'errorDescription' => 'HostID invalid')));
+        }
+
     }
 
     private function populateVisits($visits) {
@@ -151,8 +318,8 @@ class VisitController extends RestfulController {
             $result[$i]['visitorID'] = $visit->visitor;
             $result[$i]['hostID'] = $visit->host;
             $result[$i]['visitorType'] = $visit->visitor_type;
-            $result[$i]['startTime'] = ($visit->date_check_in != NULL) ? date("Y-m-d H:i:s", strtotime($visit->date_check_in . '' . $visit->time_check_in)) : "N/A";
-            $result[$i]['expectedEndTime'] = ($visit->date_check_out != NULL) ? date("Y-m-d H:i:s", strtotime($visit->date_check_out . '' . $visit->time_check_out)) : "N/A";
+            $result[$i]['startTime'] = ($visit->date_check_in != NULL) ? date("Y-m-d\TH:i:s\Z", strtotime($visit->date_check_in . '' . $visit->time_check_in)) : "N/A";
+            $result[$i]['expectedEndTime'] = ($visit->date_check_out != NULL) ? date("Y-m-d\TH:i:s\Z", strtotime($visit->date_check_out . '' . $visit->time_check_out)) : "N/A";
             $result[$i]['visitorPicture'] = !empty($visit->visitor0->photo) ? $visit->visitor0->photo : "N/A";
             if ($visit->visitor0) {
                 if (isset($visit->visitor0->id) && ($visit->visitor0->id != null)) {
@@ -175,7 +342,11 @@ class VisitController extends RestfulController {
                 } else {
                     $email = "N/A";
                 }
-
+                if (isset($visit->visitor0->profile_type) && ($visit->visitor0->profile_type != null)) {
+                    $profile_type = $visit->visitor0->profile_type;
+                } else {
+                    $profile_type = "N/A";
+                }
                 if (isset($visit->visitor0->company) && ($visit->visitor0->company != null)) {
                     $company = Company::model()->findByPk($visit->visitor0->company);
                     if ($company) {
@@ -192,6 +363,7 @@ class VisitController extends RestfulController {
                     'lastName' => $lastname,
                     'email' => $email,
                     'companyName' => $companyname,
+                    'profileType' => $profile_type,
                 );
             } else {
                 $result[$i]['visitor'] = array();

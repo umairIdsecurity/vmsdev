@@ -89,7 +89,7 @@ class Visit extends CActiveRecord {
             //array('other_reason', 'unique','className'=>'VisitReason','attributeName'=>'reason','message'=>"Reason must be unique"),
             array('reason,visitor_type,visitor,visitor_status,workstation', 'required', 'on' => 'webapp'),
             array('visitor,card, visitor_type, reason, visitor_status,host, patient, created_by, tenant, tenant_agent', 'length', 'max' => 20),
-            array('date_in,date_out,time_in_hours,time_in_minutes,visit_status, time_in, time_out, date_check_in, time_check_in, date_check_out, time_check_out,card_type, finish_date, finish_time, card_returned_date, negate_reason, reset_id, card_option, police_report_number, card_lost_declaration_file, workstation , other_reason', 'safe'),
+            array('date_in,date_out,time_in_hours,time_in_minutes,visit_status, time_in, time_out, date_check_in, time_check_in, date_check_out, time_check_out,card_type, finish_date, finish_time, card_returned_date, negate_reason, reset_id, card_option, police_report_number, card_lost_declaration_file, workstation , other_reason,asic_escort', 'safe'),
             array('patient, host,card,tenant,tenant_agent', 'default', 'setOnEmpty' => true, 'value' => null),
             array('filterProperties', 'length', 'max' => 70),
 
@@ -493,12 +493,12 @@ class Visit extends CActiveRecord {
                 }
                 break;
         }
-        
+
         $criteria->addCondition('t.is_deleted = 0');
-        
+
         /*
          * this condition is a hack to show only CORPORATE VISITOR in the listing report
-         * 
+         *
          */
         if (Yii::app()->controller->action->id == 'visitorRegistrationHistory') {
             $criteria->addCondition("visitor0.profile_type = '" . Visitor::PROFILE_TYPE_CORPORATE . "'");
@@ -629,11 +629,15 @@ class Visit extends CActiveRecord {
         if ($merge !== null) {
             $criteria->mergeWith($merge);
         }
-        if (Yii::app()->params['dbDriver'] == 'mssql') {
-            $criteria->addCondition("CONVERT(date, t.date_check_out, 102) > DATEADD(day, -2, GETDATE())");
-        } else {
-            $criteria->addCondition("str_to_date(t.date_check_out,'%Y-%m-%d') > DATE_ADD(now(),interval -2 day)");
+
+        if ($this->date_check_out) {
+            if (Yii::app()->params['dbDriver'] == 'mssql') {
+                $criteria->addCondition("CONVERT(date, t.date_check_out, 102) > DATEADD(day, -2, GETDATE())");
+            } else {
+                $criteria->addCondition("str_to_date(t.date_check_out,'%Y-%m-%d') > DATE_ADD(now(),interval -2 day)");
+            }
         }
+
         if ($this->filterProperties) {
             $query = "t.id LIKE CONCAT('%', :filterProperties , '%')
                 OR visitor0.first_name LIKE CONCAT('%', :filterProperties , '%')
@@ -723,7 +727,7 @@ class Visit extends CActiveRecord {
         } else {
             Yii::app()->user->setState('pageSize', (int) '');
         }
-       
+
         return new CActiveDataProvider($this, array(
             'pagination' => array(
                 'pageSize' => Yii::app()->user->getState('pageSize', Yii::app()->params['defaultPageSize']),
@@ -843,9 +847,8 @@ class Visit extends CActiveRecord {
             $command = Yii::app()->db->createCommand("UPDATE visit
                     SET visit_status = '" . VisitStatus::EXPIRED
                         . "', card_option ='" . CardStatus::RETURNED
-                        . "', finish_date = CURDATE(), '%Y-%m-%d'), finish_time = CURTIME()
+                        . "', finish_date = CURRENT_DATE, finish_time = CURRENT_TIME
                     WHERE CURRENT_DATE > date_check_out
-                    AND CURRENT_TIME > time_check_out
                     AND visit_status = '" . VisitStatus::ACTIVE . "'
                     AND (card_type = '" . CardType::VIC_CARD_EXTENDED . "'
                     OR card_type = '". CardType::VIC_CARD_MULTIDAY ."')")->execute();
@@ -873,8 +876,9 @@ class Visit extends CActiveRecord {
             $command = Yii::app()->db->createCommand(
                 "UPDATE visit SET visit_status = '" . VisitStatus::CLOSED
                     . "', card_option ='" . CardStatus::RETURNED
-                    . "', finish_date = CURRENT_DATE, finish_time = CURRENT_DATE
+                    . "', finish_date = CURRENT_DATE, finish_time = CURRENT_TIME
                     WHERE CURRENT_DATE > date_check_out
+                    AND CURRENT_TIME > time_check_out
                     AND visit_status = '" . VisitStatus::ACTIVE . "'
                     AND card_type = '" . CardType::VIC_CARD_24HOURS . "'")->execute();
 
@@ -1038,48 +1042,64 @@ class Visit extends CActiveRecord {
     }
 
     public function getVisitCounts() {
-        $dateIn = new DateTime($this->date_check_in);
-        $dateOut = new DateTime($this->date_check_out);
-        $dateNow = new DateTime(date('Y-m-d'));
+        $dateIn   = new DateTime($this->date_check_in);
+        $dateOut  = new DateTime($this->date_check_out);
+        $dateNow  = new DateTime(date('Y-m-d'));
+        $criteria = new CDbCriteria;
+
+        $criteria->addCondition("(visit_status = " . VisitStatus::AUTOCLOSED . " OR visit_status = " . VisitStatus::CLOSED . ") AND visitor = " . $this->visitor);
+        
         switch ($this->card_type) {
             case CardType::VIC_CARD_MANUAL:
+                return (int)$this->count($criteria) + 1;
+                break;
             case CardType::VIC_CARD_SAMEDATE:
-            case CardType::VIC_CARD_24HOURS:
                 if (in_array($this->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED, VisitStatus::EXPIRED])) {
                     return 1;
                 }
-                return (int)$this->countByAttributes(['visit_status' => VisitStatus::CLOSED, 'visitor' => $this->visitor]) + 1;
+                return (int)$this->count($criteria) + 1;
+            case CardType::VIC_CARD_24HOURS:
+                return (int)$this->count($criteria) + 1;
+                break;
+
+            case CardType::VIC_CARD_MULTIDAY:
+                $totalCount = (int)($dateNow->format('z') - $dateIn->format('z')) + 1;
+                if ($this->count($criteria) > 0) {
+                    $totalCount += $this->count($criteria);
+                }
+                return $totalCount;
                 break;
             case CardType::VIC_CARD_EXTENDED:
-            case CardType::VIC_CARD_MULTIDAY:
                 switch ($this->visit_status) {
                     case VisitStatus::AUTOCLOSED:
                         return (int)($dateOut->format('z') - $dateIn->format('z'));
                         break;
                     default:
+                        if ($dateNow->format('z') > $dateOut->format('z')) {
+                            return (int)($dateOut->format('z') - $dateIn->format('z'));
+                        }
                         return (int)($dateNow->format('z') - $dateIn->format('z')) + 1;
                         break;
                 }
                 break;
-            /*case CardType::VIC_CARD_SAMEDATE:
-            case CardType::VIC_CARD_24HOURS:
-                return (int)$this->countByAttributes(['visit_status' => VisitStatus::CLOSED, 'visitor' => $this->visitor]) + 1;
-                break;*/
         }
     }
 
     public function getRemainingDays() {
         $dateNow = new DateTime(date('Y-m-d'));
         $dateOut = new DateTime($this->date_check_out);
-        $dateIn = new DateTime($this->date_check_in);
+        $dateIn  = new DateTime($this->date_check_in);
+
         switch ($this->card_type) {
             case CardType::VIC_CARD_MANUAL:
             case CardType::VIC_CARD_24HOURS:
             case CardType::VIC_CARD_SAMEDATE:
                 return 28 - (int)$this->visitCounts;
                 break;
-            case CardType::VIC_CARD_EXTENDED:
             case CardType::VIC_CARD_MULTIDAY:
+                return 28 - (int)$this->visitCounts;
+                break;
+            case CardType::VIC_CARD_EXTENDED:
                 $totalDays = (int)($dateOut->format('z') - $dateIn->format('z'));
                 switch ($this->visit_status) {
                     case VisitStatus::AUTOCLOSED:
@@ -1087,8 +1107,8 @@ class Visit extends CActiveRecord {
                         break;
                     default:
                         $remainingDays = $totalDays - $this->visitCounts;
-                        if ($remainingDays < 0) {
-                            return 0;
+                        if ($dateNow->format('z') > $dateOut->format('z')) {
+                            return (int)($dateOut->format('z') - $dateIn->format('z'));
                         }
                         return $remainingDays;
                         break;
@@ -1116,7 +1136,7 @@ class Visit extends CActiveRecord {
      */
     public function archivePregisteredOldVisits() {
         // Find and Update Status
-        $crieteria = "visit_status = 2 AND ( date_check_in <= '" . date('Y-m-d', strtotime("-2 days")) . "')";
+       /* $crieteria = "visit_status = 2 AND ( date_check_in <= '" . date('Y-m-d', strtotime("-2 days")) . "')";
         $preRegistered = $this->findAll($crieteria);
 
         if ($preRegistered)
@@ -1124,7 +1144,7 @@ class Visit extends CActiveRecord {
                 $this->updateByPk($visit->id, array('is_deleted' => '1'));
             }
 
-        return;
+        return;*/
     }
 
     /**
@@ -1140,4 +1160,16 @@ class Visit extends CActiveRecord {
         return false;
     }
 
+    public function getAsicEscort()
+    {
+        return Visitor::model()->findByPk($this->asic_escort);
+    }
+
+
+    public function getVisitorProfile()
+    {
+    	$visitor = Visitor::model()->findByPk($this->visitor);
+    	 
+    	return $visitor;
+    }
 }

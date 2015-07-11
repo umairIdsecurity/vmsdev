@@ -85,6 +85,13 @@ class User extends VmsActiveRecord {
         1 => 'Open',
         2 => 'Access Denied',
     );
+    
+    // Module  Allowed to view by a Tenant user
+    public static $allowed_module = array(
+            1 => 'AVMS',
+            2 => 'CVMS',
+            3 => 'Both'
+        );
 
     /**
      * @return string the associated database table name
@@ -132,7 +139,7 @@ class User extends VmsActiveRecord {
                 // @todo Please remove those attributes that should not be searched.
                 array('id, companyname,first_name, last_name,email,photo,is_deleted ,contact_number, date_of_birth, company, department, position, staff_id, notes, role_id, user_type_id, user_status_id, created_by', 'safe', 'on' => 'search'),
 				
-		array('is_required_induction, is_completed_induction, induction_expiry ', 'safe'),
+		array('is_required_induction, is_completed_induction, induction_expiry, allowed_module', 'safe'),
                 
             );
         } else {
@@ -154,7 +161,7 @@ class User extends VmsActiveRecord {
                 // @todo Please remove those attributes that should not be searched.
                 array('id, first_name, companyname,last_name,email,photo,is_deleted,assignedWorkstations,contact_number, date_of_birth, company, department, position, staff_id, notes, role_id, user_type_id, user_status_id, created_by', 'safe', 'on' => 'search'),
 				
-				array('is_required_induction, is_completed_induction, induction_expiry ', 'safe'),
+		array('is_required_induction, is_completed_induction, induction_expiry, allowed_module', 'safe'),
                
             );
         }
@@ -279,7 +286,7 @@ class User extends VmsActiveRecord {
      * @return CActiveDataProvider the data provider that can return the models
      * based on the search/filter conditions.
      */
-    public function search()
+    public function search($merge = null)
     {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
@@ -402,6 +409,10 @@ class User extends VmsActiveRecord {
             $criteria->addCondition('t.id in (' . implode(', ', $user_ids) . ')');
         }
 
+        if ($merge !== null) {
+            $criteria->mergeWith($merge);
+        }
+
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'sort' => array(
@@ -450,9 +461,9 @@ class User extends VmsActiveRecord {
         } else {
             $this->is_deleted = 1;
             if ($this->asic_expiry || $this->asic_expiry == 0) {
-                $this->asic_expiry_day = date('d', $this->asic_expiry);
-                $this->asic_expiry_month = date('m', $this->asic_expiry);
-                $this->asic_expiry_year = date('Y', $this->asic_expiry);
+                $this->asic_expiry_day = date('d', strtotime($this->asic_expiry));
+                $this->asic_expiry_month = date('m', strtotime($this->asic_expiry));
+                $this->asic_expiry_year = date('Y', strtotime($this->asic_expiry));
             }
 
             $this->save();
@@ -581,13 +592,14 @@ class User extends VmsActiveRecord {
 
     public function findAllTenantAgent($tenantId) {
         //select all companies of tenant agents with same tenant
+        $session = new CHttpSession;
         $tenantId = trim($tenantId);
         $aArray = array();
         $company = Yii::app()->db->createCommand()
                 ->selectdistinct(' c.id as id, c.name as name,c.tenant,c.tenant_agent, u.first_name, u.last_name')
                 ->from('user u')
                 ->join('company c', 'u.company=c.id')
-                ->where("u.is_deleted = 0 and u.tenant='" . $tenantId . "' and u.role =" . Roles::ROLE_AGENT_ADMIN)
+                ->where("u.is_deleted = 0 and u.tenant='" . $session['tenant'] . "' and u.role =" . Roles::ROLE_AGENT_ADMIN)
                 ->queryAll();
 
         foreach ($company as $index => $value) {
@@ -626,17 +638,18 @@ class User extends VmsActiveRecord {
 
     public function findWorkstationsWithSameTenant($tenantId) {
         $aArray = array();
+        $session = new CHttpSession;
 
         $criteria = new CDbCriteria();
         //$criteria->condition = "tenant = '$tenantId' and (tenant_agent IS NULL or tenant_agent = 0 or tenant_agent = '') ";
 
         $user = User::model()->findByPK(Yii::app()->user->id);
         if ($user->role == Roles::ROLE_ADMIN) {
-            $criteria->condition = "tenant = " . $tenantId . " AND is_deleted = 0";
+            $criteria->condition = "created_by = " . $session['tenant'] . " AND is_deleted = 0";
         } else if ($user->role == Roles::ROLE_AGENT_ADMIN) {
-            $criteria->condition = "tenant = " . $tenantId . " AND tenant_agent = " . $user->tenant_agent . " AND is_deleted = 0";
+            $criteria->condition = "created_by = " . $session['tenant'] . " AND tenant_agent = " . $user->tenant_agent . " AND is_deleted = 0";
         } else {
-            $criteria->condition = "tenant = '$tenantId' and (tenant_agent IS NULL or tenant_agent = 0 or tenant_agent = '') AND is_deleted = 0";
+            $criteria->condition = "created_by = '" . $session['tenant'] . "' and (tenant_agent IS NULL or tenant_agent = 0 or tenant_agent = '') AND is_deleted = 0";
         }
 
         $workstation = Workstation::model()->findAll($criteria);
@@ -769,4 +782,7 @@ class User extends VmsActiveRecord {
         }
     }
 
+    public function getCompanyForLogVisit() {
+        return Company::model()->findByPk($this->company);
+    }
 }

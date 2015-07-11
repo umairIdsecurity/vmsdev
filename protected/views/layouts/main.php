@@ -41,6 +41,8 @@ $userRole = $session['role'];
         <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->controller->assetsBase; ?>/css/imgareaselect-default.css" />
         <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->controller->assetsBase; ?>/css/gridview.css" />
         <?php
+        $session['tenant'] = $session['id'];
+
         $tenantCompany = User::model()->findByPk($session['tenant'])->company;
         $company = Company::model()->findByPk($tenantCompany);
 
@@ -58,7 +60,11 @@ $userRole = $session['role'];
         <script  src="<?php echo Yii::app()->controller->assetsBase; ?>/js/script-sidebar.js" ></script>
         <script  src="<?php echo Yii::app()->controller->assetsBase; ?>/js/jquery.uploadfile.min.js" ></script>
         <script  src="<?php echo Yii::app()->controller->assetsBase; ?>/js/jquery.form.js" ></script>
-    
+
+        <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+        <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+        <script async src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
         <title><?php echo CHtml::encode($this->pageTitle); ?></title>
  
     </head>

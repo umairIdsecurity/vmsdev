@@ -26,7 +26,7 @@ class CardGeneratedController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'admin', 'delete', 'print', 'reprint', 'pdfprint'),
+                'actions' => array('create', 'update', 'admin', 'delete', 'print', 'preprint', 'pdfprint'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -50,13 +50,13 @@ class CardGeneratedController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate($visitId) {
+        $session = new CHttpSession;
         $model = new CardGenerated;
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['CardGenerated'])) {
-        	
             if ($_POST['CardGenerated']['tenant_agent'] == '') {
                 $_POST['CardGenerated']['tenant_agent'] = null;
             }
@@ -69,12 +69,13 @@ class CardGeneratedController extends Controller {
                 $model->card_number = $_POST['CardGenerated']['card_number'];
             }
 
+            //$model->tenant = $session['tenant'];
+
             if ($model->save()) {
                 Visit::model()->updateByPk($visitId, array('card' => $model->id));
-                
-                $tenant = User::model()->findByPk($model->tenant);
+                //$tenant = User::model()->findByPk($model->tenant);
 
-                $company = Company::model()->findByPk($tenant->company);
+                $company = Company::model()->findByPk($_POST['CardGenerated']['tenant']);
 
                 if (!is_null($company)) {
                     $cardCount = $company->card_count;
@@ -250,6 +251,26 @@ class CardGeneratedController extends Controller {
 
 
         $html2pdf->Output();
+
+    }
+
+    public function actionPreprint($id) {
+
+        if (!isset($_GET['type'])){
+            throw new CHttpException(404,'Parameter missing');
+        } else {
+            $type=$_GET['type'];
+        }
+        #data of user of card
+        $model = Visit::model()->findByPk($id);
+        $visitorModel = Visitor::model()->findByPk($model->visitor);
+        $data = array('model' => $model, 'visitorModel' => $visitorModel, 'type' => $type);
+
+        if ($model->card_type > 4) {
+            $this->renderPartial('printpdf', $data);
+        } else {
+            $this->renderPartial('_card-corporate', $data);
+        }
 
     }
 

@@ -10,6 +10,15 @@ $arrSubject = array(
 
 <h1>Contact Support</h1>
 
+    <?php
+        $tenant = '';
+        if(Yii::app()->user->role == Roles::ROLE_ADMIN){
+            $tenant = "tenant='".Yii::app()->user->tenant."'";
+        } 
+    ?>
+
+
+
 <?php if(Yii::app()->user->hasFlash('contact')): ?>
 
     <div class="flash-success">
@@ -42,13 +51,14 @@ $arrSubject = array(
         
         
         <tr>
-            <td><?php echo $form->labelEx($model,'role_id'); ?></td>
+            <td><?php echo $form->labelEx($model,'contact_person_name'); ?></td>
             <td><?php echo $form->dropDownList(
                             $model,
-                            'role_id',
-                            CHtml::listData(Roles::model()->findAll(),
+                            'contact_person_name',
+                            CHtml::listData(ContactPerson::model()->findAll($tenant),
                                     'id',
-                                    'nameFuncForNotifiLabels')
+                                    'contact_person_name'),
+                                    array('empty'=>'Select a person')
                     );?>
             </td>
 	</tr>
@@ -59,7 +69,7 @@ $arrSubject = array(
                 <?php echo $form->dropDownList(
                             $model,
                             'reason',
-                            CHtml::listData(Reasons::model()->findAll(),
+                            CHtml::listData(Reasons::model()->findAll($tenant),
                                     'nameFuncForReasons',
                                     'nameFuncForReasons'),
                                     array('empty'=>'Select a reason')
@@ -77,7 +87,7 @@ $arrSubject = array(
     </table>
 
     <div class="row">
-        <?php
+        <?php   
             echo $form->textField($model, 'email', array(
                 'value'     =>  $userModel->email,
                 'disabled'  =>  'disabled',

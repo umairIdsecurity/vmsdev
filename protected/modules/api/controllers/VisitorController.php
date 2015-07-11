@@ -9,30 +9,43 @@ class VisitorController extends RestfulController {
      * * */
     public function actionIndex() {
         try {
-            $token_user = $this->checkAuth();
+            // get AccessTokens
+            $access_token = $this->getAccessToken() ;
+            if(!$access_token) {
+                $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'HTTP_X_VMS_TOKEN', 'errorDescription' => 'HTTP_X_VMS_TOKEN is invalid.')));
+                return false;
+            }
+
+            // do response
             if (Yii::app()->request->isPostRequest) {
-                $data = file_get_contents("php://input");
-                $data = CJSON::decode($data);
-                $companyID = $this->getCompany($data['company']);
-                $this->validateData($data);
-                $visitor = new Visitor();
-                $visitorService = new VisitorServiceImpl();
-                $visitor->first_name = $data['firstName'];
-                $visitor->last_name = $data['lastName'];
-                $visitor->email = $this->validateEmail($data['email']);
-                $visitor->visitor_type = $data['visitorType'];
-                $visitor->company = $companyID;
-                $visitor->password = CPasswordHelper::hashPassword($data['password']);
-                $visitor->photo = NULL;
+                if( $access_token->USER_TYPE == self::ADMIN_USER ) {
+                    $data = file_get_contents("php://input");
+                    $data = CJSON::decode($data);
+                    $companyID = $this->getCompany($data['company']);
+                    $this->validateData($data);
+                    $visitor = new Visitor();
+                    $visitorService = new VisitorServiceImpl();
+                    $visitor->first_name = $data['firstName'];
+                    $visitor->last_name = $data['lastName'];
+                    $visitor->email = $this->validateEmail($data['email']);
+                    $visitor->visitor_type = $data['visitorType'];
+                    $visitor->company = $companyID;
+                    $visitor->password = CPasswordHelper::hashPassword($data['password']);
+                    $visitor->created_by = $access_token->USER_ID;
+                    $visitor->photo = NULL;
 
-                if ($visitor->save(false)) {
-                    $result = array();
-                    $result = $this->populatevisitor($visitor);
+                    if ($visitor->save(false)) {
+                        $result = array();
+                        $result = $this->populatevisitor($visitor);
 
-                    $this->sendResponse(200, CJSON::encode($result));
+                        $this->sendResponse(200, CJSON::encode($result));
+                    }
+                }
+                else {
+                    $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'NOT_PERMISSION', 'errorDescription' => 'Not permission create visitor')));
                 }
             } elseif (yii::app()->request->isPutRequest) {
-                $visitor_token_user = $this->checkAuthVisitor();
+                // $visitor_token_user = $this->checkAuthVisitor();
                 $data = file_get_contents("php://input");
                 $data = CJSON::decode($data);
                 $visitor = Visitor::model()->findByAttributes(array('email' => $data['email']));
@@ -43,8 +56,8 @@ class VisitorController extends RestfulController {
                     $visitor->last_name = $data['lastName'];
                     $visitor->visitor_type = $data['visitorType'];
                     $visitor->company = $companyID;
-                    $visitor->password = CPasswordHelper::hashPassword($data['password']);
-                    $visitor->photo = NULL;
+                    $visitor->password = $data['password'];
+                    //$visitor->photo = NULL;
                     if ($visitor->save(false)) {
                         $result = $this->populatevisitor($visitor);
                         $this->sendResponse(200, CJSON::encode($result));
@@ -55,11 +68,9 @@ class VisitorController extends RestfulController {
                 }
             } else {
                 $email = $_GET['email'];
-                $visitor_token_user = $this->checkAuthVisitor();
                 $visitor = Visitor::model()->findByAttributes(array('email' => $email));
                 if ($visitor) {
                     $result = $this->populatevisitor($visitor);
-
                     $this->sendResponse(200, CJSON::encode($result));
                 } else {
                     $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'VISITOR_NOT_FOUND', 'errorDescription' => 'visitor is not found ')));
@@ -72,21 +83,16 @@ class VisitorController extends RestfulController {
 
     public function actionLogout() {
         try {
-            $data = file_get_contents("php://input");
-            $data = CJSON::decode($data);
-
-            if (Yii::app()->request->getParam('email') && $data) {
+            $access_token = $this->getAccessToken() ;
+            if(!$access_token) {
+                $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'VISITOR_NOT_FOUND', 'errorDescription' => 'Access Token Admin not match')));
+            }
+            if (Yii::app()->request->getParam('email') ) {
                 $email = Yii::app()->request->getParam('email');
                 $visitor = Visitor::model()->findByAttributes(array('email' => $email));
                 if ($visitor) {
-                    $access_token = AccessTokens::model()->findByAttributes(array('USER_ID' => $visitor->id));
-                    if ($access_token && $access_token->ACCESS_TOKEN == $data["access_token"]) {
-                        $access_token->delete();
-                        $this->sendResponse(204);
-                    }
-                    else {
-                        $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'VISITOR_NOT_FOUND', 'errorDescription' => 'Access Token Admin not match')));
-                    }
+                    $access_token->delete();
+                    $this->sendResponse(204);
                 } else {
                     $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'VISITOR_NOT_FOUND', 'errorDescription' => 'Requested Admin not found')));
                 }
@@ -191,6 +197,9 @@ class VisitorController extends RestfulController {
 
     private function populatevisitor($visitor) {
         $result = array();
+        $visitype = VisitorType::model()->findByPk($visitor->visitor_type);
+        $aliasVisitype = "NULL";
+        if ($visitype) $aliasVisitype = $visitype->name;
         $result['visitorID'] = $visitor->id;
         $result['firstName'] = $visitor->first_name;
         $result['lastName'] = $visitor->last_name;
@@ -202,7 +211,8 @@ class VisitorController extends RestfulController {
         $result['department'] = $visitor->department;
         $result['staffId'] = $visitor->staff_id;
         $result['notes'] = $visitor->notes;
-        $result['visitor_type'] = $visitor->visitor_type;
+        $result['visitorType'] = $aliasVisitype;
+        $result['profileType'] = $visitor->profile_type;
         $result['vehicle'] = $visitor->vehicle;
         $result['createdBy'] = $visitor->created_by;
         $result['tenant'] = $visitor->tenant;

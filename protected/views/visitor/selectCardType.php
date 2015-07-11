@@ -1,5 +1,6 @@
 <?php
 $session = new CHttpSession;
+
 $sameday = CardType::model()->findByPk(CardType::SAME_DAY_VISITOR);
 $multiday = CardType::model()->findByPk(CardType::MULTI_DAY_VISITOR);
 
@@ -7,22 +8,23 @@ $workstation_id = $session['workstation'];
 
 if (!isset($workstation_id)) {
     $user = User::model()->findByPK(Yii::app()->user->id);
+
     if ($user->role == Roles::ROLE_AGENT_ADMIN) {
-
-        $workstations = Workstation::model()->findAllByAttributes(array('tenant' => $user->tenant, 'tenant_agent' => $user->tenant_agent));
+        $workstations = Workstation::model()->findAllByAttributes(array('tenant' => $user->tenant, 'tenant_agent' => $user->tenant_agent, 'is_deleted' => 0));
     } else {
-
-        $workstations = Workstation::model()->findAll();
+        $workstations = Workstation::model()->findAllByAttributes(array('is_deleted' => 0));
     }
 
     if (!$workstations) {
         $this->redirect(Yii::app()->createUrl('workstation/create'));
-    } else {     $session['workstation'] = $workstations[0]->id;
+    } else {
+        $session['workstation'] = $workstations[0]->id;
         $workstation_id = $workstations[0]->id;
     }
 }
 
 $cardTypeWorkstationModel = WorkstationCardType::model()->findAllByAttributes(array('workstation'=>$workstation_id));
+
 if (!$cardTypeWorkstationModel) {
     $this->redirect(Yii::app()->createUrl('workstation/admin'));
 }
@@ -83,6 +85,20 @@ if (!$cardTypeWorkstationModel) {
                 return false;
             }
 
+            $.ajax({
+                type: 'POST',
+                url: '<?php echo Yii::app()->createUrl('VisitorType/getFromCardType&cardtype='); ?>' + card_type_value,
+                dataType: 'json',
+                data: card_type_value,
+                success: function (r) {
+                    var opt = '';
+                    $.each(r, function (index, value) {
+                        opt += '<option value="' + value.id + '">Card Status: ' + value.name + '</option>';
+                    });
+                    $('#Visitor_visitor_type').html(opt);
+                }
+            });
+
             var dateoutDiv = $("#dateoutDiv");
             if (card_type_value == SAMEDAY_TYPE ) {
                 var curdateLogVisit = $("#curdateLogVisit");
@@ -96,6 +112,9 @@ if (!$cardTypeWorkstationModel) {
                 dateoutDiv.show();
                 $(".ui-datepicker-trigger").show();
             }
+
+
+
 
             $("#cardtype").val(card_type_value);
             $("#Visit_card_type").val(card_type_value);

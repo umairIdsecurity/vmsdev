@@ -8,7 +8,7 @@ class PreregistrationController extends Controller
 	public function filters() {
 		return array(
 			'accessControl', // perform access control for CRUD operations
-			'postOnly + delete', // we only allow deletion via POST request
+			'postOnly + delete , ajaxAsicSearch', // we only allow deletion via POST request
 		);
 	}
 
@@ -20,7 +20,7 @@ class PreregistrationController extends Controller
 	public function accessRules() {
 		return array(
 			array('allow',
-				'actions' => array('index','privacyPolicy' , 'declaration' , 'Login' ,'registration','confirmDetails', 'visitReason' , 'addAsic' ),
+				'actions' => array('index','privacyPolicy' , 'declaration' , 'Login' ,'registration','confirmDetails', 'visitReason' , 'addAsic' , 'asicPass', 'error' , 'uploadPhoto','ajaxAsicSearch' ),
 				'users' => array('*'),
 			),
 			array('allow',
@@ -34,6 +34,19 @@ class PreregistrationController extends Controller
 		);
 	}
 
+	/**
+	 * This is the action to handle external exceptions.
+	 */
+	public function actionError()
+	{
+		if($error=Yii::app()->errorHandler->error)
+		{
+			if(Yii::app()->request->isAjaxRequest)
+				echo $error['message'];
+			else
+				$this->render('error', $error);
+		}
+	}
 
 	public function actionIndex(){
 
@@ -136,7 +149,10 @@ class PreregistrationController extends Controller
 
 	public function actionConfirmDetails(){
 		$session = new CHttpSession;
+
 		$model = new Registration();
+
+		$model->scenario = 'preregistration';
 
 		if (isset($_POST['Registration'])) {
 			$model->profile_type = $session['account_type'];
@@ -150,7 +166,7 @@ class PreregistrationController extends Controller
 				$session['visitor_id'] = $model->id;
 				$this->redirect(array('preregistration/visitReason'));
 			}
-			//print_r($model->getErrors());
+
 		}
 		
 		$this->render('confirm-details' , array('model' => $model));
@@ -215,8 +231,10 @@ class PreregistrationController extends Controller
 				$registrationModel->company = $companyModel->id;
 
 				if($registrationModel->save()){
+
 					$this->redirect(array('preregistration/addAsic'));
 				}
+				//print_r($registrationModel->getErrors());
 			}
 
 		}
@@ -232,7 +250,144 @@ class PreregistrationController extends Controller
 	}
 
 	public function actionAddAsic(){
-		$this->render('asic-sponsor');
+
+		$model = new Registration();
+
+		$model->scenario = 'asic';
+
+		if (isset($_POST['Registration'])) {
+
+			$model->profile_type = 'ASIC';
+
+			$model->key_string = hash('ripemd160', uniqid());
+
+			$model->attributes = $_POST['Registration'];
+			if ($model->save()) {
+				$headers = "MIME-Version: 1.0" . "\r\n";
+				$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+				$to=$model->email;
+				$subject="Request for verification of VIC profile";
+				$body = "<html><body>Hi,<br><br>".
+					"VIC Holder urgently requires your Verification of their visit.<br><br>".
+					"Link of the VIC profile<br>".
+					"<a href=' " .Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?id=".$model->id."&email=".$model->email."&k_str=" .$model->key_string." '>".Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?id=".$model->id."&email=".$model->email."&k_str=".$model->key_string."</a><br>";
+				$body .="<br>"."Thanks,"."<br>Admin</body></html>";
+				mail($to, $subject, $body,$headers);
+				$this->redirect(array('preregistration/uploadPhoto'));
+
+			}
+
+		}
+
+		$this->render('asic-sponsor' , array('model'=>$model) );
+	}
+
+	public function actionAjaxAsicSearch(){
+
+		if(isset($_POST['search_value']) && !empty($_POST['search_value'])){
+
+			$searchValue = trim($_POST['search_value']);
+			$purifier = new CHtmlPurifier();
+			$searchValue = $purifier->purify($searchValue);
+
+			if (filter_var($searchValue, FILTER_VALIDATE_EMAIL)) {
+				$model =  Registration::model()->findAllByAttributes(
+					array(
+						'email'=>$searchValue,
+						'profile_type'=>'ASIC',
+					)
+				);
+				if(!empty($model)){
+					foreach($model as $data){
+						echo '<tr>
+						<th scope="row">
+							<input type="radio" name="selected_asic" id="selected_asic" value="'.$data->id.'">
+						</th>
+						<td>'.$data->first_name.'</td>
+						<td>'.$data->last_name.'</td>
+						<td>'.$data->visitorStatus->name.'</td>
+					</tr>';
+					}
+				}
+				else{
+					echo "No Record";
+				}
+
+			}
+			else{
+				$connection=Yii::app()->db;
+				$sql="SELECT * FROM `visitor` WHERE
+					  (first_name LIKE '%$searchValue%' OR last_name LIKE '%$searchValue%')
+					  AND profile_type = 'ASIC' ";
+
+				$command = $connection->createCommand($sql);
+
+				$records = $command->queryAll();
+
+				if(!empty($records)){
+					foreach($records as $data){
+						$companyModel = Company::model()->findByPk($data['company']);
+						echo '<tr>
+						<th scope="row">
+							<input type="radio" name="selected_asic" id="selected_asic" value="'.$data['id'].'">
+						</th>
+						<td>'.$data['first_name'].'</td>
+						<td>'.$data['last_name'].'</td>
+						<td>'.$companyModel->name.'</td>
+					</tr>';
+					}
+				}
+				else{
+					echo "No Record";
+				}
+
+			}
+		}
+		else{
+			throw new CHttpException(400,'Unable to solve the request');
+		}
+	}
+
+	public function actionUploadPhoto(){
+		echo "Upload Photo";
+	}
+
+	public function actionAsicPass(){
+
+		if(
+			isset($_GET['id'], $_GET['email'], $_GET['k_str']) &&
+			!empty($_GET['id']) && !empty($_GET['email']) && !empty($_GET['k_str'])
+		){
+			$model = Registration::model()->findByPk($_GET['id']);
+
+			$model->scenario = 'asic-pass';
+			if(!empty($model)){
+				if( $model->key_string === $_GET['k_str'] || $model->key_string=null){
+					$model->password = '';
+
+					if (isset($_POST['Registration'])) {
+
+						$model->attributes = $_POST['Registration'];
+						$model->key_string = null;
+						if($model->save()){
+							$this->redirect(array('preregistration/login'));
+						}
+					}
+
+					$this->render('asic-password', array('model' => $model));
+				}
+				else{
+					throw new CHttpException(403,'Unable to solve the request');
+				}
+			}
+			else{
+				throw new CHttpException(403,'Unable to solve the request');
+			}
+
+		}
+		else{
+			throw new CHttpException(400,'Unable to solve the request');
+		}
 	}
 
 	public function actionLogin(){
@@ -271,3 +426,5 @@ class PreregistrationController extends Controller
 	}
 
 }
+
+

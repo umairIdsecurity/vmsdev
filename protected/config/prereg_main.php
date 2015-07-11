@@ -111,7 +111,7 @@ return CMap::mergeArray(
             ),
             'errorHandler' => array(
                 // use 'site/error' action to display errors
-                'errorAction' => 'site/error',
+                'errorAction' => 'preregistration/error',
             ),
             'log' => array(
                 'class' => 'CLogRouter',

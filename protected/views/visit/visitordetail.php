@@ -5,6 +5,7 @@ $session = new CHttpSession;
 
 // asic sponsor
 $asic = $model->getAsicSponsor();
+$asicEscort = $model->getAsicEscort();
 
 if ($asic && $hostModel == null) {
     $hostModel = $asic;
@@ -22,13 +23,14 @@ if(!$hostModel) $hostModel = Visitor::model();
     <tr>
         <td style="padding:5px;text-align: center;">
             <?php
-            $this->renderPartial('visitor-detail-card', array('model' => $model,
-                'visitorModel' => $visitorModel,
-				'visitCount' => $visitCount,
-                'hostModel' => $hostModel,
-                'patientModel' => $patientModel,
+            $this->renderPartial('visitor-detail-card', array(
+                'model'         => $model,
+                'visitorModel'  => $visitorModel,
+                'visitCount'    => $visitCount,
+                'hostModel'     => $hostModel,
+                'patientModel'  => $patientModel,
                 'cardTypeModel' => $cardTypeModel,
-                'asic' => $asic
+                'asic'          => $asic
             ));
             ?>
 
@@ -37,26 +39,27 @@ if(!$hostModel) $hostModel = Visitor::model();
             <?php
             $this->renderPartial('visitordetail-visitorInformation', array('model' => $model,
                 'visitorModel' => $visitorModel,
-                'hostModel' => $hostModel,
-                'reasonModel' => $reasonModel,
+                'hostModel'    => $hostModel,
+                'reasonModel'  => $reasonModel,
                 'patientModel' => $patientModel,
-                'newPatient' => $newPatient,
-                'newHost' => $newHost,
-                'asic' => $asic
+                'newPatient'   => $newPatient,
+                'newHost'      => $newHost,
+                'asic'         => $asic,
+                'asicEscort'   => $asicEscort,
             ));
             ?>
 
         </td>
         <td>
-
             <?php
             $this->renderPartial('visitordetail-actions', array(
-                    'model' => $model,
+                    'model'        => $model,
                     'visitorModel' => $visitorModel,
-                    'hostModel' => $hostModel,
-                    'reasonModel' => $reasonModel,
+                    'hostModel'    => $hostModel,
+                    'reasonModel'  => $reasonModel,
                     'patientModel' => $patientModel,
-                    'asic' => $asic
+                    'asic'         => $asic,
+                    'visitCount'   => $visitCount,
                 ));
             ?>
         </td>
@@ -66,8 +69,8 @@ if(!$hostModel) $hostModel = Visitor::model();
 <?php
 $this->renderPartial('visithistory', array('model' => $model,
     'visitorModel' => $visitorModel,
-    'hostModel' => $hostModel,
-    'reasonModel' => $reasonModel,
+    'hostModel'    => $hostModel,
+    'reasonModel'  => $reasonModel,
 ));
 ?>
 <input type="text" style="display:none;" id="createUrlForEmailUnique" value="<?php echo Yii::app()->createUrl('user/checkEmailIfUnique&id='); ?>"/>
@@ -406,7 +409,15 @@ $this->renderPartial('visithistory', array('model' => $model,
     }
 
     function sendActivateVisitForm(formId) {
-        var visitForm = $("#" + formId).serialize();
+        if ($('#asicEscortRbtn').is(':checked') == true) {
+            if ($('.add-esic-escort').css('display') == 'block') {
+                var visitForm = $("#" + formId + ", #add-asic-escort-form").serialize();
+            } else if ($('#selectedAsicEscort').val() != '') {
+                var visitForm = $("#" + formId).serialize() + '&selectedAsicEscort=' + $('#selectedAsicEscort').val();
+            }
+        } else {
+            var visitForm = $("#" + formId).serialize();
+        }
         $.ajax({
             type: "POST",
             url: "<?php echo CHtml::normalizeUrl(array("visit/update&id=" . $model->id)); ?>",
@@ -468,7 +479,16 @@ $this->renderPartial('visithistory', array('model' => $model,
     }
 
     function duplicateVisit(formId) {
-        var visitForm = $("#" + formId).serialize();
+        //var visitForm = $("#" + formId).serialize();
+        if ($('#asicEscortRbtn').is(':checked') == true) {
+            if ($('.add-esic-escort').css('display') == 'block') {
+                var visitForm = $("#" + formId + ", #add-asic-escort-form").serialize();
+            } else if ($('#selectedAsicEscort').val() != '') {
+                var visitForm = $("#" + formId).serialize() + '&selectedAsicEscort=' + $('#selectedAsicEscort').val();
+            }
+        } else {
+            var visitForm = $("#" + formId).serialize();
+        }
         $.ajax({
             type: "POST",
             url: "<?php echo CHtml::normalizeUrl(array("visit/duplicateVisit&id=" . $model->id)); ?>",

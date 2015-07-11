@@ -22,7 +22,8 @@ class TenantForm extends CFormModel
     public $notes;
     public $photo;
     public $timezone_id;
-
+    public $allowed_module;
+    
 
     public static $USER_ROLE_LIST = array(
 
@@ -107,7 +108,8 @@ class TenantForm extends CFormModel
             'password' => 'Password',
             'cnf_password' => 'Repeat Password',
             'photo' => 'Photo',
-            'timezone_id' => 'Timezone'
+            'timezone_id' => 'Timezone',
+            'allowed_module' => 'Module Access'
         );
     }
     public function is_avms_user()

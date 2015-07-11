@@ -9,6 +9,6 @@ class m150707_104743_add_coloumn_visitor extends CDbMigration
 
 	public function safeDown()
 	{
-
+		$this->dropColumn('visitor', 'key_string');
 	}
 }

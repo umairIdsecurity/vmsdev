@@ -293,7 +293,8 @@ class PreregistrationController extends Controller
 			if (filter_var($searchValue, FILTER_VALIDATE_EMAIL)) {
 				$model =  Registration::model()->findAllByAttributes(
 					array(
-						'email'=>$searchValue
+						'email'=>$searchValue,
+						'profile_type'=>'ASIC',
 					)
 				);
 				if(!empty($model)){
@@ -314,26 +315,32 @@ class PreregistrationController extends Controller
 
 			}
 			else{
-				$model =  Registration::model()->findAllByAttributes(
-					array(
-						'first_name'=>$searchValue
-					)
-				);
-				if(!empty($model)){
-					foreach($model as $data){
+				$connection=Yii::app()->db;
+				$sql="SELECT * FROM `visitor` WHERE
+					  (first_name LIKE '%$searchValue%' OR last_name LIKE '%$searchValue%')
+					  AND profile_type = 'ASIC' ";
+
+				$command = $connection->createCommand($sql);
+
+				$records = $command->queryAll();
+
+				if(!empty($records)){
+					foreach($records as $data){
+						$companyModel = Company::model()->findByPk($data['company']);
 						echo '<tr>
 						<th scope="row">
-							<input type="radio" name="selected_asic" id="selected_asic" value="'.$data->id.'">
+							<input type="radio" name="selected_asic" id="selected_asic" value="'.$data['id'].'">
 						</th>
-						<td>'.$data->first_name.'</td>
-						<td>'.$data->last_name.'</td>
-						<td>'.$data->visitorStatus->name.'</td>
+						<td>'.$data['first_name'].'</td>
+						<td>'.$data['last_name'].'</td>
+						<td>'.$companyModel->name.'</td>
 					</tr>';
 					}
 				}
 				else{
 					echo "No Record";
 				}
+
 			}
 		}
 		else{

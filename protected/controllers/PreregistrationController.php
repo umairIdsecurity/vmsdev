@@ -257,24 +257,57 @@ class PreregistrationController extends Controller
 
 		if (isset($_POST['Registration'])) {
 
-			$model->profile_type = 'ASIC';
-
-			$model->key_string = hash('ripemd160', uniqid());
-
 			$model->attributes = $_POST['Registration'];
-			if ($model->save()) {
-				$headers = "MIME-Version: 1.0" . "\r\n";
-				$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-				$to=$model->email;
-				$subject="Request for verification of VIC profile";
-				$body = "<html><body>Hi,<br><br>".
-					"VIC Holder urgently requires your Verification of their visit.<br><br>".
-					"Link of the VIC profile<br>".
-					"<a href=' " .Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?id=".$model->id."&email=".$model->email."&k_str=" .$model->key_string." '>".Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?id=".$model->id."&email=".$model->email."&k_str=".$model->key_string."</a><br>";
-				$body .="<br>"."Thanks,"."<br>Admin</body></html>";
-				mail($to, $subject, $body,$headers);
-				$this->redirect(array('preregistration/uploadPhoto'));
 
+			if($_POST['Registration']['is_asic_verification']==0){
+				$this->redirect(array('preregistration/uploadPhoto'));
+			}
+			else{
+				if(!empty($model->selected_asic_id)){
+
+					$asicModel =
+						Registration::model()->findByPk(
+							$model->selected_asic_id
+						);
+
+					$headers = "MIME-Version: 1.0" . "\r\n";
+					$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+					$to=$asicModel->email;
+					$subject="Request for verification of VIC profile";
+					$body = "<html><body>Hi,<br><br>".
+						"VIC Holder urgently requires your Verification of their visit.<br><br>".
+						"Link of the VIC profile<br>".
+						"<a href=' " .Yii::app()->getBaseUrl(true)."/index.php/preregistration/login'>".Yii::app()->getBaseUrl(true)."/index.php/preregistration/login</a><br>";
+					$body .="<br>"."Thanks,"."<br>Admin</body></html>";
+					mail($to, $subject, $body,$headers);
+					//$this->redirect(array('preregistration/uploadPhoto'));
+				}
+				else{
+
+					if( !empty($model->email) && !empty($model->contact_number) ){
+
+						$model->profile_type = 'ASIC';
+						$model->key_string = hash('ripemd160', uniqid());
+
+						if ($model->save()) {
+							$headers = "MIME-Version: 1.0" . "\r\n";
+							$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+							$to=$model->email;
+							$subject="Request for verification of VIC profile";
+							$body = "<html><body>Hi,<br><br>".
+								"VIC Holder urgently requires your Verification of their visit.<br><br>".
+								"Link of the VIC profile<br>".
+								"<a href=' " .Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?id=".$model->id."&email=".$model->email."&k_str=" .$model->key_string." '>".Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?id=".$model->id."&email=".$model->email."&k_str=".$model->key_string."</a><br>";
+							$body .="<br>"."Thanks,"."<br>Admin</body></html>";
+							mail($to, $subject, $body,$headers);
+							//$this->redirect(array('preregistration/uploadPhoto'));
+
+						}
+					}
+
+				}
+
+				$this->redirect(array('preregistration/uploadPhoto'));
 			}
 
 		}
@@ -301,7 +334,7 @@ class PreregistrationController extends Controller
 					foreach($model as $data){
 						echo '<tr>
 						<th scope="row">
-							<input type="radio" name="selected_asic" id="selected_asic" value="'.$data->id.'">
+							<input type="radio" name="selected_asic" class="selected_asic" value="'.$data->id.'">
 						</th>
 						<td>'.$data->first_name.'</td>
 						<td>'.$data->last_name.'</td>
@@ -327,13 +360,19 @@ class PreregistrationController extends Controller
 				if(!empty($records)){
 					foreach($records as $data){
 						$companyModel = Company::model()->findByPk($data['company']);
+						if(!empty($companyModel)){
+							$companyName = $companyModel->name;
+						}
+						else{
+							$companyName = null;
+						}
 						echo '<tr>
 						<th scope="row">
-							<input type="radio" name="selected_asic" id="selected_asic" value="'.$data['id'].'">
+							<input type="radio" name="selected_asic" class="selected_asic" value="'.$data['id'].'">
 						</th>
 						<td>'.$data['first_name'].'</td>
 						<td>'.$data['last_name'].'</td>
-						<td>'.$companyModel->name.'</td>
+						<td>'.$companyName.'</td>
 					</tr>';
 					}
 				}
@@ -349,7 +388,7 @@ class PreregistrationController extends Controller
 	}
 
 	public function actionUploadPhoto(){
-		echo "Upload Photo";
+		$this->render('upload-photo');
 	}
 
 	public function actionAsicPass(){

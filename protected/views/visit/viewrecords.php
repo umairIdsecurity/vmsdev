@@ -188,7 +188,7 @@ function formatDate($date, $visitStatus) {
     if ($date == '' || $visitStatus != 1 || $date == '0000-00-00') {
         return "-";
     } else {
-        return Yii::app()->dateFormatter->format("dd/MM/y", strtotime($date));
+        return Yii::app()->dateFormatter->format("dd-MM-y", strtotime($date));
     }
 }
 

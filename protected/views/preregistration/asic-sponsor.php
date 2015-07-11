@@ -135,52 +135,62 @@
     <div class="form-create-login">
 
         <div class="form-group">
-            <?php echo $form->textField($model, 'first_name', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'First Name' , 'class'=>'form-control input-lg')); ?>
-            <?php echo $form->error($model, 'first_name'); ?>
+            <?php echo $form->hiddenField($model, 'selected_asic_id' ,
+                array('value'=>'')
+            ); ?>
         </div>
 
-        <div class="form-group">
-            <?php echo $form->textField($model, 'last_name', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Last Name' , 'class'=>'form-control input-lg')); ?>
-            <?php echo $form->error($model, 'last_name'); ?>
-        </div>
+        <!--  new asic -->
+        <div id="new_asic_area">
+            <div class="form-group">
+                <?php echo $form->textField($model, 'first_name', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'First Name' , 'class'=>'form-control input-lg')); ?>
+                <?php echo $form->error($model, 'first_name'); ?>
+            </div>
 
-        <div class="form-group">
-            <?php echo $form->textField($model, 'asic_no', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'ASIC no.', 'class'=>'form-control input-lg')); ?>
-            <?php echo $form->error($model, 'asic_no'); ?>
-        </div>
+            <div class="form-group">
+                <?php echo $form->textField($model, 'last_name', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Last Name' , 'class'=>'form-control input-lg')); ?>
+                <?php echo $form->error($model, 'last_name'); ?>
+            </div>
 
-        <div class="row form-group">
-            <div class="col-md-6">
-                <?php
-                $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                    'model'       => $model,
-                    'attribute'   => 'asic_expiry',
-                    'options'     => array(
-                        'dateFormat' => 'dd-mm-yy',
-                    ),
-                    'htmlOptions' => array(
-                        'size'        => '0',
-                        'maxlength'   => '10',
-                        'placeholder' => 'Expiry',
-                        'class' => 'form-control input-lg'
-                    ),
-                ));
-                ?>
-                <?php echo $form->error($model, 'asic_expiry'); ?>
+            <div class="form-group">
+                <?php echo $form->textField($model, 'asic_no', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'ASIC no.', 'class'=>'form-control input-lg')); ?>
+                <?php echo $form->error($model, 'asic_no'); ?>
+            </div>
+
+            <div class="row form-group">
+                <div class="col-md-6">
+                    <?php
+                    $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                        'model'       => $model,
+                        'attribute'   => 'asic_expiry',
+                        'options'     => array(
+                            'dateFormat' => 'dd-mm-yy',
+                        ),
+                        'htmlOptions' => array(
+                            'size'        => '0',
+                            'maxlength'   => '10',
+                            'placeholder' => 'Expiry',
+                            'class' => 'form-control input-lg'
+                        ),
+                    ));
+                    ?>
+                    <?php echo $form->error($model, 'asic_expiry'); ?>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <?php echo $form->textField($model, 'contact_number', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Mobile Number', 'class'=>'form-control input-lg')); ?>
+                <?php echo $form->error($model, 'contact_number'); ?>
+
+            </div>
+
+            <div class="form-group">
+                <?php echo $form->textField($model, 'email', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Email', 'class'=>'form-control input-lg')); ?>
+                <?php echo $form->error($model, 'email'); ?>
+
             </div>
         </div>
-
-        <div class="form-group">
-            <?php echo $form->textField($model, 'contact_number', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Mobile Number', 'class'=>'form-control input-lg')); ?>
-            <?php echo $form->error($model, 'contact_number'); ?>
-
-        </div>
-
-        <div class="form-group">
-            <?php echo $form->textField($model, 'email', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Email', 'class'=>'form-control input-lg')); ?>
-            <?php echo $form->error($model, 'email'); ?>
-
-        </div>
+        <!--  new asic -->
         <div class="form-group">
             <label class="checkbox">
                 <?php echo $form->checkBox($model,'is_asic_verification'); ?>
@@ -222,6 +232,7 @@
             $("#search_asic_error").hide();
             $("#asic_search_result").hide();
             $("#asic-notification").hide();
+            $('#new_asic_area').show();
         });
 
         $('#search_asic_btn').click(function(event) {
@@ -249,6 +260,11 @@
                         }
 
                         $("#loader").hide();
+
+                        $('.selected_asic').click(function() {
+                            $('#Registration_selected_asic_id').val($(this).val());
+                            $('#new_asic_area').hide();
+                        });
                     }
 
                 });

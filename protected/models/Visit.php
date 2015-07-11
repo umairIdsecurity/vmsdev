@@ -1090,6 +1090,10 @@ class Visit extends CActiveRecord {
         $dateOut = new DateTime($this->date_check_out);
         $dateIn  = new DateTime($this->date_check_in);
 
+        if ($this->visit_status == VisitStatus::SAVED) {
+            return 28;
+        }
+        
         switch ($this->card_type) {
             case CardType::VIC_CARD_MANUAL:
             case CardType::VIC_CARD_24HOURS:

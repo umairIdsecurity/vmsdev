@@ -556,6 +556,12 @@ class Visit extends CActiveRecord {
 
         $criteria = new CDbCriteria;
 
+        // convert date format to yy-mm-dd
+        if (!is_null($this->date_check_out) || !is_null($this->date_check_in)) {
+            $this->date_check_in = date('Y-m-d', strtotime($this->date_check_in));
+            $this->date_check_out = date('Y-m-d', strtotime($this->date_check_out));
+        }
+
         $criteria->with = array('card0','host0', 'visitor0', 'company0','visitor1');
         //$criteria->with .= 'visitor0';
         $criteria->compare('CONCAT(visitor0.first_name, \' \', visitor0.last_name)', $this->visitor, true);

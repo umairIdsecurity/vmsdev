@@ -68,11 +68,7 @@ class TenantController extends Controller {
         }
         //print_r($_POST);exit;
         if (isset($_POST['TenantForm'])) {
-            //echo $_POST['TenantForm']['photo'];exit;
 
-            //$companyModel = new Company();
-            //$companyModel->attribute = $_POST['TenantForm']['contact_number'];
-            //$companyModel->mobile_number = $_POST['TenantForm']['contact_number'];
             $transaction = Yii::app()->db->beginTransaction();
 
             try {
@@ -99,13 +95,6 @@ class TenantController extends Controller {
                 $companyModel->mobile_number = $_POST['TenantForm']['contact_number'];
                 $companyModel->is_deleted = 0;
                 $companyModel->created_by_user = Yii::app()->user->id;
-                /*$companyModel->created_by_visitor = $_POST['TenantForm']['first_name'];
-                $companyModel->tenant = $_POST['TenantForm']['first_name'];
-                $companyModel->tenant_agent = $_POST['TenantForm']['first_name'];
-                $companyModel->billing_address = $_POST['TenantForm']['first_name'];
-                $companyModel->website = $_POST['TenantForm']['first_name'];
-                $companyModel->company_laf_number = $_POST['TenantForm']['first_name'];
-                $companyModel->card_count = $_POST['TenantForm']['first_name'];*/
 
                 $comapanylastId = 0;
                 if ($companyModel->validate()) {
@@ -149,8 +138,8 @@ class TenantController extends Controller {
                         
                         $userModel->timezone_id = $_POST['TenantForm']['timezone_id'];
                         
-			$tenantModel->id = $comapanylastId;
-			$tenantModel->is_deleted = 0;
+                        $tenantModel->id = $comapanylastId;
+                        $tenantModel->is_deleted = 0;
                         $tenantModel->created_by = Yii::app()->user->id;
                         if ($tenantModel->validate()) {
                             $tenantModel->save();
@@ -204,11 +193,11 @@ class TenantController extends Controller {
                 $transaction->rollback();
 				echo $e->getMessage();
                 Yii::app()->user->setFlash('error', "There was an error processing request");
-                echo json_encode(array('success'=>FALSE));
+                //echo json_encode(array('success'=>FALSE));
             }
             //
             //echo json_encode(array('redirect'=>$this->createUrl('user/admin')));
-            exit;
+            //exit;
         }
         $this->render('create', array(
             'model' => $model,

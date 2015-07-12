@@ -64,38 +64,42 @@ class VisitController extends Controller {
      */
     public function actionCreate() {
         $model = new Visit;
-        $visitService = new VisitServiceImpl();
+        $visitService = new VisitServiceImpl;
         $session = new CHttpSession;
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['Visit'])) {
+            $visitParams = Yii::app()->request->getPost('Visit');
 
-            if (!isset($_POST['Visit']['date_check_in'])) {
-                $_POST['Visit']['date_check_in'] = date('Y-m-d');
-                $_POST['Visit']['time_check_in'] = date('h:i:s');
+            if (!isset($visitParams['date_check_in'])) {
+                $visitParams['date_check_in'] = date('Y-m-d');
+                $visitParams['time_check_in'] = date('h:i:s');
             }
 
-            if (!isset($_POST['Visit']['reason']) || empty($_POST['Visit']['reason'])) {
-                $_POST['Visit']['reason'] = 1;
+            if (!isset($visitParams['reason']) || empty($visitParams['reason'])) {
+                $visitParams['reason'] = 1;
             }
 
-            $model->attributes = $_POST['Visit'];
+            $model->attributes = $visitParams;
 
-            switch ($model->card_type) {
-                case CardType::VIC_CARD_EXTENDED: // VIC Extended
-                    $model->date_check_out = date('Y-m-d', strtotime($model->date_check_in . ' + 28 day'));
-                    break;
-                case CardType::VIC_CARD_SAMEDATE: // VIC Sameday
-                case CardType::VIC_CARD_MANUAL: // VIC Manual
-                case CardType::VIC_CARD_24HOURS: // VIC 24 hour
-                    $model->date_check_out = date('Y-m-d', strtotime($model->date_check_in . ' + 1 day'));
-                    break;
+            // If datepicker is disabled then date check out is empty
+            if (!isset($visitParams['date_check_out'])) {
+                switch ($model->card_type) {
+                    case CardType::VIC_CARD_EXTENDED: // VIC Extended
+                        $model->date_check_out = date('Y-m-d', strtotime($model->date_check_in . ' + 28 day'));
+                        break;
+                    case CardType::VIC_CARD_SAMEDATE: // VIC Sameday
+                    case CardType::VIC_CARD_MANUAL: // VIC Manual
+                    case CardType::VIC_CARD_24HOURS: // VIC 24 hour
+                        $model->date_check_out = date('Y-m-d', strtotime($model->date_check_in . ' + 1 day'));
+                        break;
+                }
             }
 
             // default workstation:
-            if ((!isset($_POST['Visit']['workstation']) || empty($_POST['Visit']['workstation'])) && isset($session['workstation'])) {
+            if ((!isset($visitParams['workstation']) || empty($visitParams['workstation'])) && isset($session['workstation'])) {
                 $model->workstation = $session['workstation'];
             }
 
@@ -123,7 +127,8 @@ class VisitController extends Controller {
             //check $reasonId has exist until add new.
             if ($model->reason == 'Other' || !$model->reason){
                 $newReason = new VisitReason();
-                $newReason->setAttribute('reason',isset($_POST['Visit']['reason_note'])?$_POST['Visit']['reason_note']:'');
+                $newReason->setAttribute('reason',isset($visitParams['reason_note']) ? $visitParams['reason_note'] : '');
+                
                 if($newReason->save()){
                     $model->reason = $newReason->id;
                 }
@@ -145,19 +150,20 @@ class VisitController extends Controller {
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
-        $model = $this->loadModel($id);
-
+        $model          = $this->loadModel($id);
+        
         $oldVisitorType = $model->visitor_type;
-        $oldReason = $model->reason;
-
-        $visitService = new VisitServiceImpl;
-        $session = new CHttpSession;
+        $oldReason      = $model->reason;
+        
+        $visitService   = new VisitServiceImpl;
+        $session        = new CHttpSession;
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['Visit'])) {
-            $model->attributes = $_POST['Visit'];
+            $visitParams = Yii::app()->request->getPost('Visit');
+            $model->attributes = $visitParams;
 
 			if ($model->visitor_type == null) {
                 $model->visitor_type = $oldVisitorType;
@@ -183,14 +189,16 @@ class VisitController extends Controller {
             }
 
             if(isset($_POST['AddAsicEscort'])) {
-                $asicEscort = new Visitor();
-                $visitorService = new VisitorServiceImpl();
-                $asicEscort->attributes = $_POST['AddAsicEscort'];
-                $asicEscort->profile_type = Visitor::PROFILE_TYPE_ASIC;
+                $asicEscort                      = new Visitor;
+                $visitorService                  = new VisitorServiceImpl;
+                $asicEscort->attributes          = Yii::app()->request->getPost('AddAsicEscort');
+
+                $asicEscort->profile_type        = Visitor::PROFILE_TYPE_ASIC;
                 $asicEscort->visitor_card_status = 6;
-                $asicEscort->escort_flag = 1;
-                $asicEscort->date_created = date("Y-m-d H:i:s");
-                $asicEscort->tenant = Yii::app()->user->tenant;
+                $asicEscort->escort_flag         = 1;
+                $asicEscort->date_created        = date("Y-m-d H:i:s");
+                $asicEscort->tenant              = Yii::app()->user->tenant;
+
                 if (empty($asicEscort->visitor_workstation)) {
                     $asicEscort->visitor_workstation = $session['workstation'];
                 }
@@ -202,7 +210,7 @@ class VisitController extends Controller {
             }
 
             if(isset($_POST['selectedAsicEscort'])){
-                $model->asic_escort = $_POST['selectedAsicEscort'];
+                $model->asic_escort = Yii::app()->request->getPost('selectedAsicEscort');
             }
 
             if ($visitService->save($model, $session['id'])) {
@@ -479,7 +487,7 @@ class VisitController extends Controller {
             $model->attributes = $visitParams;
 
             // close visit process
-            if (isset($visitParams['visit_status']) && $visitParams['visit_status'] == VisitStatus::CLOSED) {
+            if (isset($_POST['closeVisitForm']) && $visitParams['visit_status'] == VisitStatus::CLOSED) {
                 if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && strtotime(date('Y-m-d')) <= strtotime($model->date_check_out)) {
                     $model->visit_status = VisitStatus::AUTOCLOSED;
                     switch ($model->card_type) {

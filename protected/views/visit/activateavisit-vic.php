@@ -169,7 +169,6 @@ $asicEscort = new AddAsicEscort();
                 'htmlOptions' => array(
                     'size'        => '10', // textField size
                     'maxlength'   => '10', // textField maxlength
-                    //'disabled'  => 'disabled',
                     'readonly'    => 'readonly',
                     'placeholder' => 'dd-mm-yyyy',
                 ),
@@ -204,7 +203,7 @@ $asicEscort = new AddAsicEscort();
     $(document).ready(function() {
         // Set min & max date for check out datepicker
         var cardType = "<?php echo $model->card_type; ?>";
-        var d = new Date()
+        var d = new Date(),
             minDate, maxDate;
         var disabled = true;
 
@@ -238,7 +237,7 @@ $asicEscort = new AddAsicEscort();
             minDate: minDate,
             dateFormat: "dd-mm-yy",
             onClose: function (selectedDate) {
-                var currentDate  = new Date();
+                var currentDate  = d.getDate() + '-0' + (d.getMonth() + 1) + '-' + d.getFullYear();
                 var checkInSelectedDate = $("#Visit_date_check_in").datepicker('getDate');
 
                 switch(cardType) {
@@ -268,7 +267,7 @@ $asicEscort = new AddAsicEscort();
                     $("#registerNewVisit").text(text).val(val);
                 }
 
-                if (checkInSelectedDate >= currentDate) {
+                if (selectedDate >= currentDate) {
                     <?php if ($model->card_type == CardType::VIC_CARD_MANUAL) { // show Back Date Visit
                         echo 'updateTextVisitButton("Activate Visit", "registerNewVisit", "active");';
                     } else {

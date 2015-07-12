@@ -1075,7 +1075,7 @@ class Visit extends CActiveRecord {
                         return $dateNow->diff($dateIn)->days;
                         break;
                     default:
-                        if ($dateNow->diff($dateOut)->days > 0) {
+                        if ($dateNow->diff($dateOut)->days <= 0) {
                             return $dateOut->diff($dateIn)->days;
                         }
                         return $dateNow->diff($dateIn)->days + 1;
@@ -1110,7 +1110,7 @@ class Visit extends CActiveRecord {
                         return $dateOut->diff($dateNow)->days;
                         break;
                     default:
-                        if ($dateNow->diff($dateOut)->days > 0) {
+                        if ($dateNow->diff($dateOut)->days <= 0) {
                             return $dateOut->diff($dateIn)->days;
                         }
                         return $totalDays - $this->visitCounts;

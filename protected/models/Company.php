@@ -211,6 +211,10 @@ class Company extends CActiveRecord {
         $criteria->compare('code', $this->code);
         $criteria->compare('company_laf_preferences', $this->company_laf_preferences);
         $criteria->compare('card_count', $this->card_count);
+
+        if($_SESSION['role'] != Roles::ROLE_SUPERADMIN) {
+            $criteria->compare('tenant', $_SESSION["tenant"]);
+        }
         $criteria->compare($post_count_sql, $this->isTenant);
 
         $data = new CActiveDataProvider($this, array(

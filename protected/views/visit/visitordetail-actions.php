@@ -456,15 +456,6 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                         var vicChecked = vicCheck();
                         if (vicChecked) {
                             $('#asicSponsorModal').modal('show');
-                            $btnASIC.on('click', function(e) {
-                                if ($('#asicEscortRbtn').is(':checked')) {
-                                    checkEscortEmailUnique();
-                                } else {
-                                    if (asicCheck()) {
-                                        $('#identificationModal').modal('show');
-                                    }
-                                }
-                            });
                         } else {
                             return false;
                         }

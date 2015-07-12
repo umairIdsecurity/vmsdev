@@ -673,7 +673,11 @@ $asicEscort = new AddAsicEscort();
             if ($('#asicEscortRbtn').is(':checked')) {
                 checkEscortEmailUnique();
             } else {
-                asicCheck();
+                if (asicCheck()) {
+                    $('#identificationModal').modal('show');
+                } else {
+                    return false;
+                }
             }
         });
 

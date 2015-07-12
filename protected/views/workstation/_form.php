@@ -85,9 +85,9 @@ $session = new CHttpSession;
 
                                             <option disabled value='' selected>Please select a tenant agent</option>
                                             <option <?php
-                                if ($model['tenant_agent'] == $value['tenant_agent']) {
-                                    echo " selected ";
-                                }
+                                            if ($model['tenant_agent'] == $value['tenant_agent']) {
+                                                echo " selected ";
+                                            }
                                             ?> value="<?php echo $value['tenant_agent']; ?>"><?php echo $value['name']; ?></option>
                                                 <?php
                                             }
@@ -140,14 +140,23 @@ $session = new CHttpSession;
                     <tr>
                         <td><?php echo $form->labelEx($model, 'timezone_id'); ?></td>
                         <td>
-                            <?php echo $form->dropDownList(
-                                    $model,
-                                    'timezone_id',
-                                    CHtml::listData(Timezone::model()->findAll(),
-                                            'id',
-                                            'timezone_name'),
-                                            array('empty'=>'Please select a timezone')
-                            );?>
+                            <select id="Workstation_timezone_id" name="Workstation[timezone_id]">
+                                <?php
+                                    $timezoneList = Timezone::model()->findAll();
+                                    foreach ($timezoneList as $key => $value) {
+                                        ?>
+                                        <option <?php
+                                        if ($model['timezone_id'] == $value['id']) {
+                                            echo " selected ";
+                                        } elseif($model['timezone_id'] == '' && $value['timezone_value'] == $_SESSION["timezone"]) {
+                                            echo " selected ";
+                                        }
+                                        ?> value="<?php echo $value['id']; ?>"><?php echo $value['timezone_name']; ?></option>
+                                        <?php
+                                    }?>
+                            </select>
+
+
                         </td>
                         <td><?php echo $form->error($model, 'timezone_id',array('style'=>'text-transform:none;')); ?></td>
                     </tr>

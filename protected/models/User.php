@@ -645,11 +645,11 @@ class User extends VmsActiveRecord {
 
         $user = User::model()->findByPK(Yii::app()->user->id);
         if ($user->role == Roles::ROLE_ADMIN) {
-            $criteria->condition = "tenant = " . $session['tenant'] . " AND is_deleted = 0";
+            $criteria->condition = "created_by = " . $session['tenant'] . " AND is_deleted = 0";
         } else if ($user->role == Roles::ROLE_AGENT_ADMIN) {
-            $criteria->condition = "tenant = " . $session['tenant'] . " AND tenant_agent = " . $user->tenant_agent . " AND is_deleted = 0";
+            $criteria->condition = "created_by = " . $session['tenant'] . " AND tenant_agent = " . $user->tenant_agent . " AND is_deleted = 0";
         } else {
-            $criteria->condition = "tenant = '" . $session['tenant'] . "' and (tenant_agent IS NULL or tenant_agent = 0 or tenant_agent = '') AND is_deleted = 0";
+            $criteria->condition = "created_by = '" . $session['tenant'] . "' and (tenant_agent IS NULL or tenant_agent = 0 or tenant_agent = '') AND is_deleted = 0";
         }
 
         $workstation = Workstation::model()->findAll($criteria);

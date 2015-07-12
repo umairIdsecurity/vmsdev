@@ -53,9 +53,15 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'headerHtmlOptions' =>  array('style'=>'width:7px; min-width: 0px !important;'),
         ),
         array(
-            'header' => 'Company',
+            'name' => 'email',
             'filter' => false,
-            'value' => 'isset($data->getCompany()->name) ? $data->getCompany()->name : "NO COMPANY"',
+            'htmlOptions' => array('style'=>'width:7px; min-width: 0px !important;'),
+            'headerHtmlOptions' =>  array('style'=>'width:7px; min-width: 0px !important;'),
+        ),
+        array(
+            'header' => 'ASIC Type',
+            'filter' => false,
+            'value' => 'isset($data->escort_flag) ? "Escort": "Sponsor"',
             'htmlOptions' => array('style'=>'width:7px; min-width: 0px !important;'),
             'headerHtmlOptions' =>  array('style'=>'width:7px; min-width: 0px !important;'),
         ),

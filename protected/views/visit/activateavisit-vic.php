@@ -669,6 +669,14 @@ $asicEscort = new AddAsicEscort();
             }
         });
 
+        $('#btnAsicConfirm').on('click',function(){
+            if ($('#asicEscortRbtn').is(':checked')) {
+                checkEscortEmailUnique();
+            } else {
+                asicCheck();
+            }
+        });
+
         $('#AddAsicEscort_email').on('change',function(){
             $('#AddAsicEscort_email_unique_em_').hide();
         });

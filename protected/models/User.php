@@ -528,10 +528,14 @@ class User extends VmsActiveRecord {
 
     public function findAllCompanyTenant() {
         return Yii::app()->db->createCommand()
-                        ->select('c.id as id, c.name as name, c.id as tenant')
+                        ->select('c.id as id, c.name as name,c.tenant')
+                        ->from('user u')
+                        ->join('company c', 'u.company=c.id')
+                        ->where('u.id=c.tenant and c.id !=1 and u.is_deleted = 0')
+                        /*->select('c.id as id, c.name as name, c.id as tenant')
                         ->from('tenant t')
                         ->join('company c', 't.id = c.id')
-                        ->where('t.is_deleted = 0 and c.is_deleted = 0')
+                        ->where('t.is_deleted = 0 and c.is_deleted = 0')*/
                         ->queryAll();
     }
     

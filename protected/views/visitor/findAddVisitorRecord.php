@@ -453,7 +453,7 @@ $model->identification_country_issued = 13;
                                         $reason = VisitReason::model()->findAllReason();
                                         foreach ($reason as $key => $value) {
                                             ?>
-                                            <option`
+                                            <option
                                                 value="<?php echo $value->id; ?>"><?php echo 'Reason: ' . $value->reason; ?></option>
                                         <?php
                                         }

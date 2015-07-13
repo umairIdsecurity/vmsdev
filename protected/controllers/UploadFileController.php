@@ -25,58 +25,14 @@ class UploadFileController extends Controller
         );
     }
 
-    /**
-     * Specifies the access control rules.
-     * This method is used by the 'accessControl' filter.
-     * @return array access control rules
-     */
-    public function accessRules()
-    {
-        /*$session = new CHttpSession;
-        return array(
-            array(
-                'allow',
-                'actions' => array(
-                    'create',
-                    'GetTenantAgentWithSameTenant',
-                    'GetIdOfUser',
-                    'CheckEmailIfUnique',
-                    'GetTenantAgentAjax',
-                    'GetTenantOrTenantAgentCompany',
-                    'GetTenantWorkstation',
-                    'GetTenantAgentWorkstation',
-                    'getCompanyOfTenant'
-                ),
-                'users' => array('@'),
-            ),
-            array(
-                'allow',
-                'actions' => array('update'),
-                'expression' => 'Yii::app()->controller->isTenantOfUserViewed(Yii::app()->user)',
 
-            ),
-            array(
-                'allow',
-                'actions' => array('profile'),
-                'expression' => '(Yii::app()->user->id == ($_GET[\'id\']))',
-            ),
-            array(
-                'allow',
-                'actions' => array('admin', 'adminAjax', 'delete', 'systemaccessrules', 'importHost'),
-                'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user, UserGroup::USERGROUP_ADMINISTRATION)',
-            ),
-            array(
-                'deny', // deny all users
-                'users' => array('*'),
-            ),
-        );*/
-    }
 
     /**
      * Lists all models.
      */
     public function actionIndex()
     {
+        $menuFolder  = Folder::model()->getAllFoldersOfCurrentUser(Yii::app()->user->id);
         $dataProvider = new CActiveDataProvider('Folder');
 
         $this->render('index', array(

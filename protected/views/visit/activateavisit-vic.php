@@ -372,7 +372,7 @@ $asicEscort = new AddAsicEscort();
 </div>
 
 <!-- ASIC SPONSOR Declarations Modal -->
-<div id="asicSponsorModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="AsicSponsorDeclarations" aria-hidden="true">
+<div id="asicSponsorModal" class="modal hide fade" role="dialog" aria-labelledby="AsicSponsorDeclarations" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         <h3>ASIC Sponsor Declarations</h3>

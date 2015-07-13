@@ -64,7 +64,7 @@ $asicEscort = new AddAsicEscort();
     </tr>
     <tr>
         <td class="vic-col">
-            <input type="checkbox" value="1" name="asicSponsorActiveVisit" class="vic-active-visit vic-active-verification" id="asicSponsorActiveVisitLink"/>
+            <input type="checkbox" disabled value="1" name="asicSponsorActiveVisit" class="vic-active-visit vic-active-verification" id="asicSponsorActiveVisitLink"/>
             <a href="#" style="text-decoration: none !important;">ASIC Sponsor</a>
         </td>
     </tr>
@@ -108,6 +108,8 @@ $asicEscort = new AddAsicEscort();
             if (!strtotime($model->date_check_in) || $model->date_check_out == '0000-00-00') {
                 $model->date_check_in = date('d-m-Y');
             }
+
+            $model->date_check_in = date('d-m-Y', strtotime($model->date_check_in));
 
             if (in_array($model->visit_status, [VisitStatus::SAVED, VisitStatus::CLOSED, VisitStatus::AUTOCLOSED]) && !in_array($model->card_type, [CardType::VIC_CARD_MANUAL])) {
                 $model->date_check_in = date('d-m-Y');
@@ -365,12 +367,12 @@ $asicEscort = new AddAsicEscort();
         </table>
     </div>
     <div class="modal-footer">
-        <button type="button" onClick="vicCheck()" class="btn btn-primary" id="btnVicConfirm">Confirm</button>
+        <button type="button" onClick="vicCheck(true)" class="btn btn-primary" id="btnVicConfirm">Confirm</button>
     </div>
 </div>
 
 <!-- ASIC SPONSOR Declarations Modal -->
-<div id="asicSponsorModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="AsicSponsorDeclarations" aria-hidden="true">
+<div id="asicSponsorModal" class="modal hide fade" role="dialog" aria-labelledby="AsicSponsorDeclarations" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         <h3>ASIC Sponsor Declarations</h3>
@@ -457,18 +459,20 @@ $asicEscort = new AddAsicEscort();
         }
     }
 
-    function vicCheck() {
+    function vicCheck(validate) {
         var checknum = $('#vicHolderModal').find('input[type="checkbox"]').filter(':checked');
         if (checknum.length == 2) {
             vicHolderDeclarationChange();
             return true;
         } else {
-            alert('Please select all the declarations.');
+            if (validate == true) {
+                alert('Please select all the declarations.');
+            }
             return false;
         }
     }
 
-    function asicCheck() {
+    function asicCheck(validate) {
         var checknum = $('#asicSponsorModal')
             .find('input[type="checkbox"]')
             .filter(':checked');
@@ -570,61 +574,6 @@ $asicEscort = new AddAsicEscort();
         return noError;
     }
 
-    $(document).on('click', '#identificationChkBoxNo', function(e) {console.log(isExpired());
-        if (isExpired()) {
-            $('#identificationNotExpired').hide();
-            $('#identificationExpired').show();
-        } else {
-            $('#identificationExpired').hide();
-            $('#identificationNotExpired').show();
-        }
-    });
-
-    $(document).on('click', '#identificationChkBoxYes', function(e) {
-        $('#identificationExpired').hide();
-        $('#identificationNotExpired').hide();
-    });
-
-    $(document).on('click', '#btnIdentificationConfirm', function(e) {
-        var isChecked = $('input[name="identification"]').filter(':checked');
-        if (isChecked.length == 0) {
-            alert('Please select an option.');
-            return false;
-        }
-
-        if ($('#identificationChkBoxYes').is(':checked')) {
-            $('#identificationModal').modal('hide');
-            $('input[name="identificationActiveVisit"]').prop('checked', true);
-        } else {
-            updateIdentificationDetails();
-        }
-    });
-
-    function updateIdentificationDetails() {
-
-        if (isExpired()) {
-            var data = $("#identification_expired_form").serialize();
-        } else {
-            var data = $("#identification_not_expired_form").serialize();
-        }
-
-        var ajaxOpts = {
-            url: "<?php echo Yii::app()->createUrl('visitor/updateIdentificationDetails&id='.$visitorModel->id); ?>",
-            type: 'POST',
-            dataType: 'json',
-            data: data,
-            success: function (r) {
-                if (r == 1) {
-                    $('#identificationModal').modal('hide');
-                    $('input[name="identificationActiveVisit"]').prop('checked', true);
-                }
-            }
-        };
-
-        $.ajax(ajaxOpts);
-        return false;
-    }
-
     function isExpired() {
         var dt = new Date();
         var dd = dt.getDate();
@@ -634,6 +583,15 @@ $asicEscort = new AddAsicEscort();
         var today = Date.parse(yyyy+'-'+mm+'-'+dd);
         return document_expiry_date <= today;
     }
+
+    function activeVisit() {
+        var status = "<?php echo $model->visit_status; ?>";
+        if (status == "<?php echo VisitStatus::SAVED; ?>" || status == "<?php echo VisitStatus::PREREGISTERED; ?>") {
+            checkIfActiveVisitConflictsWithAnotherVisit();
+        } else {
+            checkIfActiveVisitConflictsWithAnotherVisit('new');
+        }
+    }   
 
     $(document).ready(function(){
         $('#asicDecalarationRbtn1').on('click',function(){
@@ -674,7 +632,12 @@ $asicEscort = new AddAsicEscort();
                 checkEscortEmailUnique();
             } else {
                 if (asicCheck()) {
-                    $('#identificationModal').modal('show');
+                    if (!$('input[name="identificationActiveVisit"]').is(':checked')) {
+                        $('#identificationModal').modal('show');
+                    } else if ($('#VicHolderDecalarations').is(':checked')) {
+                        activeVisit();   
+                        return false;
+                    }
                 } else {
                     return false;
                 }

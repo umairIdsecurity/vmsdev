@@ -89,6 +89,7 @@ return CMap::mergeArray(
                 'urlFormat' => 'path',
                 'rules' => array(
                     'authorization/<action:\w+>'             => 'api/authorization/<action>',
+					'custom/<action:\w+>'             => 'api/custom/<action>',
                     'companies'                 => 'api/companies/index',
                     'companies/<id:\d+>'        => 'api/companies/index',
                     'companies/<action:\w+>'        => 'api/companies/search',

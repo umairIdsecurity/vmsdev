@@ -383,6 +383,19 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
         });
 
         $(document).on('click', '#registerNewVisit', function (e) {
+            e.preventDefault();
+            $this = $(this);
+
+            var pre_issued_card_no = $("#pre_issued_card_no").val();
+            if (typeof pre_issued_card_no != "undefined") {
+                if (pre_issued_card_no == "") {
+                    $("#card_number_required").show();
+                    return false;
+                } else {
+                    $("#card_number_required").hide();
+                }
+            }
+
             var imgsrc;
             $("#photoPreview").each(function() {
                 imgsrc = this.src;
@@ -408,12 +421,14 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                 <?php endif; ?>
             }
 
-            e.preventDefault();
-            $this = $(this);
-
             if ($this.val() == 'backdate') {
                 // Close a visit if card type is manual and operator select check in date less then current date
                 closeVisit();
+                return false;
+            }
+
+            if ($this.val() == 'preregister') {
+                activeVisit();
                 return false;
             }
 
@@ -439,21 +454,31 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             var declarations_checkboxs = $('.vic-active-declarations');
             var confirmed = isCheckboxsChecked(declarations_checkboxs);
 
-            if (!confirmed && $this.val() !== 'preregister') {
+            if (!confirmed) {
                 if (!$('#VicHolderDecalarations').is(':checked') && $('#AsicSponsorDecalarations').is(':checked')) {
                     $('#vicHolderModal').modal('show');
                     $btnVic.on('click', function(e) {
-                        $('#identificationModal').modal('show');
+                        if (!$('input[name="identificationActiveVisit"]').is(':checked')) {
+                            $('#identificationModal').modal('show');
+                        } else {
+                            activeVisit();
+                            return false;
+                        }
                     });
                 } else if (!$('#AsicSponsorDecalarations').is(':checked') && $('#VicHolderDecalarations').is(':checked')){
                     $('#asicSponsorModal').modal('show');
                     $btnASIC.on('click', function(e) {
-                        $('#identificationModal').modal('show');
+                        if (!$('input[name="identificationActiveVisit"]').is(':checked')) {
+                            $('#identificationModal').modal('show');
+                        } else {
+                            activeVisit();
+                            return false;
+                        }
                     });
                 } else {
                     $('#vicHolderModal').modal('show');
                     $btnVic.on('click', function(e) {
-                        var vicChecked = vicCheck();
+                        var vicChecked = vicCheck(false);
                         if (vicChecked) {
                             $('#asicSponsorModal').modal('show');
                         } else {
@@ -462,34 +487,74 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                     });
                 }
             } else {
-                confirmed = true;
+                activeVisit();
+                return false;
+            }
+        });
+
+
+        $(document).on('click', '#identificationChkBoxNo', function(e) {
+            if (isExpired()) {
+                $('#identificationNotExpired').hide();
+                $('#identificationExpired').show();
+            } else {
+                $('#identificationExpired').hide();
+                $('#identificationNotExpired').show();
+            }
+        });
+
+        $(document).on('click', '#identificationChkBoxYes', function(e) {
+            $('#identificationExpired').hide();
+            $('#identificationNotExpired').hide();
+        });
+
+        $(document).on('click', '#btnIdentificationConfirm', function(e) {
+            var isChecked = $('input[name="identification"]').filter(':checked');
+            if (isChecked.length == 0) {
+                alert('Please select an option.');
+                return false;
             }
 
-            if (confirmed == true) {
-
-                if ($this.val() == 'preregister') {
-                    flag = true;
-                } else {
-                    flag = isCheckboxsChecked(vic_active_visit_checkboxs);
+            if ($('#identificationChkBoxYes').is(':checked')) {
+                $('#identificationModal').modal('hide');
+                $('input[name="identificationActiveVisit"]').prop('checked', true);
+                if ($('#VicHolderDecalarations').is(':checked') && $('#asicSponsorActiveVisitLink').is(':checked')) {
+                    activeVisit();
+                    return false;
                 }
-                
-                if (flag == true) {
-                    var pre_issued_card_no = $("#pre_issued_card_no").val();
-                    if (typeof pre_issued_card_no != "undefined") {
-                        if (pre_issued_card_no == "") {
-                            $("#card_number_required").show();
+            } else {
+                updateIdentificationDetails();
+            }
+        });
+
+        function updateIdentificationDetails() {
+
+            if (isExpired()) {
+                var data = $("#identification_expired_form").serialize();
+            } else {
+                var data = $("#identification_not_expired_form").serialize();
+            }
+
+            var ajaxOpts = {
+                url: "<?php echo Yii::app()->createUrl('visitor/updateIdentificationDetails&id='.$visitorModel->id); ?>",
+                type: 'POST',
+                dataType: 'json',
+                data: data,
+                success: function (r) {
+                    if (r == 1) {
+                        $('#identificationModal').modal('hide');
+                        $('input[name="identificationActiveVisit"]').prop('checked', true);
+                        if ($('#VicHolderDecalarations').is(':checked') && $('#asicSponsorActiveVisitLink').is(':checked')) {
+                            activeVisit();
                             return false;
-                        } else {
-                            $("#card_number_required").hide();
                         }
                     }
-                    activeVisit();
-                } else {
-                    $('#identificationModal').modal('show');
                 }
-            }
+            };
 
-        });
+            $.ajax(ajaxOpts);
+            return false;
+        }
 
         function isCheckboxsChecked(checkboxs) {
             var flag = true;
@@ -513,22 +578,27 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             });
         }
 
-        function activeVisit() {
+        /*function activeVisit() {
             var status = "<?php echo $model->visit_status; ?>";
             if (status == "<?php echo VisitStatus::SAVED; ?>" || status == "<?php echo VisitStatus::PREREGISTERED; ?>") {
                 checkIfActiveVisitConflictsWithAnotherVisit();
             } else {
                 checkIfActiveVisitConflictsWithAnotherVisit('new');
             }
-        }
+        }*/
 
         function closeVisit() {
             var data = $('#activate-a-visit-form').serialize();
-            var url = "<?php echo Yii::app()->createUrl('visit/closeVisit&id='.$model->id); ?>";
-            $.post(url, {data: data}, function(r) {
-                if (r == 1) {
-                    window.location.reload();
-                }   
+            var url = "<?php echo Yii::app()->createUrl('visit/duplicateVisit&id='.$model->id . '&type=backdate'); ?>";
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: data,
+                success: function(id) {
+                    if (typeof id != 'undefined' && !isNaN(id)) {
+                        window.location = "index.php?r=visit/detail&id=" + id;
+                    }
+                }
             });
         }
 

@@ -940,33 +940,38 @@ class VisitController extends Controller {
         return true;
     }
 
-    public function actionDuplicateVisit($id) {
-        $visitService = new VisitServiceImpl();
-        $session = new CHttpSession;
-        $model = $this->loadModel($id); // record that we want to duplicate
-        $model->id = null;
-        $model->visit_status = VisitStatus::SAVED;
-        $model->date_in = '';
-        $model->time_in = '';
-        $model->time_out = '';
-        $model->date_out = '';
-        $model->date_check_in = '';
-        $model->time_check_in = '';
+    public function actionDuplicateVisit($id, $type = '') {
+        $visitService          = new VisitServiceImpl;
+        $session               = new CHttpSession;
+        $model                 = $this->loadModel($id); // record that we want to duplicate
+        $model->id             = null;
+        $model->visit_status   = '';
+        $model->date_in        = '';
+        $model->time_in        = '';
+        $model->time_out       = '';
+        $model->date_out       = '';
+        $model->date_check_in  = '';
+        $model->time_check_in  = '';
         $model->time_check_out = '';
         $model->date_check_out = '';
-        $model->card = NULL;
-        $model->isNewRecord = true;
+        $model->card           = NULL;
+        $model->isNewRecord    = true;
 
-        ///update data from $_POST
-        $model->attributes = $_POST['Visit'];
+        // update data from $_POST
+        $model->attributes     = Yii::app()->request->getPost('Visit');
 
-        //set status to pre-registered
+        // set status to pre-registered
         if (strtotime($model->date_check_in) > strtotime(date('d-m-Y'))) {
             $model->visit_status = VisitStatus::PREREGISTERED;
         }
 
+        // If type not null & is backdate
+        if ($type == 'backdate') {
+            $model->visit_status = VisitStatus::CLOSED;
+        }
+
         //update date checkout in case card 24h
-        if (!empty($model)) {
+        if (!empty($model) && empty($model->date_check_out)) {
             switch ($model->card_type) {
                 case CardType::VIC_CARD_SAMEDATE:
                     $model->date_check_out = date('Y-m-d');
@@ -984,18 +989,21 @@ class VisitController extends Controller {
                     break;
             }
         }
+
         if(isset($_POST['AddAsicEscort'])) {
-            $asicEscort = new Visitor();
-            $visitorService = new VisitorServiceImpl();
-            $asicEscort->attributes = $_POST['AddAsicEscort'];
-            $asicEscort->profile_type = Visitor::PROFILE_TYPE_ASIC;
+            $asicEscort                      = new Visitor;
+            $visitorService                  = new VisitorServiceImpl;
+            $asicEscort->attributes          = Yii::app()->request->getPost('AddAsicEscort');
+            $asicEscort->profile_type        = Visitor::PROFILE_TYPE_ASIC;
             $asicEscort->visitor_card_status = 6;
-            $asicEscort->escort_flag = 1;
-            $asicEscort->date_created = date("Y-m-d H:i:s");
-            $asicEscort->tenant = Yii::app()->user->tenant;
+            $asicEscort->escort_flag         = 1;
+            $asicEscort->date_created        = date("Y-m-d H:i:s");
+            $asicEscort->tenant              = Yii::app()->user->tenant;
+
             if (empty($asicEscort->visitor_workstation)) {
                 $asicEscort->visitor_workstation = $session['workstation'];
             }
+
             if ($result = $visitorService->save($asicEscort, NULL, $session['id'])) {
                 $model->asic_escort = $asicEscort->id;
             } else {
@@ -1004,7 +1012,7 @@ class VisitController extends Controller {
         }
 
         if(isset($_POST['selectedAsicEscort'])){
-            $model->asic_escort = $_POST['selectedAsicEscort'];
+            $model->asic_escort = Yii::app()->request->getPost('selectedAsicEscort');
         }
 
         if ($visitService->save($model, $session['id'])) {
@@ -1039,8 +1047,13 @@ class VisitController extends Controller {
 
     public function actionGetVisitDetailsOfHost($id) {
         $user = User::model()->findAllByPk($id);
-		$photo = Photo::model()->findAllByPk($user[0]->photo);
-		$resultMessage['data'] = $user;
+        $resultMessage['data'] = [];
+
+        if (isset($user[0])) {
+            $photo = Photo::model()->findAllByPk($user[0]->photo);
+            $resultMessage['data'] = $user;
+        }
+
         if (isset($photo[0])) {
             $resultMessage['data']["photo"] = $photo[0];
         }

@@ -91,9 +91,9 @@ if (!$cardTypeWorkstationModel) {
                 dataType: 'json',
                 data: card_type_value,
                 success: function (r) {
-                    var opt = '';
+                    var opt = '<option value ="">select Visitor type</option>';
                     $.each(r, function (index, value) {
-                        opt += '<option value="' + value.id + '">Card Status: ' + value.name + '</option>';
+                        opt += '<option value="' + value.id + '">Visitor Type: ' + value.name + '</option>';
                     });
                     $('#Visitor_visitor_type').html(opt);
                 }

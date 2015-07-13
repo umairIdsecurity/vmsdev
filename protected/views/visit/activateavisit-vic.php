@@ -109,6 +109,8 @@ $asicEscort = new AddAsicEscort();
                 $model->date_check_in = date('d-m-Y');
             }
 
+            $model->date_check_in = date('d-m-Y', strtotime($model->date_check_in));
+
             if (in_array($model->visit_status, [VisitStatus::SAVED, VisitStatus::CLOSED, VisitStatus::AUTOCLOSED]) && !in_array($model->card_type, [CardType::VIC_CARD_MANUAL])) {
                 $model->date_check_in = date('d-m-Y');
             }
@@ -582,8 +584,17 @@ $asicEscort = new AddAsicEscort();
         return document_expiry_date <= today;
     }
 
+    function activeVisit() {
+        var status = "<?php echo $model->visit_status; ?>";
+        if (status == "<?php echo VisitStatus::SAVED; ?>" || status == "<?php echo VisitStatus::PREREGISTERED; ?>") {
+            checkIfActiveVisitConflictsWithAnotherVisit();
+        } else {
+            checkIfActiveVisitConflictsWithAnotherVisit('new');
+        }
+    }   
+
     $(document).ready(function(){
-        /*$('#asicDecalarationRbtn1').on('click',function(){
+        $('#asicDecalarationRbtn1').on('click',function(){
             $(this).prop('checked',true);
             $('#asicEscortRbtn').prop('checked',false);
         });
@@ -623,8 +634,9 @@ $asicEscort = new AddAsicEscort();
                 if (asicCheck()) {
                     if (!$('input[name="identificationActiveVisit"]').is(':checked')) {
                         $('#identificationModal').modal('show');
-                    } else {
-                        
+                    } else if ($('#VicHolderDecalarations').is(':checked')) {
+                        activeVisit();   
+                        return false;
                     }
                 } else {
                     return false;
@@ -641,6 +653,6 @@ $asicEscort = new AddAsicEscort();
 
         $('#btnCloseModalAddCompanyContact').on('click',function(){
             $("#asicSponsorModal").modal("show");
-        });*/
+        });
     });
 </script>

@@ -940,29 +940,34 @@ class VisitController extends Controller {
         return true;
     }
 
-    public function actionDuplicateVisit($id) {
-        $visitService = new VisitServiceImpl();
-        $session = new CHttpSession;
-        $model = $this->loadModel($id); // record that we want to duplicate
-        $model->id = null;
-        $model->visit_status = VisitStatus::SAVED;
-        $model->date_in = '';
-        $model->time_in = '';
-        $model->time_out = '';
-        $model->date_out = '';
-        $model->date_check_in = '';
-        $model->time_check_in = '';
+    public function actionDuplicateVisit($id, $type = '') {
+        $visitService          = new VisitServiceImpl;
+        $session               = new CHttpSession;
+        $model                 = $this->loadModel($id); // record that we want to duplicate
+        $model->id             = null;
+        $model->visit_status   = '';
+        $model->date_in        = '';
+        $model->time_in        = '';
+        $model->time_out       = '';
+        $model->date_out       = '';
+        $model->date_check_in  = '';
+        $model->time_check_in  = '';
         $model->time_check_out = '';
         $model->date_check_out = '';
-        $model->card = NULL;
-        $model->isNewRecord = true;
+        $model->card           = NULL;
+        $model->isNewRecord    = true;
 
-        ///update data from $_POST
-        $model->attributes = $_POST['Visit'];
+        // update data from $_POST
+        $model->attributes     = Yii::app()->request->getPost('Visit');
 
-        //set status to pre-registered
+        // set status to pre-registered
         if (strtotime($model->date_check_in) > strtotime(date('d-m-Y'))) {
             $model->visit_status = VisitStatus::PREREGISTERED;
+        }
+
+        // If type not null & is backdate
+        if ($type == 'backdate') {
+            $model->visit_status = VisitStatus::CLOSED;
         }
 
         //update date checkout in case card 24h

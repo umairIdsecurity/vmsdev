@@ -766,7 +766,7 @@ class VisitorController extends Controller {
         $model = $this->loadModel($id);
         $model->setscenario('updateIdentification');
         if ($model) {
-            $model->attributes = $_POST['Visitor'];
+            $model->attributes = Yii::app()->request->getPost('Visitor');
             if (!$model->save()) {
                 echo 0; Yii::app()->end();
             }

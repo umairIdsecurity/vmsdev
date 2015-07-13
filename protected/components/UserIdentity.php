@@ -29,7 +29,9 @@ class UserIdentity extends CUserIdentity {
             $this->_id = $user->id;
             $this->setState('email', $user->email);
             $this->setState('role', $user->role);
-            $this->setState('tenant', $user->tenant);
+            $this->setState('tenant', ( !is_null($user->tenant) )?$user->tenant:$user->id );
+             $this->setState('allowed_module', $user->allowed_module);
+             
             if ($user->tenant_agent == '') {
                 $this->setState('tenant_agent', '');
             } else {
@@ -41,8 +43,11 @@ class UserIdentity extends CUserIdentity {
             $session['role'] = $user->role;
             $session['company'] = $user->company;
             $session['tenant'] = $user->tenant;
-
             $session['tenant_agent'] = $user->tenant_agent;
+            
+            // Subscription Modules Allowed to view by a Tenant
+            if( !is_null($user->allowed_module) )
+                $session['module_allowed_to_view'] = USER::$allowed_module[$user->allowed_module];
             
             $this->errorCode = self::ERROR_NONE;
         }

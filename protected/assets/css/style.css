@@ -157,6 +157,18 @@ input.pass_option, input.password_option , input.password_requirement{
 }
 
 
+.open-folder a span{
+    height: 38px;
+    line-height: 38px;
+    display: block;
+    padding: 0 10px;
+    color: #666666;
+}
+.glyphicons-folder-open:before {
+    content: "\e118";
+    font-size: 18px;
+    vertical-align: sub;
+}
 
 
 .top_nav .profile a{

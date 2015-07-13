@@ -252,7 +252,13 @@ $session = new CHttpSession;
                             <td colspan="2">
                                 <?php
                                 $criteria = new CDbCriteria();
-                                $criteria->addInCondition("module", array(1,2));
+                                
+                                $module = CHelper::get_allowed_module();
+                                if( $module == "CVMS" || $module == "Both")
+                                    $criteria->addInCondition("module", array(1));
+                                if( $module == "AVMS" || $module == "Both" )
+                                    $criteria->addInCondition("module", array(2));
+                                
                                 echo  $form->checkBoxList(
                                     $model,'card_type',
                                     CHtml::listData(

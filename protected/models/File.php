@@ -46,8 +46,9 @@ class File  extends CActiveRecord
     }
 
 
-    public function getAllFilesFromFolder($folder = 0){
-        if($folder > 0){
+    public function getAllFilesFromFolder($folder = 0,$count = false)
+    {
+        if ($folder > 0) {
             $criteria = new CDbCriteria;
 
             $criteria->compare('id', $this->id, true);
@@ -56,7 +57,7 @@ class File  extends CActiveRecord
             $criteria->addCondition("folder_id ='" . $folder . "'");
 
             $files = $this->findAll($criteria);
-            if($files) return $files;
+            if ($files) return $count?count($files):$files;
         }
         return null;
     }

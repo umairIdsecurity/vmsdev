@@ -76,6 +76,7 @@ class Folder extends CActiveRecord
     /**
      * @param int $id current user login system
      * @return array|null (id,name,number file)
+     * @inheritdoc  array include many level
      */
     public function getAllFoldersOfCurrentUser($id = 0)
     {
@@ -91,7 +92,7 @@ class Folder extends CActiveRecord
         if ($folders) {
             $list = array();
             foreach ($folders as $folder) {
-                $list[$folder->parent_id][] = array('id' => $folder->id, 'name' => $folder->name, 'number_file' => File::model()->getAllFilesFromFolder($folder->id));
+                $list[$folder->parent_id][] = array('id' => $folder->id, 'name' => $folder->name, 'number_file' => File::model()->getAllFilesFromFolder($folder->id,true));
             }
             return $list;
         }

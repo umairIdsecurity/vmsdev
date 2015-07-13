@@ -27,6 +27,7 @@ class Folder extends CActiveRecord
         // class name for the relations automatically generated below.
         return array(
             'userCreate' => array(self::BELONGS_TO, 'User', 'id'),
+            'files' => array(self::HAS_MANY, 'file', 'folder_id'),
         );
     }
 
@@ -92,7 +93,7 @@ class Folder extends CActiveRecord
         if ($folders) {
             $list = array();
             foreach ($folders as $folder) {
-                $list[$folder->parent_id][] = array('id' => $folder->id, 'name' => $folder->name, 'number_file' => File::model()->getAllFilesFromFolder($folder->id,true));
+                $list[$folder->parent_id][] = array('id' => $folder->id, 'name' => $folder->name, 'number_file' => count($folder->files));
             }
             return $list;
         }

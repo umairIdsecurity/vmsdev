@@ -1042,8 +1042,13 @@ class VisitController extends Controller {
 
     public function actionGetVisitDetailsOfHost($id) {
         $user = User::model()->findAllByPk($id);
-		$photo = Photo::model()->findAllByPk($user[0]->photo);
-		$resultMessage['data'] = $user;
+        $resultMessage['data'] = [];
+
+        if (isset($user[0])) {
+            $photo = Photo::model()->findAllByPk($user[0]->photo);
+            $resultMessage['data'] = $user;
+        }
+
         if (isset($photo[0])) {
             $resultMessage['data']["photo"] = $photo[0];
         }

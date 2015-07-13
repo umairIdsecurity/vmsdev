@@ -966,7 +966,7 @@ class VisitController extends Controller {
         }
 
         //update date checkout in case card 24h
-        if (!empty($model)) {
+        if (!empty($model) && empty($model->date_check_out)) {
             switch ($model->card_type) {
                 case CardType::VIC_CARD_SAMEDATE:
                     $model->date_check_out = date('Y-m-d');
@@ -984,18 +984,21 @@ class VisitController extends Controller {
                     break;
             }
         }
+
         if(isset($_POST['AddAsicEscort'])) {
-            $asicEscort = new Visitor();
-            $visitorService = new VisitorServiceImpl();
-            $asicEscort->attributes = $_POST['AddAsicEscort'];
-            $asicEscort->profile_type = Visitor::PROFILE_TYPE_ASIC;
+            $asicEscort                      = new Visitor;
+            $visitorService                  = new VisitorServiceImpl;
+            $asicEscort->attributes          = Yii::app()->request->getPost('AddAsicEscort');
+            $asicEscort->profile_type        = Visitor::PROFILE_TYPE_ASIC;
             $asicEscort->visitor_card_status = 6;
-            $asicEscort->escort_flag = 1;
-            $asicEscort->date_created = date("Y-m-d H:i:s");
-            $asicEscort->tenant = Yii::app()->user->tenant;
+            $asicEscort->escort_flag         = 1;
+            $asicEscort->date_created        = date("Y-m-d H:i:s");
+            $asicEscort->tenant              = Yii::app()->user->tenant;
+
             if (empty($asicEscort->visitor_workstation)) {
                 $asicEscort->visitor_workstation = $session['workstation'];
             }
+
             if ($result = $visitorService->save($asicEscort, NULL, $session['id'])) {
                 $model->asic_escort = $asicEscort->id;
             } else {
@@ -1004,7 +1007,7 @@ class VisitController extends Controller {
         }
 
         if(isset($_POST['selectedAsicEscort'])){
-            $model->asic_escort = $_POST['selectedAsicEscort'];
+            $model->asic_escort = Yii::app()->request->getPost('selectedAsicEscort');
         }
 
         if ($visitService->save($model, $session['id'])) {

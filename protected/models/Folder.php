@@ -74,6 +74,31 @@ class Folder extends CActiveRecord
     }
 
     /**
+     * @param int $id current user login system
+     * @return array|null (id,name,number file)
+     */
+    public function getAllFoldersOfCurrentUser($id = 0)
+    {
+        if ($id == 0) $id = Yii::app()->user->id;
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('id', $this->id, true);
+        $criteria->compare('user_id', $this->user_id, true);
+        $criteria->compare('name', $this->name, true);
+        $criteria->addCondition("user_id ='" . $id . "'");
+
+        $folders = $this->findAll($criteria);
+        if ($folders) {
+            $list = array();
+            foreach ($folders as $folder) {
+                $list[$folder->parent_id][] = array('id' => $folder->id, 'name' => $folder->nam, 'number_file' => File::model()->getAllFilesFromFolder($folder->id));
+            }
+            return $list;
+        }
+        return null;
+    }
+
+    /**
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
      * @param string $className active record class name.

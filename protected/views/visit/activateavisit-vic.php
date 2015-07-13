@@ -365,7 +365,7 @@ $asicEscort = new AddAsicEscort();
         </table>
     </div>
     <div class="modal-footer">
-        <button type="button" onClick="vicCheck()" class="btn btn-primary" id="btnVicConfirm">Confirm</button>
+        <button type="button" onClick="vicCheck(true)" class="btn btn-primary" id="btnVicConfirm">Confirm</button>
     </div>
 </div>
 
@@ -457,18 +457,20 @@ $asicEscort = new AddAsicEscort();
         }
     }
 
-    function vicCheck() {
+    function vicCheck(validate) {
         var checknum = $('#vicHolderModal').find('input[type="checkbox"]').filter(':checked');
         if (checknum.length == 2) {
             vicHolderDeclarationChange();
             return true;
         } else {
-            alert('Please select all the declarations.');
+            if (validate == true) {
+                alert('Please select all the declarations.');
+            }
             return false;
         }
     }
 
-    function asicCheck() {
+    function asicCheck(validate) {
         var checknum = $('#asicSponsorModal')
             .find('input[type="checkbox"]')
             .filter(':checked');

@@ -443,17 +443,21 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                 if (!$('#VicHolderDecalarations').is(':checked') && $('#AsicSponsorDecalarations').is(':checked')) {
                     $('#vicHolderModal').modal('show');
                     $btnVic.on('click', function(e) {
-                        $('#identificationModal').modal('show');
+                        if (!$('input[name="identificationActiveVisit"]').is(':checked')) {
+                            $('#identificationModal').modal('show');
+                        }
                     });
                 } else if (!$('#AsicSponsorDecalarations').is(':checked') && $('#VicHolderDecalarations').is(':checked')){
                     $('#asicSponsorModal').modal('show');
                     $btnASIC.on('click', function(e) {
-                        $('#identificationModal').modal('show');
+                        if (!$('input[name="identificationActiveVisit"]').is(':checked')) {
+                            $('#identificationModal').modal('show');
+                        }
                     });
                 } else {
                     $('#vicHolderModal').modal('show');
                     $btnVic.on('click', function(e) {
-                        var vicChecked = vicCheck();
+                        var vicChecked = vicCheck(false);
                         if (vicChecked) {
                             $('#asicSponsorModal').modal('show');
                         } else {

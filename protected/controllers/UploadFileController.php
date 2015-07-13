@@ -12,7 +12,7 @@ class UploadFileController extends Controller
      * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
      * using two-column layout. See 'protected/views/layouts/column2.php'.
      */
-    public $layout = '//layouts/column2';
+    public $layout = '//layouts/uploadfile';
 
     /**
      * @return array action filters
@@ -24,8 +24,6 @@ class UploadFileController extends Controller
             'postOnly + delete', // we only allow deletion via POST request
         );
     }
-
-
 
     /**
      * Lists all models.

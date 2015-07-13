@@ -1,0 +1,42 @@
+#footer {
+    font-size: 0.8em;
+    text-align: center;
+    border-top: 1px solid #9BD62C;
+    bottom: 0;
+    width: 100%;
+    position: fixed;
+    background-color: white;
+}
+
+#page {
+    margin: 0;
+}
+.top_nav {
+    margin-right: 0 !important;
+}
+.glyphicon-envelope:before {
+    content: "\2709";
+}
+
+nav.navigation ul {
+    margin: 0 10px 0 0;
+}
+
+.left {
+    float: left;
+    width: 180px;
+}
+.right {
+    width: 960px;
+}
+
+
+.file-upload-content {
+    border: 1px solid #DDDDDD;
+    padding: 20px;
+}
+
+ul.folder {
+    list-style: none;
+    margin: 0;
+}

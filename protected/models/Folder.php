@@ -60,9 +60,17 @@ class Folder extends CActiveRecord
         $criteria->compare('user_id', $this->user_id, true);
         $criteria->compare('name', $this->name, true);
 
-        return new CActiveDataProvider($this, array(
+        #if( Yii::app()->user->role == Roles::ROLE_ADMIN )
+            $criteria->addCondition("user_id ='" . Yii::app()->user->id . "'");
+
+        $data =  new CActiveDataProvider($this, array(
             'criteria' => $criteria,
         ));
+
+        $data->setTotalItemCount(count($data->getData()));
+        $data->pagination->setItemCount(count($data->getData()));
+
+        return $data;
     }
 
     /**

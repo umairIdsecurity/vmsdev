@@ -676,7 +676,9 @@ $asicEscort = new AddAsicEscort();
                 checkEscortEmailUnique();
             } else {
                 if (asicCheck()) {
-                    $('#identificationModal').modal('show');
+                    if (!$('input[name="identificationActiveVisit"]').is(':checked')) {
+                        $('#identificationModal').modal('show');
+                    }
                 } else {
                     return false;
                 }

@@ -27,6 +27,7 @@ class Folder extends CActiveRecord
         // class name for the relations automatically generated below.
         return array(
             'userCreate' => array(self::BELONGS_TO, 'User', 'id'),
+            'files' => array(self::HAS_MANY, 'file', 'folder_id'),
         );
     }
 
@@ -60,9 +61,43 @@ class Folder extends CActiveRecord
         $criteria->compare('user_id', $this->user_id, true);
         $criteria->compare('name', $this->name, true);
 
-        return new CActiveDataProvider($this, array(
+        #if( Yii::app()->user->role == Roles::ROLE_ADMIN )
+            $criteria->addCondition("user_id ='" . Yii::app()->user->id . "'");
+
+        $data =  new CActiveDataProvider($this, array(
             'criteria' => $criteria,
         ));
+
+        $data->setTotalItemCount(count($data->getData()));
+        $data->pagination->setItemCount(count($data->getData()));
+
+        return $data;
+    }
+
+    /**
+     * @param int $id current user login system
+     * @return array|null (id,name,number file)
+     * @inheritdoc  array include many level
+     */
+    public function getAllFoldersOfCurrentUser($id = 0)
+    {
+        if ($id == 0) $id = Yii::app()->user->id;
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('id', $this->id, true);
+        $criteria->compare('user_id', $this->user_id, true);
+        $criteria->compare('name', $this->name, true);
+        $criteria->addCondition("user_id ='" . $id . "'");
+
+        $folders = $this->findAll($criteria);
+        if ($folders) {
+            $list = array();
+            foreach ($folders as $folder) {
+                $list[$folder->parent_id][] = array('id' => $folder->id, 'name' => $folder->name, 'number_file' => count($folder->files));
+            }
+            return $list;
+        }
+        return null;
     }
 
     /**

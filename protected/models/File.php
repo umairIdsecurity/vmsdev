@@ -46,6 +46,28 @@ class File  extends CActiveRecord
     }
 
     /**
+     * @param int $folder : folder id
+     * @param bool|false $count : True return number files else return list files
+     * @return File[]|int|array
+     */
+    public function getAllFilesFromFolder($folder = 0, $count = false)
+    {
+        if ($folder > 0) {
+            $criteria = new CDbCriteria;
+
+            $criteria->compare('id', $this->id, true);
+            $criteria->compare('user_id', $this->user_id, true);
+            $criteria->compare('name', $this->name, true);
+            $criteria->addCondition("folder_id ='" . $folder . "'");
+
+            $files = $this->findAll($criteria);
+            if ($files) return $count ? count($files) : $files;
+        }
+        return null;
+    }
+
+
+    /**
      * Retrieves a list of models based on the current search/filter conditions.
      *
      * Typical usecase:

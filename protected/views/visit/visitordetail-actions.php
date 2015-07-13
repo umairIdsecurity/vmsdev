@@ -493,7 +493,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
         });
 
 
-        $(document).on('click', '#identificationChkBoxNo', function(e) {console.log(isExpired());
+        $(document).on('click', '#identificationChkBoxNo', function(e) {
             if (isExpired()) {
                 $('#identificationNotExpired').hide();
                 $('#identificationExpired').show();
@@ -525,67 +525,6 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             } else {
                 updateIdentificationDetails();
             }
-        });
-
-        $('#asicDecalarationRbtn1').on('click',function(){
-            $(this).prop('checked',true);
-            $('#asicEscortRbtn').prop('checked',false);
-        });
-        $('#asicEscortRbtn').on('click',function(){
-            $(this).prop('checked',true);
-            $('#asicDecalarationRbtn1').prop('checked',false);
-        });
-        $('#findEscortBtn').on('click', function(){
-            if($('#search-escort').val() == ''){
-                $('#searchEscortErrorMessage').show();
-                return;
-            } else {
-                $('#searchEscortErrorMessage').hide();
-                $('.searchAsicEscortResult').show();
-                $(this).hide();
-                $('#divMsg').show();
-                $('.add-esic-escort').hide();
-                var searchInfo = $('#search-escort').val();
-                var searchAsicEscortResult = $('.searchAsicEscortResult').empty();
-                $.ajax({
-                    type: "GET",
-                    url: "<?php echo CHtml::normalizeUrl(array("visitor/getAsicEscort")); ?>",
-                    data: {searchInfo :searchInfo},
-                    success: function(data) {
-                        searchAsicEscortResult.append(data);
-                        $('#findEscortBtn' ).show();
-                        $('#divMsg').hide();
-                    }
-                });
-            }
-        });
-
-        $('#btnAsicConfirm').on('click',function(){
-            if ($('#asicEscortRbtn').is(':checked')) {
-                checkEscortEmailUnique();
-            } else {
-                if (asicCheck()) {
-                    if (!$('input[name="identificationActiveVisit"]').is(':checked')) {
-                        $('#identificationModal').modal('show');
-                    } else if ($('#VicHolderDecalarations').is(':checked')) {
-                        activeVisit();   
-                        return false;
-                    }
-                } else {
-                    return false;
-                }
-            }
-        });
-
-        $('#AddAsicEscort_email').on('change',function(){
-            $('#AddAsicEscort_email_unique_em_').hide();
-        });
-        $('#addCompanyLink').on('click',function(){
-            $('#asicSponsorModal').modal('hide');
-        });
-
-        $('#btnCloseModalAddCompanyContact').on('click',function(){
-            $("#asicSponsorModal").modal("show");
         });
 
         function updateIdentificationDetails() {
@@ -639,22 +578,27 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             });
         }
 
-        function activeVisit() {
+        /*function activeVisit() {
             var status = "<?php echo $model->visit_status; ?>";
             if (status == "<?php echo VisitStatus::SAVED; ?>" || status == "<?php echo VisitStatus::PREREGISTERED; ?>") {
                 checkIfActiveVisitConflictsWithAnotherVisit();
             } else {
                 checkIfActiveVisitConflictsWithAnotherVisit('new');
             }
-        }
+        }*/
 
         function closeVisit() {
             var data = $('#activate-a-visit-form').serialize();
-            var url = "<?php echo Yii::app()->createUrl('visit/closeVisit&id='.$model->id); ?>";
-            $.post(url, {data: data}, function(r) {
-                if (r == 1) {
-                    window.location.reload();
-                }   
+            var url = "<?php echo Yii::app()->createUrl('visit/duplicateVisit&id='.$model->id . '&type=backdate'); ?>";
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: data,
+                success: function(id) {
+                    if (typeof id != 'undefined' && !isNaN(id)) {
+                        window.location = "index.php?r=visit/detail&id=" + id;
+                    }
+                }
             });
         }
 

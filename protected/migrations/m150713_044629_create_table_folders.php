@@ -16,6 +16,7 @@ class m150713_044629_create_table_folders extends CDbMigration
 
 	public function safeDown()
 	{
+		$this->dropForeignKey('folders_user_fk', 'folders');
 		$this->dropTable('folders');
 	}
 }

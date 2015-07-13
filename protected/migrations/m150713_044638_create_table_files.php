@@ -18,6 +18,8 @@ class m150713_044638_create_table_files extends CDbMigration
 
 	public function safeDown()
 	{
+		$this->dropForeignKey('files_user_fk', 'files');
+		$this->dropForeignKey('files_folders_fk', 'files');
 		$this->dropTable('files');
 	}
 }

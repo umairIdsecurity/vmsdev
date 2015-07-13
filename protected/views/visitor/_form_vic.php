@@ -672,6 +672,12 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
         $(".workstationRow").show();
         getWorkstation();
 
+        $('#Visitor_identification_document_expiry').datepicker({
+            minDate: '0',
+            maxDate: '+2y +2m',
+            changeYear: true,
+            changeMonth: true
+        });
 
         if($('#Visitor_contact_country').length){
             $('#Visitor_contact_country').change(function(){

@@ -91,7 +91,7 @@ class Folder extends CActiveRecord
         if ($folders) {
             $list = array();
             foreach ($folders as $folder) {
-                $list[$folder->parent_id][] = array('id' => $folder->id, 'name' => $folder->nam, 'number_file' => File::model()->getAllFilesFromFolder($folder->id));
+                $list[$folder->parent_id][] = array('id' => $folder->id, 'name' => $folder->name, 'number_file' => File::model()->getAllFilesFromFolder($folder->id));
             }
             return $list;
         }

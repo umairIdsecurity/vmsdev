@@ -26,10 +26,13 @@ $session = new ChttpSession;
                 </a>
             </li>-->
             <li><a href='<?php echo Yii::app()->createUrl('visitor/addvisitor'); ?>' class="submenu-icon addvisitorprofile"><span>Add Visitor Profile</span></a></li>
-             <li>
-                <!-- <a onclick="addCompany2()" class="addcompanymenu"><span>Add Company</span></a> -->
-                <a href="#addCompanyContactModal" role="button" data-toggle="modal" class="addcompanymenu"><span>Add Company</span></a>
-             </li>
+            <?php  $module = CHelper::get_allowed_module(); 
+                      if ($module != "CVMS") { ?>
+                <li>
+                       <a href="#addCompanyContactModal" role="button" data-toggle="modal" class="addcompanymenu"><span>Add Company</span></a>
+             
+                </li>
+                      <?php } ?>
                         
             
 

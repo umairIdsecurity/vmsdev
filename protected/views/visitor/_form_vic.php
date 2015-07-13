@@ -464,12 +464,14 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 
                                 </td>
                             </tr>
+                            <?php if (!in_array($session['role'], [Roles::ROLE_AIRPORT_OPERATOR, Roles::ROLE_AGENT_AIRPORT_ADMIN, Roles::ROLE_AGENT_AIRPORT_OPERATOR])): ?>
                             <tr>
                                 <td>
                                     <?php echo $form->checkBox($model, 'alternative_identification', array('style' => 'float: left;')); ?>
                                     <label for="Visitor_alternative_identification" class="form-label">Applicant does not have one of the above identifications</label>
                                 </td>
                             </tr>
+                            <?php endif; ?>
                             <tr class="row_document_name_number" style="display:none">
                                 <td>
                                     <?php echo $form->textField($model, 'identification_alternate_document_name1', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Document Name'));

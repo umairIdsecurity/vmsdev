@@ -534,6 +534,7 @@ $model->identification_country_issued = 13;
                                     <input type="text" name="Visitor_u18_identification_document_no" style="" placeholder="Details">
                                 </td>
                             </tr>
+                            <?php if (!in_array($session['role'], [Roles::ROLE_AIRPORT_OPERATOR, Roles::ROLE_AGENT_AIRPORT_ADMIN, Roles::ROLE_AGENT_AIRPORT_OPERATOR])): ?>
                             <tr class="vic-visitor-fields">
                                 <td>
                                     <?php echo $form->checkBox($model, 'alternative_identification', array('style' => 'float: left;')); ?>
@@ -542,6 +543,7 @@ $model->identification_country_issued = 13;
                                     </label>
                                 </td>
                             </tr>
+                            <?php endif; ?>
                             <tr class="row_document_name_number" style="display:none">
                                 <td>
                                     <?php echo $form->textField($model, 'identification_alternate_document_name1', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Document Name'));

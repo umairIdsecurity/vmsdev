@@ -27,7 +27,7 @@ class Folder extends CActiveRecord
         // class name for the relations automatically generated below.
         return array(
             'userCreate' => array(self::BELONGS_TO, 'User', 'id'),
-            'files' => array(self::HAS_MANY, 'file', 'folder_id'),
+            'files' => array(self::HAS_MANY, 'File', 'folder_id'),
         );
     }
 
@@ -79,23 +79,25 @@ class Folder extends CActiveRecord
      * @return array|null (id,name,number file)
      * @inheritdoc  array include many level
      */
-    public function getAllFoldersOfCurrentUser($id = 0)
+    public function getAllFoldersOfCurrentUser($folder_id = 0)
     {
-        if ($id == 0) $id = Yii::app()->user->id;
-        $criteria = new CDbCriteria;
+        if ($folder_id > 0) {
 
-        $criteria->compare('id', $this->id, true);
-        $criteria->compare('user_id', $this->user_id, true);
-        $criteria->compare('name', $this->name, true);
-        $criteria->addCondition("user_id ='" . $id . "'");
+            $criteria = new CDbCriteria;
 
-        $folders = $this->findAll($criteria);
-        if ($folders) {
-            $list = array();
-            foreach ($folders as $folder) {
-                $list[$folder->parent_id][] = array('id' => $folder->id, 'name' => $folder->name, 'number_file' => count($folder->files));
+            $criteria->compare('id', $this->id, true);
+            $criteria->compare('user_id', $this->user_id, true);
+            $criteria->compare('name', $this->name, true);
+            $criteria->addCondition("user_id ='" . $folder_id . "'");
+
+            $folders = $this->findAll($criteria);
+            if ($folders) {
+                $list = array();
+                foreach ($folders as $folder) {
+                    $list[$folder->parent_id][] = array('id' => $folder->id, 'name' => $folder->name, 'number_file' => count($folder->files));
+                }
+                return $list;
             }
-            return $list;
         }
         return null;
     }

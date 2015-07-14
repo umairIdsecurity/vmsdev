@@ -219,10 +219,8 @@ $(document).ready(function () {
             var contact = $('#Visitor_staff_id').val();
             if (typeof contact != 'undefined') {
                 $.ajax({
-                    type: "POST",
-                    url: "<?php echo $this->createUrl('company/getContact') ?>",
+                    url: "<?php echo $this->createUrl('company/getContact&id=') ?>" + contact,
                     dataType: "json",
-                    data: {id:contact},
                     success: function(data) {
                         if (data != 0) {
                             $('#User_id').val(data.id);
@@ -294,6 +292,10 @@ $(document).ready(function () {
 
                     sendReasonForm();
                 } else {
+                    if ($("#hostId").val() != 0 || $("#hostId").val() != '') {
+                        var $sendMail = $("<textarea  name='Visit[sendMail]'>"+'true'+"</textarea>");
+                        $("#register-visit-form").append($sendMail);
+                    }
                     populateVisitFormFields();
                 }
                 $("#searchTextHostErrorMessage").hide();
@@ -369,6 +371,21 @@ $(document).ready(function () {
 );
 
 function closeAndPopulateField(id) {
+    $.ajax({
+        type: "POST",
+        url: "<?php echo $this->createUrl('company/getContact&id=') ?>" + id + "&isCompanyContact=0",
+        dataType: "json",
+        success: function(data) {
+            if (data != 0) {
+                $('#User_id').val(data.id);
+                $('#User_first_name').val(data.first_name);
+                $('#User_last_name').val(data.last_name);
+                $('#User_email').val(data.email);
+                $('#User_contact_number').val(data.contact_number);
+            }
+        }
+    });
+
     $.ajax({
         type: 'POST',
         url: '<?php echo Yii::app()->createUrl('visitor/getVisitorDetails&id='); ?>' + id,
@@ -452,11 +469,22 @@ function preloadHostDetails(hostId) {
         success: function (r) {
             $.each(r.data, function (index, value) {
                 if (index == "photo") {
+
                     $("#Host_photo3").val(value.id);
-                    $(".ajax-upload-dragdrop3").css("background", "url(<?php echo Yii::app()->request->baseUrl."/"; ?>" + value.relative_path + ") no-repeat center top");
+
+                    /*$(".ajax-upload-dragdrop3").css("background", "url(<?php echo Yii::app()->request->baseUrl."/"; ?>" + value.relative_path + ") no-repeat center top");
                     $(".ajax-upload-dragdrop3").css({"background-size": "132px 152px"});
                     logo.src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
-                    document.getElementById('photoCropPreview3').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+                    document.getElementById('photoCropPreview3').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;*/
+
+                    //showing image from DB as saved in DB -- image is not present in folder
+                    var my_db_image = "url(data:image;base64,"+ value.db_image + ")";
+
+                    $(".ajax-upload-dragdrop3").css("background", my_db_image + " no-repeat center top");
+                    $(".ajax-upload-dragdrop3").css({"background-size": "132px 152px" });
+                    logo.src = "data:image;base64,"+ value.db_image;
+                    document.getElementById('photoCropPreview3').src = "data:image;base64,"+ value.db_image;                    
+
                     $("#cropImageBtn3").show();
 
                 }

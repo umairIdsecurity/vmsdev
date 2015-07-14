@@ -122,14 +122,21 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                     'model' => $visitorModel,
                                     'attribute' => 'date_of_birth',
                                     'htmlOptions' => array(
-                                        'size' => '10', // textField size
-                                        'maxlength' => '10', // textField maxlength
+                                        'size'        => '10', // textField size
+                                        'maxlength'   => '10', // textField maxlength
                                         'placeholder' => 'dd-mm-yyyy',
-                                        'readOnly' => 'readOnly',
-                                        'disabled' => 'disabled',
-                                        'style' => $datePickerStyle
+                                        'readOnly'    => 'readOnly',
+                                        'disabled'    => 'disabled',
+                                        'style'       => $datePickerStyle
                                     ),
-                                    'options' => $datePickerOptionAttributes
+                                    'options' => [
+                                        'showOn'          => "button",
+                                        'buttonImage'     => Yii::app()->controller->assetsBase . "/images/calendar.png",
+                                        'buttonImageOnly' => true,
+                                        'dateFormat'      => "dd-mm-yy",
+                                        'changeMonth'     => true,
+                                        'changeYear'      => true
+                                    ]
                                 ));
                                 ?>
 

@@ -61,11 +61,11 @@ $userRole = $session['role'];
         <script  src="<?php echo Yii::app()->controller->assetsBase; ?>/js/jquery.form.js" ></script>
 
         <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-        <script async src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+        <script rel="text/javascript" src="//code.jquery.com/jquery-1.10.2.js"></script>
+        <script rel="text/javascript" async src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
         <title><?php echo CHtml::encode($this->pageTitle); ?></title>
- 
+
     </head>
 
     <body>
@@ -127,6 +127,10 @@ $userRole = $session['role'];
                                 </a>
                             </li>
 
+                            <li class="open-folder">
+                                <a title="Open folder" href="<?php echo Yii::app()->createUrl("/uploadfile/"); ?>"><span class="glyphicon glyphicons-folder-open"></span></a>
+                            </li>
+
                             <li class="help">
                                 <a title="help" href="<?php echo Yii::app()->createUrl("/dashboard/helpdesk"); ?>">
                                     Help
@@ -180,7 +184,7 @@ $userRole = $session['role'];
                             <li class="<?php echo ($session['lastPage'] != 'dashboard' && ($this->action->id == "admin" || ($this->id == 'visit' && $this->action->id != 'view') || $this->id == "user" || $this->id == "visitor" || $this->id == "company" || $this->id == "workstation" || $this->id == "visitReason" || $this->id == "companyLafPreferences")) ? "active" : "" ?>">
                                 <?php if (in_array($session['role'], array(Roles::ROLE_ADMIN,Roles::ROLE_AGENT_ADMIN,Roles::ROLE_SUPERADMIN,Roles::ROLE_AGENT_AIRPORT_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN))) {
                                 ?>
-                                    <a href="<?php echo Yii::app()->createUrl("/user/admin"); ?>">Administration</a>
+                                <a href="<?php echo Yii::app()->createUrl("/user/admin&vms=".strtolower(CHelper::get_allowed_module())); ?>">Administration</a>
                                 <?php }else{ ?>
                                     <p style="width:230px;"></p>
                                 <?php } ?>

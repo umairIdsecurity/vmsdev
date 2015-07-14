@@ -155,7 +155,9 @@ $defaultKey = key($asicCardTypes);
                                              src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png"
                                              style='display:none;'/>
                                     </div>
+                                    
                                     <?php require_once(Yii::app()->basePath . '/draganddrop/host.php'); ?>
+
                                     <div id="photoErrorMessage" class="errorMessage"
                                          style="display:none;  margin-top: 200px;margin-left: 71px !important;position: absolute;">
                                         Please upload a photo.
@@ -335,7 +337,8 @@ $defaultKey = key($asicCardTypes);
                             </tr>
                             <tr class="vic-host-fields">
                                 <td>
-                                    <a onclick="" style="text-decoration: none;" id="requestASICVerify" class="greenBtn">Request verification ASIC Sponsor </a><br>
+                                    <label><input style="margin-top: 1px;" type="checkbox" id="requestVerifyAsicSponsor"/> Request ASIC Sponsor Verification </label>
+<!--                                    <a onclick="" style="text-decoration: none;" id="requestASICVerify" class="greenBtn">Request verification ASIC Sponsor </a><br>-->
                                 </td>
                             </tr>
                         </table>
@@ -442,7 +445,10 @@ $defaultKey = key($asicCardTypes);
                                              src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png"
                                              style='display:none;'/>
                                     </div>
+
+                                    
                                     <?php require_once(Yii::app()->basePath . '/draganddrop/host3.php'); ?>
+
                                     <div id="photoErrorMessage" class="errorMessage"
                                          style="display:none;  margin-top: 200px;margin-left: 71px !important;position: absolute;">
                                         Please upload a photo.
@@ -688,7 +694,7 @@ $defaultKey = key($asicCardTypes);
                     y2: $("#y22").val(),
                     width: $("#width2").val(),
                     height: $("#height2").val(),
-                    imageUrl: $('#photoCropPreview2').attr('src').substring(1, $('#photoCropPreview2').attr('src').length),
+                    //imageUrl: $('#photoCropPreview2').attr('src').substring(1, $('#photoCropPreview2').attr('src').length),
                     photoId: $('#Host_photo').val()
                 },
                 dataType: 'json',
@@ -700,12 +706,23 @@ $defaultKey = key($asicCardTypes);
                         success: function (r) {
 
                             $.each(r.data, function (index, value) {
-                                document.getElementById('photoPreview2').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+                                
+                                /*document.getElementById('photoPreview2').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 document.getElementById('photoCropPreview2').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 $(".ajax-upload-dragdrop2").css("background", "url(<?php echo Yii::app()->request->baseUrl. '/'; ?>" + value.relative_path + ") no-repeat center top");
                                 $(".ajax-upload-dragdrop2").css({
                                     "background-size": "132px 152px"
-                                });
+                                });*/
+
+                                //showing image from DB as saved in DB -- image is not present in folder
+                                var my_db_image = "url(data:image;base64,"+ value.db_image + ")";
+
+                                document.getElementById('photoPreview2').src = "data:image;base64,"+ value.db_image;
+                                document.getElementById('photoCropPreview2').src = "data:image;base64,"+ value.db_image;
+                                $(".ajax-upload-dragdrop2").css("background", my_db_image + " no-repeat center top");
+                                $(".ajax-upload-dragdrop2").css({"background-size": "132px 152px" });
+                            
+
                             });
                         }
                     });
@@ -749,7 +766,7 @@ $defaultKey = key($asicCardTypes);
                     y2: $("#y23").val(),
                     width: $("#width3").val(),
                     height: $("#height3").val(),
-                    imageUrl: $('#photoCropPreview3').attr('src').substring(1, $('#photoCropPreview3').attr('src').length),
+                    //imageUrl: $('#photoCropPreview3').attr('src').substring(1, $('#photoCropPreview3').attr('src').length),
                     photoId: $('#Host_photo3').val()
                 },
                 dataType: 'json',
@@ -761,12 +778,23 @@ $defaultKey = key($asicCardTypes);
                         success: function (r) {
 
                             $.each(r.data, function (index, value) {
-                                document.getElementById('photoPreview3').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+
+                                /*document.getElementById('photoPreview3').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 document.getElementById('photoCropPreview3').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 $(".ajax-upload-dragdrop3").css("background", "url(<?php echo Yii::app()->request->baseUrl. '/'; ?>" + value.relative_path + ") no-repeat center top");
                                 $(".ajax-upload-dragdrop3").css({
                                     "background-size": "132px 152px"
-                                });
+                                });*/
+
+                                //showing image from DB as saved in DB -- image is not present in folder
+                                var my_db_image = "url(data:image;base64,"+ value.db_image + ")";
+
+                                document.getElementById('photoPreview3').src = "data:image;base64,"+ value.db_image;
+                                document.getElementById('photoCropPreview3').src = "data:image;base64,"+ value.db_image;
+                                $(".ajax-upload-dragdrop3").css("background", my_db_image + " no-repeat center top");
+                                $(".ajax-upload-dragdrop3").css({"background-size": "132px 152px" });
+                            
+
                             });
                         }
                     });
@@ -832,7 +860,10 @@ $defaultKey = key($asicCardTypes);
     }
 
     function sendHostForm() {
-
+        if ($('#requestVerifyAsicSponsor').is(':checked') == true) {
+            var $sendMail = $("<textarea  name='Visit[sendMail]'>"+'true'+"</textarea>");
+            $("#register-visit-form").append($sendMail);
+        }
         var hostform = $("#register-host-form").serialize();
 
         if ($("#selectCardDiv input[name=selectCardType]:checked").val() > CONTRACTOR_TYPE) {

@@ -12,6 +12,19 @@
  */
 class Folder extends CActiveRecord
 {
+    public static $DEFAULT_LIST_FOLDERS = array(
+            'Help Documents',
+            'Contracts',
+            'Inbox',
+    );
+
+    public function rules()
+    {
+        return array(
+            array('name, user_id', 'required'),
+        );
+    }
+
     /**
      * @return string the associated database table name
      */
@@ -79,28 +92,83 @@ class Folder extends CActiveRecord
      * @return array|null (id,name,number file)
      * @inheritdoc  array include many level
      */
-    public function getAllFoldersOfCurrentUser($folder_id = 0)
+    public function getAllFoldersOfCurrentUser($user_id = 0)
     {
-        if ($folder_id > 0) {
+        if ($user_id > 0) {
 
             $criteria = new CDbCriteria;
 
             $criteria->compare('id', $this->id, true);
             $criteria->compare('user_id', $this->user_id, true);
             $criteria->compare('name', $this->name, true);
-            $criteria->addCondition("user_id ='" . $folder_id . "'");
+            $criteria->addCondition("user_id ='" . $user_id . "'");
+
+            $criteria->order = 'date_created ASC';
 
             $folders = $this->findAll($criteria);
             if ($folders) {
                 $list = array();
                 foreach ($folders as $folder) {
-                    $list[$folder->parent_id][] = array('id' => $folder->id, 'name' => $folder->name, 'number_file' => count($folder->files));
+                    $list[$folder->parent_id][] = array('default' => $folder->default, 'name' => $folder->name, 'number_file' => count(File::model()->getAllFilesFromFolder($folder,true)));
                 }
                 return $list;
             }
         }
         return null;
     }
+
+    /**
+     * @param $user_id
+     * @return CDbDataReader|mixed|string
+     * return number folder of current user.
+     */
+    public function getNumberFolders($user_id)
+    {
+        $criteria = new CDbCriteria;
+        $criteria->addCondition("user_id ='" . $user_id . "'");
+        $count = $this->count($criteria);
+        return $count;
+    }
+
+    /**
+     * check name folder has exist.
+     * @param $user_id
+     * @param $name
+     */
+    public function checkNameExist($user_id,$name){
+        if($user_id && $name){
+            $criteria = new CDbCriteria;
+            $criteria->addCondition("user_id ='" . $user_id . "'");
+            $criteria->addCondition("name ='" . $name . "'");
+            $folders = $this->findAll($criteria);
+            if($folders){
+                return true;
+            }
+
+        }
+        return false;
+    }
+
+
+    /**
+     * Check and Create default Folder if has yet
+     * @param int $user_id
+     */
+    public function setDefaultFoldersForUser($user_id = 0)
+    {
+        if ($this->getAllFoldersOfCurrentUser($user_id) == null && $user_id != 0) {
+            foreach (Folder::$DEFAULT_LIST_FOLDERS as $name) {
+                $folder = new Folder();
+                $folder->name = $name;
+                $folder->user_id = $user_id;
+                if ($name == 'Help Documents')
+                    $folder->default = 1;
+                $folder->save();
+            }
+
+        }
+    }
+
 
     /**
      * Returns the static model of the specified AR class.

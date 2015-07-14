@@ -13,7 +13,7 @@ class m150713_091436_add_default_folder extends CDbMigration
 
 	public function safeDown()
 	{
-		$this->addColumn('folders', 'default', 'tinyint(2) DEFAULT 0');
+		$this->dropColumn('folders', 'default');
 	}
 
 }

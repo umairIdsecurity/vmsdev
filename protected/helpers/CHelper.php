@@ -127,5 +127,68 @@ class CHelper
         
         return $access;            
     }
+    
+    /**
+     * Check and Return allowed module to view by a tenant. AVMS or CVMS or Both
+     * 
+     * @return string module
+     */
+    public static function get_allowed_module() {
+        
+         $session = new CHttpSession;
+         if( isset($session['module_allowed_to_view']) && !is_null($session['module_allowed_to_view']))
+             
+             return $session['module_allowed_to_view'];
+         
+         else {
+         
+             return "Both"; // AVMS and CVMS
+         }
+          
+    }
+    
+    /**
+     * Get comma seprated link of the Role IDs of CVMS of AVMS users
+     * 
+     * @param string $module Name of the send module
+     * @return string $str comma separated ids
+     */
+    public static function get_comma_separated_role_ids( $module = "CVMS") {
+        
+        $str = 0;
+        if($module == "CVMS")
+        {
+            $str = implode(",", Roles::get_cvms_roles());
+        }
+        if($module == "AVMS")
+        {
+            $str = implode(",", Roles::get_avms_roles());
+        }
+        if($module == "Both")
+        {
+            $array = array_merge(Roles::get_avms_roles(), Roles::get_cvms_roles());
+            $str = implode(",", $array );
+        }
+        
+        return $str;
+    }
+    
+    /**
+     * Module not authorized to view
+     * @param string $module name of the authorized module
+     */
+    
+    public static function check_module_authorization( $module = "CVMS") {
+        
+         $session = new CHttpSession;
+         
+         if( isset($session['module_allowed_to_view']) && $session['module_allowed_to_view'] != $module  && $session['module_allowed_to_view'] != "Both" )
+         {  
+             throw new CHttpException(403,'You are not authorized to view this page');
+         }
+         else {
+             return true;
+         }
+    }
 
 }

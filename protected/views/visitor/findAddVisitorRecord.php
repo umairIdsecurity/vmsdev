@@ -94,7 +94,9 @@ $model->identification_country_issued = 13;
                                              src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png"
                                              style='display:none;'/>
                                     </div>
+
                                     <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
+
                                     <div id="photoErrorMessage" class="errorMessage"
                                          style="display:none;  margin-top: 200px;margin-left: 71px !important;position: absolute;">
                                         Please upload a photo.
@@ -421,14 +423,15 @@ $model->identification_country_issued = 13;
                                     if(Yii::app()->user->role == Roles::ROLE_ADMIN) {
                                         $list = VisitorType::model()->findAll("created_by = :c", [":c" => Yii::app()->user->id]);
                                         echo '<select onchange="showHideHostPatientName(this)" name="Visitor[visitor_type]" id="Visitor_visitor_type">';
-                                        echo CHtml::tag('option',array('value' => ''),'Select Visitor Type',true);
+                                        echo CHtml::tag('option', array('value' => ''), 'Select Visitor Type', true);
                                         foreach( $list as $val ) {
                                             if ( $val->tenant == Yii::app()->user->tenant && $val->is_default_value == '1' ) {
                                                 echo CHtml::tag('option', array('value' => $val->id, 'selected' => 'selected'), CHtml::encode('Visitor Type: '.$val->name), true);
                                             } else {
                                                 echo CHtml::tag('option', array('value' => $val->id), CHtml::encode('Visitor Type: '.$val->name), true);
                                             }
-                                        } echo "</select>";
+                                        } 
+                                        echo "</select>";
                                     } else {
                                         echo $form->dropDownList($model, 'visitor_type',
                                         VisitorType::model()->returnVisitorTypes(null,""), array(
@@ -863,7 +866,7 @@ $model->identification_country_issued = 13;
             $("#search-visitor").val(''); 
         });
 
-        $('#fromDay').on('change', function () {console.log('ok');
+        $('#fromDay').on('change', function () {
             var dt = new Date();
 
             if(dt.getFullYear()< $("#fromYear").val()) {
@@ -957,7 +960,7 @@ $model->identification_country_issued = 13;
                     y2: $("#y2").val(),
                     width: $("#width").val(),
                     height: $("#height").val(),
-                    imageUrl: $('#photoCropPreview').attr('src').substring(1, $('#photoCropPreview').attr('src').length),
+                    //imageUrl: $('#photoCropPreview').attr('src').substring(1, $('#photoCropPreview').attr('src').length),
                     photoId: $('#Visitor_photo').val()
                 },
                 dataType: 'json',
@@ -969,12 +972,24 @@ $model->identification_country_issued = 13;
                         success: function(r) {
 
                             $.each(r.data, function(index, value) {
-                                document.getElementById('photoPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+
+                                /*document.getElementById('photoPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 $(".ajax-upload-dragdrop").css("background", "url(<?php echo Yii::app()->request->baseUrl; ?>" + value.relative_path + ") no-repeat center top");
                                 $(".ajax-upload-dragdrop").css({
                                     "background-size": "132px 152px"
-                                });
+                                });*/
+
+                                //showing image from DB as saved in DB -- image is not present in folder
+                                var my_db_image = "url(data:image;base64,"+ value.db_image + ")";
+
+                                document.getElementById('photoPreview').src = "data:image;base64,"+ value.db_image;
+                                document.getElementById('photoCropPreview').src = "data:image;base64,"+ value.db_image;
+                                $(".ajax-upload-dragdrop").css("background", my_db_image + " no-repeat center top");
+                                $(".ajax-upload-dragdrop").css({"background-size": "132px 152px" });
+                            
+
+
                             });
                         }
                     });

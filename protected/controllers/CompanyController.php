@@ -20,7 +20,8 @@ class CompanyController extends Controller {
         return array(
             array('allow', // allow all users to perform 'GetCompanyList' and 'GetCompanyWithSameTenant' actions
                 'actions' => array('GetCompanyList', 'GetCompanyWithSameTenant', 'create', 'delete', 'addCompanyContact', 'getContacts', 'addContact', 'getContact'),
-                'users' => array('@'),
+                 /* 'users' => array('@'), */
+                'expression' => 'CHelper::check_module_authorization("CVMS")'
             ),
             array('allow', // allow user if same company
                 'actions' => array('update'),
@@ -319,7 +320,9 @@ class CompanyController extends Controller {
         if (isset($_GET['Company'])) {
             $model->attributes = $_GET['Company'];
         }
-
+        
+        // Check whether a login user/tenant allowed to view 
+        CHelper::check_module_authorization("CVMS");
         $this->render('_admin', array('model' => $model,));
     }
 
@@ -448,17 +451,30 @@ class CompanyController extends Controller {
         }
     }
 
-    public function actionGetContact() {
+    public function actionGetContact($id, $isCompanyContact = true) {
         if (Yii::app()->request->isAjaxRequest) {
-            $contact = User::model()->findByPk($_POST['id']);
+            $visitor = Visitor::model()->findByPk($id);
+            if ($isCompanyContact == false) {
+                $contacts = User::model()->findAll("company = " . $visitor->company);
+                if (count($contacts) == 1) {
+                    $companyContact = $contacts[0];
+                } else {
+                    foreach ($contacts as $contact) {
+                        $companyContact = $contact;
+                        break;
+                    }
+                }
+            } else {
+                $companyContact = User::model()->findByPk($id);
+            }
 
-            if ($contact) {
+            if ($companyContact) {
                 $ret = [
-                    'id'             => $contact->id,
-                    'first_name'     => $contact->first_name,
-                    'last_name'      => $contact->last_name,
-                    'contact_number' => $contact->contact_number,
-                    'email'          => $contact->email
+                    'id'             => $companyContact->id,
+                    'first_name'     => $companyContact->first_name,
+                    'last_name'      => $companyContact->last_name,
+                    'contact_number' => $companyContact->contact_number,
+                    'email'          => $companyContact->email
                 ];
                 echo CJavaScript::jsonEncode($ret);
 

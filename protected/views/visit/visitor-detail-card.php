@@ -24,8 +24,17 @@ $photoForm = $this->beginWidget('CActiveForm', [
 <?php $this->endWidget(); ?>
 
 <div class="cardPhotoPreview" style="height:0px; margin-left: 15px;">
-    <?php if ($visitorModel->photo != '') { ?>
-        <img id="photoPreview" src="<?php echo Photo::model()->returnVisitorPhotoRelativePath($model->visitor) ?>">
+    <?php if ($visitorModel->photo != '') { 
+                $data = Photo::model()->returnVisitorPhotoRelativePath($model->visitor);
+                $my_image = '';
+                if(!empty($data['db_image'])){
+                    $my_image = "data:image;base64," . $data['db_image'];
+                }else{
+                    $my_image = $data['relative_path'];
+                }
+        ?>
+
+        <img id="photoPreview" src="<?php echo $my_image; ?>">
     <?php } else { ?>
         <img id="photoPreview" src="" style="display:none;"></img>
     <?php } ?>
@@ -53,6 +62,7 @@ if($model->card_type > CardType::CONTRACTOR_VISITOR) {
 <div id="Visitor_photo_em" class="errorMessage" style="display: none;">Please upload a profile image.</div>
 
 <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
+
 <?php if ($visitorModel->photo != '') : ?>
 <input type="button" class="btn editImageBtn actionForward" id="editImageBtn" style="  margin-bottom: 2px!important;" value="Edit Photo" onclick = "document.getElementById('light').style.display = 'block';
                 document.getElementById('fade').style.display = 'block'"/>
@@ -72,7 +82,7 @@ if($model->card_type > CardType::CONTRACTOR_VISITOR) {
         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo yii::app()->createAbsoluteUrl('cardGenerated/pdfprint', array('id' => $model->id, 'type' => 2)) ?>">Print On Card Printer</a></li>
         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo yii::app()->createAbsoluteUrl('cardGenerated/pdfprint', array('id' => $model->id, 'type' => 3)) ?>">Rewritable Print Card</a></li>
     </ul>
-<?php elseif (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && $model->visit_status == VisitStatus::AUTOCLOSED && $model->finish_date == date('Y-m-d')): ?>
+<?php elseif (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && $model->visit_status == VisitStatus::AUTOCLOSED && date('Y-m-d') == $model->finish_date): ?>
     <button class="complete btn btn-info printCardBtn dropdown-toggle" style="width:205px !important; margin-top: 4px; margin-right: 80px;" type="button" id="menu1" data-toggle="dropdown">Print Card
         <span class="caret pull-right"></span></button>
         <ul class="dropdown-menu" style="left: 62px;" role="menu" aria-labelledby="menu1">
@@ -101,9 +111,22 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
 <input type="hidden" id="dummycardvalue" value="<?php echo $model->card; ?>"/>
 <input type="hidden" id="remaining_day" value="<?php echo $remainingDays; ?>">
 <?php endif; ?>
-<form method="post" id="workstationForm" action="<?php echo Yii::app()->createUrl('visit/detail', array('id' => $model->id)); ?>">
+<?php
+$detailForm = $this->beginWidget('CActiveForm', [
+    'id'          => 'update-visitor-detail-form',
+    'htmlOptions' => ['name' => 'update-visitor-detail-form'],
+    /*'enableAjaxValidation'   => false,
+    'enableClientValidation' => true,
+    'clientOptions'          => [
+        'validateOnSubmit' => true,
+        'afterValidate'    => 'js:function(form, data, hasError){
+            return afterValidate(form, data, hasError);
+        }'
+    ]*/
+]);
+?>
     <div style="margin: 10px 0px 0px 19px; text-align: left;">
-        <?php
+    <?php
         if ($asic) {
             if($visitorModel->profile_type ==  Visitor::PROFILE_TYPE_VIC) {
                 $profileType = Visitor::PROFILE_TYPE_VIC;
@@ -112,7 +135,7 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
                 $profileType = Visitor::PROFILE_TYPE_ASIC;
             }
 
-            echo CHtml::dropDownList('Visitor[visitor_card_status]', $visitorModel->visitor_card_status, Visitor::$VISITOR_CARD_TYPE_LIST[$profileType], ['empty' => 'Select Card Status']);
+            echo $detailForm->dropDownList($visitorModel, 'visitor_card_status', Visitor::$VISITOR_CARD_TYPE_LIST[$profileType], ['empty' => 'Select Card Status']);
                 echo "<br />";
         }
 
@@ -124,20 +147,20 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
         } else {
             $workstationResults = [];
         }
-
-        echo CHtml::dropDownList('Visit[workstation]', $model->workstation, $workstationResults, ['empty' => 'Select Workstation']);
+        echo $detailForm->dropDownList($model, 'workstation', $workstationResults, ['empty' => 'Select Workstation']);
         echo "<span class='required'>*</span>";
-        echo '<div id="Visit_workstation_em_" class="errorMessage" style="display: none">Please select a workstation</div>';
+        echo $detailForm->error($model, 'workstation');
 
         if ($asic) {
-            echo CHtml::dropDownList('Visit[visitor_type]', $model->visitor_type, VisitorType::model()->returnVisitorTypes());
+            echo $detailForm->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes());
             echo "<span class='required'>*</span>";
-            echo '<div id="Visit_visitor_type_em_" class="errorMessage" style="display: none">Please select a Visitor type</div>';
+            echo $detailForm->error($model, 'visitor_type');
+
             $reasons = CHtml::listData(VisitReason::model()->findAll(), 'id', 'reason');
             foreach ($reasons as $key => $item) {
                 $results[$key] = 'Reason: ' . $item;
             }
-            echo CHtml::dropDownList('Visit[reason]', $model->reason, $results);
+            echo $detailForm->dropDownList($model, 'reason', $results);
             echo "<br />";
         }
 
@@ -153,16 +176,15 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
             if (in_array($key, $cardList)) {
                 $cardTypeResults[$key] = 'Card Type: ' . $item;
             }
-        }   
-        echo CHtml::dropDownList('Visit[card_type]', $model->card_type, $cardTypeResults, $cardTypeOptions);
+        }
+        echo $detailForm->dropDownList($model, 'card_type', $cardTypeResults, $cardTypeOptions);
         echo '<br />';
-        //if (in_array($model->visit_status, [VisitStatus::CLOSED])) {
-            echo '<input type="submit" name="updateWorkstationForm" id="updateWorkstationForm" class="complete btnUpdateWorkstationForm"  value="Update">';
-        //}
-        ?>
-        <input type="hidden" id="workstationForm">
+
+    ?>
+        <input type="hidden" name="updateVisitorDetailForm">
+        <button type="submit" name="updateVisitorDetailForm" id="updateVisitorDetailForm" class="greenBtn btnUpdateVisitorDetailForm">Update</button>
     </div>
-</form>
+<?php $this->endWidget(); ?>
 
 <script>
     $(document).ready(function () {
@@ -214,12 +236,12 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
                  return true;
              }
          }
-        $('.btnUpdateWorkstationForm').on('click', function (e) {
+        $('.btnUpdateVisitorDetailForm').on('click', function (e) {
             var checkWorkStation1 = checkWorkstation();
             var checkVisitorType1 = checkVisitorType();
             var checkCardStatus1 = checkCardStatus();
             if( checkCardStatus1 == true && checkVisitorType1 == true && checkWorkStation1 == true) {
-                $('#workstationForm').submit();
+                $('#update-visitor-detail-form').submit();
             } else {
                 return false;
             }
@@ -229,10 +251,10 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
         if (currentCardStatus == 6) {
             $('#Visitor_visitor_card_status').attr("disabled", true);
         }
-<?php if ($asic) { ?>
+        <?php if ($asic) { ?>
             // remove Denied card status
             $("#visitor_card_status option[value='5']").remove();
-<?php } ?>
+        <?php } ?>
 
         if (<?php echo $model->visit_status; ?> == '1' && $("#dummycardvalue").val() == '' && '<?php echo $model->card; ?>' != '') { //1 is active
             $('#printCardBtn').disabled = false;
@@ -269,7 +291,7 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
                     y2: $("#y2").val(),
                     width: $("#width").val(),
                     height: $("#height").val(),
-                    imageUrl: $('#photoCropPreview').attr('src').substring(1, $('#photoCropPreview').attr('src').length),
+                    //imageUrl: $('#photoCropPreview').attr('src').substring(1, $('#photoCropPreview').attr('src').length),
                     photoId: $('#Visitor_photo').val()
                 },
                 dataType: 'json',
@@ -281,8 +303,16 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
                         success: function (r) {
 
                             $.each(r.data, function (index, value) {
-                                document.getElementById('photoPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
-                                document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+
+                                /*document.getElementById('photoPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+                                document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;*/
+
+                                //showing image from DB as saved in DB -- image is not present in folder
+                            
+                                document.getElementById('photoPreview').src = "data:image;base64,"+ value.db_image;
+                                document.getElementById('photoCropPreview').src = "data:image;base64,"+ value.db_image;
+                            
+                            
                             });
                         }
                     });
@@ -299,7 +329,7 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
             ias.cancelSelection();
         });
 
-        /*$(document).on('click', '.btnUpdateWorkstationForm', function(e) {
+        /*$(document).on('click', '.btnUpdateVisitorDetailForm', function(e) {
             e.preventDefault();
             var currentCardStatus = "<?php echo $visitorModel->visitor_card_status; ?>";
             var currentVisitStatus = "<?php echo $model->visit_status ; ?>"
@@ -373,9 +403,19 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
     }
 </script>
 <!--POP UP FOR CROP PHOTO -->
+<?php 
+        $data = Photo::model()->returnVisitorPhotoRelativePath($model->visitor);
+        $my_image = '';
+        if(!empty($data['db_image'])){
+            $my_image = "data:image;base64," . $data['db_image'];
+        }else{
+            $my_image = $data['relative_path'];
+        }
+
+ ?>
 
 <div id="light" class="white_content">
-    <img id="photoCropPreview" width="500px" height="500px" src="<?php echo Photo::model()->returnVisitorPhotoRelativePath($model->visitor) ?>">
+    <img id="photoCropPreview" width="500px" height="500px" src="<?php echo $my_image; ?>">
 
 </div>
 <div id="fade" class="black_overlay">

@@ -46,12 +46,12 @@ class VisitorController extends Controller {
      * Creates a new model. Register and Preregister a visitor page
      */
     public function actionCreate() {
-        $session = new CHttpSession;
-        $model = new Visitor;
-        $userModel = new User();
-        $patientModel = new Patient();
-        $reasonModel = new VisitReason();
-        $visitModel = new Visit();
+        $session      = new CHttpSession;
+        $model        = new Visitor;
+        $userModel    = new User;
+        $patientModel = new Patient;
+        $reasonModel  = new VisitReason;
+        $visitModel   = new Visit;
 
         $visitorService = new VisitorServiceImpl();
         
@@ -106,12 +106,12 @@ class VisitorController extends Controller {
         }
 
         $this->render('create', array(
-            'model' => $model,
-            'userModel' => $userModel,
+            'model'        => $model,
+            'userModel'    => $userModel,
             'patientModel' => $patientModel,
-            'reasonModel' => $reasonModel,
-            'visitModel' => $visitModel,
-	), false, true);
+            'reasonModel'  => $reasonModel,
+            'visitModel'   => $visitModel
+    	), false, true);
     }
 
     /**
@@ -122,7 +122,7 @@ class VisitorController extends Controller {
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
         $profileType        = $model->profile_type;
-        $visitorService     = new VisitorServiceImpl();
+        $visitorService     = new VisitorServiceImpl;
         $session            = new CHttpSession;
         $updateErrorMessage = '';
         // if view value is 1 do not redirect page else redirect to admin
@@ -172,7 +172,7 @@ class VisitorController extends Controller {
                 } else {
                     echo $updateErrorMessage;
                 }
-            } elseif (isset($visitorParams) && isset($visitorParams['visitor_card_status']) &&  $visitorParams['visitor_card_status'] == Visitor::ASIC_ISSUED && $model->profile_type == Visitor::PROFILE_TYPE_VIC  ){
+            } elseif (isset($visitorParams['visitor_card_status']) &&  $visitorParams['visitor_card_status'] == Visitor::ASIC_ISSUED && $model->profile_type == Visitor::PROFILE_TYPE_VIC  ){
                 $model->attributes = $visitorParams;
                 $model->profile_type = Visitor::PROFILE_TYPE_ASIC;
                 $model->visitor_card_status = Visitor::ASIC_ISSUED;
@@ -249,8 +249,14 @@ class VisitorController extends Controller {
 
         if (Yii::app()->request->getParam('vms')) {
             if (CHelper::is_avms_visitor()) {
+                
+                //Check whether a login user/tenant allowed to view 
+                CHelper::check_module_authorization("AVMS");
                 $model = $model->avms_visitor();
             } else {
+                
+                //Check whether a login user/tenant allowed to view 
+                CHelper::check_module_authorization("CVMS");
                 $model = $model->cvms_visitor();
             }
         }
@@ -455,23 +461,56 @@ class VisitorController extends Controller {
         }
         $jpeg_quality = 90;
 
-        $src = $_REQUEST['imageUrl'];
+        //for my localhost directory
+        //$path = "E:/installed/xampp/htdocs/vmspro/vms/uploads/visitor";
+
+        //for accessing server files
+        $path = Yii::getPathOfAlias('webroot') . "/uploads/visitor";
+
+        $photo = Photo::model()->findByPk($_REQUEST['photoId']);
+        $photoAttr = $photo->attributes;
+
+        $db_image_contents = $photoAttr['db_image'];
+        $db_image_name = $photoAttr['unique_filename'];
+
+
+        $file = fopen($path."/".$db_image_name,"w");
+        fwrite($file, base64_decode($db_image_contents));
+        fclose($file);
+
+        //option 2 (one liner)
+        //file_put_contents($path."/".$db_image_name, base64_decode($db_image_contents));
+
+        $src = $path."/".$db_image_name;        
         $img_r = imageCreateFromAny($src);
+
         $dst_r = imagecreatetruecolor(200, 200);
         $usernameHash = hash('adler32', "visitor");
         $uniqueFileName = 'visitor' . $usernameHash . '-' . time() . ".png";
         imagecopyresampled($dst_r, $img_r, 0, 0, $_REQUEST['x1'], $_REQUEST['y1'], 200, 200, $_REQUEST['width'], $_REQUEST['height']);
-        if (file_exists($src)) {
-            unlink($src);
-        }
+        
+
         header('Content-type: image/jpeg');
         imagejpeg($dst_r, "uploads/visitor/" . $uniqueFileName, $jpeg_quality);
 
+        $uploadedFile = "uploads/visitor/" . $uniqueFileName;
+        $file=file_get_contents($uploadedFile);
+        $image = base64_encode($file);
 
         Photo::model()->updateByPk($_REQUEST['photoId'], array(
             'unique_filename' => $uniqueFileName,
             'relative_path' => "uploads/visitor/" . $uniqueFileName,
+            'db_image' => $image,
         ));
+
+        
+        if (file_exists($src)) {
+            unlink($src);
+        }
+
+        if (file_exists($uploadedFile)) {
+            unlink($uploadedFile);
+        }
 
 
         exit;

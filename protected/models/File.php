@@ -10,6 +10,8 @@
  * @property string $name
  * @property string $uploaded
  * @property string $size
+ * @property string $uploader
+ * @property string $ext
  */
 class File  extends CActiveRecord
 {
@@ -27,7 +29,7 @@ class File  extends CActiveRecord
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'userUpload' => array(self::BELONGS_TO, 'User', 'id'),
+            'userUpload' => array(self::BELONGS_TO  , 'User', 'id'),
             'folder' => array(self::BELONGS_TO, 'Folder', 'id'),
         );
     }
@@ -39,9 +41,10 @@ class File  extends CActiveRecord
         return array(
             'id' => 'ID',
             'file' => 'File',
-            'upload' => 'Uploaded',
+            'uploaded' => 'Uploaded',
             'size' => 'Size',
-            'upload_by' => 'Uploaded by'
+            'uploader' => 'Uploaded by',
+            'userUpload' => 'User',
         );
     }
 
@@ -52,13 +55,20 @@ class File  extends CActiveRecord
      */
     public function getAllFilesFromFolder($folder = 0, $count = false)
     {
-        if ($folder > 0) {
+        if ($folder) {
             $criteria = new CDbCriteria;
 
             $criteria->compare('id', $this->id, true);
             $criteria->compare('user_id', $this->user_id, true);
-            $criteria->compare('name', $this->name, true);
-            $criteria->addCondition("folder_id ='" . $folder . "'");
+            $criteria->compare('name', $this->file, true);
+            if ($folder->name != 'Help Documents')
+                $criteria->addCondition("folder_id ='" . $folder->id . "'");
+            else {
+                $criteria->addCondition("folder_id ='" . $folder->id . "'", 'OR');
+                $criteria->addCondition("folder_id ='0'",'OR');
+            }
+
+            $criteria->order = 'uploaded DESC';
 
             $files = $this->findAll($criteria);
             if ($files) return $count ? count($files) : $files;
@@ -90,6 +100,12 @@ class File  extends CActiveRecord
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
         ));
+    }
+
+    public function getNameUser($user_id){
+        $user = User::model()->findByPk($user_id);
+        if($user) return $user->first_name .' '.$user->last_name;
+        return '';
     }
 
     /**

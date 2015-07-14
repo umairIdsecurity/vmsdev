@@ -446,6 +446,7 @@ $defaultKey = key($asicCardTypes);
                                              style='display:none;'/>
                                     </div>
 
+                                    
                                     <?php require_once(Yii::app()->basePath . '/draganddrop/host3.php'); ?>
 
                                     <div id="photoErrorMessage" class="errorMessage"
@@ -693,7 +694,7 @@ $defaultKey = key($asicCardTypes);
                     y2: $("#y22").val(),
                     width: $("#width2").val(),
                     height: $("#height2").val(),
-                    imageUrl: $('#photoCropPreview2').attr('src').substring(1, $('#photoCropPreview2').attr('src').length),
+                    //imageUrl: $('#photoCropPreview2').attr('src').substring(1, $('#photoCropPreview2').attr('src').length),
                     photoId: $('#Host_photo').val()
                 },
                 dataType: 'json',

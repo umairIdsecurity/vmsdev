@@ -150,6 +150,8 @@ class CHelper
     /**
      * Get comma seprated link of the Role IDs of CVMS of AVMS users
      * 
+     * @param string $module Name of the send module
+     * @return string $str comma separated ids
      */
     public static function get_comma_separated_role_ids( $module = "CVMS") {
         
@@ -169,6 +171,24 @@ class CHelper
         }
         
         return $str;
+    }
+    
+    /**
+     * Module not authorized to view
+     * @param string $module name of the authorized module
+     */
+    
+    public static function check_module_authorization( $module = "CVMS") {
+        
+         $session = new CHttpSession;
+         
+         if( isset($session['module_allowed_to_view']) && $session['module_allowed_to_view'] != $module  && $session['module_allowed_to_view'] != "Both" )
+         {  
+             throw new CHttpException(403,'You are not authorized to view this page');
+         }
+         else {
+             return true;
+         }
     }
 
 }

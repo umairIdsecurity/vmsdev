@@ -136,6 +136,17 @@ class VisitController extends Controller {
 
 
             if ($visitService->save($model, $session['id'])) {
+                if(isset($_POST['Visit']['sendMail']) && $_POST['Visit']['sendMail'] == 'true' ){
+                    $visitor = Visitor::model()->findByPk($model->visitor);
+                    $host = Visitor::model()->findByPk($model->host);
+                    $mail = new YiiMailMessage;
+                    $mail->from = 'notify.vms@gmail.com';
+                    $mail->addTo($host->email);
+                    $mail->subject = 'Request for verification of VIC profile ';
+                    $param = 'test';
+                    $mail->setBody($param, 'text/html');
+                    Yii::app()->mail->send($mail);
+                }
                 $this->redirect(array('visit/detail', 'id' => $model->id));
             }
         }
@@ -162,6 +173,7 @@ class VisitController extends Controller {
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['Visit'])) {
+            $oldhost = $model->host;
             $visitParams = Yii::app()->request->getPost('Visit');
             $model->attributes = $visitParams;
 
@@ -217,7 +229,19 @@ class VisitController extends Controller {
                 if ($model->card_lost_declaration_file != null) {
                     $model->card_lost_declaration_file->saveAs(YiiBase::getPathOfAlias('webroot') . '/uploads/card_lost_declaration/'.$model->card_lost_declaration_file->name);
                 }
-
+                if($oldhost != $model->host){
+                    if(isset($_POST['Visit']['sendMail']) && $_POST['Visit']['sendMail'] == 'true' ){
+                        $visitor = Visitor::model()->findByPk($model->visitor);
+                        $host = Visitor::model()->findByPk($model->host);
+                        $mail = new YiiMailMessage;
+                        $mail->from = 'notify.vms@gmail.com';
+                        $mail->addTo($host->email);
+                        $mail->subject = 'Request for verification of VIC profile ';
+                        $param = 'test';
+                        $mail->setBody($param, 'text/html');
+                        Yii::app()->mail->send($mail);
+                    }
+                }
                 $this->redirect(array('visit/detail', 'id' => $id));
             }
         }
@@ -259,7 +283,9 @@ class VisitController extends Controller {
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['Visit']))
             $model->attributes = $_GET['Visit'];
-
+         
+        //Check whether a login user/tenant allowed to view 
+        CHelper::check_module_authorization("Admin");
         $this->renderPartial('_admin', array(
             'model' => $model,
                 ), false, true);

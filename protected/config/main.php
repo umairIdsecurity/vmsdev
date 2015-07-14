@@ -46,7 +46,9 @@ $result = CMap::mergeArray(
                 'application.service.impl.*',
                 'application.service.*',
                 'application.helpers.*',
-                'application.extensions.*'
+                'application.extensions.*',
+                'application.extensions.yii-mail.YiiMailMessage',
+
             ),
             'modules' => array(
                 // uncomment the following to enable the Gii tool
@@ -68,7 +70,18 @@ $result = CMap::mergeArray(
                   'autoStart'=>false
                   ),
                  */
-
+                'mail'=>array(
+                    'class' => 'ext.yii-mail.YiiMail',
+                    'transportType' => 'smtp',
+                    'transportOptions' => array(
+                        'host' => 'smtp.gmail.com',
+                        'username' => 'notify.vms@gmail.com',
+                        'password' => 'vms12345',
+                        'port' => '465',
+                        'encryption'=>'tls',
+                    ),
+                    'viewPath' => 'application.views.mail',
+                ),
                 'ePdf' => array(
                     'class' => 'ext.yii-pdf.EYiiPdf',
                     'params' => array(

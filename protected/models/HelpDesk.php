@@ -95,9 +95,15 @@ class HelpDesk extends CActiveRecord {
         $criteria->compare('answer', $this->answer, true);
         $criteria->compare('helpdesk_group_id', $this->helpdesk_group_id, true);
         $criteria->compare('created_by', $this->created_by);
-		$criteria->compare('order_by', $this->order_by, true);
+	$criteria->compare('order_by', $this->order_by, true);
         $criteria->compare('is_deleted', $this->is_deleted);
         
+        $module = CHelper::get_allowed_module();        
+        if( $module == "CVMS" )
+           $criteria->addCondition ('helpdesk_group_id IN (4, 6)');
+        if( $module == "AVMS" )
+           $criteria->addCondition ('helpdesk_group_id IN (2, 5, 7)');
+            
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'sort' => array(

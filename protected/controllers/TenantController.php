@@ -20,7 +20,8 @@ class TenantController extends Controller {
         return array(
             array('allow', // allow all users to perform 'GetCompanyList' and 'GetCompanyWithSameTenant' actions
                 'actions' => array('GetCompanyList', 'GetCompanyWithSameTenant', 'create', 'delete'),
-                'users' => array('@'),
+                /* 'users' => array('@'),*/
+                'expression' => 'CHelper::check_module_authorization("Admin")'
             ),
             array('allow', // allow user if same company
                 'actions' => array('update'),
@@ -223,7 +224,7 @@ class TenantController extends Controller {
         $model->scenario = "updatetenant";
                        
         if(isset($_POST['Company'])){
-            print_r($_POST['Company']);
+            //print_r($_POST['Company']);
             $model->attributes = $_POST['Company'];
             $model->office_number = $_POST['Company']['mobile_number'];
             $model->contact = $_POST['Company']['mobile_number'];
@@ -291,6 +292,8 @@ class TenantController extends Controller {
         if (isset($_GET['Tenant']))
             $model->attributes = $_GET['Tenant'];
 
+        //Check whether a login user/tenant allowed to view 
+         CHelper::check_module_authorization("Admin");
         $this->render('_admin', array(
             'model' => $model,
         ), false, true);

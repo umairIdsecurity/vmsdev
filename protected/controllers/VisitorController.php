@@ -249,8 +249,14 @@ class VisitorController extends Controller {
 
         if (Yii::app()->request->getParam('vms')) {
             if (CHelper::is_avms_visitor()) {
+                
+                //Check whether a login user/tenant allowed to view 
+                CHelper::check_module_authorization("AVMS");
                 $model = $model->avms_visitor();
             } else {
+                
+                //Check whether a login user/tenant allowed to view 
+                CHelper::check_module_authorization("CVMS");
                 $model = $model->cvms_visitor();
             }
         }

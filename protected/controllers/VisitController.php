@@ -259,7 +259,9 @@ class VisitController extends Controller {
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['Visit']))
             $model->attributes = $_GET['Visit'];
-
+         
+        //Check whether a login user/tenant allowed to view 
+        CHelper::check_module_authorization("Admin");
         $this->renderPartial('_admin', array(
             'model' => $model,
                 ), false, true);

@@ -4,7 +4,7 @@
 // Yii::setPathOfAlias('local','path/to/local-folder');
 Yii::setPathOfAlias('bootstrap', dirname(__FILE__) . '/../extensions/bootstrap');
 Yii::setPathOfAlias('helpers','helpers');
-if (strpos($_SERVER['SERVER_NAME'],'vmsuitest-win') !== false || strpos($_SERVER['SERVER_NAME'],'dev') !== false) {
+if (strpos($_SERVER['SERVER_NAME'],'vmsuitest-win') !== false) {
     $dbDriver = 'mssql';
     $userTbl = '"user"';
 } else {

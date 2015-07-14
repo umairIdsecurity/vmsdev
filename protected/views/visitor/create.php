@@ -219,10 +219,8 @@ $(document).ready(function () {
             var contact = $('#Visitor_staff_id').val();
             if (typeof contact != 'undefined') {
                 $.ajax({
-                    type: "POST",
-                    url: "<?php echo $this->createUrl('company/getContact') ?>",
+                    url: "<?php echo $this->createUrl('company/getContact&id=') ?>" + contact,
                     dataType: "json",
-                    data: {id:contact},
                     success: function(data) {
                         if (data != 0) {
                             $('#User_id').val(data.id);
@@ -373,6 +371,21 @@ $(document).ready(function () {
 );
 
 function closeAndPopulateField(id) {
+    $.ajax({
+        type: "POST",
+        url: "<?php echo $this->createUrl('company/getContact&id=') ?>" + id + "&isCompanyContact=0",
+        dataType: "json",
+        success: function(data) {
+            if (data != 0) {
+                $('#User_id').val(data.id);
+                $('#User_first_name').val(data.first_name);
+                $('#User_last_name').val(data.last_name);
+                $('#User_email').val(data.email);
+                $('#User_contact_number').val(data.contact_number);
+            }
+        }
+    });
+
     $.ajax({
         type: 'POST',
         url: '<?php echo Yii::app()->createUrl('visitor/getVisitorDetails&id='); ?>' + id,

@@ -455,23 +455,56 @@ class VisitorController extends Controller {
         }
         $jpeg_quality = 90;
 
-        $src = $_REQUEST['imageUrl'];
+        //for my localhost directory
+        $path = "E:/installed/xampp/htdocs/vmspro/vms/uploads/visitor";
+
+        //for accessing server files
+        //$path = Yii::getPathOfAlias('webroot') . "/uploads/visitor";
+
+        $photo = Photo::model()->findByPk($_REQUEST['photoId']);
+        $photoAttr = $photo->attributes;
+
+        $db_image_contents = $photoAttr['db_image'];
+        $db_image_name = $photoAttr['unique_filename'];
+
+
+        $file = fopen($path."/".$db_image_name,"w");
+        fwrite($file, base64_decode($db_image_contents));
+        fclose($file);
+
+        //option 2 (one liner)
+        //file_put_contents($path."/".$db_image_name, base64_decode($db_image_contents));
+
+        $src = $path."/".$db_image_name;        
         $img_r = imageCreateFromAny($src);
+
         $dst_r = imagecreatetruecolor(200, 200);
         $usernameHash = hash('adler32', "visitor");
         $uniqueFileName = 'visitor' . $usernameHash . '-' . time() . ".png";
         imagecopyresampled($dst_r, $img_r, 0, 0, $_REQUEST['x1'], $_REQUEST['y1'], 200, 200, $_REQUEST['width'], $_REQUEST['height']);
-        if (file_exists($src)) {
-            unlink($src);
-        }
+        
+
         header('Content-type: image/jpeg');
         imagejpeg($dst_r, "uploads/visitor/" . $uniqueFileName, $jpeg_quality);
 
+        $uploadedFile = "uploads/visitor/" . $uniqueFileName;
+        $file=file_get_contents($uploadedFile);
+        $image = base64_encode($file);
 
         Photo::model()->updateByPk($_REQUEST['photoId'], array(
             'unique_filename' => $uniqueFileName,
             'relative_path' => "uploads/visitor/" . $uniqueFileName,
+            'db_image' => $image,
         ));
+
+        
+        if (file_exists($src)) {
+            unlink($src);
+        }
+
+        if (file_exists($uploadedFile)) {
+            unlink($uploadedFile);
+        }
 
 
         exit;

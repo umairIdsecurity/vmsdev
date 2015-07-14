@@ -14,6 +14,8 @@
  */
 class Photo extends CActiveRecord {
 
+    public $db_image;
+
     /**
      * @return string the associated database table name
      */
@@ -34,6 +36,11 @@ class Photo extends CActiveRecord {
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, filename, unique_filename, relative_path', 'safe', 'on' => 'search'),
+
+            /*array('db_image', 'safe'),
+              array('db_image', 'file', 'types' => 'jpg,jpeg,png', 'allowEmpty' => true),*/
+
+            array('db_image', 'file', 'types' => 'jpg,jpeg,png', 'allowEmpty'=>FALSE,'maxSize' => 1024 * 1024 * 2, 'tooLarge' => 'Size should be less then 2MB !!!', 'on' => 'upload'),
         );
     }
 
@@ -98,24 +105,43 @@ class Photo extends CActiveRecord {
     }
 
     public function getRelativePathOfPhoto($photoId) {
-        $relativePath = Photo::model()->findByPK($photoId);
+        $imageAttr = Photo::model()->findByPK($photoId);
         
         $aArray = array();
             $aArray[] = array(
-                'relative_path' => $relativePath->relative_path,
+                'relative_path' => $imageAttr->relative_path,
+                'db_image' => $imageAttr->db_image,
             );
         
         return $aArray;
     }
 
     public function returnVisitorPhotoRelativePath($visitorId) {
-        $visitor = Visitor::model()->findByPK($visitorId);
+        /*$visitor = Visitor::model()->findByPK($visitorId);
         if ($visitor->photo != '') {
             $photo = Photo::model()->findByPK($visitor->photo);
             if(file_exists($photo->relative_path)){
                 return Yii::app()->getBaseUrl(true)."/".$photo->relative_path;
             }else{
                 return $this->defaultImage();
+            }
+            
+        }*/
+        $visitor = Visitor::model()->findByPK($visitorId);
+        if ($visitor->photo != '') {
+            $photo = Photo::model()->findByPK($visitor->photo);
+            if(!empty($photo->db_image)){
+                 $aArray = array(
+                    'relative_path' => '',
+                    'db_image' => $photo->db_image,
+                );
+                return $aArray;
+            }else{
+                $aArray = array(
+                    'relative_path' => $this->defaultImage(),
+                    'db_image' => '',
+                );
+                return $aArray;
             }
             
         }
@@ -222,7 +248,4 @@ class Photo extends CActiveRecord {
                 'application.components.behaviors.AuditTrailBehaviors',
         );
     }
-    
-   
-
 }

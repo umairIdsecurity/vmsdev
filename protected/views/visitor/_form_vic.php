@@ -122,35 +122,63 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                                 <table>
                                     <input type="hidden" id="Visitor_photo" name="Visitor[photo]"
                                            value="<?php echo $model['photo']; ?>">
-                                    <?php if ($model['photo'] != NULL) { ?>
+                                    
+                                    <?php if ($model['photo'] != NULL) {
+                                        $data = Photo::model()->returnVisitorPhotoRelativePath($dataId);
+                                        $my_image = '';
+                                        if(!empty($data['db_image'])){
+                                            $my_image = "url(data:image;base64," . $data['db_image'] . ")";
+                                        }else{
+                                            $my_image = "url(" .$data['relative_path'] . ")";
+                                        }
+                                        
+                                     ?>
                                         <style>
                                             .ajax-upload-dragdrop {
-                                                background: url('<?php echo Photo::model()->returnVisitorPhotoRelativePath($dataId) ?>') no-repeat center top;
+                                                background: <?php echo $my_image ?> no-repeat center top !important;
                                                 background-size: 137px 190px !important;
                                             }
                                         </style>
                                     <?php }
                                     ?>
+
                                     <br>
+                                    
                                     <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
+                                    
+
                                     <div class="photoDiv" style="display:none;">
-                                        <?php if ($dataId != '' && $model['photo'] != NULL) { ?>
+                                        <?php if ($dataId != '' && $model['photo'] != NULL) {
+                                            $data = Photo::model()->returnVisitorPhotoRelativePath($dataId);
+                                            $my_image = '';
+                                            if(!empty($data['db_image'])){
+                                                $my_image = "data:image;base64," . $data['db_image'];
+                                            }else{
+                                                $my_image = $data['relative_path'];
+                                            }
+                                         ?>
                                             <img id='photoPreview'
-                                                 src="<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($dataId) ?>"
+                                                 src = "<?php echo $my_image ?>"
                                                  style='display:block;height:174px;width:133px;'/>
-                                        <?php } elseif ($model['photo'] == NULL) { ?>
+                                        <?php } elseif ($model['photo'] == NULL) {
+                                            ?>
+
                                             <img id='photoPreview'
                                                  src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png"
                                                  style='display:block;height:174px;width:133px;'/>
+
                                         <?php } else { ?>
-                                            <img id='photoPreview' src="<?php
-                                            if ($this->action->id == 'update' && $model->photo != '') {
-                                                echo Yii::app()->request->baseUrl . "/" . Company::model()->getPhotoRelativePath($model->photo);
-                                            }
-                                            ?>
-                                             " style='display:none;'/>
+
+                                            <img id='photoPreview' src="data:image;base64,<?php
+                                                if ($this->action->id == 'update' && $model->photo != '') {
+                                                    echo Company::model()->getPhotoRelativePath($model->photo);
+                                                }
+                                                ?>
+                                                " style='display:none;'/>
+
                                         <?php } ?>
                                     </div>
+
                                     </td>
                                     </tr>
                                 </table>
@@ -836,7 +864,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                     y2: $("#y2").val(),
                     width: $("#width").val(),
                     height: $("#height").val(),
-                    imageUrl: $('#photoPreview').attr('src').substring(1, $('#photoPreview').attr('src').length),
+                    //imageUrl: $('#photoPreview').attr('src').substring(1, $('#photoPreview').attr('src').length),
                     photoId: $('#Visitor_photo').val()
                 },
                 dataType: 'json',
@@ -847,11 +875,23 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                         dataType: 'json',
                         success: function (r) {
                             $.each(r.data, function (index, value) {
-                                document.getElementById('photoPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+                                /*document.getElementById('photoPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 $(".ajax-upload-dragdrop").css("background", "url(" + value.relative_path + ") no-repeat center top");
-                                $(".ajax-upload-dragdrop").css({"background-size": "132px 152px"});
+                                $(".ajax-upload-dragdrop").css({"background-size": "132px 152px"});*/
+
+                                //showing image from DB as saved in DB -- image is not present in folder
+                                var my_db_image = "url(data:image;base64,"+ value.db_image + ")";
+
+                                document.getElementById('photoPreview').src = "data:image;base64,"+ value.db_image;
+                                document.getElementById('photoCropPreview').src = "data:image;base64,"+ value.db_image;
+                                $(".ajax-upload-dragdrop").css("background", my_db_image + " no-repeat center top");
+                                $(".ajax-upload-dragdrop").css({"background-size": "132px 152px" });
+                            
+                                
                             });
+
+
                             $("#closeCropPhoto").click();
                             var ias = $('#photoCropPreview').imgAreaSelect({instance: true});
                             ias.cancelSelection();
@@ -1200,13 +1240,21 @@ $this->widget('bootstrap.widgets.TbButton', array(
 
 </div>
 <!-- PHOTO CROP-->
-
 <div id="light" class="white_content">
     <?php if ($this->action->id == 'addvisitor') { ?>
         <img id="photoCropPreview" src="">
-    <?php } elseif ($this->action->id == 'update') { ?>
+    <?php } elseif ($this->action->id == 'update') {
+                $data = Photo::model()->returnVisitorPhotoRelativePath($model->id);
+                $my_image = '';
+                if(!empty($data['db_image'])){
+                    $my_image = "data:image;base64," . $data['db_image'];
+                }else{
+                    $my_image = $data['relative_path'];
+                }
+     ?>
+
         <img id="photoCropPreview"
-             src="<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($model->id) ?>">
+            src = "<?php echo $my_image ?>" >
     <?php } ?>
 </div>
 

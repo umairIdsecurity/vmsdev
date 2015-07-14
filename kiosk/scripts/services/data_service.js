@@ -36,7 +36,7 @@ angular.module('kiosk.DataService', [])
         $http.post(url, params).success(onSuccess).error(onFailure);
       },
       getCardType: function(onSuccess, onFailure) {
-        var url = this.baseURL + '/custom/cardtype';alert(this.authToken);
+        var url = this.baseURL + '/custom/cardtype';
 		var params = { email: this.adminEmail, workstation: this.workstation}; 
 		$http.defaults.headers.common['HTTP_X_VMS_TOKEN'] = this.authToken;
         $http.post(url, params).success(onSuccess).error(onFailure);

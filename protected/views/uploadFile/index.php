@@ -25,7 +25,7 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th  width="50px"></th>
+                    <th width="60">Select All</th>
                     <th>File</th>
                     <th>Size</th>
                     <th>Uploaded</th>

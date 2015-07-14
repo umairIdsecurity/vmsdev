@@ -335,7 +335,8 @@ $defaultKey = key($asicCardTypes);
                             </tr>
                             <tr class="vic-host-fields">
                                 <td>
-                                    <a onclick="" style="text-decoration: none;" id="requestASICVerify" class="greenBtn">Request verification ASIC Sponsor </a><br>
+                                    <label><input style="margin-top: 1px;" type="checkbox" id="requestVerifyAsicSponsor"/> Request ASIC Sponsor Verification </label>
+<!--                                    <a onclick="" style="text-decoration: none;" id="requestASICVerify" class="greenBtn">Request verification ASIC Sponsor </a><br>-->
                                 </td>
                             </tr>
                         </table>
@@ -832,7 +833,10 @@ $defaultKey = key($asicCardTypes);
     }
 
     function sendHostForm() {
-
+        if ($('#requestVerifyAsicSponsor').is(':checked') == true) {
+            var $sendMail = $("<textarea  name='Visit[sendMail]'>"+'true'+"</textarea>");
+            $("#register-visit-form").append($sendMail);
+        }
         var hostform = $("#register-host-form").serialize();
 
         if ($("#selectCardDiv input[name=selectCardType]:checked").val() > CONTRACTOR_TYPE) {

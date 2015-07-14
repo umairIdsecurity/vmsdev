@@ -2,7 +2,7 @@
     <div class="left">
         <ul class="folder">
             <?php
-            foreach ($menuFolder[0] as $folder) {
+            foreach ($menuFolder as $folder) {
                 echo '<li ';
                 if (isset($f)) {
                     if ($f == $folder['name']) echo 'class="active"';

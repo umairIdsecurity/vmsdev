@@ -30,11 +30,30 @@ class UploadFileController extends Controller
      */
     public function actionIndex()
     {
-        $menuFolder  = Folder::model()->getAllFoldersOfCurrentUser(Yii::app()->user->id);
-        $dataProvider = new CActiveDataProvider('Folder');
+        //Create default folders for user until exist.
+        Folder::model()->setDefaultFoldersForUser(Yii::app()->user->id);
 
+        //get All Folders of user
+        $menuFolder  = Folder::model()->getAllFoldersOfCurrentUser(Yii::app()->user->id);
+
+        //render view
         $this->render('index', array(
-            'dataProvider' => $dataProvider,
+            'menuFolder' => $menuFolder,
+            'folder' => Yii::app()->request->getParam('f')
         ));
+    }
+
+    public function actionCreate(){
+        if ($_POST['Folder']) {
+            //Check Folder has exist
+            if(!Folder::model()->checkNameExist($_POST['Folder']['user_id'])){
+                $folder = new Folder();
+                $folder->name = $_POST['Folder']['name'];
+                $folder->user_id = $_POST['Folder']['user_id'];
+                if($folder->validate())
+                    if($folder->save()) CJSON::encode(array('success'=>1));
+            }
+        }
+        CJSON::encode(array('success'=>0));
     }
 }

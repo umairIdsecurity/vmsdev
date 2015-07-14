@@ -5,9 +5,9 @@ class m150713_044629_create_table_folders extends CDbMigration
 	public function safeUp()
 	{
 		$this->createTable('folders', array(
-			'id' => 'BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY',
-			'parent_id' => 'BIGINT(20) NOT NULL DEFAULT 0',
-			'user_id' => 'BIGINT(20) NOT NULL DEFAULT 0',
+			'id' => 'BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY',
+			'parent_id' => 'BIGINT NOT NULL DEFAULT 0',
+			'user_id' => 'BIGINT NOT NULL DEFAULT 0',
 			'name' => 'varchar(255) NOT NULL',
 			'date_created' => 'timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP',
 		));

@@ -30,16 +30,46 @@ class UploadFileController extends Controller
      */
     public function actionIndex()
     {
+        $folderName = Yii::app()->request->getParam('f');
+
         //Create default folders for user until exist.
         Folder::model()->setDefaultFoldersForUser(Yii::app()->user->id);
 
         //get All Folders of user
         $menuFolder  = Folder::model()->getAllFoldersOfCurrentUser(Yii::app()->user->id);
 
+        $folder = null;
+        if(isset($folderName)){
+            $fltemp = Folder::model()->findAll("name = '$folderName' and user_id = '".Yii::app()->user->id."'");
+            if($fltemp) $folder = $fltemp[0];
+        }else{
+            $fltemp = Folder::model()->findAll("`default` = 1 and user_id = '".Yii::app()->user->id."'");
+            if($fltemp) $folder = $fltemp[0];
+            $folderName = $folder->name;
+        }
+
+        $model = new File();
+        $criteria = new CDbCriteria();
+        $criteria->compare('id', $model->id, true);
+        $criteria->compare('folder_id', $model->folder_id, true);
+        $criteria->compare('file', $model->file, true);
+        if ($folder->name != 'Help Documents')
+            $criteria->addCondition("folder_id ='" . $folder->id . "'");
+        else {
+            $criteria->addCondition("folder_id ='" . $folder->id . "'", 'OR');
+            $criteria->addCondition("folder_id ='0'",'OR');
+        }
+        $criteria->order = 'uploaded DESC';
+
+        $dataProvider = new CActiveDataProvider($model, array(
+            'criteria' => $criteria,
+        ));
+
         //render view
         $this->render('index', array(
+            'dataProvider' => $dataProvider,
             'menuFolder' => $menuFolder,
-            'f' => Yii::app()->request->getParam('f')
+            'f' => $folderName,
         ));
     }
 
@@ -61,5 +91,20 @@ class UploadFileController extends Controller
             }
         }
         echo CJSON::encode(array('success'=>2,'error'=>'Invalid request'));
+    }
+
+    public function actionDelete(){
+        if (isset($_POST['File'])) {
+            if(is_array($_POST['File']['id'])){
+                foreach($_POST['File']['id'] as $fi){
+                    $file = File::model()->findByPk($fi);
+                    if($file) $file->delete();
+                }
+                echo CJSON::encode(array('success'=>1));
+                exit();
+            }
+            echo CJSON::encode(array('success'=>2,'error'=>'Invalid Request.'));
+        }
+
     }
 }

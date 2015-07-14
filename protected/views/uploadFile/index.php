@@ -9,7 +9,7 @@
                 } else {
                     if ($folder['default'] == 1) echo 'class="active"';
                 }
-                echo '><a href="' . Yii::app()->createUrl("/uploadfile&f=" . $folder['name']) . '">' . $folder['name'] . '<span>(' . $folder['number_file'] . ')</span></a></li>';
+                echo '><a href="' . Yii::app()->createUrl("/uploadfile&f=" . $folder['name']) . '">' . $folder['name'] . ' <span>(' . $folder['number_file'] . ')</span></a></li>';
             }
             ?>
         </ul>
@@ -18,11 +18,118 @@
     </div>
     <div class="right">
         <h2><?php if(isset($f)) echo $f; else echo 'Help Documents'; ?></h2>
+        <div id="file_grid_error" class="errorMessage" style="text-transform: none;margin-top: 20px; height: 30px ;display:none">Couldn't delete files.</div>
         <div class="upload-function">
             <button class="btn btn-default btn-upload">Upload Files</button>
-            <button class="btn btn-default btn-delete">Delete</button>
+            <button class="btn btn-default btn-delete" id="btn_delete_file" disabled>Delete</button>
         </div>
-        <table class="table">
+        <form id="list_file" method="post" />
+        <input value="<?php echo Yii::app()->user->id; ?>" type="hidden" name="File[user_id]">
+        <?php
+$this->widget('zii.widgets.grid.CGridView', array(
+    'id' => 'file-grid',
+    'dataProvider' => $dataProvider ,
+    //'filter' => File::model(),
+    'afterAjaxUpdate' => "
+    function(id, data) {
+        $('th > .asc').append('<div></div>');
+        $('th > .desc').append('<div></div>');
+    }",
+    'htmlOptions' => array('class' => 'table'),
+    'columns' => array(
+        array(
+            'header' => '<input type="checkbox" id="check_file_all" />',
+            'value'=>'CHtml::checkBox("File[id][".$data->id."]",null,array("value"=>$data->id,"id"=>"File[".$data->id."]"))',
+            'type' => 'raw',
+            'htmlOptions' => array('style'=>'width:20px !important;'),
+            'headerHtmlOptions' => array('style'=>'min-width:0px !important;'),
+        ),
+
+        array(
+            'name' => 'file',
+            'filter' => false,
+        ),
+        array(
+            'name' => 'size',
+            'filter' => false,
+            'htmlOptions' => array('style'=>'max-width:20px !important;'),
+            'headerHtmlOptions' => array('style'=>'max-width:20px !important;'),
+        ),
+        array(
+            'name' => 'uploaded',
+            'filter' => false,
+        ),
+        array(
+            'header' => 'Uploaded by',
+            'name' => 'uploader',
+            'value' => '$data->getNameUser($data->uploader)',
+            'filter' => false,
+            'headerHtmlOptions' => array('style'=>'display:block'),
+        ),
+
+        array(
+            'class' => 'CButtonColumn',
+            'template' => '{view}',
+            'buttons' => array(
+                'view' => array(//the name {reply} must be same
+                    'label' => 'View', // text label of the button
+                    'imageUrl' => false, // image URL of the button. If not set or false, a text link is used, The image must be 16X16 pixels
+                    'url' => 'Yii::app()->createUrl("uploadfile/file", array("file"=>$data->file))',
+                    'options' => array('target' => '_new'),
+                ),
+                /*'delete' => array(//the name {reply} must be same
+                    'label' => 'Delete', // text label of the button
+                    'imageUrl' => false, // image URL of the button. If not set or false, a text link is used, The image must be 16X16 pixels
+                    'url' => 'Yii::app()->controller->createUrl("visitor/delete",array("id"=>$data->id))',
+                    'options' => array(// this is the 'html' array but we specify the 'ajax' element
+                        'confirm' => "Are you sure you want to delete this item?",
+                        'ajax' => array(
+                            'type' => 'POST',
+                            'url' => "js:$(this).attr('href')", // ajax post will use 'url' specified above
+                            'success' => 'function(data){
+
+                                                if(data == "true"){
+                                                    $.fn.yiiGridView.update("visitor-grid");
+                                                    return false;
+                                                }else{
+                                                    var urlAddress = this.url;
+                                                    var urlAddressId = urlAddress.split("=");
+                                                    var x;
+                                                    if($("#visitorExists1"+  urlAddressId["2"]).val() == 1){
+                                                        alert("This record has an open visit and must be cancelled before deleting.");
+                                                        return false;
+                                                    } else if($("#visitorExists2"+  urlAddressId["2"]).val() == 1){
+                                                        if (confirm("This Visitor Record has visit data recorded. Do you wish to delete this visitor record and its visit history?") == true) {
+                                                            $.ajax({
+                                                                type: "POST",
+                                                                url: "'. Yii::app()->createUrl('visit/deleteAllVisitWithSameVisitorId&id=') .'" +urlAddressId["2"] ,
+                                                                success: function(r) {
+                                                                    $.fn.yiiGridView.update("visitor-grid");
+                                                                    return false;
+                                                                }
+                                                            });
+                                                        }
+                                                        return false;
+                                                    }
+
+
+                                                }
+                                            }',
+                        ),
+                    ),
+
+                ),*/
+            ),
+        ),
+    ),
+));
+        ?>
+</form>
+
+
+
+        <!--<table class="table">
+
             <thead>
                 <tr>
                     <th width="60">Select All</th>
@@ -197,7 +304,7 @@
                     <td> <a href="#">View</a></td>
                 </tr>
             </tbody>
-        </table>
+        </table>-->
     </div>
     <div class="clearfix"></div>
 </div>
@@ -234,7 +341,6 @@
     $(document).ready(function(){
         $('#btn-newfolder').click(function(){
             if(validateNameFolder($('#nameFolder').val())){
-                //$('#Folder_name').fadeOut();
                 $.ajax({
                     type: 'POST',
                     url: '<?php echo Yii::app()->createUrl('uploadfile/create'); ?>',
@@ -277,6 +383,62 @@
             $('#Folder_name').fadeOut();
             return true;
         }
+
+        $('#check_file_all').bind('click', function (event) {
+
+            var
+                ref = this,
+                refChecked = this.checked;
+
+            $(this.form).find('input[type="checkbox"]').each(function (i, el) {
+                if (this != ref) {
+                    this.checked = refChecked;
+                    if (this.checked)
+                        $('#btn_delete_file').removeAttr("disabled");
+                    else
+                        $('#btn_delete_file').attr("disabled", true);
+                }
+            });
+
+        });
+
+        $("#list_file").find('input[type="checkbox"]').each(function (i, el) {
+            if ($(this).attr('id') != 'check_file_all') {
+                $(this).change(function () {
+                    $('#check_file_all').prop('checked', false);
+                    var canDisable = true;
+                    $(this.form).find('input[type="checkbox"]').each(function (i, el) {
+                        if (this.checked)
+                            canDisable = false;
+                    });
+                    $('#btn_delete_file').attr("disabled", canDisable);
+                });
+            }
+            if (!$(this).is(':checked')) {
+                $('#btn_delete_file').attr("disabled", true);
+            }
+        });
+
+        $('#btn_delete_file').click(function () {
+            $.ajax({
+                type: 'POST',
+                url: '<?php echo Yii::app()->createUrl('uploadfile/delete'); ?>',
+                //dataType: 'text',
+                data: $('#list_file').serialize(),
+                success: function (r) {
+                    r = JSON.parse(r);
+                    if (r.success != 1) {
+                        $('#file_grid_error').html(r.error);
+                        $('#file_grid_error').fadeIn();
+                    } else {
+                        $('#file_grid_error').fadeOut();
+                        $.fn.yiiGridView.update("file-grid");
+                    }
+                }
+            });
+        });
+
+
     });
 
 </script>

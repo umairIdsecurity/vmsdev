@@ -46,12 +46,12 @@ class VisitorController extends Controller {
      * Creates a new model. Register and Preregister a visitor page
      */
     public function actionCreate() {
-        $session = new CHttpSession;
-        $model = new Visitor;
-        $userModel = new User();
-        $patientModel = new Patient();
-        $reasonModel = new VisitReason();
-        $visitModel = new Visit();
+        $session      = new CHttpSession;
+        $model        = new Visitor;
+        $userModel    = new User;
+        $patientModel = new Patient;
+        $reasonModel  = new VisitReason;
+        $visitModel   = new Visit;
 
         $visitorService = new VisitorServiceImpl();
         
@@ -106,12 +106,12 @@ class VisitorController extends Controller {
         }
 
         $this->render('create', array(
-            'model' => $model,
-            'userModel' => $userModel,
+            'model'        => $model,
+            'userModel'    => $userModel,
             'patientModel' => $patientModel,
-            'reasonModel' => $reasonModel,
-            'visitModel' => $visitModel,
-	), false, true);
+            'reasonModel'  => $reasonModel,
+            'visitModel'   => $visitModel
+    	), false, true);
     }
 
     /**

@@ -59,10 +59,23 @@ class UploadFileController extends Controller
             $criteria->addCondition("folder_id ='" . $folder->id . "'", 'OR');
             $criteria->addCondition("folder_id ='0'",'OR');
         }
-        $criteria->order = 'uploaded DESC';
 
         $dataProvider = new CActiveDataProvider($model, array(
             'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 't.uploaded DESC',
+                'attributes' => array(
+                    'file' => array(
+                        'asc' => 't.file',
+                        'desc' => 't.file DESC',
+                    ),
+
+                    '*',
+                ),
+            ),
+            'pagination' => array(
+                'pageSize' => 10,
+            ),
         ));
 
         //render view

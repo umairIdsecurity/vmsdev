@@ -70,9 +70,13 @@ class UploadFileController extends Controller
             'dataProvider' => $dataProvider,
             'menuFolder' => $menuFolder,
             'f' => $folderName,
+            'allow_create_new_folder' => Folder::model()->getNumberFolders(Yii::app()->user->id)>=30?0:1,
         ));
     }
 
+    /**
+     * Create new folder
+     */
     public function actionCreate(){
         if (isset($_POST['Folder'])) {
             //Check Folder has exist
@@ -93,6 +97,32 @@ class UploadFileController extends Controller
         echo CJSON::encode(array('success'=>2,'error'=>'Invalid request'));
     }
 
+    /**
+     * Update name File
+     */
+    public function actionUpdateFile(){
+        if(isset($_POST)){
+            $id = $_POST['id'];
+            $name = $_POST['file'];
+            if(!File::model()->checkFileExist($id,$name)){
+                $file = File::model()->findByPk($id);
+                if($file){
+                    $file->file = $name;
+                    $file->save();
+                    echo CJSON::encode(array('success'=>1));
+                    exit();
+                }
+            }else {
+                echo CJSON::encode(array('success' => 2,'error'=>'Name file has exist'));
+                exit();
+            }
+            echo CJSON::encode(array('success' => 2,'error'=>'Request invalid.'));
+        }
+    }
+
+    /**
+     * delete File
+     */
     public function actionDelete(){
         if (isset($_POST['File'])) {
             if(is_array($_POST['File']['id'])){

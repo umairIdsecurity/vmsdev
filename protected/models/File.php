@@ -102,10 +102,26 @@ class File  extends CActiveRecord
         ));
     }
 
+    /**
+     * @param $user_id
+     * @return string
+     * get name user
+     */
     public function getNameUser($user_id){
         $user = User::model()->findByPk($user_id);
         if($user) return $user->first_name .' '.$user->last_name;
         return '';
+    }
+
+    /**
+     * @param $id
+     * @param $name
+     * Check Name File Exist
+     */
+    public function checkFileExist($id,$name){
+        $file = File::model()->findAll("file = '$name' AND id <> $id");
+        if($file) return true;
+        return false;
     }
 
     /**

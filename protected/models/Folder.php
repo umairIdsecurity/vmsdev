@@ -103,7 +103,7 @@ class Folder extends CActiveRecord
             $criteria->compare('name', $this->name, true);
             $criteria->addCondition("user_id ='" . $user_id . "'");
 
-            $criteria->order = 'date_created DESC';
+            $criteria->order = 'date_created ASC';
 
             $folders = $this->findAll($criteria);
             if ($folders) {
@@ -117,7 +117,37 @@ class Folder extends CActiveRecord
         return null;
     }
 
+    /**
+     * @param $user_id
+     * @return CDbDataReader|mixed|string
+     * return number folder of current user.
+     */
+    public function getNumberFolders($user_id)
+    {
+        $criteria = new CDbCriteria;
+        $criteria->addCondition("user_id ='" . $user_id . "'");
+        $count = $this->count($criteria);
+        return $count;
+    }
 
+    /**
+     * check name folder has exist.
+     * @param $user_id
+     * @param $name
+     */
+    public function checkNameExist($user_id,$name){
+        if($user_id && $name){
+            $criteria = new CDbCriteria;
+            $criteria->addCondition("user_id ='" . $user_id . "'");
+            $criteria->addCondition("name ='" . $name . "'");
+            $folders = $this->findAll($criteria);
+            if($folders){
+                return true;
+            }
+
+        }
+        return false;
+    }
 
 
     /**

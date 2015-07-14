@@ -58,12 +58,11 @@ class File  extends CActiveRecord
             $criteria->compare('id', $this->id, true);
             $criteria->compare('user_id', $this->user_id, true);
             $criteria->compare('name', $this->file, true);
-
             if ($folder->name != 'Help Documents')
                 $criteria->addCondition("folder_id ='" . $folder->id . "'");
             else {
                 $criteria->addCondition("folder_id ='" . $folder->id . "'", 'OR');
-                $criteria->addCondition("folder_id ='0'");
+                $criteria->addCondition("folder_id ='0'",'OR');
             }
 
             $criteria->order = 'uploaded DESC';

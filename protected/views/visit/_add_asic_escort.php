@@ -1,4 +1,3 @@
-<form></form>
 <?php $form=$this->beginWidget('CActiveForm', array(
     'id' => 'add-asic-escort-form',
     'htmlOptions' => array('style' => 'margin-left: 0px;'),

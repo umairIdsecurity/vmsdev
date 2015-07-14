@@ -864,7 +864,7 @@ $model->identification_country_issued = 13;
             $("#search-visitor").val(''); 
         });
 
-        $('#fromDay').on('change', function () {console.log('ok');
+        $('#fromDay').on('change', function () {
             var dt = new Date();
 
             if(dt.getFullYear()< $("#fromYear").val()) {

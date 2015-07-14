@@ -164,7 +164,6 @@ Yii::app()->clientScript->registerScript('select_card_type_vic', "
             var card_id = button_id.split('_');
             getEditText(card_id[1]);
             modal_name = modal_name + "-Back of Card";
-            console.log(modal_name);
             $("#mdlttl").html(modal_name);
             $("#card_id").val(card_id[1]);
             $('#form_modal_edit').modal('show');

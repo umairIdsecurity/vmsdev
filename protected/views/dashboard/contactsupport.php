@@ -162,7 +162,6 @@ $arrSubject = array(
         if($multifile.length) {
 
             $(document).on('click', '.delete-image-upload', function(){
-                console.log($(this).parent().index());
                 $(this).parent().empty();
             });
 

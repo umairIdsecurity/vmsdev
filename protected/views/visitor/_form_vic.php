@@ -1058,7 +1058,6 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
         }
 
         var form = $("#register-form").serialize();
-        //console.log(form);return;
         //$('#Visitor_contact_country').attr('disabled', 'disabled');
         var url;
 

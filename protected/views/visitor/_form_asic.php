@@ -75,7 +75,6 @@ if ($this->action->id == 'update') {
             'afterValidate'    => 'js:function(form, data, hasError){ 
                 
                 var visitor_card_status = $("#Visitor_visitor_card_status").val();
-                console.log(visitor_card_status);
                 switch (visitor_card_status) {
                     case "'.Visitor::ASIC_ISSUED.'":
                         var visitor_asic_no     = $("#Visitor_asic_no").val();

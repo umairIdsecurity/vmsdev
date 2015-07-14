@@ -139,23 +139,15 @@ class VisitController extends Controller {
                 if(isset($_POST['Visit']['sendMail']) && $_POST['Visit']['sendMail'] == 'true' ){
                     $visitor = Visitor::model()->findByPk($model->visitor);
                     $host = Visitor::model()->findByPk($model->host);
-                    $mail = new YiiMailMessage;
-                    $mail->from = 'notify.vms@gmail.com';
-                    $mail->addTo($host->email);
-                    $mail->subject = 'Request for verification of VIC profile ';
-                    $param = 'test';
-                    $mail->setBody($param, 'text/html');
-                    Yii::app()->mail->send($mail);
+                    $this->renderPartial('_email_asic_verify',array('visitor'=>$visitor,'host'=>$host));
                 }
                 $this->redirect(array('visit/detail', 'id' => $model->id));
             }
         }
-
         $this->render('create', array(
             'model' => $model,
         ));
     }
-
     /**
      * Updates a particular model.
      * @param integer $id the ID of the model to be updated
@@ -233,13 +225,7 @@ class VisitController extends Controller {
                     if(isset($_POST['Visit']['sendMail']) && $_POST['Visit']['sendMail'] == 'true' ){
                         $visitor = Visitor::model()->findByPk($model->visitor);
                         $host = Visitor::model()->findByPk($model->host);
-                        $mail = new YiiMailMessage;
-                        $mail->from = 'notify.vms@gmail.com';
-                        $mail->addTo($host->email);
-                        $mail->subject = 'Request for verification of VIC profile ';
-                        $param = 'test';
-                        $mail->setBody($param, 'text/html');
-                        Yii::app()->mail->send($mail);
+                        $this->renderPartial('_email_asic_verify',array('visitor'=>$visitor,'host'=>$host));
                     }
                 }
                 $this->redirect(array('visit/detail', 'id' => $id));
@@ -378,7 +364,7 @@ class VisitController extends Controller {
         $hostModel = User::model()->findByPk($host);
 
         // Update Workstation form ( left column on visitor detail page )
-        if (isset($_POST['updateWorkstationForm']) && isset($_POST['Visitor'])) {
+        if (isset($_POST['updateVisitorDetailForm']) && isset($_POST['Visitor'])) {
             $visitorModel->attributes = Yii::app()->request->getPost('Visitor');
 
             $visitorModel->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;

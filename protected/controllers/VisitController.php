@@ -192,7 +192,7 @@ class VisitController extends Controller {
                 $model->finish_time = date('H:i:s');
             }
 
-            if(isset($_POST['AddAsicEscort'])) {
+            if(isset($_POST['AddAsicEscort']) && isset($_POST['createEscort']) && $_POST['createEscort']=='true') {
                 $asicEscort                      = new Visitor;
                 $visitorService                  = new VisitorServiceImpl;
                 $asicEscort->attributes          = Yii::app()->request->getPost('AddAsicEscort');
@@ -1002,7 +1002,7 @@ class VisitController extends Controller {
             }
         }
 
-        if(isset($_POST['AddAsicEscort'])) {
+        if(isset($_POST['AddAsicEscort'])&& isset($_POST['createEscort']) && $_POST['createEscort']=='true') {
             $asicEscort                      = new Visitor;
             $visitorService                  = new VisitorServiceImpl;
             $asicEscort->attributes          = Yii::app()->request->getPost('AddAsicEscort');

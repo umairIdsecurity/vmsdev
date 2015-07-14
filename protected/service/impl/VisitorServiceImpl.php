@@ -86,6 +86,7 @@ class VisitorServiceImpl implements VisitorService {
 
                 if (isset($_POST['Visitor']['photo']) && $visitor->photo == $_POST['Visitor']['photo']) {
                     $visitor->setScenario('updateVic');
+                    $visitor->detachBehavior('DateTimeZoneAndFormatBehavior');
                 }
                 break;
             case Visitor::PROFILE_TYPE_ASIC:

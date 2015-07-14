@@ -597,9 +597,9 @@ class Visitor extends CActiveRecord {
     public function findAllCompanyWithSameTenant($tenantId) {
         $session = new CHttpSession;
         $aArray = array();
-        $tenant = User::model()->findByPk($session['tenant']);
+        $tenant = Company::model()->findByPk($session['tenant']);
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = " . $session['tenant'] . " and (id != 1 and id != ".$tenant->company.")";
+        $Criteria->condition = "tenant = " . $session['tenant'] . " and (id != 1 and id != ".$session['tenant'].")";
         $company = Company::model()->findAll($Criteria);
 
         foreach ($company as $index => $value) {
@@ -616,16 +616,17 @@ class Visitor extends CActiveRecord {
         $session = new CHttpSession;
         //$tenant = User::model()->findByPk($session['tenant']);
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = " . $session['tenant'] . "";// and (id != 1 and id != " . $session['tenant'] . ")";
-        return Company::model()->findAll($Criteria);
+        $Criteria->condition = "tenant = " . $session['tenant'] . " and (id != 1 and id != " . $session['tenant'] . ")";
+        $result =  Company::model()->findAll($Criteria);
+        return $result;
     }
 
     public function findAllCompanyWithSameTenantAndTenantAgent($id, $tenantAgentId) {
         $aArray = array();
-        $tenant = User::model()->findByPk($id);
-        $tenantagent = User::model()->findByPk($tenantAgentId);
+        $user = User::model()->findByPk($id);
+        $tenantagent = Company::model()->findByPk($tenantAgentId);
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "((tenant = '$id' and tenant_agent= '$tenantAgentId') || id ='".$tenant->company."') and id !='".$tenantagent->company."'";
+        $Criteria->condition = "((tenant = '$id' and tenant_agent= '$tenantAgentId') || id ='".$user->tenant."') and id !='".$tenantagent->company."'";
         $company = Company::model()->findAll($Criteria);
 
         foreach ($company as $index => $value) {

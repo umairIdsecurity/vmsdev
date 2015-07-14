@@ -155,7 +155,9 @@ $defaultKey = key($asicCardTypes);
                                              src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png"
                                              style='display:none;'/>
                                     </div>
+                                    
                                     <?php require_once(Yii::app()->basePath . '/draganddrop/host.php'); ?>
+
                                     <div id="photoErrorMessage" class="errorMessage"
                                          style="display:none;  margin-top: 200px;margin-left: 71px !important;position: absolute;">
                                         Please upload a photo.
@@ -443,7 +445,9 @@ $defaultKey = key($asicCardTypes);
                                              src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png"
                                              style='display:none;'/>
                                     </div>
+
                                     <?php require_once(Yii::app()->basePath . '/draganddrop/host3.php'); ?>
+
                                     <div id="photoErrorMessage" class="errorMessage"
                                          style="display:none;  margin-top: 200px;margin-left: 71px !important;position: absolute;">
                                         Please upload a photo.
@@ -701,12 +705,23 @@ $defaultKey = key($asicCardTypes);
                         success: function (r) {
 
                             $.each(r.data, function (index, value) {
-                                document.getElementById('photoPreview2').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+                                
+                                /*document.getElementById('photoPreview2').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 document.getElementById('photoCropPreview2').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 $(".ajax-upload-dragdrop2").css("background", "url(<?php echo Yii::app()->request->baseUrl. '/'; ?>" + value.relative_path + ") no-repeat center top");
                                 $(".ajax-upload-dragdrop2").css({
                                     "background-size": "132px 152px"
-                                });
+                                });*/
+
+                                //showing image from DB as saved in DB -- image is not present in folder
+                                var my_db_image = "url(data:image;base64,"+ value.db_image + ")";
+
+                                document.getElementById('photoPreview2').src = "data:image;base64,"+ value.db_image;
+                                document.getElementById('photoCropPreview2').src = "data:image;base64,"+ value.db_image;
+                                $(".ajax-upload-dragdrop2").css("background", my_db_image + " no-repeat center top");
+                                $(".ajax-upload-dragdrop2").css({"background-size": "132px 152px" });
+                            
+
                             });
                         }
                     });
@@ -750,7 +765,7 @@ $defaultKey = key($asicCardTypes);
                     y2: $("#y23").val(),
                     width: $("#width3").val(),
                     height: $("#height3").val(),
-                    imageUrl: $('#photoCropPreview3').attr('src').substring(1, $('#photoCropPreview3').attr('src').length),
+                    //imageUrl: $('#photoCropPreview3').attr('src').substring(1, $('#photoCropPreview3').attr('src').length),
                     photoId: $('#Host_photo3').val()
                 },
                 dataType: 'json',
@@ -762,12 +777,23 @@ $defaultKey = key($asicCardTypes);
                         success: function (r) {
 
                             $.each(r.data, function (index, value) {
-                                document.getElementById('photoPreview3').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+
+                                /*document.getElementById('photoPreview3').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 document.getElementById('photoCropPreview3').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 $(".ajax-upload-dragdrop3").css("background", "url(<?php echo Yii::app()->request->baseUrl. '/'; ?>" + value.relative_path + ") no-repeat center top");
                                 $(".ajax-upload-dragdrop3").css({
                                     "background-size": "132px 152px"
-                                });
+                                });*/
+
+                                //showing image from DB as saved in DB -- image is not present in folder
+                                var my_db_image = "url(data:image;base64,"+ value.db_image + ")";
+
+                                document.getElementById('photoPreview3').src = "data:image;base64,"+ value.db_image;
+                                document.getElementById('photoCropPreview3').src = "data:image;base64,"+ value.db_image;
+                                $(".ajax-upload-dragdrop3").css("background", my_db_image + " no-repeat center top");
+                                $(".ajax-upload-dragdrop3").css({"background-size": "132px 152px" });
+                            
+
                             });
                         }
                     });

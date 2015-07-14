@@ -169,7 +169,8 @@ class Photo extends CActiveRecord {
         
         $photo = Photo::model()->findByPK($logoId);
         if ($photo) {
-            return $photo->relative_path;
+            //return $photo->relative_path;
+            return $photo->db_image;
         }
     }
 

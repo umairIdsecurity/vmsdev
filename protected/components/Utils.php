@@ -21,10 +21,10 @@ class Utils
                 break;
 
             case Roles::ROLE_STAFFMEMBER:
-                if ($session['company'] == null) {
+                if ($session['tenant'] == null) {
                     $tenantsearchby = "IS NULL";
                 } else {
-                    $tenantsearchby = "='" . $session['company'] . "'";
+                    $tenantsearchby = "='" . $session['tenant'] . "'";
                 }
 
                 if ($session['tenant_agent'] == null) {
@@ -40,13 +40,13 @@ class Utils
 
             case Roles::ROLE_ADMIN:
                 $Criteria = new CDbCriteria();
-                $Criteria->condition = "tenant = ".$session['company']." AND is_deleted = 0";
+                $Criteria->condition = "tenant = ".$session['tenant']." AND is_deleted = 0";
                 $workstationList = Workstation::model()->findAll($Criteria);
                 break;
 
             case Roles::ROLE_AGENT_ADMIN:
                 $Criteria = new CDbCriteria();
-                $Criteria->condition = "tenant ='" . $session['company'] . "' and tenant_agent ='" . $session['tenant_agent'] . "' AND is_deleted = 0";
+                $Criteria->condition = "tenant ='" . $session['tenant'] . "' and tenant_agent ='" . $session['tenant_agent'] . "' AND is_deleted = 0";
                 $workstationList = Workstation::model()->findAll($Criteria);
                 break;
             default :

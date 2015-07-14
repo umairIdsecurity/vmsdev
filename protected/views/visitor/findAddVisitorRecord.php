@@ -94,7 +94,9 @@ $model->identification_country_issued = 13;
                                              src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png"
                                              style='display:none;'/>
                                     </div>
+
                                     <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
+
                                     <div id="photoErrorMessage" class="errorMessage"
                                          style="display:none;  margin-top: 200px;margin-left: 71px !important;position: absolute;">
                                         Please upload a photo.
@@ -958,7 +960,7 @@ $model->identification_country_issued = 13;
                     y2: $("#y2").val(),
                     width: $("#width").val(),
                     height: $("#height").val(),
-                    imageUrl: $('#photoCropPreview').attr('src').substring(1, $('#photoCropPreview').attr('src').length),
+                    //imageUrl: $('#photoCropPreview').attr('src').substring(1, $('#photoCropPreview').attr('src').length),
                     photoId: $('#Visitor_photo').val()
                 },
                 dataType: 'json',
@@ -970,12 +972,24 @@ $model->identification_country_issued = 13;
                         success: function(r) {
 
                             $.each(r.data, function(index, value) {
-                                document.getElementById('photoPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+
+                                /*document.getElementById('photoPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 $(".ajax-upload-dragdrop").css("background", "url(<?php echo Yii::app()->request->baseUrl; ?>" + value.relative_path + ") no-repeat center top");
                                 $(".ajax-upload-dragdrop").css({
                                     "background-size": "132px 152px"
-                                });
+                                });*/
+
+                                //showing image from DB as saved in DB -- image is not present in folder
+                                var my_db_image = "url(data:image;base64,"+ value.db_image + ")";
+
+                                document.getElementById('photoPreview').src = "data:image;base64,"+ value.db_image;
+                                document.getElementById('photoCropPreview').src = "data:image;base64,"+ value.db_image;
+                                $(".ajax-upload-dragdrop").css("background", my_db_image + " no-repeat center top");
+                                $(".ajax-upload-dragdrop").css({"background-size": "132px 152px" });
+                            
+
+
                             });
                         }
                     });

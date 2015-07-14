@@ -24,8 +24,17 @@ $photoForm = $this->beginWidget('CActiveForm', [
 <?php $this->endWidget(); ?>
 
 <div class="cardPhotoPreview" style="height:0px; margin-left: 15px;">
-    <?php if ($visitorModel->photo != '') { ?>
-        <img id="photoPreview" src="<?php echo Photo::model()->returnVisitorPhotoRelativePath($model->visitor) ?>">
+    <?php if ($visitorModel->photo != '') { 
+                $data = Photo::model()->returnVisitorPhotoRelativePath($model->visitor);
+                $my_image = '';
+                if(!empty($data['db_image'])){
+                    $my_image = "data:image;base64," . $data['db_image'];
+                }else{
+                    $my_image = $data['relative_path'];
+                }
+        ?>
+
+        <img id="photoPreview" src="<?php echo $my_image; ?>">
     <?php } else { ?>
         <img id="photoPreview" src="" style="display:none;"></img>
     <?php } ?>
@@ -53,6 +62,7 @@ if($model->card_type > CardType::CONTRACTOR_VISITOR) {
 <div id="Visitor_photo_em" class="errorMessage" style="display: none;">Please upload a profile image.</div>
 
 <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
+
 <?php if ($visitorModel->photo != '') : ?>
 <input type="button" class="btn editImageBtn actionForward" id="editImageBtn" style="  margin-bottom: 2px!important;" value="Edit Photo" onclick = "document.getElementById('light').style.display = 'block';
                 document.getElementById('fade').style.display = 'block'"/>
@@ -281,7 +291,7 @@ $detailForm = $this->beginWidget('CActiveForm', [
                     y2: $("#y2").val(),
                     width: $("#width").val(),
                     height: $("#height").val(),
-                    imageUrl: $('#photoCropPreview').attr('src').substring(1, $('#photoCropPreview').attr('src').length),
+                    //imageUrl: $('#photoCropPreview').attr('src').substring(1, $('#photoCropPreview').attr('src').length),
                     photoId: $('#Visitor_photo').val()
                 },
                 dataType: 'json',
@@ -293,8 +303,16 @@ $detailForm = $this->beginWidget('CActiveForm', [
                         success: function (r) {
 
                             $.each(r.data, function (index, value) {
-                                document.getElementById('photoPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
-                                document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+
+                                /*document.getElementById('photoPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+                                document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;*/
+
+                                //showing image from DB as saved in DB -- image is not present in folder
+                            
+                                document.getElementById('photoPreview').src = "data:image;base64,"+ value.db_image;
+                                document.getElementById('photoCropPreview').src = "data:image;base64,"+ value.db_image;
+                            
+                            
                             });
                         }
                     });
@@ -385,9 +403,19 @@ $detailForm = $this->beginWidget('CActiveForm', [
     }
 </script>
 <!--POP UP FOR CROP PHOTO -->
+<?php 
+        $data = Photo::model()->returnVisitorPhotoRelativePath($model->visitor);
+        $my_image = '';
+        if(!empty($data['db_image'])){
+            $my_image = "data:image;base64," . $data['db_image'];
+        }else{
+            $my_image = $data['relative_path'];
+        }
+
+ ?>
 
 <div id="light" class="white_content">
-    <img id="photoCropPreview" width="500px" height="500px" src="<?php echo Photo::model()->returnVisitorPhotoRelativePath($model->visitor) ?>">
+    <img id="photoCropPreview" width="500px" height="500px" src="<?php echo $my_image; ?>">
 
 </div>
 <div id="fade" class="black_overlay">

@@ -1057,7 +1057,7 @@ class Visit extends CActiveRecord {
         
         switch ($this->card_type) {
             case CardType::VIC_CARD_MANUAL:
-                return (int)$this->count($criteria) + 1;
+                return (int)$this->count($criteria);
                 break;
             case CardType::VIC_CARD_SAMEDATE:
                 if (in_array($this->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED, VisitStatus::EXPIRED])) {

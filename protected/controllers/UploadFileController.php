@@ -30,11 +30,36 @@ class UploadFileController extends Controller
      */
     public function actionIndex()
     {
-        $menuFolder  = Folder::model()->getAllFoldersOfCurrentUser(Yii::app()->user->id);
-        $dataProvider = new CActiveDataProvider('Folder');
+        //Create default folders for user until exist.
+        Folder::model()->setDefaultFoldersForUser(Yii::app()->user->id);
 
+        //get All Folders of user
+        $menuFolder  = Folder::model()->getAllFoldersOfCurrentUser(Yii::app()->user->id);
+
+        //render view
         $this->render('index', array(
-            'dataProvider' => $dataProvider,
+            'menuFolder' => $menuFolder,
+            'f' => Yii::app()->request->getParam('f')
         ));
+    }
+
+    public function actionCreate(){
+        if (isset($_POST['Folder'])) {
+            //Check Folder has exist
+            if(!Folder::model()->checkNameExist($_POST['Folder']['user_id'],$_POST['Folder']['name']) && Folder::model()->getNumberFolders($_POST['Folder']['user_id']) <= 30){
+                $folder = new Folder();
+                $folder->name = $_POST['Folder']['name'];
+                $folder->user_id = $_POST['Folder']['user_id'];
+                if($folder->validate())
+                    if ($folder->save()) {
+                        echo CJSON::encode(array('success' => 1));
+                        exit();
+                    }
+            }else{
+                echo CJSON::encode(array('success'=>2,'error'=>'Name folder has exist or number folders larger than 30.'));
+                exit();
+            }
+        }
+        echo CJSON::encode(array('success'=>2,'error'=>'Invalid request'));
     }
 }

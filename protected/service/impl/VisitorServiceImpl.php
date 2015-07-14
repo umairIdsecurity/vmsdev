@@ -78,24 +78,34 @@ class VisitorServiceImpl implements VisitorService {
         }
         $visitor->asic_expiry = date("Y-m-d",strtotime($visitor->asic_expiry));
 
-        if ($visitor->profile_type == Visitor::PROFILE_TYPE_VIC && date('Y') - date('Y', strtotime($visitor->date_of_birth)) < 18) {
-            $visitor->setScenario('u18Rule');
-        }
+        switch ($visitor->profile_type) {
+            case Visitor::PROFILE_TYPE_VIC:
+                if (date('Y') - date('Y', strtotime($visitor->date_of_birth)) < 18) {
+                    $visitor->setScenario('u18Rule');
+                }
 
-        if ($visitor->profile_type == Visitor::PROFILE_TYPE_ASIC) {
-            switch ($visitor->visitor_card_status) {
-                case Visitor::ASIC_ISSUED:
-                    $visitor->setScenario('asicIssued');
-                    break;
-                case Visitor::ASIC_APPLICANT:
-                    $visitor->setScenario('asicApplicant');
-                    break;
-            }
+                if (isset($_POST['Visitor']['photo']) && $visitor->photo == $_POST['Visitor']['photo']) {
+                    $visitor->setScenario('updateVic');
+                    $visitor->detachBehavior('DateTimeZoneAndFormatBehavior');
+                }
+                break;
+            case Visitor::PROFILE_TYPE_ASIC:
+                switch ($visitor->visitor_card_status) {
+                    case Visitor::ASIC_ISSUED:
+                        $visitor->setScenario('asicIssued');
+                        break;
+                    case Visitor::ASIC_APPLICANT:
+                        $visitor->setScenario('asicApplicant');
+                        break;
+                }
 
-            #Todo: If ASIC no and ASIC expiry is empty then change visitor card status to expired
-            if (empty($visitor->asic_no) && empty($visitor->asic_expiry)) {
-                $visitor->visitor_card_status == Visitor::ASIC_EXPIRED;
-            }
+                #Todo: If ASIC no and ASIC expiry is empty then change visitor card status to expired
+                if (empty($visitor->asic_no) && empty($visitor->asic_expiry)) {
+                    $visitor->visitor_card_status == Visitor::ASIC_EXPIRED;
+                }
+                break;
+            case Visitor::PROFILE_TYPE_CORPORATE:
+                break;
         }
 
         if (!($result = $visitor->save())) {

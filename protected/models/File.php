@@ -52,13 +52,20 @@ class File  extends CActiveRecord
      */
     public function getAllFilesFromFolder($folder = 0, $count = false)
     {
-        if ($folder > 0) {
+        if ($folder) {
             $criteria = new CDbCriteria;
 
             $criteria->compare('id', $this->id, true);
             $criteria->compare('user_id', $this->user_id, true);
-            $criteria->compare('name', $this->name, true);
-            $criteria->addCondition("folder_id ='" . $folder . "'");
+            $criteria->compare('name', $this->file, true);
+            if ($folder->name != 'Help Documents')
+                $criteria->addCondition("folder_id ='" . $folder->id . "'");
+            else {
+                $criteria->addCondition("folder_id ='" . $folder->id . "'", 'OR');
+                $criteria->addCondition("folder_id ='0'",'OR');
+            }
+
+            $criteria->order = 'uploaded DESC';
 
             $files = $this->findAll($criteria);
             if ($files) return $count ? count($files) : $files;

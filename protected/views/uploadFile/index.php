@@ -252,22 +252,18 @@
                 });
             }
         });
+        var defaultName = ['help documents', 'contracts', 'inbox', 'helpdocuments'];
 
-
-        /*$('#nameFolder').keyup(function(){
-            alert($(this).val());
-            if($(this).val().length <= 0){
-                $(this).html('Please input name folder');
-                $(this).fadeIn();
-            }
-            if(defaultName.indexOf($(this).val().toLowerCase())>=0){
+        $('#nameFolder').keyup(function () {
+            if (defaultName.indexOf($(this).val().toLowerCase()) >= 0) {
                 $('#Folder_name').html('Name folder has exist. Please type other name.');
-                $(this).fadeIn();
+                $('#Folder_name').fadeIn();
+            } else {
+                $('#Folder_name').fadeOut();
             }
-        });*/
+        });
 
         function validateNameFolder(name) {
-            var defaultName = ['help documents', 'contracts', 'inbox', 'helpdocuments'];
             if (name.length <= 0) {
                 $('#Folder_name').html('Please input name folder');
                 $('#Folder_name').fadeIn();

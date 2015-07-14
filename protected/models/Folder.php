@@ -117,7 +117,13 @@ class Folder extends CActiveRecord
         return null;
     }
 
-    public function getNumberFolders($user_id){
+    /**
+     * @param $user_id
+     * @return CDbDataReader|mixed|string
+     * return number folder of current user.
+     */
+    public function getNumberFolders($user_id)
+    {
         $criteria = new CDbCriteria;
         $criteria->addCondition("user_id ='" . $user_id . "'");
         $count = $this->count($criteria);

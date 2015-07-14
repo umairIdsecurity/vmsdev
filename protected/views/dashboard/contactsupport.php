@@ -42,24 +42,30 @@ $arrSubject = array(
                 'class'     =>  'disabled',
             ));
         ?></td>
-            <td colspan="1" rowspan="3" style="vertical-align: top" >
-                <input type="file" name="my_file[]"
-                       data-multifile
-                       data-preview-template="#previewFilesTemplate"
-                       data-preview-file=".preview-files-list"
-                       data-validate-file=""
-                       multiple>
-                <div class="preview-files"><table class="preview-files-list" class="table"></table></div>
-                <table class="hidden">
-                    <tbody id="previewFilesTemplate" >
-                    <tr class="item" data-item-id="{0}">
-                        <td width="200">
-                            <span>{0}</span>
-                        </td>
-                        <td width="50" class="delete-image-upload">x</td>
-                    </tr>
-                    </tbody>
-                </table>
+            <td colspan="1" rowspan="4" style="vertical-align: top" >
+                <div class="upload-file-support">
+                    <h4>Attachments</h4>
+                    <label class="" for="attachFileSupport"><span class="glyphicon glyphicons-folder-open"></span> Add File</label>
+                    <input type="file" name="my_file[]"
+                           id="attachFileSupport"
+                           data-multifile
+                           data-preview-template="#previewFilesTemplate"
+                           data-preview-file=".preview-files-list"
+                           data-validate-file=""
+                           class="hidden"
+                           multiple>
+                    <div class="preview-files"><table class="preview-files-list" class="table"></table></div>
+                    <table class="hidden">
+                        <tbody id="previewFilesTemplate" >
+                        <tr class="item" data-item-id="{0}">
+                            <td width="200">
+                                <span>{0}</span>
+                            </td>
+                            <td width="50" class="delete-image-upload">x</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </td>
         </tr>
         <tr>
@@ -135,25 +141,6 @@ $arrSubject = array(
 
 </div><!-- form -->
 
-<!-- Modal Upload file Contact-->
-<!--<div class="modal fade" id="attachmentFileContact" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Files Attached</h4>
-            </div>
-            <div class="modal-body">
-                <div class="preview-files"><table class="preview-files-list" class="table"></table></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>-->
-
-
 <script>
 
     var formatStr = function(str) {
@@ -188,7 +175,7 @@ $arrSubject = array(
                 if( strTemplate && $previewFiles.length ) {
                     for (var i = 0, len = files.length; i < len; i++) {
                         var strItem = formatStr(strTemplate, files[i]["name"], numberWithCommas(files[i]["size"], '.') );
-                        console.log ('strItem', files[i]);
+                        // console.log ('strItem', files[i]);
                         $previewFiles.append(strItem);
                     }
                     if($viewModal.length ) {
@@ -200,5 +187,21 @@ $arrSubject = array(
     });
 </script>
     <style type="text/css">
+        .upload-file-support {
+            background-color: #EEEEEE;
+            border: 1px solid #DDDDDD;
+            padding: 0 10px;
+            width: 392px;
+            border-radius: 4px;
+        }
+        .upload-file-support h4 {
+            font-size: 14px;
+        }
+        .upload-file-support .glyphicons-folder-open {
+            padding-right: 10px;
+        }
+        .delete-image-upload {
+            cursor: pointer;
+        }
     </style>
 <?php endif;

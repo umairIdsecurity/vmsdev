@@ -2,7 +2,7 @@
     <div class="left">
         <ul class="folder">
             <?php
-            foreach ($menuFolder[0] as $folder) {
+            foreach ($menuFolder as $folder) {
                 echo '<li ';
                 if (isset($f)) {
                     if ($f == $folder['name']) echo 'class="active"';
@@ -14,7 +14,9 @@
             ?>
         </ul>
 
-        <a href="#" class="add-folder" data-toggle="modal" data-target="#addNewFolderModal">+ New folder</a>
+        <?php if (isset($allow_create_new_folder) && $allow_create_new_folder == 1) {?>
+            <a href="#" class="add-folder" data-toggle="modal" data-target="#addNewFolderModal">+ New folder</a>
+        <?php } ?>
     </div>
     <div class="right">
         <h2><?php if(isset($f)) echo $f; else echo 'Help Documents'; ?></h2>
@@ -34,7 +36,11 @@ $this->widget('zii.widgets.grid.CGridView', array(
     function(id, data) {
         $('th > .asc').append('<div></div>');
         $('th > .desc').append('<div></div>');
-    }",
+        editCell();
+    }
+
+
+    ",
     'htmlOptions' => array('class' => 'table'),
     'columns' => array(
         array(
@@ -47,7 +53,10 @@ $this->widget('zii.widgets.grid.CGridView', array(
 
         array(
             'name' => 'file',
-            'filter' => false,
+            //'value' => '"<span class=\"file-type file-" . $data->ext ."\">$data->file <span class="glyphicon glyphicon-pencil"></span></span>',
+            'value' => '"<span class=\'file-type file-" . $data->ext ."\'> <span> $data->file </span> <span id=\'pencil-".$data->id."\' class=\'glyphicon glyphicon-pencil\'></span></span>"',
+            'type' => 'raw',
+            'filter' => false
         ),
         array(
             'name' => 'size',
@@ -438,7 +447,39 @@ $this->widget('zii.widgets.grid.CGridView', array(
             });
         });
 
+        editCell();
+
+
 
     });
-
+    function editCell(){
+        $(".glyphicon.glyphicon-pencil").each(function(){
+            $(this).click(function () {
+                var text = $(this).prev("span").text();
+                var id = $(this).attr('id').substring($(this).attr('id').indexOf('-')+1,$(this).attr('id').length);
+                if($("#File-"+id).length>0){
+                    $.ajax({
+                        type: 'POST',
+                        url: '<?php echo Yii::app()->createUrl('uploadfile/updateFile'); ?>',
+                        //dataType: 'text',
+                        data: {id: id, file:$("#File-"+id).val()},
+                        success: function (r) {
+                            r = JSON.parse(r);
+                            if (r.success != 1) {
+                                $('#file_grid_error').html(r.error);
+                                $("#File-"+id).css('border-color','red');
+                                $('#file_grid_error').fadeIn();
+                            } else {
+                                $('#file_grid_error').fadeOut();
+                                $.fn.yiiGridView.update("file-grid");
+                            }
+                        }
+                    });
+                }else {
+                    $(this).prev("span").hide();
+                    $(this).before('<input id=\'File-' + id + '\' value="' + text + '" />');
+                }
+            });
+        });
+    }
 </script>

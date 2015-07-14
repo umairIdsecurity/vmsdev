@@ -83,10 +83,11 @@ class Visitor extends CActiveRecord {
             self::VIC_ASIC_PENDING => 'Card Status: ASIC Pending'
         ),
         self::PROFILE_TYPE_ASIC => array(
+            self::ASIC_APPLICANT => 'Card Status: ASIC Applicant',
             self::ASIC_ISSUED    => 'Card Status: ASIC Issued',
             self::ASIC_EXPIRED   => 'Card Status: ASIC Expired',
             self::ASIC_DENIED    => 'Card Status: ASIC Denied',
-            self::ASIC_APPLICANT => 'Card Status: ASIC Applicant'
+
         ),
     );
 
@@ -236,11 +237,10 @@ class Visitor extends CActiveRecord {
                 escort_flag,
                 key_string
                 is_under_18,
-                under_18_detail
-                ',
+                under_18_detail',
                 'safe'
             ),
-            array('tenant, tenant_agent,company, visitor_type, visitor_workstation, photo,vehicle, visitor_card_status', 'default', 'setOnEmpty' => true, 'value' => null),
+            array('tenant, tenant_agent,company, visitor_type, visitor_workstation, photo, vehicle, visitor_card_status', 'default', 'setOnEmpty' => true, 'value' => null),
             array('password', 'PasswordCustom'),
             array('repeatpassword', 'PasswordRepeat','except' => ['delete']),
 
@@ -335,14 +335,14 @@ class Visitor extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'cardGenerateds' => array(self::HAS_MANY, 'CardGenerated', 'visitor_id'),
-            'company0' => array(self::BELONGS_TO, 'Company', 'company'),
-            'visitorStatus' => array(self::BELONGS_TO, 'VisitorStatus', 'visitor_status'),
-            'createdBy' => array(self::BELONGS_TO, 'User', 'created_by'),
-            'tenant0' => array(self::BELONGS_TO, 'User', 'tenant'),
-            'tenantAgent' => array(self::BELONGS_TO, 'User', 'tenant_agent'),
-            'role0' => array(self::BELONGS_TO, 'Roles', 'role'),
-            'vehicle0' => array(self::BELONGS_TO, 'Vehicle', 'vehicle'),
-            'photo0' => array(self::BELONGS_TO, 'Photo', 'photo'),
+            'company0'       => array(self::BELONGS_TO, 'Company', 'company'),
+            'visitorStatus'  => array(self::BELONGS_TO, 'VisitorStatus', 'visitor_status'),
+            'createdBy'      => array(self::BELONGS_TO, 'User', 'created_by'),
+            'tenant0'        => array(self::BELONGS_TO, 'User', 'tenant'),
+            'tenantAgent'    => array(self::BELONGS_TO, 'User', 'tenant_agent'),
+            'role0'          => array(self::BELONGS_TO, 'Roles', 'role'),
+            'vehicle0'       => array(self::BELONGS_TO, 'Vehicle', 'vehicle'),
+            'photo0'         => array(self::BELONGS_TO, 'Photo', 'photo'),
         );
     }
 
@@ -371,7 +371,7 @@ class Visitor extends CActiveRecord {
             'visitor_status'                            => 'Visitor Status',
             'created_by'                                => 'Created By',
             'is_deleted'                                => 'Is Deleted',
-            'asic_expiry'                                => 'Asic Expiry',
+            'asic_expiry'                               => 'Asic Expiry',
             'tenant'                                    => 'Tenant',
             'tenant_agent'                              => 'Tenant Agent',
             'repeatpassword'                            => 'Repeat Password',
@@ -588,8 +588,7 @@ class Visitor extends CActiveRecord {
     
     public function behaviors() {
         return array(
-            'AuditTrailBehaviors'=>
-                'application.components.behaviors.AuditTrailBehaviors',
+            'AuditTrailBehaviors' => 'application.components.behaviors.AuditTrailBehaviors',
             'DateTimeZoneAndFormatBehavior' => 'application.components.DateTimeZoneAndFormatBehavior',
         );
     }

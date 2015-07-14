@@ -1,0 +1,104 @@
+.glyphicon-pencil:before {
+    content: "\270f";
+    font-size: 20px;
+    padding-left: 10px;
+}
+#footer {
+    font-size: 0.8em;
+    text-align: center;
+    border-top: 1px solid #9BD62C;
+    bottom: 0;
+    width: 100%;
+    position: fixed;
+    background-color: white;
+}
+
+#page {
+    margin: 0;
+}
+.top_nav {
+    margin-right: 0 !important;
+}
+.glyphicon-envelope:before {
+    content: "\2709";
+}
+
+nav.navigation ul {
+    margin: 0 10px 0 0;
+}
+
+.left {
+    float: left;
+    width: 180px;
+}
+.right {
+    width: 960px;
+}
+
+
+.file-upload-content {
+    border: 1px solid #DDDDDD;
+    padding: 20px;
+}
+.upload-function {
+    padding: 20px 0;
+    border-top: 1px solid #DDDDDD;
+    border-bottom: 1px solid #DDDDDD;
+}
+
+.upload-function .btn {
+    font-weight: bold;
+}
+
+.upload-function .btn-upload {
+    color: #0088cc;
+}
+
+.file-type {
+    display: block;
+    padding-left: 40px;
+    position: relative;
+
+}
+.file-type:before {
+    display: block;
+    position: absolute;
+    left:0px;
+    top:50%;
+    margin-top: -18px;
+    content: " ";
+    width: 30px;
+    height: 35px;
+    background-image: url("../images/filetype.png");
+    background-repeat: no-repeat;
+}
+
+.file-png:before {
+    background-position: 0px -51px;
+}
+.file-jpg:before {
+    background-position: -52px -51px;
+}
+ul.folder {
+    list-style: none;
+    margin: 0;
+}
+
+ul.folder li {
+    border-bottom: 1px solid #999999;
+}
+
+ul.folder .active {
+    font-weight: bold;
+}
+ul.folder li a{
+    display: block;
+    padding: 10px 0;
+    color: #333333;
+}
+
+.add-folder {
+    font-weight: bold;
+    display: block;
+    padding: 20px 0 10px 0;
+}

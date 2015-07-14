@@ -101,9 +101,22 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
 <input type="hidden" id="dummycardvalue" value="<?php echo $model->card; ?>"/>
 <input type="hidden" id="remaining_day" value="<?php echo $remainingDays; ?>">
 <?php endif; ?>
-<form method="post" id="workstationForm" action="<?php echo Yii::app()->createUrl('visit/detail', array('id' => $model->id)); ?>">
+<?php
+$detailForm = $this->beginWidget('CActiveForm', [
+    'id'          => 'update-visitor-detail-form',
+    'htmlOptions' => ['name' => 'update-visitor-detail-form'],
+    /*'enableAjaxValidation'   => false,
+    'enableClientValidation' => true,
+    'clientOptions'          => [
+        'validateOnSubmit' => true,
+        'afterValidate'    => 'js:function(form, data, hasError){
+            return afterValidate(form, data, hasError);
+        }'
+    ]*/
+]);
+?>
     <div style="margin: 10px 0px 0px 19px; text-align: left;">
-        <?php
+    <?php
         if ($asic) {
             if($visitorModel->profile_type ==  Visitor::PROFILE_TYPE_VIC) {
                 $profileType = Visitor::PROFILE_TYPE_VIC;
@@ -112,7 +125,7 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
                 $profileType = Visitor::PROFILE_TYPE_ASIC;
             }
 
-            echo CHtml::dropDownList('Visitor[visitor_card_status]', $visitorModel->visitor_card_status, Visitor::$VISITOR_CARD_TYPE_LIST[$profileType], ['empty' => 'Select Card Status']);
+            echo $detailForm->dropDownList($visitorModel, 'visitor_card_status', Visitor::$VISITOR_CARD_TYPE_LIST[$profileType], ['empty' => 'Select Card Status']);
                 echo "<br />";
         }
 
@@ -124,20 +137,20 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
         } else {
             $workstationResults = [];
         }
-
-        echo CHtml::dropDownList('Visit[workstation]', $model->workstation, $workstationResults, ['empty' => 'Select Workstation']);
+        echo $detailForm->dropDownList($model, 'workstation', $workstationResults, ['empty' => 'Select Workstation']);
         echo "<span class='required'>*</span>";
-        echo '<div id="Visit_workstation_em_" class="errorMessage" style="display: none">Please select a workstation</div>';
+        echo $detailForm->error($model, 'workstation');
 
         if ($asic) {
-            echo CHtml::dropDownList('Visit[visitor_type]', $model->visitor_type, VisitorType::model()->returnVisitorTypes());
+            echo $detailForm->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes());
             echo "<span class='required'>*</span>";
-            echo '<div id="Visit_visitor_type_em_" class="errorMessage" style="display: none">Please select a Visitor type</div>';
+            echo $detailForm->error($model, 'visitor_type');
+
             $reasons = CHtml::listData(VisitReason::model()->findAll(), 'id', 'reason');
             foreach ($reasons as $key => $item) {
                 $results[$key] = 'Reason: ' . $item;
             }
-            echo CHtml::dropDownList('Visit[reason]', $model->reason, $results);
+            echo $detailForm->dropDownList($model, 'reason', $results);
             echo "<br />";
         }
 
@@ -153,16 +166,15 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
             if (in_array($key, $cardList)) {
                 $cardTypeResults[$key] = 'Card Type: ' . $item;
             }
-        }   
-        echo CHtml::dropDownList('Visit[card_type]', $model->card_type, $cardTypeResults, $cardTypeOptions);
+        }
+        echo $detailForm->dropDownList($model, 'card_type', $cardTypeResults, $cardTypeOptions);
         echo '<br />';
-        //if (in_array($model->visit_status, [VisitStatus::CLOSED])) {
-            echo '<input type="submit" name="updateWorkstationForm" id="updateWorkstationForm" class="complete btnUpdateWorkstationForm"  value="Update">';
-        //}
-        ?>
-        <input type="hidden" id="workstationForm">
+
+    ?>
+        <input type="hidden" name="updateVisitorDetailForm">
+        <button type="submit" name="updateVisitorDetailForm" id="updateVisitorDetailForm" class="greenBtn btnUpdateVisitorDetailForm">Update</button>
     </div>
-</form>
+<?php $this->endWidget(); ?>
 
 <script>
     $(document).ready(function () {
@@ -214,12 +226,12 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
                  return true;
              }
          }
-        $('.btnUpdateWorkstationForm').on('click', function (e) {
+        $('.btnUpdateVisitorDetailForm').on('click', function (e) {
             var checkWorkStation1 = checkWorkstation();
             var checkVisitorType1 = checkVisitorType();
             var checkCardStatus1 = checkCardStatus();
             if( checkCardStatus1 == true && checkVisitorType1 == true && checkWorkStation1 == true) {
-                $('#workstationForm').submit();
+                $('#update-visitor-detail-form').submit();
             } else {
                 return false;
             }
@@ -229,10 +241,10 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
         if (currentCardStatus == 6) {
             $('#Visitor_visitor_card_status').attr("disabled", true);
         }
-<?php if ($asic) { ?>
+        <?php if ($asic) { ?>
             // remove Denied card status
             $("#visitor_card_status option[value='5']").remove();
-<?php } ?>
+        <?php } ?>
 
         if (<?php echo $model->visit_status; ?> == '1' && $("#dummycardvalue").val() == '' && '<?php echo $model->card; ?>' != '') { //1 is active
             $('#printCardBtn').disabled = false;
@@ -299,7 +311,7 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
             ias.cancelSelection();
         });
 
-        /*$(document).on('click', '.btnUpdateWorkstationForm', function(e) {
+        /*$(document).on('click', '.btnUpdateVisitorDetailForm', function(e) {
             e.preventDefault();
             var currentCardStatus = "<?php echo $visitorModel->visitor_card_status; ?>";
             var currentVisitStatus = "<?php echo $model->visit_status ; ?>"

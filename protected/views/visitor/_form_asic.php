@@ -457,6 +457,7 @@ if ($this->action->id == 'update') {
                                     <?php echo $form->textField($model, 'identification_document_no', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Document No.', 'style' => 'width: 110px;')); ?>
 
                                     <?php
+
                                     $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                         'model'       => $model,
                                         'attribute'   => 'identification_document_expiry',
@@ -622,6 +623,13 @@ if ($this->action->id == 'update') {
                 $('#Visitor_password_requirement_0').prop('disabled', false).trigger('click');
                 $('.user_requires_password').hide();
             }
+        });
+
+        $('#Visitor_identification_document_expiry').datepicker({
+            minDate: '0',
+            maxDate: '+2y +2m',
+            changeYear: true,
+            changeMonth: true
         });
 
         $('#fromDay').on('change', function () {

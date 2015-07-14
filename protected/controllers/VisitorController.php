@@ -122,7 +122,7 @@ class VisitorController extends Controller {
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
         $profileType        = $model->profile_type;
-        $visitorService     = new VisitorServiceImpl();
+        $visitorService     = new VisitorServiceImpl;
         $session            = new CHttpSession;
         $updateErrorMessage = '';
         // if view value is 1 do not redirect page else redirect to admin
@@ -172,7 +172,7 @@ class VisitorController extends Controller {
                 } else {
                     echo $updateErrorMessage;
                 }
-            } elseif (isset($visitorParams) && isset($visitorParams['visitor_card_status']) &&  $visitorParams['visitor_card_status'] == Visitor::ASIC_ISSUED && $model->profile_type == Visitor::PROFILE_TYPE_VIC  ){
+            } elseif (isset($visitorParams['visitor_card_status']) &&  $visitorParams['visitor_card_status'] == Visitor::ASIC_ISSUED && $model->profile_type == Visitor::PROFILE_TYPE_VIC  ){
                 $model->attributes = $visitorParams;
                 $model->profile_type = Visitor::PROFILE_TYPE_ASIC;
                 $model->visitor_card_status = Visitor::ASIC_ISSUED;
@@ -249,8 +249,14 @@ class VisitorController extends Controller {
 
         if (Yii::app()->request->getParam('vms')) {
             if (CHelper::is_avms_visitor()) {
+                
+                //Check whether a login user/tenant allowed to view 
+                CHelper::check_module_authorization("AVMS");
                 $model = $model->avms_visitor();
             } else {
+                
+                //Check whether a login user/tenant allowed to view 
+                CHelper::check_module_authorization("CVMS");
                 $model = $model->cvms_visitor();
             }
         }
@@ -799,7 +805,7 @@ class VisitorController extends Controller {
         $model = $this->loadModel($id);
         $model->setscenario('updateIdentification');
         if ($model) {
-            $model->attributes = $_POST['Visitor'];
+            $model->attributes = Yii::app()->request->getPost('Visitor');
             if (!$model->save()) {
                 echo 0; Yii::app()->end();
             }

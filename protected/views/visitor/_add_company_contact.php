@@ -63,7 +63,7 @@
             <tr>
                 <td style="width:160px;"><?php echo $form->labelEx($model,'companyName'); ?></td>
                 <td>
-                    <?php echo $form->textField($model, 'companyName', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Company Name', 'class' => 'ui-autocomplete-input', 'autocomplete' => 'on')); ?>
+                    <?php echo $form->textField($model, 'companyName', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Company Name', 'class' => 'ui-autocomplete-input company-autocomplete', 'autocomplete' => 'off')); ?>
                     <?php echo "<br>" . $form->error($model, 'companyName'); ?>
                 </td>
             </tr>
@@ -71,13 +71,14 @@
             <tr class="hidden">
                 <td style="width:160px;"><?php echo $form->labelEx($model,'companyType'); ?></td>
                 <td>
-                    <?php if (Yii::app()->controller->id == 'visitor' && in_array(Yii::app()->controller->action->id, array('addvisitor', 'create'))) {
+                    <?php /*if (Yii::app()->controller->id == 'visitor' && in_array(Yii::app()->controller->action->id, array('addvisitor', 'create'))) {
                         echo $form->dropDownList($model, 'companyType', CHtml::listData(CompanyType::model()->findAll(), 'id', 'name'), array('prompt' => 'Select a company type', 'placeholder' => 'Company Type', 'disabled' => 'disabled', 'options' => array('3' => array('selected' => true))));
                     } elseif (Yii::app()->controller->id == 'visit' && in_array(Yii::app()->controller->action->id, array('detail'))) {
                         echo $form->dropDownList($model, 'companyType', CHtml::listData(CompanyType::model()->findAll(), 'id', 'name'), array('prompt' => 'Select a company type', 'placeholder' => 'Company Type', 'disabled' => 'disabled', 'options' => array('3' => array('selected' => true))));
                     } else {
                         echo $form->dropDownList($model, 'companyType', CHtml::listData(CompanyType::model()->findAll(), 'id', 'name'), array('prompt' => 'Select a company type', 'placeholder' => 'Company Type'));
-                    }?>
+                    }*/?>
+                    <?php echo $form->dropDownList($model, 'companyType', CHtml::listData(CompanyType::model()->findAll(), 'id', 'name'), array('prompt' => 'Select a company type', 'placeholder' => 'Company Type', 'disabled' => 'disabled', 'options' => array('3' => array('selected' => true)))); ?>
                     <?php echo "<br>" . $form->error($model, 'companyType');?>
                 </td>
             </tr>
@@ -132,6 +133,9 @@
 <?php $companyList = CHtml::listData(Company::model()->findAll(), 'id', 'name');
     $companyList = array_unique($companyList);
     $listsCom = implode('", "', $companyList);
+
+    // disable duplicate js
+    Yii::app()->clientScript->scriptMap['jquery-ui.min.js']=false;
 ?>
 
 <script>
@@ -163,8 +167,12 @@
 
     $(function() {
         var availableTags = ["<?php echo $listsCom; ?>"];
-        $("#AddCompanyContactForm_companyName").autocomplete({
-            source: availableTags
+        $("#addCompanyContactModal .company-autocomplete").autocomplete({
+            source: availableTags,
+            select: function(event, ui) {
+                event.preventDefault();
+                $("#addCompanyContactModal .company-autocomplete").val(ui.item.label);
+            }
         });
         $(".ui-front").css("z-index", 1051);
     });

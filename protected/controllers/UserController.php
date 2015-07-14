@@ -96,7 +96,9 @@ class UserController extends Controller
             } else {
                 $model->password_option = '';
             }
-
+            // User Allowed Module
+            $model->allowed_module = Yii::app()->user->allowed_module;
+                    
             if ($userService->save($model, Yii::app()->user, $workstation)) {
                 Yii::app()->user->setFlash('success', "Record Added Successfully");
                 if (Yii::app()->request->isAjaxRequest) {
@@ -134,7 +136,9 @@ class UserController extends Controller
                 $_POST['User']['password'] = User::model()->hashPassword($_POST['User']['password']);
             }
             $model->attributes = $_POST['User'];
-
+            // User Allowed Module
+            $model->allowed_module = Yii::app()->user->allowed_module;
+            
             if ($userService->save($model, Yii::app()->user, null)) {
                 $this->redirect(array('admin', 'vms' => $model->is_avms_user() ? 'avms' : 'cvms'));
             }
@@ -198,8 +202,12 @@ class UserController extends Controller
         }
 
         if (CHelper::is_avms_users_requested()) {
+            //Check whether a login user/tenant allowed to view 
+            CHelper::check_module_authorization("AVMS");
             $model = $model->avms_user();
         } else {
+            //Check whether a login user/tenant allowed to view 
+            CHelper::check_module_authorization("CVMS");
             $model = $model->cvms_user();
         }
 

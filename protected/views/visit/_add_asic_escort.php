@@ -1,4 +1,3 @@
-<form></form>
 <?php $form=$this->beginWidget('CActiveForm', array(
     'id' => 'add-asic-escort-form',
     'htmlOptions' => array('style' => 'margin-left: 0px;'),
@@ -45,7 +44,9 @@
                     'options' => array(
                         'dateFormat' => 'dd-mm-yy',
                         'changeMonth' => true,
-                        'changeYear' => true
+                        'changeYear' => true,
+                        'minDate' => '0',
+                        'maxDate' => "+2y +2m",
                     ),
                     'htmlOptions' => array(
                         'maxlength' => '10',

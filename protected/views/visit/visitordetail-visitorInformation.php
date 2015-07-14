@@ -122,14 +122,21 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                     'model' => $visitorModel,
                                     'attribute' => 'date_of_birth',
                                     'htmlOptions' => array(
-                                        'size' => '10', // textField size
-                                        'maxlength' => '10', // textField maxlength
+                                        'size'        => '10', // textField size
+                                        'maxlength'   => '10', // textField maxlength
                                         'placeholder' => 'dd-mm-yyyy',
-                                        'readOnly' => 'readOnly',
-                                        'disabled' => 'disabled',
-                                        'style' => $datePickerStyle
+                                        'readOnly'    => 'readOnly',
+                                        'disabled'    => 'disabled',
+                                        'style'       => $datePickerStyle
                                     ),
-                                    'options' => $datePickerOptionAttributes
+                                    'options' => [
+                                        'showOn'          => "button",
+                                        'buttonImage'     => Yii::app()->controller->assetsBase . "/images/calendar.png",
+                                        'buttonImageOnly' => true,
+                                        'dateFormat'      => "dd-mm-yy",
+                                        'changeMonth'     => true,
+                                        'changeYear'      => true
+                                    ]
                                 ));
                                 ?>
 
@@ -276,12 +283,10 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                             <?php echo $visitorForm->error($model, 'reason'); ?>
                             </td>
                         </tr>
-                    </table>
-                    <table id="addreasonTable" class="detailsTable">
-                        <tr>
+                        <tr id="addreasonTable">
                             <td width="110px;"><label for="VisitReason_reason">Reason</label></td>
                             <td>
-                            <?php echo $visitorForm->textArea($reasonModel, 'reason', ['style' => 'width:200px !important;text-transform: capitalize;', 'rows' => '3', 'cols' => '80']) ?>
+                                <?php echo $visitorForm->textArea($reasonModel, 'reason', ['style' => 'width:107%;text-transform: capitalize;', 'rows' => '3', 'cols' => '80']) ?>
                             </td>
                         </tr>
                     </table>

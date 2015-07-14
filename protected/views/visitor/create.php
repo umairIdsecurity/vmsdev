@@ -294,6 +294,10 @@ $(document).ready(function () {
 
                     sendReasonForm();
                 } else {
+                    if ($("#hostId").val() != 0 || $("#hostId").val() != '') {
+                        var $sendMail = $("<textarea  name='Visit[sendMail]'>"+'true'+"</textarea>");
+                        $("#register-visit-form").append($sendMail);
+                    }
                     populateVisitFormFields();
                 }
                 $("#searchTextHostErrorMessage").hide();

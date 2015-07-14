@@ -462,10 +462,10 @@ class VisitorController extends Controller {
         $jpeg_quality = 90;
 
         //for my localhost directory
-        $path = "E:/installed/xampp/htdocs/vmspro/vms/uploads/visitor";
+        //$path = "E:/installed/xampp/htdocs/vmspro/vms/uploads/visitor";
 
         //for accessing server files
-        //$path = Yii::getPathOfAlias('webroot') . "/uploads/visitor";
+        $path = Yii::getPathOfAlias('webroot') . "/uploads/visitor";
 
         $photo = Photo::model()->findByPk($_REQUEST['photoId']);
         $photoAttr = $photo->attributes;

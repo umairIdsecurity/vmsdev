@@ -57,12 +57,12 @@ if ($card) {
 $visitorName = wordwrap($visitorName, 13, "\n", true);
 
 $dateExpiry = date('dMy');
+
 switch ($model->card_type) {
+    case CardType::VIC_CARD_MULTIDAY:
     case CardType::SAME_DAY_VISITOR:
     case CardType::VIC_CARD_24HOURS:
         $dateExpiry = date("dMy", strtotime($model->date_check_out));
-        break;
-    default:
         break;
 }
 

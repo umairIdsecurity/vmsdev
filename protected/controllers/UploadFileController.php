@@ -143,17 +143,19 @@ class UploadFileController extends Controller
             $folder_id = $_POST['File']['folder_id'];
             $user_id = $_POST['File']['user_id'];
             if (isset($_FILES)) {
-                $root = dirname(Yii::app()->request->scriptFile) . '/uploads/files';
+                $root = /*dirname(Yii::app()->request->scriptFile) .*/ '../../uploads/files';
                 $folderUser = $root . '/' . $user_id;
                 $folderFile = $folderUser . '/' . $folder_id;
                 if (!is_dir($root)) {
                     mkdir($root, 0777, true);
-                    if (!is_dir($folderUser)) {
-                        mkdir($folderUser, 0777, true);
-                        if (!is_dir($folderFile)) {
-                            mkdir($folderFile, 0777, true);
-                        }
-                    }
+
+                }
+                if (!is_dir($folderUser)) {
+                    mkdir($folderUser, 0777, true);
+
+                }
+                if (!is_dir($folderFile)) {
+                    mkdir($folderFile, 0777, true);
                 }
                 $files = $_FILES['file'];
                 $listError = array();

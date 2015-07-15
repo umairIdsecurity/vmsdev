@@ -21,11 +21,37 @@
     <div class="right">
         <h2><?php if(isset($f)) echo $f; else echo 'Help Documents'; ?></h2>
         <div id="file_grid_error" class="errorMessage" style="text-transform: none;margin-top: 20px; height: 30px ;display:none">Couldn't delete files.</div>
-        <div class="upload-function">
-            <button class="btn btn-default btn-upload">Upload Files</button>
+        <form method="post" class="upload-function" enctype="multipart/form-data">
+            <label class="btn btn-default btn-upload" for="attachFilesUpload">Upload Files</label>
             <button class="btn btn-default btn-delete" id="btn_delete_file" disabled>Delete</button>
-        </div>
-        <form id="list_file" method="post" />
+            <input type="file" name="filesUpload[]"
+                   id="attachFilesUpload"
+                   data-multifile
+                   data-preview-template="#previewFilesTemplate"
+                   data-preview-file=".preview-files-list"
+                   data-validate-file=""
+                   data-show-button=".btn-submit"
+                   class="hidden"
+                   multiple>
+            <div class="preview-files">
+                <table class="table preview-files-list"></table>
+                <div class="btn-submit">
+                    <input type="submit" value="Upload">
+                </div>
+            </div>
+            <table class="hidden">
+                <tbody id="previewFilesTemplate" >
+                <tr class="item" data-item-id="{0}">
+                    <td width="200">
+                        <span>{0}</span>
+                    </td>
+                    <td width="50" class="delete-image-upload">x</td>
+                </tr>
+                </tbody>
+            </table>
+
+        </form>
+        <form id="list_file" method="post">
         <input value="<?php echo Yii::app()->user->id; ?>" type="hidden" name="File[user_id]">
         <?php
 $this->widget('zii.widgets.grid.CGridView', array(
@@ -482,4 +508,46 @@ $this->widget('zii.widgets.grid.CGridView', array(
             });
         });
     }
+    var formatStr = function(str) {
+        var theString = str;
+        for (var i = 1; i < arguments.length; i++) {
+            var regEx = new RegExp("\\{" + (i - 1) + "\\}", "gm");
+            theString = theString.replace(regEx, arguments[i]);
+        }
+        return theString;
+    };
+
+    var numberWithCommas = function(x, commas) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, commas);
+    };
+
+    jQuery(function() {
+        'use strict';
+        var $multifile = $('[data-multifile]');
+        if($multifile.length) {
+
+            $(document).on('click', '.delete-image-upload', function(){
+                $(this).parent().empty();
+            });
+
+            $multifile.on('change', function() {
+                var strTemplate = $($(this).data('previewTemplate')).html();
+                var files = this.files;
+                var $previewFiles = $($(this).data('previewFile'));
+                var $viewModal = $($(this).data('viewModal') );
+                var $showButton = $($(this).data('showButton') );
+
+                $showButton.show();
+
+                $previewFiles.empty();
+                if( strTemplate && $previewFiles.length ) {
+                    for (var i = 0, len = files.length; i < len; i++) {
+                        var strItem = formatStr(strTemplate, files[i]["name"], numberWithCommas(files[i]["size"], '.') );
+
+                        $previewFiles.append(strItem);
+                    }
+                }
+            });
+        }
+    });
 </script>

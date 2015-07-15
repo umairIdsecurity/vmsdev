@@ -146,4 +146,88 @@ class File  extends CActiveRecord
         );
     }
 
+    public function displaySize($size = 0){
+        return $this->file_size($size);
+    }
+
+    /**
+     * @param $size
+     * @return string
+     */
+    public function file_size($size)
+    {
+        if ($size >= 1073741824) {
+            $fileSize = round($size / 1024 / 1024 / 1024, 1) . ' GB';
+        } elseif ($size >= 1048576) {
+            $fileSize = round($size / 1024 / 1024, 1) . ' MB';
+        } elseif ($size >= 1024) {
+            $fileSize = round($size / 1024, 1) . ' KB';
+        } else {
+            $fileSize = $size . ' bytes';
+        }
+        return $fileSize;
+    }
+
+    /**
+     * @param $date
+     * @return string
+     */
+    public function calculate_time_span($date){
+        $seconds  = strtotime(date('Y-m-d H:i:s')) - strtotime($date);
+
+        $months = floor($seconds / (3600*24*30));
+        $day = floor($seconds / (3600*24));
+        $hours = floor($seconds / 3600);
+        $mins = floor(($seconds - ($hours*3600)) / 60);
+        $secs = floor($seconds % 60);
+
+        if($seconds < 60)
+            $time = $secs." seconds ago";
+        else if($seconds < 60*60 )
+            $time = $mins." min ago";
+        else if($seconds < 24*60*60)
+            $time = $hours." hours ago";
+        else if($seconds < 24*60*60)
+            $time = $day." day ago";
+        else
+            $time = $months." month ago";
+
+        return $time;
+    }
+
+    /**
+     * @param int $id
+     * @return string
+     */
+    public function getPathFile($id = 0)
+    {
+        if ($id > 0) {
+            $files = File::model()->findAll("id = $id and user_id =" . Yii::app()->user->id);
+            if ($files) {
+                $file = $files[0];
+                $root = dirname(Yii::app()->request->scriptFile) . '/uploads/files';
+                $folderUser = $root . '/' . $file->user_id;
+                $folderFile = $folderUser . '/' . $file->folder_id;
+                return $folderFile . '/' . $file->file;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param int $id
+     * @return mixed
+     */
+    public function linkDownloadFile($id = 0){
+        if ($id > 0) {
+            $files = File::model()->findAll("id = $id and user_id =" . Yii::app()->user->id);
+            if ($files) {
+                $file = $files[0];
+                return Yii::app()->createUrl("uploadFile/download", array("id" => $file->id));
+            }
+        }
+        return null;
+    }
+
+
 }

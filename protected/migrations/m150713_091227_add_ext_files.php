@@ -1,4 +1,4 @@
-<?php
+Ok great<?php
 
 class m150713_091227_add_ext_files extends CDbMigration
 {

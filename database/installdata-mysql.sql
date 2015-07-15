@@ -1650,13 +1650,13 @@ ALTER TABLE `roles`
 -- Constraints for table `tenant`
 --
 ALTER TABLE `tenant`
-  ADD CONSTRAINT `fk_tenant_company1` FOREIGN KEY (`id`) REFERENCES `vms`.`company` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_tenant_company1` FOREIGN KEY (`id`) REFERENCES `company` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `tenant_contact`
 --
 ALTER TABLE `tenant_contact`
-  ADD CONSTRAINT `fk_tenant_contact_tenant1` FOREIGN KEY (`tenant`) REFERENCES `vms`.`tenant` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_tenant_contact_tenant1` FOREIGN KEY (`tenant`) REFERENCES `tenant` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `user`

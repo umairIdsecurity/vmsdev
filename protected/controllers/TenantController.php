@@ -116,8 +116,12 @@ class TenantController extends Controller {
                     }
                     $userModel->password = $passwordval;
                     $userModel->role = $_POST['TenantForm']['role'];
-                    $userModel->user_type = $_POST['TenantForm']['user_type'];
-                    $userModel->user_status = $_POST['TenantForm']['user_status'];
+                    //$userModel->user_type = $_POST['TenantForm']['user_type'];
+                    //$userModel->user_status = $_POST['TenantForm']['user_status'];
+                    
+                    $userModel->user_type = 1;
+                    $userModel->user_status = 1;
+                    
                     $userModel->created_by = Yii::app()->user->id;
                     $userModel->is_deleted = 0;
                     $userModel->notes = $_POST['TenantForm']['notes'];

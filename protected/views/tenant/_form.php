@@ -196,14 +196,14 @@ $currentLoggedUserId = $session['id'];
 
                     <tr>
 
-                        <td><?php echo $form->dropDownList($model, 'user_type', TenantForm::$USER_TYPE_LIST, array('disabled' => true)); ?>
-                            <span class="required">*</span>
+                        <td><?php echo $form->dropDownList($model, 'user_type', TenantForm::$USER_TYPE_LIST, array('disabled' => true, 'options' => array('1'=>array('selected'=>true)))); ?>
+                            <!-- <span class="required">*</span> -->
                             <?php echo "<br>" . $form->error($model, 'user_type'); ?>
                         </td>
                     </tr>
 
                     <tr>
-                        <td><?php echo $form->dropDownList($model, 'user_status', TenantForm::$USER_STATUS_LIST, array('disabled' => true)); ?>
+                        <td><?php echo $form->dropDownList($model, 'user_status', TenantForm::$USER_STATUS_LIST, array('disabled' => true, 'options' => array('1'=>array('selected'=>true)))); ?>
                             <?php echo "<br>" . $form->error($model, 'user_status'); ?>
                         </td>
 

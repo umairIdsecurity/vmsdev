@@ -135,7 +135,7 @@
     $listsCom = implode('", "', $companyList);
 
     // disable duplicate js
-    Yii::app()->clientScript->scriptMap['jquery-ui.min.js']=false;
+    //Yii::app()->clientScript->scriptMap['jquery-ui.min.js']=false;
 ?>
 
 <script>

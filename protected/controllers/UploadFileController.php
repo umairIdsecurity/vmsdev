@@ -161,14 +161,19 @@ class UploadFileController extends Controller
                        if ($files['error'][$i] == UPLOAD_ERR_OK) {
                            $tmp_name = $files['tmp_name'][$i];
                            $name = $files['name'][$i];
-                           if(move_uploaded_file($tmp_name, "$folderFile/$name")){
-                               $objectFile = new File();
-                               $objectFile->folder_id = $folder_id;
-                               $objectFile->user_id = $user_id;
-                               $objectFile->file = $name;
-                               $objectFile->uploader = $user_id;
-                               $objectFile->ext = pathinfo($name, PATHINFO_EXTENSION);
-                               $objectFile->save();
+                           if (!file_exists("$folderFile/$name")) {
+                               if (move_uploaded_file($tmp_name, "$folderFile/$name")) {
+                                   $objectFile = new File();
+                                   $objectFile->folder_id = $folder_id;
+                                   $objectFile->user_id = $user_id;
+                                   $objectFile->file = $name;
+                                   $objectFile->uploader = $user_id;
+                                   $objectFile->size = $files['size'][$i];
+                                   $objectFile->ext = pathinfo($name, PATHINFO_EXTENSION);
+                                   $objectFile->save();
+                               } else {
+                                   $listError[] = $files['name'][$i];
+                               }
                            }else{
                                $listError[] = $files['name'][$i];
                            }
@@ -208,30 +213,4 @@ class UploadFileController extends Controller
 
     }
 
-    public function getUploadDir() {
-        $old       = umask(0);
-        $uploadDir = Yii::$app->params['folderUpload'];
-        if (!file_exists($uploadDir)) {
-            BaseFileHelper::createDirectory($uploadDir, $mode = 0777, $recursive = true);
-        }
-        umask($old);
-        return $uploadDir;
-    }
-
-    /**
-     * Get specify user profile dir
-     */
-    public function getFileDir() {
-        $old        = umask(0);
-        $profileDir = $this->getUploadDir() . 'profile';
-        if (!file_exists($profileDir)) {
-            BaseFileHelper::createDirectory($profileDir, $mode = 0777, $recursive = true);
-        }
-        $usrDir = $profileDir . '/' . $this->uuid;
-        if (!file_exists($usrDir)) {
-            BaseFileHelper::createDirectory($usrDir, $mode = 0777, $recursive = true);
-        }
-        umask($old);
-        return $usrDir;
-    }
 }

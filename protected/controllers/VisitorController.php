@@ -138,7 +138,7 @@ class VisitorController extends Controller {
 
         if (isset($visitorParams)) {
             $currentCardStatus = $model->visitor_card_status;
-            if (isset($visitorParams['visitor_card_status']) && $currentCardStatus == Visitor::VIC_HOLDER && $visitorParams['visitor_card_status'] == Visitor::VIC_ASIC_PENDING) {
+            if (isset($visitorParams['visitor_card_status']) && $currentCardStatus != $visitorParams['visitor_card_status'] && $visitorParams['visitor_card_status'] == Visitor::VIC_ASIC_PENDING) {
                 $activeVisit = $model->activeVisits;
                 foreach ($activeVisit as $item) {
                     if ($item->visit_status == VisitStatus::ACTIVE) {
@@ -149,18 +149,18 @@ class VisitorController extends Controller {
                     $totalVisitCountBefore = $model->totalVisit;
                     $model->attributes = $visitorParams;
                     if ($visitorService->save($model, NULL, $session['id'])) {
-                        if ($totalVisitCountBefore > 0) {
-                            $resetHistory = new ResetHistory;
-                            $resetHistory->visitor_id = $model->id;
-                            $resetHistory->reset_time = date("Y-m-d H:i:s");
-                            $resetHistory->reason     = 'Update Visitor Card Type form VIC Holder to ASIC Pending';
-                            if ($resetHistory->save()) {
-                                foreach ($activeVisit as $item) {
-                                    $item->reset_id = $resetHistory->id;
-                                    $item->save();
-                                }
-                            }
-                        }
+//                        if ($totalVisitCountBefore > 0) {
+//                            $resetHistory = new ResetHistory;
+//                            $resetHistory->visitor_id = $model->id;
+//                            $resetHistory->reset_time = date("Y-m-d H:i:s");
+//                            $resetHistory->reason     = 'Update Visitor Card Type form VIC Holder to ASIC Pending';
+//                            if ($resetHistory->save()) {
+//                                foreach ($activeVisit as $item) {
+//                                    $item->reset_id = $resetHistory->id;
+//                                    $item->save();
+//                                }
+//                            }
+//                        }
                         switch ($isViewedFromModal) {
                             case "1":
                                 break;

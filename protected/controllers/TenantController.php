@@ -20,7 +20,7 @@ class TenantController extends Controller {
         return array(
             array('allow', // allow all users to perform 'GetCompanyList' and 'GetCompanyWithSameTenant' actions
                 'actions' => array('GetCompanyList', 'GetCompanyWithSameTenant', 'create', 'delete'),
-                /* 'users' => array('@'),*/
+                 'users' => array('@'),
                 'expression' => 'CHelper::check_module_authorization("Admin")'
             ),
             array('allow', // allow user if same company
@@ -82,8 +82,8 @@ class TenantController extends Controller {
                 $photolastId = 0;
                 if (isset($_POST['TenantForm']['photo']) && $_POST['TenantForm']['photo'] != "") {
                     $photolastId = $_POST['TenantForm']['photo'];
-                } else {
-
+                }else{
+                    $photolastId = NULL;
                 }
                 $companyModel->company_type = 1; // tenant company type
                 $companyModel->code = $_POST['TenantForm']['tenant_code'];
@@ -99,6 +99,8 @@ class TenantController extends Controller {
 
                 $comapanylastId = 0;
                 if ($companyModel->validate()) {
+                    
+                    
                     $companyModel->save();
                     $comapanylastId = $companyModel->id;
 
@@ -150,31 +152,37 @@ class TenantController extends Controller {
                             if ($tenantContact->validate()) {
                                 $tenantContact->save();                               
                                 $transaction->commit();
-                              
+
+                                Yii::app()->user->setFlash('success', "Tenant inserted Successfully");
+                                // echo json_encode(array('success'=>TRUE));
+                                $this->redirect(array('tenant/admin'));
                                 
                             } else {
                                 $transaction->rollback();
-                                
+                                Yii::app()->user->setFlash('error',"Unable to create tenant. Please, fill all the fields and try again");
                             }
 
                         } else {
                             $transaction->rollback();
+                            Yii::app()->user->setFlash('error',"Unable to create tenant. Please, fill all the fields and try again");
                             
                         }
  
                     } else {
                         $transaction->rollback();
-                        
+                        Yii::app()->user->setFlash('error',"Unable to create tenant. Please, fill all the fields and try again");
                     }
  
                 } else {
                     $transaction->rollback();
-                     
+                    Yii::app()->user->setFlash('error',"Unable to create tenant. Please, fill all the fields and try again");
                 }
 
 
-                Yii::app()->user->setFlash('success', "Tenant inserted Successfully");
+                /*Yii::app()->user->setFlash('success', "Tenant inserted Successfully");
                // echo json_encode(array('success'=>TRUE));
+                $this->redirect(array('tenant/admin'));*/
+
             }catch (CDbException $e)
             {
                 $transaction->rollback();
@@ -240,7 +248,8 @@ class TenantController extends Controller {
                  $userModel->save(false);
          
                 Yii::app()->user->setFlash('success', "Tenant updated Successfully");
-                $this->redirect(array("tenant/update&id=".$id));
+                $this->redirect(array('tenant/admin'));
+                //$this->redirect(array("tenant/update&id=".$id));
 
             }else{
                 //print_r($model->getErrors());

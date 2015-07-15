@@ -133,9 +133,6 @@
 <?php $companyList = CHtml::listData(Company::model()->findAll(), 'id', 'name');
     $companyList = array_unique($companyList);
     $listsCom = implode('", "', $companyList);
-
-    // disable duplicate js
-    //Yii::app()->clientScript->scriptMap['jquery-ui.min.js']=false;
 ?>
 
 <script>

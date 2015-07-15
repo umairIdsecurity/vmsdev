@@ -102,7 +102,9 @@ if (isset($_GET['id'])) {
                 <div class="photoDiv" style='display:none;'>
                     <img id='photoPreview2' src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png" style='display:none;'/>
                 </div>
+                
                 <?php  $this->renderPartial('application.draganddrop.profile',array('model'=>$model)); ?>
+
                 <div id="photoErrorMessage" class="errorMessage" style="display:none;  margin-top: 200px;margin-left: 71px !important;position: absolute;">Please upload a photo.</div>
             </td>
         </tr>

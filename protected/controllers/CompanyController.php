@@ -81,6 +81,8 @@ class CompanyController extends Controller {
 
             $model->attributes = $_POST['Company'];
 
+            $model->company_type = 3; // visitor company type -- directed by savita
+
             if ($this->isCompanyUnique($session['tenant'], $session['role'], $_POST['Company']['name'], $_POST['Company']['tenant']) == 0) {
 
 				if(isset($_POST['Company']['code'])){

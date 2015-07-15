@@ -53,7 +53,7 @@ class File  extends CActiveRecord
      * @param bool|false $count : True return number files else return list files
      * @return File[]|int|array
      */
-    public function getAllFilesFromFolder($folder = 0, $count = false)
+    public function getAllFilesFromFolder($folder = null, $count = false)
     {
         if ($folder) {
             $criteria = new CDbCriteria;
@@ -65,15 +65,18 @@ class File  extends CActiveRecord
                 $criteria->addCondition("folder_id ='" . $folder->id . "'");
             else {
                 $criteria->addCondition("folder_id ='" . $folder->id . "'", 'OR');
-                $criteria->addCondition("folder_id ='0'",'OR');
+                $criteria->addCondition("folder_id ='0'", 'OR');
             }
 
             $criteria->order = 'uploaded DESC';
-
-            $files = $this->findAll($criteria);
-            if ($files) return $count ? count($files) : $files;
+            if ($count) {
+                $files = $this->count($criteria);
+            } else {
+                $files = $this->findAll($criteria);
+            }
+            if ($files) return $files;
         }
-        return null;
+        return 0;
     }
 
 

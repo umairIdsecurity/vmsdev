@@ -141,8 +141,7 @@ class UploadFileController extends Controller
            $folder_id = $_POST['File']['folder_id'];
            $user_id = $_POST['File']['user_id'];
            if(isset($_FILES)){
-               $root=Yii::app()->basePath.'/uploads/files';
-               $root = str_replace('protected','',$root);
+               $root=dirname(Yii::app()->request->scriptFile).'/uploads/files';
                $folderUser = $root.'/'.$user_id;
                $folderFile = $folderUser.'/'.$folder_id;
                if(!is_dir($root)){
@@ -157,21 +156,22 @@ class UploadFileController extends Controller
                $files = $_FILES['file'];
                $listError=array();
                for($i = 0; $i < count($files['name']);$i++){
-                   if($files['size'][$i] <= 10000000){
+                   if($files['size'][$i] <= 10485760){
                        if ($files['error'][$i] == UPLOAD_ERR_OK) {
                            $tmp_name = $files['tmp_name'][$i];
                            $name = $files['name'][$i];
-                           if(move_uploaded_file($tmp_name, "$folderFile/$name")){
-                               $objectFile = new File();
-                               $objectFile->folder_id = $folder_id;
-                               $objectFile->user_id = $user_id;
-                               $objectFile->file = $name;
-                               $objectFile->uploader = $user_id;
-                               $objectFile->ext = pathinfo($name, PATHINFO_EXTENSION);
-                               $objectFile->save();
-                           }else{
-                               $listError[] = $files['name'][$i];
-                           }
+                               if (move_uploaded_file($tmp_name, "$folderFile/$name")) {
+                                   $objectFile = new File();
+                                   $objectFile->folder_id = $folder_id;
+                                   $objectFile->user_id = $user_id;
+                                   $objectFile->file = $name;
+                                   $objectFile->uploader = $user_id;
+                                   $objectFile->size = $files['size'][$i];
+                                   $objectFile->ext = pathinfo($name, PATHINFO_EXTENSION);
+                                   $objectFile->save();
+                               } else {
+                                   $listError[] = $files['name'][$i];
+                               }
                        }else{
                            $listError[] = $files['name'][$i];
                        }
@@ -208,30 +208,4 @@ class UploadFileController extends Controller
 
     }
 
-    public function getUploadDir() {
-        $old       = umask(0);
-        $uploadDir = Yii::$app->params['folderUpload'];
-        if (!file_exists($uploadDir)) {
-            BaseFileHelper::createDirectory($uploadDir, $mode = 0777, $recursive = true);
-        }
-        umask($old);
-        return $uploadDir;
-    }
-
-    /**
-     * Get specify user profile dir
-     */
-    public function getFileDir() {
-        $old        = umask(0);
-        $profileDir = $this->getUploadDir() . 'profile';
-        if (!file_exists($profileDir)) {
-            BaseFileHelper::createDirectory($profileDir, $mode = 0777, $recursive = true);
-        }
-        $usrDir = $profileDir . '/' . $this->uuid;
-        if (!file_exists($usrDir)) {
-            BaseFileHelper::createDirectory($usrDir, $mode = 0777, $recursive = true);
-        }
-        umask($old);
-        return $usrDir;
-    }
 }

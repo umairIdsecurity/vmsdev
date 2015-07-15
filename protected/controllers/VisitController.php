@@ -511,9 +511,9 @@ class VisitController extends Controller {
                             $model->time_check_out = $model->time_check_in;
                             break;
                         case CardType::VIC_CARD_EXTENDED: // VIC Extended
-                        case CardType::VIC_CARD_MULTIDAY: // VIC Multiday
                             break;
                     }
+                    $model->finish_date  = $model->date_check_out;
                 }
 
                 $fileUpload = CUploadedFile::getInstance($model, 'card_lost_declaration_file');

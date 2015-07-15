@@ -597,9 +597,10 @@ class Visitor extends CActiveRecord {
     public function findAllCompanyWithSameTenant($tenantId) {
         $session = new CHttpSession;
         $aArray = array();
-        $tenant = Company::model()->findByPk($session['tenant']);
+        //$tenant = Company::model()->findByPk($session['tenant']);
+
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = " . $session['tenant'] . " and (id != 1 and id != ".$session['tenant'].")";
+        $Criteria->condition = "tenant = " . $session['id'] . " and (id != 1 and id != ".$session['id'].")";
         $company = Company::model()->findAll($Criteria);
 
         foreach ($company as $index => $value) {
@@ -616,7 +617,7 @@ class Visitor extends CActiveRecord {
         $session = new CHttpSession;
         //$tenant = User::model()->findByPk($session['tenant']);
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = " . $session['tenant'] . " and (id != 1 and id != " . $session['tenant'] . ")";
+        $Criteria->condition = "tenant = " . $session['id'] . " and (id != 1 and id != " . $session['id'] . ")";
         $result =  Company::model()->findAll($Criteria);
         return $result;
     }

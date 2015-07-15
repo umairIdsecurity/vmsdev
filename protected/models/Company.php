@@ -368,7 +368,7 @@ class Company extends CActiveRecord {
         $session = new CHttpSession;
 
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = '" . $session['tenant'] . "'";
+        $Criteria->condition = "tenant = '" . $session['id'] . "'";
         $company = Company::model()->findAll($Criteria);
 
         foreach ($company as $index => $value) {

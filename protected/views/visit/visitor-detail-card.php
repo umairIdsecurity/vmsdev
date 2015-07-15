@@ -230,7 +230,7 @@ $detailForm = $this->beginWidget('CActiveForm', [
              var currentCardStatus = "<?php echo $visitorModel->visitor_card_status; ?>";
              var currentVisitStatus = "<?php echo $model->visit_status ; ?>";
              if(currentVisitStatus == "<?php echo VisitStatus::ACTIVE; ?>") {
-                 if (currentCardStatus == 2 && $('#Visitor_visitor_card_status').val() == 3) {
+                 if ($('#Visitor_visitor_card_status').val() == '<?php echo Visitor::VIC_ASIC_PENDING?>') {
                      alert('Please close the active visits before changing the status to ASIC Pending.');
                      return false;
                  } else {

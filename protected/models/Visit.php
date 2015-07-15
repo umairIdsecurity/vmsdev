@@ -556,16 +556,6 @@ class Visit extends CActiveRecord {
 
         $criteria = new CDbCriteria;
 
-        // convert date format to yy-mm-dd
-        if (!is_null($this->date_check_out) || !is_null($this->date_check_in)) {
-            $this->date_check_in  = date('Y-m-d', strtotime($this->date_check_in));
-            $this->date_check_out = date('Y-m-d', strtotime($this->date_check_out));
-
-            $criteria->compare('visit_status', VisitStatus::ACTIVE);
-        } else {
-            $criteria->compare('visit_status', $this->visit_status);
-        }
-
         $criteria->with = array('card0','host0', 'visitor0', 'company0','visitor1');
         //$criteria->with .= 'visitor0';
         $criteria->compare('CONCAT(visitor0.first_name, \' \', visitor0.last_name)', $this->visitor, true);
@@ -604,7 +594,7 @@ class Visit extends CActiveRecord {
         $criteria->compare('tenant', $this->tenant, true);
         $criteria->compare('tenant_agent', $this->tenant_agent, true);
         $criteria->compare('t.is_deleted', $this->is_deleted, "0");
-        // $criteria->compare('visit_status', $this->visit_status);
+        $criteria->compare('visit_status', $this->visit_status);
         $criteria->compare('workstation', $this->workstation);
 
         $criteria->compare('company0.code', $this->companycode, true);

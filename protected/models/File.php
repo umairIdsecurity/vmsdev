@@ -76,7 +76,7 @@ class File  extends CActiveRecord
             }
             if ($files) return $files;
         }
-        return null;
+        return 0;
     }
 
 

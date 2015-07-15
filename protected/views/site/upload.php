@@ -5,10 +5,12 @@ $controllerId = $_GET['id'];
 switch ($controllerId) {
     case 'company':
     case 'companyLafPreferences':
-        $folderKey = '/company_logo/';
+        //$folderKey = '/company_logo/';
+        $folderKey = '/visitor/';
         break;
     case 'profile':
-        $folderKey = '/profile/';
+        //$folderKey = '/profile/';
+        $folderKey = '/visitor/';
         break;
     case 'visitor':
     case 'visit':
@@ -33,11 +35,21 @@ if (isset($_FILES["myfile"])) {
         $fileName = $_FILES["myfile"]["name"];
         $uniqueFileName = $usernameHash . '-' . time() . ".jpg";
         $path = "uploads" . $folderKey . $uniqueFileName;
+
+        //temporay uploaded -- will be deleted after saving in DB
         move_uploaded_file($_FILES["myfile"]["tmp_name"], $output_dir . $uniqueFileName);
+        
         //save in database
+        
+
+        //save image in db as diretced by Geoff
+        $uploadedFile = $output_dir.$uniqueFileName;
+        $file=file_get_contents($uploadedFile);
+        $image = base64_encode($file);
+
         $connection = Yii::app()->db;
         $command = $connection->createCommand('INSERT INTO photo '
-                . "(filename, unique_filename, relative_path) VALUES ('" . $fileName . "','" . $uniqueFileName . "','" . $path . "' )");
+                . "(filename, unique_filename, relative_path, db_image) VALUES ('" . $fileName . "','" . $uniqueFileName . "','" . $path . "','" . $image . "')");
         $command->query();
         //update company
         if ($action == 'update' && ($controllerId == 'visitor' || $controllerId == 'user') ) {
@@ -49,6 +61,12 @@ if (isset($_FILES["myfile"])) {
         } else if ($action == 'create' || $action == 'addvisitor' || $action == 'detail' || $action == 'customisation') {
             $ret = Yii::app()->db->lastInsertID;
         }
+
+        //delete uploaded file from folder as inserted in DB -- directed by Geoff
+        if (file_exists($uploadedFile)) {
+            unlink($uploadedFile);
+        }
+
     }
     echo $ret;
     //echo json_encode($ret);
@@ -63,14 +81,28 @@ if (isset($_FILES["myfile2"])) {
         $fileName = $_FILES["myfile2"]["name"];
         $uniqueFileName = $usernameHash . '-' . time() . ".jpg";
         $path = "uploads" . $folderKey . $uniqueFileName;
+
+        //temporay uploaded -- will be deleted after saving in DB
         move_uploaded_file($_FILES["myfile2"]["tmp_name"], $output_dir . $uniqueFileName);
+        
         //save in database
+        
+        //save image in db as diretced by Geoff
+        $uploadedFile = $output_dir.$uniqueFileName;
+        $file=file_get_contents($uploadedFile);
+        $image = base64_encode($file);
+        
         $connection = Yii::app()->db;
         $command = $connection->createCommand('INSERT INTO photo '
-            . "(filename, unique_filename, relative_path) VALUES ('" . $fileName . "','" . $uniqueFileName . "','" . $path . "' )");
+            . "(filename, unique_filename, relative_path,  db_image) VALUES ('" . $fileName . "','" . $uniqueFileName . "','" . $path . "','" . $image . "')");
         $command->query();
         
-            $ret = Yii::app()->db->lastInsertID;
+        $ret = Yii::app()->db->lastInsertID;
+
+        //delete uploaded file from folder as inserted in DB -- directed by Geoff
+        if (file_exists($uploadedFile)) {
+            unlink($uploadedFile);
+        }
        
     }
     echo $ret;

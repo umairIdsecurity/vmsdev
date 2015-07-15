@@ -255,14 +255,16 @@ class Company extends CActiveRecord {
         if ($company->logo != '') {
             $photo = Photo::model()->findByPK($company->logo);
 
-            return $photo->relative_path;
+            //return $photo->relative_path;
+            return $photo->db_image;
         }
     }
 
     public function getPhotoRelativePath($photoId) {
         if ($photoId != '') {
             $photo = Photo::model()->findByPK($photoId);
-            return $photo->relative_path;
+            //return $photo->relative_path;
+            return $photo->db_image;
         }
     }
 
@@ -341,7 +343,7 @@ class Company extends CActiveRecord {
             $company = Yii::app()->db->createCommand()
                     ->selectdistinct('*')
                     ->from('company')
-                    ->where("id != 1 and id=" . Yii::app()->user->tenant . " AND is_deleted = 0")
+                    ->where("id != 1 and tenant=" . Yii::app()->user->tenant . " AND is_deleted = 0")
                     ->queryAll();
         } else {
             $company = Yii::app()->db->createCommand()

@@ -60,7 +60,7 @@ $company = Company::model()->findByPk($session['company']);
                      <?php
                      if ($company->logo != NULL) {
                          ?>
-                    <img id='photoPreview' src="<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnLogoPhotoRelative($company->logo); ?>"/>
+                    <img id='photoPreview' src="data:image;base64,<?php echo Photo::model()->returnLogoPhotoRelative($company->logo); ?>"/>
                 <?php } else { ?>
                     <img id="photoPreview" >
                 <?php } ?>
@@ -587,7 +587,7 @@ $company = Company::model()->findByPk($session['company']);
                     y2: $("#y22").val(),
                     width: $("#width").val(),
                     height: $("#height").val(),
-                    imageUrl: $('#photoCropPreview').attr('src').substring(1, $('#photoCropPreview').attr('src').length),
+                    //imageUrl: $('#photoCropPreview').attr('src').substring(1, $('#photoCropPreview').attr('src').length),
                     photoId: $('#Host_photo').val()
                 },
                 dataType: 'json',
@@ -598,7 +598,10 @@ $company = Company::model()->findByPk($session['company']);
                         dataType: 'json',
                         success: function (r) {
                             $.each(r.data, function (index, value) {
-                                document.getElementById('photoPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+                                
+                                /*document.getElementById('photoPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;*/
+                                document.getElementById('photoPreview').src = "data:image;base64,"+ value.db_image;
+
                             });
                         }
                     });
@@ -619,7 +622,7 @@ $company = Company::model()->findByPk($session['company']);
 
 <!-- PHOTO CROP-->
 <div id="light" class="white_content">
-    <img id="photoCropPreview" src="<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnLogoPhotoRelative($company->logo); ?>">
+    <img id="photoCropPreview" src="data:image;base64,<?php echo Photo::model()->returnLogoPhotoRelative($company->logo); ?>">
 
 </div>
 <div id="fade" class="black_overlay">

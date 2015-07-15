@@ -469,11 +469,22 @@ function preloadHostDetails(hostId) {
         success: function (r) {
             $.each(r.data, function (index, value) {
                 if (index == "photo") {
+
                     $("#Host_photo3").val(value.id);
-                    $(".ajax-upload-dragdrop3").css("background", "url(<?php echo Yii::app()->request->baseUrl."/"; ?>" + value.relative_path + ") no-repeat center top");
+
+                    /*$(".ajax-upload-dragdrop3").css("background", "url(<?php echo Yii::app()->request->baseUrl."/"; ?>" + value.relative_path + ") no-repeat center top");
                     $(".ajax-upload-dragdrop3").css({"background-size": "132px 152px"});
                     logo.src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
-                    document.getElementById('photoCropPreview3').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+                    document.getElementById('photoCropPreview3').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;*/
+
+                    //showing image from DB as saved in DB -- image is not present in folder
+                    var my_db_image = "url(data:image;base64,"+ value.db_image + ")";
+
+                    $(".ajax-upload-dragdrop3").css("background", my_db_image + " no-repeat center top");
+                    $(".ajax-upload-dragdrop3").css({"background-size": "132px 152px" });
+                    logo.src = "data:image;base64,"+ value.db_image;
+                    document.getElementById('photoCropPreview3').src = "data:image;base64,"+ value.db_image;                    
+
                     $("#cropImageBtn3").show();
 
                 }

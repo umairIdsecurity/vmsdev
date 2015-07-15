@@ -533,6 +533,7 @@ $asicEscort = new AddAsicEscort();
                         $('#AddAsicEscort_email_unique_em_').hide();
                         if(asicCheck() == true ) {
                             confirmed = true;
+                            $('#identificationModal').modal('show');
                         } else {
                             asicSponsorDeclarationChange(false);
                         }

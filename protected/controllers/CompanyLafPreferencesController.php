@@ -183,7 +183,7 @@ class CompanyLafPreferencesController extends Controller {
         $companyLafPreferencesService = new CompanyLafPreferencesServiceImpl();
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
-        $company = Company::model()->findByPk($session['company']);
+        $company = Company::model()->findByPk($session['tenant']);
 
         if ($company->company_laf_preferences != '') {
             $model = $this->loadModel($company->company_laf_preferences);

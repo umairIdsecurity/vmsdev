@@ -41,10 +41,9 @@ $userRole = $session['role'];
         <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->controller->assetsBase; ?>/css/imgareaselect-default.css" />
         <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->controller->assetsBase; ?>/css/gridview.css" />
         <?php
-        $session['tenant'] = $session['id'];
+        //$session['tenant'] = $session['id'];
 
-        $tenantCompany = User::model()->findByPk($session['tenant'])->company;
-        $company = Company::model()->findByPk($tenantCompany);
+        $company = Company::model()->findByPk($session['tenant']);
 
         if (isset($company->company_laf_preferences) && $company->company_laf_preferences != '') {
             $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
@@ -129,7 +128,7 @@ $userRole = $session['role'];
                             </li>
 
                             <li class="open-folder">
-                                <a title="Open folder" href="<?php echo Yii::app()->createUrl("/uploadfile/"); ?>"><span class="glyphicon glyphicons-folder-open"></span></a>
+                                <a title="Open folder" href="<?php echo Yii::app()->createUrl("/uploadFile"); ?>"><span class="glyphicon glyphicons-folder-open"></span></a>
                             </li>
 
                             <li class="help">

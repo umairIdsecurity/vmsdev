@@ -206,7 +206,6 @@ $form = $this->beginWidget('CActiveForm', array(
 
 </table>
 
-
 <table style="float:left;width:300px;">
 <tr>
 
@@ -235,7 +234,7 @@ $form = $this->beginWidget('CActiveForm', array(
                 <option value="<?php echo $value['id']; ?>"
 
                     <?php
-                    if (($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant'] && $this->action->id != 'update') || ($model['tenant'] == $value['id'])) {
+                    if (($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['id'] && $this->action->id != 'update') || ($model['tenant'] == $value['id'])) {
 
                         echo "selected ";
 

@@ -2,7 +2,7 @@
     <div class="left">
         <ul class="folder">
             <?php
-            foreach ($menuFolder[0] as $folder) {
+            foreach ($menuFolder as $folder) {
                 echo '<li ';
                 if (isset($f)) {
                     if ($f == $folder['name']) echo 'class="active"';
@@ -14,16 +14,44 @@
             ?>
         </ul>
 
-        <a href="#" class="add-folder" data-toggle="modal" data-target="#addNewFolderModal">+ New folder</a>
+        <?php if (isset($allow_create_new_folder) && $allow_create_new_folder == 1) {?>
+            <a href="#" class="add-folder" data-toggle="modal" data-target="#addNewFolderModal">+ New folder</a>
+        <?php } ?>
     </div>
     <div class="right">
         <h2><?php if(isset($f)) echo $f; else echo 'Help Documents'; ?></h2>
         <div id="file_grid_error" class="errorMessage" style="text-transform: none;margin-top: 20px; height: 30px ;display:none">Couldn't delete files.</div>
-        <div class="upload-function">
-            <button class="btn btn-default btn-upload">Upload Files</button>
+        <form method="post" class="upload-function" enctype="multipart/form-data">
+            <label class="btn btn-default btn-upload" for="attachFilesUpload">Upload Files</label>
             <button class="btn btn-default btn-delete" id="btn_delete_file" disabled>Delete</button>
-        </div>
-        <form id="list_file" method="post" />
+            <input type="file" name="filesUpload[]"
+                   id="attachFilesUpload"
+                   data-multifile
+                   data-preview-template="#previewFilesTemplate"
+                   data-preview-file=".preview-files-list"
+                   data-validate-file=""
+                   data-show-button=".btn-submit"
+                   class="hidden"
+                   multiple>
+            <div class="preview-files">
+                <table class="table preview-files-list"></table>
+                <div class="btn-submit">
+                    <input type="submit" value="Upload">
+                </div>
+            </div>
+            <table class="hidden">
+                <tbody id="previewFilesTemplate" >
+                <tr class="item" data-item-id="{0}">
+                    <td width="200">
+                        <span>{0}</span>
+                    </td>
+                    <td width="50" class="delete-image-upload">x</td>
+                </tr>
+                </tbody>
+            </table>
+
+        </form>
+        <form id="list_file" method="post">
         <input value="<?php echo Yii::app()->user->id; ?>" type="hidden" name="File[user_id]">
         <?php
 $this->widget('zii.widgets.grid.CGridView', array(
@@ -34,7 +62,11 @@ $this->widget('zii.widgets.grid.CGridView', array(
     function(id, data) {
         $('th > .asc').append('<div></div>');
         $('th > .desc').append('<div></div>');
-    }",
+        editCell();
+    }
+
+
+    ",
     'htmlOptions' => array('class' => 'table'),
     'columns' => array(
         array(
@@ -47,7 +79,10 @@ $this->widget('zii.widgets.grid.CGridView', array(
 
         array(
             'name' => 'file',
-            'filter' => false,
+            //'value' => '"<span class=\"file-type file-" . $data->ext ."\">$data->file <span class="glyphicon glyphicon-pencil"></span></span>',
+            'value' => '"<span class=\'file-type file-" . $data->ext ."\'> <span> $data->file </span> <span id=\'pencil-".$data->id."\' class=\'glyphicon glyphicon-pencil\'></span></span>"',
+            'type' => 'raw',
+            'filter' => false
         ),
         array(
             'name' => 'size',
@@ -438,7 +473,81 @@ $this->widget('zii.widgets.grid.CGridView', array(
             });
         });
 
+        editCell();
+
+
 
     });
+    function editCell(){
+        $(".glyphicon.glyphicon-pencil").each(function(){
+            $(this).click(function () {
+                var text = $(this).prev("span").text();
+                var id = $(this).attr('id').substring($(this).attr('id').indexOf('-')+1,$(this).attr('id').length);
+                if($("#File-"+id).length>0){
+                    $.ajax({
+                        type: 'POST',
+                        url: '<?php echo Yii::app()->createUrl('uploadfile/updateFile'); ?>',
+                        //dataType: 'text',
+                        data: {id: id, file:$("#File-"+id).val()},
+                        success: function (r) {
+                            r = JSON.parse(r);
+                            if (r.success != 1) {
+                                $('#file_grid_error').html(r.error);
+                                $("#File-"+id).css('border-color','red');
+                                $('#file_grid_error').fadeIn();
+                            } else {
+                                $('#file_grid_error').fadeOut();
+                                $.fn.yiiGridView.update("file-grid");
+                            }
+                        }
+                    });
+                }else {
+                    $(this).prev("span").hide();
+                    $(this).before('<input id=\'File-' + id + '\' value="' + text + '" />');
+                }
+            });
+        });
+    }
+    var formatStr = function(str) {
+        var theString = str;
+        for (var i = 1; i < arguments.length; i++) {
+            var regEx = new RegExp("\\{" + (i - 1) + "\\}", "gm");
+            theString = theString.replace(regEx, arguments[i]);
+        }
+        return theString;
+    };
 
+    var numberWithCommas = function(x, commas) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, commas);
+    };
+
+    jQuery(function() {
+        'use strict';
+        var $multifile = $('[data-multifile]');
+        if($multifile.length) {
+
+            $(document).on('click', '.delete-image-upload', function(){
+                $(this).parent().empty();
+            });
+
+            $multifile.on('change', function() {
+                var strTemplate = $($(this).data('previewTemplate')).html();
+                var files = this.files;
+                var $previewFiles = $($(this).data('previewFile'));
+                var $viewModal = $($(this).data('viewModal') );
+                var $showButton = $($(this).data('showButton') );
+
+                $showButton.show();
+
+                $previewFiles.empty();
+                if( strTemplate && $previewFiles.length ) {
+                    for (var i = 0, len = files.length; i < len; i++) {
+                        var strItem = formatStr(strTemplate, files[i]["name"], numberWithCommas(files[i]["size"], '.') );
+
+                        $previewFiles.append(strItem);
+                    }
+                }
+            });
+        }
+    });
 </script>

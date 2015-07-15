@@ -41,7 +41,7 @@ nav.navigation ul {
     padding: 20px;
 }
 .upload-function {
-    padding: 20px 0;
+    padding: 20px 0 0;
     border-top: 1px solid #DDDDDD;
     border-bottom: 1px solid #DDDDDD;
 }
@@ -101,4 +101,12 @@ ul.folder li a{
     font-weight: bold;
     display: block;
     padding: 20px 0 10px 0;
+}
+
+.preview-files {
+    padding-top: 20px;
+}
+.preview-files .btn-submit {
+    display: none;
+    margin-bottom: 20px;
 }

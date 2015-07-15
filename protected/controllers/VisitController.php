@@ -192,7 +192,7 @@ class VisitController extends Controller {
                 $model->finish_time = date('H:i:s');
             }
 
-            if(isset($_POST['AddAsicEscort'])) {
+            if(isset($_POST['AddAsicEscort']) && isset($_POST['createEscort']) && $_POST['createEscort']=='true') {
                 $asicEscort                      = new Visitor;
                 $visitorService                  = new VisitorServiceImpl;
                 $asicEscort->attributes          = Yii::app()->request->getPost('AddAsicEscort');
@@ -1002,7 +1002,7 @@ class VisitController extends Controller {
             }
         }
 
-        if(isset($_POST['AddAsicEscort'])) {
+        if(isset($_POST['AddAsicEscort'])&& isset($_POST['createEscort']) && $_POST['createEscort']=='true') {
             $asicEscort                      = new Visitor;
             $visitorService                  = new VisitorServiceImpl;
             $asicEscort->attributes          = Yii::app()->request->getPost('AddAsicEscort');
@@ -1317,8 +1317,10 @@ class VisitController extends Controller {
 
                 if (!empty($sheetData)) {
                     array_shift($sheetData);
+                    $sheetData = array_filter(array_map('array_filter', $sheetData));
+
                     foreach ($sheetData as $row) {
-                        $email = preg_replace('/\s+/', '', $row['B'] . '@' . $row['C']);
+                        $email = preg_replace('/[^A-Za-z0-9\-]/', '', $row['B']) . '@' . preg_replace('/[^A-Za-z0-9\-]/', '', $row['C']) . '.com';
 
                         $visitor = Visitor::model()->findByAttributes(array('email' => $email));
                         if (!$visitor['email']) {
@@ -1331,8 +1333,9 @@ class VisitController extends Controller {
                                 $worstationModel->name = $row['P'];
                                 $worstationModel->created_by = Yii::app()->user->id;
                                 $worstationModel->tenant = Yii::app()->user->tenant;
-                                $worstationModel->save();
-                                $worstationId = $worstationModel->id;
+                                if (!$worstationModel->save()) {
+                                    $worstationId = $worstationModel->id;
+                                }
                             } else {
                                 $worstationId = $worstation['id'];
                             }
@@ -1346,12 +1349,12 @@ class VisitController extends Controller {
                             $visitorModel->visitor_workstation = isset($worstationId) ? $worstationId : '';
                             $visitorModel->tenant = $session['tenant'];
                             $visitorModel->role = Roles::ROLE_VISITOR;
-                            if ($row['J'] == 'TRUE') {
+                            if (isset($row['J']) && $row['J'] == 'TRUE') {
                                 $visitorModel->visitor_card_status = 3;
                             } else {
                                 $visitorModel->visitor_card_status = 2;
                             }
-                            $visitorModel->email = preg_replace('/\s+/', '', $row['B'] . '@' . $row['C']);
+                            $visitorModel->email = $email;
                             $visitorModel->contact_number = 'dummy';
                             $visitorModel->identification_type = 'PASSPORT';
                             $visitorModel->identification_country_issued = 13;
@@ -1367,7 +1370,6 @@ class VisitController extends Controller {
                             $visitorModel->contact_postcode = 'dummy';
                             $visitorModel->contact_country = 13;
 
-                            $visitorModel->save();
                             if ($visitorModel->save()) {
                                 $visitorId = $visitorModel->id;
                             }

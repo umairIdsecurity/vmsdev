@@ -149,14 +149,18 @@ $detailForm = $this->beginWidget('CActiveForm', [
         }
         echo $detailForm->dropDownList($model, 'workstation', $workstationResults, ['empty' => 'Select Workstation']);
         echo "<span class='required'>*</span>";
-        echo $detailForm->error($model, 'workstation');
+        //echo $detailForm->error($model, 'workstation');
+        echo '<div id="Visit_workstation_em_" class="errorMessage" style="display: none">Please select a workstation</div>';
 
-        if ($asic) {
+
+    if ($asic) {
             echo $detailForm->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes());
             echo "<span class='required'>*</span>";
-            echo $detailForm->error($model, 'visitor_type');
+            //echo $detailForm->error($model, 'visitor_type');
+            echo '<div id="Visit_visitor_type_em_" class="errorMessage" style="display: none">Please select a Visitor type</div>';
 
-            $reasons = CHtml::listData(VisitReason::model()->findAll(), 'id', 'reason');
+
+        $reasons = CHtml::listData(VisitReason::model()->findAll(), 'id', 'reason');
             foreach ($reasons as $key => $item) {
                 $results[$key] = 'Reason: ' . $item;
             }

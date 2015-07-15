@@ -8,14 +8,11 @@ if ($this->Id == 'visitor') {
 }
 ?>
 <?php
-//echo '<pre>';
-//var_dump($model->photo1);
-//echo '</pre>';
-if ($model->photo1) {
-    //$background = $model->photo1->relative_path;
+/*if ($model->photo1) {
+    $background = $model->photo1->relative_path;
 } else {
-    //$background = Yii::app()->controller->assetsBase . "/images/portrait_box.png";
-}
+    $background = Yii::app()->controller->assetsBase . "/images/portrait_box.png";
+}*/
 ?>
 <style>
     .ajax-upload-dragdrop2 {
@@ -23,7 +20,7 @@ if ($model->photo1) {
         margin-left: 25px !important;
         margin-top: 10px;
         
-        /*background: url('<?php echo $background ?>') no-repeat center top;*/
+        /*background: url('<?php //echo $background ?>') no-repeat center top;*/
         background: url('<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png') no-repeat center top;
         
         background-size:137px;

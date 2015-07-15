@@ -231,6 +231,13 @@ $userRole = $session['role'];
                     </div><!-- footer -->
 
                     </div><!-- page -->
-
+<div style="display: none;">
+<?php
+    $this->widget('zii.widgets.jui.CJuiDatePicker',array(
+        'id' => 'identification_document_expiry',
+        'name'=>'Visitor[identification_document_expiry]'
+    ));
+?>
+</div>
 </body>
 </html>

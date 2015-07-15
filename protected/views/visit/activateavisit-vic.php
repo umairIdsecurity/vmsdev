@@ -265,11 +265,13 @@ $asicEscort = new AddAsicEscort();
                         break;
                 }
 
+                $('#CardGenerated_date_expiration').val($("#dateoutDiv #Visit_date_check_out" ).datepicker( "getDate"));
+
                 function updateTextVisitButton(text, id, val) {
                     $("#registerNewVisit").text(text).val(val);
                 }
 
-                if (selectedDate >= currentDate) {
+                if (selectedDate > currentDate) {
                     <?php if ($model->card_type == CardType::VIC_CARD_MANUAL) { // show Back Date Visit
                         echo 'updateTextVisitButton("Activate Visit", "registerNewVisit", "active");';
                     } else {
@@ -297,6 +299,9 @@ $asicEscort = new AddAsicEscort();
             }
         });
 
+
+        $('#CardGenerated_date_expiration').val($("#dateoutDiv #Visit_date_check_out" ).datepicker( "getDate"));
+
         $("#dateoutDiv #Visit_date_check_out").datepicker({
             changeMonth: true,
             changeYear: true,
@@ -307,14 +312,15 @@ $asicEscort = new AddAsicEscort();
             maxDate: maxDate,
             dateFormat: "dd-mm-yy",
             disabled: <?php echo in_array($model->card_type, [CardType::VIC_CARD_24HOURS, CardType::VIC_CARD_MANUAL]) ? "true" : "false"; ?>,
-            onClose: function (selectDate) {
-                var day      = selectDate.substring(0, 2);
-                var month    = selectDate.substring(3, 5);
-                var year     = selectDate.substring(6, 10);
+            onClose: function (selectedDate) {
+                var day      = selectedDate.substring(0, 2);
+                var month    = selectedDate.substring(3, 5);
+                var year     = selectedDate.substring(6, 10);
                 var newDate  = new Date(year, month-1, day);
                 var cardDate = $.datepicker.formatDate('dd M y', newDate);
                 $("#cardDetailsTable span.cardDateText").html(cardDate);
 
+                $('#CardGenerated_date_expiration').val(selectedDate);
             }
         });
 

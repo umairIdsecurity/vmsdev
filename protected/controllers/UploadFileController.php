@@ -157,7 +157,7 @@ class UploadFileController extends Controller
                $files = $_FILES['file'];
                $listError=array();
                for($i = 0; $i < count($files['name']);$i++){
-                   if($files['size'][$i] <= 10000000){
+                   if($files['size'][$i] <= 10485760){
                        if ($files['error'][$i] == UPLOAD_ERR_OK) {
                            $tmp_name = $files['tmp_name'][$i];
                            $name = $files['name'][$i];

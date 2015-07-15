@@ -673,7 +673,7 @@ $model->identification_country_issued = 13;
                                     ?>
                                     <option value="<?php echo $value['id']; ?>"
                                         <?php
-                                        if ($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant']) {
+                                        if ($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['id']) {
                                             echo " selected ";
                                         }
                                         ?>><?php echo $value['name']; ?></option>

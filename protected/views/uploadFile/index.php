@@ -4,8 +4,8 @@
             <?php
             foreach ($menuFolder as $folde) {
                 echo '<li ';
-                if (isset($f)) {
-                    if ($f == $folde['name']) echo 'class="active"';
+                if (isset($folder)) {
+                    if ($folder->name == $folde['name']) echo 'class="active"';
                 } else {
                     if ($folde['default'] == 1) echo 'class="active"';
                 }

@@ -141,8 +141,7 @@ class UploadFileController extends Controller
            $folder_id = $_POST['File']['folder_id'];
            $user_id = $_POST['File']['user_id'];
            if(isset($_FILES)){
-               $root=Yii::app()->basePath.'/uploads/files';
-               $root = str_replace('/protected','',$root);
+               $root=dirname(Yii::app()->request->scriptFile).'/uploads/files';
                $folderUser = $root.'/'.$user_id;
                $folderFile = $folderUser.'/'.$folder_id;
                if(!is_dir($root)){

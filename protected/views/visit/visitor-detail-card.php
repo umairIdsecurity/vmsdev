@@ -102,7 +102,9 @@ $companyName = isset($visitCount['companyName']) ? $visitCount['companyName'] : 
 $totalCompanyVisit = (isset($visitCount['totalVisits']) && !empty($visitCount['totalVisits'])) ? ($visitCount['totalVisits'] < 0) ? 0 : $visitCount['totalVisits'] : '0';
 $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingDays'] <= 28) ? ($visitCount['remainingDays'] < 0) ? '0' : $visitCount['remainingDays'] : '28';
 ?>
-    Total Visits at <?php echo $companyName; ?>: <?php echo $totalCompanyVisit; ?></br>
+    Total Visits at <?php echo $companyName; ?>: <?php echo $totalCompanyVisit; ?>
+    <!--<span class="glyphicon glyphicons-refresh"></span>-->
+    </br>
     <!-- Total Visits to All Companies: <?php // echo $visitCount['allVisitsByVisitor'];           ?> -->
     <?php if ($visitorModel->profile_type == Visitor::PROFILE_TYPE_VIC) { ?>
         Remaining Days: <?php echo $remainingDays; ?>

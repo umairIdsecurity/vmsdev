@@ -142,7 +142,7 @@ class UploadFileController extends Controller
            $user_id = $_POST['File']['user_id'];
            if(isset($_FILES)){
                $root=Yii::app()->basePath.'/uploads/files';
-               $root = str_replace('protected','',$root);
+               $root = str_replace('/protected','',$root);
                $folderUser = $root.'/'.$user_id;
                $folderFile = $folderUser.'/'.$folder_id;
                if(!is_dir($root)){
@@ -161,7 +161,6 @@ class UploadFileController extends Controller
                        if ($files['error'][$i] == UPLOAD_ERR_OK) {
                            $tmp_name = $files['tmp_name'][$i];
                            $name = $files['name'][$i];
-                           if (!file_exists("$folderFile/$name")) {
                                if (move_uploaded_file($tmp_name, "$folderFile/$name")) {
                                    $objectFile = new File();
                                    $objectFile->folder_id = $folder_id;
@@ -174,9 +173,6 @@ class UploadFileController extends Controller
                                } else {
                                    $listError[] = $files['name'][$i];
                                }
-                           }else{
-                               $listError[] = $files['name'][$i];
-                           }
                        }else{
                            $listError[] = $files['name'][$i];
                        }

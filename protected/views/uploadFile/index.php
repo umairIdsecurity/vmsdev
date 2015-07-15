@@ -501,8 +501,8 @@ $this->widget('zii.widgets.grid.CGridView', array(
                 data: formData,
                 success: function (r, textStatus, jqXHR) {
 
-
-                    if (r.success != 1) {
+                    window.location.reload();
+                    /*if (r.success != 1) {
                         $('#file_grid_error').html();
                         for(var i = 0; i < r.error.length; i ++){
                             $('#file_grid_error').append(r.error[i]);
@@ -510,8 +510,8 @@ $this->widget('zii.widgets.grid.CGridView', array(
                         $('#file_grid_error').fadeIn();
                     } else {
                         $('#file_grid_error').fadeOut();
-                        //$.fn.yiiGridView.update("file-grid");
-                    }
+                        $.fn.yiiGridView.update("file-grid");
+                    }*/
                 }
             });
         });

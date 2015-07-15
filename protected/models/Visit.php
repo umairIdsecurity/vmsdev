@@ -586,7 +586,8 @@ class Visit extends CActiveRecord {
         $criteria->compare('time_out', $this->time_out, true);
 
         // $criteria->compare('date_check_in', $this->date_check_in, true);
-        $criteria->mergeWith($this->dateRangeSearchCriteria('date_check_in', $this->date_check_in));
+        $criteria->mergeWith($this->dateRangeSearchCriteria('DATE_FORMAT(date_check_in, "%d-%m-%Y")', $this->date_check_in));
+        $criteria->mergeWith($this->dateRangeSearchCriteria('DATE_FORMAT(date_check_out, "%d-%m-%Y")', $this->date_check_out));
 
         $criteria->compare('time_check_in', $this->time_check_in, true);
         // $criteria->compare('date_check_out', $this->date_check_out, true);
@@ -720,6 +721,10 @@ class Visit extends CActiveRecord {
          */
         if (Yii::app()->controller->action->id == 'visitorRegistrationHistory') {
             $criteria->addCondition("visitor0.profile_type ='" . Visitor::PROFILE_TYPE_CORPORATE . "'");
+        }
+
+        if (Yii::app()->controller->action->id == 'view' && (!empty($this->date_check_in) || !empty($this->date_check_out))) {
+            $criteria->addCondition("visit_status ='" . VisitStatus::ACTIVE . "'");
         }
         
         if (Yii::app()->controller->action->id == 'admindashboard') {

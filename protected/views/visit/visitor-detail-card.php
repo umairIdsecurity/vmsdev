@@ -82,7 +82,7 @@ if($model->card_type > CardType::CONTRACTOR_VISITOR) {
         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo yii::app()->createAbsoluteUrl('cardGenerated/pdfprint', array('id' => $model->id, 'type' => 2)) ?>">Print On Card Printer</a></li>
         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo yii::app()->createAbsoluteUrl('cardGenerated/pdfprint', array('id' => $model->id, 'type' => 3)) ?>">Rewritable Print Card</a></li>
     </ul>
-<?php elseif (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && $model->visit_status == VisitStatus::AUTOCLOSED && date('Y-m-d') == $model->finish_date): ?>
+<?php elseif (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && $model->visit_status == VisitStatus::AUTOCLOSED && strtotime(date('Y-m-d')) == strtotime($model->finish_date)): ?>
     <button class="complete btn btn-info printCardBtn dropdown-toggle" style="width:205px !important; margin-top: 4px; margin-right: 80px;" type="button" id="menu1" data-toggle="dropdown">Print Card
         <span class="caret pull-right"></span></button>
         <ul class="dropdown-menu" style="left: 62px;" role="menu" aria-labelledby="menu1">
@@ -102,7 +102,12 @@ $companyName = isset($visitCount['companyName']) ? $visitCount['companyName'] : 
 $totalCompanyVisit = (isset($visitCount['totalVisits']) && !empty($visitCount['totalVisits'])) ? ($visitCount['totalVisits'] < 0) ? 0 : $visitCount['totalVisits'] : '0';
 $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingDays'] <= 28) ? ($visitCount['remainingDays'] < 0) ? '0' : $visitCount['remainingDays'] : '28';
 ?>
-    Total Visits at <?php echo $companyName; ?>: <?php echo $totalCompanyVisit; ?></br>
+    Total Visits at <?php echo $companyName; ?>: <?php echo $totalCompanyVisit; ?>
+    <?php if($visitorModel->visitor_card_status == Visitor::VIC_ASIC_PENDING && $totalCompanyVisit == 28):?>
+        <span class="glyphicon glyphicons-refresh"></span>
+    <?php endif;?>
+
+    </br>
     <!-- Total Visits to All Companies: <?php // echo $visitCount['allVisitsByVisitor'];           ?> -->
     <?php if ($visitorModel->profile_type == Visitor::PROFILE_TYPE_VIC) { ?>
         Remaining Days: <?php echo $remainingDays; ?>
@@ -243,9 +248,14 @@ $detailForm = $this->beginWidget('CActiveForm', [
         $('.btnUpdateVisitorDetailForm').on('click', function (e) {
             var checkWorkStation1 = checkWorkstation();
             var checkVisitorType1 = checkVisitorType();
-            var checkCardStatus1 = checkCardStatus();
-            if( checkCardStatus1 == true && checkVisitorType1 == true && checkWorkStation1 == true) {
-                $('#update-visitor-detail-form').submit();
+
+            if(checkVisitorType1 == true && checkWorkStation1 == true) {
+                var checkCardStatus1 = checkCardStatus();
+                if(checkCardStatus1 == true){
+                    $('#update-visitor-detail-form').submit();
+                }else {
+                    return false;
+                }
             } else {
                 return false;
             }

@@ -256,6 +256,7 @@ class UserController extends Controller
 
         if (isset($_POST['User'])) {
             $model->attributes = $_POST['User'];
+            // $model->detachBehavior('DateTimeZoneAndFormatBehavior');
             if ($model->save()) {
                 Yii::app()->user->setFlash('success', "Profile Updated Successfully.");
             }

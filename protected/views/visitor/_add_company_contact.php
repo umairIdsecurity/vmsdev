@@ -165,7 +165,7 @@
         });
     });
 
-    /*$(function() {
+    $(function() {
         var availableTags = ["<?php echo $listsCom; ?>"];
         $(".company-autocomplete").autocomplete({
             source: availableTags,
@@ -175,6 +175,6 @@
             }
         });
         $(".ui-front").css("z-index", 1051);
-    });*/
+    });
 
 </script>

@@ -148,10 +148,8 @@ if ($this->action->id == 'update') {
                         </tr>
 
                     </table><!--Company Contact field-->
-                </td>
-                <td>
-                    <div class="password-border">
-                        <table style="float:left;width:300px;">
+                    <div class="password-border" style="float: right; margin-right: 147px; margin-top: -230px;">
+                        <table style="float:left; width:300px;">
                             <tr>
                                 <td><strong>Password Options</strong></td>
                             </tr>
@@ -346,6 +344,17 @@ if (isset($_GET['viewFrom'])) {
                 $('#is_user_field').val("");
                 $( ".user_fields" ).hide();
                 $(".password-border").hide();
+            }
+
+        });
+
+        $('.password_requirement').click(function () {
+            if ($('#Company_password_requirement_1').is(':checked')) {
+                $('.user_requires_password').css("display", "block");
+                $('.pass_option').prop('checked', false);
+            }
+            else {
+                $('.user_requires_password').css("display", "none");
             }
 
         });

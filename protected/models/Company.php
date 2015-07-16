@@ -73,6 +73,7 @@ class Company extends CActiveRecord {
                     'message' => 'Code can only contain letters' ,'on' => 'updatetenant'),
 	            array('code', 'length', 'min' => 3, 'max' => 3, 'tooShort' => 'Code is too short (Should be in 3 characters)'),
 	            array('email_address', 'email'),
+                array('user_email','email'),
 	            array('website', 'url'),
 	            array('created_by_user, created_by_visitor', 'numerical', 'integerOnly' => true),
 	            array('name, trading_name, billing_address', 'length', 'max' => 150),

@@ -629,8 +629,9 @@ function checkHostEmailIfUnique() {
         dataType: 'json',
         data: email,
         success: function (r) {
+            var id = $("#User_id").val();
             $.each(r.data, function (index, value) {
-                if (value.isTaken == 1) {
+                if (value.isTaken == 1 && id == "") {
                     $("#hostEmailIsUnique").val("0");
                     $(".errorMessageEmail1").show();
                 } else {

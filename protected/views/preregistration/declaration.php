@@ -58,6 +58,12 @@
     ));
     ?>
         <?php echo $form->errorSummary($model); ?>
+
+        <label class="checkbox">
+            <?php echo $form->checkBox($model,'declaration3'); ?>
+            <span class="checkbox-style"></span>I have read and understood Perth Airport’s privacy notice on the collection and release of personal information.
+        </label>
+
         <h3 class="text-primary">Declarations</h3>
         <h5>I agree by ticking the boxes below:</h5>
 
@@ -73,10 +79,7 @@
                 <span class="checkbox-style"></span>I have not previously been refused an ASIC or had one suspended or cancelled because of an adverse criminal record, or been issued with a VIC pass at Perth Airport for more than a total of 28 days in the previous 12 months (not including a VIC issued by Customs & Border Protection, or VICs issued prior to 21st November 2011).
             </label>
 
-            <label class="checkbox">
-                <?php echo $form->checkBox($model,'declaration3'); ?>
-                <span class="checkbox-style"></span>I have read and understood <a href="<?=Yii::app()->createUrl("preregistration/privacypolicy")?>">Perth Airport’s privacy notice</a> on the collection and release of personal information.
-            </label>
+
 
             <label class="checkbox">
                 <?php echo $form->checkBox($model,'declaration4'); ?>

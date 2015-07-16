@@ -134,11 +134,11 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                         'maxlength'   => '10', // textField maxlength
                                         'placeholder' => 'dd-mm-yyyy',
                                         'readOnly'    => 'readOnly',
-                                        'disabled'    => $model->visitor_status == VisitStatus::CLOSED ? 'disabled' : '',
+                                        'disabled'    => $model->visit_status == VisitStatus::CLOSED ? 'disabled' : '',
                                         'style'       => $datePickerStyle
                                     ),
                                     'options' => [
-                                        'showOn'          => "button",
+                                        'showOn'          => $model->visit_status == VisitStatus::CLOSED ? "focus" : "button",
                                         'buttonImage'     => Yii::app()->controller->assetsBase . "/images/calendar.png",
                                         'buttonImageOnly' => true,
                                         'dateFormat'      => "dd-mm-yy",
@@ -577,7 +577,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
 <script>
     function afterValidate(form, data, hasError) {
         if (!hasError) {
-            
+
         }
     }
     

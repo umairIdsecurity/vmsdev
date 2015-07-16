@@ -37,7 +37,12 @@ if ($this->action->id == 'update') {
             'validateOnSubmit' => true,
             'afterValidate' => 'js:function(form, data, hasError) {
                 if (!hasError) {
-                    checkCompanyNameUnique ();
+                    if ($(".password_requirement").is(":checked")== false) {
+                        $("#pass_error_").show();
+                        return false;
+                    } else {
+                        checkCompanyNameUnique ();
+                    }
                 } else {
                     $( ".user_fields" ).show();
                     $(".password-border").show();
@@ -54,7 +59,7 @@ if ($this->action->id == 'update') {
     if (isset($_GET['viewFrom'])) {
         $isViewedFromModal = $_GET['viewFrom'];
     } else {
-        echo $form->errorSummary($model);
+        //echo $form->errorSummary($model);
     }
     ?>
     <!--<input type="hidden" id="user_role" name="user_role" value="<?php /*echo $session['role'];  */?>" />-->
@@ -80,18 +85,12 @@ if ($this->action->id == 'update') {
                             <td style="width:240px;">
                                 <?php
                                 echo $form->textField($model, 'name', array('size' => 60, 'maxlength' => 150, 'placeholder' => 'Company Name'));
-                                echo '<span class="required"> *</span>';
+                                echo '<span class="required"> *</span><br>';
+                                echo $form->error($model, 'name');
                                 echo '<div id="Company_name_unique_em_" class="errorMessage" style="display: none">Company name has already been taken</div>';
-                                if (isset($_GET['viewFrom'])) {
-                                    echo "<br>" . $form->error($model, 'name');
-                                }
-                                ?>
+                               ?>
                             </td>
-                            <td><?php
-                                if (!isset($_GET['viewFrom'])) {
-                                    echo $form->error($model, 'name');
-                                }
-                                ?></td>
+                            <td></td>
                         </tr>
 
                         <!--WangFu Modified-->

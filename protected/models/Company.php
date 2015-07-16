@@ -165,10 +165,10 @@ class Company extends CActiveRecord {
             'code' => 'Company Code',
             'card_count' => 'Card Count',
             'company_laf_preferences' => 'Look and Feel Preferences',
-            'user_first_name' => 'First Name',
-            'user_last_name' => 'Last Name',
-            'user_email' => 'Email',
-            'user_contact_number' => 'Contact Number',
+            'user_first_name' => 'User First Name',
+            'user_last_name' => 'User Last Name',
+            'user_email' => 'User Email',
+            'user_contact_number' => 'User Contact Number',
             'company_type' => 'Company Type'
         );
     }

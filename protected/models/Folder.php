@@ -13,9 +13,7 @@
 class Folder extends CActiveRecord
 {
     public static $DEFAULT_LIST_FOLDERS = array(
-            'Help Documents',
-            'Contracts',
-            'Inbox',
+            'Help Documents'
     );
 
     public function rules()

@@ -73,7 +73,7 @@ class DateTimeZoneAndFormatBehavior extends CActiveRecordBehavior
                     }
                 } else if ($column->dbType == 'time') {
                     $datetime_object = DateTime::createFromFormat($this->php_user_time, $event->sender->$columnName, new DateTimeZone($this->user_timezone));
-                    $datetime_object->setTimeZone(new DateTimeZone($this->edtTimeZone));
+                    $datetime_object->setTimezone(new DateTimeZone($this->edtTimeZone));
                     $event->sender->$columnName = $datetime_object->format($this->php_db_time);
                 }
             }

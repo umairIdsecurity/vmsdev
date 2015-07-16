@@ -26,7 +26,9 @@ $session = new CHttpSession;
                     <?php if ($session['role'] == Roles::ROLE_SUPERADMIN) { ?>
                         <tr>
                             <td><?php echo $form->labelEx($model, 'tenant'); ?></td>
-                            <td><select  onchange="getTenantAgent()"  id="Workstation_tenant" name="Workstation[tenant]">
+                            
+                            <td>
+                                <select  onchange="getTenantAgent()"  id="Workstation_tenant" name="Workstation[tenant]">
                                     <option disabled value='' selected>Please select a tenant</option>
                                     <?php
                                     $companyList = User::model()->findAllCompanyTenant();
@@ -41,7 +43,11 @@ $session = new CHttpSession;
                                         }
                                         ?>
 
-                                </select></td>
+                                </select>
+                            </td>
+
+
+
                             <td><?php echo $form->error($model, 'tenant'); ?></td>
                         </tr>
                         <tr>

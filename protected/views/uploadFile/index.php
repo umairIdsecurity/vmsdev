@@ -2,14 +2,14 @@
     <div class="left">
         <ul class="folder">
             <?php
-            foreach ($menuFolder as $folder) {
+            foreach ($menuFolder as $folde) {
                 echo '<li ';
-                if (isset($f)) {
-                    if ($f == $folder['name']) echo 'class="active"';
+                if (isset($folder)) {
+                    if ($folder->name == $folde['name']) echo 'class="active"';
                 } else {
-                    if ($folder['default'] == 1) echo 'class="active"';
+                    if ($folde['default'] == 1) echo 'class="active"';
                 }
-                echo '><a href="' . Yii::app()->createUrl("/uploadfile&f=" . $folder['name']) . '">' . $folder['name'] . ' <span>(' . $folder['number_file'] . ')</span></a></li>';
+                echo '><a href="' . Yii::app()->createUrl("/uploadFile&f=" . $folde['name']) . '">' . $folde['name'] . ' <span>(' . $folde['number_file'] . ')</span></a></li>';
             }
             ?>
         </ul>
@@ -19,12 +19,12 @@
         <?php } ?>
     </div>
     <div class="right">
-        <h2><?php if(isset($f)) echo $f; else echo 'Help Documents'; ?></h2>
+        <h2><?php if(isset($folder)) echo $folder->name; else echo 'Help Documents'; ?></h2>
         <div id="file_grid_error" class="errorMessage" style="text-transform: none;margin-top: 20px; height: 30px ;display:none">Couldn't delete files.</div>
-        <form method="post" class="upload-function" enctype="multipart/form-data">
+        <form id="form-submit-files" method="post" class="upload-function" enctype="multipart/form-data">
             <label class="btn btn-default btn-upload" for="attachFilesUpload">Upload Files</label>
             <button class="btn btn-default btn-delete" id="btn_delete_file" disabled>Delete</button>
-            <input type="file" name="filesUpload[]"
+            <input type="file" name="file[]"
                    id="attachFilesUpload"
                    data-multifile
                    data-preview-template="#previewFilesTemplate"
@@ -36,7 +36,9 @@
             <div class="preview-files">
                 <table class="table preview-files-list"></table>
                 <div class="btn-submit">
-                    <input type="submit" value="Upload">
+                    <input name="File[folder_id]" value="<?php echo $folder->id; ?>" type="hidden"/>
+                    <input name="File[user_id]" value="<?php echo Yii::app()->user->id;  ?>" type="hidden"/>
+                    <input id="btn-submit-files" type="button" value="Upload">
                 </div>
             </div>
             <table class="hidden">
@@ -80,18 +82,20 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'name' => 'file',
             //'value' => '"<span class=\"file-type file-" . $data->ext ."\">$data->file <span class="glyphicon glyphicon-pencil"></span></span>',
-            'value' => '"<span class=\'file-type file-" . $data->ext ."\'> <span> $data->file </span> <span id=\'pencil-".$data->id."\' class=\'glyphicon glyphicon-pencil\'></span></span>"',
+            'value' => '"<span class=\'file-type file-" . $data->ext ."\'> <span> <a href=\'".$data->linkDownloadFile($data->id)."\'>$data->name</a> </span> <span id=\'pencil-".$data->id."\' class=\'glyphicon glyphicon-pencil\'></span></span>"',
             'type' => 'raw',
             'filter' => false
         ),
         array(
             'name' => 'size',
+            'value' => '$data->displaySize($data->size)',
             'filter' => false,
-            'htmlOptions' => array('style'=>'max-width:20px !important;'),
-            'headerHtmlOptions' => array('style'=>'max-width:20px !important;'),
+            'htmlOptions' => array('style'=>'max-width:50px !important;'),
+            'headerHtmlOptions' => array('style'=>'max-width:50px !important;'),
         ),
         array(
             'name' => 'uploaded',
+            'value' => '$data->calculate_time_span($data->uploaded)',
             'filter' => false,
         ),
         array(
@@ -109,7 +113,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
                 'view' => array(//the name {reply} must be same
                     'label' => 'View', // text label of the button
                     'imageUrl' => false, // image URL of the button. If not set or false, a text link is used, The image must be 16X16 pixels
-                    'url' => 'Yii::app()->createUrl("uploadfile/file", array("file"=>$data->file))',
+                    'url' => 'Yii::app()->createUrl("uploadFile/view", array("id"=>$data->id))',
                     'options' => array('target' => '_new'),
                 ),
                 /*'delete' => array(//the name {reply} must be same
@@ -378,7 +382,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
             if(validateNameFolder($('#nameFolder').val())){
                 $.ajax({
                     type: 'POST',
-                    url: '<?php echo Yii::app()->createUrl('uploadfile/create'); ?>',
+                    url: '<?php echo Yii::app()->createUrl('uploadFile/create'); ?>',
                     //dataType: 'text',
                     data: $('#Folder_form').serialize(),
                     success: function (r) {
@@ -454,10 +458,10 @@ $this->widget('zii.widgets.grid.CGridView', array(
             }
         });
 
-        $('#btn_delete_file').click(function () {
+        $('#btn_delete_file').click(function (e) {
             $.ajax({
                 type: 'POST',
-                url: '<?php echo Yii::app()->createUrl('uploadfile/delete'); ?>',
+                url: '<?php echo Yii::app()->createUrl('uploadFile/delete'); ?>',
                 //dataType: 'text',
                 data: $('#list_file').serialize(),
                 success: function (r) {
@@ -466,17 +470,53 @@ $this->widget('zii.widgets.grid.CGridView', array(
                         $('#file_grid_error').html(r.error);
                         $('#file_grid_error').fadeIn();
                     } else {
-                        $('#file_grid_error').fadeOut();
-                        $.fn.yiiGridView.update("file-grid");
+                        window.location.reload();
                     }
                 }
             });
+            e.preventDefault();
         });
 
+        //Call function can edit cell on table
         editCell();
 
+        $('#btn-submit-files').click(function(e){
+            var obj = $('#form-submit-files');
+            /* ADD FILE TO PARAM AJAX */
+            var formData = new FormData();
+            $.each($(obj).find("input[type='file']"), function(i, tag) {
+                $.each($(tag)[0].files, function(i, file) {
+                    formData.append(tag.name, file);
+                });
+            });
+            var params = $(obj).serializeArray();
+            $.each(params, function (i, val) {
+                formData.append(val.name, val.value);
+            });
 
+            $.ajax({
+                type: 'POST',
+                url: '<?php echo Yii::app()->createUrl('uploadFile/uploadedFile'); ?>',
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                data: formData,
+                success: function (r, textStatus, jqXHR) {
 
+                    window.location.reload();
+                    /*if (r.success != 1) {
+                        $('#file_grid_error').html();
+                        for(var i = 0; i < r.error.length; i ++){
+                            $('#file_grid_error').append(r.error[i]);
+                        }
+                        $('#file_grid_error').fadeIn();
+                    } else {
+                        $('#file_grid_error').fadeOut();
+                        $.fn.yiiGridView.update("file-grid");
+                    }*/
+                }
+            });
+        });
     });
     function editCell(){
         $(".glyphicon.glyphicon-pencil").each(function(){
@@ -486,7 +526,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
                 if($("#File-"+id).length>0){
                     $.ajax({
                         type: 'POST',
-                        url: '<?php echo Yii::app()->createUrl('uploadfile/updateFile'); ?>',
+                        url: '<?php echo Yii::app()->createUrl('uploadFile/updateFile'); ?>',
                         //dataType: 'text',
                         data: {id: id, file:$("#File-"+id).val()},
                         success: function (r) {

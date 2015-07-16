@@ -53,6 +53,7 @@
             </table>
 
         </form>
+        <?php $this->widget('ext.widgets.loading.LoadingWidget'); ?>
         <form id="list_file" method="post">
             <input value="<?php echo Yii::app()->user->id; ?>" type="hidden" name="File[user_id]">
             <?php
@@ -458,12 +459,14 @@
         });
 
         $('#btn_delete_file').click(function (e) {
+            Loading.show();
             $.ajax({
                 type: 'POST',
                 url: '<?php echo Yii::app()->createUrl('uploadFile/delete'); ?>',
                 //dataType: 'text',
                 data: $('#list_file').serialize(),
                 success: function (r) {
+                    Loading.hide();
                     r = JSON.parse(r);
                     if (r.success != 1) {
                         $('#file_grid_error').html(r.error);
@@ -480,6 +483,7 @@
         editCell();
 
         $('#btn-submit-files').click(function(e){
+            Loading.show();
             var obj = $('#form-submit-files');
             /* ADD FILE TO PARAM AJAX */
             var formData = new FormData();
@@ -501,7 +505,7 @@
                 dataType: 'json',
                 data: formData,
                 success: function (r, textStatus, jqXHR) {
-
+                    Loading.hide();
                     window.location.reload();
                     /*if (r.success != 1) {
                      $('#file_grid_error').html();

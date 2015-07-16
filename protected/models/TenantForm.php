@@ -72,8 +72,8 @@ class TenantForm extends CFormModel
 
             //array('user_type', 'required', 'message' => 'Please select a {attribute}'),
             
-            array('user_type', 'safe'),
-            array('user_status', 'safe'),
+            //array('user_type', 'safe'),
+            //array('user_status', 'safe'),
             
 
             array('email', 'filter', 'filter' => 'trim'),

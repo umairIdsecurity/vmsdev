@@ -22,6 +22,10 @@ $currentLoggedUserId = $session['id'];
 
 <style type="text/css">
     .required{ padding-left:5px;}
+    .errorMessage{
+         margin-bottom: 9px;
+        margin-top: -5px;
+    }
 </style>
 <div class="form">
 
@@ -133,7 +137,7 @@ $currentLoggedUserId = $session['id'];
                             </td>
                         </tr>
                         <tr>
-                            <td><?php echo $form->textField($model, 'contact_number', array('size' => 50, 'placeholder'=>'Contact Number', 'onkeyup' => 'restrictContactNo(this)')); ?>
+                            <td><?php echo $form->textField($model, 'contact_number', array('size' => 50, 'placeholder'=>'Contact Number')); ?>
                                 <span class="required">*</span>
                                 <?php echo "<br>" . $form->error($model, 'contact_number'); ?></td>
                         </tr>
@@ -211,14 +215,34 @@ $currentLoggedUserId = $session['id'];
                      <tr>
                          
                         <td>
-                            <?php echo $form->dropDownList(
+                            <?php /*echo $form->dropDownList(
                                     $model,
                                     'timezone_id',
                                     CHtml::listData(Timezone::model()->findAll(),
                                             'id',
                                             'timezone_name'),
                                             array('empty'=>'Please select a timezone')
-                            );?>
+                                    );*/
+                            ?>
+
+                            <select id="Workstation_timezone_id" name="TenantForm[timezone_id]">
+                                <?php
+                                    $timezoneList = Timezone::model()->findAll();
+                                    foreach ($timezoneList as $key => $value) {
+                                        ?>
+                                        <option <?php
+                                        if ($model['timezone_id'] == $value['id']) {
+                                            echo " selected ";
+                                        } elseif($model['timezone_id'] == '' && $value['timezone_value'] == $_SESSION["timezone"]) {
+                                            echo " selected ";
+                                        }
+                                        ?> value="<?php echo $value['id']; ?>"><?php echo $value['timezone_name']; ?></option>
+                                        <?php
+                                    }?>
+                            </select>
+
+
+
                             <?php echo $form->error($model, 'timezone_id',array('style'=>'text-transform:none;')); ?>
                         </td>
                  
@@ -270,7 +294,7 @@ $currentLoggedUserId = $session['id'];
                                             <input placeholder="Password" type="password" id="TenantForm_password"  name="TenantForm[password]">
                                             <span class="required">*</span>
 
-                                            <?php  echo $form->error($model,'password'); ?>
+                                            <?php  echo $form->error($model,'password', array("class"=>"hidingMsgPassword")); ?>
 
                                         </td>
                                     </tr>
@@ -290,7 +314,7 @@ $currentLoggedUserId = $session['id'];
                                             <div class="row buttons" style="margin-left:23.5px;">
 
                                                 <?php $background = isset($companyLafPreferences) ? ("background:" . $companyLafPreferences->neutral_bg_color . ' !important;') : ''; ?>
-                                                <input onclick="generatepassword();" class="complete btn btn-info" style="<?php echo $background; ?>position: relative; width:178px; overflow: hidden; cursor: default;cursor:pointer;font-size:14px" type="button" value="Autogenerate Password" />
+                                                <input id="generatePassword" onclick="generatepassword();" class="complete btn btn-info" style="<?php echo $background; ?>position: relative; width:178px; overflow: hidden; cursor: default;cursor:pointer;font-size:14px" type="button" value="Autogenerate Password" />
 
                                             </div>
 
@@ -674,7 +698,32 @@ function get_avms_assignable_roles($user_role)
 
 
 <script type="text/javascript">
+    
+    $('.hidingMsgPassword').css("color","red");
 
+    $('#TenantForm_password, #TenantForm_cnf_password').on('keyup', function () {
+        if ($('#TenantForm_password').val() == $('#TenantForm_cnf_password').val()) {    
+
+            $('#TenantForm_password').css({"background-color": "#fffff", "border": "1px solid #cccccc"});
+            
+            $('#TenantForm_cnf_password').css({"background-color": "#fffff", "border": "1px solid #cccccc"});
+
+            $('#generatePassword').css({"background-color": "#2f96b4", "border": "1px solid #cccccc"});            
+            
+            $('.hidingMsgPassword').hide();
+        } else {
+            $('.hidingMsgPassword').css("color","red");
+            $('.hidingMsgPassword').show();
+
+            $('#TenantForm_password').css({"background": "#fee none repeat scroll 0 0", "border": "#c00"});
+            
+            $('#TenantForm_cnf_password').css({"background": "#fee none repeat scroll 0 0", "border": "#c00"});
+
+            $('#generatePassword').css({"background-color": "#2f96b4", "border": "1px solid #cccccc"});            
+            
+        }
+            
+    });
 
     function restrict(ob){
         var invalidChars = /([^A-Z])/g;
@@ -684,12 +733,14 @@ function get_avms_assignable_roles($user_role)
     }
 
 
-    function restrictContactNo(ob){
-        var invalidChars = /([^0-9])/g;
-        if(invalidChars.test(ob.value)) {
-            ob.value = ob.value.toUpperCase().replace(invalidChars,"");
-        }
-    }
+    $("#TenantForm_contact_number").on("keypress",function(evt){
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        //anything other than BACKSPACE,SPACE and numerics from 0 to 9 will not do anything in textbox
+        if (charCode > 32 && (charCode < 48 || charCode > 57))
+            return false;
+        return true;
+    });
+
 
     var radiochooseval = "";
     function call_radio1(){

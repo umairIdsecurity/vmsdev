@@ -271,29 +271,23 @@ $asicEscort = new AddAsicEscort();
                     $("#registerNewVisit").text(text).val(val);
                 }
 
-                if (selectedDate > currentDate) {
-                    <?php if ($model->card_type == CardType::VIC_CARD_MANUAL) { // show Back Date Visit
-                        echo 'updateTextVisitButton("Activate Visit", "registerNewVisit", "active");';
+                if (selectedDate >= currentDate) {
+                    if (cardType == <?php echo CardType::VIC_CARD_MANUAL; ?> || selectedDate == currentDate) {
+                        updateTextVisitButton("Activate Visit", "registerNewVisit", "active");
                     } else {
-                        echo 'updateTextVisitButton("Preregister Visit", "preregisterNewVisit", "preregister");
-                              $("#card_no_manual").hide();';
+                        updateTextVisitButton("Preregister Visit", "preregisterNewVisit", "preregister");
+                        $("#card_no_manual").hide();
                     }
-                    ?>
-
                     // update card date
                     var cardDate = $.datepicker.formatDate('dd M y', checkInSelectedDate);
                     $("#cardDetailsTable span.cardDateText").html(cardDate);
 
                 } else {
-                    updateTextVisitButton("");
-
-                    <?php if ($model->card_type == CardType::VIC_CARD_MANUAL) { // show Back Date Visit
-                        echo 'updateTextVisitButton("Back Date Visit", "backDateVisit", "backdate");';
+                    if (cardType == <?php echo CardType::VIC_CARD_MANUAL; ?>) {
+                        updateTextVisitButton("Back Date Visit", "backDateVisit", "backdate");
                     } else {
-                        echo 'updateTextVisitButton("Activate Visit", "registerNewVisit", "active");';
+                        updateTextVisitButton("Activate Visit", "registerNewVisit", "active");
                     }
-                    ?>
-
                     $('#card_no_manual').show();
                 }
             }

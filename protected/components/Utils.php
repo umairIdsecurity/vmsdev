@@ -39,9 +39,19 @@ class Utils
                 break;
 
             case Roles::ROLE_ADMIN:
-                $Criteria = new CDbCriteria();
+                /*$Criteria = new CDbCriteria();
                 $Criteria->condition = "tenant = ".$session['tenant']." AND is_deleted = 0";
-                $workstationList = Workstation::model()->findAll($Criteria);
+                $workstationList = Workstation::model()->findAll($Criteria);*/
+                
+                $workstationList = Yii::app()->db->createCommand()
+                        ->select('w.id,w.name')
+                        ->from('workstation w')
+                        ->leftJoin('company c', 'c.id = w.tenant')
+                        ->leftJoin('user u', 'u.company = c.id')
+                        ->where("w.is_deleted = 0 and c.is_deleted = 0 and u.is_deleted = 0 and u.id ='".$session['id']."'")
+                        ->order('w.id desc')
+                        ->queryAll();
+
                 break;
 
             case Roles::ROLE_AGENT_ADMIN:

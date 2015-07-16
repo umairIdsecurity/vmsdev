@@ -73,6 +73,7 @@ class Company extends CActiveRecord {
                     'message' => 'Code can only contain letters' ,'on' => 'updatetenant'),
 	            array('code', 'length', 'min' => 3, 'max' => 3, 'tooShort' => 'Code is too short (Should be in 3 characters)'),
 	            array('email_address', 'email'),
+                array('user_email','email'),
 	            array('website', 'url'),
 	            array('created_by_user, created_by_visitor', 'numerical', 'integerOnly' => true),
 	            array('name, trading_name, billing_address', 'length', 'max' => 150),
@@ -164,10 +165,10 @@ class Company extends CActiveRecord {
             'code' => 'Company Code',
             'card_count' => 'Card Count',
             'company_laf_preferences' => 'Look and Feel Preferences',
-            'user_first_name' => 'First Name',
-            'user_last_name' => 'Last Name',
-            'user_email' => 'Email',
-            'user_contact_number' => 'Contact Number',
+            'user_first_name' => 'User First Name',
+            'user_last_name' => 'User Last Name',
+            'user_email' => 'User Email',
+            'user_contact_number' => 'User Contact Number',
             'company_type' => 'Company Type'
         );
     }

@@ -131,8 +131,8 @@ class VisitorType extends CActiveRecord {
 
         if (Yii::app()->controller->action->id == 'index') {
             if(Yii::app()->request->getParam('vms') == 'cvms')
-                $criteria->condition = " t.name not like 'Vic%'";
-            else $criteria->condition = " t.name like 'Vic%'";
+                $criteria->condition = " t.name not like 'Vic%' AND t.name NOT like 'AVMS%'";
+            else $criteria->condition = " t.name like 'Vic%' Or t.name like 'AVMS%'";
         }
 
         if (Yii::app()->controller->action->id == 'visitorsByTypeReport' || Yii::app()->controller->action->id == 'visitorsByWorkstationReport') {
@@ -155,9 +155,9 @@ class VisitorType extends CActiveRecord {
             $criteria->addCondition("created_by ='" . Yii::app()->user->id . "'");
 
         if (in_array($cardtype, CardType::$CORPORATE_CARD_TYPE_LIST)) {
-            $criteria->condition = " t.name not like 'Vic%'";
+            $criteria->condition = " t.name not like 'Vic%' AND t.name NOT like 'AVMS%'";
         } elseif (in_array($cardtype, CardType::$VIC_CARD_TYPE_LIST)) {
-            $criteria->condition = " t.name  like 'Vic%'";
+            $criteria->condition = " t.name  like 'Vic%' Or t.name like 'AVMS%'";
         }
         $list = $this->model()->findAll($criteria);
         if ($list) return CJSON::encode($list);

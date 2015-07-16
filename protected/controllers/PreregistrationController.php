@@ -64,7 +64,7 @@ class PreregistrationController extends Controller
 			{
 				$session['workstation'] = $model->entrypoint;
 				$session['pre-page'] = 2;
-				$this->redirect(array('preregistration/privacypolicy'));
+				$this->redirect(array('preregistration/declaration'));
 			}
 		}
 

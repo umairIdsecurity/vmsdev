@@ -454,13 +454,21 @@ class VisitController extends Controller {
                     }
 
                     // Update company contact process
-                    $staffModel   = User::model()->findByPk($visitorModel->staff_id);
+                    $staffModel = User::model()->findByPk($visitorModel->staff_id);
                     if ($staffModel) {
                         if (isset($companyParams['mobile_number'])) 
                             $staffModel->contact_number = $companyParams['mobile_number'];
                         if (isset($companyParams['email_address'])) 
                             $staffModel->email          = $companyParams['email_address'];
-
+                        if (isset($companyParams['contact'])) {
+                            if (strpos($companyParams['contact'], ' ') !== false) {
+                                $arrFullName = explode(' ', $companyParams['contact']);
+                                $staffModel->first_name = $arrFullName[0];
+                                $staffModel->last_name = $arrFullName[1];
+                            } else {
+                                // Todo: if operator enter company contact with wrong format
+                            }
+                        }
                         // Save staff member
                         if (!$staffModel->save()) {
                             // Do something if save staff failure

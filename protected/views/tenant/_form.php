@@ -730,7 +730,7 @@ function get_avms_assignable_roles($user_role)
 
 
     function restrictContactNo(ob){
-        var invalidChars = /([^0-9])/g;
+        var invalidChars = /([^0-9 ])/g;
         if(invalidChars.test(ob.value)) {
             ob.value = ob.value.toUpperCase().replace(invalidChars,"");
         }

@@ -400,8 +400,8 @@ $model->identification_country_issued = 13;
 
                                         foreach ($workstationList as $key => $value) {
                                             ?>
-                                            <option value="<?php echo $value->id; ?>" <?php echo $value->id == $session['workstation'] ? 'selected="selected"' : ''; ?>>
-                                                <?php echo 'Workstation: ' . $value->name; ?>
+                                            <option value="<?php echo $value['id']; ?>" <?php echo $value['id'] == $session['workstation'] ? 'selected="selected"' : ''; ?>>
+                                                <?php echo 'Workstation: ' . $value['name']; ?>
                                             </option>
                                         <?php
                                         }

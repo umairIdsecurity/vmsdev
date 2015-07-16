@@ -9,7 +9,7 @@
                 } else {
                     if ($folde['default'] == 1) echo 'class="active"';
                 }
-                echo '><a href="' . Yii::app()->createUrl("/uploadFile&f=" . $folde['name']) . '">' . $folde['name'] . ' <span>(' . $folde['number_file'] . ')</span></a></li>';
+                echo '><a href="' . Yii::app()->createUrl("/uploadFile&f=" . $folde['name']) . '">' . (strlen($folde['name'])>17?substr($folde['name'], 0, 17).'...':$folde['name']) . ' <span>(' . $folde['number_file'] . ')</span></a></li>';
             }
             ?>
         </ul>

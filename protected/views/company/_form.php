@@ -148,7 +148,7 @@ if ($this->action->id == 'update') {
                         </tr>
 
                     </table><!--Company Contact field-->
-                    <div class="password-border" style="float: right; margin-right: 147px; margin-top: -230px;">
+                    <div class="password-border" style="float: right; margin-right: 147px; margin-top: -230px; max-width:275px !important;">
                         <table style="float:left; width:300px;">
                             <tr>
                                 <td><strong>Password Options</strong></td>
@@ -168,10 +168,8 @@ if ($this->action->id == 'update') {
                                     <?php echo $form->error($model, 'password_requirement'); ?>
                                 </td>
                             </tr>
-
                             <tr style="display:none;" class="user_requires_password">
                                 <td>
-
                                     <table
                                         style="margin-top:18px !important; width:253px; border-left-style:none; border-top-style:none;margin-left: 30px;">
 
@@ -180,19 +178,15 @@ if ($this->action->id == 'update') {
                                                 One option
                                             </td>
                                         </tr>
-
-
                                         <tr id="third_option" class='hiddenElement'></tr>
-
                                         <tr>
-                                            <td><input class="pass_option" type="radio" name="Visitor[password_option]" value="2"/>&nbsp;Send
+                                            <td><input class="pass_option" type="radio" name="Company[password_option]" value="2"/>&nbsp;Send
                                                 User Invitation
                                             </td>
                                         </tr>
-
                                         <tr>
                                             <td style="padding-bottom:10px">
-                                                <input class="pass_option" type="radio" name="Visitor[password_option]" value="1"/>
+                                                <input class="pass_option" type="radio" name="Company[password_option]" value="1"/>
                                                 &nbsp;Create Password
                                             </td>
                                         </tr>
@@ -200,27 +194,26 @@ if ($this->action->id == 'update') {
                                         <tr>
                                             <td>
                                                 <input placeholder="Password" ng-model="user.passwords" data-ng-class="{
-                                                                       'ng-invalid':registerform['Visitor[repeatpassword]'].$error.match}"
-                                                       type="password" id="Visitor_password" name="Visitor[password]">
+                                                                       'ng-invalid':registerform['Company[user_repeatpassword]'].$error.match}"
+                                                       type="password" id="Company_user_password" name="Company[user_password]">
                                                 <span class="required">*</span>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
                                                 <input placeholder="Repeat Password" ng-model="user.passwordConfirm" type="password"
-                                                       id="Visitor_repeatpassword" data-match="user.passwords"
-                                                       name="Visitor[repeatpassword]"/>
+                                                       id="Company_user_repeatpassword" data-match="user.passwords"
+                                                       name="company[user_repeatpassword]"/>
                                                 <span class="required">*</span>
 
                                                 <div style='font-size:0.9em;color:red;position: static;'
-                                                     data-ng-show="registerform['Visitor[repeatpassword]'].$error.match">Password does
+                                                     data-ng-show="registerform['Company[user_repeatpassword]'].$error.match">Password does
                                                     not match with Repeat <br> Password.
                                                 </div>
-                                                <?php echo "<br>" . $form->error($model, 'repeatpassword'); ?>
+                                                <?php echo "<br>" . $form->error($model, 'user_repeatpassword'); ?>
                                             </td>
 
                                         </tr>
-
                                         <tr>
                                             <td align="center">
                                                 <?php $background = isset($companyLafPreferences) ? ("background:" . $companyLafPreferences->neutral_bg_color . ' !important;') : ''; ?>
@@ -230,14 +223,7 @@ if ($this->action->id == 'update') {
                                                 </div>
                                             </td>
                                         </tr>
-
-                                        <tr>
-                                            <td>&nbsp;</td>
-                                        </tr>
-
-
                                     </table>
-
                                 </td>
                             </tr>
 
@@ -317,6 +303,37 @@ if (isset($_GET['viewFrom'])) {
         window.location = 'index.php?r=licenseDetails/update&id=1';
     }
 
+    function cancel() {
+        $('#Company_user_repeatpassword').val('');
+        $('#Company_user_password').val('');
+        $("#random_password").val('');
+        $("#close_generate").click();
+    }
+
+    function copy_password() {
+        if ($('#random_password').val() == '') {
+            $('#error_msg').show();
+        } else {
+            $('#Company_user_password').val($('#random_password').val());
+            $('#Company_user_repeatpassword').val($('#random_password').val());
+            $("#close_generate").click();
+        }
+    }
+
+
+    function generatepassword() {
+        $("#random_password").val('');
+        $("#pass_option").prop("checked", true);
+
+        var text = "";
+        var possible = "abcdefghijklmnopqrstuvwxyz0123456789";
+
+        for (var i = 0; i < 6; i++) {
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+        }
+        document.getElementById('random_password').value = text;
+        $("#gen_pass").click();
+    }
 
     $(document).ready(function() {
 
@@ -376,5 +393,56 @@ if (isset($_GET['viewFrom'])) {
     </div>
 
 </div>
+<div class="modal hide fade" id="generate_password" style="width: 410px">
+    <div style="border:5px solid #BEBEBE; width:405px">
+        <div class="modal-header"
+             style=" border:none !important; height: 60px !important;padding: 0px !important;width: 405px !important;">
+            <div style="background-color:#E8E8E8; padding-top:2px; width:405px; height:56px;">
+                <a data-dismiss="modal" class="close" id="close_generate">×</a>
 
+                <h1 style="color: #000;font-size: 15px;font-weight: bold;margin-left: 9px;padding-top: 0px !important;">
+                    Autogenerated Password
+                </h1>
+
+            </div>
+
+            <br>
+        </div>
+        <div id="modalBody_gen">
+
+            <table>
+
+                <div id="error_msg" style='font-size: 0.9em;color: #FF0000;padding-left: 11px; display:none'>Please
+                    Generate Password
+                </div>
+
+                <tr>
+                    <td colspan="2" style="padding-left:10px">Your randomly generated password is :</td>
+                </tr>
+                <tr>
+                    <td colspan="2"></td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="padding-left:55px; padding-top:24px;"><input readonly="readonly" type="text" placeholder="Random Password" value="" id="random_password"/>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="2" style="padding-left:10px; font:italic">Note:Please copy and save this password
+                        somewhere safe.
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-left: 11px;padding-top: 26px !important; width:50%"><input onclick="copy_password();" style="border-radius: 4px; height: 35px; " type="button" value="Use Password"/></td>
+                    <td style="padding-right:10px;padding-top: 25px;"><input onclick="cancel();" style="border-radius: 4px; height: 35px;" type="button" value="Cancel"/></td>
+                </tr>
+
+            </table>
+
+
+        </div>
+        <a data-toggle="modal" data-target="#generate_password" id="gen_pass" style="display:none"
+           class="btn btn-primary">Click me</a>
+    </div>
+</div>
 

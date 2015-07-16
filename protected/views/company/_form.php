@@ -30,7 +30,20 @@ if ($this->action->id == 'update') {
     <?php
     $form = $this->beginWidget('CActiveForm', array(
         'id' => 'company-form',
+        'htmlOptions' => array("name" => "registerform"),
         'enableAjaxValidation' => false,
+        'enableClientValidation' => true,
+        'clientOptions' => array(
+            'validateOnSubmit' => true,
+            'afterValidate' => 'js:function(form, data, hasError) {
+                if (!hasError) {
+                    checkCompanyNameUnique ();
+                } else {
+                    $( ".user_fields" ).show();
+                    $(".password-border").show();
+                }
+            }'
+        ),
     ));
     ?>
     <?php
@@ -67,6 +80,8 @@ if ($this->action->id == 'update') {
                             <td style="width:240px;">
                                 <?php
                                 echo $form->textField($model, 'name', array('size' => 60, 'maxlength' => 150, 'placeholder' => 'Company Name'));
+                                echo '<span class="required"> *</span>';
+                                echo '<div id="Company_name_unique_em_" class="errorMessage" style="display: none">Company name has already been taken</div>';
                                 if (isset($_GET['viewFrom'])) {
                                     echo "<br>" . $form->error($model, 'name');
                                 }
@@ -118,7 +133,7 @@ if ($this->action->id == 'update') {
                         <tr class="user_fields">
                             <td style="width:160px;">&nbsp;</td>
                             <td><?php echo $form->textField($model, 'user_first_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'First Name')); ?>
-
+                                <span class="required">*</span>
                                 <?php echo "<br>" . $form->error($model, 'user_first_name'); ?>
                             </td>
                         </tr>
@@ -126,7 +141,7 @@ if ($this->action->id == 'update') {
                         <tr class="user_fields">
                             <td style="width:160px;">&nbsp;</td>
                             <td><?php echo $form->textField($model, 'user_last_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Last Name')); ?>
-
+                                <span class="required">*</span>
                                 <?php echo "<br>" . $form->error($model, 'user_last_name'); ?>
                             </td>
                         </tr>
@@ -134,7 +149,7 @@ if ($this->action->id == 'update') {
                         <tr class="user_fields">
                             <td style="width:160px;">&nbsp;</td>
                             <td><?php echo $form->textField($model, 'user_email', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Email')); ?>
-
+                                <span class="required">*</span>
                                 <?php echo "<br>" . $form->error($model, 'user_email'); ?>
                             </td>
                         </tr>
@@ -142,7 +157,7 @@ if ($this->action->id == 'update') {
                         <tr class="user_fields">
                             <td style="width:160px;">&nbsp;</td>
                             <td><?php echo $form->textField($model, 'user_contact_number', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Contact Number')); ?>
-
+                                <span class="required">*</span>
                                 <?php echo "<br>" . $form->error($model, 'user_contact_number'); ?>
                             </td>
                         </tr>
@@ -203,7 +218,7 @@ if ($this->action->id == 'update') {
                                             <td>
                                                 <input placeholder="Repeat Password" ng-model="user.passwordConfirm" type="password"
                                                        id="Company_user_repeatpassword" data-match="user.passwords"
-                                                       name="company[user_repeatpassword]"/>
+                                                       name="Company[user_repeatpassword]"/>
                                                 <span class="required">*</span>
 
                                                 <div style='font-size:0.9em;color:red;position: static;'
@@ -294,6 +309,37 @@ if (isset($_GET['viewFrom'])) {
 }
 ?>"/>
 <script>
+
+    function checkCompanyNameUnique () {
+        var tenant = $('#Company_tenant').val();
+        var name = $('#Company_name').val();
+        $.ajax({
+            type : "POST",
+            url: "<?php echo $this->createUrl('company/checkNameUnique')?>",
+            data: {name:name, tenant:tenant},
+            success: function(data){
+                if(data == 0) {
+                    $('#Company_name_unique_em_').show();
+                    return false;
+                } else {
+                    $('#Company_name_unique_em_').hide();
+                    sendCreateCompanyForm();
+                }
+            }
+        });
+    }
+
+    function sendCreateCompanyForm() {
+        var formInfo = $('#company-form').serialize();
+        $.ajax({
+            type: "POST",
+            url: "<?php echo $this->createUrl('company/create')?>",
+            data: formInfo,
+            success: function(data){
+                window.location = 'index.php?r=company/admin';
+            }
+        });
+    }
 
     function closeParent() {
         window.parent.dismissModal();

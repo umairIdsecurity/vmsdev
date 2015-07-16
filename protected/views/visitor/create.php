@@ -181,10 +181,10 @@ $(document).ready(function () {
                 );
             } else {
                 $('#limit-first-name').html(
-                    '<td><input type="text" size="50" maxlength="50" placeholder="First Name" name="Visitor[first_name]" id="Visitor_first_name"><span class="required">*</span><br><div style="display:none" id="Visitor_first_name_em_" class="errorMessage"></div></td>'
+                    '<td><input type="text" size="50" maxlength="15" placeholder="First Name" name="Visitor[first_name]" id="Visitor_first_name"><span class="required">*</span><br><div style="display:none" id="Visitor_first_name_em_" class="errorMessage"></div></td>'
                 );
                 $('#limit-last-name').html(
-                    '<td><input type="text" size="50" maxlength="50" placeholder="Last Name" name="Visitor[last_name]" id="Visitor_last_name"><span class="required">*</span><br><div style="display:none" id="Visitor_last_name_em_" class="errorMessage"></div></td>'
+                    '<td><input type="text" size="50" maxlength="15" placeholder="Last Name" name="Visitor[last_name]" id="Visitor_last_name"><span class="required">*</span><br><div style="display:none" id="Visitor_last_name_em_" class="errorMessage"></div></td>'
                 );
             }
 
@@ -629,8 +629,9 @@ function checkHostEmailIfUnique() {
         dataType: 'json',
         data: email,
         success: function (r) {
+            var id = $("#User_id").val();
             $.each(r.data, function (index, value) {
-                if (value.isTaken == 1) {
+                if (value.isTaken == 1 && id == "") {
                     $("#hostEmailIsUnique").val("0");
                     $(".errorMessageEmail1").show();
                 } else {

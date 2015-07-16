@@ -128,22 +128,21 @@ $model->identification_country_issued = 13;
 
                             <tr id="limit-first-name">
                                 <td>
-                                    <?php echo $form->textField($model, 'first_name',
-                                        array('size' => 50, 'maxlength' => 50, 'placeholder' => 'First Name')); ?>
+                                    <?php echo $form->textField($model, 'first_name', ['size' => 50, 'maxlength' => 15, 'placeholder' => 'First Name']); ?>
                                     <span class="required">*</span>
                                     <?php echo "<br>" . $form->error($model, 'first_name'); ?>
                                 </td>
                             </tr>
                             <tr class="vic-visitor-fields">
                                 <td>
-                                    <?php echo $form->textField($model, 'middle_name', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Middle Name')); ?>
+                                    <?php echo $form->textField($model, 'middle_name', ['size' => 50, 'maxlength' => 50, 'placeholder' => 'Middle Name']); ?>
                                     <?php echo "<br>" . $form->error($model, 'middle_name'); ?>
                                 </td>
                             </tr>
                             <tr id="limit-last-name">
                                 <td>
                                     <?php echo $form->textField($model, 'last_name',
-                                        array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Last Name')); ?>
+                                        array('size' => 50, 'maxlength' => 15, 'placeholder' => 'Last Name')); ?>
                                     <span class="required">*</span>
                                     <?php echo "<br>" . $form->error($model, 'last_name'); ?>
                                 </td>
@@ -673,7 +672,7 @@ $model->identification_country_issued = 13;
                                     ?>
                                     <option value="<?php echo $value['id']; ?>"
                                         <?php
-                                        if ($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant']) {
+                                        if ($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['id']) {
                                             echo " selected ";
                                         }
                                         ?>><?php echo $value['name']; ?></option>

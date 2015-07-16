@@ -247,10 +247,10 @@ $form = $this->beginWidget('CActiveForm', array(
                 foreach ($allTenantCompanyNames as $key => $value) {
                     ?>
                     <option <?php
-                    if (($session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_AGENT_ADMIN) && $session['tenant'] == $value['tenant']) {
+                    if (($session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_AGENT_ADMIN) && $session['tenant'] == $value['id']) {
                         echo " selected "; //if logged in is agent admin and tenant of agent admin = admin id in adminList
                     }
-                    ?> value="<?php echo $value['tenant']; ?>"><?php echo $value['name']; ?></option>
+                    ?> value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
                 <?php
                 }
                 ?>

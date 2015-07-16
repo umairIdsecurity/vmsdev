@@ -59,44 +59,47 @@ if ($this->action->id == 'update') {
     }
     ?>
     <table>
-        <tr class="user_fields1">
-            <td style="width:160px;">&nbsp;</td>
-            <td style="width:240px;">
-                <?php
-                echo $form->textField($model, 'name', array('size' => 60, 'maxlength' => 150, 'placeholder' => 'Company Name'));
-                if (isset($_GET['viewFrom'])) {
-                    echo "<br>" . $form->error($model, 'name');
-                }
-                ?>
-            </td>
-            <td><?php
-                if (!isset($_GET['viewFrom'])) {
-                    echo $form->error($model, 'name');
-                }
-                ?></td>
-        </tr>
+            <tr>
+                <td>
+                    <table>
+                        <tr class="user_fields1">
+                            <td style="width:160px;">&nbsp;</td>
+                            <td style="width:240px;">
+                                <?php
+                                echo $form->textField($model, 'name', array('size' => 60, 'maxlength' => 150, 'placeholder' => 'Company Name'));
+                                if (isset($_GET['viewFrom'])) {
+                                    echo "<br>" . $form->error($model, 'name');
+                                }
+                                ?>
+                            </td>
+                            <td><?php
+                                if (!isset($_GET['viewFrom'])) {
+                                    echo $form->error($model, 'name');
+                                }
+                                ?></td>
+                        </tr>
 
-        <!--WangFu Modified-->
-        <?php if ($session['role'] != Roles::ROLE_ADMIN) { ?>
-            <tr class="user_fields1">
-                <td style="width:160px;">&nbsp;</td>
-                <td style="width:240px;">
-                    <?php
-                    echo $form->textField($model, 'code', array('size' => 3, 'maxlength' => 3, 'placeholder' => 'Company Code'));
-                    if (isset($_GET['viewFrom'])) {
-                        echo "<br>" . $form->error($model, 'code');
-                    }
-                    ?></td>
-                <td><?php
-                    if (!isset($_GET['viewFrom'])) {
-                        echo "<br>" . $form->error($model, 'code');
-                    }
-                    ?></td>
+                        <!--WangFu Modified-->
+                        <?php if ($session['role'] != Roles::ROLE_ADMIN) { ?>
+                            <tr class="user_fields1">
+                                <td style="width:160px;">&nbsp;</td>
+                                <td style="width:240px;">
+                                    <?php
+                                    echo $form->textField($model, 'code', array('size' => 3, 'maxlength' => 3, 'placeholder' => 'Company Code'));
+                                    if (isset($_GET['viewFrom'])) {
+                                        echo "<br>" . $form->error($model, 'code');
+                                    }
+                                    ?></td>
+                                <td><?php
+                                    if (!isset($_GET['viewFrom'])) {
+                                        echo "<br>" . $form->error($model, 'code');
+                                    }
+                                    ?></td>
 
-            </tr>
-        <?php } ?>
+                            </tr>
+                        <?php } ?>
 
-        <!-- <tr class="user_fields1">
+                        <!-- <tr class="user_fields1">
             <td style="width:160px;">&nbsp;</td>
             <td style="width:240px;">
                 <?php //echo $form->dropDownList($model, 'company_type', CHtml::listData(CompanyType::model()->findAll(), 'id', 'name'), array('prompt'=>'Select a company type', 'placeholder'=>'Company Type', 'style' => 'width: 228px')); ?>
@@ -104,50 +107,133 @@ if ($this->action->id == 'update') {
             </td>
         </tr> -->
 
-        <tr>
-            <td style="width:160px;">&nbsp;</td>
-            <td>
-                <a class="btn btn-default" href="#" role="button" id="addContact">+</a> Add Company Contact
-                <input type="hidden" id="is_user_field" name="is_user_field" value="<?php echo $session['is_field'];?>">
-            </td>
-        </tr>
+                        <tr>
+                            <td style="width:160px;">&nbsp;</td>
+                            <td>
+                                <a class="btn btn-default" href="#" role="button" id="addContact">+</a> Add Company Contact
+                                <input type="hidden" id="is_user_field" name="is_user_field" value="<?php echo $session['is_field'];?>">
+                            </td>
+                        </tr>
+
+                        <tr class="user_fields">
+                            <td style="width:160px;">&nbsp;</td>
+                            <td><?php echo $form->textField($model, 'user_first_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'First Name')); ?>
+
+                                <?php echo "<br>" . $form->error($model, 'user_first_name'); ?>
+                            </td>
+                        </tr>
+
+                        <tr class="user_fields">
+                            <td style="width:160px;">&nbsp;</td>
+                            <td><?php echo $form->textField($model, 'user_last_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Last Name')); ?>
+
+                                <?php echo "<br>" . $form->error($model, 'user_last_name'); ?>
+                            </td>
+                        </tr>
+
+                        <tr class="user_fields">
+                            <td style="width:160px;">&nbsp;</td>
+                            <td><?php echo $form->textField($model, 'user_email', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Email')); ?>
+
+                                <?php echo "<br>" . $form->error($model, 'user_email'); ?>
+                            </td>
+                        </tr>
+
+                        <tr class="user_fields">
+                            <td style="width:160px;">&nbsp;</td>
+                            <td><?php echo $form->textField($model, 'user_contact_number', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Contact Number')); ?>
+
+                                <?php echo "<br>" . $form->error($model, 'user_contact_number'); ?>
+                            </td>
+                        </tr>
+
+                    </table><!--Company Contact field-->
+                    <div class="password-border" style="float: right; margin-right: 147px; margin-top: -230px; max-width:275px !important;">
+                        <table style="float:left; width:300px;">
+                            <tr>
+                                <td><strong>Password Options</strong></td>
+                            </tr>
+                            <tr>
+                                <td id="pass_error_" style='font-size: 0.9em;color: #FF0000; display:none'>Select One Option</td>
+                            </tr>
+                            <tr>
+
+                                <td>
+                                    <?php echo $form->radioButtonList($model, 'password_requirement',
+                                        array(
+                                            PasswordRequirement::PASSWORD_IS_NOT_REQUIRED => 'User does not require Password',
+                                            PasswordRequirement::PASSWORD_IS_REQUIRED => 'User requires Password to Login',
+                                        ), array('class' => 'password_requirement form-label', 'style' => 'float:left;margin-right:10px;', 'separator' => ''));
+                                    ?>
+                                    <?php echo $form->error($model, 'password_requirement'); ?>
+                                </td>
+                            </tr>
+                            <tr style="display:none;" class="user_requires_password">
+                                <td>
+                                    <table
+                                        style="margin-top:18px !important; width:253px; border-left-style:none; border-top-style:none;margin-left: 30px;">
+
+                                        <tr>
+                                            <td id="pass_error_" style='font-size: 0.9em;color: #FF0000; display:none'>Select Atleast
+                                                One option
+                                            </td>
+                                        </tr>
+                                        <tr id="third_option" class='hiddenElement'></tr>
+                                        <tr>
+                                            <td><input class="pass_option" type="radio" name="Company[password_option]" value="2"/>&nbsp;Send
+                                                User Invitation
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding-bottom:10px">
+                                                <input class="pass_option" type="radio" name="Company[password_option]" value="1"/>
+                                                &nbsp;Create Password
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                <input placeholder="Password" ng-model="user.passwords" data-ng-class="{
+                                                                       'ng-invalid':registerform['Company[user_repeatpassword]'].$error.match}"
+                                                       type="password" id="Company_user_password" name="Company[user_password]">
+                                                <span class="required">*</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input placeholder="Repeat Password" ng-model="user.passwordConfirm" type="password"
+                                                       id="Company_user_repeatpassword" data-match="user.passwords"
+                                                       name="company[user_repeatpassword]"/>
+                                                <span class="required">*</span>
+
+                                                <div style='font-size:0.9em;color:red;position: static;'
+                                                     data-ng-show="registerform['Company[user_repeatpassword]'].$error.match">Password does
+                                                    not match with Repeat <br> Password.
+                                                </div>
+                                                <?php echo "<br>" . $form->error($model, 'user_repeatpassword'); ?>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                            <td align="center">
+                                                <?php $background = isset($companyLafPreferences) ? ("background:" . $companyLafPreferences->neutral_bg_color . ' !important;') : ''; ?>
+                                                <div class="row buttons" style="text-align:center;">
+                                                    <input onclick="generatepassword();" class="complete btn btn-info" type="button" value="Autogenerate Password"
+                                                           style="<?php echo $background; ?>position: relative; width: 180px; overflow: hidden;cursor:pointer;font-size:14px;margin-right:8px;"/>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
 
 
-        <tr class="user_fields">
-            <td style="width:160px;">&nbsp;</td>
-            <td><?php echo $form->textField($model, 'user_first_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'First Name')); ?>
-
-                <?php echo "<br>" . $form->error($model, 'user_first_name'); ?>
-            </td>
-        </tr>
-
-        <tr class="user_fields">
-            <td style="width:160px;">&nbsp;</td>
-            <td><?php echo $form->textField($model, 'user_last_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Last Name')); ?>
-
-                <?php echo "<br>" . $form->error($model, 'user_last_name'); ?>
-            </td>
-        </tr>
-
-        <tr class="user_fields">
-            <td style="width:160px;">&nbsp;</td>
-            <td><?php echo $form->textField($model, 'user_email', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Email')); ?>
-
-                <?php echo "<br>" . $form->error($model, 'user_email'); ?>
-            </td>
-        </tr>
-
-        <tr class="user_fields">
-            <td style="width:160px;">&nbsp;</td>
-            <td><?php echo $form->textField($model, 'user_contact_number', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Contact Number')); ?>
-
-                <?php echo "<br>" . $form->error($model, 'user_contact_number'); ?>
-            </td>
-        </tr>
-
-        </div>
-
+                        </table>
+                    </div> <!-- password-border -->
+                </td>
+            </tr>
     </table>
+    <!--Company Contact-->
 
 
     <div class="row buttons " style="<?php if (isset($_GET['viewFrom'])) { ?>
@@ -217,6 +303,37 @@ if (isset($_GET['viewFrom'])) {
         window.location = 'index.php?r=licenseDetails/update&id=1';
     }
 
+    function cancel() {
+        $('#Company_user_repeatpassword').val('');
+        $('#Company_user_password').val('');
+        $("#random_password").val('');
+        $("#close_generate").click();
+    }
+
+    function copy_password() {
+        if ($('#random_password').val() == '') {
+            $('#error_msg').show();
+        } else {
+            $('#Company_user_password').val($('#random_password').val());
+            $('#Company_user_repeatpassword').val($('#random_password').val());
+            $("#close_generate").click();
+        }
+    }
+
+
+    function generatepassword() {
+        $("#random_password").val('');
+        $("#pass_option").prop("checked", true);
+
+        var text = "";
+        var possible = "abcdefghijklmnopqrstuvwxyz0123456789";
+
+        for (var i = 0; i < 6; i++) {
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+        }
+        document.getElementById('random_password').value = text;
+        $("#gen_pass").click();
+    }
 
     $(document).ready(function() {
 
@@ -224,9 +341,11 @@ if (isset($_GET['viewFrom'])) {
 
         if(default_field == "") {
             $( ".user_fields" ).hide();
+            $(".password-border").hide();
         }
         else{
             $( ".user_fields" ).show();
+            $(".password-border").show();
         }
 
         $("#addContact").click(function(e) {
@@ -236,10 +355,23 @@ if (isset($_GET['viewFrom'])) {
             if(is_user_field==""){
                 $('#is_user_field').val(1);
                 $( ".user_fields" ).show();
+                $(".password-border").show();
             }
             else{
                 $('#is_user_field').val("");
                 $( ".user_fields" ).hide();
+                $(".password-border").hide();
+            }
+
+        });
+
+        $('.password_requirement').click(function () {
+            if ($('#Company_password_requirement_1').is(':checked')) {
+                $('.user_requires_password').css("display", "block");
+                $('.pass_option').prop('checked', false);
+            }
+            else {
+                $('.user_requires_password').css("display", "none");
             }
 
         });
@@ -261,5 +393,56 @@ if (isset($_GET['viewFrom'])) {
     </div>
 
 </div>
+<div class="modal hide fade" id="generate_password" style="width: 410px">
+    <div style="border:5px solid #BEBEBE; width:405px">
+        <div class="modal-header"
+             style=" border:none !important; height: 60px !important;padding: 0px !important;width: 405px !important;">
+            <div style="background-color:#E8E8E8; padding-top:2px; width:405px; height:56px;">
+                <a data-dismiss="modal" class="close" id="close_generate">×</a>
 
+                <h1 style="color: #000;font-size: 15px;font-weight: bold;margin-left: 9px;padding-top: 0px !important;">
+                    Autogenerated Password
+                </h1>
+
+            </div>
+
+            <br>
+        </div>
+        <div id="modalBody_gen">
+
+            <table>
+
+                <div id="error_msg" style='font-size: 0.9em;color: #FF0000;padding-left: 11px; display:none'>Please
+                    Generate Password
+                </div>
+
+                <tr>
+                    <td colspan="2" style="padding-left:10px">Your randomly generated password is :</td>
+                </tr>
+                <tr>
+                    <td colspan="2"></td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="padding-left:55px; padding-top:24px;"><input readonly="readonly" type="text" placeholder="Random Password" value="" id="random_password"/>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="2" style="padding-left:10px; font:italic">Note:Please copy and save this password
+                        somewhere safe.
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-left: 11px;padding-top: 26px !important; width:50%"><input onclick="copy_password();" style="border-radius: 4px; height: 35px; " type="button" value="Use Password"/></td>
+                    <td style="padding-right:10px;padding-top: 25px;"><input onclick="cancel();" style="border-radius: 4px; height: 35px;" type="button" value="Cancel"/></td>
+                </tr>
+
+            </table>
+
+
+        </div>
+        <a data-toggle="modal" data-target="#generate_password" id="gen_pass" style="display:none"
+           class="btn btn-primary">Click me</a>
+    </div>
+</div>
 

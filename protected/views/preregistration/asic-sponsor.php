@@ -68,7 +68,7 @@
 
 </style>
 <div class="page-content">
-    <h1 class="text-primary title">ADD / FIND ASIC SPONSOR</h1>
+    <h1 class="text-primary title">ADD / FIND ASIC SPONSOR dsasd</h1>
 
     <!--  searching ASIC -->
     <div class="form-create-login">
@@ -232,6 +232,7 @@
             $("#search_asic_error").hide();
             $("#asic_search_result").hide();
             $("#asic-notification").hide();
+            $('#Registration_selected_asic_id').val("");
             $('#new_asic_area').show();
         });
 
@@ -263,6 +264,8 @@
 
                         $('.selected_asic').click(function() {
                             $('#Registration_selected_asic_id').val($(this).val());
+                            $('#Registration_contact_number').val("");
+                            $('#Registration_email').val("");
                             $('#new_asic_area').hide();
                         });
                     }

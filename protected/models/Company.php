@@ -1,5 +1,5 @@
 <?php
-
+Yii::import('ext.validator.PasswordRequirement');
 /**
  * This is the model class for table "company".
  *
@@ -30,7 +30,10 @@ class Company extends CActiveRecord {
 	public $user_email;
 	public $user_contact_number;
     public $is_user_field;
-
+    public $user_password;
+    public $password_requirement;
+    public $user_repeatpassword;
+    public $password_option;
     protected $tenantQuery = "SELECT COUNT(c.id) FROM user u LEFT JOIN company c ON u.company=c.id WHERE u.id=c.tenant AND c.id !=1";
 
     /**

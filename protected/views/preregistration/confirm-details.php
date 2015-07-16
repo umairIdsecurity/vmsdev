@@ -17,7 +17,7 @@ $countryList = CHtml::listData(Country::model()->findAll(array(
 
 <div class="page-content">
     <h1 class="text-primary title">CONFIRM DETAILS</h1>
-    <div class="bg-gray-lighter form-info">Please confirm if the details below are correct and edit where necessary.</div>
+    <!--<div class="bg-gray-lighter form-info">Please confirm if the details below are correct and edit where necessary.</div>-->
     <?php
     $form=$this->beginWidget('CActiveForm', array(
         'id'=>'confirm-details-form',

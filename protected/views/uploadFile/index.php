@@ -9,7 +9,7 @@
                 } else {
                     if ($folde['default'] == 1) echo 'class="active"';
                 }
-                echo '><a href="' . Yii::app()->createUrl("/uploadfile&f=" . $folde['name']) . '">' . $folde['name'] . ' <span>(' . $folde['number_file'] . ')</span></a></li>';
+                echo '><a href="' . Yii::app()->createUrl("/uploadFile&f=" . $folde['name']) . '">' . (strlen($folde['name'])>17?substr($folde['name'], 0, 17).'...':$folde['name']) . ' <span>(' . $folde['number_file'] . ')</span></a></li>';
             }
             ?>
         </ul>
@@ -54,13 +54,13 @@
 
         </form>
         <form id="list_file" method="post">
-        <input value="<?php echo Yii::app()->user->id; ?>" type="hidden" name="File[user_id]">
-        <?php
-$this->widget('zii.widgets.grid.CGridView', array(
-    'id' => 'file-grid',
-    'dataProvider' => $dataProvider ,
-    //'filter' => File::model(),
-    'afterAjaxUpdate' => "
+            <input value="<?php echo Yii::app()->user->id; ?>" type="hidden" name="File[user_id]">
+            <?php
+            $this->widget('zii.widgets.grid.CGridView', array(
+                'id' => 'file-grid',
+                'dataProvider' => $dataProvider ,
+                //'filter' => File::model(),
+                'afterAjaxUpdate' => "
     function(id, data) {
         $('th > .asc').append('<div></div>');
         $('th > .desc').append('<div></div>');
@@ -69,99 +69,101 @@ $this->widget('zii.widgets.grid.CGridView', array(
 
 
     ",
-    'htmlOptions' => array('class' => 'table'),
-    'columns' => array(
-        array(
-            'header' => '<input type="checkbox" id="check_file_all" />',
-            'value'=>'CHtml::checkBox("File[id][".$data->id."]",null,array("value"=>$data->id,"id"=>"File[".$data->id."]"))',
-            'type' => 'raw',
-            'htmlOptions' => array('style'=>'width:20px !important;'),
-            'headerHtmlOptions' => array('style'=>'min-width:0px !important;'),
-        ),
-
-        array(
-            'name' => 'file',
-            //'value' => '"<span class=\"file-type file-" . $data->ext ."\">$data->file <span class="glyphicon glyphicon-pencil"></span></span>',
-            'value' => '"<span class=\'file-type file-" . $data->ext ."\'> <span> $data->file </span> <span id=\'pencil-".$data->id."\' class=\'glyphicon glyphicon-pencil\'></span></span>"',
-            'type' => 'raw',
-            'filter' => false
-        ),
-        array(
-            'name' => 'size',
-            'filter' => false,
-            'htmlOptions' => array('style'=>'max-width:20px !important;'),
-            'headerHtmlOptions' => array('style'=>'max-width:20px !important;'),
-        ),
-        array(
-            'name' => 'uploaded',
-            'filter' => false,
-        ),
-        array(
-            'header' => 'Uploaded by',
-            'name' => 'uploader',
-            'value' => '$data->getNameUser($data->uploader)',
-            'filter' => false,
-            'headerHtmlOptions' => array('style'=>'display:block'),
-        ),
-
-        array(
-            'class' => 'CButtonColumn',
-            'template' => '{view}',
-            'buttons' => array(
-                'view' => array(//the name {reply} must be same
-                    'label' => 'View', // text label of the button
-                    'imageUrl' => false, // image URL of the button. If not set or false, a text link is used, The image must be 16X16 pixels
-                    'url' => 'Yii::app()->createUrl("uploadfile/view", array("file"=>$data->file))',
-                    'options' => array('target' => '_new'),
-                ),
-                /*'delete' => array(//the name {reply} must be same
-                    'label' => 'Delete', // text label of the button
-                    'imageUrl' => false, // image URL of the button. If not set or false, a text link is used, The image must be 16X16 pixels
-                    'url' => 'Yii::app()->controller->createUrl("visitor/delete",array("id"=>$data->id))',
-                    'options' => array(// this is the 'html' array but we specify the 'ajax' element
-                        'confirm' => "Are you sure you want to delete this item?",
-                        'ajax' => array(
-                            'type' => 'POST',
-                            'url' => "js:$(this).attr('href')", // ajax post will use 'url' specified above
-                            'success' => 'function(data){
-
-                                                if(data == "true"){
-                                                    $.fn.yiiGridView.update("visitor-grid");
-                                                    return false;
-                                                }else{
-                                                    var urlAddress = this.url;
-                                                    var urlAddressId = urlAddress.split("=");
-                                                    var x;
-                                                    if($("#visitorExists1"+  urlAddressId["2"]).val() == 1){
-                                                        alert("This record has an open visit and must be cancelled before deleting.");
-                                                        return false;
-                                                    } else if($("#visitorExists2"+  urlAddressId["2"]).val() == 1){
-                                                        if (confirm("This Visitor Record has visit data recorded. Do you wish to delete this visitor record and its visit history?") == true) {
-                                                            $.ajax({
-                                                                type: "POST",
-                                                                url: "'. Yii::app()->createUrl('visit/deleteAllVisitWithSameVisitorId&id=') .'" +urlAddressId["2"] ,
-                                                                success: function(r) {
-                                                                    $.fn.yiiGridView.update("visitor-grid");
-                                                                    return false;
-                                                                }
-                                                            });
-                                                        }
-                                                        return false;
-                                                    }
-
-
-                                                }
-                                            }',
-                        ),
+                'htmlOptions' => array('class' => 'table'),
+                'columns' => array(
+                    array(
+                        'header' => '<input type="checkbox" id="check_file_all" />',
+                        'value'=>'CHtml::checkBox("File[id][".$data->id."]",null,array("value"=>$data->id,"id"=>"File[".$data->id."]"))',
+                        'type' => 'raw',
+                        'htmlOptions' => array('style'=>'width:20px !important;'),
+                        'headerHtmlOptions' => array('style'=>'min-width:0px !important;'),
                     ),
 
-                ),*/
-            ),
-        ),
-    ),
-));
-        ?>
-</form>
+                    array(
+                        'name' => 'file',
+                        //'value' => '"<span class=\"file-type file-" . $data->ext ."\">$data->file <span class="glyphicon glyphicon-pencil"></span></span>',
+                        'value' => '"<span class=\'file-type file-" . $data->ext ."\'> <span> <a title=\'".$data->name."\' href=\'".$data->linkDownloadFile($data->id)."\'>".(strlen($data->name)>40?substr($data->name, 0, 40)."...":$data->name)."</a> </span> <span id=\'pencil-".$data->id."\' class=\'glyphicon glyphicon-pencil\'></span></span>"',
+                        'type' => 'raw',
+                        'filter' => false
+                    ),
+                    array(
+                        'name' => 'size',
+                        'value' => '$data->displaySize($data->size)',
+                        'filter' => false,
+                        'htmlOptions' => array('style'=>'max-width:50px !important;'),
+                        'headerHtmlOptions' => array('style'=>'max-width:50px !important;'),
+                    ),
+                    array(
+                        'name' => 'uploaded',
+                        'value' => '$data->calculate_time_span($data->uploaded)',
+                        'filter' => false,
+                    ),
+                    array(
+                        'header' => 'Uploaded by',
+                        'name' => 'uploader',
+                        'value' => '$data->getNameUser($data->uploader)',
+                        'filter' => false,
+                        'headerHtmlOptions' => array('style'=>'display:block'),
+                    ),
+
+                    array(
+                        'class' => 'CButtonColumn',
+                        'template' => '{view}',
+                        'buttons' => array(
+                            'view' => array(//the name {reply} must be same
+                                'label' => 'View', // text label of the button
+                                'imageUrl' => false, // image URL of the button. If not set or false, a text link is used, The image must be 16X16 pixels
+                                'url' => 'Yii::app()->createUrl("uploadFile/view", array("id"=>$data->id))',
+                                'options' => array('target' => '_new'),
+                            ),
+                            /*'delete' => array(//the name {reply} must be same
+                                'label' => 'Delete', // text label of the button
+                                'imageUrl' => false, // image URL of the button. If not set or false, a text link is used, The image must be 16X16 pixels
+                                'url' => 'Yii::app()->controller->createUrl("visitor/delete",array("id"=>$data->id))',
+                                'options' => array(// this is the 'html' array but we specify the 'ajax' element
+                                    'confirm' => "Are you sure you want to delete this item?",
+                                    'ajax' => array(
+                                        'type' => 'POST',
+                                        'url' => "js:$(this).attr('href')", // ajax post will use 'url' specified above
+                                        'success' => 'function(data){
+
+                                                            if(data == "true"){
+                                                                $.fn.yiiGridView.update("visitor-grid");
+                                                                return false;
+                                                            }else{
+                                                                var urlAddress = this.url;
+                                                                var urlAddressId = urlAddress.split("=");
+                                                                var x;
+                                                                if($("#visitorExists1"+  urlAddressId["2"]).val() == 1){
+                                                                    alert("This record has an open visit and must be cancelled before deleting.");
+                                                                    return false;
+                                                                } else if($("#visitorExists2"+  urlAddressId["2"]).val() == 1){
+                                                                    if (confirm("This Visitor Record has visit data recorded. Do you wish to delete this visitor record and its visit history?") == true) {
+                                                                        $.ajax({
+                                                                            type: "POST",
+                                                                            url: "'. Yii::app()->createUrl('visit/deleteAllVisitWithSameVisitorId&id=') .'" +urlAddressId["2"] ,
+                                                                            success: function(r) {
+                                                                                $.fn.yiiGridView.update("visitor-grid");
+                                                                                return false;
+                                                                            }
+                                                                        });
+                                                                    }
+                                                                    return false;
+                                                                }
+
+
+                                                            }
+                                                        }',
+                                    ),
+                                ),
+
+                            ),*/
+                        ),
+                    ),
+                ),
+            ));
+            ?>
+        </form>
 
 
 
@@ -380,7 +382,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
             if(validateNameFolder($('#nameFolder').val())){
                 $.ajax({
                     type: 'POST',
-                    url: '<?php echo Yii::app()->createUrl('uploadfile/create'); ?>',
+                    url: '<?php echo Yii::app()->createUrl('uploadFile/create'); ?>',
                     //dataType: 'text',
                     data: $('#Folder_form').serialize(),
                     success: function (r) {
@@ -426,7 +428,6 @@ $this->widget('zii.widgets.grid.CGridView', array(
             var
                 ref = this,
                 refChecked = this.checked;
-
             $(this.form).find('input[type="checkbox"]').each(function (i, el) {
                 if (this != ref) {
                     this.checked = refChecked;
@@ -456,10 +457,10 @@ $this->widget('zii.widgets.grid.CGridView', array(
             }
         });
 
-        $('#btn_delete_file').click(function () {
+        $('#btn_delete_file').click(function (e) {
             $.ajax({
                 type: 'POST',
-                url: '<?php echo Yii::app()->createUrl('uploadfile/delete'); ?>',
+                url: '<?php echo Yii::app()->createUrl('uploadFile/delete'); ?>',
                 //dataType: 'text',
                 data: $('#list_file').serialize(),
                 success: function (r) {
@@ -468,11 +469,11 @@ $this->widget('zii.widgets.grid.CGridView', array(
                         $('#file_grid_error').html(r.error);
                         $('#file_grid_error').fadeIn();
                     } else {
-                        $('#file_grid_error').fadeOut();
-                        $.fn.yiiGridView.update("file-grid");
+                        window.location.reload();
                     }
                 }
             });
+            e.preventDefault();
         });
 
         //Call function can edit cell on table
@@ -494,7 +495,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
 
             $.ajax({
                 type: 'POST',
-                url: '<?php echo Yii::app()->createUrl('uploadfile/uploadedFile'); ?>',
+                url: '<?php echo Yii::app()->createUrl('uploadFile/uploadedFile'); ?>',
                 processData: false,
                 contentType: false,
                 dataType: 'json',
@@ -503,15 +504,15 @@ $this->widget('zii.widgets.grid.CGridView', array(
 
                     window.location.reload();
                     /*if (r.success != 1) {
-                        $('#file_grid_error').html();
-                        for(var i = 0; i < r.error.length; i ++){
-                            $('#file_grid_error').append(r.error[i]);
-                        }
-                        $('#file_grid_error').fadeIn();
-                    } else {
-                        $('#file_grid_error').fadeOut();
-                        $.fn.yiiGridView.update("file-grid");
-                    }*/
+                     $('#file_grid_error').html();
+                     for(var i = 0; i < r.error.length; i ++){
+                     $('#file_grid_error').append(r.error[i]);
+                     }
+                     $('#file_grid_error').fadeIn();
+                     } else {
+                     $('#file_grid_error').fadeOut();
+                     $.fn.yiiGridView.update("file-grid");
+                     }*/
                 }
             });
         });
@@ -524,7 +525,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
                 if($("#File-"+id).length>0){
                     $.ajax({
                         type: 'POST',
-                        url: '<?php echo Yii::app()->createUrl('uploadfile/updateFile'); ?>',
+                        url: '<?php echo Yii::app()->createUrl('uploadFile/updateFile'); ?>',
                         //dataType: 'text',
                         data: {id: id, file:$("#File-"+id).val()},
                         success: function (r) {

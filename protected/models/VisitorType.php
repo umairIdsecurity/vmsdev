@@ -155,9 +155,9 @@ class VisitorType extends CActiveRecord {
             $criteria->addCondition("created_by ='" . Yii::app()->user->id . "'");
 
         if (in_array($cardtype, CardType::$CORPORATE_CARD_TYPE_LIST)) {
-            $criteria->condition = " t.name not like 'Vic%'";
+            $criteria->condition = " t.name not like 'Vic%' AND NOT like 'AVMS%'";
         } elseif (in_array($cardtype, CardType::$VIC_CARD_TYPE_LIST)) {
-            $criteria->condition = " t.name  like 'Vic%'";
+            $criteria->condition = " t.name  like 'Vic%' Or like 'AVMS%'";
         }
         $list = $this->model()->findAll($criteria);
         if ($list) return CJSON::encode($list);

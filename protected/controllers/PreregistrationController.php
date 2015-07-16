@@ -270,8 +270,10 @@ class PreregistrationController extends Controller
 							$model->selected_asic_id
 						);
 
+					$loggedUserEmail = 'Admin@perthairport.com.au';
 					$headers = "MIME-Version: 1.0" . "\r\n";
 					$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+					$headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
 					$to=$asicModel->email;
 					$subject="Request for verification of VIC profile";
 					$body = "<html><body>Hi,<br><br>".
@@ -290,7 +292,7 @@ class PreregistrationController extends Controller
 						$model->key_string = hash('ripemd160', uniqid());
 
 						if ($model->save()) {
-							$loggedUserEmail = 'shimulcsc@yahoo.com';
+							$loggedUserEmail = 'Admin@perthairport.com.au';
 							$headers = "MIME-Version: 1.0" . "\r\n";
 							$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
 							$headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;

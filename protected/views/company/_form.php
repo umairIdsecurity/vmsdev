@@ -168,7 +168,6 @@ if ($this->action->id == 'update') {
                                     <?php echo $form->error($model, 'password_requirement'); ?>
                                 </td>
                             </tr>
-
                             <tr style="display:none;" class="user_requires_password">
                                 <td>
                                     <table

@@ -303,14 +303,24 @@ class SiteController extends Controller {
     }
 
     public function actionSelectWorkstation($id) {
-        $row = '';
+        $row = array();
         if (isset(Yii::app()->user->role) && (Yii::app()->user->role == Roles::ROLE_ADMIN || Yii::app()->user->role == Roles::ROLE_ISSUING_BODY_ADMIN)) {
             $session = new CHttpSession;
-            $Criteria = new CDbCriteria();
+            /*$Criteria = new CDbCriteria();
             if (isset($session['tenant']) && $session['tenant'] != NULL){
                 $Criteria->condition = "tenant = " . $session['tenant'] . " AND is_deleted = 0";
                 $row = Workstation::model()->findAll($Criteria);
-            }
+            }*/
+
+            $row = Yii::app()->db->createCommand()
+                        ->select('w.id,w.name')
+                        ->from('workstation w')
+                        ->leftJoin('company c', 'c.id = w.tenant')
+                        ->leftJoin('user u', 'u.company = c.id')
+                        ->where("w.is_deleted = 0 and c.is_deleted = 0 and u.is_deleted = 0 and u.id ='".$session['id']."'")
+                        ->order('w.id desc')
+                        ->queryAll();
+
         } else {
             $row = Workstation::model()->findWorkstationAvailableForUser($id);
         }

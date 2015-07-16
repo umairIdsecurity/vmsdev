@@ -85,6 +85,7 @@ class WorkstationController extends Controller {
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['Workstation'])) {
+            
             $model->attributes = $_POST['Workstation'];
             if ($model->save())
                 $this->redirect(array('admin'));

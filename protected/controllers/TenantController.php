@@ -116,7 +116,9 @@ class TenantController extends Controller {
                         $passwordval = $_POST['TenantForm']['password'];
                     }
                     $userModel->password = $passwordval;
-                    $userModel->role = $_POST['TenantForm']['role'];
+                    //$userModel->role = $_POST['TenantForm']['role'];
+                    $userModel->role = 1;
+                    
                     //$userModel->user_type = $_POST['TenantForm']['user_type'];
                     //$userModel->user_status = $_POST['TenantForm']['user_status'];
                     
@@ -157,7 +159,6 @@ class TenantController extends Controller {
                             if ($tenantContact->validate()) {
                                 $tenantContact->save();                               
                                 $transaction->commit();
-
 
                                 //email sending
                                 if(!empty($_POST['TenantForm']['password_opt'])){

@@ -281,7 +281,7 @@ class PreregistrationController extends Controller
 						"Link of the VIC profile<br>".
 						"<a href=' " .Yii::app()->getBaseUrl(true)."/index.php/preregistration/login'>".Yii::app()->getBaseUrl(true)."/index.php/preregistration/login</a><br>";
 					$body .="<br>"."Thanks,"."<br>Admin</body></html>";
-					mail($to, $subject, $body,$headers);
+					mail($to, $subject, $body, $headers);
 					//$this->redirect(array('preregistration/uploadPhoto'));
 				}
 				else{
@@ -303,7 +303,7 @@ class PreregistrationController extends Controller
 								"Link of the VIC profile<br>".
 								"<a href=' " .Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?id=".$model->id."&email=".$model->email."&k_str=" .$model->key_string." '>".Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?id=".$model->id."&email=".$model->email."&k_str=".$model->key_string."</a><br>";
 							$body .="<br>"."Thanks,"."<br>Admin</body></html>";
-							mail($to, $subject, $body,$headers);
+							mail($to, $subject, $body, $headers);
 							//$this->redirect(array('preregistration/uploadPhoto'));
 
 						}

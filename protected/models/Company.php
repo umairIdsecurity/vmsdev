@@ -32,6 +32,8 @@ class Company extends CActiveRecord {
     public $is_user_field;
     public $user_password;
     public $password_requirement;
+    public $user_repeatpassword;
+    public $password_option;
     protected $tenantQuery = "SELECT COUNT(c.id) FROM user u LEFT JOIN company c ON u.company=c.id WHERE u.id=c.tenant AND c.id !=1";
 
     /**

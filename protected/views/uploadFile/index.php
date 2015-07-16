@@ -82,7 +82,7 @@
                     array(
                         'name' => 'file',
                         //'value' => '"<span class=\"file-type file-" . $data->ext ."\">$data->file <span class="glyphicon glyphicon-pencil"></span></span>',
-                        'value' => '"<span class=\'file-type file-" . $data->ext ."\'> <span> <a href=\'".$data->linkDownloadFile($data->id)."\'>$data->name</a> </span> <span id=\'pencil-".$data->id."\' class=\'glyphicon glyphicon-pencil\'></span></span>"',
+                        'value' => '"<span class=\'file-type file-" . $data->ext ."\'> <span> <a title=\'".$data->name."\' href=\'".$data->linkDownloadFile($data->id)."\'>".(strlen($data->name)>40?substr($data->name, 0, 40)."...":$data->name)."</a> </span> <span id=\'pencil-".$data->id."\' class=\'glyphicon glyphicon-pencil\'></span></span>"',
                         'type' => 'raw',
                         'filter' => false
                     ),

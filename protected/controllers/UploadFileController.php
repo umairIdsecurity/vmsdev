@@ -51,7 +51,7 @@ class UploadFileController extends Controller
         $criteria->compare('id', $model->id, true);
         $criteria->compare('folder_id', $model->folder_id, true);
         $criteria->compare('file', $model->file, true);
-        if ($folder->name != 'Help Documents')
+        if ($folder->default != 1)
             $criteria->addCondition("folder_id ='" . $folder->id . "'");
         else {
             $criteria->addCondition("folder_id ='" . $folder->id . "'", 'OR');
@@ -64,8 +64,8 @@ class UploadFileController extends Controller
                 'defaultOrder' => 't.uploaded DESC',
                 'attributes' => array(
                     'file' => array(
-                        'asc' => 't.file',
-                        'desc' => 't.file DESC',
+                        'asc' => 't.name',
+                        'desc' => 't.name DESC',
                     ),
 
                     '*',

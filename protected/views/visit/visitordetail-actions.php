@@ -450,8 +450,8 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             var is_vic_holder_checked = $('#VicHolderDecalarations').is(':checked'),
                 is_asic_holder_checked = $('#AsicSponsorDecalarations').is(':checked');
 
-            var declarations_checkboxs = $('.vic-active-declarations');
-            var confirmed = isCheckboxsChecked(declarations_checkboxs);
+            var declarationsCheckboxes = $('.vic-active-declarations');
+            var confirmed = isCheckboxesChecked(declarationsCheckboxes);
 
             if (!confirmed) {
                 if (!$('#VicHolderDecalarations').is(':checked') && $('#AsicSponsorDecalarations').is(':checked')) {
@@ -555,7 +555,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             return false;
         }
 
-        function isCheckboxsChecked(checkboxs) {
+        function isCheckboxesChecked(checkboxs) {
             var flag = true;
             $.each(checkboxs, function(i, checkbox) {
                 $(checkbox).next('a').removeClass('label label-warning');
@@ -766,17 +766,6 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
     <input type="text" id="CardGenerated_tenant_agent" name="CardGenerated[tenant_agent]" value="<?php echo $model->tenant_agent;
     ?>">
     <input type="text" id="CardGenerated_enter_card_number" name="CardGenerated[enter_card_number]" value=""/>
-    <?php
-/*    switch ($model->card_type) {
-        case CardType::VIC_CARD_24HOURS:
-            $dateExpiration = 
-            break;
-        
-        default:
-            # code...
-            break;
-    }*/
-    ?>
     <input type="text" id="CardGenerated_date_expiration" name="CardGenerated[date_expiration]" value="" />
     <?php
 

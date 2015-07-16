@@ -42,7 +42,7 @@ class TenantForm extends CFormModel
 
     );
     public static $USER_TYPE_LIST = array(
-        ''=>'User Type',
+        //''=>'User Type',
         1 => 'Internal',
         2 => 'External',
     );
@@ -59,17 +59,33 @@ class TenantForm extends CFormModel
         return array(
             // name, email, subject and message are required
             array('timezone_id','required','message' =>'Please select a timezone'),
-            array('tenant_name,tenant_code,first_name, last_name, email, contact_number,password_opt', 'required'),
-            array('tenant_name,tenant_code,first_name, last_name, email', 'length', 'max' => 50),
+            array('tenant_name,tenant_code,first_name, last_name, email, contact_number', 'required'),
+
+            array('password_opt','required','message' => 'Please select a {attribute}'),
+            
+
+            array('tenant_name,first_name, last_name, email', 'length', 'max' => 50),
             array('tenant_code', 'length', 'max' => 3),
             array('tenant_code', 'length', 'min' => 3),
             array('role, user_type, user_status,password_opt', 'numerical', 'integerOnly' => true),
-            array('user_type', 'required', 'message' => 'Please select a {attribute}'),
+
+
+            //array('user_type', 'required', 'message' => 'Please select a {attribute}'),
+            
+            array('user_type', 'safe'),
+            array('user_status', 'safe'),
+            
+
             array('email', 'filter', 'filter' => 'trim'),
             array('email', 'email'),
             array('email', "unique",'className'=> 'User'),
-            array('password,cnf_password', 'required','on'=>'passwordrequire'),
+
+            array('password,cnf_password', 'required','on'=>'passwordrequire', 'message' => 'Please enter password or Autogenerate password'),
+
+            //array('password,cnf_password', 'required','on'=>'passwordrequire'),
             array('password', 'compare', 'compareAttribute'=>'cnf_password','on'=>'passwordrequire'),
+
+
             array('tenant_code','match', 'pattern' => '[^[A-Za-z]+$]','message' => 'Tenant code not contains the numeric value'),
             //array('password_opt', 'checkTerm'),
 
@@ -109,7 +125,8 @@ class TenantForm extends CFormModel
             'cnf_password' => 'Repeat Password',
             'photo' => 'Photo',
             'timezone_id' => 'Timezone',
-            'allowed_module' => 'Module Access'
+            'allowed_module' => 'Module Access',
+            'password_opt' => 'Password Option'
         );
     }
     public function is_avms_user()

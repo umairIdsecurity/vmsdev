@@ -109,7 +109,7 @@ class Folder extends CActiveRecord
             if ($folders) {
                 $list = array();
                 foreach ($folders as $folder) {
-                    $list[] = array('default' => $folder->default, 'name' => $folder->name, 'number_file' => count(File::model()->getAllFilesFromFolder($folder,true)));
+                    $list[] = array('default' => $folder->default, 'name' => $folder->name, 'number_file' => File::model()->getAllFilesFromFolder($folder,true));
                 }
                 return $list;
             }

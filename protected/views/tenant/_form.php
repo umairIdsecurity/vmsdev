@@ -95,7 +95,7 @@ $currentLoggedUserId = $session['id'];
                             </td>
                         </tr>
                         <tr>
-                            <td><?php echo $form->textField($model, 'tenant_code', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Tenant code')); ?>
+                            <td><?php echo $form->textField($model, 'tenant_code', array('size' => 50, 'maxlength' => 3,'placeholder'=>'Tenant code', 'onkeyup' => 'restrict(this)')); ?>
                                 <span class="required">*</span>
 
                                 <?php echo "<br>" . $form->error($model, 'tenant_code'); ?>
@@ -133,7 +133,7 @@ $currentLoggedUserId = $session['id'];
                             </td>
                         </tr>
                         <tr>
-                            <td><?php echo $form->textField($model, 'contact_number', array('size' => 50, 'placeholder'=>'Contact Number')); ?>
+                            <td><?php echo $form->textField($model, 'contact_number', array('size' => 50, 'placeholder'=>'Contact Number', 'onkeyup' => 'restrictContactNo(this)')); ?>
                                 <span class="required">*</span>
                                 <?php echo "<br>" . $form->error($model, 'contact_number'); ?></td>
                         </tr>
@@ -162,8 +162,8 @@ $currentLoggedUserId = $session['id'];
                             if ($this->action->Id == 'create' && !CHelper::is_add_avms_user() ) { //if action create with user roles selected in url
                                 //echo "disabled";
                             }
-                            ?> id="User_role" name="TenantForm[role]">
-                                <option disabled value='' selected>Select Role</option>
+                            ?> id="User_role" name="TenantForm[role]" disabled>
+                                <!-- <option disabled value='' selected>Select Role</option> -->
                                 <?php
 
                                 $assignableRowsArray = getAssignableRoles($session['role'],$model); // roles with access rules from getaccess function
@@ -196,14 +196,14 @@ $currentLoggedUserId = $session['id'];
 
                     <tr>
 
-                        <td><?php echo $form->dropDownList($model, 'user_type', TenantForm::$USER_TYPE_LIST); ?>
-                            <span class="required">*</span>
+                        <td><?php echo $form->dropDownList($model, 'user_type', TenantForm::$USER_TYPE_LIST, array('disabled' => true, 'options' => array('1'=>array('selected'=>true)))); ?>
+                            <!-- <span class="required">*</span> -->
                             <?php echo "<br>" . $form->error($model, 'user_type'); ?>
                         </td>
                     </tr>
 
                     <tr>
-                        <td><?php echo $form->dropDownList($model, 'user_status', TenantForm::$USER_STATUS_LIST); ?>
+                        <td><?php echo $form->dropDownList($model, 'user_status', TenantForm::$USER_STATUS_LIST, array('disabled' => true, 'options' => array('1'=>array('selected'=>true)))); ?>
                             <?php echo "<br>" . $form->error($model, 'user_status'); ?>
                         </td>
 
@@ -269,15 +269,17 @@ $currentLoggedUserId = $session['id'];
                                         <td>
                                             <input placeholder="Password" type="password" id="TenantForm_password"  name="TenantForm[password]">
                                             <span class="required">*</span>
-                                            <?php   echo $form->error($model,'password'); ?>
+
+                                            <?php  echo $form->error($model,'password'); ?>
 
                                         </td>
                                     </tr>
+
                                     <tr >
                                         <td >
                                             <input placeholder="Repeat Password" type="password" id="TenantForm_cnf_password"  name="TenantForm[cnf_password]">
                                             <span class="required">*</span>
-                                            <?php echo $form->error($model,'cnf_password'); ?>
+                                            <?php //echo $form->error($model,'cnf_password'); ?>
 
                                         </td>
 
@@ -293,6 +295,7 @@ $currentLoggedUserId = $session['id'];
                                             </div>
 
                                         </td>
+                                        
                                     </tr>
 
                                     <tr>
@@ -671,6 +674,23 @@ function get_avms_assignable_roles($user_role)
 
 
 <script type="text/javascript">
+
+
+    function restrict(ob){
+        var invalidChars = /([^A-Z])/g;
+        if(invalidChars.test(ob.value)) {
+            ob.value = ob.value.toUpperCase().replace(invalidChars,"");
+        }
+    }
+
+
+    function restrictContactNo(ob){
+        var invalidChars = /([^0-9])/g;
+        if(invalidChars.test(ob.value)) {
+            ob.value = ob.value.toUpperCase().replace(invalidChars,"");
+        }
+    }
+
     var radiochooseval = "";
     function call_radio1(){
         radiochooseval = $('#radio1').val();

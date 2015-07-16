@@ -102,7 +102,12 @@ $companyName = isset($visitCount['companyName']) ? $visitCount['companyName'] : 
 $totalCompanyVisit = (isset($visitCount['totalVisits']) && !empty($visitCount['totalVisits'])) ? ($visitCount['totalVisits'] < 0) ? 0 : $visitCount['totalVisits'] : '0';
 $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingDays'] <= 28) ? ($visitCount['remainingDays'] < 0) ? '0' : $visitCount['remainingDays'] : '28';
 ?>
-    Total Visits at <?php echo $companyName; ?>: <?php echo $totalCompanyVisit; ?></br>
+    Total Visits at <?php echo $companyName; ?>: <?php echo $totalCompanyVisit; ?>
+    <?php if($visitorModel->visitor_card_status == Visitor::VIC_ASIC_PENDING && $totalCompanyVisit == 28):?>
+        <span class="glyphicon glyphicons-refresh"></span>
+    <?php endif;?>
+
+    </br>
     <!-- Total Visits to All Companies: <?php // echo $visitCount['allVisitsByVisitor'];           ?> -->
     <?php if ($visitorModel->profile_type == Visitor::PROFILE_TYPE_VIC) { ?>
         Remaining Days: <?php echo $remainingDays; ?>
@@ -243,9 +248,14 @@ $detailForm = $this->beginWidget('CActiveForm', [
         $('.btnUpdateVisitorDetailForm').on('click', function (e) {
             var checkWorkStation1 = checkWorkstation();
             var checkVisitorType1 = checkVisitorType();
-            var checkCardStatus1 = checkCardStatus();
-            if( checkCardStatus1 == true && checkVisitorType1 == true && checkWorkStation1 == true) {
-                $('#update-visitor-detail-form').submit();
+
+            if(checkVisitorType1 == true && checkWorkStation1 == true) {
+                var checkCardStatus1 = checkCardStatus();
+                if(checkCardStatus1 == true){
+                    $('#update-visitor-detail-form').submit();
+                }else {
+                    return false;
+                }
             } else {
                 return false;
             }

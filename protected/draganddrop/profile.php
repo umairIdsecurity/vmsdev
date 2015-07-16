@@ -8,11 +8,13 @@ if ($this->Id == 'visitor') {
 }
 ?>
 <?php
-/*if ($model->photo1) {
-    $background = $model->photo1->relative_path;
+if ($model->photo1) {
+    $background = "url(data:image;base64,".$model->photo1->db_image.")";
+    //$background = $model->photo1->db_image;
 } else {
-    $background = Yii::app()->controller->assetsBase . "/images/portrait_box.png";
-}*/
+    $background = "url(".Yii::app()->controller->assetsBase ."/images/portrait_box.png)";
+    //$background = Yii::app()->controller->assetsBase . "/images/portrait_box.png";
+}
 ?>
 <style>
     .ajax-upload-dragdrop2 {
@@ -20,8 +22,8 @@ if ($this->Id == 'visitor') {
         margin-left: 25px !important;
         margin-top: 10px;
         
-        /*background: url('<?php //echo $background ?>') no-repeat center top;*/
-        background: url('<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png') no-repeat center top;
+        background: <?php echo $background ?> no-repeat center top;
+        /*background: url('<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png') no-repeat center top;*/
         
         background-size:137px;
         height: 150px;
@@ -145,7 +147,12 @@ if (isset($_GET['viewFrom'])) {
 
                             $(".ajax-upload-dragdrop2").css("background", my_db_image + " no-repeat center top");
                             $(".ajax-upload-dragdrop2").css({"background-size": "132px 152px" });
-                            document.getElementById('photoCropPreview2').src =  "data:image;base64,"+ value.db_image;
+
+                            var elem = document.getElementById('photoCropPreview2');
+                            if(typeof elem !== 'undefined' && elem !== null) {
+                                elem.src = "data:image;base64,"+ value.db_image;
+                            }
+                            //document.getElementById('photoCropPreview2').src =  "data:image;base64,"+ value.db_image;
 
                         });
                     }

@@ -78,7 +78,7 @@ if ($this->action->id == 'update') {
                 <td style="width:160px;">Tenant Code</td>
                 <td style="width:240px;">
                     <?php
-                    echo $form->textField($model, 'code', array('size' => 3, 'maxlength' => 3, 'placeholder' => 'Tenant Code'));
+                    echo $form->textField($model, 'code', array('size' => 3, 'maxlength' => 3, 'placeholder' => 'Tenant Code', "onkeyup" => "restrict(this)"));
                     if (isset($_GET['viewFrom'])) {
                         echo "<br>" . $form->error($model, 'code');
                     }
@@ -118,7 +118,7 @@ if ($this->action->id == 'update') {
 
         <tr class="user_fields">
             <td style="width:160px;">Contact number</td>
-            <td><?php echo $form->textField($model, 'mobile_number', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Contact Number')); ?>
+            <td><?php echo $form->textField($model, 'mobile_number', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Contact Number', 'onkeyup' => 'restrictContactNo(this)')); ?>
 
                 <?php echo "<br>" . $form->error($model, 'mobile_number'); ?>
             </td>
@@ -197,6 +197,20 @@ if (isset($_GET['viewFrom'])) {
 }
 ?>"/>
 <script>
+
+    function restrict(ob){
+        var invalidChars = /([^A-Z])/g;
+        if(invalidChars.test(ob.value)) {
+            ob.value = ob.value.toUpperCase().replace(invalidChars,"");
+        }
+    }
+
+    function restrictContactNo(ob){
+        var invalidChars = /([^0-9])/g;
+        if(invalidChars.test(ob.value)) {
+            ob.value = ob.value.toUpperCase().replace(invalidChars,"");
+        }
+    }
 
     function closeParent() {
         window.parent.dismissModal();

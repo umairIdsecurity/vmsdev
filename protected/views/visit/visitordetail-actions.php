@@ -595,7 +595,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                 data: data,
                 success: function(id) {
                     if (typeof id != 'undefined' && !isNaN(id)) {
-                        window.location = "index.php?r=visit/detail&id=" + id;
+                        sendCardForm(id);
                     }
                 }
             });

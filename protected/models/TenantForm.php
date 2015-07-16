@@ -70,10 +70,10 @@ class TenantForm extends CFormModel
             array('role, user_type, user_status,password_opt', 'numerical', 'integerOnly' => true),
 
 
-            //array('user_type', 'required', 'message' => 'Please select a {attribute}'),
+            array('user_type', 'required', 'message' => 'Please select a {attribute}'),
             
-            array('user_type', 'safe'),
-            array('user_status', 'safe'),
+            //array('user_type', 'safe'),
+            //array('user_status', 'safe'),
             
 
             array('email', 'filter', 'filter' => 'trim'),

@@ -109,6 +109,7 @@ class TenantController extends Controller {
                     $userModel->email = $_POST['TenantForm']['email'];
                     $userModel->contact_number = $_POST['TenantForm']['contact_number'];
                     $userModel->company = $comapanylastId;
+                    $userModel->timezone_id = $_POST['TenantForm']['timezone_id'];
 
                     $passwordval = NULL;
                     if(isset($_POST['TenantForm']['password']) && $_POST['TenantForm']['password'] != ""){
@@ -141,7 +142,7 @@ class TenantController extends Controller {
                                                
                         $userModel->save(false);
                         $userLastID = $userModel->id;                     
-                        $userModel->timezone_id = $_POST['TenantForm']['timezone_id'];
+                        
                          
                         $tenantModel->id = $comapanylastId;
                         $tenantModel->is_deleted = 0;
@@ -156,6 +157,34 @@ class TenantController extends Controller {
                             if ($tenantContact->validate()) {
                                 $tenantContact->save();                               
                                 $transaction->commit();
+
+
+                                //email sending
+                                if(!empty($_POST['TenantForm']['password_opt'])){
+                                    
+                                    $passwordRequire= intval($_POST['TenantForm']['password_opt']);
+
+                                    if($passwordRequire == 1){
+
+                                        $loggedUserEmail = Yii::app()->user->email;
+
+                                        $headers = "MIME-Version: 1.0" . "\r\n";
+                                        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+                                        $headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
+
+                                        $to=$_POST['TenantForm']['email'];
+
+                                        $subject="Preregistration email notification";
+                                        $body = "<html><body>Hi,<br><br>".
+                                                "This is preregistration email.<br><br>".
+                                                "Please click on the below URL:<br>".
+                                                "http://vmsprdev.identitysecurity.info/index.php/preregistration/login<br>";
+                                        $body .= "Password: ".$_POST['TenantForm']['password']."<br>";
+                                        $body .="<br>"."Thanks,"."<br>Admin</body></html>";
+
+                                        mail($to, $subject, $body, $headers);
+                                    }
+                                }
 
                                 Yii::app()->user->setFlash('success', "Tenant inserted Successfully");
                                 // echo json_encode(array('success'=>TRUE));

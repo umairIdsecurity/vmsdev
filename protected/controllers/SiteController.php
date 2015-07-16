@@ -303,15 +303,14 @@ class SiteController extends Controller {
     }
 
     public function actionSelectWorkstation($id) {
-        
+        $row = '';
         if (isset(Yii::app()->user->role) && (Yii::app()->user->role == Roles::ROLE_ADMIN || Yii::app()->user->role == Roles::ROLE_ISSUING_BODY_ADMIN)) {
             $session = new CHttpSession;
             $Criteria = new CDbCriteria();
             if (isset($session['tenant']) && $session['tenant'] != NULL){
                 $Criteria->condition = "tenant = " . $session['tenant'] . " AND is_deleted = 0";
+                $row = Workstation::model()->findAll($Criteria);
             }
-            $row = Workstation::model()->findAll($Criteria);
-
         } else {
             $row = Workstation::model()->findWorkstationAvailableForUser($id);
         }

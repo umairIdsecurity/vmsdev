@@ -22,6 +22,10 @@ $currentLoggedUserId = $session['id'];
 
 <style type="text/css">
     .required{ padding-left:5px;}
+    .errorMessage{
+         margin-bottom: 9px;
+        margin-top: -5px;
+    }
 </style>
 <div class="form">
 
@@ -133,7 +137,7 @@ $currentLoggedUserId = $session['id'];
                             </td>
                         </tr>
                         <tr>
-                            <td><?php echo $form->textField($model, 'contact_number', array('size' => 50, 'placeholder'=>'Contact Number', 'onkeyup' => 'restrictContactNo(this)')); ?>
+                            <td><?php echo $form->textField($model, 'contact_number', array('size' => 50, 'placeholder'=>'Contact Number')); ?>
                                 <span class="required">*</span>
                                 <?php echo "<br>" . $form->error($model, 'contact_number'); ?></td>
                         </tr>
@@ -715,7 +719,7 @@ function get_avms_assignable_roles($user_role)
             
             $('#TenantForm_cnf_password').css({"background": "#fee none repeat scroll 0 0", "border": "#c00"});
 
-            $('#generatePassword').css({"background": "#fee none repeat scroll 0 0", "border": "#c00"});            
+            $('#generatePassword').css({"background-color": "#2f96b4", "border": "1px solid #cccccc"});            
             
         }
             
@@ -729,12 +733,14 @@ function get_avms_assignable_roles($user_role)
     }
 
 
-    function restrictContactNo(ob){
-        var invalidChars = /([^0-9 ])/g;
-        if(invalidChars.test(ob.value)) {
-            ob.value = ob.value.toUpperCase().replace(invalidChars,"");
-        }
-    }
+    $("#TenantForm_contact_number").on("keypress",function(evt){
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        //anything other than BACKSPACE,SPACE and numerics from 0 to 9 will not do anything in textbox
+        if (charCode > 32 && (charCode < 48 || charCode > 57))
+            return false;
+        return true;
+    });
+
 
     var radiochooseval = "";
     function call_radio1(){

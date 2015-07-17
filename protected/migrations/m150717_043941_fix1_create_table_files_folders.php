@@ -1,6 +1,6 @@
 <?php
 
-class m150716_231939_fix_create_table_files_folders extends CDbMigration
+class m150717_043941_fix1_create_table_files_folders extends CDbMigration
 {
 
 	// Use safeUp/safeDown to do migration with transaction
@@ -21,7 +21,7 @@ class m150716_231939_fix_create_table_files_folders extends CDbMigration
 			'user_id' => 'BIGINT',
 			'default' => 'TINYINT',
 			'name' => 'varchar(255) NOT NULL',
-			'date_created' => 'datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP',
+			'date_created' => 'datetime',
 		));
 		$this->addForeignKey('folders_user_fk', 'folders', 'user_id', 'user', 'id');
 
@@ -30,7 +30,7 @@ class m150716_231939_fix_create_table_files_folders extends CDbMigration
 			'folder_id' => 'INTEGER',
 			'user_id' => 'BIGINT',
 			'file' => 'varchar(255) NOT NULL',
-			'uploaded' => 'datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP',
+			'uploaded' => 'datetime',
 			'size' => 'DOUBLE',
 			'ext' => 'varchar(20)',
 			'uploader' => 'BIGINT',

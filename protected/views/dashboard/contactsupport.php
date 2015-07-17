@@ -45,7 +45,8 @@ $arrSubject = array(
             <td colspan="1" rowspan="4" style="vertical-align: top" >
                 <div class="upload-file-support">
                     <h4>Attachments</h4>
-                    <label class="" for="attachFileSupport"><span class="glyphicon glyphicons-folder-open"></span> <a href="<?php echo Yii::app()->createUrl("support"); ?>">Help Documents</a></label>
+                    <label class="" for="attachFileSupport"><span class="glyphicon glyphicons-folder-open"></span> <!--<a href="<?php /*echo Yii::app()->createUrl("support"); */?>">-->Help Documents<!--</a>-->
+                    </label>
                    <!-- <input type="file" name="my_file[]"
                            id="attachFileSupport"
                            data-multifile

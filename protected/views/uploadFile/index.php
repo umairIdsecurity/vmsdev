@@ -363,7 +363,7 @@
                     <div class="form-group">
                         <div id="Folder_name" class="errorMessage" style="text-transform: none;margin-left: 159px;display:none">Please input name folder</div>
                         <input value="<?php echo Yii::app()->user->id; ?>" type="hidden" name="Folder[user_id]">
-                        <label for="nameFolder" class="col-sm-2 control-label">Name Folder: </label> <input name="Folder[name]" type="text" class="form-control" id="nameFolder" placeholder="Type name folder...">
+                        <label for="nameFolder" class="col-sm-2 control-label">Folder Name:</label>&nbsp;&nbsp; <input name="Folder[name]" type="text" class="form-control" id="nameFolder" placeholder="Type folder name...">
 
                     </div>
                 </form>

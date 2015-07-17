@@ -383,7 +383,7 @@ $form = $this->beginWidget('CActiveForm', array(
 </tr>
 
 
-<tr>
+<tr style="display: none">
     <td class="workstationRow">
 
         <?php

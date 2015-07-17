@@ -93,8 +93,9 @@ function getCardType() {
         return 'Host';
     }
 }
-$(document).ready(function () {
+    $(document).ready(function () {
         display_ct();
+        
         $("#register-host-patient-form").hide();
         $("#register-host-form").show();
         $("#searchHostDiv").show();
@@ -192,6 +193,7 @@ $(document).ready(function () {
 
         $(document).on("click", "#clicktabB", function (e) {
             e.preventDefault();
+            var cardType = $('#VisitCardType').val();
             if ($('.password_requirement').filter(':checked').val() == "<?php echo PasswordRequirement::PASSWORD_IS_REQUIRED; ?>") {
                 if ($('.password_option').filter(':checked').val() == "<?php echo PasswordOption::CREATE_PASSWORD; ?>") {
                     $('.visitor_password').empty().hide();
@@ -217,7 +219,7 @@ $(document).ready(function () {
             }
 
             var contact = $('#Visitor_staff_id').val();
-            if (typeof contact != 'undefined') {
+            if (cardType > <?php echo CardType::CONTRACTOR_VISITOR; ?> && typeof contact != 'undefined') {
                 $.ajax({
                     url: "<?php echo $this->createUrl('company/getContact&id=') ?>" + contact,
                     dataType: "json",

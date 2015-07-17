@@ -204,11 +204,10 @@ $asicEscort = new AddAsicEscort();
 <script>
     $(document).ready(function() {
         // Set min & max date for check out datepicker
-        var cardType = "<?php echo $model->card_type; ?>";
         var d = new Date(),
             minDate, maxDate;
         var disabled = true;
-
+        var cardType = $('#VisitCardType').val();
         switch(cardType) {
             case "<?php echo CardType::VIC_CARD_MANUAL; ?>":
                 minDate = "-12m";

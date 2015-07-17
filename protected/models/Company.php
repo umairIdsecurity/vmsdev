@@ -274,8 +274,13 @@ class Company extends CActiveRecord {
 
     public function getCompanyName($companyId) {
         if ($companyId != '') {
-            $company = Company::model()->findByPK($companyId);
-            return $company->name;
+            $this->detachBehavior('softDelete');
+            $company = $this->findByAttributes(['is_deleted' => 0, 'id' => $companyId]);
+            if ($company) {
+                return $company->name;
+            } else {
+                return '-';
+            }
         }
     }
 
@@ -285,8 +290,7 @@ class Company extends CActiveRecord {
                 'class' => 'ext.soft_delete.SoftDeleteBehavior'
             ),
 
-            'AuditTrailBehaviors'=>
-                'application.components.behaviors.AuditTrailBehaviors',
+            'AuditTrailBehaviors' => 'application.components.behaviors.AuditTrailBehaviors',
         );
     }
 

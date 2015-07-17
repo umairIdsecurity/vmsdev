@@ -458,13 +458,21 @@ class VisitController extends Controller {
                     }
 
                     // Update company contact process
-                    $staffModel   = User::model()->findByPk($visitorModel->staff_id);
+                    $staffModel = User::model()->findByPk($visitorModel->staff_id);
                     if ($staffModel) {
                         if (isset($companyParams['mobile_number'])) 
                             $staffModel->contact_number = $companyParams['mobile_number'];
                         if (isset($companyParams['email_address'])) 
                             $staffModel->email          = $companyParams['email_address'];
-
+                        if (isset($companyParams['contact'])) {
+                            if (strpos($companyParams['contact'], ' ') !== false) {
+                                $arrFullName = explode(' ', $companyParams['contact']);
+                                $staffModel->first_name = $arrFullName[0];
+                                $staffModel->last_name = $arrFullName[1];
+                            } else {
+                                // Todo: if operator enter company contact with wrong format
+                            }
+                        }
                         // Save staff member
                         if (!$staffModel->save()) {
                             // Do something if save staff failure
@@ -519,7 +527,6 @@ class VisitController extends Controller {
                             $model->time_check_out = $model->time_check_in;
                             break;
                         case CardType::VIC_CARD_EXTENDED: // VIC Extended
-                        
                             if ($visitParams['finish_date'] != NULL) {
                                 $model->finish_date =  date('Y-m-d', strtotime($visitParams['finish_date']));
                                 $model->date_check_in = $model->date_check_in;

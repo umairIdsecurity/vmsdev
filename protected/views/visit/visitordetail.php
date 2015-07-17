@@ -452,10 +452,14 @@ $this->renderPartial('visithistory', array('model' => $model,
     function sendCardForm(visitId) {
         var cardForm = $("#update-card-form").serialize();
         var id = visitId ? visitId : '<?php echo $model->id; ?>';
+        var preCardNo = '';
+        if (typeof $('#pre_issued_card_no') != 'undefined' && $('#pre_issued_card_no').val() != '') {
+            preCardNo = $('#pre_issued_card_no').val();
+        }
 
         $.ajax({
             type: "POST",
-            url: "<?php echo CHtml::normalizeUrl(array("cardGenerated/create&visitId=")) ?>" + id,
+            url: "<?php echo CHtml::normalizeUrl(array("cardGenerated/create&visitId=")) ?>" + id + "&preCardNo=" + preCardNo,
             data: cardForm,
             success: function(data) {
             	window.location = "index.php?r=visit/detail&id=" + id;

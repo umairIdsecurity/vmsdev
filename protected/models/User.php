@@ -532,12 +532,23 @@ class User extends VmsActiveRecord {
                         ->from('user u')
                         ->join('company c', 'u.company=c.id')
                         ->where('u.id=c.tenant and c.id !=1 and u.is_deleted = 0')
-                        /*->select('c.id as id, c.name as name, c.id as tenant')
+                        ->queryAll();
+                        
+                        // Todo: Why you change that query it cause log visit bug
+                        // if you change please check that log visit run normally, thanks
+                        /*->select('c.id as id, c.name as name,c.tenant')
+                        ->from('tenant t')
+                        ->join('company c', 'u.company=c.id')
+                        ->where('t.id=c.id and c.id !=1 and u.is_deleted = 0')
+                        ->select('c.id as id, c.name as name, c.id as tenant')
                         ->from('tenant t')
                         ->join('company c', 't.id = c.id')
-                        ->where('t.is_deleted = 0 and c.is_deleted = 0')*/
-                        ->queryAll();
+                        ->where('t.is_deleted = 0 and c.is_deleted = 0')
+                        ->order('c.id desc')
+                        ->queryAll();*/
     }
+
+
     
     public function behaviors() {
         return array(
@@ -618,14 +629,15 @@ class User extends VmsActiveRecord {
         return $aArray;
     }
 
-    public function findCompanyDetailsOfUser($userId) {
+    public function findCompanyDetailsOfUser($tenantId) {
         $aArray = array();
+
         //find all company with same tenant except users company
-        $user = User::model()->findByPk($userId);
-            
+        $company = Company::model()->findByPk($tenantId);
+
         $Criteria = new CDbCriteria();
- 
-        $Criteria->condition = "tenant ='" . $userId . "' and id !=1 and id != " . $user->company;
+
+        $Criteria->condition = "tenant ='" . $company['tenant'] . "' and id !=1 and id != " . $company->id;
          
         $companyList = Company::model()->findAll($Criteria);
 

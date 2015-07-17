@@ -42,7 +42,8 @@ class UserController extends Controller
                     'GetTenantOrTenantAgentCompany',
                     'GetTenantWorkstation',
                     'GetTenantAgentWorkstation',
-                    'getCompanyOfTenant'
+                    'getCompanyOfTenant',
+                    'checkCompanyContactEmail'
                 ),
                 'users' => array('@'),
             ),
@@ -256,6 +257,7 @@ class UserController extends Controller
 
         if (isset($_POST['User'])) {
             $model->attributes = $_POST['User'];
+            // $model->detachBehavior('DateTimeZoneAndFormatBehavior');
             if ($model->save()) {
                 Yii::app()->user->setFlash('success', "Profile Updated Successfully.");
             }
@@ -433,5 +435,18 @@ class UserController extends Controller
             }
         }
         return $this->render("importhost", array("model" => $model));
+    }
+
+    public function actionCheckCompanyContactEmail() {
+        if(isset($_POST['email']) && isset($_POST['tenant'])){
+            $email = $_POST['email'];
+            $tenant = $_POST['tenant'];
+            if (User::model()->isEmailAddressUnique($email, $tenant)) {
+                echo 1;
+            } else {
+                echo 0;
+            };
+            Yii::app()->end();
+        }
     }
 }

@@ -22,6 +22,10 @@ $currentLoggedUserId = $session['id'];
 
 <style type="text/css">
     .required{ padding-left:5px;}
+    .errorMessage{
+         margin-bottom: 9px;
+        margin-top: -5px;
+    }
 </style>
 <div class="form">
 
@@ -95,7 +99,7 @@ $currentLoggedUserId = $session['id'];
                             </td>
                         </tr>
                         <tr>
-                            <td><?php echo $form->textField($model, 'tenant_code', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Tenant code')); ?>
+                            <td><?php echo $form->textField($model, 'tenant_code', array('size' => 50, 'maxlength' => 3,'placeholder'=>'Tenant code', 'onkeyup' => 'restrict(this)')); ?>
                                 <span class="required">*</span>
 
                                 <?php echo "<br>" . $form->error($model, 'tenant_code'); ?>
@@ -162,8 +166,8 @@ $currentLoggedUserId = $session['id'];
                             if ($this->action->Id == 'create' && !CHelper::is_add_avms_user() ) { //if action create with user roles selected in url
                                 //echo "disabled";
                             }
-                            ?> id="User_role" name="TenantForm[role]">
-                                <option disabled value='' selected>Select Role</option>
+                            ?> id="User_role" name="TenantForm[role]" disabled>
+                                <!-- <option disabled value='' selected>Select Role</option> -->
                                 <?php
 
                                 $assignableRowsArray = getAssignableRoles($session['role'],$model); // roles with access rules from getaccess function
@@ -196,14 +200,14 @@ $currentLoggedUserId = $session['id'];
 
                     <tr>
 
-                        <td><?php echo $form->dropDownList($model, 'user_type', TenantForm::$USER_TYPE_LIST); ?>
-                            <span class="required">*</span>
+                        <td><?php echo $form->dropDownList($model, 'user_type', TenantForm::$USER_TYPE_LIST, array('disabled' => true, 'options' => array('1'=>array('selected'=>true)))); ?>
+                            <!-- <span class="required">*</span> -->
                             <?php echo "<br>" . $form->error($model, 'user_type'); ?>
                         </td>
                     </tr>
 
                     <tr>
-                        <td><?php echo $form->dropDownList($model, 'user_status', TenantForm::$USER_STATUS_LIST); ?>
+                        <td><?php echo $form->dropDownList($model, 'user_status', TenantForm::$USER_STATUS_LIST, array('disabled' => true, 'options' => array('1'=>array('selected'=>true)))); ?>
                             <?php echo "<br>" . $form->error($model, 'user_status'); ?>
                         </td>
 
@@ -211,14 +215,34 @@ $currentLoggedUserId = $session['id'];
                      <tr>
                          
                         <td>
-                            <?php echo $form->dropDownList(
+                            <?php /*echo $form->dropDownList(
                                     $model,
                                     'timezone_id',
                                     CHtml::listData(Timezone::model()->findAll(),
                                             'id',
                                             'timezone_name'),
                                             array('empty'=>'Please select a timezone')
-                            );?>
+                                    );*/
+                            ?>
+
+                            <select id="Workstation_timezone_id" name="TenantForm[timezone_id]">
+                                <?php
+                                    $timezoneList = Timezone::model()->findAll();
+                                    foreach ($timezoneList as $key => $value) {
+                                        ?>
+                                        <option <?php
+                                        if ($model['timezone_id'] == $value['id']) {
+                                            echo " selected ";
+                                        } elseif($model['timezone_id'] == '' && $value['timezone_value'] == $_SESSION["timezone"]) {
+                                            echo " selected ";
+                                        }
+                                        ?> value="<?php echo $value['id']; ?>"><?php echo $value['timezone_name']; ?></option>
+                                        <?php
+                                    }?>
+                            </select>
+
+
+
                             <?php echo $form->error($model, 'timezone_id',array('style'=>'text-transform:none;')); ?>
                         </td>
                  
@@ -269,15 +293,17 @@ $currentLoggedUserId = $session['id'];
                                         <td>
                                             <input placeholder="Password" type="password" id="TenantForm_password"  name="TenantForm[password]">
                                             <span class="required">*</span>
-                                            <?php   echo $form->error($model,'password'); ?>
+
+                                            <?php  echo $form->error($model,'password', array("class"=>"hidingMsgPassword")); ?>
 
                                         </td>
                                     </tr>
+
                                     <tr >
                                         <td >
                                             <input placeholder="Repeat Password" type="password" id="TenantForm_cnf_password"  name="TenantForm[cnf_password]">
                                             <span class="required">*</span>
-                                            <?php echo $form->error($model,'cnf_password'); ?>
+                                            <?php //echo $form->error($model,'cnf_password'); ?>
 
                                         </td>
 
@@ -288,11 +314,12 @@ $currentLoggedUserId = $session['id'];
                                             <div class="row buttons" style="margin-left:23.5px;">
 
                                                 <?php $background = isset($companyLafPreferences) ? ("background:" . $companyLafPreferences->neutral_bg_color . ' !important;') : ''; ?>
-                                                <input onclick="generatepassword();" class="complete btn btn-info" style="<?php echo $background; ?>position: relative; width:178px; overflow: hidden; cursor: default;cursor:pointer;font-size:14px" type="button" value="Autogenerate Password" />
+                                                <input id="generatePassword" onclick="generatepassword();" class="complete btn btn-info" style="<?php echo $background; ?>position: relative; width:178px; overflow: hidden; cursor: default;cursor:pointer;font-size:14px" type="button" value="Autogenerate Password" />
 
                                             </div>
 
                                         </td>
+                                        
                                     </tr>
 
                                     <tr>
@@ -671,6 +698,50 @@ function get_avms_assignable_roles($user_role)
 
 
 <script type="text/javascript">
+    
+    $('.hidingMsgPassword').css("color","red");
+
+    $('#TenantForm_password, #TenantForm_cnf_password').on('keyup', function () {
+        if ($('#TenantForm_password').val() == $('#TenantForm_cnf_password').val()) {    
+
+            $('#TenantForm_password').css({"background-color": "#fffff", "border": "1px solid #cccccc"});
+            
+            $('#TenantForm_cnf_password').css({"background-color": "#fffff", "border": "1px solid #cccccc"});
+
+            $('#generatePassword').css({"background-color": "#2f96b4", "border": "1px solid #cccccc"});            
+            
+            $('.hidingMsgPassword').hide();
+        } else {
+            $('.hidingMsgPassword').css("color","red");
+            $('.hidingMsgPassword').show();
+
+            $('#TenantForm_password').css({"background": "#fee none repeat scroll 0 0", "border": "#c00"});
+            
+            $('#TenantForm_cnf_password').css({"background": "#fee none repeat scroll 0 0", "border": "#c00"});
+
+            $('#generatePassword').css({"background-color": "#2f96b4", "border": "1px solid #cccccc"});            
+            
+        }
+            
+    });
+
+    function restrict(ob){
+        var invalidChars = /([^A-Z])/g;
+        if(invalidChars.test(ob.value)) {
+            ob.value = ob.value.toUpperCase().replace(invalidChars,"");
+        }
+    }
+
+
+    $("#TenantForm_contact_number").on("keypress",function(evt){
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        //anything other than BACKSPACE,SPACE and numerics from 0 to 9 will not do anything in textbox
+        if (charCode > 32 && (charCode < 48 || charCode > 57))
+            return false;
+        return true;
+    });
+
+
     var radiochooseval = "";
     function call_radio1(){
         radiochooseval = $('#radio1').val();

@@ -741,17 +741,27 @@ class VisitorController extends Controller {
      * Add asic sponsor for Log Visit process
      */
     public function actionAddAsicSponsor() {
-        $model = new Visitor;
-        $visitorService = new VisitorServiceImpl();
-        $session = new CHttpSession;
+        // If asic sponsor existed
+        if (isset($_POST['User']['email']) && !empty($_POST['User']['email'])) { 
+            $model = Visitor::model()->findByAttributes(['email' => $_POST['User']['email']]);
+        }
 
+        // If does not exist then create new
+        if (!$model) {
+            $model = new Visitor;
+        }
+
+        $visitorService = new VisitorServiceImpl;
+        $session        = new CHttpSession;
 
         if (isset($_POST['User']) && isset($_POST['Visitor'])) {
-            $model->attributes = $_POST['User'];
-            $model->attributes = $_POST['Visitor'];
+            $userParams        = Yii::app()->request->getPost('User');
+            $visitorParams     = Yii::app()->request->getPost('Visitor');
+            $model->attributes = $userParams;
+            $model->attributes = $visitorParams;
 
-            if (isset($_POST['User']['asic_expiry']) && !empty($_POST['User']['asic_expiry'])) {
-                $model->asic_expiry = date('Y-m-d', strtotime($_POST['User']['asic_expiry']));
+            if (isset($userParams['asic_expiry']) && !empty($userParams['asic_expiry'])) {
+                $model->asic_expiry = date('Y-m-d', strtotime($userParams['asic_expiry']));
             }
 
             $model->profile_type = Visitor::PROFILE_TYPE_ASIC;
@@ -762,24 +772,24 @@ class VisitorController extends Controller {
 
             if ($result = $visitorService->save($model, NULL, $session['id'])) {
                 $company = Company::model()->findByPk($model->company);
-                if ($company) {
-                    $contact = new User('add_company_contact');
-                    $contact->company = $company->id;
-                    $contact->first_name = $model->first_name;
-                    $contact->last_name = $model->last_name;
-                    $contact->email = $model->email;
+                if (!empty($userParams['company']) && $company) {
+                    $contact                 = new User('add_company_contact');
+                    $contact->company        = $company->id;
+                    $contact->first_name     = $model->first_name;
+                    $contact->last_name      = $model->last_name;
+                    $contact->email          = $model->email;
                     $contact->contact_number = $model->contact_number;
-                    $contact->created_by = Yii::app()->user->id;
-
+                    $contact->created_by     = Yii::app()->user->id;
+                    
                     // Todo: temporary value for saving contact, will be update later
-                    $contact->timezone_id = 1; 
-                    $contact->photo = 0;
-
+                    $contact->timezone_id    = 1; 
+                    $contact->photo          = 0;
+                    
                     // foreign keys // todo: need to check and change for HARD-CODE
-                    $contact->tenant = $session['tenant'];
-                    $contact->user_type = UserType::USERTYPE_INTERNAL;
-                    $contact->user_status = 1;
-                    $contact->role = Roles::ROLE_STAFFMEMBER;
+                    $contact->tenant         = $session['tenant'];
+                    $contact->user_type      = UserType::USERTYPE_INTERNAL;
+                    $contact->user_status    = 1;
+                    $contact->role           = Roles::ROLE_STAFFMEMBER;
                     if (!$contact->save()) {
                         echo 0;
                         Yii::app()->end();

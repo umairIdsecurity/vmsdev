@@ -60,9 +60,6 @@ $userRole = $session['role'];
         <script  src="<?php echo Yii::app()->controller->assetsBase; ?>/js/jquery.uploadfile.min.js" ></script>
         <script  src="<?php echo Yii::app()->controller->assetsBase; ?>/js/jquery.form.js" ></script>
 
-        <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-        <script rel="text/javascript" src="//code.jquery.com/jquery-1.10.2.js"></script>
-        <script rel="text/javascript" async src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
         <title><?php echo CHtml::encode($this->pageTitle); ?></title>
 
@@ -128,7 +125,7 @@ $userRole = $session['role'];
                             </li>
 
                             <li class="open-folder">
-                                <a title="Open folder" href="<?php echo Yii::app()->createUrl("/uploadFile"); ?>"><span class="glyphicon glyphicons-folder-open"></span></a>
+                                <a style="display:block; width: 40px;height: 40px;" title="Open folder" href="<?php echo Yii::app()->createUrl("/uploadFile"); ?>"><span class="glyphicon glyphicons-folder-open"></span></a>
                             </li>
 
                             <li class="help">
@@ -234,6 +231,12 @@ $userRole = $session['role'];
                     </div><!-- footer -->
 
                     </div><!-- page -->
-
+<div style="display: none;">
+<?php
+    $this->widget('zii.widgets.jui.CJuiDatePicker',array(
+        'name' => 'AutoGenerateJqueryUI'
+    ));
+?>
+</div>
 </body>
 </html>

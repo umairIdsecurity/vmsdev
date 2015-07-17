@@ -200,7 +200,7 @@ $defaultKey = key($asicCardTypes);
                                             ?>
                                             <option value="<?php echo $value['id']; ?>"
                                                 <?php
-                                                if ($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant']) {
+                                                if ($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['id']) {
                                                     echo " selected ";
                                                 }
                                                 ?>
@@ -910,7 +910,7 @@ $defaultKey = key($asicCardTypes);
     }
 
     // company change
-    $('#User_company').on('change', function() {
+    /*$('#User_company').on('change', function() {
         var companyId = $(this).val();
         $('#CompanySelectedId').val(companyId);
         $modal = $('#addCompanyContactModal');
@@ -932,7 +932,7 @@ $defaultKey = key($asicCardTypes);
                 return false;
             }
         });
-    });
+    });*/
 
     function isEmpty(obj) {
         for(var prop in obj) {

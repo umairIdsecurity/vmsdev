@@ -45,15 +45,15 @@ $arrSubject = array(
             <td colspan="1" rowspan="4" style="vertical-align: top" >
                 <div class="upload-file-support">
                     <h4>Attachments</h4>
-                    <label class="" for="attachFileSupport"><span class="glyphicon glyphicons-folder-open"></span> Add File</label>
-                    <input type="file" name="my_file[]"
+                    <label class="" for="attachFileSupport"><span class="glyphicon glyphicons-folder-open"></span> <a href="<?php echo Yii::app()->createUrl("support"); ?>">Help Documents</a></label>
+                   <!-- <input type="file" name="my_file[]"
                            id="attachFileSupport"
                            data-multifile
                            data-preview-template="#previewFilesTemplate"
                            data-preview-file=".preview-files-list"
                            data-validate-file=""
                            class="hidden"
-                           multiple>
+                           multiple>-->
                     <div class="preview-files"><table class="preview-files-list" class="table"></table></div>
                     <table class="hidden">
                         <tbody id="previewFilesTemplate" >
@@ -156,7 +156,7 @@ $arrSubject = array(
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, commas);
     };
 
-    jQuery(function() {
+    /*jQuery(function() {
         'use strict';
         var $multifile = $('[data-multifile]');
         if($multifile.length) {
@@ -183,7 +183,7 @@ $arrSubject = array(
                 }
             });
         }
-    });
+    });*/
 </script>
     <style type="text/css">
         .upload-file-support {

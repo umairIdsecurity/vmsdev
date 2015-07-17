@@ -1,10 +1,12 @@
 <?php
 
-class CompanyController extends Controller {
+class CompanyController extends Controller
+{
 
     public $layout = '//layouts/column2';
 
-    public function filters() {
+    public function filters()
+    {
         return array(
             'accessControl', // perform access control for CRUD operations
             'postOnly + delete', // we only allow deletion via POST request
@@ -16,11 +18,12 @@ class CompanyController extends Controller {
      * This method is used by the 'accessControl' filter.
      * @return array access control rules
      */
-    public function accessRules() {
+    public function accessRules()
+    {
         return array(
             array('allow', // allow all users to perform 'GetCompanyList' and 'GetCompanyWithSameTenant' actions
-                'actions' => array('GetCompanyList', 'GetCompanyWithSameTenant', 'create', 'delete', 'addCompanyContact', 'getContacts', 'addContact', 'getContact'),
-                 /* 'users' => array('@'), */
+                'actions' => array('GetCompanyList', 'GetCompanyWithSameTenant', 'create', 'delete', 'addCompanyContact', 'getContacts', 'addContact', 'getContact','checkNameUnique'),
+                /* 'users' => array('@'), */
                 'expression' => 'CHelper::check_module_authorization("CVMS")'
             ),
             array('allow', // allow user if same company
@@ -31,11 +34,11 @@ class CompanyController extends Controller {
                 'actions' => array('admin', 'adminAjax', 'delete', 'index'),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_SUPERADMIN)',
             ),
-			array('allow', // allow superadmin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin', 'adminAjax' , 'delete', 'index'),
+            array('allow', // allow superadmin user to perform 'admin' and 'delete' actions
+                'actions' => array('admin', 'adminAjax', 'delete', 'index'),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
             ),
-			array('allow', // allow superadmin user to perform 'admin' and 'delete' actions
+            array('allow', // allow superadmin user to perform 'admin' and 'delete' actions
                 'actions' => array('update'),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
             ),
@@ -45,7 +48,8 @@ class CompanyController extends Controller {
         );
     }
 
-    public function isUserAllowedToUpdate($user) {
+    public function isUserAllowedToUpdate($user)
+    {
         if ($user->role == Roles::ROLE_SUPERADMIN) {
             return true;
         } else {
@@ -54,22 +58,22 @@ class CompanyController extends Controller {
         }
     }
 
-    public function actionCreate() {
+    public function actionCreate()
+    {
 
         //     $this->layout = '//layouts/contentIframeLayout';
         $session = new CHttpSession;
         $model = new Company;
-
-        if (isset($_POST['is_user_field']) && $_POST['is_user_field']==1) {
-            $session['is_field']=1;
-            $model->scenario = 'company_contact';
-        }else{
+        $model->scenario = 'company_contact';
+        if (isset($_POST['is_user_field']) && $_POST['is_user_field'] == 1) {
+            $session['is_field'] = 1;
+        } else {
             unset($_SESSION['is_field']);
         }
 
-		if (isset($_POST['user_role'])) {
-			$model->userRole = $_POST['user_role'] ;
-		}
+        if (isset($_POST['user_role'])) {
+            $model->userRole = $_POST['user_role'];
+        }
 
         $companyService = new CompanyServiceImpl();
         $isUserViewingFromModal = '';
@@ -80,32 +84,33 @@ class CompanyController extends Controller {
         if (isset($_POST['Company'])) {
 
             $model->attributes = $_POST['Company'];
+            $model->company_type = 3; // visitor company type -- directed by savita
 
             if ($this->isCompanyUnique($session['tenant'], $session['role'], $_POST['Company']['name'], $_POST['Company']['tenant']) == 0) {
 
-				if(isset($_POST['Company']['code'])){
-					 if ((($this->isCompanyCodeUnique($session['tenant'], $session['role'], $_POST['Company']['code'], $_POST['Company']['tenant']) == 0)) && ($session['role'] != Roles::ROLE_ADMIN)) {
-	                    if ($companyService->save($model, $session['tenant'], $session['role'], 'create')) {
-	                        $lastId = $model->id;
+                if (isset($_POST['Company']['code'])) {
+                    if ((($this->isCompanyCodeUnique($session['tenant'], $session['role'], $_POST['Company']['code'], $_POST['Company']['tenant']) == 0)) && ($session['role'] != Roles::ROLE_ADMIN)) {
+                        if ($companyService->save($model, $session['tenant'], $session['role'], 'create')) {
+                            $lastId = $model->id;
 
                             $cs = Yii::app()->clientScript;
-	                        $cs->registerScript('closeParentModal', 'window.parent.dismissModal(' . $lastId . ');', CClientScript::POS_READY);
-	                        $model->unsetAttributes();
+                            $cs->registerScript('closeParentModal', 'window.parent.dismissModal(' . $lastId . ');', CClientScript::POS_READY);
+                            $model->unsetAttributes();
 
-	                        switch ($isUserViewingFromModal) {
-	                            case 1:
-	                                Yii::app()->user->setFlash('success', 'Company Successfully added!');
-	                                break;
-	                            default:
-	                                $this->redirect(array('company/admin'));
-	                        }
-	                    }
-	                } else {
-	                    Yii::app()->user->setFlash('error', 'Company code has already been taken');
-	                }
-				} else {
+                            switch ($isUserViewingFromModal) {
+                                case 1:
+                                    Yii::app()->user->setFlash('success', 'Company Successfully added!');
+                                    break;
+                                default:
+                                    $this->redirect(array('company/admin'));
+                            }
+                        }
+                    } else {
+                        Yii::app()->user->setFlash('error', 'Company code has already been taken');
+                    }
+                } else {
 
-					if ($companyService->save($model, $session['tenant'], $session['role'], 'create')) {
+                    if ($companyService->save($model, $session['tenant'], $session['role'], 'create')) {
 
                         $lastId = $model->id;
                         $userModel = new User();
@@ -116,7 +121,14 @@ class CompanyController extends Controller {
                         $userModel->contact_number = $model->user_contact_number;
 
                         $userModel->user_type = 2;
-                        $userModel->password = 12345;
+                        if($model->password_requirement == 2) {
+                            if($model->password_option == 1) {
+                                $userModel->password = 12345;
+                            } else{
+                                $userModel->password = $model->user_password;
+                            }
+                        }
+                        $userModel->tenant = $model->tenant;
                         $userModel->role = 10;
                         $userModel->company = $lastId;
                         $userModel->asic_no = 10;
@@ -138,7 +150,7 @@ class CompanyController extends Controller {
                                 $this->redirect(array('company/admin'));
                         }
                     }
-				}
+                }
 
             } else {
                 Yii::app()->user->setFlash('error', 'Company name has already been taken');
@@ -151,7 +163,8 @@ class CompanyController extends Controller {
         ));
     }
 
-    private function isCompanyUnique($sessionTenant, $sessionRole, $companyName, $selectedTenant) {
+    private function isCompanyUnique($sessionTenant, $sessionRole, $companyName, $selectedTenant)
+    {
         if ($sessionRole == Roles::ROLE_ADMIN) {
             $countCompany = Company::model()->isCompanyUniqueWithinTheTenant($companyName, $sessionTenant);
         } else {
@@ -161,7 +174,8 @@ class CompanyController extends Controller {
         return $countCompany;
     }
 
-    private function isCompanyCodeUnique($sessionTenant, $sessionRole, $companyCode, $selectedTenant) {
+    private function isCompanyCodeUnique($sessionTenant, $sessionRole, $companyCode, $selectedTenant)
+    {
         if ($sessionRole == Roles::ROLE_ADMIN) {
             $countCompany = Company::model()->isWithoutCompanyCodeUniqueWithinTheTenant($sessionTenant);
         } else {
@@ -171,15 +185,16 @@ class CompanyController extends Controller {
         return $countCompany;
     }
 
-    public function actionUpdate($id) {
+    public function actionUpdate($id)
+    {
         //$this->layout = '//layouts/contentIframeLayout';
         $session = new CHttpSession;
         $model = $this->loadModel($id);
 
-        if (isset($_POST['is_user_field']) && $_POST['is_user_field']==1) {
-            $session['is_field']=1;
+        if (isset($_POST['is_user_field']) && $_POST['is_user_field'] == 1) {
+            $session['is_field'] = 1;
             $model->scenario = 'company_contact';
-        }else{
+        } else {
             unset($_SESSION['is_field']);
         }
 
@@ -195,7 +210,7 @@ class CompanyController extends Controller {
         }*/
 
         if (isset($_POST['user_role'])) {
-            $model->userRole = $_POST['user_role'] ;
+            $model->userRole = $_POST['user_role'];
         }
         $session = new CHttpSession;
 
@@ -214,7 +229,7 @@ class CompanyController extends Controller {
                     Yii::app()->user->setFlash('error', 'Company code has already been taken');
                 }
             }
-            $model->company_type = $_POST['Company']['company_type'];
+            //$model->company_type = $_POST['Company']['company_type'];
 
             if (is_null($errorFlashMessage = Yii::app()->user->getFlash('error'))) {
 
@@ -235,7 +250,7 @@ class CompanyController extends Controller {
                     $userModel->asic_expiry_day = 10;
                     $userModel->asic_expiry_month = 10;
                     $userModel->asic_expiry_year = 15;
-                    $userModel->save(); 
+                    $userModel->save();
 
                     switch ($session['role']) {
                         case Roles::ROLE_SUPERADMIN:
@@ -267,29 +282,29 @@ class CompanyController extends Controller {
      * If deletion is successful, the browser will be redirected to the 'admin' page.
      * @param integer $id the ID of the model to be deleted
      */
-    public function actionDelete($id) {
+    public function actionDelete($id)
+    {
 
-        if(Yii::app()->request->isPostRequest)
-        {
+        if (Yii::app()->request->isPostRequest) {
 
             $sql = "UPDATE company SET is_deleted=1 WHERE id=$id";
-            $connection=Yii::app()->db;
+            $connection = Yii::app()->db;
             $connection->createCommand($sql)->execute();
 
             // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
             if (!isset($_GET['ajax']))
                 $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
 
-        }
-        else
-            throw new CHttpException(400,'Invalid request. Please do not repeat this request');
+        } else
+            throw new CHttpException(400, 'Invalid request. Please do not repeat this request');
 
     }
 
     /**
      * Manages all models.
      */
-    public function actionAdmin() {
+    public function actionAdmin()
+    {
         //  $this->layout = '//layouts/contentIframeLayout';
         $model = new Company('search');
         $model->unsetAttributes();  // clear any default values
@@ -298,10 +313,11 @@ class CompanyController extends Controller {
 
         $this->render('_admin', array(
             'model' => $model,
-                ), false, true);
+        ), false, true);
     }
 
-    public function actionAdminAjax() {
+    public function actionAdminAjax()
+    {
         //  $this->layout = '//layouts/contentIframeLayout';
         $model = new Company('search');
         $model->unsetAttributes();  // clear any default values
@@ -310,7 +326,7 @@ class CompanyController extends Controller {
 
         $this->renderPartial('_admin', array(
             'model' => $model,
-                ), false, true);
+        ), false, true);
     }
 
     public function actionIndex()
@@ -320,7 +336,7 @@ class CompanyController extends Controller {
         if (isset($_GET['Company'])) {
             $model->attributes = $_GET['Company'];
         }
-        
+
         // Check whether a login user/tenant allowed to view 
         CHelper::check_module_authorization("CVMS");
         $this->render('_admin', array('model' => $model,));
@@ -333,7 +349,8 @@ class CompanyController extends Controller {
      * @return Company the loaded model
      * @throws CHttpException
      */
-    public function loadModel($id) {
+    public function loadModel($id)
+    {
         $model = Company::model()->findByPk($id);
         if ($model === null)
             throw new CHttpException(404, 'The requested page does not exist.');
@@ -344,21 +361,24 @@ class CompanyController extends Controller {
      * Performs the AJAX validation.
      * @param Company $model the model to be validated
      */
-    protected function performAjaxValidation($model) {
+    protected function performAjaxValidation($model)
+    {
         if (isset($_POST['ajax']) && $_POST['ajax'] === 'company-form') {
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }
     }
 
-    public function actionGetCompanyList() {
+    public function actionGetCompanyList()
+    {
         $resultMessage['data'] = Company::model()->findAllCompany();
 
         echo CJavaScript::jsonEncode($resultMessage);
         Yii::app()->end();
     }
 
-    public function actionGetCompanyWithSameTenant($id) {
+    public function actionGetCompanyWithSameTenant($id)
+    {
         $resultMessage['data'] = Company::model()->findAllCompanyWithSameTenant($id);
         echo CJavaScript::jsonEncode($resultMessage);
         Yii::app()->end();
@@ -401,7 +421,7 @@ class CompanyController extends Controller {
                 $contact->created_by = Yii::app()->user->id;
 
                 // Todo: temporary value for saving contact, will be update later
-                $contact->timezone_id = 1; 
+                $contact->timezone_id = 1;
                 $contact->photo = 0;
 
                 // foreign keys // todo: need to check and change for HARD-CODE
@@ -412,7 +432,7 @@ class CompanyController extends Controller {
 
                 if ($contact->save()) {
                     $options = [$contact->id, $contact->getFullName()];
-                    $contactDropDown =  '<option value="'.$contact->id.'" >'.$contact->getFullName().'</option>';
+                    $contactDropDown = '<option value="' . $contact->id . '" >' . $contact->getFullName() . '</option>';
                     if (isset($_POST['typePostForm']) && $_POST['typePostForm'] == 'company') {
                         $id = $company->id;
                     } else {
@@ -432,7 +452,8 @@ class CompanyController extends Controller {
 
     }
 
-    public function actionGetContacts() {
+    public function actionGetContacts()
+    {
         if (Yii::app()->request->isAjaxRequest) {
             $contacts = User::model()->findAll("company = " . $_POST['id']);
 
@@ -451,7 +472,8 @@ class CompanyController extends Controller {
         }
     }
 
-    public function actionGetContact($id, $isCompanyContact = true) {
+    public function actionGetContact($id, $isCompanyContact = true)
+    {
         if (Yii::app()->request->isAjaxRequest) {
             $visitor = Visitor::model()->findByPk($id);
             if ($isCompanyContact == false) {
@@ -459,22 +481,30 @@ class CompanyController extends Controller {
                 if (count($contacts) == 1) {
                     $companyContact = $contacts[0];
                 } else {
-                    foreach ($contacts as $contact) {
-                        $companyContact = $contact;
-                        break;
-                    }
+                    // foreach ($contacts as $contact) {
+                        $companyContact = $contacts[count($contacts) - 1];
+                        // break;
+                    // }
                 }
             } else {
                 $companyContact = User::model()->findByPk($id);
             }
 
             if ($companyContact) {
+                $photo = '';
+                if (!empty($companyContact->photo)) {
+                    $photo = Photo::model()->getRelativePathOfPhoto($companyContact->photo);
+                }
                 $ret = [
                     'id'             => $companyContact->id,
                     'first_name'     => $companyContact->first_name,
                     'last_name'      => $companyContact->last_name,
                     'contact_number' => $companyContact->contact_number,
-                    'email'          => $companyContact->email
+                    'email'          => $companyContact->email,
+                    'company'        => $companyContact->company,
+                    'asic_no'        => $companyContact->asic_no,
+                    'asic_expiry'    => empty($companyContact->asic_expiry) || $companyContact->asic_expiry == '0000-00-00' ? '' : date('d-m-Y', strtotime($companyContact->asic_expiry)),
+                    'photo'          => $photo
                 ];
                 echo CJavaScript::jsonEncode($ret);
 
@@ -485,4 +515,16 @@ class CompanyController extends Controller {
         }
     }
 
+    public function actionCheckNameUnique()
+    {
+        $session = new CHttpSession;
+        if (isset($_POST['name']) && isset($_POST['tenant'])) {
+            if ($this->isCompanyUnique($session['tenant'], $session['role'], $_POST['name'], $_POST['tenant']) == 0){
+                echo 1;
+            } else {
+                echo 0;
+            }
+        }
+    }
 }
+

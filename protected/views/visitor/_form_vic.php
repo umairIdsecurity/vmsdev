@@ -277,7 +277,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                     <table style="float:left;width:300px;">
                         <tr>
                             <td>
-                                <?php echo $form->textField($model, 'first_name', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'First Name')); ?>
+                                <?php echo $form->textField($model, 'first_name', array('size' => 50, 'maxlength' => 15, 'placeholder' => 'First Name')); ?>
                                 <span class="required">*</span>
                                 <?php echo "<br>" . $form->error($model, 'first_name'); ?>
                             </td>
@@ -289,7 +289,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                         </tr>
                         <tr>
                             <td>
-                                <?php echo $form->textField($model, 'last_name', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Last Name')); ?>
+                                <?php echo $form->textField($model, 'last_name', array('size' => 50, 'maxlength' => 15, 'placeholder' => 'Last Name')); ?>
                                 <span class="required">*</span>
                                 <?php echo "<br>" . $form->error($model, 'last_name'); ?>
                             </td>

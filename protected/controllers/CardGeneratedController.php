@@ -49,7 +49,7 @@ class CardGeneratedController extends Controller {
      * Creates a new model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
-    public function actionCreate($visitId) {
+    public function actionCreate($visitId, $preCardNo = '') {
         $session = new CHttpSession;
         $model = new CardGenerated;
 
@@ -63,10 +63,14 @@ class CardGeneratedController extends Controller {
 
             $model->attributes = $_POST['CardGenerated'];
 
-            if (isset($_POST['CardGenerated']['enter_card_number']) && !empty($_POST['CardGenerated']['enter_card_number'])) {
-                $model->card_number = $_POST['CardGenerated']['enter_card_number'];
+            if (empty($preCardNo)) {
+                if (isset($_POST['CardGenerated']['enter_card_number']) && !empty($_POST['CardGenerated']['enter_card_number'])) {
+                    $model->card_number = $_POST['CardGenerated']['enter_card_number'];
+                } else {
+                    $model->card_number = $_POST['CardGenerated']['card_number'];
+                }
             } else {
-                $model->card_number = $_POST['CardGenerated']['card_number'];
+                $model->card_number = $preCardNo;
             }
 
             //$model->tenant = $session['tenant'];

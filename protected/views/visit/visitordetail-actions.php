@@ -50,8 +50,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                         ));
                                     }
                                     ?>
-                                        
-                                    <input type='submit' id="closeVisitSubmit" style="display: none;" />
+                                    <input type='submit' id="closeVisitSubmit" name="closeVisitForm" style="display: none;" />
                                     <input type="submit" id="closeVisitBtn" class="complete" value="Close Visit" />
                                     <div style="display:inline;font-size:12px;"><b>or</b><a id="cancelActiveVisitButton" href="" class="cancelBtnVisitorDetail">Cancel</a></div>
                                     <!-- <button class="neutral greenBtn" id="cancelActiveVisitButton">Cancel</button>-->
@@ -452,8 +451,8 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             var is_vic_holder_checked = $('#VicHolderDecalarations').is(':checked'),
                 is_asic_holder_checked = $('#AsicSponsorDecalarations').is(':checked');
 
-            var declarations_checkboxs = $('.vic-active-declarations');
-            var confirmed = isCheckboxsChecked(declarations_checkboxs);
+            var declarationsCheckboxes = $('.vic-active-declarations');
+            var confirmed = isCheckboxesChecked(declarationsCheckboxes);
 
             if (!confirmed) {
                 if (!$('#VicHolderDecalarations').is(':checked') && $('#AsicSponsorDecalarations').is(':checked')) {
@@ -557,7 +556,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             return false;
         }
 
-        function isCheckboxsChecked(checkboxs) {
+        function isCheckboxesChecked(checkboxs) {
             var flag = true;
             $.each(checkboxs, function(i, checkbox) {
                 $(checkbox).next('a').removeClass('label label-warning');
@@ -597,7 +596,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                 data: data,
                 success: function(id) {
                     if (typeof id != 'undefined' && !isNaN(id)) {
-                        window.location = "index.php?r=visit/detail&id=" + id;
+                        sendCardForm(id);
                     }
                 }
             });
@@ -768,6 +767,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
     <input type="text" id="CardGenerated_tenant_agent" name="CardGenerated[tenant_agent]" value="<?php echo $model->tenant_agent;
     ?>">
     <input type="text" id="CardGenerated_enter_card_number" name="CardGenerated[enter_card_number]" value=""/>
+    <input type="text" id="CardGenerated_date_expiration" name="CardGenerated[date_expiration]" value="" />
     <?php
 
     //$tenant = User::model()->findByPk($model->tenant);
@@ -788,5 +788,4 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
     <input type="text" id="CardGenerated_print_count" name="CardGenerated[print_count]" value="">
     <input type="submit" value="Create" name="yt0" id="submitCardForm">
     <?php $this->endWidget(); ?>
-
 </div>

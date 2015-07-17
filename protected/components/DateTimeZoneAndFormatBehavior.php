@@ -66,14 +66,14 @@ class DateTimeZoneAndFormatBehavior extends CActiveRecordBehavior
                         }
                         $col_data = date("d-m-Y H:i:s", strtotime($event->sender->$columnName));
                         $datetime_object = DateTime::createFromFormat($this->php_user_datetime, $col_data, new DateTimeZone($this->user_timezone));
-                        $datetime_object->setTimeZone(new
+                        $datetime_object->setTimezone(new
                                 DateTimeZone($this->edtTimeZone));
                         $event->sender->$columnName =
                                 $datetime_object->format($this->php_db_datetime);
                     }
                 } else if ($column->dbType == 'time') {
                     $datetime_object = DateTime::createFromFormat($this->php_user_time, $event->sender->$columnName, new DateTimeZone($this->user_timezone));
-                    $datetime_object->setTimeZone(new DateTimeZone($this->edtTimeZone));
+                    $datetime_object->setTimezone(new DateTimeZone($this->edtTimeZone));
                     $event->sender->$columnName = $datetime_object->format($this->php_db_time);
                 }
             }
@@ -99,7 +99,7 @@ class DateTimeZoneAndFormatBehavior extends CActiveRecordBehavior
                 } elseif ($column->dbType == 'datetime' || $column->dbType == 'timestamp') {
                     if (date("Y-m-d", strtotime($event->sender->$columnName)) != "1970-01-01") {
                         if ($event->sender->$columnName != '0000-00-00 00:00:00') {
-                            $datetime_object->setTimeZone(new
+                            $datetime_object->setTimezone(new
                                     DateTimeZone($this->user_timezone));
                             $event->sender->$columnName =
                                     $datetime_object->format(
@@ -107,7 +107,7 @@ class DateTimeZoneAndFormatBehavior extends CActiveRecordBehavior
                         }
                     }
                 } else if ($column->dbType == 'time') {
-                    $datetime_object->setTimeZone(new
+                    $datetime_object->setTimezone(new
                             DateTimeZone($this->user_timezone));
                     /* Output the required format */
                     $event->sender->$columnName =

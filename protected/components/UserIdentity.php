@@ -42,7 +42,9 @@ class UserIdentity extends CUserIdentity {
             $session['id'] = $user->id;
             $session['role'] = $user->role;
             $session['company'] = $user->company;
+            
             $session['tenant'] = $user->tenant;
+            
             $session['tenant_agent'] = $user->tenant_agent;
             
             // Subscription Modules Allowed to view by a Tenant

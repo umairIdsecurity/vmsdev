@@ -66,7 +66,15 @@ if (in_array($model->visit_status, [VisitStatus::CLOSED])) {
 <?php
 $visitorForm = $this->beginWidget('CActiveForm', [
     'id' => 'update-visitor-information-form',
-    'htmlOptions' => ['name' => 'update-visitor-information-form']
+    'htmlOptions' => ['name' => 'update-visitor-information-form'],
+    'enableAjaxValidation'   => false,
+    'enableClientValidation' => true,
+    'clientOptions'          => [
+        'validateOnSubmit' => false,
+        'afterValidate'    => 'js:function(form, data, hasError){
+            return afterValidate(form, data, hasError);
+        }'
+    ]
 ]);
 ?>
 <div id='visitorInformationCssMenu' <?php //if ($model && $model->card_type <= CardType::CONTRACTOR_VISITOR) {echo 'style="height:615px !important"';} ?>>
@@ -126,11 +134,11 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                         'maxlength'   => '10', // textField maxlength
                                         'placeholder' => 'dd-mm-yyyy',
                                         'readOnly'    => 'readOnly',
-                                        'disabled'    => 'disabled',
+                                        'disabled'    => $model->visit_status == VisitStatus::CLOSED ? 'disabled' : '',
                                         'style'       => $datePickerStyle
                                     ),
                                     'options' => [
-                                        'showOn'          => "button",
+                                        'showOn'          => $model->visit_status == VisitStatus::CLOSED ? "focus" : "button",
                                         'buttonImage'     => Yii::app()->controller->assetsBase . "/images/calendar.png",
                                         'buttonImageOnly' => true,
                                         'dateFormat'      => "dd-mm-yy",
@@ -328,15 +336,16 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                         </td>
                         <td style="padding-left: 0 !important;">
                             <?php
+                            $visitorModel->identification_document_expiry = !is_null($visitorModel->identification_document_expiry) ? date('d-m-Y', strtotime($visitorModel->identification_document_expiry)) : date('d-m-Y');
                             $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                'model' => $visitorModel,
+                                'model'     => $visitorModel,
                                 'attribute' => 'identification_document_expiry',
                                 'htmlOptions' => array(
-                                    'size' => '10', // textField size
-                                    'maxlength' => '10', // textField maxlength
+                                    'size'        => '10', // textField size
+                                    'maxlength'   => '10', // textField maxlength
                                     'placeholder' => 'dd-mm-yyyy',
-                                    'readOnly' => 'readOnly',
-                                    'style' => $datePickerStyle
+                                    'readOnly'    => 'readOnly',
+                                    'style'       => $datePickerStyle
                                 ),
                                 'options' => $datePickerOptionAttributes
                             ));
@@ -568,7 +577,9 @@ $visitorForm = $this->beginWidget('CActiveForm', [
 <?php $this->endWidget(); ?>
 <script>
     function afterValidate(form, data, hasError) {
-        hasError = false;
+        if (!hasError) {
+
+        }
     }
     
     $(document).ready(function () {

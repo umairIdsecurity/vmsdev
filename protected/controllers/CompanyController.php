@@ -393,8 +393,13 @@ class CompanyController extends Controller
             $session = new CHttpSession;
             $formInfo = $_POST['AddCompanyContactForm'];
 
-            if (isset($_POST['CompanySelectedId']) && $_POST['CompanySelectedId'] > 0 && $_POST['typePostForm'] === 'contact') {
-                $company = Company::model()->findByPk($_POST['CompanySelectedId']);
+            if ($_POST['typePostForm'] === 'contact') {
+                if(isset($_POST['CompanySelectedId']) && $_POST['CompanySelectedId'] > 0){
+                    $company = Company::model()->findByPk($_POST['CompanySelectedId']);
+                } else {
+                    $companyId = $this->findIdByName($formInfo['companyName']);
+                    $company = Company::model()->findByPk($companyId);
+                }
             } else {
                 $company = new Company();
 
@@ -525,6 +530,12 @@ class CompanyController extends Controller
                 echo 0;
             }
         }
+    }
+
+    public function findIdByName($name) {
+        $companyList = CHtml::listData(Company::model()->findAll(), 'id', 'name');
+        $companyList = array_unique($companyList);
+        return array_search($name, $companyList);
     }
 }
 

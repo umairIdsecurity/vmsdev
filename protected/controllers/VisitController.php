@@ -165,6 +165,7 @@ class VisitController extends Controller {
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['Visit'])) {
+
             $oldhost = $model->host;
             $visitParams = Yii::app()->request->getPost('Visit');
             $model->attributes = $visitParams;
@@ -191,6 +192,8 @@ class VisitController extends Controller {
                 $model->card_lost_declaration_file = CUploadedFile::getInstance($model, 'card_lost_declaration_file');
                 $model->finish_time = date('H:i:s');
             }
+
+             
 
             if(isset($_POST['AddAsicEscort']) && isset($_POST['createEscort']) && $_POST['createEscort']=='true') {
                 $asicEscort                      = new Visitor;
@@ -331,6 +334,7 @@ class VisitController extends Controller {
         $workstationModel = Workstation::model()->findByPk($model->workstation);
 
         if (empty($workstationModel) && in_array($model->visit_status, VisitStatus::$VISIT_STATUS_DENIED)) {
+           
             Yii::app()->user->setFlash('error', 'Workstation of this visit has been deleted.');
             $this->redirect(Yii::app()->createUrl('visit/view'));
         }
@@ -505,23 +509,37 @@ class VisitController extends Controller {
             }
 
             $model->attributes = $visitParams;
-
+            
             // close visit process
             if (isset($_POST['closeVisitForm']) && $visitParams['visit_status'] == VisitStatus::CLOSED) {
+                
+
                 if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && strtotime(date('Y-m-d')) <= strtotime($model->date_check_out)) {
                     $model->visit_status = VisitStatus::AUTOCLOSED;
+
                     switch ($model->card_type) {
                         case CardType::VIC_CARD_24HOURS: // VIC 24 hour
                             #change datetime check in and out for vic 24h.
+
                             $model->date_check_in  = $model->date_check_out;
                             $model->date_check_out = date('Y-m-d', strtotime('+1 day', strtotime($model->date_check_out)));
                             $model->time_check_in  = date('H:i:s', strtotime('+1 minutes', strtotime($model->date_check_in.' '.$model->time_check_in)));
                             $model->time_check_out = $model->time_check_in;
                             break;
                         case CardType::VIC_CARD_EXTENDED: // VIC Extended
+                            if ($visitParams['finish_date'] != NULL) {
+                                $model->finish_date =  date('Y-m-d', strtotime($visitParams['finish_date']));
+                                $model->date_check_in = $model->date_check_in;
+                                $model->date_check_out = $model->date_check_out;
+                            } else { 
+                                $model->finish_date =  date('Y-m-d', strtotime($visitParams['date_check_out']));
+                                $model->date_check_in = $model->date_check_in;
+                                $model->date_check_out = $model->date_check_out;
+                            }
+                            break;
+                        case CardType::VIC_CARD_MULTIDAY: // VIC Multiday
                             break;
                     }
-                    $model->finish_date  = $model->date_check_out;
                 }
 
                 $fileUpload = CUploadedFile::getInstance($model, 'card_lost_declaration_file');
@@ -536,12 +554,14 @@ class VisitController extends Controller {
             }
 
             // save visit model
+           
             if ($model->save()) {
                 // if has file upload then upload and save
                 if (!empty($fileUpload)) {
                     $fileUpload->saveAs(YiiBase::getPathOfAlias('webroot') . $model->card_lost_declaration_file);
                 }
             } else {
+               
                 $model->visit_status = $oldStatus;
             }
         }
@@ -549,7 +569,6 @@ class VisitController extends Controller {
         // Get visit count and remaining days
         $visitCount['totalVisits'] = $model->visitCounts;
         $visitCount['remainingDays'] = $model->remainingDays;
-
         $this->render('visitordetail', array(
             'model'         => $model,
             'visitorModel'  => $visitorModel ? $visitorModel : new Visitor,
@@ -569,6 +588,7 @@ class VisitController extends Controller {
         if ($model) {
             parse_str(Yii::app()->request->getPost('data'), $request);
             $model->attributes = $request['Visit'];
+            
             $model->visit_status = VisitStatus::CLOSED;
 
             if (!$model->save()) {

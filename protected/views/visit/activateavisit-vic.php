@@ -119,8 +119,12 @@ $asicEscort = new AddAsicEscort();
             if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && $model->visit_status == VisitStatus::AUTOCLOSED) {
                 switch ($model->card_type) {
                     case CardType::VIC_CARD_24HOURS:
+                        break;
                     case CardType::VIC_CARD_EXTENDED:
-                        $model->date_check_in = date("d-m-Y", time() + 86400);
+                        $model->date_check_in = date('d-m-Y', strtotime($model->finish_date . '+ 1 day'));
+                        break;
+                    default:
+                        $model->date_check_in = date('d-m-Y');
                         break;
                 }
             }
@@ -155,13 +159,22 @@ $asicEscort = new AddAsicEscort();
             $model->date_check_out = date('d-m-Y', strtotime($model->date_check_out));
 
             // Extended Card Type (EVIC) or Multiday
-            if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED]) && $model->visit_status == VisitStatus::AUTOCLOSED) {
-                $model->date_check_out = date('d-m-Y');
+            if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && $model->visit_status == VisitStatus::AUTOCLOSED) {
+                switch ($model->card_type) {
+                    case CardType::VIC_CARD_EXTENDED:
+                        $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . '+ 1 day'));
+                        break;
+                    default:
+                        $model->date_check_out = date('d-m-Y');
+                        break;
+                }
+                
             }
 
             // Update date check out for Saved, Closed, AutoClosed Visit
             if (in_array($model->visit_status, [VisitStatus::SAVED, VisitStatus::CLOSED, VisitStatus::AUTOCLOSED]) && !in_array($model->card_type, [CardType::VIC_CARD_24HOURS, CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MANUAL])) {
-                $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in. ' +1 day'));
+                $model->date_check_out = date('d-m-Y', strtotime($model->date_check_out. ' +1 day'));
+                
                 $model->time_check_out = $model->time_check_in;
             }
 

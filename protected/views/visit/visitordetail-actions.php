@@ -3,19 +3,13 @@ $cs = Yii::app()->clientScript;
 $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/script-visitordetail-actions-cssmenu.js');
 $session = new CHttpSession;
 $workstationModel = Workstation::model()->findByPk($model->workstation);
-
 $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
 ?>
 <div id='actionsCssMenu'>
-    <ul>
 
-        <li class='has-sub' id="closevisitLi" style="<?php
-        if (in_array($model->visit_status, array(VisitStatus::ACTIVE, VisitStatus::EXPIRED)) && $session['role'] != Roles::ROLE_STAFFMEMBER) {
-            echo "display:block;";
-        } else {
-            echo "display:none;";
-        }
-        ?>"><span class="close-visit">Close Visit</span>
+    <ul>
+        <?php if (in_array($model->visit_status, array(VisitStatus::ACTIVE, VisitStatus::EXPIRED))) : ?>
+        <li class='has-sub' id="closevisitLi"><span class="close-visit">Close Visit</span>
             <ul>
                 <li>
                     <table id="actionsVisitDetails">
@@ -24,7 +18,9 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                             <td >
 
                                 <div id="closeVisitDiv" class="form">
+
                                     <?php
+
                                     $closeVisitForm = $this->beginWidget('CActiveForm', array(
                                         'id' => 'close-visit-form',
                                         'htmlOptions' => array("name" => "close-visit-form", 'enctype' => 'multipart/form-data'),
@@ -33,6 +29,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                     ?>
 
                                     <?php
+                                   
                                     if (in_array($model->card_type, [CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_MULTIDAY, CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MANUAL])) {
                                         $this->renderPartial('closevisit-vic', array(
                                             'model' => $model,
@@ -43,6 +40,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                             'asic' => $asic
                                         ));
                                     } else {
+                                            
                                         $this->renderPartial('closevisit', array(
                                             'model' => $model,
                                             'visitorModel' => $visitorModel,
@@ -64,6 +62,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                 </li>
             </ul>
         </li>
+        <?php endif; ?>
         <?php if (in_array($model->visit_status, [VisitStatus::PREREGISTERED, VisitStatus::SAVED, VisitStatus::CLOSED, VisitStatus::AUTOCLOSED])) { ?>
             
             <li class='has-sub' id="activateLi"><span class="log-current">Log Visit</span>
@@ -104,6 +103,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
 
                                     <div id="logVisitDiv">
                                         <?php
+                                           
                                         if ($asic) {
                                             $this->renderPartial('activateavisit-vic', array(
                                                 'model'        => $model,
@@ -166,6 +166,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
 
         <?php } ?>
     </ul>
+
 </div>
 
 <!-- Identification Modal -->

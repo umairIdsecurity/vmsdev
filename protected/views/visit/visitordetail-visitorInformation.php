@@ -336,15 +336,16 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                         </td>
                         <td style="padding-left: 0 !important;">
                             <?php
+                            $visitorModel->identification_document_expiry = !is_null($visitorModel->identification_document_expiry) ? date('d-m-Y', strtotime($visitorModel->identification_document_expiry)) : date('d-m-Y');
                             $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                'model' => $visitorModel,
+                                'model'     => $visitorModel,
                                 'attribute' => 'identification_document_expiry',
                                 'htmlOptions' => array(
-                                    'size' => '10', // textField size
-                                    'maxlength' => '10', // textField maxlength
+                                    'size'        => '10', // textField size
+                                    'maxlength'   => '10', // textField maxlength
                                     'placeholder' => 'dd-mm-yyyy',
-                                    'readOnly' => 'readOnly',
-                                    'style' => $datePickerStyle
+                                    'readOnly'    => 'readOnly',
+                                    'style'       => $datePickerStyle
                                 ),
                                 'options' => $datePickerOptionAttributes
                             ));

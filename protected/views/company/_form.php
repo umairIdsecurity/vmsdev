@@ -37,13 +37,42 @@ if ($this->action->id == 'update') {
             'validateOnSubmit' => true,
             'afterValidate' => 'js:function(form, data, hasError) {
                 if (!hasError) {
-                    if ($(".password_requirement").is(":checked")== false) {
-                        $("#pass_error_").show();
-                        return false;
-                    } else {
-                        checkCompanyNameUnique ();
+                    if($("#currentAction").val() == "create"){
+                        if ($(".password_requirement").is(":checked")== false) {
+                            $("#pass_error_").show();
+                            return false;
+                        } else {
+                            if ($("#Company_password_requirement_1").is(":checked")) {
+                                if($(".pass_option").is(":checked") == false) {
+                                    $(".user_requires_password #pass_error_").show();
+                                    return false;
+                                } else {
+                                    $(".user_requires_password #pass_error_").hide();
+                                    if($("#pass_option_1").is(":checked")) {
+                                        var validatePass = validatePassword();
+                                        if(validatePass == true) {
+                                            var isMatch = isPasswordMatch();
+                                            if(isMatch == true) {
+                                                checkCompanyNameUnique();
+                                            } else {
+                                                return false;
+                                            }
+                                        } else {
+                                            return false;
+                                        }
+                                    }else {
+                                        checkCompanyNameUnique();
+                                    }
+                                }
+                            } else {
+                                checkCompanyNameUnique();
+                            }
+                        }
+                    } else{
+                        checkCompanyNameUnique();
                     }
                 } else {
+                    console.log("errrrr");
                     $( ".user_fields" ).show();
                     $(".password-border").show();
                 }
@@ -194,37 +223,44 @@ if ($this->action->id == 'update') {
                                         </tr>
                                         <tr id="third_option" class='hiddenElement'></tr>
                                         <tr>
-                                            <td><input class="pass_option" type="radio" name="Company[password_option]" value="2"/>&nbsp;Send
+                                            <td><input class="pass_option" id="pass_option_0" type="radio" name="Company[password_option]" value="1"/>&nbsp;Send
                                                 User Invitation
                                             </td>
                                         </tr>
                                         <tr>
                                             <td style="padding-bottom:10px">
-                                                <input class="pass_option" type="radio" name="Company[password_option]" value="1"/>
+                                                <input class="pass_option" id="pass_option_1" type="radio" name="Company[password_option]" value="2"/>
                                                 &nbsp;Create Password
                                             </td>
                                         </tr>
 
                                         <tr>
                                             <td>
-                                                <input placeholder="Password" ng-model="user.passwords" data-ng-class="{
-                                                                       'ng-invalid':registerform['Company[user_repeatpassword]'].$error.match}"
-                                                       type="password" id="Company_user_password" name="Company[user_password]">
+<!--                                                <input placeholder="Password" ng-model="user.passwords" data-ng-class="{-->
+<!--                                                                       'ng-invalid':registerform['Company[user_repeatpassword]'].$error.match}"-->
+<!--                                                       type="password" id="Company_user_password" name="Company[user_password]">-->
+<!--                                                <span class="required">*</span>-->
+                                                <?php echo $form->passwordField($model, 'user_password', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Password')); ?>
                                                 <span class="required">*</span>
+                                                <?php echo "<br>" . $form->error($model, 'user_password'); ?>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input placeholder="Repeat Password" ng-model="user.passwordConfirm" type="password"
-                                                       id="Company_user_repeatpassword" data-match="user.passwords"
-                                                       name="Company[user_repeatpassword]"/>
+<!--                                                <input placeholder="Repeat Password" ng-model="user.passwordConfirm" type="password"-->
+<!--                                                       id="Company_user_repeatpassword" data-match="user.passwords"-->
+<!--                                                       name="Company[user_repeatpassword]"/>-->
+<!--                                                <span class="required">*</span>-->
+<!---->
+<!--                                                <div style='font-size:0.9em;color:red;position: static;'-->
+<!--                                                     data-ng-show="registerform['Company[user_repeatpassword]'].$error.match">Password does-->
+<!--                                                    not match with Repeat <br> Password.-->
+<!--                                                </div>-->
+<!--                                                --><?php //echo "<br>" . $form->error($model, 'user_repeatpassword'); ?>
+                                                <?php echo $form->passwordField($model, 'user_repeatpassword', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Repeat Password')); ?>
                                                 <span class="required">*</span>
-
-                                                <div style='font-size:0.9em;color:red;position: static;'
-                                                     data-ng-show="registerform['Company[user_repeatpassword]'].$error.match">Password does
-                                                    not match with Repeat <br> Password.
-                                                </div>
                                                 <?php echo "<br>" . $form->error($model, 'user_repeatpassword'); ?>
+                                                <?php echo '<div id="Company_user_passwordmatch_em_" class="errorMessage" style="display:none"></div>'?>
                                             </td>
 
                                         </tr>
@@ -299,7 +335,7 @@ if ($this->action->id == 'update') {
     <?php endif; ?>
 
 </div><!-- form -->
-
+<input type="hidden" id="currentAction" value="<?php echo $this->action->id; ?>">
 <input type="hidden" id="viewFrom" value="<?php
 if (isset($_GET['viewFrom'])) {
     echo "1";
@@ -309,14 +345,20 @@ if (isset($_GET['viewFrom'])) {
 ?>"/>
 <script>
 
-    function checkCompanyNameUnique () {
-        var tenant = $('#Company_tenant').val();
+    function checkCompanyNameUnique() {
+
         var name = $('#Company_name').val();
+        if($("#currentAction").val() == "create"){
+            var tenant = $('#Company_tenant').val();
+        } else{
+            var tenant = $('#Company_tenant_').val();
+        }
         $.ajax({
             type : "POST",
             url: "<?php echo $this->createUrl('company/checkNameUnique')?>",
             data: {name:name, tenant:tenant},
             success: function(data){
+                console.log(data);
                 if(data == 0) {
                     $('#Company_name_unique_em_').show();
                     return false;
@@ -330,9 +372,14 @@ if (isset($_GET['viewFrom'])) {
 
     function sendCreateCompanyForm() {
         var formInfo = $('#company-form').serialize();
+        if($("#currentAction").val() == "create"){
+            var url = "<?php echo $this->createUrl('company/create')?>";
+        } else{
+            var url = "<?php echo $this->createUrl('company/update&id='.$model->id)?>";
+        }
         $.ajax({
             type: "POST",
-            url: "<?php echo $this->createUrl('company/create')?>",
+            url:url ,
             data: formInfo,
             success: function(data){
                 window.location = 'index.php?r=company/admin';
@@ -365,6 +412,32 @@ if (isset($_GET['viewFrom'])) {
         }
     }
 
+    function validatePassword() {
+        if($("#Company_user_password").val() == ""){
+            $("#Company_user_password_em_").html("Password cannot be blank");
+            $("#Company_user_password_em_").show();
+            return false;
+        } else if($("#Company_user_repeatpassword").val() == "") {
+            $("#Company_user_repeatpassword_em_").html("Reapeat password cannot be blank");
+            $("#Company_user_repeatpassword_em_").show();
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    function isPasswordMatch() {
+        if($("#pass_option_1").is(":checked")){
+            if($("#Company_user_password").val() == $("#Company_user_repeatpassword").val()){
+                $("#Company_user_passwordmatch_em_").hide();
+                return true;
+            } else {
+                $("#Company_user_passwordmatch_em_").html("Password is not match");
+                $("#Company_user_passwordmatch_em_").show();
+                return false;
+            }
+        }
+    }
 
     function generatepassword() {
         $("#random_password").val('');
@@ -381,6 +454,31 @@ if (isset($_GET['viewFrom'])) {
     }
 
     $(document).ready(function() {
+        $(".pass_option").on("click",function(){
+            $(".user_requires_password #pass_error_").hide();
+        });
+
+        $("#Company_user_password").on("change",function(){
+            isPasswordMatch();
+           if($("#Company_user_password").val() == '') {
+               $("#Company_user_password_em_").html("Password cannot be blank");
+               $("#Company_user_password_em_").show();
+           } else {
+               $("#Company_user_password_em_").hide();
+           }
+
+        });
+
+        $("#Company_user_repeatpassword").on("change",function(){
+            isPasswordMatch();
+           if($("#Company_user_repeatpassword").val() == '') {
+               $("#Company_user_repeatpassword_em_").html("Password cannot be blank");
+               $("#Company_user_repeatpassword_em_").show();
+           } else {
+               $("Company_user_repeatpassword_em_").hide();
+           }
+
+        });
 
         var default_field = $("#is_user_field").attr('value');
 
@@ -411,6 +509,7 @@ if (isset($_GET['viewFrom'])) {
         });
 
         $('.password_requirement').click(function () {
+            $("#pass_error_").hide();
             if ($('#Company_password_requirement_1').is(':checked')) {
                 $('.user_requires_password').css("display", "block");
                 $('.pass_option').prop('checked', false);

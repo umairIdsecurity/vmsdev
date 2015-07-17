@@ -84,7 +84,6 @@ class CompanyController extends Controller
         if (isset($_POST['Company'])) {
 
             $model->attributes = $_POST['Company'];
-
             $model->company_type = 3; // visitor company type -- directed by savita
 
             if ($this->isCompanyUnique($session['tenant'], $session['role'], $_POST['Company']['name'], $_POST['Company']['tenant']) == 0) {
@@ -122,7 +121,13 @@ class CompanyController extends Controller
                         $userModel->contact_number = $model->user_contact_number;
 
                         $userModel->user_type = 2;
-                        //$userModel->password = 12345;
+                        if($model->password_requirement == 2) {
+                            if($model->password_option == 1) {
+                                $userModel->password = 12345;
+                            } else{
+                                $userModel->password = $model->user_password;
+                            }
+                        }
                         $userModel->role = 10;
                         $userModel->company = $lastId;
                         $userModel->asic_no = 10;
@@ -223,7 +228,7 @@ class CompanyController extends Controller
                     Yii::app()->user->setFlash('error', 'Company code has already been taken');
                 }
             }
-            $model->company_type = $_POST['Company']['company_type'];
+            //$model->company_type = $_POST['Company']['company_type'];
 
             if (is_null($errorFlashMessage = Yii::app()->user->getFlash('error'))) {
 

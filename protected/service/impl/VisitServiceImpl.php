@@ -48,7 +48,7 @@ class VisitServiceImpl implements VisitService {
         if ($visit->card != '' && $visit->visit_status == VisitStatus::CLOSED) {
             CardGenerated::model()->updateByPk($visit->card, array(
                 'card_status' => CardStatus::RETURNED,
-                'date_returned' => date('d-m-Y'),
+                'date_returned' => date('Y-m-d'),
             ));
         }
     }

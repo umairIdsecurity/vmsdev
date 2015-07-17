@@ -11,6 +11,7 @@ $cs->registerCssFile(Yii::app()->controller->assetsBase . '/bootstrapSwitch/boot
 /* @var $form CActiveForm */
 
 $session = new CHttpSession;
+
 $currentRoleinUrl = '';
 if (isset($_GET['role'])) {
     $currentRoleinUrl = $_GET['role'];
@@ -330,7 +331,7 @@ $form = $this->beginWidget('CActiveForm', array(
             <?php
             $criteria = new CDbCriteria();
             if ($session['role'] != Roles::ROLE_SUPERADMIN) {
-                $criteria->addCondition("tenant='" . $session['tenant'] . "' and id!= 1 and id!=" . $session['company']);
+                $criteria->addCondition("tenant='" . $session['id'] . "' and id!= 1 and id!=" . $session['company']);
             } else {
                 $criteria->addCondition("id!= 1");
             }

@@ -66,6 +66,7 @@ class Company extends CActiveRecord {
 		return array(
 	            array('name', 'required'),
 	            array('user_first_name , user_last_name , user_email , user_contact_number', 'required' , 'on' => 'company_contact'),
+                array('password_requirement,password_option,user_password','safe'),
 				array('name , code , email_address , mobile_number', 'required' , 'on' => 'updatetenant'),
                 array('mobile_number', 'numerical', 'integerOnly' => true, 'on' => 'updatetenant'),
                 array('code', 'match',
@@ -274,8 +275,13 @@ class Company extends CActiveRecord {
 
     public function getCompanyName($companyId) {
         if ($companyId != '') {
-            $company = Company::model()->findByPK($companyId);
-            return $company->name;
+            $this->detachBehavior('softDelete');
+            $company = $this->findByAttributes(['is_deleted' => 0, 'id' => $companyId]);
+            if ($company) {
+                return $company->name;
+            } else {
+                return '-';
+            }
         }
     }
 
@@ -285,8 +291,7 @@ class Company extends CActiveRecord {
                 'class' => 'ext.soft_delete.SoftDeleteBehavior'
             ),
 
-            'AuditTrailBehaviors'=>
-                'application.components.behaviors.AuditTrailBehaviors',
+            'AuditTrailBehaviors' => 'application.components.behaviors.AuditTrailBehaviors',
         );
     }
 
@@ -347,7 +352,7 @@ class Company extends CActiveRecord {
             $company = Yii::app()->db->createCommand()
                     ->selectdistinct('*')
                     ->from('company')
-                    ->where("id != 1 and tenant=" . Yii::app()->user->tenant . " AND is_deleted = 0")
+                    ->where("id != 1 and tenant=" . Yii::app()->user->id . " AND is_deleted = 0")
                     ->queryAll();
         } else {
             $company = Yii::app()->db->createCommand()

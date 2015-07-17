@@ -36,7 +36,7 @@ $photoForm = $this->beginWidget('CActiveForm', [
 
         <img id="photoPreview" src="<?php echo $my_image; ?>">
     <?php } else { ?>
-        <img id="photoPreview" src="" style="display:none;"></img>
+        <img id="photoPreview" src="" style="display:none;">
     <?php } ?>
 </div>
 <?php
@@ -384,7 +384,7 @@ $detailForm = $this->beginWidget('CActiveForm', [
             data: form,
             success: function (data) {
                 $("#photoPreview").show();
-            },
+            }
         });
 
     }

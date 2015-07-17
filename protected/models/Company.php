@@ -66,6 +66,7 @@ class Company extends CActiveRecord {
 		return array(
 	            array('name', 'required'),
 	            array('user_first_name , user_last_name , user_email , user_contact_number', 'required' , 'on' => 'company_contact'),
+                array('password_requirement,password_option,user_password','safe'),
 				array('name , code , email_address , mobile_number', 'required' , 'on' => 'updatetenant'),
                 array('mobile_number', 'numerical', 'integerOnly' => true, 'on' => 'updatetenant'),
                 array('code', 'match',

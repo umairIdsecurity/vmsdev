@@ -1,3 +1,15 @@
+<style>
+    .delete-image-upload a{
+        cursor: pointer;
+        display: block;
+        width: 40px;
+        text-align: center;
+
+    }
+    .delete-image-upload a:hover{
+        text-decoration: none;
+    }
+</style>
 <div class="file-upload-content">
     <div class="left">
         <ul class="folder">
@@ -47,7 +59,7 @@
                     <td width="200">
                         <span>{0}</span>
                     </td>
-                    <td width="50" class="delete-image-upload">x</td>
+                    <td width="50" class="delete-image-upload"><a> x </a></td>
                 </tr>
                 </tbody>
             </table>

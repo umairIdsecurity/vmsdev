@@ -273,7 +273,7 @@ $form = $this->beginWidget('CActiveForm', array(
                         if ($session['role'] == Roles::ROLE_AGENT_ADMIN && $session['tenant_agent'] == $value['id']) {
                             echo " selected "; //if logged in is agent admin and tenant agent of logged in user is = agentadminname
                         }
-                        ?> value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
+                        ?> value="<?php echo $value['tenant_agent']; ?>"><?php echo $value['name']; ?></option>
                     <?php
                     }
                 } else {
@@ -1369,7 +1369,6 @@ function getCompanyTenantAgent() { /*get tenant agent company*/
                         selectedVal = value.name;
                     }
                 });
-                s
                 $("#User_company").val(selectedId);
                 $("#select2-User_company-container").html(selectedVal);
             }

@@ -179,6 +179,7 @@ if ($this->action->id == 'update') {
                             <td><?php echo $form->textField($model, 'user_email', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Email')); ?>
                                 <span class="required">*</span>
                                 <?php echo "<br>" . $form->error($model, 'user_email'); ?>
+                                <div id="Company_user_email_unique_em_" class="errorMessage" style="display: none">User email has already been taken</div>
                             </td>
                         </tr>
 
@@ -364,6 +365,25 @@ if (isset($_GET['viewFrom'])) {
                     return false;
                 } else {
                     $('#Company_name_unique_em_').hide();
+                    checkUserEmailUnique();
+                }
+            }
+        });
+    }
+
+    function checkUserEmailUnique(){
+        var email = $("#Company_user_email").val();
+        var tenant = $('#Company_tenant').val();
+        $.ajax({
+            type : "POST",
+            url: "<?php echo $this->createUrl('user/checkCompanyContactEmail')?>",
+            data: {email:email, tenant:tenant},
+            success: function(data){
+                if(data == 1) {
+                    $('#Company_user_email_unique_em_').show();
+                    return false;
+                } else {
+                    $('#Company_user_email_unique_em_').hide();
                     sendCreateCompanyForm();
                 }
             }

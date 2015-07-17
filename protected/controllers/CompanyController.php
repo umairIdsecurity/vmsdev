@@ -128,6 +128,7 @@ class CompanyController extends Controller
                                 $userModel->password = $model->user_password;
                             }
                         }
+                        $userModel->tenant = $model->tenant;
                         $userModel->role = 10;
                         $userModel->company = $lastId;
                         $userModel->asic_no = 10;

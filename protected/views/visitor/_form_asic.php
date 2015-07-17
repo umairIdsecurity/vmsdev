@@ -548,7 +548,7 @@ if ($this->action->id == 'update') {
         }
 
         var companyValue = $("#Visitor_company").val();
-        
+        var passwordConfirmed = false;
         if ($('.password_requirement').filter(':checked').val() == "<?php echo PasswordRequirement::PASSWORD_IS_REQUIRED; ?>") {
             if ($('.password_option').filter(':checked').val() == "<?php echo PasswordOption::CREATE_PASSWORD; ?>") {
                 $('.visitor_password').empty().hide();
@@ -567,6 +567,7 @@ if ($this->action->id == 'update') {
                 }
                 $('input[name="Visitor[password]"]').val(password_temp);
                 $('input[name="Visitor[repeatpassword]"]').val(password_repeat_temp);
+                passwordConfirmed = true;
             }
         } else {
             $('.visitor_password').empty().hide();
@@ -578,7 +579,7 @@ if ($this->action->id == 'update') {
             var asic_no = $('#Visitor_asic_no').val();
             var asic_expiry = $('#Visitor_asic_expiry').val();
 
-            if (asic_no == "" && asic_expiry == "") {
+            if (asic_no == "" && asic_expiry == "" && passwordConfirmed == false) {
                 $('#Visitor_visitor_card_status').val(<?php echo Visitor::ASIC_EXPIRED; ?>);
                 var card_status = $('#Visitor_visitor_card_status').val();
                 if (card_status == "<?php echo Visitor::ASIC_EXPIRED; ?>") {

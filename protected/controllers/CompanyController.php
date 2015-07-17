@@ -480,22 +480,30 @@ class CompanyController extends Controller
                 if (count($contacts) == 1) {
                     $companyContact = $contacts[0];
                 } else {
-                    foreach ($contacts as $contact) {
-                        $companyContact = $contact;
-                        break;
-                    }
+                    // foreach ($contacts as $contact) {
+                        $companyContact = $contacts[count($contacts) - 1];
+                        // break;
+                    // }
                 }
             } else {
                 $companyContact = User::model()->findByPk($id);
             }
 
             if ($companyContact) {
+                $photo = '';
+                if (!empty($companyContact->photo)) {
+                    $photo = Photo::model()->getRelativePathOfPhoto($companyContact->photo);
+                }
                 $ret = [
-                    'id' => $companyContact->id,
-                    'first_name' => $companyContact->first_name,
-                    'last_name' => $companyContact->last_name,
+                    'id'             => $companyContact->id,
+                    'first_name'     => $companyContact->first_name,
+                    'last_name'      => $companyContact->last_name,
                     'contact_number' => $companyContact->contact_number,
-                    'email' => $companyContact->email
+                    'email'          => $companyContact->email,
+                    'company'        => $companyContact->company,
+                    'asic_no'        => $companyContact->asic_no,
+                    'asic_expiry'    => empty($companyContact->asic_expiry) || $companyContact->asic_expiry == '0000-00-00' ? '' : date('d-m-Y', strtotime($companyContact->asic_expiry)),
+                    'photo'          => $photo
                 ];
                 echo CJavaScript::jsonEncode($ret);
 

@@ -230,6 +230,10 @@ function getCardType() {
                             $('#User_last_name').val(data.last_name);
                             $('#User_email').val(data.email);
                             $('#User_contact_number').val(data.contact_number);
+                            $('#User_company').select2("val", data.company);
+                            $('#User_asic_no').val(data.asic_no);
+                            $('#User_asic_expiry').val(data.asic_expiry);
+                            $('#Host_photo').val(data.photo);
                         }
                     }
                 });
@@ -384,6 +388,10 @@ function closeAndPopulateField(id) {
                 $('#User_last_name').val(data.last_name);
                 $('#User_email').val(data.email);
                 $('#User_contact_number').val(data.contact_number);
+                $('#User_company').select2("val", data.company);
+                $('#User_asic_no').val(data.asic_no);
+                $('#User_asic_expiry').val(data.asic_expiry);
+                $('#Host_photo').val(data.photo);
             }
         }
     });

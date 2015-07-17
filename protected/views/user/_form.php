@@ -395,7 +395,7 @@ $form = $this->beginWidget('CActiveForm', array(
             </select>
         <!--echo $form->dropDownList($model,'userWorkstation1',CHtml::listData($listWorkstation,'id','name'),array('disabled'=>'disabled'));-->
 
-        <!--<select id="User_workstation" name="User[workstation]" disabled></select>-->
+         <select style="display: none !important;" id="User_workstation" name="User[workstation]" disabled></select>
     </td>
 </tr>
 
@@ -884,8 +884,8 @@ $(document).ready(function () {
     }
     else if (sessionRole == agentadmin) {
         if (getRole == agentoperator) {
-            document.getElementById('User_workstation').disabled = false;
-            $(".workstationRow").show();
+            /*document.getElementById('User_workstation').disabled = false;
+            $(".workstationRow").show();*/
             getWorkstationAgentOperator();
         }
     } else if (sessionRole == agentairportadmin) {
@@ -1157,16 +1157,16 @@ function populateDynamicFields() {
     if (sessionRole == admin) {
         if (selectedRole == admin) {
             document.getElementById('User_company').disabled = true;
-            document.getElementById('User_workstation').disabled = true;
-            $(".workstationRow").hide();
+            /*document.getElementById('User_workstation').disabled = true;
+            $(".workstationRow").hide();*/
             $('#User_company').find('option[value=<?php echo $session['company']; ?>]').show();
             $("#User_company").val("<?php echo $session['company']; ?>");
         }
         else if (selectedRole == operator) {
             $("#User_company").val($("#sessionCompany").val());
             document.getElementById('User_company').disabled = true;
-            document.getElementById('User_workstation').disabled = false;
-            $(".workstationRow").show();
+            /*document.getElementById('User_workstation').disabled = false;
+            $(".workstationRow").show();*/
             $('#User_company').find('option[value=<?php echo $session['company']; ?>]').show();
             $("#User_company").val("<?php echo $session['company']; ?>");
             getWorkstation();
@@ -1176,8 +1176,8 @@ function populateDynamicFields() {
 
             $('#User_company').find('option[value=<?php echo $session['company']; ?>]').show();
             $("#User_company").val("<?php echo $session['company']; ?>");
-            document.getElementById('User_workstation').disabled = true;
-            $(".workstationRow").hide();
+            /*document.getElementById('User_workstation').disabled = true;
+            $(".workstationRow").hide();*/
             $("#User_company").val($("#sessionCompany").val());
             document.getElementById('User_tenant').disabled = true;
             document.getElementById('User_company').disabled = true;
@@ -1199,8 +1199,8 @@ function populateDynamicFields() {
             });
         }
         else {
-            document.getElementById('User_workstation').disabled = true;
-            $(".workstationRow").hide();
+            /*document.getElementById('User_workstation').disabled = true;
+            $(".workstationRow").hide();*/
             //$('#User_company option[value=""]').remove;
             $('#User_company').find('option[value=<?php echo $session['company']; ?>]').hide();
             $("#User_company").val("");
@@ -1213,10 +1213,10 @@ function populateDynamicFields() {
         if (selectedRole != admin) { // if selected is not equal to admin enable tenant
             if (selectedRole == operator) {
                 document.getElementById('User_tenant_agent').disabled = true;
-                document.getElementById('User_workstation').disabled = false;
+                /*document.getElementById('User_workstation').disabled = false;*/
                 $("#tenantAgentRow").hide();
                 $("#tenantRow").show();
-                $(".workstationRow").show();
+               /* $(".workstationRow").show();*/
                 document.getElementById('User_tenant').disabled = false;
                 document.getElementById('User_company').disabled = true;
                 $("#User_tenant").val('');
@@ -1231,8 +1231,8 @@ function populateDynamicFields() {
                 $("#tenantRow").show();
                 document.getElementById('User_tenant').disabled = false;
                 document.getElementById('User_company').disabled = true;
-                document.getElementById('User_workstation').disabled = true;
-                $(".workstationRow").hide();
+               /* document.getElementById('User_workstation').disabled = true;
+                $(".workstationRow").hide();*/
                 $("#User_tenant").val('');
                 $("#User_tenant_agent").empty();
 
@@ -1242,8 +1242,8 @@ function populateDynamicFields() {
                 document.getElementById('User_tenant_agent').disabled = true;
                 $("#tenantAgentRow").hide();
                 document.getElementById('User_company').disabled = true;
-                document.getElementById('User_workstation').disabled = true;
-                $(".workstationRow").hide();
+                /*document.getElementById('User_workstation').disabled = true;
+                $(".workstationRow").hide();*/
                 $("#tenantRow").show();
                 document.getElementById('User_tenant').disabled = false;
 
@@ -1254,8 +1254,8 @@ function populateDynamicFields() {
                 document.getElementById('User_company').disabled = true;
                 $("#tenantRow").show();
                 document.getElementById('User_tenant').disabled = false;
-                document.getElementById('User_workstation').disabled = false;
-                $(".workstationRow").show();
+               /* document.getElementById('User_workstation').disabled = false;
+                $(".workstationRow").show();*/
                 $("#User_tenant").val('');
                 $("#User_tenant_agent").empty();
 
@@ -1276,20 +1276,20 @@ function populateDynamicFields() {
             var id = $("#User_company").val();
             var options = $("#User_company").data('options');
             $('#User_company').html(options);
-            document.getElementById('User_workstation').disabled = true;
-            $(".workstationRow").hide();
+            /*document.getElementById('User_workstation').disabled = true;
+            $(".workstationRow").hide();*/
             $("#tenantRow").hide();
             $("#tenantAgentRow").hide();
         }
     }
     else if (sessionRole == agentadmin) {
         if (selectedRole == 7) { /*if selected role field is agent operator*/
-            document.getElementById('User_workstation').disabled = false;
-            $(".workstationRow").show();
+            /*document.getElementById('User_workstation').disabled = false;
+            $(".workstationRow").show();*/
             getWorkstationAgentOperator();
         } else {
-            document.getElementById('User_workstation').disabled = true;
-            $(".workstationRow").hide();
+            /*document.getElementById('User_workstation').disabled = true;
+            $(".workstationRow").hide();*/
         }
     }
 

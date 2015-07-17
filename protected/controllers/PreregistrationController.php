@@ -352,6 +352,7 @@ class PreregistrationController extends Controller
 
 			}
 			else{
+				
 				$connection=Yii::app()->db;
 				$sql="SELECT * FROM `visitor` WHERE
 					  (first_name LIKE '%$searchValue%' OR last_name LIKE '%$searchValue%')

@@ -37,37 +37,42 @@ if ($this->action->id == 'update') {
             'validateOnSubmit' => true,
             'afterValidate' => 'js:function(form, data, hasError) {
                 if (!hasError) {
-                    if ($(".password_requirement").is(":checked")== false) {
-                        $("#pass_error_").show();
-                        return false;
-                    } else {
-                        if ($("#Company_password_requirement_1").is(":checked")) {
-                            if($(".pass_option").is(":checked") == false) {
-                                $(".user_requires_password #pass_error_").show();
-                                return false;
-                            } else {
-                                $(".user_requires_password #pass_error_").hide();
-                                if($("#pass_option_1").is(":checked")) {
-                                    var validatePass = validatePassword();
-                                    if(validatePass == true) {
-                                        var isMatch = isPasswordMatch();
-                                        if(isMatch == true) {
-                                            checkCompanyNameUnique();
+                    if($("#currentAction").val() == "create"){
+                        if ($(".password_requirement").is(":checked")== false) {
+                            $("#pass_error_").show();
+                            return false;
+                        } else {
+                            if ($("#Company_password_requirement_1").is(":checked")) {
+                                if($(".pass_option").is(":checked") == false) {
+                                    $(".user_requires_password #pass_error_").show();
+                                    return false;
+                                } else {
+                                    $(".user_requires_password #pass_error_").hide();
+                                    if($("#pass_option_1").is(":checked")) {
+                                        var validatePass = validatePassword();
+                                        if(validatePass == true) {
+                                            var isMatch = isPasswordMatch();
+                                            if(isMatch == true) {
+                                                checkCompanyNameUnique();
+                                            } else {
+                                                return false;
+                                            }
                                         } else {
                                             return false;
                                         }
-                                    } else {
-                                        return false;
+                                    }else {
+                                        checkCompanyNameUnique();
                                     }
-                                }else {
-                                    checkCompanyNameUnique();
                                 }
+                            } else {
+                                checkCompanyNameUnique();
                             }
-                        } else {
-                            checkCompanyNameUnique();
                         }
+                    } else{
+                        checkCompanyNameUnique();
                     }
                 } else {
+                    console.log("errrrr");
                     $( ".user_fields" ).show();
                     $(".password-border").show();
                 }
@@ -218,13 +223,13 @@ if ($this->action->id == 'update') {
                                         </tr>
                                         <tr id="third_option" class='hiddenElement'></tr>
                                         <tr>
-                                            <td><input class="pass_option" id="pass_option_0" type="radio" name="Company[password_option]" value="2"/>&nbsp;Send
+                                            <td><input class="pass_option" id="pass_option_0" type="radio" name="Company[password_option]" value="1"/>&nbsp;Send
                                                 User Invitation
                                             </td>
                                         </tr>
                                         <tr>
                                             <td style="padding-bottom:10px">
-                                                <input class="pass_option" id="pass_option_1" type="radio" name="Company[password_option]" value="1"/>
+                                                <input class="pass_option" id="pass_option_1" type="radio" name="Company[password_option]" value="2"/>
                                                 &nbsp;Create Password
                                             </td>
                                         </tr>
@@ -330,7 +335,7 @@ if ($this->action->id == 'update') {
     <?php endif; ?>
 
 </div><!-- form -->
-
+<input type="hidden" id="currentAction" value="<?php echo $this->action->id; ?>">
 <input type="hidden" id="viewFrom" value="<?php
 if (isset($_GET['viewFrom'])) {
     echo "1";
@@ -340,14 +345,20 @@ if (isset($_GET['viewFrom'])) {
 ?>"/>
 <script>
 
-    function checkCompanyNameUnique () {
-        var tenant = $('#Company_tenant').val();
+    function checkCompanyNameUnique() {
+
         var name = $('#Company_name').val();
+        if($("#currentAction").val() == "create"){
+            var tenant = $('#Company_tenant').val();
+        } else{
+            var tenant = $('#Company_tenant_').val();
+        }
         $.ajax({
             type : "POST",
             url: "<?php echo $this->createUrl('company/checkNameUnique')?>",
             data: {name:name, tenant:tenant},
             success: function(data){
+                console.log(data);
                 if(data == 0) {
                     $('#Company_name_unique_em_').show();
                     return false;
@@ -361,9 +372,14 @@ if (isset($_GET['viewFrom'])) {
 
     function sendCreateCompanyForm() {
         var formInfo = $('#company-form').serialize();
+        if($("#currentAction").val() == "create"){
+            var url = "<?php echo $this->createUrl('company/create')?>";
+        } else{
+            var url = "<?php echo $this->createUrl('company/update&id='.$model->id)?>";
+        }
         $.ajax({
             type: "POST",
-            url: "<?php echo $this->createUrl('company/create')?>",
+            url:url ,
             data: formInfo,
             success: function(data){
                 window.location = 'index.php?r=company/admin';

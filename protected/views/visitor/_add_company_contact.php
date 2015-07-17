@@ -155,7 +155,7 @@
                     return;
                 }
             });
-            
+
             if (flag == true) {
                 $('#btnAddCompanyContactConfirm').click();
             }
@@ -169,9 +169,16 @@
             select: function(event, ui) {
                 event.preventDefault();
                 $(".company-autocomplete").val(ui.item.label);
+                $('#typePostForm').val('contact');
             }
         });
         $(".ui-front").css("z-index", 1051);
+    });
+
+    $(document).ready(function(){
+        $("#AddCompanyContactForm_companyName").keypress(function(){
+            $('#typePostForm').val('company');
+        })
     });
 
 </script>

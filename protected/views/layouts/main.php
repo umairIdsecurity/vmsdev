@@ -234,7 +234,7 @@ $userRole = $session['role'];
 <div style="display: none;">
 <?php
     $this->widget('zii.widgets.jui.CJuiDatePicker',array(
-        'name'=>'Visitor[identification_document_expiry]'
+        'name' => 'AutoGenerateJqueryUI'
     ));
 ?>
 </div>

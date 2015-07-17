@@ -207,7 +207,7 @@ $asicEscort = new AddAsicEscort();
         var d = new Date(),
             minDate, maxDate;
         var disabled = true;
-        var cardType = $('#VisitCardType').val();
+        var cardType = "<?php echo $model->card_type; ?>";
         switch(cardType) {
             case "<?php echo CardType::VIC_CARD_MANUAL; ?>":
                 minDate = "-12m";

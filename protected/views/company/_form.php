@@ -72,7 +72,6 @@ if ($this->action->id == 'update') {
                         checkCompanyNameUnique();
                     }
                 } else {
-                    console.log("errrrr");
                     $( ".user_fields" ).show();
                     $(".password-border").show();
                 }

@@ -255,7 +255,7 @@ $form = $this->beginWidget('CActiveForm', array(
                 <?php
                 }
                 ?>
-            </select><?php echo "<br>" . $form->error($model, 'tenant'); ?>
+            </select><span class="required">*</span><?php echo "<br>" . $form->error($model, 'tenant'); ?>
         </td>
     </tr>
     <tr id="tenantAgentRow" class='hiddenElement'>

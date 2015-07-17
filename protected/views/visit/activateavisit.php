@@ -125,7 +125,9 @@ $session = new CHttpSession;
 <script>
     $(document).ready(function() {
         // for Card Type Manual
-        var minDate = '<?php echo $model->card_type == CardType::MANUAL_VISITOR ? "-3m" : "0"; ?>';
+        var d        = new Date();
+        var cardType = "<?php echo $model->card_type; ?>";
+        var minDate  = '<?php echo $model->card_type == CardType::MANUAL_VISITOR ? "-3m" : "0"; ?>';
 
         refreshTimeIn();
 
@@ -137,43 +139,40 @@ $session = new CHttpSession;
             buttonImageOnly: true,
             minDate: minDate,
             dateFormat: "dd-mm-yy",
-            onClose: function (dateText) {
-                var currentDate = new Date();
-                var date = dateText.substring(0, 2);
-                var month = dateText.substring(3, 5);
-                var year = dateText.substring(6, 10);
-                var selectedDate = new Date(year, month-1, date);
+            onClose: function (selectedDate) {
+                var currentDate  = d.getDate() + '-0' + (d.getMonth() + 1) + '-' + d.getFullYear();
+                var checkInSelectedDate = $("#Visit_date_check_in").datepicker('getDate');
 
                 $( "#dateoutDiv #Visit_date_check_out" ).datepicker( "option", "minDate", selectedDate);
 
                 //update text of visit button
-                function updateTextVisitButton(text, id) {
-                    var visitButton = $("#activate-a-visit-form input.complete");
-                    if (visitButton.length) {
-                        visitButton.attr('id', id).val(text);
-                    } else {
-                        visitButton = $("#registerNewVisit");
-                        visitButton.attr('id', id).text(text);
-                    }
+                 function updateTextVisitButton(text, id, val) {
+                    $("#registerNewVisit").text(text).val(val);
                 }
 
                 if (selectedDate >= currentDate) {
-                    updateTextVisitButton("Preregister Visit", "preregisterNewVisit");
+                    if (cardType == <?php echo CardType::MANUAL_VISITOR; ?> || selectedDate == currentDate) {
+                        updateTextVisitButton("Activate Visit", "registerNewVisit", "active");
+                    } else {
+                        updateTextVisitButton("Preregister Visit", "preregisterNewVisit", "preregister");
+                    }
+                    // update card date
+                    var cardDate = $.datepicker.formatDate('dd M y', checkInSelectedDate);
+                    $("#cardDetailsTable span.cardDateText").html(cardDate);
+                    $("#card_no_manual").hide();
+                    
+                    /*updateTextVisitButton("Preregister Visit", "preregisterNewVisit");
                     // update card date
                     var cardDate = $.datepicker.formatDate('dd M y', selectedDate);
                     $("#cardDetailsTable span.cardDateText").html(cardDate);
 
-                    $('#card_no_manual').hide();
+                    $('#card_no_manual').hide();*/
                 } else {
-                    updateTextVisitButton("");
-
-                    <?php if ($model->card_type == CardType::MANUAL_VISITOR) { // show Back Date Visit
-                        echo 'updateTextVisitButton("Back Date Visit", "");';
+                    if (cardType == <?php echo CardType::MANUAL_VISITOR; ?>) {
+                        updateTextVisitButton("Back Date Visit", "backDateVisit", "backdate");
                     } else {
-                        echo 'updateTextVisitButton("Activate Visit", "registerNewVisit");';
+                        updateTextVisitButton("Activate Visit", "registerNewVisit", "active");
                     }
-                    ?>
-
                     $('#card_no_manual').show();
                 }
             }

@@ -629,14 +629,15 @@ class User extends VmsActiveRecord {
         return $aArray;
     }
 
-    public function findCompanyDetailsOfUser($userId) {
+    public function findCompanyDetailsOfUser($tenantId) {
         $aArray = array();
+
         //find all company with same tenant except users company
-        $user = User::model()->findByPk($userId);
-            
+        $company = Company::model()->findByPk($tenantId);
+
         $Criteria = new CDbCriteria();
- 
-        $Criteria->condition = "tenant ='" . $userId . "' and id !=1 and id != " . $user->company;
+
+        $Criteria->condition = "tenant ='" . $company['tenant'] . "' and id !=1 and id != " . $company->id;
          
         $companyList = Company::model()->findAll($Criteria);
 

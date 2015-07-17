@@ -258,6 +258,7 @@ if ($this->action->id == 'update') {
                                             <?php /*echo "<br>" . $form->error($model, 'tenant_agent'); */?>
                                 </table>-->
                                 <table style="margin-top: 70px;">
+                                <?php if ($model->profile_type == Visitor::PROFILE_TYPE_ASIC): ?>
                                     <tr>
                                         <td>
                                             <?php echo $form->dropDownList($model, 'visitor_card_status', Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_ASIC], array('empty' => 'Select Card Status')); ?>
@@ -265,6 +266,7 @@ if ($this->action->id == 'update') {
                                             <?php echo "<br>" . $form->error($model, 'visitor_card_status'); ?>
                                         </td>
                                     </tr>
+                                <?php endif; ?>
                                     <tr>
                                         <td id="visitorTenantRow" <?php
                                         if ($session['role'] != Roles::ROLE_SUPERADMIN) {
@@ -979,6 +981,7 @@ if ($this->action->id == 'update') {
         } else {
             url = "<?php echo CHtml::normalizeUrl(array("visitor/addvisitor")); ?>";
         }
+
         var ajaxOpts = {
             type: "POST",
             url: url,

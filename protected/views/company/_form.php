@@ -348,7 +348,15 @@ if (isset($_GET['viewFrom'])) {
 
     function checkCompanyNameUnique() {
 
-        var name = $('#Company_name').val();
+        if($("#currentAction").val() == "update"){
+            if($('#Company_name').val() == "<?php echo $model->name?>"){
+                var name = "";
+            } else{
+                var name = $('#Company_name').val();
+            }
+        } else {
+            var name = $('#Company_name').val();
+        }
         if($("#currentAction").val() == "create"){
             var tenant = $('#Company_tenant').val();
         } else{
@@ -364,8 +372,11 @@ if (isset($_GET['viewFrom'])) {
                     $('#Company_name_unique_em_').show();
                     return false;
                 } else {
-                    $('#Company_name_unique_em_').hide();
-                    checkUserEmailUnique();
+                    if($("#currentAction").val() == "create"){
+                        checkUserEmailUnique();
+                    } else{
+                        sendCreateCompanyForm();
+                    }
                 }
             }
         });

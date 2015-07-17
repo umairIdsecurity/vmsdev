@@ -822,8 +822,8 @@ $(document).ready(function () {
                 elem1.disabled = false;
             }
             
-            document.getElementById('User_workstation').disabled = false;
-            $(".workstationRow").show();
+            /*document.getElementById('User_workstation').disabled = false;
+            $(".workstationRow").show();*/
             $("#tenantRow").show();
         } else if (getRole == agentoperator) {
             // $("#User_company").empty();
@@ -838,8 +838,8 @@ $(document).ready(function () {
             document.getElementById('User_tenant_agent').disabled = false;
             $("#tenantRow").show();
             $("#tenantAgentRow").show();
-            document.getElementById('User_workstation').disabled = false;
-            $(".workstationRow").show();
+            /*document.getElementById('User_workstation').disabled = false;
+            $(".workstationRow").show();*/
         }
         else {
             // document.getElementById('User_tenant').disabled = false;

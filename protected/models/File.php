@@ -15,6 +15,11 @@
  */
 class File  extends CActiveRecord
 {
+
+    public static $EXT_ALLOWED = array(
+        'jpg','png','pdf','xls','xlsx','doc','docx','txt','ppt','xml'
+    );
+
     /**
      * @return string the associated database table name
      */

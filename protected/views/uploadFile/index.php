@@ -145,7 +145,7 @@
             <div class="modal-body">
                 <form class="form-horizontal" id="Folder_form">
                     <div class="form-group">
-                        <div id="Folder_name" class="errorMessage" style="text-transform: none;margin-left: 159px;display:none">Please input name folder</div>
+                        <div id="Folder_name" class="errorMessage" style="text-transform: none;margin-left: 159px;display:none">Please input folder name</div>
                         <input value="<?php echo Yii::app()->user->id; ?>" type="hidden" name="Folder[user_id]">
                         <label for="nameFolder" class="col-sm-2 control-label">Folder Name:</label>&nbsp;&nbsp; <input name="Folder[name]" type="text" class="form-control" id="nameFolder" placeholder="Type folder name...">
 
@@ -182,7 +182,7 @@
                 });
             }
         });
-        var defaultName = ['help documents', 'contracts', 'inbox', 'helpdocuments'];
+        var defaultName = ['help documents', 'helpdocuments'];
 
         $('#nameFolder').keyup(function () {
             if (defaultName.indexOf($(this).val().toLowerCase()) >= 0) {

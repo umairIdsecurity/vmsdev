@@ -160,7 +160,8 @@ class UploadFileController extends Controller
                 $files = $_FILES['file'];
                 $listError = array();
                 for ($i = 0; $i < count($files['name']); $i++) {
-                    if ($files['size'][$i] <= 10485760) {
+                    $ext = pathinfo($files['name'][$i], PATHINFO_EXTENSION);
+                    if ($files['size'][$i] <= 10485760 && in_array($ext, File::$EXT_ALLOWED)) {
                         if ($files['error'][$i] == UPLOAD_ERR_OK) {
                             $tmp_name = $files['tmp_name'][$i];
                             $name = $files['name'][$i];
@@ -173,7 +174,7 @@ class UploadFileController extends Controller
                                 $objectFile->name = $name;
                                 $objectFile->uploader = $user_id;
                                 $objectFile->size = $files['size'][$i];
-                                $objectFile->ext = pathinfo($name_file, PATHINFO_EXTENSION);
+                                $objectFile->ext = $ext;
                                 $objectFile->save();
                             } else {
                                 $listError[] = $files['name'][$i];
@@ -233,12 +234,15 @@ class UploadFileController extends Controller
                 $root = dirname(Yii::app()->request->scriptFile) . '/uploads/files';
                 $folderUser = $root . '/' . $file->user_id;
                 $folderFile = $folderUser . '/' . $file->folder_id;
+                //ext allowed: jpg|png|pdf|xls|xlsx|doc|docx|txt|ppt|xml
                 switch ($file->ext) {
-                    case 'pdf':
+                    case 'xlsx':
                     case 'doc':
                     case 'docx':
-                    case 'html':
+                    case 'pdf':
+                    case 'ppt':
                     case 'xls':
+                    case 'xml':
                         //render view
                         $this->renderPartial('_view', array(
                             'source' => '/uploads/files' . '/' . $file->user_id . '/' .$file->folder_id . '/' . $file->file,

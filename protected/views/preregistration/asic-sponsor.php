@@ -249,8 +249,6 @@
                     data: search_value,
                     success: function(data) {
 
-
-
                         if(data == 'No Record'){
                             $("#asic-notification").show();
                         }
@@ -270,19 +268,22 @@
                                     { "title": "First Name" },
                                     { "title": "Last Name" },
                                     { "title": "Company" }
-                                ]
-                            } );
+                                ],
+                                "fnDrawCallback": function (oSettings) {
+                                    $('.selected_asic').click(function() {
+                                        $('#Registration_selected_asic_id').val($(this).val());
+                                        $('#Registration_contact_number').val("");
+                                        $('#Registration_email').val("");
+                                        $('#new_asic_area').hide();
+                                    });
+                                }
+                            });
+
 
                         }
 
                         $("#loader").hide();
 
-                        $('.selected_asic').click(function() {
-                            $('#Registration_selected_asic_id').val($(this).val());
-                            $('#Registration_contact_number').val("");
-                            $('#Registration_email').val("");
-                            $('#new_asic_area').hide();
-                        });
                     }
 
                 });

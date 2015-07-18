@@ -32,18 +32,21 @@
     </div>
     <div class="right">
         <h2><?php if(isset($folder)) echo $folder->name; else echo 'Help Documents'; ?></h2>
-        <div id="file_grid_error" class="errorMessage" style="text-transform: none;margin-top: 20px; height: 30px ;display:none">Couldn't delete files.</div>
+        <div id="file_grid_error" class="errorMessage" style="text-transform: none;margin-top: 20px; height: auto ;display:none">Couldn't delete files.</div>
         <form id="form-submit-files" method="post" class="upload-function" enctype="multipart/form-data">
-            <label class="btn btn-default btn-upload" id="upload_multi_label">Upload Files</label>
+            <label class="btn btn-default btn-upload" id="upload_multi_label">Upload Files
+                <input type="file" name="file[]" id="upload_multi" style="display: none"  multiple/>
+            </label>
             <button class="btn btn-default btn-delete" id="btn_delete_file" disabled>Delete</button>
             <div class="preview-files" style="display: block">
-                <input type="file" name="file[]" id="upload_multi" style="display: none"  multiple/>
+
                 <!--<table class="table preview-files-list"></table>-->
-                <div class="btn-submit">
-                    <input name="File[folder_id]" value="<?php echo $folder->id; ?>" type="hidden"/>
-                    <input name="File[user_id]" value="<?php echo Yii::app()->user->id;  ?>" type="hidden"/>
-                    <input id="btn-submit-files" type="button" value="Upload">
-                </div>
+
+            </div>
+            <div class="btn-submit" style="margin-top: 10px; margin-bottom: 5px; display: none">
+                <input name="File[folder_id]" value="<?php echo $folder->id; ?>" type="hidden"/>
+                <input name="File[user_id]" value="<?php echo Yii::app()->user->id;  ?>" type="hidden"/>
+                <input id="btn-submit-files" type="button" value="Upload">
             </div>
             <!--<table class="hidden">
                 <tbody id="previewFilesTemplate" >
@@ -305,6 +308,8 @@
             });
         });
 
+
+
         $("#upload_multi_label").click(function () {
             $("#upload_multi").trigger('click');
         });
@@ -313,19 +318,14 @@
             accept: 'jpg|png|pdf|xls|xlsx|doc|docx|txt|ppt|xml',
             max_size: 10485760,
             afterFileRemove: function (element, value, master_element) {
-                var obj = $('#form-submit-files');
-                var count = 0;
-                $.each($(obj).find("input[type='file']"), function (i, tag) {
-                    $.each($(tag)[0].files, function (i, file) {
-                        count++;
-                        alert(count);
-                    });
-                });
+                var count = $('#upload_multi_list > .MultiFile-label').length;
                 if (count == 0) {
                     $('.btn-submit').fadeOut();
                 }
             },
             afterFileAppend: function (element, value, master_element) {
+                $('#file_grid_error').html('');
+                    $('#file_grid_error').fadeOut();
                 $('.btn-submit').fadeIn();
             }
         });

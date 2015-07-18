@@ -124,9 +124,9 @@ $userRole = $session['role'];
                                 </a>
                             </li>
 
-                           <!-- <li class="open-folder">
-                                <a style="display:block; width: 40px;height: 40px;" title="Open folder" href="<?php /*echo Yii::app()->createUrl("/uploadFile"); */?>"><span class="glyphicon glyphicons-folder-open"></span></a>
-                            </li>-->
+                            <li class="open-folder">
+                                <a style="display:block; width: 40px;height: 40px;" title="Open folder" href="<?php echo Yii::app()->createUrl("/uploadFile"); ?>"><span class="glyphicon glyphicons-folder-open"></span></a>
+                            </li>
 
                             <li class="help">
                                 <a title="help" href="<?php echo Yii::app()->createUrl("/dashboard/helpdesk"); ?>">

@@ -159,6 +159,7 @@ class Folder extends CActiveRecord
                 $folder = new Folder();
                 $folder->name = $name;
                 $folder->user_id = $user_id;
+                $folder->date_created = date('Y-m-d H:i:s');
                 if ($name == 'Help Documents')
                     $folder->default = 1;
                 $folder->save();

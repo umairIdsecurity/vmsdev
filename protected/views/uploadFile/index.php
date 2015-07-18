@@ -33,9 +33,9 @@
     <div class="right">
         <h2><?php if(isset($folder)) echo $folder->name; else echo 'Help Documents'; ?></h2>
         <div id="file_grid_error" class="errorMessage" style="text-transform: none;margin-top: 20px; height: auto ;display:none">Couldn't delete files.</div>
-        <form id="form-submit-files" method="post" class="upload-function" enctype="multipart/form-data">
+        <form id="form-submit-files" method="post" class="upload-function" enctype="multipart/form-data" action="<?php echo Yii::app()->createUrl('uploadFile/uploadedFile'); ?>">
             <label class="btn btn-default btn-upload" id="upload_multi_label">Upload Files
-                <input type="file" name="file[]" id="upload_multi" style="display: none"  multiple/>
+                <input type="file" name="file[]" id="upload_multi" style="display: none" multiple/>
             </label>
             <button class="btn btn-default btn-delete" id="btn_delete_file" disabled>Delete</button>
             <div class="preview-files" style="display: block">
@@ -46,7 +46,7 @@
             <div class="btn-submit" style="margin-top: 10px; margin-bottom: 5px; display: none">
                 <input name="File[folder_id]" value="<?php echo $folder->id; ?>" type="hidden"/>
                 <input name="File[user_id]" value="<?php echo Yii::app()->user->id;  ?>" type="hidden"/>
-                <input id="btn-submit-files" type="button" value="Upload">
+                <input id="btn-submit-files" type="submit" value="Upload">
             </div>
             <!--<table class="hidden">
                 <tbody id="previewFilesTemplate" >
@@ -274,6 +274,7 @@
             var obj = $('#form-submit-files');
             /* ADD FILE TO PARAM AJAX */
             var formData = new FormData();
+            var count = 0;
             $.each($(obj).find("input[type='file']"), function(i, tag) {
                 $.each($(tag)[0].files, function(i, file) {
                     formData.append(tag.name, file);

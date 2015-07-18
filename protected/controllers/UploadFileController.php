@@ -96,6 +96,7 @@ class UploadFileController extends Controller
                 $folder = new Folder();
                 $folder->name = $_POST['Folder']['name'];
                 $folder->user_id = $_POST['Folder']['user_id'];
+                $folder->date_created = date('Y-m-d H:i:s');
                 if ($folder->validate())
                     if ($folder->save()) {
                         echo CJSON::encode(array('success' => 1));
@@ -172,6 +173,7 @@ class UploadFileController extends Controller
                                 $objectFile->user_id = $user_id;
                                 $objectFile->file = $name_file;
                                 $objectFile->name = $name;
+                                $objectFile->uploaded = date('Y-m-d H:i:s');
                                 $objectFile->uploader = $user_id;
                                 $objectFile->size = $files['size'][$i];
                                 $objectFile->ext = $ext;
@@ -195,6 +197,7 @@ class UploadFileController extends Controller
                 }
             }
         }
+        //$this->redirect(Yii::app()->createUrl('uploadFile'));
     }
 
     /**

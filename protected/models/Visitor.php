@@ -242,7 +242,7 @@ class Visitor extends CActiveRecord {
             ),
             array('tenant, tenant_agent,company, visitor_type, visitor_workstation, photo, vehicle, visitor_card_status', 'default', 'setOnEmpty' => true, 'value' => null),
             array('password', 'PasswordCustom'),
-            array('repeatpassword', 'PasswordRepeat','except' => ['delete']),
+            array('repeatpassword', 'PasswordRepeat','except' => ['delete','updateVic']),
 
             //todo: check to enable again. why do we need this validation ?
             //array('password_requirement', 'PasswordRequirement'),
@@ -307,14 +307,14 @@ class Visitor extends CActiveRecord {
                     contact_postcode,
                     contact_country',
                     'required',
-                    'except'=> ['updateVic', 'updateIdentification', 'delete']
+                    'except'=> ['updateVic', 'updateIdentification', 'delete', 'asicConvert']
                 );
                 break;
             case self::PROFILE_TYPE_ASIC:
                 $rules[] = [
                     'identification_type, identification_document_no, identification_document_expiry', 'required',
                     'on' => 'asicApplicant',
-                    'except'=> ['delete']
+                    'except' => ['delete']
                 ];
                 $rules[] = array(
                     'visitor_card_status, asic_no, asic_expiry', 'required',

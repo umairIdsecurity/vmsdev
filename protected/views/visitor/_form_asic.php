@@ -258,6 +258,7 @@ if ($this->action->id == 'update') {
                                             <?php /*echo "<br>" . $form->error($model, 'tenant_agent'); */?>
                                 </table>-->
                                 <table style="margin-top: 70px;">
+                                <?php if ($model->profile_type == Visitor::PROFILE_TYPE_ASIC): ?>
                                     <tr>
                                         <td>
                                             <?php echo $form->dropDownList($model, 'visitor_card_status', Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_ASIC], array('empty' => 'Select Card Status')); ?>
@@ -265,6 +266,7 @@ if ($this->action->id == 'update') {
                                             <?php echo "<br>" . $form->error($model, 'visitor_card_status'); ?>
                                         </td>
                                     </tr>
+                                <?php endif; ?>
                                     <tr>
                                         <td id="visitorTenantRow" <?php
                                         if ($session['role'] != Roles::ROLE_SUPERADMIN) {
@@ -548,7 +550,7 @@ if ($this->action->id == 'update') {
         }
 
         var companyValue = $("#Visitor_company").val();
-        
+        var passwordConfirmed = false;
         if ($('.password_requirement').filter(':checked').val() == "<?php echo PasswordRequirement::PASSWORD_IS_REQUIRED; ?>") {
             if ($('.password_option').filter(':checked').val() == "<?php echo PasswordOption::CREATE_PASSWORD; ?>") {
                 $('.visitor_password').empty().hide();
@@ -567,6 +569,7 @@ if ($this->action->id == 'update') {
                 }
                 $('input[name="Visitor[password]"]').val(password_temp);
                 $('input[name="Visitor[repeatpassword]"]').val(password_repeat_temp);
+                passwordConfirmed = true;
             }
         } else {
             $('.visitor_password').empty().hide();
@@ -578,7 +581,7 @@ if ($this->action->id == 'update') {
             var asic_no = $('#Visitor_asic_no').val();
             var asic_expiry = $('#Visitor_asic_expiry').val();
 
-            if (asic_no == "" && asic_expiry == "") {
+            if (asic_no == "" && asic_expiry == "" && passwordConfirmed == false) {
                 $('#Visitor_visitor_card_status').val(<?php echo Visitor::ASIC_EXPIRED; ?>);
                 var card_status = $('#Visitor_visitor_card_status').val();
                 if (card_status == "<?php echo Visitor::ASIC_EXPIRED; ?>") {
@@ -978,6 +981,7 @@ if ($this->action->id == 'update') {
         } else {
             url = "<?php echo CHtml::normalizeUrl(array("visitor/addvisitor")); ?>";
         }
+
         var ajaxOpts = {
             type: "POST",
             url: url,

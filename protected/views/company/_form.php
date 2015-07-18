@@ -72,7 +72,6 @@ if ($this->action->id == 'update') {
                         checkCompanyNameUnique();
                     }
                 } else {
-                    console.log("errrrr");
                     $( ".user_fields" ).show();
                     $(".password-border").show();
                 }
@@ -179,6 +178,7 @@ if ($this->action->id == 'update') {
                             <td><?php echo $form->textField($model, 'user_email', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Email')); ?>
                                 <span class="required">*</span>
                                 <?php echo "<br>" . $form->error($model, 'user_email'); ?>
+                                <div id="Company_user_email_unique_em_" class="errorMessage" style="display: none">User email has already been taken</div>
                             </td>
                         </tr>
 
@@ -347,7 +347,15 @@ if (isset($_GET['viewFrom'])) {
 
     function checkCompanyNameUnique() {
 
-        var name = $('#Company_name').val();
+        if($("#currentAction").val() == "update"){
+            if($('#Company_name').val() == "<?php echo $model->name?>"){
+                var name = "";
+            } else{
+                var name = $('#Company_name').val();
+            }
+        } else {
+            var name = $('#Company_name').val();
+        }
         if($("#currentAction").val() == "create"){
             var tenant = $('#Company_tenant').val();
         } else{
@@ -363,7 +371,29 @@ if (isset($_GET['viewFrom'])) {
                     $('#Company_name_unique_em_').show();
                     return false;
                 } else {
-                    $('#Company_name_unique_em_').hide();
+                    if($("#currentAction").val() == "create"){
+                        checkUserEmailUnique();
+                    } else{
+                        sendCreateCompanyForm();
+                    }
+                }
+            }
+        });
+    }
+
+    function checkUserEmailUnique(){
+        var email = $("#Company_user_email").val();
+        var tenant = $('#Company_tenant').val();
+        $.ajax({
+            type : "POST",
+            url: "<?php echo $this->createUrl('user/checkCompanyContactEmail')?>",
+            data: {email:email, tenant:tenant},
+            success: function(data){
+                if(data == 1) {
+                    $('#Company_user_email_unique_em_').show();
+                    return false;
+                } else {
+                    $('#Company_user_email_unique_em_').hide();
                     sendCreateCompanyForm();
                 }
             }

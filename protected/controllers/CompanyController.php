@@ -128,6 +128,7 @@ class CompanyController extends Controller
                                 $userModel->password = $model->user_password;
                             }
                         }
+                        $userModel->tenant = $model->tenant;
                         $userModel->role = 10;
                         $userModel->company = $lastId;
                         $userModel->asic_no = 10;
@@ -392,8 +393,13 @@ class CompanyController extends Controller
             $session = new CHttpSession;
             $formInfo = $_POST['AddCompanyContactForm'];
 
-            if (isset($_POST['CompanySelectedId']) && $_POST['CompanySelectedId'] > 0 && $_POST['typePostForm'] === 'contact') {
-                $company = Company::model()->findByPk($_POST['CompanySelectedId']);
+            if ($_POST['typePostForm'] === 'contact') {
+                if(isset($_POST['CompanySelectedId']) && $_POST['CompanySelectedId'] > 0){
+                    $company = Company::model()->findByPk($_POST['CompanySelectedId']);
+                } else {
+                    $companyId = $this->findIdByName($formInfo['companyName']);
+                    $company = Company::model()->findByPk($companyId);
+                }
             } else {
                 $company = new Company();
 
@@ -480,22 +486,30 @@ class CompanyController extends Controller
                 if (count($contacts) == 1) {
                     $companyContact = $contacts[0];
                 } else {
-                    foreach ($contacts as $contact) {
-                        $companyContact = $contact;
-                        break;
-                    }
+                    // foreach ($contacts as $contact) {
+                        $companyContact = $contacts[count($contacts) - 1];
+                        // break;
+                    // }
                 }
             } else {
                 $companyContact = User::model()->findByPk($id);
             }
 
             if ($companyContact) {
+                $photo = '';
+                if (!empty($companyContact->photo)) {
+                    $photo = Photo::model()->getRelativePathOfPhoto($companyContact->photo);
+                }
                 $ret = [
-                    'id' => $companyContact->id,
-                    'first_name' => $companyContact->first_name,
-                    'last_name' => $companyContact->last_name,
+                    'id'             => $companyContact->id,
+                    'first_name'     => $companyContact->first_name,
+                    'last_name'      => $companyContact->last_name,
                     'contact_number' => $companyContact->contact_number,
-                    'email' => $companyContact->email
+                    'email'          => $companyContact->email,
+                    'company'        => $companyContact->company,
+                    'asic_no'        => $companyContact->asic_no,
+                    'asic_expiry'    => empty($companyContact->asic_expiry) || $companyContact->asic_expiry == '0000-00-00' ? '' : date('d-m-Y', strtotime($companyContact->asic_expiry)),
+                    'photo'          => $photo
                 ];
                 echo CJavaScript::jsonEncode($ret);
 
@@ -516,6 +530,12 @@ class CompanyController extends Controller
                 echo 0;
             }
         }
+    }
+
+    public function findIdByName($name) {
+        $companyList = CHtml::listData(Company::model()->findAll(), 'id', 'name');
+        $companyList = array_unique($companyList);
+        return array_search($name, $companyList);
     }
 }
 

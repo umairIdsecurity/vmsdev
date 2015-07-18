@@ -15,9 +15,11 @@
     <link href="<?php echo Yii::app()->theme->baseUrl; ?>/css/style.css" rel="stylesheet">
     <link href="<?php echo Yii::app()->theme->baseUrl; ?>/css/main.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->controller->assetsBase; ?>/css/form.css" />
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.7/css/jquery.dataTables.min.css">
 
     <script  src="<?php echo Yii::app()->controller->assetsBase; ?>/js/jquery.min.js" ></script>
     <script  src="<?php echo Yii::app()->controller->assetsBase; ?>/js/jquery.form.js" ></script>
+
     <script src="<?php echo Yii::app()->theme->baseUrl; ?>/js/libs.js"></script>
 
     <title><?php echo CHtml::encode($this->pageTitle); ?></title>
@@ -82,6 +84,8 @@
         <script src="<?php echo Yii::app()->theme->baseUrl; ?>/js/plugins.download.js"></script>
         <script src="<?php echo Yii::app()->theme->baseUrl; ?>/js/plugins.js"></script>
         <script src="<?php echo Yii::app()->theme->baseUrl; ?>/js/script.js"></script>
+
+        <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
         <script src="<?php echo Yii::app()->theme->baseUrl; ?>/js/custom.js"></script>
     </body>
 </html>

@@ -352,7 +352,7 @@ class PreregistrationController extends Controller
 
 			}
 			else{
-				
+
 				$connection=Yii::app()->db;
 				$sql="SELECT * FROM `visitor` WHERE
 					  (first_name LIKE '%$searchValue%' OR last_name LIKE '%$searchValue%')
@@ -363,23 +363,23 @@ class PreregistrationController extends Controller
 				$records = $command->queryAll();
 
 				if(!empty($records)){
+
 					foreach($records as $data){
+						//$dataSet = array();
 						$companyModel = Company::model()->findByPk($data['company']);
 						if(!empty($companyModel)){
 							$companyName = $companyModel->name;
 						}
 						else{
-							$companyName = null;
+							$companyName = '-';
 						}
-						echo '<tr>
-						<th scope="row">
-							<input type="radio" name="selected_asic" class="selected_asic" value="'.$data['id'].'">
-						</th>
-						<td>'.$data['first_name'].'</td>
-						<td>'.$data['last_name'].'</td>
-						<td>'.$companyName.'</td>
-					</tr>';
+
+						$dataSet[] = array('<input type="radio" name="selected_asic" class="selected_asic" value="'.$data['id'].'">',$data['first_name'],$data['last_name'],$companyName);
+
 					}
+
+					echo json_encode($dataSet);
+
 				}
 				else{
 					echo "No Record";

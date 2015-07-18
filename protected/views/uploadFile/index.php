@@ -34,12 +34,10 @@
         <h2><?php if(isset($folder)) echo $folder->name; else echo 'Help Documents'; ?></h2>
         <div id="file_grid_error" class="errorMessage" style="text-transform: none;margin-top: 20px; height: auto ;display:none">Couldn't delete files.</div>
         <form id="form-submit-files" method="post" class="upload-function" enctype="multipart/form-data">
-            <label class="btn btn-default btn-upload" id="upload_multi_label">Upload Files
-                <input type="file" name="file[]" id="upload_multi" style="display: none" multiple/>
-            </label>
+            <label class="btn btn-default btn-upload" id="upload_multi_label">Upload Files</label>
             <button class="btn btn-default btn-delete" id="btn_delete_file" disabled>Delete</button>
             <div class="preview-files" style="display: block">
-
+                <input type="file" name="file[]" id="upload_multi" style="width: 0px;height: 0px;overflow: hidden" multiple/>
                 <!--<table class="table preview-files-list"></table>-->
 
             </div>
@@ -329,6 +327,26 @@
                     $('#file_grid_error').fadeOut();
                 $('.btn-submit').fadeIn();
             }
+        });
+
+        $("#upload_multi_label").click(function () {
+            var countInput = 0;
+            var obj = $('#form-submit-files');
+            var count = 0;
+            $.each($(obj).find("input[type='file']"), function(i, tag) {
+                countInput ++;
+            });
+            $.each($(obj).find("input[type='file']"), function(i, tag) {
+                if ($(this).attr('id') == 'upload_multi' && countInput == 1){
+                    $(this).click();
+                }else {
+                    alert(countInput);
+                    if ($(this).attr('id') == ('upload_multi_F' + (countInput - 1))) {
+                        $(this).click();
+                    }
+                }
+
+            });
         });
     });
     function editCell(){

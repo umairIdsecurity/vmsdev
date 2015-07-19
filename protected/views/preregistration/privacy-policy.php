@@ -41,6 +41,13 @@
             </div>
 
         </div>
+
+    </div>
+
+    <div class="declarations" style="padding: 10px 0 0 20px;">
+        <div class="form-group">
+            <label class="checkbox"><input name="name1" type="checkbox" value="YES" ><span class="checkbox-style"></span>I have read, understood and agree to abide by the information and conditions applicable to the holder of the Visitor Identification Card (VIC).</label>
+        </div>
     </div>
 
     <div class="row next-prev-btns">

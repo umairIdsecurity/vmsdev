@@ -526,6 +526,8 @@ class User extends VmsActiveRecord {
         return trim($this->first_name . ' ' . $this->last_name);
     }
 
+
+
     public function findAllCompanyTenant() {
         return Yii::app()->db->createCommand()
                         ->select('c.id as id, c.name as name,c.tenant')

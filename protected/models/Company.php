@@ -390,5 +390,26 @@ class Company extends CActiveRecord {
         return $aArray;
     }
 
+    public function findAllTenants()
+    {
+        $aArray = array();
+
+        $company = Yii::app()->db->createCommand()
+            ->selectdistinct('*')
+            ->from('company')
+            ->where("id != 1 and company_type = 1 AND is_deleted = 0")
+            ->queryAll();
+
+        foreach ($company as $index => $value) {
+            $aArray[] = array(
+                'id' => $value['id'],
+                'name' => $value['name'],
+            );
+        }
+
+        return $aArray;
+
+    }
+
 
 }

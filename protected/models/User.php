@@ -607,6 +607,7 @@ class User extends VmsActiveRecord {
         $post->save();
     }
 
+
     public function findAllTenantAgent($tenantId) {
         //select all companies of tenant agents with same tenant
         $tenantId = trim($tenantId);

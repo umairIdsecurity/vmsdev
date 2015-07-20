@@ -309,7 +309,7 @@
 
 
         $('#upload_multi').MultiFile({
-            accept: 'jpg|png|pdf|xls|xlsx|doc|docx|txt|ppt|xml',
+            accept: 'jpg|png|pdf|xls|xlsx|doc|docx|txt|ppt|pptx|xml',
             max_size: 10485760,
             afterFileRemove: function (element, value, master_element) {
                 var count = $('#upload_multi_list > .MultiFile-label').length;

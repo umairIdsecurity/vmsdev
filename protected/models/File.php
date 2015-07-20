@@ -17,7 +17,7 @@ class File  extends CActiveRecord
 {
 
     public static $EXT_ALLOWED = array(
-        'jpg','png','pdf','xls','xlsx','doc','docx','txt','ppt','xml'
+        'jpg','png','pdf','xls','xlsx','doc','docx','txt','ppt','pptx','xml'
     );
 
     /**

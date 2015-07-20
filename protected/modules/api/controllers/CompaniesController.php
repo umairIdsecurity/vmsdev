@@ -37,12 +37,9 @@ class CompaniesController extends RestfulController {
             $token_user = $this->checkAuth();
             if (Yii::app()->request->getParam('query')) {
                 $query = Yii::app()->request->getParam('query');
-                $criteria = new CDbCriteria();
-                $criteria->addSearchCondition("code", $query,true,'OR');
-                $criteria->addSearchCondition("name", $query,true,'OR','LIKE');
-                $company = Company::model()->find($criteria);
+                $company = Company::model()->findAll("name like '%$query%' OR code like '$query'");
                 if($company){
-                    $result = $this->populateCompanies(array($company));
+                    $result = $this->populateCompanies($company);
                     $this->sendResponse(200, CJSON::encode($result));
                 }else{
                     $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'COMPANY_DOES_NOT_EXIST', 'errorDescription' => 'Requested company not found')));

@@ -35,6 +35,18 @@ class System extends CActiveRecord
         );
     }
 
+    /**
+     * @return bool | System is shutdown
+     */
+    public function isSystemShutdown()
+    {
+        $model = $this->model()->find("key_name = '" . System::$EMERGENCY_SHUTDOWN . "'");
+        if ($model) {
+            if ($model->key_value == System::ON) return true;
+        }
+        return false;
+    }
+
     public function createNewKey($key_name = '', $key_value = '')
     {
         if($key_name && $key_value){

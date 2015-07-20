@@ -162,7 +162,7 @@
 </div>
 
 
-<script>
+<script type="text/javascript">
     $(document).ready(function(){
         $('#btn-newfolder').click(function(){
             if(validateNameFolder($('#nameFolder').val())){
@@ -330,24 +330,47 @@
         });
 
         $("#upload_multi_label").click(function () {
-            var countInput = 0;
-            var obj = $('#form-submit-files');
-            var count = 0;
+            var countInput = 0,
+                obj = $('#form-submit-files'),
+                lasNumberOfInputFile = [],max = 0;
+
+
             $.each($(obj).find("input[type='file']"), function(i, tag) {
-                countInput ++;
+                if ($(this).attr('id') != 'upload_multi'){
+                    lasNumberOfInputFile.push(parseInt(reverse($(this).attr('id')).substring(0,1)));
+                }
             });
+            for (var i = 0; i < lasNumberOfInputFile.length; i++) {
+                if (max < lasNumberOfInputFile[i]) max = lasNumberOfInputFile[i];
+            }
             $.each($(obj).find("input[type='file']"), function(i, tag) {
-                if ($(this).attr('id') == 'upload_multi' && countInput == 1){
+
+                if ($(this).attr('id') == 'upload_multi' && max == 0){
                     $(this).click();
                 }else {
-                    if ($(this).attr('id') == ('upload_multi_F' + (countInput - 1))) {
-                        $(this).click();
+                    if ($(this).attr('id') == ('upload_multi_F' + (max))) {
+                        if($(this).length) {
+                            $(this).click();
+                        }else{
+
+                        }
                     }
                 }
 
             });
         });
     });
+
+    function reverse(s) {
+        var i = s.length,
+            o = '';
+        while (i > 0) {
+            o += s.substring(i - 1, i);
+            i--;
+        }
+        return o;
+    }
+
     function editCell(){
         $(".glyphicon.glyphicon-pencil").each(function(){
             $(this).click(function () {

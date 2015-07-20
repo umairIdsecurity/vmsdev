@@ -102,6 +102,7 @@ class VisitorType extends CActiveRecord {
         
         $data =  new CActiveDataProvider($this, array(
             'criteria' => $criteria,
+
         ));
 
         $data->setTotalItemCount(count($data->getData()));
@@ -124,15 +125,18 @@ class VisitorType extends CActiveRecord {
     public function beforeFind() {
         $session = new CHttpSession;
         $criteria = new CDbCriteria;
-        if (Yii::app()->controller->action->id != 'exportvisitorrecords' && Yii::app()->controller->action->id != 'evacuationReport' && Yii::app()->controller->action->id != 'visitorRegistrationHistory' && Yii::app()->controller->action->id != 'view' && Yii::app()->controller->action->id != 'index' && Yii::app()->controller->action->id != 'getFromCardType') {
+        if (Yii::app()->controller->action->id != 'exportvisitorrecords' && Yii::app()->controller->action->id != 'evacuationReport' && Yii::app()->controller->action->id != 'visitorRegistrationHistory' && Yii::app()->controller->action->id != 'view') {
             $criteria->condition = "t.is_deleted = 0 AND t.id !=1";
         }
 
 
-        if (Yii::app()->controller->action->id == 'index') {
+        if (Yii::app()->controller->action->id == 'index' || Yii::app()->controller->action->id == 'getFromCardType') {
+            $criteria->condition = "t.is_deleted = 0 AND t.id !=1 ";
             if(Yii::app()->request->getParam('vms') == 'cvms')
-                $criteria->condition = " t.name not like 'Vic%' AND t.name NOT like 'AVMS%'";
-            else $criteria->condition = " t.name like 'Vic%' Or t.name like 'AVMS%'";
+                $criteria->condition .= " AND t.name not like 'Vic%' AND t.name NOT like 'AVMS%'";
+            else $criteria->condition .= " AND (t.name like 'Vic%' Or t.name like 'AVMS%')";
+
+
         }
 
         if (Yii::app()->controller->action->id == 'visitorsByTypeReport' || Yii::app()->controller->action->id == 'visitorsByWorkstationReport') {
@@ -150,16 +154,7 @@ class VisitorType extends CActiveRecord {
      */
     public function getFromCardType($cardtype)
     {
-        $criteria = new CDbCriteria;
-        if (Yii::app()->user->role == Roles::ROLE_ADMIN)
-            $criteria->addCondition("created_by ='" . Yii::app()->user->id . "'");
-
-        if (in_array($cardtype, CardType::$CORPORATE_CARD_TYPE_LIST)) {
-            $criteria->condition = " t.name not like 'Vic%' AND t.name NOT like 'AVMS%'";
-        } elseif (in_array($cardtype, CardType::$VIC_CARD_TYPE_LIST)) {
-            $criteria->condition = " t.name  like 'Vic%' Or t.name like 'AVMS%'";
-        }
-        $list = $this->model()->findAll($criteria);
+        $list = $this->model()->findAll();
         if ($list) return CJSON::encode($list);
         return null;
     }

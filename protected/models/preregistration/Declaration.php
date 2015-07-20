@@ -10,7 +10,7 @@ class Declaration extends CFormModel{
 
     public $declaration1;
     public $declaration2;
-    public $declaration3;
+    //public $declaration3;
     public $declaration4;
 
     /**
@@ -20,7 +20,7 @@ class Declaration extends CFormModel{
     {
         return array(
 
-            array('declaration1,declaration2,declaration3,declaration4', 'compare', 'compareValue' => true,
+            array('declaration1,declaration2,declaration4', 'compare', 'compareValue' => true,
               'message' => 'You must agree to the terms and conditions'),
 
         );

@@ -119,6 +119,7 @@ $asicEscort = new AddAsicEscort();
             if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && $model->visit_status == VisitStatus::AUTOCLOSED) {
                 switch ($model->card_type) {
                     case CardType::VIC_CARD_24HOURS:
+                        $model->date_check_in = date('d-m-Y', strtotime('+ 1 day'));
                         break;
                     case CardType::VIC_CARD_EXTENDED:
                         $model->date_check_in = date('d-m-Y', strtotime($model->finish_date . '+ 1 day'));
@@ -161,6 +162,9 @@ $asicEscort = new AddAsicEscort();
             // Extended Card Type (EVIC) or Multiday
             if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && $model->visit_status == VisitStatus::AUTOCLOSED) {
                 switch ($model->card_type) {
+                    case CardType::VIC_CARD_24HOURS:
+                        $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . '+ 1 day'));
+                        break;
                     case CardType::VIC_CARD_EXTENDED:
                         $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . '+ 1 day'));
                         break;

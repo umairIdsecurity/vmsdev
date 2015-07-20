@@ -20,22 +20,38 @@ class m150717_043941_fix1_create_table_files_folders extends CDbMigration
 			'parent_id' => 'INTEGER',
 			'user_id' => 'BIGINT',
 			'default' => 'TINYINT',
-			'name' => 'varchar(255) NOT NULL',
-			'date_created' => 'datetime',
+			'name' => 'VARCHAR(255) NOT NULL',
+			'date_created' => 'DATETIME',
 		));
 		$this->addForeignKey('folders_user_fk', 'folders', 'user_id', 'user', 'id');
 
-		$this->createTable('files', array(
-			'id' => 'pk',
-			'folder_id' => 'INTEGER',
-			'user_id' => 'BIGINT',
-			'file' => 'varchar(255) NOT NULL',
-			'uploaded' => 'datetime',
-			'size' => 'DOUBLE',
-			'ext' => 'varchar(20)',
-			'uploader' => 'BIGINT',
-			'name' => 'varchar(255)',
-		));
+		if ($this->dbConnection->driverName == 'sqlsrv') {
+			$this->createTable('files', array(
+				'id' => 'pk',
+				'folder_id' => 'INTEGER',
+				'user_id' => 'BIGINT',
+				'file' => 'VARCHAR(255) NOT NULL',
+				'uploaded' => 'DATETIME',
+				'size' => 'FLOAT',
+				'ext' => 'VARCHAR(20)',
+				'uploader' => 'BIGINT',
+				'name' => 'VARCHAR(255)',
+			));
+		} else {
+			$this->createTable('files', array(
+				'id' => 'pk',
+				'folder_id' => 'INTEGER',
+				'user_id' => 'BIGINT',
+				'file' => 'VARCHAR(255) NOT NULL',
+				'uploaded' => 'DATETIME',
+				'size' => 'DOUBLE',
+				'ext' => 'VARCHAR(20)',
+				'uploader' => 'BIGINT',
+				'name' => 'VARCHAR(255)',
+			));
+		}
+
+		
 
 		$this->addForeignKey('files_user_fk', 'files', 'user_id', 'user', 'id');
 		$this->addForeignKey('files_folders_fk', 'files', 'folder_id', 'folders','id');

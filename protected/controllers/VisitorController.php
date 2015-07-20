@@ -393,7 +393,8 @@ class VisitorController extends Controller {
                 . "%' or identification_alternate_document_no2 LIKE '%" . $searchInfo
                 . "%')";
             $hostTitle = 'ASIC Sponsor';
-            $conditionString .= " AND profile_type = '" . Visitor::PROFILE_TYPE_ASIC . "' ";
+            // $conditionString .= " AND profile_type = '" . Visitor::PROFILE_TYPE_ASIC . "' ";
+            $conditionString .= " AND (profile_type = '" . Visitor::PROFILE_TYPE_VIC . "' OR profile_type = '". Visitor::PROFILE_TYPE_ASIC ."')";
         } else {
             $model = new User('search');
             $model->unsetAttributes();

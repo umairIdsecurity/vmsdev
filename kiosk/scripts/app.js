@@ -80,11 +80,15 @@ angular
     $httpProvider.defaults.headers.put  = {};
 	
   }])
-  .run(['$rootScope', '$location', '$http', '$cookies', function run($rootScope, $location, $http, $cookies) {
+  .run(['$rootScope', '$location', '$http', '$cookies', '$templateCache', function run($rootScope, $location, $http, $cookies, $templateCache) {
         /** keep user logged in after page refresh */
 		$rootScope.globals = $cookies.get('globals') || {};       
 
         $rootScope.$on('$locationChangeStart', function (event, next, current) {
+			if (typeof(current) !== 'undefined'){
+				$templateCache.remove(current.templateUrl);
+			}
+			
             /** redirect to login page if not logged in and trying to access a restricted page */
             var restrictedPage = $.inArray($location.path(), ['/', '/register']) === -1;
             var loggedIn = $rootScope.globals.accessToken;

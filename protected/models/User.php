@@ -612,20 +612,22 @@ class User extends VmsActiveRecord {
         //select all companies of tenant agents with same tenant
         $tenantId = trim($tenantId);
         $aArray = array();
-        $company = Yii::app()->db->createCommand()
+        if ($tenantId) {
+            $company = Yii::app()->db->createCommand()
                 ->selectdistinct(' c.id as id, c.name as name,c.tenant,c.tenant_agent, u.first_name, u.last_name')
                 ->from('user u')
                 ->join('company c', 'u.company=c.id')
                 ->where("u.is_deleted = 0 and u.tenant=" . $tenantId . " and u.role =" . Roles::ROLE_AGENT_ADMIN . " and c.is_deleted = 0")
                 ->queryAll();
 
-        foreach ($company as $index => $value) {
-            $aArray[] = array(
-                'id' => $value['id'],
-                'name' => $value['first_name'].' '.$value['last_name'],
-                'tenant' => $value['tenant'],
-                'tenant_agent' => $value['tenant_agent'],
-            );
+            foreach ($company as $index => $value) {
+                $aArray[] = array(
+                    'id' => $value['id'],
+                    'name' => $value['first_name'] . ' ' . $value['last_name'],
+                    'tenant' => $value['tenant'],
+                    'tenant_agent' => $value['tenant_agent'],
+                );
+            }
         }
 
         return $aArray;

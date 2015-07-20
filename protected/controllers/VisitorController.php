@@ -172,10 +172,11 @@ class VisitorController extends Controller {
                 } else {
                     echo $updateErrorMessage;
                 }
-            } elseif (isset($visitorParams['visitor_card_status']) && $visitorParams['visitor_card_status'] == Visitor::ASIC_ISSUED && $model->profile_type == Visitor::PROFILE_TYPE_VIC) {
+            } elseif (isset($visitorParams['visitor_card_status']) && in_array($visitorParams['visitor_card_status'], [Visitor::ASIC_ISSUED, Visitor::ASIC_APPLICANT, Visitor::ASIC_EXPIRED, Visitor::ASIC_DENIED]) && $model->profile_type == Visitor::PROFILE_TYPE_VIC) {
                 $model->attributes          = $visitorParams;
                 $model->profile_type        = Visitor::PROFILE_TYPE_ASIC;
-                $model->visitor_card_status = Visitor::ASIC_ISSUED;
+                // $model->visitor_card_status = Visitor::ASIC_ISSUED;
+                $model->visitor_card_status = $visitorParams['visitor_card_status'];
 
                 if($visitorService->save($model, NULL, $session['id'])) {
                     $logCardstatusConvert               = new CardstatusConvert;

@@ -87,7 +87,6 @@ class Visitor extends CActiveRecord {
             self::ASIC_ISSUED    => 'Card Status: ASIC Issued',
             self::ASIC_EXPIRED   => 'Card Status: ASIC Expired',
             self::ASIC_DENIED    => 'Card Status: ASIC Denied',
-
         ),
     );
 
@@ -307,7 +306,7 @@ class Visitor extends CActiveRecord {
                     contact_postcode,
                     contact_country',
                     'required',
-                    'except'=> ['updateVic', 'updateIdentification', 'delete', 'asicConvert']
+                    'except'=> ['updateVic', 'updateIdentification', 'delete', 'asicIssued']
                 );
                 break;
             case self::PROFILE_TYPE_ASIC:

@@ -97,9 +97,6 @@ class VisitorServiceImpl implements VisitorService {
                     case Visitor::ASIC_APPLICANT:
                         $visitor->setScenario('asicApplicant');
                         break;
-                    default:
-                        $visitor->setScenario('asicConvert');
-                        break;
                 }
 
                 if (Yii::app()->controller->action->id == 'update') {

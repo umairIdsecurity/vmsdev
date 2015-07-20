@@ -308,11 +308,6 @@
         });
 
 
-
-        $("#upload_multi_label").click(function () {
-            $("#upload_multi").trigger('click');
-        });
-
         $('#upload_multi').MultiFile({
             accept: 'jpg|png|pdf|xls|xlsx|doc|docx|txt|ppt|xml',
             max_size: 10485760,

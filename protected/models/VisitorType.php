@@ -155,15 +155,15 @@ class VisitorType extends CActiveRecord {
     public function getFromCardType($cardtype)
     {
 
-        $condition = "is_deleted = 0 AND id !=1 ";
+        $condition = "t.is_deleted = 0 AND t.id !=1 ";
         if (Yii::app()->user->role == Roles::ROLE_ADMIN) {
-            $condition .= "created_by ='" . Yii::app()->user->id . "'";
+            $condition .= "t.created_by ='" . Yii::app()->user->id . "'";
         }
 
         if (in_array($cardtype, CardType::$CORPORATE_CARD_TYPE_LIST)) {
-            $condition .= "AND `name` not like 'Vic%' AND `name` NOT like 'AVMS%'";
+            $condition .= "AND t.name not like 'Vic%' AND t.name NOT like 'AVMS%'";
         } elseif (in_array($cardtype, CardType::$VIC_CARD_TYPE_LIST)) {
-            $condition .= "AND (`name`  like 'Vic%' Or `name` like 'AVMS%')";
+            $condition .= "AND (t.name  like 'Vic%' Or t.name like 'AVMS%')";
         }
 
         $list = $this->model()->findAll($condition);

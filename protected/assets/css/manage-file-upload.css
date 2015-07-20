@@ -73,12 +73,47 @@ nav.navigation ul {
     background-repeat: no-repeat;
 }
 
+.file-psd:before {
+    background-position: -96px 0px;
+}
+.file-mp3:before {
+    background-position: -144px 0px;
+}
+
 .file-png:before {
     background-position: 0px -51px;
 }
 .file-jpg:before {
     background-position: -52px -51px;
 }
+
+.file-xlsx:before {
+    background-position: 0px -157px;
+}
+.file-docx:before {
+    background-position: -48px -157px;
+}
+.file-xml:before {
+    background-position: -96px -157px;
+}
+.file-pptx:before {
+    background-position: -144px -157px;
+}
+
+.file-xls:before {
+    background-position: 0px -209px;
+}
+.file-doc:before {
+    background-position: -48px -209px;
+}
+.file-txt:before {
+    background-position: -96px -209px;
+}
+.file-ppt:before {
+    background-position: -144px -209px;
+}
+
+
 ul.folder {
     list-style: none;
     margin: 0;

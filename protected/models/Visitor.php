@@ -83,10 +83,11 @@ class Visitor extends CActiveRecord {
             self::VIC_ASIC_PENDING => 'Card Status: ASIC Pending'
         ),
         self::PROFILE_TYPE_ASIC => array(
+            self::ASIC_APPLICANT => 'Card Status: ASIC Applicant',
             self::ASIC_ISSUED    => 'Card Status: ASIC Issued',
             self::ASIC_EXPIRED   => 'Card Status: ASIC Expired',
             self::ASIC_DENIED    => 'Card Status: ASIC Denied',
-            self::ASIC_APPLICANT => 'Card Status: ASIC Applicant'
+
         ),
     );
 
@@ -236,13 +237,12 @@ class Visitor extends CActiveRecord {
                 escort_flag,
                 key_string
                 is_under_18,
-                under_18_detail
-                ',
+                under_18_detail',
                 'safe'
             ),
-            array('tenant, tenant_agent,company, visitor_type, visitor_workstation, photo,vehicle, visitor_card_status', 'default', 'setOnEmpty' => true, 'value' => null),
+            array('tenant, tenant_agent,company, visitor_type, visitor_workstation, photo, vehicle, visitor_card_status', 'default', 'setOnEmpty' => true, 'value' => null),
             array('password', 'PasswordCustom'),
-            array('repeatpassword', 'PasswordRepeat','except' => ['delete']),
+            array('repeatpassword', 'PasswordRepeat','except' => ['delete','updateVic']),
 
             //todo: check to enable again. why do we need this validation ?
             //array('password_requirement', 'PasswordRequirement'),
@@ -307,14 +307,14 @@ class Visitor extends CActiveRecord {
                     contact_postcode,
                     contact_country',
                     'required',
-                    'except'=> ['updateVic', 'updateIdentification', 'delete']
+                    'except'=> ['updateVic', 'updateIdentification', 'delete', 'asicConvert']
                 );
                 break;
             case self::PROFILE_TYPE_ASIC:
                 $rules[] = [
                     'identification_type, identification_document_no, identification_document_expiry', 'required',
                     'on' => 'asicApplicant',
-                    'except'=> ['delete']
+                    'except' => ['delete']
                 ];
                 $rules[] = array(
                     'visitor_card_status, asic_no, asic_expiry', 'required',
@@ -335,14 +335,14 @@ class Visitor extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'cardGenerateds' => array(self::HAS_MANY, 'CardGenerated', 'visitor_id'),
-            'company0' => array(self::BELONGS_TO, 'Company', 'company'),
-            'visitorStatus' => array(self::BELONGS_TO, 'VisitorStatus', 'visitor_status'),
-            'createdBy' => array(self::BELONGS_TO, 'User', 'created_by'),
-            'tenant0' => array(self::BELONGS_TO, 'User', 'tenant'),
-            'tenantAgent' => array(self::BELONGS_TO, 'User', 'tenant_agent'),
-            'role0' => array(self::BELONGS_TO, 'Roles', 'role'),
-            'vehicle0' => array(self::BELONGS_TO, 'Vehicle', 'vehicle'),
-            'photo0' => array(self::BELONGS_TO, 'Photo', 'photo'),
+            'company0'       => array(self::BELONGS_TO, 'Company', 'company'),
+            'visitorStatus'  => array(self::BELONGS_TO, 'VisitorStatus', 'visitor_status'),
+            'createdBy'      => array(self::BELONGS_TO, 'User', 'created_by'),
+            'tenant0'        => array(self::BELONGS_TO, 'User', 'tenant'),
+            'tenantAgent'    => array(self::BELONGS_TO, 'User', 'tenant_agent'),
+            'role0'          => array(self::BELONGS_TO, 'Roles', 'role'),
+            'vehicle0'       => array(self::BELONGS_TO, 'Vehicle', 'vehicle'),
+            'photo0'         => array(self::BELONGS_TO, 'Photo', 'photo'),
         );
     }
 
@@ -371,7 +371,7 @@ class Visitor extends CActiveRecord {
             'visitor_status'                            => 'Visitor Status',
             'created_by'                                => 'Created By',
             'is_deleted'                                => 'Is Deleted',
-            'asic_expiry'                                => 'Asic Expiry',
+            'asic_expiry'                               => 'Asic Expiry',
             'tenant'                                    => 'Tenant',
             'tenant_agent'                              => 'Tenant Agent',
             'repeatpassword'                            => 'Repeat Password',
@@ -588,8 +588,7 @@ class Visitor extends CActiveRecord {
     
     public function behaviors() {
         return array(
-            'AuditTrailBehaviors'=>
-                'application.components.behaviors.AuditTrailBehaviors',
+            'AuditTrailBehaviors' => 'application.components.behaviors.AuditTrailBehaviors',
             'DateTimeZoneAndFormatBehavior' => 'application.components.DateTimeZoneAndFormatBehavior',
         );
     }
@@ -598,9 +597,10 @@ class Visitor extends CActiveRecord {
     public function findAllCompanyWithSameTenant($tenantId) {
         $session = new CHttpSession;
         $aArray = array();
-        $tenant = User::model()->findByPk($session['tenant']);
+        //$tenant = Company::model()->findByPk($session['tenant']);
+
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = " . $session['tenant'] . " and (id != 1 and id != ".$tenant->company.")";
+        $Criteria->condition = "tenant = " . $session['id'] . " and (id != 1 and id != ".$session['id'].")";
         $company = Company::model()->findAll($Criteria);
 
         foreach ($company as $index => $value) {
@@ -615,19 +615,19 @@ class Visitor extends CActiveRecord {
 
     public function findAllCompanyByTenant($tenantId) {
         $session = new CHttpSession;
-
-        $tenant = User::model()->findByPk($session['tenant']);
+        //$tenant = User::model()->findByPk($session['tenant']);
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = '" . $session['tenant'] . "' and (id != 1 and id != " . $tenant->company . ")";
-        return Company::model()->findAll($Criteria);
+        $Criteria->condition = "tenant = " . $session['id'] . " and (id != 1 and id != " . $session['id'] . ")";
+        $result =  Company::model()->findAll($Criteria);
+        return $result;
     }
 
     public function findAllCompanyWithSameTenantAndTenantAgent($id, $tenantAgentId) {
         $aArray = array();
-        $tenant = User::model()->findByPk($id);
-        $tenantagent = User::model()->findByPk($tenantAgentId);
+        $user = User::model()->findByPk($id);
+        $tenantagent = Company::model()->findByPk($tenantAgentId);
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "((tenant = '$id' and tenant_agent= '$tenantAgentId') || id ='".$tenant->company."') and id !='".$tenantagent->company."'";
+        $Criteria->condition = "((tenant = '$id' and tenant_agent= '$tenantAgentId') || id ='".$user->tenant."') and id !='".$tenantagent->company."'";
         $company = Company::model()->findAll($Criteria);
 
         foreach ($company as $index => $value) {

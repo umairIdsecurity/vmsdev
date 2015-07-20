@@ -66,6 +66,10 @@
         padding: 7px;
     }
 
+    .selected_col{
+        text-align: center;
+    }
+
 </style>
 <div class="page-content">
     <h1 class="text-primary title">ADD / FIND ASIC SPONSOR</h1>
@@ -99,21 +103,12 @@
 
         </div>
 
+        <div id="asic_holder"></div>
+
         <div class="loader" id="loader">Loading...</div>
 
         <p id="asic-notification" class="bg-info">No Record Found</p>
-        <table class="table table-striped" id="asic_search_result">
-            <thead>
-            <tr>
-                <th></th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Company</th>
-            </tr>
-            </thead>
-            <tbody id="showresults">
-            </tbody>
-        </table>
+
     </div><!--  end searching ASIC -->
 
 
@@ -224,14 +219,17 @@
     <?php $this->endWidget(); ?>
 </div>
 
+
 <script type="text/javascript">
+
 
     $(document).ready(function() {
 
         $('#search_asic_box').on('input', function() {
             $("#search_asic_error").hide();
-            $("#asic_search_result").hide();
+            $("#asic_table_wrapper").hide();
             $("#asic-notification").hide();
+            $('#Registration_selected_asic_id').val("");
             $('#new_asic_area').show();
         });
 
@@ -255,16 +253,37 @@
                             $("#asic-notification").show();
                         }
                         else{
-                            $("#asic_search_result").show();
-                            $('#showresults').html(data);
+
+                            var dataSet = JSON.parse(data);
+
+                            $('#asic_holder').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="asic_table"></table>' );
+
+                            $('#asic_table').dataTable( {
+                                "ordering": false,
+                                "bLengthChange": false,
+                                "bFilter": false,
+                                "data": dataSet,
+                                "columns": [
+                                    { "title": "Select", "class":"selected_col"  },
+                                    { "title": "First Name" },
+                                    { "title": "Last Name" },
+                                    { "title": "Company" }
+                                ],
+                                "fnDrawCallback": function (oSettings) {
+                                    $('.selected_asic').click(function() {
+                                        $('#Registration_selected_asic_id').val($(this).val());
+                                        $('#Registration_contact_number').val("");
+                                        $('#Registration_email').val("");
+                                        $('#new_asic_area').hide();
+                                    });
+                                }
+                            });
+
+
                         }
 
                         $("#loader").hide();
 
-                        $('.selected_asic').click(function() {
-                            $('#Registration_selected_asic_id').val($(this).val());
-                            $('#new_asic_area').hide();
-                        });
                     }
 
                 });

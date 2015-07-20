@@ -26,14 +26,16 @@ $session = new CHttpSession;
                     <?php if ($session['role'] == Roles::ROLE_SUPERADMIN) { ?>
                         <tr>
                             <td><?php echo $form->labelEx($model, 'tenant'); ?></td>
-                            <td><select  onchange="getTenantAgent()"  id="Workstation_tenant" name="Workstation[tenant]">
+                            
+                            <td>
+                                <select  onchange="getTenantAgent()"  id="Workstation_tenant" name="Workstation[tenant]">
                                     <option disabled value='' selected>Please select a tenant</option>
                                     <?php
-                                    $companyList = User::model()->findAllCompanyTenant();
-                                    foreach ($companyList as $key => $value) {
+                                    $tenantList = Company::model()->findAllTenants();
+                                    foreach ($tenantList as $key => $value) {
                                         ?>
                                         <option <?php
-                                if ($model['tenant'] == $value['tenant']) {
+                                if ($model['tenant'] == $value['id']) {
                                     echo " selected ";
                                 }
                                         ?> value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
@@ -41,7 +43,11 @@ $session = new CHttpSession;
                                         }
                                         ?>
 
-                                </select></td>
+                                </select>
+                            </td>
+
+
+
                             <td><?php echo $form->error($model, 'tenant'); ?></td>
                         </tr>
                         <tr>
@@ -85,9 +91,9 @@ $session = new CHttpSession;
 
                                             <option disabled value='' selected>Please select a tenant agent</option>
                                             <option <?php
-                                if ($model['tenant_agent'] == $value['tenant_agent']) {
-                                    echo " selected ";
-                                }
+                                            if ($model['tenant_agent'] == $value['tenant_agent']) {
+                                                echo " selected ";
+                                            }
                                             ?> value="<?php echo $value['tenant_agent']; ?>"><?php echo $value['name']; ?></option>
                                                 <?php
                                             }
@@ -140,14 +146,23 @@ $session = new CHttpSession;
                     <tr>
                         <td><?php echo $form->labelEx($model, 'timezone_id'); ?></td>
                         <td>
-                            <?php echo $form->dropDownList(
-                                    $model,
-                                    'timezone_id',
-                                    CHtml::listData(Timezone::model()->findAll(),
-                                            'id',
-                                            'timezone_name'),
-                                            array('empty'=>'Please select a timezone')
-                            );?>
+                            <select id="Workstation_timezone_id" name="Workstation[timezone_id]">
+                                <?php
+                                    $timezoneList = Timezone::model()->findAll();
+                                    foreach ($timezoneList as $key => $value) {
+                                        ?>
+                                        <option <?php
+                                        if ($model['timezone_id'] == $value['id']) {
+                                            echo " selected ";
+                                        } elseif($model['timezone_id'] == '' && $value['timezone_value'] == $_SESSION["timezone"]) {
+                                            echo " selected ";
+                                        }
+                                        ?> value="<?php echo $value['id']; ?>"><?php echo $value['timezone_name']; ?></option>
+                                        <?php
+                                    }?>
+                            </select>
+
+
                         </td>
                         <td><?php echo $form->error($model, 'timezone_id',array('style'=>'text-transform:none;')); ?></td>
                     </tr>
@@ -243,7 +258,13 @@ $session = new CHttpSession;
                             <td colspan="2">
                                 <?php
                                 $criteria = new CDbCriteria();
-                                $criteria->addInCondition("module", array(1,2));
+                                
+                                $module = CHelper::get_allowed_module();
+                                if( $module == "CVMS" || $module == "Both")
+                                    $criteria->addInCondition("module", array(1));
+                                if( $module == "AVMS" || $module == "Both" )
+                                    $criteria->addInCondition("module", array(2));
+                                
                                 echo  $form->checkBoxList(
                                     $model,'card_type',
                                     CHtml::listData(

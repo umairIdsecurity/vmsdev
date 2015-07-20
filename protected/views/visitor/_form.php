@@ -143,21 +143,40 @@ $form = $this->beginWidget('CActiveForm', array(
             <table style="width:300px;float:left;min-height:320px;">
                 <input type="hidden" id="Visitor_photo" name="Visitor[photo]" value="<?php echo $model['photo']; ?>">
                 
-                <?php if ($model['photo'] != NULL) { ?>
+                <?php if ($model['photo'] != NULL) {
+                    $data = Photo::model()->returnVisitorPhotoRelativePath($dataId);
+                    $my_image = '';
+                    if(!empty($data['db_image'])){
+                        $my_image = "url(data:image;base64," . $data['db_image'] . ")";
+                    }else{
+                        $my_image = "url(" .$data['relative_path'] . ")";
+                    }
+                    
+                 ?>
                     <style>
                         .ajax-upload-dragdrop {
-                            background: url('<?php echo Photo::model()->returnVisitorPhotoRelativePath($dataId) ?>') no-repeat center top !important;
+                            background: <?php echo $my_image ?> no-repeat center top !important;
                             background-size: 137px 190px !important;
                         }
                     </style>
                 <?php }
                 ?>
                 <br>
+
                 <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
+
                 <div class="photoDiv" style="display:none;">
-                    <?php if ($dataId != '' && $model['photo'] != NULL) { ?>
+                    <?php if ($dataId != '' && $model['photo'] != NULL) {
+                        $data = Photo::model()->returnVisitorPhotoRelativePath($dataId);
+                        $my_image = '';
+                        if(!empty($data['db_image'])){
+                            $my_image = "data:image;base64," . $data['db_image'];
+                        }else{
+                            $my_image = $data['relative_path'];
+                        }
+                     ?>
                         <img id='photoPreview'
-                             src="<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($dataId) ?>"
+                             src = "<?php echo $my_image ?>"
                              style='display:block;height:174px;width:133px;'/>
                     <?php } elseif ($model['photo'] == NULL) {
                         ?>
@@ -166,16 +185,15 @@ $form = $this->beginWidget('CActiveForm', array(
                              src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png"
                              style='display:block;height:174px;width:133px;'/>
 
-                    <?php } else {
+                    <?php } else { ?>
 
-                        ?>
+                        <img id='photoPreview' src="data:image;base64,<?php
+                            if ($this->action->id == 'update' && $model->photo != '') {
+                                echo Company::model()->getPhotoRelativePath($model->photo);
+                            }
+                            ?>
+                            " style='display:none;'/>
 
-                        <img id='photoPreview' src="<?php
-                        if ($this->action->id == 'update' && $model->photo != '') {
-                            echo Yii::app()->request->baseUrl . "/" . Company::model()->getPhotoRelativePath($model->photo);
-                        }
-                        ?>
-                                             " style='display:none;'/>
                     <?php } ?>
                 </div>
 
@@ -187,7 +205,6 @@ $form = $this->beginWidget('CActiveForm', array(
     </tr>
 
 </table>
-
 
 <table style="float:left;width:300px;">
 <tr>
@@ -217,7 +234,7 @@ $form = $this->beginWidget('CActiveForm', array(
                 <option value="<?php echo $value['id']; ?>"
 
                     <?php
-                    if (($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant'] && $this->action->id != 'update') || ($model['tenant'] == $value['id'])) {
+                    if (($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['id'] && $this->action->id != 'update') || ($model['tenant'] == $value['id'])) {
 
                         echo "selected ";
 
@@ -641,6 +658,7 @@ $(document).ready(function () {
 
         e.preventDefault();
 
+        
         $.ajax({
 
             type: 'POST',
@@ -661,7 +679,7 @@ $(document).ready(function () {
 
                 height: $("#height").val(),
 
-                imageUrl: $('#photoPreview').attr('src').substring(1, $('#photoPreview').attr('src').length),
+                //imageUrl: $('#photoPreview').attr('src').substring(1, $('#photoPreview').attr('src').length),
 
                 photoId: $('#Visitor_photo').val()
 
@@ -670,6 +688,7 @@ $(document).ready(function () {
             dataType: 'json',
 
             success: function (r) {
+
 
                 $.ajax({
 
@@ -681,10 +700,9 @@ $(document).ready(function () {
 
                     success: function (r) {
 
-
                         $.each(r.data, function (index, value) {
 
-                            document.getElementById('photoPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+                            /*document.getElementById('photoPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
 
                             document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
 
@@ -695,7 +713,15 @@ $(document).ready(function () {
 
                                 "background-size": "132px 152px"
 
-                            });
+                            });*/
+
+                            //showing image from DB as saved in DB -- image is not present in folder
+                            var my_db_image = "url(data:image;base64,"+ value.db_image + ")";
+
+                            document.getElementById('photoPreview').src = "data:image;base64,"+ value.db_image;
+                            document.getElementById('photoCropPreview').src = "data:image;base64,"+ value.db_image;
+                            $(".ajax-upload-dragdrop").css("background", my_db_image + " no-repeat center top");
+                            $(".ajax-upload-dragdrop").css({"background-size": "132px 152px" });
 
                         });
 
@@ -1238,11 +1264,18 @@ $this->widget('bootstrap.widgets.TbButton', array(
 
         <img id="photoCropPreview" src="">
 
-    <?php } elseif ($this->action->id == 'update') { ?>
+    <?php } elseif ($this->action->id == 'update') {
+                $data = Photo::model()->returnVisitorPhotoRelativePath($model->id);
+                $my_image = '';
+                if(!empty($data['db_image'])){
+                    $my_image = "data:image;base64," . $data['db_image'];
+                }else{
+                    $my_image = $data['relative_path'];
+                }
+     ?>
 
         <img id="photoCropPreview"
-             src="<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($model->id) ?>">
-
+            src = "<?php echo $my_image ?>" >
 
 
     <?php } ?>

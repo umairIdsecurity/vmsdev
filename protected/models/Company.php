@@ -1,5 +1,5 @@
 <?php
-
+Yii::import('ext.validator.PasswordRequirement');
 /**
  * This is the model class for table "company".
  *
@@ -30,8 +30,16 @@ class Company extends CActiveRecord {
 	public $user_email;
 	public $user_contact_number;
     public $is_user_field;
+<<<<<<< HEAD
 
     protected $tenantQuery = 'SELECT COUNT(c.id) FROM "user" u LEFT JOIN company c ON u.company=c.id WHERE u.id=c.tenant AND c.id !=1';
+=======
+    public $user_password;
+    public $password_requirement;
+    public $user_repeatpassword;
+    public $password_option;
+    protected $tenantQuery = "SELECT COUNT(c.id) FROM user u LEFT JOIN company c ON u.company=c.id WHERE u.id=c.tenant AND c.id !=1";
+>>>>>>> 3bdc35dce4cd87041079585f98a936be1d7a3a87
 
     /**
      * @return string the associated database table name
@@ -63,6 +71,7 @@ class Company extends CActiveRecord {
 		return array(
 	            array('name', 'required'),
 	            array('user_first_name , user_last_name , user_email , user_contact_number', 'required' , 'on' => 'company_contact'),
+                array('password_requirement,password_option,user_password','safe'),
 				array('name , code , email_address , mobile_number', 'required' , 'on' => 'updatetenant'),
                 array('mobile_number', 'numerical', 'integerOnly' => true, 'on' => 'updatetenant'),
                 array('code', 'match',
@@ -70,8 +79,9 @@ class Company extends CActiveRecord {
                     'message' => 'Code can only contain letters' ,'on' => 'updatetenant'),
 	            array('code', 'length', 'min' => 3, 'max' => 3, 'tooShort' => 'Code is too short (Should be in 3 characters)'),
 	            array('email_address', 'email'),
+                array('user_email','email'),
 	            array('website', 'url'),
-	            array('office_number, mobile_number, created_by_user, created_by_visitor', 'numerical', 'integerOnly' => true),
+	            array('created_by_user, created_by_visitor', 'numerical', 'integerOnly' => true),
 	            array('name, trading_name, billing_address', 'length', 'max' => 150),
 	            array('email_address, website', 'length', 'max' => 50),
 	            array('contact', 'length', 'max' => 100),
@@ -101,7 +111,7 @@ class Company extends CActiveRecord {
                                 'message' => 'Code can only contain letters'),
                             array('email_address', 'email'),
                             array('website', 'url'),
-                            array('office_number, mobile_number, created_by_user, created_by_visitor', 'numerical', 'integerOnly' => true),
+                            array('created_by_user, created_by_visitor', 'numerical', 'integerOnly' => true),
                             array('name, trading_name, billing_address', 'length', 'max' => 150),
                             array('email_address, website', 'length', 'max' => 50),
                             array('contact', 'length', 'max' => 100),
@@ -161,10 +171,10 @@ class Company extends CActiveRecord {
             'code' => 'Company Code',
             'card_count' => 'Card Count',
             'company_laf_preferences' => 'Look and Feel Preferences',
-            'user_first_name' => 'First Name',
-            'user_last_name' => 'Last Name',
-            'user_email' => 'Email',
-            'user_contact_number' => 'Contact Number',
+            'user_first_name' => 'User First Name',
+            'user_last_name' => 'User Last Name',
+            'user_email' => 'User Email',
+            'user_contact_number' => 'User Contact Number',
             'company_type' => 'Company Type'
         );
     }
@@ -211,6 +221,10 @@ class Company extends CActiveRecord {
         $criteria->compare('code', $this->code);
         $criteria->compare('company_laf_preferences', $this->company_laf_preferences);
         $criteria->compare('card_count', $this->card_count);
+
+        if($_SESSION['role'] != Roles::ROLE_SUPERADMIN) {
+            $criteria->compare('tenant', $_SESSION["tenant"]);
+        }
         $criteria->compare($post_count_sql, $this->isTenant);
 
         $data = new CActiveDataProvider($this, array(
@@ -251,21 +265,28 @@ class Company extends CActiveRecord {
         if ($company->logo != '') {
             $photo = Photo::model()->findByPK($company->logo);
 
-            return $photo->relative_path;
+            //return $photo->relative_path;
+            return $photo->db_image;
         }
     }
 
     public function getPhotoRelativePath($photoId) {
         if ($photoId != '') {
             $photo = Photo::model()->findByPK($photoId);
-            return $photo->relative_path;
+            //return $photo->relative_path;
+            return $photo->db_image;
         }
     }
 
     public function getCompanyName($companyId) {
         if ($companyId != '') {
-            $company = Company::model()->findByPK($companyId);
-            return $company->name;
+            $this->detachBehavior('softDelete');
+            $company = $this->findByAttributes(['is_deleted' => 0, 'id' => $companyId]);
+            if ($company) {
+                return $company->name;
+            } else {
+                return '-';
+            }
         }
     }
 
@@ -275,8 +296,7 @@ class Company extends CActiveRecord {
                 'class' => 'ext.soft_delete.SoftDeleteBehavior'
             ),
 
-            'AuditTrailBehaviors'=>
-                'application.components.behaviors.AuditTrailBehaviors',
+            'AuditTrailBehaviors' => 'application.components.behaviors.AuditTrailBehaviors',
         );
     }
 
@@ -337,7 +357,7 @@ class Company extends CActiveRecord {
             $company = Yii::app()->db->createCommand()
                     ->selectdistinct('*')
                     ->from('company')
-                    ->where("id != 1 and id=" . Yii::app()->user->tenant . " AND is_deleted = 0")
+                    ->where("id != 1 and tenant=" . Yii::app()->user->id . " AND is_deleted = 0")
                     ->queryAll();
         } else {
             $company = Yii::app()->db->createCommand()
@@ -362,7 +382,7 @@ class Company extends CActiveRecord {
         $session = new CHttpSession;
 
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = '" . $session['tenant'] . "'";
+        $Criteria->condition = "tenant = '" . $session['id'] . "'";
         $company = Company::model()->findAll($Criteria);
 
         foreach ($company as $index => $value) {
@@ -373,6 +393,36 @@ class Company extends CActiveRecord {
         }
 
         return $aArray;
+    }
+
+    public function findAllTenantAgents()
+    {
+        $company = Yii::app()->db->createCommand()
+            ->selectdistinct('id,name,tenant')
+            ->from('company')
+            ->where("id != 1 and company_type = 2 AND is_deleted = 0")
+            ->queryAll();
+    }
+
+    public function findAllTenants()
+    {
+        $aArray = array();
+
+        $company = Yii::app()->db->createCommand()
+            ->selectdistinct('*')
+            ->from('company')
+            ->where("id != 1 and company_type = 1 AND is_deleted = 0")
+            ->queryAll();
+
+        foreach ($company as $index => $value) {
+            $aArray[] = array(
+                'id' => $value['id'],
+                'name' => $value['name'],
+            );
+        }
+
+        return $aArray;
+
     }
 
 

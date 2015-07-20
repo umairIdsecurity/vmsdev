@@ -586,7 +586,8 @@ class Visit extends CActiveRecord {
         $criteria->compare('time_out', $this->time_out, true);
 
         // $criteria->compare('date_check_in', $this->date_check_in, true);
-        $criteria->mergeWith($this->dateRangeSearchCriteria('date_check_in', $this->date_check_in));
+        $criteria->mergeWith($this->dateRangeSearchCriteria('DATE_FORMAT(date_check_in, "%d-%m-%Y")', $this->date_check_in));
+        $criteria->mergeWith($this->dateRangeSearchCriteria('DATE_FORMAT(date_check_out, "%d-%m-%Y")', $this->date_check_out));
 
         $criteria->compare('time_check_in', $this->time_check_in, true);
         // $criteria->compare('date_check_out', $this->date_check_out, true);
@@ -720,6 +721,10 @@ class Visit extends CActiveRecord {
          */
         if (Yii::app()->controller->action->id == 'visitorRegistrationHistory') {
             $criteria->addCondition("visitor0.profile_type ='" . Visitor::PROFILE_TYPE_CORPORATE . "'");
+        }
+
+        if (Yii::app()->controller->action->id == 'view' && (!empty($this->date_check_in) || !empty($this->date_check_out))) {
+            $criteria->addCondition("visit_status ='" . VisitStatus::ACTIVE . "'");
         }
         
         if (Yii::app()->controller->action->id == 'admindashboard') {
@@ -1051,7 +1056,7 @@ class Visit extends CActiveRecord {
         
         switch ($this->card_type) {
             case CardType::VIC_CARD_MANUAL:
-                return (int)$this->count($criteria) + 1;
+                return (int)$this->count($criteria);
                 break;
             case CardType::VIC_CARD_SAMEDATE:
                 if (in_array($this->visit_status, [VisitStatus::CLOSED, VisitStatus::AUTOCLOSED, VisitStatus::EXPIRED])) {
@@ -1059,11 +1064,11 @@ class Visit extends CActiveRecord {
                 }
                 return (int)$this->count($criteria) + 1;
             case CardType::VIC_CARD_24HOURS:
-                return (int)$this->count($criteria) + 1;
+                return (int)$this->count($criteria);
                 break;
 
             case CardType::VIC_CARD_MULTIDAY:
-                $totalCount = (int)($dateNow->format('z') - $dateIn->format('z')) + 1;
+                $totalCount = $dateNow->diff($dateIn)->days + 1;
                 if ($this->count($criteria) > 0) {
                     $totalCount += $this->count($criteria);
                 }
@@ -1072,13 +1077,13 @@ class Visit extends CActiveRecord {
             case CardType::VIC_CARD_EXTENDED:
                 switch ($this->visit_status) {
                     case VisitStatus::AUTOCLOSED:
-                        return (int)($dateOut->format('z') - $dateIn->format('z'));
+                        return $dateNow->diff($dateIn)->days;
                         break;
                     default:
-                        if ($dateNow->format('z') > $dateOut->format('z')) {
-                            return (int)($dateOut->format('z') - $dateIn->format('z'));
+                        if ($dateNow->diff($dateOut)->days <= 0) {
+                            return $dateOut->diff($dateIn)->days;
                         }
-                        return (int)($dateNow->format('z') - $dateIn->format('z')) + 1;
+                        return $dateNow->diff($dateIn)->days + 1;
                         break;
                 }
                 break;
@@ -1104,17 +1109,16 @@ class Visit extends CActiveRecord {
                 return 28 - (int)$this->visitCounts;
                 break;
             case CardType::VIC_CARD_EXTENDED:
-                $totalDays = (int)($dateOut->format('z') - $dateIn->format('z'));
+                $totalDays = $dateOut->diff($dateIn)->days;
                 switch ($this->visit_status) {
                     case VisitStatus::AUTOCLOSED:
-                        return (int)($dateOut->format('z') - $dateNow->format('z'));
+                        return $dateOut->diff($dateNow)->days;
                         break;
                     default:
-                        $remainingDays = $totalDays - $this->visitCounts;
-                        if ($dateNow->format('z') > $dateOut->format('z')) {
-                            return (int)($dateOut->format('z') - $dateIn->format('z'));
+                        if ($dateNow->diff($dateOut)->days <= 0) {
+                            return $dateOut->diff($dateIn)->days;
                         }
-                        return $remainingDays;
+                        return $totalDays - $this->visitCounts;
                         break;
                 }
                 break;

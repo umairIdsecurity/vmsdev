@@ -409,9 +409,18 @@ $this->renderPartial('visithistory', array('model' => $model,
     }
 
     function sendActivateVisitForm(formId) {
-        if ($('#asicEscortRbtn').is(':checked') == true) {
+        /*if ($('#asicEscortRbtn').is(':checked') == true) {
             if ($('.add-esic-escort').css('display') == 'block') {
                 var visitForm = $("#" + formId + ", #add-asic-escort-form").serialize();
+            } else if ($('#selectedAsicEscort').val() != '') {
+                var visitForm = $("#" + formId).serialize() + '&selectedAsicEscort=' + $('#selectedAsicEscort').val();
+            }
+        } else {
+            var visitForm = $("#" + formId).serialize();
+        }*/
+        if ($('#asicEscortRbtn').is(':checked') == true) {
+            if ($('.add-esic-escort').css('display') == 'block') {
+                var visitForm = $("#" + formId).serialize()+'&createEscort=true';
             } else if ($('#selectedAsicEscort').val() != '') {
                 var visitForm = $("#" + formId).serialize() + '&selectedAsicEscort=' + $('#selectedAsicEscort').val();
             }
@@ -443,10 +452,14 @@ $this->renderPartial('visithistory', array('model' => $model,
     function sendCardForm(visitId) {
         var cardForm = $("#update-card-form").serialize();
         var id = visitId ? visitId : '<?php echo $model->id; ?>';
+        var preCardNo = '';
+        if (typeof $('#pre_issued_card_no') != 'undefined' && $('#pre_issued_card_no').val() != '') {
+            preCardNo = $('#pre_issued_card_no').val();
+        }
 
         $.ajax({
             type: "POST",
-            url: "<?php echo CHtml::normalizeUrl(array("cardGenerated/create&visitId=")) ?>" + id,
+            url: "<?php echo CHtml::normalizeUrl(array("cardGenerated/create&visitId=")) ?>" + id + "&preCardNo=" + preCardNo,
             data: cardForm,
             success: function(data) {
             	window.location = "index.php?r=visit/detail&id=" + id;
@@ -482,7 +495,7 @@ $this->renderPartial('visithistory', array('model' => $model,
         //var visitForm = $("#" + formId).serialize();
         if ($('#asicEscortRbtn').is(':checked') == true) {
             if ($('.add-esic-escort').css('display') == 'block') {
-                var visitForm = $("#" + formId + ", #add-asic-escort-form").serialize();
+                var visitForm = $("#" + formId).serialize()+'&createEscort=true';
             } else if ($('#selectedAsicEscort').val() != '') {
                 var visitForm = $("#" + formId).serialize() + '&selectedAsicEscort=' + $('#selectedAsicEscort').val();
             }

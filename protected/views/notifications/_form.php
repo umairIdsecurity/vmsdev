@@ -3,7 +3,7 @@
 /* @var $model Notification */
 /* @var $form CActiveForm */
 ?>
-
+<?php $module = CHelper::get_allowed_module(); ?>
 <div class="form">
 
 <?php $form=$this->beginWidget('CActiveForm', array(
@@ -34,11 +34,12 @@
 
 	 
 	<div class="row">
+        <?php  $role_ids = CHelper::get_comma_separated_role_ids($module); ?>    
 		<?php echo $form->labelEx($model,'role_id'); ?><br>
 		<?php echo $form->dropDownList(
                                 $model,
                                 'role_id',
-                                CHtml::listData(Roles::model()->findAll(),
+                                CHtml::listData(Roles::model()->findAll("id IN (".$role_ids.")"),
                                         'id',
                                         'nameFuncForNotifiLabels'),
                                         array('empty'=>'Send To All Users')

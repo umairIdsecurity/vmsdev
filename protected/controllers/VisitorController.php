@@ -46,12 +46,12 @@ class VisitorController extends Controller {
      * Creates a new model. Register and Preregister a visitor page
      */
     public function actionCreate() {
-        $session = new CHttpSession;
-        $model = new Visitor;
-        $userModel = new User();
-        $patientModel = new Patient();
-        $reasonModel = new VisitReason();
-        $visitModel = new Visit();
+        $session      = new CHttpSession;
+        $model        = new Visitor;
+        $userModel    = new User;
+        $patientModel = new Patient;
+        $reasonModel  = new VisitReason;
+        $visitModel   = new Visit;
 
         $visitorService = new VisitorServiceImpl();
         
@@ -106,12 +106,12 @@ class VisitorController extends Controller {
         }
 
         $this->render('create', array(
-            'model' => $model,
-            'userModel' => $userModel,
+            'model'        => $model,
+            'userModel'    => $userModel,
             'patientModel' => $patientModel,
-            'reasonModel' => $reasonModel,
-            'visitModel' => $visitModel,
-	), false, true);
+            'reasonModel'  => $reasonModel,
+            'visitModel'   => $visitModel
+    	), false, true);
     }
 
     /**
@@ -122,7 +122,7 @@ class VisitorController extends Controller {
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
         $profileType        = $model->profile_type;
-        $visitorService     = new VisitorServiceImpl();
+        $visitorService     = new VisitorServiceImpl;
         $session            = new CHttpSession;
         $updateErrorMessage = '';
         // if view value is 1 do not redirect page else redirect to admin
@@ -138,7 +138,7 @@ class VisitorController extends Controller {
 
         if (isset($visitorParams)) {
             $currentCardStatus = $model->visitor_card_status;
-            if (isset($visitorParams['visitor_card_status']) && $currentCardStatus == Visitor::VIC_HOLDER && $visitorParams['visitor_card_status'] == Visitor::VIC_ASIC_PENDING) {
+            if (isset($visitorParams['visitor_card_status']) && $currentCardStatus != $visitorParams['visitor_card_status'] && $visitorParams['visitor_card_status'] == Visitor::VIC_ASIC_PENDING) {
                 $activeVisit = $model->activeVisits;
                 foreach ($activeVisit as $item) {
                     if ($item->visit_status == VisitStatus::ACTIVE) {
@@ -149,18 +149,18 @@ class VisitorController extends Controller {
                     $totalVisitCountBefore = $model->totalVisit;
                     $model->attributes = $visitorParams;
                     if ($visitorService->save($model, NULL, $session['id'])) {
-                        if ($totalVisitCountBefore > 0) {
-                            $resetHistory = new ResetHistory;
-                            $resetHistory->visitor_id = $model->id;
-                            $resetHistory->reset_time = date("Y-m-d H:i:s");
-                            $resetHistory->reason     = 'Update Visitor Card Type form VIC Holder to ASIC Pending';
-                            if ($resetHistory->save()) {
-                                foreach ($activeVisit as $item) {
-                                    $item->reset_id = $resetHistory->id;
-                                    $item->save();
-                                }
-                            }
-                        }
+//                        if ($totalVisitCountBefore > 0) {
+//                            $resetHistory = new ResetHistory;
+//                            $resetHistory->visitor_id = $model->id;
+//                            $resetHistory->reset_time = date("Y-m-d H:i:s");
+//                            $resetHistory->reason     = 'Update Visitor Card Type form VIC Holder to ASIC Pending';
+//                            if ($resetHistory->save()) {
+//                                foreach ($activeVisit as $item) {
+//                                    $item->reset_id = $resetHistory->id;
+//                                    $item->save();
+//                                }
+//                            }
+//                        }
                         switch ($isViewedFromModal) {
                             case "1":
                                 break;
@@ -172,13 +172,14 @@ class VisitorController extends Controller {
                 } else {
                     echo $updateErrorMessage;
                 }
-            } elseif (isset($visitorParams) && isset($visitorParams['visitor_card_status']) &&  $visitorParams['visitor_card_status'] == Visitor::ASIC_ISSUED && $model->profile_type == Visitor::PROFILE_TYPE_VIC  ){
-                $model->attributes = $visitorParams;
-                $model->profile_type = Visitor::PROFILE_TYPE_ASIC;
+            } elseif (isset($visitorParams['visitor_card_status']) && $visitorParams['visitor_card_status'] == Visitor::ASIC_ISSUED && $model->profile_type == Visitor::PROFILE_TYPE_VIC) {
+                $model->attributes          = $visitorParams;
+                $model->profile_type        = Visitor::PROFILE_TYPE_ASIC;
                 $model->visitor_card_status = Visitor::ASIC_ISSUED;
+
                 if($visitorService->save($model, NULL, $session['id'])) {
-                    $logCardstatusConvert = new CardstatusConvert();
-                    $logCardstatusConvert->visitor_id = $model->id;
+                    $logCardstatusConvert               = new CardstatusConvert;
+                    $logCardstatusConvert->visitor_id   = $model->id;
                     $logCardstatusConvert->convert_time = date("Y-m-d");
                     $logCardstatusConvert->save();
                 }
@@ -249,8 +250,14 @@ class VisitorController extends Controller {
 
         if (Yii::app()->request->getParam('vms')) {
             if (CHelper::is_avms_visitor()) {
+                
+                //Check whether a login user/tenant allowed to view 
+                CHelper::check_module_authorization("AVMS");
                 $model = $model->avms_visitor();
             } else {
+                
+                //Check whether a login user/tenant allowed to view 
+                CHelper::check_module_authorization("CVMS");
                 $model = $model->cvms_visitor();
             }
         }
@@ -455,23 +462,56 @@ class VisitorController extends Controller {
         }
         $jpeg_quality = 90;
 
-        $src = $_REQUEST['imageUrl'];
+        //for my localhost directory
+        //$path = "E:/installed/xampp/htdocs/vmspro/vms/uploads/visitor";
+
+        //for accessing server files
+        $path = Yii::getPathOfAlias('webroot') . "/uploads/visitor";
+
+        $photo = Photo::model()->findByPk($_REQUEST['photoId']);
+        $photoAttr = $photo->attributes;
+
+        $db_image_contents = $photoAttr['db_image'];
+        $db_image_name = $photoAttr['unique_filename'];
+
+
+        $file = fopen($path."/".$db_image_name,"w");
+        fwrite($file, base64_decode($db_image_contents));
+        fclose($file);
+
+        //option 2 (one liner)
+        //file_put_contents($path."/".$db_image_name, base64_decode($db_image_contents));
+
+        $src = $path."/".$db_image_name;        
         $img_r = imageCreateFromAny($src);
+
         $dst_r = imagecreatetruecolor(200, 200);
         $usernameHash = hash('adler32', "visitor");
         $uniqueFileName = 'visitor' . $usernameHash . '-' . time() . ".png";
         imagecopyresampled($dst_r, $img_r, 0, 0, $_REQUEST['x1'], $_REQUEST['y1'], 200, 200, $_REQUEST['width'], $_REQUEST['height']);
-        if (file_exists($src)) {
-            unlink($src);
-        }
+        
+
         header('Content-type: image/jpeg');
         imagejpeg($dst_r, "uploads/visitor/" . $uniqueFileName, $jpeg_quality);
 
+        $uploadedFile = "uploads/visitor/" . $uniqueFileName;
+        $file=file_get_contents($uploadedFile);
+        $image = base64_encode($file);
 
         Photo::model()->updateByPk($_REQUEST['photoId'], array(
             'unique_filename' => $uniqueFileName,
             'relative_path' => "uploads/visitor/" . $uniqueFileName,
+            'db_image' => $image,
         ));
+
+        
+        if (file_exists($src)) {
+            unlink($src);
+        }
+
+        if (file_exists($uploadedFile)) {
+            unlink($uploadedFile);
+        }
 
 
         exit;
@@ -702,17 +742,27 @@ class VisitorController extends Controller {
      * Add asic sponsor for Log Visit process
      */
     public function actionAddAsicSponsor() {
-        $model = new Visitor;
-        $visitorService = new VisitorServiceImpl();
-        $session = new CHttpSession;
+        // If asic sponsor existed
+        if (isset($_POST['User']['email']) && !empty($_POST['User']['email'])) { 
+            $model = Visitor::model()->findByAttributes(['email' => $_POST['User']['email']]);
+        }
 
+        // If does not exist then create new
+        if (!$model) {
+            $model = new Visitor;
+        }
+
+        $visitorService = new VisitorServiceImpl;
+        $session        = new CHttpSession;
 
         if (isset($_POST['User']) && isset($_POST['Visitor'])) {
-            $model->attributes = $_POST['User'];
-            $model->attributes = $_POST['Visitor'];
+            $userParams        = Yii::app()->request->getPost('User');
+            $visitorParams     = Yii::app()->request->getPost('Visitor');
+            $model->attributes = $userParams;
+            $model->attributes = $visitorParams;
 
-            if (isset($_POST['User']['asic_expiry']) && !empty($_POST['User']['asic_expiry'])) {
-                $model->asic_expiry = date('Y-m-d', strtotime($_POST['User']['asic_expiry']));
+            if (isset($userParams['asic_expiry']) && !empty($userParams['asic_expiry'])) {
+                $model->asic_expiry = date('Y-m-d', strtotime($userParams['asic_expiry']));
             }
 
             $model->profile_type = Visitor::PROFILE_TYPE_ASIC;
@@ -723,24 +773,24 @@ class VisitorController extends Controller {
 
             if ($result = $visitorService->save($model, NULL, $session['id'])) {
                 $company = Company::model()->findByPk($model->company);
-                if ($company) {
-                    $contact = new User('add_company_contact');
-                    $contact->company = $company->id;
-                    $contact->first_name = $model->first_name;
-                    $contact->last_name = $model->last_name;
-                    $contact->email = $model->email;
+                if (!empty($userParams['company']) && $company) {
+                    $contact                 = new User('add_company_contact');
+                    $contact->company        = $company->id;
+                    $contact->first_name     = $model->first_name;
+                    $contact->last_name      = $model->last_name;
+                    $contact->email          = $model->email;
                     $contact->contact_number = $model->contact_number;
-                    $contact->created_by = Yii::app()->user->id;
-
+                    $contact->created_by     = Yii::app()->user->id;
+                    
                     // Todo: temporary value for saving contact, will be update later
-                    $contact->timezone_id = 1; 
-                    $contact->photo = 0;
-
+                    $contact->timezone_id    = 1; 
+                    $contact->photo          = 0;
+                    
                     // foreign keys // todo: need to check and change for HARD-CODE
-                    $contact->tenant = $session['tenant'];
-                    $contact->user_type = UserType::USERTYPE_INTERNAL;
-                    $contact->user_status = 1;
-                    $contact->role = Roles::ROLE_STAFFMEMBER;
+                    $contact->tenant         = $session['tenant'];
+                    $contact->user_type      = UserType::USERTYPE_INTERNAL;
+                    $contact->user_status    = 1;
+                    $contact->role           = Roles::ROLE_STAFFMEMBER;
                     if (!$contact->save()) {
                         echo 0;
                         Yii::app()->end();
@@ -766,7 +816,7 @@ class VisitorController extends Controller {
         $model = $this->loadModel($id);
         $model->setscenario('updateIdentification');
         if ($model) {
-            $model->attributes = $_POST['Visitor'];
+            $model->attributes = Yii::app()->request->getPost('Visitor');
             if (!$model->save()) {
                 echo 0; Yii::app()->end();
             }

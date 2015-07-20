@@ -22,6 +22,7 @@
 <h1>Workstations</h1>
 
 <?php
+$module = CHelper::get_allowed_module();
 $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'workstation-grid',
     'dataProvider' => $model->search(),
@@ -40,21 +41,25 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'header' => 'Workstation',
             'htmlOptions' => array('width' => '180px', 'class' => 'ws-padding'),
         ),
+        
         array(
             'name' => 'moduleCorporate',
             'header' => '',
             'type' => 'raw',
             'value' => '$data->getCorporateCardType($data->id)',
             /* 'htmlOptions'=>array('width'=>'300px' , 'height'=>'119px'), */
-            'headerHtmlOptions' => array('class' => 'header-corporate')
+            'headerHtmlOptions' => array('class' => 'header-corporate'),
+            'visible'=> ( $module == "CVMS" || $module == "Both"),
         ),
+         
         array(
             'name' => 'moduleVic',
             'type' => 'raw',
             'header' => '',
             'value' => '$data->getCorporateVic($data->id)',
             /* 'htmlOptions'=>array('width'=>'400px' , 'height'=>'119px'), */
-            'headerHtmlOptions' => array('class' => 'header-vic')
+            'headerHtmlOptions' => array('class' => 'header-vic'),
+            'visible'=> ( $module == "AVMS" || $module == "Both"),
         ),
         array(
             'header' => 'Actions',
@@ -159,7 +164,6 @@ Yii::app()->clientScript->registerScript('select_card_type_vic', "
             var card_id = button_id.split('_');
             getEditText(card_id[1]);
             modal_name = modal_name + "-Back of Card";
-            console.log(modal_name);
             $("#mdlttl").html(modal_name);
             $("#card_id").val(card_id[1]);
             $('#form_modal_edit').modal('show');

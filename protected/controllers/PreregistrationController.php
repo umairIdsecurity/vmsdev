@@ -64,7 +64,7 @@ class PreregistrationController extends Controller
 			{
 				$session['workstation'] = $model->entrypoint;
 				$session['pre-page'] = 2;
-				$this->redirect(array('preregistration/privacypolicy'));
+				$this->redirect(array('preregistration/declaration'));
 			}
 		}
 
@@ -270,8 +270,10 @@ class PreregistrationController extends Controller
 							$model->selected_asic_id
 						);
 
+					$loggedUserEmail = 'Admin@perthairport.com.au';
 					$headers = "MIME-Version: 1.0" . "\r\n";
 					$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+					$headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
 					$to=$asicModel->email;
 					$subject="Request for verification of VIC profile";
 					$body = "<html><body>Hi,<br><br>".
@@ -279,8 +281,8 @@ class PreregistrationController extends Controller
 						"Link of the VIC profile<br>".
 						"<a href=' " .Yii::app()->getBaseUrl(true)."/index.php/preregistration/login'>".Yii::app()->getBaseUrl(true)."/index.php/preregistration/login</a><br>";
 					$body .="<br>"."Thanks,"."<br>Admin</body></html>";
-					mail($to, $subject, $body,$headers);
-					//$this->redirect(array('preregistration/uploadPhoto'));
+					mail($to, $subject, $body, $headers);
+
 				}
 				else{
 
@@ -290,8 +292,10 @@ class PreregistrationController extends Controller
 						$model->key_string = hash('ripemd160', uniqid());
 
 						if ($model->save()) {
+							$loggedUserEmail = 'Admin@perthairport.com.au';
 							$headers = "MIME-Version: 1.0" . "\r\n";
 							$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+							$headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
 							$to=$model->email;
 							$subject="Request for verification of VIC profile";
 							$body = "<html><body>Hi,<br><br>".
@@ -299,8 +303,8 @@ class PreregistrationController extends Controller
 								"Link of the VIC profile<br>".
 								"<a href=' " .Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?id=".$model->id."&email=".$model->email."&k_str=" .$model->key_string." '>".Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?id=".$model->id."&email=".$model->email."&k_str=".$model->key_string."</a><br>";
 							$body .="<br>"."Thanks,"."<br>Admin</body></html>";
-							mail($to, $subject, $body,$headers);
-							//$this->redirect(array('preregistration/uploadPhoto'));
+							mail($to, $subject, $body, $headers);
+
 
 						}
 					}
@@ -348,6 +352,7 @@ class PreregistrationController extends Controller
 
 			}
 			else{
+
 				$connection=Yii::app()->db;
 				$sql="SELECT * FROM `visitor` WHERE
 					  (first_name LIKE '%$searchValue%' OR last_name LIKE '%$searchValue%')
@@ -358,23 +363,22 @@ class PreregistrationController extends Controller
 				$records = $command->queryAll();
 
 				if(!empty($records)){
+
 					foreach($records as $data){
+						//$dataSet = array();
 						$companyModel = Company::model()->findByPk($data['company']);
 						if(!empty($companyModel)){
 							$companyName = $companyModel->name;
 						}
 						else{
-							$companyName = null;
+							$companyName = '-';
 						}
-						echo '<tr>
-						<th scope="row">
-							<input type="radio" name="selected_asic" class="selected_asic" value="'.$data['id'].'">
-						</th>
-						<td>'.$data['first_name'].'</td>
-						<td>'.$data['last_name'].'</td>
-						<td>'.$companyName.'</td>
-					</tr>';
+
+						$dataSet[] = array('<input type="radio" name="selected_asic" class="selected_asic" value="'.$data['id'].'">',$data['first_name'],$data['last_name'],$companyName);
+
 					}
+
+					echo json_encode($dataSet);
 				}
 				else{
 					echo "No Record";

@@ -42,7 +42,8 @@ class UserController extends Controller
                     'GetTenantOrTenantAgentCompany',
                     'GetTenantWorkstation',
                     'GetTenantAgentWorkstation',
-                    'getCompanyOfTenant'
+                    'getCompanyOfTenant',
+                    'checkCompanyContactEmail'
                 ),
                 'users' => array('@'),
             ),
@@ -96,7 +97,9 @@ class UserController extends Controller
             } else {
                 $model->password_option = '';
             }
-
+            // User Allowed Module
+            $model->allowed_module = Yii::app()->user->allowed_module;
+                    
             if ($userService->save($model, Yii::app()->user, $workstation)) {
                 Yii::app()->user->setFlash('success', "Record Added Successfully");
                 if (Yii::app()->request->isAjaxRequest) {
@@ -134,7 +137,9 @@ class UserController extends Controller
                 $_POST['User']['password'] = User::model()->hashPassword($_POST['User']['password']);
             }
             $model->attributes = $_POST['User'];
-
+            // User Allowed Module
+            $model->allowed_module = Yii::app()->user->allowed_module;
+            
             if ($userService->save($model, Yii::app()->user, null)) {
                 $this->redirect(array('admin', 'vms' => $model->is_avms_user() ? 'avms' : 'cvms'));
             }
@@ -198,8 +203,12 @@ class UserController extends Controller
         }
 
         if (CHelper::is_avms_users_requested()) {
+            //Check whether a login user/tenant allowed to view 
+            CHelper::check_module_authorization("AVMS");
             $model = $model->avms_user();
         } else {
+            //Check whether a login user/tenant allowed to view 
+            CHelper::check_module_authorization("CVMS");
             $model = $model->cvms_user();
         }
 
@@ -248,6 +257,7 @@ class UserController extends Controller
 
         if (isset($_POST['User'])) {
             $model->attributes = $_POST['User'];
+            // $model->detachBehavior('DateTimeZoneAndFormatBehavior');
             if ($model->save()) {
                 Yii::app()->user->setFlash('success', "Profile Updated Successfully.");
             }
@@ -425,5 +435,18 @@ class UserController extends Controller
             }
         }
         return $this->render("importhost", array("model" => $model));
+    }
+
+    public function actionCheckCompanyContactEmail() {
+        if(isset($_POST['email']) && isset($_POST['tenant'])){
+            $email = $_POST['email'];
+            $tenant = $_POST['tenant'];
+            if (User::model()->isEmailAddressUnique($email, $tenant)) {
+                echo 1;
+            } else {
+                echo 0;
+            };
+            Yii::app()->end();
+        }
     }
 }

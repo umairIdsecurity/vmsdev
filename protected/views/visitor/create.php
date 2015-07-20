@@ -93,8 +93,9 @@ function getCardType() {
         return 'Host';
     }
 }
-$(document).ready(function () {
+    $(document).ready(function () {
         display_ct();
+        
         $("#register-host-patient-form").hide();
         $("#register-host-form").show();
         $("#searchHostDiv").show();
@@ -181,10 +182,10 @@ $(document).ready(function () {
                 );
             } else {
                 $('#limit-first-name').html(
-                    '<td><input type="text" size="50" maxlength="50" placeholder="First Name" name="Visitor[first_name]" id="Visitor_first_name"><span class="required">*</span><br><div style="display:none" id="Visitor_first_name_em_" class="errorMessage"></div></td>'
+                    '<td><input type="text" size="50" maxlength="15" placeholder="First Name" name="Visitor[first_name]" id="Visitor_first_name"><span class="required">*</span><br><div style="display:none" id="Visitor_first_name_em_" class="errorMessage"></div></td>'
                 );
                 $('#limit-last-name').html(
-                    '<td><input type="text" size="50" maxlength="50" placeholder="Last Name" name="Visitor[last_name]" id="Visitor_last_name"><span class="required">*</span><br><div style="display:none" id="Visitor_last_name_em_" class="errorMessage"></div></td>'
+                    '<td><input type="text" size="50" maxlength="15" placeholder="Last Name" name="Visitor[last_name]" id="Visitor_last_name"><span class="required">*</span><br><div style="display:none" id="Visitor_last_name_em_" class="errorMessage"></div></td>'
                 );
             }
 
@@ -192,6 +193,7 @@ $(document).ready(function () {
 
         $(document).on("click", "#clicktabB", function (e) {
             e.preventDefault();
+            var cardType = $('#VisitCardType').val();
             if ($('.password_requirement').filter(':checked').val() == "<?php echo PasswordRequirement::PASSWORD_IS_REQUIRED; ?>") {
                 if ($('.password_option').filter(':checked').val() == "<?php echo PasswordOption::CREATE_PASSWORD; ?>") {
                     $('.visitor_password').empty().hide();
@@ -217,12 +219,10 @@ $(document).ready(function () {
             }
 
             var contact = $('#Visitor_staff_id').val();
-            if (typeof contact != 'undefined') {
+            if (cardType > <?php echo CardType::CONTRACTOR_VISITOR; ?> && typeof contact != 'undefined') {
                 $.ajax({
-                    type: "POST",
-                    url: "<?php echo $this->createUrl('company/getContact') ?>",
+                    url: "<?php echo $this->createUrl('company/getContact&id=') ?>" + contact,
                     dataType: "json",
-                    data: {id:contact},
                     success: function(data) {
                         if (data != 0) {
                             $('#User_id').val(data.id);
@@ -230,6 +230,10 @@ $(document).ready(function () {
                             $('#User_last_name').val(data.last_name);
                             $('#User_email').val(data.email);
                             $('#User_contact_number').val(data.contact_number);
+                            $('#User_company').select2("val", data.company);
+                            $('#User_asic_no').val(data.asic_no);
+                            $('#User_asic_expiry').val(data.asic_expiry);
+                            $('#Host_photo').val(data.photo);
                         }
                     }
                 });
@@ -294,6 +298,10 @@ $(document).ready(function () {
 
                     sendReasonForm();
                 } else {
+                    if ($("#hostId").val() != 0 || $("#hostId").val() != '') {
+                        var $sendMail = $("<textarea  name='Visit[sendMail]'>"+'true'+"</textarea>");
+                        $("#register-visit-form").append($sendMail);
+                    }
                     populateVisitFormFields();
                 }
                 $("#searchTextHostErrorMessage").hide();
@@ -369,6 +377,25 @@ $(document).ready(function () {
 );
 
 function closeAndPopulateField(id) {
+    $.ajax({
+        type: "POST",
+        url: "<?php echo $this->createUrl('company/getContact&id=') ?>" + id + "&isCompanyContact=0",
+        dataType: "json",
+        success: function(data) {
+            if (data != 0) {
+                $('#User_id').val(data.id);
+                $('#User_first_name').val(data.first_name);
+                $('#User_last_name').val(data.last_name);
+                $('#User_email').val(data.email);
+                $('#User_contact_number').val(data.contact_number);
+                $('#User_company').select2("val", data.company);
+                $('#User_asic_no').val(data.asic_no);
+                $('#User_asic_expiry').val(data.asic_expiry);
+                $('#Host_photo').val(data.photo);
+            }
+        }
+    });
+
     $.ajax({
         type: 'POST',
         url: '<?php echo Yii::app()->createUrl('visitor/getVisitorDetails&id='); ?>' + id,
@@ -452,11 +479,22 @@ function preloadHostDetails(hostId) {
         success: function (r) {
             $.each(r.data, function (index, value) {
                 if (index == "photo") {
+
                     $("#Host_photo3").val(value.id);
-                    $(".ajax-upload-dragdrop3").css("background", "url(<?php echo Yii::app()->request->baseUrl."/"; ?>" + value.relative_path + ") no-repeat center top");
+
+                    /*$(".ajax-upload-dragdrop3").css("background", "url(<?php echo Yii::app()->request->baseUrl."/"; ?>" + value.relative_path + ") no-repeat center top");
                     $(".ajax-upload-dragdrop3").css({"background-size": "132px 152px"});
                     logo.src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
-                    document.getElementById('photoCropPreview3').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+                    document.getElementById('photoCropPreview3').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;*/
+
+                    //showing image from DB as saved in DB -- image is not present in folder
+                    var my_db_image = "url(data:image;base64,"+ value.db_image + ")";
+
+                    $(".ajax-upload-dragdrop3").css("background", my_db_image + " no-repeat center top");
+                    $(".ajax-upload-dragdrop3").css({"background-size": "132px 152px" });
+                    logo.src = "data:image;base64,"+ value.db_image;
+                    document.getElementById('photoCropPreview3').src = "data:image;base64,"+ value.db_image;                    
+
                     $("#cropImageBtn3").show();
 
                 }
@@ -601,8 +639,9 @@ function checkHostEmailIfUnique() {
         dataType: 'json',
         data: email,
         success: function (r) {
+            var id = $("#User_id").val();
             $.each(r.data, function (index, value) {
-                if (value.isTaken == 1) {
+                if (value.isTaken == 1 && id == "") {
                     $("#hostEmailIsUnique").val("0");
                     $(".errorMessageEmail1").show();
                 } else {

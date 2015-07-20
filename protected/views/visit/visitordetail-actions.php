@@ -3,19 +3,13 @@ $cs = Yii::app()->clientScript;
 $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/script-visitordetail-actions-cssmenu.js');
 $session = new CHttpSession;
 $workstationModel = Workstation::model()->findByPk($model->workstation);
-
 $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
 ?>
 <div id='actionsCssMenu'>
-    <ul>
 
-        <li class='has-sub' id="closevisitLi" style="<?php
-        if (in_array($model->visit_status, array(VisitStatus::ACTIVE, VisitStatus::EXPIRED)) && $session['role'] != Roles::ROLE_STAFFMEMBER) {
-            echo "display:block;";
-        } else {
-            echo "display:none;";
-        }
-        ?>"><span class="close-visit">Close Visit</span>
+    <ul>
+        <?php if (in_array($model->visit_status, array(VisitStatus::ACTIVE, VisitStatus::EXPIRED))) : ?>
+        <li class='has-sub' id="closevisitLi"><span class="close-visit">Close Visit</span>
             <ul>
                 <li>
                     <table id="actionsVisitDetails">
@@ -24,7 +18,9 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                             <td >
 
                                 <div id="closeVisitDiv" class="form">
+
                                     <?php
+
                                     $closeVisitForm = $this->beginWidget('CActiveForm', array(
                                         'id' => 'close-visit-form',
                                         'htmlOptions' => array("name" => "close-visit-form", 'enctype' => 'multipart/form-data'),
@@ -33,6 +29,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                     ?>
 
                                     <?php
+                                   
                                     if (in_array($model->card_type, [CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_MULTIDAY, CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MANUAL])) {
                                         $this->renderPartial('closevisit-vic', array(
                                             'model' => $model,
@@ -43,6 +40,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                             'asic' => $asic
                                         ));
                                     } else {
+                                            
                                         $this->renderPartial('closevisit', array(
                                             'model' => $model,
                                             'visitorModel' => $visitorModel,
@@ -52,8 +50,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                                         ));
                                     }
                                     ?>
-
-                                    <input type='submit' id="closeVisitSubmit" style="display: none;" />
+                                    <input type='submit' id="closeVisitSubmit" name="closeVisitForm" style="display: none;" />
                                     <input type="submit" id="closeVisitBtn" class="complete" value="Close Visit" />
                                     <div style="display:inline;font-size:12px;"><b>or</b><a id="cancelActiveVisitButton" href="" class="cancelBtnVisitorDetail">Cancel</a></div>
                                     <!-- <button class="neutral greenBtn" id="cancelActiveVisitButton">Cancel</button>-->
@@ -65,6 +62,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                 </li>
             </ul>
         </li>
+        <?php endif; ?>
         <?php if (in_array($model->visit_status, [VisitStatus::PREREGISTERED, VisitStatus::SAVED, VisitStatus::CLOSED, VisitStatus::AUTOCLOSED])) { ?>
             
             <li class='has-sub' id="activateLi"><span class="log-current">Log Visit</span>
@@ -105,6 +103,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
 
                                     <div id="logVisitDiv">
                                         <?php
+                                           
                                         if ($asic) {
                                             $this->renderPartial('activateavisit-vic', array(
                                                 'model'        => $model,
@@ -167,6 +166,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
 
         <?php } ?>
     </ul>
+
 </div>
 
 <!-- Identification Modal -->
@@ -383,6 +383,19 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
         });
 
         $(document).on('click', '#registerNewVisit', function (e) {
+            e.preventDefault();
+            $this = $(this);
+
+            var pre_issued_card_no = $("#pre_issued_card_no").val();
+            if (typeof pre_issued_card_no != "undefined") {
+                if (pre_issued_card_no == "") {
+                    $("#card_number_required").show();
+                    return false;
+                } else {
+                    $("#card_number_required").hide();
+                }
+            }
+
             var imgsrc;
             $("#photoPreview").each(function() {
                 imgsrc = this.src;
@@ -408,12 +421,14 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                 <?php endif; ?>
             }
 
-            e.preventDefault();
-            $this = $(this);
-
             if ($this.val() == 'backdate') {
                 // Close a visit if card type is manual and operator select check in date less then current date
                 closeVisit();
+                return false;
+            }
+
+            if ($this.val() == 'preregister') {
+                activeVisit();
                 return false;
             }
 
@@ -436,71 +451,112 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             var is_vic_holder_checked = $('#VicHolderDecalarations').is(':checked'),
                 is_asic_holder_checked = $('#AsicSponsorDecalarations').is(':checked');
 
-            var declarations_checkboxs = $('.vic-active-declarations');
-            var confirmed = isCheckboxsChecked(declarations_checkboxs);
+            var declarationsCheckboxes = $('.vic-active-declarations');
+            var confirmed = isCheckboxesChecked(declarationsCheckboxes);
 
-            if (!confirmed && $this.val() !== 'preregister') {
+            if (!confirmed) {
                 if (!$('#VicHolderDecalarations').is(':checked') && $('#AsicSponsorDecalarations').is(':checked')) {
                     $('#vicHolderModal').modal('show');
                     $btnVic.on('click', function(e) {
-                        $('#identificationModal').modal('show');
+                        if (!$('input[name="identificationActiveVisit"]').is(':checked')) {
+                            $('#identificationModal').modal('show');
+                        } else {
+                            activeVisit();
+                            return false;
+                        }
                     });
                 } else if (!$('#AsicSponsorDecalarations').is(':checked') && $('#VicHolderDecalarations').is(':checked')){
                     $('#asicSponsorModal').modal('show');
                     $btnASIC.on('click', function(e) {
-                        $('#identificationModal').modal('show');
+                        if (!$('input[name="identificationActiveVisit"]').is(':checked')) {
+                            $('#identificationModal').modal('show');
+                        } else {
+                            activeVisit();
+                            return false;
+                        }
                     });
                 } else {
                     $('#vicHolderModal').modal('show');
                     $btnVic.on('click', function(e) {
-                        var vicChecked = vicCheck();
+                        var vicChecked = vicCheck(false);
                         if (vicChecked) {
                             $('#asicSponsorModal').modal('show');
-                            $btnASIC.on('click', function(e) {
-                                if ($('#asicEscortRbtn').is(':checked')) {
-                                    checkEscortEmailUnique();
-                                } else {
-                                    if (asicCheck()) {
-                                        $('#identificationModal').modal('show');
-                                    }
-                                }
-                            });
                         } else {
                             return false;
                         }
                     });
                 }
             } else {
-                confirmed = true;
+                activeVisit();
+                return false;
             }
-
-            if (confirmed == true) {
-
-                if ($this.val() == 'preregister') {
-                    flag = true;
-                } else {
-                    flag = isCheckboxsChecked(vic_active_visit_checkboxs);
-                }
-                
-                if (flag == true) {
-                    var pre_issued_card_no = $("#pre_issued_card_no").val();
-                    if (typeof pre_issued_card_no != "undefined") {
-                        if (pre_issued_card_no == "") {
-                            $("#card_number_required").show();
-                            return false;
-                        } else {
-                            $("#card_number_required").hide();
-                        }
-                    }
-                    activeVisit();
-                } else {
-                    $('#identificationModal').modal('show');
-                }
-            }
-
         });
 
-        function isCheckboxsChecked(checkboxs) {
+
+        $(document).on('click', '#identificationChkBoxNo', function(e) {
+            if (isExpired()) {
+                $('#identificationNotExpired').hide();
+                $('#identificationExpired').show();
+            } else {
+                $('#identificationExpired').hide();
+                $('#identificationNotExpired').show();
+            }
+        });
+
+        $(document).on('click', '#identificationChkBoxYes', function(e) {
+            $('#identificationExpired').hide();
+            $('#identificationNotExpired').hide();
+        });
+
+        $(document).on('click', '#btnIdentificationConfirm', function(e) {
+            var isChecked = $('input[name="identification"]').filter(':checked');
+            if (isChecked.length == 0) {
+                alert('Please select an option.');
+                return false;
+            }
+
+            if ($('#identificationChkBoxYes').is(':checked')) {
+                $('#identificationModal').modal('hide');
+                $('input[name="identificationActiveVisit"]').prop('checked', true);
+                if ($('#VicHolderDecalarations').is(':checked') && $('#asicSponsorActiveVisitLink').is(':checked')) {
+                    activeVisit();
+                    return false;
+                }
+            } else {
+                updateIdentificationDetails();
+            }
+        });
+
+        function updateIdentificationDetails() {
+
+            if (isExpired()) {
+                var data = $("#identification_expired_form").serialize();
+            } else {
+                var data = $("#identification_not_expired_form").serialize();
+            }
+
+            var ajaxOpts = {
+                url: "<?php echo Yii::app()->createUrl('visitor/updateIdentificationDetails&id='.$visitorModel->id); ?>",
+                type: 'POST',
+                dataType: 'json',
+                data: data,
+                success: function (r) {
+                    if (r == 1) {
+                        $('#identificationModal').modal('hide');
+                        $('input[name="identificationActiveVisit"]').prop('checked', true);
+                        if ($('#VicHolderDecalarations').is(':checked') && $('#asicSponsorActiveVisitLink').is(':checked')) {
+                            activeVisit();
+                            return false;
+                        }
+                    }
+                }
+            };
+
+            $.ajax(ajaxOpts);
+            return false;
+        }
+
+        function isCheckboxesChecked(checkboxs) {
             var flag = true;
             $.each(checkboxs, function(i, checkbox) {
                 $(checkbox).next('a').removeClass('label label-warning');
@@ -522,22 +578,27 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
             });
         }
 
-        function activeVisit() {
+        /*function activeVisit() {
             var status = "<?php echo $model->visit_status; ?>";
             if (status == "<?php echo VisitStatus::SAVED; ?>" || status == "<?php echo VisitStatus::PREREGISTERED; ?>") {
                 checkIfActiveVisitConflictsWithAnotherVisit();
             } else {
                 checkIfActiveVisitConflictsWithAnotherVisit('new');
             }
-        }
+        }*/
 
         function closeVisit() {
             var data = $('#activate-a-visit-form').serialize();
-            var url = "<?php echo Yii::app()->createUrl('visit/closeVisit&id='.$model->id); ?>";
-            $.post(url, {data: data}, function(r) {
-                if (r == 1) {
-                    window.location.reload();
-                }   
+            var url = "<?php echo Yii::app()->createUrl('visit/duplicateVisit&id='.$model->id . '&type=backdate'); ?>";
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: data,
+                success: function(id) {
+                    if (typeof id != 'undefined' && !isNaN(id)) {
+                        sendCardForm(id);
+                    }
+                }
             });
         }
 
@@ -706,6 +767,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
     <input type="text" id="CardGenerated_tenant_agent" name="CardGenerated[tenant_agent]" value="<?php echo $model->tenant_agent;
     ?>">
     <input type="text" id="CardGenerated_enter_card_number" name="CardGenerated[enter_card_number]" value=""/>
+    <input type="text" id="CardGenerated_date_expiration" name="CardGenerated[date_expiration]" value="" />
     <?php
 
     //$tenant = User::model()->findByPk($model->tenant);
@@ -726,5 +788,4 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
     <input type="text" id="CardGenerated_print_count" name="CardGenerated[print_count]" value="">
     <input type="submit" value="Create" name="yt0" id="submitCardForm">
     <?php $this->endWidget(); ?>
-
 </div>

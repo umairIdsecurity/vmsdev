@@ -20,7 +20,8 @@ class TenantController extends Controller {
         return array(
             array('allow', // allow all users to perform 'GetCompanyList' and 'GetCompanyWithSameTenant' actions
                 'actions' => array('GetCompanyList', 'GetCompanyWithSameTenant', 'create', 'delete'),
-                'users' => array('@'),
+                 'users' => array('@'),
+                'expression' => 'CHelper::check_module_authorization("Admin")'
             ),
             array('allow', // allow user if same company
                 'actions' => array('update'),
@@ -54,77 +55,85 @@ class TenantController extends Controller {
     }
 
     public function actionCreate() {
-       
+
+        //     $this->layout = '//layouts/contentIframeLayout';
         $session = new CHttpSession;
         $model = new TenantForm;
         if(yii::app()->request->isAjaxRequest){
-            if( $_POST['TenantForm']['password_opt']==1 ){
+            if($_POST['TenantForm']['password_opt']==1){
                 $model->scenario = "passwordrequire";
-            }  
+            }
             $this->performAjaxValidation($model);
+
+
         }
-        
+        //print_r($_POST);exit;
         if (isset($_POST['TenantForm'])) {
-           
+
             $transaction = Yii::app()->db->beginTransaction();
 
             try {
-                    $tenantContact = new TenantContact;
-                    $tenantModel = new Tenant;
-                    $userModel = new User;
-                    $companyModel = new Company;
-                    $photo = new Photo;
+                $tenantContact = new TenantContact;
+                $tenantModel = new Tenant;
+                $userModel = new User;
+                $companyModel = new Company;
+                $photo = new Photo;
                         
-                $photolastId = NULL;
+                $photolastId = 0;
                 if (isset($_POST['TenantForm']['photo']) && $_POST['TenantForm']['photo'] != "") {
-                    $photolastId = $_POST['TenantForm']['photo']; 
-                }  
-                /**
-                 * Saving Tenant Info as a new company
-                 */
-                
-                $companyModel->scenario = 'add_tenant';
+                    $photolastId = $_POST['TenantForm']['photo'];
+                }else{
+                    $photolastId = NULL;
+                }
+                $companyModel->company_type = 1; // tenant company type
                 $companyModel->code = $_POST['TenantForm']['tenant_code'];
                 $companyModel->name = $_POST['TenantForm']['tenant_name'];
                 $companyModel->trading_name = $_POST['TenantForm']['tenant_name'];
-                $companyModel->logo = $photolastId; /*logo image id*/
+                $companyModel->logo = $photolastId;/*logo image id*/
                 $companyModel->contact = $_POST['TenantForm']['contact_number'];
                 $companyModel->email_address = $_POST['TenantForm']['email'];
-                $companyModel->office_number = str_replace(" ","",$_POST['TenantForm']['contact_number']);
-                $companyModel->mobile_number =  str_replace(" ","", $_POST['TenantForm']['contact_number']);
+                $companyModel->office_number = $_POST['TenantForm']['contact_number'];
+                $companyModel->mobile_number = $_POST['TenantForm']['contact_number'];
                 $companyModel->is_deleted = 0;
                 $companyModel->created_by_user = Yii::app()->user->id;
-                $companyModel->company_type = 1; // For Tenant 
-                
-                $comapanylastId = 0;
-                                 
-                   if ( $companyModel->validate() ) {
+
+                $companyLastId = 0;
+                if ($companyModel->validate()) {
                     
-                    $companyModel->save();  
-                    $comapanylastId = $companyModel->id;
                     
+                    $companyModel->save();
+                    $companyLastId = $companyModel->id;
+
+                    $companyModel->tenant = $companyModel->id;
+                    $companyModel->save();
+
                     $userModel->first_name = $_POST['TenantForm']['first_name'];
                     $userModel->last_name = $_POST['TenantForm']['last_name'];
                     $userModel->email = $_POST['TenantForm']['email'];
                     $userModel->contact_number = $_POST['TenantForm']['contact_number'];
-                    $userModel->company = $comapanylastId;
+                    $userModel->company = $companyLastId;
+                    $userModel->timezone_id = $_POST['TenantForm']['timezone_id'];
+                    $userModel->tenant = $companyLastId;
 
                     $passwordval = NULL;
-                    if(isset($_POST['TenantForm']['password']) && $_POST['TenantForm']['password']!=""){
+                    if(isset($_POST['TenantForm']['password']) && $_POST['TenantForm']['password'] != ""){
                         $passwordval = $_POST['TenantForm']['password'];
                     }
-                    
-                    /**
-                     * Saving Tenant Admin User
-                     */
                     $userModel->password = $passwordval;
-                    $userModel->role = $_POST['TenantForm']['role'];
-                    $userModel->user_type = $_POST['TenantForm']['user_type'];
-                    $userModel->user_status = $_POST['TenantForm']['user_status'];
+                    //$userModel->role = $_POST['TenantForm']['role'];
+                    $userModel->role = 1;
+                    
+                    //$userModel->user_type = $_POST['TenantForm']['user_type'];
+                    //$userModel->user_status = $_POST['TenantForm']['user_status'];
+                    
+                    $userModel->user_type = 1;
+                    $userModel->user_status = 1;
+                    
                     $userModel->created_by = Yii::app()->user->id;
                     $userModel->is_deleted = 0;
                     $userModel->notes = $_POST['TenantForm']['notes'];
                     $userModel->photo = $photolastId;//$_POST['TenantForm']['photo'];
+
                     $userModel->asic_no = 10;
                     $userModel->asic_expiry_day = 10;
                     $userModel->asic_expiry_month = 10;
@@ -135,15 +144,14 @@ class TenantController extends Controller {
                     $access = CHelper::get_module_access($_POST);
                     $userModel->allowed_module = $access;    
                     $userLastID = 0;
-                    if ($userModel->validate()) {
-                        $userModel->save();
-                        $userLastID = $userModel->id;
-                        $userModel->timezone_id = $_POST['TenantForm']['timezone_id'];
-                        /**
-                         * Saving in Tenant and Tenant contact table
-                         */
-			$tenantModel->id = $comapanylastId;
-			$tenantModel->is_deleted = 0;
+                    if ( $userModel->validate() ) {
+                                               
+                        $userModel->save(false);
+                        $userLastID = $userModel->id;                     
+                        
+                         
+                        $tenantModel->id = $companyLastId;
+                        $tenantModel->is_deleted = 0;
                         $tenantModel->created_by = Yii::app()->user->id;
                         if ($tenantModel->validate()) {
                             $tenantModel->save();
@@ -153,46 +161,73 @@ class TenantController extends Controller {
                             $tenantContact->tenant = $tenantLastID;
                             $tenantContact->user = $userLastID;
                             if ($tenantContact->validate()) {
-                                $tenantContact->save();
-                                $transaction->commit(); 
+                                $tenantContact->save();                               
+                                $transaction->commit();
+
+                                //email sending
+                                if(!empty($_POST['TenantForm']['password_opt'])){
+                                    
+                                    $passwordRequire= intval($_POST['TenantForm']['password_opt']);
+
+                                    if($passwordRequire == 1){
+
+                                        $loggedUserEmail = Yii::app()->user->email;
+
+                                        $headers = "MIME-Version: 1.0" . "\r\n";
+                                        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+                                        $headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
+
+                                        $to=$_POST['TenantForm']['email'];
+
+                                        $subject="Preregistration email notification";
+                                        $body = "<html><body>Hi,<br><br>".
+                                                "This is preregistration email.<br><br>".
+                                                "Please click on the below URL:<br>".
+                                                "http://vmsprdev.identitysecurity.info/index.php/preregistration/login<br>";
+                                        $body .= "Password: ".$_POST['TenantForm']['password']."<br>";
+                                        $body .="<br>"."Thanks,"."<br>Admin</body></html>";
+
+                                        mail($to, $subject, $body, $headers);
+                                    }
+                                }
+
+                                Yii::app()->user->setFlash('success', "Tenant inserted Successfully");
+                                // echo json_encode(array('success'=>TRUE));
+                                $this->redirect(array('tenant/admin'));
                                 
-                                /** 
-                                 * Send User invitation to set password him/her self.
-                                 */
-                                 if( $_POST['TenantForm']['password_opt'] == 2 ){
-                                    User::model()->restorePassword($userModel->email);                           
-                                 }
-                                 
                             } else {
                                 $transaction->rollback();
+                                Yii::app()->user->setFlash('error',"Unable to create tenant. Please, fill all the fields and try again");
                             }
 
                         } else {
                             $transaction->rollback();
-                          }
+                            Yii::app()->user->setFlash('error',"Unable to create tenant. Please, fill all the fields and try again");
+                            
+                        }
+ 
                     } else {
                         $transaction->rollback();
-                        
-                 }
- 
-                } else { 
-                    //print_r($companyModel->getErrors());
-                    $transaction->rollback();
-                  }
-                
-                  Yii::app()->user->setFlash('success', "Tenant inserted Successfully");
-                //echo json_encode(array('success'=>TRUE));
-            
-                
-                }   catch (CDbException $e)
-                    {
-                        $transaction->rollback();
-                        echo $e->getMessage();
-                        Yii::app()->user->setFlash('error', "There was an error processing request");
-                        //echo json_encode(array('success'=>FALSE));
+                        Yii::app()->user->setFlash('error',"Unable to create tenant. Please, fill all the fields and try again");
                     }
-             
-           
+ 
+                } else {
+                    $transaction->rollback();
+                    Yii::app()->user->setFlash('error',"Unable to create tenant. Please, fill all the fields and try again");
+                }
+
+
+                /*Yii::app()->user->setFlash('success', "Tenant inserted Successfully");
+               // echo json_encode(array('success'=>TRUE));
+                $this->redirect(array('tenant/admin'));*/
+
+            }catch (CDbException $e)
+            {
+                $transaction->rollback();
+                Yii::app()->user->setFlash('error', $e->getMessage());
+                 
+            }
+            
         }
         $this->render('create', array(
             'model' => $model,
@@ -235,7 +270,7 @@ class TenantController extends Controller {
         $model->scenario = "updatetenant";
                        
         if(isset($_POST['Company'])){
-            print_r($_POST['Company']);
+            //print_r($_POST['Company']);
             $model->attributes = $_POST['Company'];
             $model->office_number = $_POST['Company']['mobile_number'];
             $model->contact = $_POST['Company']['mobile_number'];
@@ -251,7 +286,8 @@ class TenantController extends Controller {
                  $userModel->save(false);
          
                 Yii::app()->user->setFlash('success', "Tenant updated Successfully");
-                $this->redirect(array("tenant/update&id=".$id));
+                $this->redirect(array('tenant/admin'));
+                //$this->redirect(array("tenant/update&id=".$id));
 
             }else{
                 //print_r($model->getErrors());
@@ -303,6 +339,8 @@ class TenantController extends Controller {
         if (isset($_GET['Tenant']))
             $model->attributes = $_GET['Tenant'];
 
+        //Check whether a login user/tenant allowed to view 
+         CHelper::check_module_authorization("Admin");
         $this->render('_admin', array(
             'model' => $model,
         ), false, true);

@@ -8,13 +8,12 @@ if ($this->Id == 'visitor') {
 }
 ?>
 <?php
-//echo '<pre>';
-//var_dump($model->photo1);
-//echo '</pre>';
 if ($model->photo1) {
-    $background = $model->photo1->relative_path;
+    $background = "url(data:image;base64,".$model->photo1->db_image.")";
+    //$background = $model->photo1->db_image;
 } else {
-    $background = Yii::app()->controller->assetsBase . "/images/portrait_box.png";
+    $background = "url(".Yii::app()->controller->assetsBase ."/images/portrait_box.png)";
+    //$background = Yii::app()->controller->assetsBase . "/images/portrait_box.png";
 }
 ?>
 <style>
@@ -22,7 +21,10 @@ if ($model->photo1) {
         float:left !important;
         margin-left: 25px !important;
         margin-top: 10px;
-        background: url('<?php echo $background ?>') no-repeat center top;
+        
+        background: <?php echo $background ?> no-repeat center top;
+        /*background: url('<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png') no-repeat center top;*/
+        
         background-size:137px;
         height: 150px;
         width: 120px !important;
@@ -134,11 +136,24 @@ if (isset($_GET['viewFrom'])) {
 
                         $.each(r.data, function(index, value) {
 
-                            $(".ajax-upload-dragdrop2").css("background", "url(<?php echo Yii::app()->request->baseUrl."/"; ?>" + value.relative_path + ") no-repeat center top");
+                            /*$(".ajax-upload-dragdrop2").css("background", "url(<?php echo Yii::app()->request->baseUrl."/"; ?>" + value.relative_path + ") no-repeat center top");
                             $(".ajax-upload-dragdrop2").css({
                                 "background-size": "132px 152px"
                             });
-                            document.getElementById('photoCropPreview2').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+                            document.getElementById('photoCropPreview2').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;*/
+
+                            //showing image from DB as saved in DB -- image is not present in folder
+                            var my_db_image = "url(data:image;base64,"+ value.db_image + ")";
+
+                            $(".ajax-upload-dragdrop2").css("background", my_db_image + " no-repeat center top");
+                            $(".ajax-upload-dragdrop2").css({"background-size": "132px 152px" });
+
+                            var elem = document.getElementById('photoCropPreview2');
+                            if(typeof elem !== 'undefined' && elem !== null) {
+                                elem.src = "data:image;base64,"+ value.db_image;
+                            }
+                            //document.getElementById('photoCropPreview2').src =  "data:image;base64,"+ value.db_image;
+
                         });
                     }
                 });

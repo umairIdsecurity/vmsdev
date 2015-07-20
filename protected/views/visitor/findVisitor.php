@@ -85,7 +85,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'header' => 'Company',
             'filter' => false,
-            'value' => 'isset($data->getCompany()->name) ? $data->getCompany()->name : "NO COMPANY"'
+            'value' => 'Company::model()->getCompanyName($data->company)'
         ),
         array(
             'header' => 'Action',

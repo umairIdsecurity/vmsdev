@@ -41,10 +41,9 @@ $userRole = $session['role'];
         <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->controller->assetsBase; ?>/css/imgareaselect-default.css" />
         <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->controller->assetsBase; ?>/css/gridview.css" />
         <?php
-        $session['tenant'] = $session['id'];
+        //$session['tenant'] = $session['id'];
 
-        $tenantCompany = User::model()->findByPk($session['tenant'])->company;
-        $company = Company::model()->findByPk($tenantCompany);
+        $company = Company::model()->findByPk($session['tenant']);
 
         if (isset($company->company_laf_preferences) && $company->company_laf_preferences != '') {
             $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
@@ -61,12 +60,9 @@ $userRole = $session['role'];
         <script  src="<?php echo Yii::app()->controller->assetsBase; ?>/js/jquery.uploadfile.min.js" ></script>
         <script  src="<?php echo Yii::app()->controller->assetsBase; ?>/js/jquery.form.js" ></script>
 
-        <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
-        <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-        <script async src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 
         <title><?php echo CHtml::encode($this->pageTitle); ?></title>
- 
+
     </head>
 
     <body>
@@ -128,6 +124,10 @@ $userRole = $session['role'];
                                 </a>
                             </li>
 
+                            <li class="open-folder">
+                                <a style="display:block; width: 40px;height: 40px;" title="Open folder" href="<?php echo Yii::app()->createUrl("/uploadFile"); ?>"><span class="glyphicon glyphicons-folder-open"></span></a>
+                            </li>
+
                             <li class="help">
                                 <a title="help" href="<?php echo Yii::app()->createUrl("/dashboard/helpdesk"); ?>">
                                     Help
@@ -181,7 +181,7 @@ $userRole = $session['role'];
                             <li class="<?php echo ($session['lastPage'] != 'dashboard' && ($this->action->id == "admin" || ($this->id == 'visit' && $this->action->id != 'view') || $this->id == "user" || $this->id == "visitor" || $this->id == "company" || $this->id == "workstation" || $this->id == "visitReason" || $this->id == "companyLafPreferences")) ? "active" : "" ?>">
                                 <?php if (in_array($session['role'], array(Roles::ROLE_ADMIN,Roles::ROLE_AGENT_ADMIN,Roles::ROLE_SUPERADMIN,Roles::ROLE_AGENT_AIRPORT_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN))) {
                                 ?>
-                                    <a href="<?php echo Yii::app()->createUrl("/user/admin"); ?>">Administration</a>
+                                <a href="<?php echo Yii::app()->createUrl("/user/admin&vms=".strtolower(CHelper::get_allowed_module())); ?>">Administration</a>
                                 <?php }else{ ?>
                                     <p style="width:230px;"></p>
                                 <?php } ?>
@@ -231,6 +231,12 @@ $userRole = $session['role'];
                     </div><!-- footer -->
 
                     </div><!-- page -->
-
+<div style="display: none;">
+<?php
+    $this->widget('zii.widgets.jui.CJuiDatePicker',array(
+        'name' => 'AutoGenerateJqueryUI'
+    ));
+?>
+</div>
 </body>
 </html>

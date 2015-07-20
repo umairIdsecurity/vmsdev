@@ -75,7 +75,6 @@ if ($this->action->id == 'update') {
             'afterValidate'    => 'js:function(form, data, hasError){ 
                 
                 var visitor_card_status = $("#Visitor_visitor_card_status").val();
-                console.log(visitor_card_status);
                 switch (visitor_card_status) {
                     case "'.Visitor::ASIC_ISSUED.'":
                         var visitor_asic_no     = $("#Visitor_asic_no").val();
@@ -156,21 +155,39 @@ if ($this->action->id == 'update') {
                                 <table>
                                     <input type="hidden" id="Visitor_photo" name="Visitor[photo]"
                                            value="<?php echo $model['photo']; ?>">
-                                    <?php if ($model['photo'] != NULL) { ?>
+                                    <?php if ($model['photo'] != NULL) { 
+                                        $data = Photo::model()->returnVisitorPhotoRelativePath($dataId);
+                                        $my_image = '';
+                                        if(!empty($data['db_image'])){
+                                            $my_image = "url(data:image;base64," . $data['db_image'] . ")";
+                                        }else{
+                                            $my_image = "url(" .$data['relative_path'] . ")";
+                                        }
+                                    ?>
                                         <style>
                                             .ajax-upload-dragdrop {
-                                                background: url('<?php echo Photo::model()->returnVisitorPhotoRelativePath($dataId) ?>') no-repeat center top;
+                                                background: <?php echo $my_image ?> no-repeat center top !important;
                                                 background-size: 137px 190px !important;
                                             }
                                         </style>
                                     <?php }
                                     ?>
                                     <br>
+                                    
                                     <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
+
                                     <div class="photoDiv" style="display:none;">
-                                        <?php if ($dataId != '' && $model['photo'] != NULL) { ?>
+                                        <?php if ($dataId != '' && $model['photo'] != NULL) {
+                                            $data = Photo::model()->returnVisitorPhotoRelativePath($dataId);
+                                            $my_image = '';
+                                            if(!empty($data['db_image'])){
+                                                $my_image = "data:image;base64," . $data['db_image'];
+                                            }else{
+                                                $my_image = $data['relative_path'];
+                                            }
+                                         ?>
                                             <img id='photoPreview'
-                                                 src="<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($dataId) ?>"
+                                                 src = "<?php echo $my_image ?>"
                                                  style='display:block;height:174px;width:133px;'/>
                                         <?php } elseif ($model['photo'] == NULL) {
                                             ?>
@@ -179,18 +196,18 @@ if ($this->action->id == 'update') {
                                                  src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png"
                                                  style='display:block;height:174px;width:133px;'/>
 
-                                        <?php } else {
+                                        <?php } else { ?>
 
-                                            ?>
+                                            <img id='photoPreview' src="data:image;base64,<?php
+                                                if ($this->action->id == 'update' && $model->photo != '') {
+                                                    echo Company::model()->getPhotoRelativePath($model->photo);
+                                                }
+                                                ?>
+                                                " style='display:none;'/>
 
-                                            <img id='photoPreview' src="<?php
-                                            if ($this->action->id == 'update' && $model->photo != '') {
-                                                echo Yii::app()->request->baseUrl . "/" . Company::model()->getPhotoRelativePath($model->photo);
-                                            }
-                                            ?>
-                                             " style='display:none;'/>
                                         <?php } ?>
                                     </div>
+
                                     </td>
                                     </tr>
                                 </table>
@@ -241,6 +258,7 @@ if ($this->action->id == 'update') {
                                             <?php /*echo "<br>" . $form->error($model, 'tenant_agent'); */?>
                                 </table>-->
                                 <table style="margin-top: 70px;">
+                                <?php if ($model->profile_type == Visitor::PROFILE_TYPE_ASIC): ?>
                                     <tr>
                                         <td>
                                             <?php echo $form->dropDownList($model, 'visitor_card_status', Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_ASIC], array('empty' => 'Select Card Status')); ?>
@@ -248,6 +266,7 @@ if ($this->action->id == 'update') {
                                             <?php echo "<br>" . $form->error($model, 'visitor_card_status'); ?>
                                         </td>
                                     </tr>
+                                <?php endif; ?>
                                     <tr>
                                         <td id="visitorTenantRow" <?php
                                         if ($session['role'] != Roles::ROLE_SUPERADMIN) {
@@ -264,7 +283,7 @@ if ($this->action->id == 'update') {
                                                     ?>
                                                     <option value="<?php echo $value['id']; ?>"
                                                         <?php
-                                                        if (($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant'] && $this->action->id != 'update') || ($model['tenant'] == $value['id'])) {
+                                                        if (($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['id'] && $this->action->id != 'update') || ($model['tenant'] == $value['id'])) {
                                                             echo "selected ";
                                                         }
                                                         ?> ><?php echo $value['name']; ?></option>
@@ -439,6 +458,7 @@ if ($this->action->id == 'update') {
                                     <?php echo $form->textField($model, 'identification_document_no', array('size' => 10, 'maxlength' => 50, 'placeholder' => 'Document No.', 'style' => 'width: 110px;')); ?>
 
                                     <?php
+
                                     $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                         'model'       => $model,
                                         'attribute'   => 'identification_document_expiry',
@@ -530,7 +550,7 @@ if ($this->action->id == 'update') {
         }
 
         var companyValue = $("#Visitor_company").val();
-        
+        var passwordConfirmed = false;
         if ($('.password_requirement').filter(':checked').val() == "<?php echo PasswordRequirement::PASSWORD_IS_REQUIRED; ?>") {
             if ($('.password_option').filter(':checked').val() == "<?php echo PasswordOption::CREATE_PASSWORD; ?>") {
                 $('.visitor_password').empty().hide();
@@ -549,6 +569,7 @@ if ($this->action->id == 'update') {
                 }
                 $('input[name="Visitor[password]"]').val(password_temp);
                 $('input[name="Visitor[repeatpassword]"]').val(password_repeat_temp);
+                passwordConfirmed = true;
             }
         } else {
             $('.visitor_password').empty().hide();
@@ -560,7 +581,7 @@ if ($this->action->id == 'update') {
             var asic_no = $('#Visitor_asic_no').val();
             var asic_expiry = $('#Visitor_asic_expiry').val();
 
-            if (asic_no == "" && asic_expiry == "") {
+            if (asic_no == "" && asic_expiry == "" && passwordConfirmed == false) {
                 $('#Visitor_visitor_card_status').val(<?php echo Visitor::ASIC_EXPIRED; ?>);
                 var card_status = $('#Visitor_visitor_card_status').val();
                 if (card_status == "<?php echo Visitor::ASIC_EXPIRED; ?>") {
@@ -604,6 +625,13 @@ if ($this->action->id == 'update') {
                 $('#Visitor_password_requirement_0').prop('disabled', false).trigger('click');
                 $('.user_requires_password').hide();
             }
+        });
+
+        $('#Visitor_identification_document_expiry').datepicker({
+            minDate: '0',
+            maxDate: '+2y +2m',
+            changeYear: true,
+            changeMonth: true
         });
 
         $('#fromDay').on('change', function () {
@@ -726,7 +754,7 @@ if ($this->action->id == 'update') {
                     y2: $("#y2").val(),
                     width: $("#width").val(),
                     height: $("#height").val(),
-                    imageUrl: $('#photoPreview').attr('src').substring(1, $('#photoPreview').attr('src').length),
+                    //imageUrl: $('#photoPreview').attr('src').substring(1, $('#photoPreview').attr('src').length),
                     photoId: $('#Visitor_photo').val()
                 },
                 dataType: 'json',
@@ -737,11 +765,25 @@ if ($this->action->id == 'update') {
                         dataType: 'json',
                         success: function (r) {
                             $.each(r.data, function (index, value) {
-                                document.getElementById('photoPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+                            
+                            /*    document.getElementById('photoPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 $(".ajax-upload-dragdrop").css("background", "url(" + value.relative_path + ") no-repeat center top");
-                                $(".ajax-upload-dragdrop").css({"background-size": "132px 152px"});
+                                $(".ajax-upload-dragdrop").css({"background-size": "132px 152px"});*/
+
+                                //showing image from DB as saved in DB -- image is not present in folder
+                                var my_db_image = "url(data:image;base64,"+ value.db_image + ")";
+
+                                document.getElementById('photoPreview').src = "data:image;base64,"+ value.db_image;
+                                document.getElementById('photoCropPreview').src = "data:image;base64,"+ value.db_image;
+                                $(".ajax-upload-dragdrop").css("background", my_db_image + " no-repeat center top");
+                                $(".ajax-upload-dragdrop").css({"background-size": "132px 152px" });
+                            
+
                             });
+
+
+
                             $("#closeCropPhoto").click();
                             var ias = $('#photoCropPreview').imgAreaSelect({instance: true});
                             ias.cancelSelection();
@@ -939,6 +981,7 @@ if ($this->action->id == 'update') {
         } else {
             url = "<?php echo CHtml::normalizeUrl(array("visitor/addvisitor")); ?>";
         }
+
         var ajaxOpts = {
             type: "POST",
             url: url,
@@ -1061,16 +1104,27 @@ $this->widget('bootstrap.widgets.TbButton', array(
 
 </div>
 <!-- PHOTO CROP-->
-
 <div id="light" class="white_content">
-    <br>
+
     <?php if ($this->action->id == 'addvisitor') { ?>
+
         <img id="photoCropPreview" src="">
-    <?php } elseif ($this->action->id == 'update') { ?>
+
+    <?php } elseif ($this->action->id == 'update') {
+                $data = Photo::model()->returnVisitorPhotoRelativePath($model->id);
+                $my_image = '';
+                if(!empty($data['db_image'])){
+                    $my_image = "data:image;base64," . $data['db_image'];
+                }else{
+                    $my_image = $data['relative_path'];
+                }
+     ?>
+
         <img id="photoCropPreview"
-             src="<?php echo Yii::app()->request->baseUrl . "/" . Photo::model()->returnVisitorPhotoRelativePath($model->id) ?>">
+            src = "<?php echo $my_image ?>" >
     <?php } ?>
 </div>
+
 
 <div id="fade" class="black_overlay"></div>
 <div id="crop_button">

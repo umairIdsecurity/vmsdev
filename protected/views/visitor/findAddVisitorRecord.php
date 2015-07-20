@@ -94,7 +94,9 @@ $model->identification_country_issued = 13;
                                              src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png"
                                              style='display:none;'/>
                                     </div>
+
                                     <?php require_once(Yii::app()->basePath . '/draganddrop/index.php'); ?>
+
                                     <div id="photoErrorMessage" class="errorMessage"
                                          style="display:none;  margin-top: 200px;margin-left: 71px !important;position: absolute;">
                                         Please upload a photo.
@@ -126,22 +128,21 @@ $model->identification_country_issued = 13;
 
                             <tr id="limit-first-name">
                                 <td>
-                                    <?php echo $form->textField($model, 'first_name',
-                                        array('size' => 50, 'maxlength' => 50, 'placeholder' => 'First Name')); ?>
+                                    <?php echo $form->textField($model, 'first_name', ['size' => 50, 'maxlength' => 15, 'placeholder' => 'First Name']); ?>
                                     <span class="required">*</span>
                                     <?php echo "<br>" . $form->error($model, 'first_name'); ?>
                                 </td>
                             </tr>
                             <tr class="vic-visitor-fields">
                                 <td>
-                                    <?php echo $form->textField($model, 'middle_name', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Middle Name')); ?>
+                                    <?php echo $form->textField($model, 'middle_name', ['size' => 50, 'maxlength' => 50, 'placeholder' => 'Middle Name']); ?>
                                     <?php echo "<br>" . $form->error($model, 'middle_name'); ?>
                                 </td>
                             </tr>
                             <tr id="limit-last-name">
                                 <td>
                                     <?php echo $form->textField($model, 'last_name',
-                                        array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Last Name')); ?>
+                                        array('size' => 50, 'maxlength' => 15, 'placeholder' => 'Last Name')); ?>
                                     <span class="required">*</span>
                                     <?php echo "<br>" . $form->error($model, 'last_name'); ?>
                                 </td>
@@ -331,7 +332,7 @@ $model->identification_country_issued = 13;
                                             ?>
                                             <option value="<?php echo $value['id']; ?>"
                                                 <?php
-                                                if ($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant']) {
+                                                if ($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['id']) {
                                                     echo " selected ";
                                                 }
                                                 ?>
@@ -399,8 +400,8 @@ $model->identification_country_issued = 13;
 
                                         foreach ($workstationList as $key => $value) {
                                             ?>
-                                            <option value="<?php echo $value->id; ?>" <?php echo $value->id == $session['workstation'] ? 'selected="selected"' : ''; ?>>
-                                                <?php echo 'Workstation: ' . $value->name; ?>
+                                            <option value="<?php echo $value['id']; ?>" <?php echo $value['id'] == $session['workstation'] ? 'selected="selected"' : ''; ?>>
+                                                <?php echo 'Workstation: ' . $value['name']; ?>
                                             </option>
                                         <?php
                                         }
@@ -421,14 +422,15 @@ $model->identification_country_issued = 13;
                                     if(Yii::app()->user->role == Roles::ROLE_ADMIN) {
                                         $list = VisitorType::model()->findAll("created_by = :c", [":c" => Yii::app()->user->id]);
                                         echo '<select onchange="showHideHostPatientName(this)" name="Visitor[visitor_type]" id="Visitor_visitor_type">';
-                                        echo CHtml::tag('option',array('value' => ''),'Select Visitor Type',true);
+                                        echo CHtml::tag('option', array('value' => ''), 'Select Visitor Type', true);
                                         foreach( $list as $val ) {
                                             if ( $val->tenant == Yii::app()->user->tenant && $val->is_default_value == '1' ) {
                                                 echo CHtml::tag('option', array('value' => $val->id, 'selected' => 'selected'), CHtml::encode('Visitor Type: '.$val->name), true);
                                             } else {
                                                 echo CHtml::tag('option', array('value' => $val->id), CHtml::encode('Visitor Type: '.$val->name), true);
                                             }
-                                        } echo "</select>";
+                                        } 
+                                        echo "</select>";
                                     } else {
                                         echo $form->dropDownList($model, 'visitor_type',
                                         VisitorType::model()->returnVisitorTypes(null,""), array(
@@ -453,7 +455,7 @@ $model->identification_country_issued = 13;
                                         $reason = VisitReason::model()->findAllReason();
                                         foreach ($reason as $key => $value) {
                                             ?>
-                                            <option`
+                                            <option
                                                 value="<?php echo $value->id; ?>"><?php echo 'Reason: ' . $value->reason; ?></option>
                                         <?php
                                         }
@@ -534,6 +536,7 @@ $model->identification_country_issued = 13;
                                     <input type="text" name="Visitor_u18_identification_document_no" style="" placeholder="Details">
                                 </td>
                             </tr>
+                            <?php if (!in_array($session['role'], [Roles::ROLE_AIRPORT_OPERATOR, Roles::ROLE_AGENT_AIRPORT_ADMIN, Roles::ROLE_AGENT_AIRPORT_OPERATOR])): ?>
                             <tr class="vic-visitor-fields">
                                 <td>
                                     <?php echo $form->checkBox($model, 'alternative_identification', array('style' => 'float: left;')); ?>
@@ -542,6 +545,7 @@ $model->identification_country_issued = 13;
                                     </label>
                                 </td>
                             </tr>
+                            <?php endif; ?>
                             <tr class="row_document_name_number" style="display:none">
                                 <td>
                                     <?php echo $form->textField($model, 'identification_alternate_document_name1', array('size' => 50, 'maxlength' => 50, 'placeholder' => 'Document Name'));
@@ -668,7 +672,7 @@ $model->identification_country_issued = 13;
                                     ?>
                                     <option value="<?php echo $value['id']; ?>"
                                         <?php
-                                        if ($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['tenant']) {
+                                        if ($session['role'] != Roles::ROLE_SUPERADMIN && $session['tenant'] == $value['id']) {
                                             echo " selected ";
                                         }
                                         ?>><?php echo $value['name']; ?></option>
@@ -861,7 +865,7 @@ $model->identification_country_issued = 13;
             $("#search-visitor").val(''); 
         });
 
-        $('#fromDay').on('change', function () {console.log('ok');
+        $('#fromDay').on('change', function () {
             var dt = new Date();
 
             if(dt.getFullYear()< $("#fromYear").val()) {
@@ -955,7 +959,7 @@ $model->identification_country_issued = 13;
                     y2: $("#y2").val(),
                     width: $("#width").val(),
                     height: $("#height").val(),
-                    imageUrl: $('#photoCropPreview').attr('src').substring(1, $('#photoCropPreview').attr('src').length),
+                    //imageUrl: $('#photoCropPreview').attr('src').substring(1, $('#photoCropPreview').attr('src').length),
                     photoId: $('#Visitor_photo').val()
                 },
                 dataType: 'json',
@@ -967,12 +971,24 @@ $model->identification_country_issued = 13;
                         success: function(r) {
 
                             $.each(r.data, function(index, value) {
-                                document.getElementById('photoPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
+
+                                /*document.getElementById('photoPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 $(".ajax-upload-dragdrop").css("background", "url(<?php echo Yii::app()->request->baseUrl; ?>" + value.relative_path + ") no-repeat center top");
                                 $(".ajax-upload-dragdrop").css({
                                     "background-size": "132px 152px"
-                                });
+                                });*/
+
+                                //showing image from DB as saved in DB -- image is not present in folder
+                                var my_db_image = "url(data:image;base64,"+ value.db_image + ")";
+
+                                document.getElementById('photoPreview').src = "data:image;base64,"+ value.db_image;
+                                document.getElementById('photoCropPreview').src = "data:image;base64,"+ value.db_image;
+                                $(".ajax-upload-dragdrop").css("background", my_db_image + " no-repeat center top");
+                                $(".ajax-upload-dragdrop").css({"background-size": "132px 152px" });
+                            
+
+
                             });
                         }
                     });

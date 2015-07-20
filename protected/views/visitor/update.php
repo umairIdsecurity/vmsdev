@@ -14,5 +14,10 @@ if ($model->profile_type == Visitor::PROFILE_TYPE_CORPORATE) {
     $formSuffix = '_' . strtolower($model->profile_type);
 }
 
-$this->renderPartial('_form' . $formSuffix, array('model'=>$model));
+if (isset($_GET['profile_type']) && $_GET['profile_type'] != $model->profile_type) {
+	$model->unsetAttributes(['asic_no', 'asic_expiry']);
+	$formSuffix = '_' . strtolower($_GET['profile_type']);
+}
+
+$this->renderPartial('_form' . $formSuffix, ['model' => $model]);
 ?>

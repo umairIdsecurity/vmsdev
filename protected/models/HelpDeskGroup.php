@@ -133,9 +133,18 @@ class HelpDeskGroup extends CActiveRecord {
       * @return HelpDeskGroup the static model class
      */
 	public function getAllHelpDeskGroup() {
-       $helpDeskGroup = $this->findAll(array('order' => 'order_by ASC'));
-
-		return $helpDeskGroup;
+            
+            $criteria = new CDbCriteria();
+            $criteria->order = 'order_by ASC';
+            $module = CHelper::get_allowed_module();
+            
+            if( $module == "CVMS" )
+                $criteria->addCondition ('id IN (4, 6)');
+            if( $module == "AVMS" )
+               $criteria->addCondition ('id IN (2, 5, 7)');
+                       
+            $helpDeskGroup = $this->findAll($criteria);
+            return $helpDeskGroup;
     }
 	
 	 /**

@@ -233,7 +233,7 @@ $form = $this->beginWidget('CActiveForm', array(
     </td>
 </tr>
 <tr>
-    <td><?php echo $form->textField($model, 'contact_number', array('size' => 50, 'placeholder' => 'Mobile Number')); ?>
+    <td><?php echo $form->textField($model, 'contact_number', array('size' => 50, 'placeholder' => 'Contact No')); ?>
         <span class="required">*</span>
         <?php echo "<br>" . $form->error($model, 'contact_number'); ?></td>
 </tr>

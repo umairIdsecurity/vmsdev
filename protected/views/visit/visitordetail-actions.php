@@ -226,7 +226,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
                     <table style="border-collapse: initial;">
                         <tbody>
                             <tr>
-                                <td><input type="text" style="width: 300px;" name="Visitor['identification_type']" placeholder="Enter drivers licence, passport or proof of age"> <span class="required primary-identification-require">*</span>
+                                <td><input type="text" style="width: 300px;" name="Visitor[identification_document_no]" placeholder="Enter drivers licence, passport or proof of age"> <span class="required primary-identification-require">*</span>
                                 </td>
                                 <td>
                                 <?php

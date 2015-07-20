@@ -1348,6 +1348,13 @@ p.asic{
     text-decoration: none;
 }
 
+.glyphicon-off:before {
+    content: "\e017";
+    /*font-size: 20px;
+    padding-left: 10px;*/
+}
+
+
 #visitorDetailDiv .flash-success{
     display:none;
     font-size:12px;

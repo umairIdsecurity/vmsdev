@@ -24,6 +24,22 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
     <div id='cssmenu'>
         <ul>
 
+            <!-- menu for Tenant -->
+            <?php if ($session['role'] == Roles::ROLE_SUPERADMIN) { ?>
+                <li class='has-sub'>
+                    <?php echo CHtml::link('Tenant', array('tenant/admin'), array('class' => 'managetenant')) ?>
+
+                    <ul <?php if ($this->id == 'tenant') {
+                        echo "style='display:block ;'";
+                    }
+                    ?>>
+                        <li><a href='<?php echo Yii::app()->createUrl('tenant/create/&role=1'); ?>' class="addSubMenu ajaxLinkLi"><span>Add Tenant</span></a></li>
+                    </ul>
+                </li>
+            <?php
+            }
+            ?><!-- menu for tenant -->
+
             <?php
             if ($session['role'] == Roles::ROLE_ADMIN || $session['role'] == Roles::ROLE_ISSUING_BODY_ADMIN) {
                 ?>
@@ -397,27 +413,6 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
             <?php }
             */
             ?>
-
-            <!-- menu for Tenant -->
-            <?php if ($session['role'] == Roles::ROLE_SUPERADMIN) {
-            ?>
-
-            <li class='has-sub'>
-                <?php echo CHtml::link('Tenant', array('tenant/admin'), array('class' => 'managetenant')) ?>
-
-                <ul <?php
-                if ($this->id == 'tenant') {
-                    echo "style='display:block ;'";
-                }
-                ?>>
-
-                    <li><a href='<?php echo Yii::app()->createUrl('tenant/create/&role=1'); ?>'
-                           class="addSubMenu ajaxLinkLi"><span>Add Tenant</span></a></li>
-                </ul>
-            </li>
-            <?php
-            }
-            ?><!-- menu for tenant -->
 
             <!-- menu for companies -->
             <?php 

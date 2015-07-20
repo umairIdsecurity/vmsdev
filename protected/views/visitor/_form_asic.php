@@ -617,7 +617,7 @@ if ($this->action->id == 'update') {
 //        getWorkstation();
         currentCardStatus = $('#Visitor_visitor_card_status').val();
         if(currentCardStatus == 6) {
-            $('#Visitor_visitor_card_status').attr("disabled", true);
+            $('#Visitor_visitor_card_status').attr("readonly", true);
         }
 
         $(document).on('change', '#Visitor_visitor_card_status', function(e) {

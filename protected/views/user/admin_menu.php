@@ -327,62 +327,57 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                     </li>
                 </ul>
             </li>   <!-- end menu for AVMS Visitors -->
-          <?php } ?>
+        <?php } ?>
 
-          
-            <?php if ($session['role'] == Roles::ROLE_SUPERADMIN) {
+        <?php if ($session['role'] == Roles::ROLE_ADMIN) { ?>
+            <!-- menu for Visitors Reasons -->
+            <li class='has-sub'><?php
+                echo CHtml::ajaxLink("Visit Reasons", CController::createUrl('visitReason/adminAjax'), array(
+                    'update' => '#content',
+                    'complete' => "js:function(html){
+                        $('.managecompanies').next().slideUp('normal');
+                        $('.manageworkstations').next().slideUp('normal');
+                        $('.manageusers').next().slideUp('normal');
+                        $('.managevisitorrecords').next().slideUp('normal');
+                        $('.managevisitreasons').next().slideDown('normal');
+                        $('.managereports').next().slideUp('normal');
+                        $('.managevisitortype').next().slideUp('normal');
+                        $('.manageavmsreports').next().slideUp('normal');
+                    }",
+                ), array(
+                    'class' => 'managevisitreasons',
+                ));
                 ?>
+                <ul <?php if ($this->id == 'visitReason') {
+                    echo "style='display:block ;'";
+                }
+                ?>>
+                    <li><a href='<?php echo Yii::app()->createUrl('visitReason/create'); ?>' class="addSubMenu"><span>Add Visit Reason</span></a></li>
+                </ul>
+            </li><!-- menu for Visitors Reasons
+        <?php } ?>
 
-                      <!-- menu for Visitors Reasons -->
-                <li class='has-sub'><?php
-                    echo CHtml::ajaxLink("Visit Reasons", CController::createUrl('visitReason/adminAjax'), array(
-                        'update' => '#content',
-                        'complete' => "js:function(html){
-            $('.managecompanies').next().slideUp('normal');
-            $('.manageworkstations').next().slideUp('normal');
-            $('.manageusers').next().slideUp('normal');
-            $('.managevisitorrecords').next().slideUp('normal');
-            $('.managevisitreasons').next().slideDown('normal');
-            $('.managereports').next().slideUp('normal');
-            $('.managevisitortype').next().slideUp('normal');
-            $('.manageavmsreports').next().slideUp('normal');
-        }",
-                    ), array(
-                        'class' => 'managevisitreasons',
-                    ));
-                    ?>
-                    <ul <?php
-                    if ($this->id == 'visitReason') {
-                        echo "style='display:block ;'";
-                    }
-                    ?>>
-                        <li><a href='<?php echo Yii::app()->createUrl('visitReason/create'); ?>'
-                               class="addSubMenu"><span>Add Visit Reason</span></a></li>
-                    </ul>
-                </li><!-- menu for Visitors Reasons -->
-
-                <!-- menu for Visits -->
-                <li class=''><?php
-                    echo CHtml::ajaxLink("Visits", CController::createUrl('visit/admin'), array(
-                        'update' => '#content',
-                        'complete' => "js:function(html){
-                            $('.manageworkstations').next().slideUp('normal');
-                            $('.managecompanies').next().slideUp('normal');
-                            $('.manageusers').next().slideUp('normal');
-                            $('.managevisitorrecords').next().slideUp('normal');
-                            $('.managevisitreasons').next().slideUp('normal');
-                            $('.managereports').next().slideUp('normal');
-                            $('.managevisitortype').next().slideUp('normal');
-                            $('.manageavmsreports').next().slideUp('normal');
-                        }",
-                    ), array(
-                        'class' => 'managevisits',
-                    ));
-                    ?>
-
-                </li><!-- menu for Visits -->
-
-            <?php } /*else {
+        <?php if ($session['role'] == Roles::ROLE_SUPERADMIN) { ?>
+            <!-- menu for Visits -->
+            <li class=''><?php
+                echo CHtml::ajaxLink("Visits", CController::createUrl('visit/admin'), array(
+                    'update' => '#content',
+                    'complete' => "js:function(html){
+                        $('.manageworkstations').next().slideUp('normal');
+                        $('.managecompanies').next().slideUp('normal');
+                        $('.manageusers').next().slideUp('normal');
+                        $('.managevisitorrecords').next().slideUp('normal');
+                        $('.managevisitreasons').next().slideUp('normal');
+                        $('.managereports').next().slideUp('normal');
+                        $('.managevisitortype').next().slideUp('normal');
+                        $('.manageavmsreports').next().slideUp('normal');
+                    }",
+                ), array(
+                    'class' => 'managevisits',
+                ));
+                ?>
+            </li><!-- menu for Visits -->
+        <?php } /*else {
                 ?>
                 <!-- menu for Visitors -->
                 <li class='has-sub'><a class='managevisitorrecords'
@@ -416,7 +411,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
 
             <!-- menu for companies -->
             <?php 
-              if($module == "CVMS" || $module == "Both") {  
+              if($module == "CVMS" || $module == "Both") {
                 if ($session['role'] == Roles::ROLE_SUPERADMIN) {
             ?>
 

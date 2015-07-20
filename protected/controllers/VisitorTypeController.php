@@ -50,7 +50,7 @@ class VisitorTypeController extends Controller {
         if (isset($_POST['VisitorType'])) {
             $model->attributes = $_POST['VisitorType'];
             if ($visitorTypeService->save($model, Yii::app()->user))
-                $this->redirect(array('admin'));
+                $this->redirect(array('index', 'vms' => CHelper::is_accessing_avms_features() ? 'avms' : 'cvms'));
         }
 
         $this->render('create', array(

@@ -87,9 +87,13 @@ class Visitor extends CActiveRecord {
             self::ASIC_ISSUED    => 'Card Status: ASIC Issued',
             self::ASIC_EXPIRED   => 'Card Status: ASIC Expired',
             self::ASIC_DENIED    => 'Card Status: ASIC Denied',
-
         ),
     );
+
+    const ASIC_DENIED_LABEL      = 'Card Status: ASIC Denied';
+    const ASIC_ISSUED_LABEL      = 'Card Status: ASIC Issued';
+    const ASIC_APPLICANT_LABEL   = 'Card Status: ASIC Applicant';
+    const ASIC_EXPIRED_LABEL     = 'Card Status: ASIC Expired';
 
     public static $PROFILE_TYPE_LIST = array(
         self::PROFILE_TYPE_CORPORATE => 'Corporate',
@@ -307,7 +311,7 @@ class Visitor extends CActiveRecord {
                     contact_postcode,
                     contact_country',
                     'required',
-                    'except'=> ['updateVic', 'updateIdentification', 'delete', 'asicConvert']
+                    'except'=> ['updateVic', 'updateIdentification', 'delete', 'asicIssued']
                 );
                 break;
             case self::PROFILE_TYPE_ASIC:

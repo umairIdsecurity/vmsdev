@@ -366,7 +366,6 @@ if (isset($_GET['viewFrom'])) {
             url: "<?php echo $this->createUrl('company/checkNameUnique')?>",
             data: {name:name, tenant:tenant},
             success: function(data){
-                console.log(data);
                 if(data == 0) {
                     $('#Company_name_unique_em_').show();
                     return false;

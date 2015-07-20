@@ -22,7 +22,7 @@
         <table>
             <tr>
                 <td  style="vertical-align: top;width:100px;">
-                    <?php echo $form->labelEx($model,'reason'); ?>:
+                    <?php echo $form->labelEx($model,'reason'); ?>
                 </td>
                 
                 <td >

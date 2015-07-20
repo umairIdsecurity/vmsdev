@@ -340,7 +340,6 @@
                 if ($(this).attr('id') == 'upload_multi' && countInput == 1){
                     $(this).click();
                 }else {
-                    alert(countInput);
                     if ($(this).attr('id') == ('upload_multi_F' + (countInput - 1))) {
                         $(this).click();
                     }

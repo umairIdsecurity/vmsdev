@@ -133,8 +133,8 @@ class VisitorType extends CActiveRecord {
         if (Yii::app()->controller->action->id == 'index' || Yii::app()->controller->action->id == 'getFromCardType') {
             $criteria->condition = "t.is_deleted = 0 AND t.id !=1 ";
             if(Yii::app()->request->getParam('vms') == 'cvms')
-                $criteria->condition .= "AND t.name not like 'Vic%' AND t.name NOT like 'AVMS%'";
-            else $criteria->condition .= "AND (t.name like 'Vic%' Or t.name like 'AVMS%')";
+                $criteria->condition .= " AND t.name not like 'Vic%' AND t.name NOT like 'AVMS%'";
+            else $criteria->condition .= " AND (t.name like 'Vic%' Or t.name like 'AVMS%')";
 
 
         }

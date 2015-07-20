@@ -244,6 +244,7 @@ class UploadFileController extends Controller
                     case 'docx':
                     case 'pdf':
                     case 'ppt':
+                    case 'pptx':
                     case 'xls':
                     case 'xml':
                         //render view

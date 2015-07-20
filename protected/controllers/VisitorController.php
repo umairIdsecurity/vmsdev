@@ -121,7 +121,7 @@ class VisitorController extends Controller {
      */
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
-        $profileType        = $model->profile_type;
+        $oldProfileType        = $model->profile_type;
         $visitorService     = new VisitorServiceImpl;
         $session            = new CHttpSession;
         $updateErrorMessage = '';
@@ -194,6 +194,38 @@ class VisitorController extends Controller {
                             echo $updateErrorMessage;
                     }
                 }
+            }
+
+            // If operator convert from VIC to ASIC profile then generate a company contact
+            if ($oldProfileType == Visitor::PROFILE_TYPE_VIC && $model->profile_type == Visitor::PROFILE_TYPE_ASIC) {
+                $contact                 = new User('add_company_contact');
+                $contact->company        = $model->company;
+                $contact->first_name     = $model->first_name;
+                $contact->last_name      = $model->last_name;
+                $contact->email          = $model->email;
+                $contact->contact_number = $model->contact_number;
+                $contact->created_by     = Yii::app()->user->id;
+                
+                // Todo: temporary value for saving contact, will be update later
+                $contact->timezone_id    = 1;
+                $contact->photo          = 0;
+                
+                // foreign keys // todo: need to check and change for HARD-CODE
+                $contact->tenant         = $session['tenant'];
+                $contact->user_type      = 1;
+                $contact->user_status    = 1;
+                $contact->role           = 9;
+
+                if ($contact->save()) {
+                    switch ($isViewedFromModal) {
+                        case "1":
+                            break;
+
+                        default:
+                            echo $updateErrorMessage;
+                    }
+                }
+
             }
 
         } else{

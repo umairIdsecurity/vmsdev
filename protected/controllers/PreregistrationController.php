@@ -64,7 +64,7 @@ class PreregistrationController extends Controller
 			{
 				$session['workstation'] = $model->entrypoint;
 				$session['pre-page'] = 2;
-				$this->redirect(array('preregistration/declaration'));
+				$this->redirect(array('preregistration/privacyPolicy'));
 			}
 		}
 
@@ -85,13 +85,13 @@ class PreregistrationController extends Controller
 		if(
 			isset($session['declaration1']) && $session['declaration1'] == 1 &&
 			isset($session['declaration2']) && $session['declaration2'] == 1 &&
-			isset($session['declaration3']) && $session['declaration3'] == 1 &&
+			//isset($session['declaration3']) && $session['declaration3'] == 1 &&
 			isset($session['declaration4']) && $session['declaration4'] == 1
 		)
 		{
 			$model->declaration1 = $session['declaration1'];
 			$model->declaration2 = $session['declaration2'];
-			$model->declaration3 = $session['declaration3'];
+			//$model->declaration3 = $session['declaration3'];
 			$model->declaration4 = $session['declaration4'];
 		}
 
@@ -104,7 +104,7 @@ class PreregistrationController extends Controller
 			{
 				$session['declaration1'] = $model->declaration1;
 				$session['declaration2'] = $model->declaration2;
-				$session['declaration3'] = $model->declaration3;
+				//$session['declaration3'] = $model->declaration3;
 				$session['declaration4'] = $model->declaration4;
 				$this->redirect(array('preregistration/registration'));
 			}

@@ -188,23 +188,14 @@ $userRole = $session['role'];
                                 <?php } ?>
                             </li>
 
-
-
-
                             <li class="loggedin-as">
                                Logged in as <?php echo User::model()->getUserRole($userRole); ?>
-                                
-                            </li> 
+                            </li>
 
                             <li class="logout">
-                                    <?php
-                            echo '<a href="' . Yii::app()->createUrl("/site/logout") . '">Log Out</a>';
-                            ?>
+                                <?php echo '<a href="' . Yii::app()->createUrl("/site/logout") . '">Log Out</a>'; ?>
                             </li>
-                            
-
                         </ul>
-
                     </nav>
 
                     <div class="clear"></div>

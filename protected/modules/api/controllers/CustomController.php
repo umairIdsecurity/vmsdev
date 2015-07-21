@@ -133,16 +133,17 @@ class CustomController extends RestfulController {
 					$kiosk->created_by = $user->id;
 					$kiosk->is_deleted = 0;
 					$kiosk->enabled = 1;
+					$kiosk->atoken = password_hash($data['kiosk'].time().rand(1000, 9999), PASSWORD_BCRYPT);
 					
 					if ($kiosk->validate()) {
 						$kiosk->save();    
-						$result = array('status'=>'new');
+						$result = array('status'=>'new', 'atoken'=>$kiosk->atoken);
 						$this->sendResponse(201, CJSON::encode($result));
 					} else {
 						$this->sendResponse(401, CJSON::encode($kiosk->getErrors()));
 					}
 				}else{
-					$result = array('status'=>'continue');
+					$result = array('status'=>'continue', 'ktoken'=>$kiosk[0]->atoken);
 					$this->sendResponse(201, CJSON::encode($result));
 				}				
 				

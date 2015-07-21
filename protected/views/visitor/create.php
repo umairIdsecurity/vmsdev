@@ -218,9 +218,9 @@ function getCardType() {
                 $('.visitor_password_repeat').empty().hide();
             }
 
-            var company = $('#Visitor_company').val();
+            var contact = $('#Visitor_staff_id').val();
             if (cardType > <?php echo CardType::CONTRACTOR_VISITOR; ?> && typeof contact != 'undefined') {
-                populateAsicFields(company, true);
+                populateAsicFields(contact, true);
             }
 
             $(".visitorType").hide();
@@ -358,10 +358,10 @@ function getCardType() {
             $("#" + showThisLiId).show();
         }
 
-        window.populateAsicFields = function populateAsicFields(contact, isCompany) {
-            if (isCompany) {
+        window.populateAsicFields = function populateAsicFields(contact, isCompanyContact) {
+            if (isCompanyContact) {
                 // if contact is company
-                var url = "<?php echo $this->createUrl('company/getContact&id=') ?>" + contact + "&isCompany=1";
+                var url = "<?php echo $this->createUrl('company/getContact&id=') ?>" + contact + "&isCompanyContact=1";
             } else {
                 // If contact is visitor
                 var url = "<?php echo $this->createUrl('company/getContact&id=') ?>" + contact;
@@ -370,7 +370,7 @@ function getCardType() {
             $.ajax({
                 url: url,
                 dataType: "json",
-                success: function(data) {console.log(data);
+                success: function(data) {
                     if (data != 0) {
                         $('#User_id').val(data.id);
                         $('#User_first_name').val(data.first_name);

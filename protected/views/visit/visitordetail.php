@@ -427,9 +427,16 @@ $this->renderPartial('visithistory', array('model' => $model,
         } else {
             var visitForm = $("#" + formId).serialize();
         }
+        if ($('#Visitor_visitor_card_status option:selected').val() == 1)
+        {
+            $('#Visitor_visitor_card_status').children("option[value='2']").prop('selected',true);
+            $('#update-visitor-detail-form').submit();
+        } 
+
         $.ajax({
             type: "POST",
             url: "<?php echo CHtml::normalizeUrl(array("visit/update&id=" . $model->id)); ?>",
+            
             data: visitForm,
             success: function(data) {
                 $("#preregisterLi").hide();

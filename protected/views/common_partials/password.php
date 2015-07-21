@@ -99,12 +99,14 @@ if (isset($company) && !empty($company)) {
 	    $(parentElement() + '.password_requirement').click(function() {
 		     if($(parentElement() + '#Visitor_password_requirement_1').is(':checked'))
 			 {
-				$(parentElement() + '.user_requires_password').css("display","block");
-				$(parentElement() + '.password_option').prop('checked', false);
+                 $(parentElement() + '#Visitor_password_input').val('');
+                 $(parentElement() + '#Visitor_repeatpassword_input').val('');
+				 $(parentElement() + '.user_requires_password').css("display","block");
+				 $(parentElement() + '.password_option').prop('checked', false);
 			 }
 				else
 			 {
-				$(parentElement() + '.user_requires_password').css("display","none");
+				 $(parentElement() + '.user_requires_password').css("display","none");
 			 }
 
          });
@@ -122,6 +124,59 @@ if (isset($company) && !empty($company)) {
         }
         return parentElement;
     }
+
+    function validatePassword() {
+        if ($(parentElement() + "#Visitor_password_input").val() == "") {
+            $(parentElement() + "#Visitor_password_em_").html("Password should be specified");
+            $(parentElement() + "#Visitor_password_em_").show();
+            return false;
+        } else if ($(parentElement() + "#Visitor_repeatpassword_input").val() == "") {
+            $(parentElement() + "#Visitor_password_em_").hide();
+            $(parentElement() + "#Visitor_repeatpassword_em_").html("Please confirm a password");
+            $(parentElement() + "#Visitor_repeatpassword_em_").show();
+            return false;
+        } else {
+            $(parentElement() + "#Visitor_password_em_").hide();
+            $(parentElement() + "#Visitor_repeatpassword_em_").hide();
+            return true;
+        }
+    }
+
+    function isPasswordMatch() {
+        if($(parentElement() + "#Visitor_password_option_1").is(":checked")){
+            if($(parentElement() + "#Visitor_password_input").val() == $(parentElement() +"#Visitor_repeatpassword_input").val()){
+                $(parentElement() + "#Visitor_repeatpassword_em_").hide();
+                return true;
+            } else {
+                $(parentElement() + "#Visitor_repeatpassword_em_").html("Passwords are not matched");
+                $(parentElement() + "#Visitor_repeatpassword_em_").show();
+                return false;
+            }
+        }
+    }
+
+    $(parentElement() + "#Visitor_password_input").on("change",function(){
+        $(parentElement() + "#Visitor_password_em_").hide();
+        if($(parentElement() + "#Visitor_password_input").val() == '') {
+            $(parentElement() + "#Visitor_password_em_").html("Password should be specified");
+            $(parentElement() + "#Visitor_password_em_").show();
+        } else {
+            $(parentElement() + "#Visitor_password_em_").hide();
+        }
+
+    });
+
+    $(parentElement() + "#Visitor_repeatpassword_input").on("change",function(){
+        $(parentElement() + "Visitor_repeatpassword_em_").hide();
+        if($(parentElement() + "#Visitor_repeatpassword").val() == '') {
+            $(parentElement() + "#Visitor_repeatpassword_em_").html("Please confirm a password");
+            $(parentElement() + "#Visitor_repeatpassword_em_").show();
+        } else {
+            $(parentElement() + "Visitor_repeatpassword_em_").hide();
+        }
+
+    });
+
     function cancel() {
         $(parentElement() + '#Visitor_repeatpassword').val('');
         $(parentElement() + '#Visitor_password').val('');

@@ -367,7 +367,7 @@ class VisitController extends Controller {
 
         $hostModel = User::model()->findByPk($host);
 
-        // Update Workstation form ( left column on visitor detail page )
+        // Update visitor detail form ( left column on visitor detail page )
         if (isset($_POST['updateVisitorDetailForm']) && isset($_POST['Visitor'])) {
             $visitorModel->attributes = Yii::app()->request->getPost('Visitor');
 

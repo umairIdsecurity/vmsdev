@@ -382,7 +382,7 @@ function getCardType() {
                         $('#User_asic_expiry').val(data.asic_expiry);
                         $('select#Visitor_visitor_card_status').val(data.visitor_card_status);
                         $('#Host_photo').val(data.photo);
-                        if (typeof data.photoRelativePath[0].relative_path != 'undefined' && data.photoRelativePath != '') {
+                        if (data.photoRelativePath != '' && typeof data.photoRelativePath[0] != 'undefined' && typeof data.photoRelativePath[0].relative_path != 'undefined') {
                             $('.ajax-upload-dragdrop2').css(
                                 'backgroundImage', 'url(/'+data.photoRelativePath[0].relative_path+')'
                             );

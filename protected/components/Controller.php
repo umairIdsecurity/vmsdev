@@ -53,7 +53,7 @@ class Controller extends CController
                 if (!$systemIsShutdown || in_array(Yii::app()->user->role, array(Roles::ROLE_SUPERADMIN,
                     Roles::ROLE_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN))
                 )
-                    $this->redirect(Yii::app()->createUrl("dashboard"));
+                    $this->redirect(Yii::app()->user->returnUrl);
             }
         }
 

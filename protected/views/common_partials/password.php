@@ -127,12 +127,12 @@ if (isset($company) && !empty($company)) {
 
     function validatePassword() {
         if ($(parentElement() + "#Visitor_password_input").val() == "") {
-            $(parentElement() + "#Visitor_password_em_").html("Password cannot be blank");
+            $(parentElement() + "#Visitor_password_em_").html("Password should be specified");
             $(parentElement() + "#Visitor_password_em_").show();
             return false;
         } else if ($(parentElement() + "#Visitor_repeatpassword_input").val() == "") {
             $(parentElement() + "#Visitor_password_em_").hide();
-            $(parentElement() + "#Visitor_repeatpassword_em_").html("Reapeat password cannot be blank");
+            $(parentElement() + "#Visitor_repeatpassword_em_").html("Please confirm a password");
             $(parentElement() + "#Visitor_repeatpassword_em_").show();
             return false;
         } else {
@@ -148,7 +148,7 @@ if (isset($company) && !empty($company)) {
                 $(parentElement() + "#Visitor_repeatpassword_em_").hide();
                 return true;
             } else {
-                $(parentElement() + "#Visitor_repeatpassword_em_").html("Password is not match");
+                $(parentElement() + "#Visitor_repeatpassword_em_").html("Passwords are not matched");
                 $(parentElement() + "#Visitor_repeatpassword_em_").show();
                 return false;
             }
@@ -158,7 +158,7 @@ if (isset($company) && !empty($company)) {
     $(parentElement() + "#Visitor_password_input").on("change",function(){
         $(parentElement() + "#Visitor_password_em_").hide();
         if($(parentElement() + "#Visitor_password_input").val() == '') {
-            $(parentElement() + "#Visitor_password_em_").html("Password cannot be blank");
+            $(parentElement() + "#Visitor_password_em_").html("Password should be specified");
             $(parentElement() + "#Visitor_password_em_").show();
         } else {
             $(parentElement() + "#Visitor_password_em_").hide();
@@ -169,7 +169,7 @@ if (isset($company) && !empty($company)) {
     $(parentElement() + "#Visitor_repeatpassword_input").on("change",function(){
         $(parentElement() + "Visitor_repeatpassword_em_").hide();
         if($(parentElement() + "#Visitor_repeatpassword").val() == '') {
-            $(parentElement() + "#Visitor_repeatpassword_em_").html("Password cannot be blank");
+            $(parentElement() + "#Visitor_repeatpassword_em_").html("Please confirm a password");
             $(parentElement() + "#Visitor_repeatpassword_em_").show();
         } else {
             $(parentElement() + "Visitor_repeatpassword_em_").hide();

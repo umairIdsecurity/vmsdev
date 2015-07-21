@@ -38,17 +38,17 @@ if ($this->action->id == 'update') {
             'afterValidate' => 'js:function(form, data, hasError) {
                 if (!hasError) {
                     if($("#currentAction").val() == "create"){
-                        if ($(".password_requirement").is(":checked")== false) {
-                            $("#pass_error_").show();
+                        if ($("#company-form .password_requirement").is(":checked")== false) {
+                            $("#company-form #pass_error_").show();
                             return false;
                         } else {
-                            if ($("#Company_password_requirement_1").is(":checked")) {
-                                if($(".pass_option").is(":checked") == false) {
-                                    $(".user_requires_password #pass_error_").show();
+                            if ($("#company-form #Company_password_requirement_1").is(":checked")) {
+                                if($("#company-form .pass_option").is(":checked") == false) {
+                                    $("#company-form .user_requires_password #pass_error_").show();
                                     return false;
                                 } else {
-                                    $(".user_requires_password #pass_error_").hide();
-                                    if($("#pass_option_1").is(":checked")) {
+                                    $("#company-form .user_requires_password #pass_error_").hide();
+                                    if($("#company-form #pass_option_1").is(":checked")) {
                                         var validatePass = validatePassword();
                                         if(validatePass == true) {
                                             var isMatch = isPasswordMatch();
@@ -72,8 +72,8 @@ if ($this->action->id == 'update') {
                         checkCompanyNameUnique();
                     }
                 } else {
-                    $( ".user_fields" ).show();
-                    $(".password-border").show();
+                    $( "#company-form .user_fields" ).show();
+                    $("#company-form .password-border").show();
                 }
             }'
         ),
@@ -427,27 +427,27 @@ if (isset($_GET['viewFrom'])) {
     function cancel() {
         $('#Company_user_repeatpassword').val('');
         $('#Company_user_password').val('');
-        $("#random_password").val('');
-        $("#close_generate").click();
+        $("#company-form #random_password").val('');
+        $("#company-form #close_generate").click();
     }
 
     function copy_password() {
-        if ($('#random_password').val() == '') {
-            $('#error_msg').show();
+        if ($('#company-form #random_password').val() == '') {
+            $('#company-form #error_msg').show();
         } else {
-            $('#Company_user_password').val($('#random_password').val());
-            $('#Company_user_repeatpassword').val($('#random_password').val());
-            $("#close_generate").click();
+            $('#Company_user_password').val($('#company-form #random_password').val());
+            $('#Company_user_repeatpassword').val($('#company-form #random_password').val());
+            $("#company-form #close_generate").click();
         }
     }
 
     function validatePassword() {
         if($("#Company_user_password").val() == ""){
-            $("#Company_user_password_em_").html("Password cannot be blank");
+            $("#Company_user_password_em_").html("Password should be specified");
             $("#Company_user_password_em_").show();
             return false;
         } else if($("#Company_user_repeatpassword").val() == "") {
-            $("#Company_user_repeatpassword_em_").html("Reapeat password cannot be blank");
+            $("#Company_user_repeatpassword_em_").html("Please confirm a password");
             $("#Company_user_repeatpassword_em_").show();
             return false;
         } else {
@@ -456,12 +456,12 @@ if (isset($_GET['viewFrom'])) {
     }
 
     function isPasswordMatch() {
-        if($("#pass_option_1").is(":checked")){
+        if($("#company-form #pass_option_1").is(":checked")){
             if($("#Company_user_password").val() == $("#Company_user_repeatpassword").val()){
                 $("#Company_user_passwordmatch_em_").hide();
                 return true;
             } else {
-                $("#Company_user_passwordmatch_em_").html("Password is not match");
+                $("#Company_user_passwordmatch_em_").html("Passwords are not matched");
                 $("#Company_user_passwordmatch_em_").show();
                 return false;
             }
@@ -469,8 +469,8 @@ if (isset($_GET['viewFrom'])) {
     }
 
     function generatepassword() {
-        $("#random_password").val('');
-        $("#pass_option").prop("checked", true);
+        $("#company-form #random_password").val('');
+        $("#company-form #pass_option").prop("checked", true);
 
         var text = "";
         var possible = "abcdefghijklmnopqrstuvwxyz0123456789";
@@ -479,18 +479,18 @@ if (isset($_GET['viewFrom'])) {
             text += possible.charAt(Math.floor(Math.random() * possible.length));
         }
         document.getElementById('random_password').value = text;
-        $("#gen_pass").click();
+        $("#company-form #gen_pass").click();
     }
 
     $(document).ready(function() {
-        $(".pass_option").on("click",function(){
-            $(".user_requires_password #pass_error_").hide();
+        $("#company-form .pass_option").on("click",function(){
+            $("#company-form .user_requires_password #pass_error_").hide();
         });
 
         $("#Company_user_password").on("change",function(){
             isPasswordMatch();
            if($("#Company_user_password").val() == '') {
-               $("#Company_user_password_em_").html("Password cannot be blank");
+               $("#Company_user_password_em_").html("Password should be specified");
                $("#Company_user_password_em_").show();
            } else {
                $("#Company_user_password_em_").hide();
@@ -501,7 +501,7 @@ if (isset($_GET['viewFrom'])) {
         $("#Company_user_repeatpassword").on("change",function(){
             isPasswordMatch();
            if($("#Company_user_repeatpassword").val() == '') {
-               $("#Company_user_repeatpassword_em_").html("Password cannot be blank");
+               $("#Company_user_repeatpassword_em_").html("Please confirm a password");
                $("#Company_user_repeatpassword_em_").show();
            } else {
                $("Company_user_repeatpassword_em_").hide();
@@ -513,38 +513,39 @@ if (isset($_GET['viewFrom'])) {
 
         if(default_field == "") {
             $( ".user_fields" ).hide();
-            $(".password-border").hide();
+            $("#company-form .password-border").hide();
         }
         else{
             $( ".user_fields" ).show();
-            $(".password-border").show();
+            $("#company-form .password-border").show();
         }
 
-        $("#addContact").click(function(e) {
+        $("#company-form #addContact").click(function(e) {
             e.preventDefault();
 
             var is_user_field = $("#is_user_field").attr('value');
             if(is_user_field==""){
                 $('#is_user_field').val(1);
-                $( ".user_fields" ).show();
-                $(".password-border").show();
+                $( "#company-form .user_fields" ).show();
+                $("#company-form .password-border").show();
             }
             else{
                 $('#is_user_field').val("");
-                $( ".user_fields" ).hide();
-                $(".password-border").hide();
+                $( "#company-form .user_fields" ).hide();
+                $("#company-form .password-border").hide();
             }
 
         });
 
-        $('.password_requirement').click(function () {
-            $("#pass_error_").hide();
+        $('#company-form .password_requirement').click(function () {
+            $("#company-form #pass_error_").hide();
             if ($('#Company_password_requirement_1').is(':checked')) {
-                $('.user_requires_password').css("display", "block");
-                $('.pass_option').prop('checked', false);
+                $('#company-form .user_requires_password').css("display", "block");
+                $('#company-form .pass_option').prop('checked', false);
+                $('#Company_user_password').val('');
             }
             else {
-                $('.user_requires_password').css("display", "none");
+                $('#company-form .user_requires_password').css("display", "none");
             }
 
         });

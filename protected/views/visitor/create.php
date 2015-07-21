@@ -218,9 +218,9 @@ function getCardType() {
                 $('.visitor_password_repeat').empty().hide();
             }
 
-            var contact = $('#Visitor_staff_id').val();
+            var company = $('#Visitor_company').val();
             if (cardType > <?php echo CardType::CONTRACTOR_VISITOR; ?> && typeof contact != 'undefined') {
-                populateAsicFields(contact, true);
+                populateAsicFields(company, true);
             }
 
             $(".visitorType").hide();
@@ -358,10 +358,12 @@ function getCardType() {
             $("#" + showThisLiId).show();
         }
 
-        window.populateAsicFields = function populateAsicFields(contact, isContact) {
-            if (!isContact) {
-                var url = "<?php echo $this->createUrl('company/getContact&id=') ?>" + contact + "&isCompanyContact=0";
+        window.populateAsicFields = function populateAsicFields(contact, isCompany) {
+            if (isCompany) {
+                // if contact is company
+                var url = "<?php echo $this->createUrl('company/getContact&id=') ?>" + contact + "&isCompany=1";
             } else {
+                // If contact is visitor
                 var url = "<?php echo $this->createUrl('company/getContact&id=') ?>" + contact;
             }
 
@@ -379,6 +381,11 @@ function getCardType() {
                         $('#User_asic_no').val(data.asic_no);
                         $('#User_asic_expiry').val(data.asic_expiry);
                         $('#Host_photo').val(data.photo);
+                        if (typeof data.photoRelativePath[0].relative_path != 'undefined') {
+                            $('.ajax-upload-dragdrop2').css(
+                                'backgroundImage', 'url(/'+data.photoRelativePath[0].relative_path+')'
+                            );
+                        }
                     }
                 }
             });

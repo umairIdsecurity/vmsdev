@@ -787,6 +787,14 @@ $model->identification_country_issued = 13;
             $("#Visitor_visitor_type_em_").empty().hide();
         }
         if (!hasError){
+            if ($(parentElement()+"#Visitor_password_requirement_1").is(":checked")) {
+                if($(parentElement()+".password_option").is(":checked") == false) {
+                    $(parentElement()+".user_requires_password #pass_error_").show();
+                    return false;
+                } else {
+                    $(parentElement()+".user_requires_password #pass_error_").hide();
+                }
+            }
             var vehicleValue = $("#Visitor_vehicle").val();
             if(vehicleValue.length < 6 && vehicleValue != ""){
 

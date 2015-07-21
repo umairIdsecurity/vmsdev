@@ -196,8 +196,6 @@
                                     </table>
                                 </td>
                             </tr>
-
-
                         </table>
                     </div> <!-- password-border -->
                 </td>

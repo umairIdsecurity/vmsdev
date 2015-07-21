@@ -469,7 +469,7 @@ if (isset($_GET['viewFrom'])) {
     }
 
     function generatepassword() {
-        $("#company-form #random_password").val('');
+        $("#random_password").val('');
         $("#company-form #pass_option").prop("checked", true);
 
         var text = "";
@@ -479,7 +479,7 @@ if (isset($_GET['viewFrom'])) {
             text += possible.charAt(Math.floor(Math.random() * possible.length));
         }
         document.getElementById('random_password').value = text;
-        $("#company-form #gen_pass").click();
+        $("#gen_pass").click();
     }
 
     $(document).ready(function() {

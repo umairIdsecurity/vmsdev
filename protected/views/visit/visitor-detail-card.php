@@ -24,7 +24,7 @@ $photoForm = $this->beginWidget('CActiveForm', [
 <?php $this->endWidget(); ?>
 
 <div class="cardPhotoPreview" style="height:0px; margin-left: 15px;">
-    <?php if ($visitorModel->photo != '') { 
+    <?php if ($visitorModel->photo != '') {
                 $data = Photo::model()->returnVisitorPhotoRelativePath($model->visitor);
                 $my_image = '';
                 if(!empty($data['db_image'])){
@@ -135,11 +135,11 @@ $detailForm = $this->beginWidget('CActiveForm', [
         if ($asic) {
             if($visitorModel->profile_type ==  Visitor::PROFILE_TYPE_VIC) {
                 $profileType = Visitor::PROFILE_TYPE_VIC;
-                
+
             } elseif($visitorModel->profile_type ==  Visitor::PROFILE_TYPE_ASIC) {
                 $profileType = Visitor::PROFILE_TYPE_ASIC;
             }
-            
+
             echo $detailForm->dropDownList($visitorModel, 'visitor_card_status', Visitor::$VISITOR_CARD_TYPE_LIST[$profileType], ['empty' => 'Select Card Status']);
                 echo "<br />";
         }
@@ -321,11 +321,11 @@ $detailForm = $this->beginWidget('CActiveForm', [
                                 document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;*/
 
                                 //showing image from DB as saved in DB -- image is not present in folder
-                            
+
                                 document.getElementById('photoPreview').src = "data:image;base64,"+ value.db_image;
                                 document.getElementById('photoCropPreview').src = "data:image;base64,"+ value.db_image;
-                            
-                            
+
+
                             });
                         }
                     });
@@ -416,7 +416,7 @@ $detailForm = $this->beginWidget('CActiveForm', [
     }
 </script>
 <!--POP UP FOR CROP PHOTO -->
-<?php 
+<?php
         $data = Photo::model()->returnVisitorPhotoRelativePath($model->visitor);
         $my_image = '';
         if(!empty($data['db_image'])){

@@ -254,6 +254,7 @@ class UploadFileController extends Controller
                         break;
                     case 'png':
                     case 'jpg':
+                    case 'jpeg':
                     case 'gif':
                         echo "<image src='" . '/uploads/files' . '/' . $file->user_id . '/' . $file->folder_id . '/' . $file->file . "'>";
                         break;

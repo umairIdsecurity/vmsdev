@@ -8,6 +8,7 @@
     }
 </style>
 <?php
+Yii::app()->clientScript->scriptMap['jquery.js']=false;
 $session = new CHttpSession;
 /* @var $this VisitorController */
 /* @var $model Visitor */

@@ -50,7 +50,7 @@ class Controller extends CController
                         $this->redirect(Yii::app()->createUrl("site/shutdown"));
                 }
             } elseif (Yii::app()->controller->action->id == 'shutdown') {
-                if (!$systemIsShutdown || in_array(Yii::app()->user->role, array(/*Roles::ROLE_SUPERADMIN,*/
+                if (!$systemIsShutdown || in_array(Yii::app()->user->role, array(Roles::ROLE_SUPERADMIN,
                     Roles::ROLE_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN))
                 )
                     $this->redirect(Yii::app()->createUrl("dashboard"));

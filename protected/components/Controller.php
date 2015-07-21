@@ -37,7 +37,7 @@ class Controller extends CController
      */
     public $breadcrumbs = array();
 
-    public function beforeAction(CAction $action)
+    public function beforeAction($action)
     {
         $systemIsShutdown = System::model()->isSystemShutdown();
         if (isset(Yii::app()->user->id)) {

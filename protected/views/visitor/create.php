@@ -95,7 +95,7 @@ function getCardType() {
 }
     $(document).ready(function () {
         display_ct();
-        
+
         $("#register-host-patient-form").hide();
         $("#register-host-form").show();
         $("#searchHostDiv").show();
@@ -220,25 +220,9 @@ function getCardType() {
 
             var contact = $('#Visitor_staff_id').val();
             if (cardType > <?php echo CardType::CONTRACTOR_VISITOR; ?> && typeof contact != 'undefined') {
-                $.ajax({
-                    url: "<?php echo $this->createUrl('company/getContact&id=') ?>" + contact,
-                    dataType: "json",
-                    success: function(data) {
-                        if (data != 0) {
-                            $('#User_id').val(data.id);
-                            $('#User_first_name').val(data.first_name);
-                            $('#User_last_name').val(data.last_name);
-                            $('#User_email').val(data.email);
-                            $('#User_contact_number').val(data.contact_number);
-                            $('#User_company').select2("val", data.company);
-                            $('#User_asic_no').val(data.asic_no);
-                            $('#User_asic_expiry').val(data.asic_expiry);
-                            $('#Host_photo').val(data.photo);
-                        }
-                    }
-                });
+                populateAsicFields(contact, true);
             }
-            
+
             $(".visitorType").hide();
             if ($("#Visitor_visitor_type").val() == 1 || $("#Visitor_visitor_type_search").val() == 1) {
                 $("#findHostA").html("Add Patient Details");
@@ -373,28 +357,37 @@ function getCardType() {
             $("#" + hideThisLiId).hide();
             $("#" + showThisLiId).show();
         }
+
+        window.populateAsicFields = function populateAsicFields(contact, isContact) {
+            if (!isContact) {
+                var url = "<?php echo $this->createUrl('company/getContact&id=') ?>" + contact + "&isCompanyContact=0";
+            } else {
+                var url = "<?php echo $this->createUrl('company/getContact&id=') ?>" + contact;
+            }
+
+            $.ajax({
+                url: url,
+                dataType: "json",
+                success: function(data) {
+                    if (data != 0) {
+                        $('#User_id').val(data.id);
+                        $('#User_first_name').val(data.first_name);
+                        $('#User_last_name').val(data.last_name);
+                        $('#User_email').val(data.email);
+                        $('#User_contact_number').val(data.contact_number);
+                        $('#User_company').select2("val", data.company);
+                        $('#User_asic_no').val(data.asic_no);
+                        $('#User_asic_expiry').val(data.asic_expiry);
+                        $('#Host_photo').val(data.photo);
+                    }
+                }
+            });
+        }
     }
 );
 
 function closeAndPopulateField(id) {
-    $.ajax({
-        type: "POST",
-        url: "<?php echo $this->createUrl('company/getContact&id=') ?>" + id + "&isCompanyContact=0",
-        dataType: "json",
-        success: function(data) {
-            if (data != 0) {
-                $('#User_id').val(data.id);
-                $('#User_first_name').val(data.first_name);
-                $('#User_last_name').val(data.last_name);
-                $('#User_email').val(data.email);
-                $('#User_contact_number').val(data.contact_number);
-                $('#User_company').select2("val", data.company);
-                $('#User_asic_no').val(data.asic_no);
-                $('#User_asic_expiry').val(data.asic_expiry);
-                $('#Host_photo').val(data.photo);
-            }
-        }
-    });
+    populateAsicFields(id, false);
 
     $.ajax({
         type: 'POST',
@@ -493,7 +486,7 @@ function preloadHostDetails(hostId) {
                     $(".ajax-upload-dragdrop3").css("background", my_db_image + " no-repeat center top");
                     $(".ajax-upload-dragdrop3").css({"background-size": "132px 152px" });
                     logo.src = "data:image;base64,"+ value.db_image;
-                    document.getElementById('photoCropPreview3').src = "data:image;base64,"+ value.db_image;                    
+                    document.getElementById('photoCropPreview3').src = "data:image;base64,"+ value.db_image;
 
                     $("#cropImageBtn3").show();
 

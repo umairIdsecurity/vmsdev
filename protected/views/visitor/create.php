@@ -370,7 +370,7 @@ function getCardType() {
             $.ajax({
                 url: url,
                 dataType: "json",
-                success: function(data) {
+                success: function(data) {console.log(data);
                     if (data != 0) {
                         $('#User_id').val(data.id);
                         $('#User_first_name').val(data.first_name);
@@ -380,8 +380,9 @@ function getCardType() {
                         $('#User_company').select2("val", data.company);
                         $('#User_asic_no').val(data.asic_no);
                         $('#User_asic_expiry').val(data.asic_expiry);
+                        $('select#Visitor_visitor_card_status').val(data.visitor_card_status);
                         $('#Host_photo').val(data.photo);
-                        if (typeof data.photoRelativePath[0].relative_path != 'undefined') {
+                        if (typeof data.photoRelativePath[0].relative_path != 'undefined' && data.photoRelativePath != '') {
                             $('.ajax-upload-dragdrop2').css(
                                 'backgroundImage', 'url(/'+data.photoRelativePath[0].relative_path+')'
                             );

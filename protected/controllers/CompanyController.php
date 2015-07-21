@@ -507,6 +507,7 @@ class CompanyController extends Controller
                     'company'        => $asic->company,
                     'asic_no'        => $asic->asic_no,
                     'asic_expiry'    => empty($asic->asic_expiry) || $asic->asic_expiry == '0000-00-00' ? '' : date('d-m-Y', strtotime($asic->asic_expiry)),
+                    'visitor_card_status' => (int)$asic->visitor_card_status,
                     'photo'          => $asic->photo,
                     'photoRelativePath'      => $photo
                 ];

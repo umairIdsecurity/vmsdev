@@ -8,7 +8,7 @@ $cs->registerCssFile(Yii::app()->controller->assetsBase . '/bootstrapSwitch/boot
 <div id="shutdown_error" class="errorMessage" style="text-transform: none;margin-top: 20px; height: auto ;display:none">Couldn't delete files.</div>
 
 <div style="display:inline-block;margin-top: 20px; width: 87%">
-    <span style="font-weight: bold;color: black;">Emergency shut down will disable all users from issuing visitors passes</span>
+    <span style="font-weight: bold;color: black;">Emergency shut down will disable all users from issuing visitor passes</span>
     <div class="switch switch-blue" style="float: right">
         <input type="radio" class="switch-input is_required_induction_radio" name="emergency_shutdown" value="<?php echo System::OFF ?>" id="OFF" <?php if($shutdown->key_value == System::OFF) { ?> checked <?php } ?>>
         <label for="OFF" class="switch-label switch-label-off">OFF</label>
@@ -35,7 +35,7 @@ $cs->registerCssFile(Yii::app()->controller->assetsBase . '/bootstrapSwitch/boot
         $('<div></div>').appendTo('body')
             .html('<div><h6>'+message+'?</h6></div>')
             .dialog({
-                modal: true, title: 'Delete message', zIndex: 10000, autoOpen: true,
+                modal: true, title: 'Emergency Shut Down', zIndex: 10000, autoOpen: true,
                 width: 'auto', resizable: false,
                 buttons: {
                     Yes: function () {
@@ -44,7 +44,10 @@ $cs->registerCssFile(Yii::app()->controller->assetsBase . '/bootstrapSwitch/boot
                     },
                     No: function () {
                         $(this).dialog("close");
-                        document.getElementById("week").checked = true;
+                        if(value == '<?php echo System::ON ?>')
+                            document.getElementById("OFF").checked = true;
+                        else
+                            document.getElementById("ON").checked = true;
                     }
                 },
                 close: function (event, ui) {
@@ -66,7 +69,7 @@ $cs->registerCssFile(Yii::app()->controller->assetsBase . '/bootstrapSwitch/boot
             success: function (r) {
                 r = JSON.parse(r);
                 if (r.success != 1) {
-                    if($(".is_required_induction_radio").val() == '<?php echo System::ON ?>')
+                    if(key_value == '<?php echo System::ON ?>')
                         document.getElementById("OFF").checked = true;
                     else
                         document.getElementById("ON").checked = true;

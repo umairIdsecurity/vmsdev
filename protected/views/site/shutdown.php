@@ -6,9 +6,9 @@ $this->pageTitle=Yii::app()->name . ' - Emergency Shut Down';
 
     <div class="form form-in" >
 
-        <table class="login-area" style="border-collapse: none !important;width:  432px;">
+        <table class="login-area" style="width:  464px;">
             <tr>
-                <td align="center" class="form-group"><span class="glyphicon glyphicon-off" style="color: #ED2A36;font-size: 18px;font-weight: bold">    Access denied! Emergency Shutdown.</span></td>
+                <td align="center" class="form-group"><span class="glyphicon glyphicon-off" style="color: #ED2A36;font-size: 18px;font-weight: bold"> Access denied! Emergency Shutdown.</span></td>
 
             </tr>
             <tr>
@@ -16,7 +16,7 @@ $this->pageTitle=Yii::app()->name . ' - Emergency Shut Down';
             </tr>
 
             <tr>
-                <td colspan="2" ><span style="font-weight: bold">Visitor Passes can not be issued until further notice.</span></td>
+                <td colspan="2" ><span style="font-weight: bold;margin-left: 50px;">Visitor Passes can not be issued until further notice.</span></td>
             </tr>
         </table>
 

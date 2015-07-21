@@ -39,16 +39,21 @@ class Controller extends CController
 
     public function beforeAction(CAction $action)
     {
-        if(isset(Yii::app()->user->id))
-        {
+        $systemIsShutdown = System::model()->isSystemShutdown();
+        if (isset(Yii::app()->user->id)) {
             if (Yii::app()->controller->id != 'site') {
-                if (System::model()->isSystemShutdown()) {
+                if ($systemIsShutdown) {
 
                     if (!in_array(Yii::app()->user->role, array(Roles::ROLE_SUPERADMIN,
                         Roles::ROLE_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN))
                     )
                         $this->redirect(Yii::app()->createUrl("site/shutdown"));
                 }
+            } elseif (Yii::app()->controller->action->id == 'shutdown') {
+                if (!$systemIsShutdown || in_array(Yii::app()->user->role, array(/*Roles::ROLE_SUPERADMIN,*/
+                    Roles::ROLE_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN))
+                )
+                    $this->redirect(Yii::app()->createUrl("dashboard"));
             }
         }
 

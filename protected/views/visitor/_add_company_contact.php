@@ -8,39 +8,7 @@
             'validateOnSubmit' => true,
             'afterValidate' => 'js:function(form, data, hasError){
                 if (!hasError){ // no errors
-
-                    var currentController = "'.Yii::app()->controller->id.'";
-                    var currentAction = "'.Yii::app()->controller->action->id.'";
-                    if($("#AddCompanyContactForm_companyType").attr("disabled") == "disabled" && $("#AddCompanyContactForm_companyType").val() != ""){
-                        var formInfo = $("#add-company-contact-form").serialize()+ "&AddCompanyContactForm%5BcompanyType%5D=" + $("#AddCompanyContactForm_companyType").val();
-                    } else {
-                        var formInfo = $("#add-company-contact-form").serialize();
-                    }
-                    $.ajax({
-                        type: "POST",
-                        url: "' . $this->createUrl('company/addCompanyContact') .'",
-                        dataType: "json",
-                        data: formInfo,
-
-                        success: function(data) {
-                            $("#addCompanyContactModal").modal("hide");
-                            if (data.type == "contact") {
-                                //$("#visitorStaffRow").html(data.contactDropDown);
-                                $("#Visitor_staff_id").append(data.contactDropDown).val(data.id);
-                            } else {
-                                //update company dropdown:
-                                if(currentController == "visit" && currentAction == "detail") {
-                                    $("#AddAsicEscort_company").prepend($("<option>", {value:data.id, text: data.name}));
-                                    $("#AddAsicEscort_company").select2("val", data.id);
-                                    $("#asicSponsorModal").modal("show");
-                                } else if (currentController == "visitor"){
-                                    $("#Visitor_company").prepend($("<option>", {value:data.id, text: data.name}));
-                                    $("#Visitor_company").select2("val", data.id);
-                                }
-                            }
-                            return false;
-                        }
-                    });
+                    sendCompanyContactForm();
                 } else { // has error
                     return false;
                 }
@@ -218,6 +186,9 @@
 ?>
 
 <script>
+    function addCompanyContactForm(){
+        return "#add-company-contact-form ";
+    }
     $(function() {
         $(document).on('click', '#showCompanyContactFields', function(e) {
             $("tr.company_contact_field").toggleClass("hidden");
@@ -227,8 +198,9 @@
 
         $(document).on('click', '#btnAddCompanyContact', function(e) {
             e.preventDefault();
-            $("tr.company_contact_field").removeClass('hidden');
-            var inputs = $('#add-company-contact-form')
+            $(addCompanyContactForm() + "tr.company_contact_field").removeClass('hidden');
+            $(addCompanyContactForm() + '.password-border').removeClass('hidden');
+            var inputs = $(addCompanyContactForm())
                 .not('input[type="hidden"]')
                 .find('input[type="text"]');
             var flag = true;
@@ -264,5 +236,40 @@
             $('#typePostForm').val('company');
         })
     });
+
+    function sendCompanyContactForm() {
+        var currentController = "<?php echo Yii::app()->controller->id; ?>";
+        var currentAction = "<?php echo Yii::app()->controller->action->id; ?>";
+        if($("#AddCompanyContactForm_companyType").attr("disabled") == "disabled" && $("#AddCompanyContactForm_companyType").val() != ""){
+            var formInfo = $("#add-company-contact-form").serialize()+ "&AddCompanyContactForm%5BcompanyType%5D=" + $("#AddCompanyContactForm_companyType").val();
+        } else {
+            var formInfo = $("#add-company-contact-form").serialize();
+        }
+        $.ajax({
+            type: "POST",
+            url: "<?php echo $this->createUrl('company/addCompanyContact') ?>",
+            dataType: "json",
+            data: formInfo,
+
+            success: function(data) {
+                $("#addCompanyContactModal").modal("hide");
+                if (data.type == "contact") {
+                    //$("#visitorStaffRow").html(data.contactDropDown);
+                    $("#Visitor_staff_id").append(data.contactDropDown).val(data.id);
+                } else {
+                    //update company dropdown:
+                    if(currentController == "visit" && currentAction == "detail") {
+                        $("#AddAsicEscort_company").prepend($("<option>", {value:data.id, text: data.name}));
+                        $("#AddAsicEscort_company").select2("val", data.id);
+                        $("#asicSponsorModal").modal("show");
+                    } else if (currentController == "visitor"){
+                        $("#Visitor_company").prepend($("<option>", {value:data.id, text: data.name}));
+                        $("#Visitor_company").select2("val", data.id);
+                    }
+                }
+                return false;
+            }
+        });
+    }
 
 </script>

@@ -42,13 +42,13 @@ if ($this->action->id == 'update') {
                             $("#company-form #pass_error_").show();
                             return false;
                         } else {
-                            if ($("#company-form #Company_password_requirement_1").is(":checked")) {
-                                if($("#company-form .pass_option").is(":checked") == false) {
-                                    $("#company-form .user_requires_password #pass_error_").show();
+                            if ($("#Company_password_requirement_1").is(":checked")) {
+                                if($(createCompanyForm()+".pass_option").is(":checked") == false) {
+                                    $(createCompanyForm()+".user_requires_password #pass_error_").show();
                                     return false;
                                 } else {
-                                    $("#company-form .user_requires_password #pass_error_").hide();
-                                    if($("#company-form #pass_option_1").is(":checked")) {
+                                    $(createCompanyForm()+".user_requires_password #pass_error_").hide();
+                                    if($(createCompanyForm()+"#pass_option_1").is(":checked")) {
                                         var validatePass = validatePassword();
                                         if(validatePass == true) {
                                             var isMatch = isPasswordMatch();
@@ -72,8 +72,8 @@ if ($this->action->id == 'update') {
                         checkCompanyNameUnique();
                     }
                 } else {
-                    $( "#company-form .user_fields" ).show();
-                    $("#company-form .password-border").show();
+                    $(createCompanyForm()+".user_fields" ).show();
+                    $(createCompanyForm()+".password-border").show();
                 }
             }'
         ),
@@ -344,7 +344,9 @@ if (isset($_GET['viewFrom'])) {
 }
 ?>"/>
 <script>
-
+    function createCompanyForm() {
+        return "#company-form ";
+    }
     function checkCompanyNameUnique() {
 
         if($("#currentAction").val() == "update"){
@@ -400,7 +402,7 @@ if (isset($_GET['viewFrom'])) {
     }
 
     function sendCreateCompanyForm() {
-        var formInfo = $('#company-form').serialize();
+        var formInfo = $(createCompanyForm()).serialize();
         if($("#currentAction").val() == "create"){
             var url = "<?php echo $this->createUrl('company/create')?>";
         } else{
@@ -427,17 +429,17 @@ if (isset($_GET['viewFrom'])) {
     function cancel() {
         $('#Company_user_repeatpassword').val('');
         $('#Company_user_password').val('');
-        $("#company-form #random_password").val('');
-        $("#company-form #close_generate").click();
+        $(createCompanyForm()+"#random_password").val('');
+        $(createCompanyForm()+"#close_generate").click();
     }
 
     function copy_password() {
-        if ($('#company-form #random_password').val() == '') {
-            $('#company-form #error_msg').show();
+        if ($('#random_password').val() == '') {
+            $('#error_msg').show();
         } else {
-            $('#Company_user_password').val($('#company-form #random_password').val());
-            $('#Company_user_repeatpassword').val($('#company-form #random_password').val());
-            $("#company-form #close_generate").click();
+            $('#Company_user_password').val($('#random_password').val());
+            $('#Company_user_repeatpassword').val($('#random_password').val());
+            $("#close_generate").click();
         }
     }
 
@@ -456,7 +458,7 @@ if (isset($_GET['viewFrom'])) {
     }
 
     function isPasswordMatch() {
-        if($("#company-form #pass_option_1").is(":checked")){
+        if($(createCompanyForm()+"#pass_option_1").is(":checked")){
             if($("#Company_user_password").val() == $("#Company_user_repeatpassword").val()){
                 $("#Company_user_passwordmatch_em_").hide();
                 return true;
@@ -470,7 +472,7 @@ if (isset($_GET['viewFrom'])) {
 
     function generatepassword() {
         $("#random_password").val('');
-        $("#company-form #pass_option").prop("checked", true);
+        $(createCompanyForm()+".pass_option").prop("checked", true);
 
         var text = "";
         var possible = "abcdefghijklmnopqrstuvwxyz0123456789";
@@ -483,10 +485,9 @@ if (isset($_GET['viewFrom'])) {
     }
 
     $(document).ready(function() {
-        $("#company-form .pass_option").on("click",function(){
-            $("#company-form .user_requires_password #pass_error_").hide();
+        $(createCompanyForm()+".pass_option").on("click",function(){
+            $(createCompanyForm()+".user_requires_password #pass_error_").hide();
         });
-
         $("#Company_user_password").on("change",function(){
             isPasswordMatch();
            if($("#Company_user_password").val() == '') {
@@ -513,39 +514,39 @@ if (isset($_GET['viewFrom'])) {
 
         if(default_field == "") {
             $( ".user_fields" ).hide();
-            $("#company-form .password-border").hide();
+            $(createCompanyForm()+".password-border").hide();
         }
         else{
             $( ".user_fields" ).show();
-            $("#company-form .password-border").show();
+            $(createCompanyForm()+".password-border").show();
         }
 
-        $("#company-form #addContact").click(function(e) {
+        $(createCompanyForm()+"#addContact").click(function(e) {
             e.preventDefault();
 
             var is_user_field = $("#is_user_field").attr('value');
             if(is_user_field==""){
                 $('#is_user_field').val(1);
-                $( "#company-form .user_fields" ).show();
-                $("#company-form .password-border").show();
+                $( createCompanyForm()+".user_fields" ).show();
+                $(createCompanyForm()+".password-border").show();
             }
             else{
                 $('#is_user_field').val("");
-                $( "#company-form .user_fields" ).hide();
-                $("#company-form .password-border").hide();
+                $( createCompanyForm()+".user_fields" ).hide();
+                $(createCompanyForm()+".password-border").hide();
             }
 
         });
 
-        $('#company-form .password_requirement').click(function () {
-            $("#company-form #pass_error_").hide();
+        $(createCompanyForm()+'.password_requirement').click(function () {
+            $(createCompanyForm()+".password-border #pass_error_").hide();
             if ($('#Company_password_requirement_1').is(':checked')) {
-                $('#company-form .user_requires_password').css("display", "block");
-                $('#company-form .pass_option').prop('checked', false);
+                $(createCompanyForm()+'.user_requires_password').css("display", "block");
+                $(createCompanyForm()+'.pass_option').prop('checked', false);
                 $('#Company_user_password').val('');
             }
             else {
-                $('#company-form .user_requires_password').css("display", "none");
+                $(createCompanyForm()+'.user_requires_password').css("display", "none");
             }
 
         });

@@ -337,7 +337,7 @@ class CompanyController extends Controller
             $model->attributes = $_GET['Company'];
         }
 
-        // Check whether a login user/tenant allowed to view 
+        // Check whether a login user/tenant allowed to view
         CHelper::check_module_authorization("CVMS");
         $this->render('_admin', array('model' => $model,));
     }
@@ -477,39 +477,39 @@ class CompanyController extends Controller
         }
     }
 
-    public function actionGetContact($id, $isCompanyContact = true)
+    public function actionGetContact($id, $isCompany = false)
     {
         if (Yii::app()->request->isAjaxRequest) {
-            $visitor = Visitor::model()->findByPk($id);
-            if ($isCompanyContact == false) {
-                $contacts = User::model()->findAll("company = " . $visitor->company);
-                if (count($contacts) == 1) {
-                    $companyContact = $contacts[0];
-                } else {
-                    // foreach ($contacts as $contact) {
-                        $companyContact = $contacts[count($contacts) - 1];
-                        // break;
-                    // }
-                }
+            if ($isCompany) {
+                $asicList = Visitor::model()->findAllByAttributes(['company' => $id, 'profile_type' => 'ASIC', 'visitor_card_status' => Visitor::ASIC_ISSUED]);
             } else {
-                $companyContact = User::model()->findByPk($id);
+                $visitor = Visitor::model()->findByPk($id);
+                $asicList = Visitor::model()->findAllByAttributes(['company' => $visitor->company, 'profile_type' => 'ASIC', 'visitor_card_status' => Visitor::ASIC_ISSUED]);
             }
 
-            if ($companyContact) {
+            if (!empty($asicList) && count($asicList) > 0) {
+                $asic = $asicList[count($asicList) - 1];
+            } else {
+                $asic = new Visitor;
+            }
+
+            if ($asic) {
                 $photo = '';
-                if (!empty($companyContact->photo)) {
-                    $photo = Photo::model()->getRelativePathOfPhoto($companyContact->photo);
+                if (!empty($asic->photo)) {
+                    $photo = Photo::model()->getRelativePathOfPhoto($asic->photo);
                 }
                 $ret = [
-                    'id'             => $companyContact->id,
-                    'first_name'     => $companyContact->first_name,
-                    'last_name'      => $companyContact->last_name,
-                    'contact_number' => $companyContact->contact_number,
-                    'email'          => $companyContact->email,
-                    'company'        => $companyContact->company,
-                    'asic_no'        => $companyContact->asic_no,
-                    'asic_expiry'    => empty($companyContact->asic_expiry) || $companyContact->asic_expiry == '0000-00-00' ? '' : date('d-m-Y', strtotime($companyContact->asic_expiry)),
-                    'photo'          => $photo
+                    'id'             => $asic->id,
+                    'first_name'     => $asic->first_name,
+                    'last_name'      => $asic->last_name,
+                    'contact_number' => $asic->contact_number,
+                    'email'          => $asic->email,
+                    'company'        => $asic->company,
+                    'asic_no'        => $asic->asic_no,
+                    'asic_expiry'    => empty($asic->asic_expiry) || $asic->asic_expiry == '0000-00-00' ? '' : date('d-m-Y', strtotime($asic->asic_expiry)),
+                    'visitor_card_status' => (int)$asic->visitor_card_status,
+                    'photo'          => $asic->photo,
+                    'photoRelativePath'      => $photo
                 ];
                 echo CJavaScript::jsonEncode($ret);
 
@@ -538,4 +538,3 @@ class CompanyController extends Controller
         return array_search($name, $companyList);
     }
 }
-

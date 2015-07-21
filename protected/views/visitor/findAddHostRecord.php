@@ -131,7 +131,32 @@ $defaultKey = key($asicCardTypes);
                                     document.getElementById("User_company").disabled = false;
                                     document.getElementById("User_tenant").disabled = false;
                                     document.getElementById("User_tenant_agent").disabled = false;
-                                    checkHostEmailIfUnique();
+                                    if ($(parentElement()+"#Visitor_password_requirement_1").is(":checked")) {
+                                        if($(parentElement()+".password_option").is(":checked") == false) {
+                                            $(parentElement()+".user_requires_password #pass_error_").show();
+                                            return false;
+                                        } else {
+                                            $(parentElement()+".user_requires_password #pass_error_").hide();
+                                            if($(parentElement()+"#Visitor_password_option_1").is(":checked")) {
+                                                var validatePass = validatePassword();
+                                                if(validatePass == true) {
+                                                    var isMatch = isPasswordMatch();
+                                                    if(isMatch == true) {
+                                                        checkHostEmailIfUnique();
+                                                    } else {
+                                                        return false;
+                                                    }
+                                                } else {
+                                                    return false;
+                                                }
+                                            } else {
+                                                checkHostEmailIfUnique();
+                                            }
+                                        }
+                                    } else {
+                                        checkHostEmailIfUnique();
+                                    }
+
                                 }
                             }'
                         ),

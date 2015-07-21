@@ -46,11 +46,23 @@ class Controller extends CController
 
                     if (!in_array(Yii::app()->user->role, array(Roles::ROLE_SUPERADMIN,
                         Roles::ROLE_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN))
-                    )
-                        $this->redirect(Yii::app()->createUrl("site/shutdown"));
+                    ) {
+                        $this->redirect(array("site/shutdown"));
+                    }
                 }
-            } elseif (Yii::app()->controller->action->id == 'shutdown') {
-                if (!$systemIsShutdown || in_array(Yii::app()->user->role, array(Roles::ROLE_SUPERADMIN,
+            }
+            if (Yii::app()->controller->id == 'site' && Yii::app()->controller->action->id == 'selectworkstation') {
+                if ($systemIsShutdown) {
+                    if (!in_array(Yii::app()->user->role, array(Roles::ROLE_SUPERADMIN,
+                        Roles::ROLE_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN))
+                    ) {
+                        $this->redirect(array("site/shutdown"));
+                    }
+                }
+
+            }
+            if (Yii::app()->controller->id == 'site' && Yii::app()->controller->action->id == 'shutdown') {
+                if (in_array(Yii::app()->user->role, array(Roles::ROLE_SUPERADMIN,
                     Roles::ROLE_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN))
                 )
                     $this->redirect(Yii::app()->user->returnUrl);

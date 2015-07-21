@@ -407,8 +407,8 @@ function closeAndPopulateField(id) {
                 $("#searchVisitorTableDiv h4").html("Selected Visitor Record : " + value.first_name + ' ' + value.last_name);
                 checkIfVisitorHasACurrentSavedVisit(value.id);
             });
+            $('.findVisitorButtonColumn .delete').html('Select Visitor');
             $('.findVisitorButtonColumn a').removeClass('delete');
-            //$('.findVisitorButtonColumn a').html('Select Visitor');
             $('#' + id).addClass('delete');
             $('#' + id).html('Visitor Selected');
             //$('.findVisitorButtonColumn .linkToVisitorDetailPage').html('Active');
@@ -541,7 +541,7 @@ function checkAsicStatusById(id){
                             $("#searchHostTableDiv h4").html("Selected "+getCardType()+" Record : " + value.first_name + " " + value.last_name);
                         });
                         $('#searchHostTable').contents().find('.findHostButtonColumn a').removeClass('delete');
-                        $('#searchHostTable').contents().find('.findHostButtonColumn a').html('Select'+getCardType());
+                        $('#searchHostTable').contents().find('.findHostButtonColumn a').html('Select '+getCardType());
                         $('#searchHostTable').contents().find('#' + id).addClass('delete');
                         $('#searchHostTable').contents().find('#' + id).html(getCardType()+' Selected');
                    }

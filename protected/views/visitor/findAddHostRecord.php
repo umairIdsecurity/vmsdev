@@ -35,7 +35,7 @@ $defaultKey = key($asicCardTypes);
                 <button class="host-findBtn" onclick="findHostRecord()" id="host-findBtn" style="display:none;"
                         data-target="#findHostRecordModal" data-toggle="modal">Search Visits
                 </button>
-                
+
                 <?php $background = isset($companyLafPreferences) ? ("background:" . $companyLafPreferences->neutral_bg_color . ' !important;') : ''; ?>
                 <button class="host-findBtn" id="dummy-host-findBtn" style="<?php echo $background; ?>padding: 8px;">
                     Find ASIC Sponsor
@@ -82,7 +82,7 @@ $defaultKey = key($asicCardTypes);
                             if(!hasError){
                                 var currentURL = $("#getcurrentUrl").val();
                                 if(currentURL != "" ){
-                                    showHideTabs("logVisitB", "logVisitA", "logVisit", "findHostA", "findHost", "findVisitorA", "findVisitor");   
+                                    showHideTabs("logVisitB", "logVisitA", "logVisit", "findHostA", "findHost", "findVisitorA", "findVisitor");
                                 } else {
                                     sendReasonForm();
                                 }
@@ -155,7 +155,7 @@ $defaultKey = key($asicCardTypes);
                                              src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png"
                                              style='display:none;'/>
                                     </div>
-                                    
+
                                     <?php require_once(Yii::app()->basePath . '/draganddrop/host.php'); ?>
 
                                     <div id="photoErrorMessage" class="errorMessage"
@@ -180,7 +180,7 @@ $defaultKey = key($asicCardTypes);
 
                             <tr class="vic-host-fields">
                                 <td>
-                                    <?php echo $form->dropDownList($asicModel, 'visitor_card_status', [Visitor::ASIC_ISSUED_LABEL, Visitor::ASIC_EXPIRED_LABEL], array('empty' => 'Card Status', 'options' => array( $defaultKey => array('selected' => 'selected')))); ?>
+                                    <?php echo $form->dropDownList($asicModel, 'visitor_card_status', [Visitor::ASIC_ISSUED => Visitor::ASIC_ISSUED_LABEL, Visitor::ASIC_EXPIRED => Visitor::ASIC_EXPIRED_LABEL], array('empty' => 'Card Status', 'options' => array( $defaultKey => array('selected' => 'selected')))); ?>
                                     <span class="required">*</span>
                                     <?php echo "<br>" . $form->error($asicModel, 'visitor_card_status'); ?>
                                 </td>
@@ -446,7 +446,7 @@ $defaultKey = key($asicCardTypes);
                                              style='display:none;'/>
                                     </div>
 
-                                    
+
                                     <?php require_once(Yii::app()->basePath . '/draganddrop/host3.php'); ?>
 
                                     <div id="photoErrorMessage" class="errorMessage"
@@ -706,7 +706,7 @@ $defaultKey = key($asicCardTypes);
                         success: function (r) {
 
                             $.each(r.data, function (index, value) {
-                                
+
                                 /*document.getElementById('photoPreview2').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 document.getElementById('photoCropPreview2').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 $(".ajax-upload-dragdrop2").css("background", "url(<?php echo Yii::app()->request->baseUrl. '/'; ?>" + value.relative_path + ") no-repeat center top");
@@ -721,7 +721,7 @@ $defaultKey = key($asicCardTypes);
                                 document.getElementById('photoCropPreview2').src = "data:image;base64,"+ value.db_image;
                                 $(".ajax-upload-dragdrop2").css("background", my_db_image + " no-repeat center top");
                                 $(".ajax-upload-dragdrop2").css({"background-size": "132px 152px" });
-                            
+
 
                             });
                         }
@@ -793,7 +793,7 @@ $defaultKey = key($asicCardTypes);
                                 document.getElementById('photoCropPreview3').src = "data:image;base64,"+ value.db_image;
                                 $(".ajax-upload-dragdrop3").css("background", my_db_image + " no-repeat center top");
                                 $(".ajax-upload-dragdrop3").css({"background-size": "132px 152px" });
-                            
+
 
                             });
                         }
@@ -845,7 +845,7 @@ $defaultKey = key($asicCardTypes);
         }).fail(function() {
             Loading.hide();
             window.location = '<?php echo Yii::app()->createUrl('site/login');?>';
-        }); 
+        });
        // $("#searchHostTable").html('<iframe id="findHostTableIframe" onLoad="autoResize2();" width="100%" height="100%" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
        return false;
     }

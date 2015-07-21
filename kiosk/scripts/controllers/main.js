@@ -8,20 +8,29 @@
  * Controller of the kioskApp
  */
 angular.module('kioskApp')
-  .controller('MainCtrl', ['$scope', '$location', 'ConfigService', function ($scope, $location, ConfigService) {
+  .controller('MainCtrl', ['$scope', '$location', 'ConfigService', 'DataService', function ($scope, $location, ConfigService, DataService) {
 	  
     function updateStyles() {
-      $scope.forwardButtonStyle = ConfigService.brandInfo.actionForwardButton;
-      $scope.checkOutButtonStyle = ConfigService.brandInfo.neutralButton;
-      $scope.imgSrc = ConfigService.brandInfo.companyLogoURL;
-      $scope.tagLine = ConfigService.companyTagLine;
+		$scope.forwardButtonStyle = ConfigService.brandInfo.actionForwardButton;
+		$scope.checkOutButtonStyle = ConfigService.brandInfo.neutralButton;
+		$scope.imgSrc = ConfigService.brandInfo.companyLogoURL;
+		$scope.tagLine = ConfigService.companyTagLine;
     }
-
+	
+	
+	if(DataService.info[0].kioskstat == 'new'){
+		$scope.success = "Kiosk name registered successfully.";
+		delete DataService.info[0];		
+	}else if(DataService.info[0].kioskstat == 'continue'){		
+		$scope.success = "Continue";
+		delete DataService.info[0];			
+	}
+	
     // due to the network lag, we listen to a notification and update accordingly.
     $scope.$on('config:updated', updateStyles);
 
     $scope.changeView = function() {
-      $location.path('compliance');
+		$location.path('compliance');
     };
 
     updateStyles();

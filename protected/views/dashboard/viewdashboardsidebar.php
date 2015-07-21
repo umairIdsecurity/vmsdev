@@ -38,6 +38,14 @@ $session = new ChttpSession;
 
             <li class=''><a href='<?php echo Yii::app()->createUrl('visit/view'); ?>' id="findrecordSidebar" class="submenu-icon findrecord"><span>Search Visits</span></a></li>
             <li class=''><a href='<?php echo Yii::app()->createUrl('visit/evacuationReport&p=d'); ?>' id="evacuationreportSidebar" class="sidemenu-icon evacuationreport"><span>Evacuation Report</span></a></li>
+
+            <?php if (in_array($session['role'], array(Roles::ROLE_SUPERADMIN,Roles::ROLE_ADMIN,Roles::ROLE_ISSUING_BODY_ADMIN))) { ?>
+                <li class=''><span style="padding-bottom: 9px;padding-top: 7px;text-align: center;width: 29px;"
+                                   class="glyphicon glyphicon-off"></span><a
+                        style="float: right; padding: 3px 15px 6px 0; width: 73.5%"
+                        href='<?php echo Yii::app()->createUrl('system/shutdown'); ?>'
+                        id="evacuationreportSidebar"><span>Emergency Shut Down</span></a></li>
+            <?php } ?>
         </ul>
     </div>
 </div>

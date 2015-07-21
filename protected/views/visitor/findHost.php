@@ -4,6 +4,7 @@
     }
 </style>
 <?php
+    Yii::app()->clientScript->scriptMap['jquery.js']=false;
     $dataProvider = new CActiveDataProvider($model, array(
         'criteria' => $criteria,
     ));

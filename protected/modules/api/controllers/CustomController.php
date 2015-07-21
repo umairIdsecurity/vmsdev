@@ -120,12 +120,13 @@ class CustomController extends RestfulController {
 				
 				# Check if kiosk exist for that workstation and for that user
 				$Criteria = new CDbCriteria();
-				$Criteria->condition = "name = '" . strtolower($data['kiosk']). "' AND workstation = " . $data['workstation'] . " AND created_by = " . $user->id . " AND is_deleted = 0";				
+				/*$Criteria->condition = "name = '" . strtolower($data['kiosk']). "' AND workstation = " . $data['workstation'] . " AND created_by = " . $user->id . " AND is_deleted = 0";*/
+				$Criteria->condition = "name = '" . strtolower($data['kiosk']). "' AND workstation = " . $data['workstation'] . " AND is_deleted = 0";
 				$kiosk = Kiosk::model()->findAll($Criteria);
 				
 				if(empty($kiosk)){
 					$kiosk = new Kiosk();
-					$kiosk->name = $data['kiosk'];
+					$kiosk->name = strtolower($data['kiosk']);
 					$kiosk->workstation = $data['workstation'];
 					$kiosk->module = 'CVMS';
 					$kiosk->tenant = $user->tenant;

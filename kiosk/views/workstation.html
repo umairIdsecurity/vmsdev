@@ -6,8 +6,7 @@
 			<h3 style="color:#666666;">{{tagLine}}</h3>
 		</div>
 	</div>
-	<div class="col-md-6 col-md-offset-3" align="center">
-		
+	<div class="col-md-6 col-md-offset-3" align="center">		
 		<div ng-show="error" class="alert alert-danger">{{error}}</div>
 		<form name="form" ng-submit="nextStep()" role="form">
 			<div class="form-group" ng-class="{ 'has-error': form.kiosk.$dirty && form.kiosk.$error.required }">

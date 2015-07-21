@@ -217,17 +217,15 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
             <?php if($module == "AVMS" || $module == "Both") { ?>
             <li class='has-sub'><a class='manageusers' href='<?php echo Yii::app()->createUrl('user/admin',
                     array('vms' => 'avms')); ?>'><span>AVMS Users</span></a>
-
-
                 <ul <?php
                 if ($this->id == 'user' && CHelper::is_accessing_avms_features() && $this->action->id != 'systemaccessrules') {
                     echo "style='display:block ;'";
                 }
                 ?>>
                     <li><a href='<?php echo Yii::app()->createUrl('user/create',
-                            array('role' => Roles::ROLE_AGENT_AIRPORT_ADMIN)); ?>' class="has-sub-sub">
-                            <div class="customIcon-adminmenu">+</div>
-                            <span>Add User</span></a></li>
+                        array('role' => Roles::ROLE_AGENT_AIRPORT_ADMIN)); ?>' class="has-sub-sub">
+                        <div class="customIcon-adminmenu">+</div>
+                        <span>Add User</span></a></li>
 
                     <?php
                     switch ($session['role']) {
@@ -301,8 +299,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
             <?php } ?>
             <!-- menu for AVMS Users -->
             
-            
-             <!-- menu for AVMS Visitors -->
+            <!-- menu for AVMS Visitors -->
             <li class='has-sub'><a class='managevisitorrecords'
                                    href='<?php echo Yii::app()->createUrl('visitor/admin', array('vms' => 'avms')); ?>'><span>AVMS Visitors</span></a>
 
@@ -410,11 +407,9 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
             ?>
 
             <!-- menu for companies -->
-            <?php 
-              if($module == "CVMS" || $module == "Both") {
+            <?php  if($module == "CVMS" || $module == "Both") {
                 if ($session['role'] == Roles::ROLE_SUPERADMIN) {
             ?>
-
                 <li class='has-sub'>
                     <?php echo CHtml::link('Companies', array('company/index'), array('class' => 'managecompanies')) ?>
                     <ul <?php
@@ -422,7 +417,6 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
                         echo "style='display:block ;'";
                     }
                     ?>>
-
                         <li><a href='<?php echo Yii::app()->createUrl('company/create'); ?>'
                                class="addSubMenu ajaxLinkLi"><span>Add Company</span></a></li>
                     </ul>
@@ -448,12 +442,10 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
 
                 <!--WangFu Modified-->
 
-            <?php
-            }
-            ?>
-            <?php }
-              } // CVMS users allowed
-            ?><!-- menu for companies -->
+            <?php }  ?>
+        <?php }
+            } // CVMS users allowed
+        ?><!-- menu for companies -->
 
 
             

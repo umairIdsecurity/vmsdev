@@ -28,6 +28,7 @@ angular.module('kioskApp')
 		var onSuccess = function(data, responseCode) {			
 			$scope.dataLoading = false;
 			$scope.error = false;
+			DataService.info.push({"kioskstat": data.status});			
 			$location.path('/intro');
 		};
 		var onFailure = function(data, responseCode) {

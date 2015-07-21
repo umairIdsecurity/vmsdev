@@ -61,7 +61,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'header' => 'ASIC Type',
             'filter' => false,
-            'value' => 'isset($data->escort_flag) ? "Escort": "Sponsor"',
+            'value' => 'getVisitorType($data->id)',
             'htmlOptions' => array('style'=>'width:7px; min-width: 0px !important;'),
             'headerHtmlOptions' =>  array('style'=>'width:7px; min-width: 0px !important;'),
         ),
@@ -84,6 +84,19 @@ function displaySelectVisitorButton($visitorData) {
             "onclick" => "selectEscort({$visitorData['id']})",
         )
     );
+}
+
+function getVisitorType($id)
+{
+    $visitor = Visitor::model()->findByPk($id);
+
+    if ($visitor->profile_type == 'VIC') {
+        return 'VIC';
+    } elseif ($visitor->profile_type == 'ASIC' && $visitor->escort_flag == 1) {
+        return 'ASIC Escort';
+    } else {
+        return 'ASIC Sponsor';
+    }
 }
 ?>
 <script>

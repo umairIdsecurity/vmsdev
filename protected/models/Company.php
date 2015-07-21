@@ -82,10 +82,10 @@ class Company extends CActiveRecord {
 	            array('contact', 'length', 'max' => 100),
 	            array('tenant', 'length', 'max' => 100),
 	            array('logo,is_deleted,company_laf_preferences ,is_user_field, company_type', 'safe'),
-                    
+
                     // Senario for Add Tenant
                     array('code, name, contact, email_address, office_number','required', 'on' => 'add_tenant'),
-                    
+
 	            array('tenant, tenant_agent,logo,card_count', 'default', 'setOnEmpty' => true, 'value' => null),
 	            // The following rule is used by search().
 	            // @todo Please remove those attributes that should not be searched.
@@ -94,7 +94,7 @@ class Company extends CActiveRecord {
 		}
 		else{
 			return array(
-                
+
                             array('name', 'required'),
                             array('code', 'required', 'except' => 'preregistration'),
                             array(' email_address , mobile_number', 'required' , 'on' => 'updatetenant'),
@@ -113,18 +113,18 @@ class Company extends CActiveRecord {
                             array('tenant', 'length', 'max' => 100),
                             array('logo,is_deleted,company_laf_preferences', 'safe'),
                             array('tenant, tenant_agent,logo,card_count', 'default', 'setOnEmpty' => true, 'value' => null),
-                            
+
                             // Senario for Add Tenant
                             array('code, name,  email_address, office_number','required', 'on' => 'add_tenant'),
-                            
+
                             // The following rule is used by search().
                             // @todo Please remove those attributes that should not be searched.
                             array('id, isTenant,card_count, name,code,company_laf_preferences, trading_name, logo,tenant, contact, billing_address, email_address, office_number, mobile_number, website, created_by_user, created_by_visitor', 'safe', 'on' => 'search'),
-                            
-                            
+
+
                             );
 		}
-        
+
     }
 
     /**
@@ -218,7 +218,7 @@ class Company extends CActiveRecord {
         $criteria->compare('card_count', $this->card_count);
 
         if($_SESSION['role'] != Roles::ROLE_SUPERADMIN) {
-            $criteria->compare('tenant', $_SESSION["tenant"]);
+            $criteria->compare('tenant', $_SESSION["id"]);
         }
         $criteria->compare($post_count_sql, $this->isTenant);
 
@@ -335,7 +335,7 @@ class Company extends CActiveRecord {
         $company = array_filter($company);
         return count($company);
     }
-	
+
 	public function isWithoutCompanyCodeUniqueWithinTheTenant($tenant) {
         $Criteria = new CDbCriteria();
         $Criteria->condition = "tenant='" . $tenant . "'";
@@ -345,7 +345,7 @@ class Company extends CActiveRecord {
         return count($company);
     }
 
-	
+
     public function findAllCompany() {
         $aArray = array();
         if (Yii::app()->user->role != Roles::ROLE_SUPERADMIN) {

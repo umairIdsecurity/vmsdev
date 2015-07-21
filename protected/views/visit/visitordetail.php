@@ -98,7 +98,7 @@ $this->renderPartial('visithistory', array('model' => $model,
     function checkEmailIfUnique() {
 
         var email = $("#Visitor_email").val();
-        if (email == '<?php echo $visitorModel->email ?>') {
+        if (email == '<?php echo CHtml::encode($visitorModel->email) ?>') {
             sendVisitorForm();
         } else {
 
@@ -431,12 +431,12 @@ $this->renderPartial('visithistory', array('model' => $model,
         {
             $('#Visitor_visitor_card_status').children("option[value='2']").prop('selected',true);
             $('#update-visitor-detail-form').submit();
-        } 
+        }
 
         $.ajax({
             type: "POST",
             url: "<?php echo CHtml::normalizeUrl(array("visit/update&id=" . $model->id)); ?>",
-            
+
             data: visitForm,
             success: function(data) {
                 $("#preregisterLi").hide();
@@ -449,7 +449,7 @@ $this->renderPartial('visithistory', array('model' => $model,
                 $(".visitStatusLi li a span").css('color', '#9BD62C !important');
 
                 sendCardForm();
-                
+
                 //alert("Visit is now activated. You can now print the visitor badge.");
                 //window.location = "<?php //echo CHtml::normalizeUrl(array("visit/detail&id=" . $model->id)); ?>";
             }
@@ -461,11 +461,11 @@ $this->renderPartial('visithistory', array('model' => $model,
         var id = visitId ? visitId : '<?php echo $model->id; ?>';
         var preCardNo = '';
 
-      
+
         if (typeof $('#pre_issued_card_no').val() != 'undefined' && $('#pre_issued_card_no').val() != '') {
             preCardNo = $('#pre_issued_card_no').val();
         }
-        
+
         $.ajax({
             type: "POST",
             url: "<?php echo CHtml::normalizeUrl(array("cardGenerated/create&visitId=")) ?>" + id + "&preCardNo=" + preCardNo,

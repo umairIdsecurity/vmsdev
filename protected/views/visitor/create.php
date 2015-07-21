@@ -218,9 +218,9 @@ function getCardType() {
                 $('.visitor_password_repeat').empty().hide();
             }
 
-            var company = $('#Visitor_company').val();
+            var contact = $('#Visitor_staff_id').val();
             if (cardType > <?php echo CardType::CONTRACTOR_VISITOR; ?> && typeof contact != 'undefined') {
-                populateAsicFields(company, true);
+                populateAsicFields(contact, true);
             }
 
             $(".visitorType").hide();
@@ -283,7 +283,7 @@ function getCardType() {
                     sendReasonForm();
                 } else {
                     if ($("#hostId").val() != 0 || $("#hostId").val() != '') {
-                        var $sendMail = $("<textarea  name='Visit[sendMail]'>"+'true'+"</textarea>");
+                        var $sendMail = $("<textarea  name='Visit[sendMail]'>"+' true '+"</textarea>");
                         $("#register-visit-form").append($sendMail);
                     }
                     populateVisitFormFields();
@@ -358,10 +358,10 @@ function getCardType() {
             $("#" + showThisLiId).show();
         }
 
-        window.populateAsicFields = function populateAsicFields(contact, isCompany) {
-            if (isCompany) {
+        window.populateAsicFields = function populateAsicFields(contact, isCompanyContact) {
+            if (isCompanyContact) {
                 // if contact is company
-                var url = "<?php echo $this->createUrl('company/getContact&id=') ?>" + contact + "&isCompany=1";
+                var url = "<?php echo $this->createUrl('company/getContact&id=') ?>" + contact + "&isCompanyContact=1";
             } else {
                 // If contact is visitor
                 var url = "<?php echo $this->createUrl('company/getContact&id=') ?>" + contact;
@@ -380,8 +380,9 @@ function getCardType() {
                         $('#User_company').select2("val", data.company);
                         $('#User_asic_no').val(data.asic_no);
                         $('#User_asic_expiry').val(data.asic_expiry);
+                        $('select#Visitor_visitor_card_status').val(data.visitor_card_status);
                         $('#Host_photo').val(data.photo);
-                        if (typeof data.photoRelativePath[0].relative_path != 'undefined') {
+                        if (data.photoRelativePath != '' && typeof data.photoRelativePath[0] != 'undefined' && typeof data.photoRelativePath[0].relative_path != 'undefined') {
                             $('.ajax-upload-dragdrop2').css(
                                 'backgroundImage', 'url(/'+data.photoRelativePath[0].relative_path+')'
                             );
@@ -406,8 +407,8 @@ function closeAndPopulateField(id) {
                 $("#searchVisitorTableDiv h4").html("Selected Visitor Record : " + value.first_name + ' ' + value.last_name);
                 checkIfVisitorHasACurrentSavedVisit(value.id);
             });
+            $('.findVisitorButtonColumn .delete').html('Select Visitor');
             $('.findVisitorButtonColumn a').removeClass('delete');
-            //$('.findVisitorButtonColumn a').html('Select Visitor');
             $('#' + id).addClass('delete');
             $('#' + id).html('Visitor Selected');
             //$('.findVisitorButtonColumn .linkToVisitorDetailPage').html('Active');
@@ -540,7 +541,7 @@ function checkAsicStatusById(id){
                             $("#searchHostTableDiv h4").html("Selected "+getCardType()+" Record : " + value.first_name + " " + value.last_name);
                         });
                         $('#searchHostTable').contents().find('.findHostButtonColumn a').removeClass('delete');
-                        $('#searchHostTable').contents().find('.findHostButtonColumn a').html('Select'+getCardType());
+                        $('#searchHostTable').contents().find('.findHostButtonColumn a').html('Select '+getCardType());
                         $('#searchHostTable').contents().find('#' + id).addClass('delete');
                         $('#searchHostTable').contents().find('#' + id).html(getCardType()+' Selected');
                    }

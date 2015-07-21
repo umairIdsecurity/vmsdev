@@ -42,10 +42,10 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'filter'=>array(""=>"Is Tenant?",0=>"No",1=>"Yes"),
             'value' => '$data->isTenant?"Yes":"No"',
             'htmlOptions' => array('style' => "text-align:center;"),
-            
+
         ),*/
-        
-      
+
+
         array(
             'header' => 'Actions',
             'class' => 'CButtonColumn',

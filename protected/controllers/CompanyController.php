@@ -477,19 +477,24 @@ class CompanyController extends Controller
         }
     }
 
-    public function actionGetContact($id, $isCompany = false)
+    public function actionGetContact($id, $isCompanyContact = false)
     {
         if (Yii::app()->request->isAjaxRequest) {
-            if ($isCompany) {
-                $asicList = Visitor::model()->findAllByAttributes(['company' => $id, 'profile_type' => 'ASIC', 'visitor_card_status' => Visitor::ASIC_ISSUED]);
+            if ($isCompanyContact) {
+                // if isCompanyContact true then get contact on user table
+                $contact = User::model()->findByPk($id);
+                $asic = Visitor::model()->findByAttributes(['email' => $contact->email, 'profile_type' => 'ASIC', 'visitor_card_status' => Visitor::ASIC_ISSUED]);
             } else {
+                // else get visitor on visitor table
                 $visitor = Visitor::model()->findByPk($id);
                 $asicList = Visitor::model()->findAllByAttributes(['company' => $visitor->company, 'profile_type' => 'ASIC', 'visitor_card_status' => Visitor::ASIC_ISSUED]);
+
+                if (!empty($asicList)) {
+                    $asic = $asicList[count($asicList) - 1];
+                }
             }
 
-            if (!empty($asicList) && count($asicList) > 0) {
-                $asic = $asicList[count($asicList) - 1];
-            } else {
+            if (!isset($asic) || !$asic) {
                 $asic = new Visitor;
             }
 
@@ -507,6 +512,7 @@ class CompanyController extends Controller
                     'company'        => $asic->company,
                     'asic_no'        => $asic->asic_no,
                     'asic_expiry'    => empty($asic->asic_expiry) || $asic->asic_expiry == '0000-00-00' ? '' : date('d-m-Y', strtotime($asic->asic_expiry)),
+                    'visitor_card_status' => (int)$asic->visitor_card_status,
                     'photo'          => $asic->photo,
                     'photoRelativePath'      => $photo
                 ];

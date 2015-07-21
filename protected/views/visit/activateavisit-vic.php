@@ -1,4 +1,4 @@
-<?php 
+<?php
 $session = new CHttpSession;
 $identification_document_expiry = date('Y-m-d', strtotime($visitorModel->identification_document_expiry));
 $asicEscort = new AddAsicEscort();
@@ -172,13 +172,13 @@ $asicEscort = new AddAsicEscort();
                         $model->date_check_out = date('d-m-Y');
                         break;
                 }
-                
+
             }
 
             // Update date check out for Saved, Closed, AutoClosed Visit
             if (in_array($model->visit_status, [VisitStatus::SAVED, VisitStatus::CLOSED, VisitStatus::AUTOCLOSED]) && !in_array($model->card_type, [CardType::VIC_CARD_24HOURS, CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MANUAL])) {
                 $model->date_check_out = date('d-m-Y', strtotime($model->date_check_out. ' +1 day'));
-                
+
                 $model->time_check_out = $model->time_check_in;
             }
 
@@ -602,13 +602,38 @@ $asicEscort = new AddAsicEscort();
     }
 
     function activeVisit() {
+        var photoReview = $('#photoPreview').attr('src');
+        var isDefault = photoReview.search('images/companylogohere1.png');
+        // Stop active visit if image is not uploaded
+        if (
+            (photoReview == '' || isDefault > 0) &&
+            $("#Visit_card_type").val() != <?php echo CardType::SAME_DAY_VISITOR; ?> &&
+            $("#Visit_card_type").val() != <?php echo CardType::MANUAL_VISITOR; ?> &&
+            $("#Visit_card_type").val() != <?php echo CardType::VIC_CARD_SAMEDATE ?> &&
+            $("#Visit_card_type").val() != <?php echo CardType::VIC_CARD_MANUAL; ?>
+        ) {
+            <?php if ($model->card_type > CardType::CONTRACTOR_VISITOR ) : ?>
+                <?php if(!in_array($model->card_type, [CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_MANUAL])) : ?>
+                    $("#Visitor_photo_em").attr('style', 'margin-right:84px ; margin-bottom:0px; margin-top:0px ;');
+                    $("#editImageBtn.editImageBtn").attr('style', 'margin-top:-5px !important; margin-right:84px ; margin-bottom:0px;');
+                    $("#cropImageBtn.editImageBtn").attr('style', 'margin-top:-5px !important; margin-right:84px ; margin-bottom:0px;');
+                <?php endif; ?>
+            <?php else : ?>
+                <?php if(!in_array($model->card_type, [CardType::SAME_DAY_VISITOR, CardType::MANUAL_VISITOR])) : ?>
+                    $("#Visitor_photo_em").attr('style', 'margin-bottom: -17px; margin-right: 0px; margin-top: 13px;');
+                    $("#cropImageBtn.editImageBtn").attr('style', 'margin-bottom: 0; margin-right: 0 !important; margin-top: 0 !important;');
+                <?php endif; ?>
+            <?php endif; ?>
+            return false;
+        }
+
         var status = "<?php echo $model->visit_status; ?>";
         if (status == "<?php echo VisitStatus::SAVED; ?>" || status == "<?php echo VisitStatus::PREREGISTERED; ?>") {
             checkIfActiveVisitConflictsWithAnotherVisit();
         } else {
             checkIfActiveVisitConflictsWithAnotherVisit('new');
         }
-    }   
+    }
 
     $(document).ready(function(){
         $('#asicDecalarationRbtn1').on('click',function(){
@@ -652,7 +677,7 @@ $asicEscort = new AddAsicEscort();
                     if (!$('input[name="identificationActiveVisit"]').is(':checked')) {
                         $('#identificationModal').modal('show');
                     } else if ($('#VicHolderDecalarations').is(':checked')) {
-                        activeVisit();   
+                        activeVisit();
                         return false;
                     }
                 } else {

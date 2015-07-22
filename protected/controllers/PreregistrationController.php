@@ -392,7 +392,32 @@ class PreregistrationController extends Controller
 	}
 
 	public function actionUploadPhoto(){
-		$this->render('upload-photo');
+
+		$model = new UploadForm();
+
+		if(isset($_POST['UploadForm']))
+		{
+			$model->attributes=$_POST['UploadForm'];
+
+			$name       = $_FILES['UploadForm']['name']['image'];
+			//$filename   = pathinfo($name, PATHINFO_FILENAME);
+			$ext        = pathinfo($name, PATHINFO_EXTENSION);
+
+			$newNameHash = hash('adler32', time());
+			$newName    = $newNameHash.".".$ext;
+
+
+			$model->image=CUploadedFile::getInstance($model,'image');
+
+			$fullImgSource = Yii::getPathOfAlias('webroot').'/uploads/visitor/'.$newName;
+
+			$model->image->saveAs($fullImgSource);
+
+			//$model->image->saveAs(Yii::app()->basePath.'/../uploads/visitor/'.$model->image);
+
+		}
+
+		$this->render('upload-photo',array('model'=>$model) );
 	}
 
 	public function actionAsicPass(){

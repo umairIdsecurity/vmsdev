@@ -20,7 +20,7 @@ class PreregistrationController extends Controller
 	public function accessRules() {
 		return array(
 			array('allow',
-				'actions' => array('index','privacyPolicy' , 'declaration' , 'Login' ,'registration','confirmDetails', 'visitReason' , 'addAsic' , 'asicPass', 'error' , 'uploadPhoto','ajaxAsicSearch' ),
+				'actions' => array('index','privacyPolicy' , 'declaration' , 'Login' ,'registration','confirmDetails', 'visitReason' , 'addAsic' , 'asicPass', 'error' , 'uploadPhoto','ajaxAsicSearch' , 'visitDetails' ),
 				'users' => array('*'),
 			),
 			array('allow',
@@ -167,7 +167,7 @@ class PreregistrationController extends Controller
 				$session['visitor_id'] = $model->id;
 				$this->redirect(array('preregistration/visitReason'));
 			}
-			print_r($model->getErrors());
+
 
 		}
 		
@@ -233,7 +233,7 @@ class PreregistrationController extends Controller
 
 					$this->redirect(array('preregistration/addAsic'));
 				}
-				print_r($registrationModel->getErrors());
+
 			}
 
 		}
@@ -405,41 +405,54 @@ class PreregistrationController extends Controller
 
 			$model->attributes=$_POST['UploadForm'];
 
+
 			$name       = $_FILES['UploadForm']['name']['image'];
 
-			$ext        = pathinfo($name, PATHINFO_EXTENSION);
+			if(!empty($name)){
 
-			$newNameHash = hash('adler32', time());
+				$ext        = pathinfo($name, PATHINFO_EXTENSION);
 
-			$newName    = $newNameHash.'-' . time().'.'.$ext;
+				$newNameHash = hash('adler32', time());
 
-			$model->image=CUploadedFile::getInstance($model,'image');
+				$newName    = $newNameHash.'-' . time().'.'.$ext;
 
-			$fullImgSource = Yii::getPathOfAlias('webroot').'/uploads/visitor/'.$newName;
+				$model->image=CUploadedFile::getInstance($model,'image');
 
-			$relativeImgSrc = 'uploads/visitor/'.$newName;
+				$fullImgSource = Yii::getPathOfAlias('webroot').'/uploads/visitor/'.$newName;
 
-			if($model->image->saveAs($fullImgSource)){
-				$photoModel = new Photo();
-				$photoModel->filename = $name;
-				$photoModel->unique_filename = $newName;
-				$photoModel->relative_path = $relativeImgSrc;
+				$relativeImgSrc = 'uploads/visitor/'.$newName;
 
-				if($photoModel->save()){
-					$visitorModel =
-						Registration::model()->findByPk(
-							$session['visitor_id']
-						);
-					$visitorModel->photo = $photoModel->id;
-					$visitorModel->save();
-					$session['imgName'] = $newName;
+				if($model->image->saveAs($fullImgSource)){
+					$photoModel = new Photo();
+					$photoModel->filename = $name;
+					$photoModel->unique_filename = $newName;
+					$photoModel->relative_path = $relativeImgSrc;
+
+					if($photoModel->save()){
+						$visitorModel =
+							Registration::model()->findByPk(
+								$session['visitor_id']
+							);
+						$visitorModel->photo = $photoModel->id;
+						$visitorModel->save(true,array('photo'));
+						$session['imgName'] = $newName;
+
+					}
 				}
 			}
+
+			$this->redirect(array('preregistration/visitDetails'));
+
 
 		}
 
 		$this->render('upload-photo',array('model'=>$model) );
 	}
+
+	public function actionVisitDetails(){
+		$this->render('visit-details');
+	}
+
 
 	public function actionAsicPass(){
 

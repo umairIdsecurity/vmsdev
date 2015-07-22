@@ -405,4 +405,12 @@ class SiteController extends Controller {
         echo "DONE";
     }
 
+    /**
+     * if System shutdown, all user except super admin, issue body admin, administrator will run this action
+     */
+    public function actionShutdown()
+    {
+        $this->render('shutdown');
+    }
+
 }

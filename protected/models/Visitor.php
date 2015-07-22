@@ -58,12 +58,12 @@ class Visitor extends CActiveRecord {
     const PROFILE_TYPE_CORPORATE = 'CORPORATE';
     const PROFILE_TYPE_VIC       = 'VIC';
     const PROFILE_TYPE_ASIC      = 'ASIC';
-    
+
     const AUSTRALIA_ID           = 13;
-    
+
     const DELTED                 = 1;
     const NOT_DELETED            = 0;
-    
+
     # Visitor Card Status
     const SAVED            = 1;
     const VIC_HOLDER       = 2;
@@ -87,9 +87,13 @@ class Visitor extends CActiveRecord {
             self::ASIC_ISSUED    => 'Card Status: ASIC Issued',
             self::ASIC_EXPIRED   => 'Card Status: ASIC Expired',
             self::ASIC_DENIED    => 'Card Status: ASIC Denied',
-
         ),
     );
+
+    const ASIC_DENIED_LABEL      = 'Card Status: ASIC Denied';
+    const ASIC_ISSUED_LABEL      = 'Card Status: ASIC Issued';
+    const ASIC_APPLICANT_LABEL   = 'Card Status: ASIC Applicant';
+    const ASIC_EXPIRED_LABEL     = 'Card Status: ASIC Expired';
 
     public static $PROFILE_TYPE_LIST = array(
         self::PROFILE_TYPE_CORPORATE => 'Corporate',
@@ -307,7 +311,7 @@ class Visitor extends CActiveRecord {
                     contact_postcode,
                     contact_country',
                     'required',
-                    'except'=> ['updateVic', 'updateIdentification', 'delete', 'asicConvert']
+                    'except'=> ['updateVic', 'updateIdentification', 'delete', 'asicIssued']
                 );
                 break;
             case self::PROFILE_TYPE_ASIC:
@@ -557,23 +561,23 @@ class Visitor extends CActiveRecord {
         $this->dbCriteria->mergeWith($criteria);
 
     }
-    
+
     /**
      * Radio button auto Select on Edit/Update
-     * 
+     *
      */
     public function afterFind() {
-     
-        if( is_null($this->password) ) { 
+
+        if( is_null($this->password) ) {
             $this->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
         }
         else {
             $this->password_requirement = PasswordRequirement::PASSWORD_IS_REQUIRED;
             $this->password_option = 1;
-            
+
         }
-        
-        
+
+
         parent::afterFind();
     }
     protected function afterValidate() {
@@ -585,14 +589,14 @@ class Visitor extends CActiveRecord {
             //disable if action is update
         }
     }
-    
+
     public function behaviors() {
         return array(
             'AuditTrailBehaviors' => 'application.components.behaviors.AuditTrailBehaviors',
             'DateTimeZoneAndFormatBehavior' => 'application.components.DateTimeZoneAndFormatBehavior',
         );
     }
-   
+
 
     public function findAllCompanyWithSameTenant($tenantId) {
         $session = new CHttpSession;

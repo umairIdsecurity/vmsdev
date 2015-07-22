@@ -134,12 +134,12 @@ class VisitController extends Controller {
                 }
             }
 
-
             if ($visitService->save($model, $session['id'])) {
                 if(isset($_POST['Visit']['sendMail']) && $_POST['Visit']['sendMail'] == 'true' ){
                     $visitor = Visitor::model()->findByPk($model->visitor);
                     $host = Visitor::model()->findByPk($model->host);
-                    $this->renderPartial('_email_asic_verify',array('visitor'=>$visitor,'host'=>$host));
+
+                    $this->renderPartial('_email_asic_verify', array('visitor' => $visitor, 'host' => $host));
                 }
                 $this->redirect(array('visit/detail', 'id' => $model->id));
             }
@@ -367,7 +367,7 @@ class VisitController extends Controller {
 
         $hostModel = User::model()->findByPk($host);
 
-        // Update Workstation form ( left column on visitor detail page )
+        // Update visitor detail form ( left column on visitor detail page )
         if (isset($_POST['updateVisitorDetailForm']) && isset($_POST['Visitor'])) {
             $visitorModel->attributes = Yii::app()->request->getPost('Visitor');
 

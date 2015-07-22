@@ -172,10 +172,11 @@ class VisitorController extends Controller {
                 } else {
                     echo $updateErrorMessage;
                 }
-            } elseif (isset($visitorParams['visitor_card_status']) && $visitorParams['visitor_card_status'] == Visitor::ASIC_ISSUED && $model->profile_type == Visitor::PROFILE_TYPE_VIC) {
+            } elseif (isset($visitorParams['visitor_card_status']) && in_array($visitorParams['visitor_card_status'], [Visitor::ASIC_ISSUED, Visitor::ASIC_APPLICANT, Visitor::ASIC_EXPIRED, Visitor::ASIC_DENIED]) && $model->profile_type == Visitor::PROFILE_TYPE_VIC) {
                 $model->attributes          = $visitorParams;
                 $model->profile_type        = Visitor::PROFILE_TYPE_ASIC;
-                $model->visitor_card_status = Visitor::ASIC_ISSUED;
+                // $model->visitor_card_status = Visitor::ASIC_ISSUED;
+                $model->visitor_card_status = $visitorParams['visitor_card_status'];
 
                 if($visitorService->save($model, NULL, $session['id'])) {
                     $logCardstatusConvert               = new CardstatusConvert;
@@ -392,7 +393,8 @@ class VisitorController extends Controller {
                 . "%' or identification_alternate_document_no2 LIKE '%" . $searchInfo
                 . "%')";
             $hostTitle = 'ASIC Sponsor';
-            $conditionString .= " AND profile_type = '" . Visitor::PROFILE_TYPE_ASIC . "' ";
+            // $conditionString .= " AND profile_type = '" . Visitor::PROFILE_TYPE_ASIC . "' ";
+            $conditionString .= " AND (profile_type = '" . Visitor::PROFILE_TYPE_VIC . "' OR profile_type = '". Visitor::PROFILE_TYPE_ASIC ."')";
         } else {
             $model = new User('search');
             $model->unsetAttributes();
@@ -873,7 +875,12 @@ class VisitorController extends Controller {
         if (isset($_GET['searchInfo'])) {
             $searchInfo = $_GET['searchInfo'];
             $merge = new CDbCriteria;
-            $conditionString = "profile_type = 'ASIC' AND (CONCAT(first_name,' ',last_name) like '%" . $searchInfo
+            /*$conditionString = "profile_type = 'ASIC' AND (CONCAT(first_name,' ',last_name) like '%" . $searchInfo
+                . "%' or first_name like '%" . $searchInfo
+                . "%' or last_name like '%" . $searchInfo
+                . "%' or email like '%" . $searchInfo
+                . "%')";*/
+            $conditionString = "profile_type = 'VIC' OR profile_type = 'ASIC' AND (CONCAT(first_name,' ',last_name) like '%" . $searchInfo
                 . "%' or first_name like '%" . $searchInfo
                 . "%' or last_name like '%" . $searchInfo
                 . "%' or email like '%" . $searchInfo

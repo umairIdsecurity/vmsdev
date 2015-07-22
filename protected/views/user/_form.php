@@ -258,6 +258,7 @@ $form = $this->beginWidget('CActiveForm', array(
             </select><span class="required">*</span><?php echo "<br>" . $form->error($model, 'tenant'); ?>
         </td>
     </tr>
+
     <tr id="tenantAgentRow" class='hiddenElement'>
 
         <td>

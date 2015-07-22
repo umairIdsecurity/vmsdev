@@ -17,7 +17,9 @@ angular.module('kiosk.DataService', [])
 		adminEmail: VMSConfig.adminEmail,	  
 		kiosk:'',
 		workstation:0,
-		cardType:0,	  
+		cardType:0,
+		ktoken:'',
+		info:[],
 		authLogin: function(email, password, onSuccess, onFailure) {
 			var url = this.baseURL + '/authorization/admin';
 			var params = { grant_type:'password', email: email, password: password,};

@@ -95,7 +95,7 @@ function getCardType() {
 }
     $(document).ready(function () {
         display_ct();
-        
+
         $("#register-host-patient-form").hide();
         $("#register-host-form").show();
         $("#searchHostDiv").show();
@@ -220,25 +220,9 @@ function getCardType() {
 
             var contact = $('#Visitor_staff_id').val();
             if (cardType > <?php echo CardType::CONTRACTOR_VISITOR; ?> && typeof contact != 'undefined') {
-                $.ajax({
-                    url: "<?php echo $this->createUrl('company/getContact&id=') ?>" + contact,
-                    dataType: "json",
-                    success: function(data) {
-                        if (data != 0) {
-                            $('#User_id').val(data.id);
-                            $('#User_first_name').val(data.first_name);
-                            $('#User_last_name').val(data.last_name);
-                            $('#User_email').val(data.email);
-                            $('#User_contact_number').val(data.contact_number);
-                            $('#User_company').select2("val", data.company);
-                            $('#User_asic_no').val(data.asic_no);
-                            $('#User_asic_expiry').val(data.asic_expiry);
-                            $('#Host_photo').val(data.photo);
-                        }
-                    }
-                });
+                populateAsicFields(contact, true);
             }
-            
+
             $(".visitorType").hide();
             if ($("#Visitor_visitor_type").val() == 1 || $("#Visitor_visitor_type_search").val() == 1) {
                 $("#findHostA").html("Add Patient Details");
@@ -299,7 +283,7 @@ function getCardType() {
                     sendReasonForm();
                 } else {
                     if ($("#hostId").val() != 0 || $("#hostId").val() != '') {
-                        var $sendMail = $("<textarea  name='Visit[sendMail]'>"+'true'+"</textarea>");
+                        var $sendMail = $("<textarea  name='Visit[sendMail]'>"+' true '+"</textarea>");
                         $("#register-visit-form").append($sendMail);
                     }
                     populateVisitFormFields();
@@ -373,28 +357,45 @@ function getCardType() {
             $("#" + hideThisLiId).hide();
             $("#" + showThisLiId).show();
         }
+
+        window.populateAsicFields = function populateAsicFields(contact, isCompanyContact) {
+            if (isCompanyContact) {
+                // if contact is company
+                var url = "<?php echo $this->createUrl('company/getContact&id=') ?>" + contact + "&isCompanyContact=1";
+            } else {
+                // If contact is visitor
+                var url = "<?php echo $this->createUrl('company/getContact&id=') ?>" + contact;
+            }
+
+            $.ajax({
+                url: url,
+                dataType: "json",
+                success: function(data) {
+                    if (data != 0) {
+                        $('#User_id').val(data.id);
+                        $('#User_first_name').val(data.first_name);
+                        $('#User_last_name').val(data.last_name);
+                        $('#User_email').val(data.email);
+                        $('#User_contact_number').val(data.contact_number);
+                        $('#User_company').select2("val", data.company);
+                        $('#User_asic_no').val(data.asic_no);
+                        $('#User_asic_expiry').val(data.asic_expiry);
+                        $('select#Visitor_visitor_card_status').val(data.visitor_card_status);
+                        $('#Host_photo').val(data.photo);
+                        if (data.photoRelativePath != '' && typeof data.photoRelativePath[0] != 'undefined' && typeof data.photoRelativePath[0].relative_path != 'undefined') {
+                            $('.ajax-upload-dragdrop2').css(
+                                'backgroundImage', 'url(/'+data.photoRelativePath[0].relative_path+')'
+                            );
+                        }
+                    }
+                }
+            });
+        }
     }
 );
 
 function closeAndPopulateField(id) {
-    $.ajax({
-        type: "POST",
-        url: "<?php echo $this->createUrl('company/getContact&id=') ?>" + id + "&isCompanyContact=0",
-        dataType: "json",
-        success: function(data) {
-            if (data != 0) {
-                $('#User_id').val(data.id);
-                $('#User_first_name').val(data.first_name);
-                $('#User_last_name').val(data.last_name);
-                $('#User_email').val(data.email);
-                $('#User_contact_number').val(data.contact_number);
-                $('#User_company').select2("val", data.company);
-                $('#User_asic_no').val(data.asic_no);
-                $('#User_asic_expiry').val(data.asic_expiry);
-                $('#Host_photo').val(data.photo);
-            }
-        }
-    });
+    populateAsicFields(id, false);
 
     $.ajax({
         type: 'POST',
@@ -406,8 +407,8 @@ function closeAndPopulateField(id) {
                 $("#searchVisitorTableDiv h4").html("Selected Visitor Record : " + value.first_name + ' ' + value.last_name);
                 checkIfVisitorHasACurrentSavedVisit(value.id);
             });
+            $('.findVisitorButtonColumn .delete').html('Select Visitor');
             $('.findVisitorButtonColumn a').removeClass('delete');
-            //$('.findVisitorButtonColumn a').html('Select Visitor');
             $('#' + id).addClass('delete');
             $('#' + id).html('Visitor Selected');
             //$('.findVisitorButtonColumn .linkToVisitorDetailPage').html('Active');
@@ -493,7 +494,7 @@ function preloadHostDetails(hostId) {
                     $(".ajax-upload-dragdrop3").css("background", my_db_image + " no-repeat center top");
                     $(".ajax-upload-dragdrop3").css({"background-size": "132px 152px" });
                     logo.src = "data:image;base64,"+ value.db_image;
-                    document.getElementById('photoCropPreview3').src = "data:image;base64,"+ value.db_image;                    
+                    document.getElementById('photoCropPreview3').src = "data:image;base64,"+ value.db_image;
 
                     $("#cropImageBtn3").show();
 
@@ -540,7 +541,7 @@ function checkAsicStatusById(id){
                             $("#searchHostTableDiv h4").html("Selected "+getCardType()+" Record : " + value.first_name + " " + value.last_name);
                         });
                         $('#searchHostTable').contents().find('.findHostButtonColumn a').removeClass('delete');
-                        $('#searchHostTable').contents().find('.findHostButtonColumn a').html('Select'+getCardType());
+                        $('#searchHostTable').contents().find('.findHostButtonColumn a').html('Select '+getCardType());
                         $('#searchHostTable').contents().find('#' + id).addClass('delete');
                         $('#searchHostTable').contents().find('#' + id).html(getCardType()+' Selected');
                    }

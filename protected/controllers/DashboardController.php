@@ -188,7 +188,7 @@ class DashboardController extends Controller {
         //Archive Expired 48 Old Pre-registered Visits
         Visit::model()->archivePregisteredOldVisits();
         $model = new Visit('search');
-        
+
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['Visit'])) {
             $model->attributes = $_GET['Visit'];
@@ -211,18 +211,18 @@ class DashboardController extends Controller {
 
     public function actionContactSupport() {
         $session = new CHttpSession;
-        
+
         $user_id = Yii::app()->user->id;
         $userModel = User::model()->findByPk($user_id);
 
         $model = new ContactForm;
-        
+
         if (isset($_POST['ContactForm'])) {
-            
+
             $model->attributes = $_POST['ContactForm'];
-            
+
             if ($model->validate()) {
-                
+
                 $headers = "MIME-Version: 1.0" . "\r\n";
                 $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
                 $headers .= "From: {$userModel->email}\r\nReply-To: {$userModel->email}";
@@ -236,22 +236,22 @@ class DashboardController extends Controller {
                 $contactModel->attributes=$contactModel;
                 $contactModel->contact_person_message=$model->message;
 		$contactModel->save();
-		
+
                 mail($contactModel->contact_person_email, "Contact Support", $content, $headers);
-                
+
                 Yii::app()->user->setFlash(
                         'contact', 'Thank you for contacting us. We will respond to you as soon as possible.'
                 );
                 $this->refresh();
             }
         }
-       
+
         $this->render('contactsupport', array(
             'model' => $model,
             'userModel' => $userModel
         ));
     }
-	
+
     public function actionHelpDesk() {
 	$helpDeskGroupRecords = HelpDeskGroup::model()->getAllHelpDeskGroup();
         $session = new CHttpSession;

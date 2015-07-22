@@ -77,12 +77,18 @@ if ($this->action->id == 'update') {
                 var visitor_card_status = $("#Visitor_visitor_card_status").val();
                 switch (visitor_card_status) {
                     case "'.Visitor::ASIC_ISSUED.'":
+                        var identification_type = $("#Visitor_identification_type").val();
                         var visitor_asic_no     = $("#Visitor_asic_no").val();
                         var visitor_asic_expiry = $("#Visitor_asic_expiry").val();
-                        if (visitor_asic_no == "" || visitor_asic_expiry == "") {
+                        if (identification_type == "" || visitor_asic_no == "" || visitor_asic_expiry == "") {
                             //add validation item
-                            data["Visitor_asic_no"] = ["Please enter an asic no"];
-                            data["Visitor_asic_expiry"] = ["Please select an asic expiry"];
+                            data["Visitor_identification_type"] = ["Please select an identification type"];
+                            data["Visitor_asic_no"]             = ["Please enter an asic no"];
+                            data["Visitor_asic_expiry"]         = ["Please select an asic expiry"];
+
+                            if (identification_type == "") {
+                                $("#Visitor_identification_type_em_").html(data["Visitor_identification_type"]).show();
+                            }
 
                             if (visitor_asic_no == "") {
                                 $("#Visitor_asic_no_em_").html(data["Visitor_asic_no"]).show();
@@ -93,6 +99,7 @@ if ($this->action->id == 'update') {
                             }
 
                             hasError = true;
+                            return false;
                         } else {
                             hasError = false;
                         }
@@ -120,13 +127,14 @@ if ($this->action->id == 'update') {
                             }
 
                             hasError = true;
+                            return false;
                         } else {
                             hasError = false;
                         }
                         break;
                 }
 
-                if(isEmpty(data)) {
+                if(jQuery.isEmptyObject(data)) {
                     hasError = false;
                 }
 
@@ -609,7 +617,7 @@ if ($this->action->id == 'update') {
 //        getWorkstation();
         currentCardStatus = $('#Visitor_visitor_card_status').val();
         if(currentCardStatus == 6) {
-            $('#Visitor_visitor_card_status').attr("disabled", true);
+            $('#Visitor_visitor_card_status').attr("readonly", true);
         }
 
         $(document).on('change', '#Visitor_visitor_card_status', function(e) {
@@ -1065,14 +1073,6 @@ $('#Visitor_company').on('change', function() {
     });
 });
 
-function isEmpty(obj) {
-    for(var prop in obj) {
-        if(obj.hasOwnProperty(prop))
-            return false;
-    }
-
-    return true;
-}
 </script>
 
 

@@ -24,7 +24,7 @@ $photoForm = $this->beginWidget('CActiveForm', [
 <?php $this->endWidget(); ?>
 
 <div class="cardPhotoPreview" style="height:0px; margin-left: 15px;">
-    <?php if ($visitorModel->photo != '') { 
+    <?php if ($visitorModel->photo != '') {
                 $data = Photo::model()->returnVisitorPhotoRelativePath($model->visitor);
                 $my_image = '';
                 if(!empty($data['db_image'])){
@@ -120,14 +120,14 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
 $detailForm = $this->beginWidget('CActiveForm', [
     'id'          => 'update-visitor-detail-form',
     'htmlOptions' => ['name' => 'update-visitor-detail-form'],
-    /*'enableAjaxValidation'   => false,
+    'enableAjaxValidation'   => false,
     'enableClientValidation' => true,
     'clientOptions'          => [
-        'validateOnSubmit' => true,
+        'validateOnSubmit' => false,
         'afterValidate'    => 'js:function(form, data, hasError){
             return afterValidate(form, data, hasError);
         }'
-    ]*/
+    ]
 ]);
 ?>
     <div style="margin: 10px 0px 0px 19px; text-align: left;">
@@ -135,7 +135,7 @@ $detailForm = $this->beginWidget('CActiveForm', [
         if ($asic) {
             if($visitorModel->profile_type ==  Visitor::PROFILE_TYPE_VIC) {
                 $profileType = Visitor::PROFILE_TYPE_VIC;
-                
+
             } elseif($visitorModel->profile_type ==  Visitor::PROFILE_TYPE_ASIC) {
                 $profileType = Visitor::PROFILE_TYPE_ASIC;
             }
@@ -154,11 +154,10 @@ $detailForm = $this->beginWidget('CActiveForm', [
         }
         echo $detailForm->dropDownList($model, 'workstation', $workstationResults, ['empty' => 'Select Workstation']);
         echo "<span class='required'>*</span>";
-        //echo $detailForm->error($model, 'workstation');
+        // echo $detailForm->error($model, 'workstation');
         echo '<div id="Visit_workstation_em_" class="errorMessage" style="display: none">Please select a workstation</div>';
 
-
-    if ($asic) {
+        if ($asic) {
             echo $detailForm->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes());
             echo "<span class='required'>*</span>";
             //echo $detailForm->error($model, 'visitor_type');
@@ -322,11 +321,11 @@ $detailForm = $this->beginWidget('CActiveForm', [
                                 document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;*/
 
                                 //showing image from DB as saved in DB -- image is not present in folder
-                            
+
                                 document.getElementById('photoPreview').src = "data:image;base64,"+ value.db_image;
                                 document.getElementById('photoCropPreview').src = "data:image;base64,"+ value.db_image;
-                            
-                            
+
+
                             });
                         }
                     });
@@ -417,7 +416,7 @@ $detailForm = $this->beginWidget('CActiveForm', [
     }
 </script>
 <!--POP UP FOR CROP PHOTO -->
-<?php 
+<?php
         $data = Photo::model()->returnVisitorPhotoRelativePath($model->visitor);
         $my_image = '';
         if(!empty($data['db_image'])){

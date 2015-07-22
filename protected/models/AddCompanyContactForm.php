@@ -1,5 +1,5 @@
 <?php
-
+Yii::import('ext.validator.PasswordRequirement');
 /**
  * AddCompanyContactForm class.
  */
@@ -11,7 +11,10 @@ class AddCompanyContactForm extends CFormModel {
     public $email;
     public $mobile;
     public $companyType;
-
+    public $user_password;
+    public $password_requirement;
+    public $user_repeatpassword;
+    public $password_option;
     /**
      * Declares the validation rules.
      * The rules state that username and password are required,
@@ -23,6 +26,7 @@ class AddCompanyContactForm extends CFormModel {
             array('companyName, firstName, lastName, email, mobile, companyType', 'required'),
             array('email', 'email'),
             array('email', 'emailUnique', 'add_company_contact'),
+            array('password_requirement,password_option,user_password','safe'),
         );
     }
 

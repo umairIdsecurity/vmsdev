@@ -55,7 +55,7 @@ class Tenant extends CActiveRecord
 		return array(
 			'id0' => array(self::BELONGS_TO, 'Company', 'id'),
 			'tenantContacts' => array(self::HAS_MANY, 'TenantContact', 'tenant'),
-            'user0'=> array(self::MANY_MANY, 'User', 'tenant_contact(tenant, user)'),
+                        'user0'=> array(self::MANY_MANY, 'User', 'tenant_contact(tenant, user)'),
 		);
 	}
 
@@ -91,7 +91,7 @@ class Tenant extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-        $criteria->with = array('id0', 'user0');
+                $criteria->with = array('id0', 'user0');
                  
 		$criteria->compare('t.id',$this->id,true);
 		$criteria->compare('t.created_by',$this->created_by,true);

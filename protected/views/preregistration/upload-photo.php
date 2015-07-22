@@ -8,6 +8,17 @@
 
 ?>
 
+<?php
+$session = new CHttpSession;
+
+if(!empty($session['imgName'])){
+    $preImg = '/uploads/visitor/'.$session['imgName'];
+}
+else{
+    $preImg = Yii::app()->theme->baseUrl.'/images/user.png';
+}
+
+?>
 <div class="page-content">
     <h1 class="text-primary title">PHOTO</h1>
     <div class="bg-gray-lighter form-info">Please upload a photo or take a head and shoulders picture with no glasses or hat, on a white background.</div>
@@ -24,7 +35,7 @@
     )); ?>
 
     <div class="text-center image-user">
-        <img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/user.png" alt="image user" id="preview">
+        <img src="<?=$preImg ?>" alt="image user" id="preview">
     </div>
 
     <div class="form-group">

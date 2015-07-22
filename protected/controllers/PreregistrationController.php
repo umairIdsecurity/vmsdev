@@ -158,6 +158,7 @@ class PreregistrationController extends Controller
 			$model->profile_type = $session['account_type'];
 			$model->email 		 = $session['username'];
 			$model->password 	 = $session['password'];
+			$model->password_repeat 	 = $session['password'];
 			$model->attributes = $_POST['Registration'];
 
 			$model->date_of_birth = date('Y-m-d', strtotime($model->birthdayYear . '-' . $model->birthdayMonth . '-' . $model->birthdayDay));
@@ -166,6 +167,7 @@ class PreregistrationController extends Controller
 				$session['visitor_id'] = $model->id;
 				$this->redirect(array('preregistration/visitReason'));
 			}
+			print_r($model->getErrors());
 
 		}
 		
@@ -393,27 +395,49 @@ class PreregistrationController extends Controller
 
 	public function actionUploadPhoto(){
 
+		$session = new CHttpSession;
+
+		if($session['visitor_id']=="" or $session['visitor_id']==null){
+			$this->redirect(array('preregistration/registration'));
+		}
+
 		$model = new UploadForm();
 
 		if(isset($_POST['UploadForm']))
 		{
+
 			$model->attributes=$_POST['UploadForm'];
 
 			$name       = $_FILES['UploadForm']['name']['image'];
-			//$filename   = pathinfo($name, PATHINFO_FILENAME);
+
 			$ext        = pathinfo($name, PATHINFO_EXTENSION);
 
 			$newNameHash = hash('adler32', time());
-			$newName    = $newNameHash.".".$ext;
 
+			$newName    = $newNameHash.'-' . time().'.'.$ext;
 
 			$model->image=CUploadedFile::getInstance($model,'image');
 
 			$fullImgSource = Yii::getPathOfAlias('webroot').'/uploads/visitor/'.$newName;
 
-			$model->image->saveAs($fullImgSource);
+			$relativeImgSrc = 'uploads/visitor/'.$newName;
 
-			//$model->image->saveAs(Yii::app()->basePath.'/../uploads/visitor/'.$model->image);
+			if($model->image->saveAs($fullImgSource)){
+				$photoModel = new Photo();
+				$photoModel->filename = $name;
+				$photoModel->unique_filename = $newName;
+				$photoModel->relative_path = $relativeImgSrc;
+
+				if($photoModel->save()){
+					$visitorModel =
+						Registration::model()->findByPk(
+							$session['visitor_id']
+						);
+					$visitorModel->photo = $photoModel->id;
+					$visitorModel->save();
+					$session['imgName'] = $newName;
+				}
+			}
 
 		}
 

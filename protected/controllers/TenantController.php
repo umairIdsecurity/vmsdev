@@ -312,12 +312,18 @@ class TenantController extends Controller {
      public function actionDelete($id) {
 
         if(Yii::app()->request->isPostRequest)
-        {
-
+        { 
             $sql = "UPDATE tenant SET is_deleted=1 WHERE id=$id";
             $connection=Yii::app()->db;
             $connection->createCommand($sql)->execute();
-                       
+            
+            // Delete user from User table
+            $model = Tenant::model()->findByPk($id);        
+            $userId = $model->tenantContacts[0]->user; 
+            $user = User::model()->findByPk($userId);
+            $user->is_deleted = 1;
+            $user->save(false);
+                                                
             // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
             if (!isset($_GET['ajax']))
                 $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));

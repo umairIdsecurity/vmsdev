@@ -137,7 +137,7 @@ class CustomController extends RestfulController {
 					
 					if ($kiosk->validate()) {
 						$kiosk->save();    
-						$result = array('status'=>'new', 'atoken'=>$kiosk->atoken);
+						$result = array('status'=>'new', 'ktoken'=>$kiosk->atoken);
 						$this->sendResponse(201, CJSON::encode($result));
 					} else {
 						$this->sendResponse(401, CJSON::encode($kiosk->getErrors()));

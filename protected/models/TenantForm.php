@@ -78,8 +78,10 @@ class TenantForm extends CFormModel
 
             array('email', 'filter', 'filter' => 'trim'),
             array('email', 'email'),
-            array('email', "unique",'className'=> 'User'),
-
+            array('email', "unique",'className'=> 'User','criteria'=>array('condition'=>'`is_deleted` =:is_deleted', 'params'=>array(
+                ':is_deleted'=>0
+                ))),
+          
             array('password,cnf_password', 'required','on'=>'passwordrequire', 'message' => 'Please enter password or Autogenerate password'),
 
             //array('password,cnf_password', 'required','on'=>'passwordrequire'),

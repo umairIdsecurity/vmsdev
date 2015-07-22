@@ -18,6 +18,7 @@ angular
     'ngRoute',
     'ngSanitize',
     'ngTouch',
+	'ngStorage',
     'angular-spinkit',
     'kiosk.VisitorService',
     'kiosk.CameraService',
@@ -80,24 +81,46 @@ angular
     $httpProvider.defaults.headers.put  = {};
 	
   }])
-  .run(['$rootScope', '$location', '$http', '$cookies', '$templateCache', function run($rootScope, $location, $http, $cookies, $templateCache) {
-        /** keep user logged in after page refresh */
-		$rootScope.globals = $cookies.get('globals') || {};       
-
+  .run(['$rootScope', '$location', '$http', '$cookies', '$localStorage', '$templateCache','DataService' , function run($rootScope, $location, $http, $cookies, $localStorage, $templateCache, DataService) {
+			  	
+        /** keep user logged in after page refresh */			
         $rootScope.$on('$locationChangeStart', function (event, next, current) {
+			
 			if (typeof(current) !== 'undefined'){
 				$templateCache.remove(current.templateUrl);
 			}
 			
-            /** redirect to login page if not logged in and trying to access a restricted page */
+            /** redirect to login page if not logged in and trying to access a restricted page */			
             var restrictedPage = $.inArray($location.path(), ['/', '/register']) === -1;
-            var loggedIn = $rootScope.globals.accessToken;
+			//$rootScope.globals = $cookies.getObject('globals') || {};
+			$rootScope.globals = $localStorage.globals || {};
 			
-            if (restrictedPage && !loggedIn) {
+            var aToken = $rootScope.globals.accessToken;
+			var adminEmail = $rootScope.globals.adminEmail;
+			
+			if(aToken){
+				DataService.authToken = aToken;
+				DataService.adminEmail = adminEmail;
+			}
+						
+            if (restrictedPage && !aToken) {
+				
                 $location.path('/');
-            }else if(!restrictedPage && loggedIn){
-				$location.path('/workstation');
-				$http.defaults.headers.common['Authorization'] = $rootScope.globals.accessToken;
+				
+            }else if(!restrictedPage && aToken){
+				$http.defaults.headers.common['HTTP_X_VMS_TOKEN'] = aToken;
+				
+				if(!!$localStorage.kioskInfo){
+					DataService.kiosk = $localStorage.kioskInfo.kiosk;
+					DataService.workstation = $localStorage.kioskInfo.workstation;
+					DataService.ktoken = $localStorage.kioskInfo.ktoken;
+				}
+				
+				if(!!$localStorage.kioskInfo.ktoken){/* Kiosk already registered */
+					$location.path('/intro');
+				}else{
+					$location.path('/workstation');
+				}								
 			}
         });
     }]);

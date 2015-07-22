@@ -15,6 +15,7 @@
  * @property int $created_by
  * @property int $is_deleted
  * @property int $enabled
+ * @property string $atoken
  *
  * The followings are the available model relations:
  * @property Visitor[] $visitors
@@ -40,7 +41,7 @@ class Kiosk extends CActiveRecord
 			array('name, workstation, tenant, created_by', 'required'),			
 			array('workstation, tenant, tenant_agent, created_by, is_deleted, enabled', 'numerical', 'integerOnly' => true),
 			array('name, module, username, password', 'length', 'max' => 255),
-			array('name, module, username, password', 'safe'),
+			array('name, module, username, password, atoken', 'safe'),
 			
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
@@ -51,7 +52,7 @@ class Kiosk extends CActiveRecord
 	 * @return array relational rules.
 	 */
 	public function relations()
-	{
+	{ 
 		# NOTE: you may need to adjust the relation name and the related
 		# class name for the relations automatically generated below.
 		return array();

@@ -123,8 +123,8 @@ class CustomController extends RestfulController {
 				/*$Criteria->condition = "name = '" . strtolower($data['kiosk']). "' AND workstation = " . $data['workstation'] . " AND created_by = " . $user->id . " AND is_deleted = 0";*/
 				$Criteria->condition = "name = '" . strtolower($data['kiosk']). "' AND workstation = " . $data['workstation'] . " AND is_deleted = 0";
 				$kiosk = Kiosk::model()->findAll($Criteria);
-				
-				if(empty($kiosk)){
+				pr($kiosk);exit;
+				/*if(empty($kiosk)){
 					$kiosk = new Kiosk();
 					$kiosk->name = strtolower($data['kiosk']);
 					$kiosk->workstation = $data['workstation'];
@@ -145,7 +145,7 @@ class CustomController extends RestfulController {
 				}else{
 					$result = array('status'=>'continue', 'ktoken'=>$kiosk[0]->atoken);
 					$this->sendResponse(201, CJSON::encode($result));
-				}				
+				}*/
 				
 			} else {
                 $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_PARAMETER', 'errorDescription' => 'POST  parameter required for action')));

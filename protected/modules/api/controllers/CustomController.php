@@ -134,18 +134,20 @@ class CustomController extends RestfulController {
 					$kiosk->is_deleted = 0;
 					$kiosk->enabled = 1;
 					$kiosk->atoken = password_hash($data['kiosk'].time().rand(1000, 9999), PASSWORD_BCRYPT);
-					
+					echo "pp";exit;
+					/*
 					if ($kiosk->validate()) {
 						$kiosk->save();    
-						$result = array('status'=>'new', 'atoken'=>$kiosk->atoken);
+						$result = array('status'=>'new', 'ktoken'=>$kiosk->atoken);
 						$this->sendResponse(201, CJSON::encode($result));
 					} else {
 						$this->sendResponse(401, CJSON::encode($kiosk->getErrors()));
 					}
+					*/
 				}else{
 					$result = array('status'=>'continue', 'ktoken'=>$kiosk[0]->atoken);
 					$this->sendResponse(201, CJSON::encode($result));
-				}				
+				}
 				
 			} else {
                 $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_PARAMETER', 'errorDescription' => 'POST  parameter required for action')));

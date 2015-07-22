@@ -108,12 +108,14 @@ angular
                 $location.path('/');
 				
             }else if(!restrictedPage && aToken){
+				$http.defaults.headers.common['HTTP_X_VMS_TOKEN'] = aToken;
+				
 				if(!!$localStorage.kioskInfo){
 					DataService.kiosk = $localStorage.kioskInfo.kiosk;
 					DataService.workstation = $localStorage.kioskInfo.workstation;
 					DataService.ktoken = $localStorage.kioskInfo.ktoken;
 				}
-				$http.defaults.headers.common['Authorization'] = aToken;
+				
 				if(!!$localStorage.kioskInfo.ktoken){/* Kiosk already registered */
 					$location.path('/intro');
 				}else{

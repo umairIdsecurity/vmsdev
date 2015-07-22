@@ -61,7 +61,7 @@ class Company extends CActiveRecord {
     public function rules() {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
-		 $this->userRole = Yii::app()->user->role;
+		 //$this->userRole = Yii::app()->user->role;
 		if($this->userRole == 1){
 		return array(
 	            array('name', 'required'),

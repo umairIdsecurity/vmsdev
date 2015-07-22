@@ -200,10 +200,7 @@ class PreregistrationController extends Controller
 
 			$model->attributes    = $_POST['Visit'];
 
-			if(
-				empty($model->visitor_type) OR
-				empty($model->reason)
-			){
+			if( empty($model->visitor_type) OR empty($model->reason) ){
 				$model->visitor_type = null;
 				$model->reason 		 = null;
 			}
@@ -232,11 +229,11 @@ class PreregistrationController extends Controller
 
 				$registrationModel->company = $companyModel->id;
 
-				if($registrationModel->save()){
+				if($registrationModel->save(true,array('company'))){
 
 					$this->redirect(array('preregistration/addAsic'));
 				}
-				//print_r($registrationModel->getErrors());
+				print_r($registrationModel->getErrors());
 			}
 
 		}

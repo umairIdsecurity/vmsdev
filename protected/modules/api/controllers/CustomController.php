@@ -134,7 +134,7 @@ class CustomController extends RestfulController {
 					$kiosk->is_deleted = 0;
 					$kiosk->enabled = 1;
 					$kiosk->atoken = password_hash($data['kiosk'].time().rand(1000, 9999), PASSWORD_BCRYPT);
-					$kiosk->validate()
+					$kiosk->validate();
 					pr($kiosk->getErrors());exit;
 					/*if ($kiosk->validate()) {
 						$kiosk->save();    

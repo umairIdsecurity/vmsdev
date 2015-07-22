@@ -87,7 +87,7 @@ $userRole = $session['role'];
                             if ($company->logo) {
                                 $path = Photo::model()->returnLogoPhotoRelative($company->logo);
                                 if ($path) {
-                                    if (file_exists($path)) {
+                                    if (@file_exists($path)) {
                                         $logo = Yii::app()->request->baseUrl . '/' . $path;
                                     } else {
                                         $logo = Yii::app()->controller->assetsBase . '/images/companylogohere1.png';

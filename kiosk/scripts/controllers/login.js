@@ -36,4 +36,8 @@ angular.module('kioskApp')
 		
 		DataService.authLogin($scope.email, $scope.password, onSuccess, onFailure);
 	};
+	
+	if(!!DataService.info[0]){/* Display error message if token expired */
+		$scope.error = DataService.info[0];		
+	}
 }]);

@@ -1,3 +1,4 @@
 <?php
-echo ContentCache::fetch($session['tenant']);
+$session = new CHttpSession;
+echo $session['tenant.css'];
 ?>

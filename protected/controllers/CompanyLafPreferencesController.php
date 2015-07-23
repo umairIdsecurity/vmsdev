@@ -29,10 +29,28 @@ class CompanyLafPreferencesController extends Controller {
                 'actions' => array('customisation', 'create', 'update', 'ajaxCrop'),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user, UserGroup::USERGROUP_ADMINISTRATION)',
             ),
+            array('allow',
+                'actions' => array('css','companyLogo'),
+                'users' => array('*'),
+            ),
             array('deny', // deny all users
                 'users' => array('*'),
             ),
         );
+    }
+
+    public function actionCss(){
+
+        $session = new CHttpSession;
+        if(!isset($session['tenant.css'])) {
+            $this->GenerateCss();
+        }
+        $size = strlen($session['tenant.css']);
+
+        header('Content-Length: '. $size);
+        header('Content-Type: text/css');
+        echo $session['tenant.css'];
+        exit;
     }
 
     /**
@@ -203,37 +221,13 @@ class CompanyLafPreferencesController extends Controller {
         ));
     }
 
-    public function GenerateCss($company) {
-        $session = new CHttpSession;
-        $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
-
-        $filename = $company->code . "-" . time() . ".css";
-        $filepath = 'company_css/' . $filename;
-
-        if (!file_exists(Yii::app()->request->baseUrl . "company_css")) {
-            mkdir(Yii::app()->request->baseUrl . "company_css", 0777, true);
-        }
+    public function GenerateCss() {
 
         ob_start(); // Capture all output (output buffering)
-
         require_once(Yii::app()->basePath . '/views/companyLafPreferences/css_template.php');
-
         $css = ob_get_clean(); // Get generated CSS (output buffering)
-        file_put_contents(Yii::app()->request->baseUrl . $filepath, $css, LOCK_EX); // Save it
+        $session['tenant.css'] = $css;
 
-
-
-        if ($companyLafPreferences->css_file_path != '' ) {
-
-            if(file_exists($companyLafPreferences->css_file_path)) {
-
-                unlink(Yii::getPathOfAlias('webroot') . $companyLafPreferences->css_file_path); //delete file
-            }
-        }
-
-        CompanyLafPreferences::model()->updateByPk($company->company_laf_preferences, array(
-            'css_file_path' => '/company_css/' . $filename,
-        ));
     }
 
 }

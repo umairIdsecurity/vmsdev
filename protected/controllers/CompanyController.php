@@ -42,6 +42,10 @@ class CompanyController extends Controller
                 'actions' => array('update'),
                 'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
             ),
+            array('allow', // allow superadmin user to perform 'admin' and 'delete' actions
+                'actions' => array('logo'),
+                'users' => array('*'),
+            ),
             array('deny', // deny all users
                 'users' => array('*'),
             ),
@@ -56,6 +60,30 @@ class CompanyController extends Controller
             $currentlyEditedCompanyId = $_GET['id'];
             return Company::model()->isUserAllowedToViewCompany($currentlyEditedCompanyId, $user);
         }
+    }
+
+    public function actionLogo()
+    {
+        $session = new CHttpSession;
+        if(!isset($session['tenant.logo'])){
+            $id = 1;
+            if(isset($session['tenant'])){
+                $id = $session['tenant'];
+            }
+            $company = Company::model()->findByPk($id);
+            $photoId = $company->logo;
+            $photo = Photo::model()->findByPk($photoId);
+            $session['tenant.logo'] = $photo->db_image;
+            $session['tenant.logo.format'] = pathinfo($photo->filename, PATHINFO_EXTENSION);
+        }
+
+        $ext =  $session['tenant.logo.format'];
+        $size = strlen($session['tenant.logo']);
+        header('Content-Length: '. $size);
+        header('Content-Type: image/'.$ext);
+        echo $session['tenant.logo'];
+        //exit;
+        Yii::app()->end();
     }
 
     public function actionCreate()

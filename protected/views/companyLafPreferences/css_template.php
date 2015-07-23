@@ -1,6 +1,6 @@
 <?php
-$company = Company::model()->findByPk($session['company']);
-$companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
+$session = new CHttpSession;
+$companyLafPreferences = CompanyLafPreferences::model()->findByPk($session['tenant']);
 ?>
 .actionForward,.update, #addCompanyLink {	 
 background: -webkit-gradient(linear, center top, center bottom, from(<?php echo $companyLafPreferences->action_forward_bg_color; ?>), to(<?php echo $companyLafPreferences->action_forward_bg_color2; ?>)) !important;

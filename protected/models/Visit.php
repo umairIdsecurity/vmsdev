@@ -70,6 +70,39 @@ class Visit extends CActiveRecord {
     public $_asicname;
     public $other_reason;
 
+    public $visitClockTime = array(
+                '5:00' => '5:00',
+                '5:30' => '5:30',
+                '6:00' => '6:00',
+                '6:30' => '6:30',
+                '7:00' => '7:00',
+                '7:30' => '7:30',
+                '8:00' => '8:00',
+                '8:30' => '8:30',
+                '9:00' => '9:00',
+                '9:30' => '9:30',
+                '10:00' => '10:00',
+                '10:30' => '10:30',
+                '11:00' => '11:00',
+                '11:30' => '11:30',
+                '12:00' => '12:00',
+                '12:30' => '12:30',
+                '01:00' => '01:00',
+                '01:30' => '01:30',
+                '02:00' => '02:00',
+                '02:30' => '02:30',
+                '03:00' => '03:00',
+                '03:30' => '03:30',
+                '04:00' => '04:00',
+                '04:30' => '04:30'
+            );
+
+    public $ampm;
+    public $oClock = array(
+                'am' => 'AM',
+                'pm' => 'PM'
+            );
+
     /**
      * @return string the associated database table name
      */
@@ -794,7 +827,7 @@ class Visit extends CActiveRecord {
             ),
             'AuditTrailBehaviors'=>
                 'application.components.behaviors.AuditTrailBehaviors',
-            'DateTimeZoneAndFormatBehavior' => 'application.components.DateTimeZoneAndFormatBehavior',
+            //'DateTimeZoneAndFormatBehavior' => 'application.components.DateTimeZoneAndFormatBehavior',
         );
     }
 

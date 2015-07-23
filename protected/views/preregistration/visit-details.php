@@ -12,80 +12,144 @@
 <div class="page-content">
     <h1 class="text-primary title">LOG VISIT DETAILS</h1>
     <div class="bg-gray-lighter form-info">Please select the time of your visit.</div>
-    <div class="form-log-visit">
-        <div class="row">
-            <div class="hidden-xs col-sm-4 text-center">
-                <a href="#"><img src="<?=Yii::app()->theme->baseUrl?>/images/vic24h.png" alt="Vic24h"></a>
+
+
+    <?php $form=$this->beginWidget('CActiveForm', array(
+        'id'=>'visit-details-form',
+        'enableAjaxValidation'   => false,
+        'enableClientValidation'=>true,
+        'clientOptions'=>array(
+            'validateOnSubmit'=>true,
+        ),
+        'htmlOptions' =>
+            array(
+                'class' => 'form-log-visit',
+            ),
+
+        )); ?>
+
+
+    <div class="row">
+        <div class="hidden-xs col-sm-4 text-center">
+            <a href="#"><img src="<?=Yii::app()->theme->baseUrl?>/images/vic24h.png" alt="Vic24h"></a>
+        </div>
+        <div class="col-sm-8">
+
+            <div class="form-group">
+                <label class="col-sm-4 text-primary control-label">DATE OF VISIT</label>
+                <div class="col-sm-7">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                    <?php echo $form->textField($model,'date_in',
+                        array(
+                            'placeholder' => 'YY-MM-DD',
+                            'class'=>'form-control input-lg',
+                            'data-date-picker'=>"",
+                            'data-date-format'=>'yyyy-mm-dd',
+                            'value'=>''
+                        )); ?>
+                </div>
             </div>
-            <div class="col-sm-8">
-                <form class="form-horizontal">
-                    <div class="form-group">
-                        <label class="col-sm-4 text-primary control-label">DATE OF VISIT</label>
-                        <div class="col-sm-7">
-                            <span class="glyphicon glyphicon-calendar"></span>
-                            <input type="input"
-                                   name="date_start"
-                                   class="form-control input-lg"
-                                   data-date-picker
-                                   data-date-format="dd/mm/yy"
-                                   placeholder="DD/MM/YY">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-4 text-primary control-label">END DATE OF VISIT</label>
-                        <div class="col-sm-7">
-                            <span class="glyphicon glyphicon-calendar"></span>
-                            <input type="input"
-                                   name="date_end"
-                                   class="form-control input-lg"
-                                   data-date-picker
-                                   data-date-format="dd/mm/yy"
-                                   data-linked-pickers="[name=date_start]"
-                                   placeholder="DD/MM/YY">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-4 text-primary control-label">TIME IN</label>
-                        <div class="row col-sm-7">
-                            <div class="col-xs-6">
-                                <select name="time-in-h" class="form-control input-lg">
-                                    <option value="5:00">5:00</option>
-                                    <option value="5:30">5:30</option>
-                                    <option value="6:00">6:00</option>
-                                    <option value="6:30">6:30</option>
-                                    <option value="7:00">7:00</option>
-                                    <option value="7:30">7:30</option>
-                                    <option value="8:00">8:00</option>
-                                    <option value="8:30">8:30</option>
-                                    <option value="9:00">9:00</option>
-                                    <option value="9:30">9:30</option>
-                                    <option value="10:00">10:00</option>
-                                    <option value="10:30">10:30</option>
-                                    <option value="11:00">11:00</option>
-                                    <option value="11:30">11:30</option>
-                                    <option value="12:00">12:00</option>
-                                    <option value="12:30">12:30</option>
-                                    <option value="1:00">1:00</option>
-                                    <option value="1:30">1:30</option>
-                                    <option value="2:00">2:00</option>
-                                    <option value="2:30">2:30</option>
-                                    <option value="3:00">3:00</option>
-                                    <option value="3:30">3:30</option>
-                                    <option value="4:00">4:00</option>
-                                    <option value="4:30">4:30</option>
-                                </select>
-                            </div>
-                            <div class="col-xs-4">
-                                <select name="time-in-h" class="form-control input-lg">
-                                    <option value="AM">AM</option>
-                                    <option value="AM">PM</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </form>
+            <div class="form-group">
+                <label class="col-sm-4 text-primary control-label">END DATE OF VISIT</label>
+                <div class="col-sm-7">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                    <?php
+                    echo $form->textField($model,'date_out',
+                        array(
+                            'placeholder' => 'YY-MM-DD',
+                            'class'=>'form-control input-lg',
+                            'data-date-picker'=>"",
+                            'data-date-format'=>'yyyy-mm-dd',
+                            'value'=>''
+                        ));
+                    ?>
+                </div>
             </div>
-            <div class="col-sm-1"></div>
+            <div class="form-group">
+                <label class="col-sm-4 text-primary control-label">TIME IN</label>
+                <div class="row col-sm-7">
+
+                    <div class="col-xs-6">
+
+
+                    <?php
+                    //echo date("H:i", strtotime("06:30 + 12 hour"));
+
+                    echo $form->dropDownList($model,'time_in', $model->visitClockTime , array('class'=>'form-control input-lg') )
+                    ?>
+
+                    </div>
+                    <div class="col-xs-4">
+                        <?php
+                            echo $form->dropDownList($model,'ampm', $model->oClock,array('class'=>'form-control input-lg'));
+                        ?>
+                        <!--<select name="time-in-h" class="form-control input-lg">
+                            <option value="AM">AM</option>
+                            <option value="AM">PM</option>
+                        </select>-->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-sm-1"></div>
+    </div>
+
+
+
+    <div class="row next-prev-btns">
+        <div class="col-md-1 col-sm-1 col-xs-1">
+            <a href="<?=Yii::app()->createUrl("preregistration/confirmDetails")?>" class="btn btn-large btn-primary btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> BACK</a>
+        </div>
+
+        <div class="col-md-offset-10 col-sm-offset-10 col-xs-offset-7 col-md-1 col-sm-1 col-xs-1">
+            <?php
+            echo CHtml::tag('button', array(
+                'type'=>'submit',
+                'class' => 'btn btn-primary btn-next'
+            ), 'NEXT <span class="glyphicon glyphicon-chevron-right"></span> ');
+            ?>
+
         </div>
     </div>
+
+    <?php $this->endWidget(); ?>
 </div>
+
+<script type="text/javascript">
+
+    /*function getTime(t1,t2){
+    //function getTime(){
+        var t1 = '08:00', t2 = '08:00';
+        var m = (t1.substring(0,t1.indexOf(':'))-0) * 60 +
+            (t1.substring(t1.indexOf(':')+1,t1.length)-0) +
+            (t2.substring(0,t2.indexOf(':'))-0) * 60 +
+            (t2.substring(t2.indexOf(':')+1,t2.length)-0);
+        var h = Math.floor(m / 60);
+        //document.write(h + ':' + (m - (h * 60)));
+
+        var min = m - (h * 60);
+
+        if( min == 0 ){
+            var time = h + ':' + '00';
+        }
+        else{
+            var time = h + ':' + (m - (h * 60));
+        }
+
+        return time;
+    }
+
+    //alert(getTime());
+
+    alert(50+'10');
+    $('#time_in').on('change', function() {
+
+
+        //var t1 = $(this).val(), t2 = '12:00';
+        //var time = getTime(t1,t2);
+        //alert($(this).val());
+        //alert(time);
+    });*/
+
+</script>

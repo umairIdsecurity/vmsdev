@@ -558,6 +558,7 @@ class VisitorController extends Controller {
         $session = new CHttpSession;
 		
         if (isset($_POST['Visitor'])) {
+                
             if (isset($_POST['Visitor']['profile_type'])) {
                 $model->profile_type = $_POST['Visitor']['profile_type'];
             }
@@ -565,6 +566,9 @@ class VisitorController extends Controller {
 
             if (empty($model->visitor_workstation)) {
                 $model->visitor_workstation = $session['workstation'];
+            }
+             if (empty($model->tenant)) {
+                $model->tenant = $session['tenant'];
             }
             //print_r($model->rules());
             //die("--DONE--");
@@ -624,6 +628,9 @@ class VisitorController extends Controller {
                 }
 
             	Yii::app()->end();
+                
+            }  else {
+                // $errors = $model->getErrors(); print_r($errors); 
             }
         }
 

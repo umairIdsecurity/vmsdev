@@ -83,8 +83,15 @@ $userRole = $session['role'];
             ?>>
                 <article class="header_midbox">
                     <div id="logo" >
-                        <?php $photo = Photo::model()->findByPk($company->logo); ?>
-                        <img id='photoPreview' style="height: 65px;" src="data:image/<?php echo pathinfo($photo->filename, PATHINFO_EXTENSION); ?>;base64,<?php echo $photo->db_image; ?>"/>
+                        <?php
+                            $id = $company->logo;
+                            if($id == 1 ){
+                                ?><img id='photoPreview' style="height: 65px;" src="<?php echo Yii::app()->controller->assetsBase . '/images/companylogohere1.png'; ?>"/><?php
+                            } else {
+                                $photo = Photo::model()->findByPk($company->logo);
+                                ?><img id='photoPreview' style="height: 65px;" src="data:image/<?php echo pathinfo($photo->filename, PATHINFO_EXTENSION); ?>;base64,<?php echo $photo->db_image; ?>"/><?php
+                            }?>
+
                     </div>
                     <aside class="top_nav">
                         <ul id="icons">

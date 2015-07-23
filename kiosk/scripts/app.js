@@ -26,7 +26,7 @@ angular
     'kiosk.DataService',
     'kiosk.VisitService'
   ])
-  .config(['$httpProvider', '$routeProvider', function ($httpProvider, $routeProvider) {
+  .config(['$httpProvider', '$routeProvider', '$compileProvider', function ($httpProvider, $routeProvider, $compileProvider) {
     $routeProvider
       .when('/', {
         templateUrl: 'views/login.html',
@@ -79,7 +79,7 @@ angular
     $httpProvider.defaults.headers.post = {};
     $httpProvider.defaults.headers.get  = {};
     $httpProvider.defaults.headers.put  = {};
-	
+	$compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|local|data):/);
   }])
   .run(['$rootScope', '$location', '$http', '$cookies', '$localStorage', '$templateCache','DataService' , function run($rootScope, $location, $http, $cookies, $localStorage, $templateCache, DataService) {
 			  	
@@ -103,7 +103,7 @@ angular
 				DataService.adminEmail = adminEmail;
 			}
 						
-            if (restrictedPage && !aToken) {
+            if (restrictedPage && !aToken) {/* If not Authorized, send back to login screen */
 				
                 $location.path('/');
 				

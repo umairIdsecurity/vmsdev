@@ -20,7 +20,7 @@ class PreregistrationController extends Controller
 	public function accessRules() {
 		return array(
 			array('allow',
-				'actions' => array('index','privacyPolicy' , 'declaration' , 'Login' ,'registration','confirmDetails', 'visitReason' , 'addAsic' , 'asicPass', 'error' , 'uploadPhoto','ajaxAsicSearch' ),
+				'actions' => array('index','privacyPolicy' , 'declaration' , 'Login' ,'registration','confirmDetails', 'visitReason' , 'addAsic' , 'asicPass', 'error' , 'uploadPhoto','ajaxAsicSearch' , 'visitDetails' ),
 				'users' => array('*'),
 			),
 			array('allow',
@@ -158,6 +158,7 @@ class PreregistrationController extends Controller
 			$model->profile_type = $session['account_type'];
 			$model->email 		 = $session['username'];
 			$model->password 	 = $session['password'];
+			$model->password_repeat 	 = $session['password'];
 			$model->attributes = $_POST['Registration'];
 
 			$model->date_of_birth = date('Y-m-d', strtotime($model->birthdayYear . '-' . $model->birthdayMonth . '-' . $model->birthdayDay));
@@ -166,6 +167,7 @@ class PreregistrationController extends Controller
 				$session['visitor_id'] = $model->id;
 				$this->redirect(array('preregistration/visitReason'));
 			}
+
 
 		}
 		
@@ -198,10 +200,7 @@ class PreregistrationController extends Controller
 
 			$model->attributes    = $_POST['Visit'];
 
-			if(
-				empty($model->visitor_type) OR
-				empty($model->reason)
-			){
+			if( empty($model->visitor_type) OR empty($model->reason) ){
 				$model->visitor_type = null;
 				$model->reason 		 = null;
 			}
@@ -230,11 +229,11 @@ class PreregistrationController extends Controller
 
 				$registrationModel->company = $companyModel->id;
 
-				if($registrationModel->save()){
+				if($registrationModel->save(true,array('company'))){
 
 					$this->redirect(array('preregistration/addAsic'));
 				}
-				//print_r($registrationModel->getErrors());
+
 			}
 
 		}
@@ -392,8 +391,68 @@ class PreregistrationController extends Controller
 	}
 
 	public function actionUploadPhoto(){
-		$this->render('upload-photo');
+
+		$session = new CHttpSession;
+
+		if($session['visitor_id']=="" or $session['visitor_id']==null){
+			$this->redirect(array('preregistration/registration'));
+		}
+
+		$model = new UploadForm();
+
+		if(isset($_POST['UploadForm']))
+		{
+
+			$model->attributes=$_POST['UploadForm'];
+
+
+			$name       = $_FILES['UploadForm']['name']['image'];
+
+			if(!empty($name)){
+
+				$ext        = pathinfo($name, PATHINFO_EXTENSION);
+
+				$newNameHash = hash('adler32', time());
+
+				$newName    = $newNameHash.'-' . time().'.'.$ext;
+
+				$model->image=CUploadedFile::getInstance($model,'image');
+
+				$fullImgSource = Yii::getPathOfAlias('webroot').'/uploads/visitor/'.$newName;
+
+				$relativeImgSrc = 'uploads/visitor/'.$newName;
+
+				if($model->image->saveAs($fullImgSource)){
+					$photoModel = new Photo();
+					$photoModel->filename = $name;
+					$photoModel->unique_filename = $newName;
+					$photoModel->relative_path = $relativeImgSrc;
+
+					if($photoModel->save()){
+						$visitorModel =
+							Registration::model()->findByPk(
+								$session['visitor_id']
+							);
+						$visitorModel->photo = $photoModel->id;
+						$visitorModel->save(true,array('photo'));
+						$session['imgName'] = $newName;
+
+					}
+				}
+			}
+
+			$this->redirect(array('preregistration/visitDetails'));
+
+
+		}
+
+		$this->render('upload-photo',array('model'=>$model) );
 	}
+
+	public function actionVisitDetails(){
+		$this->render('visit-details');
+	}
+
 
 	public function actionAsicPass(){
 

@@ -61,8 +61,7 @@ class Company extends CActiveRecord {
     public function rules() {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
-		 $this->userRole = Yii::app()->user->role;
-		if($this->userRole == 1){
+		if(isset(Yii::app()->user->role) && Yii::app()->user->role == 1){
 		return array(
 	            array('name', 'required'),
 	            array('user_first_name , user_last_name , user_email , user_contact_number', 'required' , 'on' => 'company_contact'),
@@ -218,7 +217,7 @@ class Company extends CActiveRecord {
         $criteria->compare('card_count', $this->card_count);
 
         if($_SESSION['role'] != Roles::ROLE_SUPERADMIN) {
-            $criteria->compare('tenant', $_SESSION["id"]);
+            $criteria->compare('tenant', $_SESSION["tenant"]);
         }
         $criteria->compare($post_count_sql, $this->isTenant);
 

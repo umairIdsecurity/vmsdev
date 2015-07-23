@@ -122,8 +122,8 @@
             'validateOnSubmit'=>true
         ),
         'htmlOptions'=>array(
-        'class'=> 'declarations'
-    )
+            'class'=> 'declarations'
+        )
     ));
     ?>
 

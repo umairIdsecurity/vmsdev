@@ -621,7 +621,7 @@ class Visitor extends CActiveRecord {
         $session = new CHttpSession;
         //$tenant = User::model()->findByPk($session['tenant']);
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = " . $session['id'] . " and (id != 1 and id != " . $session['id'] . ")";
+        $Criteria->condition = "(tenant = " . $session['id']  . " OR tenant = ".$session['tenant'].")  and (id != 1 and id != " . $session['id'] . ")";
         $result =  Company::model()->findAll($Criteria);
         return $result;
     }

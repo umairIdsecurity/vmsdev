@@ -217,7 +217,7 @@ class Company extends CActiveRecord {
         $criteria->compare('card_count', $this->card_count);
 
         if($_SESSION['role'] != Roles::ROLE_SUPERADMIN) {
-            $criteria->compare('tenant', $_SESSION["id"]);
+            $criteria->compare('tenant', $_SESSION["tenant"]);
         }
         $criteria->compare($post_count_sql, $this->isTenant);
 

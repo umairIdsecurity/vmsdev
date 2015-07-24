@@ -61,7 +61,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
 		array(
 			'name'   => 'companycode',
 			'value'  => 'isset($data->company0->code) ? $data->company0->code : ""',
-			'filter' => CHtml::activeTextField($model, 'companycode', array('placeholder' => 'Airport Code', 'class' => 'header-form')),
+			'filter' => CHtml::activeTextField($model, 'companycode', array('placeholder' => 'Tenant Code', 'class' => 'header-form')),
 		),
 		array(
 			'name'   => 'firstname',

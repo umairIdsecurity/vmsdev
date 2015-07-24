@@ -84,12 +84,12 @@ $userRole = $session['role'];
                 <article class="header_midbox">
                     <div id="logo" >
                         <?php
-                            $id = $company->logo;
-                            if($id == 1 ){
-                                ?><img id='photoPreview' style="height: 65px;" src="<?php echo Yii::app()->controller->assetsBase . '/images/companylogohere1.png'; ?>"/><?php
+                           $id = $company->logo;
+                            $photo = Photo::model()->findByPk($id);
+                            if( $id == 1  || !is_object($photo) || is_null($photo->db_image)){
+                                ?><img id='photoPreview' style="height: 65px !important; width:130px !important;" src="<?php echo Yii::app()->controller->assetsBase . '/images/companylogohere1.png'; ?>"/><?php
                             } else {
-                                $photo = Photo::model()->findByPk($company->logo);
-                                ?><img id='photoPreview' style="height: 65px;" src="data:image/<?php echo pathinfo($photo->filename, PATHINFO_EXTENSION); ?>;base64,<?php echo $photo->db_image; ?>"/><?php
+                                 ?><img id='photoPreview' style="height: 65px;width:130px !important;" src="data:image/<?php echo pathinfo($photo->filename, PATHINFO_EXTENSION); ?>;base64,<?php echo $photo->db_image; ?>"/><?php
                             }?>
 
                     </div>

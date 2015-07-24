@@ -1,6 +1,7 @@
 <?php
 $session = new CHttpSession;
 $companyLafPreferences = CompanyLafPreferences::model()->findByPk($session['tenant']);
+if(is_object($companyLafPreferences)) {
 ?>
 .actionForward,.update, #addCompanyLink {	 
 background: -webkit-gradient(linear, center top, center bottom, from(<?php echo $companyLafPreferences->action_forward_bg_color; ?>), to(<?php echo $companyLafPreferences->action_forward_bg_color2; ?>)) !important;
@@ -181,3 +182,5 @@ ul.yiiPager .selected a {
 .sidebarTitle{
 background: none repeat scroll 0 0 <?php echo $companyLafPreferences->sidemenu_bg_color; ?> !important;
 }
+<?php 
+} ?>

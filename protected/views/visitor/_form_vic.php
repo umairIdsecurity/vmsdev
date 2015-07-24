@@ -92,12 +92,8 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                     }
 
                 }
-
-                if(isEmpty(data)) {
                     hasError = false;
-                }
-
-                return afterValidate(form, data, hasError);
+                    return afterValidate(form, data, hasError);
             }'
         ),
     ));

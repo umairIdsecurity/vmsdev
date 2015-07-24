@@ -710,7 +710,7 @@ if ($this->action->id == 'update') {
 
             if ($("#currentRoleOfLoggedInUser").val() != 5) {
                 //$("#User_workstation").prop("disabled", false);
-                $('#Visitor_company option[value!=""]').remove();
+                //$('#Visitor_company option[value!=""]').remove();
 
                 if ($("#Visitor_tenant_agent").val() == '') {
                     getCompanyWithSameTenant($("#Visitor_tenant").val());
@@ -725,7 +725,7 @@ if ($this->action->id == 'update') {
 
             if ($("#currentRoleOfLoggedInUser").val() != 5) {
                 //$("#User_workstation").prop("disabled", false);
-                $('#Visitor_company option[value!=""]').remove();
+                //$('#Visitor_company option[value!=""]').remove();
 
                 if ($("#Visitor_tenant_agent").val() == '') {
                     getCompanyWithSameTenant($("#Visitor_tenant").val());
@@ -853,7 +853,7 @@ if ($this->action->id == 'update') {
 
     function populateTenantAgentAndCompanyField() {
 
-        $('#Visitor_company option[value!=""]').remove();
+        //$('#Visitor_company option[value!=""]').remove();
 
         $('#Visitor_tenant_agent option[value!=""]').remove();
         //$("#User_workstation").empty();

@@ -636,7 +636,7 @@ class VisitorController extends Controller {
                 
                 
             }  else {
-                //$errors = $model->getErrors(); print_r($errors); exit;
+                 $errors = $model->getErrors(); print_r($errors); exit;
             }
         }
 

@@ -29,7 +29,7 @@ $session = new ChttpSession;
             <?php  $module = CHelper::get_allowed_module(); 
                       if ($module != "CVMS") { ?>
                 <li>
-                       <a href="#addCompanyContactModal" role="button" data-toggle="modal" class="addcompanymenu"><span>Add Company</span></a>
+                       <a href="<?php echo Yii::app()->createUrl('company/create'); ?>" role="button" data-toggle="modal" class="addcompanymenu"><span>Add Company</span></a>
              
                 </li>
                       <?php } ?>

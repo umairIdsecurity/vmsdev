@@ -254,6 +254,7 @@ class Visitor extends CActiveRecord {
 
             /// array('vehicle', 'length', 'min'=>6, 'max'=>6, 'tooShort'=>'Vehicle is too short (Should be in 6 characters)'),
             array('email', 'EmailCustom'),
+            array('email', 'unique'),
             array('vehicle', 'match',
                 'pattern' => '/^[A-Za-z0-9_]+$/u',
                 'message' => 'Vehicle accepts alphanumeric characters only'

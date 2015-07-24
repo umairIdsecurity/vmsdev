@@ -67,64 +67,24 @@ if (isset($company) && !empty($company)) {
 <div data-ng-app="PwordForm">
 
 <?php
-
+ 
 $form = $this->beginWidget('CActiveForm', array(
-    'id' => 'register-form',
+    'id' => 'visitor-form',
     'htmlOptions' => array("name" => "registerform"),
-    'enableAjaxValidation' => false,
-    'enableClientValidation' => true,
-    'clientOptions' => array(
-        'validateOnSubmit' => true,
-        'afterValidate' => 'js:function(form, data, hasError) {
-            if (hasError) {           
-                if ($(".password_requirement").is(":checked")== false) {
-                 
-                    $("#pass_error_1").show();
-                    return false;
-                } else if ($(".pass_option").is(":checked")== true && $(".pass_option:checked").val()==1 && $("#currentAction").val() != "update") {
-                    if ($("#Visitor_password").val()== "" || $("#Visitor_repeatpassword").val()=="") {
-                        $("#pass_error_").show();
-                        $("#pass_error_").html("Type Password or Generate");
-                        return false;
-                    } else if ($("#Visitor_password").val() != $("#Visitor_repeatpassword").val()) {
-                        return false;
-                    }
-                }
-                    
-                    var vehicleValue = $("#Visitor_vehicle").val();
-                    var companyValue = $("#Visitor_company").val();
-                    if (!companyValue || companyValue == "") {
-                        $("#company_error_").show();
-                        return false;
-                    } else if (vehicleValue.length < 6 && vehicleValue != "") { 
-                        $("#Visitor_vehicle_em_").show();
-                        $("#Visitor_vehicle_em_").html("Vehicle should have a min. of 6 characters");
-                } /* // Show password options selected and do not force to enter password on Update page.
-                    else if ($("#currentAction").val() == "update" && $(".password_requirement:checked").val() == 2 && ($("#Visitor_password").val() == "" || $("#Visitor_repeatpassword").val() == "")) {
-                     if ($("#Visitor_password").val() == "") {
-                        $("#pass_error_").show();
-                        $("#pass_error_").html("Please enter a Password");
-                    } else if ($("#Visitor_repeatpassword").val() == "") {
-                        $("#Visitor_repeatpassword_em_").show();
-                        $("#Visitor_repeatpassword_em_").html("Please enter a repeat password");
-                    }
-                }*/ 
-                else {
-                    checkEmailIfUnique();
-                }
-                return false;
-            }  
-             
-        }'
-    ),
-));
+    'enableAjaxValidation' => true,
+      'clientOptions'=>array('validateOnSubmit'=>true),
+ ));
 
 ?>
 
 <input type="hidden" id="emailIsUnique" value="0"/>
 
 <div>
-
+<?php    
+foreach (Yii::app()->user->getFlashes() as $key => $message) {
+        echo '<div class="flash-' . $key . '">' . $message . "</div>\n";
+ }
+?>
 <table id="addvisitor-table" data-ng-app="PwordForm">
 
 
@@ -256,7 +216,7 @@ $form = $this->beginWidget('CActiveForm', array(
 
         <span class="required">*</span>
 
-        <?php echo "<br>" . $form->error($model, 'tenant'); ?>
+        <?php  echo "<br>" . $form->error($model, 'tenant'); ?>
 
     </td>
 
@@ -304,7 +264,7 @@ $form = $this->beginWidget('CActiveForm', array(
 
     <td>
 
-
+        <?php echo $form->hiddenfield($model, "tenant", array("value"=>$session['tenant'])); ?>
         <?php echo $form->textField($model, 'first_name', array('size' => 15, 'maxlength' => 15, 'placeholder' => 'First Name')); ?>
         <span class="required">*</span>
 

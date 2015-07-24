@@ -112,13 +112,9 @@ $form = $this->beginWidget('CActiveForm', array(
                 else {
                     checkEmailIfUnique();
                 }
+                return false;
             }  
-            
-                if(isEmpty(data)) {
-                    hasError = false;
-                }
-
-                return afterValidate(form, data, hasError);
+             
         }'
     ),
 ));

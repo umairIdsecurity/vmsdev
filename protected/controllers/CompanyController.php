@@ -336,6 +336,7 @@ class CompanyController extends Controller
         //  $this->layout = '//layouts/contentIframeLayout';
         $model = new Company('search');
         $model->unsetAttributes();  // clear any default values
+        $model->company_type = 3;
         if (isset($_GET['Company']))
             $model->attributes = $_GET['Company'];
 
@@ -364,6 +365,9 @@ class CompanyController extends Controller
         if (isset($_GET['Company'])) {
             $model->attributes = $_GET['Company'];
         }
+        //$model->attributes['company_type'] = 3;
+        //$model->dbCriteria->addCondition("t.company_type = 3");
+        $model->company_type = 3;
 
         // Check whether a login user/tenant allowed to view
         CHelper::check_module_authorization("CVMS");

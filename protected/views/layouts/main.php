@@ -48,7 +48,8 @@ $userRole = $session['role'];
         if (isset($company->company_laf_preferences) && $company->company_laf_preferences != '') {
             $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
             ?>
-            <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl . $companyLafPreferences->css_file_path; ?>" />
+            <!--<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl . $companyLafPreferences->css_file_path; ?>" />-->
+            <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl . "/index.php?r=companyLafPreferences/css"; ?>" />
 
             <?php
         }
@@ -83,36 +84,14 @@ $userRole = $session['role'];
                 <article class="header_midbox">
                     <div id="logo" >
                         <?php
-                        if ($company) {
-                            if ($company->logo) {
-                                $path = Photo::model()->returnLogoPhotoRelative($company->logo);
-                                if ($path) {
-                                    if (@file_exists($path)) {
-                                        $logo = Yii::app()->request->baseUrl . '/' . $path;
-                                    } else {
-                                        $logo = Yii::app()->controller->assetsBase . '/images/companylogohere1.png';
-                                    }
-                                } else {
-                                    $logo = Yii::app()->controller->assetsBase . '/images/companylogohere1.png';
-                                }
-                            }else{
+                            $id = $company->logo;
+                            if($id == 1 ){
+                                ?><img id='photoPreview' style="height: 65px;" src="<?php echo Yii::app()->controller->assetsBase . '/images/companylogohere1.png'; ?>"/><?php
+                            } else {
+                                $photo = Photo::model()->findByPk($company->logo);
+                                ?><img id='photoPreview' style="height: 65px;" src="data:image/<?php echo pathinfo($photo->filename, PATHINFO_EXTENSION); ?>;base64,<?php echo $photo->db_image; ?>"/><?php
+                            }?>
 
-                                $logo = Yii::app()->controller->assetsBase . '/images/companylogohere1.png';
-                            }
-                        } else {
-                            $logo = Yii::app()->controller->assetsBase . '/images/companylogohere1.png';
-                        }
-
-
-                        echo CHtml::link(CHtml::image($logo, '', array('style' => 'height: 65px;')), $this->createUrl('dashboard/adminDashboard'));
-                        /* if (isset($company->logo) && $company->logo != '') {
-                          echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl . '/' . Photo::model()->returnLogoPhotoRelative($company->logo), '',
-                          array('style' => 'height: 65px;')));
-                          } else {
-                          echo CHtml::link(CHtml::image(Yii::app()->controller->assetsBase . '/images/companylogohere1.png', '',
-                          array('style' => 'width: 130px;')));
-                          } */
-                        ?>
                     </div>
                     <aside class="top_nav">
                         <ul id="icons">

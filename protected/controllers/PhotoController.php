@@ -162,10 +162,12 @@ class PhotoController extends Controller
 		}
 	}
         
-        public function actionGetPathOfCompanyLogo($id) {
-        $resultMessage['data'] = Photo::model()->getRelativePathOfPhoto($id);
+	public function actionGetPathOfCompanyLogo($id) {
+		$resultMessage['data'] = Photo::model()->getRelativePathOfPhoto($id);
 
-        echo CJavaScript::jsonEncode($resultMessage);
-        Yii::app()->end();
+		echo CJavaScript::jsonEncode($resultMessage);
+		Yii::app()->end();
     }
+
+
 }

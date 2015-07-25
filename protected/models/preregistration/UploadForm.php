@@ -16,9 +16,15 @@ class UploadForm extends CFormModel
     public function rules()
     {
         return array(
-            // name, email, subject and body are required
-            //array('image', 'required'),
+            array('image', 'file',
+                'maxSize'=>1024 * 1024 * 2, // 2 MB
+                'types'=>'jpg, gif, png',
+                'allowEmpty'=>false,
+            )
+
         );
+
+
     }
 
 

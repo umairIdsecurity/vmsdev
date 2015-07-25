@@ -25,7 +25,10 @@ else{
 
     <?php $form=$this->beginWidget('CActiveForm', array(
         'id' => 'upload-form',
-        'enableClientValidation'=>false,
+        'enableClientValidation'=>true,
+        'clientOptions'=>array(
+            'validateOnSubmit'=>true,
+        ),
         'htmlOptions' =>
             array(
                 'enctype' => 'multipart/form-data',
@@ -34,6 +37,8 @@ else{
 
     )); ?>
 
+
+
     <div class="text-center image-user">
         <img src="<?=$preImg ?>" alt="image user" id="preview">
     </div>
@@ -41,9 +46,11 @@ else{
     <div class="form-group">
         <div class="custom-file-button">
             <?php echo $form->fileField($model,'image'); ?>
-            <?php echo $form->error($model,'image'); ?>
+
         </div>
+        <p class="title text-center"><?php echo $form->error($model,'image'); ?></p>
     </div>
+
 
     <h3 class="title text-center">UPLOAD/ TAKE PHOTO</h3>
 

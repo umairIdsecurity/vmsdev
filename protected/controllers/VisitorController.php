@@ -554,10 +554,15 @@ class VisitorController extends Controller {
 
     public function actionAddVisitor() {
         $model = new Visitor;
+        // For Corporate Visitor
+        if( Yii::app()->request->getParam("profile_type", "CORPORATE") == "CORPORATE")  
+            $this->performAjaxValidation($model);
+        
         $visitorService = new VisitorServiceImpl;
         $session = new CHttpSession;
 		
         if (isset($_POST['Visitor'])) {
+                
             if (isset($_POST['Visitor']['profile_type'])) {
                 $model->profile_type = $_POST['Visitor']['profile_type'];
             }
@@ -566,10 +571,10 @@ class VisitorController extends Controller {
             if (empty($model->visitor_workstation)) {
                 $model->visitor_workstation = $session['workstation'];
             }
-            //print_r($model->rules());
-            //die("--DONE--");
-
-
+             if (empty($model->tenant)) {
+                $model->tenant = $session['tenant'];
+            }
+           
             if ($result = $visitorService->save($model, NULL, $session['id'])) {
                 // Add company contact for this visitor if profile is ASIC
                 if (isset($_POST['profile_type']) && $_POST['profile_type'] == 'ASIC') {
@@ -622,8 +627,16 @@ class VisitorController extends Controller {
                         mail($to, $subject, $body, $headers);
                     }
                 }
-
+                if( $model->profile_type == "CORPORATE" ) {
+                    Yii::app()->user->setFlash('success', 'Corporate Visitor Created Successfully!');
+                    $this->redirect(array("visitor/addvisitor"));
+                }
+                    
             	Yii::app()->end();
+                
+                
+            }  else {
+                 $errors = $model->getErrors(); print_r($errors); exit;
             }
         }
 

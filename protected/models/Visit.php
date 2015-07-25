@@ -827,7 +827,7 @@ class Visit extends CActiveRecord {
             ),
             'AuditTrailBehaviors'=>
                 'application.components.behaviors.AuditTrailBehaviors',
-            //'DateTimeZoneAndFormatBehavior' => 'application.components.DateTimeZoneAndFormatBehavior',
+            'DateTimeZoneAndFormatBehavior' => 'application.components.DateTimeZoneAndFormatBehavior',
         );
     }
 

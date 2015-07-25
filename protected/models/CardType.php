@@ -31,10 +31,26 @@ class CardType extends CActiveRecord {
 	public static $CARD_TYPE_LIST = array(
 		'' => 'Card Type',
 		1  => 'Same Day Visitor',
-		2  => 'Multi Day Visitor',
+		2  => 'Multi-Day Visitor',
 		3  => 'Manual Visitor',
 		4  => 'Contractor Visitor',
 	);
+
+	public static $CORPORATE_CARD_TYPES = array(
+		1  => 'Same Day',
+		2  => 'Multi-Day',
+		3  => 'Manual',
+		4  => 'Contractor',
+	);
+
+	public static $VIC_CARD_TYPES = array(
+		5  => 'Same Day',
+		6  => '24 Hour',
+		7  => 'Extended',
+		8  => 'Multi-Day',
+		9  => 'Manual',
+	);
+
 
 	public static $CORPORATE_CARD_TYPE_LIST = [
 		self::SAME_DAY_VISITOR,

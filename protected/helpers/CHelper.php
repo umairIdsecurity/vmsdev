@@ -151,6 +151,25 @@ class CHelper
          }
           
     }
+
+    /**
+     * Check and Return allowed module to view by a tenant. AVMS or CVMS or Both
+     *
+     * @return string module
+     */
+    public static function get_default_module() {
+
+        $session = new CHttpSession;
+        if( isset($session['module_allowed_to_view']) && !is_null($session['module_allowed_to_view']))
+
+            return $session['module_allowed_to_view'];
+
+        else {
+
+            return "AVMS"; // AVMS and CVMS
+        }
+
+    }
     
     /**
      * Get comma seprated link of the Role IDs of CVMS of AVMS users

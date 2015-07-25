@@ -38,6 +38,37 @@
                     <?php echo "<br>".$form->error($model,'is_default_value'); ?>
                 </td>
             </tr>
+
+            <tr>
+                <td style="vertical-align: top">
+                    <label>Related Card Types</label>
+                </td>
+                <td style="vertical-align: top">
+                    <table style="vertical-align: top" >
+                    <?php
+                        if(CHelper::is_accessing_avms_features())
+                            $card_list=CardType::$VIC_CARD_TYPES;
+                        else
+                            $card_list=CardType::$CORPORATE_CARD_TYPES;
+
+                        if($model->id >0)
+                            $selected_type_list = array_keys(VisitorTypeCardType::model()->findAll("visitor_type=" . $model->id));
+                        else
+                            $selected_type_list = array();
+
+                        echo CHtml::checkBoxList('card_types',$selected_type_list,$card_list,array(
+                            'template'  => '<tr><td style="width: 15px">{input}</td><td>{label}</td></tr>',
+                            'container' => 'tbody',
+                            'separator' => '',
+                        ));
+
+                    ?>
+                    </table>
+                </td>
+            </tr>
+
+
+
         </table>
 
 	<div class="row buttons buttonsAlignToRight">

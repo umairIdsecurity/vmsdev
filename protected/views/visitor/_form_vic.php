@@ -92,12 +92,8 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
                     }
 
                 }
-
-                if(isEmpty(data)) {
                     hasError = false;
-                }
-
-                return afterValidate(form, data, hasError);
+                    return afterValidate(form, data, hasError);
             }'
         ),
     ));
@@ -815,7 +811,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 
             if ($("#currentRoleOfLoggedInUser").val() != 5 && $("#currentRoleOfLoggedInUser").val() != 1) {
                 $("#User_workstation").prop("disabled", false);
-                $('#Visitor_company option[value!=""]').remove();
+               // $('#Visitor_company option[value!=""]').remove();
 
                 if ($("#Visitor_tenant_agent").val() == '') {
                     getCompanyWithSameTenant($("#Visitor_tenant").val());
@@ -835,7 +831,7 @@ $countryList = CHtml::listData(Country::model()->findAll(), 'id', 'name');
 
             if ($("#currentRoleOfLoggedInUser").val() != 5 && $("#currentRoleOfLoggedInUser").val() != 1) {
                 $("#User_workstation").prop("disabled", false);
-                $('#Visitor_company option[value!=""]').remove();
+              //  $('#Visitor_company option[value!=""]').remove();
 
                 if ($("#Visitor_tenant_agent").val() == '') {
                     getCompanyWithSameTenant($("#Visitor_tenant").val());

@@ -31,11 +31,11 @@ $result = CMap::mergeArray(
             'sourceLanguage' => 'en-AU',
 
             'modules' => array(
-            /* 'gii' => array(
+            'gii' => array(
               'generatorPaths' => array(
               'bootstrap.gii',
               ),
-              ), */
+              ),
             ),
             // autoloading model and component classes
             'import' => array(

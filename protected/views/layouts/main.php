@@ -7,7 +7,7 @@ $cs = Yii::app()->clientScript;
 $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/jquery.uploadfile.min.js');
 $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/jquery.maskedinput.min.js');
 $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/jquery.form.js');
-$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/jquery.imgareaselect.pack.js');
+$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/jquery.imgarloeaselect.pack.js');
 $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/MaxLength.min.js');
 
 

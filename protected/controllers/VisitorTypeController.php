@@ -42,6 +42,7 @@ class VisitorTypeController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate() {
+        $session = new CHttpSession;
         $model = new VisitorType;
         $visitorTypeService = new VisitorTypeServiceImpl();
         // Uncomment the following line if AJAX validation is needed
@@ -49,8 +50,41 @@ class VisitorTypeController extends Controller {
 
         if (isset($_POST['VisitorType'])) {
             $model->attributes = $_POST['VisitorType'];
-            if ($visitorTypeService->save($model, Yii::app()->user))
-                $this->redirect(array('index', 'vms' => CHelper::is_accessing_avms_features() ? 'avms' : 'cvms'));
+
+            $card_types = $_POST["card_types"];
+
+            $transaction = Yii::app()->db->beginTransaction();
+
+            try {
+
+                if ($visitorTypeService->save($model, Yii::app()->user)) {
+
+                    // add any new ones
+                    foreach($card_types as $value){
+
+                        $new_row = new VisitorTypeCardType;
+                        $new_row->card_type = $value;
+                        $new_row->visitor_type = $model->id;
+                        $new_row->tenant = $session['tenant'];
+                        $new_row->tenant_agent = $session['tenant_agent'];
+                        $new_row->save();
+
+                    }
+
+                    $transaction->commit();
+
+                    $this->redirect(array('index', 'vms' => CHelper::is_accessing_avms_features() ? 'avms' : 'cvms'));
+
+                }
+
+
+
+            } catch (CDbException $e)
+            {
+                $transaction->rollback();
+                Yii::app()->user->setFlash('error', $e->getMessage());
+
+            }
         }
 
         $this->render('create', array(
@@ -64,20 +98,74 @@ class VisitorTypeController extends Controller {
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
+        $session = new CHttpSession;
         $model = $this->loadModel($id);
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['VisitorType'])) {
+
             $model->attributes = $_POST['VisitorType'];
-            if ($model->save())
+
+            $card_types = $_POST["card_types"];
+
+            $transaction = Yii::app()->db->beginTransaction();
+
+            try {
+
+
+                if ($model->save()) {
+
+                    $found = array();
+                    $existing = VisitorTypeCardType::model()->find('visitor_type=' . $model->id);
+
+                    if(is_array($existing)) {
+
+                        // delete card types not in the array
+                        foreach ($existing as $value) {
+                            if (!in_array($value->card_type, $card_types))
+                                $value->delete();
+                            else
+                                array_push($found, $existing->card_type);
+                        }
+                    }
+
+                    // add any new ones
+                    if(is_array($card_types)) {
+                        foreach ($card_types as $value) {
+
+                            if (!in_array($value,$found)) {
+                                $new_row = new VisitorTypeCardType;
+                                $new_row->card_type = $value;
+                                $new_row->visitor_type = $model->id;
+                                $new_row->tenant = $session['tenant'];
+                                $new_row->tenant_agent = $session['tenant_agent'];
+                                $new_row->save();
+                            }
+                        }
+                    }
+
+                }
+
+                $transaction->commit();
+
                 $this->redirect(array('admin'));
+
+            } catch (CDbException $e)
+            {
+                $transaction->rollback();
+                Yii::app()->user->setFlash('error', $e->getMessage());
+
+            }
         }
 
         $this->render('update', array(
             'model' => $model,
         ));
+
+        //$this->redirect(array('index', 'vms' => CHelper::is_accessing_avms_features() ? 'avms' : 'cvms'));
+
     }
 
     /**
@@ -140,7 +228,9 @@ class VisitorTypeController extends Controller {
             Yii::app()->end();
         }
     }
-    
+
+
+
     public function actionAdminAjax() {
         $model = new VisitorType('search');
         $model->unsetAttributes();  // clear any default values

@@ -12,10 +12,12 @@
  * The followings are the available model relations:
  * @property Visitor[] $visitors
  * @property User $createdBy
+ *
+ *
  */
 class VisitorType extends CActiveRecord {
 
-    //public static $VISITOR_TYPE_LIST = returnVisitorTypes();
+    public $card_types = array();
 
     const PATIENT_VISITOR = 1;
     const CORPORATE_VISITOR = 2;
@@ -97,9 +99,11 @@ class VisitorType extends CActiveRecord {
         $criteria->compare('tenant_agent', $this->tenant_agent, true);
         $criteria->compare('is_default_value', $this->is_default_value, true);
         // Allow Admin to View and Manage his own created Types
-        if( Yii::app()->user->role == Roles::ROLE_ADMIN )
-            $criteria->addCondition("created_by ='" . Yii::app()->user->id . "'");
-        
+        //if( Yii::app()->user->role == Roles::ROLE_ADMIN )
+        //    $criteria->addCondition("created_by ='" . Yii::app()->user->id . "'");
+
+
+
         $data =  new CActiveDataProvider($this, array(
             'criteria' => $criteria,
 
@@ -125,6 +129,8 @@ class VisitorType extends CActiveRecord {
     public function beforeFind() {
         $session = new CHttpSession;
         $criteria = new CDbCriteria;
+
+
         if (Yii::app()->controller->action->id != 'exportvisitorrecords' && Yii::app()->controller->action->id != 'evacuationReport' && Yii::app()->controller->action->id != 'visitorRegistrationHistory' && Yii::app()->controller->action->id != 'view') {
             $criteria->condition = "t.is_deleted = 0 AND t.id !=1";
         }
@@ -144,7 +150,12 @@ class VisitorType extends CActiveRecord {
             $criteria->condition = "t.is_deleted=0";
         }
         
+
+        if( Yii::app()->user->role != Roles::ROLE_SUPERADMIN )
+            $criteria->addCondition("t.tenant IS NULL OR t.tenant =" . $session['tenant']);
+
         $this->dbCriteria->mergeWith($criteria);
+
     }
 
 

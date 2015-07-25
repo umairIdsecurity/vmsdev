@@ -52,7 +52,8 @@ else{
     </div>
 
 
-    <h3 class="title text-center">UPLOAD/ TAKE PHOTO</h3>
+    <h3 class="title text-center">UPLOAD/ TAKE PHOTO </h3>
+    <p class="title text-center">'Allowed Max size: 2.00 MB'</p>
 
 
 

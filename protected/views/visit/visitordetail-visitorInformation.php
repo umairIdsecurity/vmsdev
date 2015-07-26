@@ -262,7 +262,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                     </select>
                                 <?php
                                 } else {
-                                    echo $visitorForm->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes(), ['onchange' => 'visitorTypeOnChange()', 'class' => 'visitortypedetails']);
+                                    echo $visitorForm->dropDownList($model, 'visitor_type', VisitorType::model()->getFromCardType(-1), ['onchange' => 'visitorTypeOnChange()', 'class' => 'visitortypedetails']);
                                 }
                             ?>
                             <br />

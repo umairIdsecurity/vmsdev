@@ -51,10 +51,11 @@
                         }else {
                             $card_list = CardType::$CORPORATE_CARD_TYPES;
                         }
-                        if($model->id >0)
-                            $selected_type_list = array_keys(VisitorTypeCardType::model()->findAll("visitor_type=" . $model->id));
-                        else
-                            $selected_type_list = array();
+                        //if($model->id >0)
+                        $selected_type_list = VisitorType::model()->getActiveCardTypeIds($model->id);
+
+                        if(!is_array($selected_type_list))
+                            $selected_type_list= array();
 
                         echo CHtml::checkBoxList('card_types',$selected_type_list,$card_list,array(
                             'template'  => '<tr><td style="width: 15px">{input}</td><td>{label}</td></tr>',

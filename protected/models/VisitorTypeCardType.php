@@ -98,4 +98,14 @@ class VisitorTypeCardType extends CActiveRecord
     {
         return parent::model($className);
     }
+
+    public function beforeDelete() {
+        $this->is_deleted = 1;
+        $this->save();
+
+        //prevent real deletion
+        return false;
+        //return true;
+    }
+
 }

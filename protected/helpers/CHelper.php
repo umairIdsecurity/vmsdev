@@ -221,7 +221,7 @@ class CHelper
         $uModule = strtoupper($module);
         self::check_module_authorization($uModule);
         $session = new CHttpSession;
-        $session['current_module_focus'] = strtolower($uModule);
+        $session['current_module_focus'] = $uModule;
     }
 
     public static function get_module_focus()
@@ -235,7 +235,7 @@ class CHelper
         else if(!isset($session['current_module_focus']))
             self::set_module_focus(self::get_default_module());
 
-        return $session['current_module_focus'];
+        return strtoupper($session['current_module_focus']);
 
     }
 

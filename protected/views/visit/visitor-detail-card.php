@@ -158,13 +158,13 @@ $detailForm = $this->beginWidget('CActiveForm', [
         echo '<div id="Visit_workstation_em_" class="errorMessage" style="display: none">Please select a workstation</div>';
 
         if ($asic) {
-            $visitor_types = VisitorType::model()->returnVisitorTypes();
-            if(is_array($visitor_types)) {
-                echo $detailForm->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes());
+            //$visitor_types = VisitorType::model()->returnVisitorTypes();
+           // if(is_array($visitor_types)) {
+                echo $detailForm->dropDownList($model, 'visitor_type', VisitorType::model()->getFromCardType(-1));
                 echo "<span class='required'>*</span>";
                 //echo $detailForm->error($model, 'visitor_type');
                 echo '<div id="Visit_visitor_type_em_" class="errorMessage" style="display: none">Please select a Visitor type</div>';
-            }
+            //}
 
             $reasons = CHtml::listData(VisitReason::model()->findAll(), 'id', 'reason');
             foreach ($reasons as $key => $item) {

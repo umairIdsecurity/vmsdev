@@ -178,7 +178,25 @@ class VisitorTypeController extends Controller {
      * @param integer $id the ID of the model to be deleted
      */
     public function actionDelete($id) {
-        $this->loadModel($id)->delete();
+
+        $transaction = Yii::app()->db->beginTransaction();
+
+        try {
+
+            $this->loadModel($id)->delete();
+
+            $cardTypes = VisitorTypeCardType::model()->find('visitor_type=' . $id);
+            foreach ($cardTypes as $cardType => $value) {
+                $cardType->delete();
+            }
+
+            $transaction->commit();
+
+        } catch (CDbException $e)
+        {
+            $transaction->rollback();
+            Yii::app()->user->setFlash('error', $e->getMessage());
+        }
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
         if (!isset($_GET['ajax']))

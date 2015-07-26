@@ -420,7 +420,8 @@ $model->identification_country_issued = 13;
 
                                     <?php
                                     if(Yii::app()->user->role == Roles::ROLE_ADMIN) {
-                                        $list = VisitorType::model()->findAll("created_by = :c", [":c" => Yii::app()->user->id]);
+                                        //$list = VisitorType::model()->findAll("created_by = :c", [":c" => Yii::app()->user->id]);
+                                        $list=array();
                                         echo '<select onchange="showHideHostPatientName(this)" name="Visitor[visitor_type]" id="Visitor_visitor_type">';
                                         echo CHtml::tag('option', array('value' => ''), 'Select Visitor Type', true);
                                         foreach( $list as $val ) {
@@ -434,7 +435,7 @@ $model->identification_country_issued = 13;
                                     } else {
 
                                         echo $form->dropDownList($model, 'visitor_type',
-                                        VisitorType::model()->returnVisitorTypes(null,""), array(
+                                        VisitorType::model()->getCardTypeVisitorTypes(null,""), array(
                                             'onchange' => 'showHideHostPatientName(this)',
                                             //'prompt' => 'Select Visitor Type',
                                         ));

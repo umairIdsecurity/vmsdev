@@ -59,6 +59,7 @@ class VisitorType extends CActiveRecord {
             'createdBy' => array(self::BELONGS_TO, 'User', 'created_by'),
             'visits'=>array(self::HAS_MANY, 'Visit', 'visitor_type'),
             'visitsCount' => array(self::STAT, 'Visit', 'visitor_type'),
+            'visitTypeCardType' => array(self::HAS_MANY,"VisitTypeCardType","visitor_type")
         );
     }
 
@@ -165,8 +166,11 @@ class VisitorType extends CActiveRecord {
      */
     public function getFromCardType($cardtype)
     {
-        $list = $this->model()->findAll();
-        if ($list) return CJSON::encode($list);
+        $list = $this->getCardTypeVisitorTypes($cardtype);
+        if($list) {
+
+            return CJSON::encode($list);
+        }
         return null;
     }
 
@@ -191,15 +195,53 @@ class VisitorType extends CActiveRecord {
 
         //prevent real deletion
         return false;
+        //return true;
     }
 
+    public function nullVisitorTypes(){
+        return null;
+    }
     public function getCardTypeVisitorTypes($card_type){
         $session = new CHttpSession;
-        $criteria = "card_type=".$card_type." AND tenant=".$session['tenant']." AND is_deleted=0";
-        if(isset($session['tenant_agent']))
-            $criteria+=" AND tenant_agent=".$session['tenant_agent'];
+        $criteria = new CDbCriteria;
 
-        return VisitorTypeCardType::model()->find($criteria);
+        $criteria->addCondition("t.tenant=".$session['tenant']." AND t.is_deleted=0");
+        $criteria->addCondition("t.module='".Chelper::get_module_focus()."'");
+        if(isset($session['tenant_agent']))
+            $criteria->addCondition("t.tenant_agent=".$session['tenant_agent']);
+
+        $criteria->join = 'JOIN visitor_type_card_type '
+                                        .'ON visitor_type_card_type.visitor_type = t.id '
+                                        .'AND visitor_type_card_type.is_deleted=0 '
+                                        .'AND visitor_type_card_type.card_type='.$card_type;
+
+        return VisitorType::model()->findAll($criteria);
+
+    }
+
+    public function getActiveCardTypeIds($visitor_type)
+    {
+        $session = new CHttpSession;
+        $criteria = new CDbCriteria;
+        $criteria->select = "card_type";
+        $criteria->addCondition("visitor_type=".$visitor_type);
+        $criteria->addCondition("t.tenant=".$session['tenant']." AND t.is_deleted=0");
+
+        if(isset($session['tenant_agent']))
+            $criteria->addCondition("t.tenant_agent=".$session['tenant_agent']);
+
+        $criteria->join = 'JOIN visitor_type '
+            .'ON visitor_type.id = t.visitor_type '
+            .'AND visitor_type.is_deleted=0 '
+            ."AND visitor_type.module='".Chelper::get_module_focus()."'";
+
+        $types  = VisitorTypeCardType::model()->findAll($criteria);
+        $result= array();
+        foreach($types as $type => $value)
+        {
+            array_push($result,$value->card_type);
+        }
+        return $result;
     }
 
     public function returnVisitorTypes($visitorTypeId = NULL,$condition= "1>0") {

@@ -92,7 +92,7 @@ class VisitorType extends CActiveRecord {
      */
     public function search() {
         // @todo Please modify the following code to remove attributes that should not be searched.
-
+        $session = new CHttpSession;
         $criteria = new CDbCriteria;
 
         $criteria->compare('id', $this->id, true);
@@ -102,6 +102,11 @@ class VisitorType extends CActiveRecord {
         $criteria->compare('tenant_agent', $this->tenant_agent, true);
         $criteria->compare('is_default_value', $this->is_default_value, true);
         $criteria->compare('module', $this->module, true);
+
+        if(isset($session['tenant']))
+        {
+            $criteria->addCondition("t.tenant =" . $session['tenant']);
+        }
 
         // Allow Admin to View and Manage his own created Types
         //if( Yii::app()->user->role == Roles::ROLE_ADMIN )
@@ -132,7 +137,7 @@ class VisitorType extends CActiveRecord {
     }
 
     public function beforeFind() {
-        $session = new CHttpSession;
+
         $criteria = new CDbCriteria;
 
 
@@ -147,7 +152,7 @@ class VisitorType extends CActiveRecord {
         
 
         //if( Yii::app()->user->role != Roles::ROLE_SUPERADMIN )
-        $criteria->addCondition("t.tenant =" . $session['tenant']);
+
 
         $this->dbCriteria->mergeWith($criteria);
 

@@ -9,6 +9,7 @@
  * @property string $created_by
  * @property string $tenant
  * @property string $tenant_agent
+ * @property string $module
  *
  * The followings are the available model relations:
  * @property User $tenantAgent
@@ -32,9 +33,10 @@ class VisitReason extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('created_by, tenant, tenant_agent', 'length', 'max' => 20),
-            array('reason', 'required'),
+            array('reason,module', 'required'),
+            array('module', 'length','max' => 20),
             array('reason', 'filter', 'filter' => 'trim'),
-            array('reason', 'unique'),
+            //array('reason', 'unique'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id,reason, created_by, tenant, tenant_agent,is_deleted', 'safe', 'on' => 'search'),
@@ -65,6 +67,7 @@ class VisitReason extends CActiveRecord {
             'tenant' => 'Tenant',
             'tenant_agent' => 'Tenant Agent',
             'is_deleted' => 'Deleted',
+            'module' => 'Module',
         );
     }
 
@@ -90,7 +93,11 @@ class VisitReason extends CActiveRecord {
         $criteria->compare('created_by', $this->created_by, true);
         $criteria->compare('tenant', $this->tenant, true);
         $criteria->compare('tenant_agent', $this->tenant_agent, true);
-        
+        $criteria->compare('module', $this->module, true);
+        if(isset($session['tenant']))
+            $criteria->addCondition("tenant=".$session['tenant']);
+
+
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'sort' => array(
@@ -131,24 +138,30 @@ class VisitReason extends CActiveRecord {
     }
 
     public function isReasonUnique($reason) {
+
+        $session = new CHttpSession;
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "reason = '" . $reason . "' ";
+        $Criteria->condition = "reason = '" . $reason . "' AND tenant=".$session['tenant']." AND is_deleted=0";
+
         $visitorReason = VisitReason::model()->findAll($Criteria);
 
         $visitorReason = array_filter($visitorReason);
         $visitorReasonCount = count($visitorReason);
 
         if ($visitorReasonCount == 0) {
-            return false;
-        } else {
             return true;
+        } else {
+            return false;
         }
     }
     
     public function beforeFind() {
         $session = new CHttpSession;
         $criteria = new CDbCriteria;
-        $criteria->condition = "t.is_deleted = 0";
+        $criteria->condition = "t.is_deleted = 0 AND module='".CHelper::get_module_focus()."'";
+
+
+
         $this->dbCriteria->mergeWith($criteria);
     }
     

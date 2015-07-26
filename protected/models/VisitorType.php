@@ -8,6 +8,7 @@
  * @property string $name
  * @property string $created_by
  * @property integer $is_default_value
+ * @property string $module
  *
  * The followings are the available model relations:
  * @property Visitor[] $visitors
@@ -37,8 +38,9 @@ class VisitorType extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('name', 'length', 'max' => 25),
-            array('name', 'required'),          
+            array('name', 'required'),
             array('created_by', 'length', 'max' => 20),
+            array('module', 'length', 'max' => 4),
             array('is_default_value', 'length', 'max'=>1),  
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
@@ -71,7 +73,8 @@ class VisitorType extends CActiveRecord {
             'is_deleted' => 'Is Deleted',
             'tenant' => 'Tenant',
             'tenant_agent' => 'Tenant Agent',
-            'is_default_value' => 'Set Default'
+            'is_default_value' => 'Set Default',
+            'module' => 'Module'
         );
     }
 
@@ -98,6 +101,8 @@ class VisitorType extends CActiveRecord {
         $criteria->compare('tenant', $this->tenant, true);
         $criteria->compare('tenant_agent', $this->tenant_agent, true);
         $criteria->compare('is_default_value', $this->is_default_value, true);
+        $criteria->compare('module', $this->module, true);
+
         // Allow Admin to View and Manage his own created Types
         //if( Yii::app()->user->role == Roles::ROLE_ADMIN )
         //    $criteria->addCondition("created_by ='" . Yii::app()->user->id . "'");
@@ -135,24 +140,14 @@ class VisitorType extends CActiveRecord {
             $criteria->condition = "t.is_deleted = 0 AND t.id !=1";
         }
 
-
-        if (Yii::app()->controller->action->id == 'index' || Yii::app()->controller->action->id == 'getFromCardType') {
-            $criteria->condition = "t.is_deleted = 0 AND t.id !=1 ";
-            if(Yii::app()->request->getParam('vms') == 'cvms')
-                $criteria->condition .= " AND t.name not like 'Vic%' AND t.name NOT like 'AVMS%'";
-            else $criteria->condition .= " AND (t.name like 'Vic%' Or t.name like 'AVMS%')";
-
-
-        }
-
         if (Yii::app()->controller->action->id == 'visitorsByTypeReport' || Yii::app()->controller->action->id == 'visitorsByWorkstationReport') {
             $criteria->condition = "";
             $criteria->condition = "t.is_deleted=0";
         }
         
 
-        if( Yii::app()->user->role != Roles::ROLE_SUPERADMIN )
-            $criteria->addCondition("t.tenant IS NULL OR t.tenant =" . $session['tenant']);
+        //if( Yii::app()->user->role != Roles::ROLE_SUPERADMIN )
+        $criteria->addCondition("t.tenant =" . $session['tenant']);
 
         $this->dbCriteria->mergeWith($criteria);
 
@@ -191,6 +186,15 @@ class VisitorType extends CActiveRecord {
 
         //prevent real deletion
         return false;
+    }
+
+    public function getCardTypeVisitorTypes($card_type){
+        $session = new CHttpSession;
+        $criteria = "card_type=".$card_type." AND tenant=".$session['tenant']." AND is_deleted=0";
+        if(isset($session['tenant_agent']))
+            $criteria+=" AND tenant_agent=".$session['tenant_agent'];
+
+        return VisitorTypeCardType::model()->find($criteria);
     }
 
     public function returnVisitorTypes($visitorTypeId = NULL,$condition= "1>0") {

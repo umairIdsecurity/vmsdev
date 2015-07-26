@@ -51,7 +51,6 @@ class VisitorTypeController extends Controller {
         if (isset($_POST['VisitorType'])) {
             $model->attributes = $_POST['VisitorType'];
 
-            $card_types = $_POST["card_types"];
 
             $transaction = Yii::app()->db->beginTransaction();
 
@@ -59,25 +58,27 @@ class VisitorTypeController extends Controller {
 
                 if ($visitorTypeService->save($model, Yii::app()->user)) {
 
-                    // add any new ones
-                    foreach($card_types as $value){
+                    if(isset($_POST["card_types"])) {
 
-                        $new_row = new VisitorTypeCardType;
-                        $new_row->card_type = $value;
-                        $new_row->visitor_type = $model->id;
-                        $new_row->tenant = $session['tenant'];
-                        $new_row->tenant_agent = $session['tenant_agent'];
-                        $new_row->save();
+                        $card_types = $_POST["card_types"];
 
+                        // add any new ones
+                        foreach ($card_types as $value) {
+
+                            $new_row = new VisitorTypeCardType;
+                            $new_row->card_type = $value;
+                            $new_row->visitor_type = $model->id;
+                            $new_row->tenant = $session['tenant'];
+                            $new_row->tenant_agent = $session['tenant_agent'];
+                            $new_row->save();
+
+                        }
                     }
-
-                    $transaction->commit();
-
-                    $this->redirect(array('index', 'vms' => CHelper::is_accessing_avms_features() ? 'avms' : 'cvms'));
-
                 }
 
+                $transaction->commit();
 
+                $this->redirect(array('admin',array('vms' => $model->module)));
 
             } catch (CDbException $e)
             {
@@ -108,8 +109,6 @@ class VisitorTypeController extends Controller {
 
             $model->attributes = $_POST['VisitorType'];
 
-            $card_types = $_POST["card_types"];
-
             $transaction = Yii::app()->db->beginTransaction();
 
             try {
@@ -117,31 +116,36 @@ class VisitorTypeController extends Controller {
 
                 if ($model->save()) {
 
-                    $found = array();
-                    $existing = VisitorTypeCardType::model()->find('visitor_type=' . $model->id);
+                    if(isset($_POST["card_types"])) {
 
-                    if(is_array($existing)) {
+                        $card_types = $_POST["card_types"];
 
-                        // delete card types not in the array
-                        foreach ($existing as $value) {
-                            if (!in_array($value->card_type, $card_types))
-                                $value->delete();
-                            else
-                                array_push($found, $existing->card_type);
+                        $found = array();
+                        $existing = VisitorTypeCardType::model()->find('visitor_type=' . $model->id);
+
+                        if (is_array($existing)) {
+
+                            // delete card types not in the array
+                            foreach ($existing as $value) {
+                                if (!in_array($value->card_type, $card_types))
+                                    $value->delete();
+                                else
+                                    array_push($found, $existing->card_type);
+                            }
                         }
-                    }
 
-                    // add any new ones
-                    if(is_array($card_types)) {
-                        foreach ($card_types as $value) {
+                        // add any new ones
+                        if (is_array($card_types)) {
+                            foreach ($card_types as $value) {
 
-                            if (!in_array($value,$found)) {
-                                $new_row = new VisitorTypeCardType;
-                                $new_row->card_type = $value;
-                                $new_row->visitor_type = $model->id;
-                                $new_row->tenant = $session['tenant'];
-                                $new_row->tenant_agent = $session['tenant_agent'];
-                                $new_row->save();
+                                if (!in_array($value, $found)) {
+                                    $new_row = new VisitorTypeCardType;
+                                    $new_row->card_type = $value;
+                                    $new_row->visitor_type = $model->id;
+                                    $new_row->tenant = $session['tenant'];
+                                    $new_row->tenant_agent = $session['tenant_agent'];
+                                    $new_row->save();
+                                }
                             }
                         }
                     }
@@ -150,7 +154,7 @@ class VisitorTypeController extends Controller {
 
                 $transaction->commit();
 
-                $this->redirect(array('admin'));
+                $this->redirect(array('admin',array('vms' => $model->module)));
 
             } catch (CDbException $e)
             {
@@ -187,6 +191,7 @@ class VisitorTypeController extends Controller {
     public function actionAdmin() {
         $model = new VisitorType('search');
         $model->unsetAttributes();  // clear any default values
+        $model->module = CHelper::is_cvms_users_requested()?"CVMS":"AVMS";
         if (isset($_GET['VisitorType']))
             $model->attributes = $_GET['VisitorType'];
 

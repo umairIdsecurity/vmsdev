@@ -703,7 +703,7 @@ class VisitorController extends Controller {
                                $visitorInfo->company = $session['company'];
                             $visitorInfo->role = Roles::ROLE_VISITOR;
                             $visitorInfo->visitor_status = '1'; // Active
-                            $visitorInfo->visitor_type= '2'; 
+                            //$visitorInfo->visitor_type= '2';
                             //$visitorInfo->vehicle= $line[12]; 
                             $visitorInfo->created_by = Yii::app()->user->id;
                             $visitorInfo->tenant = Yii::app()->user->tenant;
@@ -728,7 +728,7 @@ class VisitorController extends Controller {
                                 // Insert Visit Now
                                 $visitInfo = new Visit;
                                 $visitInfo->visitor = $visitorInfo->id;
-                                $visitInfo->visitor_type = '2'; // Corporate
+                                //$visitInfo->visitor_type = '2'; // Corporate
                                 $visitInfo->visitor_status = 1;
                                 $visitInfo->card = $card ? $card->id:"";
                                 $visitInfo->host = Yii::app()->user->id;
@@ -741,7 +741,7 @@ class VisitorController extends Controller {
                                 $visitInfo->workstation = $session['workstation'];                               
                                 $visitInfo->tenant = Yii::app()->user->tenant;
                                 $visitInfo->reason = '1';
-                                $visitInfo->visitor_type = '2';
+                                //$visitInfo->visitor_type = '2';
                     
                                 $visitInfo->save();
                             }                    

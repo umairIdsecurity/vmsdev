@@ -198,7 +198,7 @@ class ImportVisitorController extends Controller
                                $visitorInfo->company = $session['company'];
                             $visitorInfo->role = Roles::ROLE_VISITOR;
                             $visitorInfo->visitor_status = '1'; // Active
-                            $visitorInfo->visitor_type= '2'; 
+                            #$visitorInfo->visitor_type= '2';
                             $visitorInfo->created_by = Yii::app()->user->id;
                             $visitorInfo->tenant = Yii::app()->user->tenant;
                             if( $visitorInfo->validate() ) 
@@ -219,7 +219,7 @@ class ImportVisitorController extends Controller
                                 // Insert Visit Now
                                 $visitInfo = new Visit;
                                 $visitInfo->visitor = $visitorInfo->id;
-                                $visitInfo->visitor_type = '2'; // Corporate
+                                #$visitInfo->visitor_type = '2'; // Corporate
                                 $visitInfo->visitor_status = 1;
                                 $visitInfo->host = Yii::app()->user->id;
                                 $visitInfo->card = $card ? $card->id:"";

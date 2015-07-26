@@ -190,9 +190,9 @@ class VisitorController extends RestfulController {
             $this->sendResponse(400, CJSON::encode(array('responseCode' => 400, 'errorCode' => 'VISITOR_EMAIL_MISSING', 'errorDescription' => 'email should not be blank')));
         } elseif (!isset($data['password']) || empty($data['password'])) {
             $this->sendResponse(400, CJSON::encode(array('responseCode' => 400, 'errorCode' => 'VISITOR_PASSWORD_MISSING', 'errorDescription' => 'password should not be blank')));
-        } elseif (!isset($data['visitorType']) || empty($data['visitorType'])) {
+        } /*elseif (!isset($data['visitorType']) || empty($data['visitorType'])) {
             $this->sendResponse(400, CJSON::encode(array('responseCode' => 400, 'errorCode' => 'VISITOR_TYPE_MISSING', 'errorDescription' => 'visitor type should not be blank')));
-        }
+        }*/
     }
 
     private function populatevisitor($visitor) {

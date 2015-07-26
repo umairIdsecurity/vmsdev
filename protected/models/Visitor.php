@@ -303,7 +303,6 @@ class Visitor extends CActiveRecord {
                     'company,
                     visitor_card_status,
                     visitor_workstation,
-                    visitor_type,
                     contact_street_no,
                     contact_street_name,
                     contact_street_type,

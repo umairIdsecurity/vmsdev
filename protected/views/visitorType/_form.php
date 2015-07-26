@@ -46,11 +46,13 @@
                 <td style="vertical-align: top">
                     <table style="vertical-align: top" >
                     <?php
-                        if(CHelper::is_accessing_avms_features())
-                            $card_list=CardType::$VIC_CARD_TYPES;
-                        else
-                            $card_list=CardType::$CORPORATE_CARD_TYPES;
-
+                        if(CHelper::getModuleFocus() == "AVMS") {
+                            $card_list = CardType::$VIC_CARD_TYPES;
+                            $model->module = "AVMS";
+                        }else {
+                            $card_list = CardType::$CORPORATE_CARD_TYPES;
+                            $model->module = "CVMS";
+                        }
                         if($model->id >0)
                             $selected_type_list = array_keys(VisitorTypeCardType::model()->findAll("visitor_type=" . $model->id));
                         else
@@ -61,6 +63,8 @@
                             'container' => 'tbody',
                             'separator' => '',
                         ));
+
+                        $form->hiddenField($model,'module');
 
                     ?>
                     </table>

@@ -562,19 +562,20 @@ $company = Company::model()->findByPk($session['company']);
 
         /*Added by farhat aziz for upload host photo*/
 
-
-        $('#photoCropPreview').imgAreaSelect({
-            handles: true,
-            onSelectEnd: function (img, selection) {
-                $("#cropPhotoBtn").show();
-                $("#x12").val(selection.x1);
-                $("#x22").val(selection.x2);
-                $("#y12").val(selection.y1);
-                $("#y22").val(selection.y2);
-                $("#width").val(selection.width);
-                $("#height").val(selection.height);
-            }
-        });
+        if($('#photoCropPreview').imgAreaSelect) {
+            $('#photoCropPreview').imgAreaSelect({
+                handles: true,
+                onSelectEnd: function (img, selection) {
+                    $("#cropPhotoBtn").show();
+                    $("#x12").val(selection.x1);
+                    $("#x22").val(selection.x2);
+                    $("#y12").val(selection.y1);
+                    $("#y22").val(selection.y2);
+                    $("#width").val(selection.width);
+                    $("#height").val(selection.height);
+                }
+            });
+        }
         $("#cropPhotoBtn").click(function (e) {
             e.preventDefault();
             $.ajax({

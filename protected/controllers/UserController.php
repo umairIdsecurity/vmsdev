@@ -202,6 +202,8 @@ class UserController extends Controller
             $model->attributes = $_GET['User'];
         }
 
+
+
         if (CHelper::is_avms_users_requested()) {
             //Check whether a login user/tenant allowed to view 
             CHelper::check_module_authorization("AVMS");

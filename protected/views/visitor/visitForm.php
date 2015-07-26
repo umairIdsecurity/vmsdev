@@ -162,15 +162,15 @@ date_default_timezone_set('Asia/Manila');
         }
 
 
-        if ($("#Visitor_visitor_type").val() == 1) { //if type is patient
+        /*if ($("#Visitor_visitor_type").val() == 1) { //if type is patient
             $("#Visit_host").val("");
             $("#Visit_patient").val($("#hostId").val());
             $("#submitVisitForm").delay(1000).click();
-        } else {
+        } else {*/
             $("#Visit_patient").val("");
             $("#Visit_host").val($("#hostId").val());
             $("#submitVisitForm").delay(1000).click();
-        }
+        //}
     }
 
     function sendVisitForm() {

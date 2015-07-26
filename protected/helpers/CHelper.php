@@ -215,4 +215,18 @@ class CHelper
          }
     }
 
+    public static function setModuleFocus($module)
+    {
+        self::check_module_authorization($module);
+        $session = new CHttpSession;
+        $session['current_module_focus'] = $module;
+    }
+
+    public static function getModuleFocus()
+    {
+        $session = new CHttpSession;
+        return $session['current_module_focus'];
+    }
+
+
 }

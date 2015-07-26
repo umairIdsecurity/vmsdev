@@ -162,11 +162,12 @@ class CHelper
         $session = new CHttpSession;
         if( isset($session['module_allowed_to_view']) && !is_null($session['module_allowed_to_view']))
 
-            return $session['module_allowed_to_view'];
+            return $session['module_allowed_to_view']=="Both"?"AVMS":$session['module_allowed_to_view'];
 
         else {
 
-            return "AVMS"; // AVMS and CVMS
+            //throw new CHttpException(403,'You are not authorized to view this page');
+            return "AVMS";
         }
 
     }
@@ -217,19 +218,30 @@ class CHelper
 
     public static function set_module_focus($module)
     {
-        self::check_module_authorization($module);
+        $uModule = strtoupper($module);
+        self::check_module_authorization($uModule);
         $session = new CHttpSession;
-        $session['current_module_focus'] = $module;
+        $session['current_module_focus'] = strtolower($uModule);
     }
 
     public static function get_module_focus()
     {
         $session = new CHttpSession;
-        if(!isset($session['current_module_focus']))
+        $requestedModule = strtoupper(Yii::app()->request->getParam('vms'));
+
+        if(!empty($requestedModule) && self::check_module_authorization(($requestedModule)))
+            self::set_module_focus($requestedModule);
+
+        else if(!isset($session['current_module_focus']))
             self::set_module_focus(self::get_default_module());
 
         return $session['current_module_focus'];
 
+    }
+
+    public static function avms_module_has_focus()
+    {
+        return self::get_module_focus()=='AVMS';
     }
 
 

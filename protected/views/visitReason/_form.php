@@ -34,7 +34,6 @@
                     $model->module = CHelper::get_module_focus();
                     echo $form->hiddenField($model,'module');
 
-
                     ?>
                 </td>
             </tr>

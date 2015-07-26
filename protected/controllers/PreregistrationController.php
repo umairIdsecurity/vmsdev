@@ -435,13 +435,13 @@ class PreregistrationController extends Controller
 						$visitorModel->photo = $photoModel->id;
 						$visitorModel->save(true,array('photo'));
 						$session['imgName'] = $newName;
-
+						$this->redirect(array('preregistration/visitDetails'));
 					}
 				}
 			}
-
-			$this->redirect(array('preregistration/visitDetails'));
-
+			else{
+				$this->redirect(array('preregistration/visitDetails'));
+			}
 
 		}
 
@@ -452,12 +452,12 @@ class PreregistrationController extends Controller
 
 		$session = new CHttpSession;
 
-		/*if($session['visitor_id']=="" or $session['visitor_id']==null){
+		if($session['visitor_id']=="" or $session['visitor_id']==null){
 			$this->redirect(array('preregistration/registration'));
-		}*/
+		}
 
 		$model = Visit::model()->findByAttributes(
-			array('visitor'=>76)
+			array('visitor'=>$session['visitor_id'])
 		);
 
 		if(isset($_POST['Visit']))

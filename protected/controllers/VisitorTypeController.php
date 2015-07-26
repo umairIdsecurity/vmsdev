@@ -191,7 +191,8 @@ class VisitorTypeController extends Controller {
     public function actionAdmin() {
         $model = new VisitorType('search');
         $model->unsetAttributes();  // clear any default values
-        $model->module = CHelper::is_cvms_users_requested()?"CVMS":"AVMS";
+        $model->module = CHelper::get_module_focus();
+
         if (isset($_GET['VisitorType']))
             $model->attributes = $_GET['VisitorType'];
 
@@ -251,6 +252,7 @@ class VisitorTypeController extends Controller {
     {
         $model = new VisitorType('search');
         $model->unsetAttributes();  // clear any default values
+        $model->module = CHelper::get_module_focus();
         if (isset($_GET['VisitorType'])) {
             $model->attributes = $_GET['VisitorType'];
         }

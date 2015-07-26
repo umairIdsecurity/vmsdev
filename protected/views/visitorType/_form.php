@@ -46,7 +46,7 @@
                 <td style="vertical-align: top">
                     <table style="vertical-align: top" >
                     <?php
-                        if(CHelper::getModuleFocus() == "AVMS") {
+                        if(CHelper::get_module_focus() == "AVMS") {
                             $card_list = CardType::$VIC_CARD_TYPES;
                             $model->module = "AVMS";
                         }else {
@@ -64,7 +64,7 @@
                             'separator' => '',
                         ));
 
-                        $form->hiddenField($model,'module');
+                        echo $form->hiddenField($model,'module');
 
                     ?>
                     </table>
@@ -74,6 +74,8 @@
 
 
         </table>
+
+
 
 	<div class="row buttons buttonsAlignToRight">
 		<?php echo CHtml::submitButton($model->isNewRecord ? 'Add' : 'Save', array("class" => "complete")); ?>

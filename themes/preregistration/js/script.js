@@ -171,38 +171,6 @@ jQuery(function() {
         $('.from_date').datepicker('setEndDate', null);
     });
 
-    /*var $datepickerStart = $('[data-date-picker-start]');
-
-    if($datepickerStart.length){
-
-        $datepickerStart.each(function(){
-            var formatDay =$(this).data('dateFormat') || 'yyyy/mm/dd';
-            var $datepickerStart = $(this).data('linkedPickers')?$($(this).data('linkedPickers')):null;
-
-            $(this).datepicker({
-                format: formatDay,
-                autoclose: true,
-                startDate: '-3d'
-            });
-        });
-    }
-
-    var $datepickerEnd = $('[data-date-picker-end]');
-
-    if($datepickerEnd.length){
-
-        $datepickerEnd.each(function(){
-            var formatDay =$(this).data('dateFormat') || 'yyyy/mm/dd';
-            var $datepickerEnd = $(this).data('linkedPickers')?$($(this).data('linkedPickers')):null;
-
-            $(this).datepicker({
-                format: formatDay,
-                autoclose: true,
-                startDate: '27/07/2015'
-            });
-        });
-    }*/
-
 });
 
 jQuery(function() {

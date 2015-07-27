@@ -161,7 +161,7 @@ class VisitorTypeController extends Controller {
             {
                 $transaction->rollback();
                 Yii::app()->user->setFlash('error', $e->getMessage());
-
+                throw $e;
             }
         }
 

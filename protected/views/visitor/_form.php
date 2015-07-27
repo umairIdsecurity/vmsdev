@@ -72,7 +72,9 @@ $form = $this->beginWidget('CActiveForm', array(
     'id' => 'visitor-form',
     'htmlOptions' => array("name" => "registerform"),
     'enableAjaxValidation' => true,
-      'clientOptions'=>array('validateOnSubmit'=>true),
+      'clientOptions'=>array('validateOnSubmit'=>true, 'validateOnChange'=>true,
+      'validateOnType'=>false),
+    
  ));
 
 ?>
@@ -594,25 +596,15 @@ $(document).ready(function () {
 
 
     $('#photoCropPreview').imgAreaSelect({
-
         handles: true,
-
         onSelectEnd: function (img, selection) {
-
             $("#cropPhotoBtn").show();
-
             $("#x1").val(selection.x1);
-
             $("#x2").val(selection.x2);
-
             $("#y1").val(selection.y1);
-
             $("#y2").val(selection.y2);
-
             $("#width").val(selection.width);
-
             $("#height").val(selection.height);
-
         }
 
     });

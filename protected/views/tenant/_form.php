@@ -286,7 +286,7 @@ $currentLoggedUserId = $session['id'];
                                             &nbsp;Create Password
                                         </td>
 
-                                        <?php echo $form->error($model,'password_opt'); ?>
+                                        <?php echo "<br>". $form->error($model,'password_opt'); ?>
                                     </tr>
                                     <tr>
 
@@ -314,7 +314,7 @@ $currentLoggedUserId = $session['id'];
                                             <div class="row buttons" style="margin-left:23.5px;">
 
                                                 <?php $background = isset($companyLafPreferences) ? ("background:" . $companyLafPreferences->neutral_bg_color . ' !important;') : ''; ?>
-                                                <input id="generatePassword" onclick="generatepassword();" class="complete btn btn-info" style="<?php echo $background; ?>position: relative; width:178px; overflow: hidden; cursor: default;cursor:pointer;font-size:14px" type="button" value="Autogenerate Password" />
+                                                <input id="generatePassword2" onclick="generatepassword();" class="complete btn btn-info" style="<?php echo $background; ?>position: relative; width:178px; overflow: hidden; cursor: default;cursor:pointer;font-size:13px" type="button" value="Autogenerate Password" />
 
                                             </div>
 
@@ -708,7 +708,7 @@ function get_avms_assignable_roles($user_role)
             
             $('#TenantForm_cnf_password').css({"background-color": "#fffff", "border": "1px solid #cccccc"});
 
-            $('#generatePassword').css({"background-color": "#2f96b4", "border": "1px solid #cccccc"});            
+         //   $('#generatePassword').css({"background-color": "#2f96b4", "border": "1px solid #cccccc"});            
             
             $('.hidingMsgPassword').hide();
         } else {
@@ -719,7 +719,7 @@ function get_avms_assignable_roles($user_role)
             
             $('#TenantForm_cnf_password').css({"background": "#fee none repeat scroll 0 0", "border": "#c00"});
 
-            $('#generatePassword').css({"background-color": "#2f96b4", "border": "1px solid #cccccc"});            
+           // $('#generatePassword').css({"background-color": "#2f96b4", "border": "1px solid #cccccc"});            
             
         }
             

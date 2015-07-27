@@ -66,6 +66,12 @@ angular.module('kiosk.DataService', [])
 			console.log('GET: ' + url);
 			$http.get(url).success(onSuccess).error(onFailure);
 		},
+		searchComp: function(comp, onSuccess, onFailure) {
+			var url = this.baseURL + '/custom/search';
+			var params = { email: this.adminEmail, comp: escape(comp)}; 
+			console.log('GET: ' + url);
+			$http.post(url, params).success(onSuccess).error(onFailure);
+		},
 		
 		createVisit: function(visitInfo, onSuccess, onFailure) {
 			var url = this.baseURL + '/visit';
@@ -92,10 +98,12 @@ angular.module('kiosk.DataService', [])
 			var params = { firstName: visitorInfo.firstName,
 			lastName: visitorInfo.lastName,
 			email: visitorInfo.email,
-			company: '1', // TODO: this needs to change to 'visitorInfo.companyName' after the API has been fixed.
+			/*company: '1', // TODO: this needs to change to 'visitorInfo.companyName' after the API has been fixed.*/
+			company: visitorInfo.companyName,
 			password: '123456',
-			visitorType: '2' };
-			console.log('POST: ' + url);
+			visitorType: '2',
+			workstation:this.workstation};
+			
 			$http.post(url, params).success(onSuccess).error(onFailure);
 		},
 		

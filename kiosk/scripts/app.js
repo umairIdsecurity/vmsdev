@@ -52,6 +52,10 @@ angular
         templateUrl: 'views/create_visitor_profile.html',
         controller: 'CreateVisitorCtrl'
       })
+	  .when('/card_types', {
+        templateUrl: 'views/card_types.html',
+        controller: 'CardTypesCtrl'
+      })
       .when('/host_search', {
         templateUrl: 'views/host_search.html',
         controller: 'HostSearchCtrl'
@@ -102,6 +106,12 @@ angular
 				DataService.authToken = aToken;
 				DataService.adminEmail = adminEmail;
 			}
+			
+			if(!!$localStorage.kioskInfo){
+				DataService.kiosk = $localStorage.kioskInfo.kiosk;
+				DataService.workstation = $localStorage.kioskInfo.workstation;
+				DataService.ktoken = $localStorage.kioskInfo.ktoken;				
+			}
 						
             if (restrictedPage && !aToken) {/* If not Authorized, send back to login screen */
 				
@@ -109,12 +119,6 @@ angular
 				
             }else if(!restrictedPage && aToken){
 				$http.defaults.headers.common['HTTP_X_VMS_TOKEN'] = aToken;
-				
-				if(!!$localStorage.kioskInfo){
-					DataService.kiosk = $localStorage.kioskInfo.kiosk;
-					DataService.workstation = $localStorage.kioskInfo.workstation;
-					DataService.ktoken = $localStorage.kioskInfo.ktoken;
-				}
 				
 				if(!!$localStorage.kioskInfo.ktoken){/* Kiosk already registered */
 					$location.path('/intro');

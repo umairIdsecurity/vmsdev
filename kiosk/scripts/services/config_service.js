@@ -29,9 +29,9 @@ angular.module('kiosk.ConfigService', [])
 			function(data, responseCode) {
 				initialConfig.companyName = data.companyName;
 				initialConfig.pickupLocation = data.VICPickupLocation;
-				initialConfig.complianceTerms = data.complianceTerms;
-				console.log(initialConfig.complianceTerms);
+				initialConfig.complianceTerms = data.complianceTerms;				
 				initialConfig.companyTagLine = data.companyTagLine.toUpperCase();
+				console.log(initialConfig.complianceTerms);
 				setBrandingInfo(data.brandInfo);
 
 				$rootScope.$broadcast('config:updated', initialConfig);
@@ -54,4 +54,4 @@ angular.module('kiosk.ConfigService', [])
     loadConfiguration();
 
     return initialConfig;
-  }]);
+}]);

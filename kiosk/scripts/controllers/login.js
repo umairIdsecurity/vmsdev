@@ -38,6 +38,7 @@ angular.module('kioskApp')
 	};
 	
 	if(!!DataService.info[0]){/* Display error message if token expired */
-		$scope.error = DataService.info[0];		
+		$scope.error = DataService.info[0];
+		delete DataService.info[0];
 	}
 }]);

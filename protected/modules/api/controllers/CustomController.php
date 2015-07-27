@@ -55,6 +55,65 @@ class CustomController extends RestfulController {
     }
 	
 	/**
+     * @Function: for searching all matching companies
+	 *
+	 * @param: NA   	 
+	 * @return: NA
+     */
+	public function actionSearch() {
+
+        try {
+            $token_user = $this->checkAuth();
+            if (Yii::app()->request->isPostRequest) {
+				
+				$data = file_get_contents("php://input");
+                $data = CJSON::decode($data);
+				
+				# Get admin detail
+				$admin = User::model()->findByAttributes(array('email' => $data['email']));
+				
+				# Build search query based search string
+                $comp = explode(" ", $data['comp']);
+                $criteria = new CDbCriteria();
+
+                foreach ($comp as $c):					
+                    $criteria->addSearchCondition("name", $c, TRUE, "OR", "LIKE");                    
+                endforeach;
+				$criteria->addCondition("tenant = ".$admin->id, "AND");
+                
+                $companies = Company::model()->findAll($criteria);
+				
+                if ($companies) {
+                    $result = $this->populateCompanies($companies);
+                    $this->sendResponse(200, CJSON::encode($result));
+                } else {
+                    $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'HOST_NOT_FOUND', 'errorDescription' => 'No host for requseted query')));
+                }
+            } else {
+                $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_PARAMETER', 'errorDescription' => 'POST  parameter required for action')));
+            }
+        } catch (Exception $ex) {
+            $this->sendResponse(500, CJSON::encode(array('responseCode' => 500, 'errorCode' => 'INTERNAL_SERVER_ERROR', 'errorDescription' => 'Something went wrong')));
+        }
+    }
+	/**
+     * @Function: for searching all matching companies
+	 *
+	 * @param: array  $companies
+	 * @return: array $result
+     */
+	private function populateCompanies($companies) {
+        $result = array();
+        $i = 0;
+        foreach ($companies as $comp) {
+            $result[$i]['id'] = $comp->id;
+			$result[$i]['name']= $comp->name;
+            $i++;
+        }
+        return $result;
+    }
+	
+	/**
      * @Function: for retrieving the card types list
 	 *
 	 * @param: NA   	 

@@ -7,7 +7,7 @@ $cs = Yii::app()->clientScript;
 $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/jquery.uploadfile.min.js');
 $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/jquery.maskedinput.min.js');
 $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/jquery.form.js');
-$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/jquery.imgareaselect.pack.js');
+$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/jquery.imgarloeaselect.pack.js');
 $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/MaxLength.min.js');
 
 
@@ -48,7 +48,8 @@ $userRole = $session['role'];
         if (isset($company->company_laf_preferences) && $company->company_laf_preferences != '') {
             $companyLafPreferences = CompanyLafPreferences::model()->findByPk($company->company_laf_preferences);
             ?>
-            <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl . $companyLafPreferences->css_file_path; ?>" />
+            <!--<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl . $companyLafPreferences->css_file_path; ?>" />-->
+            <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl . "/index.php?r=companyLafPreferences/css"; ?>" />
 
             <?php
         }
@@ -83,36 +84,14 @@ $userRole = $session['role'];
                 <article class="header_midbox">
                     <div id="logo" >
                         <?php
-                        if ($company) {
-                            if ($company->logo) {
-                                $path = Photo::model()->returnLogoPhotoRelative($company->logo);
-                                if ($path) {
-                                    if (file_exists($path)) {
-                                        $logo = Yii::app()->request->baseUrl . '/' . $path;
-                                    } else {
-                                        $logo = Yii::app()->controller->assetsBase . '/images/companylogohere1.png';
-                                    }
-                                } else {
-                                    $logo = Yii::app()->controller->assetsBase . '/images/companylogohere1.png';
-                                }
-                            }else{
+                           $id = $company->logo;
+                            $photo = Photo::model()->findByPk($id);
+                            if( $id == 1  || !is_object($photo) || is_null($photo->db_image)){
+                                ?><img id='photoPreview' style="height: 65px !important; width:130px !important;" src="<?php echo Yii::app()->controller->assetsBase . '/images/companylogohere1.png'; ?>"/><?php
+                            } else {
+                                 ?><img id='photoPreview' style="height: 65px;width:130px !important;" src="data:image/<?php echo pathinfo($photo->filename, PATHINFO_EXTENSION); ?>;base64,<?php echo $photo->db_image; ?>"/><?php
+                            }?>
 
-                                $logo = Yii::app()->controller->assetsBase . '/images/companylogohere1.png';
-                            }
-                        } else {
-                            $logo = Yii::app()->controller->assetsBase . '/images/companylogohere1.png';
-                        }
-
-
-                        echo CHtml::link(CHtml::image($logo, '', array('style' => 'height: 65px;')), $this->createUrl('dashboard/adminDashboard'));
-                        /* if (isset($company->logo) && $company->logo != '') {
-                          echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl . '/' . Photo::model()->returnLogoPhotoRelative($company->logo), '',
-                          array('style' => 'height: 65px;')));
-                          } else {
-                          echo CHtml::link(CHtml::image(Yii::app()->controller->assetsBase . '/images/companylogohere1.png', '',
-                          array('style' => 'width: 130px;')));
-                          } */
-                        ?>
                     </div>
                     <aside class="top_nav">
                         <ul id="icons">
@@ -125,7 +104,7 @@ $userRole = $session['role'];
                             </li>
 
                             <li class="open-folder">
-                                <a style="display:block; width: 40px;height: 40px;" title="Open folder" href="<?php echo Yii::app()->createUrl("/uploadFile"); ?>"><span class="glyphicon glyphicons-folder-open"></span></a>
+                                <a style="display:block; width: 40px;height: 40px;" title="Upload File" href="<?php echo Yii::app()->createUrl("/uploadFile"); ?>"><span class="glyphicon glyphicons-folder-open"></span></a>
                             </li>
 
                             <li class="help">
@@ -181,29 +160,20 @@ $userRole = $session['role'];
                             <li class="<?php echo ($session['lastPage'] != 'dashboard' && ($this->action->id == "admin" || ($this->id == 'visit' && $this->action->id != 'view') || $this->id == "user" || $this->id == "visitor" || $this->id == "company" || $this->id == "workstation" || $this->id == "visitReason" || $this->id == "companyLafPreferences")) ? "active" : "" ?>">
                                 <?php if (in_array($session['role'], array(Roles::ROLE_ADMIN,Roles::ROLE_AGENT_ADMIN,Roles::ROLE_SUPERADMIN,Roles::ROLE_AGENT_AIRPORT_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN))) {
                                 ?>
-                                <a href="<?php echo Yii::app()->createUrl("/user/admin&vms=".strtolower(CHelper::get_allowed_module())); ?>">Administration</a>
+                                <a href="<?php echo Yii::app()->createUrl("/user/admin&vms=".strtolower(CHelper::get_default_module())); ?>">Administration</a>
                                 <?php }else{ ?>
                                     <p style="width:230px;"></p>
                                 <?php } ?>
                             </li>
 
-
-
-
                             <li class="loggedin-as">
                                Logged in as <?php echo User::model()->getUserRole($userRole); ?>
-                                
-                            </li> 
+                            </li>
 
                             <li class="logout">
-                                    <?php
-                            echo '<a href="' . Yii::app()->createUrl("/site/logout") . '">Log Out</a>';
-                            ?>
+                                <?php echo '<a href="' . Yii::app()->createUrl("/site/logout") . '">Log Out</a>'; ?>
                             </li>
-                            
-
                         </ul>
-
                     </nav>
 
                     <div class="clear"></div>
@@ -234,7 +204,7 @@ $userRole = $session['role'];
 <div style="display: none;">
 <?php
     $this->widget('zii.widgets.jui.CJuiDatePicker',array(
-        'name'=>'Visitor[identification_document_expiry]'
+        'name' => 'AutoGenerateJqueryUI'
     ));
 ?>
 </div>

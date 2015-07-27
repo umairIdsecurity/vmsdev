@@ -93,8 +93,9 @@ function getCardType() {
         return 'Host';
     }
 }
-$(document).ready(function () {
+    $(document).ready(function () {
         display_ct();
+
         $("#register-host-patient-form").hide();
         $("#register-host-form").show();
         $("#searchHostDiv").show();
@@ -192,6 +193,7 @@ $(document).ready(function () {
 
         $(document).on("click", "#clicktabB", function (e) {
             e.preventDefault();
+            var cardType = $('#VisitCardType').val();
             if ($('.password_requirement').filter(':checked').val() == "<?php echo PasswordRequirement::PASSWORD_IS_REQUIRED; ?>") {
                 if ($('.password_option').filter(':checked').val() == "<?php echo PasswordOption::CREATE_PASSWORD; ?>") {
                     $('.visitor_password').empty().hide();
@@ -217,22 +219,10 @@ $(document).ready(function () {
             }
 
             var contact = $('#Visitor_staff_id').val();
-            if (typeof contact != 'undefined') {
-                $.ajax({
-                    url: "<?php echo $this->createUrl('company/getContact&id=') ?>" + contact,
-                    dataType: "json",
-                    success: function(data) {
-                        if (data != 0) {
-                            $('#User_id').val(data.id);
-                            $('#User_first_name').val(data.first_name);
-                            $('#User_last_name').val(data.last_name);
-                            $('#User_email').val(data.email);
-                            $('#User_contact_number').val(data.contact_number);
-                        }
-                    }
-                });
+            if (cardType > <?php echo CardType::CONTRACTOR_VISITOR; ?> && typeof contact != 'undefined') {
+                populateAsicFields(contact, true);
             }
-            
+
             $(".visitorType").hide();
             if ($("#Visitor_visitor_type").val() == 1 || $("#Visitor_visitor_type_search").val() == 1) {
                 $("#findHostA").html("Add Patient Details");
@@ -293,7 +283,7 @@ $(document).ready(function () {
                     sendReasonForm();
                 } else {
                     if ($("#hostId").val() != 0 || $("#hostId").val() != '') {
-                        var $sendMail = $("<textarea  name='Visit[sendMail]'>"+'true'+"</textarea>");
+                        var $sendMail = $("<textarea  name='Visit[sendMail]'>"+' true '+"</textarea>");
                         $("#register-visit-form").append($sendMail);
                     }
                     populateVisitFormFields();
@@ -367,24 +357,45 @@ $(document).ready(function () {
             $("#" + hideThisLiId).hide();
             $("#" + showThisLiId).show();
         }
+
+        window.populateAsicFields = function populateAsicFields(contact, isCompanyContact) {
+            if (isCompanyContact) {
+                // if contact is company
+                var url = "<?php echo $this->createUrl('company/getContact&id=') ?>" + contact + "&isCompanyContact=1";
+            } else {
+                // If contact is visitor
+                var url = "<?php echo $this->createUrl('company/getContact&id=') ?>" + contact;
+            }
+
+            $.ajax({
+                url: url,
+                dataType: "json",
+                success: function(data) {
+                    if (data != 0) {
+                        $('#User_id').val(data.id);
+                        $('#User_first_name').val(data.first_name);
+                        $('#User_last_name').val(data.last_name);
+                        $('#User_email').val(data.email);
+                        $('#User_contact_number').val(data.contact_number);
+                        $('#User_company').select2("val", data.company);
+                        $('#User_asic_no').val(data.asic_no);
+                        $('#User_asic_expiry').val(data.asic_expiry);
+                        $('select#Visitor_visitor_card_status').val(data.visitor_card_status);
+                        $('#Host_photo').val(data.photo);
+                        if (data.photoRelativePath != '' && typeof data.photoRelativePath[0] != 'undefined' && typeof data.photoRelativePath[0].relative_path != 'undefined') {
+                            $('.ajax-upload-dragdrop2').css(
+                                'backgroundImage', 'url(/'+data.photoRelativePath[0].relative_path+')'
+                            );
+                        }
+                    }
+                }
+            });
+        }
     }
 );
 
 function closeAndPopulateField(id) {
-    $.ajax({
-        type: "POST",
-        url: "<?php echo $this->createUrl('company/getContact&id=') ?>" + id + "&isCompanyContact=0",
-        dataType: "json",
-        success: function(data) {
-            if (data != 0) {
-                $('#User_id').val(data.id);
-                $('#User_first_name').val(data.first_name);
-                $('#User_last_name').val(data.last_name);
-                $('#User_email').val(data.email);
-                $('#User_contact_number').val(data.contact_number);
-            }
-        }
-    });
+    populateAsicFields(id, false);
 
     $.ajax({
         type: 'POST',
@@ -396,8 +407,8 @@ function closeAndPopulateField(id) {
                 $("#searchVisitorTableDiv h4").html("Selected Visitor Record : " + value.first_name + ' ' + value.last_name);
                 checkIfVisitorHasACurrentSavedVisit(value.id);
             });
+            $('.findVisitorButtonColumn .delete').html('Select Visitor');
             $('.findVisitorButtonColumn a').removeClass('delete');
-            //$('.findVisitorButtonColumn a').html('Select Visitor');
             $('#' + id).addClass('delete');
             $('#' + id).html('Visitor Selected');
             //$('.findVisitorButtonColumn .linkToVisitorDetailPage').html('Active');
@@ -446,14 +457,14 @@ function preloadVisit(visitorId) {
                 $("#Visit_host").val(value.host);
                 $("#Visit_reason").val(value.reason);
                 $("#Visit_workstation").val(value.workstation);
-                if (value.visitor_type != 1) {
+                //if (value.visitor_type != 1) {
                     $("#register-host-patient-form").hide();
                     $("#register-host-form").hide();
                     $("#searchHostDiv").show();
                     $("#currentHostDetailsDiv").show();
                     $("#host-AddBtn").show();
                     preloadHostDetails(value.host);
-                }
+                //}
             });
         }
     });
@@ -483,7 +494,7 @@ function preloadHostDetails(hostId) {
                     $(".ajax-upload-dragdrop3").css("background", my_db_image + " no-repeat center top");
                     $(".ajax-upload-dragdrop3").css({"background-size": "132px 152px" });
                     logo.src = "data:image;base64,"+ value.db_image;
-                    document.getElementById('photoCropPreview3').src = "data:image;base64,"+ value.db_image;                    
+                    document.getElementById('photoCropPreview3').src = "data:image;base64,"+ value.db_image;
 
                     $("#cropImageBtn3").show();
 
@@ -530,7 +541,7 @@ function checkAsicStatusById(id){
                             $("#searchHostTableDiv h4").html("Selected "+getCardType()+" Record : " + value.first_name + " " + value.last_name);
                         });
                         $('#searchHostTable').contents().find('.findHostButtonColumn a').removeClass('delete');
-                        $('#searchHostTable').contents().find('.findHostButtonColumn a').html('Select'+getCardType());
+                        $('#searchHostTable').contents().find('.findHostButtonColumn a').html('Select '+getCardType());
                         $('#searchHostTable').contents().find('#' + id).addClass('delete');
                         $('#searchHostTable').contents().find('#' + id).html(getCardType()+' Selected');
                    }
@@ -725,13 +736,13 @@ function populateTenantAgentAndCompanyField(isSearch) {
         $('#Visitor_tenant_agent option[value!=""]').remove();
         var visitor_type = $("#Visitor_visitor_type").val();
         var tenant = $("#Visitor_tenant").val();
-        if (visitor_type == "1") {
-            getTenantAgentWithSameTenant(tenant, '');
-            document.getElementById('Visitor_company').disabled = true;
-        } else {
+        //if (visitor_type == "1") {
+        //    getTenantAgentWithSameTenant(tenant, '');
+        //    document.getElementById('Visitor_company').disabled = true;
+        //} else {
             getTenantAgentWithSameTenant(tenant);
             getCompanyWithSameTenant(tenant);
-        }
+        //}
     }
     //workstation be based on selected tenant
 
@@ -876,17 +887,17 @@ function getHostCompanyWithSameTenantAndTenantAgent(tenant, tenant_agent) {
 }
 
 function showHideHostPatientName(visitor_type) {
-    if (visitor_type.value == 1) { //if patient
-        $("#register-host-patient-form").show();
-        $("#register-host-form").hide();
-        $("#searchHostDiv").hide();
-        $("#addCompanyLink").hide();
-    } else {
+    //if (visitor_type.value == 1) { //if patient
+    //    $("#register-host-patient-form").show();
+    //    $("#register-host-form").hide();
+    //    $("#searchHostDiv").hide();
+   //     $("#addCompanyLink").hide();
+    //} else {
         $("#register-host-patient-form").hide();
         $("#register-host-form").show();
         $("#searchHostDiv").show();
         $("#addCompanyLink").show();
-    }
+    //}
 
     $("#Visitor_visitor_type").val(visitor_type.value);
     $("#Visitor_visitor_type_search").val(visitor_type.value);
@@ -1006,13 +1017,13 @@ function checkReasonIfUnique() {
                             getHostCompanyWithSameTenant($("#Visitor_tenant").val());
                         }
 
-                        if ($("#Visitor_visitor_type").val() == 1 || $("#Visitor_visitor_type_search").val() == 1) {
-                            $("#findHostA").html("Add Patient Details");
-                            $("#findHostB").html("Add Patient Details");
-                        } else {
+                        //if ($("#Visitor_visitor_type").val() == 1 || $("#Visitor_visitor_type_search").val() == 1) {
+                        //    $("#findHostA").html("Add Patient Details");
+                        //    $("#findHostB").html("Add Patient Details");
+                        //} else {
                             $("#findHostA").html("Add or Find "+getCardType());
                             $("#findHostB").html("Add or Find "+getCardType());
-                        }
+                        //}
                         //tenant and tenant agent of visitor and host should be the same
                         var options = $("#search_visitor_tenant > option").clone();
                         $('#User_tenant option').remove();

@@ -50,7 +50,10 @@ class UserIdentity extends CUserIdentity {
             // Subscription Modules Allowed to view by a Tenant
             if( !is_null($user->allowed_module) )
                 $session['module_allowed_to_view'] = USER::$allowed_module[$user->allowed_module];
-            
+            //else
+            //    $session['module_allowed_to_to_view'] = Company::model()->findByPk($user->module)->
+
+
             $this->errorCode = self::ERROR_NONE;
         }
 

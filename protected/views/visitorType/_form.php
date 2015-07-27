@@ -38,7 +38,44 @@
                     <?php echo "<br>".$form->error($model,'is_default_value'); ?>
                 </td>
             </tr>
+
+            <tr>
+                <td style="vertical-align: top">
+                    <label>Related Card Types</label>
+                </td>
+                <td style="vertical-align: top">
+                    <table style="vertical-align: top" >
+                    <?php
+                        if(Chelper::avms_module_has_focus()) {
+                            $card_list = CardType::$VIC_CARD_TYPES;
+                        }else {
+                            $card_list = CardType::$CORPORATE_CARD_TYPES;
+                        }
+                        //if($model->id >0)
+                        $selected_type_list = VisitorType::model()->getActiveCardTypeIds($model->id);
+
+                        if(!is_array($selected_type_list))
+                            $selected_type_list= array();
+
+                        echo CHtml::checkBoxList('card_types',$selected_type_list,$card_list,array(
+                            'template'  => '<tr><td style="width: 15px">{input}</td><td>{label}</td></tr>',
+                            'container' => 'tbody',
+                            'separator' => '',
+                        ));
+
+                        $model->module = CHelper::get_module_focus();
+                        echo $form->hiddenField($model,'module');
+
+                    ?>
+                    </table>
+                </td>
+            </tr>
+
+
+
         </table>
+
+
 
 	<div class="row buttons buttonsAlignToRight">
 		<?php echo CHtml::submitButton($model->isNewRecord ? 'Add' : 'Save', array("class" => "complete")); ?>

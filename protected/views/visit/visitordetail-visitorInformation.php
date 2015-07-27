@@ -134,11 +134,11 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                         'maxlength'   => '10', // textField maxlength
                                         'placeholder' => 'dd-mm-yyyy',
                                         'readOnly'    => 'readOnly',
-                                        'disabled'    => $model->visitor_status == VisitStatus::CLOSED ? 'disabled' : '',
+                                        'disabled'    => $model->visit_status == VisitStatus::CLOSED ? 'disabled' : '',
                                         'style'       => $datePickerStyle
                                     ),
                                     'options' => [
-                                        'showOn'          => "button",
+                                        'showOn'          => $model->visit_status == VisitStatus::CLOSED ? "focus" : "button",
                                         'buttonImage'     => Yii::app()->controller->assetsBase . "/images/calendar.png",
                                         'buttonImageOnly' => true,
                                         'dateFormat'      => "dd-mm-yy",
@@ -262,7 +262,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                     </select>
                                 <?php
                                 } else {
-                                    echo $visitorForm->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes(), ['onchange' => 'visitorTypeOnChange()', 'class' => 'visitortypedetails']);
+                                    echo $visitorForm->dropDownList($model, 'visitor_type', VisitorType::model()->getFromCardType(-1), ['onchange' => 'visitorTypeOnChange()', 'class' => 'visitortypedetails']);
                                 }
                             ?>
                             <br />
@@ -336,15 +336,16 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                         </td>
                         <td style="padding-left: 0 !important;">
                             <?php
+                            $visitorModel->identification_document_expiry = !is_null($visitorModel->identification_document_expiry) ? date('d-m-Y', strtotime($visitorModel->identification_document_expiry)) : date('d-m-Y');
                             $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                'model' => $visitorModel,
+                                'model'     => $visitorModel,
                                 'attribute' => 'identification_document_expiry',
                                 'htmlOptions' => array(
-                                    'size' => '10', // textField size
-                                    'maxlength' => '10', // textField maxlength
+                                    'size'        => '10', // textField size
+                                    'maxlength'   => '10', // textField maxlength
                                     'placeholder' => 'dd-mm-yyyy',
-                                    'readOnly' => 'readOnly',
-                                    'style' => $datePickerStyle
+                                    'readOnly'    => 'readOnly',
+                                    'style'       => $datePickerStyle
                                 ),
                                 'options' => $datePickerOptionAttributes
                             ));
@@ -577,7 +578,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
 <script>
     function afterValidate(form, data, hasError) {
         if (!hasError) {
-            
+
         }
     }
     
@@ -718,14 +719,14 @@ $visitorForm = $this->beginWidget('CActiveForm', [
         });
 
         /*if visit type == patient visitor, hide host details else hide patient details*/
-        if ('<?php echo $model->visitor_type ?>' == '1') {
-            $("#hostDetailsLi").hide();
-            $("#patientDetailsLi").show();
-        } else {
+        //if ('<?php echo $model->visitor_type ?>' == '1') {
+        //    $("#hostDetailsLi").hide();
+        //    $("#patientDetailsLi").show();
+        //} else {
             $("#hostDetailsLi").show();
             $("#patientDetailsLi").hide();
             $("#searchHostDiv").show();
-        }
+        //}
     });
 
     function findHostRecord() {
@@ -790,7 +791,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
         var visit_type = $("#Visit_visitor_type").val();
         $("#visitorTypeUnderSearchForm").val($("#Visit_visitor_type").val());
 
-        if (visit_type == 1 && '<?php echo $model->visitor_type; ?>' == 1) {
+        /*if (visit_type == 1 && '<?php echo $model->visitor_type; ?>' == 1) {
             $("#addPatientDiv").hide();
             $("#hostDetailsLi").hide();
             $("#patientDetailsLi").show();
@@ -814,7 +815,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
             $("#update-host-form").hide();
             $("#register-newhost-form").show();
             $("#addnewhost-table").show();
-        }
+        }*/
     }
 
     function populateHostTenantAgentAndCompanyField() {

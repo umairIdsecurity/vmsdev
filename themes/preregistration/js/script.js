@@ -148,6 +148,61 @@ jQuery(function() {
             }*/
         });
     }
+
+    /* start date */
+    $(".from_date").datepicker({
+        format: 'yyyy-mm-dd',
+        autoclose: true
+    }).on('changeDate', function (selected) {
+        var startDate = new Date(selected.date.valueOf());
+        $('.to_date').datepicker('setStartDate', startDate);
+    }).on('clearDate', function (selected) {
+        $('.to_date').datepicker('setStartDate', null);
+    });
+
+    /* end date */
+    $(".to_date").datepicker({
+        format: 'yyyy-mm-dd',
+        autoclose: true
+    }).on('changeDate', function (selected) {
+        var endDate = new Date(selected.date.valueOf());
+        $('.from_date').datepicker('setEndDate', endDate);
+    }).on('clearDate', function (selected) {
+        $('.from_date').datepicker('setEndDate', null);
+    });
+
+    /*var $datepickerStart = $('[data-date-picker-start]');
+
+    if($datepickerStart.length){
+
+        $datepickerStart.each(function(){
+            var formatDay =$(this).data('dateFormat') || 'yyyy/mm/dd';
+            var $datepickerStart = $(this).data('linkedPickers')?$($(this).data('linkedPickers')):null;
+
+            $(this).datepicker({
+                format: formatDay,
+                autoclose: true,
+                startDate: '-3d'
+            });
+        });
+    }
+
+    var $datepickerEnd = $('[data-date-picker-end]');
+
+    if($datepickerEnd.length){
+
+        $datepickerEnd.each(function(){
+            var formatDay =$(this).data('dateFormat') || 'yyyy/mm/dd';
+            var $datepickerEnd = $(this).data('linkedPickers')?$($(this).data('linkedPickers')):null;
+
+            $(this).datepicker({
+                format: formatDay,
+                autoclose: true,
+                startDate: '27/07/2015'
+            });
+        });
+    }*/
+
 });
 
 jQuery(function() {

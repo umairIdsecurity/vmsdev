@@ -20,11 +20,11 @@ class VisitServiceImpl implements VisitService {
             $visit->time_in = $visit->time_in_hours . ':' . $visit->time_in_minutes;
         }
 
-        if ($visit->visitor_type == VisitorType::PATIENT_VISITOR) {
-            $visit->host = NULL;
-        } else {
-            $visit->patient = NULL;
-        }
+        //if ($visit->visitor_type == VisitorType::PATIENT_VISITOR) {
+        //    $visit->host = NULL;
+        //} else {
+        //    $visit->patient = NULL;
+        //}
 
         if (!($visit->save())) {
             return false;
@@ -48,7 +48,7 @@ class VisitServiceImpl implements VisitService {
         if ($visit->card != '' && $visit->visit_status == VisitStatus::CLOSED) {
             CardGenerated::model()->updateByPk($visit->card, array(
                 'card_status' => CardStatus::RETURNED,
-                'date_returned' => date('d-m-Y'),
+                'date_returned' => date('Y-m-d'),
             ));
         }
     }

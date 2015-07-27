@@ -77,12 +77,18 @@ if ($this->action->id == 'update') {
                 var visitor_card_status = $("#Visitor_visitor_card_status").val();
                 switch (visitor_card_status) {
                     case "'.Visitor::ASIC_ISSUED.'":
+                        var identification_type = $("#Visitor_identification_type").val();
                         var visitor_asic_no     = $("#Visitor_asic_no").val();
                         var visitor_asic_expiry = $("#Visitor_asic_expiry").val();
-                        if (visitor_asic_no == "" || visitor_asic_expiry == "") {
+                        if (identification_type == "" || visitor_asic_no == "" || visitor_asic_expiry == "") {
                             //add validation item
-                            data["Visitor_asic_no"] = ["Please enter an asic no"];
-                            data["Visitor_asic_expiry"] = ["Please select an asic expiry"];
+                            data["Visitor_identification_type"] = ["Please select an identification type"];
+                            data["Visitor_asic_no"]             = ["Please enter an asic no"];
+                            data["Visitor_asic_expiry"]         = ["Please select an asic expiry"];
+
+                            if (identification_type == "") {
+                                $("#Visitor_identification_type_em_").html(data["Visitor_identification_type"]).show();
+                            }
 
                             if (visitor_asic_no == "") {
                                 $("#Visitor_asic_no_em_").html(data["Visitor_asic_no"]).show();
@@ -93,6 +99,7 @@ if ($this->action->id == 'update') {
                             }
 
                             hasError = true;
+                            return false;
                         } else {
                             hasError = false;
                         }
@@ -120,13 +127,14 @@ if ($this->action->id == 'update') {
                             }
 
                             hasError = true;
+                            return false;
                         } else {
                             hasError = false;
                         }
                         break;
                 }
 
-                if(isEmpty(data)) {
+                if(jQuery.isEmptyObject(data)) {
                     hasError = false;
                 }
 
@@ -548,7 +556,7 @@ if ($this->action->id == 'update') {
         }
 
         var companyValue = $("#Visitor_company").val();
-        
+        var passwordConfirmed = false;
         if ($('.password_requirement').filter(':checked').val() == "<?php echo PasswordRequirement::PASSWORD_IS_REQUIRED; ?>") {
             if ($('.password_option').filter(':checked').val() == "<?php echo PasswordOption::CREATE_PASSWORD; ?>") {
                 $('.visitor_password').empty().hide();
@@ -567,6 +575,7 @@ if ($this->action->id == 'update') {
                 }
                 $('input[name="Visitor[password]"]').val(password_temp);
                 $('input[name="Visitor[repeatpassword]"]').val(password_repeat_temp);
+                passwordConfirmed = true;
             }
         } else {
             $('.visitor_password').empty().hide();
@@ -578,7 +587,7 @@ if ($this->action->id == 'update') {
             var asic_no = $('#Visitor_asic_no').val();
             var asic_expiry = $('#Visitor_asic_expiry').val();
 
-            if (asic_no == "" && asic_expiry == "") {
+            if (asic_no == "" && asic_expiry == "" && passwordConfirmed == false) {
                 $('#Visitor_visitor_card_status').val(<?php echo Visitor::ASIC_EXPIRED; ?>);
                 var card_status = $('#Visitor_visitor_card_status').val();
                 if (card_status == "<?php echo Visitor::ASIC_EXPIRED; ?>") {
@@ -608,7 +617,7 @@ if ($this->action->id == 'update') {
 //        getWorkstation();
         currentCardStatus = $('#Visitor_visitor_card_status').val();
         if(currentCardStatus == 6) {
-            $('#Visitor_visitor_card_status').attr("disabled", true);
+            $('#Visitor_visitor_card_status').attr("readonly", true);
         }
 
         $(document).on('change', '#Visitor_visitor_card_status', function(e) {
@@ -701,7 +710,7 @@ if ($this->action->id == 'update') {
 
             if ($("#currentRoleOfLoggedInUser").val() != 5) {
                 //$("#User_workstation").prop("disabled", false);
-                $('#Visitor_company option[value!=""]').remove();
+                //$('#Visitor_company option[value!=""]').remove();
 
                 if ($("#Visitor_tenant_agent").val() == '') {
                     getCompanyWithSameTenant($("#Visitor_tenant").val());
@@ -716,7 +725,7 @@ if ($this->action->id == 'update') {
 
             if ($("#currentRoleOfLoggedInUser").val() != 5) {
                 //$("#User_workstation").prop("disabled", false);
-                $('#Visitor_company option[value!=""]').remove();
+                //$('#Visitor_company option[value!=""]').remove();
 
                 if ($("#Visitor_tenant_agent").val() == '') {
                     getCompanyWithSameTenant($("#Visitor_tenant").val());
@@ -844,7 +853,7 @@ if ($this->action->id == 'update') {
 
     function populateTenantAgentAndCompanyField() {
 
-        $('#Visitor_company option[value!=""]').remove();
+        //$('#Visitor_company option[value!=""]').remove();
 
         $('#Visitor_tenant_agent option[value!=""]').remove();
         //$("#User_workstation").empty();
@@ -978,6 +987,7 @@ if ($this->action->id == 'update') {
         } else {
             url = "<?php echo CHtml::normalizeUrl(array("visitor/addvisitor")); ?>";
         }
+
         var ajaxOpts = {
             type: "POST",
             url: url,
@@ -1063,14 +1073,6 @@ $('#Visitor_company').on('change', function() {
     });
 });
 
-function isEmpty(obj) {
-    for(var prop in obj) {
-        if(obj.hasOwnProperty(prop))
-            return false;
-    }
-
-    return true;
-}
 </script>
 
 

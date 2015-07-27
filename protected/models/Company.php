@@ -16,6 +16,7 @@ Yii::import('ext.validator.PasswordRequirement');
  * @property string $website
  * @property integer $created_by_user
  * @property integer $created_by_visitor
+ * @property integer $company_type
  *
  * The followings are the available model relations:
  * @property User $createdByUser
@@ -34,6 +35,7 @@ class Company extends CActiveRecord {
     public $password_requirement;
     public $user_repeatpassword;
     public $password_option;
+    public $company_type;
     protected $tenantQuery = "SELECT COUNT(c.id) FROM user u LEFT JOIN company c ON u.company=c.id WHERE u.id=c.tenant AND c.id !=1";
 
     /**
@@ -61,11 +63,11 @@ class Company extends CActiveRecord {
     public function rules() {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
-		 $this->userRole = Yii::app()->user->role;
-		if($this->userRole == 1){
+		if(isset(Yii::app()->user->role) && Yii::app()->user->role == 1){
 		return array(
 	            array('name', 'required'),
 	            array('user_first_name , user_last_name , user_email , user_contact_number', 'required' , 'on' => 'company_contact'),
+                array('password_requirement,password_option,user_password','safe'),
 				array('name , code , email_address , mobile_number', 'required' , 'on' => 'updatetenant'),
                 array('mobile_number', 'numerical', 'integerOnly' => true, 'on' => 'updatetenant'),
                 array('code', 'match',
@@ -73,6 +75,7 @@ class Company extends CActiveRecord {
                     'message' => 'Code can only contain letters' ,'on' => 'updatetenant'),
 	            array('code', 'length', 'min' => 3, 'max' => 3, 'tooShort' => 'Code is too short (Should be in 3 characters)'),
 	            array('email_address', 'email'),
+                array('user_email','email'),
 	            array('website', 'url'),
 	            array('created_by_user, created_by_visitor', 'numerical', 'integerOnly' => true),
 	            array('name, trading_name, billing_address', 'length', 'max' => 150),
@@ -80,10 +83,10 @@ class Company extends CActiveRecord {
 	            array('contact', 'length', 'max' => 100),
 	            array('tenant', 'length', 'max' => 100),
 	            array('logo,is_deleted,company_laf_preferences ,is_user_field, company_type', 'safe'),
-                    
+
                     // Senario for Add Tenant
                     array('code, name, contact, email_address, office_number','required', 'on' => 'add_tenant'),
-                    
+
 	            array('tenant, tenant_agent,logo,card_count', 'default', 'setOnEmpty' => true, 'value' => null),
 	            // The following rule is used by search().
 	            // @todo Please remove those attributes that should not be searched.
@@ -92,7 +95,7 @@ class Company extends CActiveRecord {
 		}
 		else{
 			return array(
-                
+
                             array('name', 'required'),
                             array('code', 'required', 'except' => 'preregistration'),
                             array(' email_address , mobile_number', 'required' , 'on' => 'updatetenant'),
@@ -111,18 +114,18 @@ class Company extends CActiveRecord {
                             array('tenant', 'length', 'max' => 100),
                             array('logo,is_deleted,company_laf_preferences', 'safe'),
                             array('tenant, tenant_agent,logo,card_count', 'default', 'setOnEmpty' => true, 'value' => null),
-                            
+
                             // Senario for Add Tenant
                             array('code, name,  email_address, office_number','required', 'on' => 'add_tenant'),
-                            
+
                             // The following rule is used by search().
                             // @todo Please remove those attributes that should not be searched.
                             array('id, isTenant,card_count, name,code,company_laf_preferences, trading_name, logo,tenant, contact, billing_address, email_address, office_number, mobile_number, website, created_by_user, created_by_visitor', 'safe', 'on' => 'search'),
-                            
-                            
+
+
                             );
 		}
-        
+
     }
 
     /**
@@ -164,10 +167,10 @@ class Company extends CActiveRecord {
             'code' => 'Company Code',
             'card_count' => 'Card Count',
             'company_laf_preferences' => 'Look and Feel Preferences',
-            'user_first_name' => 'First Name',
-            'user_last_name' => 'Last Name',
-            'user_email' => 'Email',
-            'user_contact_number' => 'Contact Number',
+            'user_first_name' => 'User First Name',
+            'user_last_name' => 'User Last Name',
+            'user_email' => 'User Email',
+            'user_contact_number' => 'User Contact Number',
             'company_type' => 'Company Type'
         );
     }
@@ -214,6 +217,7 @@ class Company extends CActiveRecord {
         $criteria->compare('code', $this->code);
         $criteria->compare('company_laf_preferences', $this->company_laf_preferences);
         $criteria->compare('card_count', $this->card_count);
+        $criteria->compare('company_type', $this->company_type);
 
         if($_SESSION['role'] != Roles::ROLE_SUPERADMIN) {
             $criteria->compare('tenant', $_SESSION["tenant"]);
@@ -273,8 +277,13 @@ class Company extends CActiveRecord {
 
     public function getCompanyName($companyId) {
         if ($companyId != '') {
-            $company = Company::model()->findByPK($companyId);
-            return $company->name;
+            $this->detachBehavior('softDelete');
+            $company = $this->findByAttributes(['is_deleted' => 0, 'id' => $companyId]);
+            if ($company) {
+                return $company->name;
+            } else {
+                return '-';
+            }
         }
     }
 
@@ -284,8 +293,7 @@ class Company extends CActiveRecord {
                 'class' => 'ext.soft_delete.SoftDeleteBehavior'
             ),
 
-            'AuditTrailBehaviors'=>
-                'application.components.behaviors.AuditTrailBehaviors',
+            'AuditTrailBehaviors' => 'application.components.behaviors.AuditTrailBehaviors',
         );
     }
 
@@ -329,7 +337,7 @@ class Company extends CActiveRecord {
         $company = array_filter($company);
         return count($company);
     }
-	
+
 	public function isWithoutCompanyCodeUniqueWithinTheTenant($tenant) {
         $Criteria = new CDbCriteria();
         $Criteria->condition = "tenant='" . $tenant . "'";
@@ -339,14 +347,14 @@ class Company extends CActiveRecord {
         return count($company);
     }
 
-	
+
     public function findAllCompany() {
         $aArray = array();
         if (Yii::app()->user->role != Roles::ROLE_SUPERADMIN) {
             $company = Yii::app()->db->createCommand()
                     ->selectdistinct('*')
                     ->from('company')
-                    ->where("id != 1 and tenant=" . Yii::app()->user->tenant . " AND is_deleted = 0")
+                    ->where("id != 1 and tenant=" . Yii::app()->user->id . " AND is_deleted = 0")
                     ->queryAll();
         } else {
             $company = Yii::app()->db->createCommand()
@@ -382,6 +390,36 @@ class Company extends CActiveRecord {
         }
 
         return $aArray;
+    }
+
+    public function findAllTenantAgents()
+    {
+        $company = Yii::app()->db->createCommand()
+            ->selectdistinct('id,name,tenant')
+            ->from('company')
+            ->where("id != 1 and company_type = 2 AND is_deleted = 0")
+            ->queryAll();
+    }
+
+    public function findAllTenants()
+    {
+        $aArray = array();
+
+        $company = Yii::app()->db->createCommand()
+            ->selectdistinct('*')
+            ->from('company')
+            ->where("id != 1 and company_type = 1 AND is_deleted = 0")
+            ->queryAll();
+
+        foreach ($company as $index => $value) {
+            $aArray[] = array(
+                'id' => $value['id'],
+                'name' => $value['name'],
+            );
+        }
+
+        return $aArray;
+
     }
 
 

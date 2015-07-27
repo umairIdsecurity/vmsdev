@@ -27,7 +27,7 @@ class VisitReasonController extends Controller {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('update', 'admin','adminAjax', 'delete'),
-                'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_SUPERADMIN)',
+                'expression' => 'UserGroup::isUserAMemberOfThisGroup(Yii::app()->user,UserGroup::USERGROUP_ADMINISTRATION)',
            
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -82,6 +82,7 @@ class VisitReasonController extends Controller {
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
+        $session = new CHttpSession;
         $model = $this->loadModel($id);
 
         // Uncomment the following line if AJAX validation is needed
@@ -89,8 +90,16 @@ class VisitReasonController extends Controller {
 
         if (isset($_POST['VisitReason'])) {
             $model->attributes = $_POST['VisitReason'];
+
+            if(isset($session['tenant']))
+                $model->tenant = $session['tenant'];
+
+            if(isset($session['tenant_agent']))
+                $model->tenant = $session['tenant_agent'];
+
             if ($model->save())
                 $this->redirect(array('admin'));
+
         }
 
         $this->render('update', array(

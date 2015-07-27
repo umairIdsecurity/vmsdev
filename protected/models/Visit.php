@@ -70,6 +70,39 @@ class Visit extends CActiveRecord {
     public $_asicname;
     public $other_reason;
 
+    public $visitClockTime = array(
+                '5:00' => '5:00',
+                '5:30' => '5:30',
+                '6:00' => '6:00',
+                '6:30' => '6:30',
+                '7:00' => '7:00',
+                '7:30' => '7:30',
+                '8:00' => '8:00',
+                '8:30' => '8:30',
+                '9:00' => '9:00',
+                '9:30' => '9:30',
+                '10:00' => '10:00',
+                '10:30' => '10:30',
+                '11:00' => '11:00',
+                '11:30' => '11:30',
+                '12:00' => '12:00',
+                '12:30' => '12:30',
+                '01:00' => '01:00',
+                '01:30' => '01:30',
+                '02:00' => '02:00',
+                '02:30' => '02:30',
+                '03:00' => '03:00',
+                '03:30' => '03:30',
+                '04:00' => '04:00',
+                '04:30' => '04:30'
+            );
+
+    public $ampm;
+    public $oClock = array(
+                'am' => 'AM',
+                'pm' => 'PM'
+            );
+
     /**
      * @return string the associated database table name
      */
@@ -87,7 +120,7 @@ class Visit extends CActiveRecord {
             array('is_deleted', 'numerical', 'integerOnly' => true),
             array('visitor', 'required', 'on' => 'api'),
             //array('other_reason', 'unique','className'=>'VisitReason','attributeName'=>'reason','message'=>"Reason must be unique"),
-            array('reason,visitor_type,visitor,visitor_status,workstation', 'required', 'on' => 'webapp'),
+            array('reason,visitor,visitor_status,workstation', 'required', 'on' => 'webapp'),
             array('visitor,card, visitor_type, reason, visitor_status,host, patient, created_by, tenant, tenant_agent', 'length', 'max' => 20),
             array('date_in,date_out,time_in_hours,time_in_minutes,visit_status, time_in, time_out, date_check_in, time_check_in, date_check_out, time_check_out,card_type, finish_date, finish_time, card_returned_date, negate_reason, reset_id, card_option, police_report_number, card_lost_declaration_file, workstation , other_reason,asic_escort', 'safe'),
             array('patient, host,card,tenant,tenant_agent', 'default', 'setOnEmpty' => true, 'value' => null),
@@ -1064,7 +1097,7 @@ class Visit extends CActiveRecord {
                 }
                 return (int)$this->count($criteria) + 1;
             case CardType::VIC_CARD_24HOURS:
-                return (int)$this->count($criteria) + 1;
+                return (int)$this->count($criteria);
                 break;
 
             case CardType::VIC_CARD_MULTIDAY:

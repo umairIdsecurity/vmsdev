@@ -24,7 +24,7 @@ $photoForm = $this->beginWidget('CActiveForm', [
 <?php $this->endWidget(); ?>
 
 <div class="cardPhotoPreview" style="height:0px; margin-left: 15px;">
-    <?php if ($visitorModel->photo != '') { 
+    <?php if ($visitorModel->photo != '') {
                 $data = Photo::model()->returnVisitorPhotoRelativePath($model->visitor);
                 $my_image = '';
                 if(!empty($data['db_image'])){
@@ -36,7 +36,7 @@ $photoForm = $this->beginWidget('CActiveForm', [
 
         <img id="photoPreview" src="<?php echo $my_image; ?>">
     <?php } else { ?>
-        <img id="photoPreview" src="" style="display:none;"></img>
+        <img id="photoPreview" src="" style="display:none;">
     <?php } ?>
 </div>
 <?php
@@ -120,14 +120,14 @@ $remainingDays = (isset($visitCount['remainingDays']) && $visitCount['remainingD
 $detailForm = $this->beginWidget('CActiveForm', [
     'id'          => 'update-visitor-detail-form',
     'htmlOptions' => ['name' => 'update-visitor-detail-form'],
-    /*'enableAjaxValidation'   => false,
+    'enableAjaxValidation'   => false,
     'enableClientValidation' => true,
     'clientOptions'          => [
-        'validateOnSubmit' => true,
+        'validateOnSubmit' => false,
         'afterValidate'    => 'js:function(form, data, hasError){
             return afterValidate(form, data, hasError);
         }'
-    ]*/
+    ]
 ]);
 ?>
     <div style="margin: 10px 0px 0px 19px; text-align: left;">
@@ -135,7 +135,7 @@ $detailForm = $this->beginWidget('CActiveForm', [
         if ($asic) {
             if($visitorModel->profile_type ==  Visitor::PROFILE_TYPE_VIC) {
                 $profileType = Visitor::PROFILE_TYPE_VIC;
-                
+
             } elseif($visitorModel->profile_type ==  Visitor::PROFILE_TYPE_ASIC) {
                 $profileType = Visitor::PROFILE_TYPE_ASIC;
             }
@@ -154,18 +154,19 @@ $detailForm = $this->beginWidget('CActiveForm', [
         }
         echo $detailForm->dropDownList($model, 'workstation', $workstationResults, ['empty' => 'Select Workstation']);
         echo "<span class='required'>*</span>";
-        //echo $detailForm->error($model, 'workstation');
+        // echo $detailForm->error($model, 'workstation');
         echo '<div id="Visit_workstation_em_" class="errorMessage" style="display: none">Please select a workstation</div>';
 
+        if ($asic) {
+            //$visitor_types = VisitorType::model()->returnVisitorTypes();
+           // if(is_array($visitor_types)) {
+                echo $detailForm->dropDownList($model, 'visitor_type', VisitorType::model()->getFromCardType(-1));
+                echo "<span class='required'>*</span>";
+                //echo $detailForm->error($model, 'visitor_type');
+                echo '<div id="Visit_visitor_type_em_" class="errorMessage" style="display: none">Please select a Visitor type</div>';
+            //}
 
-    if ($asic) {
-            echo $detailForm->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes());
-            echo "<span class='required'>*</span>";
-            //echo $detailForm->error($model, 'visitor_type');
-            echo '<div id="Visit_visitor_type_em_" class="errorMessage" style="display: none">Please select a Visitor type</div>';
-
-
-        $reasons = CHtml::listData(VisitReason::model()->findAll(), 'id', 'reason');
+            $reasons = CHtml::listData(VisitReason::model()->findAll(), 'id', 'reason');
             foreach ($reasons as $key => $item) {
                 $results[$key] = 'Reason: ' . $item;
             }
@@ -223,6 +224,7 @@ $detailForm = $this->beginWidget('CActiveForm', [
             }
         }
         function checkVisitorType(){
+
             var visitortype = $('#Visit_visitor_type').val();
             if(!visitortype || visitortype == "") {
                 $('#Visit_visitor_type_em_').show();
@@ -280,19 +282,20 @@ $detailForm = $this->beginWidget('CActiveForm', [
                 $("#printCardBtn").addClass("disabledButton");
             }
         }
-
-        $('#photoCropPreview').imgAreaSelect({
-            handles: true,
-            onSelectEnd: function (img, selection) {
-                $("#cropPhotoBtn").show();
-                $("#x1").val(selection.x1);
-                $("#x2").val(selection.x2);
-                $("#y1").val(selection.y1);
-                $("#y2").val(selection.y2);
-                $("#width").val(selection.width);
-                $("#height").val(selection.height);
-            }
-        });
+        if($('#photoCropPreview').imgAreaSelect) {
+            $('#photoCropPreview').imgAreaSelect({
+                handles: true,
+                onSelectEnd: function (img, selection) {
+                    $("#cropPhotoBtn").show();
+                    $("#x1").val(selection.x1);
+                    $("#x2").val(selection.x2);
+                    $("#y1").val(selection.y1);
+                    $("#y2").val(selection.y2);
+                    $("#width").val(selection.width);
+                    $("#height").val(selection.height);
+                }
+            });
+        }
         $("#cropPhotoBtn").click(function (e) {
             e.preventDefault();
             $.ajax({
@@ -322,11 +325,11 @@ $detailForm = $this->beginWidget('CActiveForm', [
                                 document.getElementById('photoCropPreview').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;*/
 
                                 //showing image from DB as saved in DB -- image is not present in folder
-                            
+
                                 document.getElementById('photoPreview').src = "data:image;base64,"+ value.db_image;
                                 document.getElementById('photoCropPreview').src = "data:image;base64,"+ value.db_image;
-                            
-                            
+
+
                             });
                         }
                     });
@@ -384,7 +387,7 @@ $detailForm = $this->beginWidget('CActiveForm', [
             data: form,
             success: function (data) {
                 $("#photoPreview").show();
-            },
+            }
         });
 
     }
@@ -417,7 +420,7 @@ $detailForm = $this->beginWidget('CActiveForm', [
     }
 </script>
 <!--POP UP FOR CROP PHOTO -->
-<?php 
+<?php
         $data = Photo::model()->returnVisitorPhotoRelativePath($model->visitor);
         $my_image = '';
         if(!empty($data['db_image'])){

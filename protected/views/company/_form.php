@@ -30,7 +30,53 @@ if ($this->action->id == 'update') {
     <?php
     $form = $this->beginWidget('CActiveForm', array(
         'id' => 'company-form',
+        'htmlOptions' => array("name" => "registerform"),
         'enableAjaxValidation' => false,
+        'enableClientValidation' => true,
+        'clientOptions' => array(
+            'validateOnSubmit' => true,
+            'afterValidate' => 'js:function(form, data, hasError) {
+                if (!hasError) {
+                    if($("#currentAction").val() == "create"){
+                        if ($("#company-form .password_requirement").is(":checked")== false) {
+                            $("#company-form #pass_error_").show();
+                            return false;
+                        } else {
+                            if ($("#Company_password_requirement_1").is(":checked")) {
+                                if($(createCompanyForm()+".pass_option").is(":checked") == false) {
+                                    $(createCompanyForm()+".user_requires_password #pass_error_").show();
+                                    return false;
+                                } else {
+                                    $(createCompanyForm()+".user_requires_password #pass_error_").hide();
+                                    if($(createCompanyForm()+"#pass_option_1").is(":checked")) {
+                                        var validatePass = validatePassword();
+                                        if(validatePass == true) {
+                                            var isMatch = isPasswordMatch();
+                                            if(isMatch == true) {
+                                                checkCompanyNameUnique();
+                                            } else {
+                                                return false;
+                                            }
+                                        } else {
+                                            return false;
+                                        }
+                                    }else {
+                                        checkCompanyNameUnique();
+                                    }
+                                }
+                            } else {
+                                checkCompanyNameUnique();
+                            }
+                        }
+                    } else{
+                        checkCompanyNameUnique();
+                    }
+                } else {
+                    $(createCompanyForm()+".user_fields" ).show();
+                    $(createCompanyForm()+".password-border").show();
+                }
+            }'
+        ),
     ));
     ?>
     <?php
@@ -41,7 +87,7 @@ if ($this->action->id == 'update') {
     if (isset($_GET['viewFrom'])) {
         $isViewedFromModal = $_GET['viewFrom'];
     } else {
-        echo $form->errorSummary($model);
+        //echo $form->errorSummary($model);
     }
     ?>
     <!--<input type="hidden" id="user_role" name="user_role" value="<?php /*echo $session['role'];  */?>" />-->
@@ -67,16 +113,12 @@ if ($this->action->id == 'update') {
                             <td style="width:240px;">
                                 <?php
                                 echo $form->textField($model, 'name', array('size' => 60, 'maxlength' => 150, 'placeholder' => 'Company Name'));
-                                if (isset($_GET['viewFrom'])) {
-                                    echo "<br>" . $form->error($model, 'name');
-                                }
-                                ?>
+                                echo '<span class="required"> *</span><br>';
+                                echo $form->error($model, 'name');
+                                echo '<div id="Company_name_unique_em_" class="errorMessage" style="display: none">Company name has already been taken</div>';
+                               ?>
                             </td>
-                            <td><?php
-                                if (!isset($_GET['viewFrom'])) {
-                                    echo $form->error($model, 'name');
-                                }
-                                ?></td>
+                            <td></td>
                         </tr>
 
                         <!--WangFu Modified-->
@@ -118,7 +160,7 @@ if ($this->action->id == 'update') {
                         <tr class="user_fields">
                             <td style="width:160px;">&nbsp;</td>
                             <td><?php echo $form->textField($model, 'user_first_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'First Name')); ?>
-
+                                <span class="required">*</span>
                                 <?php echo "<br>" . $form->error($model, 'user_first_name'); ?>
                             </td>
                         </tr>
@@ -126,7 +168,7 @@ if ($this->action->id == 'update') {
                         <tr class="user_fields">
                             <td style="width:160px;">&nbsp;</td>
                             <td><?php echo $form->textField($model, 'user_last_name', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Last Name')); ?>
-
+                                <span class="required">*</span>
                                 <?php echo "<br>" . $form->error($model, 'user_last_name'); ?>
                             </td>
                         </tr>
@@ -134,15 +176,16 @@ if ($this->action->id == 'update') {
                         <tr class="user_fields">
                             <td style="width:160px;">&nbsp;</td>
                             <td><?php echo $form->textField($model, 'user_email', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Email')); ?>
-
+                                <span class="required">*</span>
                                 <?php echo "<br>" . $form->error($model, 'user_email'); ?>
+                                <div id="Company_user_email_unique_em_" class="errorMessage" style="display: none">User email has already been taken</div>
                             </td>
                         </tr>
 
                         <tr class="user_fields">
                             <td style="width:160px;">&nbsp;</td>
                             <td><?php echo $form->textField($model, 'user_contact_number', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Contact Number')); ?>
-
+                                <span class="required">*</span>
                                 <?php echo "<br>" . $form->error($model, 'user_contact_number'); ?>
                             </td>
                         </tr>
@@ -180,37 +223,44 @@ if ($this->action->id == 'update') {
                                         </tr>
                                         <tr id="third_option" class='hiddenElement'></tr>
                                         <tr>
-                                            <td><input class="pass_option" type="radio" name="Company[password_option]" value="2"/>&nbsp;Send
+                                            <td><input class="pass_option" id="pass_option_0" type="radio" name="Company[password_option]" value="1"/>&nbsp;Send
                                                 User Invitation
                                             </td>
                                         </tr>
                                         <tr>
                                             <td style="padding-bottom:10px">
-                                                <input class="pass_option" type="radio" name="Company[password_option]" value="1"/>
+                                                <input class="pass_option" id="pass_option_1" type="radio" name="Company[password_option]" value="2"/>
                                                 &nbsp;Create Password
                                             </td>
                                         </tr>
 
                                         <tr>
                                             <td>
-                                                <input placeholder="Password" ng-model="user.passwords" data-ng-class="{
-                                                                       'ng-invalid':registerform['Company[user_repeatpassword]'].$error.match}"
-                                                       type="password" id="Company_user_password" name="Company[user_password]">
+<!--                                                <input placeholder="Password" ng-model="user.passwords" data-ng-class="{-->
+<!--                                                                       'ng-invalid':registerform['Company[user_repeatpassword]'].$error.match}"-->
+<!--                                                       type="password" id="Company_user_password" name="Company[user_password]">-->
+<!--                                                <span class="required">*</span>-->
+                                                <?php echo $form->passwordField($model, 'user_password', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Password')); ?>
                                                 <span class="required">*</span>
+                                                <?php echo "<br>" . $form->error($model, 'user_password'); ?>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input placeholder="Repeat Password" ng-model="user.passwordConfirm" type="password"
-                                                       id="Company_user_repeatpassword" data-match="user.passwords"
-                                                       name="company[user_repeatpassword]"/>
+<!--                                                <input placeholder="Repeat Password" ng-model="user.passwordConfirm" type="password"-->
+<!--                                                       id="Company_user_repeatpassword" data-match="user.passwords"-->
+<!--                                                       name="Company[user_repeatpassword]"/>-->
+<!--                                                <span class="required">*</span>-->
+<!---->
+<!--                                                <div style='font-size:0.9em;color:red;position: static;'-->
+<!--                                                     data-ng-show="registerform['Company[user_repeatpassword]'].$error.match">Password does-->
+<!--                                                    not match with Repeat <br> Password.-->
+<!--                                                </div>-->
+<!--                                                --><?php //echo "<br>" . $form->error($model, 'user_repeatpassword'); ?>
+                                                <?php echo $form->passwordField($model, 'user_repeatpassword', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Repeat Password')); ?>
                                                 <span class="required">*</span>
-
-                                                <div style='font-size:0.9em;color:red;position: static;'
-                                                     data-ng-show="registerform['Company[user_repeatpassword]'].$error.match">Password does
-                                                    not match with Repeat <br> Password.
-                                                </div>
                                                 <?php echo "<br>" . $form->error($model, 'user_repeatpassword'); ?>
+                                                <?php echo '<div id="Company_user_passwordmatch_em_" class="errorMessage" style="display:none"></div>'?>
                                             </td>
 
                                         </tr>
@@ -285,7 +335,7 @@ if ($this->action->id == 'update') {
     <?php endif; ?>
 
 </div><!-- form -->
-
+<input type="hidden" id="currentAction" value="<?php echo $this->action->id; ?>">
 <input type="hidden" id="viewFrom" value="<?php
 if (isset($_GET['viewFrom'])) {
     echo "1";
@@ -294,6 +344,79 @@ if (isset($_GET['viewFrom'])) {
 }
 ?>"/>
 <script>
+    function createCompanyForm() {
+        return "#company-form ";
+    }
+    function checkCompanyNameUnique() {
+
+        if($("#currentAction").val() == "update"){
+            if($('#Company_name').val() == "<?php echo $model->name?>"){
+                var name = "";
+            } else{
+                var name = $('#Company_name').val();
+            }
+        } else {
+            var name = $('#Company_name').val();
+        }
+        if($("#currentAction").val() == "create"){
+            var tenant = $('#Company_tenant').val();
+        } else{
+            var tenant = $('#Company_tenant_').val();
+        }
+        $.ajax({
+            type : "POST",
+            url: "<?php echo $this->createUrl('company/checkNameUnique')?>",
+            data: {name:name, tenant:tenant},
+            success: function(data){
+                if(data == 0) {
+                    $('#Company_name_unique_em_').show();
+                    return false;
+                } else {
+                    if($("#currentAction").val() == "create"){
+                        checkUserEmailUnique();
+                    } else{
+                        sendCreateCompanyForm();
+                    }
+                }
+            }
+        });
+    }
+
+    function checkUserEmailUnique(){
+        var email = $("#Company_user_email").val();
+        var tenant = $('#Company_tenant').val();
+        $.ajax({
+            type : "POST",
+            url: "<?php echo $this->createUrl('user/checkCompanyContactEmail')?>",
+            data: {email:email, tenant:tenant},
+            success: function(data){
+                if(data == 1) {
+                    $('#Company_user_email_unique_em_').show();
+                    return false;
+                } else {
+                    $('#Company_user_email_unique_em_').hide();
+                    sendCreateCompanyForm();
+                }
+            }
+        });
+    }
+
+    function sendCreateCompanyForm() {
+        var formInfo = $(createCompanyForm()).serialize();
+        if($("#currentAction").val() == "create"){
+            var url = "<?php echo $this->createUrl('company/create')?>";
+        } else{
+            var url = "<?php echo $this->createUrl('company/update&id='.$model->id)?>";
+        }
+        $.ajax({
+            type: "POST",
+            url:url ,
+            data: formInfo,
+            success: function(data){
+                window.location = 'index.php?r=company/admin';
+            }
+        });
+    }
 
     function closeParent() {
         window.parent.dismissModal();
@@ -306,8 +429,8 @@ if (isset($_GET['viewFrom'])) {
     function cancel() {
         $('#Company_user_repeatpassword').val('');
         $('#Company_user_password').val('');
-        $("#random_password").val('');
-        $("#close_generate").click();
+        $(createCompanyForm()+"#random_password").val('');
+        $(createCompanyForm()+"#close_generate").click();
     }
 
     function copy_password() {
@@ -320,10 +443,36 @@ if (isset($_GET['viewFrom'])) {
         }
     }
 
+    function validatePassword() {
+        if($("#Company_user_password").val() == ""){
+            $("#Company_user_password_em_").html("Password should be specified");
+            $("#Company_user_password_em_").show();
+            return false;
+        } else if($("#Company_user_repeatpassword").val() == "") {
+            $("#Company_user_repeatpassword_em_").html("Please confirm a password");
+            $("#Company_user_repeatpassword_em_").show();
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    function isPasswordMatch() {
+        if($(createCompanyForm()+"#pass_option_1").is(":checked")){
+            if($("#Company_user_password").val() == $("#Company_user_repeatpassword").val()){
+                $("#Company_user_passwordmatch_em_").hide();
+                return true;
+            } else {
+                $("#Company_user_passwordmatch_em_").html("Passwords are not matched");
+                $("#Company_user_passwordmatch_em_").show();
+                return false;
+            }
+        }
+    }
 
     function generatepassword() {
         $("#random_password").val('');
-        $("#pass_option").prop("checked", true);
+        $(createCompanyForm()+".pass_option").prop("checked", true);
 
         var text = "";
         var possible = "abcdefghijklmnopqrstuvwxyz0123456789";
@@ -336,42 +485,68 @@ if (isset($_GET['viewFrom'])) {
     }
 
     $(document).ready(function() {
+        $(createCompanyForm()+".pass_option").on("click",function(){
+            $(createCompanyForm()+".user_requires_password #pass_error_").hide();
+        });
+        $("#Company_user_password").on("change",function(){
+            isPasswordMatch();
+           if($("#Company_user_password").val() == '') {
+               $("#Company_user_password_em_").html("Password should be specified");
+               $("#Company_user_password_em_").show();
+           } else {
+               $("#Company_user_password_em_").hide();
+           }
+
+        });
+
+        $("#Company_user_repeatpassword").on("change",function(){
+            isPasswordMatch();
+           if($("#Company_user_repeatpassword").val() == '') {
+               $("#Company_user_repeatpassword_em_").html("Please confirm a password");
+               $("#Company_user_repeatpassword_em_").show();
+           } else {
+               $("Company_user_repeatpassword_em_").hide();
+           }
+
+        });
 
         var default_field = $("#is_user_field").attr('value');
 
         if(default_field == "") {
             $( ".user_fields" ).hide();
-            $(".password-border").hide();
+            $(createCompanyForm()+".password-border").hide();
         }
         else{
             $( ".user_fields" ).show();
-            $(".password-border").show();
+            $(createCompanyForm()+".password-border").show();
         }
 
-        $("#addContact").click(function(e) {
+        $(createCompanyForm()+"#addContact").click(function(e) {
             e.preventDefault();
 
             var is_user_field = $("#is_user_field").attr('value');
             if(is_user_field==""){
                 $('#is_user_field').val(1);
-                $( ".user_fields" ).show();
-                $(".password-border").show();
+                $( createCompanyForm()+".user_fields" ).show();
+                $(createCompanyForm()+".password-border").show();
             }
             else{
                 $('#is_user_field').val("");
-                $( ".user_fields" ).hide();
-                $(".password-border").hide();
+                $( createCompanyForm()+".user_fields" ).hide();
+                $(createCompanyForm()+".password-border").hide();
             }
 
         });
 
-        $('.password_requirement').click(function () {
+        $(createCompanyForm()+'.password_requirement').click(function () {
+            $(createCompanyForm()+".password-border #pass_error_").hide();
             if ($('#Company_password_requirement_1').is(':checked')) {
-                $('.user_requires_password').css("display", "block");
-                $('.pass_option').prop('checked', false);
+                $(createCompanyForm()+'.user_requires_password').css("display", "block");
+                $(createCompanyForm()+'.pass_option').prop('checked', false);
+                $('#Company_user_password').val('');
             }
             else {
-                $('.user_requires_password').css("display", "none");
+                $(createCompanyForm()+'.user_requires_password').css("display", "none");
             }
 
         });

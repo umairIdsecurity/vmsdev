@@ -8,40 +8,41 @@
  * Controller of the kioskApp
  */
 angular.module('kioskApp')
-.controller('WorkstationCtrl', ['$scope', '$location', 'DataService', 'ConfigService', 'VMSConfig', function ($scope, $location, DataService, ConfigService, VMSConfig) {
+.controller('WorkstationCtrl', ['$scope', '$location', '$localStorage', 'DataService', 'ConfigService', 'VMSConfig', function ($scope, $location, $localStorage, DataService, ConfigService, VMSConfig) {
 	
-	function getWorkstation() {				
+	function getWorkstation() {
 		var onSuccess = function(data, responseCode) {
 			$scope.facilities = data;
 		};
 		var onFailure = function(data, responseCode) {
 			$scope.error = data.errorDescription;
-		};		
+		};
 		DataService.getWorkstation(onSuccess, onFailure);
 	};
 	
-	$scope.getCTypes = function () {
-		$scope.wloading = true;
+	$scope.nextStep = function () {		
+		$scope.dataLoading = true;
+		
+		/* Assign param value for ajax post param */
+		DataService.kiosk = $scope.kiosk;
 		DataService.workstation = $scope.workstations;
 		
-		var onSuccess = function(data, responseCode) {
-			$scope.wloading = false;
-			$scope.cardtypes = data;
+		var onSuccess = function(data, responseCode) {			
+			$scope.dataLoading = false;
+			$scope.error = false;
+			
+			DataService.info.push({"kioskstat": data.status});
+			
+			/* Storing in browser's local storage */
+			$localStorage.kioskInfo = {"kiosk": $scope.kiosk, 'workstation':$scope.workstations, 'ktoken':data.ktoken};	
+			
+			$location.path('/intro');
 		};
 		var onFailure = function(data, responseCode) {
 			$scope.error = data.errorDescription;
-		};		
-		DataService.getCardType(onSuccess, onFailure);
-	};
-	
-	$scope.nextStep = function () {
-		
-		$scope.dataLoading = true;
-		
-		DataService.cardType = $scope.cardtype;
-		alert("Selectd Work station:"+DataService.workstation);
-		alert("Selectd Card Type:"+DataService.cardType);
-		
+			$scope.dataLoading = false;
+		};
+		DataService.resgiterKiosk(onSuccess, onFailure);
 	};
 		
 	function updateStyles() {

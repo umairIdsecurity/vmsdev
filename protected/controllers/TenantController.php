@@ -97,19 +97,23 @@ class TenantController extends Controller {
                 $companyModel->is_deleted = 0;
                 $companyModel->created_by_user = Yii::app()->user->id;
 
-                $comapanylastId = 0;
+                $companyLastId = 0;
                 if ($companyModel->validate()) {
                     
                     
                     $companyModel->save();
-                    $comapanylastId = $companyModel->id;
+                    $companyLastId = $companyModel->id;
+
+                    $companyModel->tenant = $companyModel->id;
+                    $companyModel->save();
 
                     $userModel->first_name = $_POST['TenantForm']['first_name'];
                     $userModel->last_name = $_POST['TenantForm']['last_name'];
                     $userModel->email = $_POST['TenantForm']['email'];
                     $userModel->contact_number = $_POST['TenantForm']['contact_number'];
-                    $userModel->company = $comapanylastId;
+                    $userModel->company = $companyLastId;
                     $userModel->timezone_id = $_POST['TenantForm']['timezone_id'];
+                    $userModel->tenant = $companyLastId;
 
                     $passwordval = NULL;
                     if(isset($_POST['TenantForm']['password']) && $_POST['TenantForm']['password'] != ""){
@@ -146,7 +150,7 @@ class TenantController extends Controller {
                         $userLastID = $userModel->id;                     
                         
                          
-                        $tenantModel->id = $comapanylastId;
+                        $tenantModel->id = $companyLastId;
                         $tenantModel->is_deleted = 0;
                         $tenantModel->created_by = Yii::app()->user->id;
                         if ($tenantModel->validate()) {
@@ -308,12 +312,18 @@ class TenantController extends Controller {
      public function actionDelete($id) {
 
         if(Yii::app()->request->isPostRequest)
-        {
-
+        { 
             $sql = "UPDATE tenant SET is_deleted=1 WHERE id=$id";
             $connection=Yii::app()->db;
             $connection->createCommand($sql)->execute();
-                       
+            
+            // Delete user from User table
+            $model = Tenant::model()->findByPk($id);        
+            $userId = $model->tenantContacts[0]->user; 
+            $user = User::model()->findByPk($userId);
+            $user->is_deleted = 1;
+            $user->save(false);
+                                                
             // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
             if (!isset($_GET['ajax']))
                 $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));

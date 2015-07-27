@@ -23,17 +23,25 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'name' => 'name',
             'filter'=>CHtml::activeTextField($model, 'name', array('placeholder'=>'Company Name')),
         ),
-        array(
-            'name' => 'trading_name',
-            'filter'=>CHtml::activeTextField($model, 'trading_name', array('placeholder'=>'Trading/Display Name')),
-        ),
+//        array(
+//            'name' => 'trading_name',
+//            'filter'=>CHtml::activeTextField($model, 'trading_name', array('placeholder'=>'Trading/Display Name')),
+//        ),
         array(
             'name' => 'contact',
-            'filter'=>CHtml::activeTextField($model, 'contact', array('placeholder'=>'Company Contact Person')),
+            'filter'=>CHtml::activeTextField($model, 'contact', array('placeholder'=>'Company Contact Name')),
+        ),
+//        array(
+//            'name' => 'billing_address',
+//            'filter'=>CHtml::activeTextField($model, 'billing_address', array('placeholder'=>'Billing Address')),
+//        ),
+        array(
+            'name' => 'user_email',
+            'filter'=>CHtml::activeTextField($model, 'user_email', array('placeholder'=>'Email Address')),
         ),
         array(
-            'name' => 'billing_address',
-            'filter'=>CHtml::activeTextField($model, 'billing_address', array('placeholder'=>'Billing Address')),
+            'name' => 'user_contact_number',
+            'filter'=>CHtml::activeTextField($model, 'user_contact_number', array('placeholder'=>'Contact Number')),
         ),
         /*array(
            'name'=>'isTenant',
@@ -42,10 +50,10 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'filter'=>array(""=>"Is Tenant?",0=>"No",1=>"Yes"),
             'value' => '$data->isTenant?"Yes":"No"',
             'htmlOptions' => array('style' => "text-align:center;"),
-            
+
         ),*/
-        
-      
+
+
         array(
             'header' => 'Actions',
             'class' => 'CButtonColumn',

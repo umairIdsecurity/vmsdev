@@ -99,6 +99,10 @@ class VisitorServiceImpl implements VisitorService {
                         break;
                 }
 
+                if (Yii::app()->controller->action->id == 'update') {
+                    $visitor->detachBehavior('DateTimeZoneAndFormatBehavior');
+                }
+
                 #Todo: If ASIC no and ASIC expiry is empty then change visitor card status to expired
                 if (empty($visitor->asic_no) && empty($visitor->asic_expiry)) {
                     $visitor->visitor_card_status == Visitor::ASIC_EXPIRED;
@@ -107,12 +111,10 @@ class VisitorServiceImpl implements VisitorService {
             case Visitor::PROFILE_TYPE_CORPORATE:
                 break;
         }
-
+        
         if (!($result = $visitor->save())) {
             return false;
         }
-
-
         // Visitor::model()->saveReason($visitor->id, $visit_reason);
         return true;
     }

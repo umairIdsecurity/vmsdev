@@ -20,7 +20,7 @@ class PreregistrationController extends Controller
 	public function accessRules() {
 		return array(
 			array('allow',
-				'actions' => array('index','privacyPolicy' , 'declaration' , 'Login' ,'registration','confirmDetails', 'visitReason' , 'addAsic' , 'asicPass', 'error' , 'uploadPhoto','ajaxAsicSearch' ),
+				'actions' => array('index','privacyPolicy' , 'declaration' , 'Login' ,'registration','confirmDetails', 'visitReason' , 'addAsic' , 'asicPass', 'error' , 'uploadPhoto','ajaxAsicSearch' , 'visitDetails' ,'success'),
 				'users' => array('*'),
 			),
 			array('allow',
@@ -64,7 +64,7 @@ class PreregistrationController extends Controller
 			{
 				$session['workstation'] = $model->entrypoint;
 				$session['pre-page'] = 2;
-				$this->redirect(array('preregistration/privacypolicy'));
+				$this->redirect(array('preregistration/privacyPolicy'));
 			}
 		}
 
@@ -85,13 +85,13 @@ class PreregistrationController extends Controller
 		if(
 			isset($session['declaration1']) && $session['declaration1'] == 1 &&
 			isset($session['declaration2']) && $session['declaration2'] == 1 &&
-			isset($session['declaration3']) && $session['declaration3'] == 1 &&
+			//isset($session['declaration3']) && $session['declaration3'] == 1 &&
 			isset($session['declaration4']) && $session['declaration4'] == 1
 		)
 		{
 			$model->declaration1 = $session['declaration1'];
 			$model->declaration2 = $session['declaration2'];
-			$model->declaration3 = $session['declaration3'];
+			//$model->declaration3 = $session['declaration3'];
 			$model->declaration4 = $session['declaration4'];
 		}
 
@@ -104,7 +104,7 @@ class PreregistrationController extends Controller
 			{
 				$session['declaration1'] = $model->declaration1;
 				$session['declaration2'] = $model->declaration2;
-				$session['declaration3'] = $model->declaration3;
+				//$session['declaration3'] = $model->declaration3;
 				$session['declaration4'] = $model->declaration4;
 				$this->redirect(array('preregistration/registration'));
 			}
@@ -158,6 +158,7 @@ class PreregistrationController extends Controller
 			$model->profile_type = $session['account_type'];
 			$model->email 		 = $session['username'];
 			$model->password 	 = $session['password'];
+			$model->password_repeat 	 = $session['password'];
 			$model->attributes = $_POST['Registration'];
 
 			$model->date_of_birth = date('Y-m-d', strtotime($model->birthdayYear . '-' . $model->birthdayMonth . '-' . $model->birthdayDay));
@@ -166,6 +167,7 @@ class PreregistrationController extends Controller
 				$session['visitor_id'] = $model->id;
 				$this->redirect(array('preregistration/visitReason'));
 			}
+
 
 		}
 		
@@ -198,10 +200,7 @@ class PreregistrationController extends Controller
 
 			$model->attributes    = $_POST['Visit'];
 
-			if(
-				empty($model->visitor_type) OR
-				empty($model->reason)
-			){
+			if( empty($model->visitor_type) OR empty($model->reason) ){
 				$model->visitor_type = null;
 				$model->reason 		 = null;
 			}
@@ -230,11 +229,11 @@ class PreregistrationController extends Controller
 
 				$registrationModel->company = $companyModel->id;
 
-				if($registrationModel->save()){
+				if($registrationModel->save(true,array('company'))){
 
 					$this->redirect(array('preregistration/addAsic'));
 				}
-				//print_r($registrationModel->getErrors());
+
 			}
 
 		}
@@ -282,7 +281,7 @@ class PreregistrationController extends Controller
 						"<a href=' " .Yii::app()->getBaseUrl(true)."/index.php/preregistration/login'>".Yii::app()->getBaseUrl(true)."/index.php/preregistration/login</a><br>";
 					$body .="<br>"."Thanks,"."<br>Admin</body></html>";
 					mail($to, $subject, $body, $headers);
-					//$this->redirect(array('preregistration/uploadPhoto'));
+
 				}
 				else{
 
@@ -304,7 +303,7 @@ class PreregistrationController extends Controller
 								"<a href=' " .Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?id=".$model->id."&email=".$model->email."&k_str=" .$model->key_string." '>".Yii::app()->getBaseUrl(true)."/index.php/preregistration/asicPass/?id=".$model->id."&email=".$model->email."&k_str=".$model->key_string."</a><br>";
 							$body .="<br>"."Thanks,"."<br>Admin</body></html>";
 							mail($to, $subject, $body, $headers);
-							//$this->redirect(array('preregistration/uploadPhoto'));
+
 
 						}
 					}
@@ -352,6 +351,7 @@ class PreregistrationController extends Controller
 
 			}
 			else{
+
 				$connection=Yii::app()->db;
 				$sql="SELECT * FROM `visitor` WHERE
 					  (first_name LIKE '%$searchValue%' OR last_name LIKE '%$searchValue%')
@@ -362,23 +362,22 @@ class PreregistrationController extends Controller
 				$records = $command->queryAll();
 
 				if(!empty($records)){
+
 					foreach($records as $data){
+						//$dataSet = array();
 						$companyModel = Company::model()->findByPk($data['company']);
 						if(!empty($companyModel)){
 							$companyName = $companyModel->name;
 						}
 						else{
-							$companyName = null;
+							$companyName = '-';
 						}
-						echo '<tr>
-						<th scope="row">
-							<input type="radio" name="selected_asic" class="selected_asic" value="'.$data['id'].'">
-						</th>
-						<td>'.$data['first_name'].'</td>
-						<td>'.$data['last_name'].'</td>
-						<td>'.$companyName.'</td>
-					</tr>';
+
+						$dataSet[] = array('<input type="radio" name="selected_asic" class="selected_asic" value="'.$data['id'].'">',$data['first_name'],$data['last_name'],$companyName);
+
 					}
+
+					echo json_encode($dataSet);
 				}
 				else{
 					echo "No Record";
@@ -392,8 +391,97 @@ class PreregistrationController extends Controller
 	}
 
 	public function actionUploadPhoto(){
-		$this->render('upload-photo');
+
+		$session = new CHttpSession;
+
+		if($session['visitor_id']=="" or $session['visitor_id']==null){
+			$this->redirect(array('preregistration/registration'));
+		}
+
+		$model = new UploadForm();
+
+		if(isset($_POST['UploadForm']))
+		{
+
+			$model->attributes=$_POST['UploadForm'];
+
+			$name       = $_FILES['UploadForm']['name']['image'];
+
+			if(!empty($name)){
+
+				$ext        = pathinfo($name, PATHINFO_EXTENSION);
+
+				$newNameHash = hash('adler32', time());
+
+				$newName    = $newNameHash.'-' . time().'.'.$ext;
+
+				$model->image=CUploadedFile::getInstance($model,'image');
+
+				$fullImgSource = Yii::getPathOfAlias('webroot').'/uploads/visitor/'.$newName;
+
+				$relativeImgSrc = 'uploads/visitor/'.$newName;
+
+				if($model->image->saveAs($fullImgSource)){
+					$photoModel = new Photo();
+					$photoModel->filename = $name;
+					$photoModel->unique_filename = $newName;
+					$photoModel->relative_path = $relativeImgSrc;
+
+					if($photoModel->save()){
+						$visitorModel =
+							Registration::model()->findByPk(
+								$session['visitor_id']
+							);
+						$visitorModel->photo = $photoModel->id;
+						$visitorModel->save(true,array('photo'));
+						$session['imgName'] = $newName;
+						$this->redirect(array('preregistration/visitDetails'));
+					}
+				}
+			}
+			else{
+				$this->redirect(array('preregistration/visitDetails'));
+			}
+
+		}
+
+		$this->render('upload-photo',array('model'=>$model) );
 	}
+
+	public function actionVisitDetails(){
+
+		$session = new CHttpSession;
+
+		if($session['visitor_id']=="" or $session['visitor_id']==null){
+			$this->redirect(array('preregistration/registration'));
+		}
+
+		$model = Visit::model()->findByAttributes(
+			array('visitor'=>$session['visitor_id'])
+		);
+
+		$model->detachBehavior('DateTimeZoneAndFormatBehavior');
+
+		if(isset($_POST['Visit']))
+		{
+			$oClock = $_POST['Visit']['ampm'];
+			$model->attributes=$_POST['Visit'];
+			$model->time_in
+				= $oClock == 'am' ? $model->time_in :
+				date("H:i", strtotime($model->time_in . " + 12 hour"));
+			if($model->save()){
+				$this->redirect(array('preregistration/success'));
+			}
+
+		}
+
+		$this->render('visit-details' , array('model'=>$model) );
+	}
+
+	public function actionSuccess(){
+		$this->render('success');
+	}
+
 
 	public function actionAsicPass(){
 

@@ -96,6 +96,7 @@ class UploadFileController extends Controller
                 $folder = new Folder();
                 $folder->name = $_POST['Folder']['name'];
                 $folder->user_id = $_POST['Folder']['user_id'];
+                $folder->date_created = date('Y-m-d H:i:s');
                 if ($folder->validate())
                     if ($folder->save()) {
                         echo CJSON::encode(array('success' => 1));
@@ -160,7 +161,8 @@ class UploadFileController extends Controller
                 $files = $_FILES['file'];
                 $listError = array();
                 for ($i = 0; $i < count($files['name']); $i++) {
-                    if ($files['size'][$i] <= 10485760) {
+                    $ext = pathinfo($files['name'][$i], PATHINFO_EXTENSION);
+                    if ($files['size'][$i] <= 10485760 && in_array($ext, File::$EXT_ALLOWED)) {
                         if ($files['error'][$i] == UPLOAD_ERR_OK) {
                             $tmp_name = $files['tmp_name'][$i];
                             $name = $files['name'][$i];
@@ -171,9 +173,10 @@ class UploadFileController extends Controller
                                 $objectFile->user_id = $user_id;
                                 $objectFile->file = $name_file;
                                 $objectFile->name = $name;
+                                $objectFile->uploaded = date('Y-m-d H:i:s');
                                 $objectFile->uploader = $user_id;
                                 $objectFile->size = $files['size'][$i];
-                                $objectFile->ext = pathinfo($name_file, PATHINFO_EXTENSION);
+                                $objectFile->ext = $ext;
                                 $objectFile->save();
                             } else {
                                 $listError[] = $files['name'][$i];
@@ -194,6 +197,7 @@ class UploadFileController extends Controller
                 }
             }
         }
+        //$this->redirect(Yii::app()->createUrl('uploadFile'));
     }
 
     /**
@@ -233,12 +237,16 @@ class UploadFileController extends Controller
                 $root = dirname(Yii::app()->request->scriptFile) . '/uploads/files';
                 $folderUser = $root . '/' . $file->user_id;
                 $folderFile = $folderUser . '/' . $file->folder_id;
+                //ext allowed: jpg|png|pdf|xls|xlsx|doc|docx|txt|ppt|xml
                 switch ($file->ext) {
-                    case 'pdf':
+                    case 'xlsx':
                     case 'doc':
                     case 'docx':
-                    case 'html':
+                    case 'pdf':
+                    case 'ppt':
+                    case 'pptx':
                     case 'xls':
+                    case 'xml':
                         //render view
                         $this->renderPartial('_view', array(
                             'source' => '/uploads/files' . '/' . $file->user_id . '/' .$file->folder_id . '/' . $file->file,
@@ -246,6 +254,7 @@ class UploadFileController extends Controller
                         break;
                     case 'png':
                     case 'jpg':
+                    case 'jpeg':
                     case 'gif':
                         echo "<image src='" . '/uploads/files' . '/' . $file->user_id . '/' . $file->folder_id . '/' . $file->file . "'>";
                         break;

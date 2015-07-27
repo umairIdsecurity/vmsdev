@@ -121,7 +121,7 @@ class VisitorController extends Controller {
      */
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
-        $profileType        = $model->profile_type;
+        $oldProfileType        = $model->profile_type;
         $visitorService     = new VisitorServiceImpl;
         $session            = new CHttpSession;
         $updateErrorMessage = '';
@@ -172,13 +172,15 @@ class VisitorController extends Controller {
                 } else {
                     echo $updateErrorMessage;
                 }
-            } elseif (isset($visitorParams['visitor_card_status']) &&  $visitorParams['visitor_card_status'] == Visitor::ASIC_ISSUED && $model->profile_type == Visitor::PROFILE_TYPE_VIC  ){
-                $model->attributes = $visitorParams;
-                $model->profile_type = Visitor::PROFILE_TYPE_ASIC;
-                $model->visitor_card_status = Visitor::ASIC_ISSUED;
+            } elseif (isset($visitorParams['visitor_card_status']) && in_array($visitorParams['visitor_card_status'], [Visitor::ASIC_ISSUED, Visitor::ASIC_APPLICANT, Visitor::ASIC_EXPIRED, Visitor::ASIC_DENIED]) && $model->profile_type == Visitor::PROFILE_TYPE_VIC) {
+                $model->attributes          = $visitorParams;
+                $model->profile_type        = Visitor::PROFILE_TYPE_ASIC;
+                // $model->visitor_card_status = Visitor::ASIC_ISSUED;
+                $model->visitor_card_status = $visitorParams['visitor_card_status'];
+
                 if($visitorService->save($model, NULL, $session['id'])) {
-                    $logCardstatusConvert = new CardstatusConvert();
-                    $logCardstatusConvert->visitor_id = $model->id;
+                    $logCardstatusConvert               = new CardstatusConvert;
+                    $logCardstatusConvert->visitor_id   = $model->id;
                     $logCardstatusConvert->convert_time = date("Y-m-d");
                     $logCardstatusConvert->save();
                 }
@@ -193,6 +195,38 @@ class VisitorController extends Controller {
                             echo $updateErrorMessage;
                     }
                 }
+            }
+
+            // If operator convert from VIC to ASIC profile then generate a company contact
+            if ($oldProfileType == Visitor::PROFILE_TYPE_VIC && $model->profile_type == Visitor::PROFILE_TYPE_ASIC) {
+                $contact                 = new User('add_company_contact');
+                $contact->company        = $model->company;
+                $contact->first_name     = $model->first_name;
+                $contact->last_name      = $model->last_name;
+                $contact->email          = $model->email;
+                $contact->contact_number = $model->contact_number;
+                $contact->created_by     = Yii::app()->user->id;
+                
+                // Todo: temporary value for saving contact, will be update later
+                $contact->timezone_id    = 1;
+                $contact->photo          = 0;
+                
+                // foreign keys // todo: need to check and change for HARD-CODE
+                $contact->tenant         = $session['tenant'];
+                $contact->user_type      = 1;
+                $contact->user_status    = 1;
+                $contact->role           = 9;
+
+                if ($contact->save()) {
+                    switch ($isViewedFromModal) {
+                        case "1":
+                            break;
+
+                        default:
+                            echo $updateErrorMessage;
+                    }
+                }
+
             }
 
         } else{
@@ -359,7 +393,8 @@ class VisitorController extends Controller {
                 . "%' or identification_alternate_document_no2 LIKE '%" . $searchInfo
                 . "%')";
             $hostTitle = 'ASIC Sponsor';
-            $conditionString .= " AND profile_type = '" . Visitor::PROFILE_TYPE_ASIC . "' ";
+            // $conditionString .= " AND profile_type = '" . Visitor::PROFILE_TYPE_ASIC . "' ";
+            $conditionString .= " AND (profile_type = '" . Visitor::PROFILE_TYPE_VIC . "' OR profile_type = '". Visitor::PROFILE_TYPE_ASIC ."')";
         } else {
             $model = new User('search');
             $model->unsetAttributes();
@@ -519,10 +554,15 @@ class VisitorController extends Controller {
 
     public function actionAddVisitor() {
         $model = new Visitor;
+        // For Corporate Visitor
+        if( Yii::app()->request->getParam("profile_type", "CORPORATE") == "CORPORATE")  
+            $this->performAjaxValidation($model);
+        
         $visitorService = new VisitorServiceImpl;
         $session = new CHttpSession;
 		
         if (isset($_POST['Visitor'])) {
+                
             if (isset($_POST['Visitor']['profile_type'])) {
                 $model->profile_type = $_POST['Visitor']['profile_type'];
             }
@@ -531,10 +571,10 @@ class VisitorController extends Controller {
             if (empty($model->visitor_workstation)) {
                 $model->visitor_workstation = $session['workstation'];
             }
-            //print_r($model->rules());
-            //die("--DONE--");
-
-
+             if (empty($model->tenant)) {
+                $model->tenant = $session['tenant'];
+            }
+           
             if ($result = $visitorService->save($model, NULL, $session['id'])) {
                 // Add company contact for this visitor if profile is ASIC
                 if (isset($_POST['profile_type']) && $_POST['profile_type'] == 'ASIC') {
@@ -587,8 +627,16 @@ class VisitorController extends Controller {
                         mail($to, $subject, $body, $headers);
                     }
                 }
-
+                if( $model->profile_type == "CORPORATE" ) {
+                    Yii::app()->user->setFlash('success', 'Corporate Visitor Created Successfully!');
+                    $this->redirect(array("visitor/addvisitor"));
+                }
+                    
             	Yii::app()->end();
+                
+                
+            }  else {
+                 $errors = $model->getErrors(); print_r($errors); exit;
             }
         }
 
@@ -655,7 +703,7 @@ class VisitorController extends Controller {
                                $visitorInfo->company = $session['company'];
                             $visitorInfo->role = Roles::ROLE_VISITOR;
                             $visitorInfo->visitor_status = '1'; // Active
-                            $visitorInfo->visitor_type= '2'; 
+                            //$visitorInfo->visitor_type= '2';
                             //$visitorInfo->vehicle= $line[12]; 
                             $visitorInfo->created_by = Yii::app()->user->id;
                             $visitorInfo->tenant = Yii::app()->user->tenant;
@@ -680,7 +728,7 @@ class VisitorController extends Controller {
                                 // Insert Visit Now
                                 $visitInfo = new Visit;
                                 $visitInfo->visitor = $visitorInfo->id;
-                                $visitInfo->visitor_type = '2'; // Corporate
+                                //$visitInfo->visitor_type = '2'; // Corporate
                                 $visitInfo->visitor_status = 1;
                                 $visitInfo->card = $card ? $card->id:"";
                                 $visitInfo->host = Yii::app()->user->id;
@@ -693,7 +741,7 @@ class VisitorController extends Controller {
                                 $visitInfo->workstation = $session['workstation'];                               
                                 $visitInfo->tenant = Yii::app()->user->tenant;
                                 $visitInfo->reason = '1';
-                                $visitInfo->visitor_type = '2';
+                                //$visitInfo->visitor_type = '2';
                     
                                 $visitInfo->save();
                             }                    
@@ -840,7 +888,12 @@ class VisitorController extends Controller {
         if (isset($_GET['searchInfo'])) {
             $searchInfo = $_GET['searchInfo'];
             $merge = new CDbCriteria;
-            $conditionString = "profile_type = 'ASIC' AND (CONCAT(first_name,' ',last_name) like '%" . $searchInfo
+            /*$conditionString = "profile_type = 'ASIC' AND (CONCAT(first_name,' ',last_name) like '%" . $searchInfo
+                . "%' or first_name like '%" . $searchInfo
+                . "%' or last_name like '%" . $searchInfo
+                . "%' or email like '%" . $searchInfo
+                . "%')";*/
+            $conditionString = "profile_type = 'VIC' OR profile_type = 'ASIC' AND (CONCAT(first_name,' ',last_name) like '%" . $searchInfo
                 . "%' or first_name like '%" . $searchInfo
                 . "%' or last_name like '%" . $searchInfo
                 . "%' or email like '%" . $searchInfo

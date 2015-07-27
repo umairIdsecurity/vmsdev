@@ -46,7 +46,7 @@ input.pass_option, input.password_option , input.password_requirement{
     margin: 3px 3px 0 0 !important;
 }
 
-.forgot-password-area input[type="submit"], .reset-password-area input[type="submit"], .grid-view td a, #btnSubmit, input[type="submit"],#updateBtn,#submitBtn,#addCompanyLink, #addUserCompanyLink
+.forgot-password-area input[type="submit"], .reset-password-area input[type="submit"], .grid-view td a, #btnSubmit, input[type="button"], input[type="submit"],#updateBtn,#submitBtn,#addCompanyLink, #addUserCompanyLink
 ,.yiiBtn, #clicktabA, #clicktabB,#clicktabB1,#clicktabB2,#submitFormVisitor,#clicktabC,
 .visitor-findBtn,.host-findBtn,.visitor-backBtn,
 #dummy-submitFormPatientName,
@@ -1347,6 +1347,13 @@ p.asic{
     height: 16px;
     text-decoration: none;
 }
+
+.glyphicon-off:before {
+    content: "\e017";
+    /*font-size: 20px;
+    padding-left: 10px;*/
+}
+
 
 #visitorDetailDiv .flash-success{
     display:none;

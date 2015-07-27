@@ -98,10 +98,10 @@ if ($visitModel->time_in != '') {
             if ($("#proposedDateOut").val() == '') {
                 $("#preregisterdateoutError").show();
             }
-            else if ($("#Visit_visitor_type").val() == 1) { //if patient type
-                $("#preregisterdateoutError").hide();
-                sendReasonForm();
-            } else {
+            //else if ($("#Visit_visitor_type").val() == 1) { //if patient type
+            //    $("#preregisterdateoutError").hide();
+            //    sendReasonForm();
+            //} else {
                 $("#preregisterdateoutError").hide();
                 if (($("#selectedHostInSearchTable").val() != '' && $("#search-host").val() != '')) { //if host is from search
                     
@@ -132,7 +132,7 @@ if ($visitModel->time_in != '') {
                         sendHostForm();
                     }
                 }
-            }
+            //}
         });
     });
 </script>

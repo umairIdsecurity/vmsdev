@@ -113,7 +113,7 @@ class VisitController extends RestfulController {
                 $host = Visitor::model()->findByPk($data['hostID']);
                 if($host) {
                     if ($visit) {
-                        if ($data['visitorType'] == Visitor::PROFILE_TYPE_CORPORATE || $data['visitorType'] == Visitor::PROFILE_TYPE_VIC || $data['visitorType'] == Visitor::PROFILE_TYPE_ASIC) {
+                        //if ($data['visitorType'] == Visitor::PROFILE_TYPE_CORPORATE || $data['visitorType'] == Visitor::PROFILE_TYPE_VIC || $data['visitorType'] == Visitor::PROFILE_TYPE_ASIC) {
                             $this->validateDate($data);
                             $visit->host = $data['hostID'];
                             $visit->visit_status = 1;
@@ -137,9 +137,9 @@ class VisitController extends RestfulController {
                             } else {
                                 $this->sendResponse(401, CJSON::encode(array('responseCode' => 401, 'errorCode' => 'INVALID_DATA', 'errorDescription' => 'Requsted data are invalid')));
                             }
-                        }else{
+                        /*}else{
                             $this->sendResponse(400, CJSON::encode(array('responseCode' => 400, 'errorCode' => 'VISITOR_TYPE_INVALID', 'errorDescription' => 'Requsted visitor type is invalid')));
-                        }
+                        }*/
                     } else {
                         $this->sendResponse(404, CJSON::encode(array('responseCode' => 404, 'errorCode' => 'VISIT_NOT_FOUND', 'errorDescription' => 'Requested visit not found')));
                     }
@@ -234,8 +234,8 @@ class VisitController extends RestfulController {
                 if ($visit) {
                     $visit->date_check_out = date('Y-m-d');
                     $visit->time_check_out = date('H:i:s');
-                    if($visit->visit_status == visitStatus::ACTIVE) {
-                        $visit->visit_status = visitStatus::CLOSED;
+                    if($visit->visit_status == VisitStatus::ACTIVE) {
+                        $visit->visit_status = VisitStatus::CLOSED;
                     }
                     if($visit->save()) {
                         $this->sendResponse(204, CJSON::encode(['responseCode' => 204]));

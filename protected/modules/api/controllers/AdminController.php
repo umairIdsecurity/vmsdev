@@ -25,8 +25,11 @@ class AdminController extends RestfulController {
                     $result['photoRequired'] = true;
                     $result['complianceTerms'] = $this->getComplianceTerms();
                     if (isset($admin->com->companyPreference)) {
+						
                         $pref = $admin->com->companyPreference;
-                        $result['brandInfo']['companyLogoURL'] = ($admin->com->ph) ? Yii::app()->request->hostInfo . yii::app()->baseUrl . '/' . $admin->com->ph->relative_path : "N/A";
+                        //$result['brandInfo']['companyLogoURL'] = ($admin->com->ph) ? Yii::app()->request->hostInfo . yii::app()->baseUrl . '/' . $admin->com->ph->relative_path : "N/A";
+						$result['brandInfo']['companyLogoURL'] = ($admin->com->ph) ? $admin->com->ph->db_image : "N/A";
+						
                         #actionForwardButton
                         $result['brandInfo']['actionForwardButton']['backgroundColor'] = $pref->action_forward_bg_color;
                         $result['brandInfo']['actionForwardButton']['backgroundGradient'] = $pref->action_forward_bg_color2;

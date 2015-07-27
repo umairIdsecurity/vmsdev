@@ -1,4 +1,4 @@
-<?php 
+<?php
 $session = new CHttpSession;
 $identification_document_expiry = date('Y-m-d', strtotime($visitorModel->identification_document_expiry));
 $asicEscort = new AddAsicEscort();
@@ -119,8 +119,13 @@ $asicEscort = new AddAsicEscort();
             if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && $model->visit_status == VisitStatus::AUTOCLOSED) {
                 switch ($model->card_type) {
                     case CardType::VIC_CARD_24HOURS:
+                        $model->date_check_in = date('d-m-Y', strtotime('+ 1 day'));
+                        break;
                     case CardType::VIC_CARD_EXTENDED:
-                        $model->date_check_in = date("d-m-Y", time() + 86400);
+                        $model->date_check_in = date('d-m-Y', strtotime($model->finish_date . '+ 1 day'));
+                        break;
+                    default:
+                        $model->date_check_in = date('d-m-Y');
                         break;
                 }
             }
@@ -155,13 +160,25 @@ $asicEscort = new AddAsicEscort();
             $model->date_check_out = date('d-m-Y', strtotime($model->date_check_out));
 
             // Extended Card Type (EVIC) or Multiday
-            if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED]) && $model->visit_status == VisitStatus::AUTOCLOSED) {
-                $model->date_check_out = date('d-m-Y');
+            if (in_array($model->card_type, [CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_24HOURS]) && $model->visit_status == VisitStatus::AUTOCLOSED) {
+                switch ($model->card_type) {
+                    case CardType::VIC_CARD_24HOURS:
+                        $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . '+ 1 day'));
+                        break;
+                    case CardType::VIC_CARD_EXTENDED:
+                        $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in . '+ 1 day'));
+                        break;
+                    default:
+                        $model->date_check_out = date('d-m-Y');
+                        break;
+                }
+
             }
 
             // Update date check out for Saved, Closed, AutoClosed Visit
             if (in_array($model->visit_status, [VisitStatus::SAVED, VisitStatus::CLOSED, VisitStatus::AUTOCLOSED]) && !in_array($model->card_type, [CardType::VIC_CARD_24HOURS, CardType::VIC_CARD_EXTENDED, CardType::VIC_CARD_MANUAL])) {
-                $model->date_check_out = date('d-m-Y', strtotime($model->date_check_in. ' +1 day'));
+                $model->date_check_out = date('d-m-Y', strtotime($model->date_check_out. ' +1 day'));
+
                 $model->time_check_out = $model->time_check_in;
             }
 
@@ -204,11 +221,10 @@ $asicEscort = new AddAsicEscort();
 <script>
     $(document).ready(function() {
         // Set min & max date for check out datepicker
-        var cardType = "<?php echo $model->card_type; ?>";
         var d = new Date(),
             minDate, maxDate;
         var disabled = true;
-
+        var cardType = "<?php echo $model->card_type; ?>";
         switch(cardType) {
             case "<?php echo CardType::VIC_CARD_MANUAL; ?>":
                 minDate = "-12m";
@@ -271,29 +287,23 @@ $asicEscort = new AddAsicEscort();
                     $("#registerNewVisit").text(text).val(val);
                 }
 
-                if (selectedDate > currentDate) {
-                    <?php if ($model->card_type == CardType::VIC_CARD_MANUAL) { // show Back Date Visit
-                        echo 'updateTextVisitButton("Activate Visit", "registerNewVisit", "active");';
+                if (selectedDate >= currentDate) {
+                    if (cardType == <?php echo CardType::VIC_CARD_MANUAL; ?> || selectedDate == currentDate) {
+                        updateTextVisitButton("Activate Visit", "registerNewVisit", "active");
                     } else {
-                        echo 'updateTextVisitButton("Preregister Visit", "preregisterNewVisit", "preregister");
-                              $("#card_no_manual").hide();';
+                        updateTextVisitButton("Preregister Visit", "preregisterNewVisit", "preregister");
+                        $("#card_no_manual").hide();
                     }
-                    ?>
-
                     // update card date
                     var cardDate = $.datepicker.formatDate('dd M y', checkInSelectedDate);
                     $("#cardDetailsTable span.cardDateText").html(cardDate);
 
                 } else {
-                    updateTextVisitButton("");
-
-                    <?php if ($model->card_type == CardType::VIC_CARD_MANUAL) { // show Back Date Visit
-                        echo 'updateTextVisitButton("Back Date Visit", "backDateVisit", "backdate");';
+                    if (cardType == <?php echo CardType::VIC_CARD_MANUAL; ?>) {
+                        updateTextVisitButton("Back Date Visit", "backDateVisit", "backdate");
                     } else {
-                        echo 'updateTextVisitButton("Activate Visit", "registerNewVisit", "active");';
+                        updateTextVisitButton("Activate Visit", "registerNewVisit", "active");
                     }
-                    ?>
-
                     $('#card_no_manual').show();
                 }
             }
@@ -592,13 +602,38 @@ $asicEscort = new AddAsicEscort();
     }
 
     function activeVisit() {
+        var photoReview = $('#photoPreview').attr('src');
+        var isDefault = photoReview.search('images/companylogohere1.png');
+        // Stop active visit if image is not uploaded
+        if (
+            (photoReview == '' || isDefault > 0) &&
+            $("#Visit_card_type").val() != <?php echo CardType::SAME_DAY_VISITOR; ?> &&
+            $("#Visit_card_type").val() != <?php echo CardType::MANUAL_VISITOR; ?> &&
+            $("#Visit_card_type").val() != <?php echo CardType::VIC_CARD_SAMEDATE ?> &&
+            $("#Visit_card_type").val() != <?php echo CardType::VIC_CARD_MANUAL; ?>
+        ) {
+            <?php if ($model->card_type > CardType::CONTRACTOR_VISITOR ) : ?>
+                <?php if(!in_array($model->card_type, [CardType::VIC_CARD_SAMEDATE, CardType::VIC_CARD_MANUAL])) : ?>
+                    $("#Visitor_photo_em").attr('style', 'margin-right:84px ; margin-bottom:0px; margin-top:0px ;');
+                    $("#editImageBtn.editImageBtn").attr('style', 'margin-top:-5px !important; margin-right:84px ; margin-bottom:0px;');
+                    $("#cropImageBtn.editImageBtn").attr('style', 'margin-top:-5px !important; margin-right:84px ; margin-bottom:0px;');
+                <?php endif; ?>
+            <?php else : ?>
+                <?php if(!in_array($model->card_type, [CardType::SAME_DAY_VISITOR, CardType::MANUAL_VISITOR])) : ?>
+                    $("#Visitor_photo_em").attr('style', 'margin-bottom: -17px; margin-right: 0px; margin-top: 13px;');
+                    $("#cropImageBtn.editImageBtn").attr('style', 'margin-bottom: 0; margin-right: 0 !important; margin-top: 0 !important;');
+                <?php endif; ?>
+            <?php endif; ?>
+            return false;
+        }
+
         var status = "<?php echo $model->visit_status; ?>";
         if (status == "<?php echo VisitStatus::SAVED; ?>" || status == "<?php echo VisitStatus::PREREGISTERED; ?>") {
             checkIfActiveVisitConflictsWithAnotherVisit();
         } else {
             checkIfActiveVisitConflictsWithAnotherVisit('new');
         }
-    }   
+    }
 
     $(document).ready(function(){
         $('#asicDecalarationRbtn1').on('click',function(){
@@ -642,7 +677,7 @@ $asicEscort = new AddAsicEscort();
                     if (!$('input[name="identificationActiveVisit"]').is(':checked')) {
                         $('#identificationModal').modal('show');
                     } else if ($('#VicHolderDecalarations').is(':checked')) {
-                        activeVisit();   
+                        activeVisit();
                         return false;
                     }
                 } else {

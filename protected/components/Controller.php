@@ -36,4 +36,39 @@ class Controller extends CController
      * for more details on how to specify this property.
      */
     public $breadcrumbs = array();
+
+    public function beforeAction($action)
+    {
+        $systemIsShutdown = System::model()->isSystemShutdown();
+        if (isset(Yii::app()->user->id)) {
+            if (Yii::app()->controller->id != 'site') {
+                if ($systemIsShutdown) {
+
+                    if (!in_array(Yii::app()->user->role, array(Roles::ROLE_SUPERADMIN,
+                        Roles::ROLE_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN))
+                    ) {
+                        $this->redirect(array("site/shutdown"));
+                    }
+                }
+            }
+            if (Yii::app()->controller->id == 'site' && Yii::app()->controller->action->id == 'selectworkstation') {
+                if ($systemIsShutdown) {
+                    if (!in_array(Yii::app()->user->role, array(Roles::ROLE_SUPERADMIN,
+                        Roles::ROLE_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN))
+                    ) {
+                        $this->redirect(array("site/shutdown"));
+                    }
+                }
+
+            }
+            if (Yii::app()->controller->id == 'site' && Yii::app()->controller->action->id == 'shutdown') {
+                if (in_array(Yii::app()->user->role, array(Roles::ROLE_SUPERADMIN,
+                    Roles::ROLE_ADMIN, Roles::ROLE_ISSUING_BODY_ADMIN))
+                )
+                    $this->redirect(Yii::app()->user->returnUrl);
+            }
+        }
+
+        return true;
+    }
 }

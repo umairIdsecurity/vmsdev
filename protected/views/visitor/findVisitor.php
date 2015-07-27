@@ -8,6 +8,7 @@
     }
 </style>
 <?php
+Yii::app()->clientScript->scriptMap['jquery.js']=false;
 $session = new CHttpSession;
 /* @var $this VisitorController */
 /* @var $model Visitor */
@@ -30,7 +31,7 @@ $tenant = '';
 //    $tenant = '';
 //}
 
- $tenant = 'tenant='.Yii::app()->user->tenant.' AND ';
+$tenant = 'tenant='.Yii::app()->user->tenant.' AND ';
 $conditionString = $tenant. $tenant_agent . " (CONCAT(first_name,' ',last_name) like '%" . $visitorName
                  . "%' or first_name like '%" . $visitorName
                  . "%' or last_name like '%" . $visitorName
@@ -41,8 +42,8 @@ $conditionString = $tenant. $tenant_agent . " (CONCAT(first_name,' ',last_name) 
                  . "%')";
 
 if (isset($_GET['cardType']) && $_GET['cardType'] > CardType::CONTRACTOR_VISITOR) {
-    // $conditionString .= " AND (profile_type = '" . Visitor::PROFILE_TYPE_VIC . "' OR profile_type = '". Visitor::PROFILE_TYPE_ASIC ."')";
-    $conditionString .= " AND profile_type = '" . Visitor::PROFILE_TYPE_VIC . "' ";
+    $conditionString .= " AND (profile_type = '" . Visitor::PROFILE_TYPE_VIC . "' OR profile_type = '". Visitor::PROFILE_TYPE_ASIC ."')";
+    // $conditionString .= " AND profile_type = '" . Visitor::PROFILE_TYPE_VIC . "' ";
 
 } else {
     $conditionString .= " AND profile_type = '" . Visitor::PROFILE_TYPE_CORPORATE . "'";
@@ -59,9 +60,6 @@ $customDataProvider = new CActiveDataProvider($model, array(
     'criteria' => $criteria,
 ));
 
-
-
-
 $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'findvisitor-grid-1',
     'dataProvider' => $customDataProvider,
@@ -72,26 +70,26 @@ $this->widget('zii.widgets.grid.CGridView', array(
     }",
     'columns' => array(
         array(
-            'header' => '',
-            'type' => 'raw',
+            'header'      => '',
+            'type'        => 'raw',
             'htmlOptions' => array('style' => 'text-align:center;width:12px;'),
-            'value' => '$data->getVisitorProfileIcon()',
+            'value'       => '$data->getVisitorProfileIcon()',
         ),
         array(
-            'name' => 'first_name',
+            'name'   => 'first_name',
             'filter' => false
         ),
         'last_name',
         array(
             'header' => 'Company',
             'filter' => false,
-            'value' => 'isset($data->company->name) ? $data->company->name : "NO COMPANY"'
+            'value'  => 'Company::model()->getCompanyName($data->company)'
         ),
         array(
-            'header' => 'Action',
-            'type' => 'raw',
+            'header'      => 'Action',
+            'type'        => 'raw',
             'htmlOptions' => array('style' => 'text-align:center', 'class' => 'findVisitorButtonColumn'),
-            'value' => '(checkIfanActiveVisitExists($data->id)=="0")? displaySelectVisitorButton($data):returnVisitorDetailLink($data->id)',
+            'value'       => '(checkIfanActiveVisitExists($data->id)=="0")? displaySelectVisitorButton($data):returnVisitorDetailLink($data->id)',
         ),
     ),
 ));

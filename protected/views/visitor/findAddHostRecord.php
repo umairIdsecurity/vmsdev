@@ -35,7 +35,7 @@ $defaultKey = key($asicCardTypes);
                 <button class="host-findBtn" onclick="findHostRecord()" id="host-findBtn" style="display:none;"
                         data-target="#findHostRecordModal" data-toggle="modal">Search Visits
                 </button>
-                
+
                 <?php $background = isset($companyLafPreferences) ? ("background:" . $companyLafPreferences->neutral_bg_color . ' !important;') : ''; ?>
                 <button class="host-findBtn" id="dummy-host-findBtn" style="<?php echo $background; ?>padding: 8px;">
                     Find ASIC Sponsor
@@ -82,7 +82,7 @@ $defaultKey = key($asicCardTypes);
                             if(!hasError){
                                 var currentURL = $("#getcurrentUrl").val();
                                 if(currentURL != "" ){
-                                    showHideTabs("logVisitB", "logVisitA", "logVisit", "findHostA", "findHost", "findVisitorA", "findVisitor");   
+                                    showHideTabs("logVisitB", "logVisitA", "logVisit", "findHostA", "findHost", "findVisitorA", "findVisitor");
                                 } else {
                                     sendReasonForm();
                                 }
@@ -131,7 +131,32 @@ $defaultKey = key($asicCardTypes);
                                     document.getElementById("User_company").disabled = false;
                                     document.getElementById("User_tenant").disabled = false;
                                     document.getElementById("User_tenant_agent").disabled = false;
-                                    checkHostEmailIfUnique();
+                                    if ($(parentElement()+"#Visitor_password_requirement_1").is(":checked")) {
+                                        if($(parentElement()+".password_option").is(":checked") == false) {
+                                            $(parentElement()+".user_requires_password #pass_error_").show();
+                                            return false;
+                                        } else {
+                                            $(parentElement()+".user_requires_password #pass_error_").hide();
+                                            if($(parentElement()+"#Visitor_password_option_1").is(":checked")) {
+                                                var validatePass = validatePassword();
+                                                if(validatePass == true) {
+                                                    var isMatch = isPasswordMatch();
+                                                    if(isMatch == true) {
+                                                        checkHostEmailIfUnique();
+                                                    } else {
+                                                        return false;
+                                                    }
+                                                } else {
+                                                    return false;
+                                                }
+                                            } else {
+                                                checkHostEmailIfUnique();
+                                            }
+                                        }
+                                    } else {
+                                        checkHostEmailIfUnique();
+                                    }
+
                                 }
                             }'
                         ),
@@ -155,7 +180,7 @@ $defaultKey = key($asicCardTypes);
                                              src="<?php echo Yii::app()->controller->assetsBase; ?>/images/portrait_box.png"
                                              style='display:none;'/>
                                     </div>
-                                    
+
                                     <?php require_once(Yii::app()->basePath . '/draganddrop/host.php'); ?>
 
                                     <div id="photoErrorMessage" class="errorMessage"
@@ -180,7 +205,7 @@ $defaultKey = key($asicCardTypes);
 
                             <tr class="vic-host-fields">
                                 <td>
-                                    <?php echo $form->dropDownList($asicModel, 'visitor_card_status', Visitor::$VISITOR_CARD_TYPE_LIST[Visitor::PROFILE_TYPE_ASIC], array('empty' => 'Card Status', 'options' => array( $defaultKey => array('selected' => 'selected')))); ?>
+                                    <?php echo $form->dropDownList($asicModel, 'visitor_card_status', [Visitor::ASIC_ISSUED => Visitor::ASIC_ISSUED_LABEL, Visitor::ASIC_EXPIRED => Visitor::ASIC_EXPIRED_LABEL], array('empty' => 'Card Status', 'options' => array( $defaultKey => array('selected' => 'selected')))); ?>
                                     <span class="required">*</span>
                                     <?php echo "<br>" . $form->error($asicModel, 'visitor_card_status'); ?>
                                 </td>
@@ -384,7 +409,7 @@ $defaultKey = key($asicCardTypes);
 
                             <tr class="vic-visitor-fields">
                                 <td id="passwordVicForm">
-                                    <?php $this->renderPartial('/common_partials/password', array('model' => $userModel, 'form' => $form, 'session' => $session)); ?>
+                                    <?php $this->renderPartial('/common_partials/password', array('model' => $asicModel, 'form' => $form, 'session' => $session)); ?>
                                 </td>
                             </tr>
 
@@ -446,7 +471,7 @@ $defaultKey = key($asicCardTypes);
                                              style='display:none;'/>
                                     </div>
 
-                                    
+
                                     <?php require_once(Yii::app()->basePath . '/draganddrop/host3.php'); ?>
 
                                     <div id="photoErrorMessage" class="errorMessage"
@@ -668,19 +693,20 @@ $defaultKey = key($asicCardTypes);
             $("#addhostTab").click();
         });
 
-
-        $('#photoCropPreview2').imgAreaSelect({
-            handles: true,
-            onSelectEnd: function (img, selection) {
-                $("#cropPhotoBtn2").show();
-                $("#x12").val(selection.x1);
-                $("#x22").val(selection.x2);
-                $("#y12").val(selection.y1);
-                $("#y22").val(selection.y2);
-                $("#width2").val(selection.width);
-                $("#height2").val(selection.height);
-            }
-        });
+        if($('#photoCropPreview2').imgAreaSelect) {
+            $('#photoCropPreview2').imgAreaSelect({
+                handles: true,
+                onSelectEnd: function (img, selection) {
+                    $("#cropPhotoBtn2").show();
+                    $("#x12").val(selection.x1);
+                    $("#x22").val(selection.x2);
+                    $("#y12").val(selection.y1);
+                    $("#y22").val(selection.y2);
+                    $("#width2").val(selection.width);
+                    $("#height2").val(selection.height);
+                }
+            });
+        }
         /*Added by farhat aziz for upload host photo*/
         $("#cropPhotoBtn2").click(function (e) {
             e.preventDefault();
@@ -706,7 +732,7 @@ $defaultKey = key($asicCardTypes);
                         success: function (r) {
 
                             $.each(r.data, function (index, value) {
-                                
+
                                 /*document.getElementById('photoPreview2').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 document.getElementById('photoCropPreview2').src = "<?php echo Yii::app()->request->baseUrl . '/' ?>" + value.relative_path;
                                 $(".ajax-upload-dragdrop2").css("background", "url(<?php echo Yii::app()->request->baseUrl. '/'; ?>" + value.relative_path + ") no-repeat center top");
@@ -721,7 +747,7 @@ $defaultKey = key($asicCardTypes);
                                 document.getElementById('photoCropPreview2').src = "data:image;base64,"+ value.db_image;
                                 $(".ajax-upload-dragdrop2").css("background", my_db_image + " no-repeat center top");
                                 $(".ajax-upload-dragdrop2").css({"background-size": "132px 152px" });
-                            
+
 
                             });
                         }
@@ -740,19 +766,20 @@ $defaultKey = key($asicCardTypes);
         });
 
         /*			photo 3			*/
-
-        $('#photoCropPreview3').imgAreaSelect({
-            handles: true,
-            onSelectEnd: function (img, selection) {
-                $("#cropPhotoBtn3").show();
-                $("#x13").val(selection.x1);
-                $("#x23").val(selection.x2);
-                $("#y13").val(selection.y1);
-                $("#y23").val(selection.y2);
-                $("#width3").val(selection.width);
-                $("#height3").val(selection.height);
-            }
-        });
+        if($('#photoCropPreview3').imgAreaSelect) {
+            $('#photoCropPreview3').imgAreaSelect({
+                handles: true,
+                onSelectEnd: function (img, selection) {
+                    $("#cropPhotoBtn3").show();
+                    $("#x13").val(selection.x1);
+                    $("#x23").val(selection.x2);
+                    $("#y13").val(selection.y1);
+                    $("#y23").val(selection.y2);
+                    $("#width3").val(selection.width);
+                    $("#height3").val(selection.height);
+                }
+            });
+        }
         /*Added by farhat aziz for upload host photo*/
         $("#cropPhotoBtn3").click(function (e) {
             e.preventDefault();
@@ -793,7 +820,7 @@ $defaultKey = key($asicCardTypes);
                                 document.getElementById('photoCropPreview3').src = "data:image;base64,"+ value.db_image;
                                 $(".ajax-upload-dragdrop3").css("background", my_db_image + " no-repeat center top");
                                 $(".ajax-upload-dragdrop3").css({"background-size": "132px 152px" });
-                            
+
 
                             });
                         }
@@ -845,7 +872,7 @@ $defaultKey = key($asicCardTypes);
         }).fail(function() {
             Loading.hide();
             window.location = '<?php echo Yii::app()->createUrl('site/login');?>';
-        }); 
+        });
        // $("#searchHostTable").html('<iframe id="findHostTableIframe" onLoad="autoResize2();" width="100%" height="100%" frameborder="0" scrolling="no" src="' + url + '"></iframe>');
        return false;
     }
@@ -861,7 +888,7 @@ $defaultKey = key($asicCardTypes);
 
     function sendHostForm() {
         if ($('#requestVerifyAsicSponsor').is(':checked') == true) {
-            var $sendMail = $("<textarea  name='Visit[sendMail]'>"+'true'+"</textarea>");
+            var $sendMail = $("<textarea  name='Visit[sendMail]'>"+' true '+"</textarea>");
             $("#register-visit-form").append($sendMail);
         }
         var hostform = $("#register-host-form").serialize();
@@ -910,7 +937,7 @@ $defaultKey = key($asicCardTypes);
     }
 
     // company change
-    $('#User_company').on('change', function() {
+    /*$('#User_company').on('change', function() {
         var companyId = $(this).val();
         $('#CompanySelectedId').val(companyId);
         $modal = $('#addCompanyContactModal');
@@ -932,7 +959,7 @@ $defaultKey = key($asicCardTypes);
                 return false;
             }
         });
-    });
+    });*/
 
     function isEmpty(obj) {
         for(var prop in obj) {

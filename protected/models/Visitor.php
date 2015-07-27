@@ -58,12 +58,12 @@ class Visitor extends CActiveRecord {
     const PROFILE_TYPE_CORPORATE = 'CORPORATE';
     const PROFILE_TYPE_VIC       = 'VIC';
     const PROFILE_TYPE_ASIC      = 'ASIC';
-    
+
     const AUSTRALIA_ID           = 13;
-    
+
     const DELTED                 = 1;
     const NOT_DELETED            = 0;
-    
+
     # Visitor Card Status
     const SAVED            = 1;
     const VIC_HOLDER       = 2;
@@ -87,9 +87,13 @@ class Visitor extends CActiveRecord {
             self::ASIC_ISSUED    => 'Card Status: ASIC Issued',
             self::ASIC_EXPIRED   => 'Card Status: ASIC Expired',
             self::ASIC_DENIED    => 'Card Status: ASIC Denied',
-
         ),
     );
+
+    const ASIC_DENIED_LABEL      = 'Card Status: ASIC Denied';
+    const ASIC_ISSUED_LABEL      = 'Card Status: ASIC Issued';
+    const ASIC_APPLICANT_LABEL   = 'Card Status: ASIC Applicant';
+    const ASIC_EXPIRED_LABEL     = 'Card Status: ASIC Expired';
 
     public static $PROFILE_TYPE_LIST = array(
         self::PROFILE_TYPE_CORPORATE => 'Corporate',
@@ -242,7 +246,7 @@ class Visitor extends CActiveRecord {
             ),
             array('tenant, tenant_agent,company, visitor_type, visitor_workstation, photo, vehicle, visitor_card_status', 'default', 'setOnEmpty' => true, 'value' => null),
             array('password', 'PasswordCustom'),
-            array('repeatpassword', 'PasswordRepeat','except' => ['delete']),
+            array('repeatpassword', 'PasswordRepeat','except' => ['delete','updateVic']),
 
             //todo: check to enable again. why do we need this validation ?
             //array('password_requirement', 'PasswordRequirement'),
@@ -250,6 +254,7 @@ class Visitor extends CActiveRecord {
 
             /// array('vehicle', 'length', 'min'=>6, 'max'=>6, 'tooShort'=>'Vehicle is too short (Should be in 6 characters)'),
             array('email', 'EmailCustom'),
+            array('email', 'unique'),
             array('vehicle', 'match',
                 'pattern' => '/^[A-Za-z0-9_]+$/u',
                 'message' => 'Vehicle accepts alphanumeric characters only'
@@ -298,7 +303,6 @@ class Visitor extends CActiveRecord {
                     'company,
                     visitor_card_status,
                     visitor_workstation,
-                    visitor_type,
                     contact_street_no,
                     contact_street_name,
                     contact_street_type,
@@ -307,14 +311,14 @@ class Visitor extends CActiveRecord {
                     contact_postcode,
                     contact_country',
                     'required',
-                    'except'=> ['updateVic', 'updateIdentification', 'delete']
+                    'except'=> ['updateVic', 'updateIdentification', 'delete', 'asicIssued']
                 );
                 break;
             case self::PROFILE_TYPE_ASIC:
                 $rules[] = [
                     'identification_type, identification_document_no, identification_document_expiry', 'required',
                     'on' => 'asicApplicant',
-                    'except'=> ['delete']
+                    'except' => ['delete']
                 ];
                 $rules[] = array(
                     'visitor_card_status, asic_no, asic_expiry', 'required',
@@ -557,23 +561,23 @@ class Visitor extends CActiveRecord {
         $this->dbCriteria->mergeWith($criteria);
 
     }
-    
+
     /**
      * Radio button auto Select on Edit/Update
-     * 
+     *
      */
     public function afterFind() {
-     
-        if( is_null($this->password) ) { 
+
+        if( is_null($this->password) ) {
             $this->password_requirement = PasswordRequirement::PASSWORD_IS_NOT_REQUIRED;
         }
         else {
             $this->password_requirement = PasswordRequirement::PASSWORD_IS_REQUIRED;
             $this->password_option = 1;
-            
+
         }
-        
-        
+
+
         parent::afterFind();
     }
     protected function afterValidate() {
@@ -585,14 +589,14 @@ class Visitor extends CActiveRecord {
             //disable if action is update
         }
     }
-    
+
     public function behaviors() {
         return array(
             'AuditTrailBehaviors' => 'application.components.behaviors.AuditTrailBehaviors',
             'DateTimeZoneAndFormatBehavior' => 'application.components.DateTimeZoneAndFormatBehavior',
         );
     }
-   
+
 
     public function findAllCompanyWithSameTenant($tenantId) {
         $session = new CHttpSession;
@@ -617,7 +621,7 @@ class Visitor extends CActiveRecord {
         $session = new CHttpSession;
         //$tenant = User::model()->findByPk($session['tenant']);
         $Criteria = new CDbCriteria();
-        $Criteria->condition = "tenant = " . $session['id'] . " and (id != 1 and id != " . $session['id'] . ")";
+        $Criteria->condition = "(tenant = " . $session['id']  . " OR tenant = ".$session['tenant'].")  and (id != 1 and id != " . $session['id'] . ")";
         $result =  Company::model()->findAll($Criteria);
         return $result;
     }

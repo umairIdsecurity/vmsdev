@@ -31,11 +31,11 @@ $session = new CHttpSession;
                                 <select  onchange="getTenantAgent()"  id="Workstation_tenant" name="Workstation[tenant]">
                                     <option disabled value='' selected>Please select a tenant</option>
                                     <?php
-                                    $companyList = User::model()->findAllCompanyTenant();
-                                    foreach ($companyList as $key => $value) {
+                                    $tenantList = Company::model()->findAllTenants();
+                                    foreach ($tenantList as $key => $value) {
                                         ?>
                                         <option <?php
-                                if ($model['tenant'] == $value['tenant']) {
+                                if ($model['tenant'] == $value['id']) {
                                     echo " selected ";
                                 }
                                         ?> value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>

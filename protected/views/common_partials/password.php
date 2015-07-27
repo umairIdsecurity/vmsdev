@@ -93,46 +93,111 @@ if (isset($company) && !empty($company)) {
 <script>
 
     $(document).ready(function () {
+        $(parentElement() + "#passwordInputsTable").detach().insertAfter($( parentElement() + ".password_option:eq(1)").next());
 
-        $("#passwordInputsTable").detach().insertAfter($(".password_option:eq(1)").next());
-		
-		/***********************hide password section if not required************************/	
-	    $('.password_requirement').click(function() { 
-		     if($('#Visitor_password_requirement_1').is(':checked'))
+		/***********************hide password section if not required************************/
+	    $(parentElement() + '.password_requirement').click(function() {
+		     if($(parentElement() + '#Visitor_password_requirement_1').is(':checked'))
 			 {
-				$('.user_requires_password').css("display","block");
-				$('.password_option').prop('checked', false);
+                 $(parentElement() + '#Visitor_password_input').val('');
+                 $(parentElement() + '#Visitor_repeatpassword_input').val('');
+				 $(parentElement() + '.user_requires_password').css("display","block");
+				 $(parentElement() + '.password_option').prop('checked', false);
 			 }
 				else
 			 {
-				$('.user_requires_password').css("display","none");
+				 $(parentElement() + '.user_requires_password').css("display","none");
 			 }
-			   
+
          });
     });
 
+    function parentElement() {
+
+        var parentElement = '';
+        if("<?php echo $this->action->id?>" == "create") {
+            if($('#step2Tab').css('display') == 'block'){
+                parentElement = "#step2Tab ";
+            } else if ($('#step3Tab').css('display') == 'block') {
+                parentElement = "#step3Tab ";
+            }
+        }
+        return parentElement;
+    }
+
+    function validatePassword() {
+        if ($(parentElement() + "#Visitor_password_input").val() == "") {
+            $(parentElement() + "#Visitor_password_em_").html("Password should be specified");
+            $(parentElement() + "#Visitor_password_em_").show();
+            return false;
+        } else if ($(parentElement() + "#Visitor_repeatpassword_input").val() == "") {
+            $(parentElement() + "#Visitor_password_em_").hide();
+            $(parentElement() + "#Visitor_repeatpassword_em_").html("Please confirm a password");
+            $(parentElement() + "#Visitor_repeatpassword_em_").show();
+            return false;
+        } else {
+            $(parentElement() + "#Visitor_password_em_").hide();
+            $(parentElement() + "#Visitor_repeatpassword_em_").hide();
+            return true;
+        }
+    }
+
+    function isPasswordMatch() {
+        if($(parentElement() + "#Visitor_password_option_1").is(":checked")){
+            if($(parentElement() + "#Visitor_password_input").val() == $(parentElement() +"#Visitor_repeatpassword_input").val()){
+                $(parentElement() + "#Visitor_repeatpassword_em_").hide();
+                return true;
+            } else {
+                $(parentElement() + "#Visitor_repeatpassword_em_").html("Passwords are not matched");
+                $(parentElement() + "#Visitor_repeatpassword_em_").show();
+                return false;
+            }
+        }
+    }
+
+    $(parentElement() + "#Visitor_password_input").on("change",function(){
+        $(parentElement() + "#Visitor_password_em_").hide();
+        if($(parentElement() + "#Visitor_password_input").val() == '') {
+            $(parentElement() + "#Visitor_password_em_").html("Password should be specified");
+            $(parentElement() + "#Visitor_password_em_").show();
+        } else {
+            $(parentElement() + "#Visitor_password_em_").hide();
+        }
+
+    });
+
+    $(parentElement() + "#Visitor_repeatpassword_input").on("change",function(){
+        $(parentElement() + "Visitor_repeatpassword_em_").hide();
+        if($(parentElement() + "#Visitor_repeatpassword").val() == '') {
+            $(parentElement() + "#Visitor_repeatpassword_em_").html("Please confirm a password");
+            $(parentElement() + "#Visitor_repeatpassword_em_").show();
+        } else {
+            $(parentElement() + "Visitor_repeatpassword_em_").hide();
+        }
+
+    });
+
     function cancel() {
-        $('#Visitor_repeatpassword').val('');
-        $('#Visitor_password').val('');
-        $("#random_password").val('');
-        $("#close_generate").click();
+        $(parentElement() + '#Visitor_repeatpassword').val('');
+        $(parentElement() + '#Visitor_password').val('');
+        $(parentElement() + "#random_password").val('');
+        $(parentElement() + "#close_generate").click();
     }
 
     function copy_password() {
-        if ($('#random_password').val() == '') {
-            $('#error_msg').show();
+        if ($(parentElement() + '#random_password').val() == '') {
+            $(parentElement() + '#error_msg').show();
         } else {
-            var random_password = $('#random_password').val();
-            $('input[name="Visitor[password]"]').val(random_password);
-            $('input[name="Visitor[repeatpassword]"]').val(random_password);
-            $("#close_generate").click();
+            var random_password = $(parentElement() + '#random_password').val();
+            $(parentElement() + 'input[name="Visitor[password]"]').val(random_password);
+            $(parentElement() + 'input[name="Visitor[repeatpassword]"]').val(random_password);
+            $(parentElement() + "#close_generate").click();
         }
     }
 
     function generatepassword() {
-
-        $("#random_password").val('');
-        $("#pass_option").prop("checked", true);
+        $(parentElement() + "#random_password").val('');
+        $(parentElement() + "#pass_option").prop("checked", true);
 
         var text = "";
         var possible = "abcdefghijklmnopqrstuvwxyz0123456789";
@@ -141,8 +206,8 @@ if (isset($company) && !empty($company)) {
             text += possible.charAt(Math.floor(Math.random() * possible.length));
         }
 
-        document.getElementById('random_password').value = text;
-        $("#gen_pass").click();
+        $(parentElement() + ' #random_password').val(text);
+        $(parentElement() + "#generate_password").modal('show');
     }
 
 </script>

@@ -16,6 +16,7 @@ Yii::import('ext.validator.PasswordRequirement');
  * @property string $website
  * @property integer $created_by_user
  * @property integer $created_by_visitor
+ * @property integer $company_type
  *
  * The followings are the available model relations:
  * @property User $createdByUser
@@ -34,6 +35,7 @@ class Company extends CActiveRecord {
     public $password_requirement;
     public $user_repeatpassword;
     public $password_option;
+    public $company_type;
     protected $tenantQuery = "SELECT COUNT(c.id) FROM user u LEFT JOIN company c ON u.company=c.id WHERE u.id=c.tenant AND c.id !=1";
 
     /**
@@ -215,6 +217,7 @@ class Company extends CActiveRecord {
         $criteria->compare('code', $this->code);
         $criteria->compare('company_laf_preferences', $this->company_laf_preferences);
         $criteria->compare('card_count', $this->card_count);
+        $criteria->compare('company_type', $this->company_type);
 
         if($_SESSION['role'] != Roles::ROLE_SUPERADMIN) {
             $criteria->compare('tenant', $_SESSION["tenant"]);

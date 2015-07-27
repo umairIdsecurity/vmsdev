@@ -153,22 +153,28 @@ $detailForm = $this->beginWidget('CActiveForm', [
             $workstationResults = [];
         }
         echo $detailForm->dropDownList($model, 'workstation', $workstationResults, ['empty' => 'Select Workstation']);
-        echo "<span class='required'>*</span>";
+        echo "<span class='required'> *</span>";
         // echo $detailForm->error($model, 'workstation');
         echo '<div id="Visit_workstation_em_" class="errorMessage" style="display: none">Please select a workstation</div>';
 
         if ($asic) {
-            echo $detailForm->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes());
-            echo "<span class='required'>*</span>";
-            //echo $detailForm->error($model, 'visitor_type');
-            echo '<div id="Visit_visitor_type_em_" class="errorMessage" style="display: none">Please select a Visitor type</div>';
+            //$visitor_types = VisitorType::model()->returnVisitorTypes();
+           // if(is_array($visitor_types)) {
+               $visitor_types = VisitorType::model()->getFromCardType(-1);
+               if($visitor_types) {
+                    echo $detailForm->dropDownList($model, 'visitor_type', $visitor_types);
+                    echo "<span class='required'>*</span>";
+               }
+                //echo $detailForm->error($model, 'visitor_type');
+                echo '<div id="Visit_visitor_type_em_" class="errorMessage" style="display: none">Please select a Visitor type</div>';
+            //}
 
-
-        $reasons = CHtml::listData(VisitReason::model()->findAll(), 'id', 'reason');
+            $reasons = CHtml::listData(VisitReason::model()->findAll(), 'id', 'reason');
             foreach ($reasons as $key => $item) {
                 $results[$key] = 'Reason: ' . $item;
             }
-            echo $detailForm->dropDownList($model, 'reason', $results);
+            if( isset($results) && count($results))
+                echo $detailForm->dropDownList($model, 'reason', $results);
             echo "<br />";
         }
 
@@ -222,6 +228,8 @@ $detailForm = $this->beginWidget('CActiveForm', [
             }
         }
         function checkVisitorType(){
+            return true;// no need to make it mandatory
+            
             var visitortype = $('#Visit_visitor_type').val();
             if(!visitortype || visitortype == "") {
                 $('#Visit_visitor_type_em_').show();
@@ -279,19 +287,20 @@ $detailForm = $this->beginWidget('CActiveForm', [
                 $("#printCardBtn").addClass("disabledButton");
             }
         }
-
-        $('#photoCropPreview').imgAreaSelect({
-            handles: true,
-            onSelectEnd: function (img, selection) {
-                $("#cropPhotoBtn").show();
-                $("#x1").val(selection.x1);
-                $("#x2").val(selection.x2);
-                $("#y1").val(selection.y1);
-                $("#y2").val(selection.y2);
-                $("#width").val(selection.width);
-                $("#height").val(selection.height);
-            }
-        });
+        if($('#photoCropPreview').imgAreaSelect) {
+            $('#photoCropPreview').imgAreaSelect({
+                handles: true,
+                onSelectEnd: function (img, selection) {
+                    $("#cropPhotoBtn").show();
+                    $("#x1").val(selection.x1);
+                    $("#x2").val(selection.x2);
+                    $("#y1").val(selection.y1);
+                    $("#y2").val(selection.y2);
+                    $("#width").val(selection.width);
+                    $("#height").val(selection.height);
+                }
+            });
+        }
         $("#cropPhotoBtn").click(function (e) {
             e.preventDefault();
             $.ajax({

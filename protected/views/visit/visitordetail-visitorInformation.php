@@ -262,7 +262,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
                                     </select>
                                 <?php
                                 } else {
-                                    echo $visitorForm->dropDownList($model, 'visitor_type', VisitorType::model()->returnVisitorTypes(), ['onchange' => 'visitorTypeOnChange()', 'class' => 'visitortypedetails']);
+                                    echo $visitorForm->dropDownList($model, 'visitor_type', VisitorType::model()->getFromCardType(-1), ['onchange' => 'visitorTypeOnChange()', 'class' => 'visitortypedetails']);
                                 }
                             ?>
                             <br />
@@ -719,14 +719,14 @@ $visitorForm = $this->beginWidget('CActiveForm', [
         });
 
         /*if visit type == patient visitor, hide host details else hide patient details*/
-        if ('<?php echo $model->visitor_type ?>' == '1') {
-            $("#hostDetailsLi").hide();
-            $("#patientDetailsLi").show();
-        } else {
+        //if ('<?php echo $model->visitor_type ?>' == '1') {
+        //    $("#hostDetailsLi").hide();
+        //    $("#patientDetailsLi").show();
+        //} else {
             $("#hostDetailsLi").show();
             $("#patientDetailsLi").hide();
             $("#searchHostDiv").show();
-        }
+        //}
     });
 
     function findHostRecord() {
@@ -791,7 +791,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
         var visit_type = $("#Visit_visitor_type").val();
         $("#visitorTypeUnderSearchForm").val($("#Visit_visitor_type").val());
 
-        if (visit_type == 1 && '<?php echo $model->visitor_type; ?>' == 1) {
+        /*if (visit_type == 1 && '<?php echo $model->visitor_type; ?>' == 1) {
             $("#addPatientDiv").hide();
             $("#hostDetailsLi").hide();
             $("#patientDetailsLi").show();
@@ -815,7 +815,7 @@ $visitorForm = $this->beginWidget('CActiveForm', [
             $("#update-host-form").hide();
             $("#register-newhost-form").show();
             $("#addnewhost-table").show();
-        }
+        }*/
     }
 
     function populateHostTenantAgentAndCompanyField() {

@@ -371,13 +371,13 @@ $asicEscort = new AddAsicEscort();
             <tr>
                 <td width="5%"><input type="checkbox" id="issuedVicCbx"/></td>
                 <td><label for="issuedVicCbx">The applicant declares they have not been issued with a VIC for this airport for more than 28 days in the past 12 months.
-                    (from <?php
-                            if (isset($model->date_check_in)) {
-                                echo $model->date_check_in;
-                            } else {
-                                echo date("d F Y");
-                            }
-                    ?>)
+<!--                    (from <?php
+//                            if (isset($model->date_check_in)) {
+//                                echo $model->date_check_in;
+//                            } else {
+//                                echo date("d F Y");
+//                            }
+                    ?>)-->
                 </label></td>
             </tr>
         </table>

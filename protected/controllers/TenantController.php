@@ -170,24 +170,43 @@ class TenantController extends Controller {
                                     $passwordRequire= intval($_POST['TenantForm']['password_opt']);
 
                                     if($passwordRequire == 1){
-
                                         $loggedUserEmail = Yii::app()->user->email;
-
                                         $headers = "MIME-Version: 1.0" . "\r\n";
                                         $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
                                         $headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
-
                                         $to=$_POST['TenantForm']['email'];
-
-                                        $subject="Preregistration email notification";
+                                        $subject="Tenant registration notification email";
                                         $body = "<html><body>Hi,<br><br>".
-                                                "This is preregistration email.<br><br>".
-                                                "Please click on the below URL:<br>".
-                                                "http://vmsprdev.identitysecurity.info/index.php/preregistration/login<br>";
+                                                "This is Tenant registration confirmation.<br><br>".
+                                                "Please click on the below URL to access application:<br><br>".
+                                                Yii::app()->getBaseUrl(true)."/index.php?r=site/login<br>";
                                         $body .= "Password: ".$_POST['TenantForm']['password']."<br>";
                                         $body .="<br>"."Thanks,"."<br>Admin</body></html>";
 
                                         mail($to, $subject, $body, $headers);
+                                    }
+                                    elseif ($passwordRequire == 2) {
+
+                                        /*$loggedUserEmail = Yii::app()->user->email;
+                                        $headers = "MIME-Version: 1.0" . "\r\n";
+                                        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+                                        $headers .= "From: ".$loggedUserEmail."\r\nReply-To: ".$loggedUserEmail;
+                                        $to=$_POST['TenantForm']['email'];
+                                        $subject="Tenant registration notification email";
+
+                                        
+
+                                        $body = "<html><body>Hi,<br><br>".
+                                                "This is Tenant registration confirmation.<br><br>".*/
+                                                //"Please click on the below URL to access application:<br><br>".
+                                                //Yii::app()->getBaseUrl(true) . '/index.php?r=site/reset/hash/' . md5(time() . $userLastID . $_POST['TenantForm']['email']. 'Some salt 9ht3ldjnhuy)jnt47thlJ&');
+
+                                        User::model()->restorePassword($_POST['TenantForm']['email']);
+
+                                        //$body .= "<br>";
+                                        //$body .="<br>"."Thanks,"."<br>Admin</body></html>";
+
+                                        //mail($to, $subject, $body, $headers);
                                     }
                                 }
 

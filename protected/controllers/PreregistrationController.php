@@ -20,7 +20,7 @@ class PreregistrationController extends Controller
 	public function accessRules() {
 		return array(
 			array('allow',
-				'actions' => array('index','privacyPolicy' , 'declaration' , 'Login' ,'registration','confirmDetails', 'visitReason' , 'addAsic' , 'asicPass', 'error' , 'uploadPhoto','ajaxAsicSearch' , 'visitDetails' ),
+				'actions' => array('index','privacyPolicy' , 'declaration' , 'Login' ,'registration','confirmDetails', 'visitReason' , 'addAsic' , 'asicPass', 'error' , 'uploadPhoto','ajaxAsicSearch' , 'visitDetails' ,'success'),
 				'users' => array('*'),
 			),
 			array('allow',
@@ -405,7 +405,6 @@ class PreregistrationController extends Controller
 
 			$model->attributes=$_POST['UploadForm'];
 
-
 			$name       = $_FILES['UploadForm']['name']['image'];
 
 			if(!empty($name)){
@@ -436,13 +435,13 @@ class PreregistrationController extends Controller
 						$visitorModel->photo = $photoModel->id;
 						$visitorModel->save(true,array('photo'));
 						$session['imgName'] = $newName;
-
+						$this->redirect(array('preregistration/visitDetails'));
 					}
 				}
 			}
-
-			$this->redirect(array('preregistration/visitDetails'));
-
+			else{
+				$this->redirect(array('preregistration/visitDetails'));
+			}
 
 		}
 
@@ -450,7 +449,37 @@ class PreregistrationController extends Controller
 	}
 
 	public function actionVisitDetails(){
-		$this->render('visit-details');
+
+		$session = new CHttpSession;
+
+		if($session['visitor_id']=="" or $session['visitor_id']==null){
+			$this->redirect(array('preregistration/registration'));
+		}
+
+		$model = Visit::model()->findByAttributes(
+			array('visitor'=>$session['visitor_id'])
+		);
+
+		$model->detachBehavior('DateTimeZoneAndFormatBehavior');
+
+		if(isset($_POST['Visit']))
+		{
+			$oClock = $_POST['Visit']['ampm'];
+			$model->attributes=$_POST['Visit'];
+			$model->time_in
+				= $oClock == 'am' ? $model->time_in :
+				date("H:i", strtotime($model->time_in . " + 12 hour"));
+			if($model->save()){
+				$this->redirect(array('preregistration/success'));
+			}
+
+		}
+
+		$this->render('visit-details' , array('model'=>$model) );
+	}
+
+	public function actionSuccess(){
+		$this->render('success');
 	}
 
 

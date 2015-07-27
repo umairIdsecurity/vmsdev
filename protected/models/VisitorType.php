@@ -8,14 +8,17 @@
  * @property string $name
  * @property string $created_by
  * @property integer $is_default_value
+ * @property string $module
  *
  * The followings are the available model relations:
  * @property Visitor[] $visitors
  * @property User $createdBy
+ *
+ *
  */
 class VisitorType extends CActiveRecord {
 
-    //public static $VISITOR_TYPE_LIST = returnVisitorTypes();
+    public $card_types = array();
 
     const PATIENT_VISITOR = 1;
     const CORPORATE_VISITOR = 2;
@@ -35,8 +38,9 @@ class VisitorType extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('name', 'length', 'max' => 25),
-            array('name', 'required'),          
+            array('name', 'required'),
             array('created_by', 'length', 'max' => 20),
+            array('module', 'length', 'max' => 4),
             array('is_default_value', 'length', 'max'=>1),  
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
@@ -55,6 +59,7 @@ class VisitorType extends CActiveRecord {
             'createdBy' => array(self::BELONGS_TO, 'User', 'created_by'),
             'visits'=>array(self::HAS_MANY, 'Visit', 'visitor_type'),
             'visitsCount' => array(self::STAT, 'Visit', 'visitor_type'),
+            'visitTypeCardType' => array(self::HAS_MANY,"VisitTypeCardType","visitor_type")
         );
     }
 
@@ -69,7 +74,8 @@ class VisitorType extends CActiveRecord {
             'is_deleted' => 'Is Deleted',
             'tenant' => 'Tenant',
             'tenant_agent' => 'Tenant Agent',
-            'is_default_value' => 'Set Default'
+            'is_default_value' => 'Set Default',
+            'module' => 'Module'
         );
     }
 
@@ -87,7 +93,7 @@ class VisitorType extends CActiveRecord {
      */
     public function search() {
         // @todo Please modify the following code to remove attributes that should not be searched.
-
+        $session = new CHttpSession;
         $criteria = new CDbCriteria;
 
         $criteria->compare('id', $this->id, true);
@@ -96,10 +102,19 @@ class VisitorType extends CActiveRecord {
         $criteria->compare('tenant', $this->tenant, true);
         $criteria->compare('tenant_agent', $this->tenant_agent, true);
         $criteria->compare('is_default_value', $this->is_default_value, true);
+        $criteria->compare('module', $this->module, true);
+
+        if(isset($session['tenant']))
+        {
+            $criteria->addCondition("t.tenant =" . $session['tenant']);
+        }
+
         // Allow Admin to View and Manage his own created Types
-        if( Yii::app()->user->role == Roles::ROLE_ADMIN )
-            $criteria->addCondition("created_by ='" . Yii::app()->user->id . "'");
-        
+        //if( Yii::app()->user->role == Roles::ROLE_ADMIN )
+        //    $criteria->addCondition("created_by ='" . Yii::app()->user->id . "'");
+
+
+
         $data =  new CActiveDataProvider($this, array(
             'criteria' => $criteria,
 
@@ -123,20 +138,12 @@ class VisitorType extends CActiveRecord {
     }
 
     public function beforeFind() {
-        $session = new CHttpSession;
+
         $criteria = new CDbCriteria;
+
+
         if (Yii::app()->controller->action->id != 'exportvisitorrecords' && Yii::app()->controller->action->id != 'evacuationReport' && Yii::app()->controller->action->id != 'visitorRegistrationHistory' && Yii::app()->controller->action->id != 'view') {
             $criteria->condition = "t.is_deleted = 0 AND t.id !=1";
-        }
-
-
-        if (Yii::app()->controller->action->id == 'index' || Yii::app()->controller->action->id == 'getFromCardType') {
-            $criteria->condition = "t.is_deleted = 0 AND t.id !=1 ";
-            if(Yii::app()->request->getParam('vms') == 'cvms')
-                $criteria->condition .= " AND t.name not like 'Vic%' AND t.name NOT like 'AVMS%'";
-            else $criteria->condition .= " AND (t.name like 'Vic%' Or t.name like 'AVMS%')";
-
-
         }
 
         if (Yii::app()->controller->action->id == 'visitorsByTypeReport' || Yii::app()->controller->action->id == 'visitorsByWorkstationReport') {
@@ -144,7 +151,12 @@ class VisitorType extends CActiveRecord {
             $criteria->condition = "t.is_deleted=0";
         }
         
+
+        //if( Yii::app()->user->role != Roles::ROLE_SUPERADMIN )
+
+
         $this->dbCriteria->mergeWith($criteria);
+
     }
 
 
@@ -154,8 +166,11 @@ class VisitorType extends CActiveRecord {
      */
     public function getFromCardType($cardtype)
     {
-        $list = $this->model()->findAll();
-        if ($list) return CJSON::encode($list);
+        $list = $this->getCardTypeVisitorTypes($cardtype);
+        if($list) {
+
+            return CJSON::encode($list);
+        }
         return null;
     }
 
@@ -180,6 +195,60 @@ class VisitorType extends CActiveRecord {
 
         //prevent real deletion
         return false;
+        //return true;
+    }
+
+    public function nullVisitorTypes(){
+        return null;
+    }
+    public function getCardTypeVisitorTypes($card_type){
+        $session = new CHttpSession;
+        $criteria = new CDbCriteria;
+
+        $criteria->addCondition("t.tenant=".$session['tenant']." AND t.is_deleted=0");
+        $criteria->addCondition("t.module='".Chelper::get_module_focus()."'");
+        if(isset($session['tenant_agent']))
+            $criteria->addCondition("t.tenant_agent=".$session['tenant_agent']);
+
+        $criteria->join = 'JOIN visitor_type_card_type '
+                                        .'ON visitor_type_card_type.visitor_type = t.id '
+                                        .'AND visitor_type_card_type.is_deleted=0 '
+                                        .'AND visitor_type_card_type.card_type='.$card_type;
+
+        return VisitorType::model()->findAll($criteria);
+
+    }
+    public function getActiveCardTypes($visitor_type){
+
+        $session = new CHttpSession;
+        $criteria = new CDbCriteria;
+        //$criteria->select = "card_type";
+        $criteria->addCondition("visitor_type=" . $visitor_type);
+        $criteria->addCondition("t.tenant=" . $session['tenant'] . " AND t.is_deleted=0");
+
+        if (isset($session['tenant_agent']))
+            $criteria->addCondition("t.tenant_agent=" . $session['tenant_agent']);
+
+        $criteria->join = 'JOIN visitor_type '
+            . 'ON visitor_type.id = t.visitor_type '
+            . 'AND visitor_type.is_deleted=0 '
+            . "AND visitor_type.module='" . Chelper::get_module_focus() . "'";
+
+        return VisitorTypeCardType::model()->findAll($criteria);
+
+    }
+    public function getActiveCardTypeIds($visitor_type)
+    {
+        $result= array();
+        if($visitor_type!='') {
+
+            $types = $this->getActiveCardTypes($visitor_type);
+
+            foreach ($types as $type => $value) {
+                array_push($result, $value->card_type);
+            }
+        }
+        return $result;
     }
 
     public function returnVisitorTypes($visitorTypeId = NULL,$condition= "1>0") {

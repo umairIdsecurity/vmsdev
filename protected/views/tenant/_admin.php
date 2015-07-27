@@ -8,10 +8,10 @@
 
 <?php 
     foreach (Yii::app()->user->getFlashes() as $key => $message) {
-        echo '<div class="flash-' . $key . '">' . $message . "</div>\n";
+        echo '<div class="flash-' . $key . '">' . $message . "</div><br>";
     }
 ?>
-
+ 
 
 <?php
 $this->widget('zii.widgets.grid.CGridView', array(

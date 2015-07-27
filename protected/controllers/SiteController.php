@@ -321,6 +321,13 @@ class SiteController extends Controller {
                         ->order('w.id desc')
                         ->queryAll();
 
+            /*$row = Yii::app()->db->createCommand()
+                        ->select('w.id,w.name')
+                        ->from('workstation w')
+                        ->join('user u', 'w.tenant = u.id')
+                        ->where("w.is_deleted = 0 and u.is_deleted = 0 and u.id ='".$session['id']."'")
+                        ->order('w.id desc')
+                        ->queryAll();*/
         } else {
             $row = Workstation::model()->findWorkstationAvailableForUser($id);
         }

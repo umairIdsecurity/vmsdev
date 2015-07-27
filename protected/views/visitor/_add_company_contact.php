@@ -93,7 +93,7 @@
                             </td>
                         </tr>
                     </table><!-- Company infor -->
-                    <div class="password-border hidden" style="float: right; margin-right: 3px; margin-top: -187px; max-width:275px !important;">
+<!--                    <div class="password-border hidden" style="float: right; margin-right: 3px; margin-top: -187px; max-width:275px !important;">
                         <table style="float:left; width:300px;">
                             <tr>
                                 <td><strong>Password Options</strong></td>
@@ -165,7 +165,7 @@
                                 </td>
                             </tr>
                         </table>
-                    </div> <!-- password-border -->
+                    </div>  password-border -->
                 </td>
             </tr>
         </table>
@@ -187,6 +187,7 @@
 
 <script>
     function addCompanyContactForm(){
+         
         return "#add-company-contact-form ";
     }
     $(function() {
@@ -199,7 +200,7 @@
         $(document).on('click', '#btnAddCompanyContact', function(e) {
             e.preventDefault();
             $(addCompanyContactForm() + "tr.company_contact_field").removeClass('hidden');
-            $(addCompanyContactForm() + '.password-border').removeClass('hidden');
+            //$(addCompanyContactForm() + '.password-border').removeClass('hidden');
             var inputs = $(addCompanyContactForm())
                 .not('input[type="hidden"]')
                 .find('input[type="text"]');

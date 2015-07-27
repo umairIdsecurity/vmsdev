@@ -114,7 +114,7 @@ class VisitController extends Controller {
                 } else {
                     // default value:
                     // todo: check this default later
-                    $model->visitor_type = VisitorType::CORPORATE_VISITOR;
+                    //$model->visitor_type = VisitorType::CORPORATE_VISITOR;
 
                     /*$reason = VisitReason::model()->findAllReason();
                     if (count($reason) > 0) {
@@ -359,11 +359,11 @@ class VisitController extends Controller {
         $newPatient    = new Patient;
         $newHost       = new User;
 
-        if ($model->visitor_type == VisitorType::PATIENT_VISITOR) {
-            $host = 16;
-        } else {
-            $host = $model->host;
-        }
+        //if ($model->visitor_type == VisitorType::PATIENT_VISITOR) {
+        //    $host = 16;
+        //} else {
+        $host = $model->host;
+        //}
 
         $hostModel = User::model()->findByPk($host);
 
@@ -1389,7 +1389,7 @@ class VisitController extends Controller {
                             $visitorModel->identification_document_no = 'dummy';
                             $visitorModel->identification_document_expiry = date("Y-m-d");
                             $visitorModel->company = 15;
-                            $visitorModel->visitor_type = 2;
+                            //$visitorModel->visitor_type = 2;
                             $visitorModel->contact_street_no = 'dummy';
                             $visitorModel->contact_street_name = 'dummy';
                             $visitorModel->contact_street_type = 'ALLY';
@@ -1429,7 +1429,7 @@ class VisitController extends Controller {
                             $visitModel->created_by = Yii::app()->user->id;
                             $visitModel->workstation = $session['workstation'];
                             $visitModel->tenant = Yii::app()->user->tenant;
-                            $visitModel->visitor_type = 2;
+                            //$visitModel->visitor_type = 2;
                             $visitModel->save();
                         }
                     }

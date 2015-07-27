@@ -457,14 +457,14 @@ function preloadVisit(visitorId) {
                 $("#Visit_host").val(value.host);
                 $("#Visit_reason").val(value.reason);
                 $("#Visit_workstation").val(value.workstation);
-                if (value.visitor_type != 1) {
+                //if (value.visitor_type != 1) {
                     $("#register-host-patient-form").hide();
                     $("#register-host-form").hide();
                     $("#searchHostDiv").show();
                     $("#currentHostDetailsDiv").show();
                     $("#host-AddBtn").show();
                     preloadHostDetails(value.host);
-                }
+                //}
             });
         }
     });
@@ -736,13 +736,13 @@ function populateTenantAgentAndCompanyField(isSearch) {
         $('#Visitor_tenant_agent option[value!=""]').remove();
         var visitor_type = $("#Visitor_visitor_type").val();
         var tenant = $("#Visitor_tenant").val();
-        if (visitor_type == "1") {
-            getTenantAgentWithSameTenant(tenant, '');
-            document.getElementById('Visitor_company').disabled = true;
-        } else {
+        //if (visitor_type == "1") {
+        //    getTenantAgentWithSameTenant(tenant, '');
+        //    document.getElementById('Visitor_company').disabled = true;
+        //} else {
             getTenantAgentWithSameTenant(tenant);
             getCompanyWithSameTenant(tenant);
-        }
+        //}
     }
     //workstation be based on selected tenant
 
@@ -887,17 +887,17 @@ function getHostCompanyWithSameTenantAndTenantAgent(tenant, tenant_agent) {
 }
 
 function showHideHostPatientName(visitor_type) {
-    if (visitor_type.value == 1) { //if patient
-        $("#register-host-patient-form").show();
-        $("#register-host-form").hide();
-        $("#searchHostDiv").hide();
-        $("#addCompanyLink").hide();
-    } else {
+    //if (visitor_type.value == 1) { //if patient
+    //    $("#register-host-patient-form").show();
+    //    $("#register-host-form").hide();
+    //    $("#searchHostDiv").hide();
+   //     $("#addCompanyLink").hide();
+    //} else {
         $("#register-host-patient-form").hide();
         $("#register-host-form").show();
         $("#searchHostDiv").show();
         $("#addCompanyLink").show();
-    }
+    //}
 
     $("#Visitor_visitor_type").val(visitor_type.value);
     $("#Visitor_visitor_type_search").val(visitor_type.value);
@@ -1017,13 +1017,13 @@ function checkReasonIfUnique() {
                             getHostCompanyWithSameTenant($("#Visitor_tenant").val());
                         }
 
-                        if ($("#Visitor_visitor_type").val() == 1 || $("#Visitor_visitor_type_search").val() == 1) {
-                            $("#findHostA").html("Add Patient Details");
-                            $("#findHostB").html("Add Patient Details");
-                        } else {
+                        //if ($("#Visitor_visitor_type").val() == 1 || $("#Visitor_visitor_type_search").val() == 1) {
+                        //    $("#findHostA").html("Add Patient Details");
+                        //    $("#findHostB").html("Add Patient Details");
+                        //} else {
                             $("#findHostA").html("Add or Find "+getCardType());
                             $("#findHostB").html("Add or Find "+getCardType());
-                        }
+                        //}
                         //tenant and tenant agent of visitor and host should be the same
                         var options = $("#search_visitor_tenant > option").clone();
                         $('#User_tenant option').remove();

@@ -554,10 +554,15 @@ class VisitorController extends Controller {
 
     public function actionAddVisitor() {
         $model = new Visitor;
+        // For Corporate Visitor
+        if( Yii::app()->request->getParam("profile_type", "CORPORATE") == "CORPORATE")  
+            $this->performAjaxValidation($model);
+        
         $visitorService = new VisitorServiceImpl;
         $session = new CHttpSession;
 		
         if (isset($_POST['Visitor'])) {
+                
             if (isset($_POST['Visitor']['profile_type'])) {
                 $model->profile_type = $_POST['Visitor']['profile_type'];
             }
@@ -566,10 +571,10 @@ class VisitorController extends Controller {
             if (empty($model->visitor_workstation)) {
                 $model->visitor_workstation = $session['workstation'];
             }
-            //print_r($model->rules());
-            //die("--DONE--");
-
-
+             if (empty($model->tenant)) {
+                $model->tenant = $session['tenant'];
+            }
+           
             if ($result = $visitorService->save($model, NULL, $session['id'])) {
                 // Add company contact for this visitor if profile is ASIC
                 if (isset($_POST['profile_type']) && $_POST['profile_type'] == 'ASIC') {
@@ -622,11 +627,19 @@ class VisitorController extends Controller {
                         mail($to, $subject, $body, $headers);
                     }
                 }
-
+                if( $model->profile_type == "CORPORATE" ) {
+                    Yii::app()->user->setFlash('success', 'Corporate Visitor Created Successfully!');
+                    $this->redirect(array("visitor/addvisitor"));
+                }
+                    
             	Yii::app()->end();
+                
+                
+            }  else {
+                //$errors = $model->getErrors(); print_r($errors); exit;
             }
         }
-
+              
         $this->render('addvisitor', array(
             'model' => $model,
         ));
@@ -690,7 +703,7 @@ class VisitorController extends Controller {
                                $visitorInfo->company = $session['company'];
                             $visitorInfo->role = Roles::ROLE_VISITOR;
                             $visitorInfo->visitor_status = '1'; // Active
-                            $visitorInfo->visitor_type= '2'; 
+                            //$visitorInfo->visitor_type= '2';
                             //$visitorInfo->vehicle= $line[12]; 
                             $visitorInfo->created_by = Yii::app()->user->id;
                             $visitorInfo->tenant = Yii::app()->user->tenant;
@@ -715,7 +728,7 @@ class VisitorController extends Controller {
                                 // Insert Visit Now
                                 $visitInfo = new Visit;
                                 $visitInfo->visitor = $visitorInfo->id;
-                                $visitInfo->visitor_type = '2'; // Corporate
+                                //$visitInfo->visitor_type = '2'; // Corporate
                                 $visitInfo->visitor_status = 1;
                                 $visitInfo->card = $card ? $card->id:"";
                                 $visitInfo->host = Yii::app()->user->id;
@@ -728,7 +741,7 @@ class VisitorController extends Controller {
                                 $visitInfo->workstation = $session['workstation'];                               
                                 $visitInfo->tenant = Yii::app()->user->tenant;
                                 $visitInfo->reason = '1';
-                                $visitInfo->visitor_type = '2';
+                                //$visitInfo->visitor_type = '2';
                     
                                 $visitInfo->save();
                             }                    

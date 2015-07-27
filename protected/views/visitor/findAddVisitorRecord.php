@@ -420,7 +420,8 @@ $model->identification_country_issued = 13;
 
                                     <?php
                                     if(Yii::app()->user->role == Roles::ROLE_ADMIN) {
-                                        $list = VisitorType::model()->findAll("created_by = :c", [":c" => Yii::app()->user->id]);
+                                        //$list = VisitorType::model()->findAll("created_by = :c", [":c" => Yii::app()->user->id]);
+                                        $list=array();
                                         echo '<select onchange="showHideHostPatientName(this)" name="Visitor[visitor_type]" id="Visitor_visitor_type">';
                                         echo CHtml::tag('option', array('value' => ''), 'Select Visitor Type', true);
                                         foreach( $list as $val ) {
@@ -432,8 +433,9 @@ $model->identification_country_issued = 13;
                                         } 
                                         echo "</select>";
                                     } else {
+
                                         echo $form->dropDownList($model, 'visitor_type',
-                                        VisitorType::model()->returnVisitorTypes(null,""), array(
+                                        VisitorType::model()->getCardTypeVisitorTypes(null,""), array(
                                             'onchange' => 'showHideHostPatientName(this)',
                                             //'prompt' => 'Select Visitor Type',
                                         ));
@@ -786,6 +788,7 @@ $model->identification_country_issued = 13;
         } else {
             $("#Visitor_visitor_type_em_").empty().hide();
         }
+
         if (!hasError){
             if ($(parentElement()+"#Visitor_password_requirement_1").is(":checked")) {
                 if($(parentElement()+".password_option").is(":checked") == false) {
@@ -942,18 +945,20 @@ $model->identification_country_issued = 13;
 		
         $("#Visitor_password").val("(NULL)");
         $("#Visitor_repeatpassword").val("(NULL)");
-        $('#photoCropPreview').imgAreaSelect({
-            handles: true,
-            onSelectEnd: function(img, selection) {
-                $("#cropPhotoBtn").show();
-                $("#x1").val(selection.x1);
-                $("#x2").val(selection.x2);
-                $("#y1").val(selection.y1);
-                $("#y2").val(selection.y2);
-                $("#width").val(selection.width);
-                $("#height").val(selection.height);
-            }
-        });
+        if($('#photoCropPreview').imgAreaSelect) {
+            $('#photoCropPreview').imgAreaSelect({
+                handles: true,
+                onSelectEnd: function (img, selection) {
+                    $("#cropPhotoBtn").show();
+                    $("#x1").val(selection.x1);
+                    $("#x2").val(selection.x2);
+                    $("#y1").val(selection.y1);
+                    $("#y2").val(selection.y2);
+                    $("#width").val(selection.width);
+                    $("#height").val(selection.height);
+                }
+            });
+        }
 
         $("#cropPhotoBtn").click(function(e) {
             e.preventDefault();

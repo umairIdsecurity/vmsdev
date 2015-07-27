@@ -693,19 +693,20 @@ $defaultKey = key($asicCardTypes);
             $("#addhostTab").click();
         });
 
-
-        $('#photoCropPreview2').imgAreaSelect({
-            handles: true,
-            onSelectEnd: function (img, selection) {
-                $("#cropPhotoBtn2").show();
-                $("#x12").val(selection.x1);
-                $("#x22").val(selection.x2);
-                $("#y12").val(selection.y1);
-                $("#y22").val(selection.y2);
-                $("#width2").val(selection.width);
-                $("#height2").val(selection.height);
-            }
-        });
+        if($('#photoCropPreview2').imgAreaSelect) {
+            $('#photoCropPreview2').imgAreaSelect({
+                handles: true,
+                onSelectEnd: function (img, selection) {
+                    $("#cropPhotoBtn2").show();
+                    $("#x12").val(selection.x1);
+                    $("#x22").val(selection.x2);
+                    $("#y12").val(selection.y1);
+                    $("#y22").val(selection.y2);
+                    $("#width2").val(selection.width);
+                    $("#height2").val(selection.height);
+                }
+            });
+        }
         /*Added by farhat aziz for upload host photo*/
         $("#cropPhotoBtn2").click(function (e) {
             e.preventDefault();
@@ -765,19 +766,20 @@ $defaultKey = key($asicCardTypes);
         });
 
         /*			photo 3			*/
-
-        $('#photoCropPreview3').imgAreaSelect({
-            handles: true,
-            onSelectEnd: function (img, selection) {
-                $("#cropPhotoBtn3").show();
-                $("#x13").val(selection.x1);
-                $("#x23").val(selection.x2);
-                $("#y13").val(selection.y1);
-                $("#y23").val(selection.y2);
-                $("#width3").val(selection.width);
-                $("#height3").val(selection.height);
-            }
-        });
+        if($('#photoCropPreview3').imgAreaSelect) {
+            $('#photoCropPreview3').imgAreaSelect({
+                handles: true,
+                onSelectEnd: function (img, selection) {
+                    $("#cropPhotoBtn3").show();
+                    $("#x13").val(selection.x1);
+                    $("#x23").val(selection.x2);
+                    $("#y13").val(selection.y1);
+                    $("#y23").val(selection.y2);
+                    $("#width3").val(selection.width);
+                    $("#height3").val(selection.height);
+                }
+            });
+        }
         /*Added by farhat aziz for upload host photo*/
         $("#cropPhotoBtn3").click(function (e) {
             e.preventDefault();

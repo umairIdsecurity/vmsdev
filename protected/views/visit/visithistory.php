@@ -6,6 +6,9 @@ $session = new CHttpSession;
     #visit-grid table th {
         padding-right: 0 !important;
     }
+    #visitorDetailDiv tr {
+        border:none !important;
+    }
 </style>
 <div id="visitHistoryVisitDetailDiv">
     <span class="visitTitle">Visit History</span>
@@ -103,9 +106,9 @@ $session = new CHttpSession;
 
 function returnPatientOrHostName($visit_id, $userHost) {
     $visitDetails = Visit::model()->findByPk($visit_id);
-    if ($visitDetails['visitor_type'] == VisitorType::PATIENT_VISITOR) {
+    /*if ($visitDetails['visitor_type'] == VisitorType::PATIENT_VISITOR) {
         $hostFullName = Patient::model()->findByPk($visitDetails['patient'])->name;
-    } else {
+    } else {*/
         $user = Visitor::model()->findByPk($visitDetails['host']);
         if ($user) {
             $fname = $user->first_name;
@@ -114,7 +117,7 @@ function returnPatientOrHostName($visit_id, $userHost) {
         } else {
             $hostFullName = '';
         }
-    }
+    //}
 
     return $hostFullName;
 }

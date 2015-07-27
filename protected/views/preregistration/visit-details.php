@@ -42,8 +42,8 @@
                     <?php echo $form->textField($model,'date_in',
                         array(
                             'placeholder' => 'YY-MM-DD',
-                            'class'=>'form-control input-lg',
-                            'data-date-picker'=>"",
+                            'class'=>'form-control input-lg from_date',
+                            //'data-date-picker-start'=>"",
                             'data-date-format'=>'yyyy-mm-dd',
                             'value'=>''
                         )); ?>
@@ -57,8 +57,8 @@
                     echo $form->textField($model,'date_out',
                         array(
                             'placeholder' => 'YY-MM-DD',
-                            'class'=>'form-control input-lg',
-                            'data-date-picker'=>"",
+                            'class'=>'form-control input-lg to_date',
+                            //'data-date-picker-end'=>"",
                             'data-date-format'=>'yyyy-mm-dd',
                             'value'=>''
                         ));
@@ -70,11 +70,7 @@
                 <div class="row col-sm-7">
 
                     <div class="col-xs-6">
-
-
                     <?php
-                    //echo date("H:i", strtotime("06:30 + 12 hour"));
-
                     echo $form->dropDownList($model,'time_in', $model->visitClockTime , array('class'=>'form-control input-lg') )
                     ?>
 
@@ -83,10 +79,6 @@
                         <?php
                             echo $form->dropDownList($model,'ampm', $model->oClock,array('class'=>'form-control input-lg'));
                         ?>
-                        <!--<select name="time-in-h" class="form-control input-lg">
-                            <option value="AM">AM</option>
-                            <option value="AM">PM</option>
-                        </select>-->
                     </div>
                 </div>
             </div>

@@ -460,11 +460,15 @@ class PreregistrationController extends Controller
 			array('visitor'=>$session['visitor_id'])
 		);
 
+		$model->detachBehavior('DateTimeZoneAndFormatBehavior');
+
 		if(isset($_POST['Visit']))
 		{
-
+			$oClock = $_POST['Visit']['ampm'];
 			$model->attributes=$_POST['Visit'];
-
+			$model->time_in
+				= $oClock == 'am' ? $model->time_in :
+				date("H:i", strtotime($model->time_in . " + 12 hour"));
 			if($model->save()){
 				$this->redirect(array('preregistration/success'));
 			}

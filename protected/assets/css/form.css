@@ -91,7 +91,7 @@ div.form span.error
         display:inline;
 }
 
-div.form div.error input,
+div.form div.error input[type="text"],
 div.form div.error textarea,
 div.form div.error select,
 div.form div.error .select2-selection,

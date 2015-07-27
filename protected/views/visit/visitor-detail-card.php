@@ -153,15 +153,18 @@ $detailForm = $this->beginWidget('CActiveForm', [
             $workstationResults = [];
         }
         echo $detailForm->dropDownList($model, 'workstation', $workstationResults, ['empty' => 'Select Workstation']);
-        echo "<span class='required'>*</span>";
+        echo "<span class='required'> *</span>";
         // echo $detailForm->error($model, 'workstation');
         echo '<div id="Visit_workstation_em_" class="errorMessage" style="display: none">Please select a workstation</div>';
 
         if ($asic) {
             //$visitor_types = VisitorType::model()->returnVisitorTypes();
            // if(is_array($visitor_types)) {
-                echo $detailForm->dropDownList($model, 'visitor_type', VisitorType::model()->getFromCardType(-1));
-                echo "<span class='required'>*</span>";
+               $visitor_types = VisitorType::model()->getFromCardType(-1);
+               if($visitor_types) {
+                    echo $detailForm->dropDownList($model, 'visitor_type', $visitor_types);
+                    echo "<span class='required'>*</span>";
+               }
                 //echo $detailForm->error($model, 'visitor_type');
                 echo '<div id="Visit_visitor_type_em_" class="errorMessage" style="display: none">Please select a Visitor type</div>';
             //}
@@ -170,7 +173,8 @@ $detailForm = $this->beginWidget('CActiveForm', [
             foreach ($reasons as $key => $item) {
                 $results[$key] = 'Reason: ' . $item;
             }
-            echo $detailForm->dropDownList($model, 'reason', $results);
+            if( isset($results) && count($results))
+                echo $detailForm->dropDownList($model, 'reason', $results);
             echo "<br />";
         }
 
@@ -224,7 +228,8 @@ $detailForm = $this->beginWidget('CActiveForm', [
             }
         }
         function checkVisitorType(){
-
+            return true;// no need to make it mandatory
+            
             var visitortype = $('#Visit_visitor_type').val();
             if(!visitortype || visitortype == "") {
                 $('#Visit_visitor_type_em_').show();

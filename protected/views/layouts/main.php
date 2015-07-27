@@ -7,7 +7,7 @@ $cs = Yii::app()->clientScript;
 $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/jquery.uploadfile.min.js');
 $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/jquery.maskedinput.min.js');
 $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/jquery.form.js');
-$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/jquery.imgarloeaselect.pack.js');
+$cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/jquery.imgareaselect.pack.js');
 $cs->registerScriptFile(Yii::app()->controller->assetsBase . '/js/MaxLength.min.js');
 
 
@@ -84,12 +84,14 @@ $userRole = $session['role'];
                 <article class="header_midbox">
                     <div id="logo" >
                         <?php
-                           $id = $company->logo;
+ 
+                           $id = @is_null($company->logo)?1:$company->logo;
+ 
                             $photo = Photo::model()->findByPk($id);
                             if( $id == 1  || !is_object($photo) || is_null($photo->db_image)){
                                 ?><img id='photoPreview' style="height: 65px !important; width:130px !important;" src="<?php echo Yii::app()->controller->assetsBase . '/images/companylogohere1.png'; ?>"/><?php
                             } else {
-                                 ?><img id='photoPreview' style="height: 65px;width:130px !important;" src="data:image/<?php echo pathinfo($photo->filename, PATHINFO_EXTENSION); ?>;base64,<?php echo $photo->db_image; ?>"/><?php
+                                 ?><img id='photoPreview' style="height: 65px !important;" src="data:image/<?php echo pathinfo($photo->filename, PATHINFO_EXTENSION); ?>;base64,<?php echo $photo->db_image; ?>"/><?php
                             }?>
 
                     </div>

@@ -715,9 +715,9 @@ function get_avms_assignable_roles($user_role)
             $('.hidingMsgPassword').css("color","red");
             $('.hidingMsgPassword').show();
 
-            $('#TenantForm_password').css({"background": "#fee none repeat scroll 0 0", "border": "#c00"});
+            $('#TenantForm_password').css({"background-color": "#fee none repeat scroll 0 0", "border": "#c00"});
             
-            $('#TenantForm_cnf_password').css({"background": "#fee none repeat scroll 0 0", "border": "#c00"});
+            $('#TenantForm_cnf_password').css({"background-color": "#fee none repeat scroll 0 0", "border": "#c00"});
 
            // $('#generatePassword').css({"background-color": "#2f96b4", "border": "1px solid #cccccc"});            
             

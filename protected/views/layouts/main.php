@@ -84,7 +84,7 @@ $userRole = $session['role'];
                 <article class="header_midbox">
                     <div id="logo" >
                         <?php
-                           $id = $company->logo;
+                           $id = @is_null($company->logo)?1:$company->logo;
                             $photo = Photo::model()->findByPk($id);
                             if( $id == 1  || !is_object($photo) || is_null($photo->db_image)){
                                 ?><img id='photoPreview' style="height: 65px !important; width:130px !important;" src="<?php echo Yii::app()->controller->assetsBase . '/images/companylogohere1.png'; ?>"/><?php

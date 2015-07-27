@@ -179,15 +179,18 @@ class VisitorTypeController extends Controller {
      */
     public function actionDelete($id) {
 
+        $session = new CHttpSession;
         $transaction = Yii::app()->db->beginTransaction();
 
         try {
 
             $this->loadModel($id)->delete();
 
-            $cardTypes = VisitorTypeCardType::model()->find('visitor_type=' . $id);
-            foreach ($cardTypes as $cardType => $value) {
-                $cardType->delete();
+            $cardTypes = VisitorTypeCardType::model()->find('visitor_type=' . $id. " AND tenant=".$session['tenant']);
+            if(is_array($cardTypes)) {
+                foreach ($cardTypes as $value) {
+                    $value->delete();
+                }
             }
 
             $transaction->commit();

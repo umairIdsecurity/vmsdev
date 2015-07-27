@@ -13,3 +13,13 @@
     <p>Please go to the gate to collect your VIC with your Identification for verification.</p>
 
 </div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        window.setTimeout(function () {
+            location.href = '<?=Yii::app()->getBaseUrl(true)?>/index.php/preregistration';
+        }, 5000);
+    });
+
+</script>

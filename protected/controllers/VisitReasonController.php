@@ -60,6 +60,7 @@ class VisitReasonController extends Controller {
 
         if (isset($_POST['VisitReason'])) {
             $model->attributes = $_POST['VisitReason'];
+            $model->tenant = Yii::app()->user->tenant;
             if ($visitReasonService->save($model, $session['id'])) {
 
                 switch ($isViewedFromModal) {

@@ -24,10 +24,5 @@ angular.module('kioskApp')
 	
     // due to the network lag, we listen to a notification and update accordingly.
     $scope.$on('config:updated', updateStyles);
-
-    $scope.changeView = function() {
-		$location.path('compliance');
-    };
-
-    updateStyles();
+    updateStyles();	
 }]);

@@ -16,7 +16,7 @@ angular.module('kioskApp')
                   $scope.backButtonStyle = ConfigService.brandInfo.neutralButton;
                 }
 
-                $scope.hasError = false;
+                $scope.error = false;
 
                 $scope.visitor = VisitorService;
                 $scope.host = null;
@@ -33,6 +33,7 @@ angular.module('kioskApp')
                   DataService.createVisit({ visitorID: VisitorService.visitorID,
                                           hostID: VisitorService.host.hostID,
                                           visitorType: 2,
+										  visitCardType: VisitorService.cardType,
                                           startTime: new Date().toJSON(),
                                           expectedEndTime: new Date().toJSON(),
                                           visitReason: 1,
@@ -40,13 +41,13 @@ angular.module('kioskApp')
                                           function(data, responseCode) {
                                             var visitInfo = data[0];
                                             VisitService.visitID = visitInfo.visitID;
-                                            $scope.hasError = false;
+                                            $scope.error = false;
                                             console.log('Got visitID: '+ visitInfo.visitID);
                                             $location.path('photo_capture');
                                           },
                                           function(data, responseCode) {
                                             console.log('Create visit failed: ' + data);
-                                            $scope.hasError = true;
+                                            $scope.error = data.errorDescription;
                                           });
                 };
 

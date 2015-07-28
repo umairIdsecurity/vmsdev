@@ -51,8 +51,10 @@ angular.module('kioskApp')
 		$scope.imgSrc = ConfigService.brandInfo.companyLogoURL;
 		$scope.tagLine = ConfigService.companyTagLine;
     }
+	
+	// Listen to a notification and update accordingly.
 	$scope.$on('config:updated', updateStyles);
 	
 	getWorkstation();
-	//updateStyles();
+	updateStyles();
 }]);

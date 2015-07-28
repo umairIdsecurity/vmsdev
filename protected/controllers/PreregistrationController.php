@@ -393,7 +393,7 @@ class PreregistrationController extends Controller
 	public function actionUploadPhoto(){
 
 		$session = new CHttpSession;
-
+		//unset(Yii::app()->session['imgName']);
 		if($session['visitor_id']=="" or $session['visitor_id']==null){
 			$this->redirect(array('preregistration/registration'));
 		}

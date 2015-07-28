@@ -16,10 +16,10 @@ class UploadForm extends CFormModel
     public function rules()
     {
         return array(
-            array('image', 'file',
-                'maxSize'=>1024 * 1024 * 2, // 2 MB
-                'types'=>'jpg, gif, png',
-                'allowEmpty'=>false,
+            array('image','file',
+                'types'=>'jpg, gif, png, jpeg',
+                'maxSize'=>1024 * 1024 * 2,
+                'tooLarge'=>'File has to be smaller than 50MB'
             )
 
         );

@@ -25,6 +25,7 @@ else{
 
     <?php $form=$this->beginWidget('CActiveForm', array(
         'id' => 'upload-form',
+        'enableAjaxValidation'   => false,
         'enableClientValidation'=>true,
         'clientOptions'=>array(
             'validateOnSubmit'=>true,
@@ -40,7 +41,7 @@ else{
 
 
     <div class="text-center image-user">
-        <img src="<?=$preImg ?>" alt="image user" id="preview">
+        <img src="<?=$preImg ?>" alt="image user" id="preview" width="220" height="253">
     </div>
 
     <div class="form-group">
@@ -53,7 +54,7 @@ else{
 
 
     <h3 class="title text-center">UPLOAD/ TAKE PHOTO </h3>
-    <p class="title text-center">'Allowed Max size: 2.00 MB'</p>
+    <p class="title text-center text-danger">'Allowed Max size: 2.00 MB'</p>
 
 
 
@@ -81,7 +82,7 @@ else{
 
     function readURL(input) {
 
-     if (input.files && input.files[0]) {
+        if (input.files && input.files[0]) {
          var reader = new FileReader();
 
          reader.onload = function (e) {
@@ -92,8 +93,20 @@ else{
          }
      }
 
-     $("#UploadForm_image").change(function(){
-        readURL(this);
-     });
+    $('#UploadForm_image').bind('change', function() {
+
+        var f = this.files[0]
+
+        if (f.size > 2000000 || f.fileSize > 2000000)
+        {
+            alert("Allowed file size exceeded. (Max. 2 MB)")
+
+            this.value = null;
+        }
+        else{
+            readURL(this);
+        }
+
+    });
 
 </script>

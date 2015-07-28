@@ -238,8 +238,19 @@ class CardGeneratedController extends Controller {
         
         #data of user of card
         $model = Visit::model()->findByPk($id);
+
         $visitorModel = Visitor::model()->findByPk($model->visitor);
-        $data = array('model' => $model, 'visitorModel' => $visitorModel, 'type' => $type);
+
+        //needs photo of the visitor as stored in DB to be shown in printing the card
+        $userPhotoModel = Photo::model()->findByPk($visitorModel->photo);
+
+        //needs photo of the comapny as stored in DB to be shown in the footer while printing the card
+        $tenant = User::model()->findByPk($visitorModel->created_by);
+        $company = Company::model()->findByPk($tenant->company);
+        $companyPhotoModel =  Photo::model()->findByPk($company->logo);
+
+        
+        $data = array('model' => $model, 'visitorModel' => $visitorModel, 'type' => $type, 'userPhotoModel' => $userPhotoModel, 'companyPhotoModel' => $companyPhotoModel);
 
         if($type == 1){
             $html2pdf = Yii::app()->ePdf->HTML2PDF('P', 'A4', 'en',TRUE,'UTF-8',array(0,0,0,0));

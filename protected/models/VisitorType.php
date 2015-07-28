@@ -30,6 +30,7 @@ class VisitorType extends CActiveRecord {
         return 'visitor_type';
     }
 
+
     /**
      * @return array validation rules for model attributes.
      */

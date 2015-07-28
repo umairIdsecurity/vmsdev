@@ -393,7 +393,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
 
 
             
-            <?php if($module == "Both") {  ?>
+            <?php if($module == "Both" || $module == "CVMS") {  ?>
             <!-- menu for Reports -->
             <li class='has-sub'>
                 <?php echo CHtml::link('CVMS Reports', array('visit/evacuationReport'), array('class' => 'managereports')) ?>
@@ -416,7 +416,7 @@ if ($session['role'] == Roles::ROLE_AGENT_OPERATOR || $session['role'] == Roles:
             <!-- menu for Reports -->
             <?php } ?>
             
-            <?php if($module == "Both") {  ?>
+            <?php if($module == "Both" || $module == "AVMS") {  ?>
             <!-- menu for AVMS Reports -->
             <li class='has-sub'>
                 <?php

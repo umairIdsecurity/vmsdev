@@ -24,6 +24,9 @@ class VisitorTypeCardType extends CActiveRecord
         return 'visitor_type_card_type';
     }
 
+    public function primaryKey(){
+        return array('visitor_type', 'card_type');
+    }
     /**
      * @return array validation rules for model attributes.
      */

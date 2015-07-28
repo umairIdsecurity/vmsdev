@@ -94,8 +94,8 @@ class VisitReason extends CActiveRecord {
         $criteria->compare('tenant', $this->tenant, true);
         $criteria->compare('tenant_agent', $this->tenant_agent, true);
         $criteria->compare('module', $this->module, true);
-        if(isset($session['tenant']))
-            $criteria->addCondition("tenant=".$session['tenant']);
+        
+        $criteria->addCondition("tenant=".Yii::app()->user->tenant);
 
 
         return new CActiveDataProvider($this, array(

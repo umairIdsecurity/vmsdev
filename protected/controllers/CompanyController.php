@@ -23,8 +23,8 @@ class CompanyController extends Controller
         return array(
             array('allow', // allow all users to perform 'GetCompanyList' and 'GetCompanyWithSameTenant' actions
                 'actions' => array('GetCompanyList', 'GetCompanyWithSameTenant', 'create', 'delete', 'addCompanyContact', 'getContacts', 'addContact', 'getContact','checkNameUnique'),
-                /* 'users' => array('@'), */
-                'expression' => 'CHelper::check_module_authorization("CVMS")'
+                'users' => array('@'),
+                //'expression' => 'CHelper::check_module_authorization("CVMS")'
             ),
             array('allow', // allow user if same company
                 'actions' => array('update'),

@@ -86,7 +86,8 @@ class ContactPerson extends CActiveRecord
 		$criteria->compare('contact_person_email',$this->contact_person_email,true);
 		$criteria->compare('contact_person_message',$this->contact_person_message,true);
 		$criteria->compare('date_created',$this->date_created,true);
-
+                //Show only same tenant related persons. 
+                $criteria->condition = "t.tenant = " . Yii::app()->user->tenant;
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));

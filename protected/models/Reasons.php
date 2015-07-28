@@ -78,7 +78,8 @@ class Reasons extends CActiveRecord
 		$criteria->compare('id',$this->id);
 		$criteria->compare('reason_name',$this->reason_name,true);
 		$criteria->compare('date_created',$this->date_created,true);
-
+                
+                 $criteria->condition = "t.tenant = " . Yii::app()->user->tenant;
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));

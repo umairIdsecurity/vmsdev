@@ -114,11 +114,6 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'filter' => CHtml::activeTextField($model, 'contact_postcode', array('placeholder' => 'Postcode', 'class' => 'header-form')),
         ),
         array(
-            'name'   => 'reason',
-            'value'  => 'VisitReason::model()->findByPk($data->reason)->reason',
-            'filter' => CHtml::activeTextField($model, 'reason', array('placeholder' => 'Reason', 'class' => 'header-form')),
-        ),
-        array(
             'name'   => 'company0.name',
             'value'  => 'isset($data->company0->name) ? $data->company0->name : ""',
             'filter' => CHtml::activeTextField($model, 'company', array('placeholder' => 'Company Name', 'class' => 'header-form')),

@@ -6,6 +6,9 @@ $session = new CHttpSession;
     #visit-grid table th {
         padding-right: 0 !important;
     }
+    #visitorDetailDiv tr {
+        border:none !important;
+    }
 </style>
 <div id="visitHistoryVisitDetailDiv">
     <span class="visitTitle">Visit History</span>

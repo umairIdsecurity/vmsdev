@@ -116,21 +116,22 @@ class VisitorTypeController extends Controller {
 
                 if ($model->save()) {
 
-                    if(isset($_POST["card_types"])) {
-
-                        $card_types = $_POST["card_types"];
+                        if(isset($_POST["card_types"]))
+                            $card_types = $_POST["card_types"];
+                        else
+                            $card_types = array();
 
                         $found = array();
-                        $existing = VisitorTypeCardType::model()->find('visitor_type=' . $model->id);
+                        $existing = VisitorType::model()->getActiveCardTypes($model->id);
 
                         if (is_array($existing)) {
 
                             // delete card types not in the array
-                            foreach ($existing as $value) {
+                            foreach ($existing as $key =>$value) {
                                 if (!in_array($value->card_type, $card_types))
                                     $value->delete();
                                 else
-                                    array_push($found, $existing->card_type);
+                                    array_push($found, $value->card_type);
                             }
                         }
 
@@ -148,7 +149,7 @@ class VisitorTypeController extends Controller {
                                 }
                             }
                         }
-                    }
+                    //}
 
                 }
 
@@ -172,6 +173,8 @@ class VisitorTypeController extends Controller {
 
     }
 
+
+
     /**
      * Deletes a particular model.
      * If deletion is successful, the browser will be redirected to the 'admin' page.
@@ -179,15 +182,18 @@ class VisitorTypeController extends Controller {
      */
     public function actionDelete($id) {
 
+        $session = new CHttpSession;
         $transaction = Yii::app()->db->beginTransaction();
 
         try {
 
             $this->loadModel($id)->delete();
 
-            $cardTypes = VisitorTypeCardType::model()->find('visitor_type=' . $id);
-            foreach ($cardTypes as $cardType => $value) {
-                $cardType->delete();
+            $cardTypes = VisitorTypeCardType::model()->find('visitor_type=' . $id. " AND tenant=".$session['tenant']);
+            if(is_array($cardTypes)) {
+                foreach ($cardTypes as $value) {
+                    $value->delete();
+                }
             }
 
             $transaction->commit();

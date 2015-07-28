@@ -176,7 +176,7 @@ $isWorkstationDelete = empty($workstationModel) ? 'true' : 'false';
         <h3>Identification Verification</h3>
     </div>
     <div class="modal-body">
-        <table style="border-collapse: initial;">
+        <table style="border-collapse: initial; border: 0px !important">
             <tr><td colspan="2"><strong>Does the document number match the identification provided?</strong></td></tr>
             <tr><td colspan="2"><strong>&nbsp;</strong></td></tr>
             <tr>

@@ -37,7 +37,20 @@ class VisitorController extends RestfulController {
                     if ($visitor->save(false)) {
                         $result = array();
                         $result = $this->populatevisitor($visitor);
-
+						
+						# Getting card types
+						$Criteria = new CDbCriteria();
+						$Criteria->condition = "workstation = '" . $data['workstation'] ."'";	
+						$row = WorkstationCardType::model()->with('cardType')->findAll($Criteria);
+						if(count($row) > 1){# If more than one card type available
+							$result['CtypeCount'] = count($row);
+						}else if(count($row) == 1){# If one card type available
+							$result['CtypeCount'] = count($row);
+							$result['cid'] = $row[0]['cardType']['id'];				
+						}else{# If none available
+							$result['CtypeCount'] = count($row);
+						}
+						
                         $this->sendResponse(200, CJSON::encode($result));
                     }
                 }

@@ -218,28 +218,35 @@ class VisitorType extends CActiveRecord {
         return VisitorType::model()->findAll($criteria);
 
     }
+    public function getActiveCardTypes($visitor_type){
 
-    public function getActiveCardTypeIds($visitor_type)
-    {
         $session = new CHttpSession;
         $criteria = new CDbCriteria;
-        $criteria->select = "card_type";
-        $criteria->addCondition("visitor_type=".$visitor_type);
-        $criteria->addCondition("t.tenant=".$session['tenant']." AND t.is_deleted=0");
+        //$criteria->select = "card_type";
+        $criteria->addCondition("visitor_type=" . $visitor_type);
+        $criteria->addCondition("t.tenant=" . $session['tenant'] . " AND t.is_deleted=0");
 
-        if(isset($session['tenant_agent']))
-            $criteria->addCondition("t.tenant_agent=".$session['tenant_agent']);
+        if (isset($session['tenant_agent']))
+            $criteria->addCondition("t.tenant_agent=" . $session['tenant_agent']);
 
         $criteria->join = 'JOIN visitor_type '
-            .'ON visitor_type.id = t.visitor_type '
-            .'AND visitor_type.is_deleted=0 '
-            ."AND visitor_type.module='".Chelper::get_module_focus()."'";
+            . 'ON visitor_type.id = t.visitor_type '
+            . 'AND visitor_type.is_deleted=0 '
+            . "AND visitor_type.module='" . Chelper::get_module_focus() . "'";
 
-        $types  = VisitorTypeCardType::model()->findAll($criteria);
+        return VisitorTypeCardType::model()->findAll($criteria);
+
+    }
+    public function getActiveCardTypeIds($visitor_type)
+    {
         $result= array();
-        foreach($types as $type => $value)
-        {
-            array_push($result,$value->card_type);
+        if($visitor_type!='') {
+
+            $types = $this->getActiveCardTypes($visitor_type);
+
+            foreach ($types as $type => $value) {
+                array_push($result, $value->card_type);
+            }
         }
         return $result;
     }

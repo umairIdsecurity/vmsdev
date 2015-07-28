@@ -300,9 +300,14 @@ class TenantController extends Controller {
                 /**
                   * Module Access
                  */ 
-                 $access = CHelper::get_module_access($_POST);
-                 $userModel->allowed_module = $access;  
-                 $userModel->save(false);
+                $access = CHelper::get_module_access($_POST);
+                
+                $userModel->allowed_module = $access; 
+
+                /*$userModel->email = $_POST['Company']['email_address'];
+                $userModel->contact_number = $_POST['Company']['mobile_number'];*/
+                
+                $userModel->save(false);
          
                 Yii::app()->user->setFlash('success', "Tenant updated Successfully");
                 $this->redirect(array('tenant/admin'));

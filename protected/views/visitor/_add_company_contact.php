@@ -1,3 +1,6 @@
+<?php
+$session = new CHttpSession;
+?>
 <div class="modal hide fade" id="addCompanyContactModal" style="width: 700px;">
     <?php $form=$this->beginWidget('CActiveForm', array(
         'id'=>'add-company-contact-form',
@@ -104,13 +107,13 @@
                             <tr>
 
                                 <td>
-                                    <?php echo $form->radioButtonList($model, 'password_requirement',
+                                    <?php /*echo $form->radioButtonList($model, 'password_requirement',
                                         array(
                                             PasswordRequirement::PASSWORD_IS_NOT_REQUIRED => 'User does not require Password',
                                             PasswordRequirement::PASSWORD_IS_REQUIRED => 'User requires Password to Login',
-                                        ), array('class' => 'password_requirement form-label', 'style' => 'float:left;margin-right:10px;', 'separator' => ''));
+                                        ), array('class' => 'password_requirement form-label', 'style' => 'float:left;margin-right:10px;', 'separator' => ''));*/
                                     ?>
-                                    <?php echo $form->error($model, 'password_requirement'); ?>
+                                    <?php //echo $form->error($model, 'password_requirement'); ?>
                                 </td>
                             </tr>
                             <tr style="display:none;" class="user_requires_password">
@@ -138,26 +141,26 @@
 
                                         <tr>
                                             <td>
-                                                <?php echo $form->passwordField($model, 'user_password', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Password')); ?>
+                                                <?php //echo $form->passwordField($model, 'user_password', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Password')); ?>
                                                 <span class="required">*</span>
-                                                <?php echo "<br>" . $form->error($model, 'user_password'); ?>
+                                                <?php //echo "<br>" . $form->error($model, 'user_password'); ?>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <?php echo $form->passwordField($model, 'user_repeatpassword', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Repeat Password')); ?>
+                                                <?php //echo $form->passwordField($model, 'user_repeatpassword', array('size' => 50, 'maxlength' => 50,'placeholder'=>'Repeat Password')); ?>
                                                 <span class="required">*</span>
-                                                <?php echo "<br>" . $form->error($model, 'user_repeatpassword'); ?>
-                                                <?php echo '<div id="AddCompanyContactForm_user_passwordmatch_em_" class="errorMessage" style="display:none"></div>'?>
+                                                <?php //echo "<br>" . $form->error($model, 'user_repeatpassword'); ?>
+                                                <?php //echo '<div id="AddCompanyContactForm_user_passwordmatch_em_" class="errorMessage" style="display:none"></div>'?>
                                             </td>
 
                                         </tr>
                                         <tr>
                                             <td align="center">
-                                                <?php $background = isset($companyLafPreferences) ? ("background:" . $companyLafPreferences->neutral_bg_color . ' !important;') : ''; ?>
+                                                <?php //$background = isset($companyLafPreferences) ? ("background:" . $companyLafPreferences->neutral_bg_color . ' !important;') : ''; ?>
                                                 <div class="row buttons" style="text-align:center;">
                                                     <input onclick="generatepassword();" class="complete btn btn-info" type="button" value="Autogenerate Password"
-                                                           style="<?php echo $background; ?>position: relative; width: 180px; overflow: hidden;cursor:pointer;font-size:14px;margin-right:8px;"/>
+                                                           style="<?php //echo $background; ?>position: relative; width: 180px; overflow: hidden;cursor:pointer;font-size:14px;margin-right:8px;"/>
                                                 </div>
                                             </td>
                                         </tr>
@@ -180,7 +183,10 @@
 <?php $this->endWidget(); ?>
 </div>
 
-<?php $companyList = CHtml::listData(Company::model()->findAll(), 'id', 'name');
+<?php
+    //$companyList = CHtml::listData(Company::model()->findAll(), 'id', 'name');
+    //All the companies list is displayed for any tenant --- CAVMS-826
+    $companyList = CHtml::listData(Visitor::model()->findAllCompanyByTenant($session['tenant']), 'id', 'name');
     $companyList = array_unique($companyList);
     $listsCom = implode('", "', $companyList);
 ?>

@@ -181,7 +181,7 @@ class VisitReasonController extends Controller {
     public function actionCheckReasonIfUnique($id) {
         if (VisitReason::model()->isReasonUnique($id)) {
             $aArray[] = array(
-                'isTaken' => 1,
+                'isTaken' => 0, //visitor reason is disabled by Geoff so isTaken is changed from 1 to 0 here for working of log visit
             );
         } else {
             $aArray[] = array(

@@ -26,16 +26,16 @@ if ($tenant) {
 } else {
     throw new CHttpException(404, 'Company not found for this User.');
 }
-/*$company = Company::model()->findByPk($visitorModel->company);
-if ($company) {
-    $companyName = $company->name;
-    $companyLogoId = $company->logo;
-    $companyCode = $company->code;
-} else {
-    throw new CHttpException(404, 'Company not found for this User.');
-}
-*/
-$companyLogo =  Photo::model()->getAbsolutePathOfImage(Photo::COMPANY_IMAGE, $tenant->company);
+// $company = Company::model()->findByPk($visitorModel->company);
+// if ($company) {
+//     $companyName = $company->name;
+//     $companyLogoId = $company->logo;
+//     $companyCode = $company->code;
+// } else {
+//     throw new CHttpException(404, 'Company not found for this User.');
+// }
+
+/*$companyLogo =  Photo::model()->getAbsolutePathOfImage(Photo::COMPANY_IMAGE, $tenant->company);
 
 if ($companyLogo  == Photo::model()->defaultAbsoluteImage() ){
     $companyLogo = null;
@@ -45,7 +45,7 @@ $userPhoto = Photo::model()->getAbsolutePathOfImage(Photo::VISITOR_IMAGE,$model-
 
 if ($userPhoto  == Photo::model()->defaultAbsoluteImage() ){
     $userPhoto = null;
-}
+}*/
 
 $card = CardGenerated::model()->findByPk($model->card);
 if ($card) {
@@ -56,8 +56,16 @@ if ($card) {
 }
 $visitorName = wordwrap($visitorName, 13, "\n", true);
 
-$dateExpiry = date('dMy');
 
+/*
+According to Savita
+Corporate and Aviation Visitor Management System --- CAVMS-815
+All VIC card should display Finish / check out date on the card printing.
+*/
+$dateExpiry = date("dMy", strtotime($model->date_check_out));
+
+/*
+$dateExpiry = date('dMy');
 switch ($model->card_type) {
     case CardType::VIC_CARD_MULTIDAY:
     case CardType::SAME_DAY_VISITOR:
@@ -65,6 +73,9 @@ switch ($model->card_type) {
         $dateExpiry = date("dMy", strtotime($model->date_check_out));
         break;
 }
+*/
+
+
 
 $first_name = $visitorModel->first_name != "" ? $visitorModel->first_name : "N/A";
 $last_name = $visitorModel->last_name != "" ? $visitorModel->last_name : "N/A";
@@ -105,9 +116,10 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
 </head>
 <style>
     .card-print {
-        width:256px;
-        border:1px solid #000;
-        height:405px;
+        /*width:256px;*/
+        width:205px;
+        /*height:405px;*/
+        height:325px;border:1px solid #000;
         border-radius:20px;
         background:<?= $bgcolor; ?>;
         position: relative;
@@ -129,18 +141,28 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
     }
 
     .card-date-text {
-        font-size: 30px;
+        /*font-size: 30px;
         font-weight: bold;
         text-align: left;
         margin-bottom: 8px;
         margin-left: 5px;
         line-height: 32px;
-        margin-top: 3px;
+        margin-top: 3px;*/
+        font-size: 15px;
+        font-weight: bold;
+        text-align: left;
+        margin-bottom: 0px;
+        margin-left: 5px;
+        line-height: 12px;
+        margin-top: 0px;
     }
 
     .card-date-text span {
-        margin-top:-8px;
+        /*margin-top:-8px;
         font-size: 60px;
+        vertical-align: top;*/
+        margin-top:0px;
+        font-size: 40px;
         vertical-align: top;
     }
 
@@ -149,12 +171,19 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
     }
 
     .card-visit-info {
-        font-size:22px;
+        /*font-size:22px;
         width:256px;
         float:left;
         font-weight:bold;
         line-height:24px;
         margin:5px 0 3px 0;
+        text-transform: capitalize;*/
+        font-size:12px;
+        width:205px;
+        float:left;
+        font-weight:bold;
+        line-height:12px;
+        margin:2px 0 1px 0;
         text-transform: capitalize;
     }
     .card-visit-info .last-name {
@@ -162,34 +191,53 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
     }
 
     .text-cmp {
-        font-size:25px;
+        /*font-size:25px;
         font-weight:bold;
-        margin:0 0 10px 0;
+        margin:0 0 10px 0;*/
+        font-size:12px;
+        font-weight:bold;
+        margin:0;
     }
     .card-footer{
-        background:#fff;
+        /*background:#fff;
         border-bottom-right-radius: 20px;
         border-bottom-left-radius: 20px;
         width:258px; height:40px;
         padding-top: 8px;
         position: absolute;
+        bottom: 1px; left: 1px;*/
+        background:#fff;
+        border-bottom-right-radius: 20px;
+        border-bottom-left-radius: 20px;
+        width:206px; height:40px;
+        padding-top: 8px;
+        position: absolute;
         bottom: 1px; left: 1px;
     }
     .card-footer .img-logo {
+        /*width:69px;
+        height:30px;
+        margin-left:15px;
+        margin-top:2px;
+        display:inline-block;*/
         width:69px;
         height:30px;
         margin-left:15px;
         margin-top:2px;
         display:inline-block;
+        
+
     }
     .img-logo img {
         width: auto;
         height: 30px;
     }
     .card-text {
-        width:256px;
+        /*width:256px;*/
+        width:205px;
+        /*height:405px;*/
+        height:325px;
         border:1px solid #000;
-        height:410px;
         border-radius:20px;
         background:#fff;
         float: left;
@@ -217,7 +265,17 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
                         <!--Box 1-->
                         <div class="card-print">
                             <div class="img-visitor">
-                                <?=$userPhoto ? "<img src=\"{$userPhoto}\">":"";?>
+                                <?php  
+                                    if(isset($userPhotoModel->db_image) && !empty($userPhotoModel->db_image))
+                                    {
+                                        $imageSrc = "data:image/png;base64,".$userPhotoModel->db_image; 
+                                        echo '<img src="'.$imageSrc.'"/>';
+                                    }
+                                    else{
+                                        echo '';
+                                    }
+                                    //echo $userPhoto ? "<img src=\"{$userPhoto}\">":"";
+                                ?>
                             </div>
                             <div class="card-info">
                                 <p class="text-cmp"><?= $companyCode; ?></p>
@@ -232,13 +290,22 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
                             </div>
                             <div class="card-footer">
                                 <?php
-                                if($companyLogo) {
-                                    ?>
-                                    <div class="img-logo">
-                                        <img src="<?= $companyLogo; ?>">
-                                    </div>
+                                //if($companyLogo) {
+                                ?>
+                                    <!-- <div class="img-logo">
+                                        <img src="<?php //echo $companyLogo; ?>">
+                                    </div> -->
                                 <?php
-                                }
+                                //}
+                                ?>
+
+
+                                <?php 
+                                    if(isset($companyPhotoModel->db_image) && !empty($companyPhotoModel->db_image))
+                                    {
+                                        $CompImageSrc1 = "data:image/png;base64,".$companyPhotoModel->db_image;
+                                        echo '<div class="img-logo"><img src="'.$CompImageSrc1.'"/></div> ';
+                                    }
                                 ?>
                             </div>
                         </div>
@@ -259,7 +326,17 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
         <!--Box 1-->
         <div class="card-print">
             <div class="img-visitor">
-                <?=$userPhoto ? "<img src=\"{$userPhoto}\">":"";?>
+                <?php  
+                                    if(isset($userPhotoModel->db_image) && !empty($userPhotoModel->db_image))
+                                    {
+                                        $imageSrc = "data:image/png;base64,".$userPhotoModel->db_image; 
+                                        echo '<img src="'.$imageSrc.'"/>';
+                                    }
+                                    else{
+                                        echo '';
+                                    }
+                                    //echo $userPhoto ? "<img src=\"{$userPhoto}\">":"";
+                                ?>
             </div>
             <div class="card-info">
                 <p class="text-cmp"><?= $companyCode; ?></p>
@@ -275,14 +352,22 @@ if ($model->card_type != CardType::VIC_CARD_MANUAL) {
 
             <div class="card-footer">
                 <?php
-                if($companyLogo) {
+                //if($companyLogo) {
                 ?>
-                    <div class="img-logo">
-                        <img src="<?= $companyLogo; ?>">
-                    </div>
+                    <!-- <div class="img-logo">
+                        <img src="<?php //echo $companyLogo; ?>">
+                    </div> -->
                 <?php
-                }
+                //}
                 ?>
+
+                <?php 
+                                    if(isset($companyPhotoModel->db_image) && !empty($companyPhotoModel->db_image))
+                                    {
+                                        $CompImageSrc1 = "data:image/png;base64,".$companyPhotoModel->db_image;
+                                        echo '<div class="img-logo"><img src="'.$CompImageSrc1.'"/></div> ';
+                                    }
+                                ?>
             </div>
 
         </div>

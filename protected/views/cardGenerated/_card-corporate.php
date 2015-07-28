@@ -101,8 +101,17 @@ if($model->card_type ==  CardType::CONTRACTOR_VISITOR){
                             <td>
                                 <div
                                     style="float:left; width:150px; height:200px; background:#fff; margin-left:15px; margin-top:13px;">
-                                    <img border="0" style="width:150px; height:200px;"
-                                         src="<?=$userPhoto;?>">
+                                    <!-- <img border="0" style="width:150px; height:200px;"
+                                         src="<?php //echo $userPhoto;?>"> -->
+                                    <?php if(isset($userPhotoModel->db_image) && !empty($userPhotoModel->db_image))
+                                    {
+                                        $imageSrc = "data:image/png;base64,".$userPhotoModel->db_image; 
+                                        echo '<img src="'.$imageSrc.'" border="0" style="width:150px; height:200px;" />';
+                                    }
+                                    else{
+                                        echo '';
+                                    }     
+                                    ?>
                                 </div>
                             </td>
                             <td>
@@ -123,8 +132,17 @@ if($model->card_type ==  CardType::CONTRACTOR_VISITOR){
                     <table style="  margin-top: 25px;padding: 5px;">
                         <tr>
                             <td>
-                                <img style="height:35px; width: 130px;"
-                                     src="<?=$companyLogo?>">
+                                <!-- <img style="height:35px; width: 130px;"
+                                     src="<?php //echo $companyLogo;?>"> -->
+                                <?php 
+                                    if(isset($companyPhotoModel->db_image) && !empty($companyPhotoModel->db_image))
+                                    {
+                                        $CompImageSrc1 = "data:image/png;base64,".$companyPhotoModel->db_image;
+                                        echo '<img src="'.$CompImageSrc1.'" style="height:35px; width: 130px;" />';
+                                    }else{
+                                        echo '';
+                                    }
+                                ?>     
                             </td>
                             <td>
                                 <div
@@ -154,8 +172,17 @@ if($model->card_type ==  CardType::CONTRACTOR_VISITOR){
                             <td>
                                 <div
                                     style="float:left; width:150px; height:200px; background:#fff; margin-left:15px; margin-top:13px;">
-                                    <img border="0" style="width:150px; height:200px;"
-                                         src="<?=$userPhoto;?>">
+                                    <!-- <img border="0" style="width:150px; height:200px;"
+                                         src="<?php //echo $userPhoto;?>"> -->
+                                    <?php if(isset($userPhotoModel->db_image) && !empty($userPhotoModel->db_image))
+                                    {
+                                        $imageSrc = "data:image/png;base64,".$userPhotoModel->db_image; 
+                                        echo '<img src="'.$imageSrc.'" border="0" style="width:150px; height:200px;" />';
+                                    }
+                                    else{
+                                        echo '';
+                                    }     
+                                    ?>     
                                 </div>
                             </td>
                             <td>
@@ -176,8 +203,17 @@ if($model->card_type ==  CardType::CONTRACTOR_VISITOR){
                     <table style="  margin-top: 22px;padding: 5px;">
                         <tr>
                             <td>
-                                <img style="height:35px; width: 130px;"
-                                     src="<?=$companyLogo?>">
+                                <!-- <img style="height:35px; width: 130px;"
+                                     src="<?php //echo $companyLogo;?>"> -->
+                                <?php 
+                                    if(isset($companyPhotoModel->db_image) && !empty($companyPhotoModel->db_image))
+                                    {
+                                        $CompImageSrc1 = "data:image/png;base64,".$companyPhotoModel->db_image;
+                                        echo '<img src="'.$CompImageSrc1.'" style="height:35px; width: 130px;" />';
+                                    }else{
+                                        echo '';
+                                    }
+                                ?> 
                             </td>
                             <td>
                                 <div
@@ -201,8 +237,17 @@ if($model->card_type ==  CardType::CONTRACTOR_VISITOR){
                 <td>
                     <div
                         style="float:left; width:150px; height:200px; background:#fff; margin-left:15px; margin-top:13px;">
-                        <img border="0" style="width:150px; height:200px;"
-                             src="<?=$userPhoto;?>">
+                        <!-- <img border="0" style="width:150px; height:200px;"
+                                         src="<?php //echo $userPhoto;?>"> -->
+                                    <?php if(isset($userPhotoModel->db_image) && !empty($userPhotoModel->db_image))
+                                    {
+                                        $imageSrc = "data:image/png;base64,".$userPhotoModel->db_image; 
+                                        echo '<img src="'.$imageSrc.'" border="0" style="width:150px; height:200px;" />';
+                                    }
+                                    else{
+                                        echo '';
+                                    }     
+                                    ?>
                     </div>
                 </td>
                 <td>
@@ -223,8 +268,17 @@ if($model->card_type ==  CardType::CONTRACTOR_VISITOR){
         <table style="  margin-top: 22px;padding: 5px;">
             <tr>
                 <td>
-                    <img style="height:35px; width: 130px;"
-                         src="<?=$companyLogo?>">
+                    <!-- <img style="height:35px; width: 130px;"
+                                     src="<?php //echo $companyLogo;?>"> -->
+                                <?php 
+                                    if(isset($companyPhotoModel->db_image) && !empty($companyPhotoModel->db_image))
+                                    {
+                                        $CompImageSrc1 = "data:image/png;base64,".$companyPhotoModel->db_image;
+                                        echo '<img src="'.$CompImageSrc1.'" style="height:35px; width: 130px;" />';
+                                    }else{
+                                        echo '';
+                                    }
+                                ?> 
                 </td>
                 <td>
                     <div

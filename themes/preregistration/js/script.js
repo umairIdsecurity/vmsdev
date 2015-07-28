@@ -151,26 +151,14 @@ jQuery(function() {
 
     /* start date */
     $(".from_date").datepicker({
-        format: 'yyyy-mm-dd',
+        format: 'dd-mm-yyyy',
+        startDate: '0d',
         autoclose: true
     }).on('changeDate', function (selected) {
-        var startDate = new Date(selected.date.valueOf());
-        $('.to_date').datepicker('setStartDate', startDate);
-    }).on('clearDate', function (selected) {
-        $('.to_date').datepicker('setStartDate', null);
+        var date2 = $('.from_date').datepicker('getDate', '+1d');
+        date2.setDate(date2.getDate()+1);
+        $('.to_date').datepicker('setDate', date2);
     });
-
-    /* end date */
-    $(".to_date").datepicker({
-        format: 'yyyy-mm-dd',
-        autoclose: true
-    }).on('changeDate', function (selected) {
-        var endDate = new Date(selected.date.valueOf());
-        $('.from_date').datepicker('setEndDate', endDate);
-    }).on('clearDate', function (selected) {
-        $('.from_date').datepicker('setEndDate', null);
-    });
-
 });
 
 jQuery(function() {
